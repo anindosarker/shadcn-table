@@ -1,0 +1,27 @@
+{
+  "name": "shadcn-react-table-cli",
+  "version": "0.0.1",
+  "bin": {
+    "shadcn-rt": "dist/cli.cjs"
+  },
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "eta": "^4.0.1",
+    "kolorist": "^1.8.0",
+    "prettier": "^3.6.2",
+    "shadcn-react-table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.1.13",
+    "esbuild": "^0.23.0"
+  },
+  "files": [
+    "dist",
+    "src/templates"
+  ],
+  "scripts": {
+    "build": "esbuild src/cli.ts --bundle --platform=node --format=cjs --outfile=dist/cli.cjs"
+  }
+}

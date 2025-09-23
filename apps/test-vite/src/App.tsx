@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
 } from 'material-react-table';
-import { MRT_Localization_ES } from 'material-react-table/locales/es';
+import { useMemo } from 'react';
 
 //example data type
 type Person = {
@@ -102,7 +101,7 @@ const Example = () => {
   const table = useMaterialReactTable({
     columns,
     data,
-    localization: MRT_Localization_ES,
+    // localization: MRT_Localization_ES,
   });
 
   return <MaterialReactTable table={table} />;

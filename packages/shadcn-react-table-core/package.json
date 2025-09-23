@@ -1,0 +1,49 @@
+{
+  "name": "shadcn-react-table-core",
+  "version": "0.0.1",
+  "description": "Headless core for shadcn React Table (hooks, types, utils)",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && rollup -c rollup.config.mjs",
+    "dev": "rollup -c rollup.config.mjs --watch"
+  },
+  "peerDependencies": {
+    "@tanstack/react-table": ">=8",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/react": "^19.1.13",
+    "rollup": "^4.50.2",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "tslib": "^2.8.1",
+    "typescript": "5.7.2"
+  },
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@tanstack/match-sorter-utils": "8.19.4",
+    "@tanstack/react-table": "8.20.6",
+    "@tanstack/react-virtual": "3.11.2",
+    "highlight-words": "2.0.0",
+    "lucide-react": "^0.544.0"
+  }
+}
