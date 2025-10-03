@@ -61,7 +61,7 @@ export const useSRT_TableInstance = <TData extends SRT_RowData>(
   const searchInputRef = useRef<HTMLInputElement>(null);
   const tableContainerRef = useRef<HTMLDivElement>(null);
   const tableHeadCellRefs = useRef<Record<string, HTMLTableCellElement>>({});
-  const tablePaperRef = useRef<HTMLDivElement>(null);
+  const tableLayoutRef = useRef<HTMLDivElement>(null);
   const topToolbarRef = useRef<HTMLDivElement>(null);
   const tableHeadRef = useRef<HTMLTableSectionElement>(null);
   const tableFooterRef = useRef<HTMLTableSectionElement>(null);
@@ -270,7 +270,7 @@ export const useSRT_TableInstance = <TData extends SRT_RowData>(
     tableFooterRef,
     tableHeadCellRefs,
     tableHeadRef,
-    tablePaperRef,
+    tableLayoutRef,
     topToolbarRef,
   };
 

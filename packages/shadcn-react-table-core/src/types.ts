@@ -1,4 +1,6 @@
 import {
+  HTMLAttributes,
+  type ComponentPropsWithoutRef,
   type Dispatch,
   type ReactNode,
   type RefObject,
@@ -43,6 +45,7 @@ import { SRT_FilterFns } from './fns/filterFns';
 import { SRT_AggregationFns } from './fns/aggregationFns';
 import { SRT_SortingFns } from './fns/sortingFns';
 import { SRT_Icons } from './icons';
+import { LucideProps } from 'lucide-react';
 
 export type {
   ColumnDef,
@@ -447,7 +450,6 @@ export type SRT_GroupColumnDef<TData extends SRT_RowData> =
     columns: SRT_ColumnDef<TData>[];
   };
 
-
 export type SRT_DefinedColumnDef<
   TData extends SRT_RowData,
   TValue = unknown,
@@ -680,7 +682,7 @@ export type SRT_TableInstance<TData extends SRT_RowData> = Omit<
     tableFooterRef: RefObject<HTMLTableSectionElement | null>;
     tableHeadCellRefs: RefObject<Record<string, HTMLTableCellElement> | null>;
     tableHeadRef: RefObject<HTMLTableSectionElement | null>;
-    tablePaperRef: RefObject<HTMLDivElement | null>;
+    tableLayoutRef: RefObject<HTMLDivElement | null>;
     topToolbarRef: RefObject<HTMLDivElement | null>;
   };
   setActionCell: Dispatch<SetStateAction<SRT_Cell<TData> | null>>;
@@ -869,11 +871,11 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   // muiBottomToolbarProps?:
   //   | ((props: { table: SRT_TableInstance<TData> }) => BoxProps)
   //   | BoxProps;
-  // muiCircularProgressProps?:
-  //   | ((props: {
-  //       table: SRT_TableInstance<TData>;
-  //     }) => CircularProgressProps & { Component?: ReactNode })
-  //   | (CircularProgressProps & { Component?: ReactNode });
+  srtCircularProgressProps?:
+    | ((props: {
+        table: SRT_TableInstance<TData>;
+      }) => SRT_CircularProgressProps & { Component?: ReactNode })
+    | (SRT_CircularProgressProps & { Component?: ReactNode });
   // muiColumnActionsButtonProps?:
   //   | ((props: {
   //       column: SRT_Column<TData>;
@@ -976,12 +978,12 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   //       table: SRT_TableInstance<TData>;
   //     }) => TimePickerProps<never>)
   //   | TimePickerProps<never>;
-  // muiLinearProgressProps?:
-  //   | ((props: {
-  //       isTopToolbar: boolean;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => LinearProgressProps)
-  //   | LinearProgressProps;
+  srtLinearProgressProps?:
+    | ((props: {
+        isTopToolbar: boolean;
+        table: SRT_TableInstance<TData>;
+      }) => SRT_LinearProgressProps)
+    | SRT_LinearProgressProps;
   // muiPaginationProps?:
   //   | ((props: { table: SRT_TableInstance<TData> }) => Partial<
   //       PaginationProps & {
@@ -1078,9 +1080,9 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   //       table: SRT_TableInstance<TData>;
   //     }) => TableRowProps)
   //   | TableRowProps;
-  // muiTablePaperProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => PaperProps)
-  //   | PaperProps;
+  srtTableLayoutProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => LayoutDivProps)
+    | LayoutDivProps;
   // muiTableProps?:
   //   | ((props: { table: SRT_TableInstance<TData> }) => TableProps)
   //   | TableProps;
@@ -1260,4 +1262,19 @@ export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
   showProgressBars: boolean;
   showSkeletons: boolean;
   showToolbarDropZone: boolean;
+}
+
+// * Newly defined types
+export type LayoutDivProps = Omit<
+  React.ComponentPropsWithoutRef<'div'>,
+  'children'
+>;
+
+export type SRT_LinearProgressProps = {
+  wrapper?: HTMLAttributes<HTMLDivElement>;
+  progressRoot?: HTMLAttributes<HTMLDivElement>;
+};
+
+export interface SRT_CircularProgressProps extends LucideProps {
+  Component?: ReactNode;
 }

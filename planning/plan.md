@@ -21,9 +21,16 @@ When users will install the package `shadcn-react-table-core`, they will get all
         - [ ] /table
                 - [ ] /table/MRT_Table.tsx
                 - [ ] /table/MRT_TableContainer.tsx
-                - [ ] /table/MRT_TableLoadingOverlay.tsx
+                        - cva for className overrides
+                        - MRT_TableLoadingOverlay
+                        - MRT_EditRowModal
+                        - MRT_CellActionMenu
+ 
+                - [x] /table/MRT_TableLoadingOverlay.tsx
                 - [ ] /table/MRT_TablePaper.tsx
+                        - Add bottom toolbar
+                        - cva for className overrides
         - [ ] /toolbar
-        - [ ] /MaterialReactTable.tsx
+        - [x] /MaterialReactTable.tsx
 - [ ] port hooks
         - [ ]

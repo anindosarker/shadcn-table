@@ -5,7 +5,7 @@ import {
   type SRT_TableOptions,
   type Xor,
 } from 'shadcn-react-table-core';
-import SRT_TableLayout from './table/SRT_TableLayout';
+import { SRT_TableLayout } from './table/SRT_TableLayout';
 
 type TableInstanceProp<TData extends SRT_RowData> = {
   table: SRT_TableInstance<TData>;
@@ -21,7 +21,7 @@ const isTableInstanceProp = <TData extends SRT_RowData>(
 ): props is TableInstanceProp<TData> =>
   (props as TableInstanceProp<TData>).table !== undefined;
 
-export const ShadcnReactTable = <TData extends SRT_RowData>(
+const ShadcnReactTable = <TData extends SRT_RowData>(
   props: ShadcnReactTableProps<TData>,
 ) => {
   let table: SRT_TableInstance<TData>;

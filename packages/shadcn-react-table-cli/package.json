@@ -7,6 +7,7 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
     "eta": "^4.0.1",
     "kolorist": "^1.8.0",
     "prettier": "^3.6.2",
