@@ -4,6 +4,7 @@ import type {
   SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
 export interface SRT_TableBodyCellProps<TData extends SRT_RowData> {
@@ -17,6 +18,7 @@ export interface SRT_TableBodyCellProps<TData extends SRT_RowData> {
  * Implemented:
  * - Basic cell rendering with cell value
  * - Renders cell.renderValue() directly
+ * - Density variations (compact/comfortable/spacious)
  *
  * TODO (Future enhancements):
  * - Custom Cell component support (columnDef.Cell)
@@ -28,14 +30,29 @@ export interface SRT_TableBodyCellProps<TData extends SRT_RowData> {
  * - Column pinning styles
  * - Custom cell props
  * - Keyboard shortcuts
- * - Density variations (compact/comfortable/spacious)
  */
+
+const cellVariants = cva('align-middle [&:has([role=checkbox])]:pr-0', {
+  variants: {
+    density: {
+      compact: 'px-2 py-1',
+      comfortable: 'px-4 py-2',
+      spacious: 'px-6 py-4',
+    },
+  },
+  defaultVariants: {
+    density: 'comfortable',
+  },
+});
 
 export const SRT_TableBodyCell = <TData extends SRT_RowData>({
   cell,
+  table,
 }: SRT_TableBodyCellProps<TData>) => {
+  const { density } = table.getState();
+
   return (
-    <td className={cn('p-4 align-middle', '[&:has([role=checkbox])]:pr-0')}>
+    <td className={cn(cellVariants({ density }))}>
       {cell.renderValue() as ReactNode}
     </td>
   );

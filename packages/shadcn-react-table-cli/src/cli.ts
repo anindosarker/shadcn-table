@@ -54,9 +54,9 @@ async function run() {
   for (const template of files) {
     const raw = readFileSync(template, 'utf8');
     const rendered = engine.renderString(raw, {}) ?? raw;
-    // Map template path under src/templates/shadcn-react-table/** to app's src/components/ui/shadcn-react-table/**
+    // Map template path under src/templates/shadcn-react-table/** to app's src/components/shadcn-react-table/**
     const rel = template.slice(sourceDir.length + 1);
-    const target = join(cwd, 'src/components/ui/shadcn-react-table', rel);
+    const target = join(cwd, 'src/components/shadcn-react-table', rel);
     const formatted = await formatWithPrettier(rendered);
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, formatted, 'utf8');

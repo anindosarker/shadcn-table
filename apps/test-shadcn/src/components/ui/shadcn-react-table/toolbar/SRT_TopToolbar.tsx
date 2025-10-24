@@ -4,6 +4,10 @@ import {
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
+import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
+import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone';
+import { SRT_ToolbarInternalButtons } from './SRT_ToolbarInternalButtons';
+import { SRT_GlobalFilterTextField } from '../inputs/SRT_GlobalFilterTextField';
 
 export interface SRT_TopToolbarProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -14,6 +18,14 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
 }: SRT_TopToolbarProps<TData>) => {
   const {
     getState,
+    options: {
+      enableGlobalFilter,
+      enableToolbarInternalActions,
+      positionGlobalFilter,
+      positionToolbarAlertBanner,
+      positionToolbarDropZone,
+      renderTopToolbarCustomActions,
+    },
     refs: { topToolbarRef },
   } = table;
 
@@ -23,7 +35,8 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
   // const toolbarProps = parseFromValuesOrFunc(table?.options?.srtTopToolbarProps as any, { table });
 
   // TODO: stackAlertBanner and responsive handling (mobile/tablet) without MUI's useMediaQuery
-  // const stackAlertBanner = isMobile || !!renderTopToolbarCustomActions || (showGlobalFilter && isTablet);
+  // For now, always stack the alert banner for simplicity
+  const stackAlertBanner = true;
 
   return (
     <div
@@ -38,37 +51,58 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
         //TODO: add (toolbarProps as any)?.className,
       )}
     >
-      {/* TODO: Add these later      
-        {positionToolbarAlertBanner === 'top' && (
-          <MRT_ToolbarAlertBanner
-            stackAlertBanner={stackAlertBanner}
-            table={table}
-          />
-        )}
-        {['both', 'top'].includes(positionToolbarDropZone ?? '') && (
-          <MRT_ToolbarDropZone table={table} />
-        )} */}
+      {/* Alert Banner */}
+      {positionToolbarAlertBanner === 'top' && (
+        <SRT_ToolbarAlertBanner
+          stackAlertBanner={stackAlertBanner}
+          table={table}
+        />
+      )}
+
+      {/* Drop Zone for Column Grouping */}
+      {['both', 'top'].includes(positionToolbarDropZone ?? '') && (
+        <SRT_ToolbarDropZone table={table} />
+      )}
 
       <div
         className={cn(
           'box-border flex w-full items-start justify-between gap-2 p-2',
-          //TODO: use cva for stackAlertBanner ? 'relative' : 'absolute right-0 top-0', // TODO: handle overlay position
+          stackAlertBanner ? 'relative' : 'absolute right-0 top-0',
         )}
       >
-        {/**
-         * Handle global filters
-         */}
-        <h1>Top Toolbar global filters</h1>
+        {/* Global Filter - Left Position */}
+        {enableGlobalFilter && positionGlobalFilter === 'left' && (
+          <SRT_GlobalFilterTextField table={table} />
+        )}
+
+        {/* Custom Actions */}
+        {renderTopToolbarCustomActions?.({ table }) ?? <span />}
+
+        {/* Internal Buttons */}
+        {enableToolbarInternalActions ? (
+          <div className="flex flex-wrap-reverse items-center justify-end gap-2">
+            {/* Global Filter - Right Position */}
+            {enableGlobalFilter && positionGlobalFilter === 'right' && (
+              <SRT_GlobalFilterTextField table={table} />
+            )}
+            <SRT_ToolbarInternalButtons table={table} />
+          </div>
+        ) : (
+          enableGlobalFilter &&
+          positionGlobalFilter === 'right' && (
+            <SRT_GlobalFilterTextField table={table} />
+          )
+        )}
       </div>
 
       {/* TODO: Pagination (top/both) */}
       {/* {enablePagination &&
         ['both', 'top'].includes(positionPagination ?? '') && (
-          <MRT_TablePagination position="top" table={table} />
+          <SRT_TablePagination position="top" table={table} />
         )} */}
-      {/* TODO: Linear Progress Bar (isTopToolbar) */}
+
+      {/* Linear Progress Bar */}
       <SRT_LinearProgressBar isTopToolbar table={table} />
-      <h1 className="text-red-500">Top Toolbar</h1>
     </div>
   );
 };

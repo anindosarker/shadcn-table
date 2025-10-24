@@ -10,27 +10,80 @@ When users will install the package `shadcn-react-table-core`, they will get all
     - [x] - shadcn-react-table-core will be used to create the table component
 - [x] Remove old shadcn-react-table package since we don't need it anymore
 - [ ] Port components
-
-        - [ ] /body
-        - [ ] /buttons
-        - [ ] /footer
-        - [ ] /head
-        - [ ] /inputs
-        - [ ] /menus
-        - [ ] /modals
-        - [ ] /table
-                - [ ] /table/MRT_Table.tsx
-                - [ ] /table/MRT_TableContainer.tsx
+        - [ ] body
+        - [ ] body/MRT_TableBody.tsx
+        - [ ] body/MRT_TableBodyCell.tsx
+        - [ ] body/MRT_TableBodyCellValue.tsx
+        - [ ] body/MRT_TableBodyRow.tsx
+        - [ ] body/MRT_TableBodyRowGrabHandle.tsx
+        - [ ] body/MRT_TableBodyRowPinButton.tsx
+        - [ ] body/MRT_TableDetailPanel.tsx
+        - [ ] buttons
+        - [ ] buttons/MRT_ColumnPinningButtons.tsx
+        - [ ] buttons/MRT_CopyButton.tsx
+        - [ ] buttons/MRT_EditActionButtons.tsx
+        - [ ] buttons/MRT_ExpandAllButton.tsx
+        - [ ] buttons/MRT_ExpandButton.tsx
+        - [ ] buttons/MRT_GrabHandleButton.tsx
+        - [ ] buttons/MRT_RowPinButton.tsx
+        - [ ] buttons/MRT_ShowHideColumnsButton.tsx
+        - [ ] buttons/MRT_ToggleDensePaddingButton.tsx
+        - [ ] buttons/MRT_ToggleFiltersButton.tsx
+        - [ ] buttons/MRT_ToggleFullScreenButton.tsx
+        - [ ] buttons/MRT_ToggleGlobalFilterButton.tsx
+        - [ ] buttons/MRT_ToggleRowActionMenuButton.tsx
+        - [ ] footer
+        - [ ] footer/MRT_TableFooter.tsx
+        - [ ] footer/MRT_TableFooterCell.tsx
+        - [ ] footer/MRT_TableFooterRow.tsx
+        - [ ] head
+        - [ ] head/MRT_TableHead.tsx
+        - [ ] head/MRT_TableHeadCell.tsx
+        - [ ] head/MRT_TableHeadCellColumnActionsButton.tsx
+        - [ ] head/MRT_TableHeadCellFilterContainer.tsx
+        - [ ] head/MRT_TableHeadCellFilterLabel.tsx
+        - [ ] head/MRT_TableHeadCellGrabHandle.tsx
+        - [ ] head/MRT_TableHeadCellResizeHandle.tsx
+        - [ ] head/MRT_TableHeadCellSortLabel.tsx
+        - [ ] head/MRT_TableHeadRow.tsx
+        - [ ] inputs
+        - [ ] inputs/MRT_EditCellTextField.tsx
+        - [ ] inputs/MRT_FilterCheckbox.tsx
+        - [ ] inputs/MRT_FilterRangeFields.tsx
+        - [ ] inputs/MRT_FilterRangeSlider.tsx
+        - [ ] inputs/MRT_FilterTextField.tsx
+        - [ ] inputs/MRT_GlobalFilterTextField.tsx
+        - [ ] inputs/MRT_SelectCheckbox.tsx
+        - [ ] menus
+        - [ ] menus/MRT_ActionMenuItem.tsx
+        - [ ] menus/MRT_CellActionMenu.tsx
+        - [ ] menus/MRT_ColumnActionMenu.tsx
+        - [ ] menus/MRT_FilterOptionMenu.tsx
+        - [ ] menus/MRT_RowActionMenu.tsx
+        - [ ] menus/MRT_ShowHideColumnsMenu.tsx
+        - [ ] menus/MRT_ShowHideColumnsMenuItems.tsx
+        - [ ] modals
+        - [ ] modals/MRT_EditRowModal.tsx
+        - [ ] table
+        - [ ] table/MRT_Table.tsx
+        - [ ] /table/MRT_TableContainer.tsx
                         - cva for className overrides
                         - MRT_TableLoadingOverlay
                         - MRT_EditRowModal
                         - MRT_CellActionMenu
  
-                - [x] /table/MRT_TableLoadingOverlay.tsx
-                - [ ] /table/MRT_TablePaper.tsx
+        - [ ] table/MRT_TableLoadingOverlay.tsx
+        - [ ] /table/MRT_TablePaper.tsx
                         - Add bottom toolbar
                         - cva for className overrides
-        - [ ] /toolbar
-        - [x] /MaterialReactTable.tsx
+        - [ ] toolbar
+        - [ ] toolbar/MRT_BottomToolbar.tsx
+        - [ ] toolbar/MRT_LinearProgressBar.tsx
+        - [ ] toolbar/MRT_TablePagination.tsx
+        - [ ] toolbar/MRT_ToolbarAlertBanner.tsx
+        - [ ] toolbar/MRT_ToolbarDropZone.tsx
+        - [ ] toolbar/MRT_ToolbarInternalButtons.tsx
+        - [ ] toolbar/MRT_TopToolbar.tsx
+        - [ ] MaterialReactTable.tsx
 - [ ] port hooks
         - [ ]

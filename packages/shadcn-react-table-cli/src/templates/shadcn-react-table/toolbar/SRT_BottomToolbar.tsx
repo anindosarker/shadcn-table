@@ -1,6 +1,8 @@
 import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
 import { SRT_TablePagination } from './SRT_TablePagination';
+import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
+import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone';
 import { cn } from '@/lib/utils';
 
 export interface SRT_BottomToolbarProps<TData extends SRT_RowData> {
@@ -33,11 +35,17 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
     options: {
       enablePagination,
       positionPagination,
+      positionToolbarAlertBanner,
+      positionToolbarDropZone,
       renderBottomToolbarCustomActions,
     },
     refs: { bottomToolbarRef },
   } = table;
   const { isFullScreen } = getState();
+
+  // TODO: stackAlertBanner and responsive handling (mobile/tablet)
+  // For now, always stack the alert banner for simplicity
+  const stackAlertBanner = true;
 
   return (
     <div
@@ -46,26 +54,47 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
       }}
       className={cn(
         'relative border-t bg-background',
-        isFullScreen && 'fixed bottom-0 left-0 right-0',
+        isFullScreen && 'fixed bottom-0 left-0 right-0 z-40',
         className,
       )}
     >
       <SRT_LinearProgressBar isTopToolbar={false} table={table} />
 
-      {/* TODO: Alert banner (bottom position) */}
-      {/* TODO: Drop zone (for column grouping) */}
+      {/* Alert Banner */}
+      {positionToolbarAlertBanner === 'bottom' && (
+        <SRT_ToolbarAlertBanner
+          stackAlertBanner={stackAlertBanner}
+          table={table}
+        />
+      )}
 
-      <div className="flex items-center justify-between w-full box-border">
+      {/* Drop Zone for Column Grouping */}
+      {['both', 'bottom'].includes(positionToolbarDropZone ?? '') && (
+        <SRT_ToolbarDropZone table={table} />
+      )}
+
+      <div className="flex items-center justify-between w-full box-border p-2">
         {/* Custom actions */}
         <div className="flex-1">
-          {renderBottomToolbarCustomActions?.({ table })}
+          {renderBottomToolbarCustomActions ? (
+            renderBottomToolbarCustomActions({ table })
+          ) : (
+            <span />
+          )}
         </div>
 
         {/* Pagination */}
-        {enablePagination &&
-          ['both', 'bottom'].includes(positionPagination ?? '') && (
-            <SRT_TablePagination position="bottom" table={table} />
+        <div
+          className={cn(
+            'flex justify-end',
+            stackAlertBanner ? 'relative' : 'absolute right-0 top-0',
           )}
+        >
+          {enablePagination &&
+            ['both', 'bottom'].includes(positionPagination ?? '') && (
+              <SRT_TablePagination position="bottom" table={table} />
+            )}
+        </div>
       </div>
     </div>
   );
