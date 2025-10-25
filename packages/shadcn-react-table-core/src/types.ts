@@ -159,13 +159,13 @@ export type SRT_DisplayColumnDef<
 
 //TODO: change to srt
 export type SRT_DisplayColumnIds =
-  | 'mrt-row-actions'
-  | 'mrt-row-drag'
-  | 'mrt-row-expand'
-  | 'mrt-row-numbers'
-  | 'mrt-row-pin'
-  | 'mrt-row-select'
-  | 'mrt-row-spacer';
+  | 'srt-row-actions' 
+  | 'srt-row-drag'    
+  | 'srt-row-expand'  
+  | 'srt-row-numbers' 
+  | 'srt-row-pin'     
+  | 'srt-row-select'  
+  | 'srt-row-spacer'; 
 export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
   extends Omit<
     ColumnDef<TData, TValue>,
@@ -762,6 +762,12 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | 'onStateChange'
     | 'state'
   > {
+    srtTopToolbarProps?:
+    | ((props: {
+        table: SRT_TableInstance<TData>;
+      }) => Partial<HTMLAttributes<HTMLDivElement>>)
+    | Partial<HTMLAttributes<HTMLDivElement>>;
+
   columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
     LiteralUnion<string & SRT_FilterOption>

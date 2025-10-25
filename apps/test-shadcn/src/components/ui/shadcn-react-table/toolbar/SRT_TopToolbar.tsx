@@ -1,6 +1,8 @@
+// SRT_TopToolbar.tsx
 import {
   type SRT_RowData,
   type SRT_TableInstance,
+  parseFromValuesOrFunc, // Import from your core library
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
@@ -8,6 +10,8 @@ import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
 import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone';
 import { SRT_ToolbarInternalButtons } from './SRT_ToolbarInternalButtons';
 import { SRT_GlobalFilterTextField } from '../inputs/SRT_GlobalFilterTextField';
+import { SRT_TablePagination } from './SRT_TablePagination'; // Import SRT_TablePagination
+import React, { type HTMLAttributes } from 'react'; // Import React and HTMLAttributes
 
 export interface SRT_TopToolbarProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -25,30 +29,46 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
       positionToolbarAlertBanner,
       positionToolbarDropZone,
       renderTopToolbarCustomActions,
+      srtTopToolbarProps,
+      enablePagination,
+      positionPagination,
     },
     refs: { topToolbarRef },
   } = table;
 
-  const { isFullScreen } = getState();
+  const { isFullScreen, showGlobalFilter } = getState();
 
-  // TODO: srtTopToolbarProps - support passing props to top toolbar similar to MRT's muiTopToolbarProps
-  // const toolbarProps = parseFromValuesOrFunc(table?.options?.srtTopToolbarProps as any, { table });
+  // Explicitly type toolbarProps (include ref attribute)
+  const toolbarProps:
+    | Partial<HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>
+    | undefined = parseFromValuesOrFunc(srtTopToolbarProps, { table });
 
-  // TODO: stackAlertBanner and responsive handling (mobile/tablet) without MUI's useMediaQuery
-  // For now, always stack the alert banner for simplicity
-  const stackAlertBanner = true;
+  const stackAlertBanner =
+    !!renderTopToolbarCustomActions || showGlobalFilter;
+
+  // Destructure className and ref from toolbarProps to use them separately
+  // This allows us to handle `ref` specifically and pass other props normally
+  const { ref: toolbarRefProp, className: toolbarClassName, ...restToolbarProps } =
+    toolbarProps || {};
 
   return (
     <div
-      //TODO: add {...toolbarProps}
+      {...restToolbarProps} // Spread the remaining props
       ref={(ref: HTMLDivElement) => {
         topToolbarRef.current = ref;
-        //TODO: add if ((toolbarProps as any)?.ref) (toolbarProps as any).ref.current = ref;
+        // Safely handle the ref from toolbarProps
+        if (toolbarRefProp) {
+          if (typeof toolbarRefProp === 'function') {
+            toolbarRefProp(ref);
+          } else if (typeof toolbarRefProp === 'object' && toolbarRefProp !== null) {
+            (toolbarRefProp as React.RefObject<HTMLDivElement | null>).current = ref;
+          }
+        }
       }}
       className={cn(
         'relative w-full',
         isFullScreen ? 'sticky top-0 z-40 bg-background' : undefined,
-        //TODO: add (toolbarProps as any)?.className,
+        toolbarClassName, // Apply the className from toolbarProps
       )}
     >
       {/* Alert Banner */}
@@ -95,11 +115,11 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
         )}
       </div>
 
-      {/* TODO: Pagination (top/both) */}
-      {/* {enablePagination &&
+      {/* Pagination (top/both) */}
+      {enablePagination &&
         ['both', 'top'].includes(positionPagination ?? '') && (
           <SRT_TablePagination position="top" table={table} />
-        )} */}
+        )}
 
       {/* Linear Progress Bar */}
       <SRT_LinearProgressBar isTopToolbar table={table} />
