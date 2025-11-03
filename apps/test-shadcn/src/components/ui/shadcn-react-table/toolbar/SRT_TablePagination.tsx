@@ -1,11 +1,18 @@
 import { Button } from '@/components/ui/button';
-import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
+import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 
 export interface SRT_TablePaginationProps<TData extends SRT_RowData> {
   position?: 'bottom' | 'top';
@@ -19,14 +26,16 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData> {
  * - Basic page navigation (first, prev, next, last)
  * - Current page info (showing X-Y of Z)
  * - Simple button-based navigation
+ * - Rows per page selector (needs Select component from shadcn)
  *
  * TODO (Future enhancements):
- * - Rows per page selector (needs Select component from shadcn)
  * - Page number display mode
  * - Custom pagination component support
  * - Mobile responsive layout
  * - Disabled state handling
  */
+
+const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 
 export const SRT_TablePagination = <TData extends SRT_RowData>({
   table,
@@ -47,7 +56,31 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   const canGoNext = lastRowIndex < totalRowCount;
 
   return (
-    <div className="flex items-center justify-between px-2 py-4">
+    <div className="flex flex-wrap items-center justify-between gap-4 px-2 py-4">
+      {/* Rows per page selector */}
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-muted-foreground">
+          {localization.rowsPerPage}
+        </span>
+        <Select
+          value={pageSize.toString()}
+          onValueChange={(value) => {
+            table.setPageSize(Number(value));
+          }}
+        >
+          <SelectTrigger className="h-8 w-20">
+            <SelectValue>{pageSize}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {defaultRowsPerPage.map((option) => (
+              <SelectItem key={option} value={option.toString()}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Row count info */}
       <div className="flex-1 text-sm text-muted-foreground">
         {lastRowIndex === 0 ? 0 : firstRowIndex + 1}-{lastRowIndex}{' '}
