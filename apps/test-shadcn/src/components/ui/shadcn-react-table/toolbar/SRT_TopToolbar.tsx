@@ -80,6 +80,12 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
     (showGlobalFilter && isTablet);
 
   const globalFilterProps = {
+    // TODO:  use cva for handling mobile and tablet classnames
+    //  sx: !isTablet
+    //    ? {
+    //        zIndex: 2,
+    //      }
+    //    : undefined,
     table,
   };
 
@@ -88,11 +94,9 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
       {...toolbarProps}
       ref={(ref: HTMLDivElement) => {
         topToolbarRef.current = ref;
-        const toolbarPropsWithRef = toolbarProps as typeof toolbarProps & {
-          ref?: React.RefObject<HTMLDivElement | null>;
-        };
-        if (toolbarPropsWithRef?.ref) {
-          toolbarPropsWithRef.ref.current = ref;
+        if (toolbarProps?.ref) {
+          // @ts-expect-error - TODO: add description
+          toolbarProps.ref.current = ref;
         }
       }}
       className={cn(

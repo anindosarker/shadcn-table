@@ -1,5 +1,9 @@
 import {
+  DetailedHTMLProps,
   HTMLAttributes,
+  HtmlHTMLAttributes,
+  Ref,
+  RefAttributes,
   type ComponentPropsWithoutRef,
   type Dispatch,
   type ReactNode,
@@ -159,13 +163,13 @@ export type SRT_DisplayColumnDef<
 
 //TODO: change to srt
 export type SRT_DisplayColumnIds =
-  | 'srt-row-actions' 
-  | 'srt-row-drag'    
-  | 'srt-row-expand'  
-  | 'srt-row-numbers' 
-  | 'srt-row-pin'     
-  | 'srt-row-select'  
-  | 'srt-row-spacer'; 
+  | 'srt-row-actions'
+  | 'srt-row-drag'
+  | 'srt-row-expand'
+  | 'srt-row-numbers'
+  | 'srt-row-pin'
+  | 'srt-row-select'
+  | 'srt-row-spacer';
 export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
   extends Omit<
     ColumnDef<TData, TValue>,
@@ -762,11 +766,11 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | 'onStateChange'
     | 'state'
   > {
-    srtTopToolbarProps?:
+  srtTopToolbarProps?:
     | ((props: {
         table: SRT_TableInstance<TData>;
-      }) => Partial<HTMLAttributes<HTMLDivElement>>)
-    | Partial<HTMLAttributes<HTMLDivElement>>;
+      }) =>  React.ComponentPropsWithRef<'div'>)
+    | React.ComponentPropsWithRef<'div'>;
 
   columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
