@@ -6,15 +6,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import * as SelectPrimitive from '@radix-ui/react-select';
 import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
+import { useMedia } from 'react-use';
 import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 
-export interface SRT_TablePaginationProps<TData extends SRT_RowData> {
+const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
+
+export interface SRT_TablePaginationProps<TData extends SRT_RowData>
+  extends Partial<{
+    SelectProps?: Partial<typeof SelectPrimitive.Root>;
+    disabled?: boolean;
+    rowsPerPageOptions?: { label: string; value: number }[] | number[];
+    showRowsPerPage?: boolean;
+  }> {
   position?: 'bottom' | 'top';
   table: SRT_TableInstance<TData>;
 }
@@ -35,59 +45,85 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData> {
  * - Disabled state handling
  */
 
-const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
-
 export const SRT_TablePagination = <TData extends SRT_RowData>({
+  position = 'bottom',
   table,
+  ...rest
 }: SRT_TablePaginationProps<TData>) => {
+  const isMobile = useMedia('(max-width: 720px)');
+
   const {
     getState,
-    options: { localization, paginationDisplayMode },
+    options: {
+      enableToolbarInternalActions,
+      id,
+      localization,
+      paginationDisplayMode,
+    },
   } = table;
   const {
     pagination: { pageIndex = 0, pageSize = 10 },
   } = getState();
 
+  const paginationProps = {
+    ...rest,
+  };
+
   const totalRowCount = table.getRowCount();
+  const numberOfPages = table.getPageCount();
+  const showFirstLastPageButtons = numberOfPages > 2;
   const firstRowIndex = pageIndex * pageSize;
   const lastRowIndex = Math.min(pageIndex * pageSize + pageSize, totalRowCount);
 
-  const canGoPrevious = pageIndex > 0;
-  const canGoNext = lastRowIndex < totalRowCount;
+  const {
+    SelectProps = {},
+    disabled = false,
+    rowsPerPageOptions = defaultRowsPerPage,
+    // showFirstButton = showFirstLastPageButtons,
+    // showLastButton = showFirstLastPageButtons,
+    showRowsPerPage = true,
+    ...restPaginationProps
+  } = paginationProps ?? {};
+
+  const disableBack = pageIndex <= 0 || disabled;
+  const disableNext = lastRowIndex >= totalRowCount || disabled;
+
+  // if (isMobile && SelectProps?.native !== false) {
+  //   SelectProps.native = true;
+  // }
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 px-2 py-4">
-      {/* Rows per page selector */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">
-          {localization.rowsPerPage}
-        </span>
-        <Select
-          value={pageSize.toString()}
-          onValueChange={(value) => {
-            table.setPageSize(Number(value));
-          }}
-        >
-          <SelectTrigger className="h-8 w-20">
-            <SelectValue>{pageSize}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {defaultRowsPerPage.map((option) => (
-              <SelectItem key={option} value={option.toString()}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      {showRowsPerPage && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {localization.rowsPerPage}
+          </span>
+          <Select
+            value={pageSize.toString()}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value));
+            }}
+          >
+            <SelectTrigger className="h-8 w-20">
+              <SelectValue>{pageSize}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {defaultRowsPerPage.map((option) => (
+                <SelectItem key={option} value={option.toString()}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
-      {/* Row count info */}
       <div className="flex-1 text-sm text-muted-foreground">
         {lastRowIndex === 0 ? 0 : firstRowIndex + 1}-{lastRowIndex}{' '}
         {localization.of} {totalRowCount}
       </div>
 
-      {/* Navigation buttons */}
       {paginationDisplayMode === 'pages' ? (
         (() => {
           const numberOfPages = table.getPageCount();
@@ -223,7 +259,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
             variant="outline"
             size="icon"
             onClick={() => table.firstPage()}
-            disabled={!canGoPrevious}
+            disabled={disableBack}
             aria-label={localization.goToFirstPage}
             className="h-8 w-8"
           >
@@ -233,7 +269,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
             variant="outline"
             size="icon"
             onClick={() => table.previousPage()}
-            disabled={!canGoPrevious}
+            disabled={disableBack}
             aria-label={localization.goToPreviousPage}
             className="h-8 w-8"
           >
@@ -243,7 +279,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
             variant="outline"
             size="icon"
             onClick={() => table.nextPage()}
-            disabled={!canGoNext}
+            disabled={disableNext}
             aria-label={localization.goToNextPage}
             className="h-8 w-8"
           >
@@ -253,7 +289,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
             variant="outline"
             size="icon"
             onClick={() => table.lastPage()}
-            disabled={!canGoNext}
+            disabled={disableNext}
             aria-label={localization.goToLastPage}
             className="h-8 w-8"
           >
