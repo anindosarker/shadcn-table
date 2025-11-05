@@ -46,6 +46,7 @@ import { SRT_AggregationFns } from './fns/aggregationFns';
 import { SRT_SortingFns } from './fns/sortingFns';
 import { SRT_Icons } from './icons';
 import { LucideProps } from 'lucide-react';
+import * as SelectPrimitive from '@radix-ui/react-select';
 
 export type {
   ColumnDef,
@@ -984,23 +985,24 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => SRT_LinearProgressProps)
     | SRT_LinearProgressProps;
-  // muiPaginationProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => Partial<
-  //       PaginationProps & {
-  //         SelectProps?: Partial<SelectProps>;
-  //         disabled?: boolean;
-  //         rowsPerPageOptions?: { label: string; value: number }[] | number[];
-  //         showRowsPerPage?: boolean;
-  //       }
-  //     >)
-  //   | Partial<
-  //       PaginationProps & {
-  //         SelectProps?: Partial<SelectProps>;
-  //         disabled?: boolean;
-  //         rowsPerPageOptions?: { label: string; value: number }[] | number[];
-  //         showRowsPerPage?: boolean;
-  //       }
-  //     >;
+  srtPaginationProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => Partial<{
+        SelectProps?: Partial<typeof SelectPrimitive.Root>;
+        disabled?: boolean;
+        rowsPerPageOptions?: { label: string; value: number }[] | number[];
+        showFirstButton?: boolean;
+        showLastButton?: boolean;
+        showRowsPerPage?: boolean;
+      }>)
+    | Partial<{
+        SelectProps?: Partial<typeof SelectPrimitive.Root>;
+        disabled?: boolean;
+        rowsPerPageOptions?: { label: string; value: number }[] | number[];
+        // added for pagination props since it's not supported by shadcn pagination
+        showFirstButton?: boolean;
+        showLastButton?: boolean;
+        showRowsPerPage?: boolean;
+      }>;
   // muiRowDragHandleProps?:
   //   | ((props: {
   //       row: SRT_Row<TData>;

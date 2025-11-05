@@ -40,6 +40,7 @@
     }
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.2.6",
     "@tanstack/match-sorter-utils": "8.19.4",
     "@tanstack/react-table": "8.20.6",
     "@tanstack/react-virtual": "3.11.2",
