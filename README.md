@@ -10,3 +10,28 @@ PRs are Welcome, but please discuss in [GitHub Discussions](https://github.com/K
 Read the [Contributing Guide](https://github.com/KevinVandy/material-react-table/blob/v3/CONTRIBUTING.md) to learn how to run this project locally.
 
 <!-- Use the FORCE, Luke! -->
+
+## Running the project
+
+1. Install dependencies from the project root
+    ```bash
+    pnpm i
+    ```
+2. Build the shadcn-react-table-core package
+    ```bash
+    # from the root of the project
+    pnpm -C packages/shadcn-react-table-core/ run build
+
+    # or you can run in from the project folder
+    cd packages/shadcn-react-table-core/
+    pnpm run build
+    ```
+3. Run the dev server in `test-shadcn` project
+    ```bash
+    # from the root of the project
+    pnpm -C apps/test-shadcn/ run dev
+
+    # or you can run in from the project folder
+    cd apps/test-shadcn/
+    pnpm run dev
+    ```
