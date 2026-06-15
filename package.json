@@ -31,5 +31,10 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "packageManager": "pnpm@10.13.1"
+  "packageManager": "pnpm@10.13.1",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.1.13"
+    }
+  }
 }

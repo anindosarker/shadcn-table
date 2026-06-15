@@ -1,46 +1,58 @@
+import { type CSSProperties, type DragEvent, type KeyboardEvent } from 'react';
 import {
-  flexRender,
+  type SRT_ColumnVirtualizer,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
+  cellKeyboardShortcuts,
+  flexRender,
+  parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
-import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+import { SRT_ExpandAllButton } from '../buttons/SRT_ExpandAllButton';
+import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
+import { SRT_TableHeadCellColumnActionsButton } from './SRT_TableHeadCellColumnActionsButton';
+import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
+import { SRT_TableHeadCellFilterLabel } from './SRT_TableHeadCellFilterLabel';
+import { SRT_TableHeadCellGrabHandle } from './SRT_TableHeadCellGrabHandle';
+import { SRT_TableHeadCellResizeHandle } from './SRT_TableHeadCellResizeHandle';
 import { SRT_TableHeadCellSortLabel } from './SRT_TableHeadCellSortLabel';
 
 export interface SRT_TableHeadCellProps<TData extends SRT_RowData> {
+  columnVirtualizer?: SRT_ColumnVirtualizer;
   header: SRT_Header<TData>;
+  staticColumnIndex?: number;
   table: SRT_TableInstance<TData>;
+  className?: string;
 }
 
 /**
- * Table head cell component - renders individual header cell
+ * Table head cell - renders an individual header cell.
  *
- * Implemented:
- * - Basic header rendering with flexRender
- * - Placeholder handling
- * - ColSpan support
- * - Density variations (compact/comfortable/spacious)
+ * Ported 1:1 from MRT_TableHeadCell:
+ * - Header rendering (columnDef.Header function/element or columnDef.header).
+ * - Sort label, filter label, column actions button, grab/drag handle, resize
+ *   handle, subheader filter container.
+ * - Column drag/reorder: onDragEnter sets the hovered column, onDragOver allows
+ *   the drop. Dragging/hovered/resize borders are reflected with classes.
+ * - Column pinning offsets (sticky left/right via getStart/getAfter).
+ * - Density-driven padding, alignment (group => center), colSpan, data-* attrs,
+ *   keyboard shortcuts, virtualizer measureElement on the cell node.
  *
- * TODO (Future enhancements):
- * - Sorting UI (sort label, icons)
- * - Column resizing handle
- * - Column drag handle
- * - Column actions menu button
- * - Filter label/button
- * - Column pinning styles
- * - Custom cell props
- * - Keyboard shortcuts
+ * MUI -> shadcn notes: cva drives density padding; className overrides instead of
+ * the `sx` prop. The MRT `*Props` option/columnDef overrides are not yet present
+ * on the headless options, so they are intentionally not merged here.
  */
 
 const headCellVariants = cva(
-  'text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
+  'relative overflow-visible text-left align-top font-bold text-muted-foreground',
   {
     variants: {
       density: {
-        compact: 'h-8 px-2 py-1',
-        comfortable: 'h-12 px-4 py-2',
-        spacious: 'h-16 px-6 py-4',
+        compact: 'p-2',
+        comfortable: 'p-4',
+        spacious: 'px-6 py-5',
       },
     },
     defaultVariants: {
@@ -50,33 +62,241 @@ const headCellVariants = cva(
 );
 
 export const SRT_TableHeadCell = <TData extends SRT_RowData>({
+  columnVirtualizer,
   header,
+  staticColumnIndex,
   table,
+  className,
 }: SRT_TableHeadCellProps<TData>) => {
+  const {
+    getState,
+    options: {
+      columnFilterDisplayMode,
+      enableExpandAll,
+      enableKeyboardShortcuts,
+      enableColumnActions,
+      enableColumnDragging,
+      enableColumnOrdering,
+      enableColumnPinning,
+      enableGrouping,
+      enableMultiRowSelection,
+      enableMultiSort,
+      enableSelectAll,
+      localization,
+    },
+    refs: { tableHeadCellRefs },
+    setHoveredColumn,
+  } = table;
+  const { columnSizingInfo, density, draggingColumn, grouping, hoveredColumn } =
+    getState();
   const { column } = header;
   const { columnDef } = column;
-  const { density } = table.getState();
+  const { columnDefType } = columnDef;
 
-  // Check if this column can be sorted
-  const canSort = column.getCanSort();
+  const isColumnPinned =
+    enableColumnPinning &&
+    columnDef.columnDefType !== 'group' &&
+    column.getIsPinned();
+
+  const showColumnActions =
+    (enableColumnActions || columnDef.enableColumnActions) &&
+    columnDef.enableColumnActions !== false;
+
+  const showDragHandle =
+    enableColumnDragging !== false &&
+    columnDef.enableColumnDragging !== false &&
+    (enableColumnDragging ||
+      (enableColumnOrdering && columnDef.enableColumnOrdering !== false) ||
+      (enableGrouping &&
+        columnDef.enableGrouping !== false &&
+        !grouping.includes(column.id)));
+
+  const isDragging = draggingColumn?.id === column.id;
+  const isHovered = hoveredColumn?.id === column.id;
+  const isResizingBorder =
+    columnSizingInfo.isResizingColumn === column.id &&
+    !header.subHeaders.length;
+
+  const handleDragEnter = (_e: DragEvent) => {
+    if (enableGrouping && hoveredColumn?.id === 'drop-zone') {
+      setHoveredColumn(null);
+    }
+    if (enableColumnOrdering && draggingColumn && columnDefType !== 'group') {
+      setHoveredColumn(
+        columnDef.enableColumnOrdering !== false ? column : null,
+      );
+    }
+  };
+
+  const handleDragOver = (e: DragEvent) => {
+    if (columnDef.enableColumnOrdering !== false) {
+      e.preventDefault();
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLTableCellElement>) => {
+    cellKeyboardShortcuts({
+      event,
+      cellValue: header.column.columnDef.header,
+      table,
+      header,
+    });
+  };
+
+  // Core display-column defs are headless (no Header) by design. Render the
+  // interactive header content here by column id, mirroring the MRT
+  // getMRT_*ColumnDef Header functions. User-defined Header / data columns fall
+  // through to the columnDef.Header (or flexRender of columnDef.header) below.
+  const displayHeaderElement =
+    columnDefType === 'display' ? (
+      column.id === 'mrt-row-select' ? (
+        enableSelectAll && enableMultiRowSelection ? (
+          <SRT_SelectCheckbox table={table} />
+        ) : null
+      ) : column.id === 'mrt-row-expand' ? (
+        enableExpandAll ? (
+          <SRT_ExpandAllButton table={table} />
+        ) : (
+          localization.expand
+        )
+      ) : column.id === 'mrt-row-numbers' ? (
+        localization.rowNumber
+      ) : column.id === 'mrt-row-actions' ? (
+        localization.actions
+      ) : undefined
+    ) : undefined;
+
+  const HeaderElement =
+    parseFromValuesOrFunc(columnDef.Header, {
+      column,
+      header,
+      table,
+    }) ??
+    displayHeaderElement ??
+    flexRender(columnDef.header, header.getContext());
+
+  const align = columnDefType === 'group' ? 'center' : 'left';
+
+  // Column pinning offsets (sticky), matching MRT's getStart/getAfter logic.
+  const pinnedStyle: CSSProperties = isColumnPinned
+    ? {
+        position: 'sticky',
+        zIndex: 1,
+        left:
+          isColumnPinned === 'left'
+            ? `${column.getStart('left')}px`
+            : undefined,
+        right:
+          isColumnPinned === 'right'
+            ? `${column.getAfter('right')}px`
+            : undefined,
+      }
+    : {};
 
   return (
-    <th colSpan={header.colSpan} className={cn(headCellVariants({ density }))}>
+    <th
+      aria-sort={
+        column.getIsSorted()
+          ? column.getIsSorted() === 'asc'
+            ? 'ascending'
+            : 'descending'
+          : 'none'
+      }
+      colSpan={header.colSpan}
+      data-can-sort={column.getCanSort() || undefined}
+      data-index={staticColumnIndex}
+      data-pinned={!!isColumnPinned || undefined}
+      data-sort={column.getIsSorted() || undefined}
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onKeyDown={handleKeyDown}
+      ref={(node: HTMLTableCellElement | null) => {
+        if (node) {
+          tableHeadCellRefs.current![column.id] = node;
+          if (columnDefType !== 'group') {
+            columnVirtualizer?.measureElement?.(node);
+          }
+        }
+      }}
+      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+      style={{ textAlign: align, ...pinnedStyle }}
+      className={cn(
+        headCellVariants({ density }),
+        'group',
+        // dragging / hovered / resize visual borders
+        isResizingBorder && 'border-r-2 border-r-primary',
+        !isResizingBorder &&
+          isDragging &&
+          'border border-dashed border-muted-foreground/50',
+        !isResizingBorder &&
+          isHovered &&
+          'border-2 border-dashed border-primary',
+        isColumnPinned && 'bg-muted/95',
+        enableMultiSort && column.getCanSort() && 'select-none',
+        className,
+      )}
+    >
       {header.isPlaceholder ? null : (
-        <div className="flex items-center gap-2">
-          {/* Header content */}
-          <div className="flex-1">
-            {flexRender(columnDef.header, header.getContext())}
+        <div
+          className={cn(
+            'flex w-full items-center',
+            columnDefType === 'group' ? 'justify-center' : 'justify-between',
+          )}
+        >
+          <div
+            className={cn(
+              'flex items-center',
+              column.getCanSort() &&
+                columnDefType !== 'group' &&
+                'cursor-pointer',
+              columnDefType === 'data' && 'overflow-hidden',
+            )}
+            onClick={column.getToggleSortingHandler()}
+          >
+            <div
+              className={cn(
+                'text-ellipsis',
+                columnDefType === 'data' && 'overflow-hidden',
+                (columnDef.header?.length ?? 0) < 20
+                  ? 'whitespace-nowrap'
+                  : 'whitespace-normal',
+              )}
+            >
+              {HeaderElement}
+            </div>
+            {column.getCanFilter() && (
+              <SRT_TableHeadCellFilterLabel header={header} table={table} />
+            )}
+            {column.getCanSort() && (
+              <SRT_TableHeadCellSortLabel header={header} table={table} />
+            )}
           </div>
-
-          {/* Sort label - only show if sorting is enabled for this column */}
-          {canSort && <SRT_TableHeadCellSortLabel header={header} table={table} />}
-
-          {/* TODO: Add more header components */}
-          {/* {columnDef.enableColumnFilter && <SRT_TableHeadCellFilterLabel />} */}
-          {/* {columnDef.enableColumnActions && <SRT_TableHeadCellColumnActionsButton />} */}
-          {/* {enableColumnResizing && <SRT_TableHeadCellResizeHandle />} */}
+          {columnDefType !== 'group' && (
+            <div className="flex whitespace-nowrap">
+              {showDragHandle && (
+                <SRT_TableHeadCellGrabHandle
+                  column={column}
+                  table={table}
+                  tableHeadCellRef={{
+                    current: tableHeadCellRefs.current?.[column.id] ?? null,
+                  }}
+                />
+              )}
+              {showColumnActions && (
+                <SRT_TableHeadCellColumnActionsButton
+                  header={header}
+                  table={table}
+                />
+              )}
+            </div>
+          )}
+          {column.getCanResize() && (
+            <SRT_TableHeadCellResizeHandle header={header} table={table} />
+          )}
         </div>
+      )}
+      {columnFilterDisplayMode === 'subheader' && column.getCanFilter() && (
+        <SRT_TableHeadCellFilterContainer header={header} table={table} />
       )}
     </th>
   );

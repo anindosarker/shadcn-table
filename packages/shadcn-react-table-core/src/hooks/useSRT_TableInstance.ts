@@ -27,23 +27,23 @@ import {
 } from '../utils/column.utils';
 import {
   getDefaultColumnOrderIds,
-  // showRowActionsColumn,
-  // showRowDragColumn,
-  // showRowExpandColumn,
-  // showRowNumbersColumn,
-  // showRowPinningColumn,
-  // showRowSelectionColumn,
-  // showRowSpacerColumn,
+  showRowActionsColumn,
+  showRowDragColumn,
+  showRowExpandColumn,
+  showRowNumbersColumn,
+  showRowPinningColumn,
+  showRowSelectionColumn,
+  showRowSpacerColumn,
 } from '../utils/displayColumn.utils';
 import { createRow } from '../utils/tanstack.helpers';
 import { useSRT_Effects } from './useSRT_Effects';
-// import { getSRT_RowActionsColumnDef } from './display-columns/getSRT_RowActionsColumnDef';
-// import { getSRT_RowDragColumnDef } from './display-columns/getSRT_RowDragColumnDef';
-// import { getSRT_RowExpandColumnDef } from './display-columns/getSRT_RowExpandColumnDef';
-// import { getSRT_RowNumbersColumnDef } from './display-columns/getSRT_RowNumbersColumnDef';
-// import { getSRT_RowPinningColumnDef } from './display-columns/getSRT_RowPinningColumnDef';
-// import { getSRT_RowSelectColumnDef } from './display-columns/getSRT_RowSelectColumnDef';
-// import { getSRT_RowSpacerColumnDef } from './display-columns/getSRT_RowSpacerColumnDef';
+import { getSRT_RowActionsColumnDef } from './display-columns/getSRT_RowActionsColumnDef';
+import { getSRT_RowDragColumnDef } from './display-columns/getSRT_RowDragColumnDef';
+import { getSRT_RowExpandColumnDef } from './display-columns/getSRT_RowExpandColumnDef';
+import { getSRT_RowNumbersColumnDef } from './display-columns/getSRT_RowNumbersColumnDef';
+import { getSRT_RowPinningColumnDef } from './display-columns/getSRT_RowPinningColumnDef';
+import { getSRT_RowSelectColumnDef } from './display-columns/getSRT_RowSelectColumnDef';
+import { getSRT_RowSpacerColumnDef } from './display-columns/getSRT_RowSpacerColumnDef';
 
 /**
  * The MRT hook that wraps the TanStack useReactTable hook and adds additional functionality
@@ -196,26 +196,24 @@ export const useSRT_TableInstance = <TData extends SRT_RowData>(
       : prepareColumns({
           columnDefs: [
             ...([
-              // TODO: implement later
-              // showRowPinningColumn(statefulTableOptions) &&
-              //   getSRT_RowPinningColumnDef(statefulTableOptions),
-              // showRowDragColumn(statefulTableOptions) &&
-              //   getSRT_RowDragColumnDef(statefulTableOptions),
-              // showRowActionsColumn(statefulTableOptions) &&
-              //   getSRT_RowActionsColumnDef(statefulTableOptions),
-              // showRowExpandColumn(statefulTableOptions) &&
-              //   getSRT_RowExpandColumnDef(statefulTableOptions),
-              // showRowSelectionColumn(statefulTableOptions) &&
-              //   getSRT_RowSelectColumnDef(statefulTableOptions),
-              // showRowNumbersColumn(statefulTableOptions) &&
-              //   getSRT_RowNumbersColumnDef(statefulTableOptions),
+              showRowPinningColumn(statefulTableOptions) &&
+                getSRT_RowPinningColumnDef(statefulTableOptions),
+              showRowDragColumn(statefulTableOptions) &&
+                getSRT_RowDragColumnDef(statefulTableOptions),
+              showRowActionsColumn(statefulTableOptions) &&
+                getSRT_RowActionsColumnDef(statefulTableOptions),
+              showRowExpandColumn(statefulTableOptions) &&
+                getSRT_RowExpandColumnDef(statefulTableOptions),
+              showRowSelectionColumn(statefulTableOptions) &&
+                getSRT_RowSelectColumnDef(statefulTableOptions),
+              showRowNumbersColumn(statefulTableOptions) &&
+                getSRT_RowNumbersColumnDef(statefulTableOptions),
             ].filter(Boolean) as SRT_ColumnDef<TData>[]),
             ...statefulTableOptions.columns,
-            // TODO: implement later
-            // ...([
-            //   showRowSpacerColumn(statefulTableOptions) &&
-            //     getSRT_RowSpacerColumnDef(statefulTableOptions),
-            // ].filter(Boolean) as SRT_ColumnDef<TData>[]),
+            ...([
+              showRowSpacerColumn(statefulTableOptions) &&
+                getSRT_RowSpacerColumnDef(statefulTableOptions),
+            ].filter(Boolean) as SRT_ColumnDef<TData>[]),
           ],
           tableOptions: statefulTableOptions,
         });

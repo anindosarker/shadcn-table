@@ -1,28 +1,376 @@
+import { type MouseEvent, type ReactNode, useState } from 'react';
+import {
+  ArrowDownWideNarrowIcon,
+  ArrowUpNarrowWideIcon,
+  Columns3Icon,
+  EyeOffIcon,
+  FilterIcon,
+  FilterXIcon,
+  LayersIcon,
+  ListXIcon,
+  PinIcon,
+  RotateCcwIcon,
+} from 'lucide-react';
 import {
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
+import { SRT_FilterOptionMenu } from './SRT_FilterOptionMenu';
 
 export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData> {
-  header: SRT_Header<TData>;
-  table: SRT_TableInstance<TData>;
   anchorEl: HTMLElement | null;
+  header: SRT_Header<TData>;
   setAnchorEl: (el: HTMLElement | null) => void;
-  className?: string;
+  table: SRT_TableInstance<TData>;
 }
 
 /**
- * Column action menu - menu for column-level actions
- * TODO: Full implementation needed
+ * Column action menu - sort/pin/group/hide/filter-by + custom column actions.
+ * Port of MRT_ColumnActionMenu. MUI Menu -> shadcn DropdownMenu, MUI icons ->
+ * lucide-react. Items are gated by enable* options + column capabilities and
+ * labeled via localization, exactly as in MRT.
  */
-
 export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
-  header,
-  table,
   anchorEl,
+  header,
   setAnchorEl,
-  className,
+  table,
 }: SRT_ColumnActionMenuProps<TData>) => {
-  return <div className={className}>TODO: SRT_ColumnActionMenu</div>;
+  const {
+    getAllLeafColumns,
+    getState,
+    options: {
+      columnFilterDisplayMode,
+      columnFilterModeOptions,
+      enableColumnFilterModes,
+      enableColumnFilters,
+      enableColumnPinning,
+      enableColumnResizing,
+      enableGrouping,
+      enableHiding,
+      enableSorting,
+      enableSortingRemoval,
+      localization,
+      renderColumnActionsMenuItems,
+    },
+    refs: { filterInputRefs },
+    setColumnFilterFns,
+    setColumnOrder,
+    setColumnSizingInfo,
+    setShowColumnFilters,
+  } = table;
+  const { column } = header;
+  const { columnDef } = column;
+  const { columnSizing, columnVisibility, showColumnFilters } = getState();
+  const columnFilterValue = column.getFilterValue();
+
+  const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
+    useState<HTMLElement | null>(null);
+
+  const handleClearSort = () => {
+    column.clearSorting();
+    setAnchorEl(null);
+  };
+
+  const handleSortAsc = () => {
+    column.toggleSorting(false);
+    setAnchorEl(null);
+  };
+
+  const handleSortDesc = () => {
+    column.toggleSorting(true);
+    setAnchorEl(null);
+  };
+
+  const handleResetColumnSize = () => {
+    setColumnSizingInfo((old) => ({ ...old, isResizingColumn: false }));
+    column.resetSize();
+    setAnchorEl(null);
+  };
+
+  const handleHideColumn = () => {
+    column.toggleVisibility(false);
+    setAnchorEl(null);
+  };
+
+  const handlePinColumn = (pinDirection: 'left' | 'right' | false) => {
+    column.pin(pinDirection);
+    setAnchorEl(null);
+  };
+
+  const handleGroupByColumn = () => {
+    column.toggleGrouping();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setColumnOrder((old: any) => ['srt-row-expand', ...old]);
+    setAnchorEl(null);
+  };
+
+  const handleClearFilter = () => {
+    column.setFilterValue(undefined);
+    setAnchorEl(null);
+    if (['empty', 'notEmpty'].includes(columnDef._filterFn)) {
+      setColumnFilterFns((prev) => ({
+        ...prev,
+        [header.id]: allowedColumnFilterOptions?.[0] ?? 'fuzzy',
+      }));
+    }
+  };
+
+  const handleFilterByColumn = () => {
+    setShowColumnFilters(true);
+    queueMicrotask(() => filterInputRefs.current?.[`${column.id}-0`]?.focus());
+    setAnchorEl(null);
+  };
+
+  const handleShowAllColumns = () => {
+    getAllLeafColumns()
+      .filter((col) => col.columnDef.enableHiding !== false)
+      .forEach((col) => col.toggleVisibility(true));
+    setAnchorEl(null);
+  };
+
+  const handleOpenFilterModeMenu = (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setFilterMenuAnchorEl(event.currentTarget);
+  };
+
+  const isSelectFilter = !!columnDef.filterSelectOptions;
+
+  const allowedColumnFilterOptions =
+    columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
+
+  const showFilterModeSubMenu =
+    enableColumnFilterModes &&
+    columnDef.enableColumnFilterModes !== false &&
+    !isSelectFilter &&
+    (allowedColumnFilterOptions === undefined ||
+      !!allowedColumnFilterOptions?.length);
+
+  const internalColumnMenuItems: ReactNode[] = [
+    ...(enableSorting && column.getCanSort()
+      ? [
+          enableSortingRemoval !== false && (
+            <SRT_ActionMenuItem
+              disabled={column.getIsSorted() === false}
+              icon={<ListXIcon className="h-4 w-4" />}
+              key={0}
+              label={localization.clearSort}
+              onClick={handleClearSort}
+              table={table}
+            />
+          ),
+          <SRT_ActionMenuItem
+            disabled={column.getIsSorted() === 'asc'}
+            icon={<ArrowUpNarrowWideIcon className="h-4 w-4" />}
+            key={1}
+            label={localization.sortByColumnAsc?.replace(
+              '{column}',
+              String(columnDef.header),
+            )}
+            onClick={handleSortAsc}
+            table={table}
+          />,
+          <SRT_ActionMenuItem
+            disabled={column.getIsSorted() === 'desc'}
+            divider={enableColumnFilters || enableGrouping || enableHiding}
+            icon={<ArrowDownWideNarrowIcon className="h-4 w-4" />}
+            key={2}
+            label={localization.sortByColumnDesc?.replace(
+              '{column}',
+              String(columnDef.header),
+            )}
+            onClick={handleSortDesc}
+            table={table}
+          />,
+        ]
+      : []),
+    ...(enableColumnFilters && column.getCanFilter()
+      ? [
+          <SRT_ActionMenuItem
+            disabled={
+              !columnFilterValue ||
+              (Array.isArray(columnFilterValue) &&
+                !columnFilterValue.filter((value) => value).length)
+            }
+            icon={<FilterXIcon className="h-4 w-4" />}
+            key={3}
+            label={localization.clearFilter}
+            onClick={handleClearFilter}
+            table={table}
+          />,
+          columnFilterDisplayMode === 'subheader' && (
+            <SRT_ActionMenuItem
+              disabled={showColumnFilters && !enableColumnFilterModes}
+              divider={enableGrouping || enableHiding}
+              icon={<FilterIcon className="h-4 w-4" />}
+              key={4}
+              label={localization.filterByColumn?.replace(
+                '{column}',
+                String(columnDef.header),
+              )}
+              onClick={
+                showColumnFilters
+                  ? handleOpenFilterModeMenu
+                  : handleFilterByColumn
+              }
+              onOpenSubMenu={
+                showFilterModeSubMenu ? handleOpenFilterModeMenu : undefined
+              }
+              table={table}
+            />
+          ),
+          showFilterModeSubMenu && (
+            <SRT_FilterOptionMenu
+              anchorEl={filterMenuAnchorEl}
+              header={header}
+              key={5}
+              onSelect={handleFilterByColumn}
+              setAnchorEl={setFilterMenuAnchorEl}
+              table={table}
+            />
+          ),
+        ].filter(Boolean)
+      : []),
+    ...(enableGrouping && column.getCanGroup()
+      ? [
+          <SRT_ActionMenuItem
+            divider={enableColumnPinning}
+            icon={<LayersIcon className="h-4 w-4" />}
+            key={6}
+            label={localization[
+              column.getIsGrouped() ? 'ungroupByColumn' : 'groupByColumn'
+            ]?.replace('{column}', String(columnDef.header))}
+            onClick={handleGroupByColumn}
+            table={table}
+          />,
+        ]
+      : []),
+    ...(enableColumnPinning && column.getCanPin()
+      ? [
+          <SRT_ActionMenuItem
+            disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
+            icon={
+              <PinIcon
+                className="h-4 w-4"
+                style={{ transform: 'rotate(90deg)' }}
+              />
+            }
+            key={7}
+            label={localization.pinToLeft}
+            onClick={() => handlePinColumn('left')}
+            table={table}
+          />,
+          <SRT_ActionMenuItem
+            disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
+            icon={
+              <PinIcon
+                className="h-4 w-4"
+                style={{ transform: 'rotate(-90deg)' }}
+              />
+            }
+            key={8}
+            label={localization.pinToRight}
+            onClick={() => handlePinColumn('right')}
+            table={table}
+          />,
+          <SRT_ActionMenuItem
+            disabled={!column.getIsPinned()}
+            divider={enableHiding}
+            icon={<PinIcon className="h-4 w-4" />}
+            key={9}
+            label={localization.unpin}
+            onClick={() => handlePinColumn(false)}
+            table={table}
+          />,
+        ]
+      : []),
+    ...(enableColumnResizing && column.getCanResize()
+      ? [
+          <SRT_ActionMenuItem
+            disabled={columnSizing[column.id] === undefined}
+            icon={<RotateCcwIcon className="h-4 w-4" />}
+            key={10}
+            label={localization.resetColumnSize}
+            onClick={handleResetColumnSize}
+            table={table}
+          />,
+        ]
+      : []),
+    ...(enableHiding
+      ? [
+          <SRT_ActionMenuItem
+            disabled={!column.getCanHide()}
+            icon={<EyeOffIcon className="h-4 w-4" />}
+            key={11}
+            label={localization.hideColumn?.replace(
+              '{column}',
+              String(columnDef.header),
+            )}
+            onClick={handleHideColumn}
+            table={table}
+          />,
+          <SRT_ActionMenuItem
+            disabled={
+              !Object.values(columnVisibility).filter((visible) => !visible)
+                .length
+            }
+            icon={<Columns3Icon className="h-4 w-4" />}
+            key={12}
+            label={localization.showAllColumns?.replace(
+              '{column}',
+              String(columnDef.header),
+            )}
+            onClick={handleShowAllColumns}
+            table={table}
+          />,
+        ]
+      : []),
+  ].filter(Boolean);
+
+  const rect = anchorEl?.getBoundingClientRect();
+
+  return (
+    <DropdownMenu
+      open={!!anchorEl}
+      onOpenChange={(open) => {
+        if (!open) setAnchorEl(null);
+      }}
+    >
+      <DropdownMenuTrigger asChild>
+        <span
+          aria-hidden
+          style={{
+            position: 'fixed',
+            left: rect?.left ?? 0,
+            top: rect?.top ?? 0,
+            width: rect?.width ?? 0,
+            height: rect?.height ?? 0,
+            pointerEvents: 'none',
+          }}
+        />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        {columnDef.renderColumnActionsMenuItems?.({
+          closeMenu: () => setAnchorEl(null),
+          column,
+          internalColumnMenuItems,
+          table,
+        }) ??
+          renderColumnActionsMenuItems?.({
+            closeMenu: () => setAnchorEl(null),
+            column,
+            internalColumnMenuItems,
+            table,
+          }) ??
+          internalColumnMenuItems}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };

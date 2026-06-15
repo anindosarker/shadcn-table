@@ -1,5 +1,9 @@
 import { Fragment, useMemo } from 'react';
-import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
+import {
+  getSRT_SelectAllHandler,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { XIcon } from 'lucide-react';
@@ -81,11 +85,9 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
             )}
         </span>
         <Button
-          onClick={() => {
-            // TODO: Implement getMRT_SelectAllHandler utility
-            // For now, just clear selection manually
-            table.resetRowSelection();
-          }}
+          onClick={(event) =>
+            getSRT_SelectAllHandler({ table })(event, false, true)
+          }
           size="sm"
           variant="ghost"
           className="h-6 px-2"

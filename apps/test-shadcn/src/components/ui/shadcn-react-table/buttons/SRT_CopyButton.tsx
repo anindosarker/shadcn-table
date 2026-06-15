@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from 'react';
+import { type MouseEvent, type ReactNode, useState } from 'react';
 import {
   type SRT_Cell,
   type SRT_RowData,
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 export interface SRT_CopyButtonProps<TData extends SRT_RowData> {
   cell: SRT_Cell<TData>;
+  children?: ReactNode;
   table: SRT_TableInstance<TData>;
   className?: string;
 }
@@ -31,6 +32,7 @@ export interface SRT_CopyButtonProps<TData extends SRT_RowData> {
 
 export const SRT_CopyButton = <TData extends SRT_RowData>({
   cell,
+  children,
   table,
   className,
 }: SRT_CopyButtonProps<TData>) => {
@@ -59,7 +61,7 @@ export const SRT_CopyButton = <TData extends SRT_RowData>({
         className,
       )}
     >
-      {cell.getValue() as string}
+      {children ?? (cell.getValue() as string)}
     </Button>
   );
 };

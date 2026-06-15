@@ -1,3 +1,4 @@
+import { type MouseEvent, useState } from 'react';
 import { ColumnsIcon } from 'lucide-react';
 import {
   type SRT_RowData,
@@ -5,7 +6,7 @@ import {
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-// import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu';
+import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu';
 
 export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -13,18 +14,11 @@ export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData> {
 }
 
 /**
- * Show/Hide columns button - opens menu to toggle column visibility
+ * Show/Hide columns button - opens menu to toggle column visibility.
  *
- * Barebones implementation:
- * - Button that opens column visibility menu
- * - Columns icon
- *
- * TODO (Future enhancements):
- * - Add SRT_ShowHideColumnsMenu component
- * - Add tooltip
- * - Add keyboard shortcuts
- * - Add badge showing hidden column count
- * - Add search in menu
+ * Ported from MRT_ShowHideColumnsButton:
+ * - Columns icon button with tooltip (localization.showHideColumns).
+ * - Click captures the anchor element and opens SRT_ShowHideColumnsMenu.
  */
 
 export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
@@ -35,11 +29,10 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
     options: { localization },
   } = table;
 
-  // const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (/* event: MouseEvent<HTMLElement> */) => {
-    // setAnchorEl(event.currentTarget);
-    // TODO: Implement menu when SRT_ShowHideColumnsMenu is ready
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
   return (
@@ -54,14 +47,13 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
       >
         <ColumnsIcon className="h-4 w-4" />
       </Button>
-      {/* TODO: Implement SRT_ShowHideColumnsMenu */}
-      {/* {anchorEl && (
+      {anchorEl && (
         <SRT_ShowHideColumnsMenu
           anchorEl={anchorEl}
           setAnchorEl={setAnchorEl}
           table={table}
         />
-      )} */}
+      )}
     </>
   );
 };

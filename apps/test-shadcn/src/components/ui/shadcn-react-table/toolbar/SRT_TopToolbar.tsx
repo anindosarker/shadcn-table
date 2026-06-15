@@ -4,6 +4,7 @@ import {
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
+import { SRT_TablePagination } from './SRT_TablePagination';
 import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
 import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone';
 import { SRT_ToolbarInternalButtons } from './SRT_ToolbarInternalButtons';
@@ -20,8 +21,10 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
     getState,
     options: {
       enableGlobalFilter,
+      enablePagination,
       enableToolbarInternalActions,
       positionGlobalFilter,
+      positionPagination,
       positionToolbarAlertBanner,
       positionToolbarDropZone,
       renderTopToolbarCustomActions,
@@ -95,11 +98,11 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
         )}
       </div>
 
-      {/* TODO: Pagination (top/both) */}
-      {/* {enablePagination &&
+      {/* Pagination (top/both) */}
+      {enablePagination &&
         ['both', 'top'].includes(positionPagination ?? '') && (
           <SRT_TablePagination position="top" table={table} />
-        )} */}
+        )}
 
       {/* Linear Progress Bar */}
       <SRT_LinearProgressBar isTopToolbar table={table} />

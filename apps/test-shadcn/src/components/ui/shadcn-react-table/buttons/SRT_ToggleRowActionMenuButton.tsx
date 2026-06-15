@@ -1,4 +1,4 @@
-import { type MouseEvent } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { EditIcon, MoreHorizontalIcon } from 'lucide-react';
 import {
   type SRT_Cell,
@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { cn } from '@/lib/utils';
-// import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';
+import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';
 
 export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData> {
   cell: SRT_Cell<TData>;
@@ -66,19 +66,18 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
     (isCreating && createDisplayMode === 'row') ||
     (isEditing && editDisplayMode === 'row');
 
-  // const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleOpenRowActionMenu = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     event.preventDefault();
-    // setAnchorEl(event.currentTarget);
-    // TODO: Implement menu when SRT_RowActionMenu is ready
+    setAnchorEl(event.currentTarget);
   };
 
   const handleStartEditMode = (event: MouseEvent) => {
     event.stopPropagation();
     setEditingRow({ ...row });
-    // setAnchorEl(null);
+    setAnchorEl(null);
   };
 
   const commonButtonClass = cn(
@@ -122,8 +121,7 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
           >
             <MoreHorizontalIcon className="h-4 w-4" />
           </Button>
-          {/* TODO: Implement SRT_RowActionMenu */}
-          {/* {anchorEl && (
+          {anchorEl && (
             <SRT_RowActionMenu
               anchorEl={anchorEl}
               handleEdit={handleStartEditMode}
@@ -132,7 +130,7 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
               staticRowIndex={staticRowIndex}
               table={table}
             />
-          )} */}
+          )}
         </>
       ) : null}
     </>

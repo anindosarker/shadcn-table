@@ -1,7 +1,8 @@
 import {
   type ChangeEvent,
-  useCallback,
+  type MouseEvent,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -9,6 +10,12 @@ import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 import { SearchIcon, XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 
 export interface SRT_GlobalFilterTextFieldProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -16,60 +23,40 @@ export interface SRT_GlobalFilterTextFieldProps<TData extends SRT_RowData> {
 }
 
 /**
- * Global filter text field - search input for filtering all columns
+ * Global filter text field - search input for filtering all columns.
  *
- * Barebones implementation:
- * - Debounced search input
- * - Search icon prefix
- * - Clear button suffix
- * - Auto-focus when shown
- * - Collapse animation
- *
- * TODO (Future enhancements):
- * - Add filter mode menu (fuzzy, contains, startsWith, etc.)
- * - Add srtSearchTextFieldProps to core package types
- * - Improve collapse animation with Radix UI
- * - Add search result count badge
- * - Add keyboard shortcuts (Escape to clear)
- * - Add recent searches dropdown
+ * Ports MRT_GlobalFilterTextField: debounced search, search-icon prefix,
+ * clear-button suffix, mode-menu prefix when enableGlobalFilterModes, and
+ * mount/unmount on showGlobalFilter (the MUI Collapse equivalent).
  */
-
 export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
   table,
   className,
 }: SRT_GlobalFilterTextFieldProps<TData>) => {
   const {
     getState,
-    options: {
-      // enableGlobalFilterModes, // TODO: Add filter mode menu
-      localization,
-      manualFiltering,
-      // srtSearchTextFieldProps, // TODO: Add custom props support
-    },
+    options: { enableGlobalFilterModes, localization, manualFiltering },
     refs: { searchInputRef },
     setGlobalFilter,
   } = table;
   const { globalFilter, showGlobalFilter } = getState();
 
   const isMounted = useRef(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searchValue, setSearchValue] = useState(globalFilter ?? '');
 
-  // Debounce the filter update
-  const handleChangeDebounced = useCallback(
-    (() => {
-      let timeoutId: ReturnType<typeof setTimeout>;
-      return (value: string) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(
-          () => {
-            setGlobalFilter(value || undefined);
-          },
-          manualFiltering ? 500 : 250,
-        );
-      };
-    })(),
-    [manualFiltering, setGlobalFilter],
-  );
+  const handleChangeDebounced = useMemo(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    return (value: string) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(
+        () => {
+          setGlobalFilter(value || undefined);
+        },
+        manualFiltering ? 500 : 250,
+      );
+    };
+  }, [manualFiltering, setGlobalFilter]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -86,14 +73,16 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
   useEffect(() => {
     if (isMounted.current) {
       if (globalFilter === undefined) {
-        setSearchValue('');
+        handleClear();
       } else {
         setSearchValue(globalFilter);
       }
     }
     isMounted.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalFilter]);
 
+  // mountOnEnter / unmountOnExit (the MUI Collapse equivalent)
   if (!showGlobalFilter) return null;
 
   return (
@@ -104,10 +93,30 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
         className,
       )}
     >
-      {/* Search Icon */}
-      <SearchIcon className="absolute left-3 h-4 w-4 text-muted-foreground" />
+      {/* Mode menu button or search icon prefix */}
+      {enableGlobalFilterModes ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={localization.changeSearchMode}
+              onClick={(e: MouseEvent<HTMLElement>) =>
+                setAnchorEl(e.currentTarget)
+              }
+              className="absolute left-1 size-7"
+            >
+              <SearchIcon className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{localization.changeSearchMode}</TooltipContent>
+        </Tooltip>
+      ) : (
+        <SearchIcon className="absolute left-3 size-4 text-muted-foreground" />
+      )}
 
-      {/* Input Field */}
+      {/* Input field */}
       <input
         ref={searchInputRef}
         type="text"
@@ -124,33 +133,34 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
         )}
       />
 
-      {/* Clear Button */}
+      {/* Clear button suffix */}
       {searchValue && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={handleClear}
-          aria-label={localization.clearSearch}
-          title={localization.clearSearch}
-          className="absolute right-1 h-7 w-7"
-        >
-          <XIcon className="h-3.5 w-3.5" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleClear}
+              aria-label={localization.clearSearch}
+              className="absolute right-1 size-7"
+            >
+              <XIcon className="size-3.5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>{localization.clearSearch}</TooltipContent>
+        </Tooltip>
       )}
 
-      {/* TODO: Add filter mode menu */}
-      {/* {enableGlobalFilterModes && (
-        <SRT_FilterOptionMenu table={table} />
-      )} */}
+      {/* Filter mode menu */}
+      {enableGlobalFilterModes && (
+        <SRT_FilterOptionMenu
+          anchorEl={anchorEl}
+          setAnchorEl={setAnchorEl}
+          onSelect={handleClear}
+          table={table}
+        />
+      )}
     </div>
   );
 };
-
-// TODO: Add these features in future iterations:
-// 1. Filter mode menu (fuzzy, contains, startsWith, etc.)
-// 2. Support for srtSearchTextFieldProps
-// 3. Search result count badge
-// 4. Recent searches dropdown
-// 5. Keyboard shortcuts (Escape to clear, Cmd+K to focus)
-// 6. Better animation with Radix UI Collapsible

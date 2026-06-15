@@ -2,12 +2,13 @@ import {
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
+  getColumnFilterInfo,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
-// import { SRT_FilterCheckbox } from '../inputs/SRT_FilterCheckbox';
-// import { SRT_FilterRangeFields } from '../inputs/SRT_FilterRangeFields';
-// import { SRT_FilterRangeSlider } from '../inputs/SRT_FilterRangeSlider';
-// import { SRT_FilterTextField } from '../inputs/SRT_FilterTextField';
+import { SRT_FilterCheckbox } from '../inputs/SRT_FilterCheckbox';
+import { SRT_FilterRangeFields } from '../inputs/SRT_FilterRangeFields';
+import { SRT_FilterRangeSlider } from '../inputs/SRT_FilterRangeSlider';
+import { SRT_FilterTextField } from '../inputs/SRT_FilterTextField';
 
 export interface SRT_TableHeadCellFilterContainerProps<
   TData extends SRT_RowData,
@@ -18,20 +19,13 @@ export interface SRT_TableHeadCellFilterContainerProps<
 }
 
 /**
- * Filter container - wrapper for column filter inputs
+ * Filter container - wrapper that routes to the appropriate filter input.
  *
- * Barebones implementation:
- * - Container with collapse animation
- * - Routes to appropriate filter component based on variant
- * - Checkbox, range slider, range fields, or text field
- *
- * TODO (Future enhancements):
- * - Add SRT_FilterCheckbox component
- * - Add SRT_FilterRangeFields component
- * - Add SRT_FilterRangeSlider component
- * - Add SRT_FilterTextField component
- * - Add better animations
- * - Add filter validation
+ * Ported 1:1 from MRT_TableHeadCellFilterContainer:
+ * - Mounts only while column filters are shown (subheader mode) or the display
+ *   mode is 'popover'. MUI's Collapse mountOnEnter/unmountOnExit is approximated
+ *   by conditionally rendering with an enter animation.
+ * - Routes by filterVariant: checkbox / range-slider / range fields / text field.
  */
 
 export const SRT_TableHeadCellFilterContainer = <TData extends SRT_RowData>({
@@ -46,27 +40,24 @@ export const SRT_TableHeadCellFilterContainer = <TData extends SRT_RowData>({
   const { showColumnFilters } = getState();
   const { column } = header;
   const { columnDef } = column;
-
-  // TODO: Get filter info utility
-  // const { isRangeFilter } = getColumnFilterInfo({ header, table });
+  const { isRangeFilter } = getColumnFilterInfo({ header, table });
 
   const shouldShow = showColumnFilters || columnFilterDisplayMode === 'popover';
 
   if (!shouldShow) return null;
 
-  // TODO: Implement filter components
   return (
     <div
       className={cn('animate-in slide-in-from-top-2 duration-200', className)}
     >
       {columnDef.filterVariant === 'checkbox' ? (
-        <div>TODO: SRT_FilterCheckbox</div>
+        <SRT_FilterCheckbox column={column} table={table} />
       ) : columnDef.filterVariant === 'range-slider' ? (
-        <div>TODO: SRT_FilterRangeSlider</div>
-      ) : columnDef.filterVariant?.includes('range') ? (
-        <div>TODO: SRT_FilterRangeFields</div>
+        <SRT_FilterRangeSlider header={header} table={table} />
+      ) : isRangeFilter ? (
+        <SRT_FilterRangeFields header={header} table={table} />
       ) : (
-        <div>TODO: SRT_FilterTextField</div>
+        <SRT_FilterTextField header={header} table={table} />
       )}
     </div>
   );

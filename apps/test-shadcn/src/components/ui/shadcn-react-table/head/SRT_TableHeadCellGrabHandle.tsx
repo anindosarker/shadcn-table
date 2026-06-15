@@ -3,6 +3,7 @@ import {
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
+  reorderColumn,
 } from 'shadcn-react-table-core';
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton';
 
@@ -14,20 +15,13 @@ export interface SRT_TableHeadCellGrabHandleProps<TData extends SRT_RowData> {
 }
 
 /**
- * Column grab handle - drag handle for column reordering
+ * Column grab handle - drag handle for column reordering.
  *
- * Barebones implementation:
- * - Drag handle for columns
- * - Reorders columns on drop
- * - Updates column pinning after reorder
- * - Supports column grouping drop zone
- *
- * TODO (Future enhancements):
- * - Add srtColumnDragHandleProps support
- * - Add drag preview
- * - Add drop indicators
- * - Add keyboard accessibility
- * - Add animation
+ * Ported 1:1 from MRT_TableHeadCellGrabHandle:
+ * - Starts a drag, setting the dragging column and using the head cell as the
+ *   drag image.
+ * - On drag end: toggles grouping when dropped over the drop-zone, otherwise
+ *   reorders columns (and re-derives pinning) when column ordering is enabled.
  */
 
 export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
@@ -39,12 +33,12 @@ export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
   const {
     getState,
     options: { enableColumnOrdering },
-    // setColumnOrder,
-    // setColumnPinning,
+    setColumnOrder,
+    setColumnPinning,
     setDraggingColumn,
     setHoveredColumn,
   } = table;
-  const { /* columnOrder, */ draggingColumn, hoveredColumn } = getState();
+  const { columnOrder, draggingColumn, hoveredColumn } = getState();
 
   const handleDragStart = (event: DragEvent<HTMLButtonElement>) => {
     setDraggingColumn(column);
@@ -67,17 +61,16 @@ export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
       hoveredColumn &&
       hoveredColumn?.id !== draggingColumn?.id
     ) {
-      // TODO: Import reorderColumn utility from core package
-      // const reorderedColumns = reorderColumn(
-      //   column,
-      //   hoveredColumn as SRT_Column<TData>,
-      //   columnOrder,
-      // );
-      // setColumnOrder(reorderedColumns);
-      // setColumnPinning(({ left = [], right = [] }) => ({
-      //   left: reorderedColumns.filter((header) => left.includes(header)),
-      //   right: reorderedColumns.filter((header) => right.includes(header)),
-      // }));
+      const reorderedColumns = reorderColumn(
+        column,
+        hoveredColumn as SRT_Column<TData>,
+        columnOrder,
+      );
+      setColumnOrder(reorderedColumns);
+      setColumnPinning(({ left = [], right = [] }) => ({
+        left: reorderedColumns.filter((header) => left.includes(header)),
+        right: reorderedColumns.filter((header) => right.includes(header)),
+      }));
     }
     setDraggingColumn(null);
     setHoveredColumn(null);

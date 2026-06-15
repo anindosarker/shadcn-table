@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react';
 import {
   type SRT_Header,
   type SRT_RowData,
@@ -79,13 +80,36 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
 
   const align = columnDefType === 'group' ? 'center' : 'left';
 
+  // Column pinning offsets (sticky), matching the head/body cells' getStart/
+  // getAfter logic so pinned footer cells stay aligned during horizontal scroll.
+  const pinnedStyle: CSSProperties = isColumnPinned
+    ? {
+        position: 'sticky',
+        left:
+          isColumnPinned === 'left'
+            ? `${column.getStart('left')}px`
+            : undefined,
+        right:
+          isColumnPinned === 'right'
+            ? `${column.getAfter('right')}px`
+            : undefined,
+        zIndex: 1,
+      }
+    : {};
+
   return (
     <th
       colSpan={footer.colSpan}
       data-index={staticColumnIndex}
       data-pinned={!!isColumnPinned || undefined}
-      style={{ textAlign: align }}
-      className={cn(footerCellVariants({ density }), className)}
+      style={{ textAlign: align, ...pinnedStyle }}
+      className={cn(
+        footerCellVariants({ density }),
+        // Solid background so the pinned column doesn't show content scrolling
+        // underneath it (parity with SRT_TableHeadCell).
+        isColumnPinned && 'bg-muted/95',
+        className,
+      )}
       // onKeyDown={handleKeyDown}
       // tabIndex={enableKeyboardShortcuts ? 0 : undefined}
     >

@@ -1,4 +1,4 @@
-import { type RefObject } from 'react';
+import { type CSSProperties, type RefObject } from 'react';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -7,6 +7,7 @@ import {
   type SRT_VirtualItem,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 
 export interface SRT_TableDetailPanelProps<TData extends SRT_RowData> {
   parentRowRef: RefObject<HTMLTableRowElement | null>;
@@ -19,28 +20,24 @@ export interface SRT_TableDetailPanelProps<TData extends SRT_RowData> {
 }
 
 /**
- * Table detail panel - expandable row content
+ * Table detail panel - expandable row content rendered beneath its parent row.
  *
- * Barebones implementation:
- * - Renders detail panel below row when expanded
- * - Collapse animation with CSS
- * - Full-width cell spanning all columns
- *
- * TODO (Future enhancements):
- * - Add virtual scrolling support
- * - Add srtDetailPanelProps support
- * - Add custom animations
- * - Add loading state
- * - Better collapse animation with Radix UI
+ * Ports material-react-table's MRT_TableDetailPanel:
+ * - Renders `renderDetailPanel({ row, table })` (suppressed while loading)
+ * - Virtualized mode: absolutely positioned with translateY, content rendered
+ *   directly only when the row is expanded; measured by the row virtualizer
+ * - Non-virtualized mode: shadcn Collapsible (mount on enter / unmount on exit)
+ * - Full-width cell spanning all visible leaf columns
+ * - data-index parity with MRT (staticRowIndex * 2 + 1 when detail panels are
+ *   enabled, so virtual indices interleave row / detail-panel)
  */
-
 export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
-  // parentRowRef,
+  parentRowRef,
   row,
-  // rowVirtualizer,
+  rowVirtualizer,
   staticRowIndex,
   table,
-  // virtualRow,
+  virtualRow,
   className,
 }: SRT_TableDetailPanelProps<TData>) => {
   const {
@@ -54,41 +51,42 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
 
   const isExpanded = row.getIsExpanded();
 
-  // TODO: Add custom props support
-  // const tableRowProps = parseFromValuesOrFunc(srtTableBodyRowProps, {
-  //   isDetailPanel: true,
-  //   row,
-  //   staticRowIndex,
-  //   table,
-  // });
-
-  // TODO: Add virtual scrolling support
-  // if (virtualRow) {
-  //   // Handle virtualized detail panel
-  // }
+  const rowStyle: CSSProperties = {
+    position: virtualRow ? 'absolute' : undefined,
+    top: virtualRow
+      ? `${parentRowRef.current?.getBoundingClientRect()?.height ?? 0}px`
+      : undefined,
+    transform: virtualRow ? `translateY(${virtualRow.start}px)` : undefined,
+    width: '100%',
+  };
 
   return (
     <tr
-      className={cn('border-b transition-all', className)}
+      className={cn('border-b', !virtualRow && 'transition-all', className)}
       data-index={renderDetailPanel ? staticRowIndex * 2 + 1 : staticRowIndex}
+      ref={(node) => {
+        if (node) {
+          rowVirtualizer?.measureElement?.(node);
+        }
+      }}
+      style={rowStyle}
     >
       <td
         colSpan={getVisibleLeafColumns().length}
         className={cn(
-          'overflow-hidden transition-all duration-200',
-          isExpanded ? 'py-4' : 'py-0',
+          'w-full overflow-hidden',
+          !virtualRow && 'transition-all duration-150 ease-in-out',
+          !!DetailPanel && isExpanded ? 'py-4' : 'py-0',
+          !isExpanded && 'border-b-0',
         )}
       >
-        <div
-          className={cn(
-            'transition-all duration-200 ease-in-out',
-            isExpanded
-              ? 'max-h-[1000px] opacity-100'
-              : 'max-h-0 opacity-0 invisible',
-          )}
-        >
-          {DetailPanel}
-        </div>
+        {virtualRow ? (
+          isExpanded && DetailPanel
+        ) : (
+          <Collapsible open={isExpanded}>
+            <CollapsibleContent>{isExpanded && DetailPanel}</CollapsibleContent>
+          </Collapsible>
+        )}
       </td>
     </tr>
   );
