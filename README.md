@@ -159,3 +159,28 @@ All features from Material React Table, including:
 🚧 **Work in Progress** - This project is actively being developed. Components are being ported from Material React Table to use shadcn/ui styling. See `planning/plan.md` for current progress.
 
 <!-- Use the FORCE, Luke! -->
+
+## Running the project
+
+1. Install dependencies from the project root
+    ```bash
+    pnpm i
+    ```
+2. Build the shadcn-react-table-core package
+    ```bash
+    # from the root of the project
+    pnpm -C packages/shadcn-react-table-core/ run build
+
+    # or you can run in from the project folder
+    cd packages/shadcn-react-table-core/
+    pnpm run build
+    ```
+3. Run the dev server in `test-shadcn` project
+    ```bash
+    # from the root of the project
+    pnpm -C apps/test-shadcn/ run dev
+
+    # or you can run in from the project folder
+    cd apps/test-shadcn/
+    pnpm run dev
+    ```
