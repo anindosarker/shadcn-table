@@ -1,5 +1,7 @@
 import { type CSSProperties, type RefObject } from 'react';
 import {
+  mergeSRT_HtmlProps,
+  parseSRT_HtmlProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_RowVirtualizer,
@@ -43,9 +45,23 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
   const {
     getState,
     getVisibleLeafColumns,
-    options: { renderDetailPanel },
+    options: { renderDetailPanel, srtDetailPanelProps, srtTableBodyRowProps },
   } = table;
   const { isLoading } = getState();
+
+  // Detail-panel `<tr>` mirrors MRT's tableRowProps (muiTableBodyRowProps) and
+  // the `<td>` cell mirrors tableCellProps (muiDetailPanelProps). SRT's
+  // SRT_RowHTMLPropsContext does not carry MRT's `isDetailPanel` flag, so we
+  // pass the supported { row, staticRowIndex, table } context.
+  const tableRowProps = parseSRT_HtmlProps(srtTableBodyRowProps, {
+    row,
+    staticRowIndex,
+    table,
+  });
+  const tableCellProps = parseSRT_HtmlProps(srtDetailPanelProps, {
+    row,
+    table,
+  });
 
   const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
 
@@ -60,24 +76,37 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
     width: '100%',
   };
 
+  // Component's own row/cell DOM attrs (library = `a`) composed with the
+  // user-supplied slot props (`b`); className composes (final tailwind dedup via
+  // cn() below), style merges, handlers fire library-then-user.
+  const rowProps = mergeSRT_HtmlProps({ style: rowStyle }, tableRowProps);
+  const cellProps = mergeSRT_HtmlProps({}, tableCellProps);
+
   return (
     <tr
-      className={cn('border-b', !virtualRow && 'transition-all', className)}
       data-index={renderDetailPanel ? staticRowIndex * 2 + 1 : staticRowIndex}
       ref={(node) => {
         if (node) {
           rowVirtualizer?.measureElement?.(node);
         }
       }}
-      style={rowStyle}
+      {...rowProps}
+      className={cn(
+        'border-b',
+        !virtualRow && 'transition-all',
+        className,
+        rowProps?.className,
+      )}
     >
       <td
         colSpan={getVisibleLeafColumns().length}
+        {...cellProps}
         className={cn(
           'w-full overflow-hidden',
           !virtualRow && 'transition-all duration-150 ease-in-out',
           !!DetailPanel && isExpanded ? 'py-4' : 'py-0',
           !isExpanded && 'border-b-0',
+          cellProps?.className,
         )}
       >
         {virtualRow ? (

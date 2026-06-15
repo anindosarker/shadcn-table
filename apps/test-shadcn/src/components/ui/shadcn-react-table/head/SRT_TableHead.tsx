@@ -33,6 +33,7 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
     getState,
     options: {
       enableStickyHeader,
+      layoutMode,
       positionToolbarAlertBanner,
       srtTableHeadProps,
     },
@@ -41,6 +42,7 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
   const { isFullScreen, showAlertBanner } = getState();
 
   const stickyHeader = enableStickyHeader || isFullScreen;
+  const isGrid = layoutMode?.startsWith('grid');
 
   const headProps = parseSRT_HtmlProps(srtTableHeadProps, { table });
 
@@ -54,16 +56,24 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
       {...headProps}
       className={cn(
         'border-b bg-muted/50 opacity-[0.97]',
-        stickyHeader ? 'sticky top-0 z-[2]' : 'relative',
+        stickyHeader ? 'sticky z-[2]' : 'relative',
         className,
         headProps?.className,
       )}
+      // Grid layout + sticky offset mirror MRT_TableHead's sx: `display: grid`
+      // when layoutMode is grid, and `top: 0` only in the grid+sticky case
+      // (semantic sticky offset is handled by the `sticky top-0` classes).
+      style={{
+        display: isGrid ? 'grid' : undefined,
+        top: stickyHeader ? 0 : undefined,
+        ...headProps?.style,
+      }}
     >
       {showHeadOverlay ? (
-        <tr>
+        <tr style={{ display: isGrid ? 'grid' : undefined }}>
           <th
             colSpan={table.getVisibleLeafColumns().length}
-            style={{ padding: 0 }}
+            style={{ display: isGrid ? 'grid' : undefined, padding: 0 }}
           >
             <SRT_ToolbarAlertBanner table={table} />
           </th>

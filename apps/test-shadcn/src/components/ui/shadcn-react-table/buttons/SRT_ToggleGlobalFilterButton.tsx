@@ -1,7 +1,7 @@
 import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { SearchIcon, SearchXIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_ToggleGlobalFilterButtonProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -9,20 +9,15 @@ export interface SRT_ToggleGlobalFilterButtonProps<TData extends SRT_RowData> {
 }
 
 /**
- * Toggle global filter button - shows/hides global search input
+ * Toggle global filter button - shows/hides the global search input.
  *
- * Barebones implementation:
- * - Toggles global filter visibility
- * - Shows appropriate icon (Search/SearchOff)
- * - Auto-focuses search input when shown
- * - Disabled when filter is active and visible
- *
- * TODO (Future enhancements):
- * - Add Tooltip component from shadcn
- * - Add custom icon support via table.options.icons
- * - Add srtToggleGlobalFilterButtonProps to core package types
- * - Add animation on toggle
- * - Add keyboard shortcut (e.g., Cmd+K or Ctrl+K)
+ * Ported from MRT_ToggleGlobalFilterButton:
+ * - Toggles global filter visibility and focuses the search input when shown.
+ * - Icon (read from the table icon registry) reflects state:
+ *   SearchOffIcon when the search is shown, SearchIcon otherwise.
+ * - Disabled while a global filter value is active and visible; the tooltip is
+ *   suppressed in that disabled state (matches MRT).
+ * - Tooltip (localization.showHideSearch) via SRT_Tooltip.
  */
 
 export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
@@ -32,8 +27,8 @@ export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
   const {
     getState,
     options: {
+      icons: { SearchIcon, SearchOffIcon },
       localization,
-      // icons, // TODO: Add custom icon support
     },
     refs: { searchInputRef },
     setShowGlobalFilter,
@@ -49,28 +44,21 @@ export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
   const isDisabled = !!globalFilter && showGlobalFilter;
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={handleToggleSearch}
-      disabled={isDisabled}
-      aria-label={localization.showHideSearch}
-      title={localization.showHideSearch}
-      className={cn('h-8 w-8', className)}
-    >
-      {showGlobalFilter ? (
-        <SearchXIcon className="h-4 w-4" />
-      ) : (
-        <SearchIcon className="h-4 w-4" />
-      )}
-    </Button>
+    <SRT_Tooltip title={localization.showHideSearch} disabled={isDisabled}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleToggleSearch}
+        disabled={isDisabled}
+        aria-label={localization.showHideSearch}
+        className={cn('h-8 w-8', className)}
+      >
+        {showGlobalFilter ? (
+          <SearchOffIcon className="h-4 w-4" />
+        ) : (
+          <SearchIcon className="h-4 w-4" />
+        )}
+      </Button>
+    </SRT_Tooltip>
   );
 };
-
-// TODO: Add these features in future iterations:
-// 1. Shadcn Tooltip component for better UX
-// 2. Custom icons via table.options.icons
-// 3. Keyboard shortcut support (Cmd+K / Ctrl+K)
-// 4. Animation on toggle
-// 5. Support for srtToggleGlobalFilterButtonProps
-// 6. Badge showing number of filtered results

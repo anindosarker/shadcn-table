@@ -1,38 +1,34 @@
 import { Fragment, useMemo } from 'react';
 import {
   getSRT_SelectAllHandler,
+  parseSRT_HtmlProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { XIcon } from 'lucide-react';
+import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 
 export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData> {
-  stackAlertBanner?: boolean; // TODO: Use for responsive layout
+  stackAlertBanner?: boolean;
   table: SRT_TableInstance<TData>;
   className?: string;
 }
 
 /**
- * Toolbar alert banner - shows selection state, grouping info, and custom alerts
+ * Toolbar alert banner - shows selection state, grouping info, and custom alerts.
  *
- * Barebones implementation:
- * - Shows selected row count
- * - Shows grouped columns with remove buttons
- * - Basic collapse animation
- *
- * TODO (Future enhancements):
- * - Add srtToolbarAlertBannerProps to core package types
- * - Add srtToolbarAlertBannerChipProps for customizing chips
- * - Add renderToolbarAlertBannerContent custom render prop
- * - Improve collapse/expand animation
- * - Add support for custom alert content
- * - Add MRT_SelectCheckbox for head-overlay position
+ * Ports MRT_ToolbarAlertBanner:
+ * - Selected row count with a clear-selection button
+ * - Grouped columns rendered as removable chips
+ * - head-overlay position renders the select-all checkbox inline
+ * - renderToolbarAlertBannerContent custom render slot
+ * - srtToolbarAlertBannerProps / srtToolbarAlertBannerChipProps DOM props
+ * - density-driven padding and collapse animation
  */
-
 export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
-  // stackAlertBanner, // TODO: Use for responsive layout
+  stackAlertBanner,
   table,
   className,
 }: SRT_ToolbarAlertBannerProps<TData>) => {
@@ -42,22 +38,23 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
     getState,
     options: {
       enableRowSelection,
-      // enableSelectAll, // TODO: Add when implementing select all
+      enableSelectAll,
       localization,
       manualPagination,
-      // positionToolbarAlertBanner, // TODO: Add position support
-      // renderToolbarAlertBannerContent, // TODO: Add custom render support
+      positionToolbarAlertBanner,
+      renderToolbarAlertBannerContent,
       rowCount,
+      srtToolbarAlertBannerChipProps,
+      srtToolbarAlertBannerProps,
     },
-    // refs: { tableLayoutRef }, // TODO: Add ref support for width calculation
   } = table;
 
-  const {
-    // density, // TODO: Add density support for padding
-    grouping,
-    rowSelection,
-    showAlertBanner,
-  } = getState();
+  const { density, grouping, rowSelection, showAlertBanner } = getState();
+
+  const alertProps = parseSRT_HtmlProps(srtToolbarAlertBannerProps, { table });
+  const chipProps = parseSRT_HtmlProps(srtToolbarAlertBannerChipProps, {
+    table,
+  });
 
   const totalRowCount = rowCount ?? getCoreRowModel().rows.length;
   const filteredRowCount = getFilteredSelectedRowModel().rows.length;
@@ -108,7 +105,13 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
                 {localization.thenBy}
               </span>
             )}
-            <span className="inline-flex items-center gap-1 rounded-full border bg-secondary px-2.5 py-0.5 text-xs font-semibold">
+            <span
+              {...chipProps}
+              className={cn(
+                'inline-flex items-center gap-1 rounded-full border bg-secondary px-2.5 py-0.5 text-xs font-semibold',
+                chipProps?.className,
+              )}
+            >
               {table.getColumn(columnId)?.columnDef.header}
               <button
                 onClick={() => table.getColumn(columnId)?.toggleGrouping()}
@@ -124,30 +127,57 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
 
   const shouldShow = showAlertBanner || !!selectedAlert || !!groupedAlert;
 
+  // Density-driven padding parity with MRT. The non-head-overlay banner uses a
+  // fixed 0.5rem/1rem inset; head-overlay tightens with density.
+  const contentPadding =
+    positionToolbarAlertBanner !== 'head-overlay'
+      ? 'px-4 py-2'
+      : density === 'spacious'
+        ? 'px-5 py-3'
+        : density === 'comfortable'
+          ? 'px-3 py-2'
+          : 'px-2 py-1';
+
+  const content = renderToolbarAlertBannerContent?.({
+    groupedAlert,
+    selectedAlert,
+    table,
+  }) ?? (
+    <div className={cn('flex flex-col gap-2', contentPadding)}>
+      <div className="flex items-center gap-2">
+        {enableRowSelection &&
+          enableSelectAll &&
+          positionToolbarAlertBanner === 'head-overlay' && (
+            <SRT_SelectCheckbox table={table} />
+          )}
+        {selectedAlert}
+      </div>
+      {selectedAlert && groupedAlert && <div className="h-1" />}
+      {groupedAlert}
+    </div>
+  );
+
   return (
     <div
+      {...alertProps}
       className={cn(
-        'relative w-full overflow-hidden transition-all duration-200',
-        shouldShow ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0',
+        'relative z-[2] w-full overflow-hidden transition-all duration-200',
+        // When stacked, the banner pushes content; otherwise the collapse still
+        // animates height. The transition timing mirrors MRT's Collapse.
+        shouldShow ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0',
+        !stackAlertBanner && positionToolbarAlertBanner === 'bottom' && '-mb-4',
         className,
+        alertProps?.className,
       )}
     >
-      <div className="border-b bg-muted/50 px-4 py-2">
-        <div className="flex flex-col gap-2">
-          {selectedAlert}
-          {selectedAlert && groupedAlert && <div className="h-1" />}
-          {groupedAlert}
-        </div>
+      <div
+        className={cn(
+          'bg-muted/50',
+          positionToolbarAlertBanner !== 'head-overlay' && 'border-b',
+        )}
+      >
+        {content}
       </div>
     </div>
   );
 };
-
-// TODO: Add these features in future iterations:
-// 1. Support for custom alert content via renderToolbarAlertBannerContent
-// 2. Support for alert title
-// 3. Support for different positions (top, bottom, head-overlay)
-// 4. Support for MRT_SelectCheckbox in head-overlay mode
-// 5. Better animation with Radix UI Collapsible component
-// 6. Width calculation based on table container ref
-// 7. Support for srtToolbarAlertBannerProps and srtToolbarAlertBannerChipProps

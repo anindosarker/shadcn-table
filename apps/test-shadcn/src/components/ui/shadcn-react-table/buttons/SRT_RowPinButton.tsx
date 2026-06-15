@@ -1,5 +1,4 @@
-import { type MouseEvent } from 'react';
-import { PinIcon, XIcon } from 'lucide-react';
+import { type MouseEvent, useState } from 'react';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -7,6 +6,7 @@ import {
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_RowPinButtonProps<TData extends SRT_RowData> {
   pinningPosition: 'top' | 'bottom' | false;
@@ -16,18 +16,15 @@ export interface SRT_RowPinButtonProps<TData extends SRT_RowData> {
 }
 
 /**
- * Row pin button - pin/unpin rows to top or bottom
+ * Row pin button - pin/unpin rows to top or bottom.
  *
- * Barebones implementation:
- * - Toggle row pinning
- * - Pin icon with rotation based on position
- * - Unpin with X icon when pinned
- *
- * TODO (Future enhancements):
- * - Add tooltip
- * - Add pin animation
- * - Add custom icon support
- * - Add keyboard shortcuts
+ * Ported from MRT_RowPinButton:
+ * - Toggles row pinning for the given position.
+ * - Icon (read from the table icon registry): CloseIcon when pinned,
+ *   otherwise a rotated PushPinIcon (rotation depends on
+ *   rowPinningDisplayMode / pinningPosition).
+ * - Tooltip (localization.unpin / localization.pin) via SRT_Tooltip, controlled
+ *   so it opens on hover/focus and closes on click (matches MRT).
  */
 
 export const SRT_RowPinButton = <TData extends SRT_RowData>({
@@ -37,12 +34,19 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
   className,
 }: SRT_RowPinButtonProps<TData>) => {
   const {
-    options: { localization, rowPinningDisplayMode },
+    options: {
+      icons: { CloseIcon, PushPinIcon },
+      localization,
+      rowPinningDisplayMode,
+    },
   } = table;
 
   const isPinned = row.getIsPinned();
 
+  const [tooltipOpened, setTooltipOpened] = useState(false);
+
   const handleTogglePin = (event: MouseEvent<HTMLButtonElement>) => {
+    setTooltipOpened(false);
     event.stopPropagation();
     row.pin(isPinned ? false : pinningPosition);
   };
@@ -55,22 +59,31 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
         : 0;
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={handleTogglePin}
+    <SRT_Tooltip
       title={isPinned ? localization.unpin : localization.pin}
-      aria-label={localization.pin}
-      className={cn('h-6 w-6', className)}
+      open={tooltipOpened}
+      onOpenChange={setTooltipOpened}
     >
-      {isPinned ? (
-        <XIcon className="h-3.5 w-3.5" />
-      ) : (
-        <PinIcon
-          className="h-3.5 w-3.5"
-          style={{ transform: `rotate(${rotation}deg)` }}
-        />
-      )}
-    </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleTogglePin}
+        onBlur={() => setTooltipOpened(false)}
+        onFocus={() => setTooltipOpened(true)}
+        onMouseEnter={() => setTooltipOpened(true)}
+        onMouseLeave={() => setTooltipOpened(false)}
+        aria-label={localization.pin}
+        className={cn('h-6 w-6', className)}
+      >
+        {isPinned ? (
+          <CloseIcon className="h-3.5 w-3.5" />
+        ) : (
+          <PushPinIcon
+            className="h-3.5 w-3.5"
+            style={{ transform: `rotate(${rotation}deg)` }}
+          />
+        )}
+      </Button>
+    </SRT_Tooltip>
   );
 };

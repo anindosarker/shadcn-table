@@ -9,6 +9,7 @@ import { SRT_TablePagination } from './SRT_TablePagination';
 import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
 import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone';
 import { SRT_ToolbarInternalButtons } from './SRT_ToolbarInternalButtons';
+import { useSRT_MediaQuery } from './useSRT_MediaQuery';
 import { SRT_GlobalFilterTextField } from '../inputs/SRT_GlobalFilterTextField';
 
 export interface SRT_TopToolbarProps<TData extends SRT_RowData> {
@@ -34,13 +35,20 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
     refs: { topToolbarRef },
   } = table;
 
-  const { isFullScreen } = getState();
+  const { isFullScreen, showGlobalFilter } = getState();
+
+  const isMobile = useSRT_MediaQuery('(max-width:720px)');
+  const isTablet = useSRT_MediaQuery('(max-width:1024px)');
 
   const toolbarProps = parseSRT_HtmlProps(srtTopToolbarProps, { table });
 
-  // TODO: stackAlertBanner and responsive handling (mobile/tablet) without MUI's useMediaQuery
-  // For now, always stack the alert banner for simplicity
-  const stackAlertBanner = true;
+  // Mirror MRT: stack the alert banner (push content down) on small screens,
+  // when custom actions are rendered, or when the global filter is shown on a
+  // tablet — otherwise it overlays absolutely in the top-right corner.
+  const stackAlertBanner =
+    isMobile ||
+    !!renderTopToolbarCustomActions ||
+    (showGlobalFilter && isTablet);
 
   return (
     <div

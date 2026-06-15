@@ -58,7 +58,11 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
 }: SRT_TableFooterCellProps<TData>) => {
   const {
     getState,
-    options: { enableColumnPinning, srtTableFooterCellProps },
+    options: {
+      columnResizeDirection,
+      enableColumnPinning,
+      srtTableFooterCellProps,
+    },
   } = table;
   const { density } = getState();
   const { column } = footer;
@@ -79,7 +83,14 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
   //   });
   // };
 
-  const align = columnDefType === 'group' ? 'center' : 'left';
+  // RTL-aware alignment, mirroring MRT's `theme.direction === 'rtl'` check.
+  // SRT exposes direction via `columnResizeDirection` (see useSRT_TableOptions).
+  const align =
+    columnDefType === 'group'
+      ? 'center'
+      : columnResizeDirection === 'rtl'
+        ? 'right'
+        : 'left';
 
   // Column pinning offsets (sticky), matching the head/body cells' getStart/
   // getAfter logic so pinned footer cells stay aligned during horizontal scroll.

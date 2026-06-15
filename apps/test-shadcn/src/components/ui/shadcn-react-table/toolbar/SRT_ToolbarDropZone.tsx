@@ -1,5 +1,9 @@
 import { type DragEvent, useEffect } from 'react';
-import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
+import {
+  parseSRT_HtmlProps,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 
 export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData> {
@@ -14,12 +18,10 @@ export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData> {
  * - Shows drop zone when dragging a groupable column
  * - Highlights on hover
  * - Basic fade in/out animation
+ * - Custom DOM props via srtToolbarDropZoneProps
  *
  * TODO (Future enhancements):
- * - Add srtToolbarDropZoneProps to core package types
  * - Improve animation with Framer Motion or Radix UI
- * - Add backdrop blur effect
- * - Better hover state management
  * - Support for custom drop zone content
  * - Add drag preview component
  */
@@ -30,17 +32,15 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
 }: SRT_ToolbarDropZoneProps<TData>) => {
   const {
     getState,
-    options: {
-      enableGrouping,
-      localization,
-      // srtToolbarDropZoneProps, // TODO: Add custom props support
-    },
+    options: { enableGrouping, localization, srtToolbarDropZoneProps },
     setHoveredColumn,
     setShowToolbarDropZone,
   } = table;
 
   const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } =
     getState();
+
+  const dropZoneProps = parseSRT_HtmlProps(srtToolbarDropZoneProps, { table });
 
   const handleDragEnter = () => {
     setHoveredColumn({ id: 'drop-zone' });
@@ -75,6 +75,10 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
 
   return (
     <div
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      {...dropZoneProps}
       className={cn(
         'absolute inset-0 z-[4] flex items-center justify-center',
         'border-2 border-dashed border-blue-500',
@@ -83,10 +87,8 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
         hoveredColumn?.id === 'drop-zone' ? 'bg-blue-50/20' : 'bg-blue-50/10',
         'animate-in fade-in-0 duration-200',
         className,
+        dropZoneProps?.className,
       )}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
     >
       <p className="text-sm italic text-blue-600 dark:text-blue-400">
         {localization.dropToGroupBy.replace(
@@ -97,12 +99,3 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
     </div>
   );
 };
-
-// TODO: Add these features in future iterations:
-// 1. Add srtToolbarDropZoneProps to core package types
-// 2. Improve animation with Framer Motion
-// 3. Add custom drop zone content via render prop
-// 4. Add drag preview/ghost component
-// 5. Better visual feedback for drop target
-// 6. Support for nested group drop zones
-// 7. Add drop sound effect (optional)

@@ -1,5 +1,7 @@
 import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import {
+  mergeSRT_HtmlProps,
+  parseSRT_HtmlProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -30,11 +32,17 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   ...rest
 }: SRT_FilterRangeSliderProps<TData>) => {
   const {
-    options: { enableColumnFilterModes, localization },
+    options: { enableColumnFilterModes, localization, srtFilterSliderProps },
     refs: { filterInputRefs },
   } = table;
   const { column } = header;
   const { columnDef } = column;
+
+  // Resolve the slot props: table-level defaults overridable per-column.
+  const slotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtFilterSliderProps, { column, table }),
+    parseSRT_HtmlProps(columnDef.srtFilterSliderProps, { column, table }),
+  );
 
   const currentFilterOption = columnDef._filterFn;
 
@@ -58,10 +66,12 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   const isMounted = useRef(false);
 
   // prevent moving focus to the next/prev cell when using the arrow keys
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.stopPropagation();
     }
+    // Compose the user's slot-prop onKeyDown after the component's own logic.
+    slotProps?.onKeyDown?.(event);
   };
 
   useEffect(() => {
@@ -94,6 +104,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
         value={filterValues}
         onValueChange={(values) => setFilterValues(values)}
         onValueCommit={commitValue}
+        {...(slotProps as ComponentProps<typeof Slider>)}
         onKeyDown={handleKeyDown}
         ref={(node) => {
           if (node && filterInputRefs.current) {
@@ -104,10 +115,12 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
         className={cn(
           'mx-auto px-1',
           showChangeModeButton ? 'mt-1.5' : 'mt-2.5',
+          slotProps?.className,
         )}
         style={{
           minWidth: `${column.getSize() - 50}px`,
           width: 'calc(100% - 8px)',
+          ...slotProps?.style,
         }}
         {...rest}
       />

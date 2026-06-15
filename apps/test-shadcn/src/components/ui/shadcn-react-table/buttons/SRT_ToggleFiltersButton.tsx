@@ -1,10 +1,10 @@
-import { FilterIcon, FilterXIcon } from 'lucide-react';
 import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_ToggleFiltersButtonProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -12,19 +12,13 @@ export interface SRT_ToggleFiltersButtonProps<TData extends SRT_RowData> {
 }
 
 /**
- * Toggle filters button - show/hide column filters
+ * Toggle filters button - show/hide column filters.
  *
- * Barebones implementation:
- * - Toggles column filter visibility
- * - Filter icon changes based on state
- * - Filter icon = filters off, FilterX icon = filters on
- *
- * TODO (Future enhancements):
- * - Add tooltip
- * - Add filter count badge
- * - Add keyboard shortcuts
- * - Add animation on toggle
- * - Add clear all filters functionality
+ * Ported from MRT_ToggleFiltersButton:
+ * - Toggles column filter visibility.
+ * - Icon (read from the table icon registry) reflects state:
+ *   FilterListOffIcon when filters are shown, FilterListIcon otherwise.
+ * - Tooltip (localization.showHideFilters) via SRT_Tooltip.
  */
 
 export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
@@ -33,7 +27,10 @@ export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
 }: SRT_ToggleFiltersButtonProps<TData>) => {
   const {
     getState,
-    options: { localization },
+    options: {
+      icons: { FilterListIcon, FilterListOffIcon },
+      localization,
+    },
     setShowColumnFilters,
   } = table;
   const { showColumnFilters } = getState();
@@ -43,19 +40,20 @@ export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={handleToggleShowFilters}
-      title={localization.showHideFilters}
-      aria-label={localization.showHideFilters}
-      className={cn('h-9 w-9', className)}
-    >
-      {showColumnFilters ? (
-        <FilterXIcon className="h-4 w-4" />
-      ) : (
-        <FilterIcon className="h-4 w-4" />
-      )}
-    </Button>
+    <SRT_Tooltip title={localization.showHideFilters}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleToggleShowFilters}
+        aria-label={localization.showHideFilters}
+        className={cn('h-9 w-9', className)}
+      >
+        {showColumnFilters ? (
+          <FilterListOffIcon className="h-4 w-4" />
+        ) : (
+          <FilterListIcon className="h-4 w-4" />
+        )}
+      </Button>
+    </SRT_Tooltip>
   );
 };

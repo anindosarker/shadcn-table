@@ -1,4 +1,6 @@
 import {
+  mergeSRT_HtmlProps,
+  parseSRT_HtmlProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -33,12 +35,24 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
       onEditingRowCancel,
       renderCreateRowDialogContent,
       renderEditRowDialogContent,
+      srtCreateRowModalProps,
+      srtEditRowDialogProps,
     },
     setCreatingRow,
     setEditingRow,
   } = table;
   const { creatingRow, editingRow } = getState();
   const row = (creatingRow ?? editingRow) as SRT_Row<TData>;
+
+  // Compose the edit-dialog DOM props with the create-modal overrides (the
+  // latter only apply while creating), mirroring MRT's muiEditRowDialogProps +
+  // muiCreateRowModalProps layering. These land on <DialogContent>.
+  const dialogProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtEditRowDialogProps, { row, table }),
+    creatingRow
+      ? parseSRT_HtmlProps(srtCreateRowModalProps, { row, table })
+      : undefined,
+  );
 
   const handleClose = () => {
     if (creatingRow) {
@@ -67,7 +81,10 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
         if (!nextOpen) handleClose();
       }}
     >
-      <DialogContent className={cn('sm:max-w-xs', className)}>
+      <DialogContent
+        {...dialogProps}
+        className={cn('sm:max-w-xs', dialogProps?.className, className)}
+      >
         {((creatingRow &&
           renderCreateRowDialogContent?.({
             internalEditComponents,

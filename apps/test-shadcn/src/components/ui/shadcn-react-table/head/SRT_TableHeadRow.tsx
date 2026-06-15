@@ -33,10 +33,16 @@ export const SRT_TableHeadRow = <TData extends SRT_RowData>({
   table,
   className,
 }: SRT_TableHeadRowProps<TData>) => {
+  const {
+    options: { enableStickyHeader, layoutMode, srtTableHeadRowProps },
+  } = table;
+
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
 
-  const rowProps = parseSRT_HtmlProps(table.options.srtTableHeadRowProps, {
+  const isGrid = layoutMode?.startsWith('grid');
+
+  const rowProps = parseSRT_HtmlProps(srtTableHeadRowProps, {
     headerGroup,
     table,
   });
@@ -44,7 +50,17 @@ export const SRT_TableHeadRow = <TData extends SRT_RowData>({
   return (
     <tr
       {...rowProps}
-      className={cn('border-b', className, rowProps?.className)}
+      className={cn(
+        'border-b bg-background shadow-[4px_0_8px_rgba(0,0,0,0.1)]',
+        // Grid layout renders the head row as a flexbox; semantic sticky
+        // headers stay sticky, everything else is relative (mirrors MRT).
+        isGrid ? 'flex' : '',
+        enableStickyHeader && layoutMode === 'semantic'
+          ? 'sticky top-0'
+          : 'relative top-0',
+        className,
+        rowProps?.className,
+      )}
     >
       {virtualPaddingLeft ? (
         <th style={{ display: 'flex', width: virtualPaddingLeft }} />

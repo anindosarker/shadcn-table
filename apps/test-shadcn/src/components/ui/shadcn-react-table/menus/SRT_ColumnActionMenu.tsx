@@ -1,17 +1,5 @@
 import { type MouseEvent, type ReactNode, useState } from 'react';
 import {
-  ArrowDownWideNarrowIcon,
-  ArrowUpNarrowWideIcon,
-  Columns3Icon,
-  EyeOffIcon,
-  FilterIcon,
-  FilterXIcon,
-  LayersIcon,
-  ListXIcon,
-  PinIcon,
-  RotateCcwIcon,
-} from 'lucide-react';
-import {
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -33,8 +21,9 @@ export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData> {
 
 /**
  * Column action menu - sort/pin/group/hide/filter-by + custom column actions.
- * Port of MRT_ColumnActionMenu. MUI Menu -> shadcn DropdownMenu, MUI icons ->
- * lucide-react. Items are gated by enable* options + column capabilities and
+ * Port of MRT_ColumnActionMenu. MUI Menu -> shadcn DropdownMenu. Icons are read
+ * from `table.options.icons` (same keys as MRT, user-overridable) rather than
+ * hardcoded. Items are gated by enable* options + column capabilities and
  * labeled via localization, exactly as in MRT.
  */
 export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
@@ -57,6 +46,17 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       enableHiding,
       enableSorting,
       enableSortingRemoval,
+      icons: {
+        ClearAllIcon,
+        DynamicFeedIcon,
+        FilterListIcon,
+        FilterListOffIcon,
+        PushPinIcon,
+        RestartAltIcon,
+        SortIcon,
+        ViewColumnIcon,
+        VisibilityOffIcon,
+      },
       localization,
       renderColumnActionsMenuItems,
     },
@@ -68,7 +68,9 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  const { columnSizing, columnVisibility, showColumnFilters } = getState();
+  const { columnSizing, columnVisibility, density, showColumnFilters } =
+    getState();
+  const dense = density === 'compact';
   const columnFilterValue = column.getFilterValue();
 
   const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
@@ -158,8 +160,9 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           enableSortingRemoval !== false && (
             <SRT_ActionMenuItem
+              dense={dense}
               disabled={column.getIsSorted() === false}
-              icon={<ListXIcon className="h-4 w-4" />}
+              icon={<ClearAllIcon className="h-4 w-4" />}
               key={0}
               label={localization.clearSort}
               onClick={handleClearSort}
@@ -168,7 +171,12 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           ),
           <SRT_ActionMenuItem
             disabled={column.getIsSorted() === 'asc'}
-            icon={<ArrowUpNarrowWideIcon className="h-4 w-4" />}
+            icon={
+              <SortIcon
+                className="h-4 w-4"
+                style={{ transform: 'rotate(180deg) scaleX(-1)' }}
+              />
+            }
             key={1}
             label={localization.sortByColumnAsc?.replace(
               '{column}',
@@ -180,7 +188,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={column.getIsSorted() === 'desc'}
             divider={enableColumnFilters || enableGrouping || enableHiding}
-            icon={<ArrowDownWideNarrowIcon className="h-4 w-4" />}
+            icon={<SortIcon className="h-4 w-4" />}
             key={2}
             label={localization.sortByColumnDesc?.replace(
               '{column}',
@@ -199,7 +207,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
               (Array.isArray(columnFilterValue) &&
                 !columnFilterValue.filter((value) => value).length)
             }
-            icon={<FilterXIcon className="h-4 w-4" />}
+            icon={<FilterListOffIcon className="h-4 w-4" />}
             key={3}
             label={localization.clearFilter}
             onClick={handleClearFilter}
@@ -207,9 +215,10 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           />,
           columnFilterDisplayMode === 'subheader' && (
             <SRT_ActionMenuItem
+              dense={dense}
               disabled={showColumnFilters && !enableColumnFilterModes}
               divider={enableGrouping || enableHiding}
-              icon={<FilterIcon className="h-4 w-4" />}
+              icon={<FilterListIcon className="h-4 w-4" />}
               key={4}
               label={localization.filterByColumn?.replace(
                 '{column}',
@@ -242,7 +251,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             divider={enableColumnPinning}
-            icon={<LayersIcon className="h-4 w-4" />}
+            icon={<DynamicFeedIcon className="h-4 w-4" />}
             key={6}
             label={localization[
               column.getIsGrouped() ? 'ungroupByColumn' : 'groupByColumn'
@@ -257,7 +266,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
             icon={
-              <PinIcon
+              <PushPinIcon
                 className="h-4 w-4"
                 style={{ transform: 'rotate(90deg)' }}
               />
@@ -270,7 +279,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
             icon={
-              <PinIcon
+              <PushPinIcon
                 className="h-4 w-4"
                 style={{ transform: 'rotate(-90deg)' }}
               />
@@ -283,7 +292,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={!column.getIsPinned()}
             divider={enableHiding}
-            icon={<PinIcon className="h-4 w-4" />}
+            icon={<PushPinIcon className="h-4 w-4" />}
             key={9}
             label={localization.unpin}
             onClick={() => handlePinColumn(false)}
@@ -295,7 +304,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             disabled={columnSizing[column.id] === undefined}
-            icon={<RotateCcwIcon className="h-4 w-4" />}
+            icon={<RestartAltIcon className="h-4 w-4" />}
             key={10}
             label={localization.resetColumnSize}
             onClick={handleResetColumnSize}
@@ -307,7 +316,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             disabled={!column.getCanHide()}
-            icon={<EyeOffIcon className="h-4 w-4" />}
+            icon={<VisibilityOffIcon className="h-4 w-4" />}
             key={11}
             label={localization.hideColumn?.replace(
               '{column}',
@@ -321,7 +330,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
               !Object.values(columnVisibility).filter((visible) => !visible)
                 .length
             }
-            icon={<Columns3Icon className="h-4 w-4" />}
+            icon={<ViewColumnIcon className="h-4 w-4" />}
             key={12}
             label={localization.showAllColumns?.replace(
               '{column}',

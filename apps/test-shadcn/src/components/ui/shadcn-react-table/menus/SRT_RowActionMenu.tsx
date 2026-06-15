@@ -1,5 +1,4 @@
 import { type MouseEvent, type ReactNode, useMemo } from 'react';
-import { EditIcon } from 'lucide-react';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -38,19 +37,23 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
   table,
 }: SRT_RowActionMenuProps<TData>) => {
   const {
+    getState,
     options: {
       editDisplayMode,
       enableEditing,
+      icons: { EditIcon },
       localization,
       renderRowActionMenuItems,
     },
   } = table;
+  const { density } = getState();
 
   const menuItems = useMemo(() => {
     const items: ReactNode[] = [];
     const editItem = parseFromValuesOrFunc(enableEditing, row) &&
       ['modal', 'row'].includes(editDisplayMode!) && (
         <SRT_ActionMenuItem
+          dense={density === 'compact'}
           key={'edit'}
           icon={<EditIcon className="h-4 w-4" />}
           label={localization.edit}
@@ -68,7 +71,7 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
     if (rowActionMenuItems?.length) items.push(...rowActionMenuItems);
     return items;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [renderRowActionMenuItems, row, staticRowIndex, table]);
+  }, [density, renderRowActionMenuItems, row, staticRowIndex, table]);
 
   if (!menuItems.length) return null;
 

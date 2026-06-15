@@ -91,7 +91,7 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
   enableToolbarInternalActions = true,
   enableTopToolbar = true,
   filterFns,
-  // icons,
+  icons,
   id = useId(),
   layoutMode,
   localization,
@@ -116,7 +116,7 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
 }: SRT_TableOptions<TData>) => {
   // const theme = useTheme();
 
-  // icons = useMemo(() => ({ ...SRT_Default_Icons, ...icons }), [icons]);
+  icons = useMemo(() => ({ ...SRT_Default_Icons, ...icons }), [icons]);
   localization = useMemo(
     () => ({
       ...SRT_Localization_EN,
@@ -244,7 +244,7 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     getSortedRowModel:
       enableSorting && !manualSorting ? getSortedRowModel() : undefined,
     getSubRows: (row) => row?.subRows,
-    // icons,
+    icons,
     id,
     layoutMode,
     localization,

@@ -4,6 +4,7 @@ import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
 import { SRT_TablePagination } from './SRT_TablePagination';
 import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
 import { SRT_ToolbarDropZone } from './SRT_ToolbarDropZone';
+import { useSRT_MediaQuery } from './useSRT_MediaQuery';
 import { cn } from '@/lib/utils';
 
 export interface SRT_BottomToolbarProps<TData extends SRT_RowData> {
@@ -18,13 +19,11 @@ export interface SRT_BottomToolbarProps<TData extends SRT_RowData> {
  * - Pagination (when enabled)
  * - Linear progress bar
  * - Custom actions render slot
- *
- * TODO (Future enhancements):
  * - Alert banner support (bottom position)
  * - Drop zone support (for column grouping)
  * - Fullscreen mode fixed positioning
- * - Mobile responsive layout
- * - Custom toolbar props
+ * - Mobile responsive alert-banner stacking (matchMedia)
+ * - Custom toolbar props (srtBottomToolbarProps)
  */
 
 export const SRT_BottomToolbar = <TData extends SRT_RowData>({
@@ -45,11 +44,13 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
   } = table;
   const { isFullScreen } = getState();
 
+  const isMobile = useSRT_MediaQuery('(max-width:720px)');
+
   const toolbarProps = parseSRT_HtmlProps(srtBottomToolbarProps, { table });
 
-  // TODO: stackAlertBanner and responsive handling (mobile/tablet)
-  // For now, always stack the alert banner for simplicity
-  const stackAlertBanner = true;
+  // Mirror MRT: stack the alert banner on mobile or when custom actions are
+  // present; otherwise the pagination overlays absolutely in the top-right.
+  const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
   return (
     <div

@@ -3,17 +3,14 @@ import {
   getIsRowSelected,
   getSRT_RowSelectionHandler,
   getSRT_SelectAllHandler,
+  parseSRT_HtmlProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_SelectCheckboxProps<TData extends SRT_RowData>
   extends Omit<ComponentProps<typeof Checkbox>, 'checked' | 'onCheckedChange'> {
@@ -40,11 +37,27 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 }: SRT_SelectCheckboxProps<TData>) => {
   const {
     getState,
-    options: { enableMultiRowSelection, localization, selectAllMode },
+    options: {
+      enableMultiRowSelection,
+      localization,
+      selectAllMode,
+      srtSelectAllCheckboxProps,
+      srtSelectCheckboxProps,
+    },
   } = table;
   const { density, isLoading } = getState();
 
   const selectAll = !row;
+
+  // Resolve the slot props: select-all uses the table context, per-row
+  // checkboxes use the row context (matches MRT's two distinct slots).
+  const slotProps = selectAll
+    ? parseSRT_HtmlProps(srtSelectAllCheckboxProps, { table })
+    : parseSRT_HtmlProps(srtSelectCheckboxProps, {
+        row: row!,
+        staticRowIndex,
+        table,
+      });
 
   const allRowsSelected = selectAll
     ? selectAllMode === 'page'
@@ -91,41 +104,42 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
   const shiftKeyRef = useRef(false);
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span className="inline-flex">
-          <Checkbox
-            aria-label={label}
-            checked={checkedState}
-            disabled={disabled}
-            onCheckedChange={(value) => {
-              const next = value === true;
-              const syntheticEvent = {
-                stopPropagation: () => {},
-                nativeEvent: { shiftKey: shiftKeyRef.current },
-                target: { checked: next },
-              } as any;
-              if (selectAll) {
-                onSelectAllChange(syntheticEvent, next);
-              } else {
-                onSelectionChange!(syntheticEvent, next);
-              }
-              shiftKeyRef.current = false;
-            }}
-            onClick={(e: MouseEvent<HTMLButtonElement>) => {
-              e.stopPropagation();
-              shiftKeyRef.current = e.shiftKey;
-            }}
-            className={cn(
-              density === 'compact' ? 'size-4' : 'size-5',
-              isSingleSelect && 'rounded-full',
-              className,
-            )}
-            {...rest}
-          />
-        </span>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
+    <SRT_Tooltip title={label} asChild>
+      <span className="inline-flex">
+        <Checkbox
+          aria-label={label}
+          checked={checkedState}
+          disabled={disabled}
+          {...slotProps}
+          onCheckedChange={(value) => {
+            const next = value === true;
+            const syntheticEvent = {
+              stopPropagation: () => {},
+              nativeEvent: { shiftKey: shiftKeyRef.current },
+              target: { checked: next },
+            } as any;
+            if (selectAll) {
+              onSelectAllChange(syntheticEvent, next);
+            } else {
+              onSelectionChange!(syntheticEvent, next);
+            }
+            shiftKeyRef.current = false;
+          }}
+          onClick={(e: MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation();
+            shiftKeyRef.current = e.shiftKey;
+            // Compose the user's slot-prop onClick after the component's logic.
+            slotProps?.onClick?.(e);
+          }}
+          className={cn(
+            density === 'compact' ? 'size-4' : 'size-5',
+            isSingleSelect && 'rounded-full',
+            className,
+            slotProps?.className,
+          )}
+          {...rest}
+        />
+      </span>
+    </SRT_Tooltip>
   );
 };

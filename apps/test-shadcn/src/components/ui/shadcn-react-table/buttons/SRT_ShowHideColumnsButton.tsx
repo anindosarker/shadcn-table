@@ -1,11 +1,11 @@
 import { type MouseEvent, useState } from 'react';
-import { ColumnsIcon } from 'lucide-react';
 import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu';
 
 export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData> {
@@ -26,7 +26,10 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
   className,
 }: SRT_ShowHideColumnsButtonProps<TData>) => {
   const {
-    options: { localization },
+    options: {
+      icons: { ViewColumnIcon },
+      localization,
+    },
   } = table;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -37,16 +40,17 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleClick}
-        title={localization.showHideColumns}
-        aria-label={localization.showHideColumns}
-        className={cn('h-9 w-9', className)}
-      >
-        <ColumnsIcon className="h-4 w-4" />
-      </Button>
+      <SRT_Tooltip title={localization.showHideColumns}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleClick}
+          aria-label={localization.showHideColumns}
+          className={cn('h-9 w-9', className)}
+        >
+          <ViewColumnIcon className="h-4 w-4" />
+        </Button>
+      </SRT_Tooltip>
       {anchorEl && (
         <SRT_ShowHideColumnsMenu
           anchorEl={anchorEl}

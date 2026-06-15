@@ -1,4 +1,4 @@
-import { XIcon, SaveIcon, LoaderCircleIcon } from 'lucide-react';
+import { LoaderCircleIcon } from 'lucide-react';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -6,6 +6,7 @@ import {
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_EditActionButtonsProps<TData extends SRT_RowData> {
   row: SRT_Row<TData>;
@@ -40,6 +41,7 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
   const {
     getState,
     options: {
+      icons: { CancelIcon, SaveIcon },
       localization,
       onCreatingRowCancel,
       onCreatingRowSave,
@@ -105,33 +107,35 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
     >
       {variant === 'icon' ? (
         <>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCancel}
-            title={localization.cancel}
-            aria-label={localization.cancel}
-            className="h-9 w-9"
-          >
-            <XIcon className="h-4 w-4" />
-          </Button>
-          {((isCreating && onCreatingRowSave) ||
-            (isEditing && onEditingRowSave)) && (
+          <SRT_Tooltip title={localization.cancel}>
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleSubmitRow}
-              disabled={isSaving}
-              title={localization.save}
-              aria-label={localization.save}
-              className="h-9 w-9 text-blue-500 hover:text-blue-600"
+              onClick={handleCancel}
+              aria-label={localization.cancel}
+              className="h-9 w-9"
             >
-              {isSaving ? (
-                <LoaderCircleIcon className="h-4 w-4 animate-spin" />
-              ) : (
-                <SaveIcon className="h-4 w-4" />
-              )}
+              <CancelIcon className="h-4 w-4" />
             </Button>
+          </SRT_Tooltip>
+          {((isCreating && onCreatingRowSave) ||
+            (isEditing && onEditingRowSave)) && (
+            <SRT_Tooltip title={localization.save}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleSubmitRow}
+                disabled={isSaving}
+                aria-label={localization.save}
+                className="h-9 w-9 text-blue-500 hover:text-blue-600"
+              >
+                {isSaving ? (
+                  <LoaderCircleIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <SaveIcon className="h-4 w-4" />
+                )}
+              </Button>
+            </SRT_Tooltip>
           )}
         </>
       ) : (

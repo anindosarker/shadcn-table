@@ -7,6 +7,7 @@ export * from './utils/column.utils';
 export * from './utils/displayColumn.utils';
 export * from './utils/row.utils';
 export * from './utils/srtHtmlProps.utils';
+export * from './utils/style.utils';
 export * from './utils/utils';
 
 //fns

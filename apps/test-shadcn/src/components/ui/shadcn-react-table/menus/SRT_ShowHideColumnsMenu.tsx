@@ -49,7 +49,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
       localization,
     },
   } = table;
-  const { columnOrder, columnPinning } = getState();
+  const { columnOrder, columnPinning, density } = getState();
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -173,6 +173,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           <SRT_ShowHideColumnsMenuItems
             allColumns={allColumns}
             column={column}
+            dense={density === 'compact'}
             hoveredColumn={hoveredColumn}
             isNestedColumns={isNestedColumns}
             key={`${index}-${column.id}`}

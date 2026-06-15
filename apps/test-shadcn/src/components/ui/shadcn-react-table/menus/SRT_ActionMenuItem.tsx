@@ -1,5 +1,4 @@
 import { type ComponentProps, type MouseEvent, type ReactNode } from 'react';
-import { ChevronRightIcon } from 'lucide-react';
 import {
   type SRT_RowData,
   type SRT_TableInstance,
@@ -12,6 +11,9 @@ import { cn } from '@/lib/utils';
 
 export interface SRT_ActionMenuItemProps<TData extends SRT_RowData>
   extends Omit<ComponentProps<typeof DropdownMenuItem>, 'onSelect'> {
+  // Compact density renders tighter vertical padding, mirroring MRT's
+  // `MenuListProps.dense` (set when table density is 'compact').
+  dense?: boolean;
   divider?: boolean;
   icon: ReactNode;
   label: string;
@@ -30,19 +32,29 @@ export interface SRT_ActionMenuItemProps<TData extends SRT_RowData>
  * - `onOpenSubMenu` renders a trailing arrow that opens a submenu.
  * - `divider` renders a DropdownMenuSeparator after the item.
  * - `selected` highlights the item (filter-mode menu uses this).
+ * - `dense` tightens vertical padding (table density 'compact').
+ * - The submenu arrow icon is read from the table's icon registry
+ *   (`table.options.icons.ArrowRightIcon`), exactly as in MRT.
  */
 export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
   className,
+  dense,
   divider,
   icon,
   label,
   onOpenSubMenu,
   selected,
-  table: _table,
+  table,
   value,
   onClick,
   ...rest
 }: SRT_ActionMenuItemProps<TData>) => {
+  const {
+    options: {
+      icons: { ArrowRightIcon },
+    },
+  } = table;
+
   return (
     <>
       <DropdownMenuItem
@@ -55,7 +67,8 @@ export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
         }}
         onClick={onClick}
         className={cn(
-          'flex min-w-[120px] items-center justify-between gap-2 py-1.5',
+          'flex min-w-[120px] items-center justify-between gap-2',
+          dense ? 'py-1' : 'py-1.5',
           selected && 'bg-accent text-accent-foreground',
           className,
         )}
@@ -75,7 +88,7 @@ export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
             className="flex h-5 w-5 shrink-0 items-center justify-center rounded-sm p-0 hover:bg-accent"
             tabIndex={-1}
           >
-            <ChevronRightIcon className="h-4 w-4" />
+            <ArrowRightIcon className="h-4 w-4" />
           </button>
         )}
       </DropdownMenuItem>

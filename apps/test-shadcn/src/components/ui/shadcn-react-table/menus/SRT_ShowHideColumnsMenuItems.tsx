@@ -25,6 +25,9 @@ import { cn } from '@/lib/utils';
 export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData> {
   allColumns: SRT_Column<TData>[];
   column: SRT_Column<TData>;
+  // Compact density renders tighter row padding, mirroring MRT's
+  // `MenuListProps.dense` (set when table density is 'compact').
+  dense?: boolean;
   hoveredColumn: SRT_Column<TData> | null;
   isNestedColumns: boolean;
   setHoveredColumn: Dispatch<SetStateAction<SRT_Column<TData> | null>>;
@@ -43,6 +46,7 @@ export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData> {
 export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
   allColumns,
   column,
+  dense,
   hoveredColumn,
   isNestedColumns,
   setHoveredColumn,
@@ -134,7 +138,8 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
           paddingLeft: `${(column.depth + 0.5) * 1}rem`,
         }}
         className={cn(
-          'flex items-center justify-start px-2 py-1.5 text-sm',
+          'flex items-center justify-start px-2 text-sm',
+          dense ? 'py-1' : 'py-1.5',
           className,
         )}
       >
@@ -191,6 +196,7 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
         <SRT_ShowHideColumnsMenuItems
           allColumns={allColumns}
           column={c}
+          dense={dense}
           hoveredColumn={hoveredColumn}
           isNestedColumns={isNestedColumns}
           key={`${i}-${c.id}`}

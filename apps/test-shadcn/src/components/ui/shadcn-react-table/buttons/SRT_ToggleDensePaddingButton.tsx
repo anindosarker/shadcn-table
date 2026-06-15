@@ -1,7 +1,7 @@
 import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { AlignJustifyIcon, AlignCenterIcon, MinusIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_ToggleDensePaddingButtonProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -9,19 +9,14 @@ export interface SRT_ToggleDensePaddingButtonProps<TData extends SRT_RowData> {
 }
 
 /**
- * Toggle density button - cycles through table density options
+ * Toggle density button - cycles through table density options.
  *
- * Barebones implementation:
- * - Cycles: comfortable -> compact -> spacious -> comfortable
- * - Shows appropriate icon based on current density
- * - Basic hover tooltip via title attribute
- *
- * TODO (Future enhancements):
- * - Add Tooltip component from shadcn
- * - Add custom icon support via table.options.icons
- * - Add srtToggleDensePaddingButtonProps to core package types
- * - Add dropdown menu to select density directly
- * - Add visual preview of density options
+ * Ported from MRT_ToggleDensePaddingButton:
+ * - Cycles comfortable -> compact -> spacious -> comfortable.
+ * - Icon (read from the table icon registry) reflects current density:
+ *   DensitySmallIcon (compact), DensityMediumIcon (comfortable),
+ *   DensityLargeIcon (spacious).
+ * - Tooltip (localization.toggleDensity) via SRT_Tooltip.
  */
 
 export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
@@ -31,8 +26,8 @@ export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
   const {
     getState,
     options: {
+      icons: { DensityLargeIcon, DensityMediumIcon, DensitySmallIcon },
       localization,
-      // icons, // TODO: Add custom icon support
     },
     setDensity,
   } = table;
@@ -49,28 +44,22 @@ export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={handleToggleDensePadding}
-      aria-label={localization.toggleDensity}
-      title={localization.toggleDensity}
-      className={cn('h-8 w-8', className)}
-    >
-      {density === 'compact' ? (
-        <MinusIcon className="h-4 w-4" />
-      ) : density === 'comfortable' ? (
-        <AlignCenterIcon className="h-4 w-4" />
-      ) : (
-        <AlignJustifyIcon className="h-4 w-4" />
-      )}
-    </Button>
+    <SRT_Tooltip title={localization.toggleDensity}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleToggleDensePadding}
+        aria-label={localization.toggleDensity}
+        className={cn('h-8 w-8', className)}
+      >
+        {density === 'compact' ? (
+          <DensitySmallIcon className="h-4 w-4" />
+        ) : density === 'comfortable' ? (
+          <DensityMediumIcon className="h-4 w-4" />
+        ) : (
+          <DensityLargeIcon className="h-4 w-4" />
+        )}
+      </Button>
+    </SRT_Tooltip>
   );
 };
-
-// TODO: Add these features in future iterations:
-// 1. Shadcn Tooltip component for better UX
-// 2. Custom icons via table.options.icons
-// 3. Dropdown menu for direct density selection
-// 4. Visual preview of density options in menu
-// 5. Support for srtToggleDensePaddingButtonProps

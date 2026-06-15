@@ -29,7 +29,9 @@ import {
   ArrowLeftRight,
   Columns2,
   EyeOff,
-  Text,
+  Rows2,
+  Rows3,
+  Rows4,
 } from 'lucide-react';
 import { ComponentType } from 'react';
 
@@ -42,9 +44,9 @@ export const SRT_Default_Icons: Record<string, ComponentType<any>> = {
   ClearAllIcon: Eraser,
   CloseIcon: X,
   ContentCopy: Copy,
-  DensityLargeIcon: Text,
-  DensityMediumIcon: Text,
-  DensitySmallIcon: Text,
+  DensityLargeIcon: Rows2,
+  DensityMediumIcon: Rows3,
+  DensitySmallIcon: Rows4,
   DragHandleIcon: GripVertical,
   DynamicFeedIcon: Rss,
   EditIcon: Pencil,

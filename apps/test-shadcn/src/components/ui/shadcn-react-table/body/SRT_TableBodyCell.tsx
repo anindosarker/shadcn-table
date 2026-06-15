@@ -125,6 +125,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       groupedColumnMode,
       renderRowActions,
       rowNumberDisplayMode,
+      srtSkeletonProps,
       srtTableBodyCellProps,
     },
     setHoveredColumn,
@@ -355,6 +356,9 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     parseSRT_HtmlProps(srtTableBodyCellProps, htmlPropsContext),
     parseSRT_HtmlProps(columnDef.srtTableBodyCellProps, htmlPropsContext),
   );
+
+  // Slot props for the loading-skeleton element (MRT's muiSkeletonProps).
+  const skeletonProps = parseSRT_HtmlProps(srtSkeletonProps, htmlPropsContext);
   const cellProps = mergeSRT_HtmlProps(
     {
       onKeyDown: handleKeyDown,
@@ -401,8 +405,12 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
         (columnDef.PlaceholderCell?.({ cell, column, row, table }) ?? null)
       ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
         <span
-          className="inline-block h-5 animate-pulse rounded bg-muted"
-          style={{ width: skeletonWidth }}
+          {...skeletonProps}
+          className={cn(
+            'inline-block h-5 animate-pulse rounded bg-muted',
+            skeletonProps?.className,
+          )}
+          style={{ width: skeletonWidth, ...skeletonProps?.style }}
         />
       ) : columnDefType === 'display' &&
         (['mrt-row-expand', 'mrt-row-numbers', 'mrt-row-select'].includes(

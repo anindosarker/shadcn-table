@@ -1,3 +1,32 @@
+/**
+ * Replace every non-alphanumeric char so the column/header id can be used inside
+ * a CSS custom property name (e.g. `--col-first_name-size`). Mirrors MRT.
+ */
+export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
+
+/**
+ * shadcn `<Tooltip>`-compatible replacement for MRT's MUI `getCommonTooltipProps`.
+ *
+ * MRT returned MUI `TooltipProps` (`{ disableInteractive, enterDelay, enterNextDelay,
+ * placement }`). shadcn/Radix tooltips are configured differently, so this returns the
+ * Radix-flavored equivalents the shared `SRT_Tooltip` wrapper understands:
+ * - `side` — Radix placement (maps from MUI `placement`'s primary axis)
+ * - `delayDuration` — open delay in ms (mirrors MRT's 1000ms `enterDelay`)
+ */
+export type SRT_TooltipSide = 'bottom' | 'left' | 'right' | 'top';
+
+export type SRT_CommonTooltipProps = {
+  delayDuration: number;
+  side?: SRT_TooltipSide;
+};
+
+export const getCommonTooltipProps = (
+  side?: SRT_TooltipSide,
+): SRT_CommonTooltipProps => ({
+  delayDuration: 1000,
+  side,
+});
+
 // TODO: fix later
 // import { type CSSProperties } from 'react';
 // import {

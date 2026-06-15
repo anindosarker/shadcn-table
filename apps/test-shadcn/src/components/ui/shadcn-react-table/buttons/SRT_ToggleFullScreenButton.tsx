@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { Maximize2Icon, Minimize2Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
@@ -9,19 +10,14 @@ export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData> {
 }
 
 /**
- * Toggle fullscreen button - switches table between normal and fullscreen mode
+ * Toggle fullscreen button - switches table between normal and fullscreen mode.
  *
- * Barebones implementation:
- * - Toggles fullscreen state
- * - Shows appropriate icon (Maximize/Minimize)
- * - Basic hover tooltip via title attribute
- *
- * TODO (Future enhancements):
- * - Add Tooltip component from shadcn
- * - Add custom icon support via table.options.icons
- * - Add srtToggleFullScreenButtonProps to core package types
- * - Add keyboard shortcut (e.g., F11 or Escape)
- * - Add animation on state change
+ * Ported from MRT_ToggleFullScreenButton:
+ * - Toggles fullscreen state.
+ * - Icon (read from the table icon registry) reflects state:
+ *   FullscreenExitIcon when fullscreen, FullscreenIcon otherwise.
+ * - Tooltip (localization.toggleFullScreen) via SRT_Tooltip, controlled so it
+ *   closes on click / blur (matches MRT's open-state handling).
  */
 
 export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
@@ -31,38 +27,43 @@ export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
   const {
     getState,
     options: {
+      icons: { FullscreenExitIcon, FullscreenIcon },
       localization,
-      // icons, // TODO: Add custom icon support
     },
     setIsFullScreen,
   } = table;
   const { isFullScreen } = getState();
 
+  const [tooltipOpened, setTooltipOpened] = useState(false);
+
   const handleToggleFullScreen = () => {
+    setTooltipOpened(false);
     setIsFullScreen(!isFullScreen);
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={handleToggleFullScreen}
-      aria-label={localization.toggleFullScreen}
+    <SRT_Tooltip
       title={localization.toggleFullScreen}
-      className={cn('h-8 w-8', className)}
+      open={tooltipOpened}
+      onOpenChange={setTooltipOpened}
     >
-      {isFullScreen ? (
-        <Minimize2Icon className="h-4 w-4" />
-      ) : (
-        <Maximize2Icon className="h-4 w-4" />
-      )}
-    </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleToggleFullScreen}
+        onBlur={() => setTooltipOpened(false)}
+        onFocus={() => setTooltipOpened(true)}
+        onMouseEnter={() => setTooltipOpened(true)}
+        onMouseLeave={() => setTooltipOpened(false)}
+        aria-label={localization.toggleFullScreen}
+        className={cn('h-8 w-8', className)}
+      >
+        {isFullScreen ? (
+          <FullscreenExitIcon className="h-4 w-4" />
+        ) : (
+          <FullscreenIcon className="h-4 w-4" />
+        )}
+      </Button>
+    </SRT_Tooltip>
   );
 };
-
-// TODO: Add these features in future iterations:
-// 1. Shadcn Tooltip component for better UX
-// 2. Custom icons via table.options.icons
-// 3. Keyboard shortcut support
-// 4. Animation on toggle
-// 5. Support for srtToggleFullScreenButtonProps

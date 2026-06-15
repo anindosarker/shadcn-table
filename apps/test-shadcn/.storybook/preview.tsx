@@ -7,6 +7,9 @@ import '../src/index.css';
 const channel = addons.getChannel();
 
 const preview: Preview = {
+  // Generate an autodocs page (with a working "Show code" Source block) for
+  // every story, mirroring material-react-table's storybook.
+  tags: ['autodocs'],
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
@@ -17,6 +20,13 @@ const preview: Preview = {
     },
     darkMode: {
       current: 'dark',
+    },
+    docs: {
+      // Show the real story source from the file. The default 'dynamic' mode
+      // serializes the rendered table tree, which threw on the heavy SRT
+      // component (the stale "ColumnsIcon is not defined" eval). 'code' reads
+      // the static source instead — accurate snippets, no render-time eval.
+      source: { type: 'code' },
     },
   },
   decorators: [

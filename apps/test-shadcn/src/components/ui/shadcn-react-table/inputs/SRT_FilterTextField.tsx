@@ -93,7 +93,11 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       enableColumnFilterModes,
       localization,
       manualFiltering,
+      srtFilterAutocompleteProps,
+      srtFilterDatePickerProps,
+      srtFilterDateTimePickerProps,
       srtFilterTextFieldProps,
+      srtFilterTimePickerProps,
     },
     refs: { filterInputRefs },
     setColumnFilterFns,
@@ -102,19 +106,43 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   const { columnDef } = column;
   const { filterVariant } = columnDef;
 
+  // Slot-prop context is shared by the text field and every picker variant.
+  const slotPropsContext = { column, rangeFilterIndex, table };
+
   // Resolve the slot props: table-level defaults overridable per-column.
   const slotProps = mergeSRT_HtmlProps(
-    parseSRT_HtmlProps(srtFilterTextFieldProps, {
-      column,
-      rangeFilterIndex,
-      table,
-    }),
-    parseSRT_HtmlProps(columnDef.srtFilterTextFieldProps, {
-      column,
-      rangeFilterIndex,
-      table,
-    }),
+    parseSRT_HtmlProps(srtFilterTextFieldProps, slotPropsContext),
+    parseSRT_HtmlProps(columnDef.srtFilterTextFieldProps, slotPropsContext),
   );
+
+  // Autocomplete and the three date-flavored variants each have their own slot.
+  const autocompleteSlotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtFilterAutocompleteProps, slotPropsContext),
+    parseSRT_HtmlProps(columnDef.srtFilterAutocompleteProps, slotPropsContext),
+  );
+  const datePickerSlotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtFilterDatePickerProps, slotPropsContext),
+    parseSRT_HtmlProps(columnDef.srtFilterDatePickerProps, slotPropsContext),
+  );
+  const dateTimePickerSlotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtFilterDateTimePickerProps, slotPropsContext),
+    parseSRT_HtmlProps(
+      columnDef.srtFilterDateTimePickerProps,
+      slotPropsContext,
+    ),
+  );
+  const timePickerSlotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtFilterTimePickerProps, slotPropsContext),
+    parseSRT_HtmlProps(columnDef.srtFilterTimePickerProps, slotPropsContext),
+  );
+
+  // The date/datetime/time variants all render a single native typed input;
+  // pick the matching slot props for whichever variant is active.
+  const dateVariantSlotProps = filterVariant?.startsWith('datetime')
+    ? dateTimePickerSlotProps
+    : filterVariant?.startsWith('time')
+      ? timePickerSlotProps
+      : datePickerSlotProps;
 
   const {
     allowedColumnFilterOptions,
@@ -471,14 +499,18 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           <Popover>
             <PopoverTrigger asChild>
               <Input
-                ref={setInputRef}
                 autoComplete="off"
                 aria-label={filterPlaceholder}
                 placeholder={filterPlaceholder}
+                {...autocompleteSlotProps}
+                ref={setInputRef}
                 value={value}
-                onChange={(e) => handleChange(e.target.value)}
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                  autocompleteSlotProps?.onChange?.(e);
+                }}
                 onClick={(e) => e.stopPropagation()}
-                className="h-9 w-full"
+                className={cn('h-9 w-full', autocompleteSlotProps?.className)}
               />
             </PopoverTrigger>
             <PopoverContent
@@ -527,14 +559,21 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
         <div className="flex w-full items-center gap-1">
           {changeModeButton}
           <Input
-            ref={setInputRef}
             type={inputType}
             aria-label={filterPlaceholder}
+            {...dateVariantSlotProps}
+            ref={setInputRef}
             value={typeof filterValue === 'string' ? filterValue : ''}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => {
+              handleChange(e.target.value);
+              dateVariantSlotProps?.onChange?.(e);
+            }}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
-            className="h-9 w-full min-w-[160px]"
+            className={cn(
+              'h-9 w-full min-w-[160px]',
+              dateVariantSlotProps?.className,
+            )}
           />
         </div>
         {filterModeHelperText}
