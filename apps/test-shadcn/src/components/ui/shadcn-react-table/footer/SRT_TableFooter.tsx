@@ -1,4 +1,5 @@
 import {
+  parseSRT_HtmlProps,
   type SRT_ColumnVirtualizer,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -23,7 +24,6 @@ export interface SRT_TableFooterProps<TData extends SRT_RowData> {
  *
  * TODO (Future enhancements):
  * - Add column virtualization support
- * - Add srtTableFooterProps support
  * - Add custom styling options
  * - Add footer hover effects
  */
@@ -35,7 +35,7 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
 }: SRT_TableFooterProps<TData>) => {
   const {
     getState,
-    options: { enableStickyFooter },
+    options: { enableStickyFooter, srtTableFooterProps },
     refs: { tableFooterRef },
   } = table;
   const { isFullScreen } = getState();
@@ -59,13 +59,17 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
     return null;
   }
 
+  const footerProps = parseSRT_HtmlProps(srtTableFooterProps, { table });
+
   return (
     <tfoot
       ref={tableFooterRef}
+      {...footerProps}
       className={cn(
         'relative border-t',
         stickFooter && 'sticky bottom-0 z-[1] opacity-97 bg-background',
         className,
+        footerProps?.className,
       )}
     >
       {footerGroups.map((footerGroup) => (

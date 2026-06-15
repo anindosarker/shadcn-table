@@ -1,4 +1,5 @@
 import {
+  parseSRT_HtmlProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
@@ -28,14 +29,14 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
       positionToolbarAlertBanner,
       positionToolbarDropZone,
       renderTopToolbarCustomActions,
+      srtTopToolbarProps,
     },
     refs: { topToolbarRef },
   } = table;
 
   const { isFullScreen } = getState();
 
-  // TODO: srtTopToolbarProps - support passing props to top toolbar similar to MRT's muiTopToolbarProps
-  // const toolbarProps = parseFromValuesOrFunc(table?.options?.srtTopToolbarProps as any, { table });
+  const toolbarProps = parseSRT_HtmlProps(srtTopToolbarProps, { table });
 
   // TODO: stackAlertBanner and responsive handling (mobile/tablet) without MUI's useMediaQuery
   // For now, always stack the alert banner for simplicity
@@ -43,15 +44,14 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
 
   return (
     <div
-      //TODO: add {...toolbarProps}
       ref={(ref: HTMLDivElement) => {
         topToolbarRef.current = ref;
-        //TODO: add if ((toolbarProps as any)?.ref) (toolbarProps as any).ref.current = ref;
       }}
+      {...toolbarProps}
       className={cn(
         'relative w-full',
         isFullScreen ? 'sticky top-0 z-40 bg-background' : undefined,
-        //TODO: add (toolbarProps as any)?.className,
+        toolbarProps?.className,
       )}
     >
       {/* Alert Banner */}

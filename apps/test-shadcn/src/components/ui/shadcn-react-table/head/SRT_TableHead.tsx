@@ -3,6 +3,7 @@ import type {
   SRT_RowData,
   SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { parseSRT_HtmlProps } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { SRT_ToolbarAlertBanner } from '../toolbar/SRT_ToolbarAlertBanner';
 import { SRT_TableHeadRow } from './SRT_TableHeadRow';
@@ -30,12 +31,18 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
 }: SRT_TableHeadProps<TData>) => {
   const {
     getState,
-    options: { enableStickyHeader, positionToolbarAlertBanner },
+    options: {
+      enableStickyHeader,
+      positionToolbarAlertBanner,
+      srtTableHeadProps,
+    },
     refs: { tableHeadRef },
   } = table;
   const { isFullScreen, showAlertBanner } = getState();
 
   const stickyHeader = enableStickyHeader || isFullScreen;
+
+  const headProps = parseSRT_HtmlProps(srtTableHeadProps, { table });
 
   const showHeadOverlay =
     positionToolbarAlertBanner === 'head-overlay' &&
@@ -44,10 +51,12 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
   return (
     <thead
       ref={tableHeadRef}
+      {...headProps}
       className={cn(
         'border-b bg-muted/50 opacity-[0.97]',
         stickyHeader ? 'sticky top-0 z-[2]' : 'relative',
         className,
+        headProps?.className,
       )}
     >
       {showHeadOverlay ? (

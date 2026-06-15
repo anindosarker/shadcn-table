@@ -12,8 +12,10 @@ import {
 import {
   isCellEditable,
   cellKeyboardShortcuts,
+  mergeSRT_HtmlProps,
   openEditingCell,
   parseFromValuesOrFunc,
+  parseSRT_HtmlProps,
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -123,6 +125,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       groupedColumnMode,
       renderRowActions,
       rowNumberDisplayMode,
+      srtTableBodyCellProps,
     },
     setHoveredColumn,
   } = table;
@@ -343,18 +346,23 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     });
   };
 
-  return (
-    <td
-      data-index={staticColumnIndex}
-      data-pinned={!!isColumnPinned || undefined}
-      data-last-row={isLastRow || undefined}
-      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
-      onKeyDown={handleKeyDown}
-      onContextMenu={handleContextMenu}
-      onDoubleClick={handleDoubleClick}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      style={{
+  // Resolve the table-level + columnDef-level slot props (columnDef wins on
+  // conflicts; className composed, style merged, handlers composed), then layer
+  // them over the component's own cell DOM attrs (library handlers fire first,
+  // user handlers second). Final tailwind className dedup happens via cn() below.
+  const htmlPropsContext = { cell, column, row, table };
+  const userCellProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtTableBodyCellProps, htmlPropsContext),
+    parseSRT_HtmlProps(columnDef.srtTableBodyCellProps, htmlPropsContext),
+  );
+  const cellProps = mergeSRT_HtmlProps(
+    {
+      onKeyDown: handleKeyDown,
+      onContextMenu: handleContextMenu,
+      onDoubleClick: handleDoubleClick,
+      onDragEnter: handleDragEnter,
+      onDragOver: handleDragOver,
+      style: {
         whiteSpace:
           row.getIsPinned() || density === 'compact' ? 'nowrap' : 'normal',
         textOverflow: columnDefType !== 'display' ? 'ellipsis' : undefined,
@@ -364,7 +372,18 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
             ? 'pointer'
             : 'inherit',
         ...pinnedStyles,
-      }}
+      } as CSSProperties,
+    },
+    userCellProps,
+  );
+
+  return (
+    <td
+      data-index={staticColumnIndex}
+      data-pinned={!!isColumnPinned || undefined}
+      data-last-row={isLastRow || undefined}
+      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+      {...cellProps}
       className={cn(
         cellVariants({ density, columnDefType: columnDefType ?? 'data' }),
         (actionCell?.id === cell.id ||
@@ -375,6 +394,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           'outline outline-1 -outline-offset-1 outline-muted-foreground/50',
         isColumnPinned && 'bg-background',
         className,
+        cellProps?.className,
       )}
     >
       {cell.getIsPlaceholder() ? (

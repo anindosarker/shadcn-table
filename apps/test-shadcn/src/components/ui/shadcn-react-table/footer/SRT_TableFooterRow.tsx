@@ -1,4 +1,5 @@
 import {
+  parseSRT_HtmlProps,
   type SRT_ColumnVirtualizer,
   type SRT_Header,
   type SRT_HeaderGroup,
@@ -26,7 +27,6 @@ export interface SRT_TableFooterRowProps<TData extends SRT_RowData> {
  *
  * TODO (Future enhancements):
  * - Add column virtualization support
- * - Add srtTableFooterRowProps support
  * - Add custom styling options
  * - Add hover effects
  */
@@ -52,8 +52,16 @@ export const SRT_TableFooterRow = <TData extends SRT_RowData>({
     return null;
   }
 
+  const rowProps = parseSRT_HtmlProps(table.options.srtTableFooterRowProps, {
+    footerGroup,
+    table,
+  });
+
   return (
-    <tr className={cn('relative border-b', className)}>
+    <tr
+      {...rowProps}
+      className={cn('relative border-b', className, rowProps?.className)}
+    >
       {virtualPaddingLeft ? (
         <th style={{ display: 'flex', width: virtualPaddingLeft }} />
       ) : null}

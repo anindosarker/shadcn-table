@@ -6,7 +6,9 @@ import {
   type SRT_TableInstance,
   cellKeyboardShortcuts,
   flexRender,
+  mergeSRT_HtmlProps,
   parseFromValuesOrFunc,
+  parseSRT_HtmlProps,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -41,8 +43,9 @@ export interface SRT_TableHeadCellProps<TData extends SRT_RowData> {
  *   keyboard shortcuts, virtualizer measureElement on the cell node.
  *
  * MUI -> shadcn notes: cva drives density padding; className overrides instead of
- * the `sx` prop. The MRT `*Props` option/columnDef overrides are not yet present
- * on the headless options, so they are intentionally not merged here.
+ * the `sx` prop. The `srtTableHeadCellProps` slot is merged here (table-level then
+ * columnDef-level, columnDef winning) via mergeSRT_HtmlProps, composing over the
+ * library's own handlers/style.
  */
 
 const headCellVariants = cva(
@@ -83,6 +86,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       enableMultiSort,
       enableSelectAll,
       localization,
+      srtTableHeadCellProps,
     },
     refs: { tableHeadCellRefs },
     setHoveredColumn,
@@ -193,6 +197,32 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       }
     : {};
 
+  // Merge table-level then column-level slot props (columnDef wins), composing
+  // over the library's own handlers/style via mergeSRT_HtmlProps.
+  const tableHeadCellProps = parseSRT_HtmlProps(srtTableHeadCellProps, {
+    column,
+    table,
+  });
+  const columnHeadCellProps = parseSRT_HtmlProps(
+    columnDef.srtTableHeadCellProps,
+    { column, table },
+  );
+  const userHeadCellProps = mergeSRT_HtmlProps(
+    tableHeadCellProps,
+    columnHeadCellProps,
+  );
+
+  const baseHeadCellProps = {
+    onDragEnter: handleDragEnter,
+    onDragOver: handleDragOver,
+    onKeyDown: handleKeyDown,
+    style: { textAlign: align, ...pinnedStyle } as CSSProperties,
+  };
+  const mergedHeadCellProps = mergeSRT_HtmlProps(
+    baseHeadCellProps,
+    userHeadCellProps,
+  );
+
   return (
     <th
       aria-sort={
@@ -207,9 +237,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       data-index={staticColumnIndex}
       data-pinned={!!isColumnPinned || undefined}
       data-sort={column.getIsSorted() || undefined}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      onKeyDown={handleKeyDown}
       ref={(node: HTMLTableCellElement | null) => {
         if (node) {
           tableHeadCellRefs.current![column.id] = node;
@@ -219,7 +246,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
         }
       }}
       tabIndex={enableKeyboardShortcuts ? 0 : undefined}
-      style={{ textAlign: align, ...pinnedStyle }}
+      {...mergedHeadCellProps}
       className={cn(
         headCellVariants({ density }),
         'group',
@@ -234,6 +261,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
         isColumnPinned && 'bg-muted/95',
         enableMultiSort && column.getCanSort() && 'select-none',
         className,
+        mergedHeadCellProps?.className,
       )}
     >
       {header.isPlaceholder ? null : (

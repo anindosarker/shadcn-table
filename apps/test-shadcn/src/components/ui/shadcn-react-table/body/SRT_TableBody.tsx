@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
 import {
+  parseSRT_HtmlProps,
   useSRT_RowVirtualizer,
   useSRT_Rows,
   type SRT_ColumnVirtualizer,
@@ -50,10 +51,13 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
       renderDetailPanel,
       renderEmptyRowsFallback,
       rowPinningDisplayMode,
+      srtTableBodyProps,
     },
     refs: { tableContainerRef, tableFooterRef, tableHeadRef },
   } = table;
   const { columnFilters, globalFilter, isFullScreen, rowPinning } = getState();
+
+  const tableBodyProps = parseSRT_HtmlProps(srtTableBodyProps, { table });
 
   const tableHeadHeight =
     ((enableStickyHeader || isFullScreen) &&
@@ -89,8 +93,9 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
     <>
       {!isSticky && topRows.length > 0 && (
         <tbody
-          className={cn('sticky z-[1]', className)}
-          style={{ top: tableHeadHeight - 1 }}
+          {...tableBodyProps}
+          className={cn('sticky z-[1]', className, tableBodyProps?.className)}
+          style={{ top: tableHeadHeight - 1, ...tableBodyProps?.style }}
         >
           {topRows.map((row, staticRowIndex) => {
             const props = {
@@ -107,12 +112,18 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
         </tbody>
       )}
       <tbody
-        className={cn('relative [&_tr:last-child]:border-0', className)}
+        {...tableBodyProps}
+        className={cn(
+          'relative [&_tr:last-child]:border-0',
+          className,
+          tableBodyProps?.className,
+        )}
         style={{
           height: rowVirtualizer
             ? `${rowVirtualizer.getTotalSize()}px`
             : undefined,
           minHeight: !rows.length ? '100px' : undefined,
+          ...tableBodyProps?.style,
         }}
       >
         {!rows.length ? (
@@ -171,8 +182,9 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
       </tbody>
       {!isSticky && bottomRows.length > 0 && (
         <tbody
-          className={cn('sticky z-[1]', className)}
-          style={{ bottom: tableFooterHeight - 1 }}
+          {...tableBodyProps}
+          className={cn('sticky z-[1]', className, tableBodyProps?.className)}
+          style={{ bottom: tableFooterHeight - 1, ...tableBodyProps?.style }}
         >
           {bottomRows.map((row, staticRowIndex) => {
             const props = {

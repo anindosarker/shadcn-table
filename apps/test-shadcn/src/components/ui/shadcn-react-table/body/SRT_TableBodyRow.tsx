@@ -7,6 +7,8 @@ import {
 } from 'react';
 import {
   getIsRowSelected,
+  mergeSRT_HtmlProps,
+  parseSRT_HtmlProps,
   type SRT_Cell,
   type SRT_ColumnVirtualizer,
   type SRT_Row,
@@ -68,6 +70,7 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
       memoMode,
       renderDetailPanel,
       rowPinningDisplayMode,
+      srtTableBodyRowProps,
     },
     refs: { tableFooterRef, tableHeadRef },
     setHoveredRow,
@@ -159,6 +162,23 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
         : undefined,
   };
 
+  // Compose the component's own row DOM attrs (library = `a`) with the
+  // user-supplied `srtTableBodyRowProps` (`b`); handlers fire library-then-user,
+  // style/className compose. className gets final tailwind dedup via cn() below.
+  const userRowProps = parseSRT_HtmlProps(srtTableBodyRowProps, {
+    row,
+    staticRowIndex,
+    table,
+  });
+  const rowProps = mergeSRT_HtmlProps(
+    {
+      onDragEnter: handleDragEnter,
+      onDragOver: handleDragOver,
+      style: rowStyle,
+    },
+    userRowProps,
+  );
+
   return (
     <>
       <tr
@@ -166,20 +186,19 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
         data-pinned={!!isRowPinned || undefined}
         data-selected={isRowSelected || undefined}
         data-state={isRowSelected ? 'selected' : undefined}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
+        {...rowProps}
         ref={(node: HTMLTableRowElement | null) => {
           if (node) {
             rowRef.current = node;
             rowVirtualizer?.measureElement(node);
           }
         }}
-        style={rowStyle}
         className={cn(
           'border-b transition-colors hover:bg-muted/50',
           'data-[state=selected]:bg-muted',
           isRowPinned && 'bg-accent/40',
           className,
+          rowProps?.className,
         )}
       >
         {virtualPaddingLeft ? (

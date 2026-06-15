@@ -1,5 +1,8 @@
+import { type KeyboardEvent } from 'react';
 import {
+  mergeSRT_HtmlProps,
   parseFromValuesOrFunc,
+  parseSRT_HtmlProps,
   type LayoutDivProps,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -42,6 +45,7 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
       renderTopToolbar,
       renderBottomToolbar,
       srtTableLayoutProps,
+      srtTablePaperProps,
     },
     refs: { tableLayoutRef },
   } = table;
@@ -55,6 +59,16 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
   // TODO: use cva for className overrides
   const { className, ...divRest } = layoutDivProps;
 
+  // Compose user-supplied paper props over the library's own handlers/style so
+  // both fire (e.g. their onKeyDown plus our Escape-to-exit-fullscreen).
+  const paperProps = mergeSRT_HtmlProps(
+    {
+      onKeyDown: (e: KeyboardEvent) =>
+        e.key === 'Escape' && table.setIsFullScreen(false),
+    },
+    parseSRT_HtmlProps(srtTablePaperProps, { table }),
+  );
+
   // TODO: I've omitted the ref since this code will live in user's directory, might add later
 
   return (
@@ -62,11 +76,12 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
       ref={(ref: HTMLDivElement) => {
         tableLayoutRef.current = ref;
       }}
-      onKeyDown={(e) => e.key === 'Escape' && table.setIsFullScreen(false)}
+      {...divRest}
+      {...paperProps}
       className={cn(
         tableLayoutVariants({ fullscreen: isFullScreen, className }),
+        paperProps?.className,
       )}
-      {...divRest}
     >
       {enableTopToolbar &&
         (parseFromValuesOrFunc(renderTopToolbar, { table }) ?? (

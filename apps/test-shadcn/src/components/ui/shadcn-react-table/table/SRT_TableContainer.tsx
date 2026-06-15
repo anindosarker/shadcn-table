@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import {
+  mergeSRT_HtmlProps,
+  parseSRT_HtmlProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
@@ -28,6 +30,7 @@ export const SRT_TableContainer = <TData extends SRT_RowData>({
       editDisplayMode,
       enableCellActions,
       enableStickyHeader,
+      srtTableContainerProps,
     },
     refs: { bottomToolbarRef, tableContainerRef, topToolbarRef },
   } = table;
@@ -62,6 +65,21 @@ export const SRT_TableContainer = <TData extends SRT_RowData>({
   const createModalOpen = createDisplayMode === 'modal' && creatingRow;
   const editModalOpen = editDisplayMode === 'modal' && editingRow;
 
+  // Compose user-supplied container props over the library's own style so the
+  // height clamp survives (user style merges, b wins per-key).
+  const containerProps = mergeSRT_HtmlProps(
+    {
+      style: {
+        maxHeight: isFullScreen
+          ? `calc(100vh - ${totalToolbarHeight}px)`
+          : enableStickyHeader
+            ? `clamp(350px, calc(100vh - ${totalToolbarHeight}px), 9999px)`
+            : undefined,
+      },
+    },
+    parseSRT_HtmlProps(srtTableContainerProps, { table }),
+  );
+
   return (
     <div
       aria-busy={loading}
@@ -71,14 +89,12 @@ export const SRT_TableContainer = <TData extends SRT_RowData>({
           tableContainerRef.current = node;
         }
       }}
-      className={cn('relative max-w-full overflow-auto', className)}
-      style={{
-        maxHeight: isFullScreen
-          ? `calc(100vh - ${totalToolbarHeight}px)`
-          : enableStickyHeader
-            ? `clamp(350px, calc(100vh - ${totalToolbarHeight}px), 9999px)`
-            : undefined,
-      }}
+      {...containerProps}
+      className={cn(
+        'relative max-w-full overflow-auto',
+        className,
+        containerProps?.className,
+      )}
     >
       {loading ? <SRT_TableLoadingOverlay table={table} /> : null}
       <SRT_Table table={table} />

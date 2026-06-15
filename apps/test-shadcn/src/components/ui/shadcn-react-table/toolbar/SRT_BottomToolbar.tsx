@@ -1,4 +1,5 @@
 import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
+import { parseSRT_HtmlProps } from 'shadcn-react-table-core';
 import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
 import { SRT_TablePagination } from './SRT_TablePagination';
 import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';
@@ -38,10 +39,13 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
       positionToolbarAlertBanner,
       positionToolbarDropZone,
       renderBottomToolbarCustomActions,
+      srtBottomToolbarProps,
     },
     refs: { bottomToolbarRef },
   } = table;
   const { isFullScreen } = getState();
+
+  const toolbarProps = parseSRT_HtmlProps(srtBottomToolbarProps, { table });
 
   // TODO: stackAlertBanner and responsive handling (mobile/tablet)
   // For now, always stack the alert banner for simplicity
@@ -52,10 +56,12 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
       ref={(node: HTMLDivElement) => {
         bottomToolbarRef.current = node;
       }}
+      {...toolbarProps}
       className={cn(
         'relative border-t bg-background',
         isFullScreen && 'fixed bottom-0 left-0 right-0 z-40',
         className,
+        toolbarProps?.className,
       )}
     >
       <SRT_LinearProgressBar isTopToolbar={false} table={table} />

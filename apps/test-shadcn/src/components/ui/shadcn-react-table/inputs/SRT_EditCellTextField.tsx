@@ -7,7 +7,9 @@ import {
 } from 'react';
 import {
   getValueAndLabel,
+  mergeSRT_HtmlProps,
   parseFromValuesOrFunc,
+  parseSRT_HtmlProps,
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -45,7 +47,12 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 }: SRT_EditCellTextFieldProps<TData>) => {
   const {
     getState,
-    options: { createDisplayMode, editDisplayMode },
+    options: {
+      createDisplayMode,
+      editDisplayMode,
+      onEditingCellSave,
+      srtEditTextFieldProps,
+    },
     refs: { editInputRefs },
     setCreatingRow,
     setEditingCell,
@@ -53,6 +60,17 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;
+
+  // Resolve the slot props: table-level defaults overridable per-column.
+  const slotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtEditTextFieldProps, { cell, column, row, table }),
+    parseSRT_HtmlProps(columnDef.srtEditTextFieldProps, {
+      cell,
+      column,
+      row,
+      table,
+    }),
+  );
   const { creatingRow, editingRow } = getState();
   const { editSelectOptions, editVariant } = columnDef;
 
@@ -84,11 +102,18 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
       setCreatingRow(row);
     } else if (isEditing) {
       setEditingRow(row);
+    } else if (editDisplayMode === 'cell' || editDisplayMode === 'table') {
+      // Cell/table modes have no Save button — commit the edit here so the
+      // value can be persisted to the user's data source.
+      onEditingCellSave?.({ cell, row, table, value: newValue });
     }
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+    // Compose the user's slot-prop onChange after the component's own logic so
+    // cell-edit changes can also be observed via props.
+    slotProps?.onChange?.(event);
   };
 
   const handleSelectChange = (newValue: string) => {
@@ -100,6 +125,9 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     rest.onBlur?.(event);
     saveInputValueToRowCache(value);
     setEditingCell(null);
+    // Compose the user's slot-prop onBlur last so cell-edit persistence can be
+    // hooked via props (complements the onEditingCellSave option).
+    slotProps?.onBlur?.(event);
   };
 
   const handleEnterKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -156,11 +184,13 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
         name={column.id}
         placeholder={placeholder}
         {...rest}
+        {...slotProps}
         ref={(inputRef) => {
           if (inputRef && editInputRefs.current) {
             editInputRefs.current[column.id] = inputRef;
           }
         }}
+        className={cn(slotProps?.className)}
         value={value ?? ''}
         onBlur={handleBlur}
         onChange={handleChange}

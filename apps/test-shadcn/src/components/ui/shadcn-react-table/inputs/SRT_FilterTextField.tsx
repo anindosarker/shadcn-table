@@ -10,6 +10,8 @@ import {
 import {
   getColumnFilterInfo,
   getValueAndLabel,
+  mergeSRT_HtmlProps,
+  parseSRT_HtmlProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -87,13 +89,32 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   className,
 }: SRT_FilterTextFieldProps<TData>) => {
   const {
-    options: { enableColumnFilterModes, localization, manualFiltering },
+    options: {
+      enableColumnFilterModes,
+      localization,
+      manualFiltering,
+      srtFilterTextFieldProps,
+    },
     refs: { filterInputRefs },
     setColumnFilterFns,
   } = table;
   const { column } = header;
   const { columnDef } = column;
   const { filterVariant } = columnDef;
+
+  // Resolve the slot props: table-level defaults overridable per-column.
+  const slotProps = mergeSRT_HtmlProps(
+    parseSRT_HtmlProps(srtFilterTextFieldProps, {
+      column,
+      rangeFilterIndex,
+      table,
+    }),
+    parseSRT_HtmlProps(columnDef.srtFilterTextFieldProps, {
+      column,
+      rangeFilterIndex,
+      table,
+    }),
+  );
 
   const {
     allowedColumnFilterOptions,
@@ -529,6 +550,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
         ? event.target.valueAsNumber
         : event.target.value;
     handleChange(newValue);
+    // Compose the user's slot-prop onChange after the component's own logic.
+    slotProps?.onChange?.(event);
   };
 
   return (
@@ -537,16 +560,17 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
         {changeModeButton}
         <div className="relative flex-1">
           <Input
-            ref={setInputRef}
             autoComplete="off"
             aria-label={filterPlaceholder}
             placeholder={filterPlaceholder}
             title={filterPlaceholder}
+            {...slotProps}
+            ref={setInputRef}
             value={typeof filterValue === 'string' ? filterValue : ''}
             onChange={handleTextFieldChange}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
-            className="h-9 w-full pr-8"
+            className={cn('h-9 w-full pr-8', slotProps?.className)}
           />
           {clearButton}
         </div>

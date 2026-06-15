@@ -1,9 +1,11 @@
 import { type CSSProperties } from 'react';
 import {
+  mergeSRT_HtmlProps,
+  parseFromValuesOrFunc,
+  parseSRT_HtmlProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -27,7 +29,6 @@ export interface SRT_TableFooterCellProps<TData extends SRT_RowData> {
  *
  * TODO (Future enhancements):
  * - Add keyboard shortcuts for copy
- * - Add srtTableFooterCellProps support
  * - Add hover effects
  * - Add click to copy
  * - Better pinning styles
@@ -57,7 +58,7 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
 }: SRT_TableFooterCellProps<TData>) => {
   const {
     getState,
-    options: { enableColumnPinning },
+    options: { enableColumnPinning, srtTableFooterCellProps },
   } = table;
   const { density } = getState();
   const { column } = footer;
@@ -97,18 +98,38 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
       }
     : {};
 
+  // Merge table-level then column-level slot props (columnDef wins), composing
+  // over the library's own style via mergeSRT_HtmlProps.
+  const tableFooterCellProps = parseSRT_HtmlProps(srtTableFooterCellProps, {
+    column,
+    table,
+  });
+  const columnFooterCellProps = parseSRT_HtmlProps(
+    columnDef.srtTableFooterCellProps,
+    { column, table },
+  );
+  const userFooterCellProps = mergeSRT_HtmlProps(
+    tableFooterCellProps,
+    columnFooterCellProps,
+  );
+  const mergedFooterCellProps = mergeSRT_HtmlProps(
+    { style: { textAlign: align, ...pinnedStyle } as CSSProperties },
+    userFooterCellProps,
+  );
+
   return (
     <th
       colSpan={footer.colSpan}
       data-index={staticColumnIndex}
       data-pinned={!!isColumnPinned || undefined}
-      style={{ textAlign: align, ...pinnedStyle }}
+      {...mergedFooterCellProps}
       className={cn(
         footerCellVariants({ density }),
         // Solid background so the pinned column doesn't show content scrolling
         // underneath it (parity with SRT_TableHeadCell).
         isColumnPinned && 'bg-muted/95',
         className,
+        mergedFooterCellProps?.className,
       )}
       // onKeyDown={handleKeyDown}
       // tabIndex={enableKeyboardShortcuts ? 0 : undefined}

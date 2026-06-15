@@ -6,7 +6,11 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
+import {
+  parseSRT_HtmlProps,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from 'shadcn-react-table-core';
 import { SearchIcon, XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -35,11 +39,20 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
 }: SRT_GlobalFilterTextFieldProps<TData>) => {
   const {
     getState,
-    options: { enableGlobalFilterModes, localization, manualFiltering },
+    options: {
+      enableGlobalFilterModes,
+      localization,
+      manualFiltering,
+      srtSearchTextFieldProps,
+    },
     refs: { searchInputRef },
     setGlobalFilter,
   } = table;
   const { globalFilter, showGlobalFilter } = getState();
+
+  // Resolve the slot props (table-level only — global search has no per-column
+  // variant).
+  const slotProps = parseSRT_HtmlProps(srtSearchTextFieldProps, { table });
 
   const isMounted = useRef(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -62,6 +75,8 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
     const value = event.target.value;
     setSearchValue(value);
     handleChangeDebounced(value);
+    // Compose the user's slot-prop onChange after the component's own logic.
+    slotProps?.onChange?.(event);
   };
 
   const handleClear = () => {
@@ -118,18 +133,20 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
 
       {/* Input field */}
       <input
-        ref={searchInputRef}
         type="text"
-        value={searchValue ?? ''}
-        onChange={handleChange}
         placeholder={localization.search}
         autoComplete="off"
+        {...slotProps}
+        ref={searchInputRef}
+        value={searchValue ?? ''}
+        onChange={handleChange}
         className={cn(
           'h-9 w-48 rounded-md border border-input bg-background pl-9 pr-9',
           'text-sm ring-offset-background',
           'placeholder:text-muted-foreground',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           'disabled:cursor-not-allowed disabled:opacity-50',
+          slotProps?.className,
         )}
       />
 

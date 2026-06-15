@@ -1,6 +1,7 @@
 import {
   HTMLAttributes,
   type ComponentPropsWithoutRef,
+  type CSSProperties,
   type Dispatch,
   type ReactNode,
   type RefObject,
@@ -319,100 +320,31 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
    * @default gets set to the same value as `accessorKey` by default
    */
   id?: LiteralUnion<string & keyof TData>;
-  // muiColumnActionsButtonProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiColumnDragHandleProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiCopyButtonProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData, TValue>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => ButtonProps)
-  //   | ButtonProps;
-  // muiEditTextFieldProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData, TValue>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TextFieldProps)
-  //   | TextFieldProps;
-  // muiFilterAutocompleteProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => AutocompleteProps<any, any, any, any>)
-  //   | AutocompleteProps<any, any, any, any>;
-  // muiFilterCheckboxProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => CheckboxProps)
-  //   | CheckboxProps;
-  // muiFilterDatePickerProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => DatePickerProps<never>)
-  //   | DatePickerProps<never>;
-  // muiFilterDateTimePickerProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => DateTimePickerProps<never>)
-  //   | DateTimePickerProps<never>;
-  // muiFilterSliderProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => SliderProps)
-  //   | SliderProps;
-  // muiFilterTextFieldProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TextFieldProps)
-  //   | TextFieldProps;
-  // muiFilterTimePickerProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TimePickerProps<never>)
-  //   | TimePickerProps<never>;
-  // muiTableBodyCellProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData, TValue>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
-  // muiTableFooterCellProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
-  // muiTableHeadCellProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
+  /** DOM props for this column's body `<td>` cells. */
+  srtTableBodyCellProps?: SRT_HTMLProps<
+    HTMLTableCellElement,
+    SRT_CellHTMLPropsContext<TData>
+  >;
+  /** DOM props for this column's edit text field. */
+  srtEditTextFieldProps?: SRT_HTMLProps<
+    HTMLInputElement,
+    SRT_CellHTMLPropsContext<TData>
+  >;
+  /** DOM props for this column's filter text field. */
+  srtFilterTextFieldProps?: SRT_HTMLProps<
+    HTMLInputElement,
+    SRT_FilterTextFieldHTMLPropsContext<TData>
+  >;
+  /** DOM props for this column's footer `<td>` cells. */
+  srtTableFooterCellProps?: SRT_HTMLProps<
+    HTMLTableCellElement,
+    SRT_ColumnHTMLPropsContext<TData>
+  >;
+  /** DOM props for this column's head `<th>` cells. */
+  srtTableHeadCellProps?: SRT_HTMLProps<
+    HTMLTableCellElement,
+    SRT_ColumnHTMLPropsContext<TData>
+  >;
   PlaceholderCell?: (props: {
     cell: SRT_Cell<TData, TValue>;
     column: SRT_Column<TData, TValue>;
@@ -868,233 +800,110 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
    */
   memoMode?: 'cells' | 'rows' | 'table-body';
   // mrtTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>;
-  // muiBottomToolbarProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => BoxProps)
-  //   | BoxProps;
+  /** DOM props for the bottom toolbar container. */
+  srtBottomToolbarProps?: SRT_HTMLProps<
+    HTMLDivElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
   srtCircularProgressProps?:
     | ((props: {
         table: SRT_TableInstance<TData>;
       }) => SRT_CircularProgressProps & { Component?: ReactNode })
     | (SRT_CircularProgressProps & { Component?: ReactNode });
-  // muiColumnActionsButtonProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiColumnDragHandleProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiCopyButtonProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => ButtonProps)
-  //   | ButtonProps;
-  // muiCreateRowModalProps?:
-  //   | ((props: {
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => DialogProps)
-  //   | DialogProps;
-  // muiDetailPanelProps?:
-  //   | ((props: {
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
-  // muiEditRowDialogProps?:
-  //   | ((props: {
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => DialogProps)
-  //   | DialogProps;
-  // muiEditTextFieldProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TextFieldProps)
-  //   | TextFieldProps;
-  // muiExpandAllButtonProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiExpandButtonProps?:
-  //   | ((props: {
-  //       row: SRT_Row<TData>;
-  //       staticRowIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiFilterAutocompleteProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => AutocompleteProps<any, any, any, any>)
-  //   | AutocompleteProps<any, any, any, any>;
-  // muiFilterCheckboxProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => CheckboxProps)
-  //   | CheckboxProps;
-  // muiFilterDatePickerProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => DatePickerProps<never>)
-  //   | DatePickerProps<never>;
-  // muiFilterDateTimePickerProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => DateTimePickerProps<never>)
-  //   | DateTimePickerProps<never>;
-  // muiFilterSliderProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => SliderProps)
-  //   | SliderProps;
-  // muiFilterTextFieldProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TextFieldProps)
-  //   | TextFieldProps;
-  // muiFilterTimePickerProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       rangeFilterIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TimePickerProps<never>)
-  //   | TimePickerProps<never>;
+  /** DOM props applied to every editable text field (overridable per-column). */
+  srtEditTextFieldProps?: SRT_HTMLProps<
+    HTMLInputElement,
+    SRT_CellHTMLPropsContext<TData>
+  >;
+  /** DOM props applied to every filter text field (overridable per-column). */
+  srtFilterTextFieldProps?: SRT_HTMLProps<
+    HTMLInputElement,
+    SRT_FilterTextFieldHTMLPropsContext<TData>
+  >;
   srtLinearProgressProps?:
     | ((props: {
         isTopToolbar: boolean;
         table: SRT_TableInstance<TData>;
       }) => SRT_LinearProgressProps)
     | SRT_LinearProgressProps;
-  // muiPaginationProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => Partial<
-  //       PaginationProps & {
-  //         SelectProps?: Partial<SelectProps>;
-  //         disabled?: boolean;
-  //         rowsPerPageOptions?: { label: string; value: number }[] | number[];
-  //         showRowsPerPage?: boolean;
-  //       }
-  //     >)
-  //   | Partial<
-  //       PaginationProps & {
-  //         SelectProps?: Partial<SelectProps>;
-  //         disabled?: boolean;
-  //         rowsPerPageOptions?: { label: string; value: number }[] | number[];
-  //         showRowsPerPage?: boolean;
-  //       }
-  //     >;
-  // muiRowDragHandleProps?:
-  //   | ((props: {
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => IconButtonProps)
-  //   | IconButtonProps;
-  // muiSearchTextFieldProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => TextFieldProps)
-  //   | TextFieldProps;
-  // muiSelectAllCheckboxProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => CheckboxProps)
-  //   | CheckboxProps;
-  // muiSelectCheckboxProps?:
-  //   | ((props: {
-  //       row: SRT_Row<TData>;
-  //       staticRowIndex?: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => CheckboxProps | RadioProps)
-  //   | (CheckboxProps | RadioProps);
-  // muiSkeletonProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => SkeletonProps)
-  //   | SkeletonProps;
-  // muiTableBodyCellProps?:
-  //   | ((props: {
-  //       cell: SRT_Cell<TData>;
-  //       column: SRT_Column<TData>;
-  //       row: SRT_Row<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
-  // muiTableBodyProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => TableBodyProps)
-  //   | TableBodyProps;
-  // muiTableBodyRowProps?:
-  //   | ((props: {
-  //       isDetailPanel?: boolean;
-  //       row: SRT_Row<TData>;
-  //       staticRowIndex: number;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableRowProps)
-  //   | TableRowProps;
-  // muiTableContainerProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => TableContainerProps)
-  //   | TableContainerProps;
-  // muiTableFooterCellProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
-  // muiTableFooterProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => TableFooterProps)
-  //   | TableFooterProps;
-  // muiTableFooterRowProps?:
-  //   | ((props: {
-  //       footerGroup: SRT_HeaderGroup<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableRowProps)
-  //   | TableRowProps;
-  // muiTableHeadCellProps?:
-  //   | ((props: {
-  //       column: SRT_Column<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableCellProps)
-  //   | TableCellProps;
-  // muiTableHeadProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => TableHeadProps)
-  //   | TableHeadProps;
-  // muiTableHeadRowProps?:
-  //   | ((props: {
-  //       headerGroup: SRT_HeaderGroup<TData>;
-  //       table: SRT_TableInstance<TData>;
-  //     }) => TableRowProps)
-  //   | TableRowProps;
+  /** DOM props for the pagination container. */
+  srtPaginationProps?: SRT_HTMLProps<
+    HTMLDivElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for the global search text field. */
+  srtSearchTextFieldProps?: SRT_HTMLProps<
+    HTMLInputElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for every body `<td>` cell (overridable per-column). */
+  srtTableBodyCellProps?: SRT_HTMLProps<
+    HTMLTableCellElement,
+    SRT_CellHTMLPropsContext<TData>
+  >;
+  /** DOM props for the `<tbody>` element. */
+  srtTableBodyProps?: SRT_HTMLProps<
+    HTMLTableSectionElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for every body `<tr>` row. */
+  srtTableBodyRowProps?: SRT_HTMLProps<
+    HTMLTableRowElement,
+    SRT_RowHTMLPropsContext<TData>
+  >;
+  /** DOM props for the scroll container around the `<table>`. */
+  srtTableContainerProps?: SRT_HTMLProps<
+    HTMLDivElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for every footer `<td>` cell (overridable per-column). */
+  srtTableFooterCellProps?: SRT_HTMLProps<
+    HTMLTableCellElement,
+    SRT_ColumnHTMLPropsContext<TData>
+  >;
+  /** DOM props for the `<tfoot>` element. */
+  srtTableFooterProps?: SRT_HTMLProps<
+    HTMLTableSectionElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for every footer `<tr>` row. */
+  srtTableFooterRowProps?: SRT_HTMLProps<
+    HTMLTableRowElement,
+    SRT_FooterRowHTMLPropsContext<TData>
+  >;
+  /** DOM props for every head `<th>` cell (overridable per-column). */
+  srtTableHeadCellProps?: SRT_HTMLProps<
+    HTMLTableCellElement,
+    SRT_ColumnHTMLPropsContext<TData>
+  >;
+  /** DOM props for the `<thead>` element. */
+  srtTableHeadProps?: SRT_HTMLProps<
+    HTMLTableSectionElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for every head `<tr>` row. */
+  srtTableHeadRowProps?: SRT_HTMLProps<
+    HTMLTableRowElement,
+    SRT_HeadRowHTMLPropsContext<TData>
+  >;
   srtTableLayoutProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => LayoutDivProps)
     | LayoutDivProps;
-  // muiTableProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => TableProps)
-  //   | TableProps;
-  // muiToolbarAlertBannerChipProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => ChipProps)
-  //   | ChipProps;
-  // muiToolbarAlertBannerProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => AlertProps)
-  //   | AlertProps;
-  // muiTopToolbarProps?:
-  //   | ((props: { table: SRT_TableInstance<TData> }) => BoxProps)
-  //   | BoxProps;
+  /** DOM props for the outermost root/"paper" wrapper around the whole table. */
+  srtTablePaperProps?: SRT_HTMLProps<
+    HTMLDivElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for the `<table>` element. */
+  srtTableProps?: SRT_HTMLProps<
+    HTMLTableElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
+  /** DOM props for the top toolbar container. */
+  srtTopToolbarProps?: SRT_HTMLProps<
+    HTMLDivElement,
+    SRT_TableHTMLPropsContext<TData>
+  >;
   onActionCellChange?: OnChangeFn<SRT_Cell<TData> | null>;
   onColumnFilterFnsChange?: OnChangeFn<{ [key: string]: SRT_FilterOption }>;
   onCreatingRowCancel?: (props: {
@@ -1112,6 +921,17 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   onDraggingColumnChange?: OnChangeFn<SRT_Column<TData> | null>;
   onDraggingRowChange?: OnChangeFn<SRT_Row<TData> | null>;
   onEditingCellChange?: OnChangeFn<SRT_Cell<TData> | null>;
+  /**
+   * Fired when an inline cell edit is committed (on blur / Enter) in
+   * `editDisplayMode: 'cell'` or `'table'`. Use it to persist the new value
+   * to your data source. The value is also written to `row._valuesCache`.
+   */
+  onEditingCellSave?: (props: {
+    cell: SRT_Cell<TData>;
+    row: SRT_Row<TData>;
+    table: SRT_TableInstance<TData>;
+    value: any;
+  }) => Promise<void> | void;
   onEditingRowCancel?: (props: {
     row: SRT_Row<TData>;
     table: SRT_TableInstance<TData>;
@@ -1269,6 +1089,75 @@ export type LayoutDivProps = Omit<
   React.ComponentPropsWithoutRef<'div'>,
   'children'
 >;
+
+/**
+ * The shadcn-idiomatic replacement for MRT's MUI `sx`-passthrough props.
+ *
+ * Each `srt*Props` slot accepts either a plain object of DOM attributes for the
+ * target element, or a callback that receives a slot-specific context object and
+ * returns those attributes. The resolved object is spread onto the element by the
+ * component layer. The most common keys are:
+ *
+ * - `className` — composed over the component's own (cva) defaults via `cn()`
+ * - `style` — merged shallowly with the component's own inline styles
+ * - event handlers (`onClick`, `onDoubleClick`, `onContextMenu`, …) — composed so
+ *   both the library handler and the user handler run
+ * - `data-*` / `aria-*` attributes
+ *
+ * `TElement` is the underlying DOM element (e.g. `HTMLTableCellElement`); `TContext`
+ * is the object passed to the callback form (e.g. `{ cell, column, row, table }`).
+ *
+ * Note: `color` and `size` are omitted from the attribute surface because they collide
+ * with TanStack/shadcn semantics and are not valid passthrough DOM attributes here.
+ */
+export type SRT_HTMLPropsValue<TElement> = Omit<
+  HTMLAttributes<TElement>,
+  'color' | 'size'
+>;
+
+export type SRT_HTMLProps<TElement, TContext> =
+  | SRT_HTMLPropsValue<TElement>
+  | ((context: TContext) => SRT_HTMLPropsValue<TElement> | undefined)
+  | undefined;
+
+// Callback context objects per slot family (mirror MRT's prop callback args).
+export type SRT_CellHTMLPropsContext<TData extends SRT_RowData> = {
+  cell: SRT_Cell<TData>;
+  column: SRT_Column<TData>;
+  row: SRT_Row<TData>;
+  table: SRT_TableInstance<TData>;
+};
+
+export type SRT_ColumnHTMLPropsContext<TData extends SRT_RowData> = {
+  column: SRT_Column<TData>;
+  table: SRT_TableInstance<TData>;
+};
+
+export type SRT_RowHTMLPropsContext<TData extends SRT_RowData> = {
+  row: SRT_Row<TData>;
+  staticRowIndex?: number;
+  table: SRT_TableInstance<TData>;
+};
+
+export type SRT_HeadRowHTMLPropsContext<TData extends SRT_RowData> = {
+  headerGroup: SRT_HeaderGroup<TData>;
+  table: SRT_TableInstance<TData>;
+};
+
+export type SRT_FooterRowHTMLPropsContext<TData extends SRT_RowData> = {
+  footerGroup: SRT_HeaderGroup<TData>;
+  table: SRT_TableInstance<TData>;
+};
+
+export type SRT_TableHTMLPropsContext<TData extends SRT_RowData> = {
+  table: SRT_TableInstance<TData>;
+};
+
+export type SRT_FilterTextFieldHTMLPropsContext<TData extends SRT_RowData> = {
+  column: SRT_Column<TData>;
+  rangeFilterIndex?: number;
+  table: SRT_TableInstance<TData>;
+};
 
 export type SRT_LinearProgressProps = {
   wrapper?: HTMLAttributes<HTMLDivElement>;

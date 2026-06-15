@@ -6,6 +6,7 @@ import type {
   SRT_TableInstance,
   SRT_VirtualItem,
 } from 'shadcn-react-table-core';
+import { parseSRT_HtmlProps } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { SRT_TableHeadCell } from './SRT_TableHeadCell';
 
@@ -35,8 +36,16 @@ export const SRT_TableHeadRow = <TData extends SRT_RowData>({
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
 
+  const rowProps = parseSRT_HtmlProps(table.options.srtTableHeadRowProps, {
+    headerGroup,
+    table,
+  });
+
   return (
-    <tr className={cn('border-b', className)}>
+    <tr
+      {...rowProps}
+      className={cn('border-b', className, rowProps?.className)}
+    >
       {virtualPaddingLeft ? (
         <th style={{ display: 'flex', width: virtualPaddingLeft }} />
       ) : null}
