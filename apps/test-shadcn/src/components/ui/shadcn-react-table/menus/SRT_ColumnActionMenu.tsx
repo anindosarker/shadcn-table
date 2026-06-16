@@ -170,6 +170,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             />
           ),
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={column.getIsSorted() === 'asc'}
             icon={
               <SortIcon
@@ -186,6 +187,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={column.getIsSorted() === 'desc'}
             divider={enableColumnFilters || enableGrouping || enableHiding}
             icon={<SortIcon className="h-4 w-4" />}
@@ -202,6 +204,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableColumnFilters && column.getCanFilter()
       ? [
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={
               !columnFilterValue ||
               (Array.isArray(columnFilterValue) &&
@@ -250,6 +253,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableGrouping && column.getCanGroup()
       ? [
           <SRT_ActionMenuItem
+            dense={dense}
             divider={enableColumnPinning}
             icon={<DynamicFeedIcon className="h-4 w-4" />}
             key={6}
@@ -264,6 +268,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableColumnPinning && column.getCanPin()
       ? [
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
             icon={
               <PushPinIcon
@@ -277,6 +282,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
             icon={
               <PushPinIcon
@@ -290,6 +296,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={!column.getIsPinned()}
             divider={enableHiding}
             icon={<PushPinIcon className="h-4 w-4" />}
@@ -303,6 +310,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableColumnResizing && column.getCanResize()
       ? [
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={columnSizing[column.id] === undefined}
             icon={<RestartAltIcon className="h-4 w-4" />}
             key={10}
@@ -315,6 +323,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableHiding
       ? [
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={!column.getCanHide()}
             icon={<VisibilityOffIcon className="h-4 w-4" />}
             key={11}
@@ -326,6 +335,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
+            dense={dense}
             disabled={
               !Object.values(columnVisibility).filter((visible) => !visible)
                 .length
