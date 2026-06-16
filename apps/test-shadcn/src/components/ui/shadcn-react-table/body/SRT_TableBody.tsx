@@ -18,20 +18,6 @@ export interface SRT_TableBodyProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table body - renders all data rows (or the empty-state fallback).
- *
- * Ports material-react-table's MRT_TableBody:
- * - Empty state (renderEmptyRowsFallback, otherwise localized message)
- * - Row virtualization (height = total size, interleaved detail-panel indices)
- * - Pinned rows rendered in separate sticky top / bottom tbody sections (when
- *   rowPinningDisplayMode is not 'sticky')
- * - memoMode === 'rows' memoization dispatch
- * - Center rows via useSRT_Rows + useSRT_RowVirtualizer
- *
- * MUI's `sx` theming is replaced with Tailwind classes; sticky offsets are
- * applied as inline styles derived from the head/footer ref heights.
- */
 export const SRT_TableBody = <TData extends SRT_RowData>({
   columnVirtualizer,
   table,

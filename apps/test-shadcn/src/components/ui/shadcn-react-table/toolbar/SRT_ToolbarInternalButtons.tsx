@@ -11,10 +11,6 @@ export interface SRT_ToolbarInternalButtonsProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toolbar internal buttons - renders built-in toolbar action buttons.
- * Port of MRT_ToolbarInternalButtons (button set + order preserved).
- */
 export const SRT_ToolbarInternalButtons = <TData extends SRT_RowData>({
   table,
   className,

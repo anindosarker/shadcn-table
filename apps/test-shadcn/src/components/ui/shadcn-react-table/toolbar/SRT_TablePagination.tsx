@@ -66,8 +66,6 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   const disableBack = pageIndex <= 0 || disabled;
   const disableNext = lastRowIndex >= totalRowCount || disabled;
 
-  // Numbered page list with ellipses (boundaryCount=1, siblingCount=1),
-  // mirroring MUI Pagination's default item set used by MRT.
   const getPageItems = (): Array<number | 'ellipsis'> => {
     const total = numberOfPages;
     const current = pageIndex + 1;

@@ -56,7 +56,6 @@ export interface SRT_FilterTextFieldProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/** Simple debounce helper (shadcn has no MUI `debounce`). */
 function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
   let timeoutId: ReturnType<typeof setTimeout>;
   const debounced = (...args: Parameters<T>) => {
@@ -66,22 +65,6 @@ function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
   return debounced;
 }
 
-/**
- * Filter text field - dispatches by columnFilterVariant.
- *
- * Ports MRT_FilterTextField. Variant mapping (MUI -> shadcn):
- * - text / range / range-text: shadcn Input (range uses two of these via
- *   SRT_FilterRangeFields, one per rangeFilterIndex)
- * - select: shadcn Select
- * - multi-select: shadcn Popover + Command (multi check list with chips)
- * - autocomplete: shadcn Popover + Command (freeSolo, faceted options)
- * - date / datetime / time: native typed Input (no shadcn DatePicker in the
- *   available primitive set — documented deviation)
- * - checkbox: handled by SRT_FilterCheckbox upstream, not here
- *
- * Includes debounced updates, clear button, and the change-filter-mode button
- * wiring to SRT_FilterOptionMenu.
- */
 export const SRT_FilterTextField = <TData extends SRT_RowData>({
   header,
   rangeFilterIndex,
@@ -106,16 +89,13 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   const { columnDef } = column;
   const { filterVariant } = columnDef;
 
-  // Slot-prop context is shared by the text field and every picker variant.
   const slotPropsContext = { column, rangeFilterIndex, table };
 
-  // Resolve the slot props: table-level defaults overridable per-column.
   const slotProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtFilterTextFieldProps, slotPropsContext),
     parseSRT_HtmlProps(columnDef.srtFilterTextFieldProps, slotPropsContext),
   );
 
-  // Autocomplete and the three date-flavored variants each have their own slot.
   const autocompleteSlotProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtFilterAutocompleteProps, slotPropsContext),
     parseSRT_HtmlProps(columnDef.srtFilterAutocompleteProps, slotPropsContext),
@@ -136,8 +116,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     parseSRT_HtmlProps(columnDef.srtFilterTimePickerProps, slotPropsContext),
   );
 
-  // The date/datetime/time variants all render a single native typed input;
-  // pick the matching slot props for whichever variant is active.
   const dateVariantSlotProps = filterVariant?.startsWith('datetime')
     ? dateTimePickerSlotProps
     : filterVariant?.startsWith('time')
@@ -290,7 +268,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     }
   };
 
-  // Change-filter-mode button rendered before the field.
   const changeModeButton = showChangeModeButton ? (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -330,7 +307,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     />
   );
 
-  // Empty/notEmpty mode: show a removable chip instead of an input.
   if (filterChipLabel) {
     return (
       <div className={cn('flex w-full flex-col gap-1', className)}>
@@ -376,7 +352,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       </Tooltip>
     ) : null;
 
-  // ---- multi-select ----
   if (isMultiSelectFilter) {
     const selected = Array.isArray(filterValue) ? filterValue : [];
     const toggle = (value: string) => {
@@ -458,7 +433,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     );
   }
 
-  // ---- single select ----
   if (isSelectFilter) {
     const value = typeof filterValue === 'string' ? filterValue : '';
     return (
@@ -489,7 +463,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     );
   }
 
-  // ---- autocomplete (freeSolo) ----
   if (isAutocompleteFilter) {
     const value = typeof filterValue === 'string' ? filterValue : '';
     return (
@@ -547,7 +520,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     );
   }
 
-  // ---- date / datetime / time (native typed inputs) ----
   if (isDateFilter) {
     const inputType = filterVariant?.startsWith('datetime')
       ? 'datetime-local'
@@ -582,14 +554,12 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     );
   }
 
-  // ---- text / range textbox (default) ----
   const handleTextFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue =
       event.target.type === 'number'
         ? event.target.valueAsNumber
         : event.target.value;
     handleChange(newValue);
-    // Compose the user's slot-prop onChange after the component's own logic.
     slotProps?.onChange?.(event);
   };
 

@@ -26,13 +26,6 @@ export interface SRT_GlobalFilterTextFieldProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Global filter text field - search input for filtering all columns.
- *
- * Ports MRT_GlobalFilterTextField: debounced search, search-icon prefix,
- * clear-button suffix, mode-menu prefix when enableGlobalFilterModes, and
- * mount/unmount on showGlobalFilter (the MUI Collapse equivalent).
- */
 export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
   table,
   className,
@@ -50,8 +43,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
   } = table;
   const { globalFilter, showGlobalFilter } = getState();
 
-  // Resolve the slot props (table-level only — global search has no per-column
-  // variant).
   const slotProps = parseSRT_HtmlProps(srtSearchTextFieldProps, { table });
 
   const isMounted = useRef(false);
@@ -75,7 +66,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
     const value = event.target.value;
     setSearchValue(value);
     handleChangeDebounced(value);
-    // Compose the user's slot-prop onChange after the component's own logic.
     slotProps?.onChange?.(event);
   };
 
@@ -84,7 +74,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
     setGlobalFilter(undefined);
   };
 
-  // Sync with external globalFilter changes
   useEffect(() => {
     if (isMounted.current) {
       if (globalFilter === undefined) {
@@ -97,7 +86,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalFilter]);
 
-  // mountOnEnter / unmountOnExit (the MUI Collapse equivalent)
   if (!showGlobalFilter) return null;
 
   return (
@@ -108,7 +96,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
         className,
       )}
     >
-      {/* Mode menu button or search icon prefix */}
       {enableGlobalFilterModes ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -131,7 +118,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
         <SearchIcon className="absolute left-3 size-4 text-muted-foreground" />
       )}
 
-      {/* Input field */}
       <input
         type="text"
         placeholder={localization.search}
@@ -150,7 +136,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
         )}
       />
 
-      {/* Clear button suffix */}
       {searchValue && (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -169,7 +154,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
         </Tooltip>
       )}
 
-      {/* Filter mode menu */}
       {enableGlobalFilterModes && (
         <SRT_FilterOptionMenu
           anchorEl={anchorEl}

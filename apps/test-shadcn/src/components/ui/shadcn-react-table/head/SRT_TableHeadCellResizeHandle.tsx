@@ -11,23 +11,6 @@ export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Resize handle - drag handle for column resizing
- *
- * Barebones implementation:
- * - Vertical divider that's draggable
- * - Double-click to reset size
- * - Visual feedback on resize
- * - Positioned absolutely on column edge
- *
- * TODO (Future enhancements):
- * - Add smooth animation
- * - Add resize preview line
- * - Add keyboard resize support
- * - Add touch support
- * - Better RTL support
- */
-
 export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
   header,
   table,
@@ -45,7 +28,6 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
 
   const isResizing = column.getIsResizing();
 
-  // Calculate margin based on density
   const marginOffset =
     density === 'compact' ? -8 : density === 'comfortable' ? -16 : -24;
 

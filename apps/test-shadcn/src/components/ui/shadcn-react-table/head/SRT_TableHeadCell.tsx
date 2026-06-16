@@ -29,25 +29,6 @@ export interface SRT_TableHeadCellProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table head cell - renders an individual header cell.
- *
- * Ported 1:1 from MRT_TableHeadCell:
- * - Header rendering (columnDef.Header function/element or columnDef.header).
- * - Sort label, filter label, column actions button, grab/drag handle, resize
- *   handle, subheader filter container.
- * - Column drag/reorder: onDragEnter sets the hovered column, onDragOver allows
- *   the drop. Dragging/hovered/resize borders are reflected with classes.
- * - Column pinning offsets (sticky left/right via getStart/getAfter).
- * - Density-driven padding, alignment (group => center), colSpan, data-* attrs,
- *   keyboard shortcuts, virtualizer measureElement on the cell node.
- *
- * MUI -> shadcn notes: cva drives density padding; className overrides instead of
- * the `sx` prop. The `srtTableHeadCellProps` slot is merged here (table-level then
- * columnDef-level, columnDef winning) via mergeSRT_HtmlProps, composing over the
- * library's own handlers/style.
- */
-
 const headCellVariants = cva(
   'relative overflow-visible text-left align-top font-bold text-muted-foreground',
   {
@@ -147,10 +128,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
     });
   };
 
-  // Core display-column defs are headless (no Header) by design. Render the
-  // interactive header content here by column id, mirroring the MRT
-  // getMRT_*ColumnDef Header functions. User-defined Header / data columns fall
-  // through to the columnDef.Header (or flexRender of columnDef.header) below.
   const displayHeaderElement =
     columnDefType === 'display' ? (
       column.id === 'mrt-row-select' ? (
@@ -181,7 +158,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
 
   const align = columnDefType === 'group' ? 'center' : 'left';
 
-  // Column pinning offsets (sticky), matching MRT's getStart/getAfter logic.
   const pinnedStyle: CSSProperties = isColumnPinned
     ? {
         position: 'sticky',
@@ -197,8 +173,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       }
     : {};
 
-  // Merge table-level then column-level slot props (columnDef wins), composing
-  // over the library's own handlers/style via mergeSRT_HtmlProps.
   const tableHeadCellProps = parseSRT_HtmlProps(srtTableHeadCellProps, {
     column,
     table,
@@ -250,7 +224,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       className={cn(
         headCellVariants({ density }),
         'group',
-        // dragging / hovered / resize visual borders
         isResizingBorder && 'border-r-2 border-r-primary',
         !isResizingBorder &&
           isDragging &&

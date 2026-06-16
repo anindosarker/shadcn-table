@@ -42,9 +42,6 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
 
   const toolbarProps = parseSRT_HtmlProps(srtTopToolbarProps, { table });
 
-  // Mirror MRT: stack the alert banner (push content down) on small screens,
-  // when custom actions are rendered, or when the global filter is shown on a
-  // tablet — otherwise it overlays absolutely in the top-right corner.
   const stackAlertBanner =
     isMobile ||
     !!renderTopToolbarCustomActions ||
@@ -62,15 +59,12 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
         toolbarProps?.className,
       )}
     >
-      {/* Alert Banner */}
       {positionToolbarAlertBanner === 'top' && (
         <SRT_ToolbarAlertBanner
           stackAlertBanner={stackAlertBanner}
           table={table}
         />
       )}
-
-      {/* Drop Zone for Column Grouping */}
       {['both', 'top'].includes(positionToolbarDropZone ?? '') && (
         <SRT_ToolbarDropZone table={table} />
       )}
@@ -81,18 +75,12 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
           stackAlertBanner ? 'relative' : 'absolute right-0 top-0',
         )}
       >
-        {/* Global Filter - Left Position */}
         {enableGlobalFilter && positionGlobalFilter === 'left' && (
           <SRT_GlobalFilterTextField table={table} />
         )}
-
-        {/* Custom Actions */}
         {renderTopToolbarCustomActions?.({ table }) ?? <span />}
-
-        {/* Internal Buttons */}
         {enableToolbarInternalActions ? (
           <div className="flex flex-wrap-reverse items-center justify-end gap-2">
-            {/* Global Filter - Right Position */}
             {enableGlobalFilter && positionGlobalFilter === 'right' && (
               <SRT_GlobalFilterTextField table={table} />
             )}
@@ -105,14 +93,10 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
           )
         )}
       </div>
-
-      {/* Pagination (top/both) */}
       {enablePagination &&
         ['both', 'top'].includes(positionPagination ?? '') && (
           <SRT_TablePagination position="top" table={table} />
         )}
-
-      {/* Linear Progress Bar */}
       <SRT_LinearProgressBar isTopToolbar table={table} />
     </div>
   );

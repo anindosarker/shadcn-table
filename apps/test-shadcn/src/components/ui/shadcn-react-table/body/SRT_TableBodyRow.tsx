@@ -33,22 +33,6 @@ export interface SRT_TableBodyRowProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table body row - renders a single data row plus its optional detail panel.
- *
- * Ports material-react-table's MRT_TableBodyRow:
- * - Selection (data-state=selected) and hover styling
- * - Row pinning (sticky top/bottom offsets, dimmed opacity)
- * - Row drag/reorder hover tracking (enableRowOrdering)
- * - Row + column virtualization (translateY, virtual padding spacers,
- *   measureElement)
- * - memoMode === 'cells' memoization dispatch
- * - Striped rows via data-static-index parity
- * - Detail panel rendering for non-grouped rows
- *
- * MUI's theme color math (alpha/lighten/darken backgrounds) is replaced with
- * Tailwind tokens (muted / accent) and data attributes for consumer styling.
- */
 export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   columnVirtualizer,
   numRows,
@@ -162,9 +146,6 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
         : undefined,
   };
 
-  // Compose the component's own row DOM attrs (library = `a`) with the
-  // user-supplied `srtTableBodyRowProps` (`b`); handlers fire library-then-user,
-  // style/className compose. className gets final tailwind dedup via cn() below.
   const userRowProps = parseSRT_HtmlProps(srtTableBodyRowProps, {
     row,
     staticRowIndex,

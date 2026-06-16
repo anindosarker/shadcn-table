@@ -9,17 +9,6 @@ export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toggle fullscreen button - switches table between normal and fullscreen mode.
- *
- * Ported from MRT_ToggleFullScreenButton:
- * - Toggles fullscreen state.
- * - Icon (read from the table icon registry) reflects state:
- *   FullscreenExitIcon when fullscreen, FullscreenIcon otherwise.
- * - Tooltip (localization.toggleFullScreen) via SRT_Tooltip, controlled so it
- *   closes on click / blur (matches MRT's open-state handling).
- */
-
 export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
   table,
   className,
@@ -48,15 +37,15 @@ export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
       onOpenChange={setTooltipOpened}
     >
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleToggleFullScreen}
+        aria-label={localization.toggleFullScreen}
+        className={cn('h-8 w-8', className)}
         onBlur={() => setTooltipOpened(false)}
+        onClick={handleToggleFullScreen}
         onFocus={() => setTooltipOpened(true)}
         onMouseEnter={() => setTooltipOpened(true)}
         onMouseLeave={() => setTooltipOpened(false)}
-        aria-label={localization.toggleFullScreen}
-        className={cn('h-8 w-8', className)}
+        size="icon"
+        variant="ghost"
       >
         {isFullScreen ? (
           <FullscreenExitIcon className="h-4 w-4" />

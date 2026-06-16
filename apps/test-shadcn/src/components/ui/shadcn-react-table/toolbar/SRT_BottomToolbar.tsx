@@ -12,20 +12,6 @@ export interface SRT_BottomToolbarProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Bottom toolbar component - displays pagination and custom actions
- *
- * Implemented:
- * - Pagination (when enabled)
- * - Linear progress bar
- * - Custom actions render slot
- * - Alert banner support (bottom position)
- * - Drop zone support (for column grouping)
- * - Fullscreen mode fixed positioning
- * - Mobile responsive alert-banner stacking (matchMedia)
- * - Custom toolbar props (srtBottomToolbarProps)
- */
-
 export const SRT_BottomToolbar = <TData extends SRT_RowData>({
   table,
   className,
@@ -48,8 +34,6 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
 
   const toolbarProps = parseSRT_HtmlProps(srtBottomToolbarProps, { table });
 
-  // Mirror MRT: stack the alert banner on mobile or when custom actions are
-  // present; otherwise the pagination overlays absolutely in the top-right.
   const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
   return (
@@ -66,22 +50,17 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
       )}
     >
       <SRT_LinearProgressBar isTopToolbar={false} table={table} />
-
-      {/* Alert Banner */}
       {positionToolbarAlertBanner === 'bottom' && (
         <SRT_ToolbarAlertBanner
           stackAlertBanner={stackAlertBanner}
           table={table}
         />
       )}
-
-      {/* Drop Zone for Column Grouping */}
       {['both', 'bottom'].includes(positionToolbarDropZone ?? '') && (
         <SRT_ToolbarDropZone table={table} />
       )}
 
       <div className="flex items-center justify-between w-full box-border p-2">
-        {/* Custom actions */}
         <div className="flex-1">
           {renderBottomToolbarCustomActions ? (
             renderBottomToolbarCustomActions({ table })
@@ -90,7 +69,6 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
           )}
         </div>
 
-        {/* Pagination */}
         <div
           className={cn(
             'flex justify-end',

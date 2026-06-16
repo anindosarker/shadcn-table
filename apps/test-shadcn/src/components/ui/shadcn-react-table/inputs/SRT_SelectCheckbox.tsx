@@ -20,14 +20,6 @@ export interface SRT_SelectCheckboxProps<TData extends SRT_RowData>
   className?: string;
 }
 
-/**
- * Select checkbox - checkbox for row selection.
- *
- * Ports MRT_SelectCheckbox: handles select-all, per-row selection, and
- * single-select "radio" mode (enableMultiRowSelection === false). Since the
- * shadcn primitive set has no Radio, single-select is rendered as a Checkbox
- * styled round (rounded-full) to preserve the visual distinction.
- */
 export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
   row,
   staticRowIndex,
@@ -49,8 +41,6 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   const selectAll = !row;
 
-  // Resolve the slot props: select-all uses the table context, per-row
-  // checkboxes use the row context (matches MRT's two distinct slots).
   const slotProps = selectAll
     ? parseSRT_HtmlProps(srtSelectAllCheckboxProps, { table })
     : parseSRT_HtmlProps(srtSelectCheckboxProps, {
@@ -93,14 +83,9 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   const isSingleSelect = enableMultiRowSelection === false;
 
-  // single-select cannot show indeterminate
   const checkedState: boolean | 'indeterminate' =
     isSingleSelect || !isIndeterminate ? !!isChecked : 'indeterminate';
 
-  // Radix Checkbox's onCheckedChange omits the originating mouse event, so the
-  // shiftKey needed for batch (range) row selection is lost. Capture it from
-  // the click that immediately precedes the change and forward it on the
-  // synthetic event the selection handler reads (event.nativeEvent.shiftKey).
   const shiftKeyRef = useRef(false);
 
   return (
@@ -128,7 +113,6 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
           onClick={(e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             shiftKeyRef.current = e.shiftKey;
-            // Compose the user's slot-prop onClick after the component's logic.
             slotProps?.onClick?.(e);
           }}
           className={cn(

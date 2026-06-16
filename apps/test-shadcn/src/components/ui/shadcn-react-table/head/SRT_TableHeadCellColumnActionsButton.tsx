@@ -19,19 +19,6 @@ export interface SRT_TableHeadCellColumnActionsButtonProps<
   className?: string;
 }
 
-/**
- * Column actions button - opens the column action menu.
- *
- * Ported 1:1 from MRT_TableHeadCellColumnActionsButton:
- * - More icon button (from the icon registry) with a tooltip
- *   (localization.columnActions).
- * - Hover raises opacity from 0.3 to 1.
- * - Click captures the anchor element and opens SRT_ColumnActionMenu.
- * - Resolves the `srtColumnActionsButtonProps` slot (table-level then columnDef,
- *   columnDef winning) and composes its handlers/`className` over the library
- *   defaults via mergeSRT_HtmlProps. `children` overrides the default icon.
- */
-
 export const SRT_TableHeadCellColumnActionsButton = <
   TData extends SRT_RowData,
 >({
@@ -57,8 +44,6 @@ export const SRT_TableHeadCellColumnActionsButton = <
     setAnchorEl(event.currentTarget);
   };
 
-  // Merge table-level then column-level slot props (columnDef wins), composing
-  // over the library's own handlers/className via mergeSRT_HtmlProps.
   const tableActionsProps = parseSRT_HtmlProps(srtColumnActionsButtonProps, {
     column,
     table,

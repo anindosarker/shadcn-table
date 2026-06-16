@@ -13,14 +13,6 @@ export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Show/Hide columns button - opens menu to toggle column visibility.
- *
- * Ported from MRT_ShowHideColumnsButton:
- * - Columns icon button with tooltip (localization.showHideColumns).
- * - Click captures the anchor element and opens SRT_ShowHideColumnsMenu.
- */
-
 export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
   table,
   className,
@@ -42,11 +34,11 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
     <>
       <SRT_Tooltip title={localization.showHideColumns}>
         <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleClick}
           aria-label={localization.showHideColumns}
           className={cn('h-9 w-9', className)}
+          onClick={handleClick}
+          size="icon"
+          variant="ghost"
         >
           <ViewColumnIcon className="h-4 w-4" />
         </Button>

@@ -19,18 +19,6 @@ export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Sort label - clickable sort indicator with icon.
- *
- * Ported 1:1 from MRT_TableHeadCellSortLabel:
- * - Tooltip describing the current/next sort state (localization).
- * - Badge showing sort index when multi-sort is active.
- * - ArrowUpDown icon when unsorted (rotated), ArrowDown icon for asc/desc.
- * - Opacity dims when not sorted.
- * - Click toggles sorting (stops propagation so it doesn't double-fire with the
- *   label wrapper's onClick in the head cell).
- */
-
 export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
   header,
   table,

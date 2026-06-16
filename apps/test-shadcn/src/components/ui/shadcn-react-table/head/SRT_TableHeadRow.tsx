@@ -17,16 +17,6 @@ export interface SRT_TableHeadRowProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table head row - renders a single header row with all its cells.
- *
- * Ported 1:1 from MRT_TableHeadRow:
- * - Maps virtual columns when a column virtualizer is provided, resolving the
- *   real header by its virtual index; otherwise maps headerGroup.headers.
- * - Emits virtual left/right padding spacer cells.
- * - Sticky header positioning is handled by the parent thead.
- */
-
 export const SRT_TableHeadRow = <TData extends SRT_RowData>({
   columnVirtualizer,
   headerGroup,
@@ -52,8 +42,6 @@ export const SRT_TableHeadRow = <TData extends SRT_RowData>({
       {...rowProps}
       className={cn(
         'border-b bg-background shadow-[4px_0_8px_rgba(0,0,0,0.1)]',
-        // Grid layout renders the head row as a flexbox; semantic sticky
-        // headers stay sticky, everything else is relative (mirrors MRT).
         isGrid ? 'flex' : '',
         enableStickyHeader && layoutMode === 'semantic'
           ? 'sticky top-0'

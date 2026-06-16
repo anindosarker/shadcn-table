@@ -17,20 +17,6 @@ export interface SRT_TableFooterRowProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table footer row component - renders a row of footer cells
- *
- * Barebones implementation:
- * - Renders footer cells
- * - Skips row if no content
- * - Border styling
- *
- * TODO (Future enhancements):
- * - Add column virtualization support
- * - Add custom styling options
- * - Add hover effects
- */
-
 export const SRT_TableFooterRow = <TData extends SRT_RowData>({
   columnVirtualizer,
   footerGroup,
@@ -40,7 +26,7 @@ export const SRT_TableFooterRow = <TData extends SRT_RowData>({
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
 
-  // If no content in row, skip row
+  //if no content in row, skip row
   if (
     !footerGroup.headers?.some(
       (header) =>

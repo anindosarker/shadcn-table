@@ -11,16 +11,6 @@ export interface SRT_ToggleFiltersButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toggle filters button - show/hide column filters.
- *
- * Ported from MRT_ToggleFiltersButton:
- * - Toggles column filter visibility.
- * - Icon (read from the table icon registry) reflects state:
- *   FilterListOffIcon when filters are shown, FilterListIcon otherwise.
- * - Tooltip (localization.showHideFilters) via SRT_Tooltip.
- */
-
 export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
   table,
   className,
@@ -42,11 +32,11 @@ export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip title={localization.showHideFilters}>
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleToggleShowFilters}
         aria-label={localization.showHideFilters}
         className={cn('h-9 w-9', className)}
+        onClick={handleToggleShowFilters}
+        size="icon"
+        variant="ghost"
       >
         {showColumnFilters ? (
           <FilterListOffIcon className="h-4 w-4" />

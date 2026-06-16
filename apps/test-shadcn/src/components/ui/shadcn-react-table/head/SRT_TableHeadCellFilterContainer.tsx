@@ -18,16 +18,6 @@ export interface SRT_TableHeadCellFilterContainerProps<
   className?: string;
 }
 
-/**
- * Filter container - wrapper that routes to the appropriate filter input.
- *
- * Ported 1:1 from MRT_TableHeadCellFilterContainer:
- * - Mounts only while column filters are shown (subheader mode) or the display
- *   mode is 'popover'. MUI's Collapse mountOnEnter/unmountOnExit is approximated
- *   by conditionally rendering with an enter animation.
- * - Routes by filterVariant: checkbox / range-slider / range fields / text field.
- */
-
 export const SRT_TableHeadCellFilterContainer = <TData extends SRT_RowData>({
   header,
   table,

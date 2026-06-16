@@ -7,8 +7,8 @@ import {
   parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { cn } from '@/lib/utils';
+import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';
 
@@ -19,23 +19,6 @@ export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
   className?: string;
 }
-
-/**
- * Toggle row action menu button - shows edit/menu buttons or custom actions
- *
- * Barebones implementation:
- * - Shows SRT_EditActionButtons when in edit mode
- * - Shows edit button when editing enabled
- * - Shows menu button when renderRowActionMenuItems exists
- * - Shows custom actions via renderRowActions
- * - Hover opacity effect
- *
- * TODO (Future enhancements):
- * - Add SRT_RowActionMenu component
- * - Add tooltip
- * - Add keyboard shortcuts
- * - Add custom button props support
- */
 
 export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
   cell,
@@ -97,11 +80,11 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
         ['modal', 'row'].includes(editDisplayMode!) ? (
         <SRT_Tooltip title={localization.edit} side="right">
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleStartEditMode}
             aria-label={localization.edit}
             className={commonButtonClass}
+            onClick={handleStartEditMode}
+            size="icon"
+            variant="ghost"
           >
             <EditIcon className="h-4 w-4" />
           </Button>
@@ -110,16 +93,15 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
           row,
           staticRowIndex,
           table,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any)?.length ? (
         <>
           <SRT_Tooltip title={localization.rowActions}>
             <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleOpenRowActionMenu}
               aria-label={localization.rowActions}
               className={commonButtonClass}
+              onClick={handleOpenRowActionMenu}
+              size="icon"
+              variant="ghost"
             >
               <MoreHorizIcon className="h-4 w-4" />
             </Button>

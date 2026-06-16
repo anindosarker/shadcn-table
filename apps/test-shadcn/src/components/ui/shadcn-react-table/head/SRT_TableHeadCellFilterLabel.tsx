@@ -28,19 +28,6 @@ export interface SRT_TableHeadCellFilterLabelProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Filter label - active-filter indicator chip in the column header.
- *
- * Ported 1:1 from MRT_TableHeadCellFilterLabel:
- * - Shows the filter icon when the display mode is 'popover' or a filter is
- *   active (MUI Grow -> conditional render with zoom-in animation).
- * - Tooltip describes the active filter, including select labels and range
- *   ("and"/"or") joins, exactly as MRT builds the string.
- * - Click: in popover mode opens a popover containing the filter container;
- *   otherwise reveals the subheader filters. Either way it focuses + selects the
- *   first filter input on the next microtask.
- */
-
 export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
   header,
   table,

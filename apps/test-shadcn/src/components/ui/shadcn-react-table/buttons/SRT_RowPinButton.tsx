@@ -15,18 +15,6 @@ export interface SRT_RowPinButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Row pin button - pin/unpin rows to top or bottom.
- *
- * Ported from MRT_RowPinButton:
- * - Toggles row pinning for the given position.
- * - Icon (read from the table icon registry): CloseIcon when pinned,
- *   otherwise a rotated PushPinIcon (rotation depends on
- *   rowPinningDisplayMode / pinningPosition).
- * - Tooltip (localization.unpin / localization.pin) via SRT_Tooltip, controlled
- *   so it opens on hover/focus and closes on click (matches MRT).
- */
-
 export const SRT_RowPinButton = <TData extends SRT_RowData>({
   pinningPosition,
   row,
@@ -65,15 +53,15 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
       onOpenChange={setTooltipOpened}
     >
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleTogglePin}
+        aria-label={localization.pin}
+        className={cn('h-6 w-6', className)}
         onBlur={() => setTooltipOpened(false)}
+        onClick={handleTogglePin}
         onFocus={() => setTooltipOpened(true)}
         onMouseEnter={() => setTooltipOpened(true)}
         onMouseLeave={() => setTooltipOpened(false)}
-        aria-label={localization.pin}
-        className={cn('h-6 w-6', className)}
+        size="icon"
+        variant="ghost"
       >
         {isPinned ? (
           <CloseIcon className="h-3.5 w-3.5" />

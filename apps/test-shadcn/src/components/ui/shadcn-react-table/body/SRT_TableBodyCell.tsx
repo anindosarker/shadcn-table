@@ -47,28 +47,6 @@ export interface SRT_TableBodyCellProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table body cell - renders a single data cell.
- *
- * Ports material-react-table's MRT_TableBodyCell:
- * - Density-based padding (display columns padded tighter)
- * - Skeleton loading state with randomized width
- * - Placeholder cells (columnDef.PlaceholderCell)
- * - Display-column custom Cell rendering
- * - Inline editing dispatch (table / row / cell edit modes + creating row)
- * - Click-to-copy wrapping via SRT_CopyButton
- * - Click-to-edit (double click opens cell editor)
- * - Right-click cell action menu (enableCellActions)
- * - Keyboard shortcuts
- * - Column ordering drag enter/over hover tracking
- * - Column pinning offsets (sticky) + data-pinned / data-index attributes
- * - Grouped cell subrow count suffix
- *
- * MUI's `sx`-driven dragging/resize border styling is conveyed via data
- * attributes (data-pinned / data-index) plus cva + Tailwind classes rather
- * than runtime theme color math.
- */
-
 const cellVariants = cva(
   'overflow-hidden align-middle [&:has([role=checkbox])]:pr-0',
   {
@@ -146,8 +124,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
-  // Local anchor for the right-click cell action menu (popover-driven, the
-  // shadcn equivalent of MRT's global actionCell + Menu portal).
   const [actionAnchorEl, setActionAnchorEl] = useState<HTMLElement | null>(
     null,
   );
@@ -185,7 +161,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     (parseFromValuesOrFunc(enableClickToCopy, cell) === true ||
       parseFromValuesOrFunc(columnDef.enableClickToCopy, cell) === true) &&
     !['context-menu', false].includes(
-      // @ts-expect-error allow string/false union narrowing like MRT
+      // @ts-expect-error
       parseFromValuesOrFunc(columnDef.enableClickToCopy, cell),
     );
 
@@ -200,14 +176,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
 
   const isLastRow = numRows !== undefined && staticRowIndex === numRows - 1;
 
-  /**
-   * Render the contents of a display column's body cell.
-   *
-   * Core display column defs (getSRT_Row*ColumnDef) are intentionally headless
-   * — they carry no `Cell` — so the component layer dispatches on `column.id`
-   * here, mirroring the MRT getMRT_Row*ColumnDef `Cell` logic exactly. Any
-   * other / user-defined display column falls back to `columnDef.Cell`.
-   */
   const renderDisplayColumnCell = (): ReactNode => {
     switch (column.id) {
       case 'mrt-row-select':
@@ -347,17 +315,12 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     });
   };
 
-  // Resolve the table-level + columnDef-level slot props (columnDef wins on
-  // conflicts; className composed, style merged, handlers composed), then layer
-  // them over the component's own cell DOM attrs (library handlers fire first,
-  // user handlers second). Final tailwind className dedup happens via cn() below.
   const htmlPropsContext = { cell, column, row, table };
   const userCellProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtTableBodyCellProps, htmlPropsContext),
     parseSRT_HtmlProps(columnDef.srtTableBodyCellProps, htmlPropsContext),
   );
 
-  // Slot props for the loading-skeleton element (MRT's muiSkeletonProps).
   const skeletonProps = parseSRT_HtmlProps(srtSkeletonProps, htmlPropsContext);
   const cellProps = mergeSRT_HtmlProps(
     {

@@ -21,18 +21,6 @@ export interface SRT_TableDetailPanelProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table detail panel - expandable row content rendered beneath its parent row.
- *
- * Ports material-react-table's MRT_TableDetailPanel:
- * - Renders `renderDetailPanel({ row, table })` (suppressed while loading)
- * - Virtualized mode: absolutely positioned with translateY, content rendered
- *   directly only when the row is expanded; measured by the row virtualizer
- * - Non-virtualized mode: shadcn Collapsible (mount on enter / unmount on exit)
- * - Full-width cell spanning all visible leaf columns
- * - data-index parity with MRT (staticRowIndex * 2 + 1 when detail panels are
- *   enabled, so virtual indices interleave row / detail-panel)
- */
 export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
   parentRowRef,
   row,
@@ -49,10 +37,6 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
   } = table;
   const { isLoading } = getState();
 
-  // Detail-panel `<tr>` mirrors MRT's tableRowProps (muiTableBodyRowProps) and
-  // the `<td>` cell mirrors tableCellProps (muiDetailPanelProps). SRT's
-  // SRT_RowHTMLPropsContext does not carry MRT's `isDetailPanel` flag, so we
-  // pass the supported { row, staticRowIndex, table } context.
   const tableRowProps = parseSRT_HtmlProps(srtTableBodyRowProps, {
     row,
     staticRowIndex,
@@ -76,9 +60,6 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
     width: '100%',
   };
 
-  // Component's own row/cell DOM attrs (library = `a`) composed with the
-  // user-supplied slot props (`b`); className composes (final tailwind dedup via
-  // cn() below), style merges, handlers fire library-then-user.
   const rowProps = mergeSRT_HtmlProps({ style: rowStyle }, tableRowProps);
   const cellProps = mergeSRT_HtmlProps({}, tableCellProps);
 

@@ -25,14 +25,13 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
   } = table;
   const { isSaving, showProgressBars } = getState();
 
-  const linerProgressProps = {
+  const linearProgressProps = {
     ...parseFromValuesOrFunc(srtLinearProgressProps, { isTopToolbar, table }),
     ...rest,
   };
 
   const show = showProgressBars !== false && (showProgressBars || isSaving);
 
-  // Use the smooth progress animation hook from core package
   const [value] = useSRT_ProgressAnimation(show, {
     strategy: 'ease-in-out',
     duration: 2000,
@@ -41,24 +40,19 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
   return (
     <Collapsible open={show}>
       <CollapsibleContent
-        {...linerProgressProps}
+        {...linearProgressProps}
         className={cn(
           'absolute left-0 right-0 w-full',
           isTopToolbar ? 'bottom-0' : 'top-0',
-          linerProgressProps?.className,
+          linearProgressProps?.className,
         )}
       >
         <Progress
           value={value}
-          {...linerProgressProps}
-          className={cn('h-0.5', linerProgressProps?.className)}
+          {...linearProgressProps}
+          className={cn('h-0.5', linearProgressProps?.className)}
         />
       </CollapsibleContent>
     </Collapsible>
   );
 };
-
-// TODO: srtLinearProgressProps - add props support similar to MRT's muiLinearProgressProps
-// Example shape (commented for future parity):
-// const linearProgressProps = parseFromValuesOrFunc(options?.srtLinearProgressProps, { isTopToolbar, table });
-// <Progress value={value} className={cn('h-0.5', linearProgressProps?.className)} />

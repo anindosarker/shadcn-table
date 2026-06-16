@@ -13,21 +13,6 @@ export interface SRT_TableFooterProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table footer component - renders footer rows with aggregations
- *
- * Barebones implementation:
- * - Renders footer groups with cells
- * - Skips rendering if no footer content
- * - Sticky footer support
- * - Border styling
- *
- * TODO (Future enhancements):
- * - Add column virtualization support
- * - Add custom styling options
- * - Add footer hover effects
- */
-
 export const SRT_TableFooter = <TData extends SRT_RowData>({
   columnVirtualizer,
   table,
@@ -40,12 +25,14 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
   } = table;
   const { isFullScreen } = getState();
 
+  const footerProps = parseSRT_HtmlProps(srtTableFooterProps, { table });
+
   const stickFooter =
     (isFullScreen || enableStickyFooter) && enableStickyFooter !== false;
 
   const footerGroups = table.getFooterGroups();
 
-  // If no footer cells at all, skip footer
+  //if no footer cells at all, skip footer
   if (
     !footerGroups.some((footerGroup) =>
       footerGroup.headers?.some(
@@ -58,8 +45,6 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
   ) {
     return null;
   }
-
-  const footerProps = parseSRT_HtmlProps(srtTableFooterProps, { table });
 
   return (
     <tfoot

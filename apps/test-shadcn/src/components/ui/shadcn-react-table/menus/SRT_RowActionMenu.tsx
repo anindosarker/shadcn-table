@@ -21,13 +21,6 @@ export interface SRT_RowActionMenuProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
 }
 
-/**
- * Row action menu - edit + custom row actions. Port of MRT_RowActionMenu.
- *
- * MUI Menu (anchorEl-driven) -> shadcn DropdownMenu (open-state driven).
- * The anchorEl/setAnchorEl interface is preserved; a zero-size trigger is
- * positioned at the anchor's bounding rect so the dropdown opens there.
- */
 export const SRT_RowActionMenu = <TData extends SRT_RowData>({
   anchorEl,
   handleEdit,

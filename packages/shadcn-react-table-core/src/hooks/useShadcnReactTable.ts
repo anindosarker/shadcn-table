@@ -1,4 +1,8 @@
-import { SRT_RowData, SRT_TableInstance, SRT_TableOptions } from '../types';
+import {
+  type SRT_RowData,
+  type SRT_TableInstance,
+  type SRT_TableOptions,
+} from '../types';
 import { useSRT_TableInstance } from './useSRT_TableInstance';
 import { useSRT_TableOptions } from './useSRT_TableOptions';
 

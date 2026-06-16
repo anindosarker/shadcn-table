@@ -1,5 +1,3 @@
-//TODO: fix themes and icons
-
 import { useId, useMemo } from 'react';
 import {
   getCoreRowModel,
@@ -99,7 +97,6 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
   manualGrouping,
   manualPagination,
   manualSorting,
-  // mrtTheme,
   paginationDisplayMode = 'default',
   positionActionsColumn = 'first',
   positionCreatingRow = 'top',
@@ -114,8 +111,6 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
   sortingFns,
   ...rest
 }: SRT_TableOptions<TData>) => {
-  // const theme = useTheme();
-
   icons = useMemo(() => ({ ...SRT_Default_Icons, ...icons }), [icons]);
   localization = useMemo(
     () => ({
@@ -124,7 +119,6 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     }),
     [localization],
   );
-  // mrtTheme = useMemo(() => getMRTTheme(mrtTheme, theme), [mrtTheme, theme]);
   aggregationFns = useMemo(
     () => ({ ...SRT_AggregationFns, ...aggregationFns }),
     [],
@@ -147,10 +141,6 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     () => [enableColumnVirtualization, enableRowVirtualization],
     [],
   );
-
-  // if (!columnResizeDirection) {
-  //   columnResizeDirection = theme.direction || 'ltr';
-  // }
 
   layoutMode =
     layoutMode || (enableColumnResizing ? 'grid-no-grow' : 'semantic');
@@ -252,7 +242,6 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     manualGrouping,
     manualPagination,
     manualSorting,
-    // mrtTheme,
     paginationDisplayMode,
     positionActionsColumn,
     positionCreatingRow,

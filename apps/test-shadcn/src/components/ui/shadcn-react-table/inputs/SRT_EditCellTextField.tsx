@@ -32,13 +32,6 @@ export interface SRT_EditCellTextFieldProps<TData extends SRT_RowData>
   className?: string;
 }
 
-/**
- * Edit cell text field - inline text / select editor for cells.
- *
- * Ports MRT_EditCellTextField: text via shadcn Input, select via shadcn
- * Select (editVariant === 'select' or editSelectOptions present). Writes to
- * the row value cache on change/blur, and blurs on Enter.
- */
 export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   cell,
   table,
@@ -61,7 +54,6 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   const { column, row } = cell;
   const { columnDef } = column;
 
-  // Resolve the slot props: table-level defaults overridable per-column.
   const slotProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtEditTextFieldProps, { cell, column, row, table }),
     parseSRT_HtmlProps(columnDef.srtEditTextFieldProps, {
@@ -96,24 +88,20 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     parseFromValuesOrFunc(columnDef.enableEditing, row) === false;
 
   const saveInputValueToRowCache = (newValue: string) => {
-    // @ts-expect-error - _valuesCache is internal to TanStack rows
+    //@ts-expect-error
     row._valuesCache[column.id] = newValue;
     if (isCreating) {
       setCreatingRow(row);
     } else if (isEditing) {
       setEditingRow(row);
     } else if (editDisplayMode === 'cell' || editDisplayMode === 'table') {
-      // Cell/table modes have no Save button — commit the edit here so the
-      // value can be persisted to the user's data source.
       onEditingCellSave?.({ cell, row, table, value: newValue });
     }
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    // Compose the user's slot-prop onChange after the component's own logic so
-    // cell-edit changes can also be observed via props.
     slotProps?.onChange?.(event);
+    setValue(event.target.value);
   };
 
   const handleSelectChange = (newValue: string) => {
@@ -122,15 +110,14 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   };
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    slotProps?.onBlur?.(event);
     rest.onBlur?.(event);
     saveInputValueToRowCache(value);
     setEditingCell(null);
-    // Compose the user's slot-prop onBlur last so cell-edit persistence can be
-    // hooked via props (complements the onEditingCellSave option).
-    slotProps?.onBlur?.(event);
   };
 
   const handleEnterKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    slotProps?.onKeyDown?.(event);
     if (event.key === 'Enter' && !event.shiftKey) {
       editInputRefs.current?.[column.id]?.blur();
     }

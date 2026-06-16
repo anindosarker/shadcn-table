@@ -11,8 +11,6 @@ import { cn } from '@/lib/utils';
 
 export interface SRT_ActionMenuItemProps<TData extends SRT_RowData>
   extends Omit<ComponentProps<typeof DropdownMenuItem>, 'onSelect'> {
-  // Compact density renders tighter vertical padding, mirroring MRT's
-  // `MenuListProps.dense` (set when table density is 'compact').
   dense?: boolean;
   divider?: boolean;
   icon: ReactNode;
@@ -23,19 +21,6 @@ export interface SRT_ActionMenuItemProps<TData extends SRT_RowData>
   value?: string;
 }
 
-/**
- * Action menu item - shared dropdown menu item with icon + label + optional
- * submenu arrow and trailing divider. Port of MRT_ActionMenuItem.
- *
- * MUI MenuItem -> shadcn DropdownMenuItem.
- * - `icon` rendered before the label.
- * - `onOpenSubMenu` renders a trailing arrow that opens a submenu.
- * - `divider` renders a DropdownMenuSeparator after the item.
- * - `selected` highlights the item (filter-mode menu uses this).
- * - `dense` tightens vertical padding (table density 'compact').
- * - The submenu arrow icon is read from the table's icon registry
- *   (`table.options.icons.ArrowRightIcon`), exactly as in MRT.
- */
 export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
   className,
   dense,
@@ -59,9 +44,6 @@ export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
     <>
       <DropdownMenuItem
         data-value={value}
-        // Radix closes the menu on select by default (matching MUI's
-        // close-on-click). When this item only opens a submenu, keep the parent
-        // menu open so the submenu isn't immediately unmounted.
         onSelect={(event) => {
           if (onOpenSubMenu) event.preventDefault();
         }}

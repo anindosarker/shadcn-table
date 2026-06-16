@@ -31,12 +31,12 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
     getState,
     options: {
       localization,
+      srtCreateRowModalProps,
+      srtEditRowDialogProps,
       onCreatingRowCancel,
       onEditingRowCancel,
       renderCreateRowDialogContent,
       renderEditRowDialogContent,
-      srtCreateRowModalProps,
-      srtEditRowDialogProps,
     },
     setCreatingRow,
     setEditingRow,
@@ -44,9 +44,6 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
   const { creatingRow, editingRow } = getState();
   const row = (creatingRow ?? editingRow) as SRT_Row<TData>;
 
-  // Compose the edit-dialog DOM props with the create-modal overrides (the
-  // latter only apply while creating), mirroring MRT's muiEditRowDialogProps +
-  // muiCreateRowModalProps layering. These land on <DialogContent>.
   const dialogProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtEditRowDialogProps, { row, table }),
     creatingRow

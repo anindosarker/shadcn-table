@@ -14,12 +14,6 @@ export interface SRT_FilterRangeFieldsProps<TData extends SRT_RowData>
   className?: string;
 }
 
-/**
- * Filter range fields - min/max text inputs for range filtering.
- *
- * Ports MRT_FilterRangeFields: renders two SRT_FilterTextField halves in a
- * two-column grid, one for each end of the range.
- */
 export const SRT_FilterRangeFields = <TData extends SRT_RowData>({
   header,
   table,

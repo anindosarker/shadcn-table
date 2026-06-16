@@ -25,8 +25,6 @@ import { cn } from '@/lib/utils';
 export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData> {
   allColumns: SRT_Column<TData>[];
   column: SRT_Column<TData>;
-  // Compact density renders tighter row padding, mirroring MRT's
-  // `MenuListProps.dense` (set when table density is 'compact').
   dense?: boolean;
   hoveredColumn: SRT_Column<TData> | null;
   isNestedColumns: boolean;
@@ -35,14 +33,6 @@ export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Show/Hide columns menu items - recursive rows for column visibility.
- * Port of MRT_ShowHideColumnsMenuItems.
- *
- * MUI MenuItem + Switch + FormControlLabel -> a flex row with a shadcn Checkbox.
- * Preserves nested-column recursion, drag-to-reorder (native DnD), pinning
- * buttons, and visibility toggling (group columns toggle all children).
- */
 export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
   allColumns,
   column,

@@ -13,21 +13,6 @@ export interface SRT_ExpandAllButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Expand all button - toggle expansion of all rows.
- *
- * Ported from MRT_ExpandAllButton:
- * - Double-chevron icon (KeyboardDoubleArrowDownIcon from the table icon
- *   registry) that rotates with state: 0deg collapsed, -90deg some expanded,
- *   -180deg all expanded.
- * - Disabled while loading or when no rows can expand (and there is no detail
- *   panel).
- * - Tooltip (localization.expandAll / collapseAll) via SRT_Tooltip; the
- *   user-supplied `title` from srtExpandAllButtonProps takes precedence, and the
- *   tooltip is suppressed while disabled (matches MRT).
- * - Resolves the table-level `srtExpandAllButtonProps` slot and spreads it.
- */
-
 export const SRT_ExpandAllButton = <TData extends SRT_RowData>({
   table,
   className,
@@ -53,7 +38,6 @@ export const SRT_ExpandAllButton = <TData extends SRT_RowData>({
   const isDisabled =
     isLoading || (!renderDetailPanel && !getCanSomeRowsExpand());
 
-  // Rotation: 0deg = collapsed, -90deg = some expanded, -180deg = all expanded
   const rotation = isAllRowsExpanded ? -180 : isSomeRowsExpanded ? -90 : 0;
 
   const htmlPropsContext: SRT_TableHTMLPropsContext<TData> = { table };
@@ -69,11 +53,11 @@ export const SRT_ExpandAllButton = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip title={tooltipTitle} disabled={isDisabled}>
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
-        disabled={isDisabled}
         aria-label={localization.expandAll}
+        disabled={isDisabled}
+        onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
+        size="icon"
+        variant="ghost"
         {...buttonProps}
         className={cn(
           'transition-all',

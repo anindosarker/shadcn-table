@@ -19,13 +19,6 @@ export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
 }
 
-/**
- * Column action menu - sort/pin/group/hide/filter-by + custom column actions.
- * Port of MRT_ColumnActionMenu. MUI Menu -> shadcn DropdownMenu. Icons are read
- * from `table.options.icons` (same keys as MRT, user-overridable) rather than
- * hardcoded. Items are gated by enable* options + column capabilities and
- * labeled via localization, exactly as in MRT.
- */
 export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   anchorEl,
   header,

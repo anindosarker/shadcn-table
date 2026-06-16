@@ -11,21 +11,6 @@ export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toolbar drop zone - shows a drop target for column grouping
- *
- * Barebones implementation:
- * - Shows drop zone when dragging a groupable column
- * - Highlights on hover
- * - Basic fade in/out animation
- * - Custom DOM props via srtToolbarDropZoneProps
- *
- * TODO (Future enhancements):
- * - Improve animation with Framer Motion or Radix UI
- * - Support for custom drop zone content
- * - Add drag preview component
- */
-
 export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
   table,
   className,

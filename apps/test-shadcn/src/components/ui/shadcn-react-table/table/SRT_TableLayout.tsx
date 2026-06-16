@@ -10,8 +10,8 @@ import {
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { SRT_TableContainer } from './SRT_TableContainer';
-import { SRT_TopToolbar } from '../toolbar/SRT_TopToolbar';
 import { SRT_BottomToolbar } from '../toolbar/SRT_BottomToolbar';
+import { SRT_TopToolbar } from '../toolbar/SRT_TopToolbar';
 
 export interface SRT_TableLayoutProps<TData extends SRT_RowData>
   extends LayoutDivProps {
@@ -40,27 +40,23 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
   const {
     getState,
     options: {
-      enableTopToolbar,
       enableBottomToolbar,
-      renderTopToolbar,
+      enableTopToolbar,
       renderBottomToolbar,
+      renderTopToolbar,
       srtTableLayoutProps,
       srtTablePaperProps,
     },
     refs: { tableLayoutRef },
   } = table;
-
   const { isFullScreen } = getState();
 
   const layoutDivProps = {
     ...parseFromValuesOrFunc(srtTableLayoutProps, { table }),
     ...rest,
   };
-  // TODO: use cva for className overrides
   const { className, ...divRest } = layoutDivProps;
 
-  // Compose user-supplied paper props over the library's own handlers/style so
-  // both fire (e.g. their onKeyDown plus our Escape-to-exit-fullscreen).
   const paperProps = mergeSRT_HtmlProps(
     {
       onKeyDown: (e: KeyboardEvent) =>
@@ -68,8 +64,6 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     },
     parseSRT_HtmlProps(srtTablePaperProps, { table }),
   );
-
-  // TODO: I've omitted the ref since this code will live in user's directory, might add later
 
   return (
     <div

@@ -113,18 +113,10 @@ export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData> {
   header?: SRT_Header<TData>;
   onSelect?: () => void;
   setAnchorEl: (el: HTMLElement | null) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilterValue?: (filterValue: any) => void;
   table: SRT_TableInstance<TData>;
 }
 
-/**
- * Filter option menu - choose a filter mode per column (or globally).
- * Port of MRT_FilterOptionMenu. MUI Menu -> shadcn DropdownMenu.
- *
- * Builds the internal filter-option list per filter variant (fuzzy/contains/
- * between/etc.), reconciling the existing filter value when the mode changes.
- */
 export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
   anchorEl,
   header,

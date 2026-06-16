@@ -16,13 +16,6 @@ export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
   className?: string;
 }
 
-/**
- * Filter range slider - dual-thumb slider for numeric range filtering.
- *
- * Ports MRT_FilterRangeSlider. min/max come from explicit props or the
- * column's faceted min/max values. Committing the full range clears the
- * filter (matches MRT behavior).
- */
 export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   header,
   table,
@@ -38,7 +31,6 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  // Resolve the slot props: table-level defaults overridable per-column.
   const slotProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtFilterSliderProps, { column, table }),
     parseSRT_HtmlProps(columnDef.srtFilterSliderProps, { column, table }),
@@ -54,7 +46,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
       ? [minProp, maxProp]
       : (column.getFacetedMinMaxValues() ?? [0, 1]);
 
-  // fix potential TanStack Table bugs where min or max is an array
+  //fix potential TanStack Table bugs where min or max is an array
   if (Array.isArray(min)) min = min[0];
   if (Array.isArray(max)) max = max[0];
   if (min === null || min === undefined) min = 0;
@@ -65,12 +57,11 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
 
   const isMounted = useRef(false);
 
-  // prevent moving focus to the next/prev cell when using the arrow keys
+  // prevent moving the focus to the next/prev cell when using the arrow keys
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.stopPropagation();
     }
-    // Compose the user's slot-prop onKeyDown after the component's own logic.
     slotProps?.onKeyDown?.(event);
   };
 
@@ -88,7 +79,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   const commitValue = (value: number[]) => {
     if (Array.isArray(value)) {
       if (value[0] <= min && value[1] >= max) {
-        // if the user has selected the entire range, remove the filter
+        //if the user has selected the entire range, remove the filter
         column.setFilterValue(undefined);
       } else {
         column.setFilterValue(value as [number, number]);

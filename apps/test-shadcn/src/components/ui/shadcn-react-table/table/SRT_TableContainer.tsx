@@ -65,8 +65,6 @@ export const SRT_TableContainer = <TData extends SRT_RowData>({
   const createModalOpen = createDisplayMode === 'modal' && creatingRow;
   const editModalOpen = editDisplayMode === 'modal' && editingRow;
 
-  // Compose user-supplied container props over the library's own style so the
-  // height clamp survives (user style merges, b wins per-key).
   const containerProps = mergeSRT_HtmlProps(
     {
       style: {

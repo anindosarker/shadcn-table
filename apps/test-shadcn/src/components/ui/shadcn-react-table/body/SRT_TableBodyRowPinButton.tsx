@@ -13,20 +13,6 @@ export interface SRT_TableBodyRowPinButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table body row pin button - wrapper for row pinning buttons
- *
- * Barebones implementation:
- * - Shows pin button(s) based on pinning mode
- * - Supports top, bottom, and top-and-bottom modes
- * - Handles density layout
- *
- * TODO (Future enhancements):
- * - Add srtRowPinButtonProps support
- * - Add pin animations
- * - Add tooltip customization
- */
-
 export const SRT_TableBodyRowPinButton = <TData extends SRT_RowData>({
   row,
   table,
@@ -49,7 +35,6 @@ export const SRT_TableBodyRowPinButton = <TData extends SRT_RowData>({
     className,
   };
 
-  // Show both top and bottom buttons when not pinned
   if (rowPinningDisplayMode === 'top-and-bottom' && !row.getIsPinned()) {
     return (
       <div
@@ -65,7 +50,6 @@ export const SRT_TableBodyRowPinButton = <TData extends SRT_RowData>({
     );
   }
 
-  // Show single button based on mode
   return (
     <SRT_RowPinButton
       pinningPosition={rowPinningDisplayMode === 'bottom' ? 'bottom' : 'top'}

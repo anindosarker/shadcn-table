@@ -44,10 +44,3 @@ export const SRT_TableLoadingOverlay = <TData extends SRT_RowData>({
     </div>
   );
 };
-
-// TODO: Future enhancements:
-// 1. Add srtSpinnerProps to SRT_TableOptions in core package types
-// 2. Support custom spinner component via Component prop
-// 3. Add theme integration for background color (currently using bg-background/50)
-// 4. Add size variants for spinner
-// 5. Consider adding spinner variants (circle, circle-filled, ring, etc.) from shadcn.io

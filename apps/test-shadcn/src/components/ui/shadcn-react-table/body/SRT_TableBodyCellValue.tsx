@@ -16,14 +16,6 @@ export interface SRT_TableBodyCellValueProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
 }
 
-/**
- * Splits `text` into match / non-match chunks against `query`.
- *
- * Replaces material-react-table's `highlight-words` dependency with a small
- * local implementation so behavior is preserved without pulling in the
- * package. When `matchExactly` is true the full query is matched as one term;
- * otherwise each character of the query is matched independently (fuzzy).
- */
 const highlightWords = ({
   matchExactly,
   query,
@@ -69,18 +61,6 @@ const highlightWords = ({
   return chunks;
 };
 
-/**
- * Table body cell value - resolves the value rendered inside a body cell.
- *
- * Ports material-react-table's MRT_TableBodyCellValue 1:1:
- * - Aggregated cells render `columnDef.AggregatedCell`
- * - Grouped parent rows render `columnDef.GroupedCell` (and blank for
- *   non-grouped cells in a grouped row)
- * - Otherwise renders `cell.renderValue()`
- * - Filter match highlighting (global filter + column text/autocomplete
- *   filters) using a local `highlightWords` implementation
- * - Custom `columnDef.Cell` rendering for non-grouped values
- */
 export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
   cell,
   rowRef,

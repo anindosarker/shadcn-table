@@ -16,19 +16,6 @@ export interface SRT_TableHeadCellGrabHandleProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Column grab handle - drag handle for column reordering.
- *
- * Ported 1:1 from MRT_TableHeadCellGrabHandle:
- * - Starts a drag, setting the dragging column and using the head cell as the
- *   drag image.
- * - On drag end: toggles grouping when dropped over the drop-zone, otherwise
- *   reorders columns (and re-derives pinning) when column ordering is enabled.
- * - Resolves the `srtColumnDragHandleProps` slot (table-level then columnDef,
- *   columnDef winning) and composes its `onDragStart`/`onDragEnd` over the
- *   library handlers (library first) via mergeSRT_HtmlProps.
- */
-
 export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
   column,
   table,
@@ -82,8 +69,6 @@ export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
     setHoveredColumn(null);
   };
 
-  // Merge table-level then column-level slot props (columnDef wins), composing
-  // over the library's own drag handlers via mergeSRT_HtmlProps.
   const tableDragHandleProps = parseSRT_HtmlProps(srtColumnDragHandleProps, {
     column,
     table,

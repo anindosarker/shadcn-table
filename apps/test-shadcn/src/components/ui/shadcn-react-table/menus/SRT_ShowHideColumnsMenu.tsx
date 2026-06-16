@@ -21,11 +21,6 @@ export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
 }
 
-/**
- * Show/Hide columns menu - header with hide-all/show-all/reset-order/unpin-all
- * actions plus the (recursive) per-column visibility rows. Port of
- * MRT_ShowHideColumnsMenu. MUI Menu -> shadcn DropdownMenu.
- */
 export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
   anchorEl,
   setAnchorEl,

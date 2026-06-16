@@ -11,19 +11,6 @@ export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData>
   className?: string;
 }
 
-/**
- * Grab handle button for drag and drop functionality.
- *
- * Ported 1:1 from MRT_GrabHandleButton:
- * - Draggable grip icon button with a `move` tooltip.
- * - Icon comes from the icon registry (`table.options.icons.DragHandleIcon`).
- * - Row handles render at full opacity; column handles at 0.5 (raised to 1 on
- *   hover), matching MRT's `opacity` rule.
- * - `onClick` stops propagation, then the caller's `onClick` runs.
- * - Extra DOM props (from `srt*DragHandleProps`) are spread last; `className`
- *   composes over the defaults via `cn()`.
- */
-
 export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
   location = 'row',
   table,
@@ -42,10 +29,10 @@ export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip title={title ?? localization.move} side="top">
       <Button
-        aria-label={localization.move}
-        variant="ghost"
-        size="icon"
+        aria-label={title ?? localization.move}
         draggable="true"
+        size="icon"
+        variant="ghost"
         {...rest}
         onClick={(event: MouseEvent<HTMLButtonElement>) => {
           event.stopPropagation();

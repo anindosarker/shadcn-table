@@ -17,23 +17,6 @@ export interface SRT_TableFooterCellProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table footer cell component - renders individual footer cell
- *
- * Barebones implementation:
- * - Renders footer content from columnDef
- * - Supports Footer component or string footer
- * - Density-based padding
- * - Bold text styling
- * - Column pinning styles
- *
- * TODO (Future enhancements):
- * - Add keyboard shortcuts for copy
- * - Add hover effects
- * - Add click to copy
- * - Better pinning styles
- */
-
 const footerCellVariants = cva(
   'text-left align-top font-bold text-muted-foreground',
   {
@@ -74,17 +57,6 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     columnDef.columnDefType !== 'group' &&
     column.getIsPinned();
 
-  // TODO: Add keyboard shortcuts
-  // const handleKeyDown = (event: React.KeyboardEvent<HTMLTableCellElement>) => {
-  //   cellKeyboardShortcuts({
-  //     event,
-  //     cellValue: footer.column.columnDef.footer,
-  //     table,
-  //   });
-  // };
-
-  // RTL-aware alignment, mirroring MRT's `theme.direction === 'rtl'` check.
-  // SRT exposes direction via `columnResizeDirection` (see useSRT_TableOptions).
   const align =
     columnDefType === 'group'
       ? 'center'
@@ -92,8 +64,6 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
         ? 'right'
         : 'left';
 
-  // Column pinning offsets (sticky), matching the head/body cells' getStart/
-  // getAfter logic so pinned footer cells stay aligned during horizontal scroll.
   const pinnedStyle: CSSProperties = isColumnPinned
     ? {
         position: 'sticky',
@@ -109,8 +79,6 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
       }
     : {};
 
-  // Merge table-level then column-level slot props (columnDef wins), composing
-  // over the library's own style via mergeSRT_HtmlProps.
   const tableFooterCellProps = parseSRT_HtmlProps(srtTableFooterCellProps, {
     column,
     table,
@@ -136,14 +104,10 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
       {...mergedFooterCellProps}
       className={cn(
         footerCellVariants({ density }),
-        // Solid background so the pinned column doesn't show content scrolling
-        // underneath it (parity with SRT_TableHeadCell).
         isColumnPinned && 'bg-muted/95',
         className,
         mergedFooterCellProps?.className,
       )}
-      // onKeyDown={handleKeyDown}
-      // tabIndex={enableKeyboardShortcuts ? 0 : undefined}
     >
       {footer.isPlaceholder
         ? null

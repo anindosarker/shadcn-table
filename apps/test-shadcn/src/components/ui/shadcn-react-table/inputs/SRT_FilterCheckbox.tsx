@@ -18,13 +18,6 @@ export interface SRT_FilterCheckboxProps<TData extends SRT_RowData>
   className?: string;
 }
 
-/**
- * Filter checkbox - tri-state checkbox input for column filtering.
- *
- * Ports MRT_FilterCheckbox. The filter value cycles
- * undefined -> 'true' -> 'false' -> undefined, and renders as
- * indeterminate while undefined (no filter applied).
- */
 export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
   column,
   table,
@@ -38,7 +31,6 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
   const { density } = getState();
   const { columnDef } = column;
 
-  // Resolve the slot props: table-level defaults overridable per-column.
   const slotProps = mergeSRT_HtmlProps(
     parseSRT_HtmlProps(srtFilterCheckboxProps, { column, table }),
     parseSRT_HtmlProps(columnDef.srtFilterCheckboxProps, { column, table }),
@@ -54,7 +46,6 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
   const checkedState: boolean | 'indeterminate' =
     filterValue === undefined ? 'indeterminate' : filterValue === 'true';
 
-  // Mirror MRT: a `title` slot prop overrides the default filter label.
   const tooltipTitle = (slotProps?.title as string) ?? filterLabel;
 
   return (
@@ -79,7 +70,6 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
           }}
           onClick={(e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
-            // Compose the user's slot-prop onClick after the component's logic.
             slotProps?.onClick?.(e);
           }}
           className={cn(

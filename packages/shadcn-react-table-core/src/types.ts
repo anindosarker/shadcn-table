@@ -53,7 +53,6 @@ export type {
   Table,
 } from '@tanstack/react-table';
 
-// * Helper type functions
 export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<never, never>);
@@ -69,7 +68,6 @@ export type DropdownOption =
     }
   | string;
 
-// * Table related types
 export type SRT_Header<TData extends SRT_RowData> = Omit<
   Header<TData, unknown>,
   'column'
@@ -156,7 +154,6 @@ export type SRT_DisplayColumnDef<
   TValue = unknown,
 > = Omit<SRT_ColumnDef<TData, TValue>, 'accessorFn' | 'accessorKey'>;
 
-//TODO: change to srt
 export type SRT_DisplayColumnIds =
   | 'mrt-row-actions'
   | 'mrt-row-drag'
@@ -318,72 +315,58 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
    * @default gets set to the same value as `accessorKey` by default
    */
   id?: LiteralUnion<string & keyof TData>;
-  /** DOM props for this column's actions (column menu) trigger button. */
   srtColumnActionsButtonProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's drag handle button. */
   srtColumnDragHandleProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's click-to-copy button. */
   srtCopyButtonProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's autocomplete filter. */
   srtFilterAutocompleteProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's checkbox filter. */
   srtFilterCheckboxProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's date picker filter. */
   srtFilterDatePickerProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's datetime picker filter. */
   srtFilterDateTimePickerProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's slider (range) filter. */
   srtFilterSliderProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's time picker filter. */
   srtFilterTimePickerProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's body `<td>` cells. */
   srtTableBodyCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's edit text field. */
   srtEditTextFieldProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's filter text field. */
   srtFilterTextFieldProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's footer `<td>` cells. */
   srtTableFooterCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for this column's head `<th>` cells. */
   srtTableHeadCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_ColumnHTMLPropsContext<TData>
@@ -714,7 +697,6 @@ export type SRT_StatefulTableOptions<TData extends SRT_RowData> =
   };
 
 /**
- * TODO: fix them gradually
  * `columns` and `data` props are the only required props, but there are over 170 other optional props.
  *
  * See more info on creating columns and data on the official docs site:
@@ -842,8 +824,6 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
    * @link https://www.material-react-table.com/docs/guides/memoize-components
    */
   memoMode?: 'cells' | 'rows' | 'table-body';
-  // mrtTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>;
-  /** DOM props for the bottom toolbar container. */
   srtBottomToolbarProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
@@ -853,117 +833,94 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => SRT_CircularProgressProps & { Component?: ReactNode })
     | (SRT_CircularProgressProps & { Component?: ReactNode });
-  /** DOM props for every column actions (column menu) trigger button. */
   srtColumnActionsButtonProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for every column drag handle button. */
   srtColumnDragHandleProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for every click-to-copy button. */
   srtCopyButtonProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props for the create-row modal dialog. */
   srtCreateRowModalProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for the detail panel `<td>` cell. */
   srtDetailPanelProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for the edit-row dialog. */
   srtEditRowDialogProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for the expand-all button. */
   srtExpandAllButtonProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for each row's expand button. */
   srtExpandButtonProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for every autocomplete filter (overridable per-column). */
   srtFilterAutocompleteProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for every checkbox filter (overridable per-column). */
   srtFilterCheckboxProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for every date picker filter (overridable per-column). */
   srtFilterDatePickerProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for every datetime picker filter (overridable per-column). */
   srtFilterDateTimePickerProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for every slider (range) filter (overridable per-column). */
   srtFilterSliderProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for every time picker filter (overridable per-column). */
   srtFilterTimePickerProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
   >;
-  /** DOM props for every row drag handle button. */
   srtRowDragHandleProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for the select-all checkbox. */
   srtSelectAllCheckboxProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for each row's select checkbox. */
   srtSelectCheckboxProps?: SRT_HTMLProps<
     HTMLButtonElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for the loading skeleton cells. */
   srtSkeletonProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props for the toolbar alert banner. */
   srtToolbarAlertBannerProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for the toolbar alert banner selection-count chip. */
   srtToolbarAlertBannerChipProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for the toolbar drop zone (column grouping drop target). */
   srtToolbarDropZoneProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props applied to every editable text field (overridable per-column). */
   srtEditTextFieldProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props applied to every filter text field (overridable per-column). */
   srtFilterTextFieldProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_FilterTextFieldHTMLPropsContext<TData>
@@ -974,62 +931,50 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => SRT_LinearProgressProps)
     | SRT_LinearProgressProps;
-  /** DOM props for the pagination container. */
   srtPaginationProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for the global search text field. */
   srtSearchTextFieldProps?: SRT_HTMLProps<
     HTMLInputElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for every body `<td>` cell (overridable per-column). */
   srtTableBodyCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_CellHTMLPropsContext<TData>
   >;
-  /** DOM props for the `<tbody>` element. */
   srtTableBodyProps?: SRT_HTMLProps<
     HTMLTableSectionElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for every body `<tr>` row. */
   srtTableBodyRowProps?: SRT_HTMLProps<
     HTMLTableRowElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  /** DOM props for the scroll container around the `<table>`. */
   srtTableContainerProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for every footer `<td>` cell (overridable per-column). */
   srtTableFooterCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for the `<tfoot>` element. */
   srtTableFooterProps?: SRT_HTMLProps<
     HTMLTableSectionElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for every footer `<tr>` row. */
   srtTableFooterRowProps?: SRT_HTMLProps<
     HTMLTableRowElement,
     SRT_FooterRowHTMLPropsContext<TData>
   >;
-  /** DOM props for every head `<th>` cell (overridable per-column). */
   srtTableHeadCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_ColumnHTMLPropsContext<TData>
   >;
-  /** DOM props for the `<thead>` element. */
   srtTableHeadProps?: SRT_HTMLProps<
     HTMLTableSectionElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for every head `<tr>` row. */
   srtTableHeadRowProps?: SRT_HTMLProps<
     HTMLTableRowElement,
     SRT_HeadRowHTMLPropsContext<TData>
@@ -1037,17 +982,14 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   srtTableLayoutProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => LayoutDivProps)
     | LayoutDivProps;
-  /** DOM props for the outermost root/"paper" wrapper around the whole table. */
   srtTablePaperProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for the `<table>` element. */
   srtTableProps?: SRT_HTMLProps<
     HTMLTableElement,
     SRT_TableHTMLPropsContext<TData>
   >;
-  /** DOM props for the top toolbar container. */
   srtTopToolbarProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
@@ -1069,11 +1011,6 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   onDraggingColumnChange?: OnChangeFn<SRT_Column<TData> | null>;
   onDraggingRowChange?: OnChangeFn<SRT_Row<TData> | null>;
   onEditingCellChange?: OnChangeFn<SRT_Cell<TData> | null>;
-  /**
-   * Fired when an inline cell edit is committed (on blur / Enter) in
-   * `editDisplayMode: 'cell'` or `'table'`. Use it to persist the new value
-   * to your data source. The value is also written to `row._valuesCache`.
-   */
   onEditingCellSave?: (props: {
     cell: SRT_Cell<TData>;
     row: SRT_Row<TData>;
@@ -1232,32 +1169,11 @@ export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
   showToolbarDropZone: boolean;
 }
 
-// * Newly defined types
 export type LayoutDivProps = Omit<
   React.ComponentPropsWithoutRef<'div'>,
   'children'
 >;
 
-/**
- * The shadcn-idiomatic replacement for MRT's MUI `sx`-passthrough props.
- *
- * Each `srt*Props` slot accepts either a plain object of DOM attributes for the
- * target element, or a callback that receives a slot-specific context object and
- * returns those attributes. The resolved object is spread onto the element by the
- * component layer. The most common keys are:
- *
- * - `className` — composed over the component's own (cva) defaults via `cn()`
- * - `style` — merged shallowly with the component's own inline styles
- * - event handlers (`onClick`, `onDoubleClick`, `onContextMenu`, …) — composed so
- *   both the library handler and the user handler run
- * - `data-*` / `aria-*` attributes
- *
- * `TElement` is the underlying DOM element (e.g. `HTMLTableCellElement`); `TContext`
- * is the object passed to the callback form (e.g. `{ cell, column, row, table }`).
- *
- * Note: `color` and `size` are omitted from the attribute surface because they collide
- * with TanStack/shadcn semantics and are not valid passthrough DOM attributes here.
- */
 export type SRT_HTMLPropsValue<TElement> = Omit<
   HTMLAttributes<TElement>,
   'color' | 'size'
@@ -1268,7 +1184,6 @@ export type SRT_HTMLProps<TElement, TContext> =
   | ((context: TContext) => SRT_HTMLPropsValue<TElement> | undefined)
   | undefined;
 
-// Callback context objects per slot family (mirror MRT's prop callback args).
 export type SRT_CellHTMLPropsContext<TData extends SRT_RowData> = {
   cell: SRT_Cell<TData>;
   column: SRT_Column<TData>;

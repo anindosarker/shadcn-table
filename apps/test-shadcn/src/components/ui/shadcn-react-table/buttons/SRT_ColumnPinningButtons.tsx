@@ -13,17 +13,6 @@ export interface SRT_ColumnPinningButtonsProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Column pinning buttons - pin columns to left or right.
- *
- * Ported from MRT_ColumnPinningButtons:
- * - Pin-to-left / pin-to-right buttons (rotated PushPin icon) when unpinned.
- * - Unpin button when pinned.
- * - Each button is wrapped in a tooltip (localization.pinToLeft / pinToRight /
- *   unpin) via SRT_Tooltip.
- * - The pin icon is read from the table's icon registry (PushPinIcon).
- */
-
 export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
   column,
   table,
@@ -45,11 +34,11 @@ export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
       {column.getIsPinned() ? (
         <SRT_Tooltip title={localization.unpin}>
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handlePinColumn(false)}
             aria-label={localization.unpin}
             className="h-8 w-8"
+            onClick={() => handlePinColumn(false)}
+            size="icon"
+            variant="ghost"
           >
             <PushPinIcon className="h-4 w-4" />
           </Button>
@@ -58,11 +47,11 @@ export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
         <>
           <SRT_Tooltip title={localization.pinToLeft}>
             <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handlePinColumn('left')}
               aria-label={localization.pinToLeft}
               className="h-8 w-8"
+              onClick={() => handlePinColumn('left')}
+              size="icon"
+              variant="ghost"
             >
               <PushPinIcon
                 className="h-4 w-4"
@@ -72,11 +61,11 @@ export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
           </SRT_Tooltip>
           <SRT_Tooltip title={localization.pinToRight}>
             <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handlePinColumn('right')}
               aria-label={localization.pinToRight}
               className="h-8 w-8"
+              onClick={() => handlePinColumn('right')}
+              size="icon"
+              variant="ghost"
             >
               <PushPinIcon
                 className="h-4 w-4"

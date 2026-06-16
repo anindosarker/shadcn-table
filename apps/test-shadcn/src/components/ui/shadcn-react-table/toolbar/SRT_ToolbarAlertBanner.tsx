@@ -16,17 +16,6 @@ export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toolbar alert banner - shows selection state, grouping info, and custom alerts.
- *
- * Ports MRT_ToolbarAlertBanner:
- * - Selected row count with a clear-selection button
- * - Grouped columns rendered as removable chips
- * - head-overlay position renders the select-all checkbox inline
- * - renderToolbarAlertBannerContent custom render slot
- * - srtToolbarAlertBannerProps / srtToolbarAlertBannerChipProps DOM props
- * - density-driven padding and collapse animation
- */
 export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
   stackAlertBanner,
   table,
@@ -127,8 +116,6 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
 
   const shouldShow = showAlertBanner || !!selectedAlert || !!groupedAlert;
 
-  // Density-driven padding parity with MRT. The non-head-overlay banner uses a
-  // fixed 0.5rem/1rem inset; head-overlay tightens with density.
   const contentPadding =
     positionToolbarAlertBanner !== 'head-overlay'
       ? 'px-4 py-2'
@@ -162,8 +149,6 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
       {...alertProps}
       className={cn(
         'relative z-[2] w-full overflow-hidden transition-all duration-200',
-        // When stacked, the banner pushes content; otherwise the collapse still
-        // animates height. The transition timing mirrors MRT's Collapse.
         shouldShow ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0',
         !stackAlertBanner && positionToolbarAlertBanner === 'bottom' && '-mb-4',
         className,

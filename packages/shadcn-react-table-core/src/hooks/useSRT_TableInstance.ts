@@ -1,20 +1,20 @@
 import { useMemo, useRef, useState } from 'react';
 import { useReactTable } from '@tanstack/react-table';
 import {
-  SRT_DefinedTableOptions,
-  SRT_StatefulTableOptions,
   type SRT_Cell,
   type SRT_Column,
   type SRT_ColumnDef,
   type SRT_ColumnFilterFnsState,
   type SRT_ColumnOrderState,
   type SRT_ColumnSizingInfoState,
+  type SRT_DefinedTableOptions,
   type SRT_DensityState,
   type SRT_FilterOption,
   type SRT_GroupingState,
   type SRT_PaginationState,
   type SRT_Row,
   type SRT_RowData,
+  type SRT_StatefulTableOptions,
   type SRT_TableInstance,
   type SRT_TableState,
   type SRT_Updater,
@@ -36,7 +36,6 @@ import {
   showRowSpacerColumn,
 } from '../utils/displayColumn.utils';
 import { createRow } from '../utils/tanstack.helpers';
-import { useSRT_Effects } from './useSRT_Effects';
 import { getSRT_RowActionsColumnDef } from './display-columns/getSRT_RowActionsColumnDef';
 import { getSRT_RowDragColumnDef } from './display-columns/getSRT_RowDragColumnDef';
 import { getSRT_RowExpandColumnDef } from './display-columns/getSRT_RowExpandColumnDef';
@@ -44,6 +43,7 @@ import { getSRT_RowNumbersColumnDef } from './display-columns/getSRT_RowNumbersC
 import { getSRT_RowPinningColumnDef } from './display-columns/getSRT_RowPinningColumnDef';
 import { getSRT_RowSelectColumnDef } from './display-columns/getSRT_RowSelectColumnDef';
 import { getSRT_RowSpacerColumnDef } from './display-columns/getSRT_RowSpacerColumnDef';
+import { useSRT_Effects } from './useSRT_Effects';
 
 /**
  * The MRT hook that wraps the TanStack useReactTable hook and adds additional functionality

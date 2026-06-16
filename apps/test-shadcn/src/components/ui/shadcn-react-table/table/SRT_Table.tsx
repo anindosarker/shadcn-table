@@ -7,26 +7,13 @@ import {
   useSRT_ColumnVirtualizer,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
-import { SRT_TableHead } from '../head/SRT_TableHead';
 import { SRT_TableBody, Memo_SRT_TableBody } from '../body/SRT_TableBody';
 import { SRT_TableFooter } from '../footer/SRT_TableFooter';
+import { SRT_TableHead } from '../head/SRT_TableHead';
 
 export interface SRT_TableProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
 }
-
-/**
- * Main table component - renders the HTML table with head, body, and footer.
- *
- * Ports material-react-table's MRT_Table:
- * - instantiates the column virtualizer and feeds it to head/body/footer
- * - exposes the `--header-*-size` / `--col-*-size` CSS vars on the `<table>`
- *   so grid layout + column resizing can read live sizes
- * - dispatches to the memoized body when `memoMode === 'table-body'` or a
- *   column is mid-resize
- * - renders `renderCaption` into a `<caption>`
- * - switches to `display: grid` in grid layout modes
- */
 
 export const SRT_Table = <TData extends SRT_RowData>({
   table,
@@ -58,7 +45,6 @@ export const SRT_Table = <TData extends SRT_RowData>({
       colSizes[`--col-${parseCSSVarId(header.column.id)}-size`] = colSize;
     }
     return colSizes;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columns, columnSizing, columnSizingInfo, columnVisibility]);
 
   const columnVirtualizer = useSRT_ColumnVirtualizer(table);

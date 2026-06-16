@@ -8,17 +8,6 @@ export interface SRT_ToggleDensePaddingButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toggle density button - cycles through table density options.
- *
- * Ported from MRT_ToggleDensePaddingButton:
- * - Cycles comfortable -> compact -> spacious -> comfortable.
- * - Icon (read from the table icon registry) reflects current density:
- *   DensitySmallIcon (compact), DensityMediumIcon (comfortable),
- *   DensityLargeIcon (spacious).
- * - Tooltip (localization.toggleDensity) via SRT_Tooltip.
- */
-
 export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
   table,
   className,
@@ -46,11 +35,11 @@ export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip title={localization.toggleDensity}>
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleToggleDensePadding}
         aria-label={localization.toggleDensity}
         className={cn('h-8 w-8', className)}
+        onClick={handleToggleDensePadding}
+        size="icon"
+        variant="ghost"
       >
         {density === 'compact' ? (
           <DensitySmallIcon className="h-4 w-4" />

@@ -13,38 +13,12 @@ export interface SRT_TableBodyRowGrabHandleProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table body row grab handle - drag handle for row reordering
- *
- * Barebones implementation:
- * - Drag handle button for rows
- * - Sets dragging row state
- * - Uses row element as drag image
- *
- * TODO (Future enhancements):
- * - Add srtRowDragHandleProps support
- * - Add custom drag preview
- * - Add drop zone indicators
- * - Add drag constraints (horizontal/vertical only)
- * - Add touch support
- */
-
 export const SRT_TableBodyRowGrabHandle = <TData extends SRT_RowData>({
   row,
   rowRef,
   table,
   className,
 }: SRT_TableBodyRowGrabHandleProps<TData>) => {
-  // const {
-  //   options: { srtRowDragHandleProps },
-  // } = table;
-
-  // TODO: Add custom props support
-  // const buttonProps = parseFromValuesOrFunc(srtRowDragHandleProps, {
-  //   row,
-  //   table,
-  // });
-
   const handleDragStart = (event: DragEvent<HTMLButtonElement>) => {
     try {
       event.dataTransfer.setDragImage(rowRef.current as HTMLElement, 0, 0);

@@ -15,25 +15,12 @@ import {
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 
 export interface SRT_CellActionMenuProps<TData extends SRT_RowData> {
-  /**
-   * Optional explicit anchor. When provided (along with `cell`), drives the
-   * open/anchor state directly. When omitted, falls back to MRT behavior:
-   * the table's `actionCell` state + `actionCellRef`.
-   */
   anchorEl?: HTMLElement | null;
   cell?: SRT_Cell<TData>;
   setAnchorEl?: (el: HTMLElement | null) => void;
   table: SRT_TableInstance<TData>;
 }
 
-/**
- * Cell action menu - copy/edit + custom cell actions. Port of MRT_CellActionMenu.
- *
- * Driven by the table's `actionCell` state and `actionCellRef` (set when a cell
- * is right-clicked / the context menu is opened), matching MRT. MUI Menu ->
- * shadcn DropdownMenu, anchored to the action cell ref. Callers may instead
- * pass an explicit `anchorEl` + `cell` to control it locally.
- */
 export const SRT_CellActionMenu = <TData extends SRT_RowData>({
   anchorEl,
   cell: cellProp,

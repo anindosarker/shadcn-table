@@ -8,18 +8,6 @@ export interface SRT_ToggleGlobalFilterButtonProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Toggle global filter button - shows/hides the global search input.
- *
- * Ported from MRT_ToggleGlobalFilterButton:
- * - Toggles global filter visibility and focuses the search input when shown.
- * - Icon (read from the table icon registry) reflects state:
- *   SearchOffIcon when the search is shown, SearchIcon otherwise.
- * - Disabled while a global filter value is active and visible; the tooltip is
- *   suppressed in that disabled state (matches MRT).
- * - Tooltip (localization.showHideSearch) via SRT_Tooltip.
- */
-
 export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
   table,
   className,
@@ -37,7 +25,6 @@ export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
 
   const handleToggleSearch = () => {
     setShowGlobalFilter(!showGlobalFilter);
-    // Focus the search input after it's shown
     queueMicrotask(() => searchInputRef.current?.focus());
   };
 
@@ -46,12 +33,12 @@ export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip title={localization.showHideSearch} disabled={isDisabled}>
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleToggleSearch}
-        disabled={isDisabled}
         aria-label={localization.showHideSearch}
         className={cn('h-8 w-8', className)}
+        disabled={isDisabled}
+        onClick={handleToggleSearch}
+        size="icon"
+        variant="ghost"
       >
         {showGlobalFilter ? (
           <SearchOffIcon className="h-4 w-4" />

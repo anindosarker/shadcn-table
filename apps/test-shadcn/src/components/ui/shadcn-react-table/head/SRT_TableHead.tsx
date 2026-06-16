@@ -14,16 +14,6 @@ export interface SRT_TableHeadProps<TData extends SRT_RowData> {
   className?: string;
 }
 
-/**
- * Table head - renders all header groups and rows.
- *
- * Ported 1:1 from MRT_TableHead:
- * - Sticky header when enableStickyHeader or full-screen.
- * - 'head-overlay' alert banner replaces the header rows when an alert is shown
- *   or rows are selected.
- * - Forwards the tableHeadRef and the column virtualizer to each head row.
- */
-
 export const SRT_TableHead = <TData extends SRT_RowData>({
   columnVirtualizer,
   table,
@@ -41,10 +31,10 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
   } = table;
   const { isFullScreen, showAlertBanner } = getState();
 
+  const headProps = parseSRT_HtmlProps(srtTableHeadProps, { table });
+
   const stickyHeader = enableStickyHeader || isFullScreen;
   const isGrid = layoutMode?.startsWith('grid');
-
-  const headProps = parseSRT_HtmlProps(srtTableHeadProps, { table });
 
   const showHeadOverlay =
     positionToolbarAlertBanner === 'head-overlay' &&
@@ -60,9 +50,6 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
         className,
         headProps?.className,
       )}
-      // Grid layout + sticky offset mirror MRT_TableHead's sx: `display: grid`
-      // when layoutMode is grid, and `top: 0` only in the grid+sticky case
-      // (semantic sticky offset is handled by the `sticky top-0` classes).
       style={{
         display: isGrid ? 'grid' : undefined,
         top: stickyHeader ? 0 : undefined,
