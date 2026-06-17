@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 import { type KeyboardEvent } from 'react';
 import {
   mergeSRT_HtmlProps,
@@ -7,11 +9,9 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { SRT_TableContainer } from './SRT_TableContainer';
 import { SRT_BottomToolbar } from '../toolbar/SRT_BottomToolbar';
 import { SRT_TopToolbar } from '../toolbar/SRT_TopToolbar';
+import { SRT_TableContainer } from './SRT_TableContainer';
 
 export interface SRT_TableLayoutProps<TData extends SRT_RowData>
   extends LayoutDivProps {
@@ -42,10 +42,9 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     options: {
       enableBottomToolbar,
       enableTopToolbar,
+      srtTableLayoutProps,
       renderBottomToolbar,
       renderTopToolbar,
-      srtTableLayoutProps,
-      srtTablePaperProps,
     },
     refs: { tableLayoutRef },
   } = table;
@@ -55,7 +54,8 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     ...parseFromValuesOrFunc(srtTableLayoutProps, { table }),
     ...rest,
   };
-  const { className, ...divRest } = layoutDivProps;
+
+  const { className, ref: layoutRef, ...divRest } = layoutDivProps;
 
   const paperProps = mergeSRT_HtmlProps(
     {
@@ -67,15 +67,19 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
 
   return (
     <div
-      ref={(ref: HTMLDivElement) => {
-        tableLayoutRef.current = ref;
-      }}
       {...divRest}
       {...paperProps}
       className={cn(
         tableLayoutVariants({ fullscreen: isFullScreen, className }),
         paperProps?.className,
       )}
+      ref={(node: HTMLDivElement) => {
+        tableLayoutRef.current = node;
+        if (layoutRef) {
+          // @ts-expect-error - this is a ref from the user, so we need to assign it as well
+          layoutRef.current = node;
+        }
+      }}
     >
       {enableTopToolbar &&
         (parseFromValuesOrFunc(renderTopToolbar, { table }) ?? (

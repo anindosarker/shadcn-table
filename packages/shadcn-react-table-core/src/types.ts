@@ -982,10 +982,6 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   srtTableLayoutProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => LayoutDivProps)
     | LayoutDivProps;
-  srtTablePaperProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
   srtTableProps?: SRT_HTMLProps<
     HTMLTableElement,
     SRT_TableHTMLPropsContext<TData>
@@ -1169,10 +1165,7 @@ export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
   showToolbarDropZone: boolean;
 }
 
-export type LayoutDivProps = Omit<
-  React.ComponentPropsWithoutRef<'div'>,
-  'children'
->;
+export type LayoutDivProps = React.ComponentPropsWithRef<'div'>;
 
 export type SRT_HTMLPropsValue<TElement> = Omit<
   HTMLAttributes<TElement>,
