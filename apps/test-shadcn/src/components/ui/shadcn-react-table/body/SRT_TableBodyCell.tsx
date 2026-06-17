@@ -34,6 +34,7 @@ import { SRT_CopyButton } from '../buttons/SRT_CopyButton';
 import { SRT_ExpandButton } from '../buttons/SRT_ExpandButton';
 import { SRT_ToggleRowActionMenuButton } from '../buttons/SRT_ToggleRowActionMenuButton';
 import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
+import { getSRT_CommonCellStyles } from '../style.utils';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
 import { SRT_CellActionMenu } from '../menus/SRT_CellActionMenu';
 
@@ -338,6 +339,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           : isEditable && editDisplayMode === 'cell'
             ? 'pointer'
             : 'inherit',
+        ...getSRT_CommonCellStyles({ column, table }),
         ...pinnedStyles,
       } as CSSProperties,
     },

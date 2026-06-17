@@ -9,6 +9,7 @@ import {
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { getSRT_CommonCellStyles } from '../style.utils';
 
 export interface SRT_TableFooterCellProps<TData extends SRT_RowData> {
   footer: SRT_Header<TData>;
@@ -92,7 +93,13 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     columnFooterCellProps,
   );
   const mergedFooterCellProps = mergeSRT_HtmlProps(
-    { style: { textAlign: align, ...pinnedStyle } as CSSProperties },
+    {
+      style: {
+        textAlign: align,
+        ...getSRT_CommonCellStyles({ column, table }),
+        ...pinnedStyle,
+      } as CSSProperties,
+    },
     userFooterCellProps,
   );
 

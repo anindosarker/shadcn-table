@@ -18,6 +18,7 @@ import { SRT_TableHeadCellColumnActionsButton } from './SRT_TableHeadCellColumnA
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
 import { SRT_TableHeadCellFilterLabel } from './SRT_TableHeadCellFilterLabel';
 import { SRT_TableHeadCellGrabHandle } from './SRT_TableHeadCellGrabHandle';
+import { getSRT_CommonCellStyles } from '../style.utils';
 import { SRT_TableHeadCellResizeHandle } from './SRT_TableHeadCellResizeHandle';
 import { SRT_TableHeadCellSortLabel } from './SRT_TableHeadCellSortLabel';
 
@@ -190,7 +191,11 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
     onDragEnter: handleDragEnter,
     onDragOver: handleDragOver,
     onKeyDown: handleKeyDown,
-    style: { textAlign: align, ...pinnedStyle } as CSSProperties,
+    style: {
+      textAlign: align,
+      ...getSRT_CommonCellStyles({ column, header, table }),
+      ...pinnedStyle,
+    } as CSSProperties,
   };
   const mergedHeadCellProps = mergeSRT_HtmlProps(
     baseHeadCellProps,
