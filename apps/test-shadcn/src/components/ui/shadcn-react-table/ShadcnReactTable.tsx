@@ -21,7 +21,7 @@ const isTableInstanceProp = <TData extends SRT_RowData>(
 ): props is TableInstanceProp<TData> =>
   (props as TableInstanceProp<TData>).table !== undefined;
 
-const ShadcnReactTable = <TData extends SRT_RowData>(
+export const ShadcnReactTable = <TData extends SRT_RowData>(
   props: ShadcnReactTableProps<TData>,
 ) => {
   let table: SRT_TableInstance<TData>;
@@ -35,5 +35,3 @@ const ShadcnReactTable = <TData extends SRT_RowData>(
 
   return <SRT_TableLayout table={table} />;
 };
-
-export default ShadcnReactTable;

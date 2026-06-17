@@ -1,10 +1,10 @@
-import { useMemo, useState, useEffect } from 'react';
-import { Button } from './components/ui/button';
-import ShadcnReactTable from './components/ui/shadcn-react-table/ShadcnReactTable';
+import { useEffect, useMemo, useState } from 'react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
 } from 'shadcn-react-table-core';
+import { Button } from './components/ui/button';
+import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReactTable';
 
 type Person = {
   id: number;
@@ -88,7 +88,6 @@ function makeData(count: number): Person[] {
 }
 
 const smallData = makeData(25);
-const bigData = makeData(1000);
 
 function useColumns(): SRT_ColumnDef<Person>[] {
   return useMemo(
@@ -236,21 +235,6 @@ function App() {
     },
   });
 
-  // Virtualized table (1000 rows)
-  const virtualTable = useShadcnReactTable<Person>({
-    columns,
-    data: bigData,
-    getRowId: (row) => String(row.id),
-    enableRowVirtualization: true,
-    enableColumnVirtualization: true,
-    enablePagination: false,
-    enableBottomToolbar: false,
-    enableSorting: true,
-    enableColumnFilters: true,
-    enableGlobalFilter: true,
-    enableToolbarInternalActions: true,
-  });
-
   return (
     <div className="min-h-screen p-6">
       <div className="mb-6 flex items-center gap-4">
@@ -267,15 +251,6 @@ function App() {
             resize, row actions)
           </h2>
           <ShadcnReactTable table={table} />
-        </section>
-
-        <section>
-          <h2 className="mb-2 text-lg font-semibold">
-            Virtualized — 1,000 rows (row + column virtualization)
-          </h2>
-          <div style={{ height: 500 }}>
-            <ShadcnReactTable table={virtualTable} />
-          </div>
         </section>
       </div>
     </div>
