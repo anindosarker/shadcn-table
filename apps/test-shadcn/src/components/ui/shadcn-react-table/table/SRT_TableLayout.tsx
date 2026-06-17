@@ -2,9 +2,7 @@ import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { type KeyboardEvent } from 'react';
 import {
-  mergeSRT_HtmlProps,
   parseFromValuesOrFunc,
-  parseSRT_HtmlProps,
   type LayoutDivProps,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -55,29 +53,23 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     ...rest,
   };
 
-  const { className, ref: layoutRef, ...divRest } = layoutDivProps;
-
-  const paperProps = mergeSRT_HtmlProps(
-    {
-      onKeyDown: (e: KeyboardEvent) =>
-        e.key === 'Escape' && table.setIsFullScreen(false),
-    },
-    parseSRT_HtmlProps(srtTablePaperProps, { table }),
-  );
-
   return (
     <div
-      {...divRest}
-      {...paperProps}
+      onKeyDown={(e: KeyboardEvent) =>
+        e.key === 'Escape' && table.setIsFullScreen(false)
+      }
+      {...layoutDivProps}
       className={cn(
-        tableLayoutVariants({ fullscreen: isFullScreen, className }),
-        paperProps?.className,
+        tableLayoutVariants({
+          fullscreen: isFullScreen,
+          className: layoutDivProps.className,
+        }),
       )}
       ref={(node: HTMLDivElement) => {
         tableLayoutRef.current = node;
-        if (layoutRef) {
+        if (layoutDivProps.ref) {
           // @ts-expect-error - this is a ref from the user, so we need to assign it as well
-          layoutRef.current = node;
+          layoutDivProps.ref.current = node;
         }
       }}
     >
