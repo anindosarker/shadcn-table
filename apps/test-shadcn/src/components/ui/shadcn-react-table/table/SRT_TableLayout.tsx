@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { type KeyboardEvent } from 'react';
 import {
   parseFromValuesOrFunc,
   type LayoutDivProps,
@@ -55,9 +54,7 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
 
   return (
     <div
-      onKeyDown={(e: KeyboardEvent) =>
-        e.key === 'Escape' && table.setIsFullScreen(false)
-      }
+      onKeyDown={(e) => e.key === 'Escape' && table.setIsFullScreen(false)}
       {...layoutDivProps}
       className={cn(
         tableLayoutVariants({
@@ -65,11 +62,11 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
           className: layoutDivProps.className,
         }),
       )}
-      ref={(node: HTMLDivElement) => {
-        tableLayoutRef.current = node;
+      ref={(ref: HTMLDivElement) => {
+        tableLayoutRef.current = ref;
         if (layoutDivProps.ref) {
-          // @ts-expect-error - this is a ref from the user, so we need to assign it as well
-          layoutDivProps.ref.current = node;
+          //@ts-expect-error
+          layoutDivProps.ref.current = ref;
         }
       }}
     >
