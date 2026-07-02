@@ -20,7 +20,7 @@ const tableLayoutVariants = cva(
   {
     variants: {
       fullscreen: {
-        true: 'fixed inset-0 z-50 h-dvh w-screen rounded-none border-0 m-0',
+        true: 'fixed inset-0 z-50 h-dvh max-h-dvh w-dvw max-w-dvw rounded-none border-0 m-0 p-0',
         false: '',
       },
     },
@@ -56,12 +56,6 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     <div
       onKeyDown={(e) => e.key === 'Escape' && table.setIsFullScreen(false)}
       {...layoutDivProps}
-      className={cn(
-        tableLayoutVariants({
-          fullscreen: isFullScreen,
-          className: layoutDivProps.className,
-        }),
-      )}
       ref={(ref: HTMLDivElement) => {
         tableLayoutRef.current = ref;
         if (layoutDivProps.ref) {
@@ -69,6 +63,12 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
           layoutDivProps.ref.current = ref;
         }
       }}
+      className={cn(
+        tableLayoutVariants({
+          fullscreen: isFullScreen,
+          className: layoutDivProps.className,
+        }),
+      )}
     >
       {enableTopToolbar &&
         (parseFromValuesOrFunc(renderTopToolbar, { table }) ?? (

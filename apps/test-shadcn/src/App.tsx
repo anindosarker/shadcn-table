@@ -171,6 +171,10 @@ function App() {
     enableBottomToolbar: true,
     enableToolbarInternalActions: true,
     enableFullScreenToggle: true,
+    srtTableLayoutProps: {
+      id: 'layout',
+      className: 'srt-custom-layout',
+    },
     enableDensityToggle: true,
     enableGlobalFilter: true,
     positionGlobalFilter: 'right',
