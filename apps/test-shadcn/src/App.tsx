@@ -6,6 +6,8 @@ import {
 import { Button } from './components/ui/button';
 import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReactTable';
 import { SRT_TableContainerDemo } from './demos/SRT_TableContainerDemo';
+import { SRT_TableDemo } from './demos/SRT_TableDemo';
+import { SRT_TableLoadingOverlayDemo } from './demos/SRT_TableLoadingOverlayDemo';
 
 type Person = {
   id: number;
@@ -250,6 +252,8 @@ function App() {
       </div>
 
       <div className="space-y-10">
+        <SRT_TableLoadingOverlayDemo />
+        <SRT_TableDemo />
         <SRT_TableContainerDemo />
         <section>
           <h2 className="mb-2 text-lg font-semibold">

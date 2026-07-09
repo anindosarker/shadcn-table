@@ -981,10 +981,9 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   srtTableLayoutProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
     | DivProps;
-  srtTableProps?: SRT_HTMLProps<
-    HTMLTableElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
+  srtTableProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => TableProps)
+    | TableProps;
   srtTopToolbarProps?: SRT_HTMLProps<
     HTMLDivElement,
     SRT_TableHTMLPropsContext<TData>
@@ -1165,6 +1164,8 @@ export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
 }
 
 export type DivProps = React.ComponentPropsWithRef<'div'>;
+
+export type TableProps = React.ComponentPropsWithRef<'table'>;
 
 export type SRT_HTMLPropsValue<TElement> = Omit<
   HTMLAttributes<TElement>,
