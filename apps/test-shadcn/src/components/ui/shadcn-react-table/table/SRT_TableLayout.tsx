@@ -39,6 +39,8 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     options: {
       enableBottomToolbar,
       enableTopToolbar,
+      // Note: we removed mrtTheme since shadcn already handles the themeing through tailwind classes, so we don't need to handle it here
+      // mrtTheme: { baseBackgroundColor },
       srtTableLayoutProps,
       renderBottomToolbar,
       renderTopToolbar,
@@ -52,14 +54,17 @@ export const SRT_TableLayout = <TData extends SRT_RowData>({
     ...rest,
   };
 
+  // NOTE: theme isn't needed for shadcn
+  // const theme = useTheme();
+
   return (
     <div
       onKeyDown={(e) => e.key === 'Escape' && table.setIsFullScreen(false)}
       {...layoutDivProps}
       ref={(ref: HTMLDivElement) => {
         tableLayoutRef.current = ref;
-        if (layoutDivProps.ref) {
-          //@ts-expect-error
+        if (layoutDivProps?.ref) {
+          //@ts-expect-error ref can be either RefCallback or RefObject
           layoutDivProps.ref.current = ref;
         }
       }}
