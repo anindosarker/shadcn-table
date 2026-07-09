@@ -5,6 +5,7 @@ import {
 } from 'shadcn-react-table-core';
 import { Button } from './components/ui/button';
 import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReactTable';
+import { SRT_TableContainerDemo } from './demos/SRT_TableContainerDemo';
 
 type Person = {
   id: number;
@@ -249,6 +250,7 @@ function App() {
       </div>
 
       <div className="space-y-10">
+        <SRT_TableContainerDemo />
         <section>
           <h2 className="mb-2 text-lg font-semibold">
             Full Featured (sort, filter, select, edit, expand, pin, reorder,

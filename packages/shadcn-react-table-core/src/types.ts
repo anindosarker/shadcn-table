@@ -1,5 +1,5 @@
 import {
-  HTMLAttributes,
+  type HTMLAttributes,
   type Dispatch,
   type ReactNode,
   type RefObject,
@@ -43,8 +43,8 @@ import {
 import { SRT_FilterFns } from './fns/filterFns';
 import { SRT_AggregationFns } from './fns/aggregationFns';
 import { SRT_SortingFns } from './fns/sortingFns';
-import { SRT_Icons } from './icons';
-import { LucideProps } from 'lucide-react';
+import { type SRT_Icons } from './icons';
+import { type LucideProps } from 'lucide-react';
 
 export type {
   ColumnDef,
@@ -951,10 +951,9 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     HTMLTableRowElement,
     SRT_RowHTMLPropsContext<TData>
   >;
-  srtTableContainerProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
+  srtTableContainerProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
   srtTableFooterCellProps?: SRT_HTMLProps<
     HTMLTableCellElement,
     SRT_ColumnHTMLPropsContext<TData>
@@ -980,8 +979,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     SRT_HeadRowHTMLPropsContext<TData>
   >;
   srtTableLayoutProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => LayoutDivProps)
-    | LayoutDivProps;
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
   srtTableProps?: SRT_HTMLProps<
     HTMLTableElement,
     SRT_TableHTMLPropsContext<TData>
@@ -1165,7 +1164,7 @@ export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
   showToolbarDropZone: boolean;
 }
 
-export type LayoutDivProps = React.ComponentPropsWithRef<'div'>;
+export type DivProps = React.ComponentPropsWithRef<'div'>;
 
 export type SRT_HTMLPropsValue<TElement> = Omit<
   HTMLAttributes<TElement>,

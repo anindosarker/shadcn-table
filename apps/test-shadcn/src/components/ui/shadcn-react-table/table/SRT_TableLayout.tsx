@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import {
   parseFromValuesOrFunc,
-  type LayoutDivProps,
+  type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
@@ -11,7 +11,7 @@ import { SRT_TopToolbar } from '../toolbar/SRT_TopToolbar';
 import { SRT_TableContainer } from './SRT_TableContainer';
 
 export interface SRT_TableLayoutProps<TData extends SRT_RowData>
-  extends LayoutDivProps {
+  extends DivProps {
   table: SRT_TableInstance<TData>;
 }
 

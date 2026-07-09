@@ -24,10 +24,12 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "shadcn-react-table-core": [
+        "../../packages/shadcn-react-table-core/src/index.ts"
       ]
     }
   },

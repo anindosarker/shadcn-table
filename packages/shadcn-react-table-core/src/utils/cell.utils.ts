@@ -1,5 +1,5 @@
 import {
-  SRT_Header,
+  type SRT_Header,
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
