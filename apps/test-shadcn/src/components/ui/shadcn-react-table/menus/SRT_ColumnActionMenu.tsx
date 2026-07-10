@@ -1,4 +1,10 @@
-import { type MouseEvent, type ReactNode, useState } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type MouseEvent,
+  type ReactNode,
+  useState,
+} from 'react';
+import { cva } from 'class-variance-authority';
 import {
   type SRT_Header,
   type SRT_RowData,
@@ -9,13 +15,28 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 import { SRT_FilterOptionMenu } from './SRT_FilterOptionMenu';
 
-export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData> {
+const columnActionMenuVariants = cva('', {
+  variants: {
+    // MenuListProps dense map — menu-level (Content), never per item
+    dense: {
+      true: '[&_[role=menuitem]]:py-1',
+      false: '',
+    },
+  },
+  defaultVariants: {
+    dense: false,
+  },
+});
+
+export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData>
+  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header: SRT_Header<TData>;
-  setAnchorEl: (el: HTMLElement | null) => void;
+  setAnchorEl: (anchorEl: HTMLElement | null) => void;
   table: SRT_TableInstance<TData>;
 }
 
@@ -24,6 +45,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   header,
   setAnchorEl,
   table,
+  ...rest
 }: SRT_ColumnActionMenuProps<TData>) => {
   const {
     getAllLeafColumns,
@@ -51,6 +73,8 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
         VisibilityOffIcon,
       },
       localization,
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — shadcn
+      // bg-popover on DropdownMenuContent supplies the menu background.
       renderColumnActionsMenuItems,
     },
     refs: { filterInputRefs },
@@ -63,7 +87,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   const { columnDef } = column;
   const { columnSizing, columnVisibility, density, showColumnFilters } =
     getState();
-  const dense = density === 'compact';
   const columnFilterValue = column.getFilterValue();
 
   const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
@@ -102,8 +125,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 
   const handleGroupByColumn = () => {
     column.toggleGrouping();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setColumnOrder((old: any) => ['srt-row-expand', ...old]);
+    setColumnOrder((old) => ['mrt-row-expand', ...old]);
     setAnchorEl(null);
   };
 
@@ -153,7 +175,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           enableSortingRemoval !== false && (
             <SRT_ActionMenuItem
-              dense={dense}
               disabled={column.getIsSorted() === false}
               icon={<ClearAllIcon className="h-4 w-4" />}
               key={0}
@@ -163,7 +184,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             />
           ),
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={column.getIsSorted() === 'asc'}
             icon={
               <SortIcon
@@ -180,7 +200,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={column.getIsSorted() === 'desc'}
             divider={enableColumnFilters || enableGrouping || enableHiding}
             icon={<SortIcon className="h-4 w-4" />}
@@ -197,7 +216,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableColumnFilters && column.getCanFilter()
       ? [
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={
               !columnFilterValue ||
               (Array.isArray(columnFilterValue) &&
@@ -211,7 +229,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           />,
           columnFilterDisplayMode === 'subheader' && (
             <SRT_ActionMenuItem
-              dense={dense}
               disabled={showColumnFilters && !enableColumnFilterModes}
               divider={enableGrouping || enableHiding}
               icon={<FilterListIcon className="h-4 w-4" />}
@@ -246,7 +263,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableGrouping && column.getCanGroup()
       ? [
           <SRT_ActionMenuItem
-            dense={dense}
             divider={enableColumnPinning}
             icon={<DynamicFeedIcon className="h-4 w-4" />}
             key={6}
@@ -261,7 +277,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableColumnPinning && column.getCanPin()
       ? [
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
             icon={
               <PushPinIcon
@@ -275,7 +290,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
             icon={
               <PushPinIcon
@@ -289,7 +303,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={!column.getIsPinned()}
             divider={enableHiding}
             icon={<PushPinIcon className="h-4 w-4" />}
@@ -303,7 +316,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableColumnResizing && column.getCanResize()
       ? [
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={columnSizing[column.id] === undefined}
             icon={<RestartAltIcon className="h-4 w-4" />}
             key={10}
@@ -316,7 +328,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     ...(enableHiding
       ? [
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={!column.getCanHide()}
             icon={<VisibilityOffIcon className="h-4 w-4" />}
             key={11}
@@ -328,7 +339,6 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             table={table}
           />,
           <SRT_ActionMenuItem
-            dense={dense}
             disabled={
               !Object.values(columnVisibility).filter((visible) => !visible)
                 .length
@@ -349,6 +359,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
+    // Note: disableScrollLock dropped — Radix DropdownMenu does not scroll-lock.
     <DropdownMenu
       open={!!anchorEl}
       onOpenChange={(open) => {
@@ -368,7 +379,14 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent
+        align="start"
+        {...rest}
+        className={cn(
+          columnActionMenuVariants({ dense: density === 'compact' }),
+          rest.className,
+        )}
+      >
         {columnDef.renderColumnActionsMenuItems?.({
           closeMenu: () => setAnchorEl(null),
           column,

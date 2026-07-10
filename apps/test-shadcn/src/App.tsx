@@ -4,10 +4,15 @@ import {
   useShadcnReactTable,
 } from 'shadcn-react-table-core';
 import { Button } from './components/ui/button';
+import { SRT_ButtonsDemo } from './components/SRT_ButtonsDemo';
+import { SRT_EditRowModalDemo } from './components/SRT_EditRowModalDemo';
+import { SRT_InputsMenusDemo } from './components/SRT_InputsMenusDemo';
 import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReactTable';
+import { SRT_HeadBodyFooterDemo } from './demos/SRT_HeadBodyFooterDemo';
 import { SRT_TableContainerDemo } from './demos/SRT_TableContainerDemo';
 import { SRT_TableDemo } from './demos/SRT_TableDemo';
 import { SRT_TableLoadingOverlayDemo } from './demos/SRT_TableLoadingOverlayDemo';
+import { SRT_ToolbarsDemo } from './demos/SRT_ToolbarsDemo';
 
 type Person = {
   id: number;
@@ -252,6 +257,11 @@ function App() {
       </div>
 
       <div className="space-y-10">
+        <SRT_EditRowModalDemo />
+        <SRT_ButtonsDemo />
+        <SRT_InputsMenusDemo />
+        <SRT_ToolbarsDemo />
+        <SRT_HeadBodyFooterDemo />
         <SRT_TableLoadingOverlayDemo />
         <SRT_TableDemo />
         <SRT_TableContainerDemo />

@@ -1,17 +1,24 @@
 import { useState } from 'react';
-import type { SRT_RowData, SRT_TableInstance } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
+import {
+  type ButtonProps,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData> {
+const toggleFullScreenButtonVariants = cva('h-9 w-9');
+
+export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData>
+  extends ButtonProps {
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
   table,
-  className,
+  ...rest
 }: SRT_ToggleFullScreenButtonProps<TData>) => {
   const {
     getState,
@@ -32,13 +39,11 @@ export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
 
   return (
     <SRT_Tooltip
-      title={localization.toggleFullScreen}
       open={tooltipOpened}
-      onOpenChange={setTooltipOpened}
+      title={rest?.title ?? localization.toggleFullScreen}
     >
       <Button
         aria-label={localization.toggleFullScreen}
-        className={cn('h-8 w-8', className)}
         onBlur={() => setTooltipOpened(false)}
         onClick={handleToggleFullScreen}
         onFocus={() => setTooltipOpened(true)}
@@ -46,6 +51,9 @@ export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
         onMouseLeave={() => setTooltipOpened(false)}
         size="icon"
         variant="ghost"
+        {...rest}
+        className={cn(toggleFullScreenButtonVariants(), rest?.className)}
+        title={undefined}
       >
         {isFullScreen ? (
           <FullscreenExitIcon className="h-4 w-4" />

@@ -1,9 +1,11 @@
-import { type ComponentProps, type MouseEvent, useRef } from 'react';
+import { type ChangeEvent, type MouseEvent, useRef } from 'react';
+import { cva } from 'class-variance-authority';
 import {
+  type ButtonProps,
   getIsRowSelected,
   getSRT_RowSelectionHandler,
   getSRT_SelectAllHandler,
-  parseSRT_HtmlProps,
+  parseFromValuesOrFunc,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -12,19 +14,33 @@ import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
+// Note: MRT's density rem values (1.75rem/2.5rem) are the padded MUI IconButton
+// hit area, not the visible glyph; radix Checkbox Root IS the visible box, so
+// they map to June browser-verified visible-box sizes (size-4/size-5).
+const selectCheckboxVariants = cva('z-0', {
+  variants: {
+    density: {
+      comfortable: 'size-5',
+      compact: 'size-4',
+      spacious: 'size-5',
+    },
+  },
+  defaultVariants: {
+    density: 'comfortable',
+  },
+});
+
 export interface SRT_SelectCheckboxProps<TData extends SRT_RowData>
-  extends Omit<ComponentProps<typeof Checkbox>, 'checked' | 'onCheckedChange'> {
+  extends ButtonProps {
   row?: SRT_Row<TData>;
   staticRowIndex?: number;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
   row,
   staticRowIndex,
   table,
-  className,
   ...rest
 }: SRT_SelectCheckboxProps<TData>) => {
   const {
@@ -41,14 +57,6 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   const selectAll = !row;
 
-  const slotProps = selectAll
-    ? parseSRT_HtmlProps(srtSelectAllCheckboxProps, { table })
-    : parseSRT_HtmlProps(srtSelectCheckboxProps, {
-        row: row!,
-        staticRowIndex,
-        table,
-      });
-
   const allRowsSelected = selectAll
     ? selectAllMode === 'page'
       ? table.getIsAllPageRowsSelected()
@@ -58,6 +66,17 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
   const isChecked = selectAll
     ? allRowsSelected
     : getIsRowSelected({ row, table });
+
+  const checkboxProps = {
+    ...(selectAll
+      ? parseFromValuesOrFunc(srtSelectAllCheckboxProps, { table })
+      : parseFromValuesOrFunc(srtSelectCheckboxProps, {
+          row,
+          staticRowIndex,
+          table,
+        })),
+    ...rest,
+  };
 
   const onSelectionChange = row
     ? getSRT_RowSelectionHandler({
@@ -69,61 +88,68 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   const onSelectAllChange = getSRT_SelectAllHandler({ table });
 
-  const isIndeterminate =
-    !isChecked && selectAll
-      ? table.getIsSomeRowsSelected()
-      : !!(row?.getIsSomeSelected() && row.getCanSelectSubRows());
+  // Radix onCheckedChange carries no DOM event, but the core handlers read
+  // `nativeEvent.shiftKey` (range select) and `target.checked`. onClick fires
+  // before onCheckedChange, so capture shiftKey there and rebuild a synthetic
+  // event for the handler. June browser-verified bridge — do not redesign.
+  const shiftKeyRef = useRef(false);
 
-  const disabled =
-    isLoading || (row && !row.getCanSelect()) || row?.id === 'mrt-row-create';
+  const isSingleSelect = enableMultiRowSelection === false;
+
+  const indeterminate =
+    !isChecked &&
+    (selectAll
+      ? table.getIsSomeRowsSelected()
+      : row?.getIsSomeSelected() && row.getCanSelectSubRows());
+
+  // Note: MUI Radio (single-select) dropped — locked June deviation renders the
+  // same shadcn Checkbox with `rounded-full`, so `indeterminate` never applies.
+  const checked: boolean | 'indeterminate' =
+    !isSingleSelect && indeterminate ? 'indeterminate' : !!isChecked;
 
   const label = selectAll
     ? localization.toggleSelectAll
     : localization.toggleSelectRow;
 
-  const isSingleSelect = enableMultiRowSelection === false;
-
-  const checkedState: boolean | 'indeterminate' =
-    isSingleSelect || !isIndeterminate ? !!isChecked : 'indeterminate';
-
-  const shiftKeyRef = useRef(false);
+  const commonProps = {
+    'aria-label': label,
+    checked,
+    disabled:
+      isLoading || (row && !row.getCanSelect()) || row?.id === 'mrt-row-create',
+    // Note: MUI `inputProps.aria-label` duplication dropped — single aria-label
+    // on the control (radix Checkbox has no hidden input to label separately).
+    onCheckedChange: (value: boolean | 'indeterminate') => {
+      const next = value === true;
+      const event = {
+        nativeEvent: { shiftKey: shiftKeyRef.current },
+        stopPropagation: () => {},
+        target: { checked: next },
+      } as unknown as ChangeEvent<HTMLInputElement>;
+      if (selectAll) {
+        onSelectAllChange(event, next);
+      } else {
+        onSelectionChange!(event, next);
+      }
+      shiftKeyRef.current = false;
+    },
+    // Note: MUI `size` (small/medium) prop dropped — cva density classes size it.
+    ...checkboxProps,
+    onClick: (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      shiftKeyRef.current = event.shiftKey;
+      checkboxProps?.onClick?.(event);
+    },
+    className: cn(
+      selectCheckboxVariants({ density }),
+      isSingleSelect && 'rounded-full',
+      checkboxProps?.className,
+    ),
+    title: undefined,
+  };
 
   return (
-    <SRT_Tooltip title={label} asChild>
-      <span className="inline-flex">
-        <Checkbox
-          aria-label={label}
-          checked={checkedState}
-          disabled={disabled}
-          {...slotProps}
-          onCheckedChange={(value) => {
-            const next = value === true;
-            const syntheticEvent = {
-              stopPropagation: () => {},
-              nativeEvent: { shiftKey: shiftKeyRef.current },
-              target: { checked: next },
-            } as any;
-            if (selectAll) {
-              onSelectAllChange(syntheticEvent, next);
-            } else {
-              onSelectionChange!(syntheticEvent, next);
-            }
-            shiftKeyRef.current = false;
-          }}
-          onClick={(e: MouseEvent<HTMLButtonElement>) => {
-            e.stopPropagation();
-            shiftKeyRef.current = e.shiftKey;
-            slotProps?.onClick?.(e);
-          }}
-          className={cn(
-            density === 'compact' ? 'size-4' : 'size-5',
-            isSingleSelect && 'rounded-full',
-            className,
-            slotProps?.className,
-          )}
-          {...rest}
-        />
-      </span>
+    <SRT_Tooltip title={checkboxProps?.title ?? label} asChild>
+      <Checkbox {...commonProps} />
     </SRT_Tooltip>
   );
 };

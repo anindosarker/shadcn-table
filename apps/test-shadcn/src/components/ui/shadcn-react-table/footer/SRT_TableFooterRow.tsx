@@ -1,32 +1,49 @@
 import {
-  parseSRT_HtmlProps,
+  parseFromValuesOrFunc,
   type SRT_ColumnVirtualizer,
   type SRT_Header,
   type SRT_HeaderGroup,
   type SRT_RowData,
   type SRT_TableInstance,
   type SRT_VirtualItem,
+  type TableRowProps,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { SRT_TableFooterCell } from './SRT_TableFooterCell';
 
-export interface SRT_TableFooterRowProps<TData extends SRT_RowData> {
+export interface SRT_TableFooterRowProps<TData extends SRT_RowData>
+  extends TableRowProps {
   columnVirtualizer?: SRT_ColumnVirtualizer;
   footerGroup: SRT_HeaderGroup<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+const tableFooterRowVariants = cva('relative w-full bg-background', {
+  variants: {
+    layout: { grid: 'flex', semantic: '' },
+  },
+});
 
 export const SRT_TableFooterRow = <TData extends SRT_RowData>({
   columnVirtualizer,
   footerGroup,
   table,
-  className,
+  ...rest
 }: SRT_TableFooterRowProps<TData>) => {
+  const {
+    options: {
+      layoutMode,
+      // mrtTheme: { baseBackgroundColor },
+      // Note: mrtTheme registry dropped project-wide — bg-background handles theming
+      srtTableFooterRowProps,
+    },
+  } = table;
+
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
 
-  //if no content in row, skip row
+  // if no content in row, skip row
   if (
     !footerGroup.headers?.some(
       (header) =>
@@ -38,15 +55,23 @@ export const SRT_TableFooterRow = <TData extends SRT_RowData>({
     return null;
   }
 
-  const rowProps = parseSRT_HtmlProps(table.options.srtTableFooterRowProps, {
-    footerGroup,
-    table,
-  });
+  const tableRowProps = {
+    ...parseFromValuesOrFunc(srtTableFooterRowProps, {
+      footerGroup,
+      table,
+    }),
+    ...rest,
+  };
 
   return (
     <tr
-      {...rowProps}
-      className={cn('relative border-b', className, rowProps?.className)}
+      {...tableRowProps}
+      className={cn(
+        tableFooterRowVariants({
+          layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+        }),
+        tableRowProps.className,
+      )}
     >
       {virtualPaddingLeft ? (
         <th style={{ display: 'flex', width: virtualPaddingLeft }} />

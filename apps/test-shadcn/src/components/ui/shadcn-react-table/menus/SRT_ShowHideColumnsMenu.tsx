@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { type ComponentPropsWithRef, useMemo, useState } from 'react';
+import { cva } from 'class-variance-authority';
 import {
   type SRT_Column,
   type SRT_RowData,
@@ -12,19 +13,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import { SRT_ShowHideColumnsMenuItems } from './SRT_ShowHideColumnsMenuItems';
 
-export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData> {
+const showHideColumnsMenuContentVariants = cva('', {
+  variants: {
+    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
+    dense: {
+      false: '',
+      true: '[&>*]:py-1',
+    },
+  },
+});
+
+export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData>
+  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   isSubMenu?: boolean;
-  setAnchorEl: (el: HTMLElement | null) => void;
+  setAnchorEl: (anchorEl: HTMLElement | null) => void;
   table: SRT_TableInstance<TData>;
 }
 
 export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
   anchorEl,
+  className,
   setAnchorEl,
   table,
+  ...rest
 }: SRT_ShowHideColumnsMenuProps<TData>) => {
   const {
     getAllColumns,
@@ -42,6 +57,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
   const { columnOrder, columnPinning, density } = getState();
@@ -52,6 +68,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
       .forEach((col) => col.toggleVisibility(value));
   };
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   const allColumns = useMemo(() => {
     const columns = getAllColumns();
     if (
@@ -67,7 +84,6 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
       ].filter(Boolean);
     }
     return columns;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     columnOrder,
     columnPinning,
@@ -76,6 +92,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
     getLeftLeafColumns(),
     getRightLeafColumns(),
   ]) as SRT_Column<TData>[];
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   const isNestedColumns = allColumns.some(
     (col) => col.columnDef.columnDefType === 'group',
@@ -116,8 +133,18 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-[14rem]">
-        <div className="flex justify-between px-2 pb-2">
+      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
+      <DropdownMenuContent
+        align="start"
+        {...rest}
+        className={cn(
+          showHideColumnsMenuContentVariants({
+            dense: density === 'compact',
+          }),
+          className,
+        )}
+      >
+        <div className="flex justify-between p-2 pt-0">
           {enableHiding && (
             <Button
               variant="ghost"
@@ -168,7 +195,6 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           <SRT_ShowHideColumnsMenuItems
             allColumns={allColumns}
             column={column}
-            dense={density === 'compact'}
             hoveredColumn={hoveredColumn}
             isNestedColumns={isNestedColumns}
             key={`${index}-${column.id}`}

@@ -1,4 +1,10 @@
-import { type MouseEvent, type ReactNode, useMemo } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type MouseEvent,
+  type ReactNode,
+  useMemo,
+} from 'react';
+import { cva } from 'class-variance-authority';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -10,24 +16,38 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 
-export interface SRT_RowActionMenuProps<TData extends SRT_RowData> {
+const rowActionMenuContentVariants = cva('', {
+  variants: {
+    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
+    dense: {
+      false: '',
+      true: '[&>*]:py-1',
+    },
+  },
+});
+
+export interface SRT_RowActionMenuProps<TData extends SRT_RowData>
+  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   handleEdit: (event: MouseEvent) => void;
   row: SRT_Row<TData>;
-  setAnchorEl: (el: HTMLElement | null) => void;
+  setAnchorEl: (anchorEl: HTMLElement | null) => void;
   staticRowIndex?: number;
   table: SRT_TableInstance<TData>;
 }
 
 export const SRT_RowActionMenu = <TData extends SRT_RowData>({
   anchorEl,
+  className,
   handleEdit,
   row,
   setAnchorEl,
   staticRowIndex,
   table,
+  ...rest
 }: SRT_RowActionMenuProps<TData>) => {
   const {
     getState,
@@ -36,6 +56,7 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
       enableEditing,
       icons: { EditIcon },
       localization,
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderRowActionMenuItems,
     },
   } = table;
@@ -46,7 +67,6 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
     const editItem = parseFromValuesOrFunc(enableEditing, row) &&
       ['modal', 'row'].includes(editDisplayMode!) && (
         <SRT_ActionMenuItem
-          dense={density === 'compact'}
           key={'edit'}
           icon={<EditIcon className="h-4 w-4" />}
           label={localization.edit}
@@ -64,7 +84,7 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
     if (rowActionMenuItems?.length) items.push(...rowActionMenuItems);
     return items;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [density, renderRowActionMenuItems, row, staticRowIndex, table]);
+  }, [renderRowActionMenuItems, row, staticRowIndex, table]);
 
   if (!menuItems.length) return null;
 
@@ -90,9 +110,15 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
           }}
         />
       </DropdownMenuTrigger>
+      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
+        {...rest}
+        className={cn(
+          rowActionMenuContentVariants({ dense: density === 'compact' }),
+          className,
+        )}
       >
         {menuItems}
       </DropdownMenuContent>

@@ -1,27 +1,44 @@
-import { type ComponentProps, useEffect, useRef, useState } from 'react';
 import {
-  mergeSRT_HtmlProps,
-  parseSRT_HtmlProps,
+  type ComponentProps,
+  type KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import {
+  type DivProps,
+  parseFromValuesOrFunc,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 
 export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
-  extends Omit<ComponentProps<typeof Slider>, 'value' | 'onValueChange'> {
+  extends DivProps {
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+// Note: base maps MRT's sx (m:auto, width:'calc(100% - 8px)', px:'4px'); the
+// hasModeButton variant maps mt 6px (mode button present) / 10px (absent).
+const filterRangeSliderVariants = cva('mx-auto w-[calc(100%-8px)] px-1', {
+  variants: {
+    hasModeButton: {
+      false: 'mt-2.5',
+      true: 'mt-1.5',
+    },
+  },
+  defaultVariants: {
+    hasModeButton: false,
+  },
+});
 
 export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   header,
   table,
-  className,
-  min: minProp,
-  max: maxProp,
   ...rest
 }: SRT_FilterRangeSliderProps<TData>) => {
   const {
@@ -31,15 +48,23 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  const slotProps = mergeSRT_HtmlProps(
-    parseSRT_HtmlProps(srtFilterSliderProps, { column, table }),
-    parseSRT_HtmlProps(columnDef.srtFilterSliderProps, { column, table }),
-  );
-
   const currentFilterOption = columnDef._filterFn;
 
   const showChangeModeButton =
     enableColumnFilterModes && columnDef.enableColumnFilterModes !== false;
+
+  const sliderProps = {
+    ...parseFromValuesOrFunc(srtFilterSliderProps, { column, table }),
+    ...parseFromValuesOrFunc(columnDef.srtFilterSliderProps, { column, table }),
+    ...rest,
+  };
+
+  // Note: DivProps carries no min/max; MRT reads them off the slider slot, so
+  // reach the same optional numerics through a cast.
+  const { max: maxProp, min: minProp } = sliderProps as DivProps & {
+    max?: number;
+    min?: number;
+  };
 
   let [min, max] =
     minProp !== undefined && maxProp !== undefined
@@ -58,11 +83,10 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   const isMounted = useRef(false);
 
   // prevent moving the focus to the next/prev cell when using the arrow keys
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.stopPropagation();
     }
-    slotProps?.onKeyDown?.(event);
   };
 
   useEffect(() => {
@@ -76,27 +100,29 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
     isMounted.current = true;
   }, [columnFilterValue, min, max]);
 
-  const commitValue = (value: number[]) => {
-    if (Array.isArray(value)) {
-      if (value[0] <= min && value[1] >= max) {
-        //if the user has selected the entire range, remove the filter
-        column.setFilterValue(undefined);
-      } else {
-        column.setFilterValue(value as [number, number]);
-      }
-    }
-  };
-
   return (
-    <div className={cn('flex flex-col', className)}>
+    <div className="flex flex-col">
       <Slider
-        min={min}
+        // disableSwap  // Note: radix prevents thumb swap natively; MUI disableSwap dropped.
         max={max}
-        value={filterValues}
-        onValueChange={(values) => setFilterValues(values)}
-        onValueCommit={commitValue}
-        {...(slotProps as ComponentProps<typeof Slider>)}
+        min={min}
+        onValueChange={(values) => {
+          setFilterValues(values);
+        }}
+        onValueCommit={(value) => {
+          if (Array.isArray(value)) {
+            if (value[0] <= min && value[1] >= max) {
+              //if the user has selected the entire range, remove the filter
+              column.setFilterValue(undefined);
+            } else {
+              column.setFilterValue(value as [number, number]);
+            }
+          }
+        }}
         onKeyDown={handleKeyDown}
+        value={filterValues}
+        // valueLabelDisplay="auto"  // Note: radix has no value labels; June parity.
+        {...(sliderProps as ComponentProps<typeof Slider>)}
         ref={(node) => {
           if (node && filterInputRefs.current) {
             filterInputRefs.current[`${column.id}-0`] =
@@ -104,25 +130,22 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
           }
         }}
         className={cn(
-          'mx-auto px-1',
-          showChangeModeButton ? 'mt-1.5' : 'mt-2.5',
-          slotProps?.className,
+          filterRangeSliderVariants({ hasModeButton: showChangeModeButton }),
+          sliderProps?.className,
         )}
         style={{
           minWidth: `${column.getSize() - 50}px`,
-          width: 'calc(100% - 8px)',
-          ...slotProps?.style,
+          ...sliderProps?.style,
         }}
-        {...rest}
       />
       {showChangeModeButton ? (
-        <p className="-mx-1.5 -my-0.5 text-xs leading-tight whitespace-nowrap text-muted-foreground">
+        <p className="m-[-3px_-6px] text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
           {localization.filterMode.replace(
             '{filterType}',
             localization[
               `filter${
-                (currentFilterOption?.charAt(0)?.toUpperCase() ?? '') +
-                (currentFilterOption?.slice(1) ?? '')
+                currentFilterOption?.charAt(0)?.toUpperCase() +
+                currentFilterOption?.slice(1)
               }` as keyof typeof localization
             ],
           )}

@@ -1,5 +1,8 @@
 import { type MouseEvent, useState } from 'react';
+import { cva } from 'class-variance-authority';
 import {
+  type ButtonProps,
+  type RowPinningPosition,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -8,18 +11,20 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-export interface SRT_RowPinButtonProps<TData extends SRT_RowData> {
-  pinningPosition: 'top' | 'bottom' | false;
+const rowPinButtonVariants = cva('h-6 w-6');
+
+export interface SRT_RowPinButtonProps<TData extends SRT_RowData>
+  extends ButtonProps {
+  pinningPosition: RowPinningPosition;
   row: SRT_Row<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_RowPinButton = <TData extends SRT_RowData>({
   pinningPosition,
   row,
   table,
-  className,
+  ...rest
 }: SRT_RowPinButtonProps<TData>) => {
   const {
     options: {
@@ -39,22 +44,13 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
     row.pin(isPinned ? false : pinningPosition);
   };
 
-  const rotation =
-    rowPinningDisplayMode === 'sticky'
-      ? 135
-      : pinningPosition === 'top'
-        ? 180
-        : 0;
-
   return (
     <SRT_Tooltip
-      title={isPinned ? localization.unpin : localization.pin}
       open={tooltipOpened}
-      onOpenChange={setTooltipOpened}
+      title={isPinned ? localization.unpin : localization.pin}
     >
       <Button
         aria-label={localization.pin}
-        className={cn('h-6 w-6', className)}
         onBlur={() => setTooltipOpened(false)}
         onClick={handleTogglePin}
         onFocus={() => setTooltipOpened(true)}
@@ -62,13 +58,21 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
         onMouseLeave={() => setTooltipOpened(false)}
         size="icon"
         variant="ghost"
+        {...rest}
+        className={cn(rowPinButtonVariants(), rest?.className)}
       >
         {isPinned ? (
-          <CloseIcon className="h-3.5 w-3.5" />
+          <CloseIcon className="h-4 w-4" />
         ) : (
           <PushPinIcon
-            className="h-3.5 w-3.5"
-            style={{ transform: `rotate(${rotation}deg)` }}
+            className={cn(
+              'h-4 w-4',
+              rowPinningDisplayMode === 'sticky'
+                ? 'rotate-[135deg]'
+                : pinningPosition === 'top'
+                  ? 'rotate-180'
+                  : '',
+            )}
           />
         )}
       </Button>

@@ -1,53 +1,70 @@
-import type {
-  SRT_ColumnVirtualizer,
-  SRT_Header,
-  SRT_HeaderGroup,
-  SRT_RowData,
-  SRT_TableInstance,
-  SRT_VirtualItem,
+import {
+  parseFromValuesOrFunc,
+  type SRT_ColumnVirtualizer,
+  type SRT_Header,
+  type SRT_HeaderGroup,
+  type SRT_RowData,
+  type SRT_TableInstance,
+  type SRT_VirtualItem,
+  type TableRowProps,
 } from 'shadcn-react-table-core';
-import { parseSRT_HtmlProps } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { SRT_TableHeadCell } from './SRT_TableHeadCell';
 
-export interface SRT_TableHeadRowProps<TData extends SRT_RowData> {
+export interface SRT_TableHeadRowProps<TData extends SRT_RowData>
+  extends TableRowProps {
   columnVirtualizer?: SRT_ColumnVirtualizer;
   headerGroup: SRT_HeaderGroup<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+const tableHeadRowVariants = cva(
+  'top-0 bg-background shadow-[4px_0_8px_rgba(0,0,0,0.1)]',
+  {
+    variants: {
+      layout: { grid: 'flex', semantic: '' },
+      sticky: { true: 'sticky', false: 'relative' },
+    },
+  },
+);
 
 export const SRT_TableHeadRow = <TData extends SRT_RowData>({
   columnVirtualizer,
   headerGroup,
   table,
-  className,
+  ...rest
 }: SRT_TableHeadRowProps<TData>) => {
   const {
-    options: { enableStickyHeader, layoutMode, srtTableHeadRowProps },
+    options: {
+      enableStickyHeader,
+      layoutMode,
+      // mrtTheme: { baseBackgroundColor },
+      // Note: mrtTheme registry dropped project-wide — bg-background handles theming
+      srtTableHeadRowProps,
+    },
   } = table;
 
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
 
-  const isGrid = layoutMode?.startsWith('grid');
-
-  const rowProps = parseSRT_HtmlProps(srtTableHeadRowProps, {
-    headerGroup,
-    table,
-  });
+  const tableRowProps = {
+    ...parseFromValuesOrFunc(srtTableHeadRowProps, {
+      headerGroup,
+      table,
+    }),
+    ...rest,
+  };
 
   return (
     <tr
-      {...rowProps}
+      {...tableRowProps}
       className={cn(
-        'border-b bg-background shadow-[4px_0_8px_rgba(0,0,0,0.1)]',
-        isGrid ? 'flex' : '',
-        enableStickyHeader && layoutMode === 'semantic'
-          ? 'sticky top-0'
-          : 'relative top-0',
-        className,
-        rowProps?.className,
+        tableHeadRowVariants({
+          layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+          sticky: !!(enableStickyHeader && layoutMode === 'semantic'),
+        }),
+        tableRowProps.className,
       )}
     >
       {virtualPaddingLeft ? (

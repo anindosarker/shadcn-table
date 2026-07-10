@@ -1,21 +1,35 @@
+import { cva } from 'class-variance-authority';
 import {
+  type ButtonProps,
   type SRT_RowData,
-  type SRT_TableHTMLPropsContext,
   type SRT_TableInstance,
-  parseSRT_HtmlProps,
+  parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-export interface SRT_ExpandAllButtonProps<TData extends SRT_RowData> {
+const expandAllButtonVariants = cva('', {
+  variants: {
+    density: {
+      comfortable: 'h-9 w-9 -mt-1',
+      compact: 'h-7 w-7',
+      spacious: 'h-9 w-9 -mt-1',
+    },
+  },
+  defaultVariants: {
+    density: 'comfortable',
+  },
+});
+
+export interface SRT_ExpandAllButtonProps<TData extends SRT_RowData>
+  extends ButtonProps {
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_ExpandAllButton = <TData extends SRT_RowData>({
   table,
-  className,
+  ...rest
 }: SRT_ExpandAllButtonProps<TData>) => {
   const {
     getCanSomeRowsExpand,
@@ -25,53 +39,59 @@ export const SRT_ExpandAllButton = <TData extends SRT_RowData>({
     options: {
       icons: { KeyboardDoubleArrowDownIcon },
       localization,
-      renderDetailPanel,
       srtExpandAllButtonProps,
+      renderDetailPanel,
     },
     toggleAllRowsExpanded,
   } = table;
   const { density, isLoading } = getState();
 
+  const iconButtonProps = {
+    ...parseFromValuesOrFunc(srtExpandAllButtonProps, {
+      table,
+    }),
+    ...rest,
+  };
+
   const isAllRowsExpanded = getIsAllRowsExpanded();
-  const isSomeRowsExpanded = getIsSomeRowsExpanded();
-
-  const isDisabled =
-    isLoading || (!renderDetailPanel && !getCanSomeRowsExpand());
-
-  const rotation = isAllRowsExpanded ? -180 : isSomeRowsExpanded ? -90 : 0;
-
-  const htmlPropsContext: SRT_TableHTMLPropsContext<TData> = { table };
-  const buttonProps = parseSRT_HtmlProps(
-    srtExpandAllButtonProps,
-    htmlPropsContext,
-  );
-
-  const tooltipTitle =
-    buttonProps?.title ??
-    (isAllRowsExpanded ? localization.collapseAll : localization.expandAll);
 
   return (
-    <SRT_Tooltip title={tooltipTitle} disabled={isDisabled}>
-      <Button
-        aria-label={localization.expandAll}
-        disabled={isDisabled}
-        onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
-        size="icon"
-        variant="ghost"
-        {...buttonProps}
-        className={cn(
-          'transition-all',
-          density === 'compact' ? 'h-7 w-7' : 'h-9 w-9',
-          density !== 'compact' && '-mt-1',
-          className,
-          buttonProps?.className,
-        )}
-      >
-        <KeyboardDoubleArrowDownIcon
-          className="h-4 w-4 transition-transform duration-150"
-          style={{ transform: `rotate(${rotation}deg)` }}
-        />
-      </Button>
+    <SRT_Tooltip
+      title={
+        iconButtonProps?.title ??
+        (isAllRowsExpanded ? localization.collapseAll : localization.expandAll)
+      }
+    >
+      <span>
+        <Button
+          aria-label={localization.expandAll}
+          disabled={
+            isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
+          }
+          onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
+          size="icon"
+          variant="ghost"
+          {...iconButtonProps}
+          title={undefined}
+          className={cn(
+            expandAllButtonVariants({ density }),
+            iconButtonProps?.className,
+          )}
+        >
+          {iconButtonProps?.children ?? (
+            <KeyboardDoubleArrowDownIcon
+              className={cn(
+                'transition-transform duration-150',
+                isAllRowsExpanded
+                  ? '-rotate-180'
+                  : getIsSomeRowsExpanded()
+                    ? '-rotate-90'
+                    : 'rotate-0',
+              )}
+            />
+          )}
+        </Button>
+      </span>
     </SRT_Tooltip>
   );
 };

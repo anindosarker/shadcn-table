@@ -6,7 +6,6 @@ export * from './utils/cell.utils';
 export * from './utils/column.utils';
 export * from './utils/displayColumn.utils';
 export * from './utils/row.utils';
-export * from './utils/srtHtmlProps.utils';
 export * from './utils/style.utils';
 export * from './utils/utils';
 
@@ -14,6 +13,9 @@ export * from './utils/utils';
 export * from './fns/aggregationFns';
 export * from './fns/filterFns';
 export * from './fns/sortingFns';
+
+//third-party re-exports
+export { default as highlightWords } from 'highlight-words';
 
 //hooks
 export * from './hooks/useShadcnReactTable';

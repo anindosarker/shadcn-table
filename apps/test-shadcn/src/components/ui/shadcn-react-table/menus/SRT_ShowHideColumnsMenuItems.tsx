@@ -1,47 +1,49 @@
 import {
+  type ComponentPropsWithRef,
   type Dispatch,
   type DragEvent,
   type SetStateAction,
   useRef,
   useState,
 } from 'react';
+import { cva } from 'class-variance-authority';
 import {
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
   reorderColumn,
 } from 'shadcn-react-table-core';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 import { SRT_ColumnPinningButtons } from '../buttons/SRT_ColumnPinningButtons';
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton';
-import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
-export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData> {
+const showHideColumnsMenuItemVariants = cva(
+  'items-center justify-start my-0 py-1.5 -outline-offset-2',
+);
+
+export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData>
+  extends ComponentPropsWithRef<typeof DropdownMenuItem> {
   allColumns: SRT_Column<TData>[];
   column: SRT_Column<TData>;
-  dense?: boolean;
   hoveredColumn: SRT_Column<TData> | null;
   isNestedColumns: boolean;
   setHoveredColumn: Dispatch<SetStateAction<SRT_Column<TData> | null>>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
   allColumns,
+  className,
   column,
-  dense,
   hoveredColumn,
   isNestedColumns,
   setHoveredColumn,
+  style,
   table,
-  className,
+  ...rest
 }: SRT_ShowHideColumnsMenuItemsProps<TData>) => {
   const {
     getState,
@@ -50,6 +52,8 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
+      // Note: mrtTheme.draggingBorderColor dropped project-wide — the hovered
+      // outline maps to `outline-primary`.
     },
     setColumnOrder,
     setColumnPinning,
@@ -83,7 +87,7 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
     }
   };
 
-  const handleDragEnd = (_e: DragEvent<HTMLButtonElement>) => {
+  const handleDragEnd = () => {
     setIsDragging(false);
     setHoveredColumn(null);
     if (hoveredColumn) {
@@ -100,7 +104,7 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
     }
   };
 
-  const handleDragEnter = (_e: DragEvent) => {
+  const handleDragEnter = () => {
     if (!isDragging && columnDef.enableColumnOrdering !== false) {
       setHoveredColumn(column);
     }
@@ -110,30 +114,32 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
     return null;
   }
 
-  const isHovered = hoveredColumn?.id === column.id;
-
   return (
     <>
-      <div
+      {/* Note: disableRipple dropped — no MUI ripple in shadcn. */}
+      {/* Note: onSelect preventDefault keeps the menu OPEN on toggle — radix
+          auto-closes on item select where MUI does not; this preserves MRT
+          behavior. */}
+      <DropdownMenuItem
         onDragEnter={handleDragEnter}
+        onSelect={(event) => event.preventDefault()}
         ref={menuItemRef}
-        style={{
-          opacity: isDragging ? 0.5 : 1,
-          outline: isDragging
-            ? '2px dashed hsl(var(--muted-foreground))'
-            : isHovered
-              ? '2px dashed hsl(var(--primary))'
-              : 'none',
-          outlineOffset: '-2px',
-          paddingLeft: `${(column.depth + 0.5) * 1}rem`,
-        }}
+        {...rest}
         className={cn(
-          'flex items-center justify-start px-2 text-sm',
-          dense ? 'py-1' : 'py-1.5',
+          showHideColumnsMenuItemVariants(),
+          isDragging &&
+            'opacity-50 outline-2 outline-dashed outline-muted-foreground',
+          !isDragging &&
+            hoveredColumn?.id === column.id &&
+            'outline-2 outline-dashed outline-primary',
           className,
         )}
+        style={{
+          paddingLeft: `${(column.depth + 0.5) * 2}rem`,
+          ...style,
+        }}
       >
-        <div className="flex flex-nowrap items-center gap-2">
+        <div className="flex flex-nowrap gap-2">
           {columnDefType !== 'group' &&
             enableColumnOrdering &&
             !isNestedColumns &&
@@ -153,40 +159,27 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
               <span className="w-[70px]" />
             ))}
           {enableHiding ? (
-            <label
-              className={cn(
-                'flex cursor-pointer items-center gap-2',
-                columnDefType === 'display' && 'opacity-50',
-              )}
-            >
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="flex items-center">
-                      <Checkbox
-                        checked={switchChecked}
-                        disabled={!column.getCanHide()}
-                        onCheckedChange={() => handleToggleColumnHidden(column)}
-                      />
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {localization.toggleVisibility}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              {columnDef.header}
+            <label className="flex items-center gap-2">
+              <SRT_Tooltip title={localization.toggleVisibility}>
+                <Switch
+                  checked={switchChecked}
+                  disabled={!column.getCanHide()}
+                  onCheckedChange={() => handleToggleColumnHidden(column)}
+                />
+              </SRT_Tooltip>
+              <span className={cn(columnDefType === 'display' && 'opacity-50')}>
+                {columnDef.header}
+              </span>
             </label>
           ) : (
             <span className="self-center">{columnDef.header}</span>
           )}
         </div>
-      </div>
+      </DropdownMenuItem>
       {column.columns?.map((c: SRT_Column<TData>, i) => (
         <SRT_ShowHideColumnsMenuItems
           allColumns={allColumns}
           column={c}
-          dense={dense}
           hoveredColumn={hoveredColumn}
           isNestedColumns={isNestedColumns}
           key={`${i}-${c.id}`}

@@ -3,8 +3,10 @@ import {
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
+  highlightWords,
 } from 'shadcn-react-table-core';
-import { cn } from '@/lib/utils';
+// Note: highlightWords is re-exported from core (MRT imports 'highlight-words'
+// directly); consuming apps only need the core dependency.
 
 const allowedTypes = ['string', 'number'];
 
@@ -16,51 +18,6 @@ export interface SRT_TableBodyCellValueProps<TData extends SRT_RowData> {
   table: SRT_TableInstance<TData>;
 }
 
-const highlightWords = ({
-  matchExactly,
-  query,
-  text,
-}: {
-  matchExactly: boolean;
-  query: string;
-  text: string;
-}): Array<{ key: number; match: boolean; text: string }> => {
-  const terms = matchExactly
-    ? [query.trim()].filter(Boolean)
-    : Array.from(new Set(query.replace(/\s/g, '').split('')));
-
-  if (!terms.length) {
-    return [{ key: 0, match: false, text }];
-  }
-
-  const escaped = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
-
-  const chunks: Array<{ key: number; match: boolean; text: string }> = [];
-  let key = 0;
-  let lastIndex = 0;
-  let result: RegExpExecArray | null;
-
-  while ((result = regex.exec(text)) !== null) {
-    if (result.index > lastIndex) {
-      chunks.push({
-        key: key++,
-        match: false,
-        text: text.slice(lastIndex, result.index),
-      });
-    }
-    chunks.push({ key: key++, match: true, text: result[0] });
-    lastIndex = result.index + result[0].length;
-    if (result[0].length === 0) regex.lastIndex++;
-  }
-
-  if (lastIndex < text.length) {
-    chunks.push({ key: key++, match: false, text: text.slice(lastIndex) });
-  }
-
-  return chunks;
-};
-
 export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
   cell,
   rowRef,
@@ -70,7 +27,12 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
 }: SRT_TableBodyCellValueProps<TData>) => {
   const {
     getState,
-    options: { enableFilterMatchHighlighting },
+    options: {
+      enableFilterMatchHighlighting,
+      // mrtTheme: { matchHighlightColor },
+      // Note: mrtTheme dropped project-wide; matchHighlightColor and MRT's
+      // dark/light text ternary map to the tailwind yellow classes below.
+    },
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;
@@ -118,7 +80,7 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
         allowedTypes.includes(typeof globalFilter) &&
         column.getCanGlobalFilter()))
   ) {
-    const chunks = highlightWords({
+    const chunks = highlightWords?.({
       matchExactly:
         (filterValue ? columnDef._filterFn : globalFilterFn) !== 'fuzzy',
       query: (filterValue ?? globalFilter ?? '').toString(),
@@ -127,18 +89,21 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
     if (chunks?.length > 1 || chunks?.[0]?.match) {
       renderedCellValue = (
         <span aria-label={renderedCellValue as string} role="note">
-          {chunks?.map(({ key, match, text }) => (
-            <span
-              aria-hidden="true"
-              key={key}
-              className={cn(
-                match &&
-                  'rounded-[2px] bg-yellow-200 px-[1px] py-[2px] text-black dark:bg-yellow-500 dark:text-white',
-              )}
-            >
-              {text}
-            </span>
-          )) ?? renderedCellValue}
+          {chunks?.map(({ key, match, text }) =>
+            match ? (
+              <mark
+                aria-hidden="true"
+                key={key}
+                className="rounded-[2px] bg-yellow-200 px-[1px] py-[2px] text-black dark:bg-yellow-500/70 dark:text-white"
+              >
+                {text}
+              </mark>
+            ) : (
+              <span aria-hidden="true" key={key}>
+                {text}
+              </span>
+            ),
+          ) ?? renderedCellValue}
         </span>
       );
     }

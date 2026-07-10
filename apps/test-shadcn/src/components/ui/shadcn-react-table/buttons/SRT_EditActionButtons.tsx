@@ -1,25 +1,29 @@
 import { LoaderCircleIcon } from 'lucide-react';
 import {
+  type DivProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-export interface SRT_EditActionButtonsProps<TData extends SRT_RowData> {
+export interface SRT_EditActionButtonsProps<TData extends SRT_RowData>
+  extends DivProps {
   row: SRT_Row<TData>;
   table: SRT_TableInstance<TData>;
   variant?: 'icon' | 'text';
-  className?: string;
 }
+
+const editActionButtonsVariants = cva('flex gap-3');
 
 export const SRT_EditActionButtons = <TData extends SRT_RowData>({
   row,
   table,
   variant = 'icon',
-  className,
+  ...rest
 }: SRT_EditActionButtonsProps<TData>) => {
   const {
     getState,
@@ -48,6 +52,7 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
       onEditingRowCancel?.({ row, table });
       setEditingRow(null);
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     row._valuesCache = {} as any; //reset values cache
   };
 
@@ -60,7 +65,7 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
           input.value !== undefined &&
           Object.hasOwn(row?._valuesCache as object, input.name)
         ) {
-          // @ts-expect-error
+          // @ts-expect-error dynamic string index into _valuesCache
           row._valuesCache[input.name] = input.value;
         }
       });
@@ -83,20 +88,20 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
 
   return (
     <div
+      {...rest}
+      className={cn(editActionButtonsVariants({ className: rest.className }))}
       onClick={(e) => e.stopPropagation()}
-      className={cn('flex gap-3', className)}
     >
       {variant === 'icon' ? (
         <>
           <SRT_Tooltip title={localization.cancel}>
             <Button
               aria-label={localization.cancel}
-              className="h-9 w-9"
               onClick={handleCancel}
               size="icon"
               variant="ghost"
             >
-              <CancelIcon className="h-4 w-4" />
+              <CancelIcon />
             </Button>
           </SRT_Tooltip>
           {((isCreating && onCreatingRowSave) ||
@@ -104,16 +109,17 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
             <SRT_Tooltip title={localization.save}>
               <Button
                 aria-label={localization.save}
-                className="h-9 w-9 text-blue-500 hover:text-blue-600"
+                // Note: MUI color="info" → text-primary (no info palette token in shadcn)
+                className="text-primary"
                 disabled={isSaving}
                 onClick={handleSubmitRow}
                 size="icon"
                 variant="ghost"
               >
                 {isSaving ? (
-                  <LoaderCircleIcon className="h-4 w-4 animate-spin" />
+                  <LoaderCircleIcon className="size-[18px] animate-spin" />
                 ) : (
-                  <SaveIcon className="h-4 w-4" />
+                  <SaveIcon />
                 )}
               </Button>
             </SRT_Tooltip>
@@ -124,7 +130,7 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
           <Button
             className="min-w-[100px]"
             onClick={handleCancel}
-            variant="outline"
+            variant="ghost"
           >
             {localization.cancel}
           </Button>
@@ -132,10 +138,9 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
             className="min-w-[100px]"
             disabled={isSaving}
             onClick={handleSubmitRow}
-            variant="default"
           >
             {isSaving && (
-              <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" />
+              <LoaderCircleIcon className="size-[18px] animate-spin" />
             )}
             {localization.save}
           </Button>

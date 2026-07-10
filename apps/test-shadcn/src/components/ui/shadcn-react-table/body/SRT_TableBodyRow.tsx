@@ -7,8 +7,7 @@ import {
 } from 'react';
 import {
   getIsRowSelected,
-  mergeSRT_HtmlProps,
-  parseSRT_HtmlProps,
+  parseFromValuesOrFunc,
   type SRT_Cell,
   type SRT_ColumnVirtualizer,
   type SRT_Row,
@@ -16,12 +15,15 @@ import {
   type SRT_RowVirtualizer,
   type SRT_TableInstance,
   type SRT_VirtualItem,
+  type TableRowProps,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { SRT_TableBodyCell, Memo_SRT_TableBodyCell } from './SRT_TableBodyCell';
 import { SRT_TableDetailPanel } from './SRT_TableDetailPanel';
 
-export interface SRT_TableBodyRowProps<TData extends SRT_RowData> {
+export interface SRT_TableBodyRowProps<TData extends SRT_RowData>
+  extends TableRowProps {
   columnVirtualizer?: SRT_ColumnVirtualizer;
   numRows?: number;
   pinnedRowIds?: string[];
@@ -30,8 +32,28 @@ export interface SRT_TableBodyRowProps<TData extends SRT_RowData> {
   staticRowIndex: number;
   table: SRT_TableInstance<TData>;
   virtualRow?: SRT_VirtualItem;
-  className?: string;
 }
+
+const tableBodyRowVariants = cva(
+  'box-border w-full bg-background hover:bg-muted/50',
+  {
+    variants: {
+      layout: { grid: 'flex', semantic: '' },
+      opacity: { dimmed: 'opacity-50', normal: '', pinned: 'opacity-[0.97]' },
+      position: {
+        absolute: 'absolute',
+        relative: 'relative',
+        sticky: 'sticky',
+      },
+      selected: { false: '', true: 'bg-muted' },
+      transition: {
+        animated: 'transition-all duration-150 ease-in-out',
+        none: '',
+      },
+      zIndex: { base: 'z-0', high: 'z-[2]' },
+    },
+  },
+);
 
 export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   columnVirtualizer,
@@ -42,8 +64,11 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   staticRowIndex,
   table,
   virtualRow,
-  className,
+  ...rest
 }: SRT_TableBodyRowProps<TData>) => {
+  // const theme = useTheme();
+  // Note: MUI useTheme dropped project-wide — shadcn CSS vars handle theming.
+
   const {
     getState,
     options: {
@@ -51,7 +76,15 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
       enableRowPinning,
       enableStickyFooter,
       enableStickyHeader,
+      layoutMode,
       memoMode,
+      // mrtTheme: {
+      //   baseBackgroundColor,
+      //   pinnedRowBackgroundColor,
+      //   selectedRowBackgroundColor,
+      // },
+      // Note: mrtTheme registry dropped project-wide — bg-background / bg-muted
+      // handle theming.
       renderDetailPanel,
       rowPinningDisplayMode,
       srtTableBodyRowProps,
@@ -79,6 +112,18 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   const isRowPinned = enableRowPinning && row.getIsPinned();
   const isDraggingRow = draggingRow?.id === row.id;
   const isHoveredRow = hoveredRow?.id === row.id;
+  const isStickyPinned = !!(
+    rowPinningDisplayMode?.includes('sticky') && isRowPinned
+  );
+
+  const tableRowProps = {
+    ...parseFromValuesOrFunc(srtTableBodyRowProps, {
+      row,
+      staticRowIndex,
+      table,
+    }),
+    ...rest,
+  };
 
   const [bottomPinnedIndex, topPinnedIndex] = useMemo(() => {
     if (
@@ -92,6 +137,7 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
       [...pinnedRowIds].reverse().indexOf(row.id),
       pinnedRowIds.indexOf(row.id),
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pinnedRowIds, rowPinning]);
 
   const tableHeadHeight =
@@ -103,9 +149,15 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 
   const defaultRowHeight =
     density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69;
-  const rowHeight = defaultRowHeight;
 
-  const handleDragEnter = (_e: DragEvent) => {
+  const customRowHeight =
+    // @ts-expect-error style.height is string | number; parseInt expects a string
+    parseInt(tableRowProps?.style?.height, 10) || undefined;
+  // customRowHeight fallback `?? sx?.height` dropped — no MUI sx in SRT (see plan).
+
+  const rowHeight = customRowHeight || defaultRowHeight;
+
+  const handleDragEnter = () => {
     if (enableRowOrdering && draggingRow) {
       setHoveredRow(row);
     }
@@ -117,18 +169,33 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 
   const rowRef = useRef<HTMLTableRowElement | null>(null);
 
+  // Row highlight overlay machinery dropped — replaced by solid row classes
+  // (bg-background / bg-muted / hover:bg-muted/50 / opacity-*), which cells
+  // inherit via their `bg-inherit`. MRT painted selection/pin/hover tints via
+  // td:after overlays with alpha'd theme colors, and baseBackgroundColor
+  // carried `!important`; both are dropped. MUI's `tableRowProps?.hover` prop
+  // has no native-<tr> analogue, so hover is unconditional. See
+  // .ai/plans/components/SRT_TableBodyRow.plan.md ("Row highlight system").
+  //
+  // const sx = parseFromValuesOrFunc(tableRowProps?.sx, theme as any);
+  // const cellHighlightColor = isRowSelected
+  //   ? selectedRowBackgroundColor
+  //   : isRowPinned
+  //     ? pinnedRowBackgroundColor
+  //     : undefined;
+  // const cellHighlightColorHover =
+  //   tableRowProps?.hover !== false
+  //     ? isRowSelected
+  //       ? cellHighlightColor
+  //       : theme.palette.mode === 'dark'
+  //         ? `${lighten(baseBackgroundColor, 0.3)}`
+  //         : `${darken(baseBackgroundColor, 0.3)}`
+  //     : undefined;
+  // sx: '&:hover td:after' + 'td:after' overlays (commonCellBeforeAfterStyles),
+  //   td: getCommonPinnedCellStyles({ table, theme }),
+  //   backgroundColor: `${baseBackgroundColor} !important`.
+
   const rowStyle: CSSProperties = {
-    transform: virtualRow ? `translateY(${virtualRow.start}px)` : undefined,
-    position: virtualRow
-      ? 'absolute'
-      : rowPinningDisplayMode?.includes('sticky') && isRowPinned
-        ? 'sticky'
-        : 'relative',
-    width: '100%',
-    boxSizing: 'border-box',
-    opacity: isRowPinned ? 0.97 : isDraggingRow || isHoveredRow ? 0.5 : 1,
-    transition: virtualRow ? 'none' : 'all 150ms ease-in-out',
-    zIndex: rowPinningDisplayMode?.includes('sticky') && isRowPinned ? 2 : 0,
     top: virtualRow
       ? 0
       : topPinnedIndex !== undefined && isRowPinned
@@ -144,21 +211,9 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
             (enableStickyFooter ? tableFooterHeight - 1 : 0)
           }px`
         : undefined,
+    transform: virtualRow ? `translateY(${virtualRow.start}px)` : undefined,
+    ...tableRowProps?.style,
   };
-
-  const userRowProps = parseSRT_HtmlProps(srtTableBodyRowProps, {
-    row,
-    staticRowIndex,
-    table,
-  });
-  const rowProps = mergeSRT_HtmlProps(
-    {
-      onDragEnter: handleDragEnter,
-      onDragOver: handleDragOver,
-      style: rowStyle,
-    },
-    userRowProps,
-  );
 
   return (
     <>
@@ -166,20 +221,34 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
         data-index={renderDetailPanel ? staticRowIndex * 2 : staticRowIndex}
         data-pinned={!!isRowPinned || undefined}
         data-selected={isRowSelected || undefined}
-        data-state={isRowSelected ? 'selected' : undefined}
-        {...rowProps}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
         ref={(node: HTMLTableRowElement | null) => {
           if (node) {
             rowRef.current = node;
             rowVirtualizer?.measureElement(node);
           }
         }}
+        {...tableRowProps}
+        style={rowStyle}
         className={cn(
-          'border-b transition-colors hover:bg-muted/50',
-          'data-[state=selected]:bg-muted',
-          isRowPinned && 'bg-accent/40',
-          className,
-          rowProps?.className,
+          tableBodyRowVariants({
+            layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+            opacity: isRowPinned
+              ? 'pinned'
+              : isDraggingRow || isHoveredRow
+                ? 'dimmed'
+                : 'normal',
+            position: virtualRow
+              ? 'absolute'
+              : isStickyPinned
+                ? 'sticky'
+                : 'relative',
+            selected: isRowSelected,
+            transition: virtualRow ? 'none' : 'animated',
+            zIndex: isStickyPinned ? 'high' : 'base',
+          }),
+          tableRowProps?.className,
         )}
       >
         {virtualPaddingLeft ? (

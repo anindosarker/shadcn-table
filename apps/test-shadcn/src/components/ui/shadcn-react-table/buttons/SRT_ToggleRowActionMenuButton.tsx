@@ -1,5 +1,7 @@
 import { type MouseEvent, useState } from 'react';
+import { cva } from 'class-variance-authority';
 import {
+  type ButtonProps,
   type SRT_Cell,
   type SRT_Row,
   type SRT_RowData,
@@ -8,16 +10,20 @@ import {
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { SRT_Tooltip } from '../SRT_Tooltip';
+import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';
 
-export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData> {
+const commonIconButtonStyles = cva(
+  'ml-2.5 h-8 w-8 opacity-50 transition-opacity duration-150 hover:opacity-100',
+);
+
+export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData>
+  extends ButtonProps {
   cell: SRT_Cell<TData>;
   row: SRT_Row<TData>;
   staticRowIndex?: number;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
@@ -25,7 +31,7 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
   row,
   staticRowIndex,
   table,
-  className,
+  ...rest
 }: SRT_ToggleRowActionMenuButtonProps<TData>) => {
   const {
     getState,
@@ -64,11 +70,6 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
     setAnchorEl(null);
   };
 
-  const commonButtonClass = cn(
-    'ml-2.5 h-8 w-8 opacity-50 transition-opacity hover:opacity-100',
-    className,
-  );
-
   return (
     <>
       {renderRowActions && !showEditActionButtons ? (
@@ -78,10 +79,13 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
       ) : !renderRowActionMenuItems &&
         parseFromValuesOrFunc(enableEditing, row) &&
         ['modal', 'row'].includes(editDisplayMode!) ? (
-        <SRT_Tooltip title={localization.edit} side="right">
+        <SRT_Tooltip side="right" title={localization.edit}>
           <Button
+            {...rest}
             aria-label={localization.edit}
-            className={commonButtonClass}
+            className={cn(
+              commonIconButtonStyles({ className: rest.className }),
+            )}
             onClick={handleStartEditMode}
             size="icon"
             variant="ghost"
@@ -93,12 +97,16 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
           row,
           staticRowIndex,
           table,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any)?.length ? (
         <>
           <SRT_Tooltip title={localization.rowActions}>
             <Button
+              {...rest}
               aria-label={localization.rowActions}
-              className={commonButtonClass}
+              className={cn(
+                commonIconButtonStyles({ className: rest.className }),
+              )}
               onClick={handleOpenRowActionMenu}
               size="icon"
               variant="ghost"
@@ -106,16 +114,14 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
               <MoreHorizIcon className="h-4 w-4" />
             </Button>
           </SRT_Tooltip>
-          {anchorEl && (
-            <SRT_RowActionMenu
-              anchorEl={anchorEl}
-              handleEdit={handleStartEditMode}
-              row={row}
-              setAnchorEl={setAnchorEl}
-              staticRowIndex={staticRowIndex}
-              table={table}
-            />
-          )}
+          <SRT_RowActionMenu
+            anchorEl={anchorEl}
+            handleEdit={handleStartEditMode}
+            row={row}
+            setAnchorEl={setAnchorEl}
+            staticRowIndex={staticRowIndex}
+            table={table}
+          />
         </>
       ) : null}
     </>

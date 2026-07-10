@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { type ComponentPropsWithRef, useMemo } from 'react';
+import { cva } from 'class-variance-authority';
 import {
   type SRT_FilterOption,
   type SRT_Header,
@@ -12,7 +13,18 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
+
+const filterOptionMenuContentVariants = cva('', {
+  variants: {
+    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
+    dense: {
+      false: '',
+      true: '[&>*]:py-1',
+    },
+  },
+});
 
 export const srtFilterOptions = (
   localization: SRT_Localization,
@@ -108,22 +120,26 @@ const emptyModes = ['empty', 'notEmpty'];
 const arrModes = ['arrIncludesSome', 'arrIncludesAll', 'arrIncludes'];
 const rangeVariants = ['range-slider', 'date-range', 'datetime-range', 'range'];
 
-export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData> {
+export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData>
+  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header?: SRT_Header<TData>;
   onSelect?: () => void;
-  setAnchorEl: (el: HTMLElement | null) => void;
+  setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilterValue?: (filterValue: any) => void;
   table: SRT_TableInstance<TData>;
 }
 
 export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
   anchorEl,
+  className,
   header,
   onSelect,
   setAnchorEl,
   setFilterValue,
   table,
+  ...rest
 }: SRT_FilterOptionMenuProps<TData>) => {
   const {
     getState,
@@ -131,13 +147,14 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
       columnFilterModeOptions,
       globalFilterModeOptions,
       localization,
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnFilterModeMenuItems,
       renderGlobalFilterModeMenuItems,
     },
     setColumnFilterFns,
     setGlobalFilterFn,
   } = table;
-  const { globalFilterFn } = getState();
+  const { density, globalFilterFn } = getState();
   const { column } = header ?? {};
   const { columnDef } = column ?? {};
   const currentFilterValue = column?.getFilterValue();
@@ -265,22 +282,26 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
           }}
         />
       </DropdownMenuTrigger>
+      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
-        align="start"
+        align="center"
         side="right"
         onClick={(event) => event.stopPropagation()}
+        {...rest}
+        className={cn(
+          filterOptionMenuContentVariants({ dense: density === 'compact' }),
+          className,
+        )}
       >
         {(header && column && columnDef
           ? (columnDef.renderColumnFilterModeMenuItems?.({
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              column: column as any,
+              column,
               internalFilterOptions,
               onSelectFilterMode: handleSelectFilterMode,
               table,
             }) ??
             renderColumnFilterModeMenuItems?.({
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              column: column as any,
+              column,
               internalFilterOptions,
               onSelectFilterMode: handleSelectFilterMode,
               table,
@@ -293,16 +314,15 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
           internalFilterOptions.map(
             ({ divider, label, option, symbol }, index) => (
               <SRT_ActionMenuItem
+                className={option === filterOption ? 'bg-accent' : undefined}
                 divider={divider}
-                icon={symbol}
+                icon={<span>{symbol}</span>}
                 key={index}
                 label={label}
                 onClick={() =>
                   handleSelectFilterMode(option as SRT_FilterOption)
                 }
-                selected={option === filterOption}
                 table={table}
-                value={option}
               />
             ),
           )}

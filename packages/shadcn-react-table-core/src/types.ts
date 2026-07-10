@@ -46,10 +46,13 @@ import { SRT_SortingFns } from './fns/sortingFns';
 import { type SRT_Icons } from './icons';
 import { type LucideProps } from 'lucide-react';
 
+export type { SRT_Icons };
+
 export type {
   ColumnDef,
   Header,
   HeaderGroup,
+  RowPinningPosition,
   Table,
 } from '@tanstack/react-table';
 
@@ -315,62 +318,100 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
    * @default gets set to the same value as `accessorKey` by default
    */
   id?: LiteralUnion<string & keyof TData>;
-  srtColumnActionsButtonProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtColumnDragHandleProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtCopyButtonProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtFilterAutocompleteProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtFilterCheckboxProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtFilterDatePickerProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtFilterDateTimePickerProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtFilterSliderProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtFilterTimePickerProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtTableBodyCellProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtEditTextFieldProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtFilterTextFieldProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtTableFooterCellProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtTableHeadCellProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
+  srtColumnActionsButtonProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtColumnDragHandleProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtCopyButtonProps?:
+    | ((props: {
+        cell: SRT_Cell<TData>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtFilterAutocompleteProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterCheckboxProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtFilterDatePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterDateTimePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterSliderProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => DivProps)
+    | DivProps;
+  srtFilterTimePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtTableBodyCellProps?:
+    | ((props: {
+        cell: SRT_Cell<TData, TValue>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtEditTextFieldProps?:
+    | ((props: {
+        cell: SRT_Cell<TData, TValue>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterTextFieldProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtTableFooterCellProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtTableHeadCellProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TableCellProps)
+    | TableCellProps;
   PlaceholderCell?: (props: {
     cell: SRT_Cell<TData, TValue>;
     column: SRT_Column<TData, TValue>;
@@ -566,16 +607,6 @@ export interface SRT_Localization {
   unpinAll: string;
 }
 
-export interface SRT_Theme {
-  baseBackgroundColor: string;
-  cellNavigationOutlineColor: string;
-  draggingBorderColor: string;
-  matchHighlightColor: string;
-  menuBackgroundColor: string;
-  pinnedRowBackgroundColor: string;
-  selectedRowBackgroundColor: string;
-}
-
 export interface SRT_RowModel<TData extends SRT_RowData> {
   flatRows: SRT_Row<TData>[];
   rows: SRT_Row<TData>[];
@@ -663,11 +694,10 @@ export type SRT_TableInstance<TData extends SRT_RowData> = Omit<
 
 export type SRT_DefinedTableOptions<TData extends SRT_RowData> = Omit<
   SRT_TableOptions<TData>,
-  'icons' | 'localization' | 'mrtTheme'
+  'icons' | 'localization'
 > & {
   icons: SRT_Icons;
   localization: SRT_Localization;
-  mrtTheme: Required<SRT_Theme>;
 };
 
 export type SRT_StatefulTableOptions<TData extends SRT_RowData> =
@@ -824,170 +854,237 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
    * @link https://www.material-react-table.com/docs/guides/memoize-components
    */
   memoMode?: 'cells' | 'rows' | 'table-body';
-  srtBottomToolbarProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
+  srtBottomToolbarProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
   srtCircularProgressProps?:
     | ((props: {
         table: SRT_TableInstance<TData>;
       }) => SRT_CircularProgressProps & { Component?: ReactNode })
     | (SRT_CircularProgressProps & { Component?: ReactNode });
-  srtColumnActionsButtonProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtColumnDragHandleProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtCopyButtonProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtCreateRowModalProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
-  srtDetailPanelProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
-  srtEditRowDialogProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
-  srtExpandAllButtonProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtExpandButtonProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
-  srtFilterAutocompleteProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtFilterCheckboxProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtFilterDatePickerProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtFilterDateTimePickerProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtFilterSliderProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtFilterTimePickerProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
-  srtRowDragHandleProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
-  srtSelectAllCheckboxProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtSelectCheckboxProps?: SRT_HTMLProps<
-    HTMLButtonElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
-  srtSkeletonProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtToolbarAlertBannerProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtToolbarAlertBannerChipProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtToolbarDropZoneProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtEditTextFieldProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtFilterTextFieldProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_FilterTextFieldHTMLPropsContext<TData>
-  >;
+  srtColumnActionsButtonProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtColumnDragHandleProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtCopyButtonProps?:
+    | ((props: {
+        cell: SRT_Cell<TData>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtCreateRowModalProps?:
+    | ((props: {
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => DivProps)
+    | DivProps;
+  srtDetailPanelProps?:
+    | ((props: {
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtEditRowDialogProps?:
+    | ((props: {
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => DivProps)
+    | DivProps;
+  srtExpandAllButtonProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => ButtonProps)
+    | ButtonProps;
+  srtExpandButtonProps?:
+    | ((props: {
+        row: SRT_Row<TData>;
+        staticRowIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtFilterAutocompleteProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterCheckboxProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtFilterDatePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterDateTimePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterSliderProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => DivProps)
+    | DivProps;
+  srtFilterTimePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtRowDragHandleProps?:
+    | ((props: {
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtSelectAllCheckboxProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => ButtonProps)
+    | ButtonProps;
+  srtSelectCheckboxProps?:
+    | ((props: {
+        row: SRT_Row<TData>;
+        staticRowIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtSkeletonProps?:
+    | ((props: {
+        cell: SRT_Cell<TData>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => DivProps)
+    | DivProps;
+  srtToolbarAlertBannerProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
+  srtToolbarAlertBannerChipProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
+  srtEditTextFieldProps?:
+    | ((props: {
+        cell: SRT_Cell<TData>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterTextFieldProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
   srtLinearProgressProps?:
     | ((props: {
         isTopToolbar: boolean;
         table: SRT_TableInstance<TData>;
       }) => SRT_LinearProgressProps)
     | SRT_LinearProgressProps;
-  srtPaginationProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtSearchTextFieldProps?: SRT_HTMLProps<
-    HTMLInputElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtTableBodyCellProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_CellHTMLPropsContext<TData>
-  >;
-  srtTableBodyProps?: SRT_HTMLProps<
-    HTMLTableSectionElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtTableBodyRowProps?: SRT_HTMLProps<
-    HTMLTableRowElement,
-    SRT_RowHTMLPropsContext<TData>
-  >;
+  srtPaginationProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => Partial<
+        DivProps & {
+          SelectProps?: Partial<React.ComponentPropsWithRef<'select'>>;
+          disabled?: boolean;
+          rowsPerPageOptions?: { label: string; value: number }[] | number[];
+          showFirstButton?: boolean;
+          showLastButton?: boolean;
+          showRowsPerPage?: boolean;
+        }
+      >)
+    | Partial<
+        DivProps & {
+          SelectProps?: Partial<React.ComponentPropsWithRef<'select'>>;
+          disabled?: boolean;
+          rowsPerPageOptions?: { label: string; value: number }[] | number[];
+          showFirstButton?: boolean;
+          showLastButton?: boolean;
+          showRowsPerPage?: boolean;
+        }
+      >;
+  srtSearchTextFieldProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => InputProps)
+    | InputProps;
+  srtTableBodyCellProps?:
+    | ((props: {
+        cell: SRT_Cell<TData>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtTableBodyProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => TableBodyProps)
+    | TableBodyProps;
+  srtTableBodyRowProps?:
+    | ((props: {
+        isDetailPanel?: boolean;
+        row: SRT_Row<TData>;
+        staticRowIndex: number;
+        table: SRT_TableInstance<TData>;
+      }) => TableRowProps)
+    | TableRowProps;
   srtTableContainerProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
     | DivProps;
-  srtTableFooterCellProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtTableFooterProps?: SRT_HTMLProps<
-    HTMLTableSectionElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtTableFooterRowProps?: SRT_HTMLProps<
-    HTMLTableRowElement,
-    SRT_FooterRowHTMLPropsContext<TData>
-  >;
-  srtTableHeadCellProps?: SRT_HTMLProps<
-    HTMLTableCellElement,
-    SRT_ColumnHTMLPropsContext<TData>
-  >;
-  srtTableHeadProps?: SRT_HTMLProps<
-    HTMLTableSectionElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
-  srtTableHeadRowProps?: SRT_HTMLProps<
-    HTMLTableRowElement,
-    SRT_HeadRowHTMLPropsContext<TData>
-  >;
+  srtTableFooterCellProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtTableFooterProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => TableSectionProps)
+    | TableSectionProps;
+  srtTableFooterRowProps?:
+    | ((props: {
+        footerGroup: SRT_HeaderGroup<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TableRowProps)
+    | TableRowProps;
+  srtTableHeadCellProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TableCellProps)
+    | TableCellProps;
+  srtTableHeadProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => TableSectionProps)
+    | TableSectionProps;
+  srtTableHeadRowProps?:
+    | ((props: {
+        headerGroup: SRT_HeaderGroup<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TableRowProps)
+    | TableRowProps;
   srtTableLayoutProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
     | DivProps;
   srtTableProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => TableProps)
     | TableProps;
-  srtTopToolbarProps?: SRT_HTMLProps<
-    HTMLDivElement,
-    SRT_TableHTMLPropsContext<TData>
-  >;
+  srtTopToolbarProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
   onActionCellChange?: OnChangeFn<SRT_Cell<TData> | null>;
   onColumnFilterFnsChange?: OnChangeFn<{ [key: string]: SRT_FilterOption }>;
   onCreatingRowCancel?: (props: {
@@ -1167,53 +1264,19 @@ export type DivProps = React.ComponentPropsWithRef<'div'>;
 
 export type TableProps = React.ComponentPropsWithRef<'table'>;
 
-export type SRT_HTMLPropsValue<TElement> = Omit<
-  HTMLAttributes<TElement>,
-  'color' | 'size'
->;
+export type TableSectionProps = React.ComponentPropsWithRef<'thead'>;
 
-export type SRT_HTMLProps<TElement, TContext> =
-  | SRT_HTMLPropsValue<TElement>
-  | ((context: TContext) => SRT_HTMLPropsValue<TElement> | undefined)
-  | undefined;
+export type TableRowProps = React.ComponentPropsWithRef<'tr'>;
 
-export type SRT_CellHTMLPropsContext<TData extends SRT_RowData> = {
-  cell: SRT_Cell<TData>;
-  column: SRT_Column<TData>;
-  row: SRT_Row<TData>;
-  table: SRT_TableInstance<TData>;
-};
+export type TableBodyProps = React.ComponentPropsWithRef<'tbody'>;
 
-export type SRT_ColumnHTMLPropsContext<TData extends SRT_RowData> = {
-  column: SRT_Column<TData>;
-  table: SRT_TableInstance<TData>;
-};
+export type TableCellProps = React.ComponentPropsWithRef<'th'>;
 
-export type SRT_RowHTMLPropsContext<TData extends SRT_RowData> = {
-  row: SRT_Row<TData>;
-  staticRowIndex?: number;
-  table: SRT_TableInstance<TData>;
-};
+export type TdProps = React.ComponentPropsWithRef<'td'>;
 
-export type SRT_HeadRowHTMLPropsContext<TData extends SRT_RowData> = {
-  headerGroup: SRT_HeaderGroup<TData>;
-  table: SRT_TableInstance<TData>;
-};
+export type ButtonProps = React.ComponentPropsWithRef<'button'>;
 
-export type SRT_FooterRowHTMLPropsContext<TData extends SRT_RowData> = {
-  footerGroup: SRT_HeaderGroup<TData>;
-  table: SRT_TableInstance<TData>;
-};
-
-export type SRT_TableHTMLPropsContext<TData extends SRT_RowData> = {
-  table: SRT_TableInstance<TData>;
-};
-
-export type SRT_FilterTextFieldHTMLPropsContext<TData extends SRT_RowData> = {
-  column: SRT_Column<TData>;
-  rangeFilterIndex?: number;
-  table: SRT_TableInstance<TData>;
-};
+export type InputProps = React.ComponentPropsWithRef<'input'>;
 
 export type SRT_LinearProgressProps = {
   wrapper?: HTMLAttributes<HTMLDivElement>;

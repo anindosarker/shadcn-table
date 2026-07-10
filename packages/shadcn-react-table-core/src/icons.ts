@@ -33,9 +33,8 @@ import {
   Rows3,
   Rows4,
 } from 'lucide-react';
-import { type ComponentType } from 'react';
 
-export const SRT_Default_Icons: Record<string, ComponentType<any>> = {
+export const SRT_Default_Icons = {
   ArrowDownwardIcon: ArrowDown,
   ArrowRightIcon: ArrowRight,
   CancelIcon: XCircle,

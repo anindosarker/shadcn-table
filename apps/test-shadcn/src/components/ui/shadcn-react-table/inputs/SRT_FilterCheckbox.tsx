@@ -1,64 +1,74 @@
-import { type ComponentProps, type MouseEvent } from 'react';
+import { type MouseEvent } from 'react';
+import { cva } from 'class-variance-authority';
 import {
-  mergeSRT_HtmlProps,
-  parseSRT_HtmlProps,
+  type ButtonProps,
+  parseFromValuesOrFunc,
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
+// Note: MRT sizes the Checkbox via `size={density === 'compact' ? 'small' :
+// 'medium'}`, but that sets the padded MUI hit area (2.5rem here); the visible
+// glyph is ~18px. The radix Checkbox Root IS the visible box, so the
+// density-driven size prop is dropped and it maps to the fixed June
+// visible-box size (size-4).
+const filterCheckboxVariants = cva('size-4');
+
 export interface SRT_FilterCheckboxProps<TData extends SRT_RowData>
-  extends Omit<ComponentProps<typeof Checkbox>, 'checked' | 'onCheckedChange'> {
+  extends ButtonProps {
   column: SRT_Column<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
   column,
   table,
-  className,
   ...rest
 }: SRT_FilterCheckboxProps<TData>) => {
   const {
-    getState,
     options: { localization, srtFilterCheckboxProps },
   } = table;
-  const { density } = getState();
   const { columnDef } = column;
 
-  const slotProps = mergeSRT_HtmlProps(
-    parseSRT_HtmlProps(srtFilterCheckboxProps, { column, table }),
-    parseSRT_HtmlProps(columnDef.srtFilterCheckboxProps, { column, table }),
-  );
-
-  const filterValue = column.getFilterValue();
+  const checkboxProps = {
+    ...parseFromValuesOrFunc(srtFilterCheckboxProps, {
+      column,
+      table,
+    }),
+    ...parseFromValuesOrFunc(columnDef.srtFilterCheckboxProps, {
+      column,
+      table,
+    }),
+    ...rest,
+  };
 
   const filterLabel = localization.filterByColumn?.replace(
     '{column}',
     columnDef.header,
   );
 
-  const checkedState: boolean | 'indeterminate' =
+  const filterValue = column.getFilterValue();
+
+  // MRT's separate `checked` (=== 'true') + `indeterminate` (=== undefined)
+  // collapse into radix's single tri-state `checked` prop.
+  const checked: boolean | 'indeterminate' =
     filterValue === undefined ? 'indeterminate' : filterValue === 'true';
 
-  const tooltipTitle = (slotProps?.title as string) ?? filterLabel;
-
   return (
-    <SRT_Tooltip title={tooltipTitle} asChild>
-      <div
-        className={cn(
-          'mt-[-4px] flex items-center gap-2 font-normal text-muted-foreground',
-          className,
-        )}
-      >
+    <SRT_Tooltip title={checkboxProps?.title ?? filterLabel} asChild>
+      {/* MUI FormControlLabel → native <label> wrapping the control + text so
+          clicking the text still toggles the checkbox. */}
+      <label className="mt-[-4px] flex items-center gap-2 font-normal text-muted-foreground text-sm">
         <Checkbox
-          checked={checkedState}
-          {...slotProps}
+          checked={checked}
+          // color={filterValue === undefined ? 'default' : 'primary'}
+          // Note: MUI `color` dropped — radix checked/indeterminate state
+          // styling already differentiates unset vs. active filter.
+          {...checkboxProps}
           onCheckedChange={() => {
             column.setFilterValue(
               filterValue === undefined
@@ -68,20 +78,15 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
                   : undefined,
             );
           }}
-          onClick={(e: MouseEvent<HTMLButtonElement>) => {
-            e.stopPropagation();
-            slotProps?.onClick?.(e);
+          onClick={(event: MouseEvent<HTMLButtonElement>) => {
+            event.stopPropagation();
+            checkboxProps?.onClick?.(event);
           }}
-          className={cn(
-            density === 'compact' ? 'size-4' : 'size-5',
-            slotProps?.className,
-          )}
-          {...rest}
+          className={cn(filterCheckboxVariants(), checkboxProps?.className)}
+          title={undefined}
         />
-        <Label className="cursor-pointer font-normal text-muted-foreground">
-          {tooltipTitle}
-        </Label>
-      </div>
+        {checkboxProps.title ?? filterLabel}
+      </label>
     </SRT_Tooltip>
   );
 };

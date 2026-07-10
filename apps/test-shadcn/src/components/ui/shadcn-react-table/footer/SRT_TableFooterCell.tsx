@@ -1,54 +1,54 @@
-import { type CSSProperties } from 'react';
+import { type CSSProperties, type KeyboardEvent } from 'react';
 import {
-  mergeSRT_HtmlProps,
-  parseFromValuesOrFunc,
-  parseSRT_HtmlProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
+  type TdProps,
+  cellKeyboardShortcuts,
+  getSRTCellWidthStyles,
+  getSRTPinnedCellStyles,
+  parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
+// import { useTheme } from '@mui/material/styles';
+// Note: useTheme/Theme dropped project-wide — logical CSS + shadcn tokens replace
+// MUI's manual `theme.direction === 'rtl'` alignment branch here.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { getSRT_CommonCellStyles } from '../style.utils';
 
-export interface SRT_TableFooterCellProps<TData extends SRT_RowData> {
+export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
+  extends TdProps {
   footer: SRT_Header<TData>;
   staticColumnIndex?: number;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
+// Base folds getCommonMRTCellStyles' static pieces (backgroundColor inherit →
+// bg-inherit; MRT's backgroundImage:inherit is moot here and intentionally
+// dropped), position relative, verticalAlign top, fontWeight bold, and the
+// focus-visible cell-navigation outline (cellNavigationOutlineColor → ring
+// token) since footer cells are keyboard-focusable. Density paddings / opacity
+// / zIndex / layout are runtime-conditional in cn().
 const footerCellVariants = cva(
-  'text-left align-top font-bold text-muted-foreground',
-  {
-    variants: {
-      density: {
-        compact: 'p-2',
-        comfortable: 'p-4',
-        spacious: 'p-6',
-      },
-    },
-    defaultVariants: {
-      density: 'comfortable',
-    },
-  },
+  'relative bg-inherit font-bold align-top focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
 );
 
 export const SRT_TableFooterCell = <TData extends SRT_RowData>({
   footer,
   staticColumnIndex,
   table,
-  className,
+  ...rest
 }: SRT_TableFooterCellProps<TData>) => {
   const {
     getState,
     options: {
-      columnResizeDirection,
       enableColumnPinning,
+      enableColumnVirtualization,
+      enableKeyboardShortcuts,
+      layoutMode,
       srtTableFooterCellProps,
     },
   } = table;
-  const { density } = getState();
+  const { density, draggingColumn, hoveredColumn } = getState();
   const { column } = footer;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -58,73 +58,81 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     columnDef.columnDefType !== 'group' &&
     column.getIsPinned();
 
-  const align =
-    columnDefType === 'group'
-      ? 'center'
-      : columnResizeDirection === 'rtl'
-        ? 'right'
-        : 'left';
+  const tableCellProps = {
+    ...parseFromValuesOrFunc(srtTableFooterCellProps, { column, table }),
+    ...parseFromValuesOrFunc(columnDef.srtTableFooterCellProps, {
+      column,
+      table,
+    }),
+    ...rest,
+  };
 
-  const pinnedStyle: CSSProperties = isColumnPinned
-    ? {
-        position: 'sticky',
-        left:
-          isColumnPinned === 'left'
-            ? `${column.getStart('left')}px`
-            : undefined,
-        right:
-          isColumnPinned === 'right'
-            ? `${column.getAfter('right')}px`
-            : undefined,
-        zIndex: 1,
-      }
-    : {};
+  const handleKeyDown = (event: KeyboardEvent<HTMLTableCellElement>) => {
+    tableCellProps?.onKeyDown?.(event);
+    cellKeyboardShortcuts({
+      event,
+      cellValue: footer.column.columnDef.footer,
+      table,
+    });
+  };
 
-  const tableFooterCellProps = parseSRT_HtmlProps(srtTableFooterCellProps, {
-    column,
-    table,
-  });
-  const columnFooterCellProps = parseSRT_HtmlProps(
-    columnDef.srtTableFooterCellProps,
-    { column, table },
-  );
-  const userFooterCellProps = mergeSRT_HtmlProps(
-    tableFooterCellProps,
-    columnFooterCellProps,
-  );
-  const mergedFooterCellProps = mergeSRT_HtmlProps(
-    {
-      style: {
-        textAlign: align,
-        ...getSRT_CommonCellStyles({ column, table }),
-        ...pinnedStyle,
-      } as CSSProperties,
-    },
-    userFooterCellProps,
-  );
+  const isDraggingOrHovered =
+    draggingColumn?.id === column.id || hoveredColumn?.id === column.id;
 
   return (
-    <th
+    // MUI `variant="footer"` dropped — no native <td> analogue; the footer's
+    // visual treatment lives in the classes below.
+    <td
       colSpan={footer.colSpan}
       data-index={staticColumnIndex}
       data-pinned={!!isColumnPinned || undefined}
-      {...mergedFooterCellProps}
+      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+      {...tableCellProps}
       className={cn(
-        footerCellVariants({ density }),
-        isColumnPinned && 'bg-muted/95',
-        className,
-        mergedFooterCellProps?.className,
+        footerCellVariants(),
+        // align dropped → logical text-align; group also centers content.
+        // Note: MRT's `theme.direction === 'rtl' ? 'right' : 'left'` branch is
+        // replaced by logical `text-start`, which handles rtl without a theme.
+        columnDefType === 'group' ? 'text-center justify-center' : 'text-start',
+        layoutMode?.startsWith('grid') && 'flex',
+        // density paddings — MRT's exact rem values (0.5/1/1.5rem).
+        density === 'compact'
+          ? 'p-2'
+          : density === 'comfortable'
+            ? 'p-4'
+            : 'p-6',
+        isDraggingOrHovered && 'opacity-50',
+        !enableColumnVirtualization &&
+          'transition-[padding] duration-150 ease-in-out',
+        column.getIsResizing() || draggingColumn?.id === column.id
+          ? 'z-[2]'
+          : columnDefType !== 'group' && isColumnPinned
+            ? 'z-[1]'
+            : 'z-0',
+        // Pinned td owns its bg (June deviation) — spread after opacity so its
+        // 0.97 wins, matching getCommonMRTCellStyles' pinnedStyles order.
+        isColumnPinned && 'bg-background opacity-[0.97]',
+        tableCellProps?.className,
       )}
+      style={
+        {
+          ...getSRTCellWidthStyles({ column, header: footer, table }),
+          ...(isColumnPinned ? getSRTPinnedCellStyles({ column, table }) : {}),
+          ...tableCellProps?.style,
+        } as CSSProperties
+      }
+      onKeyDown={handleKeyDown}
     >
-      {footer.isPlaceholder
-        ? null
-        : (parseFromValuesOrFunc(columnDef.Footer, {
-            column,
-            footer,
-            table,
-          }) ??
-          columnDef.footer ??
-          null)}
-    </th>
+      {tableCellProps.children ??
+        (footer.isPlaceholder
+          ? null
+          : (parseFromValuesOrFunc(columnDef.Footer, {
+              column,
+              footer,
+              table,
+            }) ??
+            columnDef.footer ??
+            null))}
+    </td>
   );
 };

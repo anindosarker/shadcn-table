@@ -1,31 +1,46 @@
 import {
-  parseSRT_HtmlProps,
+  parseFromValuesOrFunc,
   type SRT_ColumnVirtualizer,
   type SRT_RowData,
   type SRT_TableInstance,
+  type TableSectionProps,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { SRT_TableFooterRow } from './SRT_TableFooterRow';
 
-export interface SRT_TableFooterProps<TData extends SRT_RowData> {
+export interface SRT_TableFooterProps<TData extends SRT_RowData>
+  extends TableSectionProps {
   columnVirtualizer?: SRT_ColumnVirtualizer;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+const tableFooterVariants = cva('', {
+  variants: {
+    layout: { grid: 'grid', semantic: '' },
+    sticky: {
+      true: 'bottom-0 sticky z-[1] opacity-[0.97] outline outline-1 outline-border',
+      false: 'relative',
+    },
+  },
+});
 
 export const SRT_TableFooter = <TData extends SRT_RowData>({
   columnVirtualizer,
   table,
-  className,
+  ...rest
 }: SRT_TableFooterProps<TData>) => {
   const {
     getState,
-    options: { enableStickyFooter, srtTableFooterProps },
+    options: { enableStickyFooter, layoutMode, srtTableFooterProps },
     refs: { tableFooterRef },
   } = table;
   const { isFullScreen } = getState();
 
-  const footerProps = parseSRT_HtmlProps(srtTableFooterProps, { table });
+  const tableFooterProps = {
+    ...parseFromValuesOrFunc(srtTableFooterProps, { table }),
+    ...rest,
+  };
 
   const stickFooter =
     (isFullScreen || enableStickyFooter) && enableStickyFooter !== false;
@@ -48,20 +63,26 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
 
   return (
     <tfoot
-      ref={tableFooterRef}
-      {...footerProps}
+      {...tableFooterProps}
+      ref={(ref: HTMLTableSectionElement) => {
+        tableFooterRef.current = ref;
+        if (tableFooterProps?.ref) {
+          //@ts-expect-error ref can be either RefCallback or RefObject
+          tableFooterProps.ref.current = ref;
+        }
+      }}
       className={cn(
-        'relative border-t',
-        stickFooter && 'sticky bottom-0 z-[1] opacity-97 bg-background',
-        className,
-        footerProps?.className,
+        tableFooterVariants({
+          layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+          sticky: !!stickFooter,
+        }),
+        tableFooterProps.className,
       )}
     >
       {footerGroups.map((footerGroup) => (
         <SRT_TableFooterRow
           columnVirtualizer={columnVirtualizer}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          footerGroup={footerGroup as any}
+          footerGroup={footerGroup}
           key={footerGroup.id}
           table={table}
         />

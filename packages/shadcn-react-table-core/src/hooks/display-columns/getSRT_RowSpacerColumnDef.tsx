@@ -6,6 +6,15 @@ import {
 } from '../../types';
 import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils';
 
+const blankColProps = {
+  children: null,
+  style: {
+    minWidth: 0,
+    padding: 0,
+    width: 0,
+  },
+};
+
 export const getSRT_RowSpacerColumnDef = <TData extends SRT_RowData>(
   tableOptions: SRT_StatefulTableOptions<TData>,
 ): SRT_ColumnDef<TData> => {
@@ -17,5 +26,8 @@ export const getSRT_RowSpacerColumnDef = <TData extends SRT_RowData>(
     }),
     grow: true,
     ...SRT_DefaultDisplayColumn,
+    srtTableBodyCellProps: blankColProps,
+    srtTableFooterCellProps: blankColProps,
+    srtTableHeadCellProps: blankColProps,
   };
 };

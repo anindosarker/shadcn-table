@@ -3,39 +3,44 @@ import {
   type ComponentProps,
   type FocusEvent,
   type KeyboardEvent,
+  type MouseEvent,
   useState,
 } from 'react';
 import {
   getValueAndLabel,
-  mergeSRT_HtmlProps,
+  type InputProps,
   parseFromValuesOrFunc,
-  parseSRT_HtmlProps,
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+
+const editCellTextFieldVariants = cva(
+  cn(
+    'h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30',
+    'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
+    'aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40',
+  ),
+);
+
+const editCellSelectVariants = cva(
+  cn(
+    'h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30',
+    'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
+  ),
+);
 
 export interface SRT_EditCellTextFieldProps<TData extends SRT_RowData>
-  extends Omit<ComponentProps<typeof Input>, 'onChange'> {
+  extends InputProps {
   cell: SRT_Cell<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
 
 export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   cell,
   table,
-  className,
   ...rest
 }: SRT_EditCellTextFieldProps<TData>) => {
   const {
@@ -53,16 +58,6 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;
-
-  const slotProps = mergeSRT_HtmlProps(
-    parseSRT_HtmlProps(srtEditTextFieldProps, { cell, column, row, table }),
-    parseSRT_HtmlProps(columnDef.srtEditTextFieldProps, {
-      cell,
-      column,
-      row,
-      table,
-    }),
-  );
   const { creatingRow, editingRow } = getState();
   const { editSelectOptions, editVariant } = columnDef;
 
@@ -70,6 +65,23 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   const isEditing = editingRow?.id === row.id;
 
   const [value, setValue] = useState(() => cell.getValue<string>());
+  const [completesComposition, setCompletesComposition] = useState(true);
+
+  const textFieldProps: InputProps = {
+    ...parseFromValuesOrFunc(srtEditTextFieldProps, {
+      cell,
+      column,
+      row,
+      table,
+    }),
+    ...parseFromValuesOrFunc(columnDef.srtEditTextFieldProps, {
+      cell,
+      column,
+      row,
+      table,
+    }),
+    ...rest,
+  };
 
   const selectOptions = parseFromValuesOrFunc(editSelectOptions, {
     cell,
@@ -78,17 +90,12 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     table,
   });
 
+  // Note: MRT also OR-ed `textFieldProps?.select` (a MUI TextField-only prop);
+  // no native <input> analogue exists, so that clause is dropped.
   const isSelectEdit = editVariant === 'select';
 
-  const isModalOrCustom = ['custom', 'modal'].includes(
-    (isCreating ? createDisplayMode : editDisplayMode) as string,
-  );
-
-  const disabled =
-    parseFromValuesOrFunc(columnDef.enableEditing, row) === false;
-
   const saveInputValueToRowCache = (newValue: string) => {
-    //@ts-expect-error
+    //@ts-expect-error _valuesCache is TanStack-internal
     row._valuesCache[column.id] = newValue;
     if (isCreating) {
       setCreatingRow(row);
@@ -99,91 +106,134 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     }
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    slotProps?.onChange?.(event);
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    textFieldProps.onChange?.(event as ChangeEvent<HTMLInputElement>);
     setValue(event.target.value);
+    if (isSelectEdit) {
+      saveInputValueToRowCache(event.target.value);
+    }
   };
 
-  const handleSelectChange = (newValue: string) => {
-    setValue(newValue);
-    saveInputValueToRowCache(newValue);
-  };
-
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    slotProps?.onBlur?.(event);
-    rest.onBlur?.(event);
+  const handleBlur = (
+    event: FocusEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    textFieldProps.onBlur?.(event as FocusEvent<HTMLInputElement>);
     saveInputValueToRowCache(value);
     setEditingCell(null);
   };
 
-  const handleEnterKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    slotProps?.onKeyDown?.(event);
-    if (event.key === 'Enter' && !event.shiftKey) {
+  const handleEnterKeyDown = (
+    event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    textFieldProps.onKeyDown?.(event as KeyboardEvent<HTMLInputElement>);
+    if (event.key === 'Enter' && !event.shiftKey && completesComposition) {
       editInputRefs.current?.[column.id]?.blur();
     }
+  };
+
+  const handleClick = (
+    event: MouseEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    event.stopPropagation();
+    textFieldProps.onClick?.(event as MouseEvent<HTMLInputElement>);
   };
 
   if (columnDef.Edit) {
     return <>{columnDef.Edit?.({ cell, column, row, table })}</>;
   }
 
-  const label = isModalOrCustom ? columnDef.header : undefined;
+  const isModalOrCustom = ['custom', 'modal'].includes(
+    (isCreating ? createDisplayMode : editDisplayMode) as string,
+  );
+
+  // Note: MRT rendered `label` for modal/custom edit display; SRT_EditRowModal
+  // owns modal field labels, so the label construct is dropped here.
+  // const label = isModalOrCustom ? columnDef.header : undefined;
   const placeholder = !isModalOrCustom ? columnDef.header : undefined;
+
+  const disabled =
+    parseFromValuesOrFunc(columnDef.enableEditing, row) === false;
+
+  // Dropped MUI TextField constructs (no native analogue; styling via cva):
+  //   variant="standard" size="small" margin="none"
+  //   InputProps={{ disableUnderline: editDisplayMode === 'table', sx }}
+  //   SelectProps={{ MenuProps: { disableScrollLock: true } }} (native <select>
+  //     uses the browser popup)
+  //   textFieldProps.inputRef self-assignment (slot-supplied ref is not re-wired)
 
   if (isSelectEdit) {
     return (
-      <div className={cn('flex w-full flex-col gap-1', className)}>
-        {label ? <Label>{label}</Label> : null}
-        <Select
-          disabled={disabled}
-          value={value ?? ''}
-          onValueChange={handleSelectChange}
-        >
-          <SelectTrigger
-            className="w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <SelectValue placeholder={placeholder} />
-          </SelectTrigger>
-          <SelectContent>
-            {selectOptions?.map((option) => {
-              const { label: optLabel, value: optValue } =
-                getValueAndLabel(option);
-              return (
-                <SelectItem key={optValue} value={optValue}>
-                  {optLabel}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </div>
+      <select
+        autoComplete="off"
+        disabled={disabled}
+        name={column.id}
+        // native <select> has no placeholder attr; expressed as a leading option
+        // Note: MRT unwrapped MUI's `inputRef.node` for selects; the native
+        // <select> IS the node, so no unwrap is needed.
+        {...(textFieldProps as ComponentProps<'select'>)}
+        ref={(node) => {
+          if (node && editInputRefs.current) {
+            editInputRefs.current[column.id] =
+              node as unknown as HTMLInputElement;
+          }
+        }}
+        className={cn(editCellSelectVariants(), textFieldProps.className)}
+        // Note: deliberate reorder vs MRT — `value` is placed AFTER the spread
+        // so the controlled value always wins over a slot-supplied `value`
+        // (MRT's before-spread ordering could break the controlled input).
+        value={value ?? ''}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        onClick={handleClick}
+        onCompositionEnd={() => setCompletesComposition(true)}
+        onCompositionStart={() => setCompletesComposition(false)}
+        onKeyDown={handleEnterKeyDown}
+      >
+        {placeholder !== undefined ? (
+          <option disabled hidden value="">
+            {placeholder}
+          </option>
+        ) : null}
+        {textFieldProps.children ??
+          selectOptions?.map((option) => {
+            // MenuItem is a dropped MUI construct; native <option> replaces it.
+            const { label: optionLabel, value: optionValue } =
+              getValueAndLabel(option);
+            return (
+              <option key={optionValue} value={optionValue}>
+                {optionLabel}
+              </option>
+            );
+          })}
+      </select>
     );
   }
 
   return (
-    <div className={cn('flex w-full flex-col gap-1', className)}>
-      {label ? <Label htmlFor={column.id}>{label}</Label> : null}
-      <Input
-        autoComplete="off"
-        disabled={disabled}
-        id={column.id}
-        name={column.id}
-        placeholder={placeholder}
-        {...rest}
-        {...slotProps}
-        ref={(inputRef) => {
-          if (inputRef && editInputRefs.current) {
-            editInputRefs.current[column.id] = inputRef;
-          }
-        }}
-        className={cn(slotProps?.className)}
-        value={value ?? ''}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={handleEnterKeyDown}
-      />
-    </div>
+    <input
+      autoComplete="off"
+      disabled={disabled}
+      name={column.id}
+      placeholder={placeholder}
+      {...textFieldProps}
+      ref={(node) => {
+        if (node && editInputRefs.current) {
+          editInputRefs.current[column.id] = node;
+        }
+      }}
+      className={cn(editCellTextFieldVariants(), textFieldProps.className)}
+      // Note: deliberate reorder vs MRT — `value` is placed AFTER the spread
+      // so the controlled value always wins over a slot-supplied `value`
+      // (MRT's before-spread ordering could break the controlled input).
+      value={value ?? ''}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      onClick={handleClick}
+      onCompositionEnd={() => setCompletesComposition(true)}
+      onCompositionStart={() => setCompletesComposition(false)}
+      onKeyDown={handleEnterKeyDown}
+    />
   );
 };

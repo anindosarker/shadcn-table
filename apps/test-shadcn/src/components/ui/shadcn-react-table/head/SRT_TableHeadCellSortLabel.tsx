@@ -1,45 +1,59 @@
-import { ArrowDownIcon, ArrowUpDownIcon } from 'lucide-react';
+import { cva } from 'class-variance-authority';
 import {
+  type ButtonProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
 
-export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData> {
+export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData>
+  extends ButtonProps {
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+// Base folds MUI ButtonBase reset defaults (transparent bg, no border, pointer)
+// per the "MUI defaults count as spec" convention, plus the mapped sx object.
+const sortLabelVariants = cva(
+  'inline-flex w-[3ch] shrink-0 cursor-pointer appearance-none select-none items-center justify-center border-0 bg-transparent p-0 align-middle outline-none transition-all duration-150',
+  {
+    variants: {
+      sorted: {
+        true: 'opacity-100',
+        false: 'opacity-30',
+      },
+    },
+    defaultVariants: {
+      sorted: false,
+    },
+  },
+);
 
 export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
   header,
   table,
-  className,
+  ...rest
 }: SRT_TableHeadCellSortLabelProps<TData>) => {
   const {
     getState,
-    options: { localization },
+    options: {
+      icons: { ArrowDownwardIcon, SyncAltIcon },
+      localization,
+    },
   } = table;
   const { column } = header;
   const { columnDef } = column;
   const { isLoading, showSkeletons, sorting } = getState();
 
   const isSorted = !!column.getIsSorted();
-  const sortDirection = column.getIsSorted();
 
   const sortTooltip =
     isLoading || showSkeletons
       ? ''
-      : sortDirection
-        ? sortDirection === 'desc'
+      : column.getIsSorted()
+        ? column.getIsSorted() === 'desc'
           ? localization.sortedByColumnDesc.replace(
               '{column}',
               columnDef.header,
@@ -49,49 +63,50 @@ export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
           ? localization.sortByColumnDesc.replace('{column}', columnDef.header)
           : localization.sortByColumnAsc.replace('{column}', columnDef.header);
 
-  const sortIndex = column.getSortIndex();
-  const showBadge = sorting.length > 1;
+  const direction = isSorted
+    ? (column.getIsSorted() as 'asc' | 'desc')
+    : undefined;
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
+    <SRT_Tooltip side="top" title={sortTooltip}>
+      <span className="relative">
+        {/* MUI TableSortLabel `active` — always true in MRT here; no native <button> equivalent. */}
+        <button
+          type="button"
           aria-label={sortTooltip}
           onClick={(e) => {
             e.stopPropagation();
             header.column.getToggleSortingHandler()?.(e);
           }}
+          {...rest}
           className={cn(
-            'relative h-8 w-8 flex-none transition-opacity',
-            isSorted ? 'opacity-100' : 'opacity-30 group-hover:opacity-100',
-            className,
+            sortLabelVariants({ sorted: isSorted, className: rest.className }),
           )}
         >
-          {showBadge && isSorted && (
-            <Badge
-              variant="secondary"
-              className="absolute -right-1 -top-1 h-4 min-w-[1rem] p-0 text-[10px]"
-            >
-              {sortIndex + 1}
-            </Badge>
-          )}
-          {isSorted ? (
-            <ArrowDownIcon
-              className={cn(
-                'h-4 w-4 transition-transform',
-                sortDirection === 'asc' && 'rotate-180',
-              )}
+          {!isSorted ? (
+            <SyncAltIcon
+              className="text-muted-foreground"
+              size={16}
+              style={{
+                transform: 'rotate(-90deg) scaleX(0.9) translateX(-1px)',
+              }}
             />
           ) : (
-            <ArrowUpDownIcon className="h-3.5 w-3.5" />
+            <ArrowDownwardIcon
+              className={cn(
+                'text-muted-foreground transition-transform',
+                direction === 'asc' && 'rotate-180',
+              )}
+              size={16}
+            />
           )}
-        </Button>
-      </TooltipTrigger>
-      {sortTooltip ? (
-        <TooltipContent side="top">{sortTooltip}</TooltipContent>
-      ) : null}
-    </Tooltip>
+        </button>
+        {sorting.length > 1 && column.getSortIndex() >= 0 && (
+          <span className="absolute -right-1.5 -top-1 text-[0.65rem] text-muted-foreground">
+            {column.getSortIndex() + 1}
+          </span>
+        )}
+      </span>
+    </SRT_Tooltip>
   );
 };

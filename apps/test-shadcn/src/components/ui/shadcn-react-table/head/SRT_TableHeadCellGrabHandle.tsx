@@ -1,26 +1,26 @@
 import { type DragEvent, type RefObject } from 'react';
 import {
+  type ButtonProps,
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
-  mergeSRT_HtmlProps,
-  parseSRT_HtmlProps,
+  parseFromValuesOrFunc,
   reorderColumn,
 } from 'shadcn-react-table-core';
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton';
 
-export interface SRT_TableHeadCellGrabHandleProps<TData extends SRT_RowData> {
+export interface SRT_TableHeadCellGrabHandleProps<TData extends SRT_RowData>
+  extends ButtonProps {
   column: SRT_Column<TData>;
   table: SRT_TableInstance<TData>;
   tableHeadCellRef: RefObject<HTMLTableCellElement | null>;
-  className?: string;
 }
 
 export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
   column,
   table,
   tableHeadCellRef,
-  className,
+  ...rest
 }: SRT_TableHeadCellGrabHandleProps<TData>) => {
   const {
     getState,
@@ -33,7 +33,17 @@ export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
   const { columnDef } = column;
   const { columnOrder, draggingColumn, hoveredColumn } = getState();
 
+  const iconButtonProps = {
+    ...parseFromValuesOrFunc(srtColumnDragHandleProps, { column, table }),
+    ...parseFromValuesOrFunc(columnDef.srtColumnDragHandleProps, {
+      column,
+      table,
+    }),
+    ...rest,
+  };
+
   const handleDragStart = (event: DragEvent<HTMLButtonElement>) => {
+    iconButtonProps?.onDragStart?.(event);
     setDraggingColumn(column);
     try {
       event.dataTransfer.setDragImage(
@@ -46,7 +56,8 @@ export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
     }
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (event: DragEvent<HTMLButtonElement>) => {
+    iconButtonProps?.onDragEnd?.(event);
     if (hoveredColumn?.id === 'drop-zone') {
       column.toggleGrouping();
     } else if (
@@ -69,34 +80,12 @@ export const SRT_TableHeadCellGrabHandle = <TData extends SRT_RowData>({
     setHoveredColumn(null);
   };
 
-  const tableDragHandleProps = parseSRT_HtmlProps(srtColumnDragHandleProps, {
-    column,
-    table,
-  });
-  const columnDragHandleProps = parseSRT_HtmlProps(
-    columnDef.srtColumnDragHandleProps,
-    { column, table },
-  );
-  const userDragHandleProps = mergeSRT_HtmlProps(
-    tableDragHandleProps,
-    columnDragHandleProps,
-  );
-
-  const baseDragHandleProps = {
-    className,
-    onDragEnd: handleDragEnd,
-    onDragStart: handleDragStart,
-  };
-  const mergedDragHandleProps = mergeSRT_HtmlProps(
-    baseDragHandleProps,
-    userDragHandleProps,
-  );
-
   return (
     <SRT_GrabHandleButton
-      location="column"
+      {...iconButtonProps}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
       table={table}
-      {...mergedDragHandleProps}
     />
   );
 };

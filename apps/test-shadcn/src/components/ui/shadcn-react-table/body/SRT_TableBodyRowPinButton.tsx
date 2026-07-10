@@ -1,22 +1,32 @@
+import { cva } from 'class-variance-authority';
 import {
+  type ButtonProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
   parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
 import { SRT_RowPinButton } from '../buttons/SRT_RowPinButton';
-import { cn } from '@/lib/utils';
 
-export interface SRT_TableBodyRowPinButtonProps<TData extends SRT_RowData> {
+export interface SRT_TableBodyRowPinButtonProps<TData extends SRT_RowData>
+  extends ButtonProps {
   row: SRT_Row<TData>;
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+const rowPinWrapperVariants = cva('flex', {
+  variants: {
+    density: {
+      compact: 'flex-row',
+      other: 'flex-col',
+    },
+  },
+});
 
 export const SRT_TableBodyRowPinButton = <TData extends SRT_RowData>({
   row,
   table,
-  className,
+  ...rest
 }: SRT_TableBodyRowPinButtonProps<TData>) => {
   const {
     getState,
@@ -32,17 +42,15 @@ export const SRT_TableBodyRowPinButton = <TData extends SRT_RowData>({
   const rowPinButtonProps = {
     row,
     table,
-    className,
+    ...rest,
   };
 
   if (rowPinningDisplayMode === 'top-and-bottom' && !row.getIsPinned()) {
     return (
       <div
-        className={cn(
-          'flex',
-          density === 'compact' ? 'flex-row' : 'flex-col',
-          className,
-        )}
+        className={rowPinWrapperVariants({
+          density: density === 'compact' ? 'compact' : 'other',
+        })}
       >
         <SRT_RowPinButton pinningPosition="top" {...rowPinButtonProps} />
         <SRT_RowPinButton pinningPosition="bottom" {...rowPinButtonProps} />

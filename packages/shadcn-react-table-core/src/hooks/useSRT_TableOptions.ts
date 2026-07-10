@@ -142,6 +142,11 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     [],
   );
 
+  if (!columnResizeDirection) {
+    // Note: theme.direction fallback dropped (no theme in SRT)
+    columnResizeDirection = 'ltr';
+  }
+
   layoutMode =
     layoutMode || (enableColumnResizing ? 'grid-no-grow' : 'semantic');
   if (

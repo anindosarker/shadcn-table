@@ -4,7 +4,6 @@ import type { SRT_TooltipSide } from 'shadcn-react-table-core';
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
@@ -37,18 +36,27 @@ export const SRT_Tooltip = ({
     return <>{children}</>;
   }
 
+  // Note: delayDuration goes directly to the Tooltip (Radix Root) rather than a
+  // wrapping provider — shadcn's Tooltip carries its own inner TooltipProvider
+  // (default delay 0), and Radix resolves delay from the nearest provider, so an
+  // outer provider would be shadowed. The Root's own delayDuration takes precedence.
+  // Note: disableHoverableContent maps MUI's disableInteractive — the tooltip
+  // dismisses when the pointer moves onto its content rather than staying hoverable.
   return (
-    <TooltipProvider delayDuration={delayDuration}>
-      <Tooltip open={open} onOpenChange={onOpenChange}>
-        <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
-        <TooltipContent
-          side={commonSide}
-          sideOffset={sideOffset}
-          className={className}
-        >
-          {title}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip
+      open={open}
+      onOpenChange={onOpenChange}
+      delayDuration={delayDuration}
+      disableHoverableContent
+    >
+      <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
+      <TooltipContent
+        side={commonSide}
+        sideOffset={sideOffset}
+        className={className}
+      >
+        {title}
+      </TooltipContent>
+    </Tooltip>
   );
 };

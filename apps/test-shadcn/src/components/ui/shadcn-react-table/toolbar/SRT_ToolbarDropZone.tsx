@@ -1,23 +1,40 @@
 import { type DragEvent, useEffect } from 'react';
 import {
-  parseSRT_HtmlProps,
+  type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData> {
+export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData>
+  extends DivProps {
   table: SRT_TableInstance<TData>;
-  className?: string;
 }
+
+// Note: base maps MRT's sx (position: absolute, zIndex: 4, display: flex,
+// h/w 100%, box-border, items/justify center, backdrop blur(4px), 2px dashed
+// border + border color info.main → primary token). The `hovered` variant
+// maps alpha(info.main, 0.2/0.1) on hoveredColumn?.id === 'drop-zone'.
+const toolbarDropZoneVariants = cva(
+  'absolute z-[4] box-border flex h-full w-full items-center justify-center border-2 border-dashed border-primary backdrop-blur-sm',
+  {
+    variants: {
+      hovered: {
+        true: 'bg-primary/20',
+        false: 'bg-primary/10',
+      },
+    },
+  },
+);
 
 export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
   table,
-  className,
+  ...rest
 }: SRT_ToolbarDropZoneProps<TData>) => {
   const {
     getState,
-    options: { enableGrouping, localization, srtToolbarDropZoneProps },
+    options: { enableGrouping, localization },
     setHoveredColumn,
     setShowToolbarDropZone,
   } = table;
@@ -25,18 +42,12 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
   const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } =
     getState();
 
-  const dropZoneProps = parseSRT_HtmlProps(srtToolbarDropZoneProps, { table });
-
   const handleDragEnter = () => {
     setHoveredColumn({ id: 'drop-zone' });
   };
 
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
-  };
-
-  const handleDragLeave = () => {
-    setHoveredColumn(null);
   };
 
   useEffect(() => {
@@ -48,34 +59,28 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
           !grouping.includes(draggingColumn.id),
       );
     }
-  }, [
-    enableGrouping,
-    draggingColumn,
-    grouping,
-    setShowToolbarDropZone,
-    table.options.state?.showToolbarDropZone,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableGrouping, draggingColumn, grouping]);
 
+  // Note: MRT wraps the zone in MUI <Fade in={showToolbarDropZone}>; SRT
+  // conditionally renders (unmount) instead — the zone only needs to exist
+  // for drag events while shown (Grow/Collapse precedent).
   if (!showToolbarDropZone) return null;
 
   return (
     <div
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      {...dropZoneProps}
+      {...rest}
       className={cn(
-        'absolute inset-0 z-[4] flex items-center justify-center',
-        'border-2 border-dashed border-blue-500',
-        'bg-blue-50/10 backdrop-blur-sm',
-        'transition-all duration-200',
-        hoveredColumn?.id === 'drop-zone' ? 'bg-blue-50/20' : 'bg-blue-50/10',
-        'animate-in fade-in-0 duration-200',
-        className,
-        dropZoneProps?.className,
+        'Srt-ToolbarDropZone',
+        toolbarDropZoneVariants({
+          hovered: hoveredColumn?.id === 'drop-zone',
+          className: rest.className,
+        }),
       )}
     >
-      <p className="text-sm italic text-blue-600 dark:text-blue-400">
+      <p className="italic">
         {localization.dropToGroupBy.replace(
           '{column}',
           draggingColumn?.columnDef?.header ?? '',
