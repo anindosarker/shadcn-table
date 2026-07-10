@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 import {
   parseCSSVarId,
@@ -7,9 +9,7 @@ import {
   type SRT_TableInstance,
   type TableProps,
 } from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { SRT_TableBody, Memo_SRT_TableBody } from '../body/SRT_TableBody';
+import { Memo_SRT_TableBody, SRT_TableBody } from '../body/SRT_TableBody';
 import { SRT_TableFooter } from '../footer/SRT_TableFooter';
 import { SRT_TableHead } from '../head/SRT_TableHead';
 
@@ -33,6 +33,13 @@ export const SRT_Table = <TData extends SRT_RowData>({
     getState,
     options: {
       columns,
+      /**
+       * MUI `stickyHeader` Table prop dropped (no native `<table>` attr) — sticky th
+        styles live in `SRT_TableHeadCell` (+ thead-level grid-mode sticky in
+        `SRT_TableHead`), derived from `enableStickyHeader || isFullScreen` off
+        `table`, same as MRT_TableHead does.
+      enableStickyHeader,
+       */
       enableTableFooter,
       enableTableHead,
       layoutMode,
@@ -41,6 +48,9 @@ export const SRT_Table = <TData extends SRT_RowData>({
       renderCaption,
     },
   } = table;
+  /**
+   * Stickyheader dropped, so gotta drop isFullScreen from deps too, since it only affects stickyheader.
+   */
   const { columnSizing, columnSizingInfo, columnVisibility } = getState();
 
   const tableProps = {
