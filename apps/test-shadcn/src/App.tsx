@@ -3,10 +3,10 @@ import {
   type SRT_ColumnDef,
   useShadcnReactTable,
 } from 'shadcn-react-table-core';
-import { Button } from './components/ui/button';
 import { SRT_ButtonsDemo } from './components/SRT_ButtonsDemo';
 import { SRT_EditRowModalDemo } from './components/SRT_EditRowModalDemo';
 import { SRT_InputsMenusDemo } from './components/SRT_InputsMenusDemo';
+import { Button } from './components/ui/button';
 import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReactTable';
 import { SRT_HeadBodyFooterDemo } from './demos/SRT_HeadBodyFooterDemo';
 import { SRT_TableContainerDemo } from './demos/SRT_TableContainerDemo';
@@ -249,7 +249,7 @@ function App() {
 
   return (
     <div className="min-h-screen p-6">
-      <div className="mb-6 flex items-center gap-4">
+      <div className="sticky top-0 z-40 -mx-6 mb-6 flex items-center gap-4 py-3 px-6 backdrop-blur-sm">
         <h1 className="text-2xl font-bold">shadcn-react-table Demo</h1>
         <Button onClick={() => setIsDark(!isDark)} variant="outline" size="sm">
           {isDark ? '☀️ Light' : '🌙 Dark'}
