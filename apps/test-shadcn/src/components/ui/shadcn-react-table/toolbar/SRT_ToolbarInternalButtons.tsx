@@ -1,10 +1,10 @@
+import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 import {
   type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
 import { SRT_ShowHideColumnsButton } from '../buttons/SRT_ShowHideColumnsButton';
 import { SRT_ToggleDensePaddingButton } from '../buttons/SRT_ToggleDensePaddingButton';
 import { SRT_ToggleFiltersButton } from '../buttons/SRT_ToggleFiltersButton';
@@ -46,7 +46,9 @@ export const SRT_ToolbarInternalButtons = <TData extends SRT_RowData>({
         toolbarInternalButtonsVariants({ className: rest.className }),
       )}
     >
-      {renderToolbarInternalActions?.({ table }) ?? (
+      {renderToolbarInternalActions?.({
+        table,
+      }) ?? (
         <>
           {enableFilters &&
             enableGlobalFilter &&
