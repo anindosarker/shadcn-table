@@ -41,11 +41,11 @@ export const SRT_BottomToolbar = <TData extends SRT_RowData>({
     getState,
     options: {
       enablePagination,
+      srtBottomToolbarProps,
       positionPagination,
       positionToolbarAlertBanner,
       positionToolbarDropZone,
       renderBottomToolbarCustomActions,
-      srtBottomToolbarProps,
     },
     refs: { bottomToolbarRef },
   } = table;
