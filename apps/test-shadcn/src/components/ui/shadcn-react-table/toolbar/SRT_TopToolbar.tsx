@@ -39,12 +39,12 @@ export const SRT_TopToolbar = <TData extends SRT_RowData>({
       enableGlobalFilter,
       enablePagination,
       enableToolbarInternalActions,
+      srtTopToolbarProps,
       positionGlobalFilter,
       positionPagination,
       positionToolbarAlertBanner,
       positionToolbarDropZone,
       renderTopToolbarCustomActions,
-      srtTopToolbarProps,
     },
     refs: { topToolbarRef },
   } = table;
