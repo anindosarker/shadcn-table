@@ -36,37 +36,37 @@ export const SRT_ColumnPinningButtons = <TData extends SRT_RowData>({
 
   return (
     <div {...rest} className={cn(columnPinningButtonsVariants(), className)}>
+      {/* Note: dropped h-8 w-8 on Buttons (mapped MUI size="small") — shadcn
+          size="icon" (size-9) default wins. Icon h-4 w-4 dropped — Button
+          auto-sizes svg to size-4; rotation transforms kept. */}
       {column.getIsPinned() ? (
         <SRT_Tooltip title={localization.unpin}>
           <Button
-            className="h-8 w-8"
             onClick={() => handlePinColumn(false)}
             size="icon"
             variant="ghost"
           >
-            <PushPinIcon className="h-4 w-4" />
+            <PushPinIcon />
           </Button>
         </SRT_Tooltip>
       ) : (
         <>
           <SRT_Tooltip title={localization.pinToLeft}>
             <Button
-              className="h-8 w-8"
               onClick={() => handlePinColumn('left')}
               size="icon"
               variant="ghost"
             >
-              <PushPinIcon className="h-4 w-4 rotate-90" />
+              <PushPinIcon className="rotate-90" />
             </Button>
           </SRT_Tooltip>
           <SRT_Tooltip title={localization.pinToRight}>
             <Button
-              className="h-8 w-8"
               onClick={() => handlePinColumn('right')}
               size="icon"
               variant="ghost"
             >
-              <PushPinIcon className="h-4 w-4 -rotate-90" />
+              <PushPinIcon className="-rotate-90" />
             </Button>
           </SRT_Tooltip>
         </>

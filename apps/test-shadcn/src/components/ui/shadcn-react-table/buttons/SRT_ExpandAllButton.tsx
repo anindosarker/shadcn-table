@@ -9,12 +9,15 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
+// Note: MUI sized the button 2.25rem (comfortable/spacious) / 1.75rem (compact);
+// both size overrides drop for shadcn size="icon" (size-9) — compact no longer
+// shrinks. Only the -mt-1 nudge (layout, MUI mt:-0.25rem when not compact) stays.
 const expandAllButtonVariants = cva('', {
   variants: {
     density: {
-      comfortable: 'h-9 w-9 -mt-1',
-      compact: 'h-7 w-7',
-      spacious: 'h-9 w-9 -mt-1',
+      comfortable: '-mt-1',
+      compact: '',
+      spacious: '-mt-1',
     },
   },
   defaultVariants: {

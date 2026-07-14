@@ -1,4 +1,3 @@
-import { type ComponentPropsWithoutRef } from 'react';
 import {
   type DivProps,
   type SRT_Header,
@@ -6,6 +5,7 @@ import {
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
 export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData>
@@ -14,8 +14,11 @@ export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
+// SRT-owned grab wrapper. Active highlight + height + z live here via the
+// child-combinator on the shadcn Separator (data-slot=separator); the Separator
+// itself takes no restyling className. MUI info.main highlight → bg-primary.
 const resizeHandleVariants = cva(
-  'absolute cursor-col-resize px-1 [&:active>hr]:bg-primary',
+  'absolute z-[4] h-6 cursor-col-resize touch-none select-none px-1 [&:active>[data-slot=separator]]:bg-primary',
   {
     variants: {
       density: {
@@ -74,8 +77,8 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
 
   const activeOpacityClass =
     header.subHeaders.length || columnResizeMode === 'onEnd'
-      ? '[&:active>hr]:opacity-100'
-      : '[&:active>hr]:opacity-0';
+      ? '[&:active>[data-slot=separator]]:opacity-100'
+      : '[&:active>[data-slot=separator]]:opacity-0';
 
   return (
     <div
@@ -104,13 +107,15 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
             : undefined,
       }}
     >
-      <hr
-        // Note: DivProps types ref as HTMLDivElement; the divider is an <hr>,
-        // so the spread is cast to hr props (the accepted div<->hr deviation).
-        {...(rest as ComponentPropsWithoutRef<'hr'>)}
+      <Separator
+        orientation="vertical"
+        // Note: rest is DivProps; Separator root is a div, so it spreads
+        // directly (the prior hr cast is gone). MUI Divider borderRadius:2px /
+        // borderWidth:2px / w-0 dropped — shadcn Separator's w-px bg-border wins.
+        {...rest}
         className={cn(
           'Srt-TableHeadCell-ResizeHandle-Divider',
-          'z-[4] h-6 w-0 translate-x-[4px] touch-none select-none rounded-[2px] border-l-2 border-border',
+          'translate-x-1',
           !isResizing && 'transition-all duration-150',
           rest.className,
         )}

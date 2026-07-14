@@ -14,9 +14,11 @@ import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';
 
-const commonIconButtonStyles = cva(
-  'ml-2.5 h-8 w-8 opacity-50 transition-opacity duration-150 hover:opacity-100',
-);
+// Note: dropped MUI sx style overrides — h-8 w-8 (size; size="icon"/size-9 wins),
+// opacity-50 + hover:opacity-100 (opacity) and transition-opacity (paired with
+// that opacity). The row-action button now renders at full opacity per the sweep
+// ruling. Kept: ml-2.5 (layout, MUI ml:10px).
+const commonIconButtonStyles = cva('ml-2.5');
 
 export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -81,16 +83,16 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
         ['modal', 'row'].includes(editDisplayMode!) ? (
         <SRT_Tooltip side="right" title={localization.edit}>
           <Button
-            {...rest}
             aria-label={localization.edit}
-            className={cn(
-              commonIconButtonStyles({ className: rest.className }),
-            )}
             onClick={handleStartEditMode}
             size="icon"
             variant="ghost"
+            {...rest}
+            className={cn(
+              commonIconButtonStyles({ className: rest.className }),
+            )}
           >
-            <EditIcon className="h-4 w-4" />
+            <EditIcon />
           </Button>
         </SRT_Tooltip>
       ) : renderRowActionMenuItems?.({
@@ -102,16 +104,16 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
         <>
           <SRT_Tooltip title={localization.rowActions}>
             <Button
-              {...rest}
               aria-label={localization.rowActions}
-              className={cn(
-                commonIconButtonStyles({ className: rest.className }),
-              )}
               onClick={handleOpenRowActionMenu}
               size="icon"
               variant="ghost"
+              {...rest}
+              className={cn(
+                commonIconButtonStyles({ className: rest.className }),
+              )}
             >
-              <MoreHorizIcon className="h-4 w-4" />
+              <MoreHorizIcon />
             </Button>
           </SRT_Tooltip>
           <SRT_RowActionMenu

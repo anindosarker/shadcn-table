@@ -1,16 +1,16 @@
 import { type MouseEvent, useState } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu';
 
-const showHideColumnsButtonVariants = cva('');
+// Note: empty showHideColumnsButtonVariants cva deleted — it only wrapped the
+// shadcn Button with no SRT-owned element/layout. Icon h-4 w-4 dropped (Button
+// auto-sizes svg to size-4).
 
 export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -43,10 +43,10 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
           size="icon"
           variant="ghost"
           {...rest}
-          className={cn(showHideColumnsButtonVariants(), rest?.className)}
+          className={rest?.className}
           title={undefined}
         >
-          <ViewColumnIcon className="h-4 w-4" />
+          <ViewColumnIcon />
         </Button>
       </SRT_Tooltip>
       {anchorEl && (

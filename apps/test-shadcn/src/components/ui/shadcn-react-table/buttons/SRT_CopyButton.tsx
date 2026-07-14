@@ -11,6 +11,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
+// Note: user-authorized exception (2026-07-11) to the no-className ruling —
+// click-to-copy cells must render as cell text, not a button box. The MUI sx
+// treatment (backgroundColor/border/color/font*/letterSpacing/textAlign/
+// textTransform inherit, minWidth unset, h-auto, py-0) is restored so the copy
+// control inherits the cell's typography; m-[-0.25rem] + cursor-copy stay.
 const copyButtonVariants = cva(
   'm-[-0.25rem] h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] text-[inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
 );

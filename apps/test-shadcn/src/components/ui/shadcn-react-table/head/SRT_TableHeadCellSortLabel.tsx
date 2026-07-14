@@ -1,10 +1,10 @@
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
@@ -13,23 +13,6 @@ export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData>
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }
-
-// Base folds MUI ButtonBase reset defaults (transparent bg, no border, pointer)
-// per the "MUI defaults count as spec" convention, plus the mapped sx object.
-const sortLabelVariants = cva(
-  'inline-flex w-[3ch] shrink-0 cursor-pointer appearance-none select-none items-center justify-center border-0 bg-transparent p-0 align-middle outline-none transition-all duration-150',
-  {
-    variants: {
-      sorted: {
-        true: 'opacity-100',
-        false: 'opacity-30',
-      },
-    },
-    defaultVariants: {
-      sorted: false,
-    },
-  },
-);
 
 export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
   header,
@@ -71,7 +54,12 @@ export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
     <SRT_Tooltip side="top" title={sortTooltip}>
       <span className="relative">
         {/* MUI TableSortLabel `active` — always true in MRT here; no native <button> equivalent. */}
-        <button
+        {/* Note: MUI sx dropped (flex '0 0', width 3ch, transition 150ms,
+            opacity 1/0.3) — shadcn ghost/icon default wins; active-opacity
+            moved onto the SRT-owned icons (never the Button). */}
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           aria-label={sortTooltip}
           onClick={(e) => {
@@ -79,28 +67,18 @@ export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
             header.column.getToggleSortingHandler()?.(e);
           }}
           {...rest}
-          className={cn(
-            sortLabelVariants({ sorted: isSorted, className: rest.className }),
-          )}
         >
           {!isSorted ? (
-            <SyncAltIcon
-              className="text-muted-foreground"
-              size={16}
-              style={{
-                transform: 'rotate(-90deg) scaleX(0.9) translateX(-1px)',
-              }}
-            />
+            <SyncAltIcon className="-translate-x-px -rotate-90 scale-x-90 text-muted-foreground opacity-30" />
           ) : (
             <ArrowDownwardIcon
               className={cn(
-                'text-muted-foreground transition-transform',
+                'text-muted-foreground opacity-100 transition-transform',
                 direction === 'asc' && 'rotate-180',
               )}
-              size={16}
             />
           )}
-        </button>
+        </Button>
         {sorting.length > 1 && column.getSortIndex() >= 0 && (
           <span className="absolute -right-1.5 -top-1 text-[0.65rem] text-muted-foreground">
             {column.getSortIndex() + 1}

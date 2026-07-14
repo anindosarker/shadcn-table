@@ -1,15 +1,14 @@
 import { useState } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-const toggleFullScreenButtonVariants = cva('h-9 w-9');
+// Note: toggleFullScreenButtonVariants cva deleted — only carried h-9 w-9 to
+// restyle the shadcn Button (matches size="icon" size-9). Icon h-4 w-4 dropped.
 
 export interface SRT_ToggleFullScreenButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -52,14 +51,10 @@ export const SRT_ToggleFullScreenButton = <TData extends SRT_RowData>({
         size="icon"
         variant="ghost"
         {...rest}
-        className={cn(toggleFullScreenButtonVariants(), rest?.className)}
+        className={rest?.className}
         title={undefined}
       >
-        {isFullScreen ? (
-          <FullscreenExitIcon className="h-4 w-4" />
-        ) : (
-          <FullscreenIcon className="h-4 w-4" />
-        )}
+        {isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
       </Button>
     </SRT_Tooltip>
   );

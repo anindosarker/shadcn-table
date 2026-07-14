@@ -6,6 +6,7 @@ import {
   useSRT_ProgressAnimation,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
+import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
 export interface SRT_LinearProgressBarProps<TData extends SRT_RowData>
@@ -23,9 +24,10 @@ const linearProgressWrapperVariants = cva('absolute w-full', {
   },
 });
 
-const linearProgressRootVariants = cva(
-  'relative h-1 w-full overflow-hidden bg-primary/20',
-);
+// Note: linearProgressRootVariants cva deleted — the hand-rolled bar (h-1
+// rounded-none bg-primary/20 + inner filled div) is replaced by <Progress>.
+// shadcn's default look (h-2, rounded-full, bg-primary/20, bg-primary
+// indicator) wins; the MRT/June h-1 track height is dropped.
 
 export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
   isTopToolbar,
@@ -52,8 +54,8 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
   // June deviation preserved: the indeterminate bar is driven by the JS
   // useSRT_ProgressAnimation rAF hook (a determinate value looping 0→100), not
   // a CSS keyframe slide — a keyframe animation would require Tailwind config,
-  // which the package must not ship. The plan's `w-1/3` sliding child is
-  // therefore replaced by a value-driven inline width.
+  // which the package must not ship. The looping value now feeds Progress's
+  // determinate `value` (its indicator translateX tracks it).
   const [value] = useSRT_ProgressAnimation(show, {
     duration: 2000,
     strategy: 'ease-in-out',
@@ -71,19 +73,11 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
         }),
       )}
     >
-      <div
-        aria-busy="true"
-        aria-label="Loading"
-        {...progressRoot}
-        className={cn(
-          linearProgressRootVariants({ className: progressRoot?.className }),
-        )}
-      >
-        <div
-          className="h-full bg-primary"
-          style={{ width: `${value ?? 0}%` }}
-        />
-      </div>
+      {/* aria-busy="true" aria-label="Loading" */}
+      {/* Note: Progress (radix root) supplies role="progressbar" +
+          aria-valuenow/valuemin/valuemax; the manual aria-busy/aria-label are
+          dropped. progressRoot slot (DivProps) spreads onto Progress. */}
+      <Progress value={value ?? 0} {...progressRoot} />
     </div>
   );
 };

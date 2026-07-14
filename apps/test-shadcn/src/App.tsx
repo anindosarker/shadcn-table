@@ -8,6 +8,8 @@ import { SRT_EditRowModalDemo } from './components/SRT_EditRowModalDemo';
 import { SRT_InputsMenusDemo } from './components/SRT_InputsMenusDemo';
 import { Button } from './components/ui/button';
 import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReactTable';
+import { SRT_AlertBannerDemo } from './demos/SRT_AlertBannerDemo';
+import { SRT_EditSelectCellDemo } from './demos/SRT_EditSelectCellDemo';
 import { SRT_HeadBodyFooterDemo } from './demos/SRT_HeadBodyFooterDemo';
 import { SRT_TableContainerDemo } from './demos/SRT_TableContainerDemo';
 import { SRT_TableDemo } from './demos/SRT_TableDemo';
@@ -257,6 +259,8 @@ function App() {
       </div>
 
       <div className="space-y-10">
+        <SRT_EditSelectCellDemo />
+        <SRT_AlertBannerDemo />
         <SRT_EditRowModalDemo />
         <SRT_ButtonsDemo />
         <SRT_InputsMenusDemo />

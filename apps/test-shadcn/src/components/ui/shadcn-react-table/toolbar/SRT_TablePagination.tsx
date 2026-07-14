@@ -1,12 +1,26 @@
-import { type ComponentPropsWithRef } from 'react';
 import { cva } from 'class-variance-authority';
 import {
   parseFromValuesOrFunc,
+  type ButtonProps,
   type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+} from '@/components/ui/pagination';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
@@ -15,7 +29,10 @@ const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   extends Partial<
     DivProps & {
-      SelectProps?: Partial<ComponentPropsWithRef<'select'>>;
+      // Note: was Partial<ComponentPropsWithRef<'select'>> (native select).
+      // The rows-per-page control is now a shadcn Select; this slot spreads
+      // onto SelectTrigger (a button), so the type is ButtonProps.
+      SelectProps?: Partial<ButtonProps>;
       disabled?: boolean;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
       showRowsPerPage?: boolean;
@@ -31,11 +48,9 @@ const tablePaginationVariants = cva(
   'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
 
-// Icon reset per SRT_TableHeadCellColumnActionsButton precedent (MUI IconButton
-// defaults folded into classes; size="small" dropped → sizing is h-8/w-8).
-const paginationIconButtonVariants = cva(
-  'inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent disabled:pointer-events-none disabled:opacity-50',
-);
+// Note: paginationIconButtonVariants cva deleted — the raw nav <button>s are
+// now shadcn <Button variant="ghost" size="icon">, and 'pages' mode uses the
+// shadcn Pagination composition. Both carry their own default styling.
 
 export const SRT_TablePagination = <TData extends SRT_RowData>({
   position = 'bottom',
@@ -44,7 +59,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 }: SRT_TablePaginationProps<TData>) => {
   // const theme = useTheme(); const isMobile = useMediaQuery('(max-width: 720px)');
   // Note: useTheme + flipIconStyles(theme) dropped for CSS-only rtl (rtl:rotate-180);
-  // the rows-per-page select is always a native <select> (below), so MRT's mobile
+  // the rows-per-page select is a shadcn Select (below), so MRT's mobile
   // `SelectProps.native` toggle is moot.
   const {
     getState,
@@ -90,7 +105,13 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   // if (isMobile && SelectProps?.native !== false) SelectProps.native = true;
   // const tooltipProps = getCommonTooltipProps();
   // Note: SRT_Tooltip computes getCommonTooltipProps() internally, so the
-  // per-call tooltipProps object is dropped.
+  // per-call tooltipProps object is dropped. MRT's `SelectProps.native` mobile
+  // branch is dropped too — radix Select is never a native <select>.
+
+  // Custom rows-per-page options: `children` can't inject radix SelectItems via
+  // spread, so read it off the slot before spreading the rest onto SelectTrigger
+  // and render it inside SelectContent when provided.
+  const { children: selectPropsChildren, ...selectTriggerProps } = SelectProps;
 
   // Preserved June 'pages'-mode numbered-buttons + ellipsis windowing.
   const getPageItems = (): Array<number | 'ellipsis'> => {
@@ -122,110 +143,135 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
           <label htmlFor={`srt-rows-per-page-${id}`} className="text-sm">
             {localization.rowsPerPage}
           </label>
-          <select
-            aria-label={localization.rowsPerPage}
-            className="h-8 rounded-md border border-input bg-transparent px-2 text-sm"
+          <Select
             disabled={disabled}
-            id={`srt-rows-per-page-${id}`}
-            onChange={(event) => table.setPageSize(+event.target.value)}
-            value={pageSize}
-            {...SelectProps}
+            onValueChange={(value) => table.setPageSize(+value)}
+            value={String(pageSize)}
           >
-            {rowsPerPageOptions.map((option) => {
-              const value = typeof option !== 'number' ? option.value : option;
-              const label =
-                typeof option !== 'number' ? option.label : `${option}`;
-              return (
-                // Note: MRT's SelectProps.native ternary MenuItem branch is a
-                // dropped construct — always the native <option>.
-                SelectProps?.children ?? (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                )
-              );
-            })}
-          </select>
+            <SelectTrigger
+              aria-label={localization.rowsPerPage}
+              id={`srt-rows-per-page-${id}`}
+              size="sm"
+              {...selectTriggerProps}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {/* Note: MRT's SelectProps.native <option> / MenuItem ternary is
+                    a dropped construct — radix renders SelectItems. */}
+                {selectPropsChildren ??
+                  rowsPerPageOptions.map((option) => {
+                    const value =
+                      typeof option !== 'number' ? option.value : option;
+                    const label =
+                      typeof option !== 'number' ? option.label : `${option}`;
+                    return (
+                      <SelectItem key={value} value={String(value)}>
+                        {label}
+                      </SelectItem>
+                    );
+                  })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       )}
       {paginationDisplayMode === 'pages' ? (
-        // Preserved June numbered pagination, driven by MRT's inputs. MUI
-        // Pagination / PaginationItem are dropped constructs.
-        <div
+        // shadcn Pagination composition, driven by MRT's inputs. MUI Pagination
+        // / PaginationItem are dropped constructs.
+        // Note: PaginationPrevious/PaginationNext are NOT used — they hardcode
+        // English "Previous"/"Next" text and lucide icons, which breaks the
+        // 38-locale library and bypasses the table's icon overrides. All four
+        // nav controls are Button (real <button>, so native disabled dimming)
+        // with the table's icons + localized aria-labels, kept inside the
+        // Pagination composition via PaginationItem. Numbered pages stay
+        // PaginationLink (anchor, isActive).
+        <Pagination
           {...restPaginationProps}
-          className={cn(
-            'flex items-center gap-1',
-            restPaginationProps?.className,
-          )}
+          className={cn('mx-0 w-auto', restPaginationProps?.className)}
         >
-          {showFirstButton && (
-            <Button
-              aria-label={localization.goToFirstPage}
-              className="h-8 w-8"
-              disabled={disableBack}
-              onClick={() => table.firstPage()}
-              size="icon"
-              variant="outline"
-            >
-              <FirstPageIcon className="h-4 w-4 rtl:rotate-180" />
-            </Button>
-          )}
-          <Button
-            aria-label={localization.goToPreviousPage}
-            className="h-8 w-8"
-            disabled={disableBack}
-            onClick={() => table.previousPage()}
-            size="icon"
-            variant="outline"
-          >
-            <ChevronLeftIcon className="h-4 w-4 rtl:rotate-180" />
-          </Button>
-          {getPageItems().map((item, idx) =>
-            item === 'ellipsis' ? (
-              <span
-                key={`ellipsis-${idx}`}
-                className="px-1 text-sm text-muted-foreground"
-              >
-                …
-              </span>
-            ) : (
+          <PaginationContent>
+            {showFirstButton && (
+              <PaginationItem>
+                <Button
+                  aria-label={localization.goToFirstPage}
+                  disabled={disableBack}
+                  onClick={() => table.firstPage()}
+                  size="icon"
+                  type="button"
+                  variant="ghost"
+                >
+                  <FirstPageIcon className="rtl:rotate-180" />
+                </Button>
+              </PaginationItem>
+            )}
+            <PaginationItem>
               <Button
-                key={item}
-                aria-current={item === pageIndex + 1 ? 'page' : undefined}
-                aria-label={`Go to page ${item}`}
-                className="h-8 min-w-8 px-2"
-                disabled={disabled}
-                onClick={() => table.setPageIndex(item - 1)}
+                aria-label={localization.goToPreviousPage}
+                disabled={disableBack}
+                onClick={() => table.previousPage()}
                 size="icon"
-                variant={item === pageIndex + 1 ? 'default' : 'outline'}
+                type="button"
+                variant="ghost"
               >
-                {item.toLocaleString(localization.language)}
+                <ChevronLeftIcon className="rtl:rotate-180" />
               </Button>
-            ),
-          )}
-          <Button
-            aria-label={localization.goToNextPage}
-            className="h-8 w-8"
-            disabled={disableNext}
-            onClick={() => table.nextPage()}
-            size="icon"
-            variant="outline"
-          >
-            <ChevronRightIcon className="h-4 w-4 rtl:rotate-180" />
-          </Button>
-          {showLastButton && (
-            <Button
-              aria-label={localization.goToLastPage}
-              className="h-8 w-8"
-              disabled={disableNext}
-              onClick={() => table.lastPage()}
-              size="icon"
-              variant="outline"
-            >
-              <LastPageIcon className="h-4 w-4 rtl:rotate-180" />
-            </Button>
-          )}
-        </div>
+            </PaginationItem>
+            {getPageItems().map((item, idx) =>
+              item === 'ellipsis' ? (
+                <PaginationItem key={`ellipsis-${idx}`}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                // Note: PaginationLink dropped — its href-less <a> is not
+                // keyboard-focusable/operable (regression vs MUI's button-based
+                // PaginationItem). Button with outline/ghost mirrors
+                // PaginationLink's internal buttonVariants (isActive → outline)
+                // and is keyboard-accessible.
+                <PaginationItem key={item}>
+                  <Button
+                    aria-current={item === pageIndex + 1 ? 'page' : undefined}
+                    aria-label={`Go to page ${item}`}
+                    disabled={disabled}
+                    onClick={() => table.setPageIndex(item - 1)}
+                    size="icon"
+                    type="button"
+                    variant={item === pageIndex + 1 ? 'outline' : 'ghost'}
+                  >
+                    {item.toLocaleString(localization.language)}
+                  </Button>
+                </PaginationItem>
+              ),
+            )}
+            <PaginationItem>
+              <Button
+                aria-label={localization.goToNextPage}
+                disabled={disableNext}
+                onClick={() => table.nextPage()}
+                size="icon"
+                type="button"
+                variant="ghost"
+              >
+                <ChevronRightIcon className="rtl:rotate-180" />
+              </Button>
+            </PaginationItem>
+            {showLastButton && (
+              <PaginationItem>
+                <Button
+                  aria-label={localization.goToLastPage}
+                  disabled={disableNext}
+                  onClick={() => table.lastPage()}
+                  size="icon"
+                  type="button"
+                  variant="ghost"
+                >
+                  <LastPageIcon className="rtl:rotate-180" />
+                </Button>
+              </PaginationItem>
+            )}
+          </PaginationContent>
+        </Pagination>
       ) : paginationDisplayMode === 'default' ? (
         <>
           <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
@@ -241,56 +287,60 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
             {showFirstButton && (
               <SRT_Tooltip title={localization.goToFirstPage}>
                 <span>
-                  <button
-                    type="button"
+                  <Button
                     aria-label={localization.goToFirstPage}
-                    className={paginationIconButtonVariants()}
                     disabled={disableBack}
                     onClick={() => table.firstPage()}
+                    size="icon"
+                    type="button"
+                    variant="ghost"
                   >
-                    <FirstPageIcon className="h-4 w-4 rtl:rotate-180" />
-                  </button>
+                    <FirstPageIcon className="rtl:rotate-180" />
+                  </Button>
                 </span>
               </SRT_Tooltip>
             )}
             <SRT_Tooltip title={localization.goToPreviousPage}>
               <span>
-                <button
-                  type="button"
+                <Button
                   aria-label={localization.goToPreviousPage}
-                  className={paginationIconButtonVariants()}
                   disabled={disableBack}
                   onClick={() => table.previousPage()}
+                  size="icon"
+                  type="button"
+                  variant="ghost"
                 >
-                  <ChevronLeftIcon className="h-4 w-4 rtl:rotate-180" />
-                </button>
+                  <ChevronLeftIcon className="rtl:rotate-180" />
+                </Button>
               </span>
             </SRT_Tooltip>
             <SRT_Tooltip title={localization.goToNextPage}>
               <span>
-                <button
-                  type="button"
+                <Button
                   aria-label={localization.goToNextPage}
-                  className={paginationIconButtonVariants()}
                   disabled={disableNext}
                   onClick={() => table.nextPage()}
+                  size="icon"
+                  type="button"
+                  variant="ghost"
                 >
-                  <ChevronRightIcon className="h-4 w-4 rtl:rotate-180" />
-                </button>
+                  <ChevronRightIcon className="rtl:rotate-180" />
+                </Button>
               </span>
             </SRT_Tooltip>
             {showLastButton && (
               <SRT_Tooltip title={localization.goToLastPage}>
                 <span>
-                  <button
-                    type="button"
+                  <Button
                     aria-label={localization.goToLastPage}
-                    className={paginationIconButtonVariants()}
                     disabled={disableNext}
                     onClick={() => table.lastPage()}
+                    size="icon"
+                    type="button"
+                    variant="ghost"
                   >
-                    <LastPageIcon className="h-4 w-4 rtl:rotate-180" />
-                  </button>
+                    <LastPageIcon className="rtl:rotate-180" />
+                  </Button>
                 </span>
               </SRT_Tooltip>
             )}

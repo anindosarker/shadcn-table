@@ -1,14 +1,13 @@
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-const toggleGlobalFilterButtonVariants = cva('');
+// Note: empty toggleGlobalFilterButtonVariants cva deleted (shadcn Button, no
+// SRT-owned element/layout). Icon h-4 w-4 dropped (Button auto-sizes svg).
 
 export interface SRT_ToggleGlobalFilterButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -44,14 +43,10 @@ export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
         size="icon"
         variant="ghost"
         {...rest}
-        className={cn(toggleGlobalFilterButtonVariants(), rest?.className)}
+        className={rest?.className}
         title={undefined}
       >
-        {showGlobalFilter ? (
-          <SearchOffIcon className="h-4 w-4" />
-        ) : (
-          <SearchIcon className="h-4 w-4" />
-        )}
+        {showGlobalFilter ? <SearchOffIcon /> : <SearchIcon />}
       </Button>
     </SRT_Tooltip>
   );

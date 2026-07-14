@@ -1,4 +1,3 @@
-import { LoaderCircleIcon } from 'lucide-react';
 import {
   type DivProps,
   type SRT_Row,
@@ -7,6 +6,7 @@ import {
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
@@ -107,41 +107,31 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
           {((isCreating && onCreatingRowSave) ||
             (isEditing && onEditingRowSave)) && (
             <SRT_Tooltip title={localization.save}>
+              {/* Note: MUI color="info" text-primary override dropped (no color
+                  className on shadcn Button) — ghost default color wins. */}
               <Button
                 aria-label={localization.save}
-                // Note: MUI color="info" → text-primary (no info palette token in shadcn)
-                className="text-primary"
                 disabled={isSaving}
                 onClick={handleSubmitRow}
                 size="icon"
                 variant="ghost"
               >
-                {isSaving ? (
-                  <LoaderCircleIcon className="size-[18px] animate-spin" />
-                ) : (
-                  <SaveIcon />
-                )}
+                {/* Note: MUI CircularProgress size={18} → ui/Spinner (size-4 default). */}
+                {isSaving ? <Spinner /> : <SaveIcon />}
               </Button>
             </SRT_Tooltip>
           )}
         </>
       ) : (
         <>
-          <Button
-            className="min-w-[100px]"
-            onClick={handleCancel}
-            variant="ghost"
-          >
+          {/* Note: MUI sx minWidth:100px dropped on both text buttons — sizing
+              override, shadcn Button default width wins. */}
+          <Button onClick={handleCancel} variant="ghost">
             {localization.cancel}
           </Button>
-          <Button
-            className="min-w-[100px]"
-            disabled={isSaving}
-            onClick={handleSubmitRow}
-          >
-            {isSaving && (
-              <LoaderCircleIcon className="size-[18px] animate-spin" />
-            )}
+          <Button disabled={isSaving} onClick={handleSubmitRow}>
+            {/* Note: MUI CircularProgress size={18} → ui/Spinner (size-4 default). */}
+            {isSaving && <Spinner />}
             {localization.save}
           </Button>
         </>

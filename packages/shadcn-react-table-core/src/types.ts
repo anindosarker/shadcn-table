@@ -977,8 +977,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
     | DivProps;
   srtToolbarAlertBannerChipProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
-    | DivProps;
+    | ((props: { table: SRT_TableInstance<TData> }) => SpanProps)
+    | SpanProps;
   srtEditTextFieldProps?:
     | ((props: {
         cell: SRT_Cell<TData>;
@@ -1000,10 +1000,12 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => SRT_LinearProgressProps)
     | SRT_LinearProgressProps;
-  srtPaginationProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => Partial<
+  srtPaginationProps?: // Note: SelectProps was Partial<ComponentPropsWithRef<'select'>> (native
+  // select). The rows-per-page control is now a shadcn Select whose slot
+  // spreads onto SelectTrigger (a button), so the type is ButtonProps.
+  | ((props: { table: SRT_TableInstance<TData> }) => Partial<
         DivProps & {
-          SelectProps?: Partial<React.ComponentPropsWithRef<'select'>>;
+          SelectProps?: Partial<ButtonProps>;
           disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showFirstButton?: boolean;
@@ -1013,7 +1015,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
       >)
     | Partial<
         DivProps & {
-          SelectProps?: Partial<React.ComponentPropsWithRef<'select'>>;
+          SelectProps?: Partial<ButtonProps>;
           disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showFirstButton?: boolean;
@@ -1261,6 +1263,8 @@ export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
 }
 
 export type DivProps = React.ComponentPropsWithRef<'div'>;
+
+export type SpanProps = React.ComponentPropsWithRef<'span'>;
 
 export type TableProps = React.ComponentPropsWithRef<'table'>;
 

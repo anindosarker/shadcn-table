@@ -12,11 +12,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const actionMenuItemVariants = cva(
-  'items-center justify-between min-w-[120px] my-0 py-1.5',
-);
+// Note: dropped MUI sx min-w-[120px] (sizing — DropdownMenuContent governs
+// width) and py-1.5 (padding — DropdownMenuItem default padding wins). Kept the
+// flex layout (justify-between pins the submenu arrow to the end) + my-0 margin.
+const actionMenuItemVariants = cva('items-center justify-between my-0');
 
 export interface SRT_ActionMenuItemProps<TData extends SRT_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuItem> {
@@ -56,15 +58,17 @@ export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
           {label}
         </div>
         {onOpenSubMenu && (
-          <button
+          // Note: MUI IconButton size="small" p:0 → Button ghost/icon; the tight
+          // p:0 sizing drops, shadcn size="icon" (size-9) default wins.
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={onOpenSubMenu}
             onMouseEnter={onOpenSubMenu}
-            // Note: MUI IconButton size="small" has no shadcn equivalent; dropped
-            className="p-0"
           >
             <ArrowRightIcon />
-          </button>
+          </Button>
         )}
       </DropdownMenuItem>
       {divider && <DropdownMenuSeparator />}

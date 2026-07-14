@@ -9,8 +9,13 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
+// Note: dropped MUI sx style overrides — h-auto/w-auto (size; size="icon"/size-9
+// wins), p-[2px] (padding), transition-all (paired with the dropped opacity),
+// hover:bg-transparent (color), hover:opacity-100 + the location opacity-50/100
+// dim (opacity). The grab handle now renders at full opacity per the sweep ruling.
+// Kept: my-0 -mx-[0.1rem] (layout, MUI m:'0 -0.1rem') and the grab cursor.
 const grabHandleButtonVariants = cva(
-  'm-0 -mx-[0.1rem] h-auto w-auto cursor-grab p-[2px] transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing',
+  'my-0 -mx-[0.1rem] cursor-grab active:cursor-grabbing',
 );
 
 export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData>
@@ -23,6 +28,10 @@ export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData>
 }
 
 export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
+  // Note: destructured only to keep it out of the ...rest spread onto the shadcn
+  // Button (would warn as an unknown DOM attr). Its former use — location-based
+  // opacity dim — was dropped in the sweep, so the binding is now unused.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   location,
   table,
   ...rest
@@ -47,14 +56,10 @@ export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
           event.stopPropagation();
           rest?.onClick?.(event);
         }}
-        className={cn(
-          grabHandleButtonVariants(),
-          location === 'row' ? 'opacity-100' : 'opacity-50',
-          rest?.className,
-        )}
+        className={cn(grabHandleButtonVariants(), rest?.className)}
         title={undefined}
       >
-        <DragHandleIcon className="h-4 w-4" />
+        <DragHandleIcon />
       </Button>
     </SRT_Tooltip>
   );

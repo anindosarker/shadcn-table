@@ -1,4 +1,3 @@
-import { LoaderCircleIcon } from 'lucide-react';
 import {
   parseFromValuesOrFunc,
   type SRT_CircularProgressProps,
@@ -6,6 +5,7 @@ import {
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 
 export interface SRT_TableLoadingOverlayProps<TData extends SRT_RowData>
@@ -39,12 +39,12 @@ export const SRT_TableLoadingOverlay = <TData extends SRT_RowData>({
   return (
     <div className={cn(tableLoadingOverlayVariants())}>
       {circularProgressProps?.Component ?? (
-        <LoaderCircleIcon
+        // Note: LoaderCircleIcon animate-spin → ui/Spinner (own animate-spin).
+        // MUI CircularProgress's 40px default drops — Spinner's size-4 wins.
+        <Spinner
           aria-label={localization.noRecordsToDisplay}
           id={`srt-progress-${id}`}
-          size={40}
           {...circularProgressProps}
-          className={cn('animate-spin', circularProgressProps?.className)}
         />
       )}
     </div>

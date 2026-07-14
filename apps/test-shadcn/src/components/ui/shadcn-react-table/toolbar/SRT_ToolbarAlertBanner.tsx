@@ -2,28 +2,34 @@ import { Fragment, useMemo } from 'react';
 import {
   getSRT_SelectAllHandler,
   parseFromValuesOrFunc,
-  type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 
 export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData>
-  extends DivProps {
+  extends React.ComponentProps<typeof Alert> {
   stackAlertBanner?: boolean;
   table: SRT_TableInstance<TData>;
 }
 
-// Note: MUI <Alert color="info" icon={false}> root → div. Base maps the sx:
-// position relative, inset left/right/top 0, zIndex 2, width 100%, borderRadius
-// 0, fontSize 1rem, p 0. The `info` color → primary-tinted banner
-// (bg-primary/10 + text-foreground) since SRT has no info palette token. The
+// Note: MUI <Alert color="info" icon={false}> → shadcn <Alert> (div, role
+// "alert"). This cva extends shadcn Alert's own base to map MRT's sx: it
+// neutralizes Alert's grid/border/padding (`block border-none rounded-none p-0
+// text-base` kills the has-[>svg] icon grid — no icon) and adds position
+// relative, inset left/right/top 0, zIndex 2, width 100%. The `info` color →
+// primary-tinted banner (bg-primary/10 + text-foreground) since SRT has no info
+// palette token. Alert's internal cn(alertVariants(), className) twMerges these
+// classes last, so the conflicting base tokens resolve our way. The
 // `bottomOffset` variant maps `mb: positionToolbarAlertBanner === 'bottom' &&
 // !stackAlertBanner ? '-1rem' : undefined` (-mb-4).
 const toolbarAlertBannerVariants = cva(
-  'relative left-0 right-0 top-0 z-[2] w-full rounded-none p-0 text-base bg-primary/10 text-foreground',
+  'relative left-0 right-0 top-0 z-[2] block w-full rounded-none border-none p-0 text-base bg-primary/10 text-foreground',
   {
     variants: {
       bottomOffset: {
@@ -33,6 +39,11 @@ const toolbarAlertBannerVariants = cva(
     },
   },
 );
+
+// Note: MUI clear-selection Button size="small" sx={{ p: '2px' }} → shadcn
+// Button variant="ghost" size="sm" (MUI text-variant map: primary text, ghost
+// hover:bg-accent per CopyButton ruling) with p-[2px] text-primary.
+const clearSelectionButtonVariants = cva('p-[2px] text-primary');
 
 export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
   stackAlertBanner,
@@ -49,11 +60,11 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
       icons: { CloseIcon },
       localization,
       manualPagination,
+      srtToolbarAlertBannerChipProps,
+      srtToolbarAlertBannerProps,
       positionToolbarAlertBanner,
       renderToolbarAlertBannerContent,
       rowCount,
-      srtToolbarAlertBannerChipProps,
-      srtToolbarAlertBannerProps,
     },
     refs: { tableLayoutRef },
   } = table;
@@ -93,15 +104,17 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
             '{rowCount}',
             totalRowCount.toLocaleString(localization.language),
           )}
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
+          className={clearSelectionButtonVariants()}
           onClick={(event) =>
             getSRT_SelectAllHandler({ table })(event, false, true)
           }
-          className="rounded-md p-[2px] text-sm text-primary hover:underline"
         >
           {localization.clearSelection}
-        </button>
+        </Button>
       </div>
     ) : null;
 
@@ -112,22 +125,24 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
         {grouping.map((columnId, index) => (
           <Fragment key={`${index}-${columnId}`}>
             {index > 0 ? localization.thenBy : ''}
-            <span
+            {/* Note: MUI Chip (onDelete → internal CancelIcon) → shadcn Badge
+                secondary + raw delete <button> (FilterTextField precedent).
+                Badge has no built-in delete, so the CloseIcon registry icon is
+                kept; MUI's internal delete icon is unlabeled, so no aria-label.
+                MUI Chip's rounded-full geometry yields to Badge rounded-md. */}
+            <Badge
+              variant="secondary"
               {...chipProps}
-              className={cn(
-                'inline-flex items-center gap-1 rounded-full border bg-muted px-2 py-0.5 text-sm',
-                chipProps?.className,
-              )}
+              className={cn('gap-1', chipProps?.className)}
             >
               {table.getColumn(columnId).columnDef.header}
               <button
                 type="button"
                 onClick={() => table.getColumn(columnId).toggleGrouping()}
-                className="inline-flex items-center rounded-full hover:bg-background/50"
               >
-                <CloseIcon className="h-3.5 w-3.5" />
+                <CloseIcon className="size-3" />
               </button>
-            </span>
+            </Badge>
           </Fragment>
         ))}
       </span>
@@ -140,7 +155,7 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
   if (!(showAlertBanner || !!selectedAlert || !!groupedAlert)) return null;
 
   return (
-    <div
+    <Alert
       {...alertProps}
       className={cn(
         'Srt-ToolbarAlertBanner',
@@ -167,11 +182,12 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
           table,
         }) ?? (
           <>
-            {/* Note: AlertTitle → div. `title` is the DivProps HTML attr
-                (string), narrower than MRT's AlertProps ReactNode — rendered as
-                the AlertTitle slot's content. */}
+            {/* Note: shadcn AlertTitle line-clamp-1 truncates multi-line titles
+                (MUI AlertTitle doesn't) — accepted. `title` is the Alert HTML
+                attr (string), narrower than MRT's AlertProps ReactNode —
+                rendered as the AlertTitle slot's content. */}
             {alertProps?.title && (
-              <div className="mb-1 font-medium">{alertProps.title}</div>
+              <AlertTitle className="mb-1">{alertProps.title}</AlertTitle>
             )}
             <div
               className={cn(
@@ -203,6 +219,6 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
           </>
         )}
       </div>
-    </div>
+    </Alert>
   );
 };

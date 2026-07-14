@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { cva } from 'class-variance-authority';
 // import Collapse from '@mui/material/Collapse'; // Note: dropped — conditional render below.
 // import { debounce } from '@mui/material/utils'; // Note: replaced by June's local setTimeout debounce below.
 import {
@@ -15,24 +14,14 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { cn } from '@/lib/utils';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
-
-// June's browser-verified input styling, reused verbatim.
-const globalFilterTextFieldVariants = cva([
-  'h-9 w-48 rounded-md border border-input bg-background pl-9 pr-9',
-  'text-sm ring-offset-background',
-  'placeholder:text-muted-foreground',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-  'disabled:cursor-not-allowed disabled:opacity-50',
-]);
-
-// MUI IconButton (size="small", sx { height/width: '1.75rem' }) → reset classes;
-// h-7 w-7 = 1.75rem.
-const globalFilterIconButtonVariants = cva(
-  'inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-accent disabled:pointer-events-none disabled:opacity-50',
-);
 
 // Note: MRT's `debounce` from `@mui/material/utils` → June's local
 // setTimeout-based debounce (keeps the package MUI-free).
@@ -119,63 +108,64 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
   }, [globalFilter]);
 
   // Note: MUI <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal"
-  // unmountOnExit> dropped — replaced by the conditional render below.
+  // unmountOnExit> dropped — replaced by the conditional render below; the
+  // expanded-width behavior lives on the SRT-owned wrapper div (w-48).
   if (!showGlobalFilter) return null;
 
   return (
-    <div className="relative flex items-center">
-      {/* startAdornment — MUI <InputAdornment position="start"> wrapper dropped. */}
-      {enableGlobalFilterModes ? (
-        <SRT_Tooltip title={localization.changeSearchMode}>
-          <button
-            type="button"
-            aria-label={localization.changeSearchMode}
-            className={cn(globalFilterIconButtonVariants(), 'absolute left-1')}
-            onClick={handleGlobalFilterMenuOpen}
-          >
-            <SearchIcon size={16} />
-          </button>
-        </SRT_Tooltip>
-      ) : (
-        <SearchIcon
-          className="absolute left-2.5 text-muted-foreground"
-          size={16}
-          style={{ marginRight: '4px' }}
-        />
-      )}
-
-      <input
-        autoComplete="off"
-        placeholder={localization.search}
-        onChange={handleChange}
-        value={searchValue ?? ''}
-        {...textFieldProps}
-        className={cn(
-          globalFilterTextFieldVariants(),
-          textFieldProps.className,
+    <div className="w-48">
+      <InputGroup>
+        {/* startAdornment — MUI <InputAdornment position="start"> wrapper dropped. */}
+        {enableGlobalFilterModes ? (
+          <InputGroupAddon align="inline-start">
+            <SRT_Tooltip title={localization.changeSearchMode}>
+              <InputGroupButton
+                size="icon-xs"
+                aria-label={localization.changeSearchMode}
+                onClick={handleGlobalFilterMenuOpen}
+              >
+                <SearchIcon />
+              </InputGroupButton>
+            </SRT_Tooltip>
+          </InputGroupAddon>
+        ) : (
+          // Note: MRT's SearchIcon `style={{ marginRight: '4px' }}` dropped —
+          // InputGroupAddon supplies its own spacing/sizing.
+          <InputGroupAddon align="inline-start">
+            <SearchIcon />
+          </InputGroupAddon>
         )}
-        ref={(node) => {
-          searchInputRef.current = node;
-          // Note: MRT also did `if (textFieldProps?.inputRef) textFieldProps.inputRef = inputRef`
-          // — user input-ref forwarding deferred to a slot-props style if needed.
-        }}
-      />
 
-      {/* endAdornment — MUI <InputAdornment position="end"> wrapper dropped. Button
-          stays wrapped in <span> so SRT_Tooltip can anchor it while disabled. */}
-      <SRT_Tooltip title={localization.clearSearch ?? ''}>
-        <span className="absolute right-1">
-          <button
-            type="button"
-            aria-label={localization.clearSearch}
-            className={globalFilterIconButtonVariants()}
-            disabled={!searchValue?.length}
-            onClick={handleClear}
-          >
-            <CloseIcon size={16} />
-          </button>
-        </span>
-      </SRT_Tooltip>
+        <InputGroupInput
+          autoComplete="off"
+          placeholder={localization.search}
+          onChange={handleChange}
+          value={searchValue ?? ''}
+          {...textFieldProps}
+          ref={(node) => {
+            searchInputRef.current = node;
+            // Note: MRT also did `if (textFieldProps?.inputRef) textFieldProps.inputRef = inputRef`
+            // — user input-ref forwarding deferred to a slot-props style if needed.
+          }}
+        />
+
+        {/* endAdornment — MUI <InputAdornment position="end"> wrapper dropped. Button
+            stays wrapped in <span> so SRT_Tooltip can anchor it while disabled. */}
+        <InputGroupAddon align="inline-end">
+          <SRT_Tooltip title={localization.clearSearch ?? ''}>
+            <span>
+              <InputGroupButton
+                size="icon-xs"
+                aria-label={localization.clearSearch}
+                disabled={!searchValue?.length}
+                onClick={handleClear}
+              >
+                <CloseIcon />
+              </InputGroupButton>
+            </span>
+          </SRT_Tooltip>
+        </InputGroupAddon>
+      </InputGroup>
 
       {/* MUI TextField `size="small"` / `variant="outlined"` and InputProps.sx
           `mb: 0` dropped — no MUI baseline to reset. */}

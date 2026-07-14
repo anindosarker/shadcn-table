@@ -160,6 +160,7 @@ export function SRT_InputsMenusDemo() {
     enableColumnFilters: true,
     enableColumnFilterModes: true,
     enableGlobalFilter: true,
+    enableGlobalFilterModes: true,
     positionGlobalFilter: 'right',
 
     enableColumnActions: true,

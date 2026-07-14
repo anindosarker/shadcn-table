@@ -1,5 +1,4 @@
 import { type MouseEvent, useState } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type RowPinningPosition,
@@ -11,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-const rowPinButtonVariants = cva('h-6 w-6');
+// Note: rowPinButtonVariants cva deleted — it only carried h-6 w-6 (MUI 24px
+// size="small") to restyle the shadcn Button; size="icon" (size-9) default wins.
 
 export interface SRT_RowPinButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -59,14 +59,13 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
         size="icon"
         variant="ghost"
         {...rest}
-        className={cn(rowPinButtonVariants(), rest?.className)}
+        className={rest?.className}
       >
         {isPinned ? (
-          <CloseIcon className="h-4 w-4" />
+          <CloseIcon />
         ) : (
           <PushPinIcon
             className={cn(
-              'h-4 w-4',
               rowPinningDisplayMode === 'sticky'
                 ? 'rotate-[135deg]'
                 : pinningPosition === 'top'

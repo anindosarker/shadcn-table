@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { FieldGroup } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { SRT_EditActionButtons } from '../buttons/SRT_EditActionButtons';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
@@ -117,11 +118,13 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={(e) => e.preventDefault()}>
-              <div className="flex w-full flex-col gap-8 pt-4">
-                {internalEditComponents}
-              </div>
+              {/* Note: MUI Stack gap:32px/pt:16px → ui/FieldGroup (flex-col stack);
+                  its gap-7 default and no top padding win over the MRT gap-8/pt-4. */}
+              <FieldGroup>{internalEditComponents}</FieldGroup>
             </form>
-            <DialogFooter className="p-5">
+            {/* Note: MUI DialogActions sx p:1.25rem → p-5 dropped (padding
+                override; shadcn DialogFooter default padding wins). */}
+            <DialogFooter>
               <SRT_EditActionButtons row={row} table={table} variant="text" />
             </DialogFooter>
           </>

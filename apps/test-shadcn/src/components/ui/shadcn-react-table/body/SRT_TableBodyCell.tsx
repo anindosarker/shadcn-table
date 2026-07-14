@@ -29,6 +29,7 @@ import {
 // `mrtTheme.draggingBorderColor` → `var(--color-primary)`.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_TableBodyCellValue } from './SRT_TableBodyCellValue';
 import { SRT_TableBodyRowGrabHandle } from './SRT_TableBodyRowGrabHandle';
@@ -423,13 +424,10 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
             (columnDef.PlaceholderCell?.({ cell, column, row, table }) ?? null)
           ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
             // Note: MUI Skeleton's animation="wave" has no Tailwind analogue —
-            // animate-pulse is the accepted stand-in.
-            <div
+            // Skeleton's default animate-pulse is the accepted stand-in.
+            // Note: dropped bg-muted — Skeleton's default bg-accent wins.
+            <Skeleton
               {...skeletonProps}
-              className={cn(
-                'animate-pulse rounded-md bg-muted',
-                skeletonProps?.className,
-              )}
               style={{
                 height: 20,
                 width: skeletonWidth,

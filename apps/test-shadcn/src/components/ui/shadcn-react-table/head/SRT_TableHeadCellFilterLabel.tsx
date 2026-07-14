@@ -1,5 +1,4 @@
 import { type MouseEvent, useState } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_Header,
@@ -14,26 +13,10 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
-
-// Maps the MRT IconButton sx: 16px box, 4px left margin, 8px padding,
-// scale(0.75), 150ms all-transition; opacity 1/0.3 via the `active` variant.
-const filterLabelVariants = cva(
-  'ml-1 inline-flex h-4 w-4 scale-75 items-center justify-center p-2 transition-all duration-150',
-  {
-    variants: {
-      active: {
-        true: 'opacity-100',
-        false: 'opacity-30',
-      },
-    },
-    defaultVariants: {
-      active: false,
-    },
-  },
-);
 
 export interface SRT_TableHeadCellFilterLabelProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -131,8 +114,13 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="shrink-0">
           <SRT_Tooltip side="top" title={filterTooltip}>
-            {/* disableRipple + size="small" dropped — no shadcn ripple; sizing via filterLabelVariants base */}
-            <button
+            {/* disableRipple + size="small" dropped — no shadcn ripple */}
+            {/* Note: MUI IconButton sx dropped (16px box, p:8px, scale(0.75),
+                opacity 1/0.3 active, transition 150ms) — shadcn ghost/icon
+                default wins; only ml-1 layout margin (MUI ml:4px) kept. */}
+            <Button
+              variant="ghost"
+              size="icon"
               type="button"
               aria-label={filterTooltip}
               onClick={(event: MouseEvent<HTMLButtonElement>) => {
@@ -148,13 +136,10 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
                 event.stopPropagation();
               }}
               {...rest}
-              className={cn(
-                filterLabelVariants({ active: isFilterActive }),
-                rest.className,
-              )}
+              className={cn('ml-1', rest.className)}
             >
-              <FilterAltIcon size={16} />
-            </button>
+              <FilterAltIcon />
+            </Button>
           </SRT_Tooltip>
         </span>
       )}

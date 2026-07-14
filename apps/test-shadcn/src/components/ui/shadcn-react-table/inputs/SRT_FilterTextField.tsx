@@ -33,6 +33,12 @@ import {
 } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
 import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group';
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -47,7 +53,9 @@ import {
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 
-const filterTextFieldVariants = cva('h-9 w-full');
+// Note: h-9 dropped (redundant sizing on shadcn Input/SelectTrigger, which are
+// already h-9); w-full is fill-parent layout for the filter control.
+const filterTextFieldVariants = cva('w-full');
 
 // Note: MUI's `debounce` from `@mui/material/utils` → June's local
 // setTimeout-based debounce (matches SRT_GlobalFilterTextField).
@@ -346,6 +354,37 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     },
   };
 
+  // Variant fork (Note): MRT hosted the mode/clear adornments inside the MUI
+  // TextField for every variant, but radix Select/Popover controls cannot host
+  // InputGroup addons — so text + autocomplete use an InputGroup (mode =
+  // inline-start addon, clear = inline-end addon) while select/multiselect/date
+  // keep the sibling mode button + absolute clear.
+  const isTextVariant =
+    !isDateFilter &&
+    !isAutocompleteFilter &&
+    !isSelectFilter &&
+    !isMultiSelectFilter;
+  const usesInputGroup = isTextVariant || isAutocompleteFilter;
+
+  // Chip block stays as-is (already compliant); shared between both mode-button
+  // renderings so it travels with the mode button in either layout.
+  const filterChip = filterChipLabel ? (
+    <Badge variant="secondary" className="gap-1">
+      {filterChipLabel}
+      <button
+        type="button"
+        aria-label={localization.clearFilter}
+        onClick={handleClearEmptyFilterChip}
+        className="ml-0.5"
+      >
+        <CloseIcon className="size-3" />
+      </button>
+    </Badge>
+  ) : null;
+
+  // Sibling mode button for the non-InputGroup variants (select/multiselect/date).
+  // Note: MRT's size-7 button + size-3.5 icon classNames dropped — shadcn
+  // size="icon" default wins (no style-override className).
   const startAdornment = showChangeModeButton ? (
     <div className="flex items-center gap-1">
       <SRT_Tooltip title={localization.changeFilterMode}>
@@ -354,28 +393,36 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           aria-label={localization.changeFilterMode}
           variant="ghost"
           size="icon"
-          className="size-7 shrink-0"
+          className="shrink-0"
           onClick={handleFilterMenuOpen}
         >
-          <FilterListIcon className="size-3.5" />
+          <FilterListIcon />
         </Button>
       </SRT_Tooltip>
-      {filterChipLabel && (
-        <Badge variant="secondary" className="gap-1">
-          {filterChipLabel}
-          <button
-            type="button"
-            aria-label={localization.clearFilter}
-            onClick={handleClearEmptyFilterChip}
-            className="ml-0.5"
-          >
-            <CloseIcon className="size-3" />
-          </button>
-        </Badge>
-      )}
+      {filterChip}
     </div>
   ) : null;
 
+  // InputGroup inline-start addon for the text/autocomplete variants — same mode
+  // button + chip, expressed as an InputGroupButton.
+  const startGroupAddon = showChangeModeButton ? (
+    <InputGroupAddon align="inline-start">
+      <SRT_Tooltip title={localization.changeFilterMode}>
+        <InputGroupButton
+          size="icon-xs"
+          aria-label={localization.changeFilterMode}
+          onClick={handleFilterMenuOpen}
+        >
+          <FilterListIcon />
+        </InputGroupButton>
+      </SRT_Tooltip>
+      {filterChip}
+    </InputGroupAddon>
+  ) : null;
+
+  // Absolute clear button for the non-InputGroup variants (select/multiselect).
+  // Note: MRT's size-8 + scale-90 button classNames and size-3.5 icon class
+  // dropped — shadcn size="icon" default wins.
   const clearButton =
     !isAutocompleteFilter && !isDateFilter && !filterChipLabel ? (
       <SRT_Tooltip side="right" title={localization.clearFilter ?? ''}>
@@ -393,12 +440,37 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             size="icon"
             disabled={!filterValue?.toString()?.length}
             onClick={handleClear}
-            className="size-8 scale-90"
           >
-            <CloseIcon className="size-3.5" />
+            <CloseIcon />
           </Button>
         </span>
       </SRT_Tooltip>
+    ) : null;
+
+  // InputGroup inline-end clear addon for the text variant (autocomplete keeps no
+  // clear per the !isAutocompleteFilter condition; when a filter chip is shown the
+  // input collapses and the clear is hidden, mirroring clearButton's
+  // !filterChipLabel condition).
+  const clearGroupAddon =
+    isTextVariant && !filterChipLabel ? (
+      <InputGroupAddon align="inline-end">
+        <SRT_Tooltip side="right" title={localization.clearFilter ?? ''}>
+          <span
+            className={cn(
+              (filterValue?.length ?? 0) > 0 ? 'visible' : 'invisible',
+            )}
+          >
+            <InputGroupButton
+              size="icon-xs"
+              aria-label={localization.clearFilter}
+              disabled={!filterValue?.toString()?.length}
+              onClick={handleClear}
+            >
+              <CloseIcon />
+            </InputGroupButton>
+          </span>
+        </SRT_Tooltip>
+      </InputGroupAddon>
     ) : null;
 
   const filterModeHelperText = showChangeModeButton ? (
@@ -430,7 +502,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   return (
     <div className="flex w-full flex-col gap-1">
       <div className="relative flex w-full items-center gap-1">
-        {startAdornment}
+        {!usesInputGroup && startAdornment}
         <div className="relative flex-1">
           {filterVariant?.startsWith('time') ||
           filterVariant?.startsWith('datetime') ||
@@ -457,59 +529,61 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               )}
             />
           ) : isAutocompleteFilter ? (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Input
-                  {...commonInputProps}
-                  {...autocompleteProps}
-                  ref={setInputRef}
-                  value={typeof filterValue === 'string' ? filterValue : ''}
-                  onChange={(e) =>
-                    handleAutocompleteInputChange(e.target.value)
-                  }
-                  onClick={(e) => e.stopPropagation()}
-                  className={cn(
-                    filterTextFieldVariants(),
-                    autocompleteProps.className,
-                    textFieldProps.className,
-                  )}
-                />
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-[--radix-popover-trigger-width] p-0"
-                align="start"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-              >
-                <Command>
-                  <CommandList>
-                    <CommandEmpty>—</CommandEmpty>
-                    <CommandGroup>
-                      {dropdownOptions?.map((option, index) => {
-                        const { label, value: optValue } =
-                          getValueAndLabel(option);
-                        return (
-                          <CommandItem
-                            key={`${index}-${optValue}`}
-                            value={label}
-                            onSelect={() => handleAutocompleteChange(option)}
-                          >
-                            <CheckIcon
-                              className={cn(
-                                'mr-2 size-4',
-                                optValue === selectedAutocompleteValue
-                                  ? 'opacity-100'
-                                  : 'opacity-0',
-                              )}
-                            />
-                            {label}
-                          </CommandItem>
-                        );
-                      })}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            <InputGroup>
+              {startGroupAddon}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <InputGroupInput
+                    {...commonInputProps}
+                    {...autocompleteProps}
+                    ref={setInputRef}
+                    value={typeof filterValue === 'string' ? filterValue : ''}
+                    onChange={(e) =>
+                      handleAutocompleteInputChange(e.target.value)
+                    }
+                    onClick={(e) => e.stopPropagation()}
+                    className={cn(
+                      autocompleteProps.className,
+                      textFieldProps.className,
+                    )}
+                  />
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-[--radix-popover-trigger-width] p-0"
+                  align="start"
+                  onOpenAutoFocus={(e) => e.preventDefault()}
+                >
+                  <Command>
+                    <CommandList>
+                      <CommandEmpty>—</CommandEmpty>
+                      <CommandGroup>
+                        {dropdownOptions?.map((option, index) => {
+                          const { label, value: optValue } =
+                            getValueAndLabel(option);
+                          return (
+                            <CommandItem
+                              key={`${index}-${optValue}`}
+                              value={label}
+                              onSelect={() => handleAutocompleteChange(option)}
+                            >
+                              <CheckIcon
+                                className={cn(
+                                  'mr-2 size-4',
+                                  optValue === selectedAutocompleteValue
+                                    ? 'opacity-100'
+                                    : 'opacity-0',
+                                )}
+                              />
+                              {label}
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </InputGroup>
           ) : isSelectFilter ? (
             <Select
               value={typeof filterValue === 'string' ? filterValue : ''}
@@ -551,8 +625,11 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
+                      // Note: MRT's font-normal (typography) + redundant h-9
+                      // dropped — Button defaults win; w-full/justify-start are
+                      // layout only.
                       className={cn(
-                        'h-9 w-full justify-start font-normal',
+                        'w-full justify-start',
                         textFieldProps.className,
                       )}
                     >
@@ -614,20 +691,26 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               );
             })()
           ) : (
-            <Input
-              {...commonInputProps}
-              ref={setInputRef}
-              value={typeof filterValue === 'string' ? filterValue : ''}
-              onChange={handleTextFieldChange}
-              onClick={(e) => e.stopPropagation()}
-              className={cn(
-                filterTextFieldVariants(),
-                'pr-8',
-                textFieldProps.className,
-              )}
-            />
+            <InputGroup>
+              {startGroupAddon}
+              <InputGroupInput
+                {...commonInputProps}
+                ref={setInputRef}
+                // Accept numbers too: type='number' filters set numeric values
+                // via valueAsNumber; a string-only guard would blank them.
+                value={
+                  typeof filterValue === 'string' ||
+                  typeof filterValue === 'number'
+                    ? filterValue
+                    : ''
+                }
+                onChange={handleTextFieldChange}
+                onClick={(e) => e.stopPropagation()}
+              />
+              {clearGroupAddon}
+            </InputGroup>
           )}
-          {clearButton}
+          {!usesInputGroup && clearButton}
         </div>
       </div>
       {filterModeHelperText}

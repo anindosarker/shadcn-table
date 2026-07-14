@@ -1,5 +1,4 @@
 import { type MouseEvent } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_Row,
@@ -8,25 +7,12 @@ import {
   parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-const expandButtonVariants = cva('', {
-  variants: {
-    density: {
-      compact: 'h-7 w-7',
-      default: 'h-9 w-9',
-    },
-    expandable: {
-      true: 'opacity-100',
-      false: 'opacity-30',
-    },
-  },
-  defaultVariants: {
-    density: 'default',
-    expandable: true,
-  },
-});
+// Note: expandButtonVariants cva deleted — it existed solely to restyle the
+// shadcn Button: density h-7/h-9 sizes drop for size="icon" (size-9; compact no
+// longer shrinks), and the expandable opacity-100/opacity-30 dim drops — the
+// button's `disabled` state already applies shadcn's disabled:opacity-50.
 
 export interface SRT_ExpandButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -41,8 +27,8 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
   table,
 }: SRT_ExpandButtonProps<TData>) => {
   // Note: MRT's useTheme dropped — SRT has no theme.direction (rtl).
+  // Note: getState()/density dropped — the removed size cva was its only consumer.
   const {
-    getState,
     options: {
       icons: { ExpandMoreIcon },
       localization,
@@ -51,7 +37,6 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
       srtExpandButtonProps,
     },
   } = table;
-  const { density } = getState();
 
   const iconButtonProps = parseFromValuesOrFunc(srtExpandButtonProps, {
     row,
@@ -86,13 +71,7 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
           variant="ghost"
           {...iconButtonProps}
           onClick={handleToggleExpand}
-          className={cn(
-            expandButtonVariants({
-              density: density === 'compact' ? 'compact' : 'default',
-              expandable: canExpand || detailPanel,
-            }),
-            iconButtonProps?.className,
-          )}
+          className={iconButtonProps?.className}
           style={{
             // Note: rtl 'mr'/'ml' switch dropped — positionExpandColumn only.
             ...(positionExpandColumn === 'last'

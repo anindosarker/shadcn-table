@@ -1,14 +1,14 @@
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-const toggleDensePaddingButtonVariants = cva('h-9 w-9');
+// Note: toggleDensePaddingButtonVariants cva deleted — only carried h-9 w-9 to
+// restyle the shadcn Button (matches size="icon" size-9 anyway). Icon h-4 w-4
+// dropped (Button auto-sizes svg to size-4).
 
 export interface SRT_ToggleDensePaddingButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -47,15 +47,15 @@ export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
         size="icon"
         variant="ghost"
         {...rest}
-        className={cn(toggleDensePaddingButtonVariants(), rest?.className)}
+        className={rest?.className}
         title={undefined}
       >
         {density === 'compact' ? (
-          <DensitySmallIcon className="h-4 w-4" />
+          <DensitySmallIcon />
         ) : density === 'comfortable' ? (
-          <DensityMediumIcon className="h-4 w-4" />
+          <DensityMediumIcon />
         ) : (
-          <DensityLargeIcon className="h-4 w-4" />
+          <DensityLargeIcon />
         )}
       </Button>
     </SRT_Tooltip>

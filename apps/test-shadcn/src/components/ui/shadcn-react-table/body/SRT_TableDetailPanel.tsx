@@ -9,6 +9,7 @@ import {
   type TdProps,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 export interface SRT_TableDetailPanelProps<TData extends SRT_RowData>
@@ -120,13 +121,19 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
           tableCellProps?.className,
         )}
       >
-        {virtualRow
-          ? row.getIsExpanded() && DetailPanel
-          : // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
-            // Note: MUI Collapse dropped — the conditional render preserves its
-            // mountOnEnter/unmountOnExit semantics (mount only while expanded,
-            // unmount when collapsed); expand/collapse animation deferred.
-            row.getIsExpanded() && DetailPanel}
+        {virtualRow ? (
+          // Virtualized rows are measured by the row virtualizer — keep the bare
+          // conditional here (no Collapsible wrapper) so measureElement reads the
+          // real content height.
+          row.getIsExpanded() && DetailPanel
+        ) : (
+          // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
+          // Note: MUI Collapse → ui/Collapsible. radix removes CollapsibleContent
+          // from the DOM when closed, matching Collapse's mountOnEnter/unmountOnExit.
+          <Collapsible open={row.getIsExpanded()}>
+            <CollapsibleContent>{DetailPanel}</CollapsibleContent>
+          </Collapsible>
+        )}
       </td>
     </tr>
   );
