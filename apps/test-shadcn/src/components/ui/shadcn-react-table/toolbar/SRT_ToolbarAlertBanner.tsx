@@ -1,3 +1,8 @@
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
 import { Fragment, useMemo } from 'react';
 import {
   getSRT_SelectAllHandler,
@@ -5,11 +10,6 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-import { Alert, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 
 export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData>
@@ -18,14 +18,6 @@ export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Note: MUI <Alert color="info" icon={false}> → shadcn <Alert> (div, role
-// "alert"), rendered with its DEFAULT variant (bordered, rounded-lg, px-4 py-3,
-// text-sm, bg-card) per the default-variants ruling. MRT's sx look — icon-grid
-// neutralization (`block border-none rounded-none p-0 text-base`) and the
-// `info` primary tint (`bg-primary/10 text-foreground`) — is dropped; the cva
-// keeps only layout: position relative, inset left/right/top 0, zIndex 2, full
-// width, plus the `bottomOffset` variant mapping `mb: positionToolbarAlertBanner
-// === 'bottom' && !stackAlertBanner ? '-1rem' : undefined` (-mb-4).
 const toolbarAlertBannerVariants = cva(
   'relative left-0 right-0 top-0 z-[2] w-full',
   {
@@ -97,10 +89,6 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
             '{rowCount}',
             totalRowCount.toLocaleString(localization.language),
           )}
-        {/* Note: MUI clear-selection Button size="small" sx={{ p: '2px' }} →
-            shadcn Button variant="ghost" size="sm", default variant only. MUI's
-            text-button primary color + 2px padding override dropped per the
-            default-variants ruling. */}
         <Button
           type="button"
           variant="ghost"
@@ -122,22 +110,21 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
           <Fragment key={`${index}-${columnId}`}>
             {index > 0 ? localization.thenBy : ''}
             {/* Note: MUI Chip (onDelete → internal CancelIcon) → shadcn Badge
-                secondary + raw delete <button> (FilterTextField precedent).
-                Badge has no built-in delete, so the CloseIcon registry icon is
-                kept; MUI's internal delete icon is unlabeled, so no aria-label.
-                MUI Chip's rounded-full geometry yields to Badge rounded-md. */}
-            <Badge
-              variant="secondary"
-              {...chipProps}
-              className={cn(chipProps?.className)}
-            >
-              {table.getColumn(columnId).columnDef.header}
-              <button
-                type="button"
+                asChild rendering a single <button>. Deviation: MUI Chip's label
+                is inert and only the delete icon fires onDelete — here the WHOLE
+                chip is clickable and ungroups the column (user-accepted
+                2026-07-15). CloseIcon auto-sized by the badge base cva
+                (`[&>svg]:size-3`). Accessible name is now the column header text
+                (MUI's delete icon was unlabeled). */}
+            <Badge variant="secondary" asChild {...chipProps}>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => table.getColumn(columnId).toggleGrouping()}
               >
-                <CloseIcon className="size-3" />
-              </button>
+                {table.getColumn(columnId).columnDef.header}
+                <CloseIcon />
+              </Button>
             </Badge>
           </Fragment>
         ))}
