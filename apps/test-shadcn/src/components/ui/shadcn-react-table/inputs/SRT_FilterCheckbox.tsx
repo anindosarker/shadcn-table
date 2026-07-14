@@ -1,5 +1,4 @@
 import { type MouseEvent } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
   parseFromValuesOrFunc,
@@ -7,16 +6,13 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 // Note: MRT sizes the Checkbox via `size={density === 'compact' ? 'small' :
-// 'medium'}`, but that sets the padded MUI hit area (2.5rem here); the visible
-// glyph is ~18px. The radix Checkbox Root IS the visible box, so the
-// density-driven size prop is dropped and it maps to the fixed June
-// visible-box size (size-4).
-const filterCheckboxVariants = cva('size-4');
+// 'medium'}` (the padded MUI hit area; visible glyph ~18px). Dropped — the
+// radix Checkbox Root IS the visible box and its shadcn default (size-4)
+// already matches, so nothing to style here (no cva, render bare).
 
 export interface SRT_FilterCheckboxProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -82,7 +78,6 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
             event.stopPropagation();
             checkboxProps?.onClick?.(event);
           }}
-          className={cn(filterCheckboxVariants(), checkboxProps?.className)}
           title={undefined}
         />
         {checkboxProps.title ?? filterLabel}

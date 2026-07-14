@@ -19,17 +19,15 @@ export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData>
 }
 
 // Note: MUI <Alert color="info" icon={false}> → shadcn <Alert> (div, role
-// "alert"). This cva extends shadcn Alert's own base to map MRT's sx: it
-// neutralizes Alert's grid/border/padding (`block border-none rounded-none p-0
-// text-base` kills the has-[>svg] icon grid — no icon) and adds position
-// relative, inset left/right/top 0, zIndex 2, width 100%. The `info` color →
-// primary-tinted banner (bg-primary/10 + text-foreground) since SRT has no info
-// palette token. Alert's internal cn(alertVariants(), className) twMerges these
-// classes last, so the conflicting base tokens resolve our way. The
-// `bottomOffset` variant maps `mb: positionToolbarAlertBanner === 'bottom' &&
-// !stackAlertBanner ? '-1rem' : undefined` (-mb-4).
+// "alert"), rendered with its DEFAULT variant (bordered, rounded-lg, px-4 py-3,
+// text-sm, bg-card) per the default-variants ruling. MRT's sx look — icon-grid
+// neutralization (`block border-none rounded-none p-0 text-base`) and the
+// `info` primary tint (`bg-primary/10 text-foreground`) — is dropped; the cva
+// keeps only layout: position relative, inset left/right/top 0, zIndex 2, full
+// width, plus the `bottomOffset` variant mapping `mb: positionToolbarAlertBanner
+// === 'bottom' && !stackAlertBanner ? '-1rem' : undefined` (-mb-4).
 const toolbarAlertBannerVariants = cva(
-  'relative left-0 right-0 top-0 z-[2] block w-full rounded-none border-none p-0 text-base bg-primary/10 text-foreground',
+  'relative left-0 right-0 top-0 z-[2] w-full',
   {
     variants: {
       bottomOffset: {
@@ -39,11 +37,6 @@ const toolbarAlertBannerVariants = cva(
     },
   },
 );
-
-// Note: MUI clear-selection Button size="small" sx={{ p: '2px' }} → shadcn
-// Button variant="ghost" size="sm" (MUI text-variant map: primary text, ghost
-// hover:bg-accent per CopyButton ruling) with p-[2px] text-primary.
-const clearSelectionButtonVariants = cva('p-[2px] text-primary');
 
 export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
   stackAlertBanner,
@@ -104,11 +97,14 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
             '{rowCount}',
             totalRowCount.toLocaleString(localization.language),
           )}
+        {/* Note: MUI clear-selection Button size="small" sx={{ p: '2px' }} →
+            shadcn Button variant="ghost" size="sm", default variant only. MUI's
+            text-button primary color + 2px padding override dropped per the
+            default-variants ruling. */}
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          className={clearSelectionButtonVariants()}
           onClick={(event) =>
             getSRT_SelectAllHandler({ table })(event, false, true)
           }
@@ -133,7 +129,7 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
             <Badge
               variant="secondary"
               {...chipProps}
-              className={cn('gap-1', chipProps?.className)}
+              className={cn(chipProps?.className)}
             >
               {table.getColumn(columnId).columnDef.header}
               <button
@@ -167,8 +163,14 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
       )}
     >
       {/* Note: maps the sx `& .MuiAlert-message` (Alert's content wrapper) —
-          maxWidth from the runtime-measured table width stays inline style. */}
+          maxWidth from the runtime-measured table width stays inline style.
+          `col-start-2` places this SRT-owned div in Alert's content track
+          (Alert's default base is `grid grid-cols-[0_1fr]`; this mirrors how
+          shadcn's own AlertTitle/AlertDescription place themselves). Without it
+          the div auto-places into the 0px icon track and the content is crushed
+          to zero width. Replaces Rev 2's `block` grid-neutralization. */}
       <div
+        className="col-start-2"
         style={{
           maxWidth: `calc(${
             tableLayoutRef.current?.clientWidth ?? 360
@@ -189,6 +191,9 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
             {alertProps?.title && (
               <AlertTitle className="mb-1">{alertProps.title}</AlertTitle>
             )}
+            {/* Note: SRT-owned density-padding div (cva on raw element is fine).
+                Alert's default variant now wraps this in its own px-4 py-3 —
+                combined padding accepted per the default-variants ruling. */}
             <div
               className={cn(
                 'flex flex-col',

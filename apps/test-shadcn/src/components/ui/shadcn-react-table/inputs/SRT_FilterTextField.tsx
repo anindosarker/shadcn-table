@@ -548,6 +548,11 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                     )}
                   />
                 </PopoverTrigger>
+                {/* Note: w-[--radix-popover-trigger-width] is layout (match
+                    trigger width); p-0 is shadcn's own official Combobox
+                    pattern (Popover hosting a Command list renders padless so
+                    the Command owns its spacing) — kept as the canonical
+                    pattern, not a decorative override. */}
                 <PopoverContent
                   className="w-[--radix-popover-trigger-width] p-0"
                   align="start"
@@ -653,6 +658,11 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                       )}
                     </Button>
                   </PopoverTrigger>
+                  {/* Note: w-[--radix-popover-trigger-width] is layout (match
+                      trigger width); p-0 is shadcn's own official Combobox
+                      pattern (Popover hosting a Command list renders padless so
+                      the Command owns its spacing) — kept as the canonical
+                      pattern, not a decorative override. */}
                   <PopoverContent
                     className="w-[--radix-popover-trigger-width] p-0"
                     align="start"

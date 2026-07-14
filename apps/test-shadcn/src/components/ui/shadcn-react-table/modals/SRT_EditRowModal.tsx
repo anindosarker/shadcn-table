@@ -5,7 +5,6 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
 import {
   Dialog,
   DialogContent,
@@ -14,13 +13,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { FieldGroup } from '@/components/ui/field';
-import { cn } from '@/lib/utils';
 import { SRT_EditActionButtons } from '../buttons/SRT_EditActionButtons';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
 
-// Note: MUI `fullWidth maxWidth="xs"` → `sm:max-w-[444px]` (MUI xs breakpoint 444px).
-// `fullWidth` is already covered by DialogContent's base `w-full`.
-const editRowModalVariants = cva('sm:max-w-[444px]');
+// Note: MUI `fullWidth maxWidth="xs"` (444px) sizing override dropped per the
+// 2026-07-14 default-variants ruling — shadcn DialogContent default (sm:max-w-lg,
+// 512px) wins. `fullWidth` was already covered by DialogContent's base `w-full`.
+// const editRowModalVariants = cva('sm:max-w-[444px]');
 
 export interface SRT_EditRowModalProps<TData extends SRT_RowData>
   extends Partial<React.ComponentPropsWithRef<typeof DialogContent>> {
@@ -98,7 +97,6 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
         // Note: no MRT DialogDescription equivalent; silence radix "Missing Description" warning.
         aria-describedby={undefined}
         {...dialogProps}
-        className={cn(editRowModalVariants(), dialogProps.className)}
       >
         {((creatingRow &&
           renderCreateRowDialogContent?.({
@@ -113,9 +111,11 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
           })) ?? (
           <>
             <DialogHeader>
-              <DialogTitle className="text-center">
-                {localization.edit}
-              </DialogTitle>
+              {/* Note: MUI DialogTitle textAlign:center dropped — text-align =
+                  typography, not layout; shadcn DialogHeader default
+                  (text-center sm:text-left) wins. */}
+              {/* <DialogTitle className="text-center"> */}
+              <DialogTitle>{localization.edit}</DialogTitle>
             </DialogHeader>
             <form onSubmit={(e) => e.preventDefault()}>
               {/* Note: MUI Stack gap:32px/pt:16px → ui/FieldGroup (flex-col stack);

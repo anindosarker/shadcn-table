@@ -22,9 +22,12 @@ export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Note: base maps MRT's sx (m:auto, width:'calc(100% - 8px)', px:'4px'); the
+// Note: base maps MRT's sx (m:auto, width:'calc(100% - 8px)'); the
 // hasModeButton variant maps mt 6px (mode button present) / 10px (absent).
-const filterRangeSliderVariants = cva('mx-auto w-[calc(100%-8px)] px-1', {
+// MRT's px:'4px' (→ px-1) dropped — padding on the shadcn Slider is a look
+// override per the default-variants ruling; the width calc already insets the
+// track. mx-auto/width/margins are layout.
+const filterRangeSliderVariants = cva('mx-auto w-[calc(100%-8px)]', {
   variants: {
     hasModeButton: {
       false: 'mt-2.5',

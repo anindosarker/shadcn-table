@@ -314,6 +314,12 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
           internalFilterOptions.map(
             ({ divider, label, option, symbol }, index) => (
               <SRT_ActionMenuItem
+                // Note: MUI MenuItem `selected` (active filter mode) →
+                // state-driven bg-accent. Allowed as functional state styling
+                // per the 2026-07-14 rulings (not a static decorative
+                // override); bg-accent is the same token radix
+                // DropdownMenuItem uses for its own highlighted state, so no
+                // new look is introduced.
                 className={option === filterOption ? 'bg-accent' : undefined}
                 divider={divider}
                 icon={<span>{symbol}</span>}

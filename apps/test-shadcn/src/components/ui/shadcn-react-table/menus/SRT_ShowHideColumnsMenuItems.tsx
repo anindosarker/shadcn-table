@@ -20,8 +20,13 @@ import { SRT_ColumnPinningButtons } from '../buttons/SRT_ColumnPinningButtons';
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
+// Note: MRT's MenuItem sx py:'6px' (→ py-1.5) dropped — porting MUI's padding
+// onto the shadcn DropdownMenuItem is a look override; its default padding wins
+// per the shadcn-default-variants ruling. Kept: flex placement + my-0 (layout)
+// and -outline-offset-2, which insets the conditional drag-drop outline below
+// (functional draggingBorderColor map, not decorative).
 const showHideColumnsMenuItemVariants = cva(
-  'items-center justify-start my-0 py-1.5 -outline-offset-2',
+  'items-center justify-start my-0 -outline-offset-2',
 );
 
 export interface SRT_ShowHideColumnsMenuItemsProps<TData extends SRT_RowData>
