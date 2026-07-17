@@ -32,6 +32,7 @@ import {
   Rows2,
   Rows3,
   Rows4,
+  CircleX,
 } from 'lucide-react';
 
 export const SRT_Default_Icons = {
@@ -41,7 +42,7 @@ export const SRT_Default_Icons = {
   ChevronLeftIcon: ChevronLeft,
   ChevronRightIcon: ChevronRight,
   ClearAllIcon: Eraser,
-  CloseIcon: X,
+  CloseIcon: CircleX,
   ContentCopy: Copy,
   DensityLargeIcon: Rows2,
   DensityMediumIcon: Rows3,

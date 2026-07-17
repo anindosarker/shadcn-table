@@ -116,15 +116,15 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
                 2026-07-15). CloseIcon auto-sized by the badge base cva
                 (`[&>svg]:size-3`). Accessible name is now the column header text
                 (MUI's delete icon was unlabeled). */}
+
             <Badge variant="secondary" asChild {...chipProps}>
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
+                type="button"
                 onClick={() => table.getColumn(columnId).toggleGrouping()}
               >
                 {table.getColumn(columnId).columnDef.header}
-                <CloseIcon />
-              </Button>
+                <CloseIcon data-icon="inline-end" />
+              </button>
             </Badge>
           </Fragment>
         ))}
