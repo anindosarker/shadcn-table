@@ -42,7 +42,7 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
     options: {
       enableRowSelection,
       enableSelectAll,
-      icons: { CloseIcon },
+      icons: { CancelIcon },
       localization,
       manualPagination,
       srtToolbarAlertBannerChipProps,
@@ -123,7 +123,7 @@ export const SRT_ToolbarAlertBanner = <TData extends SRT_RowData>({
                 onClick={() => table.getColumn(columnId).toggleGrouping()}
               >
                 {table.getColumn(columnId).columnDef.header}
-                <CloseIcon data-icon="inline-end" />
+                <CancelIcon data-icon="inline-end" />
               </button>
             </Badge>
           </Fragment>
