@@ -86,7 +86,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   const {
     options: {
       enableColumnFilterModes,
-      icons: { CloseIcon, FilterListIcon },
+      icons: { CancelIcon, CloseIcon, FilterListIcon },
       localization,
       manualFiltering,
       srtFilterAutocompleteProps,
@@ -366,18 +366,19 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     !isMultiSelectFilter;
   const usesInputGroup = isTextVariant || isAutocompleteFilter;
 
-  // Chip block stays as-is (already compliant); shared between both mode-button
-  // renderings so it travels with the mode button in either layout.
+  // Chip block: mirrors the banner grouping chip — shadcn Badge asChild
+  // rendering a single <button>. Deviation: MUI Chip's label is inert and only
+  // the delete icon fires onDelete — here the WHOLE chip is clickable and
+  // clears the filter value (user-accepted, banner precedent 2026-07-15).
+  // CancelIcon (MUI Chip onDelete parity = circle-X) auto-sized by the badge
+  // base cva (`[&>svg]:size-3`). Accessible name is the chip label text. Shared
+  // between both mode-button renderings so it travels with the mode button in
+  // either layout.
   const filterChip = filterChipLabel ? (
-    <Badge variant="secondary" className="gap-1">
-      {filterChipLabel}
-      <button
-        type="button"
-        aria-label={localization.clearFilter}
-        onClick={handleClearEmptyFilterChip}
-        className="ml-0.5"
-      >
-        <CloseIcon className="size-3" />
+    <Badge variant="secondary" asChild>
+      <button type="button" onClick={handleClearEmptyFilterChip}>
+        {filterChipLabel}
+        <CancelIcon data-icon="inline-end" />
       </button>
     </Badge>
   ) : null;

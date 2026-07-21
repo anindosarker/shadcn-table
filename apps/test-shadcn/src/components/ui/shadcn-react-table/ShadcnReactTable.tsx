@@ -5,6 +5,7 @@ import {
   type SRT_TableOptions,
   type Xor,
 } from 'shadcn-react-table-core';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { SRT_TableLayout } from './table/SRT_TableLayout';
 
 type TableInstanceProp<TData extends SRT_RowData> = {
@@ -33,5 +34,15 @@ export const ShadcnReactTable = <TData extends SRT_RowData>(
     table = useShadcnReactTable(props);
   }
 
-  return <SRT_TableLayout table={table} />;
+  // Note: the provider lives here at the SRT root because the latest shadcn
+  // tooltip (registry change 2026-07) no longer self-wraps each Tooltip in a
+  // TooltipProvider — Radix Tooltip.Root throws without a provider ancestor.
+  // Mounting it once at the outermost component keeps consumer boilerplate at
+  // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
+  // including portalled content (portals preserve React context).
+  return (
+    <TooltipProvider>
+      <SRT_TableLayout table={table} />
+    </TooltipProvider>
+  );
 };

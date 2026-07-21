@@ -116,11 +116,11 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
           <SRT_Tooltip side="top" title={filterTooltip}>
             {/* disableRipple + size="small" dropped — no shadcn ripple */}
             {/* Note: MUI IconButton sx dropped (16px box, p:8px, scale(0.75),
-                opacity 1/0.3 active, transition 150ms) — shadcn ghost/icon
-                default wins; only ml-1 layout margin (MUI ml:4px) kept. */}
+                opacity 1/0.3 active, transition 150ms) — shadcn ghost + icon-sm
+                (MUI small) wins; only ml-1 layout margin (MUI ml:4px) kept. */}
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               type="button"
               aria-label={filterTooltip}
               onClick={(event: MouseEvent<HTMLButtonElement>) => {

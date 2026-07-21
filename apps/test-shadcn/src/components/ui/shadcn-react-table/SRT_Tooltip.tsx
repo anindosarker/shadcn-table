@@ -37,9 +37,11 @@ export const SRT_Tooltip = ({
   }
 
   // Note: delayDuration goes directly to the Tooltip (Radix Root) rather than a
-  // wrapping provider — shadcn's Tooltip carries its own inner TooltipProvider
-  // (default delay 0), and Radix resolves delay from the nearest provider, so an
-  // outer provider would be shadowed. The Root's own delayDuration takes precedence.
+  // wrapping provider. A single TooltipProvider is mounted once at the SRT root
+  // (ShadcnReactTable) — the latest shadcn tooltip no longer self-wraps, and
+  // Radix Root would throw without a provider ancestor. Radix resolves delay
+  // from the nearest provider, but the Root's own delayDuration overrides it, so
+  // each tooltip keeps its per-instance delay regardless of the shared provider.
   // Note: disableHoverableContent maps MUI's disableInteractive — the tooltip
   // dismisses when the pointer moves onto its content rather than staying hoverable.
   return (

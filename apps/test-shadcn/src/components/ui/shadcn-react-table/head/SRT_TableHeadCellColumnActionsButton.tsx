@@ -62,13 +62,13 @@ export const SRT_TableHeadCellColumnActionsButton = <
       >
         <Button
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           type="button"
           aria-label={localization.columnActions}
           onClick={handleClick}
           // size="small"
           // Note: MUI IconButton sx dropped (h/w 2rem, m:'-8px -4px', opacity
-          // 0.3 + hover:1, transition 150ms) — shadcn ghost/icon default wins.
+          // 0.3 + hover:1, transition 150ms) — shadcn ghost + icon-sm (MUI small) wins.
           {...iconButtonProps}
           title={undefined}
         >

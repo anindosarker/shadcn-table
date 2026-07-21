@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: dropped MUI sx style overrides — h-auto/w-auto (size; size="icon"/size-9
+// Note: dropped MUI sx style overrides — h-auto/w-auto (size; size="icon-sm"/size-8
 // wins), p-[2px] (padding), transition-all (paired with the dropped opacity),
 // hover:bg-transparent (color), hover:opacity-100 + the location opacity-50/100
 // dim (opacity). The grab handle now renders at full opacity per the sweep ruling.
@@ -49,7 +49,7 @@ export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
         aria-label={rest.title ?? localization.move}
         // disableRipple  // Note: shadcn Button has no ripple effect
         draggable="true"
-        size="icon"
+        size="icon-sm"
         variant="ghost"
         {...rest}
         onClick={(event: MouseEvent<HTMLButtonElement>) => {
