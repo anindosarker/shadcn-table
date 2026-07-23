@@ -1283,8 +1283,8 @@ export type ButtonProps = React.ComponentPropsWithRef<'button'>;
 export type InputProps = React.ComponentPropsWithRef<'input'>;
 
 export type SRT_LinearProgressProps = {
-  wrapper?: HTMLAttributes<HTMLDivElement>;
-  progressRoot?: HTMLAttributes<HTMLDivElement>;
+  collapsibleProps?: HTMLAttributes<HTMLDivElement>;
+  progressComponentProps?: HTMLAttributes<HTMLDivElement>;
 };
 
 export interface SRT_CircularProgressProps extends LucideProps {
