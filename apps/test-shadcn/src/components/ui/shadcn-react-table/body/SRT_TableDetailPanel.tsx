@@ -100,7 +100,6 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
         ...tableRowProps?.style,
       }}
       className={cn(
-        'Srt-TableBodyCell-DetailPanel',
         detailPanelRowVariants({
           layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
         }),
@@ -111,7 +110,6 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
         colSpan={getVisibleLeafColumns().length}
         {...tableCellProps}
         className={cn(
-          'Srt-TableBodyCell-DetailPanel',
           detailPanelCellVariants({
             layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
             padded: !!DetailPanel && row.getIsExpanded(),

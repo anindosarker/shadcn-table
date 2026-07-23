@@ -83,7 +83,6 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
   return (
     <div
       className={cn(
-        'Srt-TableHeadCell-ResizeHandle-Wrapper',
         resizeHandleVariants({ density, direction: columnResizeDirection }),
         positionClass,
         activeOpacityClass,
@@ -114,7 +113,6 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
         // borderWidth:2px / w-0 dropped — shadcn Separator's w-px bg-border wins.
         {...rest}
         className={cn(
-          'Srt-TableHeadCell-ResizeHandle-Divider',
           'translate-x-1',
           !isResizing && 'transition-all duration-150',
           rest.className,

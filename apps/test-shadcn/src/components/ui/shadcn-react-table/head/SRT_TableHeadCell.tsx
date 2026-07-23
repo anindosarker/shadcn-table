@@ -318,7 +318,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
         : (tableCellProps.children ?? (
             <div
               className={cn(
-                'Srt-TableHeadCell-Content relative flex w-full items-center',
+                'relative flex w-full items-center',
                 columnDefType === 'group'
                   ? 'justify-center'
                   : column.getCanResize()
@@ -328,7 +328,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
             >
               <div
                 className={cn(
-                  'Srt-TableHeadCell-Content-Labels flex items-center',
+                  'flex items-center',
                   column.getCanSort() &&
                     columnDefType !== 'group' &&
                     'cursor-pointer',
@@ -345,7 +345,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
               >
                 <div
                   className={cn(
-                    'Srt-TableHeadCell-Content-Wrapper text-ellipsis hover:text-clip',
+                    'text-ellipsis hover:text-clip',
                     columnDefType === 'data' && 'overflow-hidden',
                     (columnDef.header?.length ?? 0) < 20
                       ? 'whitespace-nowrap'
@@ -365,7 +365,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
                 )}
               </div>
               {columnDefType !== 'group' && (
-                <div className="Srt-TableHeadCell-Content-Actions whitespace-nowrap">
+                <div className="whitespace-nowrap">
                   {showDragHandle && (
                     <SRT_TableHeadCellGrabHandle
                       column={column}

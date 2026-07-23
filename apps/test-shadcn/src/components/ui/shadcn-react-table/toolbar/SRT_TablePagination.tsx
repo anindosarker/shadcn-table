@@ -43,7 +43,7 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData>
 }
 
 // Root layout mapped from MRT's Box sx (justifyContent { md: space-between, sm:
-// center } → justify-center md:justify-between). class hook Mui- → Srt-.
+// center } → justify-center md:justify-between).
 const tablePaginationVariants = cva(
   'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
@@ -133,7 +133,6 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   return (
     <div
       className={cn(
-        'SrtTablePagination-root',
         tablePaginationVariants(),
         position === 'top' && enableToolbarInternalActions && 'mt-12',
       )}

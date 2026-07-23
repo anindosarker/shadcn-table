@@ -5,7 +5,6 @@ import {
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
 
 export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData>
   extends DivProps {
@@ -72,13 +71,10 @@ export const SRT_ToolbarDropZone = <TData extends SRT_RowData>({
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       {...rest}
-      className={cn(
-        'Srt-ToolbarDropZone',
-        toolbarDropZoneVariants({
-          hovered: hoveredColumn?.id === 'drop-zone',
-          className: rest.className,
-        }),
-      )}
+      className={toolbarDropZoneVariants({
+        hovered: hoveredColumn?.id === 'drop-zone',
+        className: rest.className,
+      })}
     >
       <p className="italic">
         {localization.dropToGroupBy.replace(
