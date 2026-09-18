@@ -1,4 +1,5 @@
 import { cva } from 'class-variance-authority';
+import { createElement } from 'react';
 import {
   parseFromValuesOrFunc,
   type ButtonProps,
@@ -7,6 +8,7 @@ import {
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
   Pagination,
   PaginationContent,
@@ -33,6 +35,8 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData>
       SelectProps?: Partial<ButtonProps>;
       disabled?: boolean;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
+      showFirstButton?: boolean;
+      showLastButton?: boolean;
       showRowsPerPage?: boolean;
     }
   > {
@@ -43,6 +47,138 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData>
 const tablePaginationVariants = cva(
   'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
+
+// Note: MUI Pagination derives its items in usePagination; shadcn Pagination is
+// markup only, so that algorithm is ported here (boundaryCount = siblingCount = 1).
+type SRT_PaginationNavType = 'first' | 'previous' | 'next' | 'last';
+type SRT_PaginationEllipsisType = 'start-ellipsis' | 'end-ellipsis';
+type SRT_PaginationItem =
+  | { type: 'page'; page: number; selected: boolean; disabled: boolean }
+  | {
+      type: SRT_PaginationNavType;
+      page: number;
+      selected: false;
+      disabled: boolean;
+    }
+  | {
+      type: SRT_PaginationEllipsisType;
+      page: null;
+      selected: false;
+      disabled: boolean;
+    };
+
+const getPaginationItems = ({
+  count,
+  disabled,
+  page,
+  showFirstButton,
+  showLastButton,
+}: {
+  count: number;
+  disabled: boolean;
+  page: number;
+  showFirstButton: boolean;
+  showLastButton: boolean;
+}): SRT_PaginationItem[] => {
+  const boundaryCount = 1;
+  const siblingCount = 1;
+
+  const range = (start: number, end: number) => {
+    const length = end - start + 1;
+    return Array.from({ length }, (_, i) => start + i);
+  };
+
+  const startPages = range(1, Math.min(boundaryCount, count));
+  const endPages = range(
+    Math.max(count - boundaryCount + 1, boundaryCount + 1),
+    count,
+  );
+
+  const siblingsStart = Math.max(
+    Math.min(
+      // Natural start
+      page - siblingCount,
+      // Lower boundary when page is high
+      count - boundaryCount - siblingCount * 2 - 1,
+    ),
+    // Greater than startPages
+    boundaryCount + 2,
+  );
+
+  const siblingsEnd = Math.min(
+    Math.max(
+      // Natural end
+      page + siblingCount,
+      // Upper boundary when page is low
+      boundaryCount + siblingCount * 2 + 2,
+    ),
+    // Less than endPages
+    count - boundaryCount - 1,
+  );
+
+  // Basic list of items to render
+  // for example itemList = ['first', 'previous', 1, 'ellipsis', 4, 5, 6, 'ellipsis', 10, 'next', 'last']
+  const itemList: Array<
+    SRT_PaginationNavType | SRT_PaginationEllipsisType | number
+  > = [
+    ...(showFirstButton ? (['first'] as const) : []),
+    'previous',
+    ...startPages,
+
+    // Start ellipsis
+    ...(siblingsStart > boundaryCount + 2
+      ? (['start-ellipsis'] as const)
+      : boundaryCount + 1 < count - boundaryCount
+        ? [boundaryCount + 1]
+        : []),
+
+    // Sibling pages
+    ...range(siblingsStart, siblingsEnd),
+
+    // End ellipsis
+    ...(siblingsEnd < count - boundaryCount - 1
+      ? (['end-ellipsis'] as const)
+      : count - boundaryCount > boundaryCount
+        ? [count - boundaryCount]
+        : []),
+
+    ...endPages,
+    'next',
+    ...(showLastButton ? (['last'] as const) : []),
+  ];
+
+  // Map the button type to its page number
+  const buttonPage = (type: SRT_PaginationNavType) => {
+    switch (type) {
+      case 'first':
+        return 1;
+      case 'previous':
+        return page - 1;
+      case 'next':
+        return page + 1;
+      case 'last':
+        return count;
+    }
+  };
+
+  return itemList.map(
+    (item): SRT_PaginationItem =>
+      typeof item === 'number'
+        ? { type: 'page', page: item, selected: item === page, disabled }
+        : item === 'start-ellipsis' || item === 'end-ellipsis'
+          ? { type: item, page: null, selected: false, disabled }
+          : {
+              type: item,
+              page: buttonPage(item),
+              selected: false,
+              disabled:
+                disabled ||
+                (item === 'next' || item === 'last'
+                  ? page >= count
+                  : page <= 1),
+            },
+  );
+};
 
 export const SRT_TablePagination = <TData extends SRT_RowData>({
   position = 'bottom',
@@ -58,8 +194,8 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
       icons: { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon },
       id,
       localization,
-      srtPaginationProps,
       paginationDisplayMode,
+      srtPaginationProps,
     },
   } = table;
   const {
@@ -98,20 +234,11 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 
   const { children: selectPropsChildren, ...selectTriggerProps } = SelectProps;
 
-  const getPageItems = (): Array<number | 'ellipsis'> => {
-    const total = numberOfPages;
-    const current = pageIndex + 1;
-    if (total <= 7) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
-    const items: Array<number | 'ellipsis'> = [1];
-    const start = Math.max(2, current - 1);
-    const end = Math.min(total - 1, current + 1);
-    if (start > 2) items.push('ellipsis');
-    for (let p = start; p <= end; p++) items.push(p);
-    if (end < total - 1) items.push('ellipsis');
-    items.push(total);
-    return items;
+  const navItems = {
+    first: { Icon: FirstPageIcon, label: localization.goToFirstPage },
+    last: { Icon: LastPageIcon, label: localization.goToLastPage },
+    next: { Icon: ChevronRightIcon, label: localization.goToNextPage },
+    previous: { Icon: ChevronLeftIcon, label: localization.goToPreviousPage },
   };
 
   return (
@@ -123,9 +250,9 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
     >
       {showRowsPerPage && (
         <div className="flex items-center gap-2">
-          <label htmlFor={`srt-rows-per-page-${id}`} className="text-sm">
+          <Label htmlFor={`srt-rows-per-page-${id}`}>
             {localization.rowsPerPage}
-          </label>
+          </Label>
           <Select
             disabled={disabled}
             onValueChange={(value) => table.setPageSize(+value)}
@@ -166,80 +293,46 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
           className={cn('mx-0 w-auto', restPaginationProps?.className)}
         >
           <PaginationContent>
-            {showFirstButton && (
-              <PaginationItem>
-                <Button
-                  aria-label={localization.goToFirstPage}
-                  disabled={disableBack}
-                  onClick={() => table.firstPage()}
-                  size="icon"
-                  type="button"
-                  variant="ghost"
-                >
-                  <FirstPageIcon className="rtl:rotate-180" />
-                </Button>
-              </PaginationItem>
-            )}
-            <PaginationItem>
-              <Button
-                aria-label={localization.goToPreviousPage}
-                disabled={disableBack}
-                onClick={() => table.previousPage()}
-                size="icon"
-                type="button"
-                variant="ghost"
-              >
-                <ChevronLeftIcon className="rtl:rotate-180" />
-              </Button>
-            </PaginationItem>
-            {getPageItems().map((item, idx) =>
-              item === 'ellipsis' ? (
-                <PaginationItem key={`ellipsis-${idx}`}>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              ) : (
+            {getPaginationItems({
+              count: numberOfPages,
+              disabled,
+              page: pageIndex + 1,
+              showFirstButton,
+              showLastButton,
+            }).map((item, index) => {
+              if (item.page === null) {
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                );
+              }
+              const { page } = item;
+              return (
                 // Note: PaginationLink (href-less <a>, not keyboard-operable) → Button.
-                <PaginationItem key={item}>
+                <PaginationItem key={index}>
                   <Button
-                    aria-current={item === pageIndex + 1 ? 'page' : undefined}
-                    aria-label={`Go to page ${item}`}
-                    disabled={disabled}
-                    onClick={() => table.setPageIndex(item - 1)}
-                    size="icon"
+                    aria-current={item.selected ? 'page' : undefined}
+                    aria-label={
+                      item.type === 'page'
+                        ? `${item.selected ? '' : 'Go to '}page ${page}`
+                        : navItems[item.type].label
+                    }
+                    disabled={item.disabled}
+                    onClick={() => table.setPageIndex(page - 1)}
+                    size="icon-sm"
                     type="button"
-                    variant={item === pageIndex + 1 ? 'outline' : 'ghost'}
+                    variant={item.selected ? 'outline' : 'ghost'}
                   >
-                    {item.toLocaleString(localization.language)}
+                    {item.type === 'page'
+                      ? page.toLocaleString(localization.language)
+                      : createElement(navItems[item.type].Icon, {
+                          className: 'rtl:rotate-180',
+                        })}
                   </Button>
                 </PaginationItem>
-              ),
-            )}
-            <PaginationItem>
-              <Button
-                aria-label={localization.goToNextPage}
-                disabled={disableNext}
-                onClick={() => table.nextPage()}
-                size="icon"
-                type="button"
-                variant="ghost"
-              >
-                <ChevronRightIcon className="rtl:rotate-180" />
-              </Button>
-            </PaginationItem>
-            {showLastButton && (
-              <PaginationItem>
-                <Button
-                  aria-label={localization.goToLastPage}
-                  disabled={disableNext}
-                  onClick={() => table.lastPage()}
-                  size="icon"
-                  type="button"
-                  variant="ghost"
-                >
-                  <LastPageIcon className="rtl:rotate-180" />
-                </Button>
-              </PaginationItem>
-            )}
+              );
+            })}
           </PaginationContent>
         </Pagination>
       ) : paginationDisplayMode === 'default' ? (
@@ -251,7 +344,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
           }-${lastRowIndex.toLocaleString(localization.language)} ${
             localization.of
           } ${totalRowCount.toLocaleString(localization.language)}`}</span>
-          <div className="flex gap-1">
+          <div>
             {showFirstButton && (
               <SRT_Tooltip title={localization.goToFirstPage}>
                 <span>
@@ -259,7 +352,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                     aria-label={localization.goToFirstPage}
                     disabled={disableBack}
                     onClick={() => table.firstPage()}
-                    size="icon"
+                    size="icon-sm"
                     type="button"
                     variant="ghost"
                   >
@@ -274,7 +367,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                   aria-label={localization.goToPreviousPage}
                   disabled={disableBack}
                   onClick={() => table.previousPage()}
-                  size="icon"
+                  size="icon-sm"
                   type="button"
                   variant="ghost"
                 >
@@ -288,7 +381,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                   aria-label={localization.goToNextPage}
                   disabled={disableNext}
                   onClick={() => table.nextPage()}
-                  size="icon"
+                  size="icon-sm"
                   type="button"
                   variant="ghost"
                 >
@@ -303,7 +396,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                     aria-label={localization.goToLastPage}
                     disabled={disableNext}
                     onClick={() => table.lastPage()}
-                    size="icon"
+                    size="icon-sm"
                     type="button"
                     variant="ghost"
                   >

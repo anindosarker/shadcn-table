@@ -1000,10 +1000,9 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => SRT_LinearProgressProps)
     | SRT_LinearProgressProps;
-  srtPaginationProps?: // Note: SelectProps was Partial<ComponentPropsWithRef<'select'>> (native
-  // select). The rows-per-page control is now a shadcn Select whose slot
-  // spreads onto SelectTrigger (a button), so the type is ButtonProps.
-  | ((props: { table: SRT_TableInstance<TData> }) => Partial<
+  // Note: SelectProps spreads onto SelectTrigger (a button), hence ButtonProps.
+  srtPaginationProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => Partial<
         DivProps & {
           SelectProps?: Partial<ButtonProps>;
           disabled?: boolean;
