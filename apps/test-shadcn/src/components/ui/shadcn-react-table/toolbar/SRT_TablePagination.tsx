@@ -29,9 +29,7 @@ const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   extends Partial<
     DivProps & {
-      // Note: was Partial<ComponentPropsWithRef<'select'>> (native select).
-      // The rows-per-page control is now a shadcn Select; this slot spreads
-      // onto SelectTrigger (a button), so the type is ButtonProps.
+      // Note: spreads onto SelectTrigger (a button), hence ButtonProps.
       SelectProps?: Partial<ButtonProps>;
       disabled?: boolean;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
@@ -42,15 +40,9 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Root layout mapped from MRT's Box sx (justifyContent { md: space-between, sm:
-// center } → justify-center md:justify-between).
 const tablePaginationVariants = cva(
   'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
-
-// Note: paginationIconButtonVariants cva deleted — the raw nav <button>s are
-// now shadcn <Button variant="ghost" size="icon">, and 'pages' mode uses the
-// shadcn Pagination composition. Both carry their own default styling.
 
 export const SRT_TablePagination = <TData extends SRT_RowData>({
   position = 'bottom',
@@ -58,9 +50,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   ...rest
 }: SRT_TablePaginationProps<TData>) => {
   // const theme = useTheme(); const isMobile = useMediaQuery('(max-width: 720px)');
-  // Note: useTheme + flipIconStyles(theme) dropped for CSS-only rtl (rtl:rotate-180);
-  // the rows-per-page select is a shadcn Select (below), so MRT's mobile
-  // `SelectProps.native` toggle is moot.
+  // Note: rtl via `rtl:rotate-180` class; radix Select has no native mode.
   const {
     getState,
     options: {
@@ -68,8 +58,8 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
       icons: { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon },
       id,
       localization,
-      paginationDisplayMode,
       srtPaginationProps,
+      paginationDisplayMode,
     },
   } = table;
   const {
@@ -104,16 +94,10 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 
   // if (isMobile && SelectProps?.native !== false) SelectProps.native = true;
   // const tooltipProps = getCommonTooltipProps();
-  // Note: SRT_Tooltip computes getCommonTooltipProps() internally, so the
-  // per-call tooltipProps object is dropped. MRT's `SelectProps.native` mobile
-  // branch is dropped too — radix Select is never a native <select>.
+  // Note: SRT_Tooltip applies getCommonTooltipProps() itself.
 
-  // Custom rows-per-page options: `children` can't inject radix SelectItems via
-  // spread, so read it off the slot before spreading the rest onto SelectTrigger
-  // and render it inside SelectContent when provided.
   const { children: selectPropsChildren, ...selectTriggerProps } = SelectProps;
 
-  // Preserved June 'pages'-mode numbered-buttons + ellipsis windowing.
   const getPageItems = (): Array<number | 'ellipsis'> => {
     const total = numberOfPages;
     const current = pageIndex + 1;
@@ -157,8 +141,6 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {/* Note: MRT's SelectProps.native <option> / MenuItem ternary is
-                    a dropped construct — radix renders SelectItems. */}
                 {selectPropsChildren ??
                   rowsPerPageOptions.map((option) => {
                     const value =
@@ -177,15 +159,8 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
         </div>
       )}
       {paginationDisplayMode === 'pages' ? (
-        // shadcn Pagination composition, driven by MRT's inputs. MUI Pagination
-        // / PaginationItem are dropped constructs.
-        // Note: PaginationPrevious/PaginationNext are NOT used — they hardcode
-        // English "Previous"/"Next" text and lucide icons, which breaks the
-        // 38-locale library and bypasses the table's icon overrides. All four
-        // nav controls are Button (real <button>, so native disabled dimming)
-        // with the table's icons + localized aria-labels, kept inside the
-        // Pagination composition via PaginationItem. Numbered pages stay
-        // PaginationLink (anchor, isActive).
+        // Note: MUI Pagination/PaginationItem → shadcn Pagination. PaginationPrevious/
+        // Next not used: hardcoded English text + lucide icons (locales, icon overrides).
         <Pagination
           {...restPaginationProps}
           className={cn('mx-0 w-auto', restPaginationProps?.className)}
@@ -223,11 +198,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                   <PaginationEllipsis />
                 </PaginationItem>
               ) : (
-                // Note: PaginationLink dropped — its href-less <a> is not
-                // keyboard-focusable/operable (regression vs MUI's button-based
-                // PaginationItem). Button with outline/ghost mirrors
-                // PaginationLink's internal buttonVariants (isActive → outline)
-                // and is keyboard-accessible.
+                // Note: PaginationLink (href-less <a>, not keyboard-operable) → Button.
                 <PaginationItem key={item}>
                   <Button
                     aria-current={item === pageIndex + 1 ? 'page' : undefined}
@@ -280,8 +251,6 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
           }-${lastRowIndex.toLocaleString(localization.language)} ${
             localization.of
           } ${totalRowCount.toLocaleString(localization.language)}`}</span>
-          {/* MRT <Box gap="xs"> is odd MUI — mapped to a flex container. Each
-              disabled button stays wrapped in <span> so SRT_Tooltip anchors it. */}
           <div className="flex gap-1">
             {showFirstButton && (
               <SRT_Tooltip title={localization.goToFirstPage}>
