@@ -103,7 +103,7 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
       )}
       style={{
         ...getSRTCellWidthStyles({ column, header: footer, table }),
-        ...(isColumnPinned ? getSRTPinnedCellStyles({ column, table }) : {}),
+        ...getSRTPinnedCellStyles({ column, table }),
         ...tableCellProps?.style,
       }}
       onKeyDown={handleKeyDown}

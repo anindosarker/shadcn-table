@@ -8,15 +8,28 @@ import {
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
+// getMRTTheme — Note: mrtTheme registry dropped project-wide; shadcn CSS vars theme instead.
+
+// commonCellBeforeAfterStyles — Note: pinned/highlight :before-:after pseudos dropped; the cell owns bg-background.
+
 export const getSRTPinnedCellStyles = <TData extends SRT_RowData>({
   column,
 }: {
   column: SRT_Column<TData>;
   table: SRT_TableInstance<TData>;
 }): CSSProperties => {
-  const isPinned = column.getIsPinned();
+  const isPinned =
+    column.columnDef.columnDefType !== 'group' && column.getIsPinned();
+
+  if (!isPinned) return {};
 
   return {
+    boxShadow:
+      isPinned === 'left' && column.getIsLastColumn(isPinned)
+        ? '-4px 0 4px -4px rgba(97,97,97,0.5) inset'
+        : isPinned === 'right' && column.getIsFirstColumn(isPinned)
+          ? '4px 0 4px -4px rgba(97,97,97,0.5) inset'
+          : undefined,
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
     position: 'sticky',
     right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
@@ -61,10 +74,13 @@ export const getSRTCellWidthStyles = <TData extends SRT_RowData>({
   return widthStyles;
 };
 
+// getCommonToolbarStyles — Note: mapped into topToolbarVariants/bottomToolbarVariants cva.
+
 export type SRT_TooltipSide = 'bottom' | 'left' | 'right' | 'top';
 
 export type SRT_CommonTooltipProps = {
   delayDuration: number;
+  disableHoverableContent: boolean;
   side?: SRT_TooltipSide;
 };
 
@@ -72,5 +88,7 @@ export const getCommonTooltipProps = (
   side?: SRT_TooltipSide,
 ): SRT_CommonTooltipProps => ({
   delayDuration: 1000,
+  disableHoverableContent: true,
   side,
+  // enterNextDelay: 1000 — Note: dropped; Radix owns the skip window via TooltipProvider.
 });

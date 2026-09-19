@@ -41,7 +41,7 @@ export const ShadcnReactTable = <TData extends SRT_RowData>(
   // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
   // including portalled content (portals preserve React context).
   return (
-    <TooltipProvider>
+    <TooltipProvider skipDelayDuration={0}>
       <SRT_TableLayout table={table} />
     </TooltipProvider>
   );

@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { getCommonTooltipProps } from 'shadcn-react-table-core';
-import type { SRT_TooltipSide } from 'shadcn-react-table-core';
+import {
+  getCommonTooltipProps,
+  type SRT_TooltipSide,
+} from 'shadcn-react-table-core';
 import {
   Tooltip,
   TooltipContent,
@@ -9,7 +11,7 @@ import {
 
 export interface SRT_TooltipProps {
   title?: React.ReactNode;
-  children: React.ReactNode;
+  children: React.ReactElement;
   side?: SRT_TooltipSide;
   sideOffset?: number;
   disabled?: boolean;
@@ -22,7 +24,7 @@ export interface SRT_TooltipProps {
 export const SRT_Tooltip = ({
   title,
   children,
-  side,
+  side = 'bottom',
   sideOffset,
   disabled,
   open,
@@ -30,26 +32,21 @@ export const SRT_Tooltip = ({
   className,
   asChild = true,
 }: SRT_TooltipProps) => {
-  const { delayDuration, side: commonSide } = getCommonTooltipProps(side);
-
-  if (disabled || title == null || title === '') {
+  const {
+    delayDuration,
+    disableHoverableContent,
+    side: commonSide,
+  } = getCommonTooltipProps(side);
+  if (disabled || (!title && title !== 0)) {
     return <>{children}</>;
   }
 
-  // Note: delayDuration goes directly to the Tooltip (Radix Root) rather than a
-  // wrapping provider. A single TooltipProvider is mounted once at the SRT root
-  // (ShadcnReactTable) — the latest shadcn tooltip no longer self-wraps, and
-  // Radix Root would throw without a provider ancestor. Radix resolves delay
-  // from the nearest provider, but the Root's own delayDuration overrides it, so
-  // each tooltip keeps its per-instance delay regardless of the shared provider.
-  // Note: disableHoverableContent maps MUI's disableInteractive — the tooltip
-  // dismisses when the pointer moves onto its content rather than staying hoverable.
   return (
     <Tooltip
       open={open}
       onOpenChange={onOpenChange}
       delayDuration={delayDuration}
-      disableHoverableContent
+      disableHoverableContent={disableHoverableContent}
     >
       <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
       <TooltipContent

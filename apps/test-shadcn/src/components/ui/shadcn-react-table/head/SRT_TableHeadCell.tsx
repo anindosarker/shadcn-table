@@ -278,7 +278,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       style={
         {
           ...getSRTCellWidthStyles({ column, header, table }),
-          ...(isColumnPinned ? getSRTPinnedCellStyles({ column, table }) : {}),
+          ...getSRTPinnedCellStyles({ column, table }),
           ...tableCellProps?.style,
           ...draggingBorders,
         } as CSSProperties
