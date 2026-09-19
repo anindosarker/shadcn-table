@@ -9,11 +9,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: expandButtonVariants cva deleted — it existed solely to restyle the
-// shadcn Button: density h-7/h-9 sizes drop for size="icon" (size-9; compact no
-// longer shrinks), and the expandable opacity-100/opacity-30 dim drops — the
-// button's `disabled` state already applies shadcn's disabled:opacity-50.
-
 export interface SRT_ExpandButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
   row: SRT_Row<TData>;
@@ -71,7 +66,6 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
           variant="ghost"
           {...iconButtonProps}
           onClick={handleToggleExpand}
-          className={iconButtonProps?.className}
           style={{
             // Note: rtl 'mr'/'ml' switch dropped — positionExpandColumn only.
             ...(positionExpandColumn === 'last'
