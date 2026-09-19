@@ -19,15 +19,13 @@ import {
   type SRT_TableInstance,
   useDropdownOptions,
 } from 'shadcn-react-table-core';
-import { CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
@@ -53,12 +51,8 @@ import {
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 
-// Note: h-9 dropped (redundant sizing on shadcn Input/SelectTrigger, which are
-// already h-9); w-full is fill-parent layout for the filter control.
 const filterTextFieldVariants = cva('w-full');
 
-// Note: MUI's `debounce` from `@mui/material/utils` → June's local
-// setTimeout-based debounce (matches SRT_GlobalFilterTextField).
 function debounce<TArgs extends unknown[]>(
   fn: (...args: TArgs) => void,
   delay: number,
@@ -187,12 +181,14 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             : ''
           : ((column.getFilterValue() as string) ?? ''),
   );
-  const [autocompleteValue, setAutocompleteValue] =
-    useState<DropdownOption | null>(() =>
-      isAutocompleteFilter
-        ? ((column.getFilterValue() || null) as DropdownOption | null)
-        : null,
-    );
+  const [autocompleteOpen, setAutocompleteOpen] = useState(false);
+  // const [autocompleteValue, setAutocompleteValue] = ...
+  // Note: MRT reads this state only as Autocomplete `value={autocompleteValue}`, which has no SRT surface — setter kept, getter dropped.
+  const [, setAutocompleteValue] = useState<DropdownOption | null>(() =>
+    isAutocompleteFilter
+      ? ((column.getFilterValue() || null) as DropdownOption | null)
+      : null,
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleChangeDebounced = useCallback(
@@ -232,6 +228,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   };
 
   const handleAutocompleteInputChange = (newValue: string) => {
+    setAutocompleteOpen(newValue !== '');
     handleChange(newValue);
   };
 
@@ -304,8 +301,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
         inputRef;
     }
-    // Note: MRT also forwards `textFieldProps.inputRef` here — user input-ref
-    // forwarding deferred (same as SRT_GlobalFilterTextField).
+    // if (textFieldProps.inputRef) { textFieldProps.inputRef = inputRef; }
+    // Note: user input-ref forwarding deferred (SRT_GlobalFilterTextField precedent).
   };
 
   const inputType = filterVariant?.startsWith('datetime')
@@ -320,11 +317,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       ? timePickerProps
       : datePickerProps;
 
-  // commonInputProps mirrors MRT's commonTextFieldProps intent. Note: MRT's
-  // `mx:-2px; p:0; width:calc(100%+4px)` standard-underline hack dropped — it
-  // targets the MUI TextField root, not a native <input>; shadcn Input keeps
-  // its own bordered padding (SRT_GlobalFilterTextField precedent). minWidth
-  // map + width:0 chip hack preserved.
   const commonInputProps: InputProps = {
     'aria-label': filterPlaceholder,
     autoComplete: 'off',
@@ -340,6 +332,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       textFieldProps.onKeyDown?.(e);
     },
     style: {
+      // mx: '-2px', p: 0, width: 'calc(100% + 4px)',
+      // Note: MUI TextField-root underline hack — no target on a native input.
       minWidth: isDateFilter
         ? '160px'
         : enableColumnFilterModes && rangeFilterIndex === 0
@@ -349,16 +343,12 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             : !filterChipLabel
               ? '120px'
               : 'auto',
+      textOverflow: 'ellipsis',
       width: filterChipLabel ? 0 : undefined,
       ...textFieldProps.style,
     },
   };
 
-  // Variant fork (Note): MRT hosted the mode/clear adornments inside the MUI
-  // TextField for every variant, but radix Select/Popover controls cannot host
-  // InputGroup addons — so text + autocomplete use an InputGroup (mode =
-  // inline-start addon, clear = inline-end addon) while select/multiselect/date
-  // keep the sibling mode button + absolute clear.
   const isTextVariant =
     !isDateFilter &&
     !isAutocompleteFilter &&
@@ -366,14 +356,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     !isMultiSelectFilter;
   const usesInputGroup = isTextVariant || isAutocompleteFilter;
 
-  // Chip block: mirrors the banner grouping chip — shadcn Badge asChild
-  // rendering a single <button>. Deviation: MUI Chip's label is inert and only
-  // the delete icon fires onDelete — here the WHOLE chip is clickable and
-  // clears the filter value (user-accepted, banner precedent 2026-07-15).
-  // CancelIcon (MUI Chip onDelete parity = circle-X) auto-sized by the badge
-  // base cva (`[&>svg]:size-3`). Accessible name is the chip label text. Shared
-  // between both mode-button renderings so it travels with the mode button in
-  // either layout.
   const filterChip = filterChipLabel ? (
     <Badge variant="secondary" asChild>
       <button type="button" onClick={handleClearEmptyFilterChip}>
@@ -383,9 +365,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     </Badge>
   ) : null;
 
-  // Sibling mode button for the non-InputGroup variants (select/multiselect/date).
-  // Note: MRT's size-7 button + size-3.5 icon classNames dropped — shadcn
-  // size="icon" default wins (no style-override className).
+  // sx={{ height: '1.75rem', width: '1.75rem' }}
+  // Note: MUI IconButton sizing dropped — shadcn icon-sm default wins.
   const startAdornment = showChangeModeButton ? (
     <div className="flex items-center gap-1">
       <SRT_Tooltip title={localization.changeFilterMode}>
@@ -393,7 +374,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           type="button"
           aria-label={localization.changeFilterMode}
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           className="shrink-0"
           onClick={handleFilterMenuOpen}
         >
@@ -404,8 +385,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     </div>
   ) : null;
 
-  // InputGroup inline-start addon for the text/autocomplete variants — same mode
-  // button + chip, expressed as an InputGroupButton.
   const startGroupAddon = showChangeModeButton ? (
     <InputGroupAddon align="inline-start">
       <SRT_Tooltip title={localization.changeFilterMode}>
@@ -421,9 +400,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     </InputGroupAddon>
   ) : null;
 
-  // Absolute clear button for the non-InputGroup variants (select/multiselect).
-  // Note: MRT's size-8 + scale-90 button classNames and size-3.5 icon class
-  // dropped — shadcn size="icon" default wins.
+  // sx={{ height: '2rem', transform: 'scale(0.9)', width: '2rem' }}
+  // Note: MUI IconButton sizing dropped — shadcn icon-sm default wins.
   const clearButton =
     !isAutocompleteFilter && !isDateFilter && !filterChipLabel ? (
       <SRT_Tooltip side="right" title={localization.clearFilter ?? ''}>
@@ -438,7 +416,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             type="button"
             aria-label={localization.clearFilter}
             variant="ghost"
-            size="icon"
+            size="icon-sm"
             disabled={!filterValue?.toString()?.length}
             onClick={handleClear}
           >
@@ -448,10 +426,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       </SRT_Tooltip>
     ) : null;
 
-  // InputGroup inline-end clear addon for the text variant (autocomplete keeps no
-  // clear per the !isAutocompleteFilter condition; when a filter chip is shown the
-  // input collapses and the clear is hidden, mirroring clearButton's
-  // !filterChipLabel condition).
   const clearGroupAddon =
     isTextVariant && !filterChipLabel ? (
       <InputGroupAddon align="inline-end">
@@ -498,7 +472,12 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     />
   );
 
-  const selectedAutocompleteValue = getValueAndLabel(autocompleteValue).value;
+  const autocompleteOptions =
+    dropdownOptions?.filter((option) =>
+      getValueAndLabel(option)
+        .label.toLowerCase()
+        .includes(String(filterValue).trim().toLowerCase()),
+    ) ?? [];
 
   return (
     <div className="flex w-full flex-col gap-1">
@@ -508,10 +487,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           {filterVariant?.startsWith('time') ||
           filterVariant?.startsWith('datetime') ||
           filterVariant?.startsWith('date') ? (
-            // Note: MUI picker field.clearable/onClear dropped — native date
-            // inputs provide browser-native clearing, so the shared clear
-            // button is excluded for date filters (via !isDateFilter above),
-            // matching MRT's endAdornment condition.
+            // field: { clearable: true, onClear: () => handleClear() }
+            // Note: native date inputs clear themselves (shared clear excluded above).
             <Input
               {...commonInputProps}
               {...dateFieldProps}
@@ -532,7 +509,10 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           ) : isAutocompleteFilter ? (
             <InputGroup>
               {startGroupAddon}
-              <Popover>
+              <Popover
+                open={autocompleteOpen && autocompleteOptions.length > 0}
+                onOpenChange={setAutocompleteOpen}
+              >
                 <PopoverTrigger asChild>
                   <InputGroupInput
                     {...commonInputProps}
@@ -549,37 +529,27 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                     )}
                   />
                 </PopoverTrigger>
-                {/* Note: w-[--radix-popover-trigger-width] is layout (match
-                    trigger width); p-0 is shadcn's own official Combobox
-                    pattern (Popover hosting a Command list renders padless so
-                    the Command owns its spacing) — kept as the canonical
-                    pattern, not a decorative override. */}
+                {/* Note: trigger-width + p-0 = shadcn's canonical Combobox Popover/Command pattern (layout, not decoration). */}
                 <PopoverContent
                   className="w-[--radix-popover-trigger-width] p-0"
                   align="start"
                   onOpenAutoFocus={(e) => e.preventDefault()}
                 >
-                  <Command>
+                  <Command shouldFilter={false}>
                     <CommandList>
-                      <CommandEmpty>—</CommandEmpty>
                       <CommandGroup>
-                        {dropdownOptions?.map((option, index) => {
+                        {autocompleteOptions.map((option, index) => {
                           const { label, value: optValue } =
                             getValueAndLabel(option);
                           return (
                             <CommandItem
                               key={`${index}-${optValue}`}
                               value={label}
-                              onSelect={() => handleAutocompleteChange(option)}
+                              onSelect={() => {
+                                handleAutocompleteChange(option);
+                                setAutocompleteOpen(false);
+                              }}
                             >
-                              <CheckIcon
-                                className={cn(
-                                  'mr-2 size-4',
-                                  optValue === selectedAutocompleteValue
-                                    ? 'opacity-100'
-                                    : 'opacity-0',
-                                )}
-                              />
                               {label}
                             </CommandItem>
                           );
@@ -591,6 +561,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               </Popover>
             </InputGroup>
           ) : isSelectFilter ? (
+            // onChange={handleTextFieldChange}
+            // Note: radix Select exposes no ChangeEvent, so the user onChange hook can't fire (SRT_EditCellTextField precedent).
             <Select
               value={typeof filterValue === 'string' ? filterValue : ''}
               onValueChange={(v) => handleChange(v)}
@@ -604,36 +576,35 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                 <SelectValue placeholder={filterPlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                {dropdownOptions?.map((option, index) => {
-                  const { label, value: optValue } = getValueAndLabel(option);
-                  return (
-                    <SelectItem key={`${index}-${optValue}`} value={optValue}>
-                      {label}{' '}
-                      {!columnDef.filterSelectOptions &&
-                        `(${facetedUniqueValues.get(optValue)})`}
-                    </SelectItem>
-                  );
-                })}
+                {textFieldProps.children ??
+                  dropdownOptions?.map((option, index) => {
+                    const { label, value: optValue } = getValueAndLabel(option);
+                    return (
+                      <SelectItem key={`${index}-${optValue}`} value={optValue}>
+                        {label}{' '}
+                        {!columnDef.filterSelectOptions &&
+                          `(${facetedUniqueValues.get(optValue)})`}
+                      </SelectItem>
+                    );
+                  })}
               </SelectContent>
             </Select>
           ) : isMultiSelectFilter ? (
             (() => {
               const selected = Array.isArray(filterValue) ? filterValue : [];
+              // onChange={handleTextFieldChange}
+              // Note: radix Command items expose no ChangeEvent, so the user onChange hook can't fire (SRT_EditCellTextField precedent).
               const toggle = (value: string) => {
                 const next = selected.includes(value)
                   ? selected.filter((v) => v !== value)
                   : [...selected, value];
-                setFilterValue(next);
-                column.setFilterValue(next.length ? next : []);
+                handleChange(next);
               };
               return (
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      // Note: MRT's font-normal (typography) + redundant h-9
-                      // dropped — Button defaults win; w-full/justify-start are
-                      // layout only.
                       className={cn(
                         'w-full justify-start',
                         textFieldProps.className,
@@ -659,41 +630,31 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                       )}
                     </Button>
                   </PopoverTrigger>
-                  {/* Note: w-[--radix-popover-trigger-width] is layout (match
-                      trigger width); p-0 is shadcn's own official Combobox
-                      pattern (Popover hosting a Command list renders padless so
-                      the Command owns its spacing) — kept as the canonical
-                      pattern, not a decorative override. */}
+                  {/* Note: trigger-width + p-0 = shadcn's canonical Combobox Popover/Command pattern (layout, not decoration). */}
                   <PopoverContent
                     className="w-[--radix-popover-trigger-width] p-0"
                     align="start"
                   >
                     <Command>
-                      <CommandInput placeholder={filterPlaceholder} />
                       <CommandList>
-                        <CommandEmpty>—</CommandEmpty>
                         <CommandGroup>
-                          {dropdownOptions?.map((option, index) => {
-                            const { label, value } = getValueAndLabel(option);
-                            const isSel = selected.includes(value);
-                            return (
-                              <CommandItem
-                                key={`${index}-${value}`}
-                                value={value}
-                                onSelect={() => toggle(value)}
-                              >
-                                <CheckIcon
-                                  className={cn(
-                                    'mr-2 size-4',
-                                    isSel ? 'opacity-100' : 'opacity-0',
-                                  )}
-                                />
-                                {label}{' '}
-                                {!columnDef.filterSelectOptions &&
-                                  `(${facetedUniqueValues.get(value)})`}
-                              </CommandItem>
-                            );
-                          })}
+                          {textFieldProps.children ??
+                            dropdownOptions?.map((option, index) => {
+                              const { label, value } = getValueAndLabel(option);
+                              const isSel = selected.includes(value);
+                              return (
+                                <CommandItem
+                                  key={`${index}-${value}`}
+                                  value={value}
+                                  onSelect={() => toggle(value)}
+                                >
+                                  <Checkbox checked={isSel} />
+                                  {label}{' '}
+                                  {!columnDef.filterSelectOptions &&
+                                    `(${facetedUniqueValues.get(value)})`}
+                                </CommandItem>
+                              );
+                            })}
                         </CommandGroup>
                       </CommandList>
                     </Command>
@@ -707,8 +668,6 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               <InputGroupInput
                 {...commonInputProps}
                 ref={setInputRef}
-                // Accept numbers too: type='number' filters set numeric values
-                // via valueAsNumber; a string-only guard would blank them.
                 value={
                   typeof filterValue === 'string' ||
                   typeof filterValue === 'number'
