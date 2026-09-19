@@ -6,10 +6,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: toggleDensePaddingButtonVariants cva deleted — only carried h-9 w-9 to
-// restyle the shadcn Button (matches size="icon" size-9 anyway). Icon h-4 w-4
-// dropped (Button auto-sizes svg to size-4).
-
 export interface SRT_ToggleDensePaddingButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
   table: SRT_TableInstance<TData>;
@@ -45,9 +41,9 @@ export const SRT_ToggleDensePaddingButton = <TData extends SRT_RowData>({
         aria-label={localization.toggleDensity}
         onClick={handleToggleDensePadding}
         size="icon"
+        type="button"
         variant="ghost"
         {...rest}
-        className={rest?.className}
         title={undefined}
       >
         {density === 'compact' ? (
