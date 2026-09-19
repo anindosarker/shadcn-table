@@ -7,11 +7,7 @@ import {
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
-
-// Note: rowPinButtonVariants cva deleted — it only carried h-6 w-6 (MUI 24px
-// size="small") to restyle the shadcn Button; size="icon" (size-9) default wins.
 
 export interface SRT_RowPinButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -56,22 +52,24 @@ export const SRT_RowPinButton = <TData extends SRT_RowData>({
         onFocus={() => setTooltipOpened(true)}
         onMouseEnter={() => setTooltipOpened(true)}
         onMouseLeave={() => setTooltipOpened(false)}
-        size="icon"
+        size="icon-sm"
+        type="button"
         variant="ghost"
         {...rest}
-        className={rest?.className}
+        // sx={{ height: '24px', width: '24px' }}
+        // Note: 24px box dropped; size="icon-sm" per the MUI-small icon-button ruling.
       >
         {isPinned ? (
           <CloseIcon />
         ) : (
           <PushPinIcon
-            className={cn(
+            className={
               rowPinningDisplayMode === 'sticky'
                 ? 'rotate-[135deg]'
                 : pinningPosition === 'top'
                   ? 'rotate-180'
-                  : '',
-            )}
+                  : ''
+            }
           />
         )}
       </Button>
