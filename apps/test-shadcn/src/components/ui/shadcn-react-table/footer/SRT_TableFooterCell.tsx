@@ -1,4 +1,4 @@
-import { type CSSProperties, type KeyboardEvent } from 'react';
+import { type KeyboardEvent } from 'react';
 import {
   type SRT_Header,
   type SRT_RowData,
@@ -10,8 +10,7 @@ import {
   parseFromValuesOrFunc,
 } from 'shadcn-react-table-core';
 // import { useTheme } from '@mui/material/styles';
-// Note: useTheme/Theme dropped project-wide — logical CSS + shadcn tokens replace
-// MUI's manual `theme.direction === 'rtl'` alignment branch here.
+// Note: useTheme/Theme dropped project-wide — shadcn tokens + logical CSS replace it.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
@@ -22,14 +21,9 @@ export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Base folds getCommonMRTCellStyles' static pieces (backgroundColor inherit →
-// bg-inherit; MRT's backgroundImage:inherit is moot here and intentionally
-// dropped), position relative, verticalAlign top, fontWeight bold, and the
-// focus-visible cell-navigation outline (cellNavigationOutlineColor → ring
-// token) since footer cells are keyboard-focusable. Density paddings / opacity
-// / zIndex / layout are runtime-conditional in cn().
+// Note: getCommonMRTCellStyles' backgroundImage:inherit dropped — no MUI Paper/mrtTheme ancestor sets one.
 const footerCellVariants = cva(
-  'relative bg-inherit font-bold align-top focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+  'relative bg-inherit font-bold align-top text-xs leading-[1.3125rem] text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
 );
 
 export const SRT_TableFooterCell = <TData extends SRT_RowData>({
@@ -58,12 +52,10 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     columnDef.columnDefType !== 'group' &&
     column.getIsPinned();
 
+  const args = { column, table };
   const tableCellProps = {
-    ...parseFromValuesOrFunc(srtTableFooterCellProps, { column, table }),
-    ...parseFromValuesOrFunc(columnDef.srtTableFooterCellProps, {
-      column,
-      table,
-    }),
+    ...parseFromValuesOrFunc(srtTableFooterCellProps, args),
+    ...parseFromValuesOrFunc(columnDef.srtTableFooterCellProps, args),
     ...rest,
   };
 
@@ -76,32 +68,28 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     });
   };
 
-  const isDraggingOrHovered =
-    draggingColumn?.id === column.id || hoveredColumn?.id === column.id;
-
   return (
-    // MUI `variant="footer"` dropped — no native <td> analogue; the footer's
-    // visual treatment lives in the classes below.
     <td
+      // align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
+      // Note: → text-center / logical text-start classes below (rtl-safe without theme).
       colSpan={footer.colSpan}
       data-index={staticColumnIndex}
       data-pinned={!!isColumnPinned || undefined}
       tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+      // variant="footer"
+      // Note: no td analogue — MUI footer-variant defaults folded into footerCellVariants.
       {...tableCellProps}
       className={cn(
         footerCellVariants(),
-        // align dropped → logical text-align; group also centers content.
-        // Note: MRT's `theme.direction === 'rtl' ? 'right' : 'left'` branch is
-        // replaced by logical `text-start`, which handles rtl without a theme.
         columnDefType === 'group' ? 'text-center justify-center' : 'text-start',
         layoutMode?.startsWith('grid') && 'flex',
-        // density paddings — MRT's exact rem values (0.5/1/1.5rem).
         density === 'compact'
           ? 'p-2'
           : density === 'comfortable'
             ? 'p-4'
             : 'p-6',
-        isDraggingOrHovered && 'opacity-50',
+        (draggingColumn?.id === column.id || hoveredColumn?.id === column.id) &&
+          'opacity-50',
         !enableColumnVirtualization &&
           'transition-[padding] duration-150 ease-in-out',
         column.getIsResizing() || draggingColumn?.id === column.id
@@ -109,18 +97,15 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
           : columnDefType !== 'group' && isColumnPinned
             ? 'z-[1]'
             : 'z-0',
-        // Pinned td owns its bg (June deviation) — spread after opacity so its
-        // 0.97 wins, matching getCommonMRTCellStyles' pinnedStyles order.
+        // Note: getCommonPinnedCellStyles' :before bg/edge-shadow → td owns bg (plan); placed after opacity-50 so 0.97 wins.
         isColumnPinned && 'bg-background opacity-[0.97]',
         tableCellProps?.className,
       )}
-      style={
-        {
-          ...getSRTCellWidthStyles({ column, header: footer, table }),
-          ...(isColumnPinned ? getSRTPinnedCellStyles({ column, table }) : {}),
-          ...tableCellProps?.style,
-        } as CSSProperties
-      }
+      style={{
+        ...getSRTCellWidthStyles({ column, header: footer, table }),
+        ...(isColumnPinned ? getSRTPinnedCellStyles({ column, table }) : {}),
+        ...tableCellProps?.style,
+      }}
       onKeyDown={handleKeyDown}
     >
       {tableCellProps.children ??
