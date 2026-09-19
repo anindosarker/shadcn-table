@@ -23,10 +23,7 @@ import {
   type TdProps,
 } from 'shadcn-react-table-core';
 // import { useTheme } from '@mui/material/styles';
-// Note: useTheme/mrtTheme dropped project-wide. MRT reads `theme.direction` for
-// the `align` prop → replaced by the logical `text-start` class (rtl-safe);
-// `theme.palette.grey[500]` → `var(--color-muted-foreground)`; and
-// `mrtTheme.draggingBorderColor` → `var(--color-primary)`.
+// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -50,14 +47,8 @@ export interface SRT_TableBodyCellProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Base folds getCommonMRTCellStyles' static pieces (backgroundColor inherit →
-// bg-inherit — MRT's backgroundImage:inherit is moot here and intentionally
-// dropped; position relative; the focus-visible navigation outline → ring
-// token) plus MRT's sx `overflow: hidden` and the `&:hover { textOverflow: clip
-// }` reveal. Density paddings / opacity / zIndex / pinned / layout / cursor are
-// runtime-conditional in cn() below.
 const bodyCellVariants = cva(
-  'relative bg-inherit overflow-hidden text-start hover:text-clip focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+  'relative bg-inherit border-b text-sm overflow-hidden text-start -outline-offset-1 hover:text-clip focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
 );
 
 export const SRT_TableBodyCell = <TData extends SRT_RowData>({
@@ -88,7 +79,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       layoutMode,
       // mrtTheme: { draggingBorderColor },
       // Note: mrtTheme registry dropped — draggingBorderColor → var(--color-primary).
-      rowNumberDisplayMode,
       srtSkeletonProps,
       srtTableBodyCellProps,
     },
@@ -106,7 +96,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     hoveredColumn,
     hoveredRow,
     isLoading,
-    pagination,
     showSkeletons,
   } = getState();
   const { column, row } = cell;
@@ -151,9 +140,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     const showResizeBorder =
       isResizingColumn && columnResizeMode === 'onChange';
 
-    // Note: MRT appends `!important` to each border; React style objects can't
-    // express it, so it is dropped — draggingBorders still win since they spread
-    // last in the inline style.
+    // Note: MRT's `!important` dropped — React style objects can't express it; draggingBorders spread last anyway.
     const borderStyle = showResizeBorder
       ? `2px solid var(--color-primary)`
       : isDraggingColumn || isDraggingRow
@@ -276,10 +263,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     });
   };
 
-  // SRT display-column body dispatch: core display defs are headless (core
-  // cannot import app components), so the body controls MRT supplies via each
-  // columnDef.Cell are dispatched here on column.id. Precedence — a user
-  // columnDef.Cell wins first (handled by the caller's `?? this`), then id.
   const renderDisplayColumnCell = (): ReactNode => {
     switch (column.id) {
       case 'mrt-row-select':
@@ -323,13 +306,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           </>
         );
       }
-      case 'mrt-row-numbers':
-        return (
-          ((rowNumberDisplayMode === 'static'
-            ? (staticRowIndex || 0) +
-              (pagination?.pageSize || 0) * (pagination?.pageIndex || 0)
-            : row.index) ?? 0) + 1
-        );
       case 'mrt-row-actions':
         return (
           <SRT_ToggleRowActionMenuButton
@@ -345,8 +321,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
         );
       case 'mrt-row-pin':
         return <SRT_TableBodyRowPinButton row={row} table={table} />;
-      case 'mrt-row-spacer':
-        return null;
       default:
         return null;
     }
@@ -374,7 +348,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       className={cn(
         bodyCellVariants(),
         layoutMode?.startsWith('grid') && 'flex items-center',
-        // Density paddings — MRT's exact rem values, display vs data/group.
         density === 'compact'
           ? columnDefType === 'display'
             ? 'px-2 py-0'
@@ -395,8 +368,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           : isEditable && editDisplayMode === 'cell'
             ? 'cursor-pointer'
             : undefined,
-        // getCommonMRTCellStyles: dragging/hovered column → opacity-50. Ordered
-        // before pinned so twMerge lets pinned opacity-[0.97] win when both hold.
         (draggingColumn?.id === column.id || hoveredColumn?.id === column.id) &&
           'opacity-50',
         !enableColumnVirtualization &&
@@ -406,11 +377,9 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           : columnDefType !== 'group' && isColumnPinned
             ? 'z-[1]'
             : 'z-0',
-        // Pinned cell owns its bg (June deviation); 0.97 opacity spread after so
-        // it wins, matching getCommonMRTCellStyles' pinnedStyles order.
         isColumnPinned && 'bg-background opacity-[0.97]',
         actionCell?.id === cell.id &&
-          'outline outline-1 -outline-offset-1 outline-muted-foreground',
+          'outline outline-1 outline-muted-foreground',
         (actionCell?.id === cell.id ||
           (editDisplayMode === 'cell' && isEditable) ||
           (editDisplayMode === 'table' && (isCreating || isEditing))) &&
@@ -423,9 +392,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           {cell.getIsPlaceholder() ? (
             (columnDef.PlaceholderCell?.({ cell, column, row, table }) ?? null)
           ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
-            // Note: MUI Skeleton's animation="wave" has no Tailwind analogue —
-            // Skeleton's default animate-pulse is the accepted stand-in.
-            // Note: dropped bg-muted — Skeleton's default bg-accent wins.
+            // Note: MUI Skeleton animation="wave" dropped — ui/skeleton's animate-pulse is the stand-in.
             <Skeleton
               {...skeletonProps}
               style={{
