@@ -6,14 +6,15 @@ import {
   useRef,
   useState,
 } from 'react';
-// import Collapse from '@mui/material/Collapse'; // Note: dropped — conditional render below.
-// import { debounce } from '@mui/material/utils'; // Note: replaced by June's local setTimeout debounce below.
+// import Collapse from '@mui/material/Collapse'; // Note: replaced by radix Collapsible below.
+// import { debounce } from '@mui/material/utils'; // Note: replaced by the local debounce helper below.
 import {
   parseFromValuesOrFunc,
   type InputProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   InputGroup,
   InputGroupAddon,
@@ -23,8 +24,6 @@ import {
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 
-// Note: MRT's `debounce` from `@mui/material/utils` → June's local
-// setTimeout-based debounce (keeps the package MUI-free).
 function debounce<TArgs extends unknown[]>(
   fn: (...args: TArgs) => void,
   delay: number,
@@ -107,75 +106,70 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalFilter]);
 
-  // Note: MUI <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal"
-  // unmountOnExit> dropped — replaced by the conditional render below; the
-  // expanded-width behavior lives on the SRT-owned wrapper div (w-48).
-  if (!showGlobalFilter) return null;
-
   return (
-    <div className="w-48">
-      <InputGroup>
-        {/* startAdornment — MUI <InputAdornment position="start"> wrapper dropped. */}
-        {enableGlobalFilterModes ? (
-          <InputGroupAddon align="inline-start">
-            <SRT_Tooltip title={localization.changeSearchMode}>
-              <InputGroupButton
-                size="icon-xs"
-                aria-label={localization.changeSearchMode}
-                onClick={handleGlobalFilterMenuOpen}
-              >
-                <SearchIcon />
-              </InputGroupButton>
+    // <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal" unmountOnExit>
+    // Note: radix Collapsible replaces MUI Collapse — no shadcn keyframe for horizontal (width) animation.
+    <Collapsible open={showGlobalFilter}>
+      <CollapsibleContent className="w-48">
+        <InputGroup>
+          {/* startAdornment — MUI <InputAdornment position="start"> wrapper dropped. */}
+          {enableGlobalFilterModes ? (
+            <InputGroupAddon align="inline-start">
+              <SRT_Tooltip title={localization.changeSearchMode}>
+                <InputGroupButton
+                  size="icon-xs"
+                  aria-label={localization.changeSearchMode}
+                  onClick={handleGlobalFilterMenuOpen}
+                >
+                  <SearchIcon />
+                </InputGroupButton>
+              </SRT_Tooltip>
+            </InputGroupAddon>
+          ) : (
+            // <SearchIcon style={{ marginRight: '4px' }} />
+            // Note: InputGroupAddon supplies the spacing.
+            <InputGroupAddon align="inline-start">
+              <SearchIcon />
+            </InputGroupAddon>
+          )}
+
+          <InputGroupInput
+            autoComplete="off"
+            placeholder={localization.search}
+            onChange={handleChange}
+            value={searchValue ?? ''}
+            {...textFieldProps}
+            ref={(node) => {
+              searchInputRef.current = node;
+              // if (textFieldProps?.inputRef) textFieldProps.inputRef = inputRef;
+              // Note: user input-ref forwarding deferred.
+            }}
+          />
+
+          {/* endAdornment — MUI <InputAdornment position="end"> wrapper dropped. */}
+          <InputGroupAddon align="inline-end">
+            <SRT_Tooltip title={localization.clearSearch ?? ''}>
+              <span>
+                <InputGroupButton
+                  size="icon-xs"
+                  aria-label={localization.clearSearch}
+                  disabled={!searchValue?.length}
+                  onClick={handleClear}
+                >
+                  <CloseIcon />
+                </InputGroupButton>
+              </span>
             </SRT_Tooltip>
           </InputGroupAddon>
-        ) : (
-          // Note: MRT's SearchIcon `style={{ marginRight: '4px' }}` dropped —
-          // InputGroupAddon supplies its own spacing/sizing.
-          <InputGroupAddon align="inline-start">
-            <SearchIcon />
-          </InputGroupAddon>
-        )}
+        </InputGroup>
 
-        <InputGroupInput
-          autoComplete="off"
-          placeholder={localization.search}
-          onChange={handleChange}
-          value={searchValue ?? ''}
-          {...textFieldProps}
-          ref={(node) => {
-            searchInputRef.current = node;
-            // Note: MRT also did `if (textFieldProps?.inputRef) textFieldProps.inputRef = inputRef`
-            // — user input-ref forwarding deferred to a slot-props style if needed.
-          }}
+        <SRT_FilterOptionMenu
+          anchorEl={anchorEl}
+          onSelect={handleClear}
+          setAnchorEl={setAnchorEl}
+          table={table}
         />
-
-        {/* endAdornment — MUI <InputAdornment position="end"> wrapper dropped. Button
-            stays wrapped in <span> so SRT_Tooltip can anchor it while disabled. */}
-        <InputGroupAddon align="inline-end">
-          <SRT_Tooltip title={localization.clearSearch ?? ''}>
-            <span>
-              <InputGroupButton
-                size="icon-xs"
-                aria-label={localization.clearSearch}
-                disabled={!searchValue?.length}
-                onClick={handleClear}
-              >
-                <CloseIcon />
-              </InputGroupButton>
-            </span>
-          </SRT_Tooltip>
-        </InputGroupAddon>
-      </InputGroup>
-
-      {/* MUI TextField `size="small"` / `variant="outlined"` and InputProps.sx
-          `mb: 0` dropped — no MUI baseline to reset. */}
-
-      <SRT_FilterOptionMenu
-        anchorEl={anchorEl}
-        onSelect={handleClear}
-        setAnchorEl={setAnchorEl}
-        table={table}
-      />
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
