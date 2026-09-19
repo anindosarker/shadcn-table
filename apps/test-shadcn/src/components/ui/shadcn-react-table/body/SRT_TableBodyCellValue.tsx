@@ -5,8 +5,6 @@ import {
   type SRT_TableInstance,
   highlightWords,
 } from 'shadcn-react-table-core';
-// Note: highlightWords is re-exported from core (MRT imports 'highlight-words'
-// directly); consuming apps only need the core dependency.
 
 const allowedTypes = ['string', 'number'];
 
@@ -30,8 +28,7 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
     options: {
       enableFilterMatchHighlighting,
       // mrtTheme: { matchHighlightColor },
-      // Note: mrtTheme dropped project-wide; matchHighlightColor and MRT's
-      // dark/light text ternary map to the tailwind yellow classes below.
+      // Note: mrtTheme dropped project-wide; highlight maps to yellow classes below.
     },
   } = table;
   const { column, row } = cell;
