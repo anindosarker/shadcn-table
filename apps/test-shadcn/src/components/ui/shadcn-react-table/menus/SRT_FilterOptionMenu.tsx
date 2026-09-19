@@ -282,11 +282,11 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="center"
         side="right"
-        onClick={(event) => event.stopPropagation()}
+        // disableScrollLock
+        // Note: Radix DropdownMenu owns scroll-lock behavior
         {...rest}
         className={cn(
           filterOptionMenuContentVariants({ dense: density === 'compact' }),
@@ -314,12 +314,7 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
           internalFilterOptions.map(
             ({ divider, label, option, symbol }, index) => (
               <SRT_ActionMenuItem
-                // Note: MUI MenuItem `selected` (active filter mode) →
-                // state-driven bg-accent. Allowed as functional state styling
-                // per the 2026-07-14 rulings (not a static decorative
-                // override); bg-accent is the same token radix
-                // DropdownMenuItem uses for its own highlighted state, so no
-                // new look is introduced.
+                // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
                 className={option === filterOption ? 'bg-accent' : undefined}
                 divider={divider}
                 icon={<span>{symbol}</span>}
@@ -329,6 +324,8 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
                   handleSelectFilterMode(option as SRT_FilterOption)
                 }
                 table={table}
+                // value={option}
+                // Note: MUI MenuItem value dropped — form semantics only, no visual role
               />
             ),
           )}
