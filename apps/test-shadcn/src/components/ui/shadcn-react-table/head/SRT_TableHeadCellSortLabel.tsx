@@ -53,21 +53,18 @@ export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip side="top" title={sortTooltip}>
       <span className="relative">
-        {/* MUI TableSortLabel `active` — always true in MRT here; no native <button> equivalent. */}
-        {/* Note: MUI sx dropped (flex '0 0', width 3ch, transition 150ms,
-            opacity 1/0.3) — shadcn ghost + icon-sm wins (MRT uses TableSortLabel,
-            not a sized IconButton; icon-sm matches the sibling head buttons);
-            active-opacity moved onto the SRT-owned icons (never the Button). */}
         <Button
           variant="ghost"
           size="icon-sm"
           type="button"
+          /* active dropped — Note: MUI TableSortLabel `active` is always true in MRT here; no native <button> equivalent. */
           aria-label={sortTooltip}
           onClick={(e) => {
             e.stopPropagation();
             header.column.getToggleSortingHandler()?.(e);
           }}
           {...rest}
+          /* sx dropped — Note: MUI sx (flex 0 0, w-3ch, transition, opacity 1/0.3) -> shadcn Button defaults; dim moved onto the icons. */
         >
           {!isSorted ? (
             <SyncAltIcon className="-translate-x-px -rotate-90 scale-x-90 text-muted-foreground opacity-30" />
