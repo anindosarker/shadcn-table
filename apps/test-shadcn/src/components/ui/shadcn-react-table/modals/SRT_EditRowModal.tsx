@@ -12,14 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FieldGroup } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { SRT_EditActionButtons } from '../buttons/SRT_EditActionButtons';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
-
-// Note: MUI `fullWidth maxWidth="xs"` (444px) sizing override dropped per the
-// 2026-07-14 default-variants ruling — shadcn DialogContent default (sm:max-w-lg,
-// 512px) wins. `fullWidth` was already covered by DialogContent's base `w-full`.
-// const editRowModalVariants = cva('sm:max-w-[444px]');
 
 export interface SRT_EditRowModalProps<TData extends SRT_RowData>
   extends Partial<React.ComponentPropsWithRef<typeof DialogContent>> {
@@ -56,18 +51,18 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
     ...rest,
   };
 
-  /* eslint-disable @typescript-eslint/no-explicit-any -- MRT-parity: getAllCells() widening */
   const internalEditComponents = row
     .getAllCells()
     .filter((cell) => cell.column.columnDef.columnDefType === 'data')
     .map((cell) => (
-      <SRT_EditCellTextField
-        cell={cell as any}
-        key={cell.id}
-        table={table as any}
-      />
+      <Field key={cell.id}>
+        <FieldLabel className="w-full flex-col items-start">
+          {cell.column.columnDef.header}
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <SRT_EditCellTextField cell={cell as any} table={table as any} />
+        </FieldLabel>
+      </Field>
     ));
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   const handleClose = () => {
     if (creatingRow) {
@@ -80,8 +75,7 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     row._valuesCache = {} as any; //reset values cache
     // dialogProps.onClose?.(event, reason);
-    // Note: MUI onClose(event, reason) → radix onOpenChange. The DivProps slot has
-    // no onClose/onOpenChange surface, so close interception is not exposed to users.
+    // Note: DivProps has no onClose/onOpenChange surface — close interception not exposed.
   };
 
   return (
@@ -92,9 +86,11 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
       }}
     >
       <DialogContent
-        // Note: MUI Dialog has no built-in close button — hide shadcn's top-right X for parity.
+        // fullWidth
+        // maxWidth="xs"
+        // Note: MUI sizing props dropped — shadcn default sizing wins.
+        className="max-h-[calc(100%-4rem)]"
         showCloseButton={false}
-        // Note: no MRT DialogDescription equivalent; silence radix "Missing Description" warning.
         aria-describedby={undefined}
         {...dialogProps}
       >
@@ -111,19 +107,19 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
           })) ?? (
           <>
             <DialogHeader>
-              {/* Note: MUI DialogTitle textAlign:center dropped — text-align =
-                  typography, not layout; shadcn DialogHeader default
-                  (text-center sm:text-left) wins. */}
-              {/* <DialogTitle className="text-center"> */}
+              {/* <DialogTitle sx={{ textAlign: 'center' }}> */}
+              {/* Note: text-align = typography — shadcn DialogHeader default wins. */}
               <DialogTitle>{localization.edit}</DialogTitle>
             </DialogHeader>
-            <form onSubmit={(e) => e.preventDefault()}>
-              {/* Note: MUI Stack gap:32px/pt:16px → ui/FieldGroup (flex-col stack);
-                  its gap-7 default and no top padding win over the MRT gap-8/pt-4. */}
-              <FieldGroup>{internalEditComponents}</FieldGroup>
-            </form>
-            {/* Note: MUI DialogActions sx p:1.25rem → p-5 dropped (padding
-                override; shadcn DialogFooter default padding wins). */}
+            <div className="min-h-0 overflow-y-auto">
+              <form onSubmit={(e) => e.preventDefault()}>
+                {/* <Stack sx={{ gap: '32px', paddingTop: '16px', width: '100%' }}> */}
+                {/* Note: MUI Stack → ui/FieldGroup; its gap-7/no-top-pad default wins. */}
+                <FieldGroup>{internalEditComponents}</FieldGroup>
+              </form>
+            </div>
+            {/* <DialogActions sx={{ p: '1.25rem' }}> */}
+            {/* Note: padding override dropped — shadcn DialogFooter default wins. */}
             <DialogFooter>
               <SRT_EditActionButtons row={row} table={table} variant="text" />
             </DialogFooter>
