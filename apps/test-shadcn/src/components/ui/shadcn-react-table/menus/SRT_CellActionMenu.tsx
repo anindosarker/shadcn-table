@@ -64,7 +64,7 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
       parseFromValuesOrFunc(columnDef.enableClickToCopy, cell) ===
         'context-menu') && (
       <SRT_ActionMenuItem
-        icon={<ContentCopy className="h-4 w-4" />}
+        icon={<ContentCopy />}
         key={'mrt-copy'}
         label={localization.copy}
         onClick={(event) => {
@@ -77,7 +77,7 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
     ),
     parseFromValuesOrFunc(enableEditing, row) && editDisplayMode === 'cell' && (
       <SRT_ActionMenuItem
-        icon={<EditIcon className="h-4 w-4" />}
+        icon={<EditIcon />}
         key={'mrt-edit'}
         label={localization.edit}
         onClick={() => {
