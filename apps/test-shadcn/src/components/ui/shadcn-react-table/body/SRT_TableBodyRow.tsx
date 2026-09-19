@@ -1,10 +1,4 @@
-import {
-  type CSSProperties,
-  type DragEvent,
-  memo,
-  useMemo,
-  useRef,
-} from 'react';
+import { type DragEvent, memo, useMemo, useRef } from 'react';
 import {
   getIsRowSelected,
   parseFromValuesOrFunc,
@@ -112,9 +106,6 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   const isRowPinned = enableRowPinning && row.getIsPinned();
   const isDraggingRow = draggingRow?.id === row.id;
   const isHoveredRow = hoveredRow?.id === row.id;
-  const isStickyPinned = !!(
-    rowPinningDisplayMode?.includes('sticky') && isRowPinned
-  );
 
   const tableRowProps = {
     ...parseFromValuesOrFunc(srtTableBodyRowProps, {
@@ -147,13 +138,15 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   const tableFooterHeight =
     (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
 
+  // const sx = parseFromValuesOrFunc(tableRowProps?.sx, theme as any);
+  // Note: no MUI sx in SRT; customRowHeight drops MRT's `?? sx?.height` fallback.
+
   const defaultRowHeight =
     density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69;
 
   const customRowHeight =
     // @ts-expect-error style.height is string | number; parseInt expects a string
     parseInt(tableRowProps?.style?.height, 10) || undefined;
-  // customRowHeight fallback `?? sx?.height` dropped — no MUI sx in SRT (see plan).
 
   const rowHeight = customRowHeight || defaultRowHeight;
 
@@ -169,15 +162,7 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 
   const rowRef = useRef<HTMLTableRowElement | null>(null);
 
-  // Row highlight overlay machinery dropped — replaced by solid row classes
-  // (bg-background / bg-muted / hover:bg-muted/50 / opacity-*), which cells
-  // inherit via their `bg-inherit`. MRT painted selection/pin/hover tints via
-  // td:after overlays with alpha'd theme colors, and baseBackgroundColor
-  // carried `!important`; both are dropped. MUI's `tableRowProps?.hover` prop
-  // has no native-<tr> analogue, so hover is unconditional. See
-  // .ai/plans/components/SRT_TableBodyRow.plan.md ("Row highlight system").
-  //
-  // const sx = parseFromValuesOrFunc(tableRowProps?.sx, theme as any);
+  // Note: td:after highlight overlays → solid row classes (bg-background / bg-muted / hover:bg-muted/50); see SRT_TableBodyRow.plan.md "Row highlight system".
   // const cellHighlightColor = isRowSelected
   //   ? selectedRowBackgroundColor
   //   : isRowPinned
@@ -191,29 +176,6 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
   //         ? `${lighten(baseBackgroundColor, 0.3)}`
   //         : `${darken(baseBackgroundColor, 0.3)}`
   //     : undefined;
-  // sx: '&:hover td:after' + 'td:after' overlays (commonCellBeforeAfterStyles),
-  //   td: getCommonPinnedCellStyles({ table, theme }),
-  //   backgroundColor: `${baseBackgroundColor} !important`.
-
-  const rowStyle: CSSProperties = {
-    top: virtualRow
-      ? 0
-      : topPinnedIndex !== undefined && isRowPinned
-        ? `${
-            topPinnedIndex * rowHeight +
-            (enableStickyHeader || isFullScreen ? tableHeadHeight - 1 : 0)
-          }px`
-        : undefined,
-    bottom:
-      !virtualRow && bottomPinnedIndex !== undefined && isRowPinned
-        ? `${
-            bottomPinnedIndex * rowHeight +
-            (enableStickyFooter ? tableFooterHeight - 1 : 0)
-          }px`
-        : undefined,
-    transform: virtualRow ? `translateY(${virtualRow.start}px)` : undefined,
-    ...tableRowProps?.style,
-  };
 
   return (
     <>
@@ -229,8 +191,30 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
             rowVirtualizer?.measureElement(node);
           }
         }}
+        // selected={isRowSelected}
+        // Note: MUI TableRow prop; data-selected + the bg-muted variant carry selection.
         {...tableRowProps}
-        style={rowStyle}
+        style={{
+          transform: virtualRow
+            ? `translateY(${virtualRow.start}px)`
+            : undefined,
+          top: virtualRow
+            ? 0
+            : topPinnedIndex !== undefined && isRowPinned
+              ? `${
+                  topPinnedIndex * rowHeight +
+                  (enableStickyHeader || isFullScreen ? tableHeadHeight - 1 : 0)
+                }px`
+              : undefined,
+          bottom:
+            !virtualRow && bottomPinnedIndex !== undefined && isRowPinned
+              ? `${
+                  bottomPinnedIndex * rowHeight +
+                  (enableStickyFooter ? tableFooterHeight - 1 : 0)
+                }px`
+              : undefined,
+          ...tableRowProps?.style,
+        }}
         className={cn(
           tableBodyRowVariants({
             layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
@@ -241,12 +225,15 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
                 : 'normal',
             position: virtualRow
               ? 'absolute'
-              : isStickyPinned
+              : rowPinningDisplayMode?.includes('sticky') && isRowPinned
                 ? 'sticky'
                 : 'relative',
             selected: isRowSelected,
             transition: virtualRow ? 'none' : 'animated',
-            zIndex: isStickyPinned ? 'high' : 'base',
+            zIndex:
+              rowPinningDisplayMode?.includes('sticky') && isRowPinned
+                ? 'high'
+                : 'base',
           }),
           tableRowProps?.className,
         )}
