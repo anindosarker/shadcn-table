@@ -8,10 +8,6 @@ import { Button } from '@/components/ui/button';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu';
 
-// Note: empty showHideColumnsButtonVariants cva deleted — it only wrapped the
-// shadcn Button with no SRT-owned element/layout. Icon h-4 w-4 dropped (Button
-// auto-sizes svg to size-4).
-
 export interface SRT_ShowHideColumnsButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
   table: SRT_TableInstance<TData>;
@@ -43,7 +39,6 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
           size="icon"
           variant="ghost"
           {...rest}
-          className={rest?.className}
           title={undefined}
         >
           <ViewColumnIcon />
