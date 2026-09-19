@@ -166,11 +166,15 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
           {enableHiding ? (
             <label className="flex items-center gap-2">
               <SRT_Tooltip title={localization.toggleVisibility}>
-                <Switch
-                  checked={switchChecked}
-                  disabled={!column.getCanHide()}
-                  onCheckedChange={() => handleToggleColumnHidden(column)}
-                />
+                {/* Note: span anchors the tooltip — TooltipTrigger asChild would
+                    overwrite the Switch's own data-state (radix). */}
+                <span className="inline-flex">
+                  <Switch
+                    checked={switchChecked}
+                    disabled={!column.getCanHide()}
+                    onCheckedChange={() => handleToggleColumnHidden(column)}
+                  />
+                </span>
               </SRT_Tooltip>
               <span className={cn(columnDefType === 'display' && 'opacity-50')}>
                 {columnDef.header}

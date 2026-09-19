@@ -149,7 +149,11 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   return (
     <SRT_Tooltip title={checkboxProps?.title ?? label} asChild>
-      <Checkbox {...commonProps} />
+      {/* Note: span anchors the tooltip — TooltipTrigger asChild would overwrite
+          the Checkbox's own data-state (radix), killing its checked styling. */}
+      <span className="inline-flex">
+        <Checkbox {...commonProps} />
+      </span>
     </SRT_Tooltip>
   );
 };
