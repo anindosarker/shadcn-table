@@ -14,6 +14,7 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
+import { type CSSProperties } from 'react';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   InputGroup,
@@ -108,9 +109,13 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
 
   return (
     // <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal" unmountOnExit>
-    // Note: radix Collapsible replaces MUI Collapse — no shadcn keyframe for horizontal (width) animation.
+    // Note: radix Collapsible replaces MUI Collapse; the width keyframes that
+    // map its orientation="horizontal" live in the app stylesheet.
     <Collapsible open={showGlobalFilter}>
-      <CollapsibleContent className="w-48">
+      <CollapsibleContent
+        className="w-48 overflow-hidden data-[state=closed]:animate-[srt-collapsible-left_300ms_ease] data-[state=open]:animate-[srt-collapsible-right_300ms_ease]"
+        style={{ '--srt-collapsible-width': '12rem' } as CSSProperties}
+      >
         <InputGroup>
           {/* startAdornment — MUI <InputAdornment position="start"> wrapper dropped. */}
           {enableGlobalFilterModes ? (

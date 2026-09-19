@@ -7,7 +7,6 @@ import {
   type SRT_LinearProgressProps,
   type SRT_RowData,
   type SRT_TableInstance,
-  useSRT_ProgressAnimation,
 } from 'shadcn-react-table-core';
 
 export interface SRT_LinearProgressBarProps<TData extends SRT_RowData>
@@ -43,7 +42,9 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
 
   const show = showProgressBars !== false && (showProgressBars || isSaving);
 
-  const value = useSRT_ProgressAnimation(show);
+  // MUI LinearProgress defaults to variant="indeterminate" (CSS keyframes, no
+  // React state); a slot `value` switches it to determinate like MRT's does.
+  const isIndeterminate = progressComponentProps?.value == null;
 
   return (
     <Collapsible
@@ -55,7 +56,15 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
       )}
     >
       <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-        <Progress value={value ?? 0} {...progressComponentProps} />
+        <Progress
+          aria-busy="true"
+          {...progressComponentProps}
+          className={cn(
+            isIndeterminate && 'srt-progress-indeterminate',
+            progressComponentProps?.className,
+          )}
+          value={progressComponentProps?.value ?? undefined}
+        />
       </CollapsibleContent>
     </Collapsible>
   );

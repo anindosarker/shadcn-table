@@ -13,10 +13,8 @@ export interface SRT_TooltipProps {
   title?: React.ReactNode;
   children: React.ReactElement;
   side?: SRT_TooltipSide;
-  sideOffset?: number;
   disabled?: boolean;
   open?: boolean;
-  onOpenChange?: (open: boolean) => void;
   className?: string;
   asChild?: boolean;
 }
@@ -25,10 +23,8 @@ export const SRT_Tooltip = ({
   title,
   children,
   side = 'bottom',
-  sideOffset,
   disabled,
   open,
-  onOpenChange,
   className,
   asChild = true,
 }: SRT_TooltipProps) => {
@@ -44,16 +40,11 @@ export const SRT_Tooltip = ({
   return (
     <Tooltip
       open={open}
-      onOpenChange={onOpenChange}
       delayDuration={delayDuration}
       disableHoverableContent={disableHoverableContent}
     >
       <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
-      <TooltipContent
-        side={commonSide}
-        sideOffset={sideOffset}
-        className={className}
-      >
+      <TooltipContent side={commonSide} className={className}>
         {title}
       </TooltipContent>
     </Tooltip>

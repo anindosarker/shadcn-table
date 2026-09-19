@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -116,5 +116,53 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* MUI LinearProgress indeterminate keyframes (indeterminate1), ported so the
+   loading bars animate in CSS like MUI's instead of re-rendering per frame. */
+@keyframes srt-linear-progress-indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+.srt-progress-indeterminate [data-slot='progress-indicator'] {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: auto;
+  transform: none;
+  transition: none;
+  animation: srt-linear-progress-indeterminate 2.1s
+    cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+/* MUI Collapse orientation="horizontal" — radix Collapsible only ships height
+   keyframes, so the global-filter field gets the width pair here. */
+@keyframes srt-collapsible-right {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--srt-collapsible-width);
+  }
+}
+
+@keyframes srt-collapsible-left {
+  from {
+    width: var(--srt-collapsible-width);
+  }
+  to {
+    width: 0;
   }
 }

@@ -21,7 +21,6 @@ export { default as highlightWords } from 'highlight-words';
 export * from './hooks/useShadcnReactTable';
 export * from './hooks/useSRT_ColumnVirtualizer';
 export * from './hooks/useSRT_Effects';
-export * from './hooks/useSRT_ProgressAnimation';
 export * from './hooks/useSRT_RowVirtualizer';
 export * from './hooks/useSRT_Rows';
 export * from './hooks/useSRT_TableInstance';
