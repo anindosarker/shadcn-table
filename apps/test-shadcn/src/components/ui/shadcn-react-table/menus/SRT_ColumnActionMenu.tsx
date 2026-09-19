@@ -1,9 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type MouseEvent,
-  type ReactNode,
-  useState,
-} from 'react';
+import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import {
   type SRT_Header,
@@ -73,8 +68,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
         VisibilityOffIcon,
       },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — shadcn
-      // bg-popover on DropdownMenuContent supplies the menu background.
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnActionsMenuItems,
     },
     refs: { filterInputRefs },
@@ -170,13 +164,13 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
     (allowedColumnFilterOptions === undefined ||
       !!allowedColumnFilterOptions?.length);
 
-  const internalColumnMenuItems: ReactNode[] = [
+  const internalColumnMenuItems = [
     ...(enableSorting && column.getCanSort()
       ? [
           enableSortingRemoval !== false && (
             <SRT_ActionMenuItem
               disabled={column.getIsSorted() === false}
-              icon={<ClearAllIcon className="h-4 w-4" />}
+              icon={<ClearAllIcon />}
               key={0}
               label={localization.clearSort}
               onClick={handleClearSort}
@@ -186,10 +180,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={column.getIsSorted() === 'asc'}
             icon={
-              <SortIcon
-                className="h-4 w-4"
-                style={{ transform: 'rotate(180deg) scaleX(-1)' }}
-              />
+              <SortIcon style={{ transform: 'rotate(180deg) scaleX(-1)' }} />
             }
             key={1}
             label={localization.sortByColumnAsc?.replace(
@@ -202,7 +193,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={column.getIsSorted() === 'desc'}
             divider={enableColumnFilters || enableGrouping || enableHiding}
-            icon={<SortIcon className="h-4 w-4" />}
+            icon={<SortIcon />}
             key={2}
             label={localization.sortByColumnDesc?.replace(
               '{column}',
@@ -221,7 +212,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
               (Array.isArray(columnFilterValue) &&
                 !columnFilterValue.filter((value) => value).length)
             }
-            icon={<FilterListOffIcon className="h-4 w-4" />}
+            icon={<FilterListOffIcon />}
             key={3}
             label={localization.clearFilter}
             onClick={handleClearFilter}
@@ -231,7 +222,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
             <SRT_ActionMenuItem
               disabled={showColumnFilters && !enableColumnFilterModes}
               divider={enableGrouping || enableHiding}
-              icon={<FilterListIcon className="h-4 w-4" />}
+              icon={<FilterListIcon />}
               key={4}
               label={localization.filterByColumn?.replace(
                 '{column}',
@@ -264,7 +255,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             divider={enableColumnPinning}
-            icon={<DynamicFeedIcon className="h-4 w-4" />}
+            icon={<DynamicFeedIcon />}
             key={6}
             label={localization[
               column.getIsGrouped() ? 'ungroupByColumn' : 'groupByColumn'
@@ -278,12 +269,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
-            icon={
-              <PushPinIcon
-                className="h-4 w-4"
-                style={{ transform: 'rotate(90deg)' }}
-              />
-            }
+            icon={<PushPinIcon style={{ transform: 'rotate(90deg)' }} />}
             key={7}
             label={localization.pinToLeft}
             onClick={() => handlePinColumn('left')}
@@ -291,12 +277,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           />,
           <SRT_ActionMenuItem
             disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
-            icon={
-              <PushPinIcon
-                className="h-4 w-4"
-                style={{ transform: 'rotate(-90deg)' }}
-              />
-            }
+            icon={<PushPinIcon style={{ transform: 'rotate(-90deg)' }} />}
             key={8}
             label={localization.pinToRight}
             onClick={() => handlePinColumn('right')}
@@ -305,7 +286,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
           <SRT_ActionMenuItem
             disabled={!column.getIsPinned()}
             divider={enableHiding}
-            icon={<PushPinIcon className="h-4 w-4" />}
+            icon={<PushPinIcon />}
             key={9}
             label={localization.unpin}
             onClick={() => handlePinColumn(false)}
@@ -317,7 +298,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             disabled={columnSizing[column.id] === undefined}
-            icon={<RestartAltIcon className="h-4 w-4" />}
+            icon={<RestartAltIcon />}
             key={10}
             label={localization.resetColumnSize}
             onClick={handleResetColumnSize}
@@ -329,7 +310,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       ? [
           <SRT_ActionMenuItem
             disabled={!column.getCanHide()}
-            icon={<VisibilityOffIcon className="h-4 w-4" />}
+            icon={<VisibilityOffIcon />}
             key={11}
             label={localization.hideColumn?.replace(
               '{column}',
@@ -343,7 +324,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
               !Object.values(columnVisibility).filter((visible) => !visible)
                 .length
             }
-            icon={<ViewColumnIcon className="h-4 w-4" />}
+            icon={<ViewColumnIcon />}
             key={12}
             label={localization.showAllColumns?.replace(
               '{column}',
