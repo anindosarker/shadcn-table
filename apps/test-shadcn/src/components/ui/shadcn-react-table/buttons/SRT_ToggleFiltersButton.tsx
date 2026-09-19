@@ -6,9 +6,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: empty toggleFiltersButtonVariants cva deleted (shadcn Button, no
-// SRT-owned element/layout). Icon h-4 w-4 dropped (Button auto-sizes svg).
-
 export interface SRT_ToggleFiltersButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
   table: SRT_TableInstance<TData>;
@@ -38,9 +35,9 @@ export const SRT_ToggleFiltersButton = <TData extends SRT_RowData>({
         aria-label={localization.showHideFilters}
         onClick={handleToggleShowFilters}
         size="icon"
+        type="button"
         variant="ghost"
         {...rest}
-        className={rest?.className}
         title={undefined}
       >
         {showColumnFilters ? <FilterListOffIcon /> : <FilterListIcon />}
