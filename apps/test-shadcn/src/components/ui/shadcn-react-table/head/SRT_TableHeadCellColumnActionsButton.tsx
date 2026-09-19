@@ -66,10 +66,9 @@ export const SRT_TableHeadCellColumnActionsButton = <
           type="button"
           aria-label={localization.columnActions}
           onClick={handleClick}
-          // size="small"
-          // Note: MUI IconButton sx dropped (h/w 2rem, m:'-8px -4px', opacity
-          // 0.3 + hover:1, transition 150ms) — shadcn ghost + icon-sm (MUI small) wins.
           {...iconButtonProps}
+          // sx={...}
+          // Note: MUI sx (2rem box, m -8px -4px, opacity .3→1, 150ms) dropped — shadcn ghost icon-sm wins.
           title={undefined}
         >
           {iconButtonProps?.children ?? <MoreVertIcon className="scale-90" />}
