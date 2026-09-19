@@ -1,4 +1,4 @@
-import { type DragEventHandler, type MouseEvent } from 'react';
+import { type DragEventHandler } from 'react';
 import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
@@ -9,11 +9,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: dropped MUI sx style overrides — h-auto/w-auto (size; size="icon-sm"/size-8
-// wins), p-[2px] (padding), transition-all (paired with the dropped opacity),
-// hover:bg-transparent (color), hover:opacity-100 + the location opacity-50/100
-// dim (opacity). The grab handle now renders at full opacity per the sweep ruling.
-// Kept: my-0 -mx-[0.1rem] (layout, MUI m:'0 -0.1rem') and the grab cursor.
 const grabHandleButtonVariants = cva(
   'my-0 -mx-[0.1rem] cursor-grab active:cursor-grabbing',
 );
@@ -28,9 +23,6 @@ export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData>
 }
 
 export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
-  // Note: destructured only to keep it out of the ...rest spread onto the shadcn
-  // Button (would warn as an unknown DOM attr). Its former use — location-based
-  // opacity dim — was dropped in the sweep, so the binding is now unused.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   location,
   table,
@@ -52,10 +44,12 @@ export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
         size="icon-sm"
         variant="ghost"
         {...rest}
-        onClick={(event: MouseEvent<HTMLButtonElement>) => {
-          event.stopPropagation();
-          rest?.onClick?.(event);
+        onClick={(e) => {
+          e.stopPropagation();
+          rest?.onClick?.(e);
         }}
+        // sx={{ p: '2px', opacity: location === 'row' ? 1 : 0.5, transition: 'all 150ms ease-in-out', '&:hover': { backgroundColor: 'transparent', opacity: 1 } }}
+        // Note: dropped per sweep ruling — size="icon-sm" + full opacity.
         className={cn(grabHandleButtonVariants(), rest?.className)}
         title={undefined}
       >
