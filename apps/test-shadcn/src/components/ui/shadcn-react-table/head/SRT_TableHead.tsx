@@ -84,16 +84,15 @@ export const SRT_TableHead = <TData extends SRT_RowData>({
           </th>
         </tr>
       ) : (
-        table
-          .getHeaderGroups()
-          .map((headerGroup) => (
-            <SRT_TableHeadRow
-              columnVirtualizer={columnVirtualizer}
-              headerGroup={headerGroup}
-              key={headerGroup.id}
-              table={table}
-            />
-          ))
+        table.getHeaderGroups().map((headerGroup) => (
+          <SRT_TableHeadRow
+            columnVirtualizer={columnVirtualizer}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            headerGroup={headerGroup as any}
+            key={headerGroup.id}
+            table={table}
+          />
+        ))
       )}
     </thead>
   );
