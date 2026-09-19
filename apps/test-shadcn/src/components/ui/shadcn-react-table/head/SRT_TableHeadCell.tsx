@@ -38,14 +38,7 @@ export interface SRT_TableHeadCellProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Base folds getCommonMRTCellStyles' static pieces (bg-inherit =
-// backgroundColor:inherit only — getCommonMRTCellStyles' backgroundImage:inherit
-// is dropped as moot now that no ancestor sets background-image with MUI
-// Paper/mrtTheme gone; position relative, verticalAlign top, overflow visible,
-// fontWeight bold), the `& :hover .MuiButtonBase-root { opacity: 1 }`
-// hover-reveal, and the focus-visible outline (cellNavigationOutlineColor → ring
-// token). Density paddings / opacity / zIndex / layout are runtime-conditional in
-// cn() below.
+// Note: folds getCommonMRTCellStyles statics + MRT sx statics; backgroundImage:inherit dropped (no ancestor bg-image).
 const headCellVariants = cva(
   'relative bg-inherit align-top overflow-visible font-bold [&:hover_button]:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
 );
@@ -124,8 +117,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
         columnDef.enableGrouping !== false &&
         !grouping.includes(column.id)));
 
-  // stickyHeader mirrors MUI Table's dropped stickyHeader flag (decided at the
-  // SRT_Table pair): enableStickyHeader || full-screen → sticky th with own bg.
   const stickyHeader = enableStickyHeader || isFullScreen;
 
   const headerPL = useMemo(() => {
@@ -143,8 +134,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       columnResizeMode === 'onChange' &&
       !header.subHeaders.length;
 
-    // Note: MRT appends `!important` here; React style objects can't express it,
-    // so it is dropped — draggingBorders still render since they spread last.
+    // Note: MRT's `!important` dropped — inline style objects can't express it; draggingBorders spreads last anyway.
     const borderStyle = showResizeBorder
       ? `2px solid var(--color-primary)`
       : draggingColumn?.id === column.id
@@ -197,29 +187,20 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
     });
   };
 
-  // SRT deviation: core display-column defs are headless (core cannot import
-  // app components), so MRT's select-all/expand-all controls — which arrive via
-  // columnDef.Header in MRT — must be dispatched here on column.id. Mirrors the
-  // Header render logic of getMRT_RowSelectColumnDef / getMRT_RowExpandColumnDef.
   const displayHeaderElement =
     columnDefType === 'display' ? (
       column.id === 'mrt-row-select' ? (
         enableSelectAll && enableMultiRowSelection ? (
-          // no `row` → select-all semantics; selectAllMode read internally.
           <SRT_SelectCheckbox table={table} />
         ) : undefined
       ) : column.id === 'mrt-row-expand' ? (
         enableExpandAll ? (
-          // Note: MRT also appends grouped-column names when
-          // groupedColumnMode === 'remove'; omitted until grouping parity.
+          // Note: MRT also appends grouped-column names when groupedColumnMode === 'remove' — deferred.
           <SRT_ExpandAllButton table={table} />
         ) : undefined
       ) : undefined
     ) : undefined;
 
-  // Precedence mirrors MRT's single Header slot: a user-supplied columnDef.Header
-  // (displayColumnDefOptions override) wins first, then the id-based display
-  // dispatch, then the localized columnDef.header string.
   const HeaderElement =
     parseFromValuesOrFunc(columnDef.Header, {
       column,
@@ -260,12 +241,8 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       {...tableCellProps}
       className={cn(
         headCellVariants(),
-        // align dropped → logical text-align; group also centers content.
-        // Note: MRT's `theme.direction === 'rtl' ? 'right' : 'left'` branch is
-        // replaced by logical `text-start`, which handles rtl without a theme.
         columnDefType === 'group' ? 'text-center justify-center' : 'text-start',
         layoutMode?.startsWith('grid') && 'flex flex-col',
-        // density paddings — MRT's exact rem values (p, then pb/pt override).
         density === 'compact'
           ? 'p-2'
           : density === 'comfortable'
@@ -294,12 +271,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
           : columnDefType !== 'group' && isColumnPinned
             ? 'z-[1]'
             : 'z-0',
-        // Pinned th owns its bg (June deviation) — spread after opacity so its
-        // 0.97 wins, matching getCommonMRTCellStyles' pinnedStyles order.
         isColumnPinned && 'bg-background opacity-[0.97]',
-        // Sticky ordered AFTER the zIndex conditional so its z-[2] wins; with
-        // getSRTPinnedCellStyles no longer emitting an inline zIndex, nothing
-        // overrides this class.
         stickyHeader && 'sticky top-0 z-[2] bg-background',
         tableCellProps?.className,
       )}
@@ -319,7 +291,8 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
             <div
               className={cn(
                 'relative flex w-full items-center',
-                columnDefType === 'group'
+                tableCellProps?.align === 'right' && 'flex-row-reverse',
+                columnDefType === 'group' || tableCellProps?.align === 'center'
                   ? 'justify-center'
                   : column.getCanResize()
                     ? 'justify-between'
@@ -329,16 +302,15 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
               <div
                 className={cn(
                   'flex items-center',
+                  tableCellProps?.align === 'right' && 'flex-row-reverse',
                   column.getCanSort() &&
                     columnDefType !== 'group' &&
                     'cursor-pointer',
                   columnDefType === 'data' && 'overflow-hidden',
                 )}
                 onClick={column.getToggleSortingHandler()}
-                // Note: MRT gates this pl on `tableCellProps.align === 'center'`;
-                // with align dropped the equivalent gate is group columns.
                 style={
-                  columnDefType === 'group'
+                  tableCellProps?.align === 'center'
                     ? { paddingLeft: `${headerPL}rem` }
                     : undefined
                 }
