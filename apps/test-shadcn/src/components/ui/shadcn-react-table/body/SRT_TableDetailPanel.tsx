@@ -22,17 +22,17 @@ export interface SRT_TableDetailPanelProps<TData extends SRT_RowData>
   virtualRow?: SRT_VirtualItem;
 }
 
-const detailPanelRowVariants = cva('w-full', {
+const detailPanelRowVariants = cva('w-full text-start', {
   variants: {
     layout: { grid: 'flex', semantic: '' },
   },
 });
 
-const detailPanelCellVariants = cva('w-full', {
+const detailPanelCellVariants = cva('w-full border-b text-sm px-4', {
   variants: {
     layout: { grid: 'flex', semantic: '' },
-    padded: { true: 'py-4', false: 'py-0' },
     expanded: { true: '', false: 'border-b-0' },
+    padded: { true: 'py-4', false: 'py-0' },
     virtual: {
       true: 'bg-background',
       false: 'transition-all duration-150 ease-in-out',
@@ -112,22 +112,18 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
         className={cn(
           detailPanelCellVariants({
             layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-            padded: !!DetailPanel && row.getIsExpanded(),
             expanded: row.getIsExpanded(),
+            padded: !!DetailPanel && row.getIsExpanded(),
             virtual: !!virtualRow,
           }),
           tableCellProps?.className,
         )}
       >
         {virtualRow ? (
-          // Virtualized rows are measured by the row virtualizer — keep the bare
-          // conditional here (no Collapsible wrapper) so measureElement reads the
-          // real content height.
           row.getIsExpanded() && DetailPanel
         ) : (
           // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
-          // Note: MUI Collapse → ui/Collapsible. radix removes CollapsibleContent
-          // from the DOM when closed, matching Collapse's mountOnEnter/unmountOnExit.
+          // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
           <Collapsible open={row.getIsExpanded()}>
             <CollapsibleContent>{DetailPanel}</CollapsibleContent>
           </Collapsible>
