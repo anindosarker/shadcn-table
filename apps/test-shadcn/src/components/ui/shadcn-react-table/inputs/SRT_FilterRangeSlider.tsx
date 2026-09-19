@@ -22,11 +22,6 @@ export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Note: base maps MRT's sx (m:auto, width:'calc(100% - 8px)'); the
-// hasModeButton variant maps mt 6px (mode button present) / 10px (absent).
-// MRT's px:'4px' (→ px-1) dropped — padding on the shadcn Slider is a look
-// override per the default-variants ruling; the width calc already insets the
-// track. mx-auto/width/margins are layout.
 const filterRangeSliderVariants = cva('mx-auto w-[calc(100%-8px)]', {
   variants: {
     hasModeButton: {
@@ -62,8 +57,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
     ...rest,
   };
 
-  // Note: DivProps carries no min/max; MRT reads them off the slider slot, so
-  // reach the same optional numerics through a cast.
+  // Note: DivProps has no min/max; reach MRT's slot numerics via a cast.
   const { max: maxProp, min: minProp } = sliderProps as DivProps & {
     max?: number;
     min?: number;
@@ -77,8 +71,8 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   //fix potential TanStack Table bugs where min or max is an array
   if (Array.isArray(min)) min = min[0];
   if (Array.isArray(max)) max = max[0];
-  if (min === null || min === undefined) min = 0;
-  if (max === null || max === undefined) max = 1;
+  if (min === null) min = 0;
+  if (max === null) max = 1;
 
   const [filterValues, setFilterValues] = useState<number[]>([min, max]);
   const columnFilterValue = column.getFilterValue();
@@ -128,8 +122,17 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
         {...(sliderProps as ComponentProps<typeof Slider>)}
         ref={(node) => {
           if (node && filterInputRefs.current) {
-            filterInputRefs.current[`${column.id}-0`] =
-              node as unknown as HTMLInputElement;
+            const thumb = node.querySelector(
+              '[data-slot="slider-thumb"]',
+            ) as HTMLElement | null;
+            filterInputRefs.current[`${column.id}-0`] = (thumb ??
+              node) as unknown as HTMLInputElement;
+          }
+          const userRef = (sliderProps as ComponentProps<typeof Slider>).ref;
+          if (typeof userRef === 'function') {
+            userRef(node);
+          } else if (userRef) {
+            userRef.current = node;
           }
         }}
         className={cn(
