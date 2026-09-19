@@ -5,7 +5,7 @@ import {
   type SRT_ColumnOrderState,
 } from 'shadcn-react-table-core';
 import { faker } from '@faker-js/faker';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 const meta: Meta = {
   title: 'Features/Column Ordering Examples',

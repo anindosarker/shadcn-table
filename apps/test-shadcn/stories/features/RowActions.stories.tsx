@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { type Meta } from '@storybook/react';
 import { Pencil, Share2, Trash2, UserCircle } from 'lucide-react';
 import { type SRT_ColumnDef } from 'shadcn-react-table-core';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '@/components/ui/button';
 import { makeData, type Person } from '../makeData';
 

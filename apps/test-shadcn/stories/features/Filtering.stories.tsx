@@ -3,7 +3,7 @@ import {
   type SRT_ColumnDef,
   type SRT_ColumnFiltersState,
 } from 'shadcn-react-table-core';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react';

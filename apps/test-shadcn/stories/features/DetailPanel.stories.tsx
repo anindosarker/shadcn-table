@@ -1,4 +1,4 @@
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react';
 

@@ -1,7 +1,7 @@
 import { type Meta } from '@storybook/react';
 import { type SRT_ColumnDef } from 'shadcn-react-table-core';
 import { Mail, UserX } from 'lucide-react';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { SRT_ActionMenuItem } from '@/components/ui/shadcn-react-table/menus/SRT_ActionMenuItem';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { makeData, type Person } from '../makeData';

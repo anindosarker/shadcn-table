@@ -1,7 +1,7 @@
 import { type Meta } from '@storybook/react';
 import { PlusSquare, Trash2 } from 'lucide-react';
 import { type SRT_ColumnDef } from 'shadcn-react-table-core';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { SRT_ToggleFullScreenButton } from '@/components/ui/shadcn-react-table/buttons/SRT_ToggleFullScreenButton';
 import { Button } from '@/components/ui/button';
 import { makeData, type Person } from '../makeData';

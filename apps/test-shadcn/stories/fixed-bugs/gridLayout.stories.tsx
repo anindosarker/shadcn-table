@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react';
 import { type SRT_ColumnDef } from 'shadcn-react-table-core';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 const meta: Meta = {
   title: 'Fixed Bugs/Grid Layout',

@@ -3,7 +3,7 @@ import {
   type SRT_ColumnDef,
   useShadcnReactTable,
 } from 'shadcn-react-table-core';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 const meta: Meta = {
   title: 'Fixed Bugs/AppBar overlaps with Fullscreen Modal',

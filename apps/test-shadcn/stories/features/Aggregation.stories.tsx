@@ -4,7 +4,7 @@ import {
   type SRT_ColumnDef,
 } from 'shadcn-react-table-core';
 import { faker } from '@faker-js/faker';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 const meta: Meta = {
   title: 'Features/Aggregation Examples',

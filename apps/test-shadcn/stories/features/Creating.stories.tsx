@@ -7,7 +7,7 @@ import {
 } from 'shadcn-react-table-core';
 import { Plus } from 'lucide-react';
 import { faker } from '@faker-js/faker';
-import ShadcnReactTable from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '@/components/ui/button';
 
 const meta: Meta = {
