@@ -14,10 +14,8 @@ import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';
 
-// Note: dropped MUI sx style overrides — h-8 w-8 (size; size="icon"/size-9 wins),
-// opacity-50 + hover:opacity-100 (opacity) and transition-opacity (paired with
-// that opacity). The row-action button now renders at full opacity per the sweep
-// ruling. Kept: ml-2.5 (layout, MUI ml:10px).
+// height: '2rem', width: '2rem', opacity: 0.5, '&:hover': { opacity: 1 }, transition: 'opacity 150ms'
+// Note: size/opacity overrides dropped per the buttons sweep ruling.
 const commonIconButtonStyles = cva('ml-2.5');
 
 export interface SRT_ToggleRowActionMenuButtonProps<TData extends SRT_RowData>
@@ -86,11 +84,10 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
             aria-label={localization.edit}
             onClick={handleStartEditMode}
             size="icon"
+            type="button"
             variant="ghost"
             {...rest}
-            className={cn(
-              commonIconButtonStyles({ className: rest.className }),
-            )}
+            className={cn(commonIconButtonStyles(), rest.className)}
           >
             <EditIcon />
           </Button>
@@ -106,12 +103,11 @@ export const SRT_ToggleRowActionMenuButton = <TData extends SRT_RowData>({
             <Button
               aria-label={localization.rowActions}
               onClick={handleOpenRowActionMenu}
-              size="icon"
+              size="icon-sm"
+              type="button"
               variant="ghost"
               {...rest}
-              className={cn(
-                commonIconButtonStyles({ className: rest.className }),
-              )}
+              className={cn(commonIconButtonStyles(), rest.className)}
             >
               <MoreHorizIcon />
             </Button>
