@@ -6,9 +6,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: empty toggleGlobalFilterButtonVariants cva deleted (shadcn Button, no
-// SRT-owned element/layout). Icon h-4 w-4 dropped (Button auto-sizes svg).
-
 export interface SRT_ToggleGlobalFilterButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
   table: SRT_TableInstance<TData>;
@@ -41,9 +38,9 @@ export const SRT_ToggleGlobalFilterButton = <TData extends SRT_RowData>({
         disabled={!!globalFilter && showGlobalFilter}
         onClick={handleToggleSearch}
         size="icon"
+        type="button"
         variant="ghost"
         {...rest}
-        className={rest?.className}
         title={undefined}
       >
         {showGlobalFilter ? <SearchOffIcon /> : <SearchIcon />}
