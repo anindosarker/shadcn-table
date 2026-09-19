@@ -21,7 +21,6 @@ import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 
 const rowActionMenuContentVariants = cva('', {
   variants: {
-    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
     dense: {
       false: '',
       true: '[&>*]:py-1',
@@ -68,7 +67,7 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
       ['modal', 'row'].includes(editDisplayMode!) && (
         <SRT_ActionMenuItem
           key={'edit'}
-          icon={<EditIcon className="h-4 w-4" />}
+          icon={<EditIcon />}
           label={localization.edit}
           onClick={handleEdit}
           table={table}
