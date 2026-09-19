@@ -14,11 +14,8 @@ export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// SRT-owned grab wrapper. Active highlight + height + z live here via the
-// child-combinator on the shadcn Separator (data-slot=separator); the Separator
-// itself takes no restyling className. MUI info.main highlight → bg-primary.
 const resizeHandleVariants = cva(
-  'absolute z-[4] h-6 cursor-col-resize touch-none select-none px-1 [&:active>[data-slot=separator]]:bg-primary',
+  'absolute h-6 cursor-col-resize touch-none select-none px-1 [&:active>[data-slot=separator]]:bg-primary',
   {
     variants: {
       density: {
@@ -65,7 +62,6 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
 
   const isDisplay = column.columnDef.columnDefType === 'display';
 
-  // lr: 4px for display columns else 0 → right-1/left-1 (4px) vs right-0/left-0.
   const positionClass =
     columnResizeDirection === 'rtl'
       ? isDisplay
@@ -108,9 +104,8 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
     >
       <Separator
         orientation="vertical"
-        // Note: rest is DivProps; Separator root is a div, so it spreads
-        // directly (the prior hr cast is gone). MUI Divider borderRadius:2px /
-        // borderWidth:2px / w-0 dropped — shadcn Separator's w-px bg-border wins.
+        // borderRadius: '2px', borderWidth: '2px', zIndex: 4,
+        // Note: dropped — shadcn Separator default (w-px bg-border) wins per entry ruling.
         {...rest}
         className={cn(
           'translate-x-1',
