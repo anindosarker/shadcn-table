@@ -43,10 +43,7 @@ export const SRT_LinearProgressBar = <TData extends SRT_RowData>({
 
   const show = showProgressBars !== false && (showProgressBars || isSaving);
 
-  const [value] = useSRT_ProgressAnimation(show, {
-    duration: 2000,
-    strategy: 'ease-in-out',
-  });
+  const value = useSRT_ProgressAnimation(show);
 
   return (
     <Collapsible

@@ -1,94 +1,53 @@
 import { useEffect, useState, useRef } from 'react';
 
-export type SRT_ProgressAnimationStrategy =
-  | 'ease-in-out'
-  | 'ease-in'
-  | 'ease-out'
-  | 'linear'
-  | 'bounce'
-  | 'elastic'
-  | 'pulse';
+// MUI LinearProgress `indeterminate1`: 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395),
+// keyframes finish the travel at 60% of the cycle then hold until 100%.
+const CYCLE_MS = 2100;
+const TRAVEL_FRACTION = 0.6;
 
-export interface SRT_ProgressAnimationOptions {
-  duration?: number;
-  strategy?: SRT_ProgressAnimationStrategy;
-  minValue?: number;
-  maxValue?: number;
-}
+const bezierAxis = (p1: number, p2: number, t: number) => {
+  const u = 1 - t;
+  return 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t;
+};
 
-export const useSRT_ProgressAnimation = (
-  show: boolean,
-  options: SRT_ProgressAnimationOptions = {},
-) => {
-  const {
-    duration = 2000,
-    strategy = 'ease-in-out',
-    minValue = 0,
-    maxValue = 100,
-  } = options;
+const easeIndeterminate1 = (x: number) => {
+  let lo = 0;
+  let hi = 1;
+  let t = x;
+  for (let i = 0; i < 16; i++) {
+    t = (lo + hi) / 2;
+    if (bezierAxis(0.65, 0.735, t) < x) lo = t;
+    else hi = t;
+  }
+  return bezierAxis(0.815, 0.395, t);
+};
+
+export const useSRT_ProgressAnimation = (show: boolean) => {
   const [value, setValue] = useState<number | undefined>(undefined);
   const animationRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(0);
-
-  const easingFunctions = {
-    'ease-in-out': (t: number) =>
-      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
-    'ease-in': (t: number) => t * t,
-    'ease-out': (t: number) => 1 - Math.pow(1 - t, 2),
-    linear: (t: number) => t,
-    bounce: (t: number) => {
-      if (t < 1 / 2.75) return 7.5625 * t * t;
-      if (t < 2 / 2.75) return 7.5625 * (t -= 1.5 / 2.75) * t + 0.75;
-      if (t < 2.5 / 2.75) return 7.5625 * (t -= 2.25 / 2.75) * t + 0.9375;
-      return 7.5625 * (t -= 2.625 / 2.75) * t + 0.984375;
-    },
-    elastic: (t: number) => {
-      if (t === 0) return 0;
-      if (t === 1) return 1;
-      const c4 = (2 * Math.PI) / 3;
-      return Math.pow(2, -10 * t) * Math.sin((t * 5 - 0.75) * c4) + 1;
-    },
-    pulse: (t: number) => {
-      const pulse = Math.sin(t * Math.PI * 4) * 0.05 * (1 - t);
-      return Math.max(0, Math.min(1, t + pulse));
-    },
-  };
+  const startTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!show) {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
       setValue(undefined);
       return;
     }
 
-    setValue(minValue);
-    startTimeRef.current = Date.now();
+    startTimeRef.current = null;
 
-    const animate = () => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const progress = (elapsed % duration) / duration;
-
-      let easedProgress = easingFunctions[strategy](progress);
-
-      if (progress >= 0.95) {
-        easedProgress = 1;
-      } else if (
-        progress >= 0.85 &&
-        ['bounce', 'elastic', 'pulse'].includes(strategy)
-      ) {
-        easedProgress = 1;
-      } else {
-        easedProgress = Math.max(0, Math.min(1, easedProgress));
+    const animate = (now: number) => {
+      if (startTimeRef.current === null) {
+        startTimeRef.current = now;
       }
+      const elapsed = now - startTimeRef.current;
+      const progress = (elapsed % CYCLE_MS) / CYCLE_MS;
 
-      const newValue = Math.round(
-        minValue + easedProgress * (maxValue - minValue),
-      );
+      const easedProgress =
+        progress >= TRAVEL_FRACTION
+          ? 1
+          : easeIndeterminate1(progress / TRAVEL_FRACTION);
 
-      setValue(newValue);
+      setValue(Math.round(Math.max(0, Math.min(1, easedProgress)) * 100));
 
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -101,7 +60,7 @@ export const useSRT_ProgressAnimation = (
         animationRef.current = null;
       }
     };
-  }, [show, duration, strategy, minValue, maxValue]);
+  }, [show]);
 
-  return [value, setValue] as const;
+  return value;
 };

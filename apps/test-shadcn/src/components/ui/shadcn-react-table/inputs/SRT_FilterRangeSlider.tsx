@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 import {
-  type DivProps,
+  type SpanProps,
   parseFromValuesOrFunc,
   type SRT_Header,
   type SRT_RowData,
@@ -17,7 +17,9 @@ import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 
 export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
-  extends DivProps {
+  extends SpanProps {
+  max?: number;
+  min?: number;
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }
@@ -57,11 +59,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
     ...rest,
   };
 
-  // Note: DivProps has no min/max; reach MRT's slot numerics via a cast.
-  const { max: maxProp, min: minProp } = sliderProps as DivProps & {
-    max?: number;
-    min?: number;
-  };
+  const { max: maxProp, min: minProp } = sliderProps;
 
   let [min, max] =
     minProp !== undefined && maxProp !== undefined

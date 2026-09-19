@@ -3,7 +3,7 @@ import { createElement } from 'react';
 import {
   parseFromValuesOrFunc,
   type ButtonProps,
-  type DivProps,
+  type NavProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
@@ -30,14 +30,18 @@ const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 
 export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   extends Partial<
-    DivProps & {
+    NavProps & {
       // Note: spreads onto SelectTrigger (a button), hence ButtonProps.
       SelectProps?: Partial<ButtonProps>;
+      boundaryCount?: number;
       disabled?: boolean;
+      hideNextButton?: boolean;
+      hidePrevButton?: boolean;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
       showFirstButton?: boolean;
       showLastButton?: boolean;
       showRowsPerPage?: boolean;
+      siblingCount?: number;
     }
   > {
   position?: 'bottom' | 'top';
@@ -68,21 +72,26 @@ type SRT_PaginationItem =
     };
 
 const getPaginationItems = ({
+  boundaryCount,
   count,
   disabled,
+  hideNextButton,
+  hidePrevButton,
   page,
   showFirstButton,
   showLastButton,
+  siblingCount,
 }: {
+  boundaryCount: number;
   count: number;
   disabled: boolean;
+  hideNextButton: boolean;
+  hidePrevButton: boolean;
   page: number;
   showFirstButton: boolean;
   showLastButton: boolean;
+  siblingCount: number;
 }): SRT_PaginationItem[] => {
-  const boundaryCount = 1;
-  const siblingCount = 1;
-
   const range = (start: number, end: number) => {
     const length = end - start + 1;
     return Array.from({ length }, (_, i) => start + i);
@@ -122,7 +131,7 @@ const getPaginationItems = ({
     SRT_PaginationNavType | SRT_PaginationEllipsisType | number
   > = [
     ...(showFirstButton ? (['first'] as const) : []),
-    'previous',
+    ...(hidePrevButton ? [] : (['previous'] as const)),
     ...startPages,
 
     // Start ellipsis
@@ -143,7 +152,7 @@ const getPaginationItems = ({
         : []),
 
     ...endPages,
-    'next',
+    ...(hideNextButton ? [] : (['next'] as const)),
     ...(showLastButton ? (['last'] as const) : []),
   ];
 
@@ -217,11 +226,15 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 
   const {
     SelectProps = {},
+    boundaryCount = 1,
     disabled = false,
+    hideNextButton = false,
+    hidePrevButton = false,
     rowsPerPageOptions = defaultRowsPerPage,
     showFirstButton = showFirstLastPageButtons,
     showLastButton = showFirstLastPageButtons,
     showRowsPerPage = true,
+    siblingCount = 1,
     ...restPaginationProps
   } = paginationProps ?? {};
 
@@ -294,11 +307,15 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
         >
           <PaginationContent>
             {getPaginationItems({
+              boundaryCount,
               count: numberOfPages,
               disabled,
+              hideNextButton,
+              hidePrevButton,
               page: pageIndex + 1,
               showFirstButton,
               showLastButton,
+              siblingCount,
             }).map((item, index) => {
               if (item.page === null) {
                 return (

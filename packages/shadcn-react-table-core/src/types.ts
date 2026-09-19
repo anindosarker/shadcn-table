@@ -1,5 +1,5 @@
 import {
-  type HTMLAttributes,
+  type ComponentPropsWithRef,
   type Dispatch,
   type ReactNode,
   type RefObject,
@@ -40,21 +40,44 @@ import {
   type Virtualizer,
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
-import { SRT_FilterFns } from './fns/filterFns';
-import { SRT_AggregationFns } from './fns/aggregationFns';
-import { SRT_SortingFns } from './fns/sortingFns';
+import { type SRT_FilterFns } from './fns/filterFns';
+import { type SRT_AggregationFns } from './fns/aggregationFns';
+import { type SRT_SortingFns } from './fns/sortingFns';
 import { type SRT_Icons } from './icons';
 import { type LucideProps } from 'lucide-react';
 
+export type DivProps = ComponentPropsWithRef<'div'>;
+
+export type SpanProps = ComponentPropsWithRef<'span'>;
+
+export type NavProps = ComponentPropsWithRef<'nav'>;
+
+export type TableProps = ComponentPropsWithRef<'table'>;
+
+export type TableSectionProps = ComponentPropsWithRef<'thead'>;
+
+export type TableRowProps = ComponentPropsWithRef<'tr'>;
+
+export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
+
+export type TableCellProps = ComponentPropsWithRef<'th'>;
+
+export type TdProps = ComponentPropsWithRef<'td'>;
+
+export type ButtonProps = ComponentPropsWithRef<'button'>;
+
+export type InputProps = ComponentPropsWithRef<'input'>;
+
+export type SRT_LinearProgressProps = {
+  collapsibleProps?: DivProps;
+  progressComponentProps?: DivProps & { value?: number | null };
+};
+
+export type SRT_CircularProgressProps = LucideProps;
+
 export type { SRT_Icons };
 
-export type {
-  ColumnDef,
-  Header,
-  HeaderGroup,
-  RowPinningPosition,
-  Table,
-} from '@tanstack/react-table';
+export type { RowPinningPosition } from '@tanstack/react-table';
 
 export type LiteralUnion<T extends U, U = string> =
   | T
@@ -70,47 +93,6 @@ export type DropdownOption =
       value: any;
     }
   | string;
-
-export type SRT_Header<TData extends SRT_RowData> = Omit<
-  Header<TData, unknown>,
-  'column'
-> & {
-  column: SRT_Column<TData>;
-};
-
-export type SRT_HeaderGroup<TData extends SRT_RowData> = Omit<
-  HeaderGroup<TData>,
-  'headers'
-> & {
-  headers: SRT_Header<TData>[];
-};
-export type SRT_SortingOption = LiteralUnion<
-  string & keyof typeof SRT_SortingFns
->;
-
-export type SRT_SortingFn<TData extends SRT_RowData> =
-  | SRT_SortingOption
-  | SortingFn<TData>;
-
-export type SRT_FilterOption = LiteralUnion<
-  string & keyof typeof SRT_FilterFns
->;
-
-export type SRT_FilterFn<TData extends SRT_RowData> =
-  | FilterFn<TData>
-  | SRT_FilterOption;
-
-export type SRT_AggregationOption = string & keyof typeof SRT_AggregationFns;
-export type SRT_AggregationFn<TData extends SRT_RowData> =
-  | AggregationFn<TData>
-  | SRT_AggregationOption;
-
-export type SRT_InternalFilterOption = {
-  divider: boolean;
-  label: string;
-  option: string;
-  symbol: string;
-};
 
 export type SRT_DensityState = 'comfortable' | 'compact' | 'spacious';
 
@@ -137,12 +119,6 @@ export type SRT_VirtualizerOptions<
   TItemElement extends Element = Element,
 > = VirtualizerOptions<TScrollElement, TItemElement>;
 
-export type SRT_RowVirtualizer<
-  TScrollElement extends Element | Window = HTMLDivElement,
-  TItemElement extends Element = HTMLTableRowElement,
-> = Virtualizer<TScrollElement, TItemElement> & {
-  virtualRows: SRT_VirtualItem[];
-};
 export type SRT_ColumnVirtualizer<
   TScrollElement extends Element | Window = HTMLDivElement,
   TItemElement extends Element = HTMLTableCellElement,
@@ -152,347 +128,11 @@ export type SRT_ColumnVirtualizer<
   virtualPaddingRight?: number;
 };
 
-export type SRT_DisplayColumnDef<
-  TData extends SRT_RowData,
-  TValue = unknown,
-> = Omit<SRT_ColumnDef<TData, TValue>, 'accessorFn' | 'accessorKey'>;
-
-export type SRT_DisplayColumnIds =
-  | 'mrt-row-actions'
-  | 'mrt-row-drag'
-  | 'mrt-row-expand'
-  | 'mrt-row-numbers'
-  | 'mrt-row-pin'
-  | 'mrt-row-select'
-  | 'mrt-row-spacer';
-export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
-  extends Omit<
-    ColumnDef<TData, TValue>,
-    | 'accessorKey'
-    | 'aggregatedCell'
-    | 'aggregationFn'
-    | 'cell'
-    | 'columns'
-    | 'filterFn'
-    | 'footer'
-    | 'header'
-    | 'id'
-    | 'sortingFn'
-  > {
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   * Specify a function here to point to the correct property in the data object.
-   *
-   * @example accessorFn: (row) => row.username
-   */
-  accessorFn?: (originalRow: TData) => TValue;
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   * Specify which key in the row this column should use to access the correct data.
-   * Also supports Deep Key Dot Notation.
-   *
-   * @example accessorKey: 'username' //simple
-   * @example accessorKey: 'name.firstName' //deep key dot notation
-   */
-  accessorKey?: DeepKeys<TData> | (string & {});
-  AggregatedCell?: (props: {
-    cell: SRT_Cell<TData, TValue>;
-    column: SRT_Column<TData, TValue>;
-    row: SRT_Row<TData>;
-    table: SRT_TableInstance<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-  }) => ReactNode;
-  aggregationFn?: Array<SRT_AggregationFn<TData>> | SRT_AggregationFn<TData>;
-  Cell?: (props: {
-    cell: SRT_Cell<TData, TValue>;
-    column: SRT_Column<TData, TValue>;
-    renderedCellValue: ReactNode;
-    row: SRT_Row<TData>;
-    rowRef?: RefObject<HTMLTableRowElement | null>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode;
-  /**
-   * Specify what type of column this is. Either `data`, `display`, or `group`. Defaults to `data`.
-   * Leave this blank if you are just creating a normal data column.
-   *
-   * @default 'data'
-   *
-   * @example columnDefType: 'display'
-   */
-  columnDefType?: 'data' | 'display' | 'group';
-  columnFilterModeOptions?: Array<
-    LiteralUnion<string & SRT_FilterOption>
-  > | null;
-  columns?: SRT_ColumnDef<TData, TValue>[];
-  Edit?: (props: {
-    cell: SRT_Cell<TData, TValue>;
-    column: SRT_Column<TData, TValue>;
-    row: SRT_Row<TData>;
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode;
-  editSelectOptions?:
-    | ((props: {
-        cell: SRT_Cell<TData, TValue>;
-        column: SRT_Column<TData>;
-        row: SRT_Row<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => DropdownOption[])
-    | DropdownOption[];
-  editVariant?: 'select' | 'text';
-  enableClickToCopy?:
-    | 'context-menu'
-    | ((cell: SRT_Cell<TData>) => 'context-menu' | boolean)
-    | boolean;
-  enableColumnActions?: boolean;
-  enableColumnDragging?: boolean;
-  enableColumnFilterModes?: boolean;
-  enableColumnOrdering?: boolean;
-  enableEditing?: ((row: SRT_Row<TData>) => boolean) | boolean;
-  enableFilterMatchHighlighting?: boolean;
-  Filter?: (props: {
-    column: SRT_Column<TData, TValue>;
-    header: SRT_Header<TData>;
-    rangeFilterIndex?: number;
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode;
-  filterFn?: SRT_FilterFn<TData>;
-  filterSelectOptions?: DropdownOption[];
-  filterVariant?:
-    | 'autocomplete'
-    | 'checkbox'
-    | 'date'
-    | 'date-range'
-    | 'datetime'
-    | 'datetime-range'
-    | 'multi-select'
-    | 'range'
-    | 'range-slider'
-    | 'select'
-    | 'text'
-    | 'time'
-    | 'time-range';
-  /**
-   * footer must be a string. If you want custom JSX to render the footer, you can also specify a `Footer` option. (Capital F)
-   */
-  footer?: string;
-  Footer?:
-    | ((props: {
-        column: SRT_Column<TData, TValue>;
-        footer: SRT_Header<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => ReactNode)
-    | ReactNode;
-  GroupedCell?: (props: {
-    cell: SRT_Cell<TData, TValue>;
-    column: SRT_Column<TData, TValue>;
-    row: SRT_Row<TData>;
-    table: SRT_TableInstance<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-  }) => ReactNode;
-  /**
-   * If `layoutMode` is `'grid'` or `'grid-no-grow'`, you can specify the flex grow value for individual columns to still grow and take up remaining space, or set to `false`/0 to not grow.
-   */
-  grow?: boolean | number;
-  /**
-   * header must be a string. If you want custom JSX to render the header, you can also specify a `Header` option. (Capital H)
-   */
-  header: string;
-  Header?:
-    | ((props: {
-        column: SRT_Column<TData, TValue>;
-        header: SRT_Header<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => ReactNode)
-    | ReactNode;
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   *
-   * If you have also specified an `accessorFn`, MRT still needs to have a valid `id` to be able to identify the column uniquely.
-   *
-   * `id` defaults to the `accessorKey` or `header` if not specified.
-   *
-   * @default gets set to the same value as `accessorKey` by default
-   */
-  id?: LiteralUnion<string & keyof TData>;
-  srtColumnActionsButtonProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  srtColumnDragHandleProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  srtCopyButtonProps?:
-    | ((props: {
-        cell: SRT_Cell<TData>;
-        column: SRT_Column<TData>;
-        row: SRT_Row<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  srtFilterAutocompleteProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtFilterCheckboxProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  srtFilterDatePickerProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        rangeFilterIndex?: number;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtFilterDateTimePickerProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        rangeFilterIndex?: number;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtFilterSliderProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => DivProps)
-    | DivProps;
-  srtFilterTimePickerProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        rangeFilterIndex?: number;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtTableBodyCellProps?:
-    | ((props: {
-        cell: SRT_Cell<TData, TValue>;
-        column: SRT_Column<TData>;
-        row: SRT_Row<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
-  srtEditTextFieldProps?:
-    | ((props: {
-        cell: SRT_Cell<TData, TValue>;
-        column: SRT_Column<TData>;
-        row: SRT_Row<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtFilterTextFieldProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        rangeFilterIndex?: number;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtTableFooterCellProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
-  srtTableHeadCellProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  PlaceholderCell?: (props: {
-    cell: SRT_Cell<TData, TValue>;
-    column: SRT_Column<TData, TValue>;
-    row: SRT_Row<TData>;
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode;
-  renderCellActionMenuItems?: (props: {
-    cell: SRT_Cell<TData>;
-    closeMenu: () => void;
-    column: SRT_Column<TData>;
-    internalMenuItems: ReactNode[];
-    row: SRT_Row<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode[];
-  renderColumnActionsMenuItems?: (props: {
-    closeMenu: () => void;
-    column: SRT_Column<TData>;
-    internalColumnMenuItems: ReactNode[];
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode[];
-  renderColumnFilterModeMenuItems?: (props: {
-    column: SRT_Column<TData>;
-    internalFilterOptions: SRT_InternalFilterOption[];
-    onSelectFilterMode: (filterMode: SRT_FilterOption) => void;
-    table: SRT_TableInstance<TData>;
-  }) => ReactNode[];
-  sortingFn?: SRT_SortingFn<TData>;
-  visibleInShowHideMenu?: boolean;
-}
-
-export type SRT_GroupColumnDef<TData extends SRT_RowData> =
-  SRT_DisplayColumnDef<TData, any> & {
-    columns: SRT_ColumnDef<TData>[];
-  };
-
-export type SRT_DefinedColumnDef<
-  TData extends SRT_RowData,
-  TValue = unknown,
-> = Omit<SRT_ColumnDef<TData, TValue>, 'defaultDisplayColumn' | 'id'> & {
-  _filterFn: SRT_FilterOption;
-  defaultDisplayColumn: Partial<SRT_ColumnDef<TData, TValue>>;
-  id: string;
-};
-
-export type SRT_Column<TData extends SRT_RowData, TValue = unknown> = Omit<
-  Column<TData, TValue>,
-  'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
-> & {
-  columnDef: SRT_DefinedColumnDef<TData, TValue>;
-  columns?: SRT_Column<TData, TValue>[];
-  filterFn?: SRT_FilterFn<TData>;
-  footer: string;
-  header: string;
-};
-
-export type SRT_Cell<TData extends SRT_RowData, TValue = unknown> = Omit<
-  Cell<TData, TValue>,
-  'column' | 'row'
-> & {
-  column: SRT_Column<TData, TValue>;
-  row: SRT_Row<TData>;
-};
-export type SRT_Row<TData extends SRT_RowData> = Omit<
-  Row<TData>,
-  | '_valuesCache'
-  | 'getAllCells'
-  | 'getParentRow'
-  | 'getParentRows'
-  | 'getRow'
-  | 'getVisibleCells'
-  | 'subRows'
-> & {
-  _valuesCache: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
-  getAllCells: () => SRT_Cell<TData>[];
-  getParentRow: () => SRT_Row<TData> | null;
-  getParentRows: () => SRT_Row<TData>[];
-  getRow: () => SRT_Row<TData>;
-  getVisibleCells: () => SRT_Cell<TData>[];
-  subRows?: SRT_Row<TData>[];
+export type SRT_RowVirtualizer<
+  TScrollElement extends Element | Window = HTMLDivElement,
+  TItemElement extends Element = HTMLTableRowElement,
+> = Virtualizer<TScrollElement, TItemElement> & {
+  virtualRows: SRT_VirtualItem[];
 };
 
 export type SRT_ColumnHelper<TData extends SRT_RowData> = {
@@ -694,10 +334,12 @@ export type SRT_TableInstance<TData extends SRT_RowData> = Omit<
 
 export type SRT_DefinedTableOptions<TData extends SRT_RowData> = Omit<
   SRT_TableOptions<TData>,
-  'icons' | 'localization'
+  // Note: mrtTheme dropped project-wide — shadcn CSS vars handle theming.
+  'icons' | 'localization' // | 'mrtTheme'
 > & {
   icons: SRT_Icons;
   localization: SRT_Localization;
+  // mrtTheme: Required<SRT_Theme>;
 };
 
 export type SRT_StatefulTableOptions<TData extends SRT_RowData> =
@@ -725,6 +367,418 @@ export type SRT_StatefulTableOptions<TData extends SRT_RowData> =
       | 'showToolbarDropZone'
     >;
   };
+
+export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
+  actionCell?: SRT_Cell<TData> | null;
+  columnFilterFns: SRT_ColumnFilterFnsState;
+  creatingRow: SRT_Row<TData> | null;
+  density: SRT_DensityState;
+  draggingColumn: SRT_Column<TData> | null;
+  draggingRow: SRT_Row<TData> | null;
+  editingCell: SRT_Cell<TData> | null;
+  editingRow: SRT_Row<TData> | null;
+  globalFilterFn: SRT_FilterOption;
+  hoveredColumn: Partial<SRT_Column<TData>> | null;
+  hoveredRow: Partial<SRT_Row<TData>> | null;
+  isFullScreen: boolean;
+  isLoading: boolean;
+  isSaving: boolean;
+  showAlertBanner: boolean;
+  showColumnFilters: boolean;
+  showGlobalFilter: boolean;
+  showLoadingOverlay: boolean;
+  showProgressBars: boolean;
+  showSkeletons: boolean;
+  showToolbarDropZone: boolean;
+}
+
+export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
+  extends Omit<
+    ColumnDef<TData, TValue>,
+    | 'accessorKey'
+    | 'aggregatedCell'
+    | 'aggregationFn'
+    | 'cell'
+    | 'columns'
+    | 'filterFn'
+    | 'footer'
+    | 'header'
+    | 'id'
+    | 'sortingFn'
+  > {
+  /**
+   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
+   * Specify a function here to point to the correct property in the data object.
+   *
+   * @example accessorFn: (row) => row.username
+   */
+  accessorFn?: (originalRow: TData) => TValue;
+  /**
+   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
+   * Specify which key in the row this column should use to access the correct data.
+   * Also supports Deep Key Dot Notation.
+   *
+   * @example accessorKey: 'username' //simple
+   * @example accessorKey: 'name.firstName' //deep key dot notation
+   */
+  accessorKey?: DeepKeys<TData> | (string & {});
+  AggregatedCell?: (props: {
+    cell: SRT_Cell<TData, TValue>;
+    column: SRT_Column<TData, TValue>;
+    row: SRT_Row<TData>;
+    table: SRT_TableInstance<TData>;
+    staticColumnIndex?: number;
+    staticRowIndex?: number;
+  }) => ReactNode;
+  aggregationFn?: Array<SRT_AggregationFn<TData>> | SRT_AggregationFn<TData>;
+  Cell?: (props: {
+    cell: SRT_Cell<TData, TValue>;
+    column: SRT_Column<TData, TValue>;
+    renderedCellValue: ReactNode;
+    row: SRT_Row<TData>;
+    rowRef?: RefObject<HTMLTableRowElement | null>;
+    staticColumnIndex?: number;
+    staticRowIndex?: number;
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode;
+  /**
+   * Specify what type of column this is. Either `data`, `display`, or `group`. Defaults to `data`.
+   * Leave this blank if you are just creating a normal data column.
+   *
+   * @default 'data'
+   *
+   * @example columnDefType: 'display'
+   */
+  columnDefType?: 'data' | 'display' | 'group';
+  columnFilterModeOptions?: Array<
+    LiteralUnion<string & SRT_FilterOption>
+  > | null;
+  columns?: SRT_ColumnDef<TData, TValue>[];
+  Edit?: (props: {
+    cell: SRT_Cell<TData, TValue>;
+    column: SRT_Column<TData, TValue>;
+    row: SRT_Row<TData>;
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode;
+  editSelectOptions?:
+    | ((props: {
+        cell: SRT_Cell<TData, TValue>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => DropdownOption[])
+    | DropdownOption[];
+  editVariant?: 'select' | 'text';
+  enableClickToCopy?:
+    | 'context-menu'
+    | ((cell: SRT_Cell<TData>) => 'context-menu' | boolean)
+    | boolean;
+  enableColumnActions?: boolean;
+  enableColumnDragging?: boolean;
+  enableColumnFilterModes?: boolean;
+  enableColumnOrdering?: boolean;
+  enableEditing?: ((row: SRT_Row<TData>) => boolean) | boolean;
+  enableFilterMatchHighlighting?: boolean;
+  Filter?: (props: {
+    column: SRT_Column<TData, TValue>;
+    header: SRT_Header<TData>;
+    rangeFilterIndex?: number;
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode;
+  filterFn?: SRT_FilterFn<TData>;
+  filterSelectOptions?: DropdownOption[];
+  filterVariant?:
+    | 'autocomplete'
+    | 'checkbox'
+    | 'date'
+    | 'date-range'
+    | 'datetime'
+    | 'datetime-range'
+    | 'multi-select'
+    | 'range'
+    | 'range-slider'
+    | 'select'
+    | 'text'
+    | 'time'
+    | 'time-range';
+  /**
+   * footer must be a string. If you want custom JSX to render the footer, you can also specify a `Footer` option. (Capital F)
+   */
+  footer?: string;
+  Footer?:
+    | ((props: {
+        column: SRT_Column<TData, TValue>;
+        footer: SRT_Header<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ReactNode)
+    | ReactNode;
+  GroupedCell?: (props: {
+    cell: SRT_Cell<TData, TValue>;
+    column: SRT_Column<TData, TValue>;
+    row: SRT_Row<TData>;
+    table: SRT_TableInstance<TData>;
+    staticColumnIndex?: number;
+    staticRowIndex?: number;
+  }) => ReactNode;
+  /**
+   * If `layoutMode` is `'grid'` or `'grid-no-grow'`, you can specify the flex grow value for individual columns to still grow and take up remaining space, or set to `false`/0 to not grow.
+   */
+  grow?: boolean | number;
+  /**
+   * header must be a string. If you want custom JSX to render the header, you can also specify a `Header` option. (Capital H)
+   */
+  header: string;
+  Header?:
+    | ((props: {
+        column: SRT_Column<TData, TValue>;
+        header: SRT_Header<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ReactNode)
+    | ReactNode;
+  /**
+   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
+   *
+   * If you have also specified an `accessorFn`, MRT still needs to have a valid `id` to be able to identify the column uniquely.
+   *
+   * `id` defaults to the `accessorKey` or `header` if not specified.
+   *
+   * @default gets set to the same value as `accessorKey` by default
+   */
+  id?: LiteralUnion<string & keyof TData>;
+  srtColumnActionsButtonProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtColumnDragHandleProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtCopyButtonProps?:
+    | ((props: {
+        cell: SRT_Cell<TData, TValue>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtEditTextFieldProps?:
+    | ((props: {
+        cell: SRT_Cell<TData, TValue>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterAutocompleteProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterCheckboxProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => ButtonProps)
+    | ButtonProps;
+  srtFilterDatePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterDateTimePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterSliderProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => SpanProps & { max?: number; min?: number })
+    | (SpanProps & { max?: number; min?: number });
+  srtFilterTextFieldProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtFilterTimePickerProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
+  srtTableBodyCellProps?:
+    | ((props: {
+        cell: SRT_Cell<TData, TValue>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtTableFooterCellProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TdProps)
+    | TdProps;
+  srtTableHeadCellProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => TableCellProps)
+    | TableCellProps;
+  PlaceholderCell?: (props: {
+    cell: SRT_Cell<TData, TValue>;
+    column: SRT_Column<TData, TValue>;
+    row: SRT_Row<TData>;
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode;
+  renderCellActionMenuItems?: (props: {
+    cell: SRT_Cell<TData>;
+    closeMenu: () => void;
+    column: SRT_Column<TData>;
+    internalMenuItems: ReactNode[];
+    row: SRT_Row<TData>;
+    staticColumnIndex?: number;
+    staticRowIndex?: number;
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode[];
+  renderColumnActionsMenuItems?: (props: {
+    closeMenu: () => void;
+    column: SRT_Column<TData>;
+    internalColumnMenuItems: ReactNode[];
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode[];
+  renderColumnFilterModeMenuItems?: (props: {
+    column: SRT_Column<TData>;
+    internalFilterOptions: SRT_InternalFilterOption[];
+    onSelectFilterMode: (filterMode: SRT_FilterOption) => void;
+    table: SRT_TableInstance<TData>;
+  }) => ReactNode[];
+  sortingFn?: SRT_SortingFn<TData>;
+  visibleInShowHideMenu?: boolean;
+}
+
+export type SRT_DisplayColumnDef<
+  TData extends SRT_RowData,
+  TValue = unknown,
+> = Omit<SRT_ColumnDef<TData, TValue>, 'accessorFn' | 'accessorKey'>;
+
+export type SRT_GroupColumnDef<TData extends SRT_RowData> =
+  SRT_DisplayColumnDef<TData, any> & {
+    columns: SRT_ColumnDef<TData>[];
+  };
+
+export type SRT_DefinedColumnDef<
+  TData extends SRT_RowData,
+  TValue = unknown,
+> = Omit<SRT_ColumnDef<TData, TValue>, 'defaultDisplayColumn' | 'id'> & {
+  _filterFn: SRT_FilterOption;
+  defaultDisplayColumn: Partial<SRT_ColumnDef<TData, TValue>>;
+  id: string;
+};
+
+export type SRT_Column<TData extends SRT_RowData, TValue = unknown> = Omit<
+  Column<TData, TValue>,
+  'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
+> & {
+  columnDef: SRT_DefinedColumnDef<TData, TValue>;
+  columns?: SRT_Column<TData, TValue>[];
+  filterFn?: SRT_FilterFn<TData>;
+  footer: string;
+  header: string;
+};
+
+export type SRT_Header<TData extends SRT_RowData> = Omit<
+  Header<TData, unknown>,
+  'column'
+> & {
+  column: SRT_Column<TData>;
+};
+
+export type SRT_HeaderGroup<TData extends SRT_RowData> = Omit<
+  HeaderGroup<TData>,
+  'headers'
+> & {
+  headers: SRT_Header<TData>[];
+};
+
+export type SRT_Row<TData extends SRT_RowData> = Omit<
+  Row<TData>,
+  | '_valuesCache'
+  | 'getAllCells'
+  | 'getParentRow'
+  | 'getParentRows'
+  | 'getRow'
+  | 'getVisibleCells'
+  | 'subRows'
+> & {
+  _valuesCache: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
+  getAllCells: () => SRT_Cell<TData>[];
+  getParentRow: () => SRT_Row<TData> | null;
+  getParentRows: () => SRT_Row<TData>[];
+  getRow: () => SRT_Row<TData>;
+  getVisibleCells: () => SRT_Cell<TData>[];
+  subRows?: SRT_Row<TData>[];
+};
+
+export type SRT_Cell<TData extends SRT_RowData, TValue = unknown> = Omit<
+  Cell<TData, TValue>,
+  'column' | 'row'
+> & {
+  column: SRT_Column<TData, TValue>;
+  row: SRT_Row<TData>;
+};
+
+export type SRT_AggregationOption = string & keyof typeof SRT_AggregationFns;
+
+export type SRT_AggregationFn<TData extends SRT_RowData> =
+  | AggregationFn<TData>
+  | SRT_AggregationOption;
+
+export type SRT_SortingOption = LiteralUnion<
+  string & keyof typeof SRT_SortingFns
+>;
+
+export type SRT_SortingFn<TData extends SRT_RowData> =
+  | SRT_SortingOption
+  | SortingFn<TData>;
+
+export type SRT_FilterOption = LiteralUnion<
+  string & keyof typeof SRT_FilterFns
+>;
+
+export type SRT_FilterFn<TData extends SRT_RowData> =
+  | FilterFn<TData>
+  | SRT_FilterOption;
+
+export type SRT_InternalFilterOption = {
+  divider: boolean;
+  label: string;
+  option: string;
+  symbol: string;
+};
+
+export type SRT_DisplayColumnIds =
+  | 'mrt-row-actions'
+  | 'mrt-row-drag'
+  | 'mrt-row-expand'
+  | 'mrt-row-numbers'
+  | 'mrt-row-pin'
+  | 'mrt-row-select'
+  | 'mrt-row-spacer';
 
 /**
  * `columns` and `data` props are the only required props, but there are over 170 other optional props.
@@ -854,6 +908,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
    * @link https://www.material-react-table.com/docs/guides/memoize-components
    */
   memoMode?: 'cells' | 'rows' | 'table-body';
+  // Note: mrtTheme dropped project-wide — shadcn CSS vars handle theming.
+  // mrtTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>;
   srtBottomToolbarProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
     | DivProps;
@@ -900,6 +956,14 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => DivProps)
     | DivProps;
+  srtEditTextFieldProps?:
+    | ((props: {
+        cell: SRT_Cell<TData>;
+        column: SRT_Column<TData>;
+        row: SRT_Row<TData>;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
   srtExpandAllButtonProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => ButtonProps)
     | ButtonProps;
@@ -940,8 +1004,15 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => DivProps)
-    | DivProps;
+      }) => SpanProps & { max?: number; min?: number })
+    | (SpanProps & { max?: number; min?: number });
+  srtFilterTextFieldProps?:
+    | ((props: {
+        column: SRT_Column<TData>;
+        rangeFilterIndex?: number;
+        table: SRT_TableInstance<TData>;
+      }) => InputProps)
+    | InputProps;
   srtFilterTimePickerProps?:
     | ((props: {
         column: SRT_Column<TData>;
@@ -949,12 +1020,42 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => InputProps)
     | InputProps;
+  srtLinearProgressProps?:
+    | ((props: {
+        isTopToolbar: boolean;
+        table: SRT_TableInstance<TData>;
+      }) => SRT_LinearProgressProps)
+    | SRT_LinearProgressProps;
+  srtPaginationProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => Partial<
+        NavProps & {
+          SelectProps?: Partial<ButtonProps>;
+          disabled?: boolean;
+          rowsPerPageOptions?: { label: string; value: number }[] | number[];
+          showFirstButton?: boolean;
+          showLastButton?: boolean;
+          showRowsPerPage?: boolean;
+        }
+      >)
+    | Partial<
+        NavProps & {
+          SelectProps?: Partial<ButtonProps>;
+          disabled?: boolean;
+          rowsPerPageOptions?: { label: string; value: number }[] | number[];
+          showFirstButton?: boolean;
+          showLastButton?: boolean;
+          showRowsPerPage?: boolean;
+        }
+      >;
   srtRowDragHandleProps?:
     | ((props: {
         row: SRT_Row<TData>;
         table: SRT_TableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
+  srtSearchTextFieldProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => InputProps)
+    | InputProps;
   srtSelectAllCheckboxProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => ButtonProps)
     | ButtonProps;
@@ -973,58 +1074,6 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         table: SRT_TableInstance<TData>;
       }) => DivProps)
     | DivProps;
-  srtToolbarAlertBannerProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
-    | DivProps;
-  srtToolbarAlertBannerChipProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => SpanProps)
-    | SpanProps;
-  srtEditTextFieldProps?:
-    | ((props: {
-        cell: SRT_Cell<TData>;
-        column: SRT_Column<TData>;
-        row: SRT_Row<TData>;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtFilterTextFieldProps?:
-    | ((props: {
-        column: SRT_Column<TData>;
-        rangeFilterIndex?: number;
-        table: SRT_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  srtLinearProgressProps?:
-    | ((props: {
-        isTopToolbar: boolean;
-        table: SRT_TableInstance<TData>;
-      }) => SRT_LinearProgressProps)
-    | SRT_LinearProgressProps;
-  // Note: SelectProps spreads onto SelectTrigger (a button), hence ButtonProps.
-  srtPaginationProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => Partial<
-        DivProps & {
-          SelectProps?: Partial<ButtonProps>;
-          disabled?: boolean;
-          rowsPerPageOptions?: { label: string; value: number }[] | number[];
-          showFirstButton?: boolean;
-          showLastButton?: boolean;
-          showRowsPerPage?: boolean;
-        }
-      >)
-    | Partial<
-        DivProps & {
-          SelectProps?: Partial<ButtonProps>;
-          disabled?: boolean;
-          rowsPerPageOptions?: { label: string; value: number }[] | number[];
-          showFirstButton?: boolean;
-          showLastButton?: boolean;
-          showRowsPerPage?: boolean;
-        }
-      >;
-  srtSearchTextFieldProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => InputProps)
-    | InputProps;
   srtTableBodyCellProps?:
     | ((props: {
         cell: SRT_Cell<TData>;
@@ -1083,6 +1132,12 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   srtTableProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => TableProps)
     | TableProps;
+  srtToolbarAlertBannerChipProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => ButtonProps)
+    | ButtonProps;
+  srtToolbarAlertBannerProps?:
+    | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
+    | DivProps;
   srtTopToolbarProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
     | DivProps;
@@ -1235,57 +1290,4 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
    * Manage state externally any way you want, then pass it back into MRT.
    */
   state?: Partial<SRT_TableState<TData>>;
-}
-
-export interface SRT_TableState<TData extends SRT_RowData> extends TableState {
-  actionCell?: SRT_Cell<TData> | null;
-  columnFilterFns: SRT_ColumnFilterFnsState;
-  creatingRow: SRT_Row<TData> | null;
-  density: SRT_DensityState;
-  draggingColumn: SRT_Column<TData> | null;
-  draggingRow: SRT_Row<TData> | null;
-  editingCell: SRT_Cell<TData> | null;
-  editingRow: SRT_Row<TData> | null;
-  globalFilterFn: SRT_FilterOption;
-  hoveredColumn: Partial<SRT_Column<TData>> | null;
-  hoveredRow: Partial<SRT_Row<TData>> | null;
-  isFullScreen: boolean;
-  isLoading: boolean;
-  isSaving: boolean;
-  showAlertBanner: boolean;
-  showColumnFilters: boolean;
-  showGlobalFilter: boolean;
-  showLoadingOverlay: boolean;
-  showProgressBars: boolean;
-  showSkeletons: boolean;
-  showToolbarDropZone: boolean;
-}
-
-export type DivProps = React.ComponentPropsWithRef<'div'>;
-
-export type SpanProps = React.ComponentPropsWithRef<'span'>;
-
-export type TableProps = React.ComponentPropsWithRef<'table'>;
-
-export type TableSectionProps = React.ComponentPropsWithRef<'thead'>;
-
-export type TableRowProps = React.ComponentPropsWithRef<'tr'>;
-
-export type TableBodyProps = React.ComponentPropsWithRef<'tbody'>;
-
-export type TableCellProps = React.ComponentPropsWithRef<'th'>;
-
-export type TdProps = React.ComponentPropsWithRef<'td'>;
-
-export type ButtonProps = React.ComponentPropsWithRef<'button'>;
-
-export type InputProps = React.ComponentPropsWithRef<'input'>;
-
-export type SRT_LinearProgressProps = {
-  collapsibleProps?: HTMLAttributes<HTMLDivElement>;
-  progressComponentProps?: HTMLAttributes<HTMLDivElement>;
-};
-
-export interface SRT_CircularProgressProps extends LucideProps {
-  Component?: ReactNode;
 }
