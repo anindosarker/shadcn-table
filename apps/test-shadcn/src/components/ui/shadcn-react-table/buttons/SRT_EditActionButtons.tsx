@@ -99,6 +99,7 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
               aria-label={localization.cancel}
               onClick={handleCancel}
               size="icon"
+              type="button"
               variant="ghost"
             >
               <CancelIcon />
@@ -107,16 +108,15 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
           {((isCreating && onCreatingRowSave) ||
             (isEditing && onEditingRowSave)) && (
             <SRT_Tooltip title={localization.save}>
-              {/* Note: MUI color="info" text-primary override dropped (no color
-                  className on shadcn Button) — ghost default color wins. */}
               <Button
                 aria-label={localization.save}
+                // color="info" // Note: no info color token on shadcn Button.
                 disabled={isSaving}
                 onClick={handleSubmitRow}
                 size="icon"
+                type="button"
                 variant="ghost"
               >
-                {/* Note: MUI CircularProgress size={18} → ui/Spinner (size-4 default). */}
                 {isSaving ? <Spinner /> : <SaveIcon />}
               </Button>
             </SRT_Tooltip>
@@ -124,13 +124,15 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
         </>
       ) : (
         <>
-          {/* Note: MUI sx minWidth:100px dropped on both text buttons — sizing
-              override, shadcn Button default width wins. */}
-          <Button onClick={handleCancel} variant="ghost">
+          <Button
+            onClick={handleCancel}
+            // sx={{ minWidth: '100px' }} // Note: sizing override dropped per ruling.
+            type="button"
+            variant="ghost"
+          >
             {localization.cancel}
           </Button>
-          <Button disabled={isSaving} onClick={handleSubmitRow}>
-            {/* Note: MUI CircularProgress size={18} → ui/Spinner (size-4 default). */}
+          <Button disabled={isSaving} onClick={handleSubmitRow} type="button">
             {isSaving && <Spinner />}
             {localization.save}
           </Button>
