@@ -163,14 +163,13 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
                 let row = rowOrVirtualRow as SRT_Row<TData>;
                 if (rowVirtualizer) {
                   if (renderDetailPanel) {
-                    if ((rowOrVirtualRow as SRT_VirtualItem).index % 2 === 1) {
+                    if (rowOrVirtualRow.index % 2 === 1) {
                       return null;
                     } else {
-                      staticRowIndex =
-                        (rowOrVirtualRow as SRT_VirtualItem).index / 2;
+                      staticRowIndex = rowOrVirtualRow.index / 2;
                     }
                   } else {
-                    staticRowIndex = (rowOrVirtualRow as SRT_VirtualItem).index;
+                    staticRowIndex = rowOrVirtualRow.index;
                   }
                   row = rows[staticRowIndex];
                 }
