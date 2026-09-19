@@ -14,9 +14,7 @@ import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: MRT's density rem values (1.75rem/2.5rem) are the padded MUI IconButton
-// hit area, not the visible glyph; radix Checkbox Root IS the visible box, so
-// they map to June browser-verified visible-box sizes (size-4/size-5).
+// Note: MRT sx 1.75rem/2.5rem = MUI padded hit area; radix root is the visible box (size-4/size-5).
 const selectCheckboxVariants = cva('z-0', {
   variants: {
     density: {
@@ -88,22 +86,16 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   const onSelectAllChange = getSRT_SelectAllHandler({ table });
 
-  // Radix onCheckedChange carries no DOM event, but the core handlers read
-  // `nativeEvent.shiftKey` (range select) and `target.checked`. onClick fires
-  // before onCheckedChange, so capture shiftKey there and rebuild a synthetic
-  // event for the handler. June browser-verified bridge — do not redesign.
+  // Note: radix onCheckedChange carries no DOM event — onClick captures shiftKey for the synthetic ChangeEvent the core handlers read.
   const shiftKeyRef = useRef(false);
 
   const isSingleSelect = enableMultiRowSelection === false;
 
   const indeterminate =
-    !isChecked &&
-    (selectAll
+    !isChecked && selectAll
       ? table.getIsSomeRowsSelected()
-      : row?.getIsSomeSelected() && row.getCanSelectSubRows());
+      : row?.getIsSomeSelected() && row.getCanSelectSubRows();
 
-  // Note: MUI Radio (single-select) dropped — locked June deviation renders the
-  // same shadcn Checkbox with `rounded-full`, so `indeterminate` never applies.
   const checked: boolean | 'indeterminate' =
     !isSingleSelect && indeterminate ? 'indeterminate' : !!isChecked;
 
@@ -116,8 +108,8 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
     checked,
     disabled:
       isLoading || (row && !row.getCanSelect()) || row?.id === 'mrt-row-create',
-    // Note: MUI `inputProps.aria-label` duplication dropped — single aria-label
-    // on the control (radix Checkbox has no hidden input to label separately).
+    // inputProps: { 'aria-label': label },
+    // Note: dropped — radix Checkbox has no hidden input to label separately.
     onCheckedChange: (value: boolean | 'indeterminate') => {
       const next = value === true;
       const event = {
@@ -148,10 +140,10 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
   };
 
   return (
-    <SRT_Tooltip title={checkboxProps?.title ?? label} asChild>
-      {/* Note: span anchors the tooltip — TooltipTrigger asChild would overwrite
-          the Checkbox's own data-state (radix), killing its checked styling. */}
+    <SRT_Tooltip title={checkboxProps?.title ?? label}>
       <span className="inline-flex">
+        {/* enableMultiRowSelection === false ? <Radio {...(commonProps as any)} /> : ... */}
+        {/* Note: Radio dropped — single-select renders the same Checkbox with rounded-full. */}
         <Checkbox {...commonProps} />
       </span>
     </SRT_Tooltip>
