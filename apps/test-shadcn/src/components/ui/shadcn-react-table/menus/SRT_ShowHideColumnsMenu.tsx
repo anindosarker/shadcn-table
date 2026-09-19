@@ -21,7 +21,7 @@ const showHideColumnsMenuContentVariants = cva('', {
     // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
     dense: {
       false: '',
-      true: '[&>*]:py-1',
+      true: '[&_[role=menuitem]]:py-1',
     },
   },
 });
@@ -148,7 +148,6 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           {enableHiding && (
             <Button
               variant="ghost"
-              size="sm"
               disabled={!getIsSomeColumnsVisible()}
               onClick={() => handleToggleAllColumns(false)}
             >
@@ -158,7 +157,6 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           {enableColumnOrdering && (
             <Button
               variant="ghost"
-              size="sm"
               onClick={() =>
                 table.setColumnOrder(
                   getDefaultColumnOrderIds(table.options, true),
@@ -172,7 +170,6 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           {enableColumnPinning && (
             <Button
               variant="ghost"
-              size="sm"
               disabled={!getIsSomeColumnsPinned()}
               onClick={() => table.resetColumnPinning(true)}
             >
@@ -182,7 +179,6 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           {enableHiding && (
             <Button
               variant="ghost"
-              size="sm"
               disabled={getIsAllColumnsVisible()}
               onClick={() => handleToggleAllColumns(true)}
             >
