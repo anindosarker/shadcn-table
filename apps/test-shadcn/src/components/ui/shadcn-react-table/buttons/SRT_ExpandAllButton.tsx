@@ -9,14 +9,11 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: MUI sized the button 2.25rem (comfortable/spacious) / 1.75rem (compact);
-// both size overrides drop for shadcn size="icon" (size-9) — compact no longer
-// shrinks. Only the -mt-1 nudge (layout, MUI mt:-0.25rem when not compact) stays.
 const expandAllButtonVariants = cva('', {
   variants: {
     density: {
       comfortable: '-mt-1',
-      compact: '',
+      compact: 'size-7',
       spacious: '-mt-1',
     },
   },
@@ -73,6 +70,7 @@ export const SRT_ExpandAllButton = <TData extends SRT_RowData>({
           }
           onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
           size="icon"
+          type="button"
           variant="ghost"
           {...iconButtonProps}
           title={undefined}
