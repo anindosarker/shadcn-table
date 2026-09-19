@@ -114,10 +114,8 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="shrink-0">
           <SRT_Tooltip side="top" title={filterTooltip}>
-            {/* disableRipple + size="small" dropped — no shadcn ripple */}
-            {/* Note: MUI IconButton sx dropped (16px box, p:8px, scale(0.75),
-                opacity 1/0.3 active, transition 150ms) — shadcn ghost + icon-sm
-                (MUI small) wins; only ml-1 layout margin (MUI ml:4px) kept. */}
+            {/* disableRipple — Note: shadcn Button has no ripple */}
+            {/* sx (16px scaled box, active-opacity dim) — Note: dropped per head-button ruling; ml-1 layout kept */}
             <Button
               variant="ghost"
               size="icon-sm"
@@ -168,9 +166,12 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
             align="center"
             side="top"
             onClick={(event) => event.stopPropagation()}
+            onPointerDownOutside={(event) =>
+              event.detail.originalEvent.stopPropagation()
+            }
             onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
           >
-            <div className="p-4">
+            <div>
               <SRT_TableHeadCellFilterContainer header={header} table={table} />
             </div>
           </PopoverContent>
