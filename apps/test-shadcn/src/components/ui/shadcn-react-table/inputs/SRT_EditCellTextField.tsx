@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  type ComponentProps,
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
@@ -19,7 +20,6 @@ import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -59,9 +59,6 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 
   const [value, setValue] = useState(() => cell.getValue<string>());
   const [completesComposition, setCompletesComposition] = useState(true);
-  // Tracks the radix Select popup open-state synchronously so a trigger blur can
-  // tell "focus moved into the open dropdown" (do nothing) from "tabbed away
-  // without opening" (exit edit) — the select variant's blur-exit path.
   const selectOpenRef = useRef(false);
 
   const textFieldProps: InputProps = {
@@ -87,8 +84,8 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     table,
   });
 
-  // Note: MRT also OR-ed `textFieldProps?.select` (a MUI TextField-only prop);
-  // no native/radix analogue exists, so that clause is dropped.
+  // const isSelectEdit = editVariant === 'select' || textFieldProps?.select;
+  // Note: MUI TextField-only `select` prop has no radix analogue.
   const isSelectEdit = editVariant === 'select';
 
   const saveInputValueToRowCache = (newValue: string) => {
@@ -103,38 +100,30 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     }
   };
 
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    textFieldProps.onChange?.(event as ChangeEvent<HTMLInputElement>);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    textFieldProps.onChange?.(event);
     setValue(event.target.value);
     if (isSelectEdit) {
       saveInputValueToRowCache(event.target.value);
     }
   };
 
-  const handleBlur = (
-    event: FocusEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    textFieldProps.onBlur?.(event as FocusEvent<HTMLInputElement>);
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    textFieldProps.onBlur?.(event);
     saveInputValueToRowCache(value);
     setEditingCell(null);
   };
 
-  const handleEnterKeyDown = (
-    event: KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    textFieldProps.onKeyDown?.(event as KeyboardEvent<HTMLInputElement>);
+  const handleEnterKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    textFieldProps.onKeyDown?.(event);
     if (event.key === 'Enter' && !event.shiftKey && completesComposition) {
       editInputRefs.current?.[column.id]?.blur();
     }
   };
 
-  const handleClick = (
-    event: MouseEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  const handleClick = (event: MouseEvent<HTMLInputElement>) => {
     event.stopPropagation();
-    textFieldProps.onClick?.(event as MouseEvent<HTMLInputElement>);
+    textFieldProps.onClick?.(event);
   };
 
   if (columnDef.Edit) {
@@ -145,42 +134,31 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     (isCreating ? createDisplayMode : editDisplayMode) as string,
   );
 
-  // Note: MRT rendered `label` for modal/custom edit display; SRT_EditRowModal
-  // owns modal field labels, so the label construct is dropped here.
   // const label = isModalOrCustom ? columnDef.header : undefined;
+  // Note: SRT_EditRowModal owns modal field labels.
   const placeholder = !isModalOrCustom ? columnDef.header : undefined;
 
   const disabled =
     parseFromValuesOrFunc(columnDef.enableEditing, row) === false;
 
-  // Dropped MUI TextField constructs (no native/radix analogue; styling comes
-  // from the shadcn Input/Select defaults):
-  //   variant="standard" size="small" margin="none"
-  //   InputProps={{ disableUnderline: editDisplayMode === 'table', sx }}
-  //   SelectProps={{ MenuProps: { disableScrollLock: true } }}
-  //   textFieldProps.inputRef self-assignment (slot-supplied ref is not re-wired)
-  //   editCellTextFieldVariants / editCellSelectVariants cva deleted — they only
-  //     duplicated the shadcn Input/SelectTrigger default styling.
-
   if (isSelectEdit) {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    const {
+      children: _children,
+      onChange: _onChange,
+      onBlur: _onBlur,
+      className: triggerClassName,
+      onClick: _onClick,
+      onKeyDown: _onKeyDown,
+      ...triggerRest
+    } = textFieldProps;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     return (
-      // Native <select>'s onChange (setValue + immediate save) and blur-save/
-      // Enter-blur semantics map onto radix Select as follows:
-      //   - onValueChange commits the selection (setValue + save) — the analogue
-      //     of the native select's onChange path.
-      //   - onOpenChange(false) is the analogue of the native blur: it ends the
-      //     edit via setEditingCell(null). We do NOT re-save `value` here (it was
-      //     already committed in onValueChange, and re-saving a stale closure
-      //     value could clobber the just-committed one).
-      // Note: MRT's textFieldProps.onChange/onBlur were event handlers with no
-      // ChangeEvent/FocusEvent analogue for a radix Select, so the slot's
-      // onChange/onBlur are not invoked for the select variant. InputProps do not
-      // otherwise spread onto the radix Select root (not an input); only the
-      // user className is forwarded to SelectTrigger.
       <Select
         name={column.id}
         disabled={disabled}
         value={value ?? ''}
+        // Note: slot onChange/onBlur have no radix Select event analogue.
         onValueChange={(newValue) => {
           setValue(newValue);
           saveInputValueToRowCache(newValue);
@@ -194,23 +172,16 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
       >
         <SelectTrigger
           size="sm"
-          // w-full: fill the edit cell (maps MRT TextField `fullWidth`);
-          // layout-only, per the no-style-override ruling.
-          className={cn('w-full', textFieldProps.className)}
+          {...(triggerRest as ComponentProps<typeof SelectTrigger>)}
+          className={cn('w-full', triggerClassName)}
           ref={(node) => {
             if (node && editInputRefs.current) {
-              // Note: keep the `as unknown as HTMLInputElement` idiom —
-              // editInputRefs is typed for inputs, but the radix trigger (a
-              // button) is the focusable node for the select variant.
               editInputRefs.current[column.id] =
                 node as unknown as HTMLInputElement;
             }
           }}
           onBlur={() => {
-            // Note: maps MRT's handleBlur exit path for a trigger that is
-            // focused but never opened (e.g. tabbed away). selectOpenRef is set
-            // synchronously in onOpenChange before radix moves focus into the
-            // popup, so opening the dropdown never falsely exits editing here.
+            // Note: MRT handleBlur exit path for a trigger focused but never opened.
             if (!selectOpenRef.current) {
               setEditingCell(null);
             }
@@ -221,25 +192,25 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
               event as unknown as MouseEvent<HTMLInputElement>,
             );
           }}
+          onKeyDown={(event) =>
+            textFieldProps.onKeyDown?.(
+              event as unknown as KeyboardEvent<HTMLInputElement>,
+            )
+          }
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          <SelectGroup>
-            {/* Note: MRT/native `textFieldProps.children` option passthrough
-                cannot render inside radix SelectContent (it expects SelectItem,
-                not <option>/MenuItem) — children are ignored for the select
-                variant. */}
-            {selectOptions?.map((option) => {
-              const { label: optionLabel, value: optionValue } =
-                getValueAndLabel(option);
-              return (
-                <SelectItem key={optionValue} value={optionValue}>
-                  {optionLabel}
-                </SelectItem>
-              );
-            })}
-          </SelectGroup>
+          {/* Note: MRT's `textFieldProps.children` option passthrough has no radix SelectContent analogue. */}
+          {selectOptions?.map((option) => {
+            const { label: optionLabel, value: optionValue } =
+              getValueAndLabel(option);
+            return (
+              <SelectItem key={optionValue} value={optionValue}>
+                {optionLabel}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     );
@@ -251,16 +222,13 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
       disabled={disabled}
       name={column.id}
       placeholder={placeholder}
-      {...textFieldProps}
+      value={value ?? ''}
       ref={(node) => {
         if (node && editInputRefs.current) {
           editInputRefs.current[column.id] = node;
         }
       }}
-      // Note: deliberate reorder vs MRT — `value` is placed AFTER the spread
-      // so the controlled value always wins over a slot-supplied `value`
-      // (MRT's before-spread ordering could break the controlled input).
-      value={value ?? ''}
+      {...textFieldProps}
       onBlur={handleBlur}
       onChange={handleChange}
       onClick={handleClick}
