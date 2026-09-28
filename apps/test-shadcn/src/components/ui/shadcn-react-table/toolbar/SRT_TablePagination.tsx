@@ -1,4 +1,5 @@
 import { cva } from 'class-variance-authority';
+import { type LucideIcon } from 'lucide-react';
 import { createElement } from 'react';
 import {
   getPaginationItems,
@@ -46,11 +47,6 @@ export interface SRT_TablePaginationProps<TData extends SRT_RowData>
 const tablePaginationVariants = cva(
   'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
-
-const isNavType = (
-  type: SRT_PaginationItem['type'],
-): type is 'first' | 'last' | 'next' | 'previous' =>
-  type !== 'page' && type !== 'start-ellipsis' && type !== 'end-ellipsis';
 
 export const SRT_TablePagination = <TData extends SRT_RowData>({
   position = 'bottom',
@@ -110,7 +106,9 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 
   const { children: selectPropsChildren, ...selectTriggerProps } = SelectProps;
 
-  const navItems = {
+  const navItems: Partial<
+    Record<SRT_PaginationItem['type'], { Icon: LucideIcon; label: string }>
+  > = {
     first: { Icon: FirstPageIcon, label: localization.goToFirstPage },
     last: { Icon: LastPageIcon, label: localization.goToLastPage },
     next: { Icon: ChevronRightIcon, label: localization.goToNextPage },
@@ -188,7 +186,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                 );
               }
               const { page } = item;
-              const nav = isNavType(item.type) ? navItems[item.type] : null;
+              const nav = navItems[item.type];
               return (
                 // Note: PaginationLink (href-less <a>, not keyboard-operable) → Button.
                 <PaginationItem key={index}>
