@@ -3,7 +3,7 @@ import { createElement } from 'react';
 import {
   parseFromValuesOrFunc,
   type ButtonProps,
-  type NavProps,
+  type SRT_PaginationProps,
   type SRT_RowData,
   type SRT_TableInstance,
 } from 'shadcn-react-table-core';
@@ -30,18 +30,11 @@ const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 
 export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   extends Partial<
-    NavProps & {
+    SRT_PaginationProps & {
       // Note: spreads onto SelectTrigger (a button), hence ButtonProps.
       SelectProps?: Partial<ButtonProps>;
-      boundaryCount?: number;
-      disabled?: boolean;
-      hideNextButton?: boolean;
-      hidePrevButton?: boolean;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
-      showFirstButton?: boolean;
-      showLastButton?: boolean;
       showRowsPerPage?: boolean;
-      siblingCount?: number;
     }
   > {
   position?: 'bottom' | 'top';

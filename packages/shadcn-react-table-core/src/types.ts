@@ -52,6 +52,17 @@ export type SpanProps = ComponentPropsWithRef<'span'>;
 
 export type NavProps = ComponentPropsWithRef<'nav'>;
 
+// Note: stands in for MUI PaginationProps; only the usePagination inputs SRT ports.
+export type SRT_PaginationProps = NavProps & {
+  boundaryCount?: number;
+  disabled?: boolean;
+  hideNextButton?: boolean;
+  hidePrevButton?: boolean;
+  showFirstButton?: boolean;
+  showLastButton?: boolean;
+  siblingCount?: number;
+};
+
 export type TableProps = ComponentPropsWithRef<'table'>;
 
 export type TableSectionProps = ComponentPropsWithRef<'thead'>;
@@ -1028,22 +1039,16 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | SRT_LinearProgressProps;
   srtPaginationProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => Partial<
-        NavProps & {
+        SRT_PaginationProps & {
           SelectProps?: Partial<ButtonProps>;
-          disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
-          showFirstButton?: boolean;
-          showLastButton?: boolean;
           showRowsPerPage?: boolean;
         }
       >)
     | Partial<
-        NavProps & {
+        SRT_PaginationProps & {
           SelectProps?: Partial<ButtonProps>;
-          disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
-          showFirstButton?: boolean;
-          showLastButton?: boolean;
           showRowsPerPage?: boolean;
         }
       >;
