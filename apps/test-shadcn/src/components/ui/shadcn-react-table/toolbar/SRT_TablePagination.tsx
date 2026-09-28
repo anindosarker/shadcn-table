@@ -1,8 +1,10 @@
 import { cva } from 'class-variance-authority';
 import { createElement } from 'react';
 import {
+  getPaginationItems,
   parseFromValuesOrFunc,
   type ButtonProps,
+  type SRT_PaginationItem,
   type SRT_PaginationProps,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -45,142 +47,10 @@ const tablePaginationVariants = cva(
   'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
 
-// Note: MUI Pagination derives its items in usePagination; shadcn Pagination is
-// markup only, so that algorithm is ported here (boundaryCount = siblingCount = 1).
-type SRT_PaginationNavType = 'first' | 'previous' | 'next' | 'last';
-type SRT_PaginationEllipsisType = 'start-ellipsis' | 'end-ellipsis';
-type SRT_PaginationItem =
-  | { type: 'page'; page: number; selected: boolean; disabled: boolean }
-  | {
-      type: SRT_PaginationNavType;
-      page: number;
-      selected: false;
-      disabled: boolean;
-    }
-  | {
-      type: SRT_PaginationEllipsisType;
-      page: null;
-      selected: false;
-      disabled: boolean;
-    };
-
-const getPaginationItems = ({
-  boundaryCount,
-  count,
-  disabled,
-  hideNextButton,
-  hidePrevButton,
-  page,
-  showFirstButton,
-  showLastButton,
-  siblingCount,
-}: {
-  boundaryCount: number;
-  count: number;
-  disabled: boolean;
-  hideNextButton: boolean;
-  hidePrevButton: boolean;
-  page: number;
-  showFirstButton: boolean;
-  showLastButton: boolean;
-  siblingCount: number;
-}): SRT_PaginationItem[] => {
-  const range = (start: number, end: number) => {
-    const length = end - start + 1;
-    return Array.from({ length }, (_, i) => start + i);
-  };
-
-  const startPages = range(1, Math.min(boundaryCount, count));
-  const endPages = range(
-    Math.max(count - boundaryCount + 1, boundaryCount + 1),
-    count,
-  );
-
-  const siblingsStart = Math.max(
-    Math.min(
-      // Natural start
-      page - siblingCount,
-      // Lower boundary when page is high
-      count - boundaryCount - siblingCount * 2 - 1,
-    ),
-    // Greater than startPages
-    boundaryCount + 2,
-  );
-
-  const siblingsEnd = Math.min(
-    Math.max(
-      // Natural end
-      page + siblingCount,
-      // Upper boundary when page is low
-      boundaryCount + siblingCount * 2 + 2,
-    ),
-    // Less than endPages
-    count - boundaryCount - 1,
-  );
-
-  // Basic list of items to render
-  // for example itemList = ['first', 'previous', 1, 'ellipsis', 4, 5, 6, 'ellipsis', 10, 'next', 'last']
-  const itemList: Array<
-    SRT_PaginationNavType | SRT_PaginationEllipsisType | number
-  > = [
-    ...(showFirstButton ? (['first'] as const) : []),
-    ...(hidePrevButton ? [] : (['previous'] as const)),
-    ...startPages,
-
-    // Start ellipsis
-    ...(siblingsStart > boundaryCount + 2
-      ? (['start-ellipsis'] as const)
-      : boundaryCount + 1 < count - boundaryCount
-        ? [boundaryCount + 1]
-        : []),
-
-    // Sibling pages
-    ...range(siblingsStart, siblingsEnd),
-
-    // End ellipsis
-    ...(siblingsEnd < count - boundaryCount - 1
-      ? (['end-ellipsis'] as const)
-      : count - boundaryCount > boundaryCount
-        ? [count - boundaryCount]
-        : []),
-
-    ...endPages,
-    ...(hideNextButton ? [] : (['next'] as const)),
-    ...(showLastButton ? (['last'] as const) : []),
-  ];
-
-  // Map the button type to its page number
-  const buttonPage = (type: SRT_PaginationNavType) => {
-    switch (type) {
-      case 'first':
-        return 1;
-      case 'previous':
-        return page - 1;
-      case 'next':
-        return page + 1;
-      case 'last':
-        return count;
-    }
-  };
-
-  return itemList.map(
-    (item): SRT_PaginationItem =>
-      typeof item === 'number'
-        ? { type: 'page', page: item, selected: item === page, disabled }
-        : item === 'start-ellipsis' || item === 'end-ellipsis'
-          ? { type: item, page: null, selected: false, disabled }
-          : {
-              type: item,
-              page: buttonPage(item),
-              selected: false,
-              disabled:
-                disabled ||
-                (item === 'next' || item === 'last'
-                  ? page >= count
-                  : page <= 1),
-            },
-  );
-};
+const isNavType = (
+  type: SRT_PaginationItem['type'],
+): type is 'first' | 'last' | 'next' | 'previous' =>
+  type !== 'page' && type !== 'start-ellipsis' && type !== 'end-ellipsis';
 
 export const SRT_TablePagination = <TData extends SRT_RowData>({
   position = 'bottom',
@@ -318,15 +188,16 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                 );
               }
               const { page } = item;
+              const nav = isNavType(item.type) ? navItems[item.type] : null;
               return (
                 // Note: PaginationLink (href-less <a>, not keyboard-operable) → Button.
                 <PaginationItem key={index}>
                   <Button
                     aria-current={item.selected ? 'page' : undefined}
                     aria-label={
-                      item.type === 'page'
-                        ? `${item.selected ? '' : 'Go to '}page ${page}`
-                        : navItems[item.type].label
+                      nav
+                        ? nav.label
+                        : `${item.selected ? '' : 'Go to '}page ${page}`
                     }
                     disabled={item.disabled}
                     onClick={() => table.setPageIndex(page - 1)}
@@ -334,11 +205,9 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                     type="button"
                     variant={item.selected ? 'outline' : 'ghost'}
                   >
-                    {item.type === 'page'
-                      ? page.toLocaleString(localization.language)
-                      : createElement(navItems[item.type].Icon, {
-                          className: 'rtl:rotate-180',
-                        })}
+                    {nav
+                      ? createElement(nav.Icon, { className: 'rtl:rotate-180' })
+                      : page.toLocaleString(localization.language)}
                   </Button>
                 </PaginationItem>
               );

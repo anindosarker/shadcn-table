@@ -5,6 +5,7 @@ export * from './utils/tanstack.helpers';
 export * from './utils/cell.utils';
 export * from './utils/column.utils';
 export * from './utils/displayColumn.utils';
+export * from './utils/pagination.utils';
 export * from './utils/row.utils';
 export * from './utils/style.utils';
 export * from './utils/utils';
