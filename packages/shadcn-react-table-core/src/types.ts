@@ -79,6 +79,8 @@ export type ButtonProps = ComponentPropsWithRef<'button'>;
 
 export type InputProps = ComponentPropsWithRef<'input'>;
 
+export type SelectElementProps = ComponentPropsWithRef<'select'>;
+
 export type SRT_LinearProgressProps = {
   collapsibleProps?: DivProps;
   progressComponentProps?: DivProps & { value?: number | null };
@@ -1040,14 +1042,20 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   srtPaginationProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => Partial<
         SRT_PaginationProps & {
-          SelectProps?: Partial<ButtonProps>;
+          SelectProps?: Partial<
+            ButtonProps &
+              Omit<SelectElementProps, 'size'> & { native?: boolean }
+          >;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
         }
       >)
     | Partial<
         SRT_PaginationProps & {
-          SelectProps?: Partial<ButtonProps>;
+          SelectProps?: Partial<
+            ButtonProps &
+              Omit<SelectElementProps, 'size'> & { native?: boolean }
+          >;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
         }

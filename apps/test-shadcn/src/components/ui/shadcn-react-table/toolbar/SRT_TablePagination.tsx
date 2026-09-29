@@ -9,9 +9,14 @@ import {
   type SRT_PaginationProps,
   type SRT_RowData,
   type SRT_TableInstance,
+  type SelectElementProps,
 } from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from '@/components/ui/native-select';
 import {
   Pagination,
   PaginationContent,
@@ -21,21 +26,23 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
+import { useSRT_MediaQuery } from './useSRT_MediaQuery';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 
 export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   extends Partial<
     SRT_PaginationProps & {
-      // Note: spreads onto SelectTrigger (a button), hence ButtonProps.
-      SelectProps?: Partial<ButtonProps>;
+      // Note: spread target is SelectTrigger (button) or NativeSelect (select), hence the intersection.
+      SelectProps?: Partial<
+        ButtonProps & Omit<SelectElementProps, 'size'> & { native?: boolean }
+      >;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
       showRowsPerPage?: boolean;
     }
@@ -53,8 +60,10 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   table,
   ...rest
 }: SRT_TablePaginationProps<TData>) => {
-  // const theme = useTheme(); const isMobile = useMediaQuery('(max-width: 720px)');
-  // Note: rtl via `rtl:rotate-180` class; radix Select has no native mode.
+  // const theme = useTheme();
+  // Note: rtl via `rtl:rotate-180` class.
+  const isMobile = useSRT_MediaQuery('(max-width:720px)');
+
   const {
     getState,
     options: {
@@ -100,11 +109,18 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   const disableBack = pageIndex <= 0 || disabled;
   const disableNext = lastRowIndex >= totalRowCount || disabled;
 
-  // if (isMobile && SelectProps?.native !== false) SelectProps.native = true;
+  if (isMobile && SelectProps?.native !== false) {
+    SelectProps.native = true;
+  }
+
   // const tooltipProps = getCommonTooltipProps();
   // Note: SRT_Tooltip applies getCommonTooltipProps() itself.
 
-  const { children: selectPropsChildren, ...selectTriggerProps } = SelectProps;
+  const {
+    children: selectPropsChildren,
+    native,
+    ...selectTriggerProps
+  } = SelectProps;
 
   const navItems: Partial<
     Record<SRT_PaginationItem['type'], { Icon: LucideIcon; label: string }>
@@ -127,21 +143,43 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
           <Label htmlFor={`srt-rows-per-page-${id}`}>
             {localization.rowsPerPage}
           </Label>
-          <Select
-            disabled={disabled}
-            onValueChange={(value) => table.setPageSize(+value)}
-            value={String(pageSize)}
-          >
-            <SelectTrigger
+          {native ? (
+            <NativeSelect
               aria-label={localization.rowsPerPage}
+              disabled={disabled}
               id={`srt-rows-per-page-${id}`}
-              size="sm"
+              onChange={(event) => table.setPageSize(+event.target.value)}
+              value={pageSize}
               {...selectTriggerProps}
             >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
+              {selectPropsChildren ??
+                rowsPerPageOptions.map((option) => {
+                  const value =
+                    typeof option !== 'number' ? option.value : option;
+                  const label =
+                    typeof option !== 'number' ? option.label : `${option}`;
+                  return (
+                    <NativeSelectOption key={value} value={value}>
+                      {label}
+                    </NativeSelectOption>
+                  );
+                })}
+            </NativeSelect>
+          ) : (
+            <Select
+              disabled={disabled}
+              onValueChange={(value) => table.setPageSize(+value)}
+              value={String(pageSize)}
+            >
+              <SelectTrigger
+                aria-label={localization.rowsPerPage}
+                id={`srt-rows-per-page-${id}`}
+                size="sm"
+                {...selectTriggerProps}
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
                 {selectPropsChildren ??
                   rowsPerPageOptions.map((option) => {
                     const value =
@@ -154,9 +192,9 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
                       </SelectItem>
                     );
                   })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+              </SelectContent>
+            </Select>
+          )}
         </div>
       )}
       {paginationDisplayMode === 'pages' ? (
