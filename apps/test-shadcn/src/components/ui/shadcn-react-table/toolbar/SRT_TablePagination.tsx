@@ -62,8 +62,8 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
       icons: { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon },
       id,
       localization,
-      paginationDisplayMode,
       srtPaginationProps,
+      paginationDisplayMode,
     },
   } = table;
   const {
