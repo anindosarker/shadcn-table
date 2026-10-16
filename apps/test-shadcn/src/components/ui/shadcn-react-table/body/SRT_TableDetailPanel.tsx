@@ -28,7 +28,7 @@ const detailPanelRowVariants = cva('w-full', {
   },
 });
 
-const detailPanelCellVariants = cva('w-full border-b text-start text-sm px-4', {
+const detailPanelCellVariants = cva('w-full border-b text-sm px-4', {
   variants: {
     layout: { grid: 'flex', semantic: '' },
     expanded: { true: '', false: 'border-b-0' },
@@ -116,6 +116,15 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
             padded: !!DetailPanel && row.getIsExpanded(),
             virtual: !!virtualRow,
           }),
+          tableCellProps.align === 'center'
+            ? 'text-center'
+            : tableCellProps.align === 'right'
+              ? 'text-right flex-row-reverse'
+              : tableCellProps.align === 'left'
+                ? 'text-left'
+                : tableCellProps.align === 'justify'
+                  ? 'text-justify'
+                  : 'text-start',
           tableCellProps?.className,
         )}
       >
@@ -125,7 +134,7 @@ export const SRT_TableDetailPanel = <TData extends SRT_RowData>({
           // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
           // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
           <Collapsible open={row.getIsExpanded()}>
-            <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+            <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
               {DetailPanel}
             </CollapsibleContent>
           </Collapsible>
