@@ -6,9 +6,6 @@ import {
   useRef,
   useState,
 } from 'react';
-// import Collapse from '@mui/material/Collapse'; // Note: replaced by radix Collapsible below.
-// import { debounce } from '@mui/material/utils'; // Note: replaced by the local debounce helper below.
-import { type CSSProperties } from 'react';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   InputGroup,
@@ -21,20 +18,9 @@ import {
   type SRT_RowData,
   type SRT_TableInstance,
 } from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
+import { debounce, parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
-
-function debounce<TArgs extends unknown[]>(
-  fn: (...args: TArgs) => void,
-  delay: number,
-) {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  return (...args: TArgs) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  };
-}
 
 export interface SRT_GlobalFilterTextFieldProps<TData extends SRT_RowData>
   extends InputProps {
@@ -109,22 +95,20 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
 
   return (
     // <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal" unmountOnExit>
-    // Note: radix Collapsible replaces MUI Collapse; the width keyframes that
-    // map its orientation="horizontal" live in the app stylesheet.
+    // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit); the horizontal width keyframes (MUI duration.standard, easeInOut) live in the app stylesheet.
     <Collapsible open={showGlobalFilter}>
-      <CollapsibleContent
-        className="w-48 overflow-hidden data-[state=closed]:animate-[srt-collapsible-left_300ms_ease] data-[state=open]:animate-[srt-collapsible-right_300ms_ease]"
-        style={{ '--srt-collapsible-width': '12rem' } as CSSProperties}
-      >
+      <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-[srt-collapsible-left_300ms_ease-in-out] data-[state=open]:animate-[srt-collapsible-right_300ms_ease-in-out]">
+        {/* <TextField size="small" variant="outlined" InputProps={{ ...textFieldProps.InputProps, sx: { mb: 0 } }} /> */}
+        {/* Note: InputGroup is MUI's Input root in shadcn's default variant; the slot type is input props, so InputProps and its sx have no target. */}
         <InputGroup>
-          {/* startAdornment — MUI <InputAdornment position="start"> wrapper dropped. */}
           {enableGlobalFilterModes ? (
             <InputGroupAddon align="inline-start">
               <SRT_Tooltip title={localization.changeSearchMode}>
                 <InputGroupButton
-                  size="icon-xs"
                   aria-label={localization.changeSearchMode}
                   onClick={handleGlobalFilterMenuOpen}
+                  size="icon-sm"
+                  className="size-7"
                 >
                   <SearchIcon />
                 </InputGroupButton>
@@ -137,29 +121,26 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
               <SearchIcon />
             </InputGroupAddon>
           )}
-
           <InputGroupInput
             autoComplete="off"
-            placeholder={localization.search}
             onChange={handleChange}
+            placeholder={localization.search}
             value={searchValue ?? ''}
             {...textFieldProps}
-            ref={(node) => {
-              searchInputRef.current = node;
-              // if (textFieldProps?.inputRef) textFieldProps.inputRef = inputRef;
-              // Note: user input-ref forwarding deferred.
+            ref={(inputRef) => {
+              searchInputRef.current = inputRef;
+              // if (textFieldProps?.inputRef) { textFieldProps.inputRef = inputRef; }
+              // Note: no-op in MRT too; a user ref is overridden by this one, as MRT's inputRef after the spread.
             }}
           />
-
-          {/* endAdornment — MUI <InputAdornment position="end"> wrapper dropped. */}
           <InputGroupAddon align="inline-end">
             <SRT_Tooltip title={localization.clearSearch ?? ''}>
               <span>
                 <InputGroupButton
-                  size="icon-xs"
                   aria-label={localization.clearSearch}
                   disabled={!searchValue?.length}
                   onClick={handleClear}
+                  size="icon-sm"
                 >
                   <CloseIcon />
                 </InputGroupButton>
@@ -167,7 +148,6 @@ export const SRT_GlobalFilterTextField = <TData extends SRT_RowData>({
             </SRT_Tooltip>
           </InputGroupAddon>
         </InputGroup>
-
         <SRT_FilterOptionMenu
           anchorEl={anchorEl}
           onSelect={handleClear}

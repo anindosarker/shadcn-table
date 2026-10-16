@@ -147,20 +147,21 @@
     cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
 }
 
-/* MUI Collapse orientation="horizontal" — radix Collapsible only ships height
-   keyframes, so the global-filter field gets the width pair here. */
+/* MUI Collapse orientation="horizontal": tw-animate-css ships only the height
+   pair (collapsible-down/up), so the width pair lives here, driven by the
+   radix-measured --radix-collapsible-content-width like the height pair. */
 @keyframes srt-collapsible-right {
   from {
     width: 0;
   }
   to {
-    width: var(--srt-collapsible-width);
+    width: var(--radix-collapsible-content-width);
   }
 }
 
 @keyframes srt-collapsible-left {
   from {
-    width: var(--srt-collapsible-width);
+    width: var(--radix-collapsible-content-width);
   }
   to {
     width: 0;
