@@ -10,7 +10,18 @@ import {
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 const grabHandleButtonVariants = cva(
-  'my-0 -mx-[0.1rem] cursor-grab active:cursor-grabbing',
+  'my-0 -mx-[0.1rem] cursor-grab transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',
+  {
+    variants: {
+      location: {
+        column: 'opacity-50',
+        row: 'opacity-100',
+      },
+    },
+    defaultVariants: {
+      location: 'column',
+    },
+  },
 );
 
 export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData>
@@ -23,7 +34,6 @@ export interface SRT_GrabHandleButtonProps<TData extends SRT_RowData>
 }
 
 export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   location,
   table,
   ...rest
@@ -42,15 +52,14 @@ export const SRT_GrabHandleButton = <TData extends SRT_RowData>({
         // disableRipple  // Note: shadcn Button has no ripple effect
         draggable="true"
         size="icon-sm"
+        type="button"
         variant="ghost"
         {...rest}
         onClick={(e) => {
           e.stopPropagation();
           rest?.onClick?.(e);
         }}
-        // sx={{ p: '2px', opacity: location === 'row' ? 1 : 0.5, transition: 'all 150ms ease-in-out', '&:hover': { backgroundColor: 'transparent', opacity: 1 } }}
-        // Note: dropped per sweep ruling — size="icon-sm" + full opacity.
-        className={cn(grabHandleButtonVariants(), rest?.className)}
+        className={cn(grabHandleButtonVariants({ location }), rest?.className)}
         title={undefined}
       >
         <DragHandleIcon />
