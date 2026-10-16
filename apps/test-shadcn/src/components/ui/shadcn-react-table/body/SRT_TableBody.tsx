@@ -78,8 +78,6 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
 
   const { virtualRows } = rowVirtualizer ?? {};
 
-  const layout = layoutMode?.startsWith('grid') ? 'grid' : 'semantic';
-
   const commonRowProps = {
     columnVirtualizer,
     numRows: rows.length,
@@ -93,7 +91,9 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
           <tbody
             {...tableBodyProps}
             className={cn(
-              tableBodyVariants({ layout }),
+              tableBodyVariants({
+                layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+              }),
               'sticky z-[1]',
               tableBodyProps?.className,
             )}
@@ -116,7 +116,9 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
       <tbody
         {...tableBodyProps}
         className={cn(
-          tableBodyVariants({ layout }),
+          tableBodyVariants({
+            layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+          }),
           'relative',
           !rows.length && 'min-h-[100px]',
           tableBodyProps?.className,
@@ -198,7 +200,9 @@ export const SRT_TableBody = <TData extends SRT_RowData>({
           <tbody
             {...tableBodyProps}
             className={cn(
-              tableBodyVariants({ layout }),
+              tableBodyVariants({
+                layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+              }),
               'sticky z-[1]',
               tableBodyProps?.className,
             )}
