@@ -1,13 +1,6 @@
-import {
-  type ComponentPropsWithRef,
-  type MouseEventHandler,
-  type ReactNode,
-} from 'react';
+import { type ComponentPropsWithRef, type ReactNode } from 'react';
 import { cva } from 'class-variance-authority';
-import {
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { type SRT_RowData, type SRT_TableInstance } from '../types';
@@ -21,7 +14,9 @@ export interface SRT_ActionMenuItemProps<TData extends SRT_RowData>
   divider?: boolean;
   icon: ReactNode;
   label: string;
-  onOpenSubMenu?: MouseEventHandler<HTMLButtonElement>;
+  onOpenSubMenu?:
+    | ComponentPropsWithRef<typeof DropdownMenuItem>['onClick']
+    | ComponentPropsWithRef<typeof DropdownMenuItem>['onMouseEnter'];
   table: SRT_TableInstance<TData>;
 }
 
@@ -41,32 +36,32 @@ export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
   } = table;
 
   return (
-    <>
-      <DropdownMenuItem
-        tabIndex={0}
-        {...rest}
-        className={cn(actionMenuItemVariants(), className)}
-      >
-        <div className="flex items-center">
-          {/* Note: MUI ListItemIcon defaults to ~36px min-width inside a MenuItem; mapped visually to a fixed-width slot */}
-          <span className="mr-2 inline-flex w-6 items-center">{icon}</span>
-          {label}
-        </div>
-        {onOpenSubMenu && (
-          // p-0
-          // Note: MUI IconButton p:0 dropped — shadcn icon-sm (size-8) wins.
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={onOpenSubMenu}
-            onMouseEnter={onOpenSubMenu}
-          >
-            <ArrowRightIcon />
-          </Button>
-        )}
-      </DropdownMenuItem>
-      {divider && <DropdownMenuSeparator />}
-    </>
+    <DropdownMenuItem
+      tabIndex={0}
+      {...rest}
+      className={cn(
+        actionMenuItemVariants(),
+        divider && 'border-b bg-clip-padding',
+        className,
+      )}
+    >
+      <div className="flex items-center">
+        <span className="inline-flex min-w-9 shrink-0">{icon}</span>
+        {label}
+      </div>
+      {onOpenSubMenu && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-xs"
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onClick={onOpenSubMenu as any}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onMouseEnter={onOpenSubMenu as any}
+        >
+          <ArrowRightIcon />
+        </Button>
+      )}
+    </DropdownMenuItem>
   );
 };
