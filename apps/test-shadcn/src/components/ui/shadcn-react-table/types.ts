@@ -41,6 +41,7 @@ import {
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
+import { type Checkbox } from '@/components/ui/checkbox';
 import { type Slider } from '@/components/ui/slider';
 import { type SRT_AggregationFns } from './fns/aggregationFns';
 import { type SRT_FilterFns } from './fns/filterFns';
@@ -80,6 +81,8 @@ export type InputProps = ComponentPropsWithRef<'input'>;
 
 export type SelectProps = ButtonProps &
   Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
+
+export type CheckboxProps = ComponentPropsWithRef<typeof Checkbox>;
 
 export type SliderProps = ComponentPropsWithRef<typeof Slider>;
 
@@ -600,8 +603,8 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => CheckboxProps)
+    | CheckboxProps;
   srtFilterDatePickerProps?:
     | ((props: {
         column: SRT_Column<TData>;
@@ -1001,8 +1004,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => CheckboxProps)
+    | CheckboxProps;
   srtFilterDatePickerProps?:
     | ((props: {
         column: SRT_Column<TData>;
@@ -1171,12 +1174,6 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   onDraggingColumnChange?: OnChangeFn<SRT_Column<TData> | null>;
   onDraggingRowChange?: OnChangeFn<SRT_Row<TData> | null>;
   onEditingCellChange?: OnChangeFn<SRT_Cell<TData> | null>;
-  onEditingCellSave?: (props: {
-    cell: SRT_Cell<TData>;
-    row: SRT_Row<TData>;
-    table: SRT_TableInstance<TData>;
-    value: any;
-  }) => Promise<void> | void;
   onEditingRowCancel?: (props: {
     row: SRT_Row<TData>;
     table: SRT_TableInstance<TData>;
