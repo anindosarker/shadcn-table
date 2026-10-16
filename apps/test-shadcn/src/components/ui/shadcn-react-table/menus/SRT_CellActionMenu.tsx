@@ -120,7 +120,7 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
           onClick={(event) => event.stopPropagation()}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
-            anchorEl?.focus();
+            if (!table.getState().editingCell) anchorEl?.focus();
           }}
           {...rest}
         >
