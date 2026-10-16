@@ -1,5 +1,7 @@
 import { type MouseEvent } from 'react';
+import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type SRT_Row,
@@ -8,6 +10,19 @@ import {
 } from '../types';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
+
+const expandButtonVariants = cva('', {
+  variants: {
+    density: {
+      comfortable: '',
+      compact: 'size-7',
+      spacious: '',
+    },
+  },
+  defaultVariants: {
+    density: 'comfortable',
+  },
+});
 
 export interface SRT_ExpandButtonProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -22,8 +37,8 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
   table,
 }: SRT_ExpandButtonProps<TData>) => {
   // Note: MRT's useTheme dropped — SRT has no theme.direction (rtl).
-  // Note: getState()/density dropped — the removed size cva was its only consumer.
   const {
+    getState,
     options: {
       icons: { ExpandMoreIcon },
       localization,
@@ -32,6 +47,7 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
       srtExpandButtonProps,
     },
   } = table;
+  const { density } = getState();
 
   const iconButtonProps = parseFromValuesOrFunc(srtExpandButtonProps, {
     row,
@@ -63,8 +79,13 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
           aria-label={localization.expand}
           disabled={!canExpand && !detailPanel}
           size="icon"
+          type="button"
           variant="ghost"
           {...iconButtonProps}
+          className={cn(
+            expandButtonVariants({ density }),
+            iconButtonProps?.className,
+          )}
           onClick={handleToggleExpand}
           style={{
             // Note: rtl 'mr'/'ml' switch dropped — positionExpandColumn only.
