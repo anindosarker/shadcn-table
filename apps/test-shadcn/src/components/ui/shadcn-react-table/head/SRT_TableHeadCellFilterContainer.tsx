@@ -1,7 +1,5 @@
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
-  type DivProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -14,12 +12,10 @@ import { SRT_FilterTextField } from '../inputs/SRT_FilterTextField';
 
 export interface SRT_TableHeadCellFilterContainerProps<
   TData extends SRT_RowData,
-> extends DivProps {
+> extends React.ComponentProps<typeof Collapsible> {
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }
-
-const filterContainerVariants = cva('');
 
 export const SRT_TableHeadCellFilterContainer = <TData extends SRT_RowData>({
   header,
@@ -35,23 +31,24 @@ export const SRT_TableHeadCellFilterContainer = <TData extends SRT_RowData>({
   const { columnDef } = column;
   const { isRangeFilter } = getColumnFilterInfo({ header, table });
 
-  // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
-  // Note: MUI Collapse transition dropped — conditional render keeps mountOnEnter/unmountOnExit semantics
-  if (!(showColumnFilters || columnFilterDisplayMode === 'popover')) {
-    return null;
-  }
-
   return (
-    <div {...rest} className={cn(filterContainerVariants(), rest.className)}>
-      {columnDef.filterVariant === 'checkbox' ? (
-        <SRT_FilterCheckbox column={column} table={table} />
-      ) : columnDef.filterVariant === 'range-slider' ? (
-        <SRT_FilterRangeSlider header={header} table={table} />
-      ) : isRangeFilter ? (
-        <SRT_FilterRangeFields header={header} table={table} />
-      ) : (
-        <SRT_FilterTextField header={header} table={table} />
-      )}
-    </div>
+    // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
+    // Note: MUI Collapse replaced by ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
+    <Collapsible
+      open={showColumnFilters || columnFilterDisplayMode === 'popover'}
+      {...rest}
+    >
+      <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+        {columnDef.filterVariant === 'checkbox' ? (
+          <SRT_FilterCheckbox column={column} table={table} />
+        ) : columnDef.filterVariant === 'range-slider' ? (
+          <SRT_FilterRangeSlider header={header} table={table} />
+        ) : isRangeFilter ? (
+          <SRT_FilterRangeFields header={header} table={table} />
+        ) : (
+          <SRT_FilterTextField header={header} table={table} />
+        )}
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
