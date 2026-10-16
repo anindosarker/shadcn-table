@@ -1,7 +1,7 @@
 import { type DragEvent, type KeyboardEvent, useMemo } from 'react';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
-// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
+// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -203,7 +203,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       data-sort={column.getIsSorted() || undefined}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
-      ref={(node: HTMLTableCellElement | null) => {
+      ref={(node: HTMLTableCellElement) => {
         if (node) {
           tableHeadCellRefs.current![column.id] = node;
           if (columnDefType !== 'group') {
@@ -211,6 +211,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
           }
         }
       }}
+      scope="col"
       tabIndex={enableKeyboardShortcuts ? 0 : undefined}
       {...tableCellProps}
       onKeyDown={handleKeyDown}
