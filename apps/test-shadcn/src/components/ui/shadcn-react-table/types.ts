@@ -42,6 +42,8 @@ import {
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
 import { type Checkbox } from '@/components/ui/checkbox';
+import { type DialogContent } from '@/components/ui/dialog';
+import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
 import { type SRT_AggregationFns } from './fns/aggregationFns';
 import { type SRT_FilterFns } from './fns/filterFns';
@@ -85,6 +87,10 @@ export type SelectProps = ButtonProps &
 export type CheckboxProps = ComponentPropsWithRef<typeof Checkbox>;
 
 export type SliderProps = ComponentPropsWithRef<typeof Slider>;
+
+export type RadioProps = ComponentPropsWithRef<typeof RadioGroupItem>;
+
+export type DialogProps = ComponentPropsWithRef<typeof DialogContent>;
 
 export type SRT_LinearProgressProps = {
   collapsibleProps?: DivProps;
@@ -962,8 +968,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         row: SRT_Row<TData>;
         table: SRT_TableInstance<TData>;
-      }) => DivProps)
-    | DivProps;
+      }) => DialogProps)
+    | DialogProps;
   srtDetailPanelProps?:
     | ((props: {
         row: SRT_Row<TData>;
@@ -974,8 +980,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         row: SRT_Row<TData>;
         table: SRT_TableInstance<TData>;
-      }) => DivProps)
-    | DivProps;
+      }) => DialogProps)
+    | DialogProps;
   srtEditTextFieldProps?:
     | ((props: {
         cell: SRT_Cell<TData>;
@@ -1073,15 +1079,15 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: { table: SRT_TableInstance<TData> }) => InputProps)
     | InputProps;
   srtSelectAllCheckboxProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => ButtonProps)
-    | ButtonProps;
+    | ((props: { table: SRT_TableInstance<TData> }) => CheckboxProps)
+    | CheckboxProps;
   srtSelectCheckboxProps?:
     | ((props: {
         row: SRT_Row<TData>;
         staticRowIndex?: number;
         table: SRT_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => CheckboxProps | RadioProps)
+    | (CheckboxProps | RadioProps);
   srtSkeletonProps?:
     | ((props: {
         cell: SRT_Cell<TData>;

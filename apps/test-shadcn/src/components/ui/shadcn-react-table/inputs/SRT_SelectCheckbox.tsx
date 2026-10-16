@@ -135,7 +135,11 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
           // <Radio {...(commonProps as any)} />
           // Note: shadcn RadioGroupItem needs its RadioGroup; one group per row stands in for MUI's standalone Radio.
           <RadioGroup value={isChecked ? 'on' : null}>
-            <RadioGroupItem {...commonProps} value="on" />
+            <RadioGroupItem
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              {...(commonProps as any)}
+              value="on"
+            />
           </RadioGroup>
         ) : (
           <Checkbox
