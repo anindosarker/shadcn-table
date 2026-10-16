@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -6,8 +7,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { FieldGroup } from '@/components/ui/field';
 import {
+  type DialogProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -16,8 +18,10 @@ import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_EditActionButtons } from '../buttons/SRT_EditActionButtons';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
 
+const editRowModalVariants = cva('max-h-[calc(100%-4rem)]');
+
 export interface SRT_EditRowModalProps<TData extends SRT_RowData>
-  extends Partial<React.ComponentPropsWithRef<typeof DialogContent>> {
+  extends Partial<DialogProps> {
   open: boolean;
   table: SRT_TableInstance<TData>;
 }
@@ -50,49 +54,48 @@ export const SRT_EditRowModal = <TData extends SRT_RowData>({
       parseFromValuesOrFunc(srtCreateRowModalProps, { row, table })),
     ...rest,
   };
+  const { onOpenChange, ...contentProps } = dialogProps;
 
   const internalEditComponents = row
     .getAllCells()
     .filter((cell) => cell.column.columnDef.columnDefType === 'data')
     .map((cell) => (
-      <Field key={cell.id}>
-        <FieldLabel className="w-full flex-col items-start">
-          {cell.column.columnDef.header}
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <SRT_EditCellTextField cell={cell as any} table={table as any} />
-        </FieldLabel>
-      </Field>
+      <SRT_EditCellTextField
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        cell={cell as any}
+        key={cell.id}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        table={table as any}
+      />
     ));
-
-  const handleClose = () => {
-    if (creatingRow) {
-      onCreatingRowCancel?.({ row, table });
-      setCreatingRow(null);
-    } else {
-      onEditingRowCancel?.({ row, table });
-      setEditingRow(null);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    row._valuesCache = {} as any; //reset values cache
-    // dialogProps.onClose?.(event, reason);
-    // Note: DivProps has no onClose/onOpenChange surface — close interception not exposed.
-  };
 
   return (
     <Dialog
-      open={open}
       onOpenChange={(nextOpen) => {
-        if (!nextOpen) handleClose();
+        if (nextOpen) return;
+        if (creatingRow) {
+          onCreatingRowCancel?.({ row, table });
+          setCreatingRow(null);
+        } else {
+          onEditingRowCancel?.({ row, table });
+          setEditingRow(null);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        row._valuesCache = {} as any; //reset values cache
+        onOpenChange?.(nextOpen);
       }}
+      open={open}
     >
       <DialogContent
         // fullWidth
         // maxWidth="xs"
         // Note: MUI sizing props dropped — shadcn default sizing wins.
-        className="max-h-[calc(100%-4rem)]"
         showCloseButton={false}
         aria-describedby={undefined}
-        {...dialogProps}
+        {...contentProps}
+        className={cn(
+          editRowModalVariants({ className: contentProps.className }),
+        )}
       >
         {((creatingRow &&
           renderCreateRowDialogContent?.({

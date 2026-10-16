@@ -42,7 +42,7 @@ import {
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
 import { type Checkbox } from '@/components/ui/checkbox';
-import { type DialogContent } from '@/components/ui/dialog';
+import { type Dialog, type DialogContent } from '@/components/ui/dialog';
 import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
 import { type SRT_AggregationFns } from './fns/aggregationFns';
@@ -90,7 +90,11 @@ export type SliderProps = ComponentPropsWithRef<typeof Slider>;
 
 export type RadioProps = ComponentPropsWithRef<typeof RadioGroupItem>;
 
-export type DialogProps = ComponentPropsWithRef<typeof DialogContent>;
+export type DialogProps = Pick<
+  ComponentPropsWithRef<typeof Dialog>,
+  'onOpenChange'
+> &
+  ComponentPropsWithRef<typeof DialogContent>;
 
 export type SRT_LinearProgressProps = {
   collapsibleProps?: DivProps;
