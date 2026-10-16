@@ -74,7 +74,7 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
       className={cn(
         tableFooterVariants({
           layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-          sticky: stickFooter,
+          sticky: !!stickFooter,
         }),
         tableFooterProps.className,
       )}
