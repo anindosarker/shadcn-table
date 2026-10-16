@@ -1,6 +1,6 @@
 import { type KeyboardEvent } from 'react';
 // import { useTheme } from '@mui/material/styles';
-// Note: useTheme/Theme dropped project-wide — shadcn tokens + logical CSS replace it.
+// Note: useTheme dropped. align->text-start (logical, rtl-safe).
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -21,7 +21,7 @@ export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
 }
 
 const footerCellVariants = cva(
-  'font-bold align-top text-xs leading-[1.3125rem] text-muted-foreground',
+  'border-b text-xs leading-[1.3125rem] text-muted-foreground font-bold align-top',
 );
 
 export const SRT_TableFooterCell = <TData extends SRT_RowData>({
@@ -30,12 +30,13 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
   table,
   ...rest
 }: SRT_TableFooterCellProps<TData>) => {
+  // const theme = useTheme();
   const {
     getState,
     options: {
       enableColumnPinning,
-      enableKeyboardShortcuts,
       srtTableFooterCellProps,
+      enableKeyboardShortcuts,
     },
   } = table;
   const { density } = getState();
@@ -74,30 +75,36 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
   return (
     <td
       // align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
-      // Note: → text-center / logical text-start classes below (rtl-safe without theme).
+      // Note: MUI align classes mapped in className below; user `align` wins like the MRT spread.
       colSpan={footer.colSpan}
       data-index={staticColumnIndex}
       data-pinned={!!isColumnPinned || undefined}
       tabIndex={enableKeyboardShortcuts ? 0 : undefined}
       // variant="footer"
-      // Note: no td analogue — MUI footer-variant defaults folded into footerCellVariants.
+      // Note: no td analogue. MUI footer-variant defaults folded into footerCellVariants.
       {...tableCellProps}
+      onKeyDown={handleKeyDown}
       className={cn(
         footerCellVariants(),
-        columnDefType === 'group' ? 'text-center' : 'text-start',
+        tableCellProps.align === 'center'
+          ? 'text-center'
+          : tableCellProps.align === 'right'
+            ? 'text-right flex-row-reverse'
+            : tableCellProps.align === 'left'
+              ? 'text-left'
+              : tableCellProps.align === 'justify'
+                ? 'text-justify'
+                : columnDefType === 'group'
+                  ? 'text-center'
+                  : 'text-start',
         density === 'compact'
           ? 'p-2'
           : density === 'comfortable'
             ? 'p-4'
             : 'p-6',
         commonCellStyles.className,
-        tableCellProps?.className,
       )}
-      style={{
-        ...commonCellStyles.style,
-        ...tableCellProps?.style,
-      }}
-      onKeyDown={handleKeyDown}
+      style={commonCellStyles.style}
     >
       {tableCellProps.children ??
         (footer.isPlaceholder
