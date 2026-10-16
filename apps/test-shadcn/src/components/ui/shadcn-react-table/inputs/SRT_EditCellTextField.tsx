@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import { cn } from '@/lib/utils';
+import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -122,128 +123,136 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
   }
 
   if (isSelectEdit) {
-    return (
-      <>
-        {['custom', 'modal'].includes(
-          (isCreating ? createDisplayMode : editDisplayMode) as string,
-        ) && (
-          <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
-        )}
-        <Select
-          name={column.id}
-          onOpenChange={setOpen}
-          onValueChange={(newValue) =>
-            // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
-            handleChange({
-              target: { name: column.id, value: newValue },
-            } as ChangeEvent<HTMLInputElement>)
+    const select = (
+      <Select
+        name={column.id}
+        onOpenChange={setOpen}
+        onValueChange={(newValue) =>
+          // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
+          handleChange({
+            target: { name: column.id, value: newValue },
+          } as ChangeEvent<HTMLInputElement>)
+        }
+        value={value ?? ''}
+      >
+        <SelectTrigger
+          disabled={
+            parseFromValuesOrFunc(columnDef.enableEditing, row) === false
           }
-          value={value ?? ''}
+          id={id}
+          ref={(inputRef) => {
+            if (inputRef) {
+              editInputRefs.current![column.id] =
+                inputRef as unknown as HTMLInputElement;
+            }
+          }}
+          size="sm"
+          {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
+          className={cn('w-full', textFieldProps.className)}
+          onBlur={(event) => {
+            // MUI SelectInput handleBlur: only while closed, with target { name, value }.
+            if (!open) {
+              Object.defineProperty(event, 'target', {
+                writable: true,
+                value: { name: column.id, value },
+              });
+              handleBlur(event as unknown as FocusEvent<HTMLInputElement>);
+            }
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            textFieldProps?.onClick?.(
+              e as unknown as MouseEvent<HTMLInputElement>,
+            );
+          }}
+          // onKeyDown={handleEnterKeyDown}
+          // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); radix opens on Enter.
+          onKeyDown={(e) =>
+            textFieldProps.onKeyDown?.(
+              e as unknown as KeyboardEvent<HTMLInputElement>,
+            )
+          }
         >
-          <SelectTrigger
-            disabled={
-              parseFromValuesOrFunc(columnDef.enableEditing, row) === false
-            }
-            id={id}
-            ref={(inputRef) => {
-              if (inputRef) {
-                editInputRefs.current![column.id] =
-                  inputRef as unknown as HTMLInputElement;
-              }
-            }}
-            size="sm"
-            {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
-            className={cn('w-full', textFieldProps.className)}
-            onBlur={(event) => {
-              // MUI SelectInput handleBlur: only while closed, with target { name, value }.
-              if (!open) {
-                Object.defineProperty(event, 'target', {
-                  writable: true,
-                  value: { name: column.id, value },
-                });
-                handleBlur(event as unknown as FocusEvent<HTMLInputElement>);
-              }
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              textFieldProps?.onClick?.(
-                e as unknown as MouseEvent<HTMLInputElement>,
-              );
-            }}
-            // onKeyDown={handleEnterKeyDown}
-            // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); radix opens on Enter.
-            onKeyDown={(e) =>
-              textFieldProps.onKeyDown?.(
-                e as unknown as KeyboardEvent<HTMLInputElement>,
+          <SelectValue
+            placeholder={
+              !['custom', 'modal'].includes(
+                (isCreating ? createDisplayMode : editDisplayMode) as string,
               )
+                ? columnDef.header
+                : undefined
             }
-          >
-            <SelectValue
-              placeholder={
-                !['custom', 'modal'].includes(
-                  (isCreating ? createDisplayMode : editDisplayMode) as string,
-                )
-                  ? columnDef.header
-                  : undefined
-              }
-            />
-          </SelectTrigger>
-          {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
-          {/* Note: radix Select always locks scroll. */}
-          <SelectContent>
-            {textFieldProps.children ??
-              selectOptions?.map((option) => {
-                const { label, value } = getValueAndLabel(option);
-                return (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                );
-              })}
-          </SelectContent>
-        </Select>
-      </>
+          />
+        </SelectTrigger>
+        {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
+        {/* Note: radix Select always locks scroll. */}
+        <SelectContent>
+          {textFieldProps.children ??
+            selectOptions?.map((option) => {
+              const { label, value } = getValueAndLabel(option);
+              return (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              );
+            })}
+        </SelectContent>
+      </Select>
+    );
+    return ['custom', 'modal'].includes(
+      (isCreating ? createDisplayMode : editDisplayMode) as string,
+    ) ? (
+      <Field>
+        <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
+        {select}
+      </Field>
+    ) : (
+      select
     );
   }
 
-  return (
-    <>
-      {['custom', 'modal'].includes(
-        (isCreating ? createDisplayMode : editDisplayMode) as string,
-      ) && <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>}
-      <Input
-        disabled={parseFromValuesOrFunc(columnDef.enableEditing, row) === false}
-        id={id}
-        ref={(inputRef) => {
-          if (inputRef) {
-            editInputRefs.current![column.id] = inputRef;
-            // if (textFieldProps.inputRef) textFieldProps.inputRef = inputRef;
-            // Note: no-op in MRT too; a user ref already wins through the spread below.
-          }
-        }}
-        // fullWidth, margin="none", select, size="small", variant="standard", InputProps
-        // Note: MUI TextField root props; shadcn Input is w-full with one variant and no underline.
-        name={column.id}
-        placeholder={
-          !['custom', 'modal'].includes(
-            (isCreating ? createDisplayMode : editDisplayMode) as string,
-          )
-            ? columnDef.header
-            : undefined
+  const input = (
+    <Input
+      disabled={parseFromValuesOrFunc(columnDef.enableEditing, row) === false}
+      id={id}
+      ref={(inputRef) => {
+        if (inputRef) {
+          editInputRefs.current![column.id] = inputRef;
+          // if (textFieldProps.inputRef) textFieldProps.inputRef = inputRef;
+          // Note: no-op in MRT too; a user ref already wins through the spread below.
         }
-        value={value ?? ''}
-        autoComplete="off"
-        {...textFieldProps}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        onClick={(e) => {
-          e.stopPropagation();
-          textFieldProps?.onClick?.(e);
-        }}
-        onKeyDown={handleEnterKeyDown}
-        onCompositionStart={() => setCompletesComposition(false)}
-        onCompositionEnd={() => setCompletesComposition(true)}
-      />
-    </>
+      }}
+      // fullWidth, margin="none", select, size="small", variant="standard", InputProps
+      // Note: MUI TextField root props; shadcn Input is w-full with one variant and no underline.
+      name={column.id}
+      placeholder={
+        !['custom', 'modal'].includes(
+          (isCreating ? createDisplayMode : editDisplayMode) as string,
+        )
+          ? columnDef.header
+          : undefined
+      }
+      value={value ?? ''}
+      autoComplete="off"
+      {...textFieldProps}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      onClick={(e) => {
+        e.stopPropagation();
+        textFieldProps?.onClick?.(e);
+      }}
+      onKeyDown={handleEnterKeyDown}
+      onCompositionStart={() => setCompletesComposition(false)}
+      onCompositionEnd={() => setCompletesComposition(true)}
+    />
+  );
+  return ['custom', 'modal'].includes(
+    (isCreating ? createDisplayMode : editDisplayMode) as string,
+  ) ? (
+    <Field>
+      <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
+      {input}
+    </Field>
+  ) : (
+    input
   );
 };
