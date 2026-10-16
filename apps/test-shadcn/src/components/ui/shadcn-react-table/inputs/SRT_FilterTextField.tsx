@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  type KeyboardEvent,
   type MouseEvent,
   useCallback,
   useEffect,
@@ -44,6 +45,7 @@ import {
 } from '../types';
 import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
 import {
+  createFilterOptions,
   debounce,
   getValueAndLabel,
   parseFromValuesOrFunc,
@@ -329,10 +331,10 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
         </span>
       </SRT_Tooltip>
       {filterChipLabel && (
-        <Badge asChild variant="secondary">
+        <Badge variant="secondary">
+          {filterChipLabel}
           <button type="button" onClick={handleClearEmptyFilterChip}>
-            {filterChipLabel}
-            <CancelIcon />
+            <CancelIcon className="size-3" />
           </button>
         </Badge>
       )}
@@ -350,10 +352,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
         ? undefined
         : filterPlaceholder,
     ref: (inputRef) => {
-      if (inputRef) {
-        filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
-          inputRef;
-      }
+      filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+        inputRef as HTMLInputElement;
       // if (textFieldProps.inputRef) { textFieldProps.inputRef = inputRef; }
       // Note: no-op in MRT too; a user ref already wins through the spread below.
     },
@@ -377,13 +377,14 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     value: filterValue || '',
   };
 
-  // Note: maps MUI Autocomplete's default filterOptions (ignoreCase, matchFrom 'any').
   const autocompleteOptions = isAutocompleteFilter
-    ? (dropdownOptions?.map((option) => getValueAndLabel(option)) ?? []).filter(
-        (option) =>
-          option.label
-            .toLowerCase()
-            .includes((filterValue as string).toLowerCase()),
+    ? createFilterOptions<DropdownOption>()(
+        dropdownOptions?.map((option) => getValueAndLabel(option)) ?? [],
+        {
+          getOptionLabel: (option: DropdownOption) =>
+            getValueAndLabel(option).label,
+          inputValue: filterValue as string,
+        },
       )
     : [];
 
@@ -437,6 +438,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             >
               <PopoverTrigger asChild>
                 <InputGroupInput
+                  type="text"
                   {...commonTextFieldProps}
                   {...autocompleteProps}
                   className={cn(
@@ -458,18 +460,21 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                 <Command shouldFilter={false}>
                   <CommandList>
                     <CommandGroup>
-                      {autocompleteOptions.map((option, index) => (
-                        <CommandItem
-                          key={`${index}-${option.value}`}
-                          onSelect={() => {
-                            handleAutocompleteChange(option);
-                            setAutocompleteOpen(false);
-                          }}
-                          value={option.label}
-                        >
-                          {option.label}
-                        </CommandItem>
-                      ))}
+                      {autocompleteOptions.map((option, index) => {
+                        const { label, value } = getValueAndLabel(option);
+                        return (
+                          <CommandItem
+                            key={`${index}-${value}`}
+                            onSelect={() => {
+                              handleAutocompleteChange(option);
+                              setAutocompleteOpen(false);
+                            }}
+                            value={label}
+                          >
+                            {label}
+                          </CommandItem>
+                        );
+                      })}
                     </CommandGroup>
                   </CommandList>
                 </Command>
@@ -480,11 +485,20 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             // Note: radix Select raises no ChangeEvent, so the user onChange cannot fire.
             <Select onValueChange={handleChange} value={filterValue as string}>
               <SelectTrigger
+                aria-label={filterPlaceholder}
                 className={cn(
                   'flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   textFieldProps.className,
                 )}
+                disabled={!!filterChipLabel || textFieldProps.disabled}
                 onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => {
+                  e.stopPropagation();
+                  textFieldProps.onKeyDown?.(
+                    e as unknown as KeyboardEvent<HTMLInputElement>,
+                  );
+                }}
+                title={filterPlaceholder}
               >
                 <SelectValue placeholder={filterPlaceholder} />
               </SelectTrigger>
@@ -512,11 +526,20 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  aria-label={filterPlaceholder}
                   className={cn(
                     'flex-1 justify-start font-normal',
                     textFieldProps.className,
                   )}
+                  disabled={!!filterChipLabel || textFieldProps.disabled}
                   onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    textFieldProps.onKeyDown?.(
+                      e as unknown as KeyboardEvent<HTMLInputElement>,
+                    );
+                  }}
+                  title={filterPlaceholder}
                   variant="ghost"
                 >
                   {!Array.isArray(filterValue) || filterValue.length === 0 ? (
@@ -588,8 +611,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               {...commonTextFieldProps}
               onChange={handleTextFieldChange}
               onClick={(e) => e.stopPropagation()}
-              // Note: the range clear cascade can leave the state undefined; React needs a defined value to stay controlled.
-              value={filterValue ?? ''}
+              value={filterValue}
             />
           )}
           {endAdornment}
