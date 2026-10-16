@@ -1,25 +1,13 @@
 import { type ComponentPropsWithRef } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import { type SRT_RowData, type SRT_TableInstance } from '../types';
 import { openEditingCell } from '../utils/cell.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
-
-const cellActionMenuContentVariants = cva('', {
-  variants: {
-    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
-    dense: {
-      false: '',
-      true: '[&>*]:py-1',
-    },
-  },
-});
 
 export interface SRT_CellActionMenuProps<TData extends SRT_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -27,7 +15,6 @@ export interface SRT_CellActionMenuProps<TData extends SRT_RowData>
 }
 
 export const SRT_CellActionMenu = <TData extends SRT_RowData>({
-  className,
   table,
   ...rest
 }: SRT_CellActionMenuProps<TData>) => {
@@ -44,14 +31,15 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
     },
     refs: { actionCellRef },
   } = table;
-  const { actionCell, density } = getState();
+  const { actionCell } = getState();
   const cell = actionCell!;
   const { row } = cell;
   const { column } = cell;
   const { columnDef } = column;
 
-  const handleClose = (event?: { stopPropagation?: () => void }) => {
-    event?.stopPropagation?.();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClose = (event?: any) => {
+    event?.stopPropagation();
     table.setActionCell(null);
     actionCellRef.current = null;
   };
@@ -62,7 +50,7 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
         'context-menu') && (
       <SRT_ActionMenuItem
         icon={<ContentCopy />}
-        key={'mrt-copy'}
+        key={'srt-copy'}
         label={localization.copy}
         onClick={(event) => {
           event.stopPropagation();
@@ -75,7 +63,7 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
     parseFromValuesOrFunc(enableEditing, row) && editDisplayMode === 'cell' && (
       <SRT_ActionMenuItem
         icon={<EditIcon />}
-        key={'mrt-edit'}
+        key={'srt-edit'}
         label={localization.edit}
         onClick={() => {
           openEditingCell({ cell, table });
@@ -99,7 +87,8 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
     columnDef.renderCellActionMenuItems?.(renderActionProps) ??
     renderCellActionMenuItems?.(renderActionProps);
 
-  const rect = actionCellRef.current?.getBoundingClientRect();
+  const anchorEl = actionCellRef.current;
+  const rect = anchorEl?.getBoundingClientRect();
 
   return (
     (!!menuItems?.length || !!internalMenuItems?.length) && (
@@ -123,17 +112,17 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
           />
         </DropdownMenuTrigger>
         {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
-        {/* Note: MRT transformOrigin={{horizontal:-100,vertical:8}} → align="start" alignOffset={100} sideOffset={8} approximates its offset placement near the click point */}
+        {/* Note: MRT transformOrigin={{horizontal:-100,vertical:8}} on MUI's top/left anchorOrigin puts the menu at top = anchorTop - 8, left = anchorLeft + 100; align="start" alignOffset={100} and sideOffset={-(height + 8)} from the anchor's bottom edge land on the same point */}
         <DropdownMenuContent
           align="start"
           alignOffset={100}
-          sideOffset={8}
+          sideOffset={-((rect?.height ?? 0) + 8)}
           onClick={(event) => event.stopPropagation()}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            anchorEl?.focus();
+          }}
           {...rest}
-          className={cn(
-            cellActionMenuContentVariants({ dense: density === 'compact' }),
-            className,
-          )}
         >
           {menuItems ?? internalMenuItems}
         </DropdownMenuContent>
