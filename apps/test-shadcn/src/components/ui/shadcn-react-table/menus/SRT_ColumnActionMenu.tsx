@@ -1,11 +1,9 @@
 import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import {
   type SRT_Header,
   type SRT_RowData,
@@ -13,19 +11,6 @@ import {
 } from '../types';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 import { SRT_FilterOptionMenu } from './SRT_FilterOptionMenu';
-
-const columnActionMenuVariants = cva('', {
-  variants: {
-    // MenuListProps dense map — menu-level (Content), never per item
-    dense: {
-      true: '[&_[role=menuitem]]:py-1',
-      false: '',
-    },
-  },
-  defaultVariants: {
-    dense: false,
-  },
-});
 
 export interface SRT_ColumnActionMenuProps<TData extends SRT_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -79,8 +64,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  const { columnSizing, columnVisibility, density, showColumnFilters } =
-    getState();
+  const { columnSizing, columnVisibility, showColumnFilters } = getState();
   const columnFilterValue = column.getFilterValue();
 
   const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
@@ -340,7 +324,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    // Note: disableScrollLock dropped — Radix DropdownMenu does not scroll-lock.
+    // Note: disableScrollLock dropped — Radix DropdownMenu keeps its modal default (scroll-locks), owner ruling.
     <DropdownMenu
       open={!!anchorEl}
       onOpenChange={(open) => {
@@ -362,11 +346,11 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          anchorEl?.focus();
+        }}
         {...rest}
-        className={cn(
-          columnActionMenuVariants({ dense: density === 'compact' }),
-          rest.className,
-        )}
       >
         {columnDef.renderColumnActionsMenuItems?.({
           closeMenu: () => setAnchorEl(null),
