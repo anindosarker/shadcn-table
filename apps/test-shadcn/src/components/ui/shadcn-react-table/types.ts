@@ -52,7 +52,6 @@ export type SpanProps = ComponentPropsWithRef<'span'>;
 
 export type NavProps = ComponentPropsWithRef<'nav'>;
 
-// Note: stands in for MUI PaginationProps; only the usePagination inputs SRT ports.
 export type SRT_PaginationProps = NavProps & {
   boundaryCount?: number;
   disabled?: boolean;
@@ -73,7 +72,6 @@ export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
 
 export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 
-// Note: MUI TableCellBaseProps = th & td attributes; one loose type for every cell, as MUI.
 export type TableCellProps = ComponentPropsWithRef<'th'> &
   ComponentPropsWithRef<'td'>;
 
@@ -81,7 +79,8 @@ export type ButtonProps = ComponentPropsWithRef<'button'>;
 
 export type InputProps = ComponentPropsWithRef<'input'>;
 
-export type SelectElementProps = ComponentPropsWithRef<'select'>;
+export type SelectProps = ButtonProps &
+  Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
 
 export type SRT_LinearProgressProps = {
   collapsibleProps?: DivProps;
@@ -260,6 +259,9 @@ export interface SRT_Localization {
   unpin: string;
   unpinAll: string;
 }
+
+// Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
+// export interface SRT_Theme { ... }
 
 export interface SRT_RowModel<TData extends SRT_RowData> {
   flatRows: SRT_Row<TData>[];
@@ -1043,10 +1045,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
   srtPaginationProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => Partial<
         SRT_PaginationProps & {
-          SelectProps?: Partial<
-            ButtonProps &
-              Omit<SelectElementProps, 'size'> & { native?: boolean }
-          >;
+          SelectProps?: Partial<SelectProps>;
           disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
@@ -1054,10 +1053,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
       >)
     | Partial<
         SRT_PaginationProps & {
-          SelectProps?: Partial<
-            ButtonProps &
-              Omit<SelectElementProps, 'size'> & { native?: boolean }
-          >;
+          SelectProps?: Partial<SelectProps>;
           disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;

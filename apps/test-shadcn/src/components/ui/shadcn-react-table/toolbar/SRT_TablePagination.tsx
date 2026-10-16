@@ -22,11 +22,10 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
-  type ButtonProps,
   type SRT_PaginationProps,
   type SRT_RowData,
   type SRT_TableInstance,
-  type SelectElementProps,
+  type SelectProps,
 } from '../types';
 import {
   getPaginationItems,
@@ -41,10 +40,7 @@ const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 export interface SRT_TablePaginationProps<TData extends SRT_RowData>
   extends Partial<
     SRT_PaginationProps & {
-      // Note: spread target is SelectTrigger (button) or NativeSelect (select), hence the intersection.
-      SelectProps?: Partial<
-        ButtonProps & Omit<SelectElementProps, 'size'> & { native?: boolean }
-      >;
+      SelectProps?: Partial<SelectProps>;
       rowsPerPageOptions?: { label: string; value: number }[] | number[];
       showRowsPerPage?: boolean;
     }
