@@ -1,8 +1,7 @@
 import { type DragEvent, type KeyboardEvent, useMemo } from 'react';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
-// Note: useTheme/Theme dropped project-wide — logical CSS + shadcn tokens replace
-// MUI's manual `theme.direction === 'rtl'` and palette lookups here.
+// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -31,7 +30,7 @@ export interface SRT_TableHeadCellProps<TData extends SRT_RowData>
 }
 
 const headCellVariants = cva(
-  'align-top overflow-visible font-bold [&:hover_button]:opacity-100',
+  'border-b text-sm leading-6 align-top overflow-visible font-bold [&:hover_button]:opacity-100',
 );
 
 export const SRT_TableHeadCell = <TData extends SRT_RowData>({
@@ -214,9 +213,20 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       }}
       tabIndex={enableKeyboardShortcuts ? 0 : undefined}
       {...tableCellProps}
+      onKeyDown={handleKeyDown}
       className={cn(
         headCellVariants(),
-        columnDefType === 'group' ? 'text-center' : 'text-start',
+        tableCellProps.align === 'center'
+          ? 'text-center'
+          : tableCellProps.align === 'right'
+            ? 'text-right flex-row-reverse'
+            : tableCellProps.align === 'left'
+              ? 'text-left'
+              : tableCellProps.align === 'justify'
+                ? 'text-justify'
+                : columnDefType === 'group'
+                  ? 'text-center'
+                  : 'text-start',
         layoutMode?.startsWith('grid') && 'flex-col',
         density === 'compact'
           ? 'p-2'
@@ -245,7 +255,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
         ...commonCellStyles.style,
         ...draggingBorders,
       }}
-      onKeyDown={handleKeyDown}
     >
       {header.isPlaceholder
         ? null
