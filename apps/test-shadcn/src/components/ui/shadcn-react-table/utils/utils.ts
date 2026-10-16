@@ -22,7 +22,7 @@ export const getValueAndLabel = (
   return { label, value };
 };
 
-// @mui/utils debounce, ported verbatim (MRT imports it from '@mui/material/utils').
+// Note: @mui/utils debounce, verbatim; MRT imports it from '@mui/material/utils'.
 export interface Cancelable {
   clear(): void;
 }
@@ -34,8 +34,9 @@ export function debounce<T extends (...args: any[]) => any>(
   wait = 166,
 ): T & Cancelable {
   let timeout: ReturnType<typeof setTimeout>;
-  function debounced(this: any, ...args: Parameters<T>) {
+  function debounced(...args: Parameters<T>) {
     const later = () => {
+      // @ts-expect-error -- MUI keeps `this` untyped here (its source has @ts-ignore)
       func.apply(this, args);
     };
     clearTimeout(timeout);
@@ -47,7 +48,7 @@ export function debounce<T extends (...args: any[]) => any>(
   return debounced as T & Cancelable;
 }
 
-// @mui/material useAutocomplete createFilterOptions, ported verbatim (MUI Autocomplete's default filterOptions).
+// Note: @mui/material useAutocomplete createFilterOptions, verbatim; MUI Autocomplete's default filterOptions.
 export interface CreateFilterOptionsConfig<Value> {
   ignoreAccents?: boolean;
   ignoreCase?: boolean;
@@ -64,7 +65,7 @@ export interface FilterOptionsState<Value> {
 
 // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 function stripDiacritics(string: string) {
-  return string.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 export function createFilterOptions<Value>(
