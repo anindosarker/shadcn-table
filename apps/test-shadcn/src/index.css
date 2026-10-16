@@ -149,21 +149,28 @@
 
 /* MUI Collapse orientation="horizontal": tw-animate-css ships only the height
    pair (collapsible-down/up), so the width pair lives here, driven by the
-   radix-measured --radix-collapsible-content-width like the height pair. */
+   radix-measured --radix-collapsible-content-width like the height pair.
+   overflow: hidden sits inside the keyframes so it applies only while the
+   animation runs, as MUI Collapse clips while transitioning and sets
+   overflow: visible once entered. */
 @keyframes srt-collapsible-right {
   from {
     width: 0;
+    overflow: hidden;
   }
   to {
     width: var(--radix-collapsible-content-width);
+    overflow: hidden;
   }
 }
 
 @keyframes srt-collapsible-left {
   from {
     width: var(--radix-collapsible-content-width);
+    overflow: hidden;
   }
   to {
     width: 0;
+    overflow: hidden;
   }
 }
