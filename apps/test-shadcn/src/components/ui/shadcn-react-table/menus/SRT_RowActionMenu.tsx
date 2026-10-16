@@ -3,14 +3,13 @@ import {
   type MouseEvent,
   type ReactNode,
   useMemo,
+  useRef,
 } from 'react';
-import { cva } from 'class-variance-authority';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -18,15 +17,6 @@ import {
 } from '../types';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
-
-const rowActionMenuContentVariants = cva('', {
-  variants: {
-    dense: {
-      false: '',
-      true: '[&>*]:py-1',
-    },
-  },
-});
 
 export interface SRT_RowActionMenuProps<TData extends SRT_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -40,7 +30,6 @@ export interface SRT_RowActionMenuProps<TData extends SRT_RowData>
 
 export const SRT_RowActionMenu = <TData extends SRT_RowData>({
   anchorEl,
-  className,
   handleEdit,
   row,
   setAnchorEl,
@@ -49,7 +38,6 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
   ...rest
 }: SRT_RowActionMenuProps<TData>) => {
   const {
-    getState,
     options: {
       editDisplayMode,
       enableEditing,
@@ -59,7 +47,9 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
       renderRowActionMenuItems,
     },
   } = table;
-  const { density } = getState();
+
+  const anchorRef = useRef<HTMLElement | null>(null);
+  if (anchorEl) anchorRef.current = anchorEl;
 
   const menuItems = useMemo(() => {
     const items: ReactNode[] = [];
@@ -113,11 +103,11 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          anchorRef.current?.focus();
+        }}
         {...rest}
-        className={cn(
-          rowActionMenuContentVariants({ dense: density === 'compact' }),
-          className,
-        )}
       >
         {menuItems}
       </DropdownMenuContent>
