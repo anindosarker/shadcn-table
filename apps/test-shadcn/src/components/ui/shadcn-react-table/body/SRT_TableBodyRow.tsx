@@ -78,10 +78,9 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
       //   selectedRowBackgroundColor,
       // },
       // Note: mrtTheme registry dropped project-wide — bg-background / bg-muted
-      // handle theming.
+      srtTableBodyRowProps,
       renderDetailPanel,
       rowPinningDisplayMode,
-      srtTableBodyRowProps,
     },
     refs: { tableFooterRef, tableHeadRef },
     setHoveredRow,
