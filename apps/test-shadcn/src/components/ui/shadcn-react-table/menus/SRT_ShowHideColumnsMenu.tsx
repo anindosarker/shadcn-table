@@ -1,5 +1,4 @@
 import { type ComponentPropsWithRef, useMemo, useState } from 'react';
-import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -7,7 +6,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import {
   type SRT_Column,
   type SRT_RowData,
@@ -15,16 +13,6 @@ import {
 } from '../types';
 import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
 import { SRT_ShowHideColumnsMenuItems } from './SRT_ShowHideColumnsMenuItems';
-
-const showHideColumnsMenuContentVariants = cva('', {
-  variants: {
-    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
-    dense: {
-      false: '',
-      true: '[&_[role=menuitem]]:py-1',
-    },
-  },
-});
 
 export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -36,7 +24,6 @@ export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData>
 
 export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
   anchorEl,
-  className,
   setAnchorEl,
   table,
   ...rest
@@ -60,7 +47,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
       // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
-  const { columnOrder, columnPinning, density } = getState();
+  const { columnOrder, columnPinning } = getState();
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -136,13 +123,11 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
       {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          anchorEl?.focus();
+        }}
         {...rest}
-        className={cn(
-          showHideColumnsMenuContentVariants({
-            dense: density === 'compact',
-          }),
-          className,
-        )}
       >
         <div className="flex justify-between p-2 pt-0">
           {enableHiding && (
