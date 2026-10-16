@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Usage: pnpm review SRT_TableHead
+// Usage (inside apps/test-shadcn): pnpm review SRT_TableHead
 // Opens two VS Code diff tabs: the component pair, and a generated pair of
 // "defs" files holding every core/MUI definition each component consumes.
 import { execSync } from 'node:child_process';
@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
-  '../..',
+  '../../..',
 );
 const SRT_DIR = path.join(
   ROOT,

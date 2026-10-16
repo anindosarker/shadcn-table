@@ -17,7 +17,6 @@
     "lib:build-locales": "turbo run lib:build-locales",
     "lib:build-lib": "turbo run lib:build-lib",
     "lib:dev": "turbo run lib:dev",
-    "review": "node .ai/scripts/review-defs.mjs",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
     "lint": "turbo run lint",
     "start": "turbo run start --parallel",
