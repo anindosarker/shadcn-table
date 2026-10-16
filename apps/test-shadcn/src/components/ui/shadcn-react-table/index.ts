@@ -15,9 +15,6 @@ export * from './fns/aggregationFns';
 export * from './fns/filterFns';
 export * from './fns/sortingFns';
 
-//third-party re-exports
-export { default as highlightWords } from 'highlight-words';
-
 //hooks
 export * from './hooks/useShadcnReactTable';
 export * from './hooks/useSRT_ColumnVirtualizer';

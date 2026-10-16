@@ -1,10 +1,10 @@
 import { type ReactNode, type RefObject } from 'react';
-import highlightWords from 'highlight-words';
 import {
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
 } from '../types';
+import highlightWords from 'highlight-words';
 
 const allowedTypes = ['string', 'number'];
 
@@ -28,7 +28,7 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
     options: {
       enableFilterMatchHighlighting,
       // mrtTheme: { matchHighlightColor },
-      // Note: mrtTheme dropped project-wide; highlight maps to yellow classes below.
+      // Note: mrtTheme dropped project-wide; matchHighlightColor → destructive/20 (dark /30), override via [data-slot="srt-match-highlight"].
     },
   } = table;
   const { column, row } = cell;
@@ -90,8 +90,9 @@ export const SRT_TableBodyCellValue = <TData extends SRT_RowData>({
             match ? (
               <mark
                 aria-hidden="true"
+                data-slot="srt-match-highlight"
                 key={key}
-                className="rounded-[2px] bg-yellow-200 px-[1px] py-[2px] text-black dark:bg-yellow-500/70 dark:text-white"
+                className="rounded-xs bg-destructive/20 px-px py-0.5 text-foreground dark:bg-destructive/30"
               >
                 {text}
               </mark>
