@@ -40,11 +40,11 @@ import {
   type Virtualizer,
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
-import { type SRT_FilterFns } from './fns/filterFns';
+import { type LucideProps } from 'lucide-react';
 import { type SRT_AggregationFns } from './fns/aggregationFns';
+import { type SRT_FilterFns } from './fns/filterFns';
 import { type SRT_SortingFns } from './fns/sortingFns';
 import { type SRT_Icons } from './icons';
-import { type LucideProps } from 'lucide-react';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 
@@ -91,13 +91,12 @@ export type SRT_LinearProgressProps = {
 export type SRT_CircularProgressProps = LucideProps;
 
 export type { SRT_Icons };
-
-export type { RowPinningPosition } from '@tanstack/react-table';
-
 export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<never, never>);
+
 export type Prettify<T> = { [K in keyof T]: T[K] } & unknown;
+
 export type Xor<A, B> =
   | Prettify<A & { [k in keyof B]?: never }>
   | Prettify<B & { [k in keyof A]?: never }>;
@@ -349,7 +348,7 @@ export type SRT_TableInstance<TData extends SRT_RowData> = Omit<
 
 export type SRT_DefinedTableOptions<TData extends SRT_RowData> = Omit<
   SRT_TableOptions<TData>,
-  // Note: mrtTheme dropped project-wide — shadcn CSS vars handle theming.
+  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   'icons' | 'localization' // | 'mrtTheme'
 > & {
   icons: SRT_Icons;
@@ -923,7 +922,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
    * @link https://www.material-react-table.com/docs/guides/memoize-components
    */
   memoMode?: 'cells' | 'rows' | 'table-body';
-  // Note: mrtTheme dropped project-wide — shadcn CSS vars handle theming.
+  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   // mrtTheme?: ((theme: Theme) => Partial<SRT_Theme>) | Partial<SRT_Theme>;
   srtBottomToolbarProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => DivProps)
@@ -1048,6 +1047,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
             ButtonProps &
               Omit<SelectElementProps, 'size'> & { native?: boolean }
           >;
+          disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
         }
@@ -1058,6 +1058,7 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
             ButtonProps &
               Omit<SelectElementProps, 'size'> & { native?: boolean }
           >;
+          disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
         }

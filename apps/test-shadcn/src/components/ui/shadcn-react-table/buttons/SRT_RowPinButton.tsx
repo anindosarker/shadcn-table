@@ -1,8 +1,8 @@
 import { type MouseEvent, useState } from 'react';
+import { type RowPinningPosition } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import {
   type ButtonProps,
-  type RowPinningPosition,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
