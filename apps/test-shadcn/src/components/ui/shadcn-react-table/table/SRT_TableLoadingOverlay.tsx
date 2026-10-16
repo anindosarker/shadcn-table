@@ -1,12 +1,12 @@
-import {
-  parseFromValuesOrFunc,
-  type SRT_CircularProgressProps,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
+import {
+  type SRT_CircularProgressProps,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_TableLoadingOverlayProps<TData extends SRT_RowData>
   extends SRT_CircularProgressProps {

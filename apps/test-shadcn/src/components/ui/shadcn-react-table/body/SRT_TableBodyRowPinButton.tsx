@@ -4,8 +4,8 @@ import {
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_RowPinButton } from '../buttons/SRT_RowPinButton';
 
 export interface SRT_TableBodyRowPinButtonProps<TData extends SRT_RowData>

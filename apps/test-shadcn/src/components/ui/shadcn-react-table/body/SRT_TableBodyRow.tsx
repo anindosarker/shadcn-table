@@ -1,7 +1,7 @@
 import { type DragEvent, memo, useMemo, useRef } from 'react';
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
-  getIsRowSelected,
-  parseFromValuesOrFunc,
   type SRT_Cell,
   type SRT_ColumnVirtualizer,
   type SRT_Row,
@@ -10,9 +10,9 @@ import {
   type SRT_TableInstance,
   type SRT_VirtualItem,
   type TableRowProps,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { getIsRowSelected } from '../utils/row.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_TableBodyCell, Memo_SRT_TableBodyCell } from './SRT_TableBodyCell';
 import { SRT_TableDetailPanel } from './SRT_TableDetailPanel';
 

@@ -5,7 +5,7 @@ import {
   type SRT_ColumnFiltersState,
   type SRT_PaginationState,
   type SRT_Updater,
-} from 'shadcn-react-table-core';
+} from '@/components/ui/shadcn-react-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 

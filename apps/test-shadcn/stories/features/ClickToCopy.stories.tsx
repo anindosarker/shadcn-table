@@ -2,7 +2,7 @@ import { type Meta } from '@storybook/react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
-} from 'shadcn-react-table-core';
+} from '@/components/ui/shadcn-react-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 

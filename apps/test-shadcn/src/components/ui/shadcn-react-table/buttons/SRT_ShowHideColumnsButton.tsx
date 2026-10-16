@@ -1,10 +1,10 @@
 import { type MouseEvent, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   type ButtonProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
+} from '../types';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_ShowHideColumnsMenu } from '../menus/SRT_ShowHideColumnsMenu';
 

@@ -1,17 +1,17 @@
 import { memo, useMemo } from 'react';
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+import { useSRT_Rows } from '../hooks/useSRT_Rows';
+import { useSRT_RowVirtualizer } from '../hooks/useSRT_RowVirtualizer';
 import {
-  parseFromValuesOrFunc,
-  useSRT_RowVirtualizer,
-  useSRT_Rows,
   type SRT_ColumnVirtualizer,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
   type SRT_VirtualItem,
   type TableBodyProps,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_TableBodyRow, Memo_SRT_TableBodyRow } from './SRT_TableBodyRow';
 
 export interface SRT_TableBodyProps<TData extends SRT_RowData>

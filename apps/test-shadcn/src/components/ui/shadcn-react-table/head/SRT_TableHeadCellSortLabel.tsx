@@ -1,11 +1,11 @@
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from '../types';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData>

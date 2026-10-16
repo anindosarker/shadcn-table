@@ -7,15 +7,15 @@ import {
   useState,
 } from 'react';
 import { cva } from 'class-variance-authority';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 import {
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
-  reorderColumn,
-} from 'shadcn-react-table-core';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Switch } from '@/components/ui/switch';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { reorderColumn } from '../utils/column.utils';
 import { SRT_ColumnPinningButtons } from '../buttons/SRT_ColumnPinningButtons';
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton';
 import { SRT_Tooltip } from '../SRT_Tooltip';

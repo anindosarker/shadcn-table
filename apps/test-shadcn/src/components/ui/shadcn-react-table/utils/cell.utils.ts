@@ -92,7 +92,7 @@ export const cellKeyboardShortcuts = <TData extends SRT_RowData = SRT_RowData>({
       getSRT_RowSelectionHandler({
         row: cell.row,
         table,
-        //@ts-expect-error
+        // @ts-expect-error event.target is typed EventTarget, not Element
         staticRowIndex: +event.target.getAttribute('data-index'),
       })(event as any);
     } else if (

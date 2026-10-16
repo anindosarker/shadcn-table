@@ -1,12 +1,12 @@
 import { type DragEventHandler } from 'react';
 import { cva } from 'class-variance-authority';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from '../types';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 const grabHandleButtonVariants = cva(

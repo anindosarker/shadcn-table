@@ -4,9 +4,9 @@ import {
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
-  reorderColumn,
-} from 'shadcn-react-table-core';
+} from '../types';
+import { reorderColumn } from '../utils/column.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_GrabHandleButton } from '../buttons/SRT_GrabHandleButton';
 
 export interface SRT_TableHeadCellGrabHandleProps<TData extends SRT_RowData>

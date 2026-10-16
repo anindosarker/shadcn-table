@@ -3,11 +3,11 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import {
-  parseFromValuesOrFunc,
   type SRT_LinearProgressProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_LinearProgressBarProps<TData extends SRT_RowData>
   extends SRT_LinearProgressProps {

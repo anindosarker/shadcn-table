@@ -1,12 +1,12 @@
 import { cva } from 'class-variance-authority';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type DivProps,
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from '../types';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 const columnPinningButtonsVariants = cva('min-w-[70px] text-center');

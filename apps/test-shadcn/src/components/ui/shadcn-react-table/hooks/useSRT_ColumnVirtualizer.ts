@@ -116,7 +116,7 @@ export const useSRT_ColumnVirtualizer = <
   }
 
   if (columnVirtualizerInstanceRef) {
-    //@ts-expect-error
+    // @ts-expect-error Virtualizer generics vs the SRT_ColumnVirtualizer ref type
     columnVirtualizerInstanceRef.current = columnVirtualizer;
   }
 

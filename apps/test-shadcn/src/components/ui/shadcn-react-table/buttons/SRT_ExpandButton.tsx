@@ -1,12 +1,12 @@
 import { type MouseEvent } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   type ButtonProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_ExpandButtonProps<TData extends SRT_RowData>

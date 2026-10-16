@@ -1,19 +1,19 @@
 import { type ComponentPropsWithRef, useMemo } from 'react';
 import { cva } from 'class-variance-authority';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import {
   type SRT_FilterOption,
   type SRT_Header,
   type SRT_InternalFilterOption,
   type SRT_Localization,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
+} from '../types';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 
 const filterOptionMenuContentVariants = cva('', {

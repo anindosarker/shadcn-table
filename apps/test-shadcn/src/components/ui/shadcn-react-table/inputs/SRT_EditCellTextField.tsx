@@ -7,14 +7,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  getValueAndLabel,
-  type InputProps,
-  parseFromValuesOrFunc,
-  type SRT_Cell,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import {
@@ -24,6 +16,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  type InputProps,
+  type SRT_Cell,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_EditCellTextFieldProps<TData extends SRT_RowData>
   extends InputProps {

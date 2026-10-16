@@ -1,14 +1,14 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
+import { useSRT_ColumnVirtualizer } from '../hooks/useSRT_ColumnVirtualizer';
 import {
-  parseCSSVarId,
-  parseFromValuesOrFunc,
-  useSRT_ColumnVirtualizer,
   type SRT_RowData,
   type SRT_TableInstance,
   type TableProps,
-} from 'shadcn-react-table-core';
+} from '../types';
+import { parseCSSVarId } from '../utils/style.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { Memo_SRT_TableBody, SRT_TableBody } from '../body/SRT_TableBody';
 import { SRT_TableFooter } from '../footer/SRT_TableFooter';
 import { SRT_TableHead } from '../head/SRT_TableHead';

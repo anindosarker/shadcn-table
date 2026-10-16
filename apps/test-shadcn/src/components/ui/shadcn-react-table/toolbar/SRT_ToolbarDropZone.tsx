@@ -4,7 +4,7 @@ import {
   type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
+} from '../types';
 
 export interface SRT_ToolbarDropZoneProps<TData extends SRT_RowData>
   extends DivProps {

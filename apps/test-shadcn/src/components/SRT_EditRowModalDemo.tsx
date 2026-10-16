@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
-} from 'shadcn-react-table-core';
+} from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from './ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from './ui/button';
 

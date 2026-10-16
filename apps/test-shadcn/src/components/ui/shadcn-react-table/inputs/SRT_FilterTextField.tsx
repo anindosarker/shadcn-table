@@ -8,17 +8,6 @@ import {
 } from 'react';
 import { cva } from 'class-variance-authority';
 // import { debounce } from '@mui/material/utils'; // Note: replaced by June's local setTimeout debounce below (keeps the package MUI-free).
-import {
-  type DropdownOption,
-  getColumnFilterInfo,
-  getValueAndLabel,
-  type InputProps,
-  parseFromValuesOrFunc,
-  type SRT_Header,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  useDropdownOptions,
-} from 'shadcn-react-table-core';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,6 +37,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  type DropdownOption,
+  type InputProps,
+  type SRT_Header,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
+import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 

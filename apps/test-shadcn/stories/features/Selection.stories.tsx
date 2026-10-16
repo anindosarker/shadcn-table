@@ -4,7 +4,7 @@ import { Minus, Send } from 'lucide-react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
-} from 'shadcn-react-table-core';
+} from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { SRT_SelectCheckbox } from '@/components/ui/shadcn-react-table/inputs/SRT_SelectCheckbox';
 import { Button } from '@/components/ui/button';

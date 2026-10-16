@@ -1,12 +1,12 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
-  parseFromValuesOrFunc,
   type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Table } from './SRT_Table';
 import { SRT_TableLoadingOverlay } from './SRT_TableLoadingOverlay';
 import { SRT_CellActionMenu } from '../menus/SRT_CellActionMenu';

@@ -1,18 +1,20 @@
 import { type KeyboardEvent } from 'react';
+// import { useTheme } from '@mui/material/styles';
+// Note: useTheme/Theme dropped project-wide — shadcn tokens + logical CSS replace it.
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
   type TableCellProps,
-  cellKeyboardShortcuts,
+} from '../types';
+import { cellKeyboardShortcuts } from '../utils/cell.utils';
+import {
   getSRTCellWidthStyles,
   getSRTPinnedCellStyles,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
-// import { useTheme } from '@mui/material/styles';
-// Note: useTheme/Theme dropped project-wide — shadcn tokens + logical CSS replace it.
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../utils/style.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
   extends TableCellProps {

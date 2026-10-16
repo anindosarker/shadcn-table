@@ -1,20 +1,19 @@
 import { type MouseEvent, useState } from 'react';
 import {
-  type ButtonProps,
-  type SRT_Header,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  getColumnFilterInfo,
-  getValueAndLabel,
-  useDropdownOptions,
-} from 'shadcn-react-table-core';
-import {
   Popover,
   PopoverAnchor,
   PopoverContent,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import {
+  type ButtonProps,
+  type SRT_Header,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
+import { getValueAndLabel } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
 

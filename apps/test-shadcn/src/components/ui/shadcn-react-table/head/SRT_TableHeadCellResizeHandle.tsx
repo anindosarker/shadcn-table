@@ -1,12 +1,12 @@
+import { cva } from 'class-variance-authority';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 import {
   type DivProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+} from '../types';
 
 export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData>
   extends DivProps {

@@ -4,7 +4,7 @@ import {
   type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
+} from '../types';
 import { SRT_ShowHideColumnsButton } from '../buttons/SRT_ShowHideColumnsButton';
 import { SRT_ToggleDensePaddingButton } from '../buttons/SRT_ToggleDensePaddingButton';
 import { SRT_ToggleFiltersButton } from '../buttons/SRT_ToggleFiltersButton';

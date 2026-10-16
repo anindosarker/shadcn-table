@@ -1,12 +1,12 @@
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
-  getColumnFilterInfo,
   type DivProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { getColumnFilterInfo } from '../utils/column.utils';
 import { SRT_FilterCheckbox } from '../inputs/SRT_FilterCheckbox';
 import { SRT_FilterRangeFields } from '../inputs/SRT_FilterRangeFields';
 import { SRT_FilterRangeSlider } from '../inputs/SRT_FilterRangeSlider';

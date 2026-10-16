@@ -1,16 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { type LucideIcon } from 'lucide-react';
 import { createElement } from 'react';
-import {
-  getPaginationItems,
-  parseFromValuesOrFunc,
-  type ButtonProps,
-  type SRT_PaginationItem,
-  type SRT_PaginationProps,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  type SelectElementProps,
-} from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
@@ -31,6 +21,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import {
+  type ButtonProps,
+  type SRT_PaginationProps,
+  type SRT_RowData,
+  type SRT_TableInstance,
+  type SelectElementProps,
+} from '../types';
+import {
+  getPaginationItems,
+  type SRT_PaginationItem,
+} from '../utils/pagination.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { useSRT_MediaQuery } from './useSRT_MediaQuery';
 

@@ -1,5 +1,5 @@
 import { type Meta } from '@storybook/react';
-import { type SRT_ColumnDef } from 'shadcn-react-table-core';
+import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { Mail, UserX } from 'lucide-react';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { SRT_ActionMenuItem } from '@/components/ui/shadcn-react-table/menus/SRT_ActionMenuItem';

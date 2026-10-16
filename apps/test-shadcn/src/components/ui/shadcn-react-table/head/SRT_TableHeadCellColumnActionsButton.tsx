@@ -1,12 +1,12 @@
 import { type MouseEvent, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   type ButtonProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_ColumnActionMenu } from '../menus/SRT_ColumnActionMenu';
 

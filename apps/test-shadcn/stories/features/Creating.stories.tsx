@@ -4,7 +4,7 @@ import {
   type SRT_Row,
   type SRT_TableOptions,
   createRow,
-} from 'shadcn-react-table-core';
+} from '@/components/ui/shadcn-react-table';
 import { Plus } from 'lucide-react';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';

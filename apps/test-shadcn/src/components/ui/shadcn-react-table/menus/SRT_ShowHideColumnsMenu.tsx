@@ -1,11 +1,5 @@
 import { type ComponentPropsWithRef, useMemo, useState } from 'react';
 import { cva } from 'class-variance-authority';
-import {
-  type SRT_Column,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  getDefaultColumnOrderIds,
-} from 'shadcn-react-table-core';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,6 +8,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import {
+  type SRT_Column,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
 import { SRT_ShowHideColumnsMenuItems } from './SRT_ShowHideColumnsMenuItems';
 
 const showHideColumnsMenuContentVariants = cva('', {

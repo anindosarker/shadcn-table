@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
-  getCommonTooltipProps,
-  type SRT_TooltipSide,
-} from 'shadcn-react-table-core';
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  getCommonTooltipProps,
+  type SRT_TooltipSide,
+} from './utils/style.utils';
 
 export interface SRT_TooltipProps {
   title?: React.ReactNode;

@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import {
-  parseFromValuesOrFunc,
   type DivProps,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_BottomToolbar } from '../toolbar/SRT_BottomToolbar';
 import { SRT_TopToolbar } from '../toolbar/SRT_TopToolbar';
 import { SRT_TableContainer } from './SRT_TableContainer';

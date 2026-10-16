@@ -4,23 +4,25 @@ import {
   type KeyboardEvent,
   useMemo,
 } from 'react';
-import {
-  type SRT_ColumnVirtualizer,
-  type SRT_Header,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  type TableCellProps,
-  cellKeyboardShortcuts,
-  getSRTCellWidthStyles,
-  getSRTPinnedCellStyles,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
 // Note: useTheme/Theme dropped project-wide — logical CSS + shadcn tokens replace
 // MUI's manual `theme.direction === 'rtl'` and palette lookups here.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import {
+  type SRT_ColumnVirtualizer,
+  type SRT_Header,
+  type SRT_RowData,
+  type SRT_TableInstance,
+  type TableCellProps,
+} from '../types';
+import { cellKeyboardShortcuts } from '../utils/cell.utils';
+import {
+  getSRTCellWidthStyles,
+  getSRTPinnedCellStyles,
+} from '../utils/style.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_ExpandAllButton } from '../buttons/SRT_ExpandAllButton';
 import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 import { SRT_TableHeadCellColumnActionsButton } from './SRT_TableHeadCellColumnActionsButton';

@@ -1,11 +1,5 @@
 import * as React from 'react';
 import {
-  parseFromValuesOrFunc,
-  type SRT_Row,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import {
   Dialog,
   DialogContent,
   DialogFooter,
@@ -13,6 +7,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import {
+  type SRT_Row,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_EditActionButtons } from '../buttons/SRT_EditActionButtons';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
 

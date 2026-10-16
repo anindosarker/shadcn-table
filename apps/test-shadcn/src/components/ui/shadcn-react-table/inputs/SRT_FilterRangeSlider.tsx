@@ -5,16 +5,16 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  type SpanProps,
-  parseFromValuesOrFunc,
-  type SRT_Header,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
+import {
+  type SpanProps,
+  type SRT_Header,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
   extends SpanProps {

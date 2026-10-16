@@ -1,12 +1,12 @@
 import { type MouseEvent } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   type ButtonProps,
-  parseFromValuesOrFunc,
   type SRT_Column,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_FilterCheckboxProps<TData extends SRT_RowData>

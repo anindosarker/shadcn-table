@@ -8,12 +8,6 @@ import {
 } from 'react';
 // import Collapse from '@mui/material/Collapse'; // Note: replaced by radix Collapsible below.
 // import { debounce } from '@mui/material/utils'; // Note: replaced by the local debounce helper below.
-import {
-  parseFromValuesOrFunc,
-  type InputProps,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
 import { type CSSProperties } from 'react';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
@@ -22,6 +16,12 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group';
+import {
+  type InputProps,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 

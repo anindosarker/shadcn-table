@@ -1,16 +1,16 @@
 import { type RefObject } from 'react';
+import { cva } from 'class-variance-authority';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
 import {
-  parseFromValuesOrFunc,
   type SRT_Row,
   type SRT_RowData,
   type SRT_RowVirtualizer,
   type SRT_TableInstance,
   type SRT_VirtualItem,
   type TableCellProps,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_TableDetailPanelProps<TData extends SRT_RowData>
   extends TableCellProps {

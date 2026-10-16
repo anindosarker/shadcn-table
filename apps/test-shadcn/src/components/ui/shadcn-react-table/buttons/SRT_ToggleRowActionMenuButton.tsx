@@ -1,15 +1,15 @@
 import { type MouseEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type SRT_Cell,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_EditActionButtons } from './SRT_EditActionButtons';
 import { SRT_RowActionMenu } from '../menus/SRT_RowActionMenu';

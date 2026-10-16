@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { type Meta } from '@storybook/react';
-import { type SRT_Column, type SRT_ColumnDef } from 'shadcn-react-table-core';
+import {
+  type SRT_Column,
+  type SRT_ColumnDef,
+} from '@/components/ui/shadcn-react-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 

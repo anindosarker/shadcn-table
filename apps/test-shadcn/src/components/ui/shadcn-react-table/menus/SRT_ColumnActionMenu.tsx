@@ -1,16 +1,16 @@
 import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import {
-  type SRT_Header,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import {
+  type SRT_Header,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 import { SRT_FilterOptionMenu } from './SRT_FilterOptionMenu';
 

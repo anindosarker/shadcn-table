@@ -5,15 +5,12 @@ import {
 } from 'react';
 import { cva } from 'class-variance-authority';
 import {
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { type SRT_RowData, type SRT_TableInstance } from '../types';
 
 // min-w-[120px] py-1.5
 // Note: DropdownMenuItem defaults govern padding; Content governs width.

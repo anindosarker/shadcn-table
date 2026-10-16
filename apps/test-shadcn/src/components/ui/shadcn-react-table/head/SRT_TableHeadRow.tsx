@@ -1,5 +1,6 @@
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
-  parseFromValuesOrFunc,
   type SRT_ColumnVirtualizer,
   type SRT_Header,
   type SRT_HeaderGroup,
@@ -7,9 +8,8 @@ import {
   type SRT_TableInstance,
   type SRT_VirtualItem,
   type TableRowProps,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_TableHeadCell } from './SRT_TableHeadCell';
 
 export interface SRT_TableHeadRowProps<TData extends SRT_RowData>

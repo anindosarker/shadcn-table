@@ -1,13 +1,13 @@
+import { cva } from 'class-variance-authority';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import { cn } from '@/lib/utils';
 import {
   type DivProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import { cn } from '@/lib/utils';
+} from '../types';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 export interface SRT_EditActionButtonsProps<TData extends SRT_RowData>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
-} from 'shadcn-react-table-core';
+} from '@/components/ui/shadcn-react-table';
 import { SRT_ButtonsDemo } from './components/SRT_ButtonsDemo';
 import { SRT_EditRowModalDemo } from './components/SRT_EditRowModalDemo';
 import { SRT_InputsMenusDemo } from './components/SRT_InputsMenusDemo';

@@ -1,17 +1,19 @@
 import { type ChangeEvent, type MouseEvent, useRef } from 'react';
 import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   type ButtonProps,
-  getIsRowSelected,
-  getSRT_RowSelectionHandler,
-  getSRT_SelectAllHandler,
-  parseFromValuesOrFunc,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
-} from 'shadcn-react-table-core';
-import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '../types';
+import {
+  getIsRowSelected,
+  getSRT_RowSelectionHandler,
+  getSRT_SelectAllHandler,
+} from '../utils/row.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 // Note: MRT sx 1.75rem/2.5rem = MUI padded hit area; radix root is the visible box (size-4/size-5).

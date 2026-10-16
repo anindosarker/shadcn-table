@@ -5,12 +5,9 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment, useMemo } from 'react';
-import {
-  getSRT_SelectAllHandler,
-  parseFromValuesOrFunc,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
+import { type SRT_RowData, type SRT_TableInstance } from '../types';
+import { getSRT_SelectAllHandler } from '../utils/row.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 
 export interface SRT_ToolbarAlertBannerProps<TData extends SRT_RowData>

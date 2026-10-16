@@ -1,11 +1,11 @@
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { useShadcnReactTable } from './hooks/useShadcnReactTable';
 import {
-  useShadcnReactTable,
   type SRT_RowData,
   type SRT_TableInstance,
   type SRT_TableOptions,
   type Xor,
-} from 'shadcn-react-table-core';
-import { TooltipProvider } from '@/components/ui/tooltip';
+} from './types';
 import { SRT_TableLayout } from './table/SRT_TableLayout';
 
 type TableInstanceProp<TData extends SRT_RowData> = {

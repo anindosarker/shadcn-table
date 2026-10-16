@@ -85,7 +85,7 @@ export const prepareColumns = <TData extends SRT_RowData>({
 
       //assign sortingFns
       if (Object.keys(sortingFns).includes(columnDef.sortingFn as string)) {
-        // @ts-expect-error
+        // @ts-expect-error sortingFn name indexes the sortingFns map
         columnDef.sortingFn = sortingFns[columnDef.sortingFn];
       }
     } else if (columnDef.columnDefType === 'display') {

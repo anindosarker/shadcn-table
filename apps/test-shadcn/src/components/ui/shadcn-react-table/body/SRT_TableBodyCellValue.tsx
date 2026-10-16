@@ -1,10 +1,10 @@
 import { type ReactNode, type RefObject } from 'react';
+import highlightWords from 'highlight-words';
 import {
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
-  highlightWords,
-} from 'shadcn-react-table-core';
+} from '../types';
 
 const allowedTypes = ['string', 'number'];
 

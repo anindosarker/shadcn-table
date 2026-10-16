@@ -10,23 +10,27 @@ import {
   useMemo,
   useState,
 } from 'react';
-import {
-  isCellEditable,
-  cellKeyboardShortcuts,
-  getSRTCellWidthStyles,
-  getSRTPinnedCellStyles,
-  openEditingCell,
-  parseFromValuesOrFunc,
-  type SRT_Cell,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  type TableCellProps,
-} from 'shadcn-react-table-core';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  type SRT_Cell,
+  type SRT_RowData,
+  type SRT_TableInstance,
+  type TableCellProps,
+} from '../types';
+import {
+  isCellEditable,
+  cellKeyboardShortcuts,
+  openEditingCell,
+} from '../utils/cell.utils';
+import {
+  getSRTCellWidthStyles,
+  getSRTPinnedCellStyles,
+} from '../utils/style.utils';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_TableBodyCellValue } from './SRT_TableBodyCellValue';
 import { SRT_TableBodyRowGrabHandle } from './SRT_TableBodyRowGrabHandle';

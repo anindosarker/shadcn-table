@@ -80,7 +80,7 @@ export const useSRT_RowVirtualizer = <
   rowVirtualizer.virtualRows = rowVirtualizer.getVirtualItems() as any;
 
   if (rowVirtualizerInstanceRef) {
-    //@ts-expect-error
+    // @ts-expect-error Virtualizer generics vs the SRT_RowVirtualizer ref type
     rowVirtualizerInstanceRef.current = rowVirtualizer;
   }
 

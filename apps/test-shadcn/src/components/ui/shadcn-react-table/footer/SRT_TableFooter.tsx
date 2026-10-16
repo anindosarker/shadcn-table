@@ -1,12 +1,12 @@
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 import {
-  parseFromValuesOrFunc,
   type SRT_ColumnVirtualizer,
   type SRT_RowData,
   type SRT_TableInstance,
   type TableFooterProps,
-} from 'shadcn-react-table-core';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_TableFooterRow } from './SRT_TableFooterRow';
 
 export interface SRT_TableFooterProps<TData extends SRT_RowData>

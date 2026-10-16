@@ -9,10 +9,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      'shadcn-react-table-core': path.resolve(
-        __dirname,
-        '../../packages/shadcn-react-table-core/src/index.ts',
-      ),
     },
   },
 });

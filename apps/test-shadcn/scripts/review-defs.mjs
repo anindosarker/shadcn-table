@@ -16,7 +16,7 @@ const SRT_DIR = path.join(
   ROOT,
   'apps/test-shadcn/src/components/ui/shadcn-react-table',
 );
-const CORE_DIR = path.join(ROOT, 'packages/shadcn-react-table-core/src');
+const CORE_DIR = SRT_DIR;
 const MRT_PKG = path.join(ROOT, 'packages/material-react-table');
 const MRT_DIR = path.join(MRT_PKG, 'src');
 const OUT_DIR = path.join(os.tmpdir(), 'srt-review');
@@ -156,10 +156,11 @@ const importNames = (src, specRe) => {
 
 const uniq = (a) => [...new Set(a)];
 
-// SRT: core imports + srt*Props slots referenced in body
-const srtCore = importNames(srtSrc, /^shadcn-react-table-core$/).flatMap(
-  (i) => i.named,
-);
+// SRT: core imports (relative, like MRT) + srt*Props slots referenced in body
+const srtCore = importNames(
+  srtSrc,
+  /^(?:\.\.?\/)+(?:types|icons|utils\/|hooks\/|fns\/)/,
+).flatMap((i) => i.named);
 const srtSlots = uniq(srtSrc.match(/\bsrt[A-Z]\w*Props\b/g) ?? []);
 const srtSymbols = uniq([...srtCore, ...srtSlots]);
 

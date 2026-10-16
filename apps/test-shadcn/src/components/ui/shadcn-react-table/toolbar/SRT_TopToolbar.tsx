@@ -1,10 +1,7 @@
-import {
-  parseFromValuesOrFunc,
-  type SRT_RowData,
-  type SRT_TableInstance,
-} from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { type SRT_RowData, type SRT_TableInstance } from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_LinearProgressBar } from './SRT_LinearProgressBar';
 import { SRT_TablePagination } from './SRT_TablePagination';
 import { SRT_ToolbarAlertBanner } from './SRT_ToolbarAlertBanner';

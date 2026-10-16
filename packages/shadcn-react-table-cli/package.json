@@ -10,8 +10,7 @@
     "class-variance-authority": "^0.7.1",
     "eta": "^4.0.1",
     "kolorist": "^1.8.0",
-    "prettier": "^3.6.2",
-    "shadcn-react-table-core": "workspace:*"
+    "prettier": "^3.6.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

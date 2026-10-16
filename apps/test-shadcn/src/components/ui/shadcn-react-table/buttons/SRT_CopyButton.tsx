@@ -1,14 +1,14 @@
 import { type MouseEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
 // Note: text-inheritance cva — user exception to the no-className ruling (copy cells render as cell text).

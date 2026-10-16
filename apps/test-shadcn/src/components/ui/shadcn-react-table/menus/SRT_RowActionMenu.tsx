@@ -6,17 +6,17 @@ import {
 } from 'react';
 import { cva } from 'class-variance-authority';
 import {
-  type SRT_Row,
-  type SRT_RowData,
-  type SRT_TableInstance,
-  parseFromValuesOrFunc,
-} from 'shadcn-react-table-core';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import {
+  type SRT_Row,
+  type SRT_RowData,
+  type SRT_TableInstance,
+} from '../types';
+import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
 
 const rowActionMenuContentVariants = cva('', {
