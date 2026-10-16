@@ -68,7 +68,7 @@ export const SRT_ExpandButton = <TData extends SRT_RowData>({
 
   return (
     <SRT_Tooltip
-      disabled={!canExpand && !detailPanel}
+      disableHoverListener={!canExpand && !detailPanel}
       title={
         iconButtonProps?.title ??
         (isExpanded ? localization.collapse : localization.expand)

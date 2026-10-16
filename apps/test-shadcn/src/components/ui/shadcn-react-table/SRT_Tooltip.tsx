@@ -14,20 +14,16 @@ export interface SRT_TooltipProps
   title?: React.ReactNode;
   children: React.ReactElement;
   side?: React.ComponentProps<typeof TooltipContent>['side'];
-  disabled?: boolean;
+  disableHoverListener?: boolean;
   open?: boolean;
-  className?: string;
-  asChild?: boolean;
 }
 
 export const SRT_Tooltip = ({
   title,
   children,
   side = 'bottom',
-  disabled,
+  disableHoverListener,
   open,
-  className,
-  asChild = true,
   ...rest
 }: SRT_TooltipProps) => {
   const {
@@ -35,7 +31,7 @@ export const SRT_Tooltip = ({
     disableHoverableContent,
     side: commonSide,
   } = { ...getCommonTooltipProps(side), ...rest };
-  if (disabled || (!title && title !== 0)) {
+  if (disableHoverListener || (!title && title !== 0)) {
     return <>{children}</>;
   }
 
@@ -45,10 +41,8 @@ export const SRT_Tooltip = ({
       delayDuration={delayDuration}
       disableHoverableContent={disableHoverableContent}
     >
-      <TooltipTrigger asChild={asChild}>{children}</TooltipTrigger>
-      <TooltipContent side={commonSide} className={className}>
-        {title}
-      </TooltipContent>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side={commonSide}>{title}</TooltipContent>
     </Tooltip>
   );
 };
