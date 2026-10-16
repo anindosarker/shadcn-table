@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
@@ -13,6 +13,22 @@ export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData>
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }
+
+const tableHeadCellSortLabelVariants = cva(
+  'inline-flex w-[3ch] flex-[0_0] cursor-pointer items-center justify-start outline-none transition-all duration-150 ease-in-out focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:mx-1 [&_svg]:size-[18px] [&_svg]:text-muted-foreground [&_svg]:transition-[opacity,transform] [&_svg]:duration-200 [&_svg]:select-none dark:[&_svg]:text-foreground',
+  {
+    variants: {
+      direction: {
+        asc: '[&_svg]:rotate-180',
+        desc: '[&_svg]:rotate-0',
+      },
+      isSorted: {
+        true: 'opacity-100',
+        false: 'opacity-30',
+      },
+    },
+  },
+);
 
 export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
   header,
@@ -52,33 +68,37 @@ export const SRT_TableHeadCellSortLabel = <TData extends SRT_RowData>({
 
   return (
     <SRT_Tooltip side="top" title={sortTooltip}>
-      <span className="relative">
-        <Button
-          variant="ghost"
-          size="icon-sm"
+      <span className="relative inline-flex shrink-0 align-middle">
+        <button
           type="button"
-          /* active dropped — Note: MUI TableSortLabel `active` is always true in MRT here; no native <button> equivalent. */
+          /* active dropped — Note: MUI TableSortLabel `active` is always true here; its styles are baked into the cva. */
           aria-label={sortTooltip}
           onClick={(e) => {
             e.stopPropagation();
             header.column.getToggleSortingHandler()?.(e);
           }}
           {...rest}
-          /* sx dropped — Note: MUI sx (flex 0 0, w-3ch, transition, opacity 1/0.3) -> shadcn Button defaults; dim moved onto the icons. */
+          className={cn(
+            tableHeadCellSortLabelVariants({
+              direction,
+              isSorted,
+              className: rest.className,
+            }),
+          )}
         >
           {!isSorted ? (
-            <SyncAltIcon className="-translate-x-px -rotate-90 scale-x-90 text-muted-foreground opacity-30" />
-          ) : (
-            <ArrowDownwardIcon
-              className={cn(
-                'text-muted-foreground opacity-100 transition-transform',
-                direction === 'asc' && 'rotate-180',
-              )}
+            <SyncAltIcon
+              style={{
+                transform: 'rotate(-90deg) scaleX(0.9) translateX(-1px)',
+              }}
             />
+          ) : (
+            <ArrowDownwardIcon />
           )}
-        </Button>
+        </button>
+        {/* Note: MUI Badge showZero=false hides badgeContent 0 (column outside the multi-sort). */}
         {sorting.length > 1 && column.getSortIndex() >= 0 && (
-          <span className="absolute -right-1.5 -top-1 text-[0.65rem] text-muted-foreground">
+          <span className="absolute top-[14%] right-[14%] z-[1] flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
             {column.getSortIndex() + 1}
           </span>
         )}
