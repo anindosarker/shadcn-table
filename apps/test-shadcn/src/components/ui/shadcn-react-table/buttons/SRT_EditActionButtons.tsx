@@ -88,7 +88,6 @@ export const SRT_EditActionButtons = <TData extends SRT_RowData>({
 
   return (
     <div
-      {...rest}
       className={cn(editActionButtonsVariants({ className: rest.className }))}
       onClick={(e) => e.stopPropagation()}
     >
