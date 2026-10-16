@@ -4,7 +4,8 @@ import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
-  type ButtonProps,
+  type CheckboxProps,
+  type RadioProps,
   type SRT_Row,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -31,7 +32,7 @@ const selectCheckboxVariants = cva('z-0', {
 });
 
 export interface SRT_SelectCheckboxProps<TData extends SRT_RowData>
-  extends ButtonProps {
+  extends CheckboxProps {
   row?: SRT_Row<TData>;
   staticRowIndex?: number;
   table: SRT_TableInstance<TData>;
@@ -119,7 +120,7 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
       checkboxProps?.className,
     ),
     title: undefined,
-  };
+  } as CheckboxProps | RadioProps;
 
   return (
     <SRT_Tooltip
