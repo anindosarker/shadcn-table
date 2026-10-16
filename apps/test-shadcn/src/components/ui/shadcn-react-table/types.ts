@@ -41,14 +41,13 @@ import {
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
+import { type Slider } from '@/components/ui/slider';
 import { type SRT_AggregationFns } from './fns/aggregationFns';
 import { type SRT_FilterFns } from './fns/filterFns';
 import { type SRT_SortingFns } from './fns/sortingFns';
 import { type SRT_Icons } from './icons';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
-
-export type SpanProps = ComponentPropsWithRef<'span'>;
 
 export type NavProps = ComponentPropsWithRef<'nav'>;
 
@@ -81,6 +80,8 @@ export type InputProps = ComponentPropsWithRef<'input'>;
 
 export type SelectProps = ButtonProps &
   Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
+
+export type SliderProps = ComponentPropsWithRef<typeof Slider>;
 
 export type SRT_LinearProgressProps = {
   collapsibleProps?: DivProps;
@@ -619,8 +620,8 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => SpanProps & { max?: number; min?: number })
-    | (SpanProps & { max?: number; min?: number });
+      }) => SliderProps)
+    | SliderProps;
   srtFilterTextFieldProps?:
     | ((props: {
         column: SRT_Column<TData>;
@@ -1020,8 +1021,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => SpanProps & { max?: number; min?: number })
-    | (SpanProps & { max?: number; min?: number });
+      }) => SliderProps)
+    | SliderProps;
   srtFilterTextFieldProps?:
     | ((props: {
         column: SRT_Column<TData>;

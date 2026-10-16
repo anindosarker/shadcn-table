@@ -1,15 +1,9 @@
-import {
-  type ComponentProps,
-  type KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import {
-  type SpanProps,
+  type SliderProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -17,22 +11,20 @@ import {
 import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_FilterRangeSliderProps<TData extends SRT_RowData>
-  extends SpanProps {
-  max?: number;
-  min?: number;
+  extends SliderProps {
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }
 
-const filterRangeSliderVariants = cva('mx-auto w-[calc(100%-8px)]', {
+const filterRangeSliderVariants = cva('m-auto w-[calc(100%-8px)] px-1', {
   variants: {
-    hasModeButton: {
+    showChangeModeButton: {
       false: 'mt-2.5',
       true: 'mt-1.5',
     },
   },
   defaultVariants: {
-    hasModeButton: false,
+    showChangeModeButton: false,
   },
 });
 
@@ -59,11 +51,9 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
     ...rest,
   };
 
-  const { max: maxProp, min: minProp } = sliderProps;
-
   let [min, max] =
-    minProp !== undefined && maxProp !== undefined
-      ? [minProp, maxProp]
+    sliderProps.min !== undefined && sliderProps.max !== undefined
+      ? [sliderProps.min, sliderProps.max]
       : (column.getFacetedMinMaxValues() ?? [0, 1]);
 
   //fix potential TanStack Table bugs where min or max is an array
@@ -72,7 +62,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   if (min === null) min = 0;
   if (max === null) max = 1;
 
-  const [filterValues, setFilterValues] = useState<number[]>([min, max]);
+  const [filterValues, setFilterValues] = useState([min, max]);
   const columnFilterValue = column.getFilterValue();
 
   const isMounted = useRef(false);
@@ -89,7 +79,7 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
       if (columnFilterValue === undefined) {
         setFilterValues([min, max]);
       } else if (Array.isArray(columnFilterValue)) {
-        setFilterValues(columnFilterValue as number[]);
+        setFilterValues(columnFilterValue);
       }
     }
     isMounted.current = true;
@@ -98,7 +88,8 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
   return (
     <div className="flex flex-col">
       <Slider
-        // disableSwap  // Note: radix prevents thumb swap natively; MUI disableSwap dropped.
+        // disableSwap
+        // Note: radix Slider has no disableSwap; thumbs sort on cross.
         max={max}
         min={min}
         onValueChange={(values) => {
@@ -116,25 +107,23 @@ export const SRT_FilterRangeSlider = <TData extends SRT_RowData>({
         }}
         onKeyDown={handleKeyDown}
         value={filterValues}
-        // valueLabelDisplay="auto"  // Note: radix has no value labels; June parity.
-        {...(sliderProps as ComponentProps<typeof Slider>)}
+        // valueLabelDisplay="auto"
+        // Note: radix Slider has no value label.
+        {...sliderProps}
         ref={(node) => {
-          if (node && filterInputRefs.current) {
-            const thumb = node.querySelector(
-              '[data-slot="slider-thumb"]',
-            ) as HTMLElement | null;
-            filterInputRefs.current[`${column.id}-0`] = (thumb ??
-              node) as unknown as HTMLInputElement;
-          }
-          const userRef = (sliderProps as ComponentProps<typeof Slider>).ref;
-          if (typeof userRef === 'function') {
-            userRef(node);
-          } else if (userRef) {
-            userRef.current = node;
+          if (node) {
+            filterInputRefs.current![`${column.id}-0`] =
+              node.querySelector<HTMLInputElement>(
+                '[data-slot="slider-thumb"]',
+              )!;
+            if (sliderProps?.ref) {
+              // @ts-expect-error MRT no-op: node onto the ref prop (radix has no input slot; root ref)
+              sliderProps.ref = node;
+            }
           }
         }}
         className={cn(
-          filterRangeSliderVariants({ hasModeButton: showChangeModeButton }),
+          filterRangeSliderVariants({ showChangeModeButton }),
           sliderProps?.className,
         )}
         style={{
