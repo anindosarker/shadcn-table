@@ -122,7 +122,7 @@ if (!srtFile) {
   process.exit(1);
 }
 const mrtBase = srtBase
-  .replace(/^SRT_/, 'MRT_')
+  .replace(/SRT_/, 'MRT_')
   .replace(/^ShadcnReactTable$/, 'MaterialReactTable');
 const mrtFile = findFile(MRT_DIR, mrtBase);
 if (!mrtFile) {
@@ -194,7 +194,7 @@ const muiDts = (spec) => {
 // MRT twin name for an SRT symbol
 const twinName = (n) =>
   n
-    .replace(/^SRT_/, 'MRT_')
+    .replace(/SRT_/, 'MRT_')
     .replace(/^srt([A-Z])/, 'mui$1')
     .replace(/^useSRT_/, 'useMRT_');
 
@@ -215,7 +215,7 @@ for (const name of srtSymbols) {
   if (!mDef) {
     // DOM alias (TableHeadProps etc.) -> MUI type of the same name imported by MRT
     // SRT_PaginationProps -> MUI PaginationProps; TableHeadProps -> MUI TableHeadProps
-    const bare = name.replace(/^SRT_/, '');
+    const bare = name.replace(/SRT_/, '');
     const mui = mrtMui.find((i) => i.named.includes(bare));
     if (mui) {
       const dts = muiDts(mui.spec);
