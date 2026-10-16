@@ -1,7 +1,8 @@
-import { type ChangeEvent, type MouseEvent, useRef } from 'react';
+import { type MouseEvent } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   type ButtonProps,
   type SRT_Row,
@@ -16,7 +17,6 @@ import {
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 
-// Note: MRT sx 1.75rem/2.5rem = MUI padded hit area; radix root is the visible box (size-4/size-5).
 const selectCheckboxVariants = cva('z-0', {
   variants: {
     density: {
@@ -88,65 +88,71 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
 
   const onSelectAllChange = getSRT_SelectAllHandler({ table });
 
-  // Note: radix onCheckedChange carries no DOM event — onClick captures shiftKey for the synthetic ChangeEvent the core handlers read.
-  const shiftKeyRef = useRef(false);
-
-  const isSingleSelect = enableMultiRowSelection === false;
-
-  const indeterminate =
-    !isChecked && selectAll
-      ? table.getIsSomeRowsSelected()
-      : row?.getIsSomeSelected() && row.getCanSelectSubRows();
-
-  const checked: boolean | 'indeterminate' =
-    !isSingleSelect && indeterminate ? 'indeterminate' : !!isChecked;
-
-  const label = selectAll
-    ? localization.toggleSelectAll
-    : localization.toggleSelectRow;
-
   const commonProps = {
-    'aria-label': label,
-    checked,
+    'aria-label': selectAll
+      ? localization.toggleSelectAll
+      : localization.toggleSelectRow,
+    checked: isChecked,
     disabled:
       isLoading || (row && !row.getCanSelect()) || row?.id === 'srt-row-create',
-    // inputProps: { 'aria-label': label },
-    // Note: dropped — radix Checkbox has no hidden input to label separately.
-    onCheckedChange: (value: boolean | 'indeterminate') => {
-      const next = value === true;
-      const event = {
-        nativeEvent: { shiftKey: shiftKeyRef.current },
-        stopPropagation: () => {},
-        target: { checked: next },
-      } as unknown as ChangeEvent<HTMLInputElement>;
-      if (selectAll) {
-        onSelectAllChange(event, next);
-      } else {
-        onSelectionChange!(event, next);
-      }
-      shiftKeyRef.current = false;
-    },
-    // Note: MUI `size` (small/medium) prop dropped — cva density classes size it.
+    // inputProps: { 'aria-label': ... },
+    // Note: radix renders no input; `aria-label` above lands on the root button.
+    // onChange: (event) => { event.stopPropagation(); selectAll ? onSelectAllChange(event) : onSelectionChange!(event); },
+    // Note: radix change callbacks carry no DOM event (shiftKey); selection runs in onClick below.
+    // size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
+    // Note: the density variant on className below.
     ...checkboxProps,
-    onClick: (event: MouseEvent<HTMLButtonElement>) => {
-      event.stopPropagation();
-      shiftKeyRef.current = event.shiftKey;
-      checkboxProps?.onClick?.(event);
+    onClick: (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      // Note: MUI Radio fires no change once checked; same guard here.
+      if (!(enableMultiRowSelection === false && isChecked)) {
+        if (selectAll) onSelectAllChange(e);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        else onSelectionChange!(e as any);
+      }
+      checkboxProps?.onClick?.(e);
     },
+    // sx: (theme) => ({ height, m, width, zIndex: 0, ...parseFromValuesOrFunc(checkboxProps?.sx, theme) }),
+    // Note: MUI sized the padded hit area; the density variant sizes the visible box.
     className: cn(
       selectCheckboxVariants({ density }),
-      isSingleSelect && 'rounded-full',
       checkboxProps?.className,
     ),
     title: undefined,
   };
 
   return (
-    <SRT_Tooltip title={checkboxProps?.title ?? label}>
+    <SRT_Tooltip
+      title={
+        checkboxProps?.title ??
+        (selectAll
+          ? localization.toggleSelectAll
+          : localization.toggleSelectRow)
+      }
+    >
       <span className="inline-flex">
-        {/* enableMultiRowSelection === false ? <Radio {...(commonProps as any)} /> : ... */}
-        {/* Note: Radio dropped — single-select renders the same Checkbox with rounded-full. */}
-        <Checkbox {...commonProps} />
+        {enableMultiRowSelection === false ? (
+          // <Radio {...(commonProps as any)} />
+          // Note: shadcn RadioGroupItem needs its RadioGroup; one group per row stands in for MUI's standalone Radio.
+          <RadioGroup value={isChecked ? 'on' : null}>
+            <RadioGroupItem {...commonProps} value="on" />
+          </RadioGroup>
+        ) : (
+          <Checkbox
+            {...commonProps}
+            // indeterminate={...}
+            // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
+            checked={
+              (
+                !isChecked && selectAll
+                  ? table.getIsSomeRowsSelected()
+                  : row?.getIsSomeSelected() && row.getCanSelectSubRows()
+              )
+                ? 'indeterminate'
+                : commonProps.checked
+            }
+          />
+        )}
       </span>
     </SRT_Tooltip>
   );
