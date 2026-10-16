@@ -1,11 +1,9 @@
-import { type ComponentPropsWithRef, useMemo } from 'react';
-import { cva } from 'class-variance-authority';
+import { type ComponentPropsWithRef, useMemo, useRef } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 import {
   type SRT_FilterOption,
   type SRT_Header,
@@ -15,16 +13,6 @@ import {
   type SRT_TableInstance,
 } from '../types';
 import { SRT_ActionMenuItem } from './SRT_ActionMenuItem';
-
-const filterOptionMenuContentVariants = cva('', {
-  variants: {
-    // Note: MRT MenuListProps.dense (density === 'compact') stays menu-level, tightening item padding
-    dense: {
-      false: '',
-      true: '[&>*]:py-1',
-    },
-  },
-});
 
 export const srtFilterOptions = (
   localization: SRT_Localization,
@@ -133,7 +121,6 @@ export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData>
 
 export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
   anchorEl,
-  className,
   header,
   onSelect,
   setAnchorEl,
@@ -154,7 +141,7 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
     setColumnFilterFns,
     setGlobalFilterFn,
   } = table;
-  const { density, globalFilterFn } = getState();
+  const { globalFilterFn } = getState();
   const { column } = header ?? {};
   const { columnDef } = column ?? {};
   const currentFilterValue = column?.getFilterValue();
@@ -260,6 +247,9 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
   const filterOption =
     !!header && columnDef ? columnDef._filterFn : globalFilterFn;
 
+  const anchorRef = useRef<HTMLElement | null>(null);
+  if (anchorEl) anchorRef.current = anchorEl;
+
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
@@ -283,15 +273,16 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="center"
+        align="start"
+        alignOffset={(rect?.height ?? 0) / 2}
         side="right"
         // disableScrollLock
         // Note: Radix DropdownMenu owns scroll-lock behavior
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          anchorRef.current?.focus();
+        }}
         {...rest}
-        className={cn(
-          filterOptionMenuContentVariants({ dense: density === 'compact' }),
-          className,
-        )}
       >
         {(header && column && columnDef
           ? (columnDef.renderColumnFilterModeMenuItems?.({
@@ -317,7 +308,7 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
                 // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
                 className={option === filterOption ? 'bg-accent' : undefined}
                 divider={divider}
-                icon={<span>{symbol}</span>}
+                icon={symbol}
                 key={index}
                 label={label}
                 onClick={() =>
