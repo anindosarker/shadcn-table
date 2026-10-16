@@ -92,15 +92,15 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
 
   const {
     SelectProps = {},
-    boundaryCount = 1,
+    boundaryCount,
     disabled = false,
-    hideNextButton = false,
-    hidePrevButton = false,
+    hideNextButton,
+    hidePrevButton,
     rowsPerPageOptions = defaultRowsPerPage,
     showFirstButton = showFirstLastPageButtons,
     showLastButton = showFirstLastPageButtons,
     showRowsPerPage = true,
-    siblingCount = 1,
+    siblingCount,
     ...restPaginationProps
   } = paginationProps ?? {};
 

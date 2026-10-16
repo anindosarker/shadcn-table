@@ -1,4 +1,6 @@
 // Note: verbatim port of MUI usePagination's item algorithm (shadcn Pagination is markup only).
+// `page` is controlled by table state, so useControlled/defaultPage/onChange/handleClick and the
+// per-item onClick are dropped; the component wires clicks itself.
 export type SRT_PaginationItem = {
   disabled: boolean;
   page: number | null;
@@ -14,26 +16,28 @@ export type SRT_PaginationItem = {
 };
 
 export const getPaginationItems = ({
-  boundaryCount,
-  count,
-  disabled,
-  hideNextButton,
-  hidePrevButton,
-  page,
-  showFirstButton,
-  showLastButton,
-  siblingCount,
+  // keep default values in sync with @default tags in Pagination.propTypes
+  boundaryCount = 1,
+  count = 1,
+  disabled = false,
+  hideNextButton = false,
+  hidePrevButton = false,
+  page = 1,
+  showFirstButton = false,
+  showLastButton = false,
+  siblingCount = 1,
 }: {
-  boundaryCount: number;
-  count: number;
-  disabled: boolean;
-  hideNextButton: boolean;
-  hidePrevButton: boolean;
-  page: number;
-  showFirstButton: boolean;
-  showLastButton: boolean;
-  siblingCount: number;
-}): SRT_PaginationItem[] => {
+  boundaryCount?: number;
+  count?: number;
+  disabled?: boolean;
+  hideNextButton?: boolean;
+  hidePrevButton?: boolean;
+  page?: number;
+  showFirstButton?: boolean;
+  showLastButton?: boolean;
+  siblingCount?: number;
+} = {}): SRT_PaginationItem[] => {
+  // https://dev.to/namirsab/comment/2050
   const range = (start: number, end: number) => {
     const length = end - start + 1;
     return Array.from({ length }, (_, i) => start + i);
@@ -98,12 +102,7 @@ export const getPaginationItems = ({
     ];
 
   // Map the button type to its page number
-  const buttonPage = (
-    type: Exclude<
-      SRT_PaginationItem['type'],
-      'end-ellipsis' | 'page' | 'start-ellipsis'
-    >,
-  ) => {
+  const buttonPage = (type: Exclude<SRT_PaginationItem['type'], 'page'>) => {
     switch (type) {
       case 'first':
         return 1;
@@ -113,24 +112,30 @@ export const getPaginationItems = ({
         return page + 1;
       case 'last':
         return count;
+      default:
+        return null;
     }
   };
 
-  return itemList.map(
-    (item): SRT_PaginationItem =>
-      typeof item === 'number'
-        ? { type: 'page', page: item, selected: item === page, disabled }
-        : item === 'start-ellipsis' || item === 'end-ellipsis'
-          ? { type: item, page: null, selected: false, disabled }
-          : {
-              type: item,
-              page: buttonPage(item),
-              selected: false,
-              disabled:
-                disabled ||
-                (item === 'next' || item === 'last'
-                  ? page >= count
-                  : page <= 1),
-            },
-  );
+  // Convert the basic item list to PaginationItem props objects
+  const items = itemList.map((item): SRT_PaginationItem => {
+    return typeof item === 'number'
+      ? {
+          type: 'page',
+          page: item,
+          selected: item === page,
+          disabled,
+        }
+      : {
+          type: item,
+          page: buttonPage(item),
+          selected: false,
+          disabled:
+            disabled ||
+            (!item.includes('ellipsis') &&
+              (item === 'next' || item === 'last' ? page >= count : page <= 1)),
+        };
+  });
+
+  return items;
 };
