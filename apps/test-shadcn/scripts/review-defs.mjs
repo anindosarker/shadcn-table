@@ -279,8 +279,8 @@ console.log(`symbols:   ${srtSymbols.join(', ') || '(none)'}`);
 
 if (!process.env.NO_OPEN) {
   try {
-    execSync(`code --diff "${srtFile}" "${mrtFile}"`, { stdio: 'ignore' });
-    execSync(`code --diff "${srtDefs}" "${mrtDefs}"`, { stdio: 'ignore' });
+    execSync(`code --diff "${mrtFile}" "${srtFile}"`, { stdio: 'ignore' });
+    execSync(`code --diff "${mrtDefs}" "${srtDefs}"`, { stdio: 'ignore' });
   } catch {
     console.log('(`code` CLI not on PATH; open the paths above manually)');
   }
