@@ -214,16 +214,19 @@ export function SRT_InputsMenusDemo() {
       />,
     ],
 
-    // editDisplayMode 'cell' fires this on blur / Enter
-    onEditingCellSave: ({ cell, value }) => {
-      const rowId = cell.row.original.id;
-      const colId = cell.column.id;
-      setData((prev) =>
-        prev.map((p) => (p.id === rowId ? { ...p, [colId]: value } : p)),
-      );
-      setLastSaved(`${colId} of row ${rowId} = "${value}"`);
-      console.log('[inputs-menus-demo] cell saved', colId, rowId, value);
-    },
+    // editDisplayMode 'cell': save on blur / Enter through the text field slot, like MRT
+    srtEditTextFieldProps: ({ cell }) => ({
+      onBlur: (event) => {
+        const value = event.target.value;
+        const rowId = cell.row.original.id;
+        const colId = cell.column.id;
+        setData((prev) =>
+          prev.map((p) => (p.id === rowId ? { ...p, [colId]: value } : p)),
+        );
+        setLastSaved(`${colId} of row ${rowId} = "${value}"`);
+        console.log('[inputs-menus-demo] cell saved', colId, rowId, value);
+      },
+    }),
 
     initialState: {
       showColumnFilters: true,

@@ -4,7 +4,6 @@ import {
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
-  useRef,
   useState,
 } from 'react';
 import { cn } from '@/lib/utils';
@@ -37,12 +36,7 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 }: SRT_EditCellTextFieldProps<TData>) => {
   const {
     getState,
-    options: {
-      createDisplayMode,
-      editDisplayMode,
-      onEditingCellSave,
-      srtEditTextFieldProps,
-    },
+    options: { createDisplayMode, editDisplayMode, srtEditTextFieldProps },
     refs: { editInputRefs },
     setCreatingRow,
     setEditingCell,
@@ -58,7 +52,8 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 
   const [value, setValue] = useState(() => cell.getValue<string>());
   const [completesComposition, setCompletesComposition] = useState(true);
-  const selectOpenRef = useRef(false);
+  // MUI SelectInput openState: its handleBlur fires onBlur only while the menu is closed.
+  const [open, setOpen] = useState(false);
 
   const textFieldProps: InputProps = {
     ...parseFromValuesOrFunc(srtEditTextFieldProps, {
@@ -94,8 +89,6 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
       setCreatingRow(row);
     } else if (isEditing) {
       setEditingRow(row);
-    } else if (editDisplayMode === 'cell' || editDisplayMode === 'table') {
-      onEditingCellSave?.({ cell, row, table, value: newValue });
     }
   };
 
@@ -120,96 +113,82 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
     }
   };
 
-  const handleClick = (event: MouseEvent<HTMLInputElement>) => {
-    event.stopPropagation();
-    textFieldProps.onClick?.(event);
-  };
-
   if (columnDef.Edit) {
     return <>{columnDef.Edit?.({ cell, column, row, table })}</>;
   }
 
-  const isModalOrCustom = ['custom', 'modal'].includes(
-    (isCreating ? createDisplayMode : editDisplayMode) as string,
-  );
-
-  // const label = isModalOrCustom ? columnDef.header : undefined;
-  // Note: SRT_EditRowModal owns modal field labels.
-  const placeholder = !isModalOrCustom ? columnDef.header : undefined;
-
-  const disabled =
-    parseFromValuesOrFunc(columnDef.enableEditing, row) === false;
-
   if (isSelectEdit) {
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    const {
-      children: _children,
-      onChange: _onChange,
-      onBlur: _onBlur,
-      className: triggerClassName,
-      onClick: _onClick,
-      onKeyDown: _onKeyDown,
-      ...triggerRest
-    } = textFieldProps;
-    /* eslint-enable @typescript-eslint/no-unused-vars */
     return (
       <Select
         name={column.id}
-        disabled={disabled}
+        onOpenChange={setOpen}
+        onValueChange={(newValue) =>
+          // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
+          handleChange({
+            target: { name: column.id, value: newValue },
+          } as ChangeEvent<HTMLInputElement>)
+        }
         value={value ?? ''}
-        // Note: slot onChange/onBlur have no radix Select event analogue.
-        onValueChange={(newValue) => {
-          setValue(newValue);
-          saveInputValueToRowCache(newValue);
-        }}
-        onOpenChange={(open) => {
-          selectOpenRef.current = open;
-          if (!open) {
-            setEditingCell(null);
-          }
-        }}
       >
         <SelectTrigger
+          disabled={
+            parseFromValuesOrFunc(columnDef.enableEditing, row) === false
+          }
+          ref={(inputRef) => {
+            if (inputRef) {
+              editInputRefs.current![column.id] =
+                inputRef as unknown as HTMLInputElement;
+            }
+          }}
           size="sm"
-          {...(triggerRest as ComponentProps<typeof SelectTrigger>)}
-          className={cn('w-full', triggerClassName)}
-          ref={(node) => {
-            if (node && editInputRefs.current) {
-              editInputRefs.current[column.id] =
-                node as unknown as HTMLInputElement;
+          {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
+          className={cn('w-full', textFieldProps.className)}
+          onBlur={(event) => {
+            // MUI SelectInput handleBlur: only while closed, with target { name, value }.
+            if (!open) {
+              Object.defineProperty(event, 'target', {
+                writable: true,
+                value: { name: column.id, value },
+              });
+              handleBlur(event as unknown as FocusEvent<HTMLInputElement>);
             }
           }}
-          onBlur={() => {
-            // Note: MRT handleBlur exit path for a trigger focused but never opened.
-            if (!selectOpenRef.current) {
-              setEditingCell(null);
-            }
-          }}
-          onClick={(event) => {
-            event.stopPropagation();
-            textFieldProps.onClick?.(
-              event as unknown as MouseEvent<HTMLInputElement>,
+          onClick={(e) => {
+            e.stopPropagation();
+            textFieldProps?.onClick?.(
+              e as unknown as MouseEvent<HTMLInputElement>,
             );
           }}
-          onKeyDown={(event) =>
+          // onKeyDown={handleEnterKeyDown}
+          // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); radix opens on Enter.
+          onKeyDown={(e) =>
             textFieldProps.onKeyDown?.(
-              event as unknown as KeyboardEvent<HTMLInputElement>,
+              e as unknown as KeyboardEvent<HTMLInputElement>,
             )
           }
         >
-          <SelectValue placeholder={placeholder} />
+          <SelectValue
+            placeholder={
+              !['custom', 'modal'].includes(
+                (isCreating ? createDisplayMode : editDisplayMode) as string,
+              )
+                ? columnDef.header
+                : undefined
+            }
+          />
         </SelectTrigger>
+        {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
+        {/* Note: radix Select always locks scroll. */}
         <SelectContent>
-          {/* Note: MRT's `textFieldProps.children` option passthrough has no radix SelectContent analogue. */}
-          {selectOptions?.map((option) => {
-            const { label: optionLabel, value: optionValue } =
-              getValueAndLabel(option);
-            return (
-              <SelectItem key={optionValue} value={optionValue}>
-                {optionLabel}
-              </SelectItem>
-            );
-          })}
+          {textFieldProps.children ??
+            selectOptions?.map((option) => {
+              const { label, value } = getValueAndLabel(option);
+              return (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              );
+            })}
         </SelectContent>
       </Select>
     );
@@ -217,23 +196,38 @@ export const SRT_EditCellTextField = <TData extends SRT_RowData>({
 
   return (
     <Input
-      autoComplete="off"
-      disabled={disabled}
-      name={column.id}
-      placeholder={placeholder}
-      value={value ?? ''}
-      ref={(node) => {
-        if (node && editInputRefs.current) {
-          editInputRefs.current[column.id] = node;
+      disabled={parseFromValuesOrFunc(columnDef.enableEditing, row) === false}
+      ref={(inputRef) => {
+        if (inputRef) {
+          editInputRefs.current![column.id] = inputRef;
+          // if (textFieldProps.inputRef) textFieldProps.inputRef = inputRef;
+          // Note: no-op in MRT too; a user ref already wins through the spread below.
         }
       }}
+      // label={isModalOrCustom ? columnDef.header : undefined}
+      // Note: SRT_EditRowModal's FieldLabel owns the modal label.
+      // fullWidth, margin="none", select, size="small", variant="standard", InputProps
+      // Note: MUI TextField root props; shadcn Input is w-full with one variant and no underline.
+      name={column.id}
+      placeholder={
+        !['custom', 'modal'].includes(
+          (isCreating ? createDisplayMode : editDisplayMode) as string,
+        )
+          ? columnDef.header
+          : undefined
+      }
+      value={value ?? ''}
+      autoComplete="off"
       {...textFieldProps}
       onBlur={handleBlur}
       onChange={handleChange}
-      onClick={handleClick}
-      onCompositionEnd={() => setCompletesComposition(true)}
-      onCompositionStart={() => setCompletesComposition(false)}
+      onClick={(e) => {
+        e.stopPropagation();
+        textFieldProps?.onClick?.(e);
+      }}
       onKeyDown={handleEnterKeyDown}
+      onCompositionStart={() => setCompletesComposition(false)}
+      onCompositionEnd={() => setCompletesComposition(true)}
     />
   );
 };
