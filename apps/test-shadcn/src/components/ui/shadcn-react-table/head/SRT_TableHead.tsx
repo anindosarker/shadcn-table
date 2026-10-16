@@ -3,7 +3,7 @@ import {
   type SRT_ColumnVirtualizer,
   type SRT_RowData,
   type SRT_TableInstance,
-  type TableSectionProps,
+  type TableHeadProps,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -11,7 +11,7 @@ import { SRT_ToolbarAlertBanner } from '../toolbar/SRT_ToolbarAlertBanner';
 import { SRT_TableHeadRow } from './SRT_TableHeadRow';
 
 export interface SRT_TableHeadProps<TData extends SRT_RowData>
-  extends TableSectionProps {
+  extends TableHeadProps {
   columnVirtualizer?: SRT_ColumnVirtualizer;
   table: SRT_TableInstance<TData>;
 }

@@ -65,11 +65,13 @@ export type SRT_PaginationProps = NavProps & {
 
 export type TableProps = ComponentPropsWithRef<'table'>;
 
-export type TableSectionProps = ComponentPropsWithRef<'thead'>;
+export type TableHeadProps = ComponentPropsWithRef<'thead'>;
 
 export type TableRowProps = ComponentPropsWithRef<'tr'>;
 
 export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
+
+export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 
 export type TableCellProps = ComponentPropsWithRef<'th'>;
 
@@ -1116,8 +1118,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
       }) => TdProps)
     | TdProps;
   srtTableFooterProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => TableSectionProps)
-    | TableSectionProps;
+    | ((props: { table: SRT_TableInstance<TData> }) => TableFooterProps)
+    | TableFooterProps;
   srtTableFooterRowProps?:
     | ((props: {
         footerGroup: SRT_HeaderGroup<TData>;
@@ -1131,8 +1133,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
       }) => TableCellProps)
     | TableCellProps;
   srtTableHeadProps?:
-    | ((props: { table: SRT_TableInstance<TData> }) => TableSectionProps)
-    | TableSectionProps;
+    | ((props: { table: SRT_TableInstance<TData> }) => TableHeadProps)
+    | TableHeadProps;
   srtTableHeadRowProps?:
     | ((props: {
         headerGroup: SRT_HeaderGroup<TData>;
