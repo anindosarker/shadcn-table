@@ -18,9 +18,9 @@ import {
 import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
 import { getValueAndLabel } from '../utils/utils';
 
-// Note: base maps MRT's sx (16px box + 8px padding = icon-sm, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
+// Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
-  'ml-1 scale-75 transition-all duration-150 ease-in-out',
+  'ml-1 size-4 p-2 scale-75 transition-all duration-150 ease-in-out',
   {
     variants: {
       active: {
@@ -166,6 +166,7 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
           {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: PopoverContent has no overflow clip. */}
           <PopoverContent
             align="center"
+            className="w-auto"
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
             side="top"
