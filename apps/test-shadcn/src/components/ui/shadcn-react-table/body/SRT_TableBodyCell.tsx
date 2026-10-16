@@ -48,7 +48,7 @@ export interface SRT_TableBodyCellProps<TData extends SRT_RowData>
 }
 
 const bodyCellVariants = cva(
-  'relative bg-inherit border-b text-sm overflow-hidden text-start -outline-offset-1 hover:text-clip focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+  'relative bg-inherit border-b text-sm overflow-hidden -outline-offset-1 hover:text-clip focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
 );
 
 export const SRT_TableBodyCell = <TData extends SRT_RowData>({
@@ -347,6 +347,18 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       }
       className={cn(
         bodyCellVariants(),
+        tableCellProps.align === 'center'
+          ? 'text-center'
+          : tableCellProps.align === 'right'
+            ? 'text-right flex-row-reverse'
+            : tableCellProps.align === 'left'
+              ? 'text-left'
+              : tableCellProps.align === 'justify'
+                ? 'text-justify'
+                : 'text-start',
+        layoutMode?.startsWith('grid') &&
+          tableCellProps.align === 'center' &&
+          'justify-center',
         layoutMode?.startsWith('grid') && 'flex items-center',
         density === 'compact'
           ? columnDefType === 'display'
@@ -406,17 +418,21 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
               column.id,
             ) ||
               !row.getIsGrouped()) ? (
-            (columnDef.Cell?.({
-              cell,
-              column,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              renderedCellValue: cell.renderValue() as any,
-              row,
-              rowRef,
-              staticColumnIndex,
-              staticRowIndex,
-              table,
-            }) ?? renderDisplayColumnCell())
+            columnDef.Cell ? (
+              columnDef.Cell({
+                cell,
+                column,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                renderedCellValue: cell.renderValue() as any,
+                row,
+                rowRef,
+                staticColumnIndex,
+                staticRowIndex,
+                table,
+              })
+            ) : (
+              renderDisplayColumnCell()
+            )
           ) : isCreating || isEditing ? (
             <SRT_EditCellTextField cell={cell} table={table} />
           ) : showClickToCopyButton && columnDef.enableClickToCopy !== false ? (

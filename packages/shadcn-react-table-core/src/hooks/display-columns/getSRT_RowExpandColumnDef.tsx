@@ -12,16 +12,20 @@ export const getSRT_RowExpandColumnDef = <TData extends SRT_RowData>(
     defaultColumn,
     enableExpandAll,
     groupedColumnMode,
+    positionExpandColumn,
     renderDetailPanel,
   } = tableOptions;
 
-  // Note: align→logical text-start deviation — expand column positioned 'last' stays left-aligned.
-  // const alignProps =
-  //   positionExpandColumn === 'last' ? ({ align: 'right' } as const) : undefined;
+  const alignProps =
+    positionExpandColumn === 'last'
+      ? ({
+          align: 'right',
+        } as const)
+      : undefined;
 
   return {
-    // srtTableBodyCellProps: alignProps,
-    // srtTableHeadCellProps: alignProps,
+    srtTableBodyCellProps: alignProps,
+    srtTableHeadCellProps: alignProps,
     ...defaultDisplayColumnProps({
       header: 'expand',
       id: 'mrt-row-expand',
