@@ -247,7 +247,7 @@ export const useSRT_TableInstance = <TData extends SRT_RowData>(
     ],
   );
 
-  // @ts-expect-error SRT_ColumnDef/SRT_TableInstance widen TanStack's ColumnDef/Table
+  // @ts-expect-error SRT options carry keys beyond TanStack TableOptions
   const table = useReactTable({
     onColumnOrderChange,
     onColumnSizingInfoChange,
