@@ -15,7 +15,7 @@ export interface SRT_TableHeadCellSortLabelProps<TData extends SRT_RowData>
 }
 
 const tableHeadCellSortLabelVariants = cva(
-  'inline-flex w-[3ch] flex-[0_0] cursor-pointer items-center justify-start outline-none transition-all duration-150 ease-in-out focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:mx-1 [&_svg]:size-[18px] [&_svg]:text-muted-foreground [&_svg]:transition-[opacity,transform,rotate] [&_svg]:duration-200 [&_svg]:select-none dark:[&_svg]:text-foreground',
+  'inline-flex w-[3ch] flex-[0_0] cursor-pointer items-center justify-start [flex-direction:inherit] outline-none transition-all duration-150 ease-in-out focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:mx-1 [&_svg]:size-[18px] [&_svg]:text-muted-foreground [&_svg]:transition-[opacity,transform,rotate] [&_svg]:duration-200 [&_svg]:select-none dark:[&_svg]:text-foreground',
   {
     variants: {
       direction: {
