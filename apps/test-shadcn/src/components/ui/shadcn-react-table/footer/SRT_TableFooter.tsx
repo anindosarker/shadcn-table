@@ -74,7 +74,7 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
       className={cn(
         tableFooterVariants({
           layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-          sticky: !!stickFooter,
+          sticky: stickFooter,
         }),
         tableFooterProps.className,
       )}
@@ -82,7 +82,8 @@ export const SRT_TableFooter = <TData extends SRT_RowData>({
       {footerGroups.map((footerGroup) => (
         <SRT_TableFooterRow
           columnVirtualizer={columnVirtualizer}
-          footerGroup={footerGroup}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          footerGroup={footerGroup as any}
           key={footerGroup.id}
           table={table}
         />
