@@ -1,9 +1,7 @@
 import {
-  type CSSProperties,
   type DragEvent,
   type KeyboardEvent,
   type MouseEvent,
-  type ReactNode,
   type RefObject,
   memo,
   useEffect,
@@ -31,14 +29,8 @@ import {
   getSRTPinnedCellStyles,
 } from '../utils/style.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
-import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_TableBodyCellValue } from './SRT_TableBodyCellValue';
-import { SRT_TableBodyRowGrabHandle } from './SRT_TableBodyRowGrabHandle';
-import { SRT_TableBodyRowPinButton } from './SRT_TableBodyRowPinButton';
 import { SRT_CopyButton } from '../buttons/SRT_CopyButton';
-import { SRT_ExpandButton } from '../buttons/SRT_ExpandButton';
-import { SRT_ToggleRowActionMenuButton } from '../buttons/SRT_ToggleRowActionMenuButton';
-import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
 
 export interface SRT_TableBodyCellProps<TData extends SRT_RowData>
@@ -79,7 +71,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       enableColumnVirtualization,
       enableGrouping,
       enableKeyboardShortcuts,
-      groupedColumnMode,
       layoutMode,
       // mrtTheme: { draggingBorderColor },
       // Note: mrtTheme registry dropped — draggingBorderColor → var(--color-primary).
@@ -267,69 +258,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     });
   };
 
-  const renderDisplayColumnCell = (): ReactNode => {
-    switch (column.id) {
-      case 'mrt-row-select':
-        return (
-          <SRT_SelectCheckbox
-            row={row}
-            staticRowIndex={staticRowIndex}
-            table={table}
-          />
-        );
-      case 'mrt-row-expand': {
-        const expandButton = (
-          <SRT_ExpandButton
-            row={row}
-            staticRowIndex={staticRowIndex}
-            table={table}
-          />
-        );
-        const subRowsLength = row.subRows?.length;
-        if (groupedColumnMode === 'remove' && row.groupingColumnId) {
-          return (
-            <div className="flex flex-row items-center gap-1">
-              {expandButton}
-              <SRT_Tooltip
-                side="right"
-                title={
-                  table.getColumn(row.groupingColumnId).columnDef
-                    .header as ReactNode
-                }
-              >
-                <span>{row.groupingValue as ReactNode}</span>
-              </SRT_Tooltip>
-              {!!subRowsLength && <span>({subRowsLength})</span>}
-            </div>
-          );
-        }
-        return (
-          <>
-            {expandButton}
-            {columnDef.GroupedCell?.({ cell, column, row, table })}
-          </>
-        );
-      }
-      case 'mrt-row-actions':
-        return (
-          <SRT_ToggleRowActionMenuButton
-            cell={cell}
-            row={row}
-            staticRowIndex={staticRowIndex}
-            table={table}
-          />
-        );
-      case 'mrt-row-drag':
-        return (
-          <SRT_TableBodyRowGrabHandle row={row} rowRef={rowRef} table={table} />
-        );
-      case 'mrt-row-pin':
-        return <SRT_TableBodyRowPinButton row={row} table={table} />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <td
       data-index={staticColumnIndex}
@@ -341,14 +269,12 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       onDoubleClick={handleDoubleClick}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
-      style={
-        {
-          ...getSRTCellWidthStyles({ column, table }),
-          ...getSRTPinnedCellStyles({ column, table }),
-          ...tableCellProps?.style,
-          ...draggingBorders,
-        } as CSSProperties
-      }
+      style={{
+        ...getSRTCellWidthStyles({ column, table }),
+        ...getSRTPinnedCellStyles({ column, table }),
+        ...tableCellProps?.style,
+        ...draggingBorders,
+      }}
       className={cn(
         bodyCellVariants(),
         tableCellProps.align === 'center'
@@ -418,25 +344,21 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
               }}
             />
           ) : columnDefType === 'display' &&
-            (['mrt-row-expand', 'mrt-row-numbers', 'mrt-row-select'].includes(
+            (['srt-row-expand', 'srt-row-numbers', 'srt-row-select'].includes(
               column.id,
             ) ||
               !row.getIsGrouped()) ? (
-            columnDef.Cell ? (
-              columnDef.Cell({
-                cell,
-                column,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                renderedCellValue: cell.renderValue() as any,
-                row,
-                rowRef,
-                staticColumnIndex,
-                staticRowIndex,
-                table,
-              })
-            ) : (
-              renderDisplayColumnCell()
-            )
+            columnDef.Cell?.({
+              cell,
+              column,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              renderedCellValue: cell.renderValue() as any,
+              row,
+              rowRef,
+              staticColumnIndex,
+              staticRowIndex,
+              table,
+            })
           ) : isCreating || isEditing ? (
             <SRT_EditCellTextField cell={cell} table={table} />
           ) : showClickToCopyButton && columnDef.enableClickToCopy !== false ? (

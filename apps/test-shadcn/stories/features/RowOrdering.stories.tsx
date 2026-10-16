@@ -157,7 +157,7 @@ export const RowOrderingWithColumnVirtualization = () => {
       columns={fakeColumns}
       data={data}
       displayColumnDefOptions={{
-        'mrt-row-drag': {
+        'srt-row-drag': {
           enableColumnDragging: true,
           enableColumnOrdering: true,
         },

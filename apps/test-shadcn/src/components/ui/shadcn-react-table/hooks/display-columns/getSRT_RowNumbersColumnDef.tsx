@@ -22,7 +22,7 @@ export const getSRT_RowNumbersColumnDef = <TData extends SRT_RowData>(
     grow: false,
     ...defaultDisplayColumnProps({
       header: 'rowNumbers',
-      id: 'mrt-row-numbers',
+      id: 'srt-row-numbers',
       size: 50,
       tableOptions,
     }),

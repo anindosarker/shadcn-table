@@ -25,15 +25,15 @@ export const CustomizeDisplayColumns = () => (
     columns={columns}
     data={data}
     displayColumnDefOptions={{
-      'mrt-row-actions': {
+      'srt-row-actions': {
         size: 160,
       },
-      'mrt-row-expand': {
+      'srt-row-expand': {
         enableColumnActions: true,
         enableResizing: true,
         size: 70,
       },
-      'mrt-row-numbers': {
+      'srt-row-numbers': {
         enableColumnOrdering: true,
       },
     }}

@@ -245,7 +245,7 @@ function App() {
 
     enableTableFooter: true,
     initialState: {
-      columnPinning: { left: ['mrt-row-select'], right: ['mrt-row-actions'] },
+      columnPinning: { left: ['srt-row-select'], right: ['srt-row-actions'] },
     },
   });
 

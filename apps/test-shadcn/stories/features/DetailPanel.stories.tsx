@@ -275,7 +275,7 @@ export const DetailPanelExpandColumnLast = () => (
       state: faker.location.state(),
       zipCode: faker.location.zipCode(),
     }))}
-    // API GAP: displayColumnDefOptions['mrt-row-expand'].muiTableBodyCellProps /
+    // API GAP: displayColumnDefOptions['srt-row-expand'].muiTableBodyCellProps /
     // muiTableHeadCellProps (right alignment) have no SRT equivalent; dropped.
     positionExpandColumn="last"
     renderDetailPanel={({ row }) => (

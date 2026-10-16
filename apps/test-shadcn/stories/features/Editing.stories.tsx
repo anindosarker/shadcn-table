@@ -176,7 +176,7 @@ export const EditingFeatureEnabledConditionally = () => {
       data={tableData}
       enableEditing={enabled}
       initialState={{
-        columnOrder: ['mrt-row-actions', ...columns.map((c) => c.accessorKey!)],
+        columnOrder: ['srt-row-actions', ...columns.map((c) => c.accessorKey!)],
       }}
       onEditingRowSave={handleSaveRow}
       renderTopToolbarCustomActions={() => (
@@ -332,7 +332,7 @@ export const EditingEnabledEditModeRowVirtualized = () => {
       createDisplayMode="row"
       data={tableData}
       displayColumnDefOptions={{
-        'mrt-row-actions': {
+        'srt-row-actions': {
           size: 100,
         },
       }}

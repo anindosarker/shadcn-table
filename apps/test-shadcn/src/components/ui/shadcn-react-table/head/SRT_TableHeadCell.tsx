@@ -23,8 +23,6 @@ import {
   getSRTPinnedCellStyles,
 } from '../utils/style.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
-import { SRT_ExpandAllButton } from '../buttons/SRT_ExpandAllButton';
-import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 import { SRT_TableHeadCellColumnActionsButton } from './SRT_TableHeadCellColumnActionsButton';
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
 import { SRT_TableHeadCellFilterLabel } from './SRT_TableHeadCellFilterLabel';
@@ -65,11 +63,8 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       enableColumnDragging,
       enableColumnOrdering,
       enableColumnPinning,
-      enableExpandAll,
       enableGrouping,
-      enableMultiRowSelection,
       enableMultiSort,
-      enableSelectAll,
       enableStickyHeader,
       layoutMode,
       // mrtTheme: { draggingBorderColor },
@@ -189,28 +184,12 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
     });
   };
 
-  const displayHeaderElement =
-    columnDefType === 'display' ? (
-      column.id === 'mrt-row-select' ? (
-        enableSelectAll && enableMultiRowSelection ? (
-          <SRT_SelectCheckbox table={table} />
-        ) : undefined
-      ) : column.id === 'mrt-row-expand' ? (
-        enableExpandAll ? (
-          // Note: MRT also appends grouped-column names when groupedColumnMode === 'remove' — deferred.
-          <SRT_ExpandAllButton table={table} />
-        ) : undefined
-      ) : undefined
-    ) : undefined;
-
   const HeaderElement =
     parseFromValuesOrFunc(columnDef.Header, {
       column,
       header,
       table,
-    }) ??
-    displayHeaderElement ??
-    columnDef.header;
+    }) ?? columnDef.header;
 
   const isDraggingOrHovered =
     draggingColumn?.id === column.id || hoveredColumn?.id === column.id;

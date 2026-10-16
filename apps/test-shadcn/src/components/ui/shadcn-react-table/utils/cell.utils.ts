@@ -87,7 +87,7 @@ export const cellKeyboardShortcuts = <TData extends SRT_RowData = SRT_RowData>({
   if (cellValue && isWinCtrlMacMeta(event) && event.key === 'c') {
     navigator.clipboard.writeText(cellValue);
   } else if (['Enter', ' '].includes(event.key)) {
-    if (cell?.column?.id === 'mrt-row-select') {
+    if (cell?.column?.id === 'srt-row-select') {
       event.preventDefault();
       getSRT_RowSelectionHandler({
         row: cell.row,
@@ -96,7 +96,7 @@ export const cellKeyboardShortcuts = <TData extends SRT_RowData = SRT_RowData>({
         staticRowIndex: +event.target.getAttribute('data-index'),
       })(event as any);
     } else if (
-      header?.column?.id === 'mrt-row-select' &&
+      header?.column?.id === 'srt-row-select' &&
       table.options.enableSelectAll
     ) {
       event.preventDefault();
@@ -104,19 +104,19 @@ export const cellKeyboardShortcuts = <TData extends SRT_RowData = SRT_RowData>({
         table,
       })(event as any);
     } else if (
-      cell?.column?.id === 'mrt-row-expand' &&
+      cell?.column?.id === 'srt-row-expand' &&
       (cell.row.getCanExpand() ||
         table.options.renderDetailPanel?.({ row: cell.row, table }))
     ) {
       event.preventDefault();
       cell.row.toggleExpanded();
     } else if (
-      header?.column?.id === 'mrt-row-expand' &&
+      header?.column?.id === 'srt-row-expand' &&
       table.options.enableExpandAll
     ) {
       event.preventDefault();
       table.toggleAllRowsExpanded();
-    } else if (cell?.column.id === 'mrt-row-pin') {
+    } else if (cell?.column.id === 'srt-row-pin') {
       event.preventDefault();
       cell.row.getIsPinned()
         ? cell.row.pin(false)

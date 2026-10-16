@@ -154,7 +154,7 @@ export const ColumnOrderingStateManaged = () => {
 export const ColumnOrderingStateManagedCustom = () => {
   const [columnOrder, setColumnOrder] = useState<SRT_ColumnOrderState>(() => [
     ...columns.map((c) => c.accessorKey as string),
-    'mrt-row-select',
+    'srt-row-select',
   ]);
   return (
     <ShadcnReactTable

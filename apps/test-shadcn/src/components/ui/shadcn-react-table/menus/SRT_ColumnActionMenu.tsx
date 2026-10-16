@@ -119,7 +119,7 @@ export const SRT_ColumnActionMenu = <TData extends SRT_RowData>({
 
   const handleGroupByColumn = () => {
     column.toggleGrouping();
-    setColumnOrder((old) => ['mrt-row-expand', ...old]);
+    setColumnOrder((old) => ['srt-row-expand', ...old]);
     setAnchorEl(null);
   };
 

@@ -227,7 +227,7 @@ export function SRT_InputsMenusDemo() {
 
     initialState: {
       showColumnFilters: true,
-      columnPinning: { left: ['mrt-row-select'], right: ['mrt-row-actions'] },
+      columnPinning: { left: ['srt-row-select'], right: ['srt-row-actions'] },
     },
   });
 

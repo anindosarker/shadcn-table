@@ -96,7 +96,7 @@ export const GroupingColumnModeRemoveCustomHeader = () => (
     columns={columns}
     data={data}
     displayColumnDefOptions={{
-      'mrt-row-expand': {
+      'srt-row-expand': {
         Header: 'Groups',
       },
     }}
@@ -122,7 +122,7 @@ export const GroupingColumnModeRemoveCustomGroupedCell = () => (
     columns={columns}
     data={data}
     displayColumnDefOptions={{
-      'mrt-row-expand': {
+      'srt-row-expand': {
         //last item in array of grouping state
         GroupedCell: ({ row, table }) => {
           const { grouping } = table.getState();

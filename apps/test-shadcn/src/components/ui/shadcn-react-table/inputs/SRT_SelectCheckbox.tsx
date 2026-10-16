@@ -109,7 +109,7 @@ export const SRT_SelectCheckbox = <TData extends SRT_RowData>({
     'aria-label': label,
     checked,
     disabled:
-      isLoading || (row && !row.getCanSelect()) || row?.id === 'mrt-row-create',
+      isLoading || (row && !row.getCanSelect()) || row?.id === 'srt-row-create',
     // inputProps: { 'aria-label': label },
     // Note: dropped — radix Checkbox has no hidden input to label separately.
     onCheckedChange: (value: boolean | 'indeterminate') => {

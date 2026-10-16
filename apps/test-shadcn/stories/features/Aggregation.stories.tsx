@@ -162,7 +162,7 @@ export const AggregationRemoveModeCustomGroupedCell = () => (
     columns={columns}
     data={data}
     displayColumnDefOptions={{
-      'mrt-row-expand': {
+      'srt-row-expand': {
         //last item in array of grouping state
         GroupedCell: ({ row, table }) => {
           const { grouping } = table.getState();

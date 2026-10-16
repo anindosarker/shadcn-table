@@ -158,7 +158,7 @@ export const SelectAllDisabledCustomHeader = () => (
     columns={columns}
     data={data}
     displayColumnDefOptions={{
-      'mrt-row-select': { header: 'Your Custom Header' },
+      'srt-row-select': { header: 'Your Custom Header' },
     }}
     enableRowSelection
     enableSelectAll={false}

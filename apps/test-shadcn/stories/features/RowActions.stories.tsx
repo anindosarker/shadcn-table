@@ -190,7 +190,7 @@ export const RowActionsCompleteOverride = () => (
     columns={columns}
     data={data}
     displayColumnDefOptions={{
-      'mrt-row-actions': {
+      'srt-row-actions': {
         Cell: ({ row, table }) => (
           <>
             <Button>Custom Row Action</Button>

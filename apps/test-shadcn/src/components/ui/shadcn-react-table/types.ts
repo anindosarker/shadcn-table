@@ -787,13 +787,13 @@ export type SRT_InternalFilterOption = {
 };
 
 export type SRT_DisplayColumnIds =
-  | 'mrt-row-actions'
-  | 'mrt-row-drag'
-  | 'mrt-row-expand'
-  | 'mrt-row-numbers'
-  | 'mrt-row-pin'
-  | 'mrt-row-select'
-  | 'mrt-row-spacer';
+  | 'srt-row-actions'
+  | 'srt-row-drag'
+  | 'srt-row-expand'
+  | 'srt-row-numbers'
+  | 'srt-row-pin'
+  | 'srt-row-select'
+  | 'srt-row-spacer';
 
 /**
  * `columns` and `data` props are the only required props, but there are over 170 other optional props.
