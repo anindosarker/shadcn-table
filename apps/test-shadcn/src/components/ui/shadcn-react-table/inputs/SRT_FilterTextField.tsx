@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react';
 import { cva } from 'class-variance-authority';
-// import { debounce } from '@mui/material/utils'; // Note: replaced by June's local setTimeout debounce below (keeps the package MUI-free).
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,6 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Input } from '@/components/ui/input';
 import {
   InputGroup,
   InputGroupAddon,
@@ -45,22 +43,17 @@ import {
   type SRT_TableInstance,
 } from '../types';
 import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
-import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
+import {
+  debounce,
+  getValueAndLabel,
+  parseFromValuesOrFunc,
+} from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_FilterOptionMenu } from '../menus/SRT_FilterOptionMenu';
 
-const filterTextFieldVariants = cva('w-full');
-
-function debounce<TArgs extends unknown[]>(
-  fn: (...args: TArgs) => void,
-  delay: number,
-) {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  return (...args: TArgs) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
-  };
-}
+const filterTextFieldVariants = cva(
+  'relative inline-flex w-full min-w-0 flex-col align-top',
+);
 
 export interface SRT_FilterTextFieldProps<TData extends SRT_RowData>
   extends InputProps {
@@ -78,7 +71,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   const {
     options: {
       enableColumnFilterModes,
-      icons: { CancelIcon, CloseIcon, FilterListIcon },
+      icons: { CancelIcon, CloseIcon, ExpandMoreIcon, FilterListIcon },
       localization,
       manualFiltering,
       srtFilterAutocompleteProps,
@@ -179,14 +172,15 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             : ''
           : ((column.getFilterValue() as string) ?? ''),
   );
-  const [autocompleteOpen, setAutocompleteOpen] = useState(false);
   // const [autocompleteValue, setAutocompleteValue] = ...
-  // Note: MRT reads this state only as Autocomplete `value={autocompleteValue}`, which has no SRT surface — setter kept, getter dropped.
+  // Note: MRT reads it only as Autocomplete `value`; the Command list has no selected-value prop, so only the setter stays.
   const [, setAutocompleteValue] = useState<DropdownOption | null>(() =>
     isAutocompleteFilter
       ? ((column.getFilterValue() || null) as DropdownOption | null)
       : null,
   );
+  // Note: maps MUI useAutocomplete's internal open state (opens on non-empty input).
+  const [autocompleteOpen, setAutocompleteOpen] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleChangeDebounced = useCallback(
@@ -294,150 +288,24 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     );
   }
 
-  const setInputRef = (inputRef: HTMLInputElement | null) => {
-    if (inputRef && filterInputRefs.current) {
-      filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
-        inputRef;
-    }
-    // if (textFieldProps.inputRef) { textFieldProps.inputRef = inputRef; }
-    // Note: user input-ref forwarding deferred (SRT_GlobalFilterTextField precedent).
-  };
-
-  const inputType = filterVariant?.startsWith('datetime')
-    ? 'datetime-local'
-    : filterVariant?.startsWith('time')
-      ? 'time'
-      : 'date';
-
-  const dateFieldProps = filterVariant?.startsWith('datetime')
-    ? dateTimePickerProps
-    : filterVariant?.startsWith('time')
-      ? timePickerProps
-      : datePickerProps;
-
-  const commonInputProps: InputProps = {
-    'aria-label': filterPlaceholder,
-    autoComplete: 'off',
-    disabled: !!filterChipLabel,
-    placeholder:
-      filterChipLabel || isSelectFilter || isMultiSelectFilter
-        ? undefined
-        : filterPlaceholder,
-    title: filterPlaceholder,
-    ...textFieldProps,
-    onKeyDown: (e) => {
-      e.stopPropagation();
-      textFieldProps.onKeyDown?.(e);
-    },
-    style: {
-      // mx: '-2px', p: 0, width: 'calc(100% + 4px)',
-      // Note: MUI TextField-root underline hack — no target on a native input.
-      minWidth: isDateFilter
-        ? '160px'
-        : enableColumnFilterModes && rangeFilterIndex === 0
-          ? '110px'
-          : isRangeFilter
-            ? '100px'
-            : !filterChipLabel
-              ? '120px'
-              : 'auto',
-      textOverflow: 'ellipsis',
-      width: filterChipLabel ? 0 : undefined,
-      ...textFieldProps.style,
-    },
-  };
-
-  const isTextVariant =
-    !isDateFilter &&
-    !isAutocompleteFilter &&
-    !isSelectFilter &&
-    !isMultiSelectFilter;
-  const usesInputGroup = isTextVariant || isAutocompleteFilter;
-
-  const filterChip = filterChipLabel ? (
-    <Badge variant="secondary" asChild>
-      <button type="button" onClick={handleClearEmptyFilterChip}>
-        {filterChipLabel}
-        <CancelIcon data-icon="inline-end" />
-      </button>
-    </Badge>
-  ) : null;
-
-  // sx={{ height: '1.75rem', width: '1.75rem' }}
-  // Note: MUI IconButton sizing dropped — shadcn icon-sm default wins.
-  const startAdornment = showChangeModeButton ? (
-    <div className="flex items-center gap-1">
-      <SRT_Tooltip title={localization.changeFilterMode}>
-        <Button
-          type="button"
-          aria-label={localization.changeFilterMode}
-          variant="ghost"
-          size="icon-sm"
-          className="shrink-0"
-          onClick={handleFilterMenuOpen}
-        >
-          <FilterListIcon />
-        </Button>
-      </SRT_Tooltip>
-      {filterChip}
-    </div>
-  ) : null;
-
-  const startGroupAddon = showChangeModeButton ? (
-    <InputGroupAddon align="inline-start">
-      <SRT_Tooltip title={localization.changeFilterMode}>
-        <InputGroupButton
-          size="icon-xs"
-          aria-label={localization.changeFilterMode}
-          onClick={handleFilterMenuOpen}
-        >
-          <FilterListIcon />
-        </InputGroupButton>
-      </SRT_Tooltip>
-      {filterChip}
-    </InputGroupAddon>
-  ) : null;
-
-  // sx={{ height: '2rem', transform: 'scale(0.9)', width: '2rem' }}
-  // Note: MUI IconButton sizing dropped — shadcn icon-sm default wins.
-  const clearButton =
+  const endAdornment =
     !isAutocompleteFilter && !isDateFilter && !filterChipLabel ? (
-      <SRT_Tooltip side="right" title={localization.clearFilter ?? ''}>
-        <span
-          className={cn(
-            'absolute top-1/2 right-1 -translate-y-1/2',
-            (isSelectFilter || isMultiSelectFilter) && 'right-7',
-            (filterValue?.length ?? 0) > 0 ? 'visible' : 'invisible',
-          )}
-        >
-          <Button
-            type="button"
-            aria-label={localization.clearFilter}
-            variant="ghost"
-            size="icon-sm"
-            disabled={!filterValue?.toString()?.length}
-            onClick={handleClear}
-          >
-            <CloseIcon />
-          </Button>
-        </span>
-      </SRT_Tooltip>
-    ) : null;
-
-  const clearGroupAddon =
-    isTextVariant && !filterChipLabel ? (
-      <InputGroupAddon align="inline-end">
+      <InputGroupAddon
+        align="inline-end"
+        className={cn(
+          // mr: isSelectFilter || isMultiSelectFilter ? '20px' : undefined,
+          // Note: clears MUI Select's absolute arrow; shadcn's chevron sits in flow inside the trigger.
+          (filterValue?.length ?? 0) > 0 ? 'visible' : 'invisible',
+        )}
+      >
         <SRT_Tooltip side="right" title={localization.clearFilter ?? ''}>
-          <span
-            className={cn(
-              (filterValue?.length ?? 0) > 0 ? 'visible' : 'invisible',
-            )}
-          >
+          <span>
             <InputGroupButton
-              size="icon-xs"
               aria-label={localization.clearFilter}
               disabled={!filterValue?.toString()?.length}
               onClick={handleClear}
+              size="icon-sm"
+              className="scale-90"
             >
               <CloseIcon />
             </InputGroupButton>
@@ -446,243 +314,307 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       </InputGroupAddon>
     ) : null;
 
-  const filterModeHelperText = showChangeModeButton ? (
-    <label className="block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
-      {localization.filterMode.replace(
-        '{filterType}',
-        localization[
-          `filter${
-            currentFilterOption?.charAt(0)?.toUpperCase() +
-            currentFilterOption?.slice(1)
-          }` as keyof typeof localization
-        ],
+  const startAdornment = showChangeModeButton ? (
+    <InputGroupAddon align="inline-start">
+      <SRT_Tooltip title={localization.changeFilterMode}>
+        <span>
+          <InputGroupButton
+            aria-label={localization.changeFilterMode}
+            onClick={handleFilterMenuOpen}
+            size="icon-sm"
+            className="size-7"
+          >
+            <FilterListIcon />
+          </InputGroupButton>
+        </span>
+      </SRT_Tooltip>
+      {filterChipLabel && (
+        <Badge asChild variant="secondary">
+          <button type="button" onClick={handleClearEmptyFilterChip}>
+            {filterChipLabel}
+            <CancelIcon />
+          </button>
+        </Badge>
       )}
-    </label>
+    </InputGroupAddon>
   ) : null;
 
-  const optionMenu = (
-    <SRT_FilterOptionMenu
-      anchorEl={anchorEl}
-      header={header}
-      setAnchorEl={setAnchorEl}
-      setFilterValue={setFilterValue}
-      table={table}
-    />
-  );
+  const commonTextFieldProps: InputProps = {
+    // fullWidth: true, helperText, margin: 'none', variant: 'standard',
+    // Note: TextField root props; w-full sits in filterTextFieldVariants and the helper text renders under the InputGroup.
+    'aria-label': filterPlaceholder,
+    autoComplete: 'off',
+    disabled: !!filterChipLabel,
+    placeholder:
+      filterChipLabel || isSelectFilter || isMultiSelectFilter
+        ? undefined
+        : filterPlaceholder,
+    ref: (inputRef) => {
+      if (inputRef) {
+        filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+          inputRef;
+      }
+      // if (textFieldProps.inputRef) { textFieldProps.inputRef = inputRef; }
+      // Note: no-op in MRT too; a user ref already wins through the spread below.
+    },
+    title: filterPlaceholder,
+    ...textFieldProps,
+    className: cn(
+      'text-ellipsis',
+      filterChipLabel && 'w-0',
+      textFieldProps.className,
+    ),
+    onKeyDown: (e) => {
+      e.stopPropagation();
+      textFieldProps.onKeyDown?.(e);
+    },
+  };
 
-  const autocompleteOptions =
-    dropdownOptions?.filter((option) =>
-      getValueAndLabel(option)
-        .label.toLowerCase()
-        .includes(String(filterValue).trim().toLowerCase()),
-    ) ?? [];
+  const commonDatePickerProps = {
+    onChange: (event: ChangeEvent<HTMLInputElement>) => {
+      handleChange(event.target.value);
+    },
+    value: filterValue || '',
+  };
+
+  // Note: maps MUI Autocomplete's default filterOptions (ignoreCase, matchFrom 'any').
+  const autocompleteOptions = isAutocompleteFilter
+    ? (dropdownOptions?.map((option) => getValueAndLabel(option)) ?? []).filter(
+        (option) =>
+          option.label
+            .toLowerCase()
+            .includes((filterValue as string).toLowerCase()),
+      )
+    : [];
 
   return (
-    <div className="flex w-full flex-col gap-1">
-      <div className="relative flex w-full items-center gap-1">
-        {!usesInputGroup && startAdornment}
-        <div className="relative flex-1">
-          {filterVariant?.startsWith('time') ||
-          filterVariant?.startsWith('datetime') ||
-          filterVariant?.startsWith('date') ? (
-            // field: { clearable: true, onClear: () => handleClear() }
-            // Note: native date inputs clear themselves (shared clear excluded above).
-            <Input
-              {...commonInputProps}
-              {...dateFieldProps}
-              type={inputType}
-              ref={setInputRef}
-              value={typeof filterValue === 'string' ? filterValue : ''}
-              onChange={(e) => {
-                handleChange(e.target.value);
-                dateFieldProps?.onChange?.(e);
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className={cn(
-                filterTextFieldVariants(),
-                dateFieldProps?.className,
-                textFieldProps.className,
-              )}
+    <>
+      <div
+        className={cn(
+          filterTextFieldVariants(),
+          isDateFilter
+            ? 'min-w-[160px]'
+            : enableColumnFilterModes && rangeFilterIndex === 0
+              ? 'min-w-[110px]'
+              : isRangeFilter
+                ? 'min-w-[100px]'
+                : !filterChipLabel
+                  ? 'min-w-[120px]'
+                  : 'min-w-auto',
+          // mx: '-2px', p: 0, width: 'calc(100% + 4px)',
+          // Note: bleeds MUI's standard-variant underline past the cell padding; no underline here.
+        )}
+      >
+        <InputGroup>
+          {startAdornment}
+          {filterVariant?.startsWith('time') ? (
+            // slotProps.field: { clearable: true, onClear: () => handleClear() }
+            // Note: native time/date inputs clear themselves.
+            <InputGroupInput
+              {...commonTextFieldProps}
+              {...commonDatePickerProps}
+              {...timePickerProps}
+              type="time"
+            />
+          ) : filterVariant?.startsWith('datetime') ? (
+            <InputGroupInput
+              {...commonTextFieldProps}
+              {...commonDatePickerProps}
+              {...dateTimePickerProps}
+              type="datetime-local"
+            />
+          ) : filterVariant?.startsWith('date') ? (
+            <InputGroupInput
+              {...commonTextFieldProps}
+              {...commonDatePickerProps}
+              {...datePickerProps}
+              type="date"
             />
           ) : isAutocompleteFilter ? (
-            <InputGroup>
-              {startGroupAddon}
-              <Popover
-                open={autocompleteOpen && autocompleteOptions.length > 0}
-                onOpenChange={setAutocompleteOpen}
+            <Popover
+              open={autocompleteOpen && autocompleteOptions.length > 0}
+              onOpenChange={setAutocompleteOpen}
+            >
+              <PopoverTrigger asChild>
+                <InputGroupInput
+                  {...commonTextFieldProps}
+                  {...autocompleteProps}
+                  className={cn(
+                    commonTextFieldProps.className,
+                    autocompleteProps.className,
+                  )}
+                  onChange={(e) =>
+                    handleAutocompleteInputChange(e.target.value)
+                  }
+                  onClick={(e) => e.stopPropagation()}
+                  value={filterValue as string}
+                />
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                className="w-(--radix-popover-trigger-width) p-0"
+                onOpenAutoFocus={(e) => e.preventDefault()}
               >
-                <PopoverTrigger asChild>
-                  <InputGroupInput
-                    {...commonInputProps}
-                    {...autocompleteProps}
-                    ref={setInputRef}
-                    value={typeof filterValue === 'string' ? filterValue : ''}
-                    onChange={(e) =>
-                      handleAutocompleteInputChange(e.target.value)
-                    }
-                    onClick={(e) => e.stopPropagation()}
-                    className={cn(
-                      autocompleteProps.className,
-                      textFieldProps.className,
-                    )}
-                  />
-                </PopoverTrigger>
-                {/* Note: trigger-width + p-0 = shadcn's canonical Combobox Popover/Command pattern (layout, not decoration). */}
-                <PopoverContent
-                  className="w-[--radix-popover-trigger-width] p-0"
-                  align="start"
-                  onOpenAutoFocus={(e) => e.preventDefault()}
-                >
-                  <Command shouldFilter={false}>
-                    <CommandList>
-                      <CommandGroup>
-                        {autocompleteOptions.map((option, index) => {
-                          const { label, value: optValue } =
-                            getValueAndLabel(option);
-                          return (
-                            <CommandItem
-                              key={`${index}-${optValue}`}
-                              value={label}
-                              onSelect={() => {
-                                handleAutocompleteChange(option);
-                                setAutocompleteOpen(false);
-                              }}
-                            >
-                              {label}
-                            </CommandItem>
-                          );
-                        })}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </InputGroup>
+                <Command shouldFilter={false}>
+                  <CommandList>
+                    <CommandGroup>
+                      {autocompleteOptions.map((option, index) => (
+                        <CommandItem
+                          key={`${index}-${option.value}`}
+                          onSelect={() => {
+                            handleAutocompleteChange(option);
+                            setAutocompleteOpen(false);
+                          }}
+                          value={option.label}
+                        >
+                          {option.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           ) : isSelectFilter ? (
             // onChange={handleTextFieldChange}
-            // Note: radix Select exposes no ChangeEvent, so the user onChange hook can't fire (SRT_EditCellTextField precedent).
-            <Select
-              value={typeof filterValue === 'string' ? filterValue : ''}
-              onValueChange={(v) => handleChange(v)}
-            >
+            // Note: radix Select raises no ChangeEvent, so the user onChange cannot fire.
+            <Select onValueChange={handleChange} value={filterValue as string}>
               <SelectTrigger
                 className={cn(
-                  filterTextFieldVariants(),
+                  'flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   textFieldProps.className,
                 )}
+                onClick={(e) => e.stopPropagation()}
               >
                 <SelectValue placeholder={filterPlaceholder} />
               </SelectTrigger>
+              {/* slotProps.select: { MenuProps: { disableScrollLock: true }, displayEmpty: true } */}
+              {/* Note: radix Select always locks scroll; SelectValue shows the placeholder. */}
               <SelectContent>
+                {/* <MenuItem disabled divider hidden key="p" value="">{filterPlaceholder}</MenuItem> */}
+                {/* Note: radix items cannot carry value ""; the placeholder lives on SelectValue. */}
                 {textFieldProps.children ??
                   dropdownOptions?.map((option, index) => {
-                    const { label, value: optValue } = getValueAndLabel(option);
+                    const { label, value } = getValueAndLabel(option);
                     return (
-                      <SelectItem key={`${index}-${optValue}`} value={optValue}>
+                      <SelectItem key={`${index}-${value}`} value={value}>
                         {label}{' '}
                         {!columnDef.filterSelectOptions &&
-                          `(${facetedUniqueValues.get(optValue)})`}
+                          `(${facetedUniqueValues.get(value)})`}
                       </SelectItem>
                     );
                   })}
               </SelectContent>
             </Select>
           ) : isMultiSelectFilter ? (
-            (() => {
-              const selected = Array.isArray(filterValue) ? filterValue : [];
-              // onChange={handleTextFieldChange}
-              // Note: radix Command items expose no ChangeEvent, so the user onChange hook can't fire (SRT_EditCellTextField precedent).
-              const toggle = (value: string) => {
-                const next = selected.includes(value)
-                  ? selected.filter((v) => v !== value)
-                  : [...selected, value];
-                handleChange(next);
-              };
-              return (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full justify-start',
-                        textFieldProps.className,
-                      )}
-                    >
-                      {selected.length === 0 ? (
-                        <span className="text-muted-foreground">
-                          {filterPlaceholder}
-                        </span>
-                      ) : (
-                        <span className="flex flex-wrap gap-0.5">
-                          {selected.map((value) => {
-                            const opt = dropdownOptions?.find(
-                              (o) => getValueAndLabel(o).value === value,
-                            );
-                            return (
-                              <Badge key={value} variant="secondary">
-                                {getValueAndLabel(opt ?? value).label}
-                              </Badge>
-                            );
-                          })}
-                        </span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  {/* Note: trigger-width + p-0 = shadcn's canonical Combobox Popover/Command pattern (layout, not decoration). */}
-                  <PopoverContent
-                    className="w-[--radix-popover-trigger-width] p-0"
-                    align="start"
-                  >
-                    <Command>
-                      <CommandList>
-                        <CommandGroup>
-                          {textFieldProps.children ??
-                            dropdownOptions?.map((option, index) => {
-                              const { label, value } = getValueAndLabel(option);
-                              const isSel = selected.includes(value);
-                              return (
-                                <CommandItem
-                                  key={`${index}-${value}`}
-                                  value={value}
-                                  onSelect={() => toggle(value)}
-                                >
-                                  <Checkbox checked={isSel} />
-                                  {label}{' '}
-                                  {!columnDef.filterSelectOptions &&
-                                    `(${facetedUniqueValues.get(value)})`}
-                                </CommandItem>
-                              );
-                            })}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              );
-            })()
+            // onChange={handleTextFieldChange}
+            // Note: Command items raise no ChangeEvent, so the user onChange cannot fire.
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  className={cn(
+                    'flex-1 justify-start font-normal',
+                    textFieldProps.className,
+                  )}
+                  onClick={(e) => e.stopPropagation()}
+                  variant="ghost"
+                >
+                  {!Array.isArray(filterValue) || filterValue.length === 0 ? (
+                    <span className="opacity-50">{filterPlaceholder}</span>
+                  ) : (
+                    <span className="flex flex-wrap gap-0.5">
+                      {filterValue.map((value) => {
+                        const selectedValue = dropdownOptions?.find(
+                          (option) => getValueAndLabel(option).value === value,
+                        );
+                        return (
+                          <Badge key={value} variant="secondary">
+                            {getValueAndLabel(selectedValue).label}
+                          </Badge>
+                        );
+                      })}
+                    </span>
+                  )}
+                  <ExpandMoreIcon className="ml-auto size-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                align="start"
+                className="w-(--radix-popover-trigger-width) p-0"
+              >
+                <Command>
+                  <CommandList>
+                    <CommandGroup>
+                      {textFieldProps.children ??
+                        dropdownOptions?.map((option, index) => {
+                          const { label, value } = getValueAndLabel(option);
+                          return (
+                            <CommandItem
+                              key={`${index}-${value}`}
+                              onSelect={() => {
+                                // MUI SelectInput handleItemClick, multiple branch
+                                const newValue = Array.isArray(filterValue)
+                                  ? filterValue.slice()
+                                  : [];
+                                const itemIndex = newValue.indexOf(value);
+                                if (itemIndex === -1) {
+                                  newValue.push(value);
+                                } else {
+                                  newValue.splice(itemIndex, 1);
+                                }
+                                handleChange(newValue);
+                              }}
+                              value={value}
+                            >
+                              <Checkbox
+                                checked={(
+                                  (column.getFilterValue() ?? []) as string[]
+                                ).includes(value)}
+                                className="mr-2"
+                              />
+                              {label}{' '}
+                              {!columnDef.filterSelectOptions &&
+                                `(${facetedUniqueValues.get(value)})`}
+                            </CommandItem>
+                          );
+                        })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           ) : (
-            <InputGroup>
-              {startGroupAddon}
-              <InputGroupInput
-                {...commonInputProps}
-                ref={setInputRef}
-                value={
-                  typeof filterValue === 'string' ||
-                  typeof filterValue === 'number'
-                    ? filterValue
-                    : ''
-                }
-                onChange={handleTextFieldChange}
-                onClick={(e) => e.stopPropagation()}
-              />
-              {clearGroupAddon}
-            </InputGroup>
+            <InputGroupInput
+              {...commonTextFieldProps}
+              onChange={handleTextFieldChange}
+              onClick={(e) => e.stopPropagation()}
+              // Note: the range clear cascade can leave the state undefined; React needs a defined value to stay controlled.
+              value={filterValue ?? ''}
+            />
           )}
-          {!usesInputGroup && clearButton}
-        </div>
+          {endAdornment}
+        </InputGroup>
+        {showChangeModeButton ? (
+          <label className="mt-[3px] block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+            {localization.filterMode.replace(
+              '{filterType}',
+              localization[
+                `filter${
+                  currentFilterOption?.charAt(0)?.toUpperCase() +
+                  currentFilterOption?.slice(1)
+                }` as keyof typeof localization
+              ],
+            )}
+          </label>
+        ) : null}
       </div>
-      {filterModeHelperText}
-      {optionMenu}
-    </div>
+      <SRT_FilterOptionMenu
+        anchorEl={anchorEl}
+        header={header}
+        setAnchorEl={setAnchorEl}
+        setFilterValue={setFilterValue}
+        table={table}
+      />
+    </>
   );
 };
