@@ -2,14 +2,13 @@ import { cva } from 'class-variance-authority';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import {
-  type DivProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
 } from '../types';
 
 export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData>
-  extends DivProps {
+  extends React.ComponentProps<typeof Separator> {
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }
@@ -97,7 +96,6 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
         // flexItem
         // Note: MUI-only prop; the wrapper is not a flex container, so it had no effect.
         orientation="vertical"
-        {...rest}
         className={cn(
           'z-[4] translate-x-1 touch-none select-none rounded-xs data-[orientation=vertical]:h-6 data-[orientation=vertical]:w-1',
           !column.getIsResizing() && 'transition-all duration-150 ease-in-out',
