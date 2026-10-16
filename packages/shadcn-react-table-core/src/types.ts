@@ -73,9 +73,9 @@ export type TableBodyProps = ComponentPropsWithRef<'tbody'>;
 
 export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 
-export type TableCellProps = ComponentPropsWithRef<'th'>;
-
-export type TdProps = ComponentPropsWithRef<'td'>;
+// Note: MUI TableCellBaseProps = th & td attributes; one loose type for every cell, as MUI.
+export type TableCellProps = ComponentPropsWithRef<'th'> &
+  ComponentPropsWithRef<'td'>;
 
 export type ButtonProps = ComponentPropsWithRef<'button'>;
 
@@ -640,14 +640,14 @@ export interface SRT_ColumnDef<TData extends SRT_RowData, TValue = unknown>
         column: SRT_Column<TData>;
         row: SRT_Row<TData>;
         table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
+      }) => TableCellProps)
+    | TableCellProps;
   srtTableFooterCellProps?:
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
+      }) => TableCellProps)
+    | TableCellProps;
   srtTableHeadCellProps?:
     | ((props: {
         column: SRT_Column<TData>;
@@ -963,8 +963,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         row: SRT_Row<TData>;
         table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
+      }) => TableCellProps)
+    | TableCellProps;
   srtEditRowDialogProps?:
     | ((props: {
         row: SRT_Row<TData>;
@@ -1095,8 +1095,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
         column: SRT_Column<TData>;
         row: SRT_Row<TData>;
         table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
+      }) => TableCellProps)
+    | TableCellProps;
   srtTableBodyProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => TableBodyProps)
     | TableBodyProps;
@@ -1115,8 +1115,8 @@ export interface SRT_TableOptions<TData extends SRT_RowData>
     | ((props: {
         column: SRT_Column<TData>;
         table: SRT_TableInstance<TData>;
-      }) => TdProps)
-    | TdProps;
+      }) => TableCellProps)
+    | TableCellProps;
   srtTableFooterProps?:
     | ((props: { table: SRT_TableInstance<TData> }) => TableFooterProps)
     | TableFooterProps;

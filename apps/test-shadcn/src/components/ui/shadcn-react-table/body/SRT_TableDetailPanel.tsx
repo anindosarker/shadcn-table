@@ -6,14 +6,14 @@ import {
   type SRT_RowVirtualizer,
   type SRT_TableInstance,
   type SRT_VirtualItem,
-  type TdProps,
+  type TableCellProps,
 } from 'shadcn-react-table-core';
 import { cva } from 'class-variance-authority';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 export interface SRT_TableDetailPanelProps<TData extends SRT_RowData>
-  extends TdProps {
+  extends TableCellProps {
   parentRowRef: RefObject<HTMLTableRowElement | null>;
   row: SRT_Row<TData>;
   rowVirtualizer?: SRT_RowVirtualizer;

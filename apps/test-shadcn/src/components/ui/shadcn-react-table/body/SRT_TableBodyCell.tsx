@@ -20,7 +20,7 @@ import {
   type SRT_Cell,
   type SRT_RowData,
   type SRT_TableInstance,
-  type TdProps,
+  type TableCellProps,
 } from 'shadcn-react-table-core';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
@@ -38,7 +38,7 @@ import { SRT_SelectCheckbox } from '../inputs/SRT_SelectCheckbox';
 import { SRT_EditCellTextField } from '../inputs/SRT_EditCellTextField';
 
 export interface SRT_TableBodyCellProps<TData extends SRT_RowData>
-  extends TdProps {
+  extends TableCellProps {
   cell: SRT_Cell<TData>;
   numRows?: number;
   rowRef: RefObject<HTMLTableRowElement | null>;

@@ -3,7 +3,7 @@ import {
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
-  type TdProps,
+  type TableCellProps,
   cellKeyboardShortcuts,
   getSRTCellWidthStyles,
   getSRTPinnedCellStyles,
@@ -15,7 +15,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
-  extends TdProps {
+  extends TableCellProps {
   footer: SRT_Header<TData>;
   staticColumnIndex?: number;
   table: SRT_TableInstance<TData>;
