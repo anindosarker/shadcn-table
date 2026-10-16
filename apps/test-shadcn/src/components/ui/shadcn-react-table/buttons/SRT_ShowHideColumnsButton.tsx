@@ -37,6 +37,7 @@ export const SRT_ShowHideColumnsButton = <TData extends SRT_RowData>({
           aria-label={localization.showHideColumns}
           onClick={handleClick}
           size="icon"
+          type="button"
           variant="ghost"
           {...rest}
           title={undefined}
