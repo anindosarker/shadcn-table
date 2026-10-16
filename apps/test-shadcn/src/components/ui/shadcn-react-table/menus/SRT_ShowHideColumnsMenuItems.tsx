@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import {
@@ -148,16 +149,16 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
                 table={table}
               />
             ) : (
-              <span className="w-7" />
+              <div className="w-7" />
             ))}
           {enableColumnPinning &&
             (column.getCanPin() ? (
               <SRT_ColumnPinningButtons column={column} table={table} />
             ) : (
-              <span className="w-[70px]" />
+              <div className="w-[70px]" />
             ))}
           {enableHiding ? (
-            <label className="flex items-center gap-2">
+            <Label>
               <SRT_Tooltip title={localization.toggleVisibility}>
                 <span className="inline-flex">
                   <Switch
@@ -167,12 +168,17 @@ export const SRT_ShowHideColumnsMenuItems = <TData extends SRT_RowData>({
                   />
                 </span>
               </SRT_Tooltip>
-              <span className={cn(columnDefType === 'display' && 'opacity-50')}>
+              <span
+                className={cn(
+                  columnDefType === 'display' && 'opacity-50',
+                  !column.getCanHide() && 'text-muted-foreground',
+                )}
+              >
                 {columnDef.header}
               </span>
-            </label>
+            </Label>
           ) : (
-            <span className="self-center">{columnDef.header}</span>
+            <p className="self-center">{columnDef.header}</p>
           )}
         </div>
       </DropdownMenuItem>
