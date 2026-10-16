@@ -15,7 +15,7 @@ export interface SRT_TableHeadCellResizeHandleProps<TData extends SRT_RowData>
 }
 
 const resizeHandleVariants = cva(
-  'absolute h-6 cursor-col-resize touch-none select-none px-1 [&:active>[data-slot=separator]]:bg-primary',
+  'absolute cursor-col-resize px-1 [&:active>[data-slot=separator]]:bg-primary',
   {
     variants: {
       density: {
@@ -27,6 +27,10 @@ const resizeHandleVariants = cva(
         ltr: '',
         rtl: '',
       },
+      display: {
+        true: '',
+        false: '',
+      },
     },
     compoundVariants: [
       { density: 'compact', direction: 'ltr', class: '-mr-2' },
@@ -35,11 +39,11 @@ const resizeHandleVariants = cva(
       { density: 'compact', direction: 'rtl', class: '-ml-2' },
       { density: 'comfortable', direction: 'rtl', class: '-ml-4' },
       { density: 'spacious', direction: 'rtl', class: '-ml-6' },
+      { direction: 'ltr', display: true, class: 'right-1' },
+      { direction: 'ltr', display: false, class: 'right-0' },
+      { direction: 'rtl', display: true, class: 'left-1' },
+      { direction: 'rtl', display: false, class: 'left-0' },
     ],
-    defaultVariants: {
-      density: 'comfortable',
-      direction: 'ltr',
-    },
   },
 );
 
@@ -58,30 +62,17 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
 
   const handler = header.getResizeHandler();
 
-  const isResizing = column.getIsResizing();
-
-  const isDisplay = column.columnDef.columnDefType === 'display';
-
-  const positionClass =
-    columnResizeDirection === 'rtl'
-      ? isDisplay
-        ? 'left-1'
-        : 'left-0'
-      : isDisplay
-        ? 'right-1'
-        : 'right-0';
-
-  const activeOpacityClass =
-    header.subHeaders.length || columnResizeMode === 'onEnd'
-      ? '[&:active>[data-slot=separator]]:opacity-100'
-      : '[&:active>[data-slot=separator]]:opacity-0';
-
   return (
     <div
       className={cn(
-        resizeHandleVariants({ density, direction: columnResizeDirection }),
-        positionClass,
-        activeOpacityClass,
+        resizeHandleVariants({
+          density,
+          direction: columnResizeDirection,
+          display: column.columnDef.columnDefType === 'display',
+        }),
+        header.subHeaders.length || columnResizeMode === 'onEnd'
+          ? '[&:active>[data-slot=separator]]:opacity-100'
+          : '[&:active>[data-slot=separator]]:opacity-0',
       )}
       onDoubleClick={() => {
         setColumnSizingInfo((old) => ({
@@ -94,7 +85,7 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
       onTouchStart={handler}
       style={{
         transform:
-          isResizing && columnResizeMode === 'onEnd'
+          column.getIsResizing() && columnResizeMode === 'onEnd'
             ? `translateX(${
                 (columnResizeDirection === 'rtl' ? -1 : 1) *
                 (getState().columnSizingInfo.deltaOffset ?? 0)
@@ -103,13 +94,13 @@ export const SRT_TableHeadCellResizeHandle = <TData extends SRT_RowData>({
       }}
     >
       <Separator
+        // flexItem
+        // Note: MUI-only prop; the wrapper is not a flex container, so it had no effect.
         orientation="vertical"
-        // borderRadius: '2px', borderWidth: '2px', zIndex: 4,
-        // Note: dropped — shadcn Separator default (w-px bg-border) wins per entry ruling.
         {...rest}
         className={cn(
-          'translate-x-1',
-          !isResizing && 'transition-all duration-150',
+          'z-[4] translate-x-1 touch-none select-none rounded-xs data-[orientation=vertical]:h-6 data-[orientation=vertical]:w-1',
+          !column.getIsResizing() && 'transition-all duration-150 ease-in-out',
           rest.className,
         )}
       />
