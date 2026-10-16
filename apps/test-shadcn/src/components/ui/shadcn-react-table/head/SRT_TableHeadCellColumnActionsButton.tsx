@@ -1,5 +1,7 @@
 import { type MouseEvent, useState } from 'react';
+import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type SRT_Header,
@@ -9,6 +11,11 @@ import {
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
 import { SRT_ColumnActionMenu } from '../menus/SRT_ColumnActionMenu';
+
+// Note: base maps MRT's sx (m -8px -4px, opacity .3, hover opacity 1, transition all 150ms); 2rem box is icon-sm.
+const columnActionsButtonVariants = cva(
+  '-mx-1 -my-2 opacity-30 transition-all duration-150 hover:opacity-100',
+);
 
 export interface SRT_TableHeadCellColumnActionsButtonProps<
   TData extends SRT_RowData,
@@ -61,14 +68,16 @@ export const SRT_TableHeadCellColumnActionsButton = <
         title={iconButtonProps?.title ?? localization.columnActions}
       >
         <Button
-          variant="ghost"
-          size="icon-sm"
-          type="button"
           aria-label={localization.columnActions}
           onClick={handleClick}
+          size="icon-sm"
+          type="button"
+          variant="ghost"
           {...iconButtonProps}
-          // sx={...}
-          // Note: MUI sx (2rem box, m -8px -4px, opacity .3→1, 150ms) dropped — shadcn ghost icon-sm wins.
+          className={cn(
+            columnActionsButtonVariants(),
+            iconButtonProps?.className,
+          )}
           title={undefined}
         >
           {iconButtonProps?.children ?? <MoreVertIcon className="scale-90" />}
