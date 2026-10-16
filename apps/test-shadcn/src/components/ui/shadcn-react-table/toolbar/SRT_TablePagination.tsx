@@ -29,7 +29,7 @@ import {
 } from '../types';
 import {
   getPaginationItems,
-  type SRT_PaginationItem,
+  type SRT_UsePaginationItem,
 } from '../utils/pagination.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_Tooltip } from '../SRT_Tooltip';
@@ -121,7 +121,7 @@ export const SRT_TablePagination = <TData extends SRT_RowData>({
   } = SelectProps;
 
   const navItems: Partial<
-    Record<SRT_PaginationItem['type'], { Icon: LucideIcon; label: string }>
+    Record<SRT_UsePaginationItem['type'], { Icon: LucideIcon; label: string }>
   > = {
     first: { Icon: FirstPageIcon, label: localization.goToFirstPage },
     last: { Icon: LastPageIcon, label: localization.goToLastPage },
