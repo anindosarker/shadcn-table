@@ -1,11 +1,14 @@
 import { type MouseEvent, useState } from 'react';
+import { cva } from 'class-variance-authority';
+import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverAnchor,
   PopoverContent,
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SRT_Tooltip } from '../SRT_Tooltip';
+import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
 import {
   type ButtonProps,
   type SRT_Header,
@@ -14,8 +17,19 @@ import {
 } from '../types';
 import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
 import { getValueAndLabel } from '../utils/utils';
-import { SRT_Tooltip } from '../SRT_Tooltip';
-import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
+
+// Note: base maps MRT's sx (16px box + 8px padding = icon-sm, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
+const tableHeadCellFilterLabelVariants = cva(
+  'ml-1 scale-75 transition-all duration-150 ease-in-out',
+  {
+    variants: {
+      active: {
+        true: 'opacity-100',
+        false: 'opacity-30',
+      },
+    },
+  },
+);
 
 export interface SRT_TableHeadCellFilterLabelProps<TData extends SRT_RowData>
   extends ButtonProps {
@@ -103,23 +117,16 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
           )
           .replace('" "', '');
 
-  const rect = anchorEl?.getBoundingClientRect();
-
   return (
     <>
-      {/* Note: MUI Grow transition dropped — conditional render keeps unmountOnExit semantics */}
+      {/* <Grow in={...} unmountOnExit> — Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit). */}
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
-        <span className="shrink-0">
+        <span className="flex-none">
           <SRT_Tooltip side="top" title={filterTooltip}>
-            {/* disableRipple — Note: shadcn Button has no ripple */}
-            {/* sx (16px scaled box, active-opacity dim) — Note: dropped per head-button ruling; ml-1 layout kept */}
+            {/* disableRipple — Note: shadcn Button has no ripple. */}
             <Button
-              variant="ghost"
-              size="icon-sm"
-              type="button"
-              aria-label={filterTooltip}
               onClick={(event: MouseEvent<HTMLButtonElement>) => {
                 if (columnFilterDisplayMode === 'popover') {
                   setAnchorEl(event.currentTarget);
@@ -132,8 +139,14 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
                 });
                 event.stopPropagation();
               }}
+              size="icon-sm"
+              type="button"
+              variant="ghost"
               {...rest}
-              className={cn('ml-1', rest.className)}
+              className={cn(
+                tableHeadCellFilterLabelVariants({ active: isFilterActive }),
+                rest.className,
+              )}
             >
               <FilterAltIcon />
             </Button>
@@ -142,37 +155,23 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
       )}
       {columnFilterDisplayMode === 'popover' && (
         <Popover
-          open={!!anchorEl}
           onOpenChange={(open) => {
+            // event.stopPropagation(); — Note: radix has no backdrop click to stop.
             if (!open) setAnchorEl(null);
           }}
+          open={!!anchorEl}
         >
-          <PopoverAnchor asChild>
-            <span
-              aria-hidden
-              style={{
-                position: 'fixed',
-                left: rect?.left ?? 0,
-                top: rect?.top ?? 0,
-                width: rect?.width ?? 0,
-                height: rect?.height ?? 0,
-                pointerEvents: 'none',
-              }}
-            />
-          </PopoverAnchor>
-          {/* disableScrollLock + slotProps.paper overflow:visible dropped — Radix Popover doesn't scroll-lock; overflow handled by content */}
+          {anchorEl && <PopoverAnchor virtualRef={{ current: anchorEl }} />}
+          {/* disableScrollLock — Note: radix Popover is non-modal, no scroll lock. */}
+          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: PopoverContent has no overflow clip. */}
           <PopoverContent
             align="center"
-            side="top"
             onClick={(event) => event.stopPropagation()}
-            onPointerDownOutside={(event) =>
-              event.detail.originalEvent.stopPropagation()
-            }
             onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
+            side="top"
           >
-            <div>
-              <SRT_TableHeadCellFilterContainer header={header} table={table} />
-            </div>
+            {/* <Box sx={{ p: '1rem' }}> — Note: PopoverContent already pads p-4. */}
+            <SRT_TableHeadCellFilterContainer header={header} table={table} />
           </PopoverContent>
         </Popover>
       )}
