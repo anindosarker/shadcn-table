@@ -29,7 +29,7 @@ export interface SRT_TableBodyRowProps<TData extends SRT_RowData>
 }
 
 const tableBodyRowVariants = cva(
-  'box-border w-full bg-background hover:bg-muted/50',
+  "box-border w-full bg-background [&>td]:after:absolute [&>td]:after:inset-0 [&>td]:after:-z-10 [&>td]:after:content-['']",
   {
     variants: {
       layout: { grid: 'flex', semantic: '' },
@@ -39,7 +39,6 @@ const tableBodyRowVariants = cva(
         relative: 'relative',
         sticky: 'sticky',
       },
-      selected: { false: '', true: 'bg-muted' },
       transition: {
         animated: 'transition-all duration-150 ease-in-out',
         none: '',
@@ -77,7 +76,7 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
       //   pinnedRowBackgroundColor,
       //   selectedRowBackgroundColor,
       // },
-      // Note: mrtTheme registry dropped project-wide — bg-background / bg-muted
+      // Note: mrtTheme registry dropped project-wide — bg-background / primary tokens.
       srtTableBodyRowProps,
       renderDetailPanel,
       rowPinningDisplayMode,
@@ -161,20 +160,15 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
 
   const rowRef = useRef<HTMLTableRowElement | null>(null);
 
-  // Note: td:after highlight overlays → solid row classes (bg-background / bg-muted / hover:bg-muted/50); see SRT_TableBodyRow.plan.md "Row highlight system".
-  // const cellHighlightColor = isRowSelected
-  //   ? selectedRowBackgroundColor
-  //   : isRowPinned
-  //     ? pinnedRowBackgroundColor
-  //     : undefined;
-  // const cellHighlightColorHover =
-  //   tableRowProps?.hover !== false
-  //     ? isRowSelected
-  //       ? cellHighlightColor
-  //       : theme.palette.mode === 'dark'
-  //         ? `${lighten(baseBackgroundColor, 0.3)}`
-  //         : `${darken(baseBackgroundColor, 0.3)}`
-  //     : undefined;
+  const cellHighlightClass = isRowSelected
+    ? '[&>td]:after:bg-primary/20'
+    : isRowPinned
+      ? '[&>td]:after:bg-primary/10'
+      : undefined;
+
+  const cellHighlightClassHover = isRowSelected
+    ? 'hover:[&>td]:after:bg-primary/20'
+    : 'hover:[&>td]:after:bg-foreground/10';
 
   return (
     <>
@@ -191,7 +185,7 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
           }
         }}
         // selected={isRowSelected}
-        // Note: MUI TableRow prop; data-selected + the bg-muted variant carry selection.
+        // Note: MUI TableRow prop; data-selected + the td:after overlay carry selection.
         {...tableRowProps}
         style={{
           transform: virtualRow
@@ -227,13 +221,14 @@ export const SRT_TableBodyRow = <TData extends SRT_RowData>({
               : rowPinningDisplayMode?.includes('sticky') && isRowPinned
                 ? 'sticky'
                 : 'relative',
-            selected: isRowSelected,
             transition: virtualRow ? 'none' : 'animated',
             zIndex:
               rowPinningDisplayMode?.includes('sticky') && isRowPinned
                 ? 'high'
                 : 'base',
           }),
+          cellHighlightClass,
+          cellHighlightClassHover,
           tableRowProps?.className,
         )}
       >
