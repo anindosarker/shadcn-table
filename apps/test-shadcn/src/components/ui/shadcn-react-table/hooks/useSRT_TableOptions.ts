@@ -97,6 +97,7 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
   manualGrouping,
   manualPagination,
   manualSorting,
+  // mrtTheme,
   paginationDisplayMode = 'default',
   positionActionsColumn = 'first',
   positionCreatingRow = 'top',
@@ -119,6 +120,8 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     }),
     [localization],
   );
+  // mrtTheme = useMemo(() => getMRTTheme(mrtTheme, theme), [mrtTheme, theme]);
+  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   aggregationFns = useMemo(
     () => ({ ...SRT_AggregationFns, ...aggregationFns }),
     [],
@@ -143,7 +146,8 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
   );
 
   if (!columnResizeDirection) {
-    // Note: theme.direction fallback dropped (no theme in SRT)
+    // columnResizeDirection = theme.direction || 'ltr';
+    // Note: no MUI theme in SRT; MUI theme.direction defaults to 'ltr'.
     columnResizeDirection = 'ltr';
   }
 
@@ -247,6 +251,7 @@ export const useSRT_TableOptions: <TData extends SRT_RowData>(
     manualGrouping,
     manualPagination,
     manualSorting,
+    // mrtTheme,
     paginationDisplayMode,
     positionActionsColumn,
     positionCreatingRow,
