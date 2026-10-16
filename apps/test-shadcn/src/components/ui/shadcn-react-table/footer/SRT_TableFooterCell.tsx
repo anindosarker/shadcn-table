@@ -10,10 +10,7 @@ import {
   type TableCellProps,
 } from '../types';
 import { cellKeyboardShortcuts } from '../utils/cell.utils';
-import {
-  getSRTCellWidthStyles,
-  getSRTPinnedCellStyles,
-} from '../utils/style.utils';
+import { getCommonSRTCellStyles } from '../utils/style.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
@@ -23,9 +20,8 @@ export interface SRT_TableFooterCellProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Note: getCommonMRTCellStyles' backgroundImage:inherit dropped — no MUI Paper/mrtTheme ancestor sets one.
 const footerCellVariants = cva(
-  'relative bg-inherit font-bold align-top text-xs leading-[1.3125rem] text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+  'font-bold align-top text-xs leading-[1.3125rem] text-muted-foreground',
 );
 
 export const SRT_TableFooterCell = <TData extends SRT_RowData>({
@@ -38,13 +34,11 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     getState,
     options: {
       enableColumnPinning,
-      enableColumnVirtualization,
       enableKeyboardShortcuts,
-      layoutMode,
       srtTableFooterCellProps,
     },
   } = table;
-  const { density, draggingColumn, hoveredColumn } = getState();
+  const { density } = getState();
   const { column } = footer;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -70,6 +64,13 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
     });
   };
 
+  const commonCellStyles = getCommonSRTCellStyles({
+    column,
+    header: footer,
+    table,
+    tableCellProps,
+  });
+
   return (
     <td
       // align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
@@ -83,29 +84,17 @@ export const SRT_TableFooterCell = <TData extends SRT_RowData>({
       {...tableCellProps}
       className={cn(
         footerCellVariants(),
-        columnDefType === 'group' ? 'text-center justify-center' : 'text-start',
-        layoutMode?.startsWith('grid') && 'flex',
+        columnDefType === 'group' ? 'text-center' : 'text-start',
         density === 'compact'
           ? 'p-2'
           : density === 'comfortable'
             ? 'p-4'
             : 'p-6',
-        (draggingColumn?.id === column.id || hoveredColumn?.id === column.id) &&
-          'opacity-50',
-        !enableColumnVirtualization &&
-          'transition-[padding] duration-150 ease-in-out',
-        column.getIsResizing() || draggingColumn?.id === column.id
-          ? 'z-[2]'
-          : columnDefType !== 'group' && isColumnPinned
-            ? 'z-[1]'
-            : 'z-0',
-        // Note: getCommonPinnedCellStyles' :before bg/edge-shadow → td owns bg (plan); placed after opacity-50 so 0.97 wins.
-        isColumnPinned && 'bg-background opacity-[0.97]',
+        commonCellStyles.className,
         tableCellProps?.className,
       )}
       style={{
-        ...getSRTCellWidthStyles({ column, header: footer, table }),
-        ...getSRTPinnedCellStyles({ column, table }),
+        ...commonCellStyles.style,
         ...tableCellProps?.style,
       }}
       onKeyDown={handleKeyDown}

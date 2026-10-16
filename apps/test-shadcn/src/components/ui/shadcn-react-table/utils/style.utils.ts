@@ -1,54 +1,63 @@
 import { type CSSProperties } from 'react';
+import { cn } from '@/lib/utils';
+import { type SRT_TooltipProps } from '../SRT_Tooltip';
 import {
   type SRT_Column,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
+  type TableCellProps,
 } from '../types';
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
-// getMRTTheme — Note: mrtTheme registry dropped project-wide; shadcn CSS vars theme instead.
+// export const getSRTTheme = (...) => { ... };
+// Note: mrtTheme dropped project-wide; shadcn theme tokens replace it.
 
-// commonCellBeforeAfterStyles — Note: pinned/highlight :before-:after pseudos dropped; the cell owns bg-background.
+// export const commonCellBeforeAfterStyles = { ... };
+// Note: Tailwind prefixes each class with its pseudo variant, so the fill is written literally at each use.
 
-export const getSRTPinnedCellStyles = <TData extends SRT_RowData>({
+export const getCommonPinnedCellStyles = <TData extends SRT_RowData>({
   column,
 }: {
-  column: SRT_Column<TData>;
+  column?: SRT_Column<TData>;
   table: SRT_TableInstance<TData>;
-}): CSSProperties => {
-  const isPinned =
-    column.columnDef.columnDefType !== 'group' && column.getIsPinned();
+}) => {
+  const isPinned = column?.getIsPinned();
 
-  if (!isPinned) return {};
-
-  return {
-    boxShadow:
-      isPinned === 'left' && column.getIsLastColumn(isPinned)
-        ? '-4px 0 4px -4px rgba(97,97,97,0.5) inset'
+  return cn(
+    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:left-0 data-[pinned=true]:before:-z-[1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
+    column
+      ? isPinned === 'left' && column.getIsLastColumn(isPinned)
+        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
         : isPinned === 'right' && column.getIsFirstColumn(isPinned)
-          ? '4px 0 4px -4px rgba(97,97,97,0.5) inset'
-          : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    position: 'sticky',
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
-  };
+          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+          : undefined
+      : undefined,
+  );
 };
 
-export const getSRTCellWidthStyles = <TData extends SRT_RowData>({
+export const getCommonSRTCellStyles = <TData extends SRT_RowData>({
   column,
   header,
   table,
+  tableCellProps,
 }: {
   column: SRT_Column<TData>;
   header?: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
-}): CSSProperties => {
+  tableCellProps: TableCellProps;
+}) => {
   const {
-    options: { layoutMode },
+    getState,
+    options: { enableColumnVirtualization, layoutMode },
   } = table;
+  const { draggingColumn } = getState();
   const { columnDef } = column;
+  const { columnDefType } = columnDef;
+
+  const isColumnPinned =
+    columnDef.columnDefType !== 'group' && column.getIsPinned();
 
   const widthStyles: CSSProperties = {
     minWidth: `max(calc(var(--${header ? 'header' : 'col'}-${parseCSSVarId(
@@ -71,24 +80,74 @@ export const getSRTCellWidthStyles = <TData extends SRT_RowData>({
     widthStyles.flex = `${+(columnDef.grow || 0)} 0 auto`;
   }
 
-  return widthStyles;
+  const pinnedStyles: { className?: string; style?: CSSProperties } =
+    isColumnPinned
+      ? {
+          className: cn(
+            getCommonPinnedCellStyles({ column, table }),
+            'sticky opacity-[0.97]',
+          ),
+          style: {
+            left:
+              isColumnPinned === 'left'
+                ? `${column.getStart('left')}px`
+                : undefined,
+            right:
+              isColumnPinned === 'right'
+                ? `${column.getAfter('right')}px`
+                : undefined,
+          },
+        }
+      : {};
+
+  return {
+    className: cn(
+      'bg-inherit',
+      // backgroundImage: 'inherit',
+      // Note: no ancestor sets a background-image without MUI Paper.
+      layoutMode?.startsWith('grid') && 'flex',
+      table.getState().draggingColumn?.id === column.id ||
+        table.getState().hoveredColumn?.id === column.id
+        ? 'opacity-50'
+        : 'opacity-100',
+      'relative',
+      enableColumnVirtualization
+        ? 'transition-none'
+        : 'transition-[padding] duration-150 ease-in-out',
+      column.getIsResizing() || draggingColumn?.id === column.id
+        ? 'z-[2]'
+        : columnDefType !== 'group' && isColumnPinned
+          ? 'z-[1]'
+          : 'z-0',
+      'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+      pinnedStyles.className,
+      tableCellProps?.className,
+    ),
+    style: {
+      justifyContent:
+        columnDefType === 'group'
+          ? 'center'
+          : layoutMode?.startsWith('grid')
+            ? tableCellProps.align
+            : undefined,
+      ...pinnedStyles.style,
+      ...widthStyles,
+      ...tableCellProps?.style,
+    },
+  };
 };
 
-// getCommonToolbarStyles — Note: mapped into topToolbarVariants/bottomToolbarVariants cva.
+export const getCommonToolbarStyles = () =>
+  'relative z-[1] grid min-h-14 flex-wrap-reverse items-start overflow-hidden bg-background transition-all duration-150 ease-in-out';
 
-export type SRT_TooltipSide = 'bottom' | 'left' | 'right' | 'top';
-
-export type SRT_CommonTooltipProps = {
-  delayDuration: number;
-  disableHoverableContent: boolean;
-  side?: SRT_TooltipSide;
-};
+export const flipIconStyles = () => ({ className: 'rtl:-scale-x-100' });
 
 export const getCommonTooltipProps = (
-  side?: SRT_TooltipSide,
-): SRT_CommonTooltipProps => ({
+  side?: SRT_TooltipProps['side'],
+): Partial<SRT_TooltipProps> => ({
   delayDuration: 1000,
   disableHoverableContent: true,
+  // enterNextDelay: 1000,
+  // Note: Radix keeps the skip window on TooltipProvider (skipDelayDuration).
   side,
-  // enterNextDelay: 1000 — Note: dropped; Radix owns the skip window via TooltipProvider.
 });

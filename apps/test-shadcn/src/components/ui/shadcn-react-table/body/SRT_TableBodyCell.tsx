@@ -24,10 +24,7 @@ import {
   cellKeyboardShortcuts,
   openEditingCell,
 } from '../utils/cell.utils';
-import {
-  getSRTCellWidthStyles,
-  getSRTPinnedCellStyles,
-} from '../utils/style.utils';
+import { getCommonSRTCellStyles } from '../utils/style.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_TableBodyCellValue } from './SRT_TableBodyCellValue';
 import { SRT_CopyButton } from '../buttons/SRT_CopyButton';
@@ -44,7 +41,7 @@ export interface SRT_TableBodyCellProps<TData extends SRT_RowData>
 }
 
 const bodyCellVariants = cva(
-  'relative bg-inherit border-b text-sm overflow-hidden -outline-offset-1 hover:text-clip focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+  'border-b text-sm overflow-hidden -outline-offset-1 hover:text-clip',
 );
 
 export const SRT_TableBodyCell = <TData extends SRT_RowData>({
@@ -68,7 +65,6 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       enableClickToCopy,
       enableColumnOrdering,
       enableColumnPinning,
-      enableColumnVirtualization,
       enableGrouping,
       enableKeyboardShortcuts,
       layoutMode,
@@ -258,6 +254,12 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
     });
   };
 
+  const commonCellStyles = getCommonSRTCellStyles({
+    column,
+    table,
+    tableCellProps,
+  });
+
   return (
     <td
       data-index={staticColumnIndex}
@@ -270,9 +272,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       style={{
-        ...getSRTCellWidthStyles({ column, table }),
-        ...getSRTPinnedCellStyles({ column, table }),
-        ...tableCellProps?.style,
+        ...commonCellStyles.style,
         ...draggingBorders,
       }}
       className={cn(
@@ -286,10 +286,7 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
               : tableCellProps.align === 'justify'
                 ? 'text-justify'
                 : 'text-start',
-        layoutMode?.startsWith('grid') &&
-          tableCellProps.align === 'center' &&
-          'justify-center',
-        layoutMode?.startsWith('grid') && 'flex items-center',
+        layoutMode?.startsWith('grid') && 'items-center',
         density === 'compact'
           ? columnDefType === 'display'
             ? 'px-2 py-0'
@@ -310,23 +307,13 @@ export const SRT_TableBodyCell = <TData extends SRT_RowData>({
           : isEditable && editDisplayMode === 'cell'
             ? 'cursor-pointer'
             : undefined,
-        (draggingColumn?.id === column.id || hoveredColumn?.id === column.id) &&
-          'opacity-50',
-        !enableColumnVirtualization &&
-          'transition-[padding] duration-150 ease-in-out',
-        column.getIsResizing() || draggingColumn?.id === column.id
-          ? 'z-[2]'
-          : columnDefType !== 'group' && isColumnPinned
-            ? 'z-[1]'
-            : 'z-0',
-        isColumnPinned && 'bg-background opacity-[0.97]',
         actionCell?.id === cell.id &&
           'outline outline-1 outline-muted-foreground',
         (actionCell?.id === cell.id ||
           (editDisplayMode === 'cell' && isEditable) ||
           (editDisplayMode === 'table' && (isCreating || isEditing))) &&
           'hover:outline hover:outline-1 hover:outline-muted-foreground',
-        tableCellProps?.className,
+        commonCellStyles.className,
       )}
     >
       {tableCellProps.children ?? (

@@ -1,9 +1,4 @@
-import {
-  type CSSProperties,
-  type DragEvent,
-  type KeyboardEvent,
-  useMemo,
-} from 'react';
+import { type DragEvent, type KeyboardEvent, useMemo } from 'react';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
 // Note: useTheme/Theme dropped project-wide — logical CSS + shadcn tokens replace
@@ -18,10 +13,7 @@ import {
   type TableCellProps,
 } from '../types';
 import { cellKeyboardShortcuts } from '../utils/cell.utils';
-import {
-  getSRTCellWidthStyles,
-  getSRTPinnedCellStyles,
-} from '../utils/style.utils';
+import { getCommonSRTCellStyles } from '../utils/style.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { SRT_TableHeadCellColumnActionsButton } from './SRT_TableHeadCellColumnActionsButton';
 import { SRT_TableHeadCellFilterContainer } from './SRT_TableHeadCellFilterContainer';
@@ -38,9 +30,8 @@ export interface SRT_TableHeadCellProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Note: folds getCommonMRTCellStyles statics + MRT sx statics; backgroundImage:inherit dropped (no ancestor bg-image).
 const headCellVariants = cva(
-  'relative bg-inherit align-top overflow-visible font-bold [&:hover_button]:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+  'align-top overflow-visible font-bold [&:hover_button]:opacity-100',
 );
 
 export const SRT_TableHeadCell = <TData extends SRT_RowData>({
@@ -57,7 +48,6 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       columnFilterDisplayMode,
       columnResizeDirection,
       columnResizeMode,
-      enableColumnVirtualization,
       enableKeyboardShortcuts,
       enableColumnActions,
       enableColumnDragging,
@@ -191,8 +181,12 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       table,
     }) ?? columnDef.header;
 
-  const isDraggingOrHovered =
-    draggingColumn?.id === column.id || hoveredColumn?.id === column.id;
+  const commonCellStyles = getCommonSRTCellStyles({
+    column,
+    header,
+    table,
+    tableCellProps,
+  });
 
   return (
     <th
@@ -222,8 +216,8 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
       {...tableCellProps}
       className={cn(
         headCellVariants(),
-        columnDefType === 'group' ? 'text-center justify-center' : 'text-start',
-        layoutMode?.startsWith('grid') && 'flex flex-col',
+        columnDefType === 'group' ? 'text-center' : 'text-start',
+        layoutMode?.startsWith('grid') && 'flex-col',
         density === 'compact'
           ? 'p-2'
           : density === 'comfortable'
@@ -244,26 +238,13 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
             ? 'pt-3'
             : 'pt-5',
         enableMultiSort && column.getCanSort() && 'select-none',
-        isDraggingOrHovered && 'opacity-50',
-        !enableColumnVirtualization &&
-          'transition-[padding] duration-150 ease-in-out',
-        column.getIsResizing() || draggingColumn?.id === column.id
-          ? 'z-[2]'
-          : columnDefType !== 'group' && isColumnPinned
-            ? 'z-[1]'
-            : 'z-0',
-        isColumnPinned && 'bg-background opacity-[0.97]',
         stickyHeader && 'sticky top-0 z-[2] bg-background',
-        tableCellProps?.className,
+        commonCellStyles.className,
       )}
-      style={
-        {
-          ...getSRTCellWidthStyles({ column, header, table }),
-          ...getSRTPinnedCellStyles({ column, table }),
-          ...tableCellProps?.style,
-          ...draggingBorders,
-        } as CSSProperties
-      }
+      style={{
+        ...commonCellStyles.style,
+        ...draggingBorders,
+      }}
       onKeyDown={handleKeyDown}
     >
       {header.isPlaceholder

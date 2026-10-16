@@ -4,15 +4,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  getCommonTooltipProps,
-  type SRT_TooltipSide,
-} from './utils/style.utils';
+import { getCommonTooltipProps } from './utils/style.utils';
 
-export interface SRT_TooltipProps {
+export interface SRT_TooltipProps
+  extends Pick<
+    React.ComponentProps<typeof Tooltip>,
+    'delayDuration' | 'disableHoverableContent'
+  > {
   title?: React.ReactNode;
   children: React.ReactElement;
-  side?: SRT_TooltipSide;
+  side?: React.ComponentProps<typeof TooltipContent>['side'];
   disabled?: boolean;
   open?: boolean;
   className?: string;
@@ -27,12 +28,13 @@ export const SRT_Tooltip = ({
   open,
   className,
   asChild = true,
+  ...rest
 }: SRT_TooltipProps) => {
   const {
     delayDuration,
     disableHoverableContent,
     side: commonSide,
-  } = getCommonTooltipProps(side);
+  } = { ...getCommonTooltipProps(side), ...rest };
   if (disabled || (!title && title !== 0)) {
     return <>{children}</>;
   }
