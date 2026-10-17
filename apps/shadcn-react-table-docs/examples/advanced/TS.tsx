@@ -204,7 +204,7 @@ const Example = () => {
       };
 
       return (
-        <div className="flex justify-between gap-2 bg-muted p-2">
+        <div className="flex justify-between gap-2 p-2">
           <div className="flex items-center gap-2">
             {/* import SRT sub-components */}
             <SRT_GlobalFilterTextField table={table} />
@@ -213,19 +213,25 @@ const Example = () => {
           <div>
             <div className="flex gap-2">
               <Button
-                variant="destructive"
+                size="sm"
+                variant="outline"
+                className="text-destructive"
                 disabled={!table.getIsSomeRowsSelected()}
                 onClick={handleDeactivate}
               >
                 Deactivate
               </Button>
               <Button
+                size="sm"
+                variant="default"
                 disabled={!table.getIsSomeRowsSelected()}
                 onClick={handleActivate}
               >
                 Activate
               </Button>
               <Button
+                size="sm"
+                variant="outline"
                 disabled={!table.getIsSomeRowsSelected()}
                 onClick={handleContact}
               >
