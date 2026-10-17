@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { highlight } from 'fumadocs-core/highlight';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
-import { SourceCodeSnippet } from '@/components/mdx/source-code-snippet';
+import { SourceToggle } from '@/components/prop-tables/source-toggle';
 
 interface Props {
   /** File name under components/prop-tables, shown as the code block title. */
@@ -32,7 +32,7 @@ export const PropTableSource = async ({ file, tableId }: Props) => {
   return (
     <div className="mt-20">
       <p>Wanna see the source code for this table? Check it out down below!</p>
-      <SourceCodeSnippet
+      <SourceToggle
         code={<CodeBlock title={file}>{rendered}</CodeBlock>}
         tableId={tableId}
       />

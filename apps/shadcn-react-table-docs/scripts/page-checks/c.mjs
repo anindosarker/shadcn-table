@@ -118,9 +118,7 @@ export default {
       ],
       check,
     );
-    const de = page
-      .locator('#localization-i18n-de-demo')
-      .locator('xpath=ancestor::div[1]/..');
+    const de = page.locator('#localization-i18n-de');
     await page.locator('[role="tab"]', { hasText: /^de$/ }).first().click();
     await marker(
       de,
@@ -129,9 +127,7 @@ export default {
       'th:has-text("Vorname")',
       check,
     );
-    const fa = page
-      .locator('#localization-i18n-fa-demo')
-      .locator('xpath=ancestor::div[1]/..');
+    const fa = page.locator('#localization-i18n-fa');
     await page.locator('[role="tab"]', { hasText: /^fa$/ }).first().click();
     await marker(
       fa,

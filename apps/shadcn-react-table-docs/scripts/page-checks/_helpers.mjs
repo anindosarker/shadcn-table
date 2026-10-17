@@ -21,19 +21,22 @@ export async function propTable(page, tableId, check) {
   return list;
 }
 
-/** Live example wrapper: #<id>-demo heading, table with rows. */
+/**
+ * Live example playground: panel `#<id>` present, table with rows. The
+ * table stays mounted in every view mode, so rows resolve even after the
+ * Code toggle. Returns the panel locator.
+ */
 export async function example(page, id, check) {
-  const demo = page.locator(`#${id}-demo`);
-  check(`${id}: demo heading`, (await demo.count()) === 1);
-  const wrapper = demo.locator('xpath=ancestor::div[1]/..');
-  const rows = wrapper.locator('table tbody tr');
+  const panel = page.locator(`#${id}`);
+  check(`${id}: panel`, (await panel.count()) === 1);
+  const rows = panel.locator('table tbody tr');
   await rows
     .first()
     .waitFor({ timeout: 30000 })
     .catch(() => {});
   const n = await rows.count();
   check(`${id}: table rows`, n > 0, `rows=${n}`);
-  return wrapper;
+  return panel;
 }
 
 export async function paginationControls(wrapper, id, check) {
@@ -47,12 +50,20 @@ export async function paginationControls(wrapper, id, check) {
   check(`${id}: pagination controls`, n > 0, `found=${n}`);
 }
 
+/**
+ * Code toggle of `#<id>`: an example playground (Preview | Code | Split,
+ * one file tab per source file) or a prop table's source toggle (no tabs).
+ * Clicking Code must show the highlighted source containing `needle` with
+ * its copy button, then switches a playground back to Preview. `wrapper` is
+ * kept for the older call sites; the panel is located by id.
+ */
 export async function codeToggle(page, wrapper, id, needle, check) {
-  const btn = wrapper.locator('button', { hasText: /^Code$/ });
+  const panel = page.locator(`#${id}`);
+  const btn = panel.locator('button', { hasText: /^Code$/ });
   check(`${id}: Code button`, (await btn.count()) === 1);
   if (!(await btn.count())) return;
   await btn.first().click();
-  const pre = page.locator(`#${id}-source-code pre`);
+  const pre = panel.locator('pre');
   await pre
     .first()
     .waitFor({ timeout: 15000 })
@@ -65,8 +76,17 @@ export async function codeToggle(page, wrapper, id, needle, check) {
   check(`${id}: source shown`, txt.includes(needle), `len=${txt.length}`);
   check(
     `${id}: copy button`,
-    (await page.locator(`#${id}-source-code button`).count()) >= 1,
+    (await panel.locator('figure button').count()) >= 1,
   );
+  if ((await panel.getAttribute('data-mode')) !== null) {
+    const tabs = await panel.locator('[role="tab"]').count();
+    check(`${id}: file tabs`, tabs === 1 || tabs === 2, `tabs=${tabs}`);
+    // Back to Preview so later steps can interact with the table.
+    await panel
+      .locator('button', { hasText: /^Preview$/ })
+      .first()
+      .click();
+  }
 }
 
 /**
