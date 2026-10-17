@@ -19,10 +19,15 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('storybook-dark-mode'),
     getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-mcp'),
   ],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
     options: {},
+  },
+  features: {
+    // Components manifest for the MCP addon's docs tools.
+    componentsManifest: true,
   },
   typescript: {
     reactDocgen: 'react-docgen-typescript',
