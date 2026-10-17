@@ -1,7 +1,8 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
+import { Button } from '@/components/ui/button';
+import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
 
 const meta: Meta = {
   title: 'Styling/Styling Display Columns',
@@ -9,23 +10,40 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'address', header: 'Address' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
 ];
+const data = [...Array(21)].map(() => ({
+  address: faker.location.streetAddress(),
+  age: faker.number.int(80),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+}));
 
-const data = makeData(21);
-
-// API GAP: displayColumnDefOptions muiTableHeadCellProps/muiTableBodyCellProps sx not supported in SRT (cva variants / className instead).
-// Supported sub-options (size, enableColumnActions, enableResizing, enableColumnOrdering) are kept.
 export const CustomizeDisplayColumns = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
     displayColumnDefOptions={{
       'srt-row-actions': {
+        srtTableHeadCellProps: {
+          className: 'text-xl italic',
+        },
         size: 160,
       },
       'srt-row-expand': {
@@ -35,6 +53,9 @@ export const CustomizeDisplayColumns = () => (
       },
       'srt-row-numbers': {
         enableColumnOrdering: true,
+        srtTableBodyCellProps: {
+          className: 'text-2xl text-red-500',
+        },
       },
     }}
     enableColumnOrdering
@@ -45,20 +66,21 @@ export const CustomizeDisplayColumns = () => (
     renderDetailPanel={() => <div>Detail Panel</div>}
     renderRowActions={({ row }) => (
       <div style={{ display: 'flex', flexWrap: 'nowrap', gap: '0.5rem' }}>
-        <button
+        <Button
           onClick={() => {
             console.info('View Profile', row);
           }}
         >
           View
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="destructive"
           onClick={() => {
             console.info('Remove', row);
           }}
         >
           Remove
-        </button>
+        </Button>
       </div>
     )}
   />
