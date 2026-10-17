@@ -87,14 +87,16 @@ export default {
     await tabStrip(page, EXPANDING, check);
     const btn = expandButtons(w).first();
     check('chart-detail-panel: expand button', (await btn.count()) > 0);
-    if (await btn.count()) {
-      await btn.click();
-      await page.waitForTimeout(800);
-      check(
-        'chart-detail-panel: chart rendered',
-        (await w.locator('.recharts-wrapper, .recharts-surface').count()) > 0,
-      );
-    }
+    // initialState.expanded = { 0: true }: the first chart is open on load.
+    await w
+      .locator('.recharts-surface')
+      .first()
+      .waitFor({ timeout: 10000 })
+      .catch(() => {});
+    check(
+      'chart-detail-panel: chart rendered',
+      (await w.locator('.recharts-wrapper, .recharts-surface').count()) > 0,
+    );
   },
   '/docs/examples/column-grouping': async ({ page, check }) => {
     const w = await example(page, 'enable-column-grouping', check);

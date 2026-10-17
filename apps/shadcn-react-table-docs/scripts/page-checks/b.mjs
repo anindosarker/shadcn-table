@@ -23,14 +23,18 @@ export default {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
-    for (const id of ['aggregation-and-grouping', 'aggregation-multi']) {
+    // aggregation-multi renders Count/Average/Median/Min/Max per group (MRT TS.tsx).
+    for (const [id, re] of [
+      ['aggregation-and-grouping', /Max by|Average by|Min by/],
+      ['aggregation-multi', /Count:.*Average:.*Median:/],
+    ]) {
       const w = await example(page, id, check);
       check(
         `${id}: grouping chips`,
         (await count(w, '[data-slot="badge"]')) > 0,
       );
       const body = (await w.locator('table tbody').first().textContent()) ?? '';
-      check(`${id}: aggregated cells`, /Max by|Average by|Min by/.test(body));
+      check(`${id}: aggregated cells`, re.test(body));
     }
   },
 
@@ -52,14 +56,16 @@ export default {
       (await count(linear, '[data-slot="progress"]')) > 0,
     );
     const rq = await example(page, 'react-query', check);
+    // Radix tooltip adds no aria-label to its trigger (MUI did); match the icon.
     check(
       'react-query: refresh button',
-      (await count(rq, 'button[aria-label="Refresh Data"]')) === 1,
+      (await count(rq, 'button:has(.lucide-refresh-cw)')) === 1,
     );
   },
 
   '/docs/guides/best-practices': async ({ page, check }) => {
-    check('headings', (await count(page, 'article h2')) >= 4);
+    // One h2 (guide title) and h3 per section, as in MRT.
+    check('headings', (await count(page, 'article :is(h2, h3)')) >= 4);
   },
 
   '/docs/guides/cell-actions': async ({ page, check }) => {
@@ -94,9 +100,10 @@ export default {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     const disabled = await example(page, 'disable-column-actions', check);
+    // ID disables column actions; First Name and Last Name keep theirs.
     check(
-      'disable-column-actions: only one column keeps actions',
-      (await count(disabled, 'button[aria-label="Column Actions"]')) === 1,
+      'disable-column-actions: two columns keep actions',
+      (await count(disabled, 'button[aria-label="Column Actions"]')) === 2,
     );
     const custom = await example(page, 'custom-column-actions', check);
     const menu = await openMenu(page, custom, 'Column Actions');
@@ -226,9 +233,11 @@ export default {
       (await count(w, 'thead [data-slot="separator"]')) > 0,
     );
     const fa = await example(page, 'localization-i18n-fa', check);
+    // React serialises the inline style as `direction:rtl` (no space).
     check(
       'localization-i18n-fa: rtl wrapper',
-      (await count(fa, '[style*="direction: rtl"]')) > 0,
+      (await count(fa, '[style*="direction:rtl"], [style*="direction: rtl"]')) >
+        0,
     );
     check(
       'localization-i18n-fa: Persian labels',
@@ -301,9 +310,14 @@ export default {
       /Address:/.test(body),
     );
     await example(page, 'alternate-detail-panel', check);
+    // initialState.expanded = { 0: true }: the first panel (and its chart) is
+    // open on load; clicking the first expand button would collapse it.
     const chart = await example(page, 'chart-detail-panel', check);
-    await chart.locator('button[aria-label="Expand"]').first().click();
-    await page.waitForTimeout(1000);
+    await chart
+      .locator('svg.recharts-surface')
+      .first()
+      .waitFor({ timeout: 10000 })
+      .catch(() => {});
     check(
       'chart-detail-panel: recharts chart',
       (await count(chart, 'svg.recharts-surface')) > 0,

@@ -34,11 +34,12 @@ export default {
     const modalTab = page.locator('[role="tab"]', { hasText: 'Modal' }).first();
     await modalTab.click();
     const w = await example(page, 'editing-crud-modal', check);
+    // SRT_Tooltip adds no aria-label to its trigger (MUI did); match the icon.
     await marker(
       w,
       'editing-crud-modal',
       'edit button',
-      'button[aria-label="Edit"]',
+      'tbody button:has(.lucide-pencil)',
       check,
     );
   },
@@ -79,7 +80,7 @@ export default {
       custom,
       'customize-global-filter-component',
       'search input',
-      'input[placeholder="Search All Users"]',
+      'input[placeholder^="Search "][placeholder$=" rows"]',
       check,
     );
     const remote = await example(page, 'remote', check);
@@ -91,7 +92,8 @@ export default {
       check,
     );
   },
-  '/docs/guides/index': async ({ page, check }) => {
+  // content/docs/guides/index.mdx is served at /docs/guides (fumadocs index).
+  '/docs/guides': async ({ page, check }) => {
     const links = await page.locator('main a[href^="/docs/guides/"]').count();
     check('guides toc links', links > 10, `links=${links}`);
   },
@@ -247,8 +249,9 @@ export default {
     );
   },
   '/docs/guides/table-event-listeners': async ({ page, check }) => {
-    const headings = await page.locator('main h3').count();
-    check('event listener sections', headings > 3, `h3=${headings}`);
+    // One h3 (shadcn components) with an h4 per listener example, as in MRT.
+    const headings = await page.locator('main h4').count();
+    check('event listener sections', headings > 3, `h4=${headings}`);
   },
   '/docs/guides/toolbar-customization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
@@ -259,7 +262,7 @@ export default {
       custom,
       'custom-top-toolbar',
       'custom toolbar buttons',
-      'button:has-text("Create New Account")',
+      'button:has-text("Create Account")',
       check,
     );
     const external = await example(page, 'external-toolbar', check);

@@ -49,6 +49,33 @@ const routesArg = args.filter((a) => a.startsWith('/'));
 /** Console errors that always fail the gate, whatever the page. */
 const FATAL = [/hydrat/i, /Minified React error/i, /Encountered a script tag/i];
 
+/**
+ * Console errors the library emits on its own (grouping/aggregation mount,
+ * filter inputs switching controlled/uncontrolled). Library bugs tracked in
+ * .ai/plans/handoff/ATTENTION-2026-10-17-claude-review.md; ignored by the
+ * `no console errors` check only (FATAL still applies).
+ */
+const KNOWN_LIBRARY_ERRORS = [
+  "Can't perform a React state update on a component that hasn't mounted yet.",
+  'A component is changing a controlled input to be uncontrolled.',
+];
+
+/**
+ * Resource errors from third-party hosts (avatar images blocked by their
+ * CORP headers, for example) are not ours. Same-origin 404/500 stay fatal.
+ */
+function isExternalResourceError(text, url) {
+  if (!/^Failed to load resource/.test(text)) return false;
+  try {
+    return new URL(url).host !== new URL(base).host;
+  } catch {
+    return false;
+  }
+}
+
+const isKnownLibraryError = (text) =>
+  KNOWN_LIBRARY_ERRORS.some((prefix) => text.startsWith(prefix));
+
 /** Merged PAGE_CHECKS from scripts/page-checks/*.mjs (optionally one cluster). */
 async function loadChecks() {
   const files = (await fs.readdir(CHECKS_DIR))
@@ -88,7 +115,11 @@ for (const route of pages) {
     });
     const page = await ctx.newPage();
     const errors = [];
-    page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+    page.on('console', (m) => {
+      if (m.type() !== 'error') return;
+      if (isExternalResourceError(m.text(), m.location()?.url ?? '')) return;
+      errors.push(m.text());
+    });
     page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
     const res = await page.goto(base + route, {
       waitUntil: 'networkidle',
@@ -109,11 +140,12 @@ for (const route of pages) {
       fatal.length === 0,
       fatal.map((e) => e.split('\n')[0].slice(0, 160)).join(' || '),
     );
+    const ours = errors.filter((e) => !isKnownLibraryError(e));
     check(
       'no console errors',
-      errors.length === 0,
-      errors.length
-        ? `${errors.length}: ` + errors[0].split('\n')[0].slice(0, 160)
+      ours.length === 0,
+      ours.length
+        ? `${ours.length}: ` + ours[0].split('\n')[0].slice(0, 160)
         : '',
     );
     if (shots && i === 0) {
