@@ -75,7 +75,7 @@ const preview: Preview = {
           },
         ) =>
           ctx.parameters.__isArgsStory
-            ? `<ShadcnReactTable ${Object.keys(ctx.args)
+            ? `() => <ShadcnReactTable ${Object.keys(ctx.args)
                 .map((k) => `${k}={${k}}`)
                 .join(' ')} />`
             : code,
