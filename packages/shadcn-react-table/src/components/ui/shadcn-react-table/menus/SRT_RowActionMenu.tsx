@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import {
   type SRT_Row,
   type SRT_RowData,
@@ -29,6 +30,7 @@ export interface SRT_RowActionMenuProps<TData extends SRT_RowData>
 }
 
 export const SRT_RowActionMenu = <TData extends SRT_RowData>({
+  className,
   anchorEl,
   handleEdit,
   row,
@@ -107,6 +109,7 @@ export const SRT_RowActionMenu = <TData extends SRT_RowData>({
           event.preventDefault();
           anchorRef.current?.focus();
         }}
+        className={cn('w-max', className)}
         {...rest}
       >
         {menuItems}

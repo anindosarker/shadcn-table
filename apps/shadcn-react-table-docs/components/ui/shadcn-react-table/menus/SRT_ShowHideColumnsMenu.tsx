@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import {
   type SRT_Column,
   type SRT_RowData,
@@ -23,6 +24,7 @@ export interface SRT_ShowHideColumnsMenuProps<TData extends SRT_RowData>
 }
 
 export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
+  className,
   anchorEl,
   setAnchorEl,
   table,
@@ -127,6 +129,7 @@ export const SRT_ShowHideColumnsMenu = <TData extends SRT_RowData>({
           event.preventDefault();
           anchorEl?.focus();
         }}
+        className={cn('w-max', className)}
         {...rest}
       >
         <div className="flex justify-between p-2 pt-0">

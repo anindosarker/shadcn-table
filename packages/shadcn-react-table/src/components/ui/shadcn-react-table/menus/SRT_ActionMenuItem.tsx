@@ -45,7 +45,7 @@ export const SRT_ActionMenuItem = <TData extends SRT_RowData>({
         className,
       )}
     >
-      <div className="flex items-center">
+      <div className="flex items-center whitespace-nowrap">
         <span className="inline-flex min-w-9 shrink-0">{icon}</span>
         {label}
       </div>

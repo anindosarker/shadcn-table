@@ -4,6 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import {
   type SRT_FilterOption,
   type SRT_Header,
@@ -120,6 +121,7 @@ export interface SRT_FilterOptionMenuProps<TData extends SRT_RowData>
 }
 
 export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
+  className,
   anchorEl,
   header,
   onSelect,
@@ -282,6 +284,7 @@ export const SRT_FilterOptionMenu = <TData extends SRT_RowData>({
           event.preventDefault();
           anchorRef.current?.focus();
         }}
+        className={cn('w-max', className)}
         {...rest}
       >
         {(header && column && columnDef

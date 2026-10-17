@@ -4,6 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 import { type SRT_RowData, type SRT_TableInstance } from '../types';
 import { openEditingCell } from '../utils/cell.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
@@ -15,6 +16,7 @@ export interface SRT_CellActionMenuProps<TData extends SRT_RowData>
 }
 
 export const SRT_CellActionMenu = <TData extends SRT_RowData>({
+  className,
   table,
   ...rest
 }: SRT_CellActionMenuProps<TData>) => {
@@ -122,6 +124,7 @@ export const SRT_CellActionMenu = <TData extends SRT_RowData>({
             event.preventDefault();
             if (!table.getState().editingCell) anchorEl?.focus();
           }}
+          className={cn('w-max', className)}
           {...rest}
         >
           {menuItems ?? internalMenuItems}
