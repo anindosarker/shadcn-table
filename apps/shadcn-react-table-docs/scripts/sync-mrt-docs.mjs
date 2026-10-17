@@ -87,6 +87,7 @@ const TEXT_MAP = [
 /** Replacements applied only to the page title (from <Head><title>). */
 const TITLE_MAP = [
   [/ - Material React Table V\d Docs$/, ''],
+  [/ - Material React Table Docs$/, ''],
   [/\bV3\b/g, 'V1'],
 ];
 
@@ -129,6 +130,14 @@ const PAGE_RULES = {
   ],
   'api/mrt-hooks.mdx': [
     [/https:\/\/github\.com\/KevinVandy\/[^\s)]+/g, restoreMrtUrl],
+  ],
+  // The ported example charts with recharts, not MUI X Charts.
+  'examples/chart-detail-panel.mdx': [
+    [
+      '[shadcn/ui X Charts](https://mui.com/x/react-charts/getting-started/)',
+      '[Recharts](https://recharts.org/)',
+    ],
+    ['using shadcn/ui X Charts will give you', 'using Recharts will give you'],
   ],
 };
 

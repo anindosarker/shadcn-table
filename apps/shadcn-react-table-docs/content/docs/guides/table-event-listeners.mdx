@@ -1,0 +1,108 @@
+---
+title: 'Table Event Listeners Guide'
+description: 'How to add event listeners such as onClicks and onChange events to components in Shadcn React Table'
+---
+
+## Table Event Listeners Guide
+
+You can pretty much add ANY event listener to ANY component in Shadcn React Table.
+
+You can do this by passing props to any of the `srt...Props` props. This guide gives a few examples of the most common use cases, but there are limitless possibilities.
+
+### Add Event Listeners to any of the shadcn/ui Components
+
+In the [customize components docs](/docs/guides/customize-components#material-ui-prop-types), we explained how to pass any prop you need to pass to any exposed shadcn/ui component that is in the table. The list of props that you can pass to shadcn/ui components includes any event listener.
+
+Here are a few common examples of some useful event listeners you might want to add to the table, although the possibilities are countless.
+
+#### Add an onClick to a Table Row
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableBodyRowProps: ({ row }) => ({
+    onClick: (event) => {
+      console.info(event, row.id);
+    },
+    sx: {
+      cursor: 'pointer', //you might want to change the cursor too when adding an onClick
+    },
+  }),
+});
+```
+
+#### Add an onDoubleClick to a Table Cell
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableBodyCellProps: ({ cell }) => ({
+    onDoubleClick: (event) => {
+      console.info(event, cell.id);
+    },
+  }),
+});
+```
+
+#### Add an onBlur to an Edit TextField
+
+```jsx
+//add to every edit text field
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtEditTextFieldProps: ({ cell }) => ({
+    onBlur: (event) => {
+      console.info(event, cell.id);
+    },
+  }),
+});
+```
+
+```jsx
+//or add to just edit text fields in a specific column
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    srtEditTextFieldProps: ({ cell }) => ({
+      onBlur: (event) => {
+        console.info(event);
+      },
+    }),
+  },
+];
+```
+
+#### Add an onChange to an Edit TextField
+
+> Warning: Be careful when using onChange, as it can trigger re-renders with every keystroke, which can lead to performance issues
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtEditTextFieldProps: ({ cell }) => ({
+    onChange: (event) => {
+      console.info(event, cell.id);
+    },
+  }),
+});
+```
+
+```jsx
+//or add to just edit text fields in a specific column
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    srtEditTextFieldProps: ({ cell }) => ({
+      onChange: (event) => {
+        console.info(event);
+      },
+    }),
+  },
+];
+```
