@@ -1,10 +1,13 @@
-import { type Meta } from '@storybook/react';
-import { PlusSquare, Trash2 } from 'lucide-react';
-import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
-import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { SRT_ToggleFullScreenButton } from '@/components/ui/shadcn-react-table/buttons/SRT_ToggleFullScreenButton';
+import { SquarePlus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { makeData, type Person } from '../makeData';
+import {
+  type SRT_ColumnDef,
+  SRT_ToggleFullScreenButton,
+} from '@/components/ui/shadcn-react-table';
+import { SRT_Tooltip } from '@/components/ui/shadcn-react-table/SRT_Tooltip';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Toolbar Examples',
@@ -12,15 +15,36 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
 ];
 
-const data = makeData(5);
+const data = [...Array(5)].map(() => ({
+  address: faker.location.streetAddress(),
+  age: faker.number.int(80),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+}));
 
 export const ToolbarEnabledDefault = () => (
   <ShadcnReactTable columns={columns} data={data} enableRowSelection />
@@ -69,11 +93,13 @@ export const CustomToolbarInternalActions = () => (
     data={data}
     enableGrouping
     enableRowSelection
-    renderToolbarInternalActions={({ table }) => (
-      <>
-        <SRT_ToggleFullScreenButton table={table} />
-      </>
-    )}
+    renderToolbarInternalActions={({ table }) => {
+      return (
+        <>
+          <SRT_ToggleFullScreenButton table={table} />
+        </>
+      );
+    }}
   />
 );
 
@@ -82,9 +108,9 @@ export const TableTitle = () => (
     columns={columns}
     data={data}
     enableRowSelection
-    renderTopToolbarCustomActions={() => (
-      <h4 className="text-2xl font-semibold">Table Title</h4>
-    )}
+    renderTopToolbarCustomActions={() => {
+      return <h4 className="text-3xl font-normal">Table Title</h4>;
+    }}
   />
 );
 
@@ -100,14 +126,11 @@ export const CustomTopToolbarActions = () => (
 
       return (
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Create New User"
-            onClick={handleCreateNewUser}
-          >
-            <PlusSquare size={18} />
-          </Button>
+          <SRT_Tooltip title="Create New User">
+            <Button onClick={handleCreateNewUser} size="icon" variant="ghost">
+              <SquarePlus />
+            </Button>
+          </SRT_Tooltip>
         </div>
       );
     }}
@@ -126,14 +149,11 @@ export const CustomBottomToolbarActions = () => (
 
       return (
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Create New User"
-            onClick={handleCreateNewUser}
-          >
-            <PlusSquare size={18} />
-          </Button>
+          <SRT_Tooltip title="Create New User">
+            <Button onClick={handleCreateNewUser} size="icon" variant="ghost">
+              <SquarePlus />
+            </Button>
+          </SRT_Tooltip>
         </div>
       );
     }}
@@ -167,19 +187,21 @@ export const CustomTopToolbarSelectionActions = () => (
       return (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button
-            variant="destructive"
             disabled={table.getSelectedRowModel().flatRows.length === 0}
             onClick={handleDeactivate}
+            variant="destructive"
           >
             Deactivate
           </Button>
           <Button
+            className="bg-green-600 text-white hover:bg-green-700"
             disabled={table.getSelectedRowModel().flatRows.length === 0}
             onClick={handleActivate}
           >
             Activate
           </Button>
           <Button
+            className="bg-sky-600 text-white hover:bg-sky-700"
             disabled={table.getSelectedRowModel().flatRows.length === 0}
             onClick={handleContact}
           >
@@ -218,19 +240,21 @@ export const CustomBottomToolbarSelectionActions = () => (
       return (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button
-            variant="destructive"
             disabled={table.getSelectedRowModel().flatRows.length === 0}
             onClick={handleDeactivate}
+            variant="destructive"
           >
             Deactivate
           </Button>
           <Button
+            className="bg-green-600 text-white hover:bg-green-700"
             disabled={table.getSelectedRowModel().flatRows.length === 0}
             onClick={handleActivate}
           >
             Activate
           </Button>
           <Button
+            className="bg-sky-600 text-white hover:bg-sky-700"
             disabled={table.getSelectedRowModel().flatRows.length === 0}
             onClick={handleContact}
           >
@@ -258,23 +282,23 @@ export const ToolbarAlertBannerBottom = () => (
 
       return (
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Create New User"
-            onClick={handleCreateNewUser}
-          >
-            <PlusSquare size={18} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Remove Users"
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
-            onClick={handleRemoveUsers}
-          >
-            <Trash2 size={18} />
-          </Button>
+          <SRT_Tooltip title="Create New User">
+            <Button onClick={handleCreateNewUser} size="icon" variant="ghost">
+              <SquarePlus />
+            </Button>
+          </SRT_Tooltip>
+          <SRT_Tooltip title="Remove Users">
+            <span>
+              <Button
+                disabled={table.getSelectedRowModel().flatRows.length === 0}
+                onClick={handleRemoveUsers}
+                size="icon"
+                variant="ghost"
+              >
+                <Trash2 />
+              </Button>
+            </span>
+          </SRT_Tooltip>
         </div>
       );
     }}
@@ -297,23 +321,23 @@ export const ToolbarAlertBannerBottomWithActionsAlsoBottom = () => (
 
       return (
         <div>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Create New User"
-            onClick={handleCreateNewUser}
-          >
-            <PlusSquare size={18} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            title="Remove Users"
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
-            onClick={handleRemoveUsers}
-          >
-            <Trash2 size={18} />
-          </Button>
+          <SRT_Tooltip title="Create New User">
+            <Button onClick={handleCreateNewUser} size="icon" variant="ghost">
+              <SquarePlus />
+            </Button>
+          </SRT_Tooltip>
+          <SRT_Tooltip title="Remove Users">
+            <span>
+              <Button
+                disabled={table.getSelectedRowModel().flatRows.length === 0}
+                onClick={handleRemoveUsers}
+                size="icon"
+                variant="ghost"
+              >
+                <Trash2 />
+              </Button>
+            </span>
+          </SRT_Tooltip>
         </div>
       );
     }}
@@ -324,9 +348,7 @@ export const renderCustomTopToolbar = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
-    renderTopToolbar={() => (
-      <div style={{ padding: '2rem' }}>Custom Top Toolbar</div>
-    )}
+    renderTopToolbar={() => <div className="p-8">Custom Top Toolbar</div>}
   />
 );
 
@@ -334,8 +356,6 @@ export const renderCustomBottomToolbar = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
-    renderBottomToolbar={() => (
-      <div style={{ padding: '2rem' }}>Custom Bottom Toolbar</div>
-    )}
+    renderBottomToolbar={() => <div className="p-8">Custom Bottom Toolbar</div>}
   />
 );
