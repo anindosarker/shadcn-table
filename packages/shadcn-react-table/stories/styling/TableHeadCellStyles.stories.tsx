@@ -1,7 +1,7 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
+import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
 
 const meta: Meta = {
   title: 'Styling/Style Table Head Cells',
@@ -9,37 +9,82 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'address', header: 'Address' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
 ];
-
-const data = makeData(21);
+const data = [...Array(21)].map(() => ({
+  address: faker.location.streetAddress(),
+  age: faker.number.int(80),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+}));
 
 export const DefaultTableHeadCellStyles = () => (
   <ShadcnReactTable columns={columns} data={data} />
 );
 
-// API GAP: muiTableHeadCellProps sx (sort icon color) not supported in SRT (cva variants / className instead)
 export const ColorSortIcon = () => (
-  <ShadcnReactTable columns={columns} data={data} />
+  <ShadcnReactTable
+    columns={columns}
+    data={data}
+    srtTableHeadCellProps={({ column }) => ({
+      className: column.getIsSorted()
+        ? '[&_button[aria-label^=Sort]_svg]:text-[limegreen]!'
+        : undefined,
+    })}
+  />
 );
 
-// API GAP: muiTableHeadCellProps sx (background/border/theme color) not supported in SRT (cva variants / className instead)
 export const StyleAllMuiTableHeadCell = () => (
-  <ShadcnReactTable columns={columns} data={data} />
+  <ShadcnReactTable
+    columns={columns}
+    data={data}
+    srtTableHeadCellProps={{
+      className: 'bg-sky-500/10 border-r border-border text-foreground',
+    }}
+  />
 );
 
-// API GAP: column-level muiTableHeadCellProps sx (per-column color) not supported in SRT (cva variants / className instead)
 export const StyleTableHeadCellsIndividually = () => (
   <ShadcnReactTable
     columns={[
-      { accessorKey: 'firstName', header: 'First Name' },
-      { accessorKey: 'lastName', header: 'Last Name' },
-      { accessorKey: 'age', header: 'Age' },
-      { accessorKey: 'address', header: 'Address' },
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+        srtTableHeadCellProps: {
+          className: 'text-primary',
+        },
+      },
+      {
+        accessorKey: 'age',
+        header: 'Age',
+        srtTableHeadCellProps: {
+          className: 'text-red-500',
+        },
+      },
+      {
+        accessorKey: 'address',
+        header: 'Address',
+      },
     ]}
     data={data}
   />
@@ -59,7 +104,9 @@ export const CustomHeadCellRenders = () => (
         header: 'Last Name',
       },
       {
-        Header: ({ column }) => <div>{column.columnDef.header}</div>,
+        Header: ({ column }) => (
+          <div className="text-primary">{column.columnDef.header}</div>
+        ),
         accessorKey: 'age',
         header: 'Current Age',
       },
