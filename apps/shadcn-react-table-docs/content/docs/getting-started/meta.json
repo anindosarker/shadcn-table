@@ -1,0 +1,9 @@
+{
+  "title": "Getting Started",
+  "defaultOpen": true,
+  "pages": [
+    "install",
+    "usage",
+    "migrating-to-v3"
+  ]
+}
