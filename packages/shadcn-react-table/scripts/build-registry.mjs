@@ -17,12 +17,16 @@ const CSS_FILE = path.join(PKG, 'src/index.css');
 const OUT = path.join(PKG, 'registry.json');
 
 const ITEM = 'shadcn-react-table';
-const HOMEPAGE = 'https://shadcn-table.com';
-// Where the built items are served. Locale items depend on the main item by
-// URL (a bare name would resolve to shadcn/ui's own registry), so the base is
-// baked in at build time. Override for a local install test:
+const GITHUB_REPO = 'anindosarker/shadcn-react-table';
+const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
+// Locale items depend on the main item. A bare name would resolve to
+// shadcn/ui's own registry, so the dependency is the GitHub item address,
+// which the CLI resolves through the root registry.json of the repo.
+// Override for a local install test against `pnpm registry:serve`:
 //   REGISTRY_BASE_URL=http://localhost:5310/r pnpm registry:build
-const BASE_URL = process.env.REGISTRY_BASE_URL ?? `${HOMEPAGE}/r`;
+const MAIN_ITEM_ADDRESS = process.env.REGISTRY_BASE_URL
+  ? `${process.env.REGISTRY_BASE_URL}/${ITEM}.json`
+  : `${GITHUB_REPO}/${ITEM}`;
 // Forked ui parts ship inside the item instead of being registryDependencies.
 const FORKED_UI = new Set(['checkbox']);
 // npm packages the library imports (bare specifiers). Pinned ones take their
@@ -196,7 +200,7 @@ const locales = localeFiles.map((p) => {
     type: 'registry:ui',
     title: `Shadcn React Table locale: ${code}`,
     description: `The ${code} localization for shadcn-react-table.`,
-    registryDependencies: [`${BASE_URL}/${ITEM}.json`],
+    registryDependencies: [MAIN_ITEM_ADDRESS],
     files: [fileEntry(rel(p))],
   };
 });

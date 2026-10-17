@@ -8,12 +8,14 @@
   "scripts": {
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
-    "lib:build": "cp README.md packages/material-react-table/README.md && turbo run lib:build",
-    "lib:build-locales": "turbo run lib:build-locales",
-    "lib:build-lib": "turbo run lib:build-lib",
-    "lib:dev": "turbo run lib:dev",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
+    "lib:build": "cp README.md packages/material-react-table/README.md && turbo run lib:build",
+    "lib:build-lib": "turbo run lib:build-lib",
+    "lib:build-locales": "turbo run lib:build-locales",
+    "lib:dev": "turbo run lib:dev",
     "lint": "turbo run lint",
+    "registry:build": "pnpm --filter shadcn-react-table registry:build",
+    "registry:serve": "serve packages/shadcn-react-table/public -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-react-table",
     "storybook:build": "turbo run storybook:build --filter=shadcn-react-table",
     "storybook:dev": "turbo run storybook --filter=shadcn-react-table",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "prettier": "^3.6.2",
+    "serve": "^14.2.6",
     "turbo": "2.5.6"
   },
   "engines": {
