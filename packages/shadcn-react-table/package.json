@@ -6,7 +6,7 @@
   "scripts": {
     "review": "node scripts/review-defs.mjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "storybook:build": "storybook build",
     "lint": "eslint .",
     "tsc": "tsc -p tsconfig.app.json --noEmit"
   },

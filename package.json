@@ -14,9 +14,9 @@
     "lib:dev": "turbo run lib:dev",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "storybook": "turbo run storybook",
-    "storybook:build": "turbo run storybook:build",
-    "storybook:dev": "turbo run storybook"
+    "storybook": "turbo run storybook --filter=shadcn-react-table",
+    "storybook:build": "turbo run storybook:build --filter=shadcn-react-table",
+    "storybook:dev": "turbo run storybook --filter=shadcn-react-table"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

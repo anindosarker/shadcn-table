@@ -37,7 +37,8 @@
       "cache": false
     },
     "storybook": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "storybook:build": {
       "outputs": [
