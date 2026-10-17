@@ -5,7 +5,7 @@ import type * as PageTree from 'fumadocs-core/page-tree';
 import { hasPages } from '@/lib/page-tree-utils';
 
 /**
- * Renders a top-level folder as a flat section: small uppercase label followed
+ * Renders a top-level folder as a flat section: small muted label followed
  * by its items (TanStack docs style) instead of a collapsible folder.
  * Folders with no pages render nothing.
  */
@@ -36,7 +36,7 @@ function SectionLabel(props: ComponentProps<'p'>) {
   return (
     <p
       {...props}
-      className="mb-1 inline-flex min-h-6 items-center gap-2 px-2 text-xs font-normal uppercase leading-none tracking-wide text-fd-muted-foreground"
+      className="mb-1.5 inline-flex min-h-6 items-center gap-2 px-2 text-xs font-normal leading-none text-fd-muted-foreground"
     />
   );
 }
