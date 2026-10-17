@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react';
 import {
   type SRT_ColumnDef,
   type SRT_Row,
 } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Row Ordering Examples',
@@ -13,25 +13,59 @@ const meta: Meta = {
 
 export default meta;
 
-// API GAP: MRT used `muiRowDragHandleProps={{ onDragEnd }}` to commit the
-// reordered data on drop. SRT has not implemented that prop (it is commented
-// out in the core types), so the drag-handle UI and dragging/hovered state are
-// preserved, but the array-splice commit on drop has been dropped. The stories
-// still demonstrate the drag handle, dragging row, and hovered row tracking.
+type Person = {
+  address: string;
+  city: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  num: number;
+  state: string;
+};
 
 const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'email', header: 'Email Address' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'city', header: 'City' },
-  { accessorKey: 'state', header: 'State' },
+  {
+    accessorKey: 'num',
+    header: '#',
+  },
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email Address',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'city',
+    header: 'City',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
 ];
 
-const initData = makeData(100);
+const initData = [...Array(100)].map((_, i) => ({
+  address: faker.location.streetAddress(),
+  city: faker.location.city(),
+  email: faker.internet.email(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  num: i,
+  state: faker.location.state(),
+}));
 
 export const RowOrderingEnabled = () => {
-  const [data] = useState(() => initData);
+  const [data, setData] = useState(() => initData);
 
   return (
     <ShadcnReactTable
@@ -40,12 +74,25 @@ export const RowOrderingEnabled = () => {
       data={data}
       enableRowOrdering
       enableSorting={false}
+      srtRowDragHandleProps={({ table }) => ({
+        onDragEnd: () => {
+          const { draggingRow, hoveredRow } = table.getState();
+          if (hoveredRow && draggingRow) {
+            data.splice(
+              (hoveredRow as SRT_Row<Person>).index,
+              0,
+              data.splice(draggingRow.index, 1)[0],
+            );
+            setData([...data]);
+          }
+        },
+      })}
     />
   );
 };
 
 export const RowOrderingWithSelect = () => {
-  const [data] = useState(() => initData);
+  const [data, setData] = useState(() => initData);
   const [draggingRow, setDraggingRow] = useState<SRT_Row<Person> | null>(null);
   const [hoveredRow, setHoveredRow] = useState<Partial<SRT_Row<Person>> | null>(
     null,
@@ -60,6 +107,18 @@ export const RowOrderingWithSelect = () => {
       enableRowSelection
       enableSorting={false}
       getRowId={(row) => row.email}
+      srtRowDragHandleProps={{
+        onDragEnd: () => {
+          if (hoveredRow && draggingRow) {
+            data.splice(
+              hoveredRow?.index ?? 0,
+              0,
+              data.splice(draggingRow.index, 1)[0],
+            );
+            setData([...data]);
+          }
+        },
+      }}
       onDraggingRowChange={setDraggingRow}
       onHoveredRowChange={setHoveredRow}
       state={{
@@ -71,7 +130,7 @@ export const RowOrderingWithSelect = () => {
 };
 
 export const RowOrderingWithPinning = () => {
-  const [data] = useState(() => initData);
+  const [data, setData] = useState(() => initData);
   const [draggingRow, setDraggingRow] = useState<SRT_Row<Person> | null>(null);
   const [hoveredRow, setHoveredRow] = useState<Partial<SRT_Row<Person>> | null>(
     null,
@@ -85,6 +144,18 @@ export const RowOrderingWithPinning = () => {
       enableColumnPinning
       enableRowOrdering
       enableSorting={false}
+      srtRowDragHandleProps={{
+        onDragEnd: () => {
+          if (hoveredRow && draggingRow) {
+            data.splice(
+              hoveredRow?.index ?? 0,
+              0,
+              data.splice(draggingRow.index, 1)[0],
+            );
+            setData([...data]);
+          }
+        },
+      }}
       onDraggingRowChange={setDraggingRow}
       onHoveredRowChange={setHoveredRow}
       state={{
@@ -96,7 +167,7 @@ export const RowOrderingWithPinning = () => {
 };
 
 export const RowAndColumnOrdering = () => {
-  const [data] = useState(() => initData);
+  const [data, setData] = useState(() => initData);
   const [draggingRow, setDraggingRow] = useState<SRT_Row<Person> | null>(null);
   const [hoveredRow, setHoveredRow] = useState<Partial<SRT_Row<Person>> | null>(
     null,
@@ -111,6 +182,18 @@ export const RowAndColumnOrdering = () => {
       enableColumnPinning
       enableRowOrdering
       enableSorting={false}
+      srtRowDragHandleProps={{
+        onDragEnd: () => {
+          if (hoveredRow && draggingRow) {
+            data.splice(
+              hoveredRow.index ?? 0,
+              0,
+              data.splice(draggingRow.index, 1)[0],
+            );
+            setData([...data]);
+          }
+        },
+      }}
       onDraggingRowChange={setDraggingRow}
       onHoveredRowChange={setHoveredRow}
       state={{
@@ -122,7 +205,7 @@ export const RowAndColumnOrdering = () => {
 };
 
 export const RowOrderingWithRowVirtualization = () => {
-  const [data] = useState(() => initData);
+  const [data, setData] = useState(() => initData);
 
   return (
     <ShadcnReactTable
@@ -133,6 +216,19 @@ export const RowOrderingWithRowVirtualization = () => {
       enableRowOrdering
       enableRowVirtualization
       enableSorting={false}
+      srtRowDragHandleProps={({ table }) => ({
+        onDragEnd: () => {
+          const { draggingRow, hoveredRow } = table.getState();
+          if (hoveredRow && draggingRow) {
+            data.splice(
+              (hoveredRow as SRT_Row<Person>).index,
+              0,
+              data.splice(draggingRow.index, 1)[0],
+            );
+            setData([...data]);
+          }
+        },
+      })}
     />
   );
 };
@@ -145,11 +241,13 @@ const fakeColumns = [...Array(500)].map((_, i) => {
 });
 
 const fakeData = [...Array(500)].map(() => ({
-  ...Object.fromEntries(fakeColumns.map((col) => [col.accessorKey, 'value'])),
+  ...Object.fromEntries(
+    fakeColumns.map((col) => [col.accessorKey, faker.person.firstName()]),
+  ),
 }));
 
 export const RowOrderingWithColumnVirtualization = () => {
-  const [data] = useState(() => fakeData);
+  const [data, setData] = useState(() => fakeData);
 
   return (
     <ShadcnReactTable
@@ -166,6 +264,19 @@ export const RowOrderingWithColumnVirtualization = () => {
       enableColumnVirtualization
       enableRowOrdering
       enableSorting={false}
+      srtRowDragHandleProps={({ table }) => ({
+        onDragEnd: () => {
+          const { draggingRow, hoveredRow } = table.getState();
+          if (hoveredRow && draggingRow) {
+            data.splice(
+              (hoveredRow as SRT_Row<(typeof fakeData)[0]>).index,
+              0,
+              data.splice(draggingRow.index, 1)[0],
+            );
+            setData([...data]);
+          }
+        },
+      })}
     />
   );
 };
