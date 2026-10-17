@@ -1,9 +1,46 @@
 {
-  "api/cell-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <CellInstanceAPIsSource>"],
-  "api/column-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <ColumnInstanceAPIsSource>"],
-  "api/column-options.mdx": ["- tag: <SourceCode>", "+ tag: <ColumnOptionsSource>"],
-  "api/row-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <RowInstanceAPIsSource>"],
-  "api/state-options.mdx": ["- tag: <SourceCode>", "+ tag: <StateOptionsSource>"],
-  "api/table-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <TableInstanceAPIsSource>"],
-  "api/table-options.mdx": ["- tag: <SourceCode>", "+ tag: <TableOptionsSource>"]
+  "api/cell-instance-apis.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <CellInstanceAPIsSource>"
+  ],
+  "api/column-instance-apis.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <ColumnInstanceAPIsSource>"
+  ],
+  "api/column-options.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <ColumnOptionsSource>"
+  ],
+  "api/row-instance-apis.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <RowInstanceAPIsSource>"
+  ],
+  "api/state-options.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <StateOptionsSource>"
+  ],
+  "api/table-instance-apis.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <TableInstanceAPIsSource>"
+  ],
+  "api/table-options.mdx": [
+    "- tag: <SourceCode>",
+    "+ tag: <TableOptionsSource>"
+  ],
+  "api/srt-components.mdx": [
+    "- heading: ##### \\<MRT_TablePaper /\\>",
+    "+ heading: ##### \\<SRT_TableLayout /\\>"
+  ],
+  "examples/chart-detail-panel.mdx": [
+    "description: MRT \"A Material React Table example demonstrating how to use MUI X Charts with the Detail Panel feature.\" vs SRT \"A Shadcn React Table example demonstrating how to use Recharts with the Detail Panel feature.\""
+  ],
+  "guides/customize-components.mdx": [
+    "- heading: #### The SX Prop",
+    "- heading: ### Material UI Theme",
+    "+ heading: ### Theming",
+    "- heading: ### MRT Theme Values",
+    "- heading: ### Customize Table Paper Styling",
+    "+ heading: ### Table Theme Values",
+    "+ heading: ### Customize Table Layout Styling"
+  ]
 }
