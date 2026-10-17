@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import type { Preview } from '@storybook/react-vite';
-import { addons } from 'storybook/preview-api';
+import { addons, useEffect, useState } from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
 import '../src/index.css';
@@ -62,6 +61,8 @@ const preview: Preview = {
       // inlines the mutated column objects (SRT adds id, columnDefType, ...),
       // so they print the one-liner by arg name instead.
       source: {
+        // Keep the preview harness (placeholder lines) out of snippets.
+        excludeDecorators: true,
         transform: (
           code: string,
           ctx: {

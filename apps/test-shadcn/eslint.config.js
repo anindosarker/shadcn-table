@@ -18,6 +18,9 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      // Editors lint from the repo root, where two package configs are
+      // candidates; pin the parser to this package.
+      parserOptions: { tsconfigRootDir: import.meta.dirname },
     },
   },
 ]);
