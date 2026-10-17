@@ -7,12 +7,11 @@ import { useEffect, useState } from 'react';
  * alert banner. We reproduce that here without pulling in a dependency.
  */
 export const useSRT_MediaQuery = (query: string): boolean => {
-  const getMatches = () =>
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-      ? window.matchMedia(query).matches
-      : false;
-
-  const [matches, setMatches] = useState(getMatches);
+  // Starts false on server and client alike (SSR-safe): reading matchMedia in
+  // the initializer made the first client render differ from the server HTML
+  // below 720px and threw a React hydration mismatch. The effect below sets the
+  // real value right after mount.
+  const [matches, setMatches] = useState(false);
 
   useEffect(() => {
     if (
