@@ -3,7 +3,7 @@ import {
   type SRT_ColumnDef,
   useShadcnReactTable,
 } from '@/components/ui/shadcn-react-table';
-import { ShadcnReactTable } from '../components/ui/shadcn-react-table/ShadcnReactTable';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '../components/ui/button';
 import { Checkbox } from '../components/ui/checkbox';
 import { Label } from '../components/ui/label';

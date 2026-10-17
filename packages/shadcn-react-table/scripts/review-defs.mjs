@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Usage (inside apps/test-shadcn): pnpm review SRT_TableHead
+// Usage (inside packages/shadcn-react-table): pnpm review SRT_TableHead
 // Opens two VS Code diff tabs: the component pair, and a generated pair of
 // "defs" files holding every core/MUI definition each component consumes.
 import { execSync } from 'node:child_process';
@@ -14,7 +14,7 @@ const ROOT = path.resolve(
 );
 const SRT_DIR = path.join(
   ROOT,
-  'apps/test-shadcn/src/components/ui/shadcn-react-table',
+  'packages/shadcn-react-table/src/components/ui/shadcn-react-table',
 );
 const CORE_DIR = SRT_DIR;
 const MRT_PKG = path.join(ROOT, 'packages/material-react-table');

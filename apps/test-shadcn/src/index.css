@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* The library lives in the package; Tailwind must scan it for classes. */
+@source "../../../packages/shadcn-react-table/src";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

@@ -11,6 +11,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@/components/ui/shadcn-react-table/*": [
+        "../../packages/shadcn-react-table/src/components/ui/shadcn-react-table/*"
+      ],
+      "@/components/ui/shadcn-react-table": [
+        "../../packages/shadcn-react-table/src/components/ui/shadcn-react-table"
+      ],
       "@/*": ["./src/*"]
     }
   }

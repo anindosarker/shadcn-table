@@ -4,8 +4,8 @@ import {
   useShadcnReactTable,
 } from '@/components/ui/shadcn-react-table';
 import { Copy, Eye, Trash2 } from 'lucide-react';
-import { ShadcnReactTable } from './ui/shadcn-react-table/ShadcnReactTable';
-import { SRT_ActionMenuItem } from './ui/shadcn-react-table/menus/SRT_ActionMenuItem';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { SRT_ActionMenuItem } from '@/components/ui/shadcn-react-table/menus/SRT_ActionMenuItem';
 
 type Person = {
   id: number;

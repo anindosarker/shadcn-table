@@ -1,10 +1,6 @@
-import { useEffect } from 'react';
-import { addons } from '@storybook/preview-api';
-import type { Preview } from '@storybook/react';
-import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
+import type { Preview } from '@storybook/react-vite';
+import { withThemeByClassName } from '@storybook/addon-themes';
 import '../src/index.css';
-
-const channel = addons.getChannel();
 
 const preview: Preview = {
   // Generate an autodocs page (with a working "Show code" Source block) for
@@ -18,9 +14,6 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    darkMode: {
-      current: 'dark',
-    },
     docs: {
       // Show the real story source from the file. The default 'dynamic' mode
       // serializes the rendered table tree, which threw on the heavy SRT
@@ -30,21 +23,18 @@ const preview: Preview = {
     },
   },
   decorators: [
-    (Story) => {
-      // Mirror the app: toggle the `.dark` class on <html> for Tailwind v4.
-      useEffect(() => {
-        const apply = (isDark: boolean) =>
-          document.documentElement.classList.toggle('dark', isDark);
-        channel.on(DARK_MODE_EVENT_NAME, apply);
-        return () => channel.off(DARK_MODE_EVENT_NAME, apply);
-      }, []);
-
-      return (
-        <div className="bg-background p-4 text-foreground">
-          <Story />
-        </div>
-      );
-    },
+    // Mirror the app: toggle the `.dark` class on <html> for Tailwind v4.
+    // Adds a light/dark toolbar switch; dark is the default like before.
+    withThemeByClassName({
+      themes: { light: '', dark: 'dark' },
+      defaultTheme: 'dark',
+      parentSelector: 'html',
+    }),
+    (Story) => (
+      <div className="bg-background p-4 text-foreground">
+        <Story />
+      </div>
+    ),
   ],
 };
 
