@@ -9,7 +9,6 @@ const DataExportExamples = ({ isPage = false }) => (
       { label: 'Export to CSV', value: 'export-csv' },
       { label: 'Export to PDF', value: 'export-pdf' },
     ]}
-    links={[{ label: 'More Examples', href: '/docs/examples' }]}
     panels={{
       'export-csv': <CSVExport />,
       'export-pdf': <PDFExport />,

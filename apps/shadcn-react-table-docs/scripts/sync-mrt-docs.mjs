@@ -712,6 +712,51 @@ function rewriteExampleTags(src) {
   );
 }
 
+const EXAMPLE_GROUPS = path.join(APP_DIR, 'example-groups');
+const groupPanelsCache = new Map();
+
+/**
+ * Panel map of example-groups/<group>.tsx: page slug -> registry example
+ * name, resolved through the file's own imports (panel key -> local import
+ * name -> examples/<folder> -> `<PascalCase(folder)>Example`).
+ */
+async function groupPanels(group) {
+  if (groupPanelsCache.has(group)) return groupPanelsCache.get(group);
+  const src = await fs.readFile(
+    path.join(EXAMPLE_GROUPS, `${group}.tsx`),
+    'utf8',
+  );
+  const folders = new Map();
+  for (const m of src.matchAll(
+    /^import\s+(\w+)\s+from\s+'@\/examples\/([^']+)';/gm,
+  )) {
+    folders.set(m[1], m[2]);
+  }
+  const panels = new Map();
+  for (const m of src.matchAll(/^\s+'?([\w-]+)'?:\s*<(\w+)\s*\/>,?$/gm)) {
+    const folder = folders.get(m[2]);
+    if (folder) panels.set(m[1], `${pascal(folder)}Example`);
+  }
+  groupPanelsCache.set(group, panels);
+  return panels;
+}
+
+/**
+ * Example pages render their own example instead of the group tab strip
+ * (which only guides keep): MRT's `<XExamples isPage />` becomes the group's
+ * panel for the page slug. Throws when the group has no panel for the slug so
+ * a renamed page cannot silently keep the strip.
+ */
+async function renderSingleExample(rel, src) {
+  if (!rel.startsWith('examples/')) return src;
+  const m = src.match(/^<(\w+) isPage \/>$/m);
+  if (!m) return src;
+  const slug = path.basename(rel, '.mdx');
+  const example = (await groupPanels(m[1])).get(slug);
+  if (!example) throw new Error(`${rel}: ${m[1]} has no panel for ${slug}`);
+  return src.replace(m[0], `<${example} />`);
+}
+
 function applyMap(text, map) {
   return map.reduce(
     (acc, [from, to]) =>
@@ -763,6 +808,7 @@ async function syncPage(rel) {
   out = rewriteImports(out);
   out = applyMap(out, TEXT_MAP);
   out = applyMap(out, PAGE_RULES[rel] ?? []);
+  out = await renderSingleExample(rel, out);
   out = out.replace(/^\s*\n/, '');
   const frontmatter = ['---', `title: ${yamlString(fmTitle)}`];
   if (fmDesc) frontmatter.push(`description: ${yamlString(fmDesc)}`);

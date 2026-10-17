@@ -15,10 +15,6 @@ const EditingCRUDExamples = ({ isPage = false }) => (
       { label: 'Inline Table', value: 'editing-crud-inline-table' },
       { label: 'Tree Editing', value: 'editing-crud-tree' },
     ]}
-    links={[
-      { label: 'Fetching', href: '/docs/examples/remote' },
-      { label: 'More Examples', href: '/docs/examples' },
-    ]}
     panels={{
       'editing-crud': <ModalExample />,
       'editing-crud-inline-row': <InlineRowExample />,

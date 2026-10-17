@@ -19,12 +19,6 @@ const ExpandingExamples = ({ isPage = false }) => (
       { label: 'Detail Panel', value: 'detail-panel' },
       { label: 'Chart Detail Panel', value: 'chart-detail-panel' },
     ]}
-    links={[
-      { label: 'Lazy Sub-Rows', href: '/docs/examples/lazy-sub-rows' },
-      { label: 'Lazy Detail Panel', href: '/docs/examples/lazy-detail-panel' },
-      { label: 'Tree Editing', href: '/docs/examples/editing-crud-tree' },
-      { label: 'More Examples', href: '/docs/examples' },
-    ]}
     panels={{
       'expanding-tree': <ExpandingTreeExample />,
       'expanding-tree-flat-parse': <ExpandingParsedTreeExample />,

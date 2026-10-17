@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ExternalLinkIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export interface ExampleTab {
@@ -12,16 +10,9 @@ export interface ExampleTab {
   value: string;
 }
 
-export interface ExampleLink {
-  label: string;
-  href: string;
-}
-
 export interface ExampleTabsProps {
   /** Tabs that switch between the panels, in order. */
   tabs: Array<ExampleTab>;
-  /** Trailing tabs that navigate to another page (MRT's "more" tabs). */
-  links?: Array<ExampleLink>;
   /** Live example per tab value, rendered on the server. */
   panels: Record<string, ReactNode>;
   /**
@@ -38,7 +29,6 @@ export interface ExampleTabsProps {
  */
 export const ExampleTabs = ({
   tabs,
-  links = [],
   panels,
   isPage = false,
   defaultValue,
@@ -68,22 +58,6 @@ export const ExampleTabs = ({
               className="h-8 flex-none px-3"
             >
               {tab.label}
-            </TabsTrigger>
-          ))}
-          {links.length > 0 ? (
-            <span aria-hidden className="mx-1 h-4 w-px self-center bg-border" />
-          ) : null}
-          {links.map((link) => (
-            <TabsTrigger
-              key={link.href}
-              value={`link:${link.href}`}
-              asChild
-              className="h-8 flex-none px-3 text-muted-foreground"
-            >
-              <Link href={link.href}>
-                {link.label}
-                <ExternalLinkIcon className="size-3.5 opacity-60" />
-              </Link>
             </TabsTrigger>
           ))}
         </TabsList>

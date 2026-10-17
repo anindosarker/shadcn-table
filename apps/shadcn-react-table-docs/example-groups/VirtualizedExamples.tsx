@@ -13,7 +13,6 @@ const VirtualizedExamples = ({ isPage = false }) => (
       { label: 'Column Virtualization', value: 'column-virtualization' },
       { label: 'Infinite Scrolling', value: 'infinite-scrolling' },
     ]}
-    links={[{ label: 'More Examples', href: '/docs/examples' }]}
     panels={{
       virtualized: <FullyVirtualizedExample />,
       'row-virtualization': <RowVirtualization />,

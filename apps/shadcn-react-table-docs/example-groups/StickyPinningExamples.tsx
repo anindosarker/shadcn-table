@@ -15,7 +15,6 @@ const StickyPinningExamples = ({ isPage = false }) => (
       { label: 'Row Pinning (Static)', value: 'static-row-pinning' },
       { label: 'Sticky Row Selection', value: 'sticky-row-selection' },
     ]}
-    links={[{ label: 'More Examples', href: '/docs/examples' }]}
     panels={{
       'sticky-header': <StickyHeaderExample />,
       'column-pinning': <ColumnPinningExample />,

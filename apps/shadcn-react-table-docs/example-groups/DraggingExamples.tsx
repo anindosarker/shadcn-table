@@ -11,7 +11,6 @@ const DraggingExamples = ({ isPage = false }) => (
       { label: 'Row Ordering', value: 'row-ordering' },
       { label: 'Row Dragging', value: 'row-dragging' },
     ]}
-    links={[{ label: 'More Examples', href: '/docs/examples' }]}
     panels={{
       'column-ordering': <ColumnOrdering />,
       'row-ordering': <RowOrdering />,

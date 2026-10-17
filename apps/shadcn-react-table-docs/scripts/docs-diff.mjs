@@ -134,6 +134,44 @@ function rewriteExampleTags(src) {
 }
 
 /** Copy of extractHead in scripts/sync-mrt-docs.mjs. */
+/**
+ * Example pages render one example instead of the group tab strip. Copy of
+ * groupPanels / renderSingleExample in scripts/sync-mrt-docs.mjs: the panel
+ * map of example-groups/<group>.tsx resolves a page slug to its registry
+ * example name.
+ */
+const EXAMPLE_GROUPS = path.join(APP_DIR, 'example-groups');
+const groupPanelsCache = new Map();
+
+async function groupPanels(group) {
+  if (groupPanelsCache.has(group)) return groupPanelsCache.get(group);
+  const src = await fs.readFile(
+    path.join(EXAMPLE_GROUPS, `${group}.tsx`),
+    'utf8',
+  );
+  const folders = new Map();
+  for (const m of src.matchAll(
+    /^import\s+(\w+)\s+from\s+'@\/examples\/([^']+)';/gm,
+  )) {
+    folders.set(m[1], m[2]);
+  }
+  const panels = new Map();
+  for (const m of src.matchAll(/^\s+'?([\w-]+)'?:\s*<(\w+)\s*\/>,?$/gm)) {
+    const folder = folders.get(m[2]);
+    if (folder) panels.set(m[1], `${pascal(folder)}Example`);
+  }
+  groupPanelsCache.set(group, panels);
+  return panels;
+}
+
+async function renderSingleExample(rel, src) {
+  if (!rel.startsWith('examples/')) return src;
+  const m = src.match(/^<(\w+) isPage \/>$/m);
+  if (!m) return src;
+  const example = (await groupPanels(m[1])).get(path.basename(rel, '.mdx'));
+  return example ? src.replace(m[0], `<${example} />`) : src;
+}
+
 function extractHead(src) {
   const m = src.match(/<Head>([\s\S]*?)<\/Head>\s*\n?/);
   if (!m) return { body: src, title: '', description: '' };
@@ -151,9 +189,9 @@ function extractHead(src) {
   };
 }
 
-function parseMrt(src) {
+async function parseMrt(src, rel) {
   const { body, title, description } = extractHead(src);
-  const rewritten = rewriteExampleTags(body);
+  const rewritten = await renderSingleExample(rel, rewriteExampleTags(body));
   const tags = [];
   for (const t of collectTags(rewritten)) {
     const mapped = t in TAG_MAP ? TAG_MAP[t] : t;
@@ -358,7 +396,7 @@ async function main() {
       });
       continue;
     }
-    const lines = comparePage(parseMrt(mrtSrc), parseSrt(srtSrc));
+    const lines = comparePage(await parseMrt(mrtSrc, rel), parseSrt(srtSrc));
     const diffs = lines.filter((l) => !allowed.has(l));
     results.push({
       mrt: rel,

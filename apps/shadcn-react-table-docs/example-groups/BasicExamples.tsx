@@ -13,16 +13,6 @@ const BasicExamples = ({ isPage = false }) => (
       { label: 'Advanced', value: 'advanced' },
       { label: 'Custom Headless', value: 'custom-headless' },
     ]}
-    links={[
-      { label: 'Data Export', href: '/docs/examples/export-csv' },
-      { label: 'DnD', href: '/docs/examples/column-ordering' },
-      { label: 'Editing', href: '/docs/examples/editing-crud' },
-      { label: 'Filtering', href: '/docs/examples/filter-variants' },
-      { label: 'Fetching', href: '/docs/examples/react-query' },
-      { label: 'Pinning', href: '/docs/examples/sticky-header' },
-      { label: 'Virtualization', href: '/docs/examples/virtualized' },
-      { label: 'More Examples', href: '/docs/examples' },
-    ]}
     panels={{
       basic: <BasicExample />,
       minimal: <MinimalExample />,

@@ -15,10 +15,6 @@ const RemoteFetchingExamples = ({ isPage = false }) => (
       { label: 'Lazy Detail Panel', value: 'lazy-detail-panel' },
       { label: 'Lazy Sub-Rows', value: 'lazy-sub-rows' },
     ]}
-    links={[
-      { label: 'Editing', href: '/docs/examples/editing-crud' },
-      { label: 'More Examples', href: '/docs/examples' },
-    ]}
     panels={{
       'react-query': <ReactQueryExample />,
       remote: <RemoteExample />,

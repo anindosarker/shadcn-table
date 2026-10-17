@@ -15,7 +15,6 @@ const FilteringExamples = ({ isPage = false }) => (
       { label: 'Popover Filters', value: 'popover-filters' },
       { label: 'Custom Filter UI', value: 'custom-filter-ui' },
     ]}
-    links={[{ label: 'More Examples', href: '/docs/examples' }]}
     panels={{
       'filter-variants': <FilterVariantsExample />,
       'faceted-values': <FacetedValuesExample />,
