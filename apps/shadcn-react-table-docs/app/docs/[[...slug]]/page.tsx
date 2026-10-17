@@ -52,10 +52,10 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           </ViewOptionsPopover>
         </div>
       </div>
-      <DocsTitle className="text-[1.875rem] font-semibold leading-tight tracking-tight">
+      <DocsTitle className="text-2xl font-semibold leading-tight tracking-tight">
         {page.data.title}
       </DocsTitle>
-      <DocsDescription className="docs-description-rule mb-0 pb-6">
+      <DocsDescription className="docs-description-rule mb-0 pb-4 text-[0.9375rem]">
         {page.data.description}
       </DocsDescription>
       <DocsBody>

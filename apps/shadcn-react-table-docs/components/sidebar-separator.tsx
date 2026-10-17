@@ -16,7 +16,7 @@ export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
   return (
     <p
       data-subgroup
-      className="mb-1.5 mt-4 inline-flex items-center gap-2 ps-5 pe-2 text-xs font-normal leading-none text-fd-muted-foreground"
+      className="mb-1 mt-3 inline-flex items-center gap-2 ps-5 pe-2 text-[11px] font-normal uppercase leading-none tracking-[0.04em] text-fd-muted-foreground"
     >
       {item.icon}
       {item.name}
