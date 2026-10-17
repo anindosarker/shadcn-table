@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import {
   type SRT_ColumnDef,
   type SRT_ColumnOrderState,
