@@ -326,8 +326,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               aria-label={localization.clearFilter}
               disabled={!filterValue?.toString()?.length}
               onClick={handleClear}
-              size="icon-sm"
-              className="scale-90"
+              size="icon-xs"
             >
               <CloseIcon />
             </InputGroupButton>
@@ -343,8 +342,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           <InputGroupButton
             aria-label={localization.changeFilterMode}
             onClick={handleFilterMenuOpen}
-            size="icon-sm"
-            className="size-7"
+            size="icon-xs"
           >
             <FilterListIcon />
           </InputGroupButton>
@@ -425,23 +423,21 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
         className={cn(
           filterTextFieldVariants(),
           isDateFilter
-            ? 'min-w-[160px]'
-            : enableColumnFilterModes && rangeFilterIndex === 0
-              ? 'min-w-[110px]'
-              : isRangeFilter
-                ? 'min-w-[100px]'
-                : !filterChipLabel
-                  ? 'min-w-[120px]'
-                  : 'min-w-auto',
+            ? 'min-w-[140px]'
+            : isRangeFilter
+              ? 'min-w-[64px]'
+              : !filterChipLabel
+                ? 'min-w-[96px]'
+                : 'min-w-auto',
           // mx: '-2px', p: 0, width: 'calc(100% + 4px)',
           // Note: bleeds MUI's standard-variant underline past the cell padding; no underline here.
         )}
       >
         <InputGroup
           className={cn(
+            'h-8 text-sm [&>[data-align=inline-end]]:py-0 [&>[data-align=inline-start]]:py-0',
             // Chips wrap onto new lines, so the group may grow past its fixed height.
-            isMultiSelectFilter &&
-              'h-auto min-h-9 [&>[data-align=inline-end]]:py-0',
+            isMultiSelectFilter && 'h-auto min-h-8',
           )}
           ref={comboboxAnchor}
         >

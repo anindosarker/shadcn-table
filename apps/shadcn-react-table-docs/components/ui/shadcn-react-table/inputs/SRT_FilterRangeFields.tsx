@@ -14,8 +14,8 @@ export interface SRT_FilterRangeFieldsProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-// Note: base maps MRT's sx (display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr').
-const filterRangeFieldsVariants = cva('grid grid-cols-2 gap-4');
+// Note: MRT's sx is display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr'; the gap is tighter and each track keeps its input's min width so a narrow column grows to fit Min and Max side by side instead of overlapping them.
+const filterRangeFieldsVariants = cva('grid grid-cols-[1fr_1fr] gap-2');
 
 export const SRT_FilterRangeFields = <TData extends SRT_RowData>({
   header,
