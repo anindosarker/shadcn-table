@@ -14,7 +14,7 @@ export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
   if (!siblings || !separatorHasPages(item, siblings)) return null;
 
   return (
-    <p className="mb-1 mt-4 inline-flex items-center gap-2 px-2 text-[11px] font-bold uppercase leading-none tracking-[0.075em] text-fd-muted-foreground">
+    <p className="mb-1 mt-4 inline-flex items-center gap-2 px-2 text-xs font-normal uppercase leading-none tracking-wide text-fd-muted-foreground">
       {item.icon}
       {item.name}
     </p>

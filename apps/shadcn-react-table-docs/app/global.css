@@ -3,6 +3,13 @@
 @import 'fumadocs-ui/css/preset.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+/* theme presets: <html data-theme="..."> (components/theme-preset-switcher.tsx) */
+@import '../themes/violet.css';
+@import '../themes/zinc.css';
+@import '../themes/emerald.css';
+@import '../themes/rose.css';
+@import '../themes/amber.css';
+@import '../themes/mono.css';
 /*
  ---break---
  */
@@ -23,28 +30,38 @@ html > body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0px !important;
 }
 
-/* ---------- sidebar ---------- */
+/* ---------- chrome: fewer lines ---------- */
 
-/* 1px divider between sidebar and content (TanStack) */
-#nd-sidebar {
-  border-inline-end: 1px solid var(--color-fd-border);
+/* nav bottom border and sidebar right border: the page, sidebar and TOC share
+   one background, so only the divider under the page description remains */
+#nd-subnav > div {
+  border-bottom-width: 0;
 }
 
-/* active item: tinted background comes from fumadocs; add the left accent bar */
+#nd-sidebar {
+  border-inline-end-width: 0;
+}
+
+/* ---------- sidebar ---------- */
+
+#nd-sidebar a {
+  padding-block: 0.375rem;
+  font-size: 0.875rem;
+}
+
+/* active item: subtle pill with the accent (primary) text, no left bar */
 #nd-sidebar a[data-active='true'] {
-  font-weight: 600;
+  background-color: color-mix(
+    in oklab,
+    var(--color-fd-foreground) 6%,
+    transparent
+  );
+  color: var(--color-fd-primary);
+  font-weight: 500;
 }
 
 #nd-sidebar a[data-active='true']::before {
-  content: '';
-  position: absolute;
-  inset-inline-start: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-  border-start-end-radius: 9999px;
-  border-end-end-radius: 9999px;
-  background: var(--color-fd-primary);
+  display: none;
 }
 
 /* ---------- full-width layout ---------- */
@@ -72,14 +89,70 @@ html > body[data-scroll-locked] {
 
 #nd-page .prose {
   font-size: 0.9375rem;
-  line-height: 1.7;
+  line-height: 1.75;
+}
+
+/* headings 600, not 800; h2 24px with a 2.5rem gap above, h3 18px */
+#nd-page .prose :is(h1, h2, h3, h4) {
+  font-weight: 600;
+}
+
+#nd-page .prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+#nd-page .prose h3 {
+  font-size: 1.125rem;
+}
+
+/* body links: foreground, underlined; accent on hover */
+#nd-page .prose :is(p, li, td) > a {
+  color: var(--color-fd-foreground);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(
+    in oklab,
+    var(--color-fd-foreground) 40%,
+    transparent
+  );
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+#nd-page .prose :is(p, li, td) > a:hover {
+  color: var(--color-fd-primary);
+  text-decoration-color: var(--color-fd-primary);
+}
+
+/* inline code: 13px, subtle fill, no border */
+#nd-page .prose :not(pre) > code {
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.3125rem;
+  border-width: 0;
+  background-color: color-mix(
+    in oklab,
+    var(--color-fd-foreground) 8%,
+    transparent
+  );
 }
 
 /* ---------- table of contents ---------- */
 
 #toc-title {
-  color: var(--color-fd-foreground);
-  font-weight: 700;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+#nd-toc a {
+  font-size: 0.8125rem;
+}
+
+/* only the active indicator line: hide the per-item grey track and the
+   travelling dot; the primary-coloured clipped path stays */
+#nd-toc a > svg,
+#nd-toc div[style*='offset-path'] {
+  display: none;
 }
 
 #toc-title svg {
@@ -177,9 +250,7 @@ html > body[data-scroll-locked] {
     }
   }
 }
-/*
- ---break---
- */
+/* ---------- base tokens = the "violet" preset (fallback when data-theme is unset) ---------- */
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -187,7 +258,7 @@ html > body[data-scroll-locked] {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.541 0.281 293.009);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -198,56 +269,55 @@ html > body[data-scroll-locked] {
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --ring: oklch(0.541 0.281 293.009);
   --radius: 0.25rem;
-  --sidebar: oklch(0.985 0 0);
+  --chart-1: oklch(0.541 0.281 293.009);
+  --chart-2: oklch(0.702 0.183 293.541);
+  --chart-3: oklch(0.432 0.232 292.759);
+  --chart-4: oklch(0.811 0.111 293.571);
+  --chart-5: oklch(0.606 0.25 292.717);
+  --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.541 0.281 293.009);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.541 0.281 293.009);
 }
-
 /* dark palette must follow :root (same specificity, last one wins) */
 .dark {
   --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --foreground: oklch(0.945 0 0);
+  --card: oklch(0.18 0 0);
+  --card-foreground: oklch(0.945 0 0);
+  --popover: oklch(0.18 0 0);
+  --popover-foreground: oklch(0.945 0 0);
+  --primary: oklch(0.702 0.183 293.541);
+  --primary-foreground: oklch(0.2 0.06 293);
+  --secondary: oklch(0.22 0 0);
+  --secondary-foreground: oklch(0.945 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.665 0 0);
+  --accent: oklch(0.24 0 0);
+  --accent-foreground: oklch(0.945 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.702 0.183 293.541);
+  --chart-1: oklch(0.702 0.183 293.541);
+  --chart-2: oklch(0.541 0.281 293.009);
+  --chart-3: oklch(0.811 0.111 293.571);
+  --chart-4: oklch(0.432 0.232 292.759);
+  --chart-5: oklch(0.606 0.25 292.717);
+  --sidebar: oklch(0.145 0 0);
+  --sidebar-foreground: oklch(0.945 0 0);
+  --sidebar-primary: oklch(0.702 0.183 293.541);
+  --sidebar-primary-foreground: oklch(0.2 0.06 293);
+  --sidebar-accent: oklch(1 0 0 / 6%);
+  --sidebar-accent-foreground: oklch(0.945 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.702 0.183 293.541);
 }
 /*
  ---break---

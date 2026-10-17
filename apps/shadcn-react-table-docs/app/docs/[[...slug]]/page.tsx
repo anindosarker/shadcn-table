@@ -29,7 +29,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       slots={{ breadcrumb: DocsBreadcrumb }}
     >
       <div className="flex flex-row flex-wrap items-center justify-between gap-4">
-        <DocsTitle className="text-2xl font-extrabold tracking-tight">
+        <DocsTitle className="text-[1.875rem] font-semibold leading-tight tracking-tight">
           {page.data.title}
         </DocsTitle>
         <div
