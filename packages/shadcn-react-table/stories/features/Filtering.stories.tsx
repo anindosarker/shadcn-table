@@ -5,6 +5,10 @@ import {
 } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '@/components/ui/button';
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from '@/components/ui/native-select';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react';
 
@@ -540,18 +544,18 @@ export const CustomFilterComponent = () => (
       },
       {
         Filter: ({ header }) => (
-          <select
+          <NativeSelect
+            className="w-full"
             onChange={(e) =>
               header.column.setFilterValue(e.target.value || undefined)
             }
-            style={{ width: '100%' }}
             value={(header.column.getFilterValue() as string) ?? ''}
           >
-            <option value="">All</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
+            <NativeSelectOption value="">All</NativeSelectOption>
+            <NativeSelectOption value="Male">Male</NativeSelectOption>
+            <NativeSelectOption value="Female">Female</NativeSelectOption>
+            <NativeSelectOption value="Other">Other</NativeSelectOption>
+          </NativeSelect>
         ),
         accessorKey: 'gender',
         filterFn: (row, _columnIds, filterValue) =>
