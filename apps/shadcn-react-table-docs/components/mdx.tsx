@@ -3,6 +3,7 @@ import type { MDXComponents } from 'mdx/types';
 import { TableOfContentsList } from './table-of-contents-list';
 import { FAQs } from './faqs';
 import { CompatibilityTable } from './compatibility-table';
+import { Callout, CalloutContainer } from './callout';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -10,6 +11,8 @@ export function getMDXComponents(components?: MDXComponents) {
     TableOfContentsList,
     FAQs,
     CompatibilityTable,
+    Callout,
+    CalloutContainer,
     ...components,
   } satisfies MDXComponents;
 }

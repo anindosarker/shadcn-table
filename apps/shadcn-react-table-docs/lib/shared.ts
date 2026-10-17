@@ -4,6 +4,8 @@ export const appName = 'Shadcn React Table';
 export const docsRoute = '/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';
+// placeholder until the Storybook deploy exists
+export const storybookUrl = 'https://storybook.shadcn-table.com';
 
 // fill this with your actual GitHub info, for example:
 export const gitConfig = {
