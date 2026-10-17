@@ -39,12 +39,14 @@ export const TableOptionsTable = ({ onlyOptions }: Props) => {
         header: 'Type',
         accessorKey: 'type',
         enableGlobalFilter: false,
+        size: 180,
         Cell: ({ cell }) => <InlineCode>{cell.getValue<string>()}</InlineCode>,
       },
       {
         header: 'Default Value',
         accessorKey: 'defaultValue',
         enableGlobalFilter: false,
+        size: 130,
         Cell: ({ cell }) => <InlineCode>{cell.getValue<string>()}</InlineCode>,
       },
       {
@@ -57,6 +59,7 @@ export const TableOptionsTable = ({ onlyOptions }: Props) => {
         accessorKey: 'link',
         enableColumnFilter: false,
         enableGlobalFilter: false,
+        size: 180,
         Cell: ({ cell, row }) => (
           <PropLink href={cell.getValue<string>()} source={row.original.source}>
             {row.original?.linkText}

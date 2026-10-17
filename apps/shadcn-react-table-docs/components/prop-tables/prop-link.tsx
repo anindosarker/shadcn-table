@@ -15,7 +15,7 @@ export const PropLink = ({ href, children, source }: Props) => {
   return (
     <Link
       className={cn(
-        'underline-offset-4 hover:underline',
+        'whitespace-normal underline-offset-4 hover:underline',
         source === 'SRT'
           ? 'text-foreground'
           : source === 'shadcn/ui'
