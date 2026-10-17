@@ -42,5 +42,11 @@
     "- heading: ### Customize Table Paper Styling",
     "+ heading: ### Table Theme Values",
     "+ heading: ### Customize Table Layout Styling"
+  ],
+  "examples/editing-crud-inline-cell.mdx": [
+    "title: MRT \"Editing CRUD Inline Example - Material React Table V3 Docs\" vs SRT \"Editing CRUD Inline Cell Example\""
+  ],
+  "examples/editing-crud-inline-table.mdx": [
+    "title: MRT \"Editing CRUD Inline Example - Material React Table V3 Docs\" vs SRT \"Editing CRUD Inline Table Example\""
   ]
 }

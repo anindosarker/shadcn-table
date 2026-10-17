@@ -371,6 +371,16 @@ return <ShadcnReactTable table={table} />;
 `;
 
 /**
+ * Per-page titles. MRT titles both inline editing example pages "Editing
+ * CRUD Inline Example", which shows twice in the sidebar and keeps their
+ * title-repeating heading (dropTitleHeading needs nested word sets).
+ */
+const PAGE_TITLES = {
+  'examples/editing-crud-inline-cell.mdx': 'Editing CRUD Inline Cell Example',
+  'examples/editing-crud-inline-table.mdx': 'Editing CRUD Inline Table Example',
+};
+
+/**
  * Per-page replacements, applied last. Keys are page paths relative to
  * pages/docs (e.g. 'guides/column-size.mdx'). Append only.
  */
@@ -856,7 +866,8 @@ function yamlString(s) {
 async function syncPage(rel) {
   const src = await fs.readFile(path.join(MRT_PAGES, rel), 'utf8');
   const { body, title, description } = extractHead(src);
-  const fmTitle = applyMap(applyMap(title, TITLE_MAP), TEXT_MAP);
+  const fmTitle =
+    PAGE_TITLES[rel] ?? applyMap(applyMap(title, TITLE_MAP), TEXT_MAP);
   const fmDesc = applyMap(description, TEXT_MAP);
   let out = rewriteExampleTags(body);
   out = rewriteImports(out);

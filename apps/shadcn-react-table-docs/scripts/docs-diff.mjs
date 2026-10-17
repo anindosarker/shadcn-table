@@ -59,6 +59,17 @@ const OUTPUT_PATHS = {
 };
 
 /**
+ * Per-page titles the sync sets (PAGE_TITLES in scripts/sync-mrt-docs.mjs,
+ * keyed by MRT page path). The title itself stays a reported (allowlisted)
+ * diff; the MRT heading list is title-dropped against this title so the
+ * heading rule behaves as on the SRT side.
+ */
+const PAGE_TITLES = {
+  'examples/editing-crud-inline-cell.mdx': 'Editing CRUD Inline Cell Example',
+  'examples/editing-crud-inline-table.mdx': 'Editing CRUD Inline Table Example',
+};
+
+/**
  * Tags that TEXT_MAP in scripts/sync-mrt-docs.mjs turns into something that
  * is not a PascalCase tag any more (null) or into another tag (string).
  */
@@ -200,7 +211,10 @@ async function parseMrt(src, rel) {
   return {
     title,
     description,
-    headings: dropTitleHeading(collectHeadings(rewritten), title),
+    headings: dropTitleHeading(
+      collectHeadings(rewritten),
+      PAGE_TITLES[rel] ?? title,
+    ),
     tags,
   };
 }
