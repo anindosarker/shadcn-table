@@ -9,7 +9,7 @@
       "title": "Advanced Example",
       "description": "Advanced Shadcn React Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button",
         "dropdown-menu"
       ],
@@ -32,7 +32,7 @@
       "title": "Aggregation and Grouping Example",
       "description": "A Shadcn React Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -53,7 +53,7 @@
       "title": "Aggregation Multi",
       "description": "Aggregation Multi example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -74,7 +74,7 @@
       "title": "Popover Filters Example",
       "description": "An example of Shadcn React Table which shows an excel-like column filters.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -95,7 +95,7 @@
       "title": "Alternate Detail Panel",
       "description": "Alternate Detail Panel example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -116,7 +116,7 @@
       "title": "Alternate Pagination",
       "description": "Alternate Pagination example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -137,7 +137,7 @@
       "title": "Basic Example",
       "description": "A basic example of Shadcn React Table which includes sorting, filtering, search, and pagination features by default",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -153,7 +153,7 @@
       "title": "Chart Detail Panel Example",
       "description": "A Shadcn React Table example demonstrating how to use Recharts with the Detail Panel feature.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -177,7 +177,7 @@
       "title": "Column Actions Space",
       "description": "Column Actions Space example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -198,7 +198,7 @@
       "title": "Column Alignment",
       "description": "Column Alignment example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -219,7 +219,7 @@
       "title": "Custom Column Actions",
       "description": "Custom Column Actions example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "dropdown-menu"
       ],
       "files": [
@@ -241,7 +241,7 @@
       "title": "Custom Filter UI Example",
       "description": "An example of Shadcn React Table which shows custom filter ui in a sidebar.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -262,7 +262,7 @@
       "title": "Custom Headless Example",
       "description": "A custom headless example of Shadcn React Table which shows how you can use the useShadcnReactTable hook to build with your own UI components",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "table"
       ],
       "files": [
@@ -284,7 +284,7 @@
       "title": "Custom Top Toolbar",
       "description": "Custom Top Toolbar example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -306,7 +306,7 @@
       "title": "Customize Display Columns",
       "description": "Customize Display Columns example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -328,7 +328,7 @@
       "title": "Customize Filter Components",
       "description": "Customize Filter Components example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -344,7 +344,7 @@
       "title": "Filter Switching Example",
       "description": "An example of Shadcn React Table which shows how to let the user switch between multiple filtering modes.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "dropdown-menu"
       ],
       "files": [
@@ -366,7 +366,7 @@
       "title": "Filter Variants Example",
       "description": "An example of Shadcn React Table which shows all of the powerful built-in filter variants.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -387,7 +387,7 @@
       "title": "Customize Global Filter Component",
       "description": "Customize Global Filter Component example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -408,7 +408,7 @@
       "title": "Customized Grouping Example",
       "description": "A Shadcn React Table example demonstrating various ways to customize the grouping UI.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -429,7 +429,7 @@
       "title": "Customize Row Selection",
       "description": "Customize Row Selection example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -450,7 +450,7 @@
       "title": "Customize Table Styles",
       "description": "Customize Table Styles example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -471,7 +471,7 @@
       "title": "Disable Column Actions",
       "description": "Disable Column Actions example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -492,7 +492,7 @@
       "title": "Disable Column Hiding",
       "description": "Disable Column Hiding example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -508,7 +508,7 @@
       "title": "Disable Density Toggle",
       "description": "Disable Density Toggle example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -529,7 +529,7 @@
       "title": "Dynamic Columns Example",
       "description": "An example of Shadcn React Table which shows how to fetch remote data and generate columns dynamically",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -549,7 +549,7 @@
       "title": "Editing CRUD Inline Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline cell features",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button",
         "spinner"
       ],
@@ -575,7 +575,7 @@
       "title": "Editing CRUD Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD features",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button",
         "dialog"
       ],
@@ -601,7 +601,7 @@
       "title": "Editing CRUD Inline Row Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline Row features",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -626,7 +626,7 @@
       "title": "Editing CRUD Inline Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline table features",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button",
         "spinner"
       ],
@@ -652,7 +652,7 @@
       "title": "Editing CRUD Tree Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD features with expanding sub rows",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -677,7 +677,7 @@
       "title": "Enable Cell Actions",
       "description": "Enable Cell Actions example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "dropdown-menu"
       ],
       "files": [
@@ -699,7 +699,7 @@
       "title": "Enable Click To Copy",
       "description": "Enable Click To Copy example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -720,7 +720,7 @@
       "title": "Column Grouping Example",
       "description": "A Shadcn React Table example demonstrating different grouping UI modes.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "label",
         "radio-group"
       ],
@@ -743,7 +743,7 @@
       "title": "Column DnD Ordering Example",
       "description": "An example of Shadcn React Table which shows how to enable column to be re-arranged via drag and drop.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -764,7 +764,7 @@
       "title": "Column Pinning Example",
       "description": "An example of Shadcn React Table which shows how to make the header and footer sticky while scrolling.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "dropdown-menu"
       ],
       "files": [
@@ -786,7 +786,7 @@
       "title": "Enable Column Resizing",
       "description": "Enable Column Resizing example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -807,7 +807,7 @@
       "title": "Column Virtualization Example",
       "description": "An example of a Shadcn React Table with column virtualization enabled to achieve higher performance when rendering large data sets",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -828,7 +828,7 @@
       "title": "Detail Panel Example",
       "description": "A Shadcn React Table example show how use use expandable rows to show additional information about a row.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -849,7 +849,7 @@
       "title": "Enable Detail Panel Virtualized",
       "description": "Enable Detail Panel Virtualized example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -870,7 +870,7 @@
       "title": "Enable Expanding Tree",
       "description": "Enable Expanding Tree example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -886,7 +886,7 @@
       "title": "Faceted Values Example",
       "description": "An example of Shadcn React Table which shows how to use faceted values to automatically populate filter suggestions.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -907,7 +907,7 @@
       "title": "Row Dragging Example",
       "description": "An example of Shadcn React Table which shows how to drag and drop rows for various use cases.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -928,7 +928,7 @@
       "title": "Enable Row Numbers Original",
       "description": "Enable Row Numbers Original example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -949,7 +949,7 @@
       "title": "Enable Row Numbers Static",
       "description": "Enable Row Numbers Static example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -970,7 +970,7 @@
       "title": "Row DnD Ordering Example",
       "description": "An example of Shadcn React Table which shows how to enable column to be re-arranged via drag and drop.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -991,7 +991,7 @@
       "title": "Sticky Row Selection Example",
       "description": "An example of Shadcn React Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1012,7 +1012,7 @@
       "title": "Static Row Pinning Example",
       "description": "An example of Shadcn React Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1033,7 +1033,7 @@
       "title": "Sticky Row Pinning Example",
       "description": "An example of Shadcn React Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1054,7 +1054,7 @@
       "title": "Enable Row Selection",
       "description": "Enable Row Selection example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1070,7 +1070,7 @@
       "title": "Row Virtualization Example",
       "description": "An example of a Shadcn React Table with row virtualization enabled to achieve higher performance when rendering large data sets",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1091,7 +1091,7 @@
       "title": "Sticky Header Example",
       "description": "An example of Shadcn React Table which shows how to make the header and footer sticky while scrolling.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1112,7 +1112,7 @@
       "title": "Expanding Tree Example",
       "description": "A Shadcn React Table example demonstrating expandable sub-rows in a tree structure",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1128,7 +1128,7 @@
       "title": "Expanding Parsed Tree Example",
       "description": "A Shadcn React Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1144,7 +1144,7 @@
       "title": "Expanding Tree Root Expanded",
       "description": "Expanding Tree Root Expanded example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -1161,7 +1161,7 @@
       "title": "CSV Export Example",
       "description": "An example of how to export data to CSV using Shadcn React Table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -1186,7 +1186,7 @@
       "title": "PDF Export Example",
       "description": "An example of how to export data to PDF using Shadcn React Table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -1212,7 +1212,7 @@
       "title": "External Toolbar",
       "description": "External Toolbar example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -1234,7 +1234,7 @@
       "title": "Font Awesome Icons",
       "description": "Font Awesome Icons example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1260,7 +1260,7 @@
       "title": "Infinite Scrolling Example",
       "description": "An example of Shadcn React Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1279,7 +1279,7 @@
       "title": "Lazy Detail Panel Example",
       "description": "A Shadcn React Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "alert",
         "spinner"
       ],
@@ -1300,7 +1300,7 @@
       "title": "Lazy Sub-Rows Example",
       "description": "A Shadcn React Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1319,7 +1319,7 @@
       "title": "Linear Progress",
       "description": "Linear Progress example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -1341,7 +1341,7 @@
       "title": "Loading",
       "description": "Loading example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1362,7 +1362,7 @@
       "title": "Localization I18n Ar",
       "description": "Localization I18n Ar example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1383,7 +1383,7 @@
       "title": "Localization I18n Az",
       "description": "Localization I18n Az example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1404,7 +1404,7 @@
       "title": "Localization I18n Bg",
       "description": "Localization I18n Bg example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1425,7 +1425,7 @@
       "title": "Localization I18n Cs",
       "description": "Localization I18n Cs example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1446,7 +1446,7 @@
       "title": "Localization I18n Da",
       "description": "Localization I18n Da example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1467,7 +1467,7 @@
       "title": "Localization I18n De",
       "description": "Localization I18n De example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1488,7 +1488,7 @@
       "title": "Localization I18n El",
       "description": "Localization I18n El example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1509,7 +1509,7 @@
       "title": "Localization I18n En",
       "description": "Localization I18n En example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1530,7 +1530,7 @@
       "title": "Localization I18n Es",
       "description": "Localization I18n Es example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1551,7 +1551,7 @@
       "title": "Localization I18n Et",
       "description": "Localization I18n Et example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1572,7 +1572,7 @@
       "title": "Localization I18n Fa",
       "description": "Localization I18n Fa example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1593,7 +1593,7 @@
       "title": "Localization I18n Fi",
       "description": "Localization I18n Fi example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1614,7 +1614,7 @@
       "title": "Localization I18n Fr",
       "description": "Localization I18n Fr example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1635,7 +1635,7 @@
       "title": "Localization I18n He",
       "description": "Localization I18n He example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1656,7 +1656,7 @@
       "title": "Localization I18n Hr",
       "description": "Localization I18n Hr example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1677,7 +1677,7 @@
       "title": "Localization I18n Hu",
       "description": "Localization I18n Hu example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1698,7 +1698,7 @@
       "title": "Localization I18n Hy",
       "description": "Localization I18n Hy example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1719,7 +1719,7 @@
       "title": "Localization I18n Id",
       "description": "Localization I18n Id example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1740,7 +1740,7 @@
       "title": "Localization I18n It",
       "description": "Localization I18n It example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1761,7 +1761,7 @@
       "title": "Localization I18n Ja",
       "description": "Localization I18n Ja example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1782,7 +1782,7 @@
       "title": "Localization I18n Ko",
       "description": "Localization I18n Ko example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1803,7 +1803,7 @@
       "title": "Localization I18n Nl",
       "description": "Localization I18n Nl example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1824,7 +1824,7 @@
       "title": "Localization I18n No",
       "description": "Localization I18n No example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1845,7 +1845,7 @@
       "title": "Localization I18n Np",
       "description": "Localization I18n Np example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1866,7 +1866,7 @@
       "title": "Localization I18n Pl",
       "description": "Localization I18n Pl example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1887,7 +1887,7 @@
       "title": "Localization I18n Pt",
       "description": "Localization I18n Pt example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1908,7 +1908,7 @@
       "title": "Localization I18n Pt BR",
       "description": "Localization I18n Pt BR example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1929,7 +1929,7 @@
       "title": "Localization I18n Ro",
       "description": "Localization I18n Ro example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1950,7 +1950,7 @@
       "title": "Localization I18n Ru",
       "description": "Localization I18n Ru example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1971,7 +1971,7 @@
       "title": "Localization I18n Sk",
       "description": "Localization I18n Sk example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -1992,7 +1992,7 @@
       "title": "Localization I18n Sr Cyrl RS",
       "description": "Localization I18n Sr Cyrl RS example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2013,7 +2013,7 @@
       "title": "Localization I18n Sr Latn RS",
       "description": "Localization I18n Sr Latn RS example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2034,7 +2034,7 @@
       "title": "Localization I18n Sv",
       "description": "Localization I18n Sv example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2055,7 +2055,7 @@
       "title": "Localization I18n Tr",
       "description": "Localization I18n Tr example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2076,7 +2076,7 @@
       "title": "Localization I18n Uk",
       "description": "Localization I18n Uk example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2097,7 +2097,7 @@
       "title": "Localization I18n Vi",
       "description": "Localization I18n Vi example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2118,7 +2118,7 @@
       "title": "Localization I18n Zh Hans",
       "description": "Localization I18n Zh Hans example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2139,7 +2139,7 @@
       "title": "Localization I18n Zh Hant",
       "description": "Localization I18n Zh Hant example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2160,7 +2160,7 @@
       "title": "Manual Selection",
       "description": "Manual Selection example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2176,7 +2176,7 @@
       "title": "Minimal Example",
       "description": "A minimal example of Shadcn React Table which turns off most of the advanced features",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2197,7 +2197,7 @@
       "title": "Mui Theme",
       "description": "Mui Theme example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2213,7 +2213,7 @@
       "title": "Multi Sorting",
       "description": "Multi Sorting example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -2235,7 +2235,7 @@
       "title": "Persistent State",
       "description": "Persistent State example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -2257,7 +2257,7 @@
       "title": "React Query Example",
       "description": "An example of Shadcn React Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button",
         "tooltip"
       ],
@@ -2278,7 +2278,7 @@
       "title": "Remote Data Fetching Example",
       "description": "An example of Shadcn React Table which shows how to fetch remote data and filter and paginate on a remote server",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2294,7 +2294,7 @@
       "title": "Row Actions Buttons",
       "description": "Row Actions Buttons example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
         "button"
       ],
       "files": [
@@ -2316,7 +2316,7 @@
       "title": "Row Actions Menu Items",
       "description": "Row Actions Menu Items example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2337,7 +2337,7 @@
       "title": "Single Row Selection",
       "description": "Single Row Selection example from shadcn-react-table.",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {
@@ -2353,7 +2353,7 @@
       "title": "Virtualized Example",
       "description": "An example of a Shadcn React Table with virtualization enabled to achieve higher performance when rendering large data sets",
       "registryDependencies": [
-        "anindosarker/shadcn-react-table/shadcn-react-table"
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review"
       ],
       "files": [
         {

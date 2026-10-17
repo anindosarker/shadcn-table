@@ -11,7 +11,8 @@
  * - title and description from the example's docs page frontmatter
  *   (content/docs/examples/<slug>.mdx, or the page that renders the
  *   example's component), else the slug in Title Case
- * - registryDependencies: the library item plus the shadcn parts the example
+ * - registryDependencies: the library item pinned to the docs branch from
+ *   lib/shared.ts gitConfig, plus the shadcn parts the example
  *   imports from `@/components/ui/<part>` (library paths excluded)
  * - dependencies: third-party packages imported by the example files, other
  *   than react, react-dom and lucide-react (already library dependencies)
@@ -37,7 +38,8 @@ const EXAMPLES_DIR = path.join(APP_DIR, 'examples');
 const PAGES_DIR = path.join(APP_DIR, 'content', 'docs', 'examples');
 const OUT_FILE = path.join(APP_DIR, 'registry.json');
 
-const LIBRARY_ITEM = 'anindosarker/shadcn-react-table/shadcn-react-table';
+const SHARED_FILE = path.join(APP_DIR, 'lib', 'shared.ts');
+const LIBRARY_ITEM_NAME = 'shadcn-react-table';
 const LIBRARY_IMPORT = '@/components/ui/shadcn-react-table';
 const UI_IMPORT_PREFIX = '@/components/ui/';
 /** Packages the library item already installs. */
@@ -123,10 +125,33 @@ async function loadPages() {
   return { bySlug, byComponent };
 }
 
-async function buildItem(slug, pages) {
+/**
+ * `gitConfig` from lib/shared.ts (user, repo, branch), read as text so the
+ * script needs no TypeScript loader. The library dependency carries the
+ * branch as its ref: the CLI resolves every registryDependencies address on
+ * its own, so an unversioned address would read the default branch instead
+ * of the branch the docs are built from.
+ */
+async function libraryItemAddress() {
+  const source = await fs.readFile(SHARED_FILE, 'utf8');
+  const block = source.match(/export const gitConfig = \{([\s\S]*?)\};/)?.[1];
+  const field = (key) =>
+    block?.match(new RegExp(`${key}:\\s*['"]([^'"]+)['"]`))?.[1];
+  const user = field('user');
+  const repo = field('repo');
+  const branch = field('branch');
+  if (!user || !repo || !branch) {
+    throw new Error(
+      `gitConfig user, repo and branch not found in ${SHARED_FILE}`,
+    );
+  }
+  return `${user}/${repo}/${LIBRARY_ITEM_NAME}#${branch}`;
+}
+
+async function buildItem(slug, pages, libraryItem) {
   const dir = path.join(EXAMPLES_DIR, slug);
   const files = [];
-  const registryDependencies = new Set([LIBRARY_ITEM]);
+  const registryDependencies = new Set([libraryItem]);
   const dependencies = new Set();
   const sources = {};
 
@@ -195,6 +220,7 @@ async function buildItem(slug, pages) {
 
 async function main() {
   const pages = await loadPages();
+  const libraryItem = await libraryItemAddress();
   const slugs = (await fs.readdir(EXAMPLES_DIR, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
@@ -207,7 +233,7 @@ async function main() {
       console.warn(`${slug}: no TS.tsx, skipped`);
       continue;
     }
-    const { item, sources } = await buildItem(slug, pages);
+    const { item, sources } = await buildItem(slug, pages, libraryItem);
     items.push(item);
     resolved.push({
       $schema: 'https://ui.shadcn.com/schema/registry-item.json',
