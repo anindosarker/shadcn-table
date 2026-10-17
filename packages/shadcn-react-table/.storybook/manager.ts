@@ -1,4 +1,4 @@
-import { addons } from 'storybook/manager-api';
+import { addons, types } from 'storybook/manager-api';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
 
 // First paint of the manager chrome. storybook-dark-mode's preset falls back
@@ -8,4 +8,18 @@ addons.setConfig({
   theme: readStoredMode() === 'dark' ? darkTheme : lightTheme,
   // Open the Code panel by default, like MRT's storysource tab.
   selectedPanel: 'storybook/docs/panel',
+});
+
+// Panel tabs render in registration order and the core panels (Controls,
+// Actions, Interactions) register before any addon from main.ts. Re-insert
+// the panels with Code first, like MRT's storysource tab.
+addons.register('srt/panel-order', () => {
+  const panels = addons.getElements(types.PANEL);
+  const codeId = 'storybook/docs/panel';
+  const code = panels[codeId];
+  if (!code) return;
+  const rest = Object.entries(panels).filter(([id]) => id !== codeId);
+  for (const id of Object.keys(panels)) delete panels[id];
+  panels[codeId] = code;
+  for (const [id, panel] of rest) panels[id] = panel;
 });
