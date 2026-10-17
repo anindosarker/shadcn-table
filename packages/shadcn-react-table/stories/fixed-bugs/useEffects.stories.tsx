@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import {
   type SRT_ColumnDef,
   type SRT_ColumnFiltersState,
@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/shadcn-react-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { Button } from '@/components/ui/button';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 const meta: Meta = {
   title: 'Fixed Bugs/useEffects',
@@ -214,11 +216,11 @@ export const RenderRowActionsAsync = () => {
       data={data}
       enableRowActions
       renderRowActions={() => (
-        <div style={{ display: 'flex', gap: '1rem', whiteSpace: 'nowrap' }}>
+        <div className="flex gap-4 whitespace-nowrap">
           {rowActions.map((action) => (
-            <button key={action} type="button">
+            <Button key={action} type="button">
               {action}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -226,6 +228,7 @@ export const RenderRowActionsAsync = () => {
   );
 };
 
+/* eslint-disable react-hooks/rules-of-hooks -- MRT export name is lowercase */
 export const renderRowActionMenuItemsAsync = () => {
   const [rowActions, setRowActions] = useState<string[]>([]);
 
@@ -267,12 +270,15 @@ export const renderRowActionMenuItemsAsync = () => {
       data={data}
       enableRowActions
       renderRowActionMenuItems={() =>
-        rowActions.map((action) => [<div key={action}>{action}</div>])
+        rowActions.map((action) => [
+          <DropdownMenuItem key={action}>{action}</DropdownMenuItem>,
+        ])
       }
     />
   );
 };
 
+/* eslint-enable react-hooks/rules-of-hooks */
 export const DelayedFacetedValues = () => {
   const [tableData, setTableData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);
