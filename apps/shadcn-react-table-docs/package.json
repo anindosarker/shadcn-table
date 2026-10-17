@@ -11,22 +11,28 @@
     "lib:install": "shadcn add ../../packages/shadcn-react-table/public/r/shadcn-react-table.json --overwrite --yes"
   },
   "dependencies": {
+    "@faker-js/faker": "9.3.0",
     "@tanstack/match-sorter-utils": "8.19.4",
+    "@tanstack/react-query": "5.62.8",
     "@tanstack/react-table": "8.20.6",
     "@tanstack/react-virtual": "3.11.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "cn": "^0.4.0",
+    "export-to-csv": "^1.5.0",
     "fumadocs-core": "16.17.5",
     "fumadocs-mdx": "15.4.7",
     "fumadocs-ui": "npm:@fumadocs/base-ui@16.17.5",
     "highlight-words": "2.0.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "lucide-react": "^1.50.0",
     "next": "16.3.8",
     "radix-ui": "^1.5.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "recharts": "^2.15.4",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
