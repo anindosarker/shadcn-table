@@ -6,4 +6,6 @@ import { darkTheme, lightTheme, readStoredMode } from './themes';
 // user's persisted toggle when there is one (avoids a light->dark flash).
 addons.setConfig({
   theme: readStoredMode() === 'dark' ? darkTheme : lightTheme,
+  // Open the Code panel by default, like MRT's storysource tab.
+  selectedPanel: 'storybook/docs/panel',
 });
