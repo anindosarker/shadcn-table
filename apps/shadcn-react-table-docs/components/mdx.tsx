@@ -6,6 +6,20 @@ import { CompatibilityTable } from './compatibility-table';
 import { Callout, CalloutContainer } from './callout';
 import { TableOptionsTable } from './prop-tables/table-options-table';
 import { StateOptionsTable } from './prop-tables/state-options-table';
+import { ColumnOptionsTable } from './prop-tables/column-options-table';
+import { TableInstanceAPIsTable } from './prop-tables/table-instance-apis-table';
+import { ColumnInstanceAPIsTable } from './prop-tables/column-instance-apis-table';
+import { RowInstanceAPIsTable } from './prop-tables/row-instance-apis-table';
+import { CellInstanceAPIsTable } from './prop-tables/cell-instance-apis-table';
+import {
+  CellInstanceAPIsSource,
+  ColumnInstanceAPIsSource,
+  ColumnOptionsSource,
+  RowInstanceAPIsSource,
+  StateOptionsSource,
+  TableInstanceAPIsSource,
+  TableOptionsSource,
+} from './prop-tables/prop-table-source';
 import { exampleComponents } from '@/examples/registry';
 
 export function getMDXComponents(components?: MDXComponents) {
@@ -18,6 +32,18 @@ export function getMDXComponents(components?: MDXComponents) {
     CalloutContainer,
     TableOptionsTable,
     StateOptionsTable,
+    ColumnOptionsTable,
+    TableInstanceAPIsTable,
+    ColumnInstanceAPIsTable,
+    RowInstanceAPIsTable,
+    CellInstanceAPIsTable,
+    TableOptionsSource,
+    ColumnOptionsSource,
+    StateOptionsSource,
+    TableInstanceAPIsSource,
+    ColumnInstanceAPIsSource,
+    RowInstanceAPIsSource,
+    CellInstanceAPIsSource,
     ...exampleComponents,
     ...components,
   } satisfies MDXComponents;

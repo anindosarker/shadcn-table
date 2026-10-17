@@ -5,8 +5,8 @@ import { CodeIcon, CodeXmlIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export interface SourceCodeSnippetProps {
-  /** The live example. */
-  children: ReactNode;
+  /** The live example; omitted for source-only snippets (prop tables). */
+  children?: ReactNode;
   /** The highlighted TS source, already wrapped in a fumadocs CodeBlock. */
   code: ReactNode;
   tableId: string;
@@ -24,11 +24,15 @@ export const SourceCodeSnippet = ({
   return (
     <div className="not-prose my-8 flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h4 id={demoId} className="scroll-mt-24 text-xl font-semibold">
-          <a href={`#${demoId}`} className="hover:underline">
-            Demo
-          </a>
-        </h4>
+        {children !== undefined ? (
+          <h4 id={demoId} className="scroll-mt-24 text-xl font-semibold">
+            <a href={`#${demoId}`} className="hover:underline">
+              Demo
+            </a>
+          </h4>
+        ) : (
+          <span />
+        )}
         <Button
           aria-controls={codeId}
           aria-expanded={showCode}
