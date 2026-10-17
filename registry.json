@@ -2,5 +2,8 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "shadcn-react-table",
   "homepage": "https://github.com/anindosarker/shadcn-react-table",
-  "include": ["packages/shadcn-react-table/registry.json"]
+  "include": [
+    "packages/shadcn-react-table/registry.json",
+    "apps/shadcn-react-table-docs/registry.json"
+  ]
 }

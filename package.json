@@ -15,6 +15,7 @@
     "lib:dev": "turbo run lib:dev",
     "lint": "turbo run lint",
     "registry:build": "pnpm --filter shadcn-react-table registry:build",
+    "registry:items": "node apps/shadcn-react-table-docs/scripts/build-registry-items.mjs",
     "registry:serve": "serve packages/shadcn-react-table/public -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-react-table",
     "storybook:build": "turbo run storybook:build --filter=shadcn-react-table",

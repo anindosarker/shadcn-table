@@ -69,3 +69,4 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter shadcn-react-table exec shadcn registry validate "anindosarker/shadcn-react-table#${{ github.sha }}"
       - run: pnpm --filter shadcn-react-table-docs exec shadcn add "anindosarker/shadcn-react-table/shadcn-react-table#${{ github.sha }}" --dry-run
+      - run: pnpm --filter shadcn-react-table-docs exec shadcn add "anindosarker/shadcn-react-table/example-basic#${{ github.sha }}" --dry-run

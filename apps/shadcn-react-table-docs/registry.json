@@ -1,0 +1,2372 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "srt-examples",
+  "homepage": "https://github.com/anindosarker/shadcn-react-table",
+  "items": [
+    {
+      "name": "example-advanced",
+      "type": "registry:block",
+      "title": "Advanced Example",
+      "description": "Advanced Shadcn React Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "examples/advanced/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/advanced/advanced.tsx"
+        },
+        {
+          "path": "examples/advanced/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/advanced/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-aggregation-and-grouping",
+      "type": "registry:block",
+      "title": "Aggregation and Grouping Example",
+      "description": "A Shadcn React Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/aggregation-and-grouping/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/aggregation-and-grouping/aggregation-and-grouping.tsx"
+        },
+        {
+          "path": "examples/aggregation-and-grouping/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/aggregation-and-grouping/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-aggregation-multi",
+      "type": "registry:block",
+      "title": "Aggregation Multi",
+      "description": "Aggregation Multi example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/aggregation-multi/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/aggregation-multi/aggregation-multi.tsx"
+        },
+        {
+          "path": "examples/aggregation-multi/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/aggregation-multi/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-alternate-column-filtering",
+      "type": "registry:block",
+      "title": "Popover Filters Example",
+      "description": "An example of Shadcn React Table which shows an excel-like column filters.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/alternate-column-filtering/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/alternate-column-filtering/alternate-column-filtering.tsx"
+        },
+        {
+          "path": "examples/alternate-column-filtering/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/alternate-column-filtering/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-alternate-detail-panel",
+      "type": "registry:block",
+      "title": "Alternate Detail Panel",
+      "description": "Alternate Detail Panel example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/alternate-detail-panel/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/alternate-detail-panel/alternate-detail-panel.tsx"
+        },
+        {
+          "path": "examples/alternate-detail-panel/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/alternate-detail-panel/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-alternate-pagination",
+      "type": "registry:block",
+      "title": "Alternate Pagination",
+      "description": "Alternate Pagination example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/alternate-pagination/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/alternate-pagination/alternate-pagination.tsx"
+        },
+        {
+          "path": "examples/alternate-pagination/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/alternate-pagination/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-basic",
+      "type": "registry:block",
+      "title": "Basic Example",
+      "description": "A basic example of Shadcn React Table which includes sorting, filtering, search, and pagination features by default",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/basic/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/basic/basic.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-chart-detail-panel",
+      "type": "registry:block",
+      "title": "Chart Detail Panel Example",
+      "description": "A Shadcn React Table example demonstrating how to use Recharts with the Detail Panel feature.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/chart-detail-panel/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/chart-detail-panel/chart-detail-panel.tsx"
+        },
+        {
+          "path": "examples/chart-detail-panel/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/chart-detail-panel/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "recharts"
+      ]
+    },
+    {
+      "name": "example-column-actions-space",
+      "type": "registry:block",
+      "title": "Column Actions Space",
+      "description": "Column Actions Space example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/column-actions-space/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/column-actions-space/column-actions-space.tsx"
+        },
+        {
+          "path": "examples/column-actions-space/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/column-actions-space/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-column-alignment",
+      "type": "registry:block",
+      "title": "Column Alignment",
+      "description": "Column Alignment example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/column-alignment/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/column-alignment/column-alignment.tsx"
+        },
+        {
+          "path": "examples/column-alignment/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/column-alignment/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-custom-column-actions",
+      "type": "registry:block",
+      "title": "Custom Column Actions",
+      "description": "Custom Column Actions example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "examples/custom-column-actions/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/custom-column-actions/custom-column-actions.tsx"
+        },
+        {
+          "path": "examples/custom-column-actions/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/custom-column-actions/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-custom-column-filtering-ui",
+      "type": "registry:block",
+      "title": "Custom Filter UI Example",
+      "description": "An example of Shadcn React Table which shows custom filter ui in a sidebar.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/custom-column-filtering-ui/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/custom-column-filtering-ui/custom-column-filtering-ui.tsx"
+        },
+        {
+          "path": "examples/custom-column-filtering-ui/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/custom-column-filtering-ui/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-custom-headless",
+      "type": "registry:block",
+      "title": "Custom Headless Example",
+      "description": "A custom headless example of Shadcn React Table which shows how you can use the useShadcnReactTable hook to build with your own UI components",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "table"
+      ],
+      "files": [
+        {
+          "path": "examples/custom-headless/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/custom-headless/custom-headless.tsx"
+        },
+        {
+          "path": "examples/custom-headless/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/custom-headless/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-custom-top-toolbar",
+      "type": "registry:block",
+      "title": "Custom Top Toolbar",
+      "description": "Custom Top Toolbar example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/custom-top-toolbar/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/custom-top-toolbar/custom-top-toolbar.tsx"
+        },
+        {
+          "path": "examples/custom-top-toolbar/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/custom-top-toolbar/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-display-columns",
+      "type": "registry:block",
+      "title": "Customize Display Columns",
+      "description": "Customize Display Columns example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-display-columns/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-display-columns/customize-display-columns.tsx"
+        },
+        {
+          "path": "examples/customize-display-columns/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-display-columns/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-filter-components",
+      "type": "registry:block",
+      "title": "Customize Filter Components",
+      "description": "Customize Filter Components example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-filter-components/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-filter-components/customize-filter-components.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-filter-modes",
+      "type": "registry:block",
+      "title": "Filter Switching Example",
+      "description": "An example of Shadcn React Table which shows how to let the user switch between multiple filtering modes.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-filter-modes/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-filter-modes/customize-filter-modes.tsx"
+        },
+        {
+          "path": "examples/customize-filter-modes/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-filter-modes/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-filter-variants",
+      "type": "registry:block",
+      "title": "Filter Variants Example",
+      "description": "An example of Shadcn React Table which shows all of the powerful built-in filter variants.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-filter-variants/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-filter-variants/customize-filter-variants.tsx"
+        },
+        {
+          "path": "examples/customize-filter-variants/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-filter-variants/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-global-filter-component",
+      "type": "registry:block",
+      "title": "Customize Global Filter Component",
+      "description": "Customize Global Filter Component example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-global-filter-component/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-global-filter-component/customize-global-filter-component.tsx"
+        },
+        {
+          "path": "examples/customize-global-filter-component/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-global-filter-component/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-remove-column-grouping",
+      "type": "registry:block",
+      "title": "Customized Grouping Example",
+      "description": "A Shadcn React Table example demonstrating various ways to customize the grouping UI.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-remove-column-grouping/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-remove-column-grouping/customize-remove-column-grouping.tsx"
+        },
+        {
+          "path": "examples/customize-remove-column-grouping/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-remove-column-grouping/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-row-selection",
+      "type": "registry:block",
+      "title": "Customize Row Selection",
+      "description": "Customize Row Selection example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-row-selection/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-row-selection/customize-row-selection.tsx"
+        },
+        {
+          "path": "examples/customize-row-selection/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-row-selection/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-customize-table-styles",
+      "type": "registry:block",
+      "title": "Customize Table Styles",
+      "description": "Customize Table Styles example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/customize-table-styles/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/customize-table-styles/customize-table-styles.tsx"
+        },
+        {
+          "path": "examples/customize-table-styles/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/customize-table-styles/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-disable-column-actions",
+      "type": "registry:block",
+      "title": "Disable Column Actions",
+      "description": "Disable Column Actions example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/disable-column-actions/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/disable-column-actions/disable-column-actions.tsx"
+        },
+        {
+          "path": "examples/disable-column-actions/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/disable-column-actions/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-disable-column-hiding",
+      "type": "registry:block",
+      "title": "Disable Column Hiding",
+      "description": "Disable Column Hiding example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/disable-column-hiding/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/disable-column-hiding/disable-column-hiding.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-disable-density-toggle",
+      "type": "registry:block",
+      "title": "Disable Density Toggle",
+      "description": "Disable Density Toggle example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/disable-density-toggle/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/disable-density-toggle/disable-density-toggle.tsx"
+        },
+        {
+          "path": "examples/disable-density-toggle/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/disable-density-toggle/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-dynamic-columns",
+      "type": "registry:block",
+      "title": "Dynamic Columns Example",
+      "description": "An example of Shadcn React Table which shows how to fetch remote data and generate columns dynamically",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/dynamic-columns/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/dynamic-columns/dynamic-columns.tsx"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-editing-crud-cell",
+      "type": "registry:block",
+      "title": "Editing CRUD Inline Example",
+      "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline cell features",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "examples/editing-crud-cell/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-cell/editing-crud-cell.tsx"
+        },
+        {
+          "path": "examples/editing-crud-cell/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-cell/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-editing-crud-modal",
+      "type": "registry:block",
+      "title": "Editing CRUD Example",
+      "description": "An example of Shadcn React Table which shows how to use editing CRUD features",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button",
+        "dialog"
+      ],
+      "files": [
+        {
+          "path": "examples/editing-crud-modal/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-modal/editing-crud-modal.tsx"
+        },
+        {
+          "path": "examples/editing-crud-modal/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-modal/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-editing-crud-row",
+      "type": "registry:block",
+      "title": "Editing CRUD Inline Row Example",
+      "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline Row features",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/editing-crud-row/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-row/editing-crud-row.tsx"
+        },
+        {
+          "path": "examples/editing-crud-row/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-row/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-editing-crud-table",
+      "type": "registry:block",
+      "title": "Editing CRUD Inline Example",
+      "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline table features",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "examples/editing-crud-table/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-table/editing-crud-table.tsx"
+        },
+        {
+          "path": "examples/editing-crud-table/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-table/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-editing-crud-tree",
+      "type": "registry:block",
+      "title": "Editing CRUD Tree Example",
+      "description": "An example of Shadcn React Table which shows how to use editing CRUD features with expanding sub rows",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/editing-crud-tree/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-tree/editing-crud-tree.tsx"
+        },
+        {
+          "path": "examples/editing-crud-tree/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/editing-crud-tree/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-enable-cell-actions",
+      "type": "registry:block",
+      "title": "Enable Cell Actions",
+      "description": "Enable Cell Actions example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-cell-actions/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-cell-actions/enable-cell-actions.tsx"
+        },
+        {
+          "path": "examples/enable-cell-actions/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-cell-actions/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-click-to-copy",
+      "type": "registry:block",
+      "title": "Enable Click To Copy",
+      "description": "Enable Click To Copy example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-click-to-copy/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-click-to-copy/enable-click-to-copy.tsx"
+        },
+        {
+          "path": "examples/enable-click-to-copy/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-click-to-copy/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-column-grouping",
+      "type": "registry:block",
+      "title": "Column Grouping Example",
+      "description": "A Shadcn React Table example demonstrating different grouping UI modes.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "label",
+        "radio-group"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-column-grouping/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-grouping/enable-column-grouping.tsx"
+        },
+        {
+          "path": "examples/enable-column-grouping/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-grouping/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-column-ordering",
+      "type": "registry:block",
+      "title": "Column DnD Ordering Example",
+      "description": "An example of Shadcn React Table which shows how to enable column to be re-arranged via drag and drop.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-column-ordering/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-ordering/enable-column-ordering.tsx"
+        },
+        {
+          "path": "examples/enable-column-ordering/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-ordering/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-column-pinning",
+      "type": "registry:block",
+      "title": "Column Pinning Example",
+      "description": "An example of Shadcn React Table which shows how to make the header and footer sticky while scrolling.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "dropdown-menu"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-column-pinning/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-pinning/enable-column-pinning.tsx"
+        },
+        {
+          "path": "examples/enable-column-pinning/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-pinning/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-column-resizing",
+      "type": "registry:block",
+      "title": "Enable Column Resizing",
+      "description": "Enable Column Resizing example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-column-resizing/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-resizing/enable-column-resizing.tsx"
+        },
+        {
+          "path": "examples/enable-column-resizing/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-resizing/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-column-virtualization",
+      "type": "registry:block",
+      "title": "Column Virtualization Example",
+      "description": "An example of a Shadcn React Table with column virtualization enabled to achieve higher performance when rendering large data sets",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-column-virtualization/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-virtualization/enable-column-virtualization.tsx"
+        },
+        {
+          "path": "examples/enable-column-virtualization/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-column-virtualization/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-detail-panel-conditionally",
+      "type": "registry:block",
+      "title": "Detail Panel Example",
+      "description": "A Shadcn React Table example show how use use expandable rows to show additional information about a row.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-detail-panel-conditionally/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-detail-panel-conditionally/enable-detail-panel-conditionally.tsx"
+        },
+        {
+          "path": "examples/enable-detail-panel-conditionally/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-detail-panel-conditionally/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-detail-panel-virtualized",
+      "type": "registry:block",
+      "title": "Enable Detail Panel Virtualized",
+      "description": "Enable Detail Panel Virtualized example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-detail-panel-virtualized/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-detail-panel-virtualized/enable-detail-panel-virtualized.tsx"
+        },
+        {
+          "path": "examples/enable-detail-panel-virtualized/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-detail-panel-virtualized/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-expanding-tree",
+      "type": "registry:block",
+      "title": "Enable Expanding Tree",
+      "description": "Enable Expanding Tree example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-expanding-tree/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-expanding-tree/enable-expanding-tree.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-filter-facet-values",
+      "type": "registry:block",
+      "title": "Faceted Values Example",
+      "description": "An example of Shadcn React Table which shows how to use faceted values to automatically populate filter suggestions.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-filter-facet-values/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-filter-facet-values/enable-filter-facet-values.tsx"
+        },
+        {
+          "path": "examples/enable-filter-facet-values/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-filter-facet-values/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-dragging",
+      "type": "registry:block",
+      "title": "Row Dragging Example",
+      "description": "An example of Shadcn React Table which shows how to drag and drop rows for various use cases.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-dragging/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-dragging/enable-row-dragging.tsx"
+        },
+        {
+          "path": "examples/enable-row-dragging/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-dragging/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-numbers-original",
+      "type": "registry:block",
+      "title": "Enable Row Numbers Original",
+      "description": "Enable Row Numbers Original example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-numbers-original/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-numbers-original/enable-row-numbers-original.tsx"
+        },
+        {
+          "path": "examples/enable-row-numbers-original/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-numbers-original/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-numbers-static",
+      "type": "registry:block",
+      "title": "Enable Row Numbers Static",
+      "description": "Enable Row Numbers Static example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-numbers-static/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-numbers-static/enable-row-numbers-static.tsx"
+        },
+        {
+          "path": "examples/enable-row-numbers-static/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-numbers-static/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-ordering",
+      "type": "registry:block",
+      "title": "Row DnD Ordering Example",
+      "description": "An example of Shadcn React Table which shows how to enable column to be re-arranged via drag and drop.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-ordering/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-ordering/enable-row-ordering.tsx"
+        },
+        {
+          "path": "examples/enable-row-ordering/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-ordering/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-pinning-select",
+      "type": "registry:block",
+      "title": "Sticky Row Selection Example",
+      "description": "An example of Shadcn React Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-pinning-select/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-pinning-select/enable-row-pinning-select.tsx"
+        },
+        {
+          "path": "examples/enable-row-pinning-select/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-pinning-select/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-pinning-static",
+      "type": "registry:block",
+      "title": "Static Row Pinning Example",
+      "description": "An example of Shadcn React Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-pinning-static/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-pinning-static/enable-row-pinning-static.tsx"
+        },
+        {
+          "path": "examples/enable-row-pinning-static/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-pinning-static/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-pinning-sticky",
+      "type": "registry:block",
+      "title": "Sticky Row Pinning Example",
+      "description": "An example of Shadcn React Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-pinning-sticky/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-pinning-sticky/enable-row-pinning-sticky.tsx"
+        },
+        {
+          "path": "examples/enable-row-pinning-sticky/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-pinning-sticky/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-selection",
+      "type": "registry:block",
+      "title": "Enable Row Selection",
+      "description": "Enable Row Selection example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-selection/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-selection/enable-row-selection.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-row-virtualization",
+      "type": "registry:block",
+      "title": "Row Virtualization Example",
+      "description": "An example of a Shadcn React Table with row virtualization enabled to achieve higher performance when rendering large data sets",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-row-virtualization/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-virtualization/enable-row-virtualization.tsx"
+        },
+        {
+          "path": "examples/enable-row-virtualization/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-row-virtualization/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-enable-sticky-header",
+      "type": "registry:block",
+      "title": "Sticky Header Example",
+      "description": "An example of Shadcn React Table which shows how to make the header and footer sticky while scrolling.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/enable-sticky-header/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/enable-sticky-header/enable-sticky-header.tsx"
+        },
+        {
+          "path": "examples/enable-sticky-header/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/enable-sticky-header/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-expanding-tree-expanded",
+      "type": "registry:block",
+      "title": "Expanding Tree Example",
+      "description": "A Shadcn React Table example demonstrating expandable sub-rows in a tree structure",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/expanding-tree-expanded/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/expanding-tree-expanded/expanding-tree-expanded.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-expanding-tree-flat-parse",
+      "type": "registry:block",
+      "title": "Expanding Parsed Tree Example",
+      "description": "A Shadcn React Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/expanding-tree-flat-parse/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/expanding-tree-flat-parse/expanding-tree-flat-parse.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-expanding-tree-root-expanded",
+      "type": "registry:block",
+      "title": "Expanding Tree Root Expanded",
+      "description": "Expanding Tree Root Expanded example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/expanding-tree-root-expanded/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/expanding-tree-root-expanded/expanding-tree-root-expanded.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-export-to-csv",
+      "type": "registry:block",
+      "title": "CSV Export Example",
+      "description": "An example of how to export data to CSV using Shadcn React Table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/export-to-csv/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/export-to-csv/export-to-csv.tsx"
+        },
+        {
+          "path": "examples/export-to-csv/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/export-to-csv/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "export-to-csv"
+      ]
+    },
+    {
+      "name": "example-export-to-pdf",
+      "type": "registry:block",
+      "title": "PDF Export Example",
+      "description": "An example of how to export data to PDF using Shadcn React Table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/export-to-pdf/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/export-to-pdf/export-to-pdf.tsx"
+        },
+        {
+          "path": "examples/export-to-pdf/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/export-to-pdf/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "jspdf",
+        "jspdf-autotable"
+      ]
+    },
+    {
+      "name": "example-external-toolbar",
+      "type": "registry:block",
+      "title": "External Toolbar",
+      "description": "External Toolbar example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/external-toolbar/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/external-toolbar/external-toolbar.tsx"
+        },
+        {
+          "path": "examples/external-toolbar/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/external-toolbar/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-font-awesome-icons",
+      "type": "registry:block",
+      "title": "Font Awesome Icons",
+      "description": "Font Awesome Icons example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/font-awesome-icons/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/font-awesome-icons/font-awesome-icons.tsx"
+        },
+        {
+          "path": "examples/font-awesome-icons/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/font-awesome-icons/makeData.ts"
+        }
+      ],
+      "dependencies": [
+        "@fortawesome/fontawesome-svg-core",
+        "@fortawesome/free-solid-svg-icons",
+        "@fortawesome/react-fontawesome"
+      ]
+    },
+    {
+      "name": "example-infinite-scrolling",
+      "type": "registry:block",
+      "title": "Infinite Scrolling Example",
+      "description": "An example of Shadcn React Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/infinite-scrolling/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/infinite-scrolling/infinite-scrolling.tsx"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-lazy-detail-panel",
+      "type": "registry:block",
+      "title": "Lazy Detail Panel Example",
+      "description": "A Shadcn React Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "alert",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "examples/lazy-detail-panel/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/lazy-detail-panel/lazy-detail-panel.tsx"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-lazy-sub-rows",
+      "type": "registry:block",
+      "title": "Lazy Sub-Rows Example",
+      "description": "A Shadcn React Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/lazy-sub-rows/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/lazy-sub-rows/lazy-sub-rows.tsx"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-linear-progress",
+      "type": "registry:block",
+      "title": "Linear Progress",
+      "description": "Linear Progress example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/linear-progress/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/linear-progress/linear-progress.tsx"
+        },
+        {
+          "path": "examples/linear-progress/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/linear-progress/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-loading",
+      "type": "registry:block",
+      "title": "Loading",
+      "description": "Loading example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/loading/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/loading/loading.tsx"
+        },
+        {
+          "path": "examples/loading/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/loading/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-ar",
+      "type": "registry:block",
+      "title": "Localization I18n Ar",
+      "description": "Localization I18n Ar example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-ar/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ar/localization-i18n-ar.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-ar/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ar/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-az",
+      "type": "registry:block",
+      "title": "Localization I18n Az",
+      "description": "Localization I18n Az example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-az/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-az/localization-i18n-az.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-az/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-az/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-bg",
+      "type": "registry:block",
+      "title": "Localization I18n Bg",
+      "description": "Localization I18n Bg example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-bg/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-bg/localization-i18n-bg.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-bg/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-bg/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-cs",
+      "type": "registry:block",
+      "title": "Localization I18n Cs",
+      "description": "Localization I18n Cs example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-cs/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-cs/localization-i18n-cs.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-cs/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-cs/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-da",
+      "type": "registry:block",
+      "title": "Localization I18n Da",
+      "description": "Localization I18n Da example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-da/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-da/localization-i18n-da.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-da/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-da/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-de",
+      "type": "registry:block",
+      "title": "Localization I18n De",
+      "description": "Localization I18n De example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-de/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-de/localization-i18n-de.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-de/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-de/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-el",
+      "type": "registry:block",
+      "title": "Localization I18n El",
+      "description": "Localization I18n El example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-el/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-el/localization-i18n-el.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-el/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-el/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-en",
+      "type": "registry:block",
+      "title": "Localization I18n En",
+      "description": "Localization I18n En example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-en/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-en/localization-i18n-en.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-en/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-en/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-es",
+      "type": "registry:block",
+      "title": "Localization I18n Es",
+      "description": "Localization I18n Es example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-es/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-es/localization-i18n-es.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-es/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-es/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-et",
+      "type": "registry:block",
+      "title": "Localization I18n Et",
+      "description": "Localization I18n Et example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-et/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-et/localization-i18n-et.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-et/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-et/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-fa",
+      "type": "registry:block",
+      "title": "Localization I18n Fa",
+      "description": "Localization I18n Fa example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-fa/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-fa/localization-i18n-fa.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-fa/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-fa/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-fi",
+      "type": "registry:block",
+      "title": "Localization I18n Fi",
+      "description": "Localization I18n Fi example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-fi/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-fi/localization-i18n-fi.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-fi/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-fi/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-fr",
+      "type": "registry:block",
+      "title": "Localization I18n Fr",
+      "description": "Localization I18n Fr example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-fr/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-fr/localization-i18n-fr.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-fr/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-fr/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-he",
+      "type": "registry:block",
+      "title": "Localization I18n He",
+      "description": "Localization I18n He example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-he/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-he/localization-i18n-he.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-he/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-he/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-hr",
+      "type": "registry:block",
+      "title": "Localization I18n Hr",
+      "description": "Localization I18n Hr example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-hr/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-hr/localization-i18n-hr.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-hr/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-hr/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-hu",
+      "type": "registry:block",
+      "title": "Localization I18n Hu",
+      "description": "Localization I18n Hu example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-hu/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-hu/localization-i18n-hu.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-hu/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-hu/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-hy",
+      "type": "registry:block",
+      "title": "Localization I18n Hy",
+      "description": "Localization I18n Hy example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-hy/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-hy/localization-i18n-hy.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-hy/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-hy/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-id",
+      "type": "registry:block",
+      "title": "Localization I18n Id",
+      "description": "Localization I18n Id example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-id/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-id/localization-i18n-id.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-id/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-id/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-it",
+      "type": "registry:block",
+      "title": "Localization I18n It",
+      "description": "Localization I18n It example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-it/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-it/localization-i18n-it.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-it/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-it/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-ja",
+      "type": "registry:block",
+      "title": "Localization I18n Ja",
+      "description": "Localization I18n Ja example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-ja/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ja/localization-i18n-ja.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-ja/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ja/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-ko",
+      "type": "registry:block",
+      "title": "Localization I18n Ko",
+      "description": "Localization I18n Ko example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-ko/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ko/localization-i18n-ko.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-ko/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ko/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-nl",
+      "type": "registry:block",
+      "title": "Localization I18n Nl",
+      "description": "Localization I18n Nl example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-nl/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-nl/localization-i18n-nl.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-nl/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-nl/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-no",
+      "type": "registry:block",
+      "title": "Localization I18n No",
+      "description": "Localization I18n No example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-no/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-no/localization-i18n-no.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-no/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-no/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-np",
+      "type": "registry:block",
+      "title": "Localization I18n Np",
+      "description": "Localization I18n Np example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-np/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-np/localization-i18n-np.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-np/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-np/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-pl",
+      "type": "registry:block",
+      "title": "Localization I18n Pl",
+      "description": "Localization I18n Pl example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-pl/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-pl/localization-i18n-pl.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-pl/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-pl/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-pt",
+      "type": "registry:block",
+      "title": "Localization I18n Pt",
+      "description": "Localization I18n Pt example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-pt/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-pt/localization-i18n-pt.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-pt/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-pt/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-pt-BR",
+      "type": "registry:block",
+      "title": "Localization I18n Pt BR",
+      "description": "Localization I18n Pt BR example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-pt-BR/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-pt-BR/localization-i18n-pt-BR.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-pt-BR/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-pt-BR/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-ro",
+      "type": "registry:block",
+      "title": "Localization I18n Ro",
+      "description": "Localization I18n Ro example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-ro/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ro/localization-i18n-ro.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-ro/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ro/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-ru",
+      "type": "registry:block",
+      "title": "Localization I18n Ru",
+      "description": "Localization I18n Ru example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-ru/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ru/localization-i18n-ru.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-ru/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-ru/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-sk",
+      "type": "registry:block",
+      "title": "Localization I18n Sk",
+      "description": "Localization I18n Sk example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-sk/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sk/localization-i18n-sk.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-sk/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sk/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-sr-Cyrl-RS",
+      "type": "registry:block",
+      "title": "Localization I18n Sr Cyrl RS",
+      "description": "Localization I18n Sr Cyrl RS example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-sr-Cyrl-RS/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sr-Cyrl-RS/localization-i18n-sr-Cyrl-RS.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-sr-Cyrl-RS/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sr-Cyrl-RS/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-sr-Latn-RS",
+      "type": "registry:block",
+      "title": "Localization I18n Sr Latn RS",
+      "description": "Localization I18n Sr Latn RS example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-sr-Latn-RS/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sr-Latn-RS/localization-i18n-sr-Latn-RS.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-sr-Latn-RS/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sr-Latn-RS/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-sv",
+      "type": "registry:block",
+      "title": "Localization I18n Sv",
+      "description": "Localization I18n Sv example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-sv/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sv/localization-i18n-sv.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-sv/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-sv/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-tr",
+      "type": "registry:block",
+      "title": "Localization I18n Tr",
+      "description": "Localization I18n Tr example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-tr/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-tr/localization-i18n-tr.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-tr/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-tr/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-uk",
+      "type": "registry:block",
+      "title": "Localization I18n Uk",
+      "description": "Localization I18n Uk example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-uk/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-uk/localization-i18n-uk.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-uk/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-uk/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-vi",
+      "type": "registry:block",
+      "title": "Localization I18n Vi",
+      "description": "Localization I18n Vi example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-vi/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-vi/localization-i18n-vi.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-vi/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-vi/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-zh-hans",
+      "type": "registry:block",
+      "title": "Localization I18n Zh Hans",
+      "description": "Localization I18n Zh Hans example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-zh-hans/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-zh-hans/localization-i18n-zh-hans.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-zh-hans/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-zh-hans/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-localization-i18n-zh-hant",
+      "type": "registry:block",
+      "title": "Localization I18n Zh Hant",
+      "description": "Localization I18n Zh Hant example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/localization-i18n-zh-hant/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-zh-hant/localization-i18n-zh-hant.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-zh-hant/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-zh-hant/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-manual-selection",
+      "type": "registry:block",
+      "title": "Manual Selection",
+      "description": "Manual Selection example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/manual-selection/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/manual-selection/manual-selection.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-minimal",
+      "type": "registry:block",
+      "title": "Minimal Example",
+      "description": "A minimal example of Shadcn React Table which turns off most of the advanced features",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/minimal/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/minimal/minimal.tsx"
+        },
+        {
+          "path": "examples/minimal/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/minimal/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-mui-theme",
+      "type": "registry:block",
+      "title": "Mui Theme",
+      "description": "Mui Theme example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/mui-theme/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/mui-theme/mui-theme.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-multi-sorting",
+      "type": "registry:block",
+      "title": "Multi Sorting",
+      "description": "Multi Sorting example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/multi-sorting/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/multi-sorting/multi-sorting.tsx"
+        },
+        {
+          "path": "examples/multi-sorting/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/multi-sorting/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-persistent-state",
+      "type": "registry:block",
+      "title": "Persistent State",
+      "description": "Persistent State example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/persistent-state/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-state/persistent-state.tsx"
+        },
+        {
+          "path": "examples/persistent-state/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-state/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-react-query",
+      "type": "registry:block",
+      "title": "React Query Example",
+      "description": "An example of Shadcn React Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "examples/react-query/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/react-query/react-query.tsx"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
+      ]
+    },
+    {
+      "name": "example-remote",
+      "type": "registry:block",
+      "title": "Remote Data Fetching Example",
+      "description": "An example of Shadcn React Table which shows how to fetch remote data and filter and paginate on a remote server",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/remote/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/remote/remote.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-row-actions-buttons",
+      "type": "registry:block",
+      "title": "Row Actions Buttons",
+      "description": "Row Actions Buttons example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "examples/row-actions-buttons/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/row-actions-buttons/row-actions-buttons.tsx"
+        },
+        {
+          "path": "examples/row-actions-buttons/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/row-actions-buttons/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-row-actions-menu-items",
+      "type": "registry:block",
+      "title": "Row Actions Menu Items",
+      "description": "Row Actions Menu Items example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/row-actions-menu-items/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/row-actions-menu-items/row-actions-menu-items.tsx"
+        },
+        {
+          "path": "examples/row-actions-menu-items/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/row-actions-menu-items/makeData.ts"
+        }
+      ]
+    },
+    {
+      "name": "example-single-row-selection",
+      "type": "registry:block",
+      "title": "Single Row Selection",
+      "description": "Single Row Selection example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/single-row-selection/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/single-row-selection/single-row-selection.tsx"
+        }
+      ]
+    },
+    {
+      "name": "example-virtualized",
+      "type": "registry:block",
+      "title": "Virtualized Example",
+      "description": "An example of a Shadcn React Table with virtualization enabled to achieve higher performance when rendering large data sets",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table"
+      ],
+      "files": [
+        {
+          "path": "examples/virtualized/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/virtualized/virtualized.tsx"
+        },
+        {
+          "path": "examples/virtualized/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/virtualized/makeData.ts"
+        }
+      ]
+    }
+  ]
+}
