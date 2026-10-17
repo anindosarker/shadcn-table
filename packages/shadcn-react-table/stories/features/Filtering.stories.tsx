@@ -10,7 +10,7 @@ import {
   NativeSelectOption,
 } from '@/components/ui/native-select';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Filtering Examples',
