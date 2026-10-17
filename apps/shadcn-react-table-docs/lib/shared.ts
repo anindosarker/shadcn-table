@@ -12,6 +12,14 @@ export const gitConfig = {
   branch: 'claude/review',
 };
 
+/**
+ * Site origin for absolute URLs handed to tools outside the site (the copy
+ * prompt): `NEXT_PUBLIC_SITE_URL` in deployments, the dev port otherwise.
+ */
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:5320'
+).replace(/\/$/, '');
+
 const getContentUrl = createGetUrl(docsContentRoute);
 
 export function getPageMarkdownUrl(page: { slugs: string[]; locale?: string }) {

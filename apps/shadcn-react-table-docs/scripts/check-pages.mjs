@@ -113,6 +113,20 @@ for (const route of pages) {
       viewport: { width, height: 900 },
       colorScheme: 'dark',
     });
+    // Headless clipboard is not readable; the playground's copy items write
+    // through navigator.clipboard.writeText, stubbed to keep the last text
+    // on window.__srtClipboard for the page checks.
+    await ctx.addInitScript(() => {
+      window.__srtClipboard = '';
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: {
+          writeText: async (text) => {
+            window.__srtClipboard = String(text);
+          },
+        },
+      });
+    });
     const page = await ctx.newPage();
     const errors = [];
     page.on('console', (m) => {

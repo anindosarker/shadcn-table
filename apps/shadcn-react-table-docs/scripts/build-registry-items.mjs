@@ -29,6 +29,11 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  findExamplePage,
+  loadExamplePages,
+  readExampleExportName,
+} from '../lib/example-pages.mjs';
 
 const APP_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -67,25 +72,6 @@ const titleCase = (slug) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
-/** Minimal frontmatter reader: `key: value` lines between the first `---` pair. */
-function readFrontmatter(source) {
-  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match) return {};
-  const data = {};
-  for (const line of match[1].split(/\r?\n/)) {
-    const pair = line.match(/^(\w+):\s*(.*)$/);
-    if (!pair) continue;
-    let value = pair[2].trim();
-    if (value.startsWith("'") && value.endsWith("'")) {
-      value = value.slice(1, -1).replace(/''/g, "'");
-    } else if (value.startsWith('"') && value.endsWith('"')) {
-      value = JSON.parse(value);
-    }
-    data[pair[1]] = value;
-  }
-  return data;
-}
-
 /** Every module specifier imported by a TS source, static and dynamic. */
 function importSpecifiers(source) {
   const specifiers = new Set();
@@ -105,25 +91,6 @@ const packageName = (specifier) => {
   const parts = specifier.split('/');
   return specifier.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
 };
-
-/** Docs pages that render an example, keyed by the example's default export name. */
-async function loadPages() {
-  const bySlug = new Map();
-  const byComponent = new Map();
-  const files = (await fs.readdir(PAGES_DIR)).filter((f) => f.endsWith('.mdx'));
-  for (const file of files) {
-    const source = await fs.readFile(path.join(PAGES_DIR, file), 'utf8');
-    const page = {
-      slug: file.replace(/\.mdx$/, ''),
-      ...readFrontmatter(source),
-    };
-    bySlug.set(page.slug, page);
-    for (const match of source.matchAll(/<([A-Z][A-Za-z0-9]*Example)\s*\/>/g)) {
-      if (!byComponent.has(match[1])) byComponent.set(match[1], page);
-    }
-  }
-  return { bySlug, byComponent };
-}
 
 /**
  * `gitConfig` from lib/shared.ts (user, repo, branch), read as text so the
@@ -196,12 +163,8 @@ async function buildItem(slug, pages, libraryItem) {
     });
   }
 
-  const indexSource = await fs
-    .readFile(path.join(dir, 'index.tsx'), 'utf8')
-    .catch(() => '');
-  const exportName = indexSource.match(/export\s+default\s+(\w+)/)?.[1];
-  const page =
-    pages.bySlug.get(slug) ?? (exportName && pages.byComponent.get(exportName));
+  const exportName = await readExampleExportName(dir);
+  const page = findExamplePage({ slug, exportName }, pages);
   const title = page?.title || titleCase(slug);
   const description =
     page?.description || `${title} example from shadcn-react-table.`;
@@ -219,7 +182,7 @@ async function buildItem(slug, pages, libraryItem) {
 }
 
 async function main() {
-  const pages = await loadPages();
+  const pages = await loadExamplePages(PAGES_DIR);
   const libraryItem = await libraryItemAddress();
   const slugs = (await fs.readdir(EXAMPLES_DIR, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())

@@ -54,8 +54,11 @@ export async function paginationControls(wrapper, id, check) {
  * Code toggle of `#<id>`: an example playground (Preview | Code | Split,
  * one file tab per source file) or a prop table's source toggle (no tabs).
  * Clicking Code must show the highlighted source containing `needle` with
- * its copy button, then switches a playground back to Preview. `wrapper` is
- * kept for the older call sites; the panel is located by id.
+ * its copy button, then switches a playground back to Preview. A playground
+ * also gets its full screen toggle and the caret menu's copy items checked:
+ * "Copy prompt" must write the install command for `example-<id>` through
+ * the clipboard stub scripts/check-pages.mjs installs. `wrapper` is kept for
+ * the older call sites; the panel is located by id.
  */
 export async function codeToggle(page, wrapper, id, needle, check) {
   const panel = page.locator(`#${id}`);
@@ -114,6 +117,37 @@ export async function codeToggle(page, wrapper, id, needle, check) {
         `${id}: full screen off`,
         (await full.getAttribute('aria-pressed').catch(() => null)) === 'false',
       );
+    }
+    // Caret menu: copy items above the disabled open-in items. The menu is
+    // portaled, so its items are looked up on the page.
+    const caret = panel.locator('button[aria-label="More ways to open"]');
+    check(`${id}: caret button`, (await caret.count()) === 1);
+    if (await caret.count()) {
+      await caret.first().click();
+      const menu = page.locator('[role="menu"]');
+      await menu.waitFor({ timeout: 5000 }).catch(() => {});
+      const copyInstall = menu.getByRole('menuitem', {
+        name: 'Copy install command',
+      });
+      const copyPrompt = menu.getByRole('menuitem', { name: 'Copy prompt' });
+      check(`${id}: copy install item`, (await copyInstall.count()) === 1);
+      check(`${id}: copy prompt item`, (await copyPrompt.count()) === 1);
+      if (await copyPrompt.count()) {
+        await copyPrompt.click();
+        await page.waitForTimeout(100);
+        const text = await page.evaluate(() => window.__srtClipboard ?? '');
+        check(
+          `${id}: prompt copied`,
+          text.includes('shadcn@latest add') && text.includes(`example-${id}`),
+          `len=${text.length}`,
+        );
+        check(
+          `${id}: copied state`,
+          (await menu.getByRole('menuitem', { name: 'Copied' }).count()) === 1,
+        );
+      }
+      await page.keyboard.press('Escape');
+      await menu.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
     }
   }
 }

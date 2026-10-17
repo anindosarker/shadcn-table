@@ -1,11 +1,14 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
+  CheckIcon,
   ChevronDownIcon,
   ExternalLinkIcon,
   MaximizeIcon,
   MinimizeIcon,
+  SparklesIcon,
+  TerminalIcon,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useTreePath } from 'fumadocs-ui/contexts/tree';
@@ -14,6 +17,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -38,8 +42,12 @@ interface Props {
   files: PlaygroundFile[];
   /** Link to the example folder on GitHub. */
   githubUrl: string;
+  /** `shadcn add` command that installs the example into a project. */
+  installCommand: string;
   /** Example folder name, used as the panel's anchor id. */
   name: string;
+  /** Prompt for a coding agent: install, import, docs to read, verify. */
+  prompt: string;
 }
 
 type Mode = 'preview' | 'code' | 'split';
@@ -56,18 +64,26 @@ const STORAGE_KEY = 'srt-example-mode';
 const isMode = (value: unknown): value is Mode =>
   MODES.some((mode) => mode.value === value);
 
+type CopyTarget = 'install' | 'prompt';
+
+/** How long a menu item reads "Copied" after a click. */
+const COPIED_MS = 1500;
+
 /**
  * Static playground panel around a live example: Preview, Code or Split
  * view, one tab per source file, Open in GitHub, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
  * pages the header also carries the page switcher, so the reader can jump
- * between examples without leaving the panel.
+ * between examples without leaving the panel. The caret menu next to Open in
+ * GitHub copies the install command or the agent prompt to the clipboard.
  */
 export const ExamplePlayground = ({
   children,
   files,
   githubUrl,
+  installCommand,
   name,
+  prompt,
 }: Props) => {
   const [mode, setMode] = useState<Mode>('preview');
   const [file, setFile] = useState(files[0]?.name ?? '');
@@ -75,8 +91,29 @@ export const ExamplePlayground = ({
   // The tooltip is controlled, as in the table's own toolbar button, so it
   // closes on click instead of lingering over the changed layout.
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [copied, setCopied] = useState<CopyTarget | null>(null);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const path = useTreePath();
+
+  useEffect(
+    () => () => {
+      if (copiedTimer.current) clearTimeout(copiedTimer.current);
+    },
+    [],
+  );
+
+  const copy = async (target: CopyTarget, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Clipboard blocked (permissions, insecure context): nothing to show.
+      return;
+    }
+    setCopied(target);
+    if (copiedTimer.current) clearTimeout(copiedTimer.current);
+    copiedTimer.current = setTimeout(() => setCopied(null), COPIED_MS);
+  };
 
   // The stored mode is read after mount so server and first client render
   // agree (default Preview).
@@ -223,6 +260,26 @@ export const ExamplePlayground = ({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-52">
+                {/* The menu stays open so the "Copied" state is visible. */}
+                <DropdownMenuItem
+                  onSelect={(event) => {
+                    event.preventDefault();
+                    void copy('install', installCommand);
+                  }}
+                >
+                  {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
+                  {copied === 'install' ? 'Copied' : 'Copy install command'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={(event) => {
+                    event.preventDefault();
+                    void copy('prompt', prompt);
+                  }}
+                >
+                  {copied === 'prompt' ? <CheckIcon /> : <SparklesIcon />}
+                  {copied === 'prompt' ? 'Copied' : 'Copy prompt'}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem disabled>
                   Open in StackBlitz
                   <span className="ml-auto text-xs text-fd-muted-foreground">
