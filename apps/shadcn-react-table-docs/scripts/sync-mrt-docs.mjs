@@ -72,8 +72,16 @@ const TEXT_MAP = [
   // MRT pages import MUI Box for one inline colored span (column-filtering,
   // global-filtering). Drop the import and render a Tailwind span.
   [/^import Box from '@mui\/material\/Box';\n/m, ''],
-  ['<Box component="span" color="warning.main">', '<span className="text-yellow-600">'],
+  [
+    '<Box component="span" color="warning.main">',
+    '<span className="text-yellow-600">',
+  ],
   ['</Box>', '</span>'],
+  // Prose wildcards for the option family (memoization, table-event-listeners)
+  // and MRT's short "Mui" spelling (row-selection).
+  ['`mui*Props`', '`srt*Props`'],
+  ['`mui...Props`', '`srt...Props`'],
+  [/\bMui\b/g, 'shadcn/ui'],
 ];
 
 /** Replacements applied only to the page title (from <Head><title>). */
