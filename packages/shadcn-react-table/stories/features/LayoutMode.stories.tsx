@@ -1,6 +1,6 @@
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react';
 
 const meta: Meta = {
@@ -9,7 +9,7 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -32,7 +32,13 @@ const columns: SRT_ColumnDef<Person>[] = [
   },
 ];
 
-const data = makeData(100);
+const data = [...Array(100)].map(() => ({
+  address: faker.location.streetAddress(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
 export const DefaultSemantic = () => (
   <ShadcnReactTable
