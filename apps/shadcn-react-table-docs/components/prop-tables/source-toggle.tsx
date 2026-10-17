@@ -18,7 +18,9 @@ export const SourceToggle = ({ code, tableId }: Props) => {
 
   return (
     <div
-      id={tableId}
+      // Prefixed so the page's own heading ("Table Instance APIs") cannot
+      // share the id.
+      id={`props-${tableId}`}
       className="not-prose my-8 flex scroll-mt-24 flex-col gap-4"
     >
       <div className="flex justify-end">

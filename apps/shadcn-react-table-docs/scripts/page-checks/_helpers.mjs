@@ -22,12 +22,21 @@ export async function propTable(page, tableId, check) {
 }
 
 /**
- * Live example playground: panel `#<id>` present, table with rows. The
- * table stays mounted in every view mode, so rows resolve even after the
- * Code toggle. Returns the panel locator.
+ * Example playground `#example-<id>` or prop-table source toggle
+ * `#props-<id>` for a bare example or table id. Both carry a prefix so a
+ * heading whose slug equals the id cannot resolve the locator to two nodes.
+ */
+export function panelOf(page, id) {
+  return page.locator(`[id="example-${id}"], [id="props-${id}"]`);
+}
+
+/**
+ * Live example playground: panel `#example-<id>` present, table with rows.
+ * The table stays mounted in every view mode, so rows resolve even after
+ * the Code toggle. Returns the panel locator.
  */
 export async function example(page, id, check) {
-  const panel = page.locator(`#${id}`);
+  const panel = page.locator(`[id="example-${id}"]`);
   check(`${id}: panel`, (await panel.count()) === 1);
   const rows = panel.locator('table tbody tr');
   await rows
@@ -51,7 +60,7 @@ export async function paginationControls(wrapper, id, check) {
 }
 
 /**
- * Code toggle of `#<id>`: an example playground (Preview | Code | Split,
+ * Code toggle of `#example-<id>` or `#props-<id>`: an example playground (Preview | Code | Split,
  * one file tab per source file) or a prop table's source toggle (no tabs).
  * Clicking Code must show the highlighted source containing `needle` with
  * its copy button, then switches a playground back to Preview. A playground
@@ -61,7 +70,7 @@ export async function paginationControls(wrapper, id, check) {
  * the older call sites; the panel is located by id.
  */
 export async function codeToggle(page, wrapper, id, needle, check) {
-  const panel = page.locator(`#${id}`);
+  const panel = panelOf(page, id);
   const btn = panel.locator('button', { hasText: /^Code$/ });
   check(`${id}: Code button`, (await btn.count()) === 1);
   if (!(await btn.count())) return;

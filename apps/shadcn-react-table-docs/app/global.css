@@ -73,6 +73,11 @@ html > body[data-scroll-locked] {
   margin-block: 1.25rem;
 }
 
+/* full screen pins the panel to the viewport; no page margin there */
+.docs-playground[data-fullscreen] {
+  margin: 0;
+}
+
 /* header 6px vertical padding around 28px controls */
 .docs-playground > header {
   border-bottom: var(--docs-rule);

@@ -186,7 +186,9 @@ export const ExamplePlayground = ({
 
   return (
     <div
-      id={name}
+      // Prefixed like the registry item so a guide heading whose slug is
+      // the example name ("Customize Filter Modes") cannot share the id.
+      id={`example-${name}`}
       data-mode={mode}
       data-fullscreen={fullscreen || undefined}
       className={cn(
