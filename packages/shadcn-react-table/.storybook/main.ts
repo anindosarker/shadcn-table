@@ -20,6 +20,7 @@ const config: StorybookConfig = {
     getAbsolutePath('storybook-dark-mode'),
     getAbsolutePath('@storybook/addon-docs'),
     getAbsolutePath('@storybook/addon-mcp'),
+    getAbsolutePath('@storybook/addon-vitest'),
   ],
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
