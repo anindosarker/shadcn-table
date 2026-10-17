@@ -50,14 +50,12 @@ const routesArg = args.filter((a) => a.startsWith('/'));
 const FATAL = [/hydrat/i, /Minified React error/i, /Encountered a script tag/i];
 
 /**
- * Console errors the library emits on its own (filter inputs switching
- * controlled/uncontrolled). Library bugs tracked in
- * .ai/plans/handoff/ATTENTION-2026-10-17-claude-review.md; ignored by the
- * `no console errors` check only (FATAL still applies).
+ * Console errors the library emits on its own and that are tracked as
+ * library bugs in .ai/plans/handoff/ATTENTION-2026-10-17-claude-review.md;
+ * ignored by the `no console errors` check only (FATAL still applies).
+ * Empty right now.
  */
-const KNOWN_LIBRARY_ERRORS = [
-  'A component is changing a controlled input to be uncontrolled.',
-];
+const KNOWN_LIBRARY_ERRORS = [];
 
 /**
  * Resource errors from third-party hosts (fonts blocked by an ad blocker,

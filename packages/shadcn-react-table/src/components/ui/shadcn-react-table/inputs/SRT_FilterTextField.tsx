@@ -275,7 +275,9 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       if (filterValue === undefined) {
         handleClear();
       } else if (isRangeFilter && rangeFilterIndex !== undefined) {
-        setFilterValue((filterValue as [string, string])[rangeFilterIndex]);
+        setFilterValue(
+          (filterValue as [string, string])[rangeFilterIndex] ?? '',
+        );
       } else {
         setFilterValue(filterValue as string);
       }
@@ -449,7 +451,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                     handleAutocompleteInputChange(e.target.value)
                   }
                   onClick={(e) => e.stopPropagation()}
-                  value={filterValue as string}
+                  value={(filterValue as string) ?? ''}
                 />
               </PopoverTrigger>
               <PopoverContent
@@ -611,7 +613,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               {...commonTextFieldProps}
               onChange={handleTextFieldChange}
               onClick={(e) => e.stopPropagation()}
-              value={filterValue}
+              value={filterValue ?? ''}
             />
           )}
           {endAdornment}
