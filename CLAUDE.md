@@ -11,3 +11,6 @@ This project is a table library built with tanstack table and shadcn/ui.
 - Single tracker + conventions: `.ai/plans/matching/srt-review-notes.md` (read "General notes" before any component work).
 - Per-component plans: `.ai/plans/components/<Component>.plan.md`.
 - Shared dev server: http://localhost:5273 — NEVER `pkill vite`, never start a server on the default port.
+
+## Storybook MCP
+- With `pnpm storybook` running, the `srt-sb` MCP server (http://localhost:6006/mcp) exposes `get-storybook-story-instructions`, `docs-list`, `docs-show`, `docs-show-story`, `stories-find-by-component`, `stories-preview`, `stories-changed`. Before writing or changing a story, call `get-storybook-story-instructions` and follow it. Answer props questions from `docs-show`, never from guessed prop names.
