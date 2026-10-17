@@ -3,7 +3,7 @@
  * (guides/pagination lives in a.mjs). Each entry: async ({ page, check }) =>
  * void, run after load at the first width.
  */
-import { example, exampleGroup, propTable } from './_helpers.mjs';
+import { example, exampleGroup, panelOf, propTable } from './_helpers.mjs';
 
 /** The feature's visible marker inside an example wrapper. */
 async function marker(wrapper, id, label, selector, check) {
@@ -118,7 +118,7 @@ export default {
       ],
       check,
     );
-    const de = page.locator('#localization-i18n-de');
+    const de = panelOf(page, 'localization-i18n-de');
     await page.locator('[role="tab"]', { hasText: /^de$/ }).first().click();
     await marker(
       de,
@@ -127,7 +127,7 @@ export default {
       'th:has-text("Vorname")',
       check,
     );
-    const fa = page.locator('#localization-i18n-fa');
+    const fa = panelOf(page, 'localization-i18n-fa');
     await page.locator('[role="tab"]', { hasText: /^fa$/ }).first().click();
     await marker(
       fa,
