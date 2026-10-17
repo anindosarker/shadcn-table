@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
@@ -48,13 +48,34 @@ const data = [...Array(6)].map(() => ({
   state: faker.location.state(),
 }));
 
-// API GAP: MRT's `muiTableBodyCellProps`/`muiTableHeadCellProps` (used here for
-// `align: 'center' | 'right'`) are not implemented in SRT. Per-cell alignment
-// overrides are unavailable, so these stories only exercise `layoutMode="grid"`.
 export const CenterAlignInGridLayoutMode = () => {
-  return <ShadcnReactTable columns={columns} data={data} layoutMode="grid" />;
+  return (
+    <ShadcnReactTable
+      columns={columns}
+      data={data}
+      layoutMode="grid"
+      srtTableBodyCellProps={{
+        align: 'center',
+      }}
+      srtTableHeadCellProps={{
+        align: 'center',
+      }}
+    />
+  );
 };
 
 export const RightAlignInGridLayoutMode = () => {
-  return <ShadcnReactTable columns={columns} data={data} layoutMode="grid" />;
+  return (
+    <ShadcnReactTable
+      columns={columns}
+      data={data}
+      layoutMode="grid"
+      srtTableBodyCellProps={{
+        align: 'right',
+      }}
+      srtTableHeadCellProps={{
+        align: 'right',
+      }}
+    />
+  );
 };
