@@ -1,4 +1,3 @@
-// Note: MUI usePagination minus useControlled/onChange/onClick/aria-current (page is table state; SRT_TablePagination wires clicks and aria-current).
 export type SRT_UsePaginationItem = {
   disabled: boolean;
   page: number | null;
