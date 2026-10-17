@@ -20,7 +20,7 @@ import { getValueAndLabel } from '../utils/utils';
 
 // Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
-  'ml-1 size-4 p-2 scale-75 transition-all duration-150 ease-in-out',
+  'ml-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
   {
     variants: {
       active: {
@@ -119,11 +119,11 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
 
   return (
     <>
-      {/* <Grow in={...} unmountOnExit> — Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit). */}
+      {/* <Grow in={...} unmountOnExit> — Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit); the span carries its enter (fade + zoom-in-75, 150ms), exit is instant. */}
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
-        <span className="flex-none">
+        <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
           <SRT_Tooltip side="top" title={filterTooltip}>
             {/* disableRipple — Note: shadcn Button has no ripple. */}
             <Button
@@ -148,7 +148,7 @@ export const SRT_TableHeadCellFilterLabel = <TData extends SRT_RowData>({
                 rest.className,
               )}
             >
-              <FilterAltIcon />
+              <FilterAltIcon className="size-6" />
             </Button>
           </SRT_Tooltip>
         </span>
