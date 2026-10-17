@@ -1,7 +1,7 @@
 import { type Meta } from '@storybook/react';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
+import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
 
 const meta: Meta = {
   title: 'Styling/Caption Examples',
@@ -9,16 +9,41 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'state', header: 'State' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
 ];
 
-const data = makeData(25);
+const data = [...Array(25)].map(() => ({
+  address: faker.location.streetAddress(),
+  age: faker.number.int({ max: 60, min: 20 }),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
 export const BottomCaption = () => (
   <ShadcnReactTable
@@ -28,11 +53,13 @@ export const BottomCaption = () => (
   />
 );
 
-// API GAP: muiTableProps sx (caption captionSide: 'top') not supported in SRT (cva variants / className instead)
 export const TopCaption = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
+    srtTableProps={{
+      className: '[&>caption]:caption-top',
+    }}
     renderCaption={() => 'Table Caption'}
   />
 );
