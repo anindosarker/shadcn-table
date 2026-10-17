@@ -1,4 +1,5 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import './global.css';
 import { Inter } from 'next/font/google';
 import {
@@ -31,7 +32,15 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themePresetScript }} />
         <style dangerouslySetInnerHTML={{ __html: searchHighlightStyle }} />
-        <RootProvider theme={{ defaultTheme: 'dark' }}>{children}</RootProvider>
+        {/* SRT sub-components (SRT_TopToolbar, SRT_ToggleFiltersButton, row
+            drag handles, ...) and the example playground render Radix
+            tooltips, which throw without a provider. <ShadcnReactTable>
+            mounts its own; standalone compositions (custom-headless,
+            external-toolbar, row ordering) and the home page examples need
+            this one. */}
+        <RootProvider theme={{ defaultTheme: 'dark' }}>
+          <TooltipProvider skipDelayDuration={0}>{children}</TooltipProvider>
+        </RootProvider>
       </body>
     </html>
   );
