@@ -1,0 +1,71 @@
+name: ci
+
+on:
+  push:
+    branches: [master, claude/review]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  library:
+    name: library (tsc, lint, storybook build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-react-table tsc
+      - run: pnpm --filter shadcn-react-table lint
+      - run: pnpm --filter shadcn-react-table storybook:build
+
+  test:
+    name: test (vitest browser mode)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-react-table exec playwright install --with-deps chromium
+      - run: pnpm test
+
+  docs:
+    name: docs (types, next build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-react-table-docs types:check
+      - run: pnpm --filter shadcn-react-table-docs build
+
+  registry:
+    name: registry (validate, dry-run add)
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-react-table exec shadcn registry validate "anindosarker/shadcn-react-table#${{ github.sha }}"
+      - run: pnpm --filter shadcn-react-table-docs exec shadcn add "anindosarker/shadcn-react-table/shadcn-react-table#${{ github.sha }}" --dry-run
