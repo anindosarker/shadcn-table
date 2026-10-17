@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { type SRT_TableOptions } from '@/components/ui/shadcn-react-table';
+import {
+  type SRT_Cell,
+  type SRT_TableOptions,
+} from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
@@ -282,7 +285,12 @@ export const EditingEnabledEditModeRowCustomSave = () => {
       onEditingRowSave={handleSaveRow}
       renderTopToolbarCustomActions={({ table }) =>
         table.getState().creatingRow ? (
-          <Button onClick={() => {}}>Save</Button>
+          <Button
+            className="bg-green-600 text-white hover:bg-green-700"
+            onClick={() => {}}
+          >
+            Save
+          </Button>
         ) : (
           <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
         )
@@ -341,8 +349,7 @@ export const EditingEnabledEditModeRowVirtualized = () => {
       enablePagination={false}
       enableRowSelection
       enableRowVirtualization
-      // API GAP: muiTableContainerProps (height: 400) has no SRT equivalent;
-      // dropped.
+      srtTableContainerProps={{ style: { height: 400 } }}
       onCreatingRowSave={() => {}}
       onEditingRowSave={handleSaveRow}
       renderTopToolbarCustomActions={({ table }) => (
@@ -352,11 +359,14 @@ export const EditingEnabledEditModeRowVirtualized = () => {
   );
 };
 
-// Cell-mode save: MRT wired this through muiEditTextFieldProps.onBlur. SRT
-// exposes a first-class `onEditingCellSave` callback (fired on blur/Enter in
-// cell + table modes) so the edit can be persisted to the data source.
 export const EditingEnabledEditModeCell = () => {
   const [tableData, setTableData] = useState(data);
+
+  const handleSaveCell = (cell: SRT_Cell<Person>, value: string) => {
+    // @ts-expect-error column id is a string key of Person
+    tableData[cell.row.index][cell.column.id] = value;
+    setTableData([...tableData]);
+  };
 
   return (
     <ShadcnReactTable
@@ -388,24 +398,26 @@ export const EditingEnabledEditModeCell = () => {
       editDisplayMode="cell"
       enableEditing
       onCreatingRowSave={() => {}}
-      onEditingCellSave={({ cell, value }) => {
-        setTableData((prev) =>
-          prev.map((row, i) =>
-            i === cell.row.index ? { ...row, [cell.column.id]: value } : row,
-          ),
-        );
-      }}
       renderTopToolbarCustomActions={({ table }) => (
         <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
       )}
+      srtEditTextFieldProps={({ cell }) => ({
+        onBlur: (event) => {
+          handleSaveCell(cell, event.target.value);
+        },
+      })}
     />
   );
 };
 
-// API GAP: cell-mode save was wired through muiEditTextFieldProps.onBlur (no SRT
-// equivalent); the onBlur save handler is dropped, row actions retained.
 export const EditingEnabledEditModeCellWithRowActions = () => {
-  const [tableData] = useState(data);
+  const [tableData, setTableData] = useState(data);
+
+  const handleSaveCell = (cell: SRT_Cell<Person>, value: string) => {
+    // @ts-expect-error column id is a string key of Person
+    tableData[cell.row.index][cell.column.id] = value;
+    setTableData([...tableData]);
+  };
 
   return (
     <ShadcnReactTable
@@ -441,14 +453,24 @@ export const EditingEnabledEditModeCellWithRowActions = () => {
       renderTopToolbarCustomActions={({ table }) => (
         <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
       )}
+      srtEditTextFieldProps={({ cell }) => ({
+        onBlur: (event) => {
+          handleSaveCell(cell, event.target.value);
+        },
+      })}
     />
   );
 };
 
-// API GAP: table-mode save was wired through muiEditTextFieldProps.onBlur (no
-// SRT equivalent); the onBlur save handler is dropped.
 export const EditingEnabledEditModeTable = () => {
-  const [tableData] = useState(data);
+  const [tableData, setTableData] = useState(data);
+
+  const handleSaveCell = (cell: SRT_Cell<Person>, value: string) => {
+    // @ts-expect-error column id is a string key of Person
+    tableData[+cell.row.index][cell.column.id] = value;
+    setTableData([...tableData]);
+    console.info('saved cell with value: ', value);
+  };
 
   return (
     <ShadcnReactTable
@@ -477,6 +499,11 @@ export const EditingEnabledEditModeTable = () => {
       data={tableData}
       editDisplayMode="table"
       enableEditing
+      srtEditTextFieldProps={({ cell }) => ({
+        onBlur: (event) => {
+          handleSaveCell(cell, event.target.value);
+        },
+      })}
     />
   );
 };
@@ -958,11 +985,14 @@ export const EnableEditingConditionallyTable = () => {
   );
 };
 
-// API GAP: per-cell manual onChange/onBlur was wired through
-// muiEditTextFieldProps (no SRT equivalent); the cell editors render but the
-// onChange/onBlur save handlers are dropped. SRT_Cell retained for reference.
 export const EditingCellManualOnChange = () => {
-  const [tableData] = useState(data);
+  const [tableData, setTableData] = useState(data);
+
+  const handleSaveCell = (cell: SRT_Cell<Person>, value: string) => {
+    // @ts-expect-error column id is a string key of Person
+    tableData[cell.row.index][cell.column.id] = value;
+    setTableData([...tableData]);
+  };
 
   return (
     <ShadcnReactTable
@@ -982,6 +1012,13 @@ export const EditingCellManualOnChange = () => {
         {
           accessorKey: 'state',
           header: 'State',
+          srtEditTextFieldProps: ({ cell }) => ({
+            onBlur: (event) => {
+              handleSaveCell(cell, event.target.value);
+            },
+            onChange: (event) =>
+              console.log('state col onChange', event.target.value),
+          }),
         },
         {
           accessorKey: 'phoneNumber',
@@ -992,6 +1029,13 @@ export const EditingCellManualOnChange = () => {
       data={tableData}
       editDisplayMode="cell"
       enableEditing
+      srtEditTextFieldProps={({ cell }) => ({
+        onBlur: (event) => {
+          handleSaveCell(cell, event.target.value);
+        },
+        onChange: (event) =>
+          console.log('all col onChange', event.target.value),
+      })}
     />
   );
 };
