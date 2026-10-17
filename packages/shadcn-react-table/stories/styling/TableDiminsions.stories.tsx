@@ -1,7 +1,7 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
+import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
 
 const meta: Meta = {
   title: 'Styling/Table Dimensions Examples',
@@ -9,41 +9,97 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'state', header: 'State' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
 ];
 
-const data = makeData(25);
+const data = [...Array(25)].map(() => ({
+  address: faker.location.streetAddress(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
-// API GAP: muiTablePaperProps sx (m: auto, maxWidth) not supported in SRT (cva variants / className instead)
 export const MaxWidthAndCentered = () => (
-  <ShadcnReactTable columns={columns} data={data} />
+  <ShadcnReactTable
+    columns={columns}
+    data={data}
+    srtTableLayoutProps={{
+      className: 'm-auto max-w-[800px]',
+    }}
+  />
 );
 
-// API GAP: muiTableContainerProps sx (maxHeight) not supported in SRT (cva variants / className instead)
 export const maxHeight = () => (
-  <ShadcnReactTable columns={columns} data={data} />
+  <ShadcnReactTable
+    columns={columns}
+    data={data}
+    srtTableContainerProps={{
+      className: 'max-h-[500px]',
+    }}
+  />
 );
 
-// API GAP: muiTableContainerProps sx (minHeight) not supported in SRT (cva variants / className instead)
 export const minHeight = () => (
-  <ShadcnReactTable columns={columns} data={data.slice(0, 5)} />
+  <ShadcnReactTable
+    columns={columns}
+    data={data.slice(0, 5)}
+    srtTableContainerProps={{
+      className: 'min-h-[800px]',
+    }}
+  />
 );
 
-// API GAP: muiTableContainerProps sx + table.refs height calc and muiTablePaperProps sx height not supported in SRT (cva variants / className instead)
 export const minHeightParent = () => (
   <div style={{ height: '700px' }}>
-    <ShadcnReactTable columns={columns} data={data.slice(0, 5)} />
+    <ShadcnReactTable
+      columns={columns}
+      data={data.slice(0, 5)}
+      srtTableContainerProps={({ table }) => ({
+        style: {
+          height: `calc(100% - ${table.refs.topToolbarRef.current?.offsetHeight}px - ${table.refs.bottomToolbarRef.current?.offsetHeight}px)`,
+        },
+      })}
+      srtTableLayoutProps={{
+        className: 'h-full',
+      }}
+    />
   </div>
 );
 
-// API GAP: muiTableContainerProps sx + table.refs height calc and muiTablePaperProps sx height not supported in SRT (cva variants / className instead)
 export const ContainerHeight = () => (
   <div style={{ height: '300px' }}>
-    <ShadcnReactTable columns={columns} data={data} />
+    <ShadcnReactTable
+      columns={columns}
+      data={data}
+      srtTableContainerProps={({ table }) => ({
+        style: {
+          height: `calc(100% - ${table.refs.topToolbarRef.current?.offsetHeight}px - ${table.refs.bottomToolbarRef.current?.offsetHeight}px)`,
+        },
+      })}
+      srtTableLayoutProps={{
+        className: 'h-full',
+      }}
+    />
   </div>
 );
