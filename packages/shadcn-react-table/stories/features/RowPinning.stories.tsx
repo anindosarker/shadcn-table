@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react';
+import { Button } from '@/components/ui/button';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { Button } from '@/components/ui/button';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Row Pinning Examples',
@@ -11,22 +11,41 @@ const meta: Meta = {
 
 export default meta;
 
-// API GAP: MRT set a scroll container max-height via
-// `muiTableContainerProps={{ sx: { maxHeight: '600px' } }}` and per-row height
-// via `muiTableBodyRowProps`. SRT has not implemented those MUI props, so the
-// max-height/row-height styling is dropped here; the row-pinning behaviour
-// (sticky/top/bottom/select modes) is preserved.
-
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'email', header: 'Email Address' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'city', header: 'City' },
-  { accessorKey: 'state', header: 'State' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email Address',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'city',
+    header: 'City',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
 ];
 
-const data = makeData(50);
+const data = [...Array(50)].map(() => ({
+  address: faker.location.streetAddress(),
+  city: faker.location.city(),
+  email: faker.internet.email(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  state: faker.location.state(),
+}));
 
 export const RowPinningStickyDefaultEnabled = () => (
   <ShadcnReactTable columns={columns} data={data} enableRowPinning />
@@ -54,6 +73,9 @@ export const RowPinningStickyNoPagination = () => (
     data={data}
     enablePagination={false}
     enableRowPinning
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
   />
 );
 
@@ -63,6 +85,12 @@ export const RowPinningStickyCustomRowHeight = () => (
     data={data}
     enablePagination={false}
     enableRowPinning
+    srtTableBodyRowProps={{
+      className: 'h-[100px]',
+    }}
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="sticky"
   />
 );
@@ -74,6 +102,9 @@ export const RowPinningSelectStickyMode = () => (
     enablePagination={false}
     enableRowPinning
     enableRowSelection
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="select-sticky"
   />
 );
@@ -84,6 +115,9 @@ export const RowPinningTopAndBottomMode = () => (
     data={data}
     enablePagination={false}
     enableRowPinning
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="top-and-bottom"
   />
 );
@@ -95,6 +129,9 @@ export const RowPinningTopMode = () => (
     enablePagination={false}
     enableRowPinning
     keepPinnedRows={false}
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="top"
   />
 );
@@ -106,6 +143,9 @@ export const RowPinningSelectTopMode = () => (
     enablePagination={false}
     enableRowPinning
     enableRowSelection
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="select-top"
   />
 );
@@ -116,6 +156,9 @@ export const RowPinningBottomMode = () => (
     data={data}
     enablePagination={false}
     enableRowPinning
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="bottom"
   />
 );
@@ -127,6 +170,9 @@ export const RowPinningSelectBottomMode = () => (
     enablePagination={false}
     enableRowPinning
     enableRowSelection
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="select-bottom"
   />
 );
@@ -139,6 +185,9 @@ export const RowPinningWithStickyHeader = () => (
     enableRowPinning
     enableStickyFooter
     enableStickyHeader
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
   />
 );
 
@@ -149,6 +198,9 @@ export const RowPinningWithGridLayout = () => (
     enablePagination={false}
     enableRowPinning
     layoutMode="grid"
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
   />
 );
 
@@ -159,6 +211,9 @@ export const RowPinningStickyWithVirtualization = () => (
     enablePagination={false}
     enableRowPinning
     enableRowVirtualization
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
   />
 );
 
@@ -169,6 +224,9 @@ export const RowPinningTopWithVirtualization = () => (
     enablePagination={false}
     enableRowPinning
     enableRowVirtualization
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
+    }}
     rowPinningDisplayMode="top"
   />
 );
@@ -188,6 +246,9 @@ export const RowAndColumnPinning = () => (
       rowPinning: {
         top: ['3', '5'],
       },
+    }}
+    srtTableContainerProps={{
+      className: 'max-h-[600px]',
     }}
   />
 );
