@@ -89,10 +89,18 @@ html > body[data-scroll-locked] {
   background: var(--color-fd-primary);
 }
 
+/* ---------- full-width layout ---------- */
+
+/* notebook layout boxes the grid to --fd-layout-width (97rem) and centres it;
+   make the page column fill the viewport so sidebar and TOC sit at the edges */
+#nd-notebook-layout {
+  --fd-layout-width: 100%;
+}
+
 /* ---------- content column ---------- */
 
 #nd-page:not([data-full='true']) > * {
-  max-width: 42.5rem;
+  max-width: 56rem;
 }
 
 #nd-page .prose {
