@@ -116,6 +116,13 @@ html > body[data-scroll-locked] {
   margin-inline: auto;
 }
 
+/* full pages (example pages, frontmatter `full`): fumadocs caps children at
+   1285px; keep them centred too */
+#nd-page[data-full='true'] > * {
+  width: 100%;
+  margin-inline: auto;
+}
+
 /* typography plugin radii (inline code 5px, table 8px) are not tailwind tokens */
 #nd-page .prose :not(pre) > code,
 #nd-page .prose table {

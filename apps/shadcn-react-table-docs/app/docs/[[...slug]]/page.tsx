@@ -25,7 +25,9 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   return (
     <DocsPage
       toc={page.data.toc}
-      full={page.data.full}
+      // Example pages have no headings worth a TOC and their playground wants
+      // the whole column, so they render full width.
+      full={page.data.full || page.slugs[0] === 'examples'}
       slots={{ breadcrumb: NoBreadcrumb }}
     >
       {/* Sticky under the top nav (and the mobile TOC popover): fumadocs

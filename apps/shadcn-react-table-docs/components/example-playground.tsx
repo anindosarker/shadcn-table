@@ -324,24 +324,26 @@ export const ExamplePlayground = ({
           </Tooltip>
         </div>
       </header>
-      {/* Split goes side by side only when the panel itself is at least 72rem
-          wide (the @6xl container step), which the 56rem docs column never
-          is; there, and on narrow screens in full screen, code stacks above
-          the preview with its own scroll. */}
+      {/* Split is code 3fr, preview 2fr from the @4xl container step (panel
+          body at least 56rem wide: full-width example pages, full screen);
+          narrower panels stack code above the preview. The code pane keeps
+          its own scroll in Split. */}
       <div
         className={cn(
           '@container',
           fullscreen && 'min-h-0 flex-1 overflow-auto',
         )}
       >
-        <div className={cn(mode === 'split' && 'grid @6xl:grid-cols-2')}>
+        <div
+          className={cn(mode === 'split' && 'grid @4xl:grid-cols-[3fr_2fr]')}
+        >
           {showCode && active && (
             <div
               data-slot="code"
               className={cn(
                 'min-w-0',
                 mode === 'split' &&
-                  'max-h-96 overflow-auto border-b @6xl:max-h-none @6xl:overflow-visible @6xl:border-r @6xl:border-b-0',
+                  'max-h-[32rem] overflow-auto border-b @4xl:border-r @4xl:border-b-0',
               )}
             >
               {active.node}
