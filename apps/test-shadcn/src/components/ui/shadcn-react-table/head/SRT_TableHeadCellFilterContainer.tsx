@@ -1,5 +1,6 @@
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
+  type CollapseProps,
   type SRT_Header,
   type SRT_RowData,
   type SRT_TableInstance,
@@ -12,7 +13,7 @@ import { SRT_FilterTextField } from '../inputs/SRT_FilterTextField';
 
 export interface SRT_TableHeadCellFilterContainerProps<
   TData extends SRT_RowData,
-> extends React.ComponentProps<typeof Collapsible> {
+> extends CollapseProps {
   header: SRT_Header<TData>;
   table: SRT_TableInstance<TData>;
 }

@@ -42,6 +42,7 @@ import {
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
 import { type Checkbox } from '@/components/ui/checkbox';
+import { type Collapsible } from '@/components/ui/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui/dialog';
 import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
@@ -87,6 +88,8 @@ export type SelectProps = ButtonProps &
 export type CheckboxProps = ComponentPropsWithRef<typeof Checkbox>;
 
 export type SliderProps = ComponentPropsWithRef<typeof Slider>;
+
+export type CollapseProps = ComponentPropsWithRef<typeof Collapsible>;
 
 export type RadioProps = ComponentPropsWithRef<typeof RadioGroupItem>;
 
