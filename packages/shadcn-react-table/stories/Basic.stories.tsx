@@ -36,13 +36,18 @@ const columns: SRT_ColumnDef<Person>[] = [
 
 // ShadcnReactTableProps is an Xor<{ columns; data }, { table }> union, which
 // collapses to `never` when inferred through Meta<typeof Component>, so the
-// story renders explicitly instead of passing `args`.
-const meta: Meta = {
+// args are typed explicitly and handed to the component in `render`.
+type BasicArgs = { columns: SRT_ColumnDef<Person>[]; data: Person[] };
+
+const meta: Meta<BasicArgs> = {
   title: 'Basic',
+  parameters: { docs: { source: { type: 'dynamic' } } },
+  args: { columns, data },
+  render: (args) => (
+    <ShadcnReactTable columns={args.columns} data={args.data} />
+  ),
 };
 
 export default meta;
 
-export const Default: StoryObj = {
-  render: () => <ShadcnReactTable columns={columns} data={data} />,
-};
+export const Default: StoryObj<BasicArgs> = {};

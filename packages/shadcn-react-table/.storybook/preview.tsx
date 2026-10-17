@@ -61,7 +61,25 @@ const preview: Preview = {
       // serializes the rendered table tree, which threw on the heavy SRT
       // component (the stale "ColumnsIcon is not defined" eval). 'code' reads
       // the static source instead — accurate snippets, no render-time eval.
-      source: { type: 'code' },
+      source: {
+        type: 'code',
+        // Args-based stories (args + render on the meta) have an empty story
+        // body, so the Code tab would show `{}`. They opt into `dynamic` and
+        // this prints the one-liner the args stand for; arrow-function stories
+        // keep `code` and pass through untouched.
+        transform: (
+          code: string,
+          ctx: {
+            args: Record<string, unknown>;
+            parameters: Record<string, unknown>;
+          },
+        ) =>
+          ctx.parameters.__isArgsStory
+            ? `<ShadcnReactTable ${Object.keys(ctx.args)
+                .map((k) => `${k}={${k}}`)
+                .join(' ')} />`
+            : code,
+      },
     },
   },
   decorators: [
