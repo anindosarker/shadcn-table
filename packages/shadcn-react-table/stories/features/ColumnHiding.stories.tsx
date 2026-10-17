@@ -1,4 +1,4 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
@@ -111,5 +111,136 @@ export const ColumnHidingDisabledPerColumn = () => (
       },
     ]}
     data={data}
+  />
+);
+
+export const ColumnHidingWithHeaderGroups = () => (
+  <ShadcnReactTable
+    columns={[
+      {
+        columns: [
+          {
+            accessorKey: 'firstName',
+            header: 'First Name',
+          },
+          {
+            accessorKey: 'lastName',
+            header: 'Last Name',
+          },
+        ],
+        header: 'Name',
+        id: 'name',
+      },
+      {
+        columns: [
+          {
+            accessorKey: 'address',
+            header: 'Address',
+          },
+          {
+            accessorKey: 'state',
+            header: 'State',
+          },
+          {
+            accessorKey: 'zip',
+            header: 'Zip',
+          },
+        ],
+        header: 'Mailing Info',
+        id: 'mailingInfo',
+      },
+      {
+        columns: [
+          {
+            accessorKey: 'email',
+            header: 'Email Address',
+          },
+          {
+            accessorKey: 'phoneNumber',
+            header: 'Phone Number',
+          },
+        ],
+        header: 'Contact Info',
+        id: 'contactInfo',
+      },
+    ]}
+    data={data}
+  />
+);
+export const ColumnHidingColumnsNotVisibleInShowHide = () => (
+  <ShadcnReactTable
+    columns={[
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+        visibleInShowHideMenu: false,
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+        visibleInShowHideMenu: false,
+      },
+      {
+        accessorKey: 'address',
+        header: 'Address',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+      {
+        accessorKey: 'zip',
+        header: 'Zip',
+      },
+      {
+        accessorKey: 'email',
+        header: 'Email Address',
+      },
+      {
+        accessorKey: 'phoneNumber',
+        header: 'Phone Number',
+      },
+    ]}
+    data={data}
+  />
+);
+export const ColumnHidingWithColumnsHiddenAndNotVisibleInShowHide = () => (
+  <ShadcnReactTable
+    columns={[
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'address',
+        enableHiding: false,
+        header: 'Address',
+        visibleInShowHideMenu: false,
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+      {
+        accessorKey: 'zip',
+        header: 'Zip',
+      },
+      {
+        accessorKey: 'email',
+        header: 'Email Address',
+      },
+      {
+        accessorKey: 'phoneNumber',
+        header: 'Phone Number',
+      },
+    ]}
+    data={data}
+    initialState={{
+      columnVisibility: { address: false },
+    }}
   />
 );
