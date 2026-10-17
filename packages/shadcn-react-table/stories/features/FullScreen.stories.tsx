@@ -87,9 +87,10 @@ export const ControlledFullScreen = () => {
     <ShadcnReactTable
       columns={columns}
       data={data}
-      // API GAP: muiTableBodyCellProps (cell `title` attribute) has no SRT
-      // equivalent; dropped.
       onIsFullScreenChange={setIsFullScreen}
+      srtTableBodyCellProps={({ cell }) => ({
+        title: cell.getValue<string>(),
+      })}
       state={{ isFullScreen }}
     />
   );
