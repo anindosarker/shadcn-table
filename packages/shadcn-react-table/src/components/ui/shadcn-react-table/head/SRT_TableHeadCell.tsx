@@ -309,7 +309,7 @@ export const SRT_TableHeadCell = <TData extends SRT_RowData>({
                 )}
               </div>
               {columnDefType !== 'group' && (
-                <div className="whitespace-nowrap">
+                <div className="flex items-center whitespace-nowrap">
                   {showDragHandle && (
                     <SRT_TableHeadCellGrabHandle
                       column={column}
