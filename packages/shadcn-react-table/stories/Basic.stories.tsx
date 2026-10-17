@@ -41,7 +41,6 @@ type BasicArgs = { columns: SRT_ColumnDef<Person>[]; data: Person[] };
 
 const meta: Meta<BasicArgs> = {
   title: 'Basic',
-  parameters: { docs: { source: { type: 'dynamic' } } },
   args: { columns, data },
   render: (args) => (
     <ShadcnReactTable columns={args.columns} data={args.data} />

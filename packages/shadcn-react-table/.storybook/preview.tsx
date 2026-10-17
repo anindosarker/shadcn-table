@@ -57,16 +57,11 @@ const preview: Preview = {
       // Built-in "Code" addon panel (replaces addon-storysource, which
       // material-react-table's storybook uses for its Code tab).
       codePanel: true,
-      // Show the real story source from the file. The default 'dynamic' mode
-      // serializes the rendered table tree, which threw on the heavy SRT
-      // component (the stale "ColumnsIcon is not defined" eval). 'code' reads
-      // the static source instead — accurate snippets, no render-time eval.
+      // Source type stays 'auto' (documented default): arrow stories get their
+      // file text. Arg-driven stories would get the dynamic snippet, which
+      // inlines the mutated column objects (SRT adds id, columnDefType, ...),
+      // so they print the one-liner by arg name instead.
       source: {
-        type: 'code',
-        // Args-based stories (args + render on the meta) have an empty story
-        // body, so the Code tab would show `{}`. They opt into `dynamic` and
-        // this prints the one-liner the args stand for; arrow-function stories
-        // keep `code` and pass through untouched.
         transform: (
           code: string,
           ctx: {
