@@ -60,6 +60,16 @@ html > body[data-scroll-locked] {
   border-bottom: var(--docs-rule);
 }
 
+/* example playground (components/example-playground.tsx): dashed frame and
+   header rule; the table inside keeps its own solid border */
+.docs-playground {
+  border: var(--docs-rule);
+}
+
+.docs-playground > header {
+  border-bottom: var(--docs-rule);
+}
+
 /* ---------- sidebar ---------- */
 
 #nd-sidebar a {

@@ -86,6 +86,33 @@ export async function codeToggle(page, wrapper, id, needle, check) {
       .locator('button', { hasText: /^Preview$/ })
       .first()
       .click();
+    // Example pages carry the page switcher in the panel header; guides do
+    // not, since switching there would leave the guide.
+    const onExamplePage = new URL(page.url()).pathname.startsWith(
+      '/docs/examples/',
+    );
+    const switchers = await panel.locator('header [role="combobox"]').count();
+    check(
+      `${id}: panel switcher ${onExamplePage ? 'present' : 'absent'}`,
+      switchers === (onExamplePage ? 1 : 0),
+      `combobox=${switchers}`,
+    );
+    // Full screen toggles aria-pressed and Escape leaves it again.
+    const full = panel.locator('button[aria-label="Full screen"]');
+    check(`${id}: full screen button`, (await full.count()) === 1);
+    if (await full.count()) {
+      await full.first().click();
+      const exit = panel.locator('button[aria-label="Exit full screen"]');
+      check(
+        `${id}: full screen on`,
+        (await exit.getAttribute('aria-pressed').catch(() => null)) === 'true',
+      );
+      await page.keyboard.press('Escape');
+      check(
+        `${id}: full screen off`,
+        (await full.getAttribute('aria-pressed').catch(() => null)) === 'false',
+      );
+    }
   }
 }
 
