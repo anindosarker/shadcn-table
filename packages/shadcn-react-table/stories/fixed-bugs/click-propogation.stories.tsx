@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
+import { Button } from '@/components/ui/button';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 const meta: Meta = {
   title: 'Fixed Bugs/Click Propagation',
@@ -48,10 +50,6 @@ const data = [...Array(6)].map(() => ({
   state: faker.location.state(),
 }));
 
-// API GAP: MRT's `muiTableBodyRowProps={{ onClick }}` (the row-level click
-// handler this regression checks against action-cell clicks) is not implemented
-// in SRT — there is no per-row props passthrough. The stories still exercise the
-// action menu/button rendering with a plain <button> using stopPropagation.
 export const RowClickAndRowMenuActions = () => {
   return (
     <ShadcnReactTable
@@ -59,7 +57,14 @@ export const RowClickAndRowMenuActions = () => {
       data={data}
       enableEditing
       enableRowActions
-      renderRowActionMenuItems={() => [<div key="test">Test</div>]}
+      srtTableBodyRowProps={{
+        onClick: () => {
+          alert('row click');
+        },
+      }}
+      renderRowActionMenuItems={() => [
+        <DropdownMenuItem key="test">Test</DropdownMenuItem>,
+      ]}
     />
   );
 };
@@ -71,10 +76,13 @@ export const RowClickAndRowButtonActions = () => {
       data={data}
       enableEditing
       enableRowActions
+      srtTableBodyRowProps={{
+        onClick: () => {
+          alert('row click');
+        },
+      }}
       renderRowActions={() => (
-        <button type="button" onClick={(e) => e.stopPropagation()}>
-          Test
-        </button>
+        <Button onClick={(e) => e.stopPropagation()}>Test</Button>
       )}
     />
   );
