@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import {
   type SRT_Column,
   type SRT_ColumnDef,
+  type SRT_RowData,
 } from '@/components/ui/shadcn-react-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
@@ -217,8 +218,8 @@ export const ColumnGroupingBannerOnBottom = () => (
 );
 
 export const GroupingColumnsSetState = () => {
-  const [columns, setColumns] = useState<SRT_ColumnDef<any>[]>([]);
-  const [data, setData] = useState<any>([]);
+  const [columns, setColumns] = useState<SRT_ColumnDef<SRT_RowData>[]>([]);
+  const [data, setData] = useState<SRT_RowData[]>([]);
 
   useEffect(() => {
     // Do something and set columns and data
@@ -312,9 +313,12 @@ export const ColumnGroupingDropZoneAlwaysVisible = () => {
           ? { dropToGroupBy: 'Drag a column here to group by it' }
           : undefined
       }
-      // API GAP: muiTopToolbarProps not supported in SRT (cva/className instead)
       onDraggingColumnChange={setDraggingColumn}
       positionToolbarAlertBanner="bottom"
+      srtTopToolbarProps={{
+        className:
+          '[&>.border-dashed]:z-2! [&>.border-dashed]:border [&>.border-dashed]:border-solid [&>.border-dashed]:border-red-500',
+      }}
       state={{ draggingColumn, showToolbarDropZone: true }}
     />
   );
