@@ -1,7 +1,7 @@
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Pagination Examples',
@@ -52,24 +52,29 @@ export const PaginationEnabledDefault = () => (
   <ShadcnReactTable columns={columns} data={data} />
 );
 
-// API GAP: muiTableContainerProps (minHeight) has no SRT equivalent; dropped.
 export const PaginationEnabledDefaultMoreData = () => (
-  <ShadcnReactTable columns={columns} data={moreData} />
+  <ShadcnReactTable
+    columns={columns}
+    data={moreData}
+    srtTableContainerProps={{
+      className: 'min-h-[600px]',
+    }}
+  />
 );
 
-// API GAP: muiPaginationProps (rowsPerPageOptions) and muiTableContainerProps
-// (height) have no SRT equivalent; ported with virtualization + initial state.
 export const PaginationEnabledDefaultBigData = () => (
   <ShadcnReactTable
     columns={columns}
     data={bigData}
     enableRowVirtualization
     initialState={{ pagination: { pageIndex: 0, pageSize: 1000 } }}
+    srtPaginationProps={{ rowsPerPageOptions: [100, 1000] }}
+    srtTableContainerProps={{
+      className: 'h-[600px]',
+    }}
   />
 );
 
-// API GAP: muiPaginationProps (rowsPerPageOptions) and muiTableContainerProps
-// (height) have no SRT equivalent; ported with localization + virtualization.
 export const PaginationEnabledDefaultBigDataLanguage = () => (
   <ShadcnReactTable
     columns={columns}
@@ -80,14 +85,34 @@ export const PaginationEnabledDefaultBigDataLanguage = () => (
     }}
     enableRowSelection
     initialState={{ pagination: { pageIndex: 0, pageSize: 1000 } }}
+    srtPaginationProps={{ rowsPerPageOptions: [100, 1000] }}
+    srtTableContainerProps={{
+      className: 'h-[600px]',
+    }}
   />
 );
 
-// API GAP: muiPaginationProps (showRowsPerPage: false) has no SRT equivalent;
-// this export reduces to the default and is dropped.
+export const PaginationEnabledDefaultNoRowsPerPage = () => (
+  <ShadcnReactTable
+    columns={columns}
+    data={data}
+    srtPaginationProps={{
+      showRowsPerPage: false,
+    }}
+  />
+);
 
-// API GAP: muiPaginationProps (SelectProps.native) has no SRT equivalent;
-// this export reduces to the default and is dropped.
+export const PaginationEnabledCustomizeRowsPerPage = () => (
+  <ShadcnReactTable
+    columns={columns}
+    data={data}
+    srtPaginationProps={{
+      SelectProps: {
+        native: true,
+      },
+    }}
+  />
+);
 
 export const PaginationPagesDisplayMode = () => (
   <ShadcnReactTable
@@ -97,12 +122,13 @@ export const PaginationPagesDisplayMode = () => (
   />
 );
 
-// API GAP: muiPaginationProps (showRowsPerPage: false) has no SRT equivalent;
-// ported with paginationDisplayMode="pages" only.
 export const PaginationPagesDisplayModeNoPagesPerRow = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
+    srtPaginationProps={{
+      showRowsPerPage: false,
+    }}
     paginationDisplayMode="pages"
   />
 );
@@ -117,12 +143,15 @@ export const CustomPaginationPagesDisplayMode = () => (
   />
 );
 
-// API GAP: muiPaginationProps (boundaryCount/shape/variant) has no SRT
-// equivalent; ported with paginationDisplayMode="pages" + more data only.
+// API GAP: muiPaginationProps (shape/variant) has no SRT equivalent; ported
+// with boundaryCount + paginationDisplayMode="pages" + more data only.
 export const CustomPaginationPagesDisplayModeMoreData = () => (
   <ShadcnReactTable
     columns={columns}
     data={moreData}
+    srtPaginationProps={{
+      boundaryCount: 5,
+    }}
     paginationDisplayMode="pages"
   />
 );
@@ -152,22 +181,29 @@ export const PaginationPositionTopAndBottomNoInternalActions = () => (
   />
 );
 
-// API GAP: muiPaginationProps (rowsPerPageOptions/showFirstButton/
-// showLastButton) has no SRT equivalent; ported with initial page size only.
 export const CustomizePaginationComponents = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    srtPaginationProps={{
+      rowsPerPageOptions: [5, 10, 20],
+      showFirstButton: false,
+      showLastButton: false,
+    }}
   />
 );
 
-// API GAP: muiPaginationProps (disabled/rowsPerPageOptions/showFirstButton/
-// showLastButton) has no SRT equivalent; ported with initial page size only.
 export const DisabledPaginationComponents = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    srtPaginationProps={{
+      disabled: true,
+      rowsPerPageOptions: [5, 10, 20],
+      showFirstButton: false,
+      showLastButton: false,
+    }}
   />
 );
