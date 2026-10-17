@@ -10,25 +10,25 @@ import {
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from '@/components/ui/combobox';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -73,7 +73,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   const {
     options: {
       enableColumnFilterModes,
-      icons: { CancelIcon, CloseIcon, ExpandMoreIcon, FilterListIcon },
+      icons: { CancelIcon, CloseIcon, FilterListIcon },
       localization,
       manualFiltering,
       srtFilterAutocompleteProps,
@@ -131,6 +131,16 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
 
   const dropdownOptions = useDropdownOptions({ header, table });
 
+  const optionLabel = (value: string) => {
+    const option = dropdownOptions?.find(
+      (option) => getValueAndLabel(option).value === value,
+    );
+    return option === undefined ? value : getValueAndLabel(option).label;
+  };
+
+  const optionCount = (value: string) =>
+    columnDef.filterSelectOptions ? '' : ` (${facetedUniqueValues.get(value)})`;
+
   const filterChipLabel = ['empty', 'notEmpty'].includes(currentFilterOption)
     ? localization[
         `filter${
@@ -174,15 +184,16 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             : ''
           : ((column.getFilterValue() as string) ?? ''),
   );
-  // const [autocompleteValue, setAutocompleteValue] = ...
-  // Note: MRT reads it only as Autocomplete `value`; the Command list has no selected-value prop, so only the setter stays.
-  const [, setAutocompleteValue] = useState<DropdownOption | null>(() =>
-    isAutocompleteFilter
-      ? ((column.getFilterValue() || null) as DropdownOption | null)
-      : null,
+  // The option chosen from the autocomplete list (MUI Autocomplete `value`);
+  // the typed text lives in filterValue.
+  const [autocompleteValue, setAutocompleteValue] = useState<string | null>(
+    () =>
+      isAutocompleteFilter && typeof column.getFilterValue() === 'string'
+        ? (column.getFilterValue() as string)
+        : null,
   );
-  // Note: maps MUI useAutocomplete's internal open state (opens on non-empty input).
-  const [autocompleteOpen, setAutocompleteOpen] = useState(false);
+  // The popup anchors to the whole input group so it spans the filter cell.
+  const comboboxAnchor = useComboboxAnchor();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleChangeDebounced = useCallback(
@@ -221,14 +232,21 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     textFieldProps?.onChange?.(event);
   };
 
-  const handleAutocompleteInputChange = (newValue: string) => {
-    setAutocompleteOpen(newValue !== '');
+  const handleAutocompleteInputChange = (newValue: string, reason: string) => {
+    // Choosing an item fills the input with its label; handleAutocompleteChange
+    // owns that case so the filter gets the option value.
+    if (reason === 'item-press') return;
     handleChange(newValue);
   };
 
-  const handleAutocompleteChange = (newValue: DropdownOption | null) => {
+  const handleAutocompleteChange = (newValue: string | null) => {
     setAutocompleteValue(newValue);
-    handleChangeDebounced(getValueAndLabel(newValue).value);
+    if (newValue === null) {
+      handleChange('');
+      return;
+    }
+    setFilterValue(optionLabel(newValue));
+    handleChangeDebounced(newValue);
   };
 
   const handleClear = () => {
@@ -379,7 +397,9 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     value: filterValue || '',
   };
 
-  const autocompleteOptions = isAutocompleteFilter
+  // Option values offered by the autocomplete list, already narrowed by the
+  // typed text (MUI createFilterOptions), so the combobox filters nothing.
+  const autocompleteItems = isAutocompleteFilter
     ? createFilterOptions<DropdownOption>()(
         dropdownOptions?.map((option) => getValueAndLabel(option)) ?? [],
         {
@@ -387,8 +407,17 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             getValueAndLabel(option).label,
           inputValue: filterValue as string,
         },
-      )
+      ).map((option) => getValueAndLabel(option).value)
     : [];
+
+  const multiSelectItems = isMultiSelectFilter
+    ? (dropdownOptions?.map((option) => getValueAndLabel(option).value) ?? [])
+    : [];
+
+  // Shared by both comboboxes: the inner shadcn part brings its own border and
+  // focus ring, which the surrounding InputGroup already draws.
+  const nestedGroupClassName =
+    'h-auto min-h-0 flex-1 rounded-none border-0 bg-transparent shadow-none dark:bg-transparent has-[[data-slot=input-group-control]:focus-visible]:border-0! has-[[data-slot=input-group-control]:focus-visible]:ring-0! focus-within:ring-0!';
 
   return (
     <>
@@ -408,7 +437,14 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
           // Note: bleeds MUI's standard-variant underline past the cell padding; no underline here.
         )}
       >
-        <InputGroup>
+        <InputGroup
+          className={cn(
+            // Chips wrap onto new lines, so the group may grow past its fixed height.
+            isMultiSelectFilter &&
+              'h-auto min-h-9 [&>[data-align=inline-end]]:py-0',
+          )}
+          ref={comboboxAnchor}
+        >
           {startAdornment}
           {filterVariant?.startsWith('time') ? (
             // slotProps.field: { clearable: true, onClear: () => handleClear() }
@@ -434,54 +470,43 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               type="date"
             />
           ) : isAutocompleteFilter ? (
-            <Popover
-              open={autocompleteOpen && autocompleteOptions.length > 0}
-              onOpenChange={setAutocompleteOpen}
+            // The input is the filter text field: typing filters right away,
+            // choosing an option sets the filter to that option's value.
+            <Combobox
+              filter={null}
+              inputValue={(filterValue as string) ?? ''}
+              items={autocompleteItems}
+              itemToStringLabel={optionLabel}
+              onInputValueChange={(value, { reason }) =>
+                handleAutocompleteInputChange(value, reason)
+              }
+              onValueChange={handleAutocompleteChange}
+              value={autocompleteValue}
             >
-              <PopoverTrigger asChild>
-                <InputGroupInput
-                  type="text"
-                  {...commonTextFieldProps}
-                  {...autocompleteProps}
-                  className={cn(
-                    commonTextFieldProps.className,
-                    autocompleteProps.className,
+              <ComboboxInput
+                type="text"
+                {...commonTextFieldProps}
+                {...autocompleteProps}
+                className={cn(
+                  nestedGroupClassName,
+                  commonTextFieldProps.className,
+                  autocompleteProps.className,
+                )}
+                onClick={(e) => e.stopPropagation()}
+                showClear
+              />
+              <ComboboxContent anchor={comboboxAnchor}>
+                <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
+                <ComboboxList>
+                  {(value: string) => (
+                    <ComboboxItem key={value} value={value}>
+                      {optionLabel(value)}
+                      {optionCount(value)}
+                    </ComboboxItem>
                   )}
-                  onChange={(e) =>
-                    handleAutocompleteInputChange(e.target.value)
-                  }
-                  onClick={(e) => e.stopPropagation()}
-                  value={(filterValue as string) ?? ''}
-                />
-              </PopoverTrigger>
-              <PopoverContent
-                align="start"
-                className="w-(--radix-popover-trigger-width) p-0"
-                onOpenAutoFocus={(e) => e.preventDefault()}
-              >
-                <Command shouldFilter={false}>
-                  <CommandList>
-                    <CommandGroup>
-                      {autocompleteOptions.map((option, index) => {
-                        const { label, value } = getValueAndLabel(option);
-                        return (
-                          <CommandItem
-                            key={`${index}-${value}`}
-                            onSelect={() => {
-                              handleAutocompleteChange(option);
-                              setAutocompleteOpen(false);
-                            }}
-                            value={label}
-                          >
-                            {label}
-                          </CommandItem>
-                        );
-                      })}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
           ) : isSelectFilter ? (
             // onChange={handleTextFieldChange}
             // Note: radix Select raises no ChangeEvent, so the user onChange cannot fire.
@@ -524,90 +549,59 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
             </Select>
           ) : isMultiSelectFilter ? (
             // onChange={handleTextFieldChange}
-            // Note: Command items raise no ChangeEvent, so the user onChange cannot fire.
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  aria-label={filterPlaceholder}
-                  className={cn(
-                    'flex-1 justify-start font-normal',
-                    textFieldProps.className,
-                  )}
-                  disabled={!!filterChipLabel || textFieldProps.disabled}
-                  onClick={(e) => e.stopPropagation()}
-                  onKeyDown={(e) => {
-                    e.stopPropagation();
-                    textFieldProps.onKeyDown?.(
-                      e as unknown as KeyboardEvent<HTMLInputElement>,
-                    );
-                  }}
-                  title={filterPlaceholder}
-                  variant="ghost"
-                >
-                  {!Array.isArray(filterValue) || filterValue.length === 0 ? (
-                    <span className="opacity-50">{filterPlaceholder}</span>
-                  ) : (
-                    <span className="flex flex-wrap gap-0.5">
-                      {filterValue.map((value) => {
-                        const selectedValue = dropdownOptions?.find(
-                          (option) => getValueAndLabel(option).value === value,
-                        );
-                        return (
-                          <Badge key={value} variant="secondary">
-                            {getValueAndLabel(selectedValue).label}
-                          </Badge>
-                        );
-                      })}
-                    </span>
-                  )}
-                  <ExpandMoreIcon className="ml-auto size-4 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                align="start"
-                className="w-(--radix-popover-trigger-width) p-0"
+            // Note: combobox items raise no ChangeEvent, so the user onChange cannot fire.
+            <Combobox
+              disabled={!!filterChipLabel || textFieldProps.disabled}
+              items={multiSelectItems}
+              itemToStringLabel={optionLabel}
+              multiple
+              onValueChange={(values) => handleChange(values)}
+              value={Array.isArray(filterValue) ? filterValue : []}
+            >
+              <ComboboxChips
+                className={cn(
+                  nestedGroupClassName,
+                  'px-1.5 py-0.5',
+                  textFieldProps.className,
+                )}
+                onClick={(e) => e.stopPropagation()}
               >
-                <Command>
-                  <CommandList>
-                    <CommandGroup>
-                      {textFieldProps.children ??
-                        dropdownOptions?.map((option, index) => {
-                          const { label, value } = getValueAndLabel(option);
-                          return (
-                            <CommandItem
-                              key={`${index}-${value}`}
-                              onSelect={() => {
-                                // MUI SelectInput handleItemClick, multiple branch
-                                const newValue = Array.isArray(filterValue)
-                                  ? filterValue.slice()
-                                  : [];
-                                const itemIndex = newValue.indexOf(value);
-                                if (itemIndex === -1) {
-                                  newValue.push(value);
-                                } else {
-                                  newValue.splice(itemIndex, 1);
-                                }
-                                handleChange(newValue);
-                              }}
-                              value={value}
-                            >
-                              <Checkbox
-                                checked={(
-                                  (column.getFilterValue() ?? []) as string[]
-                                ).includes(value)}
-                                className="mr-2"
-                              />
-                              {label}{' '}
-                              {!columnDef.filterSelectOptions &&
-                                `(${facetedUniqueValues.get(value)})`}
-                            </CommandItem>
-                          );
-                        })}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+                <ComboboxValue>
+                  {(values: string[]) => (
+                    <>
+                      {values.map((value) => (
+                        <ComboboxChip key={value}>
+                          {optionLabel(value)}
+                        </ComboboxChip>
+                      ))}
+                      <ComboboxChipsInput
+                        aria-label={filterPlaceholder}
+                        className="min-w-8"
+                        ref={commonTextFieldProps.ref}
+                        onKeyDown={(e) => {
+                          e.stopPropagation();
+                          textFieldProps.onKeyDown?.(e);
+                        }}
+                        placeholder={values.length ? '' : filterPlaceholder}
+                        title={filterPlaceholder}
+                      />
+                    </>
+                  )}
+                </ComboboxValue>
+              </ComboboxChips>
+              <ComboboxContent anchor={comboboxAnchor}>
+                <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
+                <ComboboxList>
+                  {textFieldProps.children ??
+                    ((value: string) => (
+                      <ComboboxItem key={value} value={value}>
+                        {optionLabel(value)}
+                        {optionCount(value)}
+                      </ComboboxItem>
+                    ))}
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
           ) : (
             <InputGroupInput
               {...commonTextFieldProps}
