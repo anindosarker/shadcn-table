@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useReactTable } from '@tanstack/react-table';
 import {
   type SRT_Cell,
@@ -142,9 +142,24 @@ export const useSRT_TableInstance = <TData extends SRT_RowData>(
   const [isFullScreen, setIsFullScreen] = useState<boolean>(
     initialState?.isFullScreen ?? false,
   );
-  const [pagination, onPaginationChange] = useState<SRT_PaginationState>(
+  const [pagination, setPagination] = useState<SRT_PaginationState>(
     initialState?.pagination ?? { pageIndex: 0, pageSize: 10 },
   );
+  // TanStack queues an auto page-index reset in a microtask during the first
+  // render when grouping or sorting row models register. React 19 rejects a
+  // state update on a component that has not mounted yet, so updates queued
+  // before mount are dropped. They only ever target the initial page index.
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const onPaginationChange = (updater: SRT_Updater<SRT_PaginationState>) => {
+    if (!mounted.current) return;
+    setPagination(updater);
+  };
   const [showAlertBanner, setShowAlertBanner] = useState<boolean>(
     initialState?.showAlertBanner ?? false,
   );

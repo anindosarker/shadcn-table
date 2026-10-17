@@ -50,13 +50,12 @@ const routesArg = args.filter((a) => a.startsWith('/'));
 const FATAL = [/hydrat/i, /Minified React error/i, /Encountered a script tag/i];
 
 /**
- * Console errors the library emits on its own (grouping/aggregation mount,
- * filter inputs switching controlled/uncontrolled). Library bugs tracked in
+ * Console errors the library emits on its own (filter inputs switching
+ * controlled/uncontrolled). Library bugs tracked in
  * .ai/plans/handoff/ATTENTION-2026-10-17-claude-review.md; ignored by the
  * `no console errors` check only (FATAL still applies).
  */
 const KNOWN_LIBRARY_ERRORS = [
-  "Can't perform a React state update on a component that hasn't mounted yet.",
   'A component is changing a controlled input to be uncontrolled.',
 ];
 
