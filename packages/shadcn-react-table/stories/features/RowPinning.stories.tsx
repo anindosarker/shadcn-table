@@ -74,7 +74,9 @@ export const RowPinningStickyNoPagination = () => (
     enablePagination={false}
     enableRowPinning
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
   />
 );
@@ -89,7 +91,9 @@ export const RowPinningStickyCustomRowHeight = () => (
       className: 'h-[100px]',
     }}
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="sticky"
   />
@@ -103,7 +107,9 @@ export const RowPinningSelectStickyMode = () => (
     enableRowPinning
     enableRowSelection
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="select-sticky"
   />
@@ -116,7 +122,9 @@ export const RowPinningTopAndBottomMode = () => (
     enablePagination={false}
     enableRowPinning
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="top-and-bottom"
   />
@@ -130,7 +138,9 @@ export const RowPinningTopMode = () => (
     enableRowPinning
     keepPinnedRows={false}
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="top"
   />
@@ -144,7 +154,9 @@ export const RowPinningSelectTopMode = () => (
     enableRowPinning
     enableRowSelection
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="select-top"
   />
@@ -157,7 +169,9 @@ export const RowPinningBottomMode = () => (
     enablePagination={false}
     enableRowPinning
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="bottom"
   />
@@ -171,7 +185,9 @@ export const RowPinningSelectBottomMode = () => (
     enableRowPinning
     enableRowSelection
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="select-bottom"
   />
@@ -186,7 +202,9 @@ export const RowPinningWithStickyHeader = () => (
     enableStickyFooter
     enableStickyHeader
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
   />
 );
@@ -199,7 +217,9 @@ export const RowPinningWithGridLayout = () => (
     enableRowPinning
     layoutMode="grid"
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
   />
 );
@@ -212,7 +232,9 @@ export const RowPinningStickyWithVirtualization = () => (
     enableRowPinning
     enableRowVirtualization
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
   />
 );
@@ -225,7 +247,9 @@ export const RowPinningTopWithVirtualization = () => (
     enableRowPinning
     enableRowVirtualization
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
     rowPinningDisplayMode="top"
   />
@@ -248,7 +272,9 @@ export const RowAndColumnPinning = () => (
       },
     }}
     srtTableContainerProps={{
-      className: 'max-h-[600px]',
+      style: {
+        maxHeight: '600px',
+      },
     }}
   />
 );
