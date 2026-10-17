@@ -26,9 +26,9 @@ const random = createRandom(314);
 
 const randomInt = (max: number) => Math.floor(random() * (max + 1));
 
-//random time today
+//random time on a fixed day, so the rows do not depend on the build date
 const today = () => {
-  const today = new Date();
+  const today = new Date(2024, 0, 15);
   today.setHours(randomInt(23));
   today.setMinutes(randomInt(59));
   today.setSeconds(randomInt(59));

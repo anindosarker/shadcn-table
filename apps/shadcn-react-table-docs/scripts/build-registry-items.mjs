@@ -149,7 +149,7 @@ async function buildItem(slug, pages, libraryItem) {
           specifier.slice(UI_IMPORT_PREFIX.length).split('/')[0],
         );
       } else if (specifier.startsWith('@/')) {
-        console.warn(
+        throw new Error(
           `${slug}/${name}: project import "${specifier}" has no registry mapping`,
         );
       } else if (!SKIPPED_PACKAGES.has(packageName(specifier))) {

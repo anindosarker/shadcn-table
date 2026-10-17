@@ -52,8 +52,10 @@ async function readRegistryItem(name: string): Promise<RegistryItem> {
 /**
  * Top-level keys of the object literal passed to the first
  * `useShadcnReactTable(...)` call: a brace-balanced scan that skips strings,
- * template literals, comments and nested brackets. Empty when the source has
- * no such call or the argument is not an object literal.
+ * template literals, comments and nested brackets. Quoted keys count by
+ * their content; spreads and computed keys are skipped. Regex literals are
+ * not recognised, so a `{` or quote inside one can derail the scan. Empty
+ * when the source has no such call or the argument is not an object literal.
  */
 export function tableOptionKeys(source: string): string[] {
   // The call, not the import: the name followed by an optional type argument
@@ -61,8 +63,8 @@ export function tableOptionKeys(source: string): string[] {
   const call = /\buseShadcnReactTable\s*(?:<[^()]*>)?\s*\(/.exec(source);
   if (!call) return [];
   const paren = call.index + call[0].length - 1;
-  const brace = source.indexOf('{', paren);
-  if (brace === -1 || source.slice(paren + 1, brace).trim() !== '') return [];
+  const brace = skipTrivia(source, paren + 1);
+  if (source[brace] !== '{') return [];
 
   const keys: string[] = [];
   let depth = 0;
@@ -83,7 +85,13 @@ export function tableOptionKeys(source: string): string[] {
       continue;
     }
     if (ch === "'" || ch === '"' || ch === '`') {
-      i = skipString(source, i);
+      const end = skipString(source, i);
+      if (depth === 1 && atKey && ch !== '`') {
+        // Quoted key: `'foo': value`.
+        keys.push(source.slice(i + 1, end - 1));
+        atKey = false;
+      }
+      i = end;
       continue;
     }
     if (ch === '{' || ch === '[' || ch === '(') {
@@ -121,6 +129,27 @@ export function tableOptionKeys(source: string): string[] {
     i += 1;
   }
   return keys;
+}
+
+/** Index of the first character at or after `start` that is not whitespace or a comment. */
+function skipTrivia(source: string, start: number) {
+  let i = start;
+  while (i < source.length) {
+    if (/\s/.test(source[i])) {
+      i += 1;
+    } else if (source.startsWith('//', i)) {
+      const end = source.indexOf('\n', i);
+      if (end === -1) return source.length;
+      i = end;
+    } else if (source.startsWith('/*', i)) {
+      const end = source.indexOf('*/', i + 2);
+      if (end === -1) return source.length;
+      i = end + 2;
+    } else {
+      return i;
+    }
+  }
+  return i;
 }
 
 /** Index just past the string literal starting at `start`. */
