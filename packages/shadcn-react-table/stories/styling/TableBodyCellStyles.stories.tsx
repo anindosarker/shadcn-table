@@ -1,7 +1,7 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
+import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
 
 const meta: Meta = {
   title: 'Styling/Style Table Body Cells',
@@ -9,14 +9,30 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'address', header: 'Address' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
 ];
-
-const data = makeData(21);
+const data = [...Array(21)].map(() => ({
+  address: faker.location.streetAddress(),
+  age: faker.number.int(80),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+}));
 
 export const DefaultTableBodyCellStyles = () => (
   <ShadcnReactTable columns={columns} data={data} />
@@ -39,19 +55,32 @@ export const StyleAllMuiTableBodyCell = () => (
 export const StyleMuiTableBodyCellConditionallyIn1Column = () => (
   <ShadcnReactTable
     columns={[
-      { accessorKey: 'firstName', header: 'First Name' },
-      { accessorKey: 'lastName', header: 'Last Name' },
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last Name',
+      },
       {
         accessorKey: 'age',
         header: 'Age',
         srtTableBodyCellProps: ({ cell }) => ({
-          className:
-            cell.getValue<number>() >= 50
-              ? 'bg-red-500/15 font-bold'
-              : 'bg-green-500/15',
+          className: [
+            cell.getValue<number>() > 40 ? 'bg-green-500/50' : undefined,
+            cell.column.id === 'age' && cell.getValue<number>() > 40
+              ? 'font-bold'
+              : 'font-normal',
+          ]
+            .filter(Boolean)
+            .join(' '),
         }),
       },
-      { accessorKey: 'address', header: 'Address' },
+      {
+        accessorKey: 'address',
+        header: 'Address',
+      },
     ]}
     data={data}
   />
@@ -92,7 +121,10 @@ export const CustomCellRender = () => (
         accessorKey: 'age',
         header: 'Age',
       },
-      { accessorKey: 'address', header: 'Address' },
+      {
+        accessorKey: 'address',
+        header: 'Address',
+      },
     ]}
     data={data}
   />
