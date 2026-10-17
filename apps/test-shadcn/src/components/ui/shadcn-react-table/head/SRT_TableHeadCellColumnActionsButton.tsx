@@ -14,7 +14,7 @@ import { SRT_ColumnActionMenu } from '../menus/SRT_ColumnActionMenu';
 
 // Note: base maps MRT's sx (m -8px -4px, opacity .3, hover opacity 1, transition all 150ms); 2rem box is icon-sm.
 const columnActionsButtonVariants = cva(
-  '-mx-1 -my-2 opacity-30 transition-all duration-150 hover:opacity-100',
+  '-mx-1 -my-2 align-middle opacity-30 transition-all duration-150 hover:opacity-100',
 );
 
 export interface SRT_TableHeadCellColumnActionsButtonProps<
