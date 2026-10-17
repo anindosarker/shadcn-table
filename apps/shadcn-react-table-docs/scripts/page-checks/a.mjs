@@ -49,4 +49,109 @@ export default {
       check('remote: next page changes rows', before !== after);
     }
   },
+  '/docs': async ({ page, check }) => {
+    const n = await page.locator('article a[href^="/docs/"]').count();
+    check('table of contents links', n >= 4, String(n));
+  },
+  '/docs/getting-started': async ({ page, check }) => {
+    const n = await page
+      .locator('article a[href^="/docs/getting-started/"]')
+      .count();
+    check('table of contents links', n >= 2, String(n));
+  },
+  '/docs/api': async ({ page, check }) => {
+    const n = await page.locator('article a[href^="/docs/api/"]').count();
+    check('table of contents links', n >= 9, String(n));
+  },
+  '/docs/api/table-options': async ({ page, check }) => {
+    await switcher(page, 'Table Options', 3, check);
+    await propTable(page, '#props-table', 210, check);
+    await codeToggle(page, page, 'root-props', 'TableOptionsTable', check);
+  },
+  '/docs/api/column-options': async ({ page, check }) => {
+    await switcher(page, 'Column Options', 3, check);
+    await propTable(page, '#column-options-table', 63, check);
+    await codeToggle(page, page, 'column-options', 'ColumnOptionsTable', check);
+  },
+  '/docs/api/state-options': async ({ page, check }) => {
+    await switcher(page, 'State Options', 3, check);
+    await propTable(page, '#state-options-table', 33, check);
+    await codeToggle(page, page, 'state-options', 'StateOptionsTable', check);
+  },
+  '/docs/api/table-instance-apis': async ({ page, check }) => {
+    await switcher(page, 'Table Instance APIs', 4, check);
+    await propTable(page, '#table-instance-apis-table', 138, check);
+    await codeToggle(
+      page,
+      page,
+      'table-instance-apis',
+      'TableInstanceAPIsTable',
+      check,
+    );
+  },
+  '/docs/api/column-instance-apis': async ({ page, check }) => {
+    await switcher(page, 'Column Instance APIs', 4, check);
+    await propTable(page, '#column-instance-apis-table', 56, check);
+    await codeToggle(
+      page,
+      page,
+      'column-instance-apis',
+      'ColumnInstanceAPIsTable',
+      check,
+    );
+  },
+  '/docs/api/row-instance-apis': async ({ page, check }) => {
+    await switcher(page, 'Row Instance APIs', 4, check);
+    await propTable(page, '#row-instance-apis-table', 39, check);
+    await codeToggle(
+      page,
+      page,
+      'row-instance-apis',
+      'RowInstanceAPIsTable',
+      check,
+    );
+  },
+  '/docs/api/cell-instance-apis': async ({ page, check }) => {
+    await switcher(page, 'Cell Instance APIs', 4, check);
+    await propTable(page, '#cell-instance-apis-table', 9, check);
+    await codeToggle(
+      page,
+      page,
+      'cell-instance-apis',
+      'CellInstanceAPIsTable',
+      check,
+    );
+  },
+  '/docs/api/srt-components': async ({ page, check }) => {
+    await switcher(page, 'SRT Components', 2, check);
+    const n = await page.locator('article h5').count();
+    check('component headings', n === 30, String(n));
+  },
+  '/docs/api/srt-hooks': async ({ page, check }) => {
+    await switcher(page, 'SRT Hooks', 2, check);
+    const n = await page.locator('article h3').count();
+    check('hook headings', n === 7, String(n));
+  },
 };
+
+/** OptionsSwitcher: `count` tabs, the one for this page active. */
+async function switcher(page, active, count, check) {
+  const tabs = page.locator('[role="tab"]');
+  check(
+    'switcher tabs',
+    (await tabs.count()) === count,
+    String(await tabs.count()),
+  );
+  const current = page.locator('[role="tab"][data-state="active"]');
+  check(
+    'switcher active tab',
+    (await current.textContent())?.trim() === active,
+    (await current.textContent()) ?? '',
+  );
+}
+
+/** Full prop table: every data row rendered (no pagination). */
+async function propTable(page, id, count, check) {
+  const rows = await names(page, id);
+  check(`${id} rows`, rows.length === count, String(rows.length));
+}
