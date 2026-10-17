@@ -1,11 +1,11 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
 
 const meta: Meta = {
   title: 'Features/Column Action Examples',
@@ -13,7 +13,15 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
+interface Row {
+  address: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  state: string;
+}
+
+const columns: SRT_ColumnDef<Row>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -36,7 +44,13 @@ const columns: SRT_ColumnDef<Person>[] = [
   },
 ];
 
-const data = makeData(100);
+const data: Row[] = [...Array(100)].map(() => ({
+  address: faker.location.streetAddress(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
 export const ColumnActionsEnabledDefault = () => (
   <ShadcnReactTable columns={columns} data={data} />
