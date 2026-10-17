@@ -12,10 +12,12 @@ import ColumnAlignmentExample from '@/examples/column-alignment';
 import CustomColumnActionsExample from '@/examples/custom-column-actions';
 import CustomColumnFilteringUiExample from '@/examples/custom-column-filtering-ui';
 import CustomHeadlessExample from '@/examples/custom-headless';
+import CustomTopToolbarExample from '@/examples/custom-top-toolbar';
 import CustomizeDisplayColumnsExample from '@/examples/customize-display-columns';
 import CustomizeFilterComponentsExample from '@/examples/customize-filter-components';
 import CustomizeFilterModesExample from '@/examples/customize-filter-modes';
 import CustomizeFilterVariantsExample from '@/examples/customize-filter-variants';
+import CustomizeGlobalFilterComponentExample from '@/examples/customize-global-filter-component';
 import CustomizeRemoveColumnGroupingExample from '@/examples/customize-remove-column-grouping';
 import CustomizeRowSelectionExample from '@/examples/customize-row-selection';
 import CustomizeTableStylesExample from '@/examples/customize-table-styles';
@@ -40,6 +42,8 @@ import EnableDetailPanelVirtualizedExample from '@/examples/enable-detail-panel-
 import EnableExpandingTreeExample from '@/examples/enable-expanding-tree';
 import EnableFilterFacetValuesExample from '@/examples/enable-filter-facet-values';
 import EnableRowDraggingExample from '@/examples/enable-row-dragging';
+import EnableRowNumbersOriginalExample from '@/examples/enable-row-numbers-original';
+import EnableRowNumbersStaticExample from '@/examples/enable-row-numbers-static';
 import EnableRowOrderingExample from '@/examples/enable-row-ordering';
 import EnableRowPinningSelectExample from '@/examples/enable-row-pinning-select';
 import EnableRowPinningStaticExample from '@/examples/enable-row-pinning-static';
@@ -52,18 +56,60 @@ import ExpandingTreeFlatParseExample from '@/examples/expanding-tree-flat-parse'
 import ExpandingTreeRootExpandedExample from '@/examples/expanding-tree-root-expanded';
 import ExportToCsvExample from '@/examples/export-to-csv';
 import ExportToPdfExample from '@/examples/export-to-pdf';
+import ExternalToolbarExample from '@/examples/external-toolbar';
 import FontAwesomeIconsExample from '@/examples/font-awesome-icons';
 import InfiniteScrollingExample from '@/examples/infinite-scrolling';
 import LazyDetailPanelExample from '@/examples/lazy-detail-panel';
 import LazySubRowsExample from '@/examples/lazy-sub-rows';
 import LinearProgressExample from '@/examples/linear-progress';
 import LoadingExample from '@/examples/loading';
+import LocalizationI18nArExample from '@/examples/localization-i18n-ar';
+import LocalizationI18nAzExample from '@/examples/localization-i18n-az';
+import LocalizationI18nBgExample from '@/examples/localization-i18n-bg';
+import LocalizationI18nCsExample from '@/examples/localization-i18n-cs';
+import LocalizationI18nDaExample from '@/examples/localization-i18n-da';
+import LocalizationI18nDeExample from '@/examples/localization-i18n-de';
+import LocalizationI18nElExample from '@/examples/localization-i18n-el';
+import LocalizationI18nEnExample from '@/examples/localization-i18n-en';
+import LocalizationI18nEsExample from '@/examples/localization-i18n-es';
+import LocalizationI18nEtExample from '@/examples/localization-i18n-et';
 import LocalizationI18nFaExample from '@/examples/localization-i18n-fa';
+import LocalizationI18nFiExample from '@/examples/localization-i18n-fi';
+import LocalizationI18nFrExample from '@/examples/localization-i18n-fr';
+import LocalizationI18nHeExample from '@/examples/localization-i18n-he';
+import LocalizationI18nHrExample from '@/examples/localization-i18n-hr';
+import LocalizationI18nHuExample from '@/examples/localization-i18n-hu';
+import LocalizationI18nHyExample from '@/examples/localization-i18n-hy';
+import LocalizationI18nIdExample from '@/examples/localization-i18n-id';
+import LocalizationI18nItExample from '@/examples/localization-i18n-it';
+import LocalizationI18nJaExample from '@/examples/localization-i18n-ja';
+import LocalizationI18nKoExample from '@/examples/localization-i18n-ko';
+import LocalizationI18nNlExample from '@/examples/localization-i18n-nl';
+import LocalizationI18nNoExample from '@/examples/localization-i18n-no';
+import LocalizationI18nNpExample from '@/examples/localization-i18n-np';
+import LocalizationI18nPlExample from '@/examples/localization-i18n-pl';
+import LocalizationI18nPtExample from '@/examples/localization-i18n-pt';
+import LocalizationI18nPtBRExample from '@/examples/localization-i18n-pt-BR';
+import LocalizationI18nRoExample from '@/examples/localization-i18n-ro';
+import LocalizationI18nRuExample from '@/examples/localization-i18n-ru';
+import LocalizationI18nSkExample from '@/examples/localization-i18n-sk';
+import LocalizationI18nSrCyrlRSExample from '@/examples/localization-i18n-sr-Cyrl-RS';
+import LocalizationI18nSrLatnRSExample from '@/examples/localization-i18n-sr-Latn-RS';
+import LocalizationI18nSvExample from '@/examples/localization-i18n-sv';
+import LocalizationI18nTrExample from '@/examples/localization-i18n-tr';
+import LocalizationI18nUkExample from '@/examples/localization-i18n-uk';
+import LocalizationI18nViExample from '@/examples/localization-i18n-vi';
+import LocalizationI18nZhHansExample from '@/examples/localization-i18n-zh-hans';
+import LocalizationI18nZhHantExample from '@/examples/localization-i18n-zh-hant';
 import ManualSelectionExample from '@/examples/manual-selection';
 import MinimalExample from '@/examples/minimal';
 import MuiThemeExample from '@/examples/mui-theme';
+import MultiSortingExample from '@/examples/multi-sorting';
+import PersistentStateExample from '@/examples/persistent-state';
 import ReactQueryExample from '@/examples/react-query';
 import RemoteExample from '@/examples/remote';
+import RowActionsButtonsExample from '@/examples/row-actions-buttons';
+import RowActionsMenuItemsExample from '@/examples/row-actions-menu-items';
 import SingleRowSelectionExample from '@/examples/single-row-selection';
 import VirtualizedExample from '@/examples/virtualized';
 import BasicExamples from '@/example-groups/BasicExamples';
@@ -73,6 +119,7 @@ import EditingCRUDExamples from '@/example-groups/EditingCRUDExamples';
 import ExpandingExamples from '@/example-groups/ExpandingExamples';
 import FilteringExamples from '@/example-groups/FilteringExamples';
 import InstanceAPIsSwitcher from '@/example-groups/InstanceAPIsSwitcher';
+import LocaleExamples from '@/example-groups/LocaleExamples';
 import OptionsSwitcher from '@/example-groups/OptionsSwitcher';
 import RemoteFetchingExamples from '@/example-groups/RemoteFetchingExamples';
 import StickyPinningExamples from '@/example-groups/StickyPinningExamples';
@@ -92,10 +139,12 @@ export const exampleComponents = {
   CustomColumnActionsExample,
   CustomColumnFilteringUiExample,
   CustomHeadlessExample,
+  CustomTopToolbarExample,
   CustomizeDisplayColumnsExample,
   CustomizeFilterComponentsExample,
   CustomizeFilterModesExample,
   CustomizeFilterVariantsExample,
+  CustomizeGlobalFilterComponentExample,
   CustomizeRemoveColumnGroupingExample,
   CustomizeRowSelectionExample,
   CustomizeTableStylesExample,
@@ -120,6 +169,8 @@ export const exampleComponents = {
   EnableExpandingTreeExample,
   EnableFilterFacetValuesExample,
   EnableRowDraggingExample,
+  EnableRowNumbersOriginalExample,
+  EnableRowNumbersStaticExample,
   EnableRowOrderingExample,
   EnableRowPinningSelectExample,
   EnableRowPinningStaticExample,
@@ -132,18 +183,60 @@ export const exampleComponents = {
   ExpandingTreeRootExpandedExample,
   ExportToCsvExample,
   ExportToPdfExample,
+  ExternalToolbarExample,
   FontAwesomeIconsExample,
   InfiniteScrollingExample,
   LazyDetailPanelExample,
   LazySubRowsExample,
   LinearProgressExample,
   LoadingExample,
+  LocalizationI18nArExample,
+  LocalizationI18nAzExample,
+  LocalizationI18nBgExample,
+  LocalizationI18nCsExample,
+  LocalizationI18nDaExample,
+  LocalizationI18nDeExample,
+  LocalizationI18nElExample,
+  LocalizationI18nEnExample,
+  LocalizationI18nEsExample,
+  LocalizationI18nEtExample,
   LocalizationI18nFaExample,
+  LocalizationI18nFiExample,
+  LocalizationI18nFrExample,
+  LocalizationI18nHeExample,
+  LocalizationI18nHrExample,
+  LocalizationI18nHuExample,
+  LocalizationI18nHyExample,
+  LocalizationI18nIdExample,
+  LocalizationI18nItExample,
+  LocalizationI18nJaExample,
+  LocalizationI18nKoExample,
+  LocalizationI18nNlExample,
+  LocalizationI18nNoExample,
+  LocalizationI18nNpExample,
+  LocalizationI18nPlExample,
+  LocalizationI18nPtExample,
+  LocalizationI18nPtBRExample,
+  LocalizationI18nRoExample,
+  LocalizationI18nRuExample,
+  LocalizationI18nSkExample,
+  LocalizationI18nSrCyrlRSExample,
+  LocalizationI18nSrLatnRSExample,
+  LocalizationI18nSvExample,
+  LocalizationI18nTrExample,
+  LocalizationI18nUkExample,
+  LocalizationI18nViExample,
+  LocalizationI18nZhHansExample,
+  LocalizationI18nZhHantExample,
   ManualSelectionExample,
   MinimalExample,
   MuiThemeExample,
+  MultiSortingExample,
+  PersistentStateExample,
   ReactQueryExample,
   RemoteExample,
+  RowActionsButtonsExample,
+  RowActionsMenuItemsExample,
   SingleRowSelectionExample,
   VirtualizedExample,
   BasicExamples,
@@ -153,6 +246,7 @@ export const exampleComponents = {
   ExpandingExamples,
   FilteringExamples,
   InstanceAPIsSwitcher,
+  LocaleExamples,
   OptionsSwitcher,
   RemoteFetchingExamples,
   StickyPinningExamples,
