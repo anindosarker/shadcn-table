@@ -66,10 +66,10 @@ export async function paginationControls(wrapper, id, check) {
  * its copy button, then switches a playground back to Preview. A playground
  * also gets its full screen toggle and the caret menu's copy items checked:
  * "Copy prompt" must write the install command for `example-<id>` through
- * the clipboard stub scripts/check-pages.mjs installs. `wrapper` is kept for
- * the older call sites; the panel is located by id.
+ * the clipboard stub scripts/check-pages.mjs installs. The panel is located
+ * by id.
  */
-export async function codeToggle(page, wrapper, id, needle, check) {
+export async function codeToggle(page, id, needle, check) {
   const panel = panelOf(page, id);
   const btn = panel.locator('button', { hasText: /^Code$/ });
   check(`${id}: Code button`, (await btn.count()) === 1);

@@ -3,7 +3,7 @@
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { ChevronDownIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import {
   Command,
   CommandEmpty,
@@ -92,6 +92,7 @@ export function PageSwitcher({
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const listId = useId();
   const groups = useMemo(() => groupPages(section), [section]);
   const label =
     section.index && current.url === section.index.url
@@ -104,7 +105,9 @@ export function PageSwitcher({
         <button
           type="button"
           role="combobox"
+          aria-haspopup="listbox"
           aria-expanded={open}
+          aria-controls={listId}
           aria-label="Switch page"
           className={cn(
             'inline-flex max-w-[60vw] cursor-pointer items-center gap-1 transition-colors hover:text-fd-foreground data-[state=open]:text-fd-foreground sm:max-w-xs',
@@ -115,7 +118,9 @@ export function PageSwitcher({
           <ChevronDownIcon className="size-3.5 shrink-0" />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-72 p-0">
+      {/* cmdk assigns the listbox its own id, so the trigger points at the
+          popup container instead. */}
+      <PopoverContent id={listId} align="start" className="w-72 p-0">
         <Command filter={filterPages}>
           <CommandInput placeholder="Search pages..." />
           <CommandList>

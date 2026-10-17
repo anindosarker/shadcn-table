@@ -70,12 +70,11 @@ html > body[data-scroll-locked] {
    header rule; the table inside keeps its own solid border */
 .docs-playground {
   border: var(--docs-rule);
-  margin-block: 1.25rem;
 }
 
-/* full screen pins the panel to the viewport; no page margin there */
-.docs-playground[data-fullscreen] {
-  margin: 0;
+/* page margin; full screen pins the panel to the viewport instead */
+.docs-playground:not([data-fullscreen]) {
+  margin-block: 1.25rem;
 }
 
 /* header 6px vertical padding around 28px controls */

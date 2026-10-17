@@ -54,7 +54,7 @@ const examplePage =
     await singleExample(page, check);
     const w = await example(page, id, check);
     if (marker) await marker(page, w, check);
-    await codeToggle(page, w, id, needle, check);
+    await codeToggle(page, id, needle, check);
   };
 
 export default {

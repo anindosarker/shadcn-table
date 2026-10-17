@@ -7,7 +7,7 @@ import { codeToggle, example, names, paginationControls } from './_helpers.mjs';
 export default {
   '/docs/getting-started/usage': async ({ page, check }) => {
     const w = await example(page, 'basic', check);
-    await codeToggle(page, w, 'basic', 'useShadcnReactTable', check);
+    await codeToggle(page, 'basic', 'useShadcnReactTable', check);
   },
   '/docs/guides/pagination': async ({ page, check }) => {
     const propNames = await names(page, '#relevant-props-table');
@@ -26,14 +26,13 @@ export default {
     await paginationControls(alt, 'alternate-pagination', check);
     await codeToggle(
       page,
-      alt,
       'alternate-pagination',
       "paginationDisplayMode: 'pages'",
       check,
     );
     const remote = await example(page, 'remote', check);
     await paginationControls(remote, 'remote', check);
-    await codeToggle(page, remote, 'remote', 'manualPagination: true', check);
+    await codeToggle(page, 'remote', 'manualPagination: true', check);
     const before = await remote.locator('table tbody tr').first().textContent();
     const next = remote
       .locator('button[aria-label*="next" i], a[aria-label*="next" i]')
@@ -69,23 +68,22 @@ export default {
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
     await propTable(page, '#props-table', 210, check);
-    await codeToggle(page, page, 'root-props', 'TableOptionsTable', check);
+    await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {
     await switcher(page, 'Column Options', 3, check);
     await propTable(page, '#column-options-table', 63, check);
-    await codeToggle(page, page, 'column-options', 'ColumnOptionsTable', check);
+    await codeToggle(page, 'column-options', 'ColumnOptionsTable', check);
   },
   '/docs/api/state-options': async ({ page, check }) => {
     await switcher(page, 'State Options', 3, check);
     await propTable(page, '#state-options-table', 33, check);
-    await codeToggle(page, page, 'state-options', 'StateOptionsTable', check);
+    await codeToggle(page, 'state-options', 'StateOptionsTable', check);
   },
   '/docs/api/table-instance-apis': async ({ page, check }) => {
     await switcher(page, 'Table Instance APIs', 4, check);
     await propTable(page, '#table-instance-apis-table', 138, check);
     await codeToggle(
-      page,
       page,
       'table-instance-apis',
       'TableInstanceAPIsTable',
@@ -97,7 +95,6 @@ export default {
     await propTable(page, '#column-instance-apis-table', 56, check);
     await codeToggle(
       page,
-      page,
       'column-instance-apis',
       'ColumnInstanceAPIsTable',
       check,
@@ -106,19 +103,12 @@ export default {
   '/docs/api/row-instance-apis': async ({ page, check }) => {
     await switcher(page, 'Row Instance APIs', 4, check);
     await propTable(page, '#row-instance-apis-table', 39, check);
-    await codeToggle(
-      page,
-      page,
-      'row-instance-apis',
-      'RowInstanceAPIsTable',
-      check,
-    );
+    await codeToggle(page, 'row-instance-apis', 'RowInstanceAPIsTable', check);
   },
   '/docs/api/cell-instance-apis': async ({ page, check }) => {
     await switcher(page, 'Cell Instance APIs', 4, check);
     await propTable(page, '#cell-instance-apis-table', 9, check);
     await codeToggle(
-      page,
       page,
       'cell-instance-apis',
       'CellInstanceAPIsTable',
