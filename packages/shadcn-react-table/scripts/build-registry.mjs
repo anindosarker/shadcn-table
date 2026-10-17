@@ -18,20 +18,27 @@ const OUT = path.join(PKG, 'registry.json');
 
 const ITEM = 'shadcn-react-table';
 const HOMEPAGE = 'https://shadcn-table.com';
+// Where the built items are served. Locale items depend on the main item by
+// URL (a bare name would resolve to shadcn/ui's own registry), so the base is
+// baked in at build time. Override for a local install test:
+//   REGISTRY_BASE_URL=http://localhost:5310/r pnpm registry:build
+const BASE_URL = process.env.REGISTRY_BASE_URL ?? `${HOMEPAGE}/r`;
 // Forked ui parts ship inside the item instead of being registryDependencies.
 const FORKED_UI = new Set(['checkbox']);
-// npm packages the library imports (bare specifiers). Versions come from
-// package.json so the registry never drifts from what is tested here.
+// npm packages the library imports (bare specifiers). Pinned ones take their
+// version from package.json so the registry never drifts from what is tested
+// here; the rest stay unversioned so the CLI keeps whatever the user has
+// (a pinned lucide-react@^0.544 would downgrade a fresh shadcn init).
 const NPM_DEPS = [
-  '@tanstack/react-table',
-  '@tanstack/react-virtual',
-  '@tanstack/match-sorter-utils',
-  'highlight-words',
-  'class-variance-authority',
-  'lucide-react',
-  'radix-ui',
+  { name: '@tanstack/react-table', pinned: true },
+  { name: '@tanstack/react-virtual', pinned: true },
+  { name: '@tanstack/match-sorter-utils', pinned: true },
+  { name: 'highlight-words', pinned: true },
+  { name: 'class-variance-authority' },
+  { name: 'lucide-react' },
+  { name: 'radix-ui' },
 ];
-const NPM_DEV_DEPS = ['tw-animate-css'];
+const NPM_DEV_DEPS = [{ name: 'tw-animate-css' }];
 
 const pkgJson = JSON.parse(
   fs.readFileSync(path.join(PKG, 'package.json'), 'utf8'),
@@ -57,7 +64,7 @@ const fileEntry = (relPath) => ({
   target: uiTarget(relPath),
 });
 
-const withVersion = (name, bucket) => {
+const withVersion = ({ name, pinned }, bucket) => {
   const spec = pkgJson[bucket]?.[name];
   if (!spec) {
     console.error(
@@ -65,7 +72,7 @@ const withVersion = (name, bucket) => {
     );
     process.exit(1);
   }
-  return `${name}@${spec}`;
+  return pinned ? `${name}@${spec}` : name;
 };
 
 const uiImports = (files) => {
@@ -189,7 +196,7 @@ const locales = localeFiles.map((p) => {
     type: 'registry:ui',
     title: `Shadcn React Table locale: ${code}`,
     description: `The ${code} localization for shadcn-react-table.`,
-    registryDependencies: [ITEM],
+    registryDependencies: [`${BASE_URL}/${ITEM}.json`],
     files: [fileEntry(rel(p))],
   };
 });

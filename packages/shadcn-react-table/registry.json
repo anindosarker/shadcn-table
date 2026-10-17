@@ -13,12 +13,12 @@
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
-        "class-variance-authority@^0.7.1",
-        "lucide-react@^0.544.0",
-        "radix-ui@^1.5.0"
+        "class-variance-authority",
+        "lucide-react",
+        "radix-ui"
       ],
       "devDependencies": [
-        "tw-animate-css@^1.3.8"
+        "tw-animate-css"
       ],
       "registryDependencies": [
         "alert",
@@ -559,7 +559,7 @@
       "title": "Shadcn React Table locale: ar",
       "description": "The ar localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -575,7 +575,7 @@
       "title": "Shadcn React Table locale: az",
       "description": "The az localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -591,7 +591,7 @@
       "title": "Shadcn React Table locale: bg",
       "description": "The bg localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -607,7 +607,7 @@
       "title": "Shadcn React Table locale: cs",
       "description": "The cs localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -623,7 +623,7 @@
       "title": "Shadcn React Table locale: da",
       "description": "The da localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -639,7 +639,7 @@
       "title": "Shadcn React Table locale: de",
       "description": "The de localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -655,7 +655,7 @@
       "title": "Shadcn React Table locale: el",
       "description": "The el localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -671,7 +671,7 @@
       "title": "Shadcn React Table locale: es",
       "description": "The es localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -687,7 +687,7 @@
       "title": "Shadcn React Table locale: et",
       "description": "The et localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -703,7 +703,7 @@
       "title": "Shadcn React Table locale: fa",
       "description": "The fa localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -719,7 +719,7 @@
       "title": "Shadcn React Table locale: fi",
       "description": "The fi localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -735,7 +735,7 @@
       "title": "Shadcn React Table locale: fr",
       "description": "The fr localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -751,7 +751,7 @@
       "title": "Shadcn React Table locale: he",
       "description": "The he localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -767,7 +767,7 @@
       "title": "Shadcn React Table locale: hr",
       "description": "The hr localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -783,7 +783,7 @@
       "title": "Shadcn React Table locale: hu",
       "description": "The hu localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -799,7 +799,7 @@
       "title": "Shadcn React Table locale: hy",
       "description": "The hy localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -815,7 +815,7 @@
       "title": "Shadcn React Table locale: id",
       "description": "The id localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -831,7 +831,7 @@
       "title": "Shadcn React Table locale: it",
       "description": "The it localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -847,7 +847,7 @@
       "title": "Shadcn React Table locale: ja",
       "description": "The ja localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -863,7 +863,7 @@
       "title": "Shadcn React Table locale: ko",
       "description": "The ko localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -879,7 +879,7 @@
       "title": "Shadcn React Table locale: nl",
       "description": "The nl localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -895,7 +895,7 @@
       "title": "Shadcn React Table locale: no",
       "description": "The no localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -911,7 +911,7 @@
       "title": "Shadcn React Table locale: np",
       "description": "The np localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -927,7 +927,7 @@
       "title": "Shadcn React Table locale: pl",
       "description": "The pl localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -943,7 +943,7 @@
       "title": "Shadcn React Table locale: pt-BR",
       "description": "The pt-BR localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -959,7 +959,7 @@
       "title": "Shadcn React Table locale: pt",
       "description": "The pt localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -975,7 +975,7 @@
       "title": "Shadcn React Table locale: ro",
       "description": "The ro localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -991,7 +991,7 @@
       "title": "Shadcn React Table locale: ru",
       "description": "The ru localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1007,7 +1007,7 @@
       "title": "Shadcn React Table locale: sk",
       "description": "The sk localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1023,7 +1023,7 @@
       "title": "Shadcn React Table locale: sr-Cyrl-RS",
       "description": "The sr-Cyrl-RS localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1039,7 +1039,7 @@
       "title": "Shadcn React Table locale: sr-Latn-RS",
       "description": "The sr-Latn-RS localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1055,7 +1055,7 @@
       "title": "Shadcn React Table locale: sv",
       "description": "The sv localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1071,7 +1071,7 @@
       "title": "Shadcn React Table locale: tr",
       "description": "The tr localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1087,7 +1087,7 @@
       "title": "Shadcn React Table locale: uk",
       "description": "The uk localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1103,7 +1103,7 @@
       "title": "Shadcn React Table locale: vi",
       "description": "The vi localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1119,7 +1119,7 @@
       "title": "Shadcn React Table locale: zh-Hans",
       "description": "The zh-Hans localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
@@ -1135,7 +1135,7 @@
       "title": "Shadcn React Table locale: zh-Hant",
       "description": "The zh-Hant localization for shadcn-react-table.",
       "registryDependencies": [
-        "shadcn-react-table"
+        "https://shadcn-table.com/r/shadcn-react-table.json"
       ],
       "files": [
         {
