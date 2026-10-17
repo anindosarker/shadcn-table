@@ -1,5 +1,3 @@
-import { faker } from '@faker-js/faker';
-
 export type Person = {
   isActive: boolean;
   name: string;
@@ -12,14 +10,28 @@ export type Person = {
   state: string;
 };
 
-faker.seed(314);
+//seeded so that server and client render the same times
+const createRandom = (seed: number) => {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const random = createRandom(314);
+
+const randomInt = (max: number) => Math.floor(random() * (max + 1));
 
 //random time today
 const today = () => {
   const today = new Date();
-  today.setHours(faker.number.int({ max: 23 }));
-  today.setMinutes(faker.number.int({ max: 59 }));
-  today.setSeconds(faker.number.int({ max: 59 }));
+  today.setHours(randomInt(23));
+  today.setMinutes(randomInt(59));
+  today.setSeconds(randomInt(59));
   return today;
 };
 

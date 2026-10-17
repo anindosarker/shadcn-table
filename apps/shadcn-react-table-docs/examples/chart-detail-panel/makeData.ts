@@ -1,5 +1,3 @@
-import { faker } from '@faker-js/faker';
-
 export type Person = {
   id: string;
   firstName: string;
@@ -12,17 +10,23 @@ export type Person = {
 };
 
 //seeded so that server and client render the same numbers
-faker.seed(4201);
+const createRandom = (seed: number) => {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const random = createRandom(4201);
 
 const randomNumbers = (num: number, multiplier: number = 1) => {
   const points: number[] = [];
   for (let i = 0; i < num; i++) {
-    points.push(
-      Math.floor(
-        faker.number.float({ min: 0, max: 1 }) * 30 * multiplier +
-          i * multiplier,
-      ),
-    );
+    points.push(Math.floor(random() * 30 * multiplier + i * multiplier));
   }
   return points;
 };
