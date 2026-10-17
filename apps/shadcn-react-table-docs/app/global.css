@@ -10,6 +10,10 @@
 @import '../themes/rose.css';
 @import '../themes/amber.css';
 @import '../themes/mono.css';
+/* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
+   ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
+   A plain ::highlight() rule is rejected too, so app/layout.tsx inlines it in a <style> tag. */
+@source not inline("[&_::highlight(fd-search)]:underline [&_::highlight(fd-search)]:text-fd-primary");
 /*
  ---break---
  */
@@ -47,6 +51,7 @@ html > body[data-scroll-locked] {
 #nd-sidebar a {
   padding-block: 0.375rem;
   font-size: 0.875rem;
+  color: var(--color-fd-foreground);
 }
 
 /* active item: subtle pill with the accent (primary) text, no left bar */

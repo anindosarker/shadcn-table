@@ -18,6 +18,9 @@ const inter = Inter({
  */
 const themePresetScript = `(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)})}catch(e){}d.setAttribute('data-theme',${JSON.stringify(THEME_PRESETS.map((p) => p.name))}.indexOf(t)===-1?${JSON.stringify(DEFAULT_THEME)}:t)})()`;
 
+/** Search-match highlight; see the note in app/global.css (Lightning CSS rejects ::highlight()). */
+const searchHighlightStyle = `::highlight(fd-search){color:var(--color-fd-primary);text-decoration-line:underline}`;
+
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html
@@ -25,8 +28,9 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       className={`${inter.variable} ${inter.className}`}
       suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themePresetScript }} />
+        <style dangerouslySetInnerHTML={{ __html: searchHighlightStyle }} />
         <RootProvider theme={{ defaultTheme: 'dark' }}>{children}</RootProvider>
       </body>
     </html>
