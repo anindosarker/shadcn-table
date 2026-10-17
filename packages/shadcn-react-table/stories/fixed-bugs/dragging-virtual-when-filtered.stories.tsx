@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
   type SRT_ColumnDef,
@@ -56,7 +56,7 @@ const columns: SRT_ColumnDef<(typeof initData)[0]>[] = [
 ];
 
 export const DraggingRowWhenFiltered = () => {
-  const [data, _setData] = useState(() => initData);
+  const [data] = useState(() => initData);
   const table = useShadcnReactTable({
     enableRowVirtualization: true,
     enableRowNumbers: true,
