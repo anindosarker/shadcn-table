@@ -774,7 +774,11 @@ async function syncPage(rel) {
 }
 
 /** MRT pages that are not ported (plan: skipped list). */
-const SKIPPED_PAGES = new Set(['getting-started/migrating-to-v3.mdx']);
+const SKIPPED_PAGES = new Set([
+  'getting-started/migrating-to-v3.mdx',
+  // MRT's docs TOC page; /docs redirects to the install page (next.config.mjs)
+  'index.mdx',
+]);
 
 async function listPages() {
   const out = [];
@@ -806,7 +810,7 @@ async function writeMeta(routes) {
   const sections = routes.filter(
     (r) => r.href?.startsWith('/docs/') && Array.isArray(r.items),
   );
-  const rootPages = ['index', ...sections.map((s) => s.href.split('/')[2])];
+  const rootPages = sections.map((s) => s.href.split('/')[2]);
   await fs.mkdir(OUT_PAGES, { recursive: true });
   await fs.writeFile(
     path.join(OUT_PAGES, 'meta.json'),

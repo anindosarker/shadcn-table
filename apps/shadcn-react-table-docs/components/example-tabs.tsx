@@ -57,17 +57,32 @@ export const ExampleTabs = ({
           isPage ? router.push(`/docs/examples/${next}`) : setActiveTab(next)
         }
       >
-        <TabsList className="w-full justify-start overflow-x-auto">
+        <TabsList
+          variant="line"
+          className="h-auto w-full flex-wrap justify-start gap-x-1 gap-y-1 border-b border-border p-0 pb-1"
+        >
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="h-8 flex-none px-3"
+            >
               {tab.label}
             </TabsTrigger>
           ))}
+          {links.length > 0 ? (
+            <span aria-hidden className="mx-1 h-4 w-px self-center bg-border" />
+          ) : null}
           {links.map((link) => (
-            <TabsTrigger key={link.href} value={`link:${link.href}`} asChild>
+            <TabsTrigger
+              key={link.href}
+              value={`link:${link.href}`}
+              asChild
+              className="h-8 flex-none px-3 text-muted-foreground"
+            >
               <Link href={link.href}>
                 {link.label}
-                <ExternalLinkIcon className="size-3.5" />
+                <ExternalLinkIcon className="size-3.5 opacity-60" />
               </Link>
             </TabsTrigger>
           ))}

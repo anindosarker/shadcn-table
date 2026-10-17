@@ -1,7 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import { CheckIcon, ChevronDownIcon } from 'lucide-react';
+import { CheckIcon, PaletteIcon } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,15 +56,18 @@ export function ThemePresetSwitcher({ className }: { className?: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Theme preset"
+        aria-label={`Theme preset: ${active.label}`}
+        title={`Theme: ${active.label}`}
         className={cn(
-          'inline-flex h-7 items-center gap-1.5 rounded-md border px-2 text-[0.8rem] text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground data-[state=open]:bg-fd-accent data-[state=open]:text-fd-accent-foreground',
+          'inline-flex size-6.5 items-center justify-center rounded-full transition-colors hover:bg-fd-accent data-[state=open]:bg-fd-accent',
           className,
         )}
       >
-        <Swatch color={active.swatch} />
-        <span>{active.label}</span>
-        <ChevronDownIcon className="size-3.5 opacity-70" />
+        <PaletteIcon
+          className="size-4"
+          style={{ color: active.swatch }}
+          aria-hidden
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-36">
         {THEME_PRESETS.map((preset) => (

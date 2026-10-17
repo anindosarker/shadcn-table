@@ -8,6 +8,16 @@ export function baseOptions(): BaseLayoutProps {
     nav: {
       title: <Logo />,
     },
+    links: [
+      {
+        text: 'Get Started',
+        url: '/docs/getting-started/install',
+        active: 'nested-url',
+      },
+      { text: 'API', url: '/docs/api', active: 'nested-url' },
+      { text: 'Examples', url: '/docs/examples', active: 'nested-url' },
+      { text: 'Guides', url: '/docs/guides', active: 'nested-url' },
+    ],
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
     slots: { themeSwitch: ThemeControls },
   };

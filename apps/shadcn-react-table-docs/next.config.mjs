@@ -8,6 +8,14 @@ const config = {
   // A second `next dev` in the same folder refuses to start (.next/dev/lock).
   // Parallel docs agents run `NEXT_DIST_DIR=.next-<x> npx next dev -p <port>`.
   distDir: process.env.NEXT_DIST_DIR ?? '.next',
+  // MRT's docs index is a table of contents page; the sidebar already is one.
+  redirects: async () => [
+    {
+      source: '/docs',
+      destination: '/docs/getting-started/install',
+      permanent: false,
+    },
+  ],
 };
 
 export default withMDX(config);

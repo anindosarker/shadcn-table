@@ -50,7 +50,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           </ViewOptionsPopover>
         </div>
       </div>
-      <DocsDescription className="mb-0 border-b pb-6">
+      <DocsDescription className="docs-description-rule mb-0 pb-6">
         {page.data.description}
       </DocsDescription>
       <DocsBody>
