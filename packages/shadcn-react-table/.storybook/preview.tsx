@@ -1,6 +1,5 @@
-import { useEffect, useState, type ComponentProps } from 'react';
+import { useEffect, useState } from 'react';
 import type { Preview } from '@storybook/react-vite';
-import { DocsContainer } from '@storybook/addon-docs/blocks';
 import { addons } from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
@@ -31,19 +30,10 @@ function useStorybookDarkMode() {
   return isDark;
 }
 
-// Set the class before React mounts so the initial docs/story paint is dark.
+// Set the class before React mounts so the initial story paint is dark.
 applyHtmlClass(readStoredMode() === 'dark');
 
-/** Docs page container that follows the toolbar toggle instead of a static theme. */
-function ThemedDocsContainer(props: ComponentProps<typeof DocsContainer>) {
-  const isDark = useStorybookDarkMode();
-  return <DocsContainer {...props} theme={isDark ? darkTheme : lightTheme} />;
-}
-
 const preview: Preview = {
-  // Generate an autodocs page (with a working "Show code" Source block) for
-  // every story, mirroring material-react-table's storybook.
-  tags: ['autodocs'],
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
@@ -64,7 +54,9 @@ const preview: Preview = {
       lightClass: 'light',
     },
     docs: {
-      container: ThemedDocsContainer,
+      // Built-in "Code" addon panel (replaces addon-storysource, which
+      // material-react-table's storybook uses for its Code tab).
+      codePanel: true,
       // Show the real story source from the file. The default 'dynamic' mode
       // serializes the rendered table tree, which threw on the heavy SRT
       // component (the stale "ColumnsIcon is not defined" eval). 'code' reads
@@ -77,6 +69,28 @@ const preview: Preview = {
       useStorybookDarkMode();
       return (
         <div className="bg-background p-4 text-foreground">
+          <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
+            Looking for the main docs site? Click{' '}
+            <a
+              href="https://shadcn-table.com"
+              target="_blank"
+              rel="noopener"
+              className="underline"
+            >
+              here.
+            </a>
+          </p>
+          <p className="pb-4 text-sm text-muted-foreground dark:text-foreground">
+            View Source code for these examples in the code tab below or{' '}
+            <a
+              href="https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories/features"
+              target="_blank"
+              rel="noopener"
+              className="underline"
+            >
+              here on GitHub.
+            </a>
+          </p>
           <Story />
         </div>
       );
