@@ -60,13 +60,18 @@ const KNOWN_LIBRARY_ERRORS = [
 ];
 
 /**
- * Resource errors from third-party hosts (avatar images blocked by their
- * CORP headers, for example) are not ours. Same-origin 404/500 stay fatal.
+ * Resource errors from third-party hosts (fonts blocked by an ad blocker,
+ * for example) are not ours. Same-origin 404/500 stay fatal, and so do
+ * hosts the docs depend on for visible content (example avatars).
  */
+const MONITORED_EXTERNAL_HOSTS = ['api.dicebear.com'];
+
 function isExternalResourceError(text, url) {
   if (!/^Failed to load resource/.test(text)) return false;
   try {
-    return new URL(url).host !== new URL(base).host;
+    const host = new URL(url).host;
+    if (MONITORED_EXTERNAL_HOSTS.includes(host)) return false;
+    return host !== new URL(base).host;
   } catch {
     return false;
   }

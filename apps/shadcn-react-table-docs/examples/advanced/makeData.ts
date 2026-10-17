@@ -9,8 +9,7 @@ export const data: Employee[] = [
     salary: 52729,
     startDate: '3/20/2014',
     signatureCatchPhrase: 'Cross-platform disintermediate workforce',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/106.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DustyKuvalis',
   },
   {
     firstName: "D'angelo",
@@ -20,8 +19,7 @@ export const data: Employee[] = [
     salary: 71964,
     startDate: '3/9/2018',
     signatureCatchPhrase: 'Virtual local support',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/420.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DangeloMoen',
   },
   {
     firstName: 'Devan',
@@ -31,8 +29,7 @@ export const data: Employee[] = [
     salary: 72551,
     startDate: '8/12/2020',
     signatureCatchPhrase: 'Pre-emptive composite hierarchy',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1091.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DevanReinger',
   },
   {
     firstName: 'Leonardo',
@@ -42,8 +39,7 @@ export const data: Employee[] = [
     salary: 57801,
     startDate: '7/25/2017',
     signatureCatchPhrase: 'Progressive real-time core',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/639.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LeonardoLangworth',
   },
   {
     firstName: 'Douglas',
@@ -53,8 +49,7 @@ export const data: Employee[] = [
     salary: 23792,
     startDate: '4/12/2020',
     signatureCatchPhrase: 'Operative well-modulated info-mediaries',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/394.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DouglasDenesik',
   },
   {
     firstName: 'Jameson',
@@ -64,8 +59,7 @@ export const data: Employee[] = [
     salary: 80916,
     startDate: '10/30/2017',
     signatureCatchPhrase: 'Front-line intermediate firmware',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1205.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JamesonMayer',
   },
   {
     firstName: 'Madaline',
@@ -75,8 +69,7 @@ export const data: Employee[] = [
     salary: 68052,
     startDate: '1/17/2018',
     signatureCatchPhrase: 'Right-sized high-level algorithm',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/432.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MadalineQuitzon',
   },
   {
     firstName: 'Wilfrid',
@@ -86,8 +79,7 @@ export const data: Employee[] = [
     salary: 85573,
     startDate: '8/4/2014',
     signatureCatchPhrase: 'Focused interactive secured line',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1131.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=WilfridVandervort',
   },
   {
     firstName: 'Chelsie',
@@ -97,8 +89,7 @@ export const data: Employee[] = [
     salary: 51062,
     startDate: '1/6/2021',
     signatureCatchPhrase: 'Diverse attitude-oriented migration',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1099.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ChelsieMraz',
   },
   {
     firstName: 'Hassie',
@@ -108,8 +99,7 @@ export const data: Employee[] = [
     salary: 61196,
     startDate: '4/28/2016',
     signatureCatchPhrase: 'Upgradable composite methodology',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/401.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=HassieBruen',
   },
   {
     firstName: 'Daisy',
@@ -119,8 +109,7 @@ export const data: Employee[] = [
     salary: 25394,
     startDate: '3/2/2020',
     signatureCatchPhrase: 'Exclusive next generation initiative',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/436.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DaisyHane',
   },
   {
     firstName: 'Wilbert',
@@ -130,8 +119,7 @@ export const data: Employee[] = [
     salary: 79355,
     startDate: '4/5/2017',
     signatureCatchPhrase: 'Total asynchronous strategy',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/74.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=WilbertMonahan',
   },
   {
     firstName: 'Heloise',
@@ -141,8 +129,7 @@ export const data: Employee[] = [
     salary: 109257,
     startDate: '12/18/2020',
     signatureCatchPhrase: 'User-friendly tertiary service-desk',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1107.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=HeloisePurdy',
   },
   {
     firstName: 'Moises',
@@ -152,8 +139,7 @@ export const data: Employee[] = [
     salary: 155037,
     startDate: '9/23/2014',
     signatureCatchPhrase: 'Public-key exuding complexity',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/484.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MoisesMcClure',
   },
   {
     firstName: 'Rahsaan',
@@ -163,8 +149,7 @@ export const data: Employee[] = [
     salary: 158595,
     startDate: '3/31/2015',
     signatureCatchPhrase: 'Decentralized 6th generation archive',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1015.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RahsaanBauch',
   },
   {
     firstName: 'Lorenzo',
@@ -174,8 +159,7 @@ export const data: Employee[] = [
     salary: 73983,
     startDate: '8/22/2020',
     signatureCatchPhrase: 'Reactive fresh-thinking local area network',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/88.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LorenzoMoore',
   },
   {
     firstName: 'Richard',
@@ -185,8 +169,7 @@ export const data: Employee[] = [
     salary: 169001,
     startDate: '10/13/2018',
     signatureCatchPhrase: 'Streamlined logistical access',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/897.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RichardBartoletti',
   },
   {
     firstName: 'Ulises',
@@ -196,8 +179,7 @@ export const data: Employee[] = [
     salary: 92008,
     startDate: '10/17/2017',
     signatureCatchPhrase: 'Monitored object-oriented interface',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/956.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=UlisesBeatty',
   },
   {
     firstName: 'Hattie',
@@ -207,8 +189,7 @@ export const data: Employee[] = [
     salary: 120554,
     startDate: '12/17/2014',
     signatureCatchPhrase: 'Organic bi-directional groupware',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/448.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=HattieStehr',
   },
   {
     firstName: 'Kane',
@@ -218,8 +199,7 @@ export const data: Employee[] = [
     salary: 95231,
     startDate: '2/28/2020',
     signatureCatchPhrase: 'Stand-alone holistic strategy',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/461.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=KaneMarquardt',
   },
   {
     firstName: 'Brittany',
@@ -229,8 +209,7 @@ export const data: Employee[] = [
     salary: 40908,
     startDate: '7/27/2016',
     signatureCatchPhrase: 'Reactive multi-tasking internet solution',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/862.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BrittanyLegros',
   },
   {
     firstName: 'Joana',
@@ -240,8 +219,7 @@ export const data: Employee[] = [
     salary: 136966,
     startDate: '8/22/2017',
     signatureCatchPhrase: 'Extended asynchronous moderator',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/795.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JoanaWitting',
   },
   {
     firstName: 'Marshall',
@@ -251,8 +229,7 @@ export const data: Employee[] = [
     salary: 155176,
     startDate: '12/25/2020',
     signatureCatchPhrase: 'Business-focused bifurcated access',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/524.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MarshallGottlieb',
   },
   {
     firstName: 'Nolan',
@@ -262,8 +239,7 @@ export const data: Employee[] = [
     salary: 161534,
     startDate: '8/3/2021',
     signatureCatchPhrase: 'Robust bifurcated initiative',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1095.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=NolanAbbott',
   },
   {
     firstName: 'Guadalupe',
@@ -273,8 +249,7 @@ export const data: Employee[] = [
     salary: 20297,
     startDate: '6/17/2020',
     signatureCatchPhrase: 'Networked tangible definition',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/322.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=GuadalupeGoyette',
   },
   {
     firstName: 'Frankie',
@@ -284,8 +259,7 @@ export const data: Employee[] = [
     salary: 57549,
     startDate: '3/16/2021',
     signatureCatchPhrase: 'Diverse 24/7 open system',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/103.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=FrankieBalistreri',
   },
   {
     firstName: 'Jimmie',
@@ -295,8 +269,7 @@ export const data: Employee[] = [
     salary: 90316,
     startDate: '9/1/2019',
     signatureCatchPhrase: 'Decentralized 5th generation functionalities',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/113.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JimmieAltenwerth',
   },
   {
     firstName: 'Ryder',
@@ -306,8 +279,7 @@ export const data: Employee[] = [
     salary: 111388,
     startDate: '5/8/2021',
     signatureCatchPhrase: 'Multi-layered didactic firmware',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/29.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RyderOHara',
   },
   {
     firstName: 'Nolan',
@@ -317,8 +289,7 @@ export const data: Employee[] = [
     salary: 46528,
     startDate: '2/21/2017',
     signatureCatchPhrase: 'Open-source stable encoding',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/915.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=NolanMayer',
   },
   {
     firstName: 'Ashley',
@@ -328,8 +299,7 @@ export const data: Employee[] = [
     salary: 132645,
     startDate: '9/25/2019',
     signatureCatchPhrase: 'Open-architected well-modulated data-warehouse',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/721.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=AshleyWolf',
   },
   {
     firstName: 'Florida',
@@ -339,8 +309,7 @@ export const data: Employee[] = [
     salary: 65835,
     startDate: '8/9/2015',
     signatureCatchPhrase: 'Ameliorated upward-trending benchmark',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1066.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=FloridaKiehn',
   },
   {
     firstName: 'Monica',
@@ -350,8 +319,7 @@ export const data: Employee[] = [
     salary: 70473,
     startDate: '3/27/2015',
     signatureCatchPhrase: 'Monitored context-sensitive frame',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/81.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MonicaCrooks',
   },
   {
     firstName: 'Callie',
@@ -361,8 +329,7 @@ export const data: Employee[] = [
     salary: 50844,
     startDate: '8/19/2019',
     signatureCatchPhrase: 'Stand-alone stable moderator',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/489.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CallieKub',
   },
   {
     firstName: 'Wellington',
@@ -372,8 +339,7 @@ export const data: Employee[] = [
     salary: 37148,
     startDate: '3/22/2017',
     signatureCatchPhrase: 'Innovative background capability',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/951.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=WellingtonTreutel',
   },
   {
     firstName: 'Ethyl',
@@ -383,8 +349,7 @@ export const data: Employee[] = [
     salary: 139956,
     startDate: '8/17/2016',
     signatureCatchPhrase: 'Function-based analyzing hardware',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/718.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=EthylRempel',
   },
   {
     firstName: 'Lora',
@@ -394,8 +359,7 @@ export const data: Employee[] = [
     salary: 49911,
     startDate: '10/7/2021',
     signatureCatchPhrase: 'Reactive 24/7 monitoring',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/147.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LoraHarvey',
   },
   {
     firstName: 'Dock',
@@ -405,8 +369,7 @@ export const data: Employee[] = [
     salary: 161196,
     startDate: '11/8/2014',
     signatureCatchPhrase: 'Cross-group reciprocal knowledge base',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/21.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DockRolfson',
   },
   {
     firstName: 'Loma',
@@ -416,8 +379,7 @@ export const data: Employee[] = [
     salary: 165993,
     startDate: '3/8/2014',
     signatureCatchPhrase: 'Robust 3rd generation capacity',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1028.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LomaDach',
   },
   {
     firstName: 'Anibal',
@@ -427,8 +389,7 @@ export const data: Employee[] = [
     salary: 112371,
     startDate: '5/26/2016',
     signatureCatchPhrase: 'Sharable 24 hour info-mediaries',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/313.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=AnibalRuecker',
   },
   {
     firstName: 'Javon',
@@ -438,8 +399,7 @@ export const data: Employee[] = [
     salary: 153271,
     startDate: '3/2/2014',
     signatureCatchPhrase: 'Total incremental throughput',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1248.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JavonKling',
   },
   {
     firstName: 'Cassidy',
@@ -449,8 +409,7 @@ export const data: Employee[] = [
     salary: 144280,
     startDate: '10/28/2020',
     signatureCatchPhrase: 'Front-line object-oriented matrices',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/402.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CassidySchiller',
   },
   {
     firstName: 'Laila',
@@ -460,8 +419,7 @@ export const data: Employee[] = [
     salary: 71824,
     startDate: '6/16/2021',
     signatureCatchPhrase: 'Public-key 24 hour extranet',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/681.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LailaOlson',
   },
   {
     firstName: 'Merle',
@@ -471,8 +429,7 @@ export const data: Employee[] = [
     salary: 63090,
     startDate: '7/19/2019',
     signatureCatchPhrase: 'Right-sized bi-directional utilisation',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/41.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MerleSchultz',
   },
   {
     firstName: 'Brennan',
@@ -482,8 +439,7 @@ export const data: Employee[] = [
     salary: 148660,
     startDate: '4/2/2017',
     signatureCatchPhrase: 'Enterprise-wide mission-critical algorithm',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/87.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BrennanRoberts',
   },
   {
     firstName: 'Derick',
@@ -493,8 +449,7 @@ export const data: Employee[] = [
     salary: 162803,
     startDate: '2/17/2018',
     signatureCatchPhrase: 'Visionary tertiary encoding',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/416.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DerickLebsack',
   },
   {
     firstName: 'Brown',
@@ -504,8 +459,7 @@ export const data: Employee[] = [
     salary: 82617,
     startDate: '10/27/2019',
     signatureCatchPhrase: 'Multi-channelled high-level core',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/759.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BrownDeckow',
   },
   {
     firstName: 'Leo',
@@ -515,8 +469,7 @@ export const data: Employee[] = [
     salary: 107179,
     startDate: '7/7/2018',
     signatureCatchPhrase: 'Assimilated 4th generation complexity',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/793.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LeoSchmidt',
   },
   {
     firstName: 'Desiree',
@@ -526,8 +479,7 @@ export const data: Employee[] = [
     salary: 144783,
     startDate: '11/14/2017',
     signatureCatchPhrase: 'Fully-configurable demand-driven hub',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/352.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DesireeBraun',
   },
   {
     firstName: 'Grant',
@@ -537,8 +489,7 @@ export const data: Employee[] = [
     salary: 43339,
     startDate: '8/13/2019',
     signatureCatchPhrase: 'Cross-platform content-based complexity',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1237.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=GrantSporer',
   },
   {
     firstName: 'Bertha',
@@ -548,8 +499,7 @@ export const data: Employee[] = [
     salary: 45793,
     startDate: '4/10/2017',
     signatureCatchPhrase: 'Down-sized empowering infrastructure',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/931.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BerthaWatsica',
   },
   {
     firstName: 'Ashleigh',
@@ -559,8 +509,7 @@ export const data: Employee[] = [
     salary: 94366,
     startDate: '4/4/2018',
     signatureCatchPhrase: 'Multi-tiered upward-trending attitude',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/168.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=AshleighKessler',
   },
   {
     firstName: 'Napoleon',
@@ -570,8 +519,7 @@ export const data: Employee[] = [
     salary: 123117,
     startDate: '3/20/2015',
     signatureCatchPhrase: 'Decentralized clear-thinking budgetary management',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/287.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=NapoleonDickens',
   },
   {
     firstName: 'Colin',
@@ -581,8 +529,7 @@ export const data: Employee[] = [
     salary: 152432,
     startDate: '8/28/2020',
     signatureCatchPhrase: 'Future-proofed context-sensitive function',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/247.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ColinBlock',
   },
   {
     firstName: 'Dallas',
@@ -592,8 +539,7 @@ export const data: Employee[] = [
     salary: 97413,
     startDate: '7/21/2021',
     signatureCatchPhrase: 'Cross-group content-based budgetary management',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/178.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DallasStark',
   },
   {
     firstName: 'Kirsten',
@@ -603,8 +549,7 @@ export const data: Employee[] = [
     salary: 135336,
     startDate: '3/10/2015',
     signatureCatchPhrase: 'Team-oriented heuristic neural-net',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/19.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=KirstenReichel',
   },
   {
     firstName: 'Petra',
@@ -614,8 +559,7 @@ export const data: Employee[] = [
     salary: 35672,
     startDate: '6/27/2020',
     signatureCatchPhrase: 'Business-focused attitude-oriented support',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/318.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=PetraLakin',
   },
   {
     firstName: 'Clifton',
@@ -625,8 +569,7 @@ export const data: Employee[] = [
     salary: 138721,
     startDate: '2/26/2016',
     signatureCatchPhrase: 'Integrated coherent structure',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/223.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CliftonErdman',
   },
   {
     firstName: 'Meagan',
@@ -636,8 +579,7 @@ export const data: Employee[] = [
     salary: 69790,
     startDate: '9/12/2020',
     signatureCatchPhrase: 'User-friendly holistic portal',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/786.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MeaganZemlak',
   },
   {
     firstName: 'Mortimer',
@@ -647,8 +589,7 @@ export const data: Employee[] = [
     salary: 32300,
     startDate: '4/10/2021',
     signatureCatchPhrase: 'Cloned bandwidth-monitored ability',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1196.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MortimerThompson',
   },
   {
     firstName: 'Ima',
@@ -658,8 +599,7 @@ export const data: Employee[] = [
     salary: 113894,
     startDate: '1/19/2016',
     signatureCatchPhrase: 'Multi-lateral secondary analyzer',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/208.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ImaNader',
   },
   {
     firstName: 'Amani',
@@ -669,8 +609,7 @@ export const data: Employee[] = [
     salary: 43182,
     startDate: '7/3/2020',
     signatureCatchPhrase: 'Synchronised 3rd generation neural-net',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/577.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=AmaniMills',
   },
   {
     firstName: 'Della',
@@ -680,8 +619,7 @@ export const data: Employee[] = [
     salary: 75492,
     startDate: '9/24/2014',
     signatureCatchPhrase: 'Optional radical migration',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/774.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DellaReilly',
   },
   {
     firstName: 'Erika',
@@ -691,8 +629,7 @@ export const data: Employee[] = [
     salary: 141949,
     startDate: '4/22/2014',
     signatureCatchPhrase: 'Monitored multi-state software',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/483.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ErikaHamill',
   },
   {
     firstName: 'Hannah',
@@ -702,8 +639,7 @@ export const data: Employee[] = [
     salary: 32414,
     startDate: '1/18/2021',
     signatureCatchPhrase: 'Expanded next generation Graphical User Interface',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1068.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=HannahRutherford',
   },
   {
     firstName: 'Bernice',
@@ -713,8 +649,7 @@ export const data: Employee[] = [
     salary: 131333,
     startDate: '4/29/2018',
     signatureCatchPhrase: 'Multi-tiered upward-trending pricing structure',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/272.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BerniceGrimes',
   },
   {
     firstName: 'Cayla',
@@ -724,8 +659,7 @@ export const data: Employee[] = [
     salary: 36880,
     startDate: '11/4/2016',
     signatureCatchPhrase: 'Phased foreground service-desk',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/963.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CaylaGlover',
   },
   {
     firstName: 'Gerard',
@@ -735,8 +669,7 @@ export const data: Employee[] = [
     salary: 124275,
     startDate: '4/15/2019',
     signatureCatchPhrase: 'Organic grid-enabled initiative',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/501.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=GerardDibbert',
   },
   {
     firstName: 'Crystel',
@@ -746,8 +679,7 @@ export const data: Employee[] = [
     salary: 74744,
     startDate: '9/11/2021',
     signatureCatchPhrase: 'Seamless attitude-oriented pricing structure',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/943.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CrystelGutmann',
   },
   {
     firstName: 'Esther',
@@ -757,8 +689,7 @@ export const data: Employee[] = [
     salary: 165191,
     startDate: '11/12/2018',
     signatureCatchPhrase: 'Multi-lateral explicit policy',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/909.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=EstherSchamberger',
   },
   {
     firstName: 'Shane',
@@ -768,8 +699,7 @@ export const data: Employee[] = [
     salary: 126982,
     startDate: '1/26/2015',
     signatureCatchPhrase: 'Integrated fault-tolerant internet solution',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/533.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ShaneFadel',
   },
   {
     firstName: 'Travis',
@@ -779,8 +709,7 @@ export const data: Employee[] = [
     salary: 117563,
     startDate: '6/4/2019',
     signatureCatchPhrase: 'Organic dedicated synergy',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/327.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=TravisOrn',
   },
   {
     firstName: 'Ephraim',
@@ -790,8 +719,7 @@ export const data: Employee[] = [
     salary: 64658,
     startDate: '2/5/2018',
     signatureCatchPhrase: 'Business-focused value-added product',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/852.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=EphraimJerde',
   },
   {
     firstName: 'Jessy',
@@ -801,8 +729,7 @@ export const data: Employee[] = [
     salary: 107263,
     startDate: '5/8/2018',
     signatureCatchPhrase: 'Distributed impactful moratorium',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1075.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JessyHuel',
   },
   {
     firstName: 'Coty',
@@ -812,8 +739,7 @@ export const data: Employee[] = [
     salary: 22128,
     startDate: '8/23/2018',
     signatureCatchPhrase: 'De-engineered zero administration utilisation',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/703.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CotyFadel',
   },
   {
     firstName: 'Davin',
@@ -823,8 +749,7 @@ export const data: Employee[] = [
     salary: 54712,
     startDate: '8/9/2021',
     signatureCatchPhrase: 'Customer-focused mobile local area network',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/697.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DavinKreiger',
   },
   {
     firstName: 'Ashly',
@@ -834,8 +759,7 @@ export const data: Employee[] = [
     salary: 98757,
     startDate: '3/20/2020',
     signatureCatchPhrase: 'Multi-layered 5th generation contingency',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1071.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=AshlyGerlach',
   },
   {
     firstName: 'Cristina',
@@ -845,8 +769,7 @@ export const data: Employee[] = [
     salary: 86074,
     startDate: '9/11/2014',
     signatureCatchPhrase: 'Team-oriented demand-driven flexibility',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/802.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CristinaHessel',
   },
   {
     firstName: 'Antoinette',
@@ -856,8 +779,7 @@ export const data: Employee[] = [
     salary: 134875,
     startDate: '11/12/2021',
     signatureCatchPhrase: 'Future-proofed leading edge knowledge user',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/519.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=AntoinetteTorp',
   },
   {
     firstName: 'Gunner',
@@ -867,8 +789,7 @@ export const data: Employee[] = [
     salary: 57932,
     startDate: '3/27/2020',
     signatureCatchPhrase: 'Robust hybrid approach',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/546.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=GunnerDaugherty',
   },
   {
     firstName: 'Lura',
@@ -878,8 +799,7 @@ export const data: Employee[] = [
     salary: 101724,
     startDate: '11/29/2014',
     signatureCatchPhrase: 'Assimilated clear-thinking secured line',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1229.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LuraStanton',
   },
   {
     firstName: 'Percy',
@@ -889,8 +809,7 @@ export const data: Employee[] = [
     salary: 140411,
     startDate: '10/7/2019',
     signatureCatchPhrase: 'Future-proofed even-keeled Graphical User Interface',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/623.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=PercyLebsack',
   },
   {
     firstName: 'Reynold',
@@ -900,8 +819,7 @@ export const data: Employee[] = [
     salary: 75114,
     startDate: '9/5/2016',
     signatureCatchPhrase: 'Front-line fault-tolerant contingency',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/653.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ReynoldDaniel',
   },
   {
     firstName: 'Selena',
@@ -911,8 +829,7 @@ export const data: Employee[] = [
     salary: 85694,
     startDate: '8/12/2018',
     signatureCatchPhrase: 'Operative multi-tasking standardization',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/644.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=SelenaHermiston',
   },
   {
     firstName: 'Waldo',
@@ -922,8 +839,7 @@ export const data: Employee[] = [
     salary: 106969,
     startDate: '3/15/2018',
     signatureCatchPhrase: 'Fundamental grid-enabled database',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/622.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=WaldoBeahan',
   },
   {
     firstName: 'Delmer',
@@ -933,8 +849,7 @@ export const data: Employee[] = [
     salary: 107387,
     startDate: '1/10/2020',
     signatureCatchPhrase: 'Cloned needs-based moderator',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/37.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DelmerStroman',
   },
   {
     firstName: 'Mack',
@@ -944,8 +859,7 @@ export const data: Employee[] = [
     salary: 59084,
     startDate: '6/7/2015',
     signatureCatchPhrase: 'Assimilated systematic parallelism',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/441.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MackMorissette',
   },
   {
     firstName: 'Precious',
@@ -955,8 +869,7 @@ export const data: Employee[] = [
     salary: 53331,
     startDate: '8/18/2018',
     signatureCatchPhrase: 'Managed asymmetric hierarchy',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/347.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=PreciousMurazik',
   },
   {
     firstName: 'Lacy',
@@ -966,8 +879,7 @@ export const data: Employee[] = [
     salary: 158553,
     startDate: '9/23/2019',
     signatureCatchPhrase: 'Compatible motivating matrices',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/150.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LacyDaugherty',
   },
   {
     firstName: 'Deshawn',
@@ -977,8 +889,7 @@ export const data: Employee[] = [
     salary: 84738,
     startDate: '1/3/2021',
     signatureCatchPhrase: 'Function-based executive conglomeration',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/580.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DeshawnAbernathy',
   },
   {
     firstName: 'Gregoria',
@@ -988,8 +899,7 @@ export const data: Employee[] = [
     salary: 46516,
     startDate: '9/25/2020',
     signatureCatchPhrase: 'Automated asynchronous success',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/195.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=GregoriaWiza',
   },
   {
     firstName: 'Rudy',
@@ -999,8 +909,7 @@ export const data: Employee[] = [
     salary: 23440,
     startDate: '3/18/2014',
     signatureCatchPhrase: 'Stand-alone systematic implementation',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/462.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RudyWisoky',
   },
   {
     firstName: 'Otho',
@@ -1010,8 +919,7 @@ export const data: Employee[] = [
     salary: 116848,
     startDate: '6/28/2021',
     signatureCatchPhrase: 'Stand-alone background installation',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1079.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=OthoLeannon',
   },
   {
     firstName: 'Estrella',
@@ -1021,8 +929,7 @@ export const data: Employee[] = [
     salary: 90509,
     startDate: '10/16/2015',
     signatureCatchPhrase: 'Adaptive zero administration portal',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/372.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=EstrellaKeeling',
   },
   {
     firstName: 'Lori',
@@ -1032,8 +939,7 @@ export const data: Employee[] = [
     salary: 94791,
     startDate: '11/26/2018',
     signatureCatchPhrase: 'Networked human-resource artificial intelligence',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/389.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LoriRomaguera',
   },
   {
     firstName: 'Zack',
@@ -1043,8 +949,7 @@ export const data: Employee[] = [
     salary: 136016,
     startDate: '3/23/2020',
     signatureCatchPhrase: 'Streamlined grid-enabled support',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/843.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ZackSipes',
   },
   {
     firstName: 'Colleen',
@@ -1054,8 +959,7 @@ export const data: Employee[] = [
     salary: 72690,
     startDate: '12/17/2015',
     signatureCatchPhrase: 'Profound local challenge',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/383.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ColleenCassin',
   },
   {
     firstName: 'Rosendo',
@@ -1065,8 +969,7 @@ export const data: Employee[] = [
     salary: 73870,
     startDate: '11/27/2015',
     signatureCatchPhrase: 'Diverse exuding paradigm',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/752.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RosendoLegros',
   },
   {
     firstName: 'Bernhard',
@@ -1076,8 +979,7 @@ export const data: Employee[] = [
     salary: 26864,
     startDate: '12/12/2015',
     signatureCatchPhrase: 'Compatible composite product',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1155.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BernhardOConner',
   },
   {
     firstName: 'Hulda',
@@ -1087,8 +989,7 @@ export const data: Employee[] = [
     salary: 20393,
     startDate: '8/19/2020',
     signatureCatchPhrase: 'Open-architected coherent support',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/418.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=HuldaLakin',
   },
   {
     firstName: 'Pauline',
@@ -1098,8 +999,7 @@ export const data: Employee[] = [
     salary: 151997,
     startDate: '6/30/2018',
     signatureCatchPhrase: 'De-engineered executive migration',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/47.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=PaulineSchmeler',
   },
   {
     firstName: 'Jordyn',
@@ -1109,8 +1009,7 @@ export const data: Employee[] = [
     salary: 64894,
     startDate: '8/25/2014',
     signatureCatchPhrase: 'Cross-group radical solution',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1174.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JordynEffertz',
   },
   {
     firstName: 'Natalia',
@@ -1120,8 +1019,7 @@ export const data: Employee[] = [
     salary: 46753,
     startDate: '2/23/2022',
     signatureCatchPhrase: 'Quality-focused client-driven help-desk',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1151.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=NataliaFlatley',
   },
   {
     firstName: 'Tremaine',
@@ -1131,8 +1029,7 @@ export const data: Employee[] = [
     salary: 41043,
     startDate: '3/8/2021',
     signatureCatchPhrase: 'Configurable hybrid standardization',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1029.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=TremaineMiller',
   },
   {
     firstName: 'Elroy',
@@ -1142,8 +1039,7 @@ export const data: Employee[] = [
     salary: 139167,
     startDate: '8/9/2015',
     signatureCatchPhrase: 'Cross-group local projection',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1222.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=ElroyStark',
   },
   {
     firstName: 'Betsy',
@@ -1153,8 +1049,7 @@ export const data: Employee[] = [
     salary: 100912,
     startDate: '8/26/2016',
     signatureCatchPhrase: 'Streamlined uniform toolset',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/264.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BetsySchimmel',
   },
   {
     firstName: 'Tommie',
@@ -1164,8 +1059,7 @@ export const data: Employee[] = [
     salary: 33687,
     startDate: '6/19/2018',
     signatureCatchPhrase: 'Focused didactic encryption',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1001.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=TommieBlanda',
   },
   {
     firstName: 'Savannah',
@@ -1175,8 +1069,7 @@ export const data: Employee[] = [
     salary: 32533,
     startDate: '2/24/2018',
     signatureCatchPhrase: 'Optional 3rd generation moderator',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1052.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=SavannahWitting',
   },
   {
     firstName: 'Caesar',
@@ -1186,8 +1079,7 @@ export const data: Employee[] = [
     salary: 70379,
     startDate: '9/7/2020',
     signatureCatchPhrase: 'Polarised 4th generation circuit',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/611.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=CaesarBotsford',
   },
   {
     firstName: 'Thea',
@@ -1197,8 +1089,7 @@ export const data: Employee[] = [
     salary: 103625,
     startDate: '7/6/2018',
     signatureCatchPhrase: 'Team-oriented coherent benchmark',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/42.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=TheaSchamberger',
   },
   {
     firstName: 'Michele',
@@ -1208,8 +1099,7 @@ export const data: Employee[] = [
     salary: 110009,
     startDate: '3/19/2020',
     signatureCatchPhrase: 'Public-key demand-driven budgetary management',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/925.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MicheleHermiston',
   },
   {
     firstName: 'Johanna',
@@ -1219,8 +1109,7 @@ export const data: Employee[] = [
     salary: 45886,
     startDate: '9/25/2017',
     signatureCatchPhrase: 'Synergized analyzing support',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/49.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JohannaJohnston',
   },
   {
     firstName: 'Jarret',
@@ -1230,8 +1119,7 @@ export const data: Employee[] = [
     salary: 87408,
     startDate: '6/1/2021',
     signatureCatchPhrase: 'Advanced scalable info-mediaries',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/327.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JarretRau',
   },
   {
     firstName: 'Kylee',
@@ -1241,8 +1129,7 @@ export const data: Employee[] = [
     salary: 141978,
     startDate: '4/13/2015',
     signatureCatchPhrase: 'Innovative 24/7 interface',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1223.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=KyleeCummings',
   },
   {
     firstName: 'Rylan',
@@ -1252,8 +1139,7 @@ export const data: Employee[] = [
     salary: 77110,
     startDate: '4/9/2020',
     signatureCatchPhrase: 'Ergonomic incremental attitude',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1040.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RylanFrami',
   },
   {
     firstName: 'Ezekiel',
@@ -1263,8 +1149,7 @@ export const data: Employee[] = [
     salary: 108973,
     startDate: '1/4/2022',
     signatureCatchPhrase: 'Devolved homogeneous migration',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/55.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=EzekielRussel',
   },
   {
     firstName: 'Barney',
@@ -1274,8 +1159,7 @@ export const data: Employee[] = [
     salary: 55270,
     startDate: '3/3/2017',
     signatureCatchPhrase: 'Business-focused bandwidth-monitored ability',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/562.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=BarneyJast',
   },
   {
     firstName: 'Moriah',
@@ -1285,8 +1169,7 @@ export const data: Employee[] = [
     salary: 98799,
     startDate: '9/25/2019',
     signatureCatchPhrase: 'Digitized impactful migration',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/749.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=MoriahSmitham',
   },
   {
     firstName: 'Korey',
@@ -1296,8 +1179,7 @@ export const data: Employee[] = [
     salary: 52735,
     startDate: '2/22/2017',
     signatureCatchPhrase: 'Distributed system-worthy frame',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/236.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=KoreyFeeney',
   },
   {
     firstName: 'Laurie',
@@ -1307,8 +1189,7 @@ export const data: Employee[] = [
     salary: 27126,
     startDate: '6/13/2016',
     signatureCatchPhrase: 'Reactive bi-directional paradigm',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/392.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=LaurieTorp',
   },
   {
     firstName: 'Oscar',
@@ -1318,8 +1199,7 @@ export const data: Employee[] = [
     salary: 95518,
     startDate: '4/5/2014',
     signatureCatchPhrase: 'Versatile neutral leverage',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/613.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=OscarSwaniawski',
   },
   {
     firstName: 'Paul',
@@ -1329,8 +1209,7 @@ export const data: Employee[] = [
     salary: 100812,
     startDate: '2/20/2019',
     signatureCatchPhrase: 'Future-proofed multi-tasking secured line',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1194.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=PaulOKeefe',
   },
   {
     firstName: 'Jerod',
@@ -1340,8 +1219,7 @@ export const data: Employee[] = [
     salary: 102099,
     startDate: '7/26/2021',
     signatureCatchPhrase: 'Phased 3rd generation functionalities',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1204.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JerodDeckow',
   },
   {
     firstName: 'Deion',
@@ -1351,8 +1229,7 @@ export const data: Employee[] = [
     salary: 22577,
     startDate: '9/20/2020',
     signatureCatchPhrase: 'Synchronised executive solution',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/907.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=DeionMedhurst',
   },
   {
     firstName: 'Vida',
@@ -1362,8 +1239,7 @@ export const data: Employee[] = [
     salary: 108348,
     startDate: '3/3/2020',
     signatureCatchPhrase: 'Optional optimizing matrix',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/460.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=VidaConsidine',
   },
   {
     firstName: 'Rosina',
@@ -1373,8 +1249,7 @@ export const data: Employee[] = [
     salary: 117529,
     startDate: '7/20/2016',
     signatureCatchPhrase: 'Profound static project',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1215.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=RosinaKshlerin',
   },
   {
     firstName: 'Troy',
@@ -1384,8 +1259,7 @@ export const data: Employee[] = [
     salary: 95202,
     startDate: '7/25/2014',
     signatureCatchPhrase: 'Virtual zero tolerance moratorium',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/89.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=TroyProhaska',
   },
   {
     firstName: 'Jadyn',
@@ -1395,8 +1269,7 @@ export const data: Employee[] = [
     salary: 21766,
     startDate: '7/1/2019',
     signatureCatchPhrase: 'Re-contextualized mission-critical challenge',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1136.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JadynTromp',
   },
   {
     firstName: 'Jerald',
@@ -1406,7 +1279,6 @@ export const data: Employee[] = [
     salary: 116164,
     startDate: '7/10/2017',
     signatureCatchPhrase: 'Customizable even-keeled time-frame',
-    avatar:
-      'https://ipfs.io/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/654.jpg',
+    avatar: 'https://api.dicebear.com/9.x/thumbs/svg?seed=JeraldHeller',
   },
 ];
