@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import {
   type SRT_Row,
   type SRT_TableOptions,
@@ -9,6 +9,13 @@ import { Plus } from 'lucide-react';
 import { faker } from '@faker-js/faker';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const meta: Meta = {
   title: 'Features/Creating Examples',
@@ -300,15 +307,12 @@ export const CreateRowIndexIndexExpanding = () => {
       initialState={{ expanded: true }}
       onCreatingRowSave={() => {}}
       positionCreatingRow={creatingRowIndex}
-      // API GAP: renderRowActions callback has no `staticRowIndex` param in SRT
-      // (only cell/row/table) -> derive insertion index from row.index instead.
-      renderRowActions={({ row, table }) => {
+      renderRowActions={({ row, staticRowIndex, table }) => {
         return (
           <Button
             size="icon"
-            variant="ghost"
             onClick={() => {
-              setCreatingRowIndex((row.index || 0) + 1);
+              setCreatingRowIndex((staticRowIndex || 0) + 1);
               table.setCreatingRow(
                 createRow(
                   table,
@@ -377,10 +381,15 @@ export const CreateWithCustomEditCell = () => {
           accessorKey: 'state',
           header: 'State',
           Edit: ({ cell }) => (
-            <select defaultValue={cell.getValue<string>()}>
-              <option value="Alabama">Alabama</option>
-              <option value="Alaska">Alaska</option>
-            </select>
+            <Select value={cell.getValue<string>()}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Alabama">Alabama</SelectItem>
+                <SelectItem value="Alaska">Alaska</SelectItem>
+              </SelectContent>
+            </Select>
           ),
         },
         {
