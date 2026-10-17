@@ -1,4 +1,4 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import {
   SRT_AggregationFns,
   type SRT_ColumnDef,
@@ -229,7 +229,7 @@ export const MultiAggregationPerColumn = () => (
         ),
         accessorKey: 'age',
         //manually set multiple aggregation functions
-        aggregationFn: (columnId, leafRows: any, childRows: any) => [
+        aggregationFn: (columnId, leafRows, childRows) => [
           SRT_AggregationFns.min(columnId, leafRows, childRows),
           SRT_AggregationFns.max(columnId, leafRows, childRows),
         ],
