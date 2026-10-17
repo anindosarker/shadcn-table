@@ -1,0 +1,6 @@
+/* Storybook-only: paint the preview body with the shadcn surface so the area
+   outside the story wrapper follows the dark/light toggle too. */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
