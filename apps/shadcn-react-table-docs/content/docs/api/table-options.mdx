@@ -1,0 +1,46 @@
+---
+title: 'Table Options'
+description: 'All the table options that can be used in the useShadcnReactTable hook'
+---
+
+## Table Options (Props)
+
+<OptionsSwitcher
+  links={[
+    {
+      label: 'Table Options',
+      value: 'table-options',
+    },
+    {
+      label: 'Column Options',
+      value: 'column-options',
+    },
+    {
+      label: 'State Options',
+      value: 'state-options',
+    },
+  ]}
+/>
+
+> Many of the options you can pass to `useShadcnReactTable` are the same as the ones you can pass to the TanStack Table [useReactTable](https://tanstack.com/table/v8/docs/api/core/table) hook.
+
+Here is a list of all the table options that you can pass to the `useShadcnReactTable` hook.
+
+```jsx
+const table = useShadcnReactTable({
+  // all the options that you can pass here (recommended)
+});
+
+//or all of the props that could be passed to `<ShadcnReactTable />` IF not using `useShadcnReactTable` hook
+return (
+  <ShadcnReactTable
+  // all of the props that could be passed here if no `table` prop is passed
+  />
+);
+
+return <ShadcnReactTable table={table} />; //recommended
+```
+
+<TableOptionsTable />
+
+<TableOptionsSource />
