@@ -99,8 +99,17 @@ html > body[data-scroll-locked] {
 
 /* ---------- content column ---------- */
 
+/* centre the content column between sidebar and TOC */
 #nd-page:not([data-full='true']) > * {
+  width: 100%;
   max-width: 56rem;
+  margin-inline: auto;
+}
+
+/* typography plugin radii (inline code 5px, table 8px) are not tailwind tokens */
+#nd-page .prose :not(pre) > code,
+#nd-page .prose table {
+  border-radius: 4px;
 }
 
 #nd-page .prose {
@@ -123,4 +132,22 @@ html > body[data-scroll-locked] {
 
 .srt-callout > div[role='none'] {
   display: none;
+}
+
+/* ---------- page header ---------- */
+
+/* "Copy page" split button: copy + options as one control */
+.srt-page-actions > button + button {
+  margin-inline-start: -1px;
+}
+
+/* ---------- corner radius ----------
+ * Keep this block last: it must win over any earlier radius mapping
+ * (shadcn's @theme inline maps rounded-* to --radius). ~4px corners on
+ * code blocks, cards, callouts, search box and sidebar items. */
+@theme inline {
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
 }

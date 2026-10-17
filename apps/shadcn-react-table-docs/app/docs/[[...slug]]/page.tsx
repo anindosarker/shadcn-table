@@ -9,6 +9,7 @@ import {
 } from 'fumadocs-ui/layouts/notebook/page';
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/components/mdx';
+import { DocsBreadcrumb } from '@/components/docs-breadcrumb';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getPageImageUrl, getPageMarkdownUrl, gitConfig } from '@/lib/shared';
@@ -22,20 +23,35 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const markdownUrl = getPageMarkdownUrl(page).url;
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle className="text-2xl font-extrabold tracking-tight">
-        {page.data.title}
-      </DocsTitle>
-      <DocsDescription className="mb-0">
+    <DocsPage
+      toc={page.data.toc}
+      full={page.data.full}
+      slots={{ breadcrumb: DocsBreadcrumb }}
+    >
+      <div className="flex flex-row flex-wrap items-start justify-between gap-4">
+        <DocsTitle className="text-2xl font-extrabold tracking-tight">
+          {page.data.title}
+        </DocsTitle>
+        <div className="srt-page-actions inline-flex shrink-0 items-center">
+          <MarkdownCopyButton
+            markdownUrl={markdownUrl}
+            className="rounded-r-none"
+          >
+            Copy page
+          </MarkdownCopyButton>
+          <ViewOptionsPopover
+            markdownUrl={markdownUrl}
+            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
+            className="rounded-l-none border-l px-2"
+            aria-label="Page options"
+          >
+            <span className="sr-only">Page options</span>
+          </ViewOptionsPopover>
+        </div>
+      </div>
+      <DocsDescription className="mb-0 border-b pb-6">
         {page.data.description}
       </DocsDescription>
-      <div className="flex flex-row gap-2 items-center border-b pb-6">
-        <MarkdownCopyButton markdownUrl={markdownUrl} />
-        <ViewOptionsPopover
-          markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
-        />
-      </div>
       <DocsBody>
         <MDX
           components={getMDXComponents({
