@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react';
-import { faker } from '@faker-js/faker';
+import { Button } from '@/components/ui/button';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { Button } from '@/components/ui/button';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Virtualization',
@@ -11,28 +11,66 @@ const meta: Meta = {
 
 export default meta;
 
-// API GAP: MRT sized the scroll container / paper via `muiTableContainerProps`
-// and `muiTablePaperProps` (sx maxHeight / maxWidth / margin). SRT has not
-// implemented those MUI props, so the container sizing is dropped; the
-// virtualization behaviour is preserved.
-
-// This story uses a wider data shape than the shared `Person` helper, so it
-// keeps its own inline faker data (matching the MRT original).
-const longColumns: SRT_ColumnDef<any>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'middleName', header: 'Middle Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'email', header: 'Email Address', size: 300 },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'zipCode', header: 'Zip Code' },
-  { accessorKey: 'city', header: 'City' },
-  { accessorKey: 'state', header: 'State' },
-  { accessorKey: 'country', header: 'Country', size: 200 },
-  { accessorKey: 'favoriteColor', header: 'Favorite Color' },
-  { accessorKey: 'favoriteQuote', header: 'Favorite Quote', size: 700 },
-  { accessorKey: 'petName', header: 'Pet Name' },
-  { accessorKey: 'petType', header: 'Pet Type' },
+const longColumns: SRT_ColumnDef<(typeof longData)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'middleName',
+    header: 'Middle Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email Address',
+    size: 300,
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'zipCode',
+    header: 'Zip Code',
+  },
+  {
+    accessorKey: 'city',
+    header: 'City',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'country',
+    header: 'Country',
+    size: 200,
+  },
+  {
+    accessorKey: 'favoriteColor',
+    header: 'Favorite Color',
+  },
+  {
+    accessorKey: 'favoriteQuote',
+    header: 'Favorite Quote',
+    size: 700,
+  },
+  {
+    accessorKey: 'petName',
+    header: 'Pet Name',
+  },
+  {
+    accessorKey: 'petType',
+    header: 'Pet Type',
+  },
 ];
 
 const longData = [...Array(5000)].map(() => ({
@@ -109,7 +147,7 @@ export const VirtualizationConditionallyWontToggle = () => {
       enableRowVirtualization={enabled}
       initialState={{ density: 'compact' }}
       renderTopToolbarCustomActions={() => (
-        <div style={{ alignItems: 'center', display: 'flex' }}>
+        <div className="flex flex-row items-center">
           <Button onClick={() => setEnabled(!enabled)}>
             Toggle Virtualization
           </Button>
@@ -175,13 +213,21 @@ export const EnableRowVirtualizationWithMemoizedRows = () => (
 export const EnableRowVirtualizationStickyFooter = () => (
   <ShadcnReactTable
     columns={[
-      { accessorKey: 'firstName', footer: 'First Name', header: 'First Name' },
+      {
+        accessorKey: 'firstName',
+        footer: 'First Name',
+        header: 'First Name',
+      },
       {
         accessorKey: 'middleName',
         footer: 'Middle Name',
         header: 'Middle Name',
       },
-      { accessorKey: 'lastName', footer: 'Last Name', header: 'Last Name' },
+      {
+        accessorKey: 'lastName',
+        footer: 'Last Name',
+        header: 'Last Name',
+      },
     ]}
     data={longData}
     enableBottomToolbar={false}
@@ -223,13 +269,21 @@ export const EnableColumnVirtualizationShortColumns = () => (
 export const EnableColumnVirtualizationWithFooter = () => (
   <ShadcnReactTable
     columns={[
-      { accessorKey: 'firstName', footer: 'First Name', header: 'First Name' },
+      {
+        accessorKey: 'firstName',
+        footer: 'First Name',
+        header: 'First Name',
+      },
       {
         accessorKey: 'middleName',
         footer: 'Middle Name',
         header: 'Middle Name',
       },
-      { accessorKey: 'lastName', footer: 'Last Name', header: 'Last Name' },
+      {
+        accessorKey: 'lastName',
+        footer: 'Last Name',
+        header: 'Last Name',
+      },
     ]}
     data={longData.slice(0, 15)}
     enableColumnVirtualization
@@ -240,13 +294,21 @@ export const EnableColumnVirtualizationWithFooter = () => (
 export const EnableColumnVirtualizationStickyFooter = () => (
   <ShadcnReactTable
     columns={[
-      { accessorKey: 'firstName', footer: 'First Name', header: 'First Name' },
+      {
+        accessorKey: 'firstName',
+        footer: 'First Name',
+        header: 'First Name',
+      },
       {
         accessorKey: 'middleName',
         footer: 'Middle Name',
         header: 'Middle Name',
       },
-      { accessorKey: 'lastName', footer: 'Last Name', header: 'Last Name' },
+      {
+        accessorKey: 'lastName',
+        footer: 'Last Name',
+        header: 'Last Name',
+      },
     ]}
     data={longData.slice(0, 50)}
     enableColumnVirtualization
@@ -307,6 +369,8 @@ export const MaxVirtualization = () => (
     enablePagination={false}
     enableRowNumbers
     enableRowVirtualization
+    srtTableContainerProps={{ style: { maxHeight: 500 } }}
+    srtTableLayoutProps={{ className: 'mx-auto max-w-[1000px]' }}
   />
 );
 
@@ -321,5 +385,7 @@ export const EmptyDataVirtualization = () => (
     enablePagination={false}
     enableRowNumbers
     enableRowVirtualization
+    srtTableContainerProps={{ style: { maxHeight: 500 } }}
+    srtTableLayoutProps={{ className: 'mx-auto max-w-[1000px]' }}
   />
 );
