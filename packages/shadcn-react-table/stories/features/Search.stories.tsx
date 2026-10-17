@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { type Meta } from '@storybook/react';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
+import { useState } from 'react';
 
 const meta: Meta = {
   title: 'Features/Search Examples',
@@ -10,16 +10,41 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'state', header: 'State' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
 ];
 
-const data = makeData(200);
+const data = [...Array(200)].map(() => ({
+  address: faker.location.streetAddress(),
+  age: +faker.number.float({ max: 100, min: 0 }),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
 export const SearchEnabledDefault = () => (
   <ShadcnReactTable columns={columns} data={data} />
@@ -128,13 +153,15 @@ export const SearchDisabled = () => (
   <ShadcnReactTable columns={columns} data={data} enableGlobalFilter={false} />
 );
 
-// API GAP: MRT customized the search field via `muiSearchTextFieldProps`
-// (label / placeholder / variant). SRT has not implemented that MUI prop, so
-// the customization is dropped; the search box is shown via initial state.
+// API GAP: muiSearchTextFieldProps label / variant / InputLabelProps have no
+// shadcn Input equivalent; only the placeholder is ported.
 export const CustomizeSearchTextBox = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
     initialState={{ showGlobalFilter: true }}
+    srtSearchTextFieldProps={{
+      placeholder: 'Search 100 rows',
+    }}
   />
 );
