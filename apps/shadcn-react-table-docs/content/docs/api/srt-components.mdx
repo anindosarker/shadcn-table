@@ -1,0 +1,203 @@
+---
+title: 'SRT Components'
+description: 'All the internal SRT components that can be used to build your own custom table components'
+---
+
+## SRT Components
+
+<OptionsSwitcher
+  links={[
+    {
+      label: 'SRT Components',
+      value: 'srt-components',
+    },
+    {
+      label: 'SRT Hooks',
+      value: 'srt-hooks',
+    },
+  ]}
+/>
+
+<br />
+
+In previous versions of `shadcn-react-table`, you only had the option to use the `<ShadcnReactTable />` component. Now in version 2, all internal SRT components are exported for you to optionally use to build up your own custom table components.
+
+### \<ShadcnReactTable /\>
+
+[View Source Code on GitHub](https://github.com/KevinVandy/material-react-table/blob/v3/packages/material-react-table/src/components/MaterialReactTable.tsx)
+
+For most use cases, you will probably just use the default `<ShadcnReactTable />` component.
+
+It accepts table options as props, just like in v1, but it also now simply accepts the `table` instance as its only prop instead. You have the choice to use the `useShadcnReactTable` hook to create the table instance in your own scope or not. Using the `table` prop with the `useShadcnReactTable` hook is recommended, because it will give you more flexibility as your table features get more complex.
+
+```jsx
+import {
+  ShadcnReactTable,
+  useShadcnReactTable,
+} from '@/components/ui/shadcn-react-table';
+//...
+const table = useShadcnReactTable({
+  columns,
+  data,
+  enableRowPinning: true,
+});
+return <ShadcnReactTable table={table} />; //recommended
+```
+
+```jsx
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table';
+//...
+return <ShadcnReactTable columns={columns} data={data} enableRowPinning />; //passing props instead like in v1 is possible
+```
+
+> Do not pass both a `table` prop and other table options as props. Additional table options passed to the `<ShadcnReactTable />` component will be ignored if a `table` prop is passed. Either specify all table options in the `useShadcnReactTable` hook or pass all of them as props to the `<ShadcnReactTable />` component.
+
+### SRT\_\* Sub Components
+
+Shadcn React Table now exports all of its internal components. You can use them for your own use cases.
+
+#### Table Components
+
+[View Table Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/table)
+
+##### \<SRT_TablePaper /\>
+
+The `<SRT_TablePaper />` component is the outermost component of the table. Using this is pretty much the same thing as using the `<ShadcnReactTable />` component, except that you cannot pass table options as props to it.
+
+The Paper component includes UI for the table and the toolbar components.
+
+##### \<SRT_TableContainer /\>
+
+The `<SRT_TableContainer />` component is the container for the table. It only contains the table ui, but none of the toolbar components.
+
+This is a popular use case for tables that do not want the built-in toolbars, but still want all of the other table features.
+
+##### \<SRT_Table /\>
+
+The `<SRT_Table />` component contains the `<table>` element, and all of the table head, body, and footer components.
+
+Be aware that using this deep of a component, you will lose out on row virtualization, modal editing, and full screen features. Use the above `<SRT_TableContainer />` if you want to use those features.
+
+##### \<SRT_TableLoadingOverlay /\>
+
+Shows a loading spinner over the table above the `SRT_Table` component when the table is loading.
+
+#### TableHead Components
+
+[View TableHead Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/head)
+
+##### \<SRT_TableHead /\>
+
+The `<SRT_TableHead />` component contains the `<thead>` element, and all of the table head rows.
+
+##### \<SRT_TableHeadRow /\>
+
+The `<SRT_TableHeadRow />` is a `<tr>` element that contains all of the table head cells in a row
+
+##### \<SRT_TableHeadCell /\>
+
+The `<SRT_TableHeadCell />` is a `<th>` element that contains all of the table head cell components. It contains all of the other table head cell components down below depending on which features are enabled.
+
+##### \<SRT_TableHeadCellColumnActionsButton /\>
+
+A button that opens up the column actions menu.
+
+##### \<SRT_TableHeadCellSortLabel /\>
+
+The Sort Icon Button and Label next to a table header
+
+##### \<SRT_TableHeadCellFilterLabel /\>
+
+The Filter Icon Button and Label next to a table header
+
+##### \<SRT_TableHeadCellGrabHandle /\>
+
+The Grab Handle Icon Button next to a table header used for column dragging
+
+##### \<SRT_TableHeadCellResizeHandle /\>
+
+The Resize Handle Icon Button next to a table header used for column resizing
+
+##### \<SRT_TableHeadCellFilterContainer /\>
+
+The Filter Container that contains the filter input and filter actions
+
+#### TableBody Components
+
+[View TableBody Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/body)
+
+##### \<SRT_TableBody /\>
+
+The `<SRT_TableBody />` component contains the `<tbody>` element, and all of the table body rows. It has the ability to render multiple table bodies, depending on if static row pinning features are enabled and used.
+
+##### \<SRT_TableBodyRow /\>
+
+The `<SRT_TableBodyRow />` is a `<tr>` element that contains all of the table body cells in a row.
+
+##### \<SRT_TableDetailPanel /\>
+
+A row and all column-spanning row for rendering detail panels for a row.
+
+##### \<SRT_TableBodyCell /\>
+
+The `<SRT_TableBodyCell />` is a `<td>` element that surrounds the cell value or custom `Cell` render.
+
+##### \<SRT_TableBodyCellValue /\>
+
+Renders the value of a cell. This is a popular component to use as an alternative to TanStack Table's `flexRender` method. It renders everything inside of the `<td>`, but not the `<td>` itself.
+
+##### \<SRT_TableBodyRowGrabHandle /\>
+
+A button for grabbing a row for dragging.
+
+##### \<SRT_TableBodyRowPinButton /\>
+
+A button or buttons for pinning a row.
+
+#### TableFooter Components
+
+[View TableFooter Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/footer)
+
+##### \<SRT_TableFooter /\>
+
+The `<SRT_TableFooter />` component contains the `<tfoot>` element, and all of the table footer rows.
+
+##### \<SRT_TableFooterRow /\>
+
+The `<SRT_TableFooterRow />` is a `<tr>` element that contains all of the table footer cells in a row.
+
+##### \<SRT_TableFooterCell /\>
+
+The `<SRT_TableFooterCell />` is a `<td>` element that surrounds the cell value or custom `Footer` render.
+
+#### Input Components
+
+[View Input Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/inputs)
+
+##### \<SRT_EditCellTextField /\>
+
+The textfield component for editing a cell value that can either show in a modal or table cell.
+
+##### \<SRT_GlobalFilterTextField /\>
+
+The search textfield component for global filtering.
+
+##### \<SRT_FilterTextField /\>
+
+The textfield component for filtering a column. A somewhat comprehensive component that can be a textfield, select, multi-select, or date picker.
+
+##### \<SRT_FilterCheckbox /\>
+
+The checkbox component for filtering a column by boolean values.
+
+##### \<SRT_FilterRangeSlider /\>
+
+The range slider component for filtering a column by a range of numbers.
+
+##### \<SRT_FilterFilterRangeFields /\>
+
+A Container component that will render two SRT_FilterTextField components for filtering in a range (min and max).
+
+##### \<SRT_SelectCheckbox /\>
+
+A checkbox component for selecting a row or selecting all rows from the table header.
