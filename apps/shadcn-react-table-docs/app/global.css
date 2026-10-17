@@ -12,11 +12,15 @@
 @import '../themes/mono.css';
 /* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
    ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
-   A plain ::highlight() rule is rejected too, so app/layout.tsx inlines it in a <style> tag. */
+   A plain ::highlight() rule is rejected too, so app/layout.tsx inlines it in a style element
+   (the word is spelled out here: `shadcn add` escapes a literal angle bracket in comments). */
 @source not inline("[&_::highlight(fd-search)]:underline [&_::highlight(fd-search)]:text-fd-primary");
-/*
- ---break---
- */
+
+/* ---------- shadcn: `shadcn init` output for the radix-nova generation ----------
+ * Verbatim from `shadcn init --preset nova --base radix` (neutral, css variables),
+ * except the next/font bridge (`--font-sans`, `--font-mono`) which the docs set in
+ * the `@theme` block below, and the SRT keyframes that `lib:install` appends to
+ * `@theme inline` (kept at the CLI's own indentation so the install is idempotent). */
 @custom-variant dark (&:is(.dark *));
 
 /* Colors come from the shadcn tokens below (fumadocs' shadcn preset maps
@@ -24,6 +28,167 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* prettier-ignore */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  @keyframes srt-linear-progress-indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+    }
+  60% {
+    left: 100%;
+    right: -90%;
+    }
+  100% {
+    left: 100%;
+    right: -90%;
+    }
+  }
+  @keyframes srt-collapsible-right {
+  from {
+    width: 0;
+    overflow: hidden;
+    }
+  to {
+    width: var(--radix-collapsible-content-width);
+    overflow: hidden;
+    }
+  }
+  @keyframes srt-collapsible-left {
+  from {
+    width: var(--radix-collapsible-content-width);
+    overflow: hidden;
+    }
+  to {
+    width: 0;
+    overflow: hidden;
+    }
+  }
+}
+
+/* base tokens: neutral (used only until the preset script sets data-theme) */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ---------- docs overrides (fumadocs chrome) ---------- */
 
 html {
   scrollbar-gutter: stable;
@@ -38,10 +203,14 @@ html > body[data-scroll-locked] {
 
 /* one line style for the layout seams: nav bottom, sidebar end, and the
    divider under the page description. Components (cards,
-   code blocks, tables, inputs) keep solid borders. */
+   code blocks, tables, inputs) keep solid borders.
+   --docs-radius: the docs chrome (code blocks, cards, callouts, search box,
+   sidebar items, playground frame) keeps ~4px corners; the shadcn radius scale
+   stays at the nova default for the parts. */
 :root {
   --docs-rule: 1px dashed
     color-mix(in oklab, var(--color-fd-border) 80%, transparent);
+  --docs-radius: 4px;
 }
 
 #nd-subnav > div {
@@ -70,11 +239,16 @@ html > body[data-scroll-locked] {
    header rule; the table inside keeps its own solid border */
 .docs-playground {
   border: var(--docs-rule);
+  border-radius: var(--docs-radius);
 }
 
 /* page margin; full screen pins the panel to the viewport instead */
 .docs-playground:not([data-fullscreen]) {
   margin-block: 1.25rem;
+}
+
+.docs-playground[data-fullscreen] {
+  border-radius: 0;
 }
 
 /* header 6px vertical padding around 28px controls */
@@ -99,6 +273,7 @@ html > body[data-scroll-locked] {
   padding-block: 0.25rem;
   font-size: 0.8125rem;
   color: var(--color-fd-foreground);
+  border-radius: var(--docs-radius);
 }
 
 /* pages under a sub-group label (meta.json "---Label---") indent one step;
@@ -149,7 +324,12 @@ html > body[data-scroll-locked] {
 /* typography plugin radii (inline code 5px, table 8px) are not tailwind tokens */
 #nd-page .prose :not(pre) > code,
 #nd-page .prose table {
-  border-radius: 4px;
+  border-radius: var(--docs-radius);
+}
+
+/* code blocks (fumadocs CodeBlock figure, rounded-xl) */
+#nd-page figure.shiki {
+  border-radius: var(--docs-radius);
 }
 
 #nd-page .prose {
@@ -240,6 +420,12 @@ html > body[data-scroll-locked] {
   display: none;
 }
 
+/* ---------- search dialog: small corners on the box ---------- */
+
+[role='dialog'].bg-fd-popover {
+  border-radius: var(--docs-radius);
+}
+
 /* ---------- callouts: hide fumadocs' inner bar; the border-left in components/callout.tsx replaces it ---------- */
 
 .srt-callout > div[role='none'] {
@@ -253,174 +439,17 @@ html > body[data-scroll-locked] {
   border-inline-start-width: 1px;
 }
 
-/* ---------- corner radius + shadcn theme bridge ----------
- * ~4px corners on code blocks, cards, callouts, search box and sidebar
- * items (literal values: without them rounded-xl falls back to 12px). */
-@theme inline {
-  --radius-sm: 3px;
-  --radius-md: 4px;
-  --radius-lg: 4px;
-  --radius-xl: 4px;
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  @keyframes srt-linear-progress-indeterminate {
-    0% {
-      left: -35%;
-      right: 100%;
-    }
-    60% {
-      left: 100%;
-      right: -90%;
-    }
-    100% {
-      left: 100%;
-      right: -90%;
-    }
-  }
-  @keyframes srt-collapsible-right {
-    from {
-      width: 0;
-      overflow: hidden;
-    }
-    to {
-      width: var(--radix-collapsible-content-width);
-      overflow: hidden;
-    }
-  }
-  @keyframes srt-collapsible-left {
-    from {
-      width: var(--radix-collapsible-content-width);
-      overflow: hidden;
-    }
-    to {
-      width: 0;
-      overflow: hidden;
-    }
-  }
-}
-/* ---------- base tokens = the "violet" preset (fallback when data-theme is unset) ---------- */
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.541 0.281 293.009);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.541 0.281 293.009);
-  --radius: 0.25rem;
-  --chart-1: oklch(0.541 0.281 293.009);
-  --chart-2: oklch(0.702 0.183 293.541);
-  --chart-3: oklch(0.432 0.232 292.759);
-  --chart-4: oklch(0.811 0.111 293.571);
-  --chart-5: oklch(0.606 0.25 292.717);
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.541 0.281 293.009);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.541 0.281 293.009);
-}
-/* dark palette must follow :root (same specificity, last one wins) */
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.945 0 0);
-  --card: oklch(0.18 0 0);
-  --card-foreground: oklch(0.945 0 0);
-  --popover: oklch(0.18 0 0);
-  --popover-foreground: oklch(0.945 0 0);
-  --primary: oklch(0.702 0.183 293.541);
-  --primary-foreground: oklch(0.2 0.06 293);
-  --secondary: oklch(0.22 0 0);
-  --secondary-foreground: oklch(0.945 0 0);
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.665 0 0);
-  --accent: oklch(0.24 0 0);
-  --accent-foreground: oklch(0.945 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.702 0.183 293.541);
-  --chart-1: oklch(0.702 0.183 293.541);
-  --chart-2: oklch(0.541 0.281 293.009);
-  --chart-3: oklch(0.811 0.111 293.571);
-  --chart-4: oklch(0.432 0.232 292.759);
-  --chart-5: oklch(0.606 0.25 292.717);
-  --sidebar: oklch(0.145 0 0);
-  --sidebar-foreground: oklch(0.945 0 0);
-  --sidebar-primary: oklch(0.702 0.183 293.541);
-  --sidebar-primary-foreground: oklch(0.2 0.06 293);
-  --sidebar-accent: oklch(1 0 0 / 6%);
-  --sidebar-accent-foreground: oklch(0.945 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.702 0.183 293.541);
-}
-/*
- ---break---
- */
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
-}
+/* ---------- library css (registry item `css`, written by `lib:install`) ----------
+ * `shadcn add` rewrites this rule and the keyframes in `@theme inline` on every
+ * install with its own indentation; both are stored in that shape (prettier-ignore)
+ * so the install only touches the file's final newline. */
+/* prettier-ignore */
 .srt-progress-indeterminate [data-slot='progress-indicator'] {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: auto;
-  transform: none;
-  transition: none;
-  animation: srt-linear-progress-indeterminate 2.1s
-    cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: auto;
+    transform: none;
+    transition: none;
+    animation: srt-linear-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
 }
