@@ -209,8 +209,6 @@ There is another option if you don't like any of the built-in editDisplayModes U
 
 ### Enable Creating
 
-> New in V3
-
 Shadcn React Table offers new functionality to make creating news rows of data easier. It works just like the editing features, but with separate state options and callbacks. A Blank row is added to the table or modal for the user to fill out and submit.
 
 #### Create Display Modes
@@ -218,8 +216,6 @@ Shadcn React Table offers new functionality to make creating news rows of data e
 There are just three different createDisplayModes to choose from. The default is `"modal"`, but you can also choose `"row"` or `"custom"`. They work exactly the same as their editDisplayMode counterparts.
 
 #### Position Creating Row
-
-> New in v2.7
 
 By default, the creating row will be added to the top of the table. You can change this behavior with the `positionCreatingRow` table option.
 
@@ -308,7 +304,7 @@ const columns = [
     accessor: 'age',
     header: 'Age',
     srtEditTextFieldProps: {
-      error: !!validationErrors.age, //highlight mui text field red error color
+      error: !!validationErrors.age, //highlight the input red
       helperText: validationErrors.age, //show error message in helper text.
       required: true,
       type: 'number',

@@ -13,9 +13,7 @@ Shadcn React Table tries to get the basics of data grid accessibility right out 
 
 ### Keyboard Navigation
 
-> New in v3
-
-Shadcn React Table V3 introduces a new table option that is `true` by default: `enableKeyboardShortcuts`
+Shadcn React Table has a table option that is `true` by default: `enableKeyboardShortcuts`
 
 #### `enableKeyboardShortcuts`
 
@@ -43,7 +41,7 @@ A `tabIndex={0}` is also automatically added to all cells, headers, and footers 
 
 You do not have to use the provided keyboard shortcuts. You can turn off `enableKeyboardShortcuts` and add your own keyboard shortcuts using the `onKeyDown` event handler on all of the table cells (or any other element).
 
-You can also add custom focus styles to any element using the `sx` prop.
+You can also add custom focus styles to any element using the `className` prop.
 
 ```tsx
 const table = useShadcnReactTable({
@@ -67,14 +65,9 @@ const table = useShadcnReactTable({
           alert('You pressed the custom shortcut!');
         }
       },
-      //add custom focus styles
-      sx: {
-        '&:focus-visible': {
-          //or just `&:focus` if you want all focus events to be visible
-          outline: '2px solid red',
-          outlineOffset: '-2px',
-        },
-      },
+      //add custom focus styles (or just `focus:` if you want all focus events to be visible)
+      className:
+        'focus-visible:outline-2 focus-visible:outline-red-500 focus-visible:-outline-offset-2',
       tabIndex: 0, //allow for keyboard focus
     },
   },
@@ -96,7 +89,7 @@ const table = useShadcnReactTable({
 });
 ```
 
-Or, of course, you can just use the `sx` props to override any styles you want, just like any other style override in SRT.
+Or, of course, you can just use the `className` or `style` props to override any styles you want, just like any other style override in SRT.
 
 ```tsx
 const table = useShadcnReactTable({
@@ -104,12 +97,8 @@ const table = useShadcnReactTable({
   data,
   defaultColumn: {
     srtTableBodyCellProps: {
-      sx: {
-        '&:focus-visible': {
-          outline: '4px solid red',
-          outlineOffset: '-4px',
-        },
-      },
+      className:
+        'focus-visible:outline-4 focus-visible:outline-red-500 focus-visible:-outline-offset-4',
     },
   },
 });
@@ -117,6 +106,6 @@ const table = useShadcnReactTable({
 
 ### Full Screen Mode
 
-Now in V3, a focus trap is applied to the table when in full screen mode. This is to prevent the user from navigating outside of the table when using the arrow keys.
+A focus trap is applied to the table when in full screen mode. This is to prevent the user from navigating outside of the table when using the arrow keys.
 
 The user can exit full screen mode by pressing `Escape`.

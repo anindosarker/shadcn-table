@@ -46,6 +46,51 @@ const SRT_TYPES = path.resolve(
 const REGISTRY_INSTALL =
   'pnpm dlx shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table';
 
+// This repository, for source links that MRT points at KevinVandy's repo.
+const SRT_REPO = 'https://github.com/anindosarker/shadcn-react-table';
+const SRT_SRC =
+  'packages/shadcn-react-table/src/components/ui/shadcn-react-table';
+// No deployed storybook yet; MRT's storybook links go to the stories folder.
+const SRT_STORIES_URL = `${SRT_REPO}/tree/main/packages/shadcn-react-table/stories`;
+
+/**
+ * mui.com API page slug -> shadcn/ui docs page for the part SRT uses in its
+ * place. Slugs not listed link the components index.
+ */
+const SHADCN_DOCS = {
+  table: 'table',
+  'table-cell': 'table',
+  'table-row': 'table',
+  'table-head': 'table',
+  'table-body': 'table',
+  'table-footer': 'table',
+  'table-container': 'table',
+  'icon-button': 'button',
+  button: 'button',
+  'text-field': 'input',
+  autocomplete: 'combobox',
+  checkbox: 'checkbox',
+  slider: 'slider',
+  skeleton: 'skeleton',
+  pagination: 'pagination',
+  'linear-progress': 'progress',
+  'circular-progress': 'spinner',
+  dialog: 'dialog',
+  chip: 'badge',
+  alert: 'alert',
+  'date-picker': 'date-picker',
+  'date-time-picker': 'date-picker',
+  'time-picker': 'date-picker',
+};
+
+/** Replacement callback for mui.com API links (TEXT_MAP). */
+function shadcnDocsUrl(_url, slug) {
+  const page = SHADCN_DOCS[slug];
+  return page
+    ? `https://ui.shadcn.com/docs/components/${page}`
+    : 'https://ui.shadcn.com/docs/components';
+}
+
 /**
  * Text replacements, applied in order to page bodies, titles, descriptions,
  * routes.ts and prop-table data. Order matters: longer / more specific
@@ -82,6 +127,80 @@ const TEXT_MAP = [
   ['`mui*Props`', '`srt*Props`'],
   ['`mui...Props`', '`srt...Props`'],
   [/\bMui\b/g, 'shadcn/ui'],
+  // MRT-only facts (2026-10-17): release history, MUI styling, MRT links.
+  // Single-line "> New in vX.Y" callouts and "new in v2.8" code comments are
+  // MRT release history.
+  [/^> New in [vV]\d[^\n]*\n\n/gm, ''],
+  [
+    /^> `'autocomplete'`, `'date'`, and `'date-range'`, variants are new in v2\.0\.0\n>\n> `datetime`, `datetime-range`, `time`, and `time-range` variants are new in v2\.4\.0\n\n/m,
+    '',
+  ],
+  [' - new in v2.8', ''],
+  [
+    '//new in v2.8 (default is false for this column)',
+    '//default is false for this column',
+  ],
+  [
+    '//new in v2.8 (allow this column to grow to fill in remaining space)',
+    '//allow this column to grow to fill in remaining space',
+  ],
+  ['//new in v2.8 - ', '//'],
+  [' //new in v2.8\n', '\n'],
+  // MUI's `sx` is `style` on an SRT part. Nested selectors are rewritten to
+  // Tailwind classes per page.
+  [/\bsx: \{/g, 'style: {'],
+  [/\bsx=\{\{/g, 'style={{'],
+  ['`mui...Prop`', '`srt...Prop`'],
+  // MUI Box in code samples; `</Box>` is already mapped to `</span>` above.
+  [/<Box\b/g, '<span'],
+  ['underlying Material components', 'underlying shadcn/ui components'],
+  [
+    'use the Material Pagination component instead',
+    'use the shadcn/ui Pagination component instead',
+  ],
+  ['material react table', 'shadcn react table'],
+  [
+    /https:\/\/www\.(?:shadcn|Material)-react-table\.dev\/\?path=[^\s)]+/g,
+    SRT_STORIES_URL,
+  ],
+  // MRT source links (already name-mapped) point at this repository.
+  [
+    /https:\/\/(?:www\.)?github\.com\/[Kk]evin[Vv]andy\/shadcn-react-table\/(blob|tree)\/v3\/packages\/shadcn-react-table\/src\/(?:components\/)?/g,
+    `${SRT_REPO}/$1/main/${SRT_SRC}/`,
+  ],
+  [
+    /https:\/\/(?:www\.)?github\.com\/[Kk]evin[Vv]andy\/shadcn-react-table/g,
+    SRT_REPO,
+  ],
+  // mui.com API links (prop tables, customize-components) -> shadcn/ui docs.
+  [
+    /https:\/\/mui\.com\/(?:material-ui\/api|x\/api\/date-pickers)\/([a-z-]+)\/?(?:#props)?/g,
+    shadcnDocsUrl,
+  ],
+  ['shadcn/ui X DatePicker Props', 'shadcn/ui Date Picker Props'],
+  ['shadcn/ui X DateTimePicker Props', 'shadcn/ui Date Picker Props'],
+  ['shadcn/ui X TimePicker Props', 'shadcn/ui Date Picker Props'],
+  // MUI X Charts in the chart-detail-panel description; the example uses Recharts.
+  ['shadcn/ui X Charts', 'Recharts'],
+  ['https://mui.com/x/react-charts/getting-started/', 'https://recharts.org/'],
+  // MRT's Paper wrapper component is SRT_TableLayout (srtTableLayoutProps above).
+  ['SRT_TablePaper', 'SRT_TableLayout'],
+  ['The Paper component includes UI', 'The layout component includes UI'],
+  // rewriteExampleTags runs before TEXT_MAP, so MRT's CodeSandbox tag on the
+  // usage page arrives here under its registry name.
+  ['<SimpleCodeSandboxExample />', '<BasicExample />'],
+];
+
+/**
+ * Replacements applied to routes.ts after TEXT_MAP: MRT-only pages that are
+ * not ported (plan: skipped list). Append only.
+ */
+const ROUTES_MAP = [
+  [
+    /\n\s*\{\n\s*href: '\/docs\/getting-started\/migrating-to-v3',\n(?:[^\n]*\n)*?\s*\},(?=\n)/,
+    '',
+  ],
+  [/\n\s*\{\n\s*label: 'Blog',\n(?:[^\n]*\n)*?\s*\],\n\s*\},(?=\n)/, ''],
 ];
 
 /** Replacements applied only to the page title (from <Head><title>). */
@@ -100,6 +219,156 @@ const IMPORT_MAP = {
   'next/head': null,
   'components/navigation/routes': '@/lib/routes',
 };
+
+/** getting-started/install: the peer dependency callout (shadcn registry). */
+const INSTALL_PEERS = `> \`shadcn-react-table\` is distributed through the shadcn registry: the install command below copies the component into your project and installs its dependencies.
+>
+> If you are already using shadcn/ui, you probably already have most of these peer dependencies installed.
+>
+> Just double-check that you have the following in your project, or use the [full install commands](<#install-with-required-peer-dependencies-(recommended)>) below.
+>
+> 1.  A shadcn/ui project initialised with \`shadcn init\` (Tailwind CSS v4)
+> 2.  \`react\` and \`react-dom\` (v18+)
+>
+> The install command adds \`@tanstack/react-table\` (v8), \`@tanstack/react-virtual\`, \`lucide-react\` and the shadcn/ui components the table is built from.
+`;
+
+/** guides/customize-components: MRT's "Styling MUI Components" / sx section. */
+const STYLING_SECTION = `### Styling Components
+
+Each \`srt...Props\` prop accepts \`className\` and \`style\`, which are forwarded to the underlying element. Since Shadcn React Table is built with Tailwind CSS, the recommended way to style components is with Tailwind classes in \`className\`. They are merged with the default classes, and they can use the shadcn/ui CSS variables from your theme.
+
+1. The \`style\` prop works just like a style prop in any React component.
+
+\`\`\`jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //simple styling with the \`style\` prop
+    style: {
+      fontWeight: 'normal',
+      fontSize: '14px',
+    },
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+\`\`\`
+
+2. Tailwind classes in \`className\` get easy access to your theme colors, no hook needed.
+
+\`\`\`jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //shadcn/ui theme colors are available as Tailwind classes
+    className: 'text-muted-foreground',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+\`\`\`
+
+3. Tailwind responsive variants give you a concise way to add media queries to your styling.
+
+\`\`\`jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //responsive variants instead of media queries
+    className:
+      'text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px]',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+\`\`\`
+
+4. Tailwind arbitrary variants let you target nested elements and states.
+
+\`\`\`jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //target nested elements (the buttons in the header cell) and the hover state
+    className: '[&_button]:p-0 hover:font-bold',
+  },
+});
+\`\`\`
+
+You can learn more about utility classes in the official [Tailwind CSS Docs](https://tailwindcss.com/docs/styling-with-utility-classes) and about the theme variables in the [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming).
+
+`;
+
+/**
+ * guides/customize-components: MRT's "Material UI Theme", nested
+ * ThemeProvider, "MRT Theme Values" and "Table Paper" sections.
+ */
+const THEME_SECTION = `### Theming
+
+Shadcn React Table respects your shadcn/ui theme. If you have already set up shadcn/ui with \`shadcn init\`, you should already be set. The table reads the CSS variables from your global stylesheet (\`--background\`, \`--foreground\`, \`--primary\`, \`--border\`, \`--muted\`, etc.), so changing them changes the table along with the rest of your app. If you have not set that up, you should visit the official [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming) to learn how.
+
+\`\`\`css
+/* app/globals.css: have you set up your theme variables globally in your app root? */
+:root {
+  --primary: oklch(0.45 0.2 280);
+  --border: oklch(0.9 0 0);
+}
+
+.dark {
+  --primary: oklch(0.7 0.18 280);
+  --border: oklch(0.3 0 0);
+}
+\`\`\`
+
+#### Customize Theme Just for your Table
+
+Because the theme is CSS variables, you can change it just for the \`<ShadcnReactTable />\` component by redefining the variables on an element around just your table (or on the table root through the \`srtTableLayoutProps\` table option). The values only effect the \`<ShadcnReactTable />\` component, and not the rest of your site. Everything you do not redefine is inherited from your global theme, so you do not have to redefine everything again. You can just tweak the values you want to change.
+
+\`\`\`jsx
+//in one of your normal components
+return (
+  <div className="[--primary:var(--secondary)] [--background:rgb(254,255,244)] dark:[--background:#000]">
+    <ShadcnReactTable table={table} />
+  </div>
+);
+\`\`\`
+
+#### Custom Theme Example
+
+<MuiThemeExample />
+
+### Table Theme Values
+
+The colors Shadcn React Table uses internally come from the shadcn/ui theme variables, so there is no separate theme object to pass in. Here is where the default values come from, if you want to override them:
+
+- the table and toolbars use \`--background\` and \`--foreground\`
+- selected rows use \`--primary\` at 20% opacity, pinned rows at 10%, hovered rows use \`--foreground\` at 10%
+- dragging borders use \`--primary\`
+- filter match highlighting uses \`--destructive\` at 20% opacity (30% in dark mode), on the element with \`data-slot="srt-match-highlight"\`
+
+### Customize Table Layout Styling
+
+You can customize both the props and the styles of the internal \`<SRT_TableLayout />\` component that wraps the table by passing in a \`srtTableLayoutProps\` table option. This is useful if you want to remove the shadow, or change the border radius, or any other styling you want to do to the wrapper.
+
+\`\`\`jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableLayoutProps: {
+    //customize wrapper styles
+    className: 'rounded-none border-dashed shadow-none',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+\`\`\`
+
+`;
 
 /**
  * Per-page replacements, applied last. Keys are page paths relative to
@@ -127,6 +396,16 @@ const PAGE_RULES = {
   // into URLs that do not exist, so they are restored verbatim.
   'api/mrt-components.mdx': [
     [/https:\/\/github\.com\/KevinVandy\/[^\s)]+/g, restoreMrtUrl],
+    // MRT-only facts pass: the links are now mapped to this repository by
+    // TEXT_MAP before this rule runs, so restoreMrtUrl no longer matches.
+    [
+      'It accepts table options as props, just like in v1, but it also now simply accepts',
+      'It accepts table options as props, but it can also simply accept',
+    ],
+    [
+      '//passing props instead like in v1 is possible',
+      '//passing props instead is possible',
+    ],
   ],
   'api/mrt-hooks.mdx': [
     [/https:\/\/github\.com\/KevinVandy\/[^\s)]+/g, restoreMrtUrl],
@@ -138,6 +417,249 @@ const PAGE_RULES = {
       '[Recharts](https://recharts.org/)',
     ],
     ['using shadcn/ui X Charts will give you', 'using Recharts will give you'],
+  ],
+  // MRT-only facts pass (2026-10-17): MUI versions and packages, sx and
+  // theming, release history, MRT links. Text below is matched after TEXT_MAP.
+  'getting-started/install.mdx': [
+    [
+      'latest version of Shadcn React Table (V3)',
+      'latest version of Shadcn React Table (V1)',
+    ],
+    [
+      "let's make sure you have the correct versions of React, shadcn/ui, and shadcn/ui X Date Pickers installed.",
+      "let's make sure you have the correct versions of React, TanStack Table, Tailwind CSS, and shadcn/ui installed.",
+    ],
+    [
+      /> `shadcn-react-table` requires \*\*shadcn\/ui V6\*\* packages[\s\S]*?> 6\.  `react` and `react-dom` \(v18\+\)\n/,
+      INSTALL_PEERS,
+    ],
+    ['which is no longer supported in v2+.', 'which is not supported.'],
+    [
+      'Or you probably do not have the correct version of shadcn/ui installed. Make sure all material ui packages are at least V6.0 or higher if you are using SRT v3 or higher.',
+      'Or your shadcn/ui components may be out of date. Re-run the install command above to update the component and its registry dependencies.',
+    ],
+    [
+      'As of SRT V3, it uses some React 18+ features, so React 18 is required. SRT V2 and below are compatible with React 17.',
+      'Shadcn React Table uses some React 18+ features, so React 18 is required.',
+    ],
+  ],
+  'getting-started/usage.mdx': [
+    [
+      'and the necessary shadcn/ui V6 dependencies.',
+      'and the necessary shadcn/ui dependencies.',
+    ],
+    [
+      'https://mui.com/material-ui/getting-started/installation/',
+      'https://ui.shadcn.com/docs/installation',
+    ],
+    [
+      'https://mui.com/material-ui/customization/default-theme/',
+      'https://ui.shadcn.com/docs/theming',
+    ],
+    [
+      '/docs/guides/customize-components#material-ui-theme',
+      '/docs/guides/customize-components#theming',
+    ],
+    [
+      "<span style={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>",
+      '<span className="flex items-center gap-[2ch]">',
+    ],
+  ],
+  'guides/customize-components.mdx': [
+    [
+      '[how to customize and use a shadcn/ui Theme](#material-ui-theme)',
+      '[how to theme your table](#theming)',
+    ],
+    ['### shadcn/ui Props and Types', '### Props and Types'],
+    [
+      /> All `srt\.\.\.Props` props are strongly typed[^\n]*\n/,
+      '> All `srt...Props` props are strongly typed and you should get ts hints as you write them. Each one forwards `className`, `style` and the props of the element or [shadcn/ui component](https://ui.shadcn.com/docs/components) it targets.\n',
+    ],
+    [
+      "    color: 'secondary', //makes all checkboxes use the secondary color",
+      "    className: 'rounded-full', //makes all checkboxes round",
+    ],
+    [
+      "    color: 'secondary',\n    disabled:",
+      "    className: 'rounded-full',\n    disabled:",
+    ],
+    [
+      /### Styling shadcn\/ui Components\n[\s\S]*?(?=### Conditional Styling)/,
+      STYLING_SECTION,
+    ],
+    [
+      'Using the `sx`, `style`, or `className` props',
+      'Using the `style` or `className` props',
+    ],
+    [
+      "    //conditionally style selected rows\n    style: {\n      fontWeight: row.getIsSelected() ? 'bold' : 'normal',\n    },",
+      "    //conditionally style selected rows\n    className: row.getIsSelected() ? 'font-bold' : 'font-normal',",
+    ],
+    [
+      "    //conditionally style expanded rows\n    style: {\n      fontWeight: row.getIsExpanded() ? 'bold' : 'normal',\n    },",
+      "    //conditionally style expanded rows\n    className: row.getIsExpanded() ? 'font-bold' : 'font-normal',",
+    ],
+    [
+      "    //conditionally style pinned columns\n    style: {\n      backgroundColor: column.getIsPinned() ? '#f5f5f5' : 'inherit',\n    },",
+      "    //conditionally style pinned columns\n    className: column.getIsPinned() ? 'bg-muted' : undefined,",
+    ],
+    [
+      "    //conditionally style pinned columns\n    style: {\n      fontWeight: column.getIsPinned() ? 'bold' : 'normal',\n    },",
+      "    //conditionally style pinned columns\n    className: column.getIsPinned() ? 'font-bold' : 'font-normal',",
+    ],
+    [
+      /### shadcn\/ui Theme\n[\s\S]*?(?=### Customize Table Body, Rows, Columns, and Cells)/,
+      THEME_SECTION,
+    ],
+    [
+      "    style: {\n      //stripe the rows, make odd rows a darker color\n      '& tr:nth-of-type(odd) > td': {\n        backgroundColor: '#f5f5f5',\n      },\n    },",
+      "    //stripe the rows, make odd rows a darker color\n    className: '[&_tr:nth-of-type(odd)>td]:bg-muted',",
+    ],
+    [
+      "    style: {\n      //stripe the rows, make odd rows a darker color\n      '& td:nth-of-type(odd)': {\n        backgroundColor: '#f5f5f5',\n      },\n    },",
+      "    //stripe the columns, make odd columns a darker color\n    className: '[&_td:nth-of-type(odd)]:bg-muted',",
+    ],
+    [
+      "    style: {\n      borderRight: '2px solid #e0e0e0', //add a border between columns\n    },",
+      "    className: 'border-r-2', //add a border between columns",
+    ],
+  ],
+  'guides/table-event-listeners.mdx': [
+    ['#material-ui-prop-types', '#props-and-types'],
+  ],
+  'guides/full-screen-toggle.mdx': [
+    [
+      'Under the hood in Shadcn React Table V3, when the table is full screen, these `styles` are applied to the root mui paper component:',
+      'Under the hood, when the table is full screen, these classes are applied to the root table container:',
+    ],
+    [
+      /```jsx\n\{\n  bottom: 0,[\s\S]*?zIndex: 999,\n\}\n```/,
+      '```txt\nfixed inset-0 z-50 h-dvh max-h-dvh w-dvw max-w-dvw rounded-none border-0 m-0 p-0\n```',
+    ],
+    [
+      'with a `style` object that has a `zIndex` property.',
+      'with a `style` object that has a `zIndex` property (or a `z-*` Tailwind class in `className`).',
+    ],
+    ['  //not sx\n', ''],
+    [/\n> Note: The `sx` table option will not work here[^\n]*\n/, ''],
+  ],
+  'guides/customize-icons.mdx': [
+    [
+      '[Material Icons](https://mui.com/material-ui/material-icons)',
+      '[Lucide icons](https://lucide.dev)',
+    ],
+    ['use other Material Icons or icons', 'use other Lucide icons or icons'],
+  ],
+  'guides/pagination.mdx': [
+    [/> Note: In v2, srtPaginationProps is now based on mui's[^\n]*\n\n/, ''],
+  ],
+  'guides/state-management.mdx': [
+    [/> Note: `tableInstanceRef` has been removed in SRT v2[^\n]*\n\n/, ''],
+    [/> Note: Previously, in early SRT v1, you could use[^\n]*\n\n/, ''],
+  ],
+  'guides/column-size.mdx': [
+    ['exposes all mui props', 'exposes all `srt*Props`'],
+    [
+      'you can edit the `srtTableContainerProps.sx` styles to set `overflowX: "hidden"`',
+      'you can edit the `srtTableContainerProps` `className` or `style` to set `overflow-x: hidden`',
+    ],
+    [
+      '`srtTableHeadCellProps.sx`, `srtTableBodyCellProps.sx`, and `srtTableFooterCellProps.sx` and more',
+      '`srtTableHeadCellProps`, `srtTableBodyCellProps`, and `srtTableFooterCellProps` (`className` or `style`) and more',
+    ],
+  ],
+  'guides/editing.mdx': [
+    ['//highlight mui text field red error color', '//highlight the input red'],
+  ],
+  'guides/best-practices.mdx': [
+    [
+      'npx npm-check-updates -u shadcn-react-table @mui/material @mui/x-date-pickers @mui/icons-material @emotion/react @emotion/styled',
+      REGISTRY_INSTALL,
+    ],
+  ],
+  'guides/column-resizing.mdx': [
+    [
+      'The default `columnResizeMode` is `onChange` (in SRT versions v1.7+), which',
+      'The default `columnResizeMode` is `onChange`, which',
+    ],
+    [/> SRT V3 has a new "opposite" behavior[^\n]*\n\n/, ''],
+    [
+      ' This may behave differently depending on which Emotion or shadcn/ui theme settings you have enabled.',
+      '',
+    ],
+    [
+      /^If you have already set the proper `theme\.direction` setting in your shadcn\/ui theme[^\n]*\n/m,
+      'Shadcn React Table does not read the document direction, so set this option explicitly when your table is rendered in an RTL layout.\n',
+    ],
+  ],
+  'guides/toolbar-customization.mdx': [
+    [
+      /> Note: This guide has become much more simple since the introduction of the `useShadcnReactTable` hook in v2\. <br \/>\n> No more `tableInstanceRef` or `useReducer` rerender hacks required!\n\n/,
+      '',
+    ],
+    [
+      'pass CSS overrides to their `sx` or `style` props',
+      'pass CSS overrides to their `className` or `style` props',
+    ],
+    [
+      'https://mui.com/material-ui/react-progress/',
+      'https://ui.shadcn.com/docs/components/progress',
+    ],
+    [
+      "    <span\n      style={{\n        display: 'flex',\n        justifyContent: 'space-between',\n        alignItems: 'center',\n      }}\n    >",
+      '    <span className="flex items-center justify-between">',
+    ],
+  ],
+  'guides/accessibility.mdx': [
+    [
+      'Shadcn React Table V3 introduces a new table option',
+      'Shadcn React Table has a table option',
+    ],
+    ['Now in V3, a focus trap', 'A focus trap'],
+    [
+      'add custom focus styles to any element using the `sx` prop.',
+      'add custom focus styles to any element using the `className` prop.',
+    ],
+    [
+      'you can just use the `sx` props to override',
+      'you can just use the `className` or `style` props to override',
+    ],
+    [
+      "      //add custom focus styles\n      style: {\n        '&:focus-visible': {\n          //or just `&:focus` if you want all focus events to be visible\n          outline: '2px solid red',\n          outlineOffset: '-2px',\n        },\n      },",
+      "      //add custom focus styles (or just `focus:` if you want all focus events to be visible)\n      className:\n        'focus-visible:outline-2 focus-visible:outline-red-500 focus-visible:-outline-offset-2',",
+    ],
+    [
+      "      style: {\n        '&:focus-visible': {\n          outline: '4px solid red',\n          outlineOffset: '-4px',\n        },\n      },",
+      "      className:\n        'focus-visible:outline-4 focus-visible:outline-red-500 focus-visible:-outline-offset-4',",
+    ],
+  ],
+  'guides/virtualization.mdx': [
+    [/> SRT v1\.4 and v1\.5 have major virtualization upgrades[^\n]*\n\n/, ''],
+    [/> SRT v1\.4 upgraded from `react-virtual` v2[^\n]*\n\n/, ''],
+  ],
+  'guides/aggregation.mdx': [
+    [
+      'This is now easier if you are upgraded to at least v1.3.0. You can now specify',
+      'You can specify',
+    ],
+  ],
+  'guides/column-ordering-dnd.mdx': [
+    ['internally as of v2.10.0.', 'internally.'],
+    ['Though, as of v2.10.0, if you do not', 'Though, if you do not'],
+    ['(Initializing is optional as of v2.10.0)', '(Initializing is optional)'],
+  ],
+  'guides/data-columns.mdx': [
+    [
+      'Setting a CSS (sx or style) width prop',
+      'Setting a CSS (`className` or `style`) width prop',
+    ],
+    ['<span color="warning.main">', '<span className="text-yellow-600">'],
+  ],
+  'guides/density-toggle.mdx': [
+    [
+      '`srtTableBodyCellProps` styles or sx prop.',
+      '`srtTableBodyCellProps` `style` or `className` prop.',
+    ],
   ],
 };
 
@@ -251,6 +773,9 @@ async function syncPage(rel) {
   return { rel: OUTPUT_PATHS[rel] ?? rel, title: fmTitle };
 }
 
+/** MRT pages that are not ported (plan: skipped list). */
+const SKIPPED_PAGES = new Set(['getting-started/migrating-to-v3.mdx']);
+
 async function listPages() {
   const out = [];
   async function walk(dir) {
@@ -261,12 +786,12 @@ async function listPages() {
     }
   }
   await walk(MRT_PAGES);
-  return out.sort();
+  return out.filter((rel) => !SKIPPED_PAGES.has(rel)).sort();
 }
 
 async function loadRoutes() {
   const raw = await fs.readFile(MRT_ROUTES, 'utf8');
-  const mapped = applyMap(raw, TEXT_MAP);
+  const mapped = applyMap(applyMap(raw, TEXT_MAP), ROUTES_MAP);
   await fs.mkdir(path.dirname(OUT_ROUTES), { recursive: true });
   await fs.writeFile(OUT_ROUTES, mapped);
   // Evaluate the TS file as JS: drop the type block and the annotation.

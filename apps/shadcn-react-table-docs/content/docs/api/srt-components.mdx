@@ -24,11 +24,11 @@ In previous versions of `shadcn-react-table`, you only had the option to use the
 
 ### \<ShadcnReactTable /\>
 
-[View Source Code on GitHub](https://github.com/KevinVandy/material-react-table/blob/v3/packages/material-react-table/src/components/MaterialReactTable.tsx)
+[View Source Code on GitHub](https://github.com/anindosarker/shadcn-react-table/blob/main/packages/shadcn-react-table/src/components/ui/shadcn-react-table/ShadcnReactTable.tsx)
 
 For most use cases, you will probably just use the default `<ShadcnReactTable />` component.
 
-It accepts table options as props, just like in v1, but it also now simply accepts the `table` instance as its only prop instead. You have the choice to use the `useShadcnReactTable` hook to create the table instance in your own scope or not. Using the `table` prop with the `useShadcnReactTable` hook is recommended, because it will give you more flexibility as your table features get more complex.
+It accepts table options as props, but it can also simply accept the `table` instance as its only prop instead. You have the choice to use the `useShadcnReactTable` hook to create the table instance in your own scope or not. Using the `table` prop with the `useShadcnReactTable` hook is recommended, because it will give you more flexibility as your table features get more complex.
 
 ```jsx
 import {
@@ -47,7 +47,7 @@ return <ShadcnReactTable table={table} />; //recommended
 ```jsx
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table';
 //...
-return <ShadcnReactTable columns={columns} data={data} enableRowPinning />; //passing props instead like in v1 is possible
+return <ShadcnReactTable columns={columns} data={data} enableRowPinning />; //passing props instead is possible
 ```
 
 > Do not pass both a `table` prop and other table options as props. Additional table options passed to the `<ShadcnReactTable />` component will be ignored if a `table` prop is passed. Either specify all table options in the `useShadcnReactTable` hook or pass all of them as props to the `<ShadcnReactTable />` component.
@@ -58,13 +58,13 @@ Shadcn React Table now exports all of its internal components. You can use them 
 
 #### Table Components
 
-[View Table Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/table)
+[View Table Components Source Code on GitHub](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/src/components/ui/shadcn-react-table/table)
 
-##### \<SRT_TablePaper /\>
+##### \<SRT_TableLayout /\>
 
-The `<SRT_TablePaper />` component is the outermost component of the table. Using this is pretty much the same thing as using the `<ShadcnReactTable />` component, except that you cannot pass table options as props to it.
+The `<SRT_TableLayout />` component is the outermost component of the table. Using this is pretty much the same thing as using the `<ShadcnReactTable />` component, except that you cannot pass table options as props to it.
 
-The Paper component includes UI for the table and the toolbar components.
+The layout component includes UI for the table and the toolbar components.
 
 ##### \<SRT_TableContainer /\>
 
@@ -84,7 +84,7 @@ Shows a loading spinner over the table above the `SRT_Table` component when the 
 
 #### TableHead Components
 
-[View TableHead Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/head)
+[View TableHead Components Source Code on GitHub](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/src/components/ui/shadcn-react-table/head)
 
 ##### \<SRT_TableHead /\>
 
@@ -124,7 +124,7 @@ The Filter Container that contains the filter input and filter actions
 
 #### TableBody Components
 
-[View TableBody Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/body)
+[View TableBody Components Source Code on GitHub](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/src/components/ui/shadcn-react-table/body)
 
 ##### \<SRT_TableBody /\>
 
@@ -156,7 +156,7 @@ A button or buttons for pinning a row.
 
 #### TableFooter Components
 
-[View TableFooter Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/footer)
+[View TableFooter Components Source Code on GitHub](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/src/components/ui/shadcn-react-table/footer)
 
 ##### \<SRT_TableFooter /\>
 
@@ -172,7 +172,7 @@ The `<SRT_TableFooterCell />` is a `<td>` element that surrounds the cell value 
 
 #### Input Components
 
-[View Input Components Source Code on GitHub](https://github.com/KevinVandy/material-react-table/tree/v3/packages/material-react-table/src/components/inputs)
+[View Input Components Source Code on GitHub](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/src/components/ui/shadcn-react-table/inputs)
 
 ##### \<SRT_EditCellTextField /\>
 

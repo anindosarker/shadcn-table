@@ -79,11 +79,11 @@ const table = useShadcnReactTable({
   displayColumnDefOptions: { 'srt-row-actions': { size: 300 } }, //change width of actions column to 300px
   enableRowActions: true,
   renderRowActions: ({ row }) => (
-    <Box>
+    <span>
       <Button>Action 1</Button>
       <Button>Action 2</Button>
       <Button>Action 3</Button>
-    </Box>
+    </span>
   ),
 });
 
@@ -102,7 +102,7 @@ const table = useShadcnReactTable({
       enablePinning: true,
       enableColumnActions: true,
       size: 40,
-      grow: true, //new in v2.8
+      grow: true,
     },
   },
   enableRowNumbers: true,

@@ -20,12 +20,12 @@ const cardData: {
   {
     text: 'Source Code',
     Icon: CodeIcon,
-    href: 'https://github.com/kevinvandy/shadcn-react-table',
+    href: 'https://github.com/anindosarker/shadcn-react-table',
   },
   {
     text: 'GitHub Issues',
     Icon: BugIcon,
-    href: 'https://github.com/kevinvandy/shadcn-react-table/issues',
+    href: 'https://github.com/anindosarker/shadcn-react-table/issues',
   },
   {
     text: 'Discord',

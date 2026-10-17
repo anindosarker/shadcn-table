@@ -9,11 +9,11 @@ Here is a brief overview of how to use Shadcn React Table. This is a very simple
 
 ### Setup
 
-To start using ShadcnReactTable, you first need to [install](/docs/getting-started/install) `shadcn-react-table` and the necessary shadcn/ui V6 dependencies.
+To start using ShadcnReactTable, you first need to [install](/docs/getting-started/install) `shadcn-react-table` and the necessary shadcn/ui dependencies.
 
-There are additional steps and customizations you can do for shadcn/ui, if you have not set it up in your application already. Check out the [shadcn/ui docs](https://mui.com/material-ui/getting-started/installation/) for more information.
+There are additional steps and customizations you can do for shadcn/ui, if you have not set it up in your application already. Check out the [shadcn/ui docs](https://ui.shadcn.com/docs/installation) for more information.
 
-If you need to change the colors of the table components, advanced [shadcn/ui Theming](https://mui.com/material-ui/customization/default-theme/) is covered in the [Customize Components](/docs/guides/customize-components#material-ui-theme) guide.
+If you need to change the colors of the table components, advanced [shadcn/ui Theming](https://ui.shadcn.com/docs/theming) is covered in the [Customize Components](/docs/guides/customize-components#theming) guide.
 
 ### Import ShadcnReactTable and useShadcnReactTable
 
@@ -71,10 +71,10 @@ const columns = useMemo(
       //more column options can be added here to enable/disable features, customize look and feel, etc.
       //optional custom cell render
       Cell: ({ row }) => (
-        <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+        <span className="flex items-center gap-[2ch]">
           <img src={row.original.imageUrl} />
           <a href={row.profileUrl}>{row.name}</a>
-        </Box>
+        </span>
       ),
     },
     {

@@ -7,9 +7,6 @@ description: 'How to customize the Toolbars, add buttons to toolbars, or customi
 
 This guide shows you how to [hide](#hide-or-disable-toolbars), [customize](#customize-toolbar-buttons), or [override](#override-with-custom-toolbar-components) the top and bottom toolbars in Shadcn React Table.
 
-> Note: This guide has become much more simple since the introduction of the `useShadcnReactTable` hook in v2. <br />
-> No more `tableInstanceRef` or `useReducer` rerender hacks required!
-
 ### Relevant Table Options
 
 <TableOptionsTable
@@ -66,7 +63,7 @@ const table = useShadcnReactTable({
   columns,
 });
 
-//This SRT sub-component does not contain the code for the toolbars. SRT_TablePaper and ShadcnReactTable do.
+//This SRT sub-component does not contain the code for the toolbars. SRT_TableLayout and ShadcnReactTable do.
 return <SRT_TableContainer table={table} />;
 ```
 
@@ -155,7 +152,7 @@ const table = useShadcnReactTable({
   positionToolbarAlertBanner: 'bottom',
   positionGlobalFilter: 'left', //move the search box to the left of the top toolbar
   positionPagination: 'top',
-  renderTopToolbarCustomActions: () => <Box>...</span>,
+  renderTopToolbarCustomActions: () => <span>...</span>,
 });
 
 return <ShadcnReactTable table={table} />;
@@ -163,11 +160,11 @@ return <ShadcnReactTable table={table} />;
 
 ### Customize Toolbar Props and Styles
 
-The `srtTopToolbarProps`, `srtBottomToolbarProps`, `srtToolbarAlertBannerProps`, and `srtToolbarAlertBannerChipProps` table options allow you to customize the props and styles of the underlying Material components that make up the toolbar components. Remember that you can pass CSS overrides to their `sx` or `style` props. Some have found this useful for forcing `position: absolute` on alerts, etc.
+The `srtTopToolbarProps`, `srtBottomToolbarProps`, `srtToolbarAlertBannerProps`, and `srtToolbarAlertBannerChipProps` table options allow you to customize the props and styles of the underlying shadcn/ui components that make up the toolbar components. Remember that you can pass CSS overrides to their `className` or `style` props. Some have found this useful for forcing `position: absolute` on alerts, etc.
 
 ### Customize Linear Progress Bars
 
-The progress bars that display in both the top and bottom toolbars become visible when either the `isLoading` or `showProgressBars` state options are set to `true`. You can customize the progress bars by passing in props to the `srtLinearProgressProps` table option. By default, the progress bars have a full animated progress bar, but you can set the `value` table option to a number between 0 and 100 to show real progress values if your table is doing some complicated long running tasks that you want to show progress for. Visit the [shadcn/ui Progress docs](https://mui.com/material-ui/react-progress/) to learn more.
+The progress bars that display in both the top and bottom toolbars become visible when either the `isLoading` or `showProgressBars` state options are set to `true`. You can customize the progress bars by passing in props to the `srtLinearProgressProps` table option. By default, the progress bars have a full animated progress bar, but you can set the `value` table option to a number between 0 and 100 to show real progress values if your table is doing some complicated long running tasks that you want to show progress for. Visit the [shadcn/ui Progress docs](https://ui.shadcn.com/docs/components/progress) to learn more.
 
 ```jsx
 const table = useShadcnReactTable({
@@ -175,7 +172,7 @@ const table = useShadcnReactTable({
   columns,
   srtLinearProgressProps: ({ isTopToolbar }) => ({
     color: 'warning',
-    sx: { display: isTopToolbar ? 'block' : 'none' }, //only show top toolbar progress bar
+    style: { display: isTopToolbar ? 'block' : 'none' }, //only show top toolbar progress bar
     value: fetchProgress, //show precise real progress value if you so desire
   }),
   state: {
@@ -231,19 +228,13 @@ const table = useShadcnReactTable({
   data,
   columns,
   renderTopToolbar: ({ table }) => (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
+    <span className="flex items-center justify-between">
       <SRT_GlobalFilterTextInput table={table} />
       <SRT_TablePagination table={table} />
     </span>
   ),
   renderBottomToolbar: ({ table }) => (
-    <Box>
+    <span>
       <Button>Download</Button>
     </span>
   ),

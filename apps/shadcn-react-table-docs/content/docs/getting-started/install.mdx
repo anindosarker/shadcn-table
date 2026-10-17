@@ -5,26 +5,24 @@ description: 'How to install Shadcn React Table'
 
 ## Installation
 
-These are install instructions for the latest version of Shadcn React Table (V3)
+These are install instructions for the latest version of Shadcn React Table (V1)
 
 ### Compatibility
 
-First, before installing Shadcn React Table, let's make sure you have the correct versions of React, shadcn/ui, and shadcn/ui X Date Pickers installed.
+First, before installing Shadcn React Table, let's make sure you have the correct versions of React, TanStack Table, Tailwind CSS, and shadcn/ui installed.
 
 <CompatibilityTable />
 
-> `shadcn-react-table` requires **shadcn/ui V6** packages as dependencies in your project.
+> `shadcn-react-table` is distributed through the shadcn registry: the install command below copies the component into your project and installs its dependencies.
 >
 > If you are already using shadcn/ui, you probably already have most of these peer dependencies installed.
 >
-> Just double-check that you have the following in your package.json, or use the [full install commands](<#install-with-required-peer-dependencies-(recommended)>) below.
+> Just double-check that you have the following in your project, or use the [full install commands](<#install-with-required-peer-dependencies-(recommended)>) below.
 >
-> 1.  `@mui/material` (V6)
-> 2.  `@mui/x-date-pickers` (v6)
-> 3.  `@mui/icons-material` (V6)
-> 4.  `@emotion/react` (v11)
-> 5.  `@emotion/styled` (v11)
-> 6.  `react` and `react-dom` (v18+)
+> 1.  A shadcn/ui project initialised with `shadcn init` (Tailwind CSS v4)
+> 2.  `react` and `react-dom` (v18+)
+>
+> The install command adds `@tanstack/react-table` (v8), `@tanstack/react-virtual`, `lucide-react` and the shadcn/ui components the table is built from.
 
 ### Quick Install
 
@@ -66,14 +64,14 @@ or a class/function (for composite components) but got: undefined.
 You likely forgot to export your component from the file it's defined in,
 or you might have mixed up default and named imports.
 
-Or You might be trying to import `ShadcnReactTable` from the default export still, which is no longer supported in v2+. Make sure you are importing the named export instead:
+Or You might be trying to import `ShadcnReactTable` from the default export still, which is not supported. Make sure you are importing the named export instead:
 
 ```diff
-- import ShadcnReactTable from 'shadcn-react-table'
-+ import { ShadcnReactTable } from 'shadcn-react-table'
+- import ShadcnReactTable from '@/components/ui/shadcn-react-table'
++ import { ShadcnReactTable } from '@/components/ui/shadcn-react-table'
 ```
 
-Or you probably do not have the correct version of shadcn/ui installed. Make sure all material ui packages are at least V6.0 or higher if you are using SRT v3 or higher.
+Or your shadcn/ui components may be out of date. Re-run the install command above to update the component and its registry dependencies.
 
 ---
 
@@ -99,7 +97,7 @@ Then try upgrading either `webpack` or `react-scripts` to the latest versions.
         name: 'Why is React 18 required for Shadcn React Table?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: '<p>As of SRT V3, it uses some React 18+ features, so React 18 is required. SRT V2 and below are compatible with React 17.</p>',
+          text: '<p>Shadcn React Table uses some React 18+ features, so React 18 is required.</p>',
         },
       },
       {

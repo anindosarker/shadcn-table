@@ -12,7 +12,7 @@ Here are some best practices to follow when using Shadcn React Table. We'll cove
 Run this command in your terminal every few weeks to make sure you are using the latest version of Shadcn React Table and shadcn/ui
 
 ```bash
-npx npm-check-updates -u shadcn-react-table @mui/material @mui/x-date-pickers @mui/icons-material @emotion/react @emotion/styled
+pnpm dlx shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table
 ```
 
 ### Type-Safety
@@ -91,11 +91,9 @@ const columns: Array<SRT_ColumnDef<User>> = [
 
 #### createSRTColumnHelper Utility
 
-> New in V3 (After many requests)
-
 Alternatively you can use the `createSRTColumnHelper` utility function to define your columns. This works the same way as the TanStack `createColumnHelper`.
 
-Additional `TValue` type-safety is provided by using this utility. That means that when you call `cell.getValue()` in either a custom `Cell` render, or in any of the `mui*Props`, you will get the correct type for the data in that column instead of `unknown`.
+Additional `TValue` type-safety is provided by using this utility. That means that when you call `cell.getValue()` in either a custom `Cell` render, or in any of the `srt*Props`, you will get the correct type for the data in that column instead of `unknown`.
 
 ```tsx
 import {
@@ -199,7 +197,7 @@ export const getDefaultSRTOptions = <TData extends SRT_RowData>(): Partial<
   manualPagination: true,
   manualSorting: true,
   srtTableHeadCellProps: {
-    sx: { fontSize: '1.1rem' },
+    style: { fontSize: '1.1rem' },
   },
   paginationDisplayMode: 'pages',
   //etc...

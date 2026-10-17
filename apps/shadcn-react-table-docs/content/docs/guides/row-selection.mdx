@@ -61,8 +61,6 @@ const table = useShadcnReactTable({
 
 ### Batch Row Selection
 
-> New in v2.11.0
-
 By default, when the user holds down the <kbd>Shift</kbd> key and clicks a row, all rows between the last selected row and the clicked row will be selected. This can be disabled with the `enableBatchRowSelection` table option.
 
 ```jsx
@@ -166,7 +164,7 @@ const table = useShadcnReactTable({
   srtTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
     onClick: (event) =>
       getSRT_RowSelectionHandler({ row, staticRowIndex, table })(event), //import this helper function from shadcn-react-table
-    sx: { cursor: 'pointer' },
+    style: { cursor: 'pointer' },
   }),
 });
 ```
@@ -241,4 +239,4 @@ You can combine the row pinning feature with the row selection feature to create
 
 <EnableRowPinningSelectExample />
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-selection-examples)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**

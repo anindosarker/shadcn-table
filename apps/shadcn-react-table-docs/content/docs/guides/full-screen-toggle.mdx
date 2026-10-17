@@ -37,34 +37,18 @@ return <ShadcnReactTable table={table} />;
 
 ### Change Z-Index of Full Screen Table
 
-Under the hood in Shadcn React Table V3, when the table is full screen, these `styles` are applied to the root mui paper component:
+Under the hood, when the table is full screen, these classes are applied to the root table container:
 
-```jsx
-{
-  bottom: 0,
-  height: '100vh',
-  left: 0,
-  margin: 0,
-  maxHeight: '100vh',
-  maxWidth: '100vw',
-  padding: 0,
-  position: 'fixed',
-  right: 0,
-  top: 0,
-  width: '100vw',
-  zIndex: 999,
-}
+```txt
+fixed inset-0 z-50 h-dvh max-h-dvh w-dvw max-w-dvw rounded-none border-0 m-0 p-0
 ```
 
-If you need to change the `zIndex` of the full screen table, you can do so by passing in a `srtTableLayoutProps` table option with a `style` object that has a `zIndex` property.
+If you need to change the `zIndex` of the full screen table, you can do so by passing in a `srtTableLayoutProps` table option with a `style` object that has a `zIndex` property (or a `z-*` Tailwind class in `className`).
 
 ```jsx
 srtTableLayoutProps: ({ table }) => ({
-  //not sx
   style: {
     zIndex: table.getState().isFullScreen ? 1000 : undefined,
   },
 });
 ```
-
-> Note: The `sx` table option will not work here because the `style` table option was used internally instead of the `sx` table option for higher specificity.

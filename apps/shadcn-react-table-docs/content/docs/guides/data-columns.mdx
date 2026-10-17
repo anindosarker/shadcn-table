@@ -84,8 +84,6 @@ const columns = useMemo<SRT_ColumnDef<Customer>[]>(
 
 #### Method 3 - Using createSRTColumnHelper
 
-> New in V3 (After many requests)
-
 Alternatively you can use the `createSRTColumnHelper` utility function to define your columns definitions in a slightly more type-safe way. Instantiate a `columnHelper` by passing in your `TData` type as a generic argument. Then the first argument of the `columnHelper.accessor()` method can be either an `accessorKey` or an `accessorFn`. Then you can specify the rest of the column options as the second argument.
 
 ```tsx
@@ -191,7 +189,7 @@ const columns = useMemo(
       Footer: () => (
         <Stack>
           Max Age:
-          <Box color="warning.main">{Math.round(maxAge)}</Box>
+          <span className="text-yellow-600">{Math.round(maxAge)}</span>
         </Stack>
       ),
     },
@@ -206,7 +204,7 @@ const columns = useMemo(
 
 This topic is covered in detail in the [Column Size Guide](/docs/guides/column-size), but here is a brief overview.
 
-Setting a CSS (sx or style) width prop in the `srtTableHeadCellProps`, `srtTableBodyCellProps`, etc. might not work well, and is redundant. SRT/TanStack Table has an official way to set column widths with the `size`, `minSize`, `maxSize`, and `grow` column options.
+Setting a CSS (`className` or `style`) width prop in the `srtTableHeadCellProps`, `srtTableBodyCellProps`, etc. might not work well, and is redundant. SRT/TanStack Table has an official way to set column widths with the `size`, `minSize`, `maxSize`, and `grow` column options.
 
 ```tsx
 const columns = [

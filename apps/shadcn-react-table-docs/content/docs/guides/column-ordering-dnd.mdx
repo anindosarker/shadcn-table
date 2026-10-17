@@ -63,13 +63,13 @@ const table = useShadcnReactTable({
 return <ShadcnReactTable table={table} />;
 ```
 
-> **Note:** If the number of `columns` and the length of the `columnOrder` state do not match, SRT will automatically re-generate the `columnOrder` state internally as of v2.10.0.
+> **Note:** If the number of `columns` and the length of the `columnOrder` state do not match, SRT will automatically re-generate the `columnOrder` state internally.
 
 ### Manage Column Order State
 
 If you need easier access to the `columnOrder` state, you can store the column order in your own state management, and then pass it back into the SRT `state` table option and sync back up internal mutations with the `onColumnOrderChange` callback.
 
-You should also should initialize the `columnOrder` state yourself for the best results. Though, as of v2.10.0, if you do not initialize the `columnOrder` state, as Shadcn React Table will generate a default column order for you based on the order of the columns passed in the `columns` option, so you only need to properly initialize the column order state if there is a problem with the default order.
+You should also should initialize the `columnOrder` state yourself for the best results. Though, if you do not initialize the `columnOrder` state, as Shadcn React Table will generate a default column order for you based on the order of the columns passed in the `columns` option, so you only need to properly initialize the column order state if there is a problem with the default order.
 
 ```jsx
 const columns = [
@@ -78,7 +78,7 @@ const columns = [
 
 //easy shortcut to initialize the columnOrder state as array of column ids
 const [columnOrder, setColumnOrder] = useState(
-  ['srt-row-select', ...columns.map((c) => c.accessorKey)], //array of column ids (Initializing is optional as of v2.10.0)
+  ['srt-row-select', ...columns.map((c) => c.accessorKey)], //array of column ids (Initializing is optional)
 );
 
 const table = useShadcnReactTable({
@@ -102,4 +102,4 @@ The ability for a column to have a drag and drop handle can be specified by sett
 
 <EnableColumnOrderingExample />
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-column-ordering-examples)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**

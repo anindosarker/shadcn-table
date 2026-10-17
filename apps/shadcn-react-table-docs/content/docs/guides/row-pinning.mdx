@@ -59,7 +59,7 @@ const table = useShadcnReactTable({
   srtTableBodyRowProps: ({ row, table }) => {
     const { density } = table.getState();
     return {
-      sx: {
+      style: {
         //Set a fixed height for pinned rows
         height: row.getIsPinned()
           ? `${

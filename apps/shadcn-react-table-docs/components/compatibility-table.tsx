@@ -1,54 +1,26 @@
 // Ported from MRT docs components/mdx/CompatibilityTable.tsx. MRT renders this
-// with its own table component; here it is a plain table. Data is MRT's with
-// the sync script's text mapping applied by hand.
+// with its own table component; here it is a plain table. Data is SRT's own
+// peer requirements (packages/shadcn-react-table/registry.json), not the
+// upstream version matrix.
 const columns = [
   { key: 'srtVersion', header: 'SRT' },
   { key: 'reactVersion', header: 'React' },
-  { key: 'muiVersion', header: 'shadcn/ui' },
-  { key: 'muiIconsVersion', header: 'shadcn/ui Icons' },
-  { key: 'muiXDatePickers', header: 'shadcn/ui X Date Pickers' },
-  { key: 'emotionVersion', header: 'Emotion' },
-  { key: 'pigmentCSS', header: 'Pigment CSS' },
+  { key: 'tanstackTable', header: 'TanStack Table' },
+  { key: 'tailwind', header: 'Tailwind CSS' },
+  { key: 'shadcn', header: 'shadcn/ui' },
+  { key: 'lucide', header: 'lucide-react' },
 ] as const;
 
 type Row = Record<(typeof columns)[number]['key'], string>;
 
 const data: Row[] = [
   {
-    srtVersion: '4.x (Next Version)',
-    muiVersion: '6.0+',
-    muiXDatePickers: '7.15.0+',
+    srtVersion: '1.x (This Version)',
     reactVersion: '18.0+',
-    muiIconsVersion: '6.0+',
-    emotionVersion: 'Optional',
-    pigmentCSS: 'Optional',
-  },
-  {
-    srtVersion: '3.x (This Version)',
-    muiVersion: '6.0+',
-    muiXDatePickers: '7.15.0+',
-    reactVersion: '18.0+',
-    muiIconsVersion: '6.0+',
-    emotionVersion: '11.0+',
-    pigmentCSS: 'Optional',
-  },
-  {
-    srtVersion: '2.x',
-    muiVersion: '5.13+',
-    muiXDatePickers: '6.15+',
-    reactVersion: '17.0+',
-    muiIconsVersion: '5.0+',
-    emotionVersion: '11.0+',
-    pigmentCSS: '-',
-  },
-  {
-    srtVersion: '1.x',
-    muiVersion: '5.0+',
-    muiXDatePickers: 'Optional',
-    reactVersion: '17.0+',
-    muiIconsVersion: '5.0+',
-    emotionVersion: '11.0+',
-    pigmentCSS: '-',
+    tanstackTable: '8.x (installed by the CLI)',
+    tailwind: '4.0+',
+    shadcn: 'shadcn init (CLI)',
+    lucide: 'latest (installed by the CLI)',
   },
 ];
 

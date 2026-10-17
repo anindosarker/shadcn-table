@@ -65,7 +65,7 @@ You can disable specific columns from being resizable by setting the `enableResi
 
 ### Column Resize Mode
 
-The default `columnResizeMode` is `onChange` (in SRT versions v1.7+), which means that the column resizing will occur immediately as the user drags the column resize handle. If you are running into performance issues because of many other enabled features, you might want to set the `columnResizeMode` to `onEnd` instead. This will make the column resizing only occur after the user has finished dragging the column resize handle and released their mouse.
+The default `columnResizeMode` is `onChange`, which means that the column resizing will occur immediately as the user drags the column resize handle. If you are running into performance issues because of many other enabled features, you might want to set the `columnResizeMode` to `onEnd` instead. This will make the column resizing only occur after the user has finished dragging the column resize handle and released their mouse.
 
 ```jsx
 const table = useShadcnReactTable({
@@ -79,8 +79,6 @@ const table = useShadcnReactTable({
 <EnableColumnResizingExample />
 
 ### Column Growing
-
-> SRT V3 has a new "opposite" behavior in regards to column sizes when column resizing is enabled compared to SRT V3
 
 When column resizing is enabled, by default, a layoutMode of `"grid-no-grow"` will be applied internally. This means that columns will have an absolute size and they will NOT grow to fill in the remaining space of the table. You can let columns grow to fill in the remaining space by changing the `layoutMode` back to `"grid"` or `"semantic"`.
 
@@ -111,11 +109,9 @@ This is discussed in more detail in the [Column Size Guide](/docs/guides/column-
 
 ### Column Resize Direction
 
-> New in V3.1
+If you are displaying your table in a RTL (right-to-left) language, you can set the `columnResizeDirection` table option to `"rtl"` to make the column resize handle appear on the left side of the column instead of the right side.
 
-If you are displaying your table in a RTL (right-to-left) language, you can set the `columnResizeDirection` table option to `"rtl"` to make the column resize handle appear on the left side of the column instead of the right side. This may behave differently depending on which Emotion or shadcn/ui theme settings you have enabled.
-
-If you have already set the proper `theme.direction` setting in your shadcn/ui theme, then this option will already have been set automatically for you, but you can still override it using the `columnResizeDirection` table option.
+Shadcn React Table does not read the document direction, so set this option explicitly when your table is rendered in an RTL layout.
 
 ```jsx
 const table = useShadcnReactTable({
@@ -150,7 +146,7 @@ const table = useShadcnReactTable({
     'srt-row-numbers': {
       enableResizing: true, //allow the row numbers column to be resized
       size: 40,
-      grow: false, //new in v2.8 - do not fill remaining space using this column
+      grow: false, //do not fill remaining space using this column
     },
   },
   enableRowNumbers: true,
@@ -160,4 +156,4 @@ const table = useShadcnReactTable({
 return <ShadcnReactTable table={table} />;
 ```
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-column-resizing-examples)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**

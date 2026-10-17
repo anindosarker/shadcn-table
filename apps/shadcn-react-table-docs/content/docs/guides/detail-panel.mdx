@@ -109,12 +109,12 @@ const table = useShadcnReactTable({
   data,
   columns,
   srtDetailPanelProps: ({ row }) => ({
-    sx: {
+    style: {
       //...
     },
   }),
   srtTableBodyRowProps: ({ isDetailPanel, row }) => ({
-    sx: {
+    style: {
       // isDetailPanel ? ... : ...
     },
   }),
@@ -152,13 +152,11 @@ Alternatively though, you could use the [Column Pinning Feature](/docs/guides/co
 
 ### Detail Panel With Charts
 
-The detail panel can be used to show a variety of content. Here's an example of a detail panel rendering charts with the [shadcn/ui X Charts](https://mui.com/x/react-charts/getting-started/) library.
+The detail panel can be used to show a variety of content. Here's an example of a detail panel rendering charts with the [Recharts](https://recharts.org/) library.
 
 <ChartDetailPanelExample />
 
 ### Detail Panels with Virtualization
-
-> New in v2.6.0
 
 If you are using row virtualization, detail panels will now work more properly as of version 2.6.0. However, there are some caveats to be aware of. In order for row virtualization to work well, many of the animation/transitions have been disabled. This means that the detail panel will not animate open and closed. It will simply appear and disappear.
 
@@ -199,4 +197,4 @@ Fetching the additional data for the detail panels only after the user clicks to
 
 <LazyDetailPanelExample />
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-detail-panel-examples-)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**

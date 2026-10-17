@@ -43,11 +43,6 @@ export const routes: Array<RouteItem> = [
         label: 'Usage',
         keywords: ['beginner', 'guide'],
       },
-      {
-        href: '/docs/getting-started/migrating-to-v3',
-        label: 'Migrating to V3',
-        keywords: ['migration', 'upgrade', 'v3'],
-      },
     ],
   },
   {
@@ -619,16 +614,6 @@ export const routes: Array<RouteItem> = [
     ],
   },
   {
-    label: 'Blog',
-    href: '/blog',
-    items: [
-      {
-        href: '/blog/the-best-react-data-grid-table-libraries-with-material-design-in-2023',
-        label: 'The Best Data Grid Libraries...',
-      },
-    ],
-  },
-  {
     label: 'Other',
     href: '#',
     items: [
@@ -638,7 +623,7 @@ export const routes: Array<RouteItem> = [
         external: true,
       },
       {
-        href: 'https://www.github.com/kevinvandy/shadcn-react-table',
+        href: 'https://github.com/anindosarker/shadcn-react-table',
         label: 'GitHub',
         external: true,
       },

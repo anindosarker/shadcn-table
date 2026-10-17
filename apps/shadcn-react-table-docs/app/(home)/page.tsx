@@ -46,12 +46,12 @@ export default async function HomePage() {
         <h2 className="mb-4 text-center text-xl leading-9 font-normal text-muted-foreground sm:text-2xl md:text-[2.2rem] lg:text-4xl">
           Built with{' '}
           <a
-            href="https://mui.com/"
+            href="https://ui.shadcn.com"
             target="_blank"
             rel="noopener"
             className="text-primary no-underline hover:underline"
           >
-            shadcn/ui<sup>V6</sup>
+            shadcn/ui
           </a>{' '}
           and&nbsp;
           <a

@@ -5,8 +5,6 @@ description: 'How to virtualize rows and columns in Shadcn React Table to improv
 
 ## Virtualization Feature Guide
 
-> SRT v1.4 and v1.5 have major virtualization upgrades after switching to `@tanstack/react-virtual` v3.0!
-
 Virtualization is useful when you have a lot of data you want to display client-side all at once without having to use pagination. Shadcn React Table makes this as simple as possible, thanks to [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3) with both [row virtualization](#enable-row-virtualization) and [column virtualization](#enable-column-virtualization) support.
 
 > NOTE: You should only enable row virtualization if you have a large number of rows. Depending on the size of the table, if you are rendering less than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have more than 50 rows or so at the same time with no pagination.
@@ -109,8 +107,6 @@ You can adjust some of the virtualizer props that are used internally with the `
 
 See the official TanStack [Virtualizer Options API Docs](https://tanstack.com/virtual/v3/docs/api/virtualizer#optional-options) for more information.
 
-> SRT v1.4 upgraded from `react-virtual` v2 to `@tanstack/react-virtual` v3.0, which has some breaking changes and virtualizer option name changes. TypeScript hints should help you with any prop name changes, but you can also view the official [TanStack Virtual Docs](https://tanstack.com/virtual/v3/docs/api/virtualizer#optional-options) for guidance.
-
 ### Access Underlying Virtualizer Instances
 
 In a similar way that you can [access the underlying table instance](/docs/guides/table-state-management#access-the-underlying-table-instance-reference), you can also access the underlying virtualizer instances. This can be useful for accessing methods like the `scrollToIndex` method, which can be used to programmatically scroll to a specific row or column.
@@ -144,7 +140,7 @@ See the official TanStack [Virtualizer Instance API Docs](https://tanstack.com/v
 
 Try out the performance of the [fully virtualized example](/docs/examples/virtualized) with **10,000 rows** and over a dozen columns! Filtering, search, and sorting also maintain usable performance.
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-virtualization)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**
 
 ### Headless Virtualization with SRT Hooks
 

@@ -22,7 +22,7 @@ const columns: {
     className: 'text-primary',
   },
   { accessorKey: 'mt', header: 'Material Table' },
-  { accessorKey: 'muix', header: 'shadcn/ui X' },
+  { accessorKey: 'muix', header: 'MUI X' },
 ];
 
 const data: { feature: string; srt: Support; mt: Support; muix: Support }[] = [

@@ -63,7 +63,7 @@ const table = useShadcnReactTable({
   data,
   enableRowActions: true,
   renderRowActions: ({ row }) => (
-    <Box>
+    <span>
       <IconButton onClick={() => console.info('Edit')}>
         <EditIcon />
       </IconButton>
@@ -97,7 +97,7 @@ const table = useShadcnReactTable({
     },
   },
   renderRowActions: ({ table }) => (
-    <Box>
+    <span>
       <Button>Button 1</Button>
       <Button>Button 2</Button>
       <Button>Button 3</Button>
@@ -122,4 +122,4 @@ const table = useShadcnReactTable({
 })
 ```
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-row-actions-examples)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**

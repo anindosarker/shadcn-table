@@ -39,20 +39,20 @@ const columns = [
     header: 'Username',
     //you can access a column instance in many callback functions in a column definition like this
     srtTableHeadCellProps: ({ column }) => ({
-      sx: {
+      style: {
         color: column.getIsSorted() ? 'red' : 'black',
       },
     }),
     //or in the component override callbacks
     Header: ({ column }) => <div>{column.columnDef.header}</div>,
     Cell: ({ cell, column }) => (
-      <Box
-        sx={{
+      <span
+        style={{
           backgroundColor: column.getIsGrouped() ? 'green' : 'white',
         }}
       >
         {cell.getValue()}
-      </Box>
+      </span>
     ),
   },
 ];
@@ -62,7 +62,7 @@ const table = useShadcnReactTable({
   data,
   //or in callback props like this
   srtTableBodyCellProps: ({ column }) => ({
-    sx: {
+    style: {
       boxShadow: column.getIsPinned() ? '0 0 0 2px red' : 'none',
     },
   }),

@@ -86,8 +86,6 @@ Next there is `paginateExpandedRows`, which works in conjunction expanding featu
 
 #### Customize Pagination Components
 
-> Note: In v2, srtPaginationProps is now based on mui's `PaginationProps` instead of `TablePaginationProps`.
-
 You can customize the pagination component with the `srtPaginationProps` table option to change things like the `rowsPerPageOptions` or whether or not to show the first and last page buttons, and more.
 
 ```jsx
@@ -104,9 +102,7 @@ const table = useShadcnReactTable({
 
 #### Alternate Pagination UI
 
-> New in v2
-
-By default, Shadcn React Table provides its own Table Pagination UI that is more compact and traditional for data tables. However, if you want to use the Material Pagination component instead, it is as easy as setting the `paginationDisplayMode` table option to `pages`.
+By default, Shadcn React Table provides its own Table Pagination UI that is more compact and traditional for data tables. However, if you want to use the shadcn/ui Pagination component instead, it is as easy as setting the `paginationDisplayMode` table option to `pages`.
 
 ```jsx
 const table = useShadcnReactTable({
@@ -178,4 +174,4 @@ Here is the full Remote Data example showing off server-side filtering, **pagina
 
 <RemoteExample />
 
-View Extra Storybook **[Examples](https://www.shadcn-react-table.dev/?path=/story/features-pagination-examples)**
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-react-table/tree/main/packages/shadcn-react-table/stories)**
