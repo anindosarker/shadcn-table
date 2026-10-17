@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react';
 import { Pencil, Share2, Trash2, UserCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { Button } from '@/components/ui/button';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Row Actions Examples',
@@ -12,63 +13,71 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'state', header: 'State' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
 ];
 
-const data = makeData(10);
-
-// MRT used MUI <MenuItem>; SRT renders these inside its own menu, so plain
-// buttons styled as menu items are used here with lucide icons.
-const menuItems = ({
-  closeMenu,
-  row,
-}: {
-  closeMenu: () => void;
-  row: { index: number };
-}) => [
-  <button
-    key={1}
-    className="flex w-full items-center gap-2 px-2 py-1.5 text-sm"
-    onClick={() => {
-      console.info('View Profile', row);
-      closeMenu();
-    }}
-  >
-    <UserCircle size={16} /> View Profile
-  </button>,
-  <button
-    key={2}
-    className="flex w-full items-center gap-2 px-2 py-1.5 text-sm"
-    onClick={() => {
-      console.info('Remove', row);
-      closeMenu();
-    }}
-  >
-    <Trash2 size={16} /> Remove
-  </button>,
-  <button
-    key={3}
-    className="flex w-full items-center gap-2 px-2 py-1.5 text-sm"
-    onClick={() => {
-      console.info('Share', row);
-      closeMenu();
-    }}
-  >
-    <Share2 size={16} /> Share
-  </button>,
-];
+const data = [...Array(10)].map(() => ({
+  address: faker.location.streetAddress(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
 export const RowActionsEnabled = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
     enableRowActions
-    renderRowActionMenuItems={menuItems}
+    renderRowActionMenuItems={({ closeMenu, row }) => [
+      <DropdownMenuItem
+        key={1}
+        onClick={() => {
+          console.info('View Profile', row);
+          closeMenu();
+        }}
+      >
+        <UserCircle /> View Profile
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={2}
+        onClick={() => {
+          console.info('Remove', row);
+          closeMenu();
+        }}
+      >
+        <Trash2 /> Remove
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={3}
+        onClick={() => {
+          console.info('Share', row);
+          closeMenu();
+        }}
+      >
+        <Share2 /> Share
+      </DropdownMenuItem>,
+    ]}
   />
 );
 
@@ -79,7 +88,35 @@ export const RowActionsEnabledConditionally = () => {
       columns={columns}
       data={data}
       enableRowActions={enabled}
-      renderRowActionMenuItems={menuItems}
+      renderRowActionMenuItems={({ closeMenu, row }) => [
+        <DropdownMenuItem
+          key={1}
+          onClick={() => {
+            console.info('View Profile', row);
+            closeMenu();
+          }}
+        >
+          <UserCircle /> View Profile
+        </DropdownMenuItem>,
+        <DropdownMenuItem
+          key={2}
+          onClick={() => {
+            console.info('Remove', row);
+            closeMenu();
+          }}
+        >
+          <Trash2 /> Remove
+        </DropdownMenuItem>,
+        <DropdownMenuItem
+          key={3}
+          onClick={() => {
+            console.info('Share', row);
+            closeMenu();
+          }}
+        >
+          <Share2 /> Share
+        </DropdownMenuItem>,
+      ]}
       renderTopToolbarCustomActions={() => (
         <Button onClick={() => setEnabled(!enabled)}>Toggle Row Actions</Button>
       )}
@@ -87,16 +124,48 @@ export const RowActionsEnabledConditionally = () => {
   );
 };
 
-export const RowActionsEnabledConditionallyPerRow = () => (
-  <ShadcnReactTable
-    columns={columns}
-    data={data}
-    enableRowActions
-    renderRowActionMenuItems={({ closeMenu, row }) =>
-      row.index % 2 === 0 ? undefined : menuItems({ closeMenu, row })
-    }
-  />
-);
+export const RowActionsEnabledConditionallyPerRow = () => {
+  return (
+    <ShadcnReactTable
+      columns={columns}
+      data={data}
+      enableRowActions
+      renderRowActionMenuItems={({ closeMenu, row }) =>
+        row.index % 2 === 0
+          ? undefined
+          : [
+              <DropdownMenuItem
+                key={1}
+                onClick={() => {
+                  console.info('View Profile', row);
+                  closeMenu();
+                }}
+              >
+                <UserCircle /> View Profile
+              </DropdownMenuItem>,
+              <DropdownMenuItem
+                key={2}
+                onClick={() => {
+                  console.info('Remove', row);
+                  closeMenu();
+                }}
+              >
+                <Trash2 /> Remove
+              </DropdownMenuItem>,
+              <DropdownMenuItem
+                key={3}
+                onClick={() => {
+                  console.info('Share', row);
+                  closeMenu();
+                }}
+              >
+                <Share2 /> Share
+              </DropdownMenuItem>,
+            ]
+      }
+    />
+  );
+};
 
 export const RowActionsAndEditingEnabled = () => (
   <ShadcnReactTable
@@ -104,7 +173,35 @@ export const RowActionsAndEditingEnabled = () => (
     data={data}
     enableEditing
     enableRowActions
-    renderRowActionMenuItems={menuItems}
+    renderRowActionMenuItems={({ closeMenu, row }) => [
+      <DropdownMenuItem
+        key={1}
+        onClick={() => {
+          console.info('View Profile', row);
+          closeMenu();
+        }}
+      >
+        <UserCircle /> View Profile
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={2}
+        onClick={() => {
+          console.info('Remove', row);
+          closeMenu();
+        }}
+      >
+        <Trash2 /> Remove
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={3}
+        onClick={() => {
+          console.info('Share', row);
+          closeMenu();
+        }}
+      >
+        <Share2 /> Share
+      </DropdownMenuItem>,
+    ]}
   />
 );
 
@@ -115,7 +212,35 @@ export const RowActionsAndEditingCellEnabled = () => (
     editDisplayMode="cell"
     enableEditing
     enableRowActions
-    renderRowActionMenuItems={menuItems}
+    renderRowActionMenuItems={({ closeMenu, row }) => [
+      <DropdownMenuItem
+        key={1}
+        onClick={() => {
+          console.info('View Profile', row);
+          closeMenu();
+        }}
+      >
+        <UserCircle /> View Profile
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={2}
+        onClick={() => {
+          console.info('Remove', row);
+          closeMenu();
+        }}
+      >
+        <Trash2 /> Remove
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={3}
+        onClick={() => {
+          console.info('Share', row);
+          closeMenu();
+        }}
+      >
+        <Share2 /> Share
+      </DropdownMenuItem>,
+    ]}
   />
 );
 
@@ -126,7 +251,35 @@ export const RowActionsLastColumn = () => (
     enableRowActions
     initialState={{ density: 'compact' }}
     positionActionsColumn="last"
-    renderRowActionMenuItems={menuItems}
+    renderRowActionMenuItems={({ closeMenu, row }) => [
+      <DropdownMenuItem
+        key={1}
+        onClick={() => {
+          console.info('View Profile', row);
+          closeMenu();
+        }}
+      >
+        <UserCircle /> View Profile
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={2}
+        onClick={() => {
+          console.info('Remove', row);
+          closeMenu();
+        }}
+      >
+        <Trash2 /> Remove
+      </DropdownMenuItem>,
+      <DropdownMenuItem
+        key={3}
+        onClick={() => {
+          console.info('Share', row);
+          closeMenu();
+        }}
+      >
+        <Share2 /> Share
+      </DropdownMenuItem>,
+    ]}
   />
 );
 
@@ -199,7 +352,7 @@ export const RowActionsCompleteOverride = () => (
               size="icon"
               onClick={() => table.setEditingRow(row)}
             >
-              <Pencil size={16} />
+              <Pencil />
             </Button>
           </>
         ),
