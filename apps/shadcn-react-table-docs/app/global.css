@@ -56,6 +56,10 @@ html > body[data-scroll-locked] {
   border-bottom: var(--docs-rule);
 }
 
+#nd-page .docs-page-bar {
+  border-bottom: var(--docs-rule);
+}
+
 /* ---------- sidebar ---------- */
 
 #nd-sidebar a {

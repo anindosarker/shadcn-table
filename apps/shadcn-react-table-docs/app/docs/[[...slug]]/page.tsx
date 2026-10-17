@@ -9,7 +9,7 @@ import {
 } from 'fumadocs-ui/layouts/notebook/page';
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/components/mdx';
-import { DocsBreadcrumb } from '@/components/docs-breadcrumb';
+import { DocsBreadcrumb, NoBreadcrumb } from '@/components/docs-breadcrumb';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getPageImageUrl, getPageMarkdownUrl, gitConfig } from '@/lib/shared';
@@ -26,12 +26,12 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
     <DocsPage
       toc={page.data.toc}
       full={page.data.full}
-      slots={{ breadcrumb: DocsBreadcrumb }}
+      slots={{ breadcrumb: NoBreadcrumb }}
     >
-      <div className="flex flex-row flex-wrap items-center justify-between gap-4">
-        <DocsTitle className="text-[1.875rem] font-semibold leading-tight tracking-tight">
-          {page.data.title}
-        </DocsTitle>
+      {/* Sticky under the top nav (and the mobile TOC popover): fumadocs
+          publishes that edge as --fd-docs-row-3. */}
+      <div className="docs-page-bar sticky top-(--fd-docs-row-3) z-10 flex flex-row items-center justify-between gap-4 bg-fd-background py-2">
+        <DocsBreadcrumb />
         <div
           className="srt-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
           role="group"
@@ -42,7 +42,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           </MarkdownCopyButton>
           <ViewOptionsPopover
             markdownUrl={markdownUrl}
-            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
+            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/apps/shadcn-react-table-docs/content/docs/${page.path}`}
             className="gap-0 border-l px-2"
             aria-label="Page options"
           >
@@ -50,6 +50,9 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           </ViewOptionsPopover>
         </div>
       </div>
+      <DocsTitle className="text-[1.875rem] font-semibold leading-tight tracking-tight">
+        {page.data.title}
+      </DocsTitle>
       <DocsDescription className="docs-description-rule mb-0 pb-6">
         {page.data.description}
       </DocsDescription>
