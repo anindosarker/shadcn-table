@@ -757,29 +757,58 @@ async function renderSingleExample(rel, src) {
   return src.replace(m[0], `<${example} />`);
 }
 
-/** Heading / title text normalised for the duplicate-title comparison. */
-const normHeadingText = (s) =>
-  s
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/[.:!?]+$/, '')
-    .toLowerCase();
+/**
+ * Words that do not distinguish a page title from its first heading (MRT
+ * writes "Sorting Feature Guide" under the title "Sorting Guide").
+ */
+const TITLE_STOPWORDS = new Set([
+  'feature',
+  'guide',
+  'example',
+  'examples',
+  'props',
+  'srt',
+  'the',
+  'a',
+]);
 
 /**
- * MRT repeats the <Head> title as the first body heading; the page layout
- * already renders the frontmatter title, so the first heading (any level)
- * whose text equals the title is dropped, with one empty line after it.
+ * Title or heading text as a set of distinguishing words: lowercase, without
+ * parenthesised segments, slashes, the library name and TITLE_STOPWORDS.
+ */
+function titleWords(text) {
+  const words = text
+    .toLowerCase()
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/shadcn react table/g, ' ')
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w && !TITLE_STOPWORDS.has(w));
+  return new Set(words);
+}
+
+/**
+ * The first body heading repeats the title when, as word sets, one is a
+ * subset of the other and they share at least one word.
+ */
+function headingRepeatsTitle(heading, title) {
+  const h = titleWords(heading);
+  const t = titleWords(title);
+  if (!h.size || !t.size) return false;
+  const [small, large] = h.size <= t.size ? [h, t] : [t, h];
+  return [...small].every((w) => large.has(w));
+}
+
+/**
+ * MRT repeats the <Head> title as the first body heading, often reworded
+ * ("Sorting Feature Guide" under "Sorting Guide"); the page layout already
+ * renders the frontmatter title, so the first heading (any level) is dropped
+ * when it repeats the title, with one empty line after it. Only the first
+ * heading of the body is considered.
  */
 function dropTitleHeading(src, title) {
-  const want = normHeadingText(title);
-  if (!want) return src;
-  const re = /^#{1,6} +(.+?)[ \t]*\n(?:[ \t]*\n)?/gm;
-  for (const m of src.matchAll(re)) {
-    if (normHeadingText(m[1]) === want) {
-      return src.slice(0, m.index) + src.slice(m.index + m[0].length);
-    }
-  }
-  return src;
+  const m = src.match(/^#{1,6} +(.+?)[ \t]*\n(?:[ \t]*\n)?/m);
+  if (!m || !headingRepeatsTitle(m[1], title)) return src;
+  return src.slice(0, m.index) + src.slice(m.index + m[0].length);
 }
 
 function applyMap(text, map) {

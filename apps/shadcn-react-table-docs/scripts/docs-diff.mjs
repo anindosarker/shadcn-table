@@ -261,18 +261,44 @@ function proseLines(src) {
 }
 
 /**
- * scripts/sync-mrt-docs.mjs drops the first body heading that repeats the
- * page title (dropTitleHeading there); the MRT heading list gets the same
- * treatment before the comparison. The title is normalised like a heading
- * after the library-name strip so `normText` decides equality on both sides.
+ * scripts/sync-mrt-docs.mjs drops the first body heading when it repeats the
+ * page title (dropTitleHeading there, word-set rule); the MRT heading list
+ * gets the same treatment before the comparison. Copy of TITLE_STOPWORDS /
+ * titleWords / headingRepeatsTitle; the library names are already gone
+ * through normText / normTitle.
  */
+const TITLE_STOPWORDS = new Set([
+  'feature',
+  'guide',
+  'example',
+  'examples',
+  'props',
+  'the',
+  'a',
+]);
+
+function titleWords(text) {
+  const words = text
+    .replace(/\([^)]*\)/g, ' ')
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w && !TITLE_STOPWORDS.has(w));
+  return new Set(words);
+}
+
+function headingRepeatsTitle(heading, title) {
+  const h = titleWords(heading);
+  const t = titleWords(title);
+  if (!h.size || !t.size) return false;
+  const [small, large] = h.size <= t.size ? [h, t] : [t, h];
+  return [...small].every((w) => large.has(w));
+}
+
 function dropTitleHeading(headings, title) {
-  const want = normTitle(title).replace(/[.:!?]+$/, '');
-  const i = headings.findIndex(
-    (h) =>
-      normText(h.replace(/^#{1,6} +/, '')).replace(/[.:!?]+$/, '') === want,
-  );
-  return i === -1 ? headings : headings.filter((_, j) => j !== i);
+  if (!headings.length) return headings;
+  const first = normText(headings[0].replace(/^#{1,6} +/, ''));
+  return headingRepeatsTitle(first, normTitle(title))
+    ? headings.slice(1)
+    : headings;
 }
 
 function collectHeadings(src) {

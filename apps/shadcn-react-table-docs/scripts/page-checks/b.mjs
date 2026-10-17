@@ -64,8 +64,9 @@ export default {
   },
 
   '/docs/guides/best-practices': async ({ page, check }) => {
-    // One h2 (guide title) and h3 per section, as in MRT.
-    check('headings', (await count(page, 'article :is(h2, h3)')) >= 4);
+    // One h3 per section, as in MRT; the h2 repeating the title is dropped
+    // by the sync.
+    check('headings', (await count(page, 'article :is(h2, h3)')) >= 3);
   },
 
   '/docs/guides/cell-actions': async ({ page, check }) => {

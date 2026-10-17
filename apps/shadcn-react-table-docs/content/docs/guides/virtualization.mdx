@@ -3,8 +3,6 @@ title: 'Virtualization Guide'
 description: 'How to virtualize rows and columns in Shadcn React Table to improve performance and user experience when there are a lot of rows or a lot of columns in the table.'
 ---
 
-## Virtualization Feature Guide
-
 Virtualization is useful when you have a lot of data you want to display client-side all at once without having to use pagination. Shadcn React Table makes this as simple as possible, thanks to [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3) with both [row virtualization](#enable-row-virtualization) and [column virtualization](#enable-column-virtualization) support.
 
 > NOTE: You should only enable row virtualization if you have a large number of rows. Depending on the size of the table, if you are rendering less than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have more than 50 rows or so at the same time with no pagination.
