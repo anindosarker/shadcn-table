@@ -2,10 +2,12 @@
 
 import type { ComponentProps } from 'react';
 import type * as PageTree from 'fumadocs-core/page-tree';
+import { hasPages } from '@/lib/page-tree-utils';
 
 /**
  * Renders a top-level folder as a flat section: small uppercase label followed
  * by its items (TanStack docs style) instead of a collapsible folder.
+ * Folders with no pages render nothing.
  */
 export function SidebarSection({
   item,
@@ -14,6 +16,8 @@ export function SidebarSection({
   item: PageTree.Folder;
   children: React.ReactNode;
 }) {
+  if (!hasPages(item)) return null;
+
   return (
     <div className="mt-6 flex flex-col gap-0.5 first:mt-0">
       {item.index ? (

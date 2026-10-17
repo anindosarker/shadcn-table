@@ -1,9 +1,18 @@
 'use client';
 
 import type * as PageTree from 'fumadocs-core/page-tree';
+import { useTreeContext } from 'fumadocs-ui/contexts/tree';
+import { findSiblings, separatorHasPages } from '@/lib/page-tree-utils';
 
-/** Sub-group label inside a section ("---Props and Options---" in meta.json). */
+/**
+ * Sub-group label inside a section ("---Props and Options---" in meta.json).
+ * Hidden until at least one page exists between it and the next separator.
+ */
 export function SidebarSeparator({ item }: { item: PageTree.Separator }) {
+  const { root } = useTreeContext();
+  const siblings = findSiblings(root, item);
+  if (!siblings || !separatorHasPages(item, siblings)) return null;
+
   return (
     <p className="mb-1 mt-4 inline-flex items-center gap-2 px-2 text-[11px] font-bold uppercase leading-none tracking-[0.075em] text-fd-muted-foreground">
       {item.icon}
