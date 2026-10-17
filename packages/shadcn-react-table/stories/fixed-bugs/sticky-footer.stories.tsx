@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
+import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 const meta: Meta = {
@@ -7,7 +8,7 @@ const meta: Meta = {
 
 export default meta;
 
-const mockData: any = [
+const mockData = [
   {
     firstName: 'Michael',
     lastName: 'Jordan',
@@ -91,7 +92,7 @@ const mockData: any = [
   },
 ];
 
-const mockColumns: any = [
+const mockColumns: SRT_ColumnDef<(typeof mockData)[0]>[] = [
   {
     accessorKey: 'no',
     filterVariant: 'multi-select',
@@ -129,11 +130,6 @@ const mockColumns: any = [
   },
 ];
 
-// API GAP: MRT's `muiTableBodyCellProps`, `muiTableHeadCellProps`, and
-// `muiTableContainerProps` (used in the original to set cell alignment, cell
-// borders, and the container `maxHeight: 300`) are not implemented in SRT, so
-// the visual styling overrides are dropped. The regression itself — pinned
-// columns combined with a sticky footer/header — is preserved.
 export const PinnedColumnsWithStickyFooter = () => {
   return (
     <ShadcnReactTable
@@ -143,6 +139,17 @@ export const PinnedColumnsWithStickyFooter = () => {
       enableStickyFooter
       enableStickyHeader
       initialState={{ columnPinning: { left: ['no', 'name', 'firstName'] } }}
+      srtTableBodyCellProps={{
+        align: 'center',
+        className: 'border-l border-black',
+      }}
+      srtTableContainerProps={{
+        style: { maxHeight: 300 },
+      }}
+      srtTableHeadCellProps={{
+        align: 'center',
+        className: 'border-l border-black',
+      }}
     />
   );
 };
