@@ -118,8 +118,6 @@ export const DetailPanelEnabledGridNoGrow = () => (
   />
 );
 
-// API GAP: muiExpandButtonProps has no SRT equivalent (SRT_TableOptions exposes
-// no expand-button props), so the custom rotation transform cannot be ported.
 export const CustomExpandRotation = () => (
   <ShadcnReactTable
     columns={[
@@ -154,6 +152,12 @@ export const CustomExpandRotation = () => (
         <span>Phone: {row.original.phone}</span>
       </div>
     )}
+    srtExpandButtonProps={({ row }) => ({
+      style: {
+        transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
+        transition: 'transform 0.2s',
+      },
+    })}
   />
 );
 
@@ -200,8 +204,6 @@ export const DetailPanelEnabledConditional = () => (
   />
 );
 
-// API GAP: original hides the expand button per-row via muiExpandButtonProps
-// (no SRT equivalent); ported with conditional detail-panel content only.
 export const DetailPanelEnabledConditionalHide = () => (
   <ShadcnReactTable
     columns={[
@@ -244,11 +246,54 @@ export const DetailPanelEnabledConditionalHide = () => (
         'No details available'
       )
     }
+    srtExpandButtonProps={({ row }) => ({
+      style: {
+        display: row.original.age > 50 ? 'flex' : 'none',
+      },
+    })}
   />
 );
 
-// API GAP: single-expand behavior relied on muiExpandButtonProps.onClick to call
-// table.setExpanded; SRT exposes no expand-button props, so this export is dropped.
+export const DetailPanelSingleExpand = () => {
+  return (
+    <ShadcnReactTable
+      columns={[
+        {
+          accessorKey: 'firstName',
+          header: 'First Name',
+        },
+        {
+          accessorKey: 'lastName',
+          header: 'Last Name',
+        },
+        {
+          accessorKey: 'address',
+          header: 'Address',
+        },
+      ]}
+      data={[...Array(5)].map(() => ({
+        address: faker.location.streetAddress(),
+        city: faker.location.city(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        phone: faker.phone.number(),
+        state: faker.location.state(),
+        zipCode: faker.location.zipCode(),
+      }))}
+      renderDetailPanel={({ row }) => (
+        <div style={{ display: 'grid' }}>
+          <span>City: {row.original.city}</span>
+          <span>State: {row.original.state}</span>
+          <span>Zip: {row.original.zipCode}</span>
+          <span>Phone: {row.original.phone}</span>
+        </div>
+      )}
+      srtExpandButtonProps={({ row, table }) => ({
+        onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }),
+      })}
+    />
+  );
+};
 
 export const DetailPanelExpandColumnLast = () => (
   <ShadcnReactTable
@@ -275,8 +320,16 @@ export const DetailPanelExpandColumnLast = () => (
       state: faker.location.state(),
       zipCode: faker.location.zipCode(),
     }))}
-    // API GAP: displayColumnDefOptions['srt-row-expand'].muiTableBodyCellProps /
-    // muiTableHeadCellProps (right alignment) have no SRT equivalent; dropped.
+    displayColumnDefOptions={{
+      'srt-row-expand': {
+        srtTableBodyCellProps: {
+          align: 'right',
+        },
+        srtTableHeadCellProps: {
+          align: 'right',
+        },
+      },
+    }}
     positionExpandColumn="last"
     renderDetailPanel={({ row }) => (
       <div style={{ display: 'grid' }}>
