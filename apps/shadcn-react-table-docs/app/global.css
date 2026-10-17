@@ -3,47 +3,48 @@
 @import 'fumadocs-ui/css/preset.css';
 
 /*
- * Theme tokens modelled on tanstack.com/table docs (sampled 2026-10-17).
- * Only --color-fd-* tokens are redefined; components never hardcode colors.
+ * Theme tokens modelled on tanstack.com/table docs (sampled 2026-10-17):
+ * neutral gray surfaces at TanStack's lightness, cyan accent. Only
+ * --color-fd-* tokens are redefined; components never hardcode colors.
  */
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  /* light: body rgb(253,253,253), text rgb(32,27,21), accent rgb(58,163,196) */
+  /* light: body rgb(253,253,253), accent rgb(58,163,196) */
   --color-fd-background: hsl(0, 0%, 99.2%);
-  --color-fd-foreground: hsl(33, 21%, 10.4%);
-  --color-fd-muted: hsl(40, 20%, 96%);
-  --color-fd-muted-foreground: hsl(35, 15%, 31%);
+  --color-fd-foreground: hsl(0, 0%, 10%);
+  --color-fd-muted: hsl(0, 0%, 96%);
+  --color-fd-muted-foreground: hsl(0, 0%, 32%);
   --color-fd-popover: hsl(0, 0%, 100%);
-  --color-fd-popover-foreground: hsl(33, 21%, 10.4%);
-  --color-fd-card: hsl(0, 0%, 100%);
-  --color-fd-card-foreground: hsl(33, 21%, 10.4%);
-  --color-fd-border: hsla(36, 10%, 50%, 0.25);
+  --color-fd-popover-foreground: hsl(0, 0%, 10%);
+  --color-fd-card: hsl(0, 0%, 97.5%);
+  --color-fd-card-foreground: hsl(0, 0%, 10%);
+  --color-fd-border: hsla(0, 0%, 0%, 0.12);
   --color-fd-primary: hsl(194, 54%, 50%);
   --color-fd-primary-foreground: hsl(0, 0%, 100%);
-  --color-fd-secondary: hsl(40, 20%, 94%);
-  --color-fd-secondary-foreground: hsl(33, 21%, 10.4%);
-  --color-fd-accent: hsla(36, 10%, 50%, 0.12);
-  --color-fd-accent-foreground: hsl(33, 21%, 10.4%);
+  --color-fd-secondary: hsl(0, 0%, 94%);
+  --color-fd-secondary-foreground: hsl(0, 0%, 10%);
+  --color-fd-accent: hsla(0, 0%, 0%, 0.06);
+  --color-fd-accent-foreground: hsl(0, 0%, 10%);
   --color-fd-ring: hsl(194, 54%, 50%);
 }
 
 .dark {
-  /* dark: body rgb(10,10,10), text rgb(234,229,215), surfaces rgb(32,27,21), accent rgb(97,173,191) */
+  /* dark: body rgb(10,10,10), accent rgb(97,173,191) */
   --color-fd-background: hsl(0, 0%, 3.9%);
-  --color-fd-foreground: hsl(44, 31%, 88%);
-  --color-fd-muted: hsl(33, 21%, 10.4%);
-  --color-fd-muted-foreground: hsl(43, 15%, 62.5%);
-  --color-fd-popover: hsl(33, 21%, 8%);
-  --color-fd-popover-foreground: hsl(44, 31%, 88%);
-  --color-fd-card: hsl(33, 21%, 10.4%);
-  --color-fd-card-foreground: hsl(44, 31%, 88%);
-  --color-fd-border: hsla(36, 10%, 50%, 0.2);
+  --color-fd-foreground: hsl(0, 0%, 92%);
+  --color-fd-muted: hsl(0, 0%, 10%);
+  --color-fd-muted-foreground: hsl(0, 0%, 64%);
+  --color-fd-popover: hsl(0, 0%, 8%);
+  --color-fd-popover-foreground: hsl(0, 0%, 92%);
+  --color-fd-card: hsl(0, 0%, 8%);
+  --color-fd-card-foreground: hsl(0, 0%, 92%);
+  --color-fd-border: hsla(0, 0%, 100%, 0.1);
   --color-fd-primary: hsl(191, 42%, 56%);
   --color-fd-primary-foreground: hsl(0, 0%, 3.9%);
-  --color-fd-secondary: hsl(36, 17%, 17%);
-  --color-fd-secondary-foreground: hsl(44, 31%, 88%);
-  --color-fd-accent: hsla(36, 10%, 50%, 0.15);
+  --color-fd-secondary: hsl(0, 0%, 10%);
+  --color-fd-secondary-foreground: hsl(0, 0%, 92%);
+  --color-fd-accent: hsla(0, 0%, 100%, 0.08);
   --color-fd-accent-foreground: hsl(0, 0%, 100%);
   --color-fd-ring: hsl(191, 42%, 56%);
 }
@@ -52,7 +53,7 @@
 .dark #nd-sidebar {
   --color-fd-muted: var(--color-fd-card);
   --color-fd-secondary: var(--color-fd-secondary);
-  --color-fd-muted-foreground: hsl(43, 15%, 62.5%);
+  --color-fd-muted-foreground: hsl(0, 0%, 64%);
 }
 
 html {
