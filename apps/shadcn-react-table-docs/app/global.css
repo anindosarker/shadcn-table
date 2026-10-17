@@ -88,13 +88,6 @@ html > body[data-scroll-locked] {
   background: var(--color-fd-primary);
 }
 
-/* ---------- navbar tabs ---------- */
-
-#nd-subnav [data-header-tabs] a {
-  font-weight: 600;
-  padding-bottom: 0.5rem;
-}
-
 /* ---------- content column ---------- */
 
 #nd-page:not([data-full='true']) > * {
