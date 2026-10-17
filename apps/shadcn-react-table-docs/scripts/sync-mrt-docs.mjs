@@ -194,9 +194,12 @@ async function writeMeta(routes) {
       }
     };
     for (const item of section.items) {
-      if (item.secondaryItems) {
+      // Guides groups nest their pages under `items` (with an anchor href),
+      // Examples/API groups under `secondaryItems`; both become a separator.
+      const group = item.secondaryItems ?? item.items;
+      if (group) {
         pages.push(`---${item.label}---`);
-        item.secondaryItems.forEach(push);
+        group.forEach(push);
       } else {
         push(item);
       }
