@@ -347,11 +347,7 @@ export const RowActionsCompleteOverride = () => (
         Cell: ({ row, table }) => (
           <>
             <Button>Custom Row Action</Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => table.setEditingRow(row)}
-            >
+            <Button size="icon" onClick={() => table.setEditingRow(row)}>
               <Pencil />
             </Button>
           </>
