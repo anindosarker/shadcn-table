@@ -1,12 +1,13 @@
 /**
  * Cluster E page checks: examples/faceted-values to examples/virtualized and
- * the home page. Each example page renders one tabbed group (isPage): the
- * active tab follows the route, so a page asserts its tab strip, its own
- * example (table with rows) and the page's feature marker.
+ * the home page. Each example page renders its own example in one playground
+ * panel (no group tab strip), so a page asserts that panel, its table rows,
+ * the Code toggle and the page's feature marker. The home page still embeds
+ * the Basic group with its tabs.
  */
 import { codeToggle, example } from './_helpers.mjs';
 
-/** Tab strip of an isPage group: every label present, the route's tab active. */
+/** Tab strip of an embedded group: every label present, the given tab active. */
 async function groupTabs(page, labels, activeLabel, check) {
   const tabs = page.locator('[role="tab"]');
   await tabs
@@ -31,41 +32,26 @@ async function groupTabs(page, labels, activeLabel, check) {
   );
 }
 
-const FILTERING = [
-  'Filter Variants',
-  'Faceted Values',
-  'Filter Switching',
-  'Popover Filters',
-  'Custom Filter UI',
-];
-const VIRTUALIZED = [
-  'Fully Virtualized',
-  'Row Virtualization',
-  'Column Virtualization',
-  'Infinite Scrolling',
-];
-const REMOTE = [
-  'React Query',
-  'useEffect',
-  'Dynamic Columns',
-  'Lazy Detail Panel',
-  'Lazy Sub-Rows',
-];
-const DRAGGING = ['Column Ordering', 'Row Ordering', 'Row Dragging'];
-const STICKY = [
-  'Sticky Header',
-  'Column Pinning',
-  'Row Pinning (Sticky)',
-  'Row Pinning (Static)',
-  'Sticky Row Selection',
-];
+/**
+ * An example page renders exactly one playground panel (data-mode) and no
+ * group tab strip; the only tablist is the playground's source file tabs.
+ */
+async function singleExample(page, check) {
+  const panels = await page.locator('article [data-mode]').count();
+  check('single example panel', panels === 1, `panels=${panels}`);
+  const strips = await page
+    .locator('article [role="tablist"]:not([aria-label="Source files"])')
+    .count();
+  check('no group tab strip', strips === 0, `tablists=${strips}`);
+}
+
 const BASIC = ['Basic', 'Minimal', 'Advanced', 'Custom Headless'];
 
-/** One example page: tabs, example rows, Code toggle, feature marker. */
+/** One example page: single panel, example rows, Code toggle, feature marker. */
 const examplePage =
-  (labels, activeLabel, id, needle, marker) =>
+  (id, needle, marker) =>
   async ({ page, check }) => {
-    await groupTabs(page, labels, activeLabel, check);
+    await singleExample(page, check);
     const w = await example(page, id, check);
     if (marker) await marker(page, w, check);
     await codeToggle(page, w, id, needle, check);
@@ -81,8 +67,6 @@ export default {
     );
   },
   '/docs/examples/faceted-values': examplePage(
-    FILTERING,
-    'Faceted Values',
     'enable-filter-facet-values',
     'enableFacetedValues: true',
     async (page, w, check) => {
@@ -91,8 +75,6 @@ export default {
     },
   ),
   '/docs/examples/filter-switching': examplePage(
-    FILTERING,
-    'Filter Switching',
     'customize-filter-modes',
     'enableColumnFilterModes: true',
     async (page, w, check) => {
@@ -104,8 +86,6 @@ export default {
     },
   ),
   '/docs/examples/filter-variants': examplePage(
-    FILTERING,
-    'Filter Variants',
     'customize-filter-variants',
     "filterVariant: 'range-slider'",
     async (page, w, check) => {
@@ -116,8 +96,6 @@ export default {
     },
   ),
   '/docs/examples/popover-filters': examplePage(
-    FILTERING,
-    'Popover Filters',
     'alternate-column-filtering',
     "columnFilterDisplayMode: 'popover'",
     async (page, w, check) => {
@@ -132,8 +110,6 @@ export default {
     },
   ),
   '/docs/examples/infinite-scrolling': examplePage(
-    VIRTUALIZED,
-    'Infinite Scrolling',
     'infinite-scrolling',
     'useInfiniteQuery',
     async (page, w, check) => {
@@ -142,8 +118,6 @@ export default {
     },
   ),
   '/docs/examples/row-virtualization': examplePage(
-    VIRTUALIZED,
-    'Row Virtualization',
     'enable-row-virtualization',
     'enableRowVirtualization: true',
     async (page, w, check) => {
@@ -156,8 +130,6 @@ export default {
     },
   ),
   '/docs/examples/virtualized': examplePage(
-    VIRTUALIZED,
-    'Fully Virtualized',
     'virtualized',
     'enableColumnVirtualization: true',
     async (page, w, check) => {
@@ -169,21 +141,9 @@ export default {
       );
     },
   ),
-  '/docs/examples/react-query': examplePage(
-    REMOTE,
-    'React Query',
-    'react-query',
-    'useQuery',
-  ),
-  '/docs/examples/remote': examplePage(
-    REMOTE,
-    'useEffect',
-    'remote',
-    'manualPagination: true',
-  ),
+  '/docs/examples/react-query': examplePage('react-query', 'useQuery'),
+  '/docs/examples/remote': examplePage('remote', 'manualPagination: true'),
   '/docs/examples/lazy-detail-panel': examplePage(
-    REMOTE,
-    'Lazy Detail Panel',
     'lazy-detail-panel',
     '/api/moredata/',
     async (page, w, check) => {
@@ -197,8 +157,6 @@ export default {
     },
   ),
   '/docs/examples/lazy-sub-rows': examplePage(
-    REMOTE,
-    'Lazy Sub-Rows',
     'lazy-sub-rows',
     '/api/treedata',
     async (page, w, check) => {
@@ -209,8 +167,6 @@ export default {
     },
   ),
   '/docs/examples/minimal': examplePage(
-    BASIC,
-    'Minimal',
     'minimal',
     'SRT_Table',
     async (page, w, check) => {
@@ -224,8 +180,6 @@ export default {
     },
   ),
   '/docs/examples/row-dragging': examplePage(
-    DRAGGING,
-    'Row Dragging',
     'enable-row-dragging',
     'enableRowDragging: true',
     async (page, w, check) => {
@@ -237,8 +191,6 @@ export default {
     },
   ),
   '/docs/examples/row-ordering': examplePage(
-    DRAGGING,
-    'Row Ordering',
     'enable-row-ordering',
     'enableRowOrdering: true',
     async (page, w, check) => {
@@ -253,8 +205,6 @@ export default {
     },
   ),
   '/docs/examples/sticky-header': examplePage(
-    STICKY,
-    'Sticky Header',
     'enable-sticky-header',
     'enableStickyHeader: true',
     async (page, w, check) => {
@@ -266,8 +216,6 @@ export default {
     },
   ),
   '/docs/examples/sticky-row-pinning': examplePage(
-    STICKY,
-    'Row Pinning (Sticky)',
     'enable-row-pinning-sticky',
     'enableRowPinning: true',
     async (page, w, check) => {
@@ -278,8 +226,6 @@ export default {
     },
   ),
   '/docs/examples/static-row-pinning': examplePage(
-    STICKY,
-    'Row Pinning (Static)',
     'enable-row-pinning-static',
     "rowPinningDisplayMode: 'top-and-bottom'",
     async (page, w, check) => {
@@ -290,8 +236,6 @@ export default {
     },
   ),
   '/docs/examples/sticky-row-selection': examplePage(
-    STICKY,
-    'Sticky Row Selection',
     'enable-row-pinning-select',
     "rowPinningDisplayMode: 'select-sticky'",
     async (page, w, check) => {
