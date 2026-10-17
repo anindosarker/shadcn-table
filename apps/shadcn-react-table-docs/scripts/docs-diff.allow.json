@@ -1,0 +1,9 @@
+{
+  "api/cell-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <CellInstanceAPIsSource>"],
+  "api/column-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <ColumnInstanceAPIsSource>"],
+  "api/column-options.mdx": ["- tag: <SourceCode>", "+ tag: <ColumnOptionsSource>"],
+  "api/row-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <RowInstanceAPIsSource>"],
+  "api/state-options.mdx": ["- tag: <SourceCode>", "+ tag: <StateOptionsSource>"],
+  "api/table-instance-apis.mdx": ["- tag: <SourceCode>", "+ tag: <TableInstanceAPIsSource>"],
+  "api/table-options.mdx": ["- tag: <SourceCode>", "+ tag: <TableOptionsSource>"]
+}
