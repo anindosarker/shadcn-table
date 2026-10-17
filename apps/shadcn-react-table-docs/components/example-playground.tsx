@@ -4,8 +4,8 @@ import { useEffect, useState, type ReactNode } from 'react';
 import {
   ChevronDownIcon,
   ExternalLinkIcon,
-  Maximize2Icon,
-  Minimize2Icon,
+  MaximizeIcon,
+  MinimizeIcon,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useTreePath } from 'fumadocs-ui/contexts/tree';
@@ -17,6 +17,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { PageSwitcher } from '@/components/page-switcher';
 import { cn } from '@/lib/cn';
 
@@ -67,6 +72,9 @@ export const ExamplePlayground = ({
   const [mode, setMode] = useState<Mode>('preview');
   const [file, setFile] = useState(files[0]?.name ?? '');
   const [fullscreen, setFullscreen] = useState(false);
+  // The tooltip is controlled, as in the table's own toolbar button, so it
+  // closes on click instead of lingering over the changed layout.
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const pathname = usePathname();
   const path = useTreePath();
 
@@ -113,6 +121,11 @@ export const ExamplePlayground = ({
     } catch {
       // Not persisted, the panel still switches for this visit.
     }
+  };
+
+  const toggleFullscreen = () => {
+    setTooltipOpen(false);
+    setFullscreen((value) => !value);
   };
 
   const showCode = mode !== 'preview';
@@ -187,17 +200,6 @@ export const ExamplePlayground = ({
               </Button>
             ))}
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            aria-label={fullscreen ? 'Exit full screen' : 'Full screen'}
-            aria-pressed={fullscreen}
-            onClick={() => setFullscreen((value) => !value)}
-            className="size-8 rounded-md border bg-fd-secondary text-fd-muted-foreground aria-pressed:text-fd-foreground"
-          >
-            {fullscreen ? <Minimize2Icon /> : <Maximize2Icon />}
-          </Button>
           <div
             role="group"
             aria-label="Open example"
@@ -236,6 +238,33 @@ export const ExamplePlayground = ({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          {/* Same button as the table toolbar's SRT_ToggleFullScreenButton. */}
+          <Tooltip open={tooltipOpen}>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Toggle full screen"
+                aria-pressed={fullscreen}
+                onBlur={() => setTooltipOpen(false)}
+                onClick={toggleFullscreen}
+                onFocus={() => setTooltipOpen(true)}
+                onMouseEnter={() => setTooltipOpen(true)}
+                onMouseLeave={() => setTooltipOpen(false)}
+              >
+                {fullscreen ? <MinimizeIcon /> : <MaximizeIcon />}
+              </Button>
+            </TooltipTrigger>
+            {/* While the tooltip is open or still fading out its Radix layer
+                claims Escape, so leave full screen from here as well. */}
+            <TooltipContent
+              side="bottom"
+              onEscapeKeyDown={() => setFullscreen(false)}
+            >
+              Toggle full screen
+            </TooltipContent>
+          </Tooltip>
         </div>
       </header>
       {/* Split goes side by side only when the panel itself is at least 72rem

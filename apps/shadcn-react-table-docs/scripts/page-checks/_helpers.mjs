@@ -97,15 +97,17 @@ export async function codeToggle(page, wrapper, id, needle, check) {
       switchers === (onExamplePage ? 1 : 0),
       `combobox=${switchers}`,
     );
-    // Full screen toggles aria-pressed and Escape leaves it again.
-    const full = panel.locator('button[aria-label="Full screen"]');
+    // Full screen (same button as the table toolbar's) toggles aria-pressed
+    // and Escape leaves it again.
+    const full = panel.locator(
+      'header button[aria-label="Toggle full screen"]',
+    );
     check(`${id}: full screen button`, (await full.count()) === 1);
     if (await full.count()) {
       await full.first().click();
-      const exit = panel.locator('button[aria-label="Exit full screen"]');
       check(
         `${id}: full screen on`,
-        (await exit.getAttribute('aria-pressed').catch(() => null)) === 'true',
+        (await full.getAttribute('aria-pressed').catch(() => null)) === 'true',
       );
       await page.keyboard.press('Escape');
       check(
