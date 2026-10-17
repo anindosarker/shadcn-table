@@ -141,12 +141,15 @@ export const ReloadingExample = () => (
   />
 );
 
-// API GAP: muiLinearProgressProps (hiding the bottom progress bar) has no SRT
-// equivalent; ported with showProgressBars only.
 export const OnlyTopProgressBar = () => (
   <ShadcnReactTable
     columns={columns}
     data={data}
+    srtLinearProgressProps={({ isTopToolbar }) => ({
+      progressComponentProps: {
+        style: { display: isTopToolbar ? 'block' : 'none' },
+      },
+    })}
     state={{ showProgressBars: true }}
   />
 );
