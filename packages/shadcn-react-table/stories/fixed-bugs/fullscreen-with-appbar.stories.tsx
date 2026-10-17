@@ -1,4 +1,4 @@
-import { type Meta } from '@storybook/react';
+import { type Meta } from '@storybook/react-vite';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
@@ -111,19 +111,10 @@ export const FullscreenIsAboveAppbar = () => {
 
   return (
     <>
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 1100,
-          padding: '1rem',
-          background: '#1976d2',
-          color: 'white',
-        }}
-      >
+      <div className="sticky top-0 z-40 bg-primary px-6 py-4 text-primary-foreground">
         <p>App</p>
       </div>
-      <div style={{ padding: '1rem' }}>
+      <div className="p-4">
         <ShadcnReactTable table={table} />
       </div>
     </>
