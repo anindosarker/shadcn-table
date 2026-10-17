@@ -197,7 +197,12 @@ async function parseMrt(src, rel) {
     const mapped = t in TAG_MAP ? TAG_MAP[t] : t;
     if (mapped) tags.push(mapped);
   }
-  return { title, description, headings: collectHeadings(rewritten), tags };
+  return {
+    title,
+    description,
+    headings: dropTitleHeading(collectHeadings(rewritten), title),
+    tags,
+  };
 }
 
 /* ---- SRT side ------------------------------------------------------------ */
@@ -253,6 +258,21 @@ function proseLines(src) {
     if (!fence) out.push(line);
   }
   return out;
+}
+
+/**
+ * scripts/sync-mrt-docs.mjs drops the first body heading that repeats the
+ * page title (dropTitleHeading there); the MRT heading list gets the same
+ * treatment before the comparison. The title is normalised like a heading
+ * after the library-name strip so `normText` decides equality on both sides.
+ */
+function dropTitleHeading(headings, title) {
+  const want = normTitle(title).replace(/[.:!?]+$/, '');
+  const i = headings.findIndex(
+    (h) =>
+      normText(h.replace(/^#{1,6} +/, '')).replace(/[.:!?]+$/, '') === want,
+  );
+  return i === -1 ? headings : headings.filter((_, j) => j !== i);
 }
 
 function collectHeadings(src) {

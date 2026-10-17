@@ -757,6 +757,31 @@ async function renderSingleExample(rel, src) {
   return src.replace(m[0], `<${example} />`);
 }
 
+/** Heading / title text normalised for the duplicate-title comparison. */
+const normHeadingText = (s) =>
+  s
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[.:!?]+$/, '')
+    .toLowerCase();
+
+/**
+ * MRT repeats the <Head> title as the first body heading; the page layout
+ * already renders the frontmatter title, so the first heading (any level)
+ * whose text equals the title is dropped, with one empty line after it.
+ */
+function dropTitleHeading(src, title) {
+  const want = normHeadingText(title);
+  if (!want) return src;
+  const re = /^#{1,6} +(.+?)[ \t]*\n(?:[ \t]*\n)?/gm;
+  for (const m of src.matchAll(re)) {
+    if (normHeadingText(m[1]) === want) {
+      return src.slice(0, m.index) + src.slice(m.index + m[0].length);
+    }
+  }
+  return src;
+}
+
 function applyMap(text, map) {
   return map.reduce(
     (acc, [from, to]) =>
@@ -807,6 +832,7 @@ async function syncPage(rel) {
   let out = rewriteExampleTags(body);
   out = rewriteImports(out);
   out = applyMap(out, TEXT_MAP);
+  out = dropTitleHeading(out, fmTitle);
   out = applyMap(out, PAGE_RULES[rel] ?? []);
   out = await renderSingleExample(rel, out);
   out = out.replace(/^\s*\n/, '');
