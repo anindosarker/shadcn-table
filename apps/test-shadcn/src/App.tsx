@@ -11,6 +11,7 @@ import { ShadcnReactTable } from './components/ui/shadcn-react-table/ShadcnReact
 import { SRT_AlertBannerDemo } from './demos/SRT_AlertBannerDemo';
 import { SRT_EditSelectCellDemo } from './demos/SRT_EditSelectCellDemo';
 import { SRT_HeadBodyFooterDemo } from './demos/SRT_HeadBodyFooterDemo';
+import { SRT_PopoverFiltersDemo } from './demos/SRT_PopoverFiltersDemo';
 import { SRT_TableContainerDemo } from './demos/SRT_TableContainerDemo';
 import { SRT_TableDemo } from './demos/SRT_TableDemo';
 import { SRT_TableLoadingOverlayDemo } from './demos/SRT_TableLoadingOverlayDemo';
@@ -264,6 +265,7 @@ function App() {
         <SRT_EditRowModalDemo />
         <SRT_ButtonsDemo />
         <SRT_InputsMenusDemo />
+        <SRT_PopoverFiltersDemo />
         <SRT_ToolbarsDemo />
         <SRT_HeadBodyFooterDemo />
         <SRT_TableLoadingOverlayDemo />
