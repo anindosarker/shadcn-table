@@ -20,7 +20,13 @@ export interface SRT_TableContainerProps<TData extends SRT_RowData>
   table: SRT_TableInstance<TData>;
 }
 
-const tableContainerVariants = cva('relative max-w-full overflow-auto');
+// Thin, always-visible scrollbars so the horizontal bar is not hidden by
+// overlay scrollbars on macOS. Chromium ignores the ::-webkit-scrollbar rules
+// once scrollbar-width is set, so scrollbar-width: thin only applies in
+// engines without ::-webkit-scrollbar support (Firefox).
+const tableContainerVariants = cva(
+  'relative min-w-0 max-w-full overflow-auto supports-[not_selector(::-webkit-scrollbar)]:[scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent',
+);
 
 export const SRT_TableContainer = <TData extends SRT_RowData>({
   table,
