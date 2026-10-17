@@ -6,9 +6,7 @@ import { CompatibilityTable } from './compatibility-table';
 import { Callout, CalloutContainer } from './callout';
 import { TableOptionsTable } from './prop-tables/table-options-table';
 import { StateOptionsTable } from './prop-tables/state-options-table';
-import AlternatePaginationExample from '@/examples/alternate-pagination';
-import BasicExample from '@/examples/basic';
-import RemoteExample from '@/examples/remote';
+import { exampleComponents } from '@/examples/registry';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -20,9 +18,7 @@ export function getMDXComponents(components?: MDXComponents) {
     CalloutContainer,
     TableOptionsTable,
     StateOptionsTable,
-    AlternatePaginationExample,
-    BasicExample,
-    RemoteExample,
+    ...exampleComponents,
     ...components,
   } satisfies MDXComponents;
 }

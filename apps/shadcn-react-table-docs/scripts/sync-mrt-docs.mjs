@@ -85,6 +85,43 @@ const IMPORT_MAP = {
   'components/navigation/routes': '@/lib/routes',
 };
 
+/**
+ * Per-page replacements, applied last. Keys are page paths relative to
+ * pages/docs (e.g. 'guides/column-size.mdx'). Append only.
+ */
+const PAGE_RULES = {};
+
+/**
+ * Example tags. MRT pages import examples under local names
+ * (`import Example from '../../../examples/font-awesome-icons'`, `<Example />`)
+ * that differ per page; the registry (scripts/build-example-registry.mjs)
+ * exposes `<PascalCase(folder)>Example` for examples/<folder> and the file
+ * name for example-groups/<Name>. Rewrites each imported tag to its registry
+ * name so the page needs no hand-written import.
+ */
+const pascal = (s) =>
+  s
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((p) => p[0].toUpperCase() + p.slice(1))
+    .join('');
+
+function rewriteExampleTags(src) {
+  const re =
+    /^import\s+(\w+)\s+from\s+['"][./]*\/(examples|example-groups)\/([^'"/]+)['"];?/gm;
+  const renames = [];
+  for (const m of src.matchAll(re)) {
+    const [, local, kind, folder] = m;
+    const target = kind === 'examples' ? `${pascal(folder)}Example` : folder;
+    if (local !== target) renames.push([local, target]);
+  }
+  return renames.reduce(
+    (acc, [from, to]) =>
+      acc.replace(new RegExp(`<${from}(?=[\\s/>])`, 'g'), `<${to}`),
+    src,
+  );
+}
+
 function applyMap(text, map) {
   return map.reduce(
     (acc, [from, to]) =>
@@ -132,8 +169,10 @@ async function syncPage(rel) {
   const { body, title, description } = extractHead(src);
   const fmTitle = applyMap(applyMap(title, TITLE_MAP), TEXT_MAP);
   const fmDesc = applyMap(description, TEXT_MAP);
-  let out = rewriteImports(body);
+  let out = rewriteExampleTags(body);
+  out = rewriteImports(out);
   out = applyMap(out, TEXT_MAP);
+  out = applyMap(out, PAGE_RULES[rel] ?? []);
   out = out.replace(/^\s*\n/, '');
   const frontmatter = ['---', `title: ${yamlString(fmTitle)}`];
   if (fmDesc) frontmatter.push(`description: ${yamlString(fmDesc)}`);

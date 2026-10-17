@@ -27,3 +27,6 @@ next-env.d.ts
 # agent rules written by next/fumadocs on dev
 AGENTS.md
 CLAUDE.md
+
+# per-agent next dev dist dirs (NEXT_DIST_DIR)
+/.next-*/

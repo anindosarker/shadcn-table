@@ -16,7 +16,8 @@
     "lint": "turbo run lint",
     "storybook": "turbo run storybook --filter=shadcn-react-table",
     "storybook:build": "turbo run storybook:build --filter=shadcn-react-table",
-    "storybook:dev": "turbo run storybook --filter=shadcn-react-table"
+    "storybook:dev": "turbo run storybook --filter=shadcn-react-table",
+    "test": "turbo run test --filter=shadcn-react-table"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
