@@ -1,7 +1,7 @@
-import { type Meta } from '@storybook/react';
 import { type SRT_ColumnDef } from '@/components/ui/shadcn-react-table';
 import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
-import { makeData, type Person } from '../makeData';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {
   parameters: {
@@ -14,15 +14,36 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'state', header: 'State' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+const columns: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
 ];
 
-const data = makeData(100);
+const data = [...Array(100)].map(() => ({
+  address: faker.location.streetAddress(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
 
 export const StickyHeaderDisabledDefault = () => (
   <ShadcnReactTable
@@ -41,7 +62,6 @@ export const EnableStickyHeader = () => (
   />
 );
 
-// API GAP: muiTableContainerProps sx (maxHeight) not supported in SRT (cva variants / className instead); enableStickyHeader is supported
 export const StickyHeaderShorterTable = () => (
   <ShadcnReactTable
     columns={columns}
@@ -50,14 +70,31 @@ export const StickyHeaderShorterTable = () => (
     enableRowSelection
     enableStickyHeader
     initialState={{ pagination: { pageIndex: 0, pageSize: 25 } }}
+    srtTableContainerProps={{ style: { maxHeight: 400 } }}
   />
 );
 
-const columnsWithFooters: SRT_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', footer: 'First Name', header: 'First Name' },
-  { accessorKey: 'lastName', footer: 'Last Name', header: 'Last Name' },
-  { accessorKey: 'address', footer: 'Address', header: 'Address' },
-  { accessorKey: 'state', footer: 'State', header: 'State' },
+const columnsWithFooters: SRT_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    footer: 'First Name',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    footer: 'Last Name',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    footer: 'Address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    footer: 'State',
+    header: 'State',
+  },
   {
     accessorKey: 'phoneNumber',
     footer: 'Phone Number',
@@ -65,7 +102,6 @@ const columnsWithFooters: SRT_ColumnDef<Person>[] = [
   },
 ];
 
-// API GAP: muiTableContainerProps sx (maxHeight) not supported in SRT (cva variants / className instead); enableStickyFooter/Header supported
 export const disableStickyFooter = () => (
   <ShadcnReactTable
     columns={columnsWithFooters}
@@ -74,10 +110,10 @@ export const disableStickyFooter = () => (
     enableStickyFooter={false}
     enableStickyHeader
     initialState={{ pagination: { pageIndex: 0, pageSize: 25 } }}
+    srtTableContainerProps={{ style: { maxHeight: 400 } }}
   />
 );
 
-// API GAP: muiTableContainerProps sx (maxHeight) not supported in SRT (cva variants / className instead); enableStickyFooter/Header supported
 export const enableStickyFooter = () => (
   <ShadcnReactTable
     columns={columnsWithFooters}
@@ -86,5 +122,6 @@ export const enableStickyFooter = () => (
     enableStickyFooter
     enableStickyHeader
     initialState={{ pagination: { pageIndex: 0, pageSize: 25 } }}
+    srtTableContainerProps={{ style: { maxHeight: 400 } }}
   />
 );
