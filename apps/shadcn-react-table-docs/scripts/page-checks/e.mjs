@@ -2,35 +2,11 @@
  * Cluster E page checks: examples/faceted-values to examples/virtualized and
  * the home page. Each example page renders its own example in one playground
  * panel (no group tab strip), so a page asserts that panel, its table rows,
- * the Code toggle and the page's feature marker. The home page still embeds
- * the Basic group with its tabs.
+ * the Code toggle and the page's feature marker. The home page asserts the new
+ * landing: hero, install command, live demo rows, feature and install
+ * headings, guide links.
  */
 import { codeToggle, example } from './_helpers.mjs';
-
-/** Tab strip of an embedded group: every label present, the given tab active. */
-async function groupTabs(page, labels, activeLabel, check) {
-  const tabs = page.locator('[role="tab"]');
-  await tabs
-    .first()
-    .waitFor({ timeout: 30000 })
-    .catch(() => {});
-  const texts = (await tabs.allTextContents()).map((t) => t.trim());
-  check(
-    'group tabs',
-    labels.every((l) => texts.includes(l)),
-    texts.join('|'),
-  );
-  const active = page.locator('[role="tab"][data-state="active"]');
-  check(
-    `active tab "${activeLabel}"`,
-    (
-      (await active
-        .first()
-        .textContent()
-        .catch(() => '')) ?? ''
-    ).trim() === activeLabel,
-  );
-}
 
 /**
  * An example page renders exactly one playground panel (data-mode) and no
@@ -44,8 +20,6 @@ async function singleExample(page, check) {
     .count();
   check('no group tab strip', strips === 0, `tablists=${strips}`);
 }
-
-const BASIC = ['Basic', 'Minimal', 'Advanced', 'Custom Headless'];
 
 /** One example page: single panel, example rows, Code toggle, feature marker. */
 const examplePage =
@@ -251,7 +225,7 @@ export default {
     const h1 = page.locator('h1').first();
     check(
       'hero title',
-      /Shadcn\s*React\s*Table/.test((await h1.textContent()) ?? ''),
+      /shadcn\s*-?\s*react\s*-?\s*table/i.test((await h1.textContent()) ?? ''),
     );
     const main = page.locator('main, body');
     const txt = (await main.first().textContent()) ?? '';
@@ -262,19 +236,27 @@ export default {
       ),
     );
     check('no V3 alert', !/was released September 5th, 2024/.test(txt));
+    // the live demo table is client-rendered (next/dynamic)
+    const rows = page.locator('table tbody tr');
+    await rows
+      .first()
+      .waitFor({ timeout: 30000 })
+      .catch(() => {});
     check(
-      'popular docs',
-      txt.includes('Popular Docs') && txt.includes('Best Practices'),
+      'live demo rows',
+      (await rows.count()) > 0,
+      `rows=${await rows.count()}`,
     );
-    await groupTabs(page, BASIC, 'Basic', check);
-    await example(page, 'basic', check);
-    check('comparison heading', txt.includes("Let's Compare"));
-    check('feature comparison heading', txt.includes('Feature Comparison'));
-    const tables = page.locator('table');
+    check('features heading', txt.includes('Everything you need'));
     check(
-      'comparison + feature tables',
-      (await tables.count()) >= 3,
-      `tables=${await tables.count()}`,
+      'install steps heading',
+      txt.includes('Up and running in three steps'),
+    );
+    const guides = page.locator('a[href^="/docs/guides/"]');
+    check(
+      'guide links',
+      (await guides.count()) >= 10,
+      `guides=${await guides.count()}`,
     );
     check(
       'no contributors section',
