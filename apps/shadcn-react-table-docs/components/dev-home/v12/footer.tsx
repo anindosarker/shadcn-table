@@ -30,7 +30,12 @@ const COLUMNS = [
  * v4's ledge footer with the wordmark pointed at the homepage: a low dune off the
  * footer rule, then mono link columns beside the wordmark and licence line.
  */
-export function Footer() {
+export function Footer({
+  showVariantsLink = false,
+}: {
+  /** Link back to the /dev index; only the /dev/12 copy shows it. */
+  showVariantsLink?: boolean;
+}) {
   return (
     <footer className="v4-footer">
       <Dune fps={6} className="v4-footer-dune" />
@@ -70,9 +75,11 @@ export function Footer() {
       </div>
       <div className="v4-shell v4-footer-base">
         <span>MIT License</span>
-        <Link href="/dev" className="v4-footer-link">
-          All variants
-        </Link>
+        {showVariantsLink ? (
+          <Link href="/dev" className="v4-footer-link">
+            All variants
+          </Link>
+        ) : null}
       </div>
     </footer>
   );

@@ -20,7 +20,12 @@ import './v12.css';
  * demo, the feature tiles and the install strip. Rendered at "/" and at
  * /dev/12.
  */
-export function HomePage() {
+export function HomePage({
+  showVariantsLink = false,
+}: {
+  /** Footer link back to the /dev index, for the /dev/12 copy. */
+  showVariantsLink?: boolean;
+}) {
   return (
     <div data-variant="12" className={`v4-root v12 ${archivo.variable}`}>
       <Starfield />
@@ -128,7 +133,7 @@ export function HomePage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer showVariantsLink={showVariantsLink} />
     </div>
   );
 }
