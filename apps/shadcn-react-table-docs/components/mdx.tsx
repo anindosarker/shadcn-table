@@ -1,9 +1,10 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import { TableOfContentsList } from './table-of-contents-list';
-import { InstallCommand } from './mdx/install-command';
+import { InitCommand, InstallCommand } from './mdx/install-command';
 import { InstallPrompt } from './mdx/install-prompt';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Callout, CalloutContainer } from './callout';
 import { TableOptionsTable } from './prop-tables/table-options-table';
 import { StateOptionsTable } from './prop-tables/state-options-table';
@@ -27,8 +28,11 @@ export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
     TableOfContentsList,
+    InitCommand,
     InstallCommand,
     InstallPrompt,
+    Step,
+    Steps,
     Tab,
     Tabs,
     Callout,

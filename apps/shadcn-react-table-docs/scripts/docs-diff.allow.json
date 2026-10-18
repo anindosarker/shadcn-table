@@ -50,22 +50,20 @@
     "title: MRT \"Editing CRUD Inline Example - Material React Table V3 Docs\" vs SRT \"Editing CRUD Inline Table Example\""
   ],
   "getting-started/install.mdx": [
-    "description: MRT \"How to install Material React Table\" vs SRT \"Install shadcn-react-table into a shadcn/ui project\"",
+    "+ heading: ### Add shadcn-react-table",
+    "+ heading: ### Import",
+    "+ heading: ### Initialize shadcn/ui",
+    "+ tag: <InitCommand>",
+    "+ tag: <InstallCommand>",
+    "+ tag: <Step>",
+    "+ tag: <Steps>",
+    "- heading: ### Common Errors",
     "- heading: ### Compatibility",
-    "- heading: ### Quick Install",
-    "- heading: ### Install With Required Peer Dependencies (Recommended)",
-    "+ heading: ### Requirements",
-    "+ heading: ### Install",
-    "+ heading: ### Let an agent install it",
-    "+ heading: ### What gets installed",
-    "+ heading: ### First table",
-    "+ heading: ### Locales",
-    "+ heading: ### Updating",
     "- heading: ### FAQs",
+    "- heading: ### Install With Required Peer Dependencies (Recommended)",
+    "- heading: ### Quick Install",
     "- tag: <CompatibilityTable>",
     "- tag: <FAQs>",
-    "+ tag: <InstallCommand>",
-    "+ tag: <InstallPrompt>",
-    "+ tag: <InstallCommand>"
+    "description: MRT \"How to install Material React Table\" vs SRT \"Add shadcn-react-table to a shadcn/ui project\""
   ]
 }

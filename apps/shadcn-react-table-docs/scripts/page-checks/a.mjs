@@ -56,20 +56,37 @@ export default {
     );
   },
   '/docs/getting-started/install': async ({ page, check }) => {
+    const steps = page.locator('article [data-slot="step"], article .fd-step');
     const tabs = page.locator('article [role="tab"]');
     check(
+      'three steps',
+      (await steps.count()) === 3,
+      String(await steps.count()),
+    );
+    check(
       'package manager tabs',
-      (await tabs.count()) >= 4,
+      (await tabs.count()) >= 8,
       String(await tabs.count()),
     );
     const txt = (await page.locator('article').textContent()) ?? '';
+    check(
+      'init on the radix base',
+      txt.includes('shadcn@latest init --base radix'),
+    );
     check(
       'install command',
       txt.includes(
         'shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table',
       ),
     );
-    check('radix requirement', txt.includes('--base radix'));
+    check(
+      'agents link',
+      (await page
+        .locator('article a[href="/docs/getting-started/agents"]')
+        .count()) === 1,
+    );
+  },
+  '/docs/getting-started/agents': async ({ page, check }) => {
     const copy = page.getByRole('button', { name: 'Copy prompt' });
     check('copy prompt button', (await copy.count()) === 1);
     if (await copy.count()) {
@@ -87,6 +104,10 @@ export default {
         (await page.getByRole('button', { name: 'Copied' }).count()) === 1,
       );
     }
+    check(
+      'llms link',
+      (await page.locator('article a[href="/llms.txt"]').count()) === 1,
+    );
   },
   '/docs/getting-started': async ({ page, check }) => {
     const n = await page

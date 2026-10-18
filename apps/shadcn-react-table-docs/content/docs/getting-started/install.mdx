@@ -1,88 +1,43 @@
 ---
 title: 'Installation'
-description: 'Install shadcn-react-table into a shadcn/ui project'
+description: 'Add shadcn-react-table to a shadcn/ui project'
 ---
 
-shadcn-react-table is a shadcn registry item. One command copies the table source into your project and installs what it needs. You own the files.
+<Steps>
 
-### Requirements
+<Step>
 
-- A shadcn/ui project on the **Radix** base with Tailwind CSS v4. No shadcn/ui yet: `pnpm dlx shadcn@latest init --base radix`
-- React 18 or newer
+### Initialize shadcn/ui
 
-Base UI and React Aria are not supported in this version.
+Skip this if the project already uses shadcn/ui on the Radix base. The table needs the Radix base, Tailwind CSS v4 and React 18 or newer; Base UI and React Aria are not supported in this version.
 
-### Install
+<InitCommand />
+
+</Step>
+
+<Step>
+
+### Add shadcn-react-table
+
+Copies the table source into `components/ui/shadcn-react-table/` and installs the shadcn/ui parts and npm packages it needs. Run it again with `--overwrite` to update.
 
 <InstallCommand />
 
-### Let an agent install it
+</Step>
 
-Copy the prompt and paste it into your coding agent. It carries the command, where the files land and the pages to read.
+<Step>
 
-<InstallPrompt />
-
-### What gets installed
-
-- `components/ui/shadcn-react-table/` the table source. Edit anything.
-- The shadcn/ui parts the table uses, added to `components/ui/` when missing: alert, badge, button, collapsible, combobox, dialog, dropdown-menu, field, input, input-group, label, native-select, pagination, popover, progress, radio-group, select, separator, skeleton, slider, spinner, switch, tooltip.
-- npm dependencies: `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, `radix-ui`.
-- A few keyframes appended to your global stylesheet.
-
-### First table
+### Import
 
 ```tsx
-import { ShadcnReactTable } from '@/components/ui/shadcn-react-table';
-
-const columns = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'age', header: 'Age' },
-];
-const data = [
-  { name: 'Ada', age: 36 },
-  { name: 'Linus', age: 54 },
-];
-
-export default function App() {
-  return <ShadcnReactTable columns={columns} data={data} />;
-}
+import {
+  ShadcnReactTable,
+  useShadcnReactTable,
+} from '@/components/ui/shadcn-react-table';
 ```
 
-Columns, data and the hook form: [Usage](/docs/getting-started/usage).
+Columns, data and the hook: [Usage](/docs/getting-started/usage). Letting an agent do all of this: [AI agents](/docs/getting-started/agents).
 
-### Locales
+</Step>
 
-English ships with the table. Every other language is its own item:
-
-<InstallCommand item="shadcn-react-table-locale-de" />
-
-```tsx
-import { SRT_Localization_DE } from '@/components/ui/shadcn-react-table/locales/de';
-```
-
-Available codes and custom translations: [Localization](/docs/guides/localization).
-
-### Updating
-
-Run the install command again with `--overwrite`. Files under `components/ui/shadcn-react-table/` are replaced, including your edits.
-
-### Common errors
-
-```bash
-Uncaught TypeError: (0 , import_react15.useId) is not a function
-    at useSRT_TableOptions (useSRT_TableOptions.ts:95:8)
-```
-
-React is older than 18. Upgrade `react` and `react-dom`.
-
-```bash
-Error: Element type is invalid: expected a string (for built-in components)
-or a class/function (for composite components) but got: undefined.
-```
-
-`ShadcnReactTable` is a named export:
-
-```diff
-- import ShadcnReactTable from '@/components/ui/shadcn-react-table'
-+ import { ShadcnReactTable } from '@/components/ui/shadcn-react-table'
-```
+</Steps>

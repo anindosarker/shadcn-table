@@ -1,0 +1,40 @@
+---
+title: 'AI agents'
+description: 'Install and use shadcn-react-table with a coding agent'
+---
+
+### Install by prompt
+
+The prompt carries the install command, where the files land and the pages to read. Paste it into Claude Code, Cursor or any coding agent.
+
+<InstallPrompt />
+
+Every example page has the same button in its menu, with the command that installs that example and the table options it uses.
+
+### Docs for agents
+
+Every page is available as markdown. Give these URLs to an agent instead of the HTML pages:
+
+- [`/llms.txt`](/llms.txt): index of all pages with one line each
+- [`/llms-full.txt`](/llms-full.txt): all pages in one file
+- Any page as markdown: append `/content.md` to its path under `/llms.mdx/docs`, for example [`/llms.mdx/docs/api/table-options/content.md`](/llms.mdx/docs/api/table-options/content.md). The "Copy page" button in the page bar copies the same text.
+
+### Project rules
+
+Add to the project's `CLAUDE.md` or `AGENTS.md` so the agent finds the table and its docs:
+
+```md
+## shadcn-react-table
+
+- Data table: components/ui/shadcn-react-table (from the shadcn registry, edit freely).
+- Before changing table options read /llms.mdx/docs/api/table-options/content.md
+  on the docs site. Column options: /llms.mdx/docs/api/column-options/content.md.
+- `data` and `columns` given to useShadcnReactTable must be stable
+  (useMemo, useState or module scope).
+- Reinstall: pnpm dlx shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table --overwrite
+  (replaces local edits in that directory).
+```
+
+### Skill and MCP
+
+A skill package and a registry entry for the shadcn MCP server are planned. Until then the prompt, the markdown URLs and the rules block above are the whole setup.

@@ -1,8 +1,5 @@
 {
   "title": "Getting Started",
   "defaultOpen": true,
-  "pages": [
-    "install",
-    "usage"
-  ]
+  "pages": ["install", "usage", "agents"]
 }
