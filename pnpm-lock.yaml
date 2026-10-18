@@ -21,7 +21,7 @@ importers:
         specifier: 2.5.6
         version: 2.5.6
 
-  apps/shadcn-react-table-docs:
+  apps/shadcn-table-docs:
     dependencies:
       '@base-ui/react':
         specifier: ^1.9.0
@@ -136,7 +136,7 @@ importers:
         specifier: ~5.8.3
         version: 5.8.3
 
-  packages/shadcn-react-table:
+  packages/shadcn-table:
     dependencies:
       '@base-ui/react':
         specifier: ^1.9.0
