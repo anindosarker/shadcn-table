@@ -49,20 +49,9 @@
   --dh-font-mono:
     ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
 
-  /* dashed hairlines: one colour and one 3px dash, 3px gap everywhere.
-   * Long rules and rails are gradients; component borders are native dashed */
+  /* dashed hairline colour for component borders */
   --v12-dash: color-mix(in oklch, var(--foreground) 20%, var(--background));
-  --v12-dash-x: repeating-linear-gradient(
-    to right,
-    var(--v12-dash) 0 3px,
-    transparent 3px 6px
-  );
-  --v12-dash-y: repeating-linear-gradient(
-    to bottom,
-    var(--v12-dash) 0 3px,
-    transparent 3px 6px
-  );
-  /* content sits this far inside the rails */
+  /* text sits this far inside the demo and code strip edges */
   --v12-pad: 12px;
 
   /* how loud the glyph field and stars are */
@@ -108,65 +97,20 @@
   opacity: var(--v12-field-opacity);
 }
 
-/* ------------------------------------------------------------ page frame */
+/* ---------------------------------------------------------------- layout */
 
 .v12 .v4-shell {
   padding-inline: calc(var(--v4-gutter) + var(--v12-pad));
 }
 
-/* full-width pieces (demo, code strip) run rail to rail */
+/* the demo and the code strip run a little wider than the text */
 .v12-bleed {
   margin-inline: calc(-1 * var(--v12-pad));
-}
-
-/* two dashed rails at the content edges, the whole page tall; drawn over
- * the field and the sticky nav, under menus and popovers */
-.v12-rails {
-  position: absolute;
-  inset: 0;
-  z-index: 31;
-  width: 100%;
-  max-width: 78rem;
-  margin-inline: auto;
-  pointer-events: none;
-}
-
-.v12-rails::before {
-  content: '';
-  position: absolute;
-  inset: 0 var(--v4-gutter);
-  background:
-    var(--v12-dash-y) left top / 1px 100% no-repeat,
-    var(--v12-dash-y) right top / 1px 100% no-repeat;
-}
-
-/* full-bleed rules: under the nav, then on top of each major section */
-.v12 .v4-nav {
-  border-bottom: 0;
-  background:
-    var(--v12-dash-x) left bottom / 100% 1px no-repeat,
-    var(--v4-nav-bg);
-}
-
-@media (max-width: 899px) {
-  .v12 .v4-nav-links {
-    border-top: 1px dashed var(--v12-dash);
-  }
 }
 
 .v12 .v4-nav-actions > div {
   border-style: dashed;
   border-color: var(--v12-dash);
-}
-
-.v12-section,
-.v12 .v4-footer {
-  background: var(--v12-dash-x) left top / 100% 1px no-repeat;
-}
-
-.v12 .v4-footer-dune {
-  border-bottom: 0;
-  background: var(--v12-dash-x) left bottom / 100% 1px no-repeat;
 }
 
 /* ------------------------------------------------------------------- nav */
@@ -197,11 +141,12 @@
 
 /* ------------------------------------------------------------------ hero */
 
-/* compact on purpose: the demo's column headers must show above the fold */
+/* sized so the demo's column headers still show above the fold on most
+ * screens */
 .v12-hero {
   position: relative;
   isolation: isolate;
-  padding-block: clamp(1.25rem, 5vh, 4rem) clamp(1rem, 3vh, 2.25rem);
+  padding-block: clamp(1.5rem, 5vh, 4rem) clamp(1.75rem, 5vh, 3rem);
 }
 
 /* the field runs on under the top of the demo */
@@ -231,7 +176,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.75rem, 2.2vh, 1.4rem);
+  gap: clamp(1.1rem, 3vh, 2rem);
   text-align: center;
 }
 
@@ -243,7 +188,10 @@
 
 @media (min-width: 768px) {
   .v12-hero {
-    padding-block: clamp(2rem, 8vh, 6rem) clamp(1.5rem, 4.5vh, 3.5rem);
+    padding-block: clamp(3rem, 11vh, 7.5rem) clamp(3rem, 10vh, 7rem);
+  }
+  .v12-hero-copy {
+    gap: clamp(1.5rem, 4.2vh, 2.75rem);
   }
   .v12-h1 {
     font-size: min(clamp(2.3rem, 7.2vw, 7.5rem), 11vh);
@@ -289,20 +237,8 @@
   position: relative;
 }
 
-/* the rule above the demo sits over the figure, so the dashes run on
- * unbroken from edge to edge */
-.v12-demo::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 2;
-  height: 1px;
-  background: var(--v12-dash-x);
-}
-
-/* sides come from the rails, top and bottom from the rules */
 .v12 .v7-figure {
-  border: 0;
+  border: 1px dashed var(--v12-dash);
 }
 
 .v12 .v7-figcap {
@@ -324,9 +260,7 @@
 }
 
 .v12-features {
-  background:
-    var(--v12-dash-x) left top / 100% 1px no-repeat,
-    var(--dh-paper-2);
+  background-color: var(--dh-paper-2);
 }
 
 .v12-head {
@@ -365,10 +299,7 @@
 /* ------------------------------------------------------------ code strip */
 
 .v12 .v7-strip {
-  border: 0;
-  background:
-    var(--v12-dash-x) left top / 100% 1px no-repeat,
-    var(--v12-dash-x) left bottom / 100% 1px no-repeat;
+  border: 1px dashed var(--v12-dash);
 }
 
 .v12 .v7-step + .v7-step {

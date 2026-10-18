@@ -18,8 +18,6 @@ import '@/components/dev-home/v12/v12.css';
 export default function Variant12Page() {
   return (
     <div data-variant="12" className={`v4-root v12 ${archivo.variable}`}>
-      {/* dashed page frame: one rail at each content edge */}
-      <div aria-hidden="true" className="v12-rails" />
       <Starfield />
       <Nav />
 
