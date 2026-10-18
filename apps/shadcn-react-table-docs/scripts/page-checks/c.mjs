@@ -150,6 +150,23 @@ export default {
       check,
     );
     check('steps', (await page.locator('article h3').count()) >= 4);
+    // Multi-file example: the code explorer lists every file in its tree.
+    await w
+      .locator('button', { hasText: /^Code$/ })
+      .first()
+      .click();
+    const files = await w
+      .locator('[data-slot="code-explorer"] nav button:not([data-folder])')
+      .count();
+    check(
+      'server-side-data: 5 files in the tree',
+      files === 5,
+      `files=${files}`,
+    );
+    await w
+      .locator('button', { hasText: /^Preview$/ })
+      .first()
+      .click();
   },
   '/docs/guides/server-side-data': async ({ page, check }) => {
     check(

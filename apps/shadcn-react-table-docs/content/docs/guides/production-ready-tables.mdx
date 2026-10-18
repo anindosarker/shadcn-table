@@ -29,14 +29,18 @@ Open the network tab and click around. Every page, sort, search or filter change
 
 ### Folder Layout
 
-The live example keeps everything in one file. In your app, split it like this:
+The live example is split the way you would split it in your app. Open the Code view above to browse the files:
 
 ```text
-src/
-├── lib/services/users.service.ts      # 1. service + types
-├── hooks/queries/use-users-query.ts   # 2. React Query hook
-├── hooks/use-table-query-params.ts    # 3. table state → server params
-└── components/users-table.tsx         # 4. the table
+server-side-data/
+├── TS.tsx                      # QueryClientProvider + <UsersTable />
+├── components/
+│   └── UsersTable.tsx          # 4. the table
+├── hooks/
+│   ├── useTableQueryParams.ts  # 3. table state → server params
+│   └── useUsersQuery.ts        # 2. React Query hook
+└── lib/
+    └── users.service.ts        # 1. service + types
 ```
 
 The demo server takes these params and returns `{ data, total, page, limit }`:
@@ -53,7 +57,7 @@ GET /api/users?page=2&limit=10&search=tex&sortBy=lastName:desc&filter=state[$con
 
 The service is a plain async function. It knows your API's URL and response shape, and nothing about tables. Type the params and the response.
 
-```ts title="lib/services/users.service.ts"
+```ts title="lib/users.service.ts"
 export type UsersQueryParams = {
   page: number; //1-based
   limit: number;
@@ -104,8 +108,9 @@ const { data } = await http.get<PaginatedResponse<User>>('/users', { params });
 
 ### Wrap It in a Query Hook
 
-```ts title="hooks/queries/use-users-query.ts"
+```ts title="hooks/useUsersQuery.ts"
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { getUsers, type UsersQueryParams } from '../lib/users.service';
 
 export function useUsersQuery(params: UsersQueryParams) {
   return useQuery({
@@ -129,7 +134,7 @@ This hook is the link between the table and your server. It holds the table stat
 
 Start small. If your server only takes `page`, `limit` and `search`, this is the whole hook:
 
-```ts title="hooks/use-table-query-params.ts"
+```ts title="hooks/useTableQueryParams.ts"
 export function useTableQueryParams({ pageSize = 10 } = {}) {
   const [pagination, setPagination] = useState<SRT_PaginationState>({
     pageIndex: 0,
@@ -157,7 +162,7 @@ export function useTableQueryParams({ pageSize = 10 } = {}) {
 
 Then grow it. The full version adds sorting, column filters and filter modes. Each change handler sends you back to the first page:
 
-```ts title="hooks/use-table-query-params.ts"
+```ts title="hooks/useTableQueryParams.ts"
 //filter values can be strings, numbers or Dates (date filters)
 const toParam = (value: unknown) =>
   value instanceof Date ? value.toISOString() : String(value);
@@ -263,7 +268,7 @@ If your server has no filter operators, drop `columnFilterFns` and send `field=v
 
 Define your columns the regular way. Then wire the hooks into the table:
 
-```tsx title="components/users-table.tsx"
+```tsx title="components/UsersTable.tsx"
 const { params, handlers, state } = useTableQueryParams({ columns });
 const { data, isError, isFetching, isLoading, refetch } = useUsersQuery(params);
 

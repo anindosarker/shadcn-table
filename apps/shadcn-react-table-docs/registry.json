@@ -2346,6 +2346,26 @@
           "path": "examples/server-side-data/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/server-side-data/server-side-data.tsx"
+        },
+        {
+          "path": "examples/server-side-data/components/UsersTable.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/server-side-data/components/UsersTable.tsx"
+        },
+        {
+          "path": "examples/server-side-data/hooks/useTableQueryParams.ts",
+          "type": "registry:component",
+          "target": "@components/examples/server-side-data/hooks/useTableQueryParams.ts"
+        },
+        {
+          "path": "examples/server-side-data/hooks/useUsersQuery.ts",
+          "type": "registry:component",
+          "target": "@components/examples/server-side-data/hooks/useUsersQuery.ts"
+        },
+        {
+          "path": "examples/server-side-data/lib/users.service.ts",
+          "type": "registry:component",
+          "target": "@components/examples/server-side-data/lib/users.service.ts"
         }
       ],
       "dependencies": [
