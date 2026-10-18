@@ -8,8 +8,7 @@
     "start": "next start -p 5320",
     "types:check": "next typegen && tsc --noEmit",
     "lint": "eslint",
-    "lib:install": "shadcn add ../../packages/shadcn-react-table/public/r/shadcn-react-table.json --overwrite --yes",
-    "docs:diff": "node scripts/docs-diff.mjs"
+    "lib:install": "shadcn add ../../packages/shadcn-react-table/public/r/shadcn-react-table.json --overwrite --yes"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

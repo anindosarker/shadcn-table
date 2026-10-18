@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "review": "node scripts/review-defs.mjs",
     "registry:build": "node scripts/build-registry.mjs && shadcn build",
     "registry:dev": "node scripts/build-registry.mjs --dev && shadcn build .dev/registry.json --output .dev/r",
     "storybook": "storybook dev -p 6006",
