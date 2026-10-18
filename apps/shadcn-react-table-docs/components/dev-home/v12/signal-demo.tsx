@@ -24,6 +24,8 @@ const SignalTable = dynamic(
 );
 
 interface Step {
+  /** Feature name for the status line. */
+  feature: string;
   title: string;
   code: string;
   apply: (s: SignalTableState) => SignalTableState;
@@ -40,11 +42,13 @@ const BASE: SignalTableState = {
 
 const STEPS: readonly Step[] = [
   {
+    feature: 'Sorting',
     title: 'Sort by salary, highest first',
     code: "sorting: [{ id: 'salary', desc: true }]",
     apply: (s) => ({ ...s, sorting: [{ id: 'salary', desc: true }] }),
   },
   {
+    feature: 'Filtering',
     title: 'Filter states starting with “New”',
     code: "columnFilters: [{ id: 'state', value: 'New' }]",
     apply: (s) => ({
@@ -54,11 +58,13 @@ const STEPS: readonly Step[] = [
     }),
   },
   {
+    feature: 'Pinning',
     title: 'Pin last name to the left',
     code: "columnPinning: { left: ['lastName'] }",
     apply: (s) => ({ ...s, columnPinning: { left: ['lastName'], right: [] } }),
   },
   {
+    feature: 'Grouping',
     title: 'Group rows by state',
     code: "grouping: ['state']",
     apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
@@ -78,6 +84,8 @@ type Mode = 'playing' | 'paused' | 'user';
 /** v5's replaying table with plain v12 copy. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);
+  // true once the replay has run through every item at least once
+  const [finished, setFinished] = useState(false);
   const [mode, setMode] = useState<Mode>('playing');
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<SignalTableState>(BASE);
@@ -90,6 +98,7 @@ export function SignalDemo() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot read of a media query
       setStep(last);
       setState(stateAt(last));
+      setFinished(true);
       setMode('paused');
     }
   }, []);
@@ -114,6 +123,7 @@ export function SignalDemo() {
     const wait = step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS;
     const t = setTimeout(() => {
       const next = step === last ? -1 : step + 1;
+      if (step === last) setFinished(true);
       setStep(next);
       setState(stateAt(next));
     }, wait);
@@ -135,12 +145,14 @@ export function SignalDemo() {
   const takeControl = () => setMode((m) => (m === 'playing' ? 'user' : m));
 
   const replay = () => {
+    setFinished(false);
     setStep(-1);
     setState(BASE);
     setMode('playing');
   };
 
   const jumpTo = (i: number) => {
+    setFinished(false);
     setStep(i);
     setState(stateAt(i));
     setMode('paused');
@@ -148,14 +160,14 @@ export function SignalDemo() {
 
   const status =
     mode === 'user'
-      ? 'Replay stopped'
-      : mode === 'paused'
-        ? step === -1
-          ? 'Paused'
-          : `Step ${step + 1} of ${STEPS.length}`
-        : step === -1
-          ? 'Starting'
-          : `Playing step ${step + 1} of ${STEPS.length}`;
+      ? 'Paused'
+      : step === -1
+        ? finished
+          ? `Showed ${STEPS.length} features`
+          : 'Starting'
+        : mode === 'paused' && step === STEPS.length - 1 && finished
+          ? `Showed ${STEPS.length} features`
+          : `Now showing: ${STEPS[step].feature}`;
 
   return (
     <div ref={rootRef} className="v5-demo" data-running={running || undefined}>
@@ -167,7 +179,7 @@ export function SignalDemo() {
         <SignalTable state={state} onChange={onChange} />
       </div>
 
-      <aside className="v5-steps" aria-label="Demo steps">
+      <aside className="v5-steps" aria-label="Demo items">
         <div className="flex items-center justify-between gap-3 border-b border-(--dh-rule) px-4 py-3">
           <p className="flex min-w-0 items-center gap-2 text-xs font-medium tracking-wide text-(--dh-ink-muted) uppercase">
             <span
@@ -231,7 +243,7 @@ export function SignalDemo() {
           />
           {mode === 'user'
             ? 'The replay is off. Use the table as you would in your app.'
-            : 'Clicking the table stops the replay. Click a step to jump to it.'}
+            : 'Click the table to try it yourself. Click an item to jump to it.'}
         </p>
       </aside>
     </div>

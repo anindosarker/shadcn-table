@@ -4,11 +4,12 @@ import { AutoplayTileGrid } from '@/components/dev-home/shared/autoplay-tile-gri
 import { InstallCommand } from '@/components/dev-home/shared/install-command';
 import { archivo } from '@/components/dev-home/v4/font';
 import { Starfield } from '@/components/dev-home/v4/starfield';
-import { RiseFigure } from '@/components/dev-home/v7/rise-figure';
+
 import { CodeStrip } from '@/components/dev-home/v12/code-strip';
 import { Dune } from '@/components/dev-home/v12/dune';
 import { Footer } from '@/components/dev-home/v12/footer';
 import { Nav } from '@/components/dev-home/v12/nav';
+import { RiseFigure } from '@/components/dev-home/v12/rise-figure';
 import { SignalDemo } from '@/components/dev-home/v12/signal-demo';
 import '@/components/dev-home/v4/v4.css';
 import '@/components/dev-home/v5/v5.css';
@@ -59,10 +60,7 @@ export default function Variant12Page() {
         <section className="v12-demo" aria-label="Demo">
           <div className="v4-shell">
             <div className="v12-bleed">
-              <RiseFigure
-                caption="Demo"
-                note="A real table running on this page. Click it to stop the replay."
-              >
+              <RiseFigure caption="Live demo">
                 <SignalDemo />
               </RiseFigure>
             </div>
