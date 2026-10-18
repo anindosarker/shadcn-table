@@ -41,15 +41,16 @@ import {
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
-import { type Checkbox } from '@/components/ui/checkbox';
 import { type Collapsible } from '@/components/ui/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui/dialog';
-import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
 import { type ST_AggregationFns } from './fns/aggregationFns';
 import { type ST_FilterFns } from './fns/filterFns';
 import { type ST_SortingFns } from './fns/sortingFns';
 import { type ST_Icons } from './icons';
+import { type CheckboxProps, type RadioProps } from './primitives/checkbox';
+
+export type { CheckboxProps, RadioProps };
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 
@@ -85,13 +86,9 @@ export type InputProps = ComponentPropsWithRef<'input'>;
 export type SelectProps = ButtonProps &
   Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
 
-export type CheckboxProps = ComponentPropsWithRef<typeof Checkbox>;
-
 export type SliderProps = ComponentPropsWithRef<typeof Slider>;
 
 export type CollapseProps = ComponentPropsWithRef<typeof Collapsible>;
-
-export type RadioProps = ComponentPropsWithRef<typeof RadioGroupItem>;
 
 export type DialogProps = Pick<
   ComponentPropsWithRef<typeof Dialog>,
