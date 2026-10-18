@@ -30,6 +30,20 @@ export function getPageMarkdownUrl(page: { slugs: string[]; locale?: string }) {
   return { segments, url: getContentUrl(segments, page.locale) };
 }
 
+/** Absolute markdown URL of a docs page, for prompts handed to agents. */
+export const absoluteMarkdownUrl = (slugs: string[]) =>
+  `${siteUrl}${getPageMarkdownUrl({ slugs }).url}`;
+
+/** The library's registry item name. */
+export const libraryItem = 'shadcn-react-table';
+
+/**
+ * `<user>/<repo>/<item>#<branch>`: the branch suffix only while the registry
+ * is served from a branch other than the default.
+ */
+export const registryRef = (item: string) =>
+  `${gitConfig.user}/${gitConfig.repo}/${item}${gitConfig.branch === 'master' ? '' : `#${gitConfig.branch}`}`;
+
 const getImageUrl = createGetUrl(docsImageRoute);
 
 export function getPageImageUrl(page: { slugs: string[]; locale?: string }) {
