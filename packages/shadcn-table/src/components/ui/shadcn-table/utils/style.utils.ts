@@ -59,16 +59,10 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   const isColumnPinned =
     columnDef.columnDefType !== 'group' && column.getIsPinned();
 
-  // In the semantic layout the column size is the preferred width: columns
-  // shrink toward their content (not below minSize) before the container
-  // scrolls, so a table a little wider than its container still fits. Grid
-  // layouts keep the size as a minimum (resizing, virtualization).
   const widthStyles: CSSProperties = {
-    minWidth: layoutMode?.startsWith('grid')
-      ? `max(calc(var(--${header ? 'header' : 'col'}-${parseCSSVarId(
-          header?.id ?? column.id,
-        )}-size) * 1px), ${columnDef.minSize ?? 30}px)`
-      : `${columnDef.minSize ?? 30}px`,
+    minWidth: `max(calc(var(--${header ? 'header' : 'col'}-${parseCSSVarId(
+      header?.id ?? column.id,
+    )}-size) * 1px), ${columnDef.minSize ?? 30}px)`,
     width: `calc(var(--${header ? 'header' : 'col'}-${parseCSSVarId(
       header?.id ?? column.id,
     )}-size) * 1px)`,
