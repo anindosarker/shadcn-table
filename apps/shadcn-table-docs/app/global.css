@@ -728,7 +728,7 @@ html:has(#nd-notebook-layout) ::selection {
 }
 
 /* body measure ~70ch, Inter headings with the landing's tight tracking */
-#nd-page .prose :is(p, ul, ol, blockquote, h2, h3, h4) {
+#nd-page .prose :is(p, ul, ol, h2, h3, h4) {
   max-width: 70ch;
 }
 
@@ -848,7 +848,7 @@ html:has(#nd-notebook-layout) ::selection {
 
 /* dashed boxes: code blocks, callouts (the accent bar stays solid), cards
    and the prev/next footer cards, prop tables and their Code toggle, markdown
-   table frames, rules and quotes, FAQ accordions (fumadocs
+   table frames, rules, FAQ accordions (fumadocs
    Accordions) and their dividers, the line tab strips (example tabs, locale
    tabs, API options switcher), the mobile TOC bar, TOC inline code, the
    search dialog's header rule and result snippets; the sidebar seam is
@@ -858,7 +858,7 @@ html:has(#nd-notebook-layout) ::selection {
 #nd-page .prose > .not-prose > .border,
 #nd-page [id^='props-'] > .justify-end > button,
 #nd-page .prose table,
-#nd-page .prose :is(hr, blockquote),
+#nd-page .prose hr,
 #nd-page .divide-y.divide-fd-border,
 #nd-page .divide-y.divide-fd-border > *,
 #nd-page .prose > .not-prose.border-b,
@@ -873,6 +873,28 @@ html:has(#nd-notebook-layout) ::selection {
 
 #nd-page figure.shiki {
   background-color: var(--docs-surface);
+}
+
+/* quotes read as notes, like the callouts: full width, solid accent bar,
+   tinted surface, body-size italic, no typographic quote marks */
+#nd-page .prose blockquote {
+  max-width: none;
+  margin-inline: 0;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid var(--docs-accent);
+  background-color: var(--docs-surface);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-fd-foreground);
+}
+#nd-page .prose blockquote p {
+  max-width: none;
+  margin-block: 0.5em;
+}
+#nd-page .prose blockquote p:first-of-type::before,
+#nd-page .prose blockquote p:last-of-type::after {
+  content: none;
 }
 
 /* markdown and compatibility tables: the dashed frame above is the only
