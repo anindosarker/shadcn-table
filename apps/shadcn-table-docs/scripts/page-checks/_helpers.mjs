@@ -67,9 +67,10 @@ export async function paginationControls(wrapper, id, check) {
  * also gets its explorer checked (the entry file `TS.tsx` shown, a file tree
  * with two or more entries when the example has several files, clicking the
  * second entry swaps the shown source, the path bar copy button copies the
- * shown file), plus its full screen toggle and the caret menu's copy items:
- * "Copy prompt" must write the install command for `example-<id>` through
- * the clipboard stub scripts/check-pages.mjs installs. The panel is located
+ * shown file), plus its full screen toggle, the "Copy prompt" split button
+ * (it must write the install command for `example-<id>` through the
+ * clipboard stub scripts/check-pages.mjs installs) and its caret menu
+ * (copy install command, Open in GitHub). The panel is located
  * by id.
  */
 export async function codeToggle(page, id, needle, check) {
@@ -197,9 +198,31 @@ export async function codeToggle(page, id, needle, check) {
         (await full.getAttribute('aria-pressed').catch(() => null)) === 'false',
       );
     }
-    // Caret menu: copy items above the disabled open-in items. The menu is
+    // Split button: Copy prompt leads and reads "Copied" after a click.
+    const copyPrompt = panel
+      .locator('header [aria-label="Open example"]')
+      .getByRole('button', { name: 'Copy prompt' });
+    check(`${id}: copy prompt button`, (await copyPrompt.count()) === 1);
+    if (await copyPrompt.count()) {
+      await copyPrompt.click();
+      await page.waitForTimeout(100);
+      const text = await page.evaluate(() => window.__stClipboard ?? '');
+      check(
+        `${id}: prompt copied`,
+        text.includes('shadcn@latest add') && text.includes(`example-${id}`),
+        `len=${text.length}`,
+      );
+      check(
+        `${id}: copied state`,
+        (await panel
+          .locator('header [aria-label="Open example"]')
+          .getByRole('button', { name: 'Copied' })
+          .count()) === 1,
+      );
+    }
+    // Caret menu: copy install command, then the open-in items. The menu is
     // portaled, so its items are looked up on the page.
-    const caret = panel.locator('button[aria-label="More ways to open"]');
+    const caret = panel.locator('button[aria-label="More actions"]');
     check(`${id}: caret button`, (await caret.count()) === 1);
     if (await caret.count()) {
       await caret.first().click();
@@ -208,21 +231,21 @@ export async function codeToggle(page, id, needle, check) {
       const copyInstall = menu.getByRole('menuitem', {
         name: 'Copy install command',
       });
-      const copyPrompt = menu.getByRole('menuitem', { name: 'Copy prompt' });
+      const github = menu.getByRole('menuitem', { name: 'Open in GitHub' });
       check(`${id}: copy install item`, (await copyInstall.count()) === 1);
-      check(`${id}: copy prompt item`, (await copyPrompt.count()) === 1);
-      if (await copyPrompt.count()) {
-        await copyPrompt.click();
+      check(
+        `${id}: open in GitHub item`,
+        (await github.count()) === 1 &&
+          /github\.com/.test((await github.getAttribute('href')) ?? ''),
+      );
+      if (await copyInstall.count()) {
+        await copyInstall.click();
         await page.waitForTimeout(100);
         const text = await page.evaluate(() => window.__stClipboard ?? '');
         check(
-          `${id}: prompt copied`,
+          `${id}: install command copied`,
           text.includes('shadcn@latest add') && text.includes(`example-${id}`),
           `len=${text.length}`,
-        );
-        check(
-          `${id}: copied state`,
-          (await menu.getByRole('menuitem', { name: 'Copied' }).count()) === 1,
         );
       }
       await page.keyboard.press('Escape');

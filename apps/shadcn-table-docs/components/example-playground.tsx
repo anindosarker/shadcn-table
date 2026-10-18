@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/tooltip';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
+import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
 
 interface Props {
@@ -108,18 +109,19 @@ const getModeServerSnapshot = () => DEFAULT_MODE;
 
 type CopyTarget = 'install' | 'prompt';
 
-/** How long a menu item reads "Copied" after a click. */
+/** How long a copy action reads "Copied" after a click. */
 const COPIED_MS = 1500;
 
 /**
  * Static playground panel around a live example: Preview, Code or Both
- * (the example, then its code below) view, a file tree code explorer, Open
- * in GitHub, full screen. The table stays
+ * (the example, then its code below) view, a file tree code explorer, Copy
+ * prompt, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
  * pages the header also carries the example switcher (previous / next and
  * the page combobox), so the reader can step through examples without
- * leaving the panel. The caret menu next to Open in
- * GitHub copies the install command or the agent prompt to the clipboard.
+ * leaving the panel. Copy prompt writes the agent prompt to the clipboard;
+ * the caret menu next to it copies the install command or opens the
+ * example in GitHub.
  */
 export const ExamplePlayground = ({
   children,
@@ -251,11 +253,38 @@ export const ExamplePlayground = ({
             aria-label="Open example"
             className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0"
           >
-            <Button asChild variant="ghost" size="sm" className="px-2.5">
-              <a href={githubUrl} target="_blank" rel="noreferrer">
-                Open in GitHub
-                <ExternalLinkIcon data-icon="inline-end" />
-              </a>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="px-2.5"
+              onClick={() => void copy('prompt', prompt)}
+            >
+              {copied === 'prompt' ? (
+                <CheckIcon data-icon="inline-start" />
+              ) : (
+                <SparklesIcon data-icon="inline-start" />
+              )}
+              {/* Both labels share one cell so the button keeps its width
+                  while it reads "Copied"; the hidden one is not announced. */}
+              <span className="grid justify-items-start">
+                <span
+                  className={cn(
+                    'col-start-1 row-start-1',
+                    copied === 'prompt' && 'invisible',
+                  )}
+                >
+                  Copy prompt
+                </span>
+                <span
+                  className={cn(
+                    'col-start-1 row-start-1',
+                    copied !== 'prompt' && 'invisible',
+                  )}
+                >
+                  Copied
+                </span>
+              </span>
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -263,7 +292,7 @@ export const ExamplePlayground = ({
                   variant="ghost"
                   size="icon-sm"
                   className="w-7 border-l"
-                  aria-label="More ways to open"
+                  aria-label="More actions"
                 >
                   <ChevronDownIcon />
                 </Button>
@@ -279,16 +308,14 @@ export const ExamplePlayground = ({
                   {copied === 'install' ? <CheckIcon /> : <TerminalIcon />}
                   {copied === 'install' ? 'Copied' : 'Copy install command'}
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={(event) => {
-                    event.preventDefault();
-                    void copy('prompt', prompt);
-                  }}
-                >
-                  {copied === 'prompt' ? <CheckIcon /> : <SparklesIcon />}
-                  {copied === 'prompt' ? 'Copied' : 'Copy prompt'}
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <a href={githubUrl} target="_blank" rel="noreferrer">
+                    <GitHubIcon />
+                    Open in GitHub
+                    <ExternalLinkIcon className="ml-auto text-fd-muted-foreground" />
+                  </a>
+                </DropdownMenuItem>
                 <DropdownMenuItem disabled>
                   Open in StackBlitz
                   <span className="ml-auto text-xs text-fd-muted-foreground">

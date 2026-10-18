@@ -892,7 +892,7 @@ html:has(#nd-notebook-layout) ::selection {
 }
 
 /* square chrome controls: page actions, playground header (example picker
-   and its previous / next steps, view modes, open in GitHub, full screen), top bar search and theme pill,
+   and its previous / next steps, view modes, copy prompt, full screen), top bar search and theme pill,
    their menus (.docs-menu, fumadocs popovers and the copy page menu), the
    search dialog, sidebar items and scroll thumb, inline code, the dashed
    boxes above, page tab triggers. Square, dashed rule border, fg 6% on hover,
