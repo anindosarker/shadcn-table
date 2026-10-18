@@ -661,12 +661,15 @@ html:has(#nd-notebook-layout) ::selection {
   margin-right: 0.2em;
 }
 
+/* the landing's display cut (Archivo 800, condensed: wdth 68 there), in
+   normal case and a little wider for long doc titles */
 #nd-page h1.docs-title {
   font-family: var(--font-display);
-  font-size: clamp(1.875rem, 1.5rem + 1.25vw, 2.5rem);
+  font-size: clamp(2rem, 1.6rem + 1.25vw, 2.75rem);
   font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.015em;
+  font-variation-settings: 'wdth' 75;
+  line-height: 1;
+  letter-spacing: -0.005em;
   text-wrap: balance;
 }
 
@@ -680,12 +683,20 @@ html:has(#nd-notebook-layout) ::selection {
   max-width: 70ch;
 }
 
+/* h2: the same display cut one step down (sections read as landing card
+   titles); h3 stays Inter 600 with the landing's tight tracking, for dense
+   guides */
 #nd-page .prose h2 {
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  font-variation-settings: 'wdth' 80;
+  line-height: 1.15;
+  letter-spacing: 0;
 }
 
 #nd-page .prose h3 {
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 /* dashed boxes: code blocks, callouts (the accent bar stays solid), cards,
