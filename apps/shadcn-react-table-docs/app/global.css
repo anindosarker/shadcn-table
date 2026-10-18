@@ -209,12 +209,12 @@ html > body[data-scroll-locked] {
    foreground 20% over the background. Inputs and the live tables keep their
    solid borders.
    --docs-radius: the docs chrome (code blocks, cards, callouts, search box,
-   sidebar items, playground frame) keeps ~4px corners; the shadcn radius scale
-   stays at the nova default for the parts. */
+   sidebar items, playground frame) is square; the shadcn radius scale stays
+   at the nova default for the parts. */
 :root {
   --docs-dash: color-mix(in oklch, var(--foreground) 20%, var(--background));
   --docs-rule: 1px dashed var(--docs-dash);
-  --docs-radius: 4px;
+  --docs-radius: 0;
 }
 
 #nd-subnav {
@@ -824,12 +824,28 @@ html:has(#nd-notebook-layout) ::selection {
   color: var(--docs-accent);
 }
 
-/* dashed boxes: code blocks, callouts (the accent bar stays solid), cards,
-   prop tables, markdown tables; the sidebar seam is --docs-rule above */
+/* dashed boxes: code blocks, callouts (the accent bar stays solid), cards
+   and the prev/next footer cards, prop tables and their Code toggle, markdown
+   tables and their cells, rules and quotes, FAQ accordions (fumadocs
+   Accordions) and their dividers, the line tab strips (example tabs, locale
+   tabs, API options switcher), the mobile TOC bar, TOC inline code, the
+   search dialog's header rule and result snippets; the sidebar seam is
+   --docs-rule above */
 #nd-page figure.shiki,
 #nd-page a.rounded-lg.border,
 #nd-page .prose > .not-prose > .border,
-#nd-page .prose table {
+#nd-page [id^='props-'] > .justify-end > button,
+#nd-page .prose table,
+#nd-page .prose :is(th, td):not(.not-prose *),
+#nd-page .prose :is(hr, blockquote),
+#nd-page .divide-y.divide-fd-border,
+#nd-page .divide-y.divide-fd-border > *,
+#nd-page .prose > .not-prose.border-b,
+#nd-page [data-slot='tabs'] > .border-b,
+#nd-page [data-slot='tabs-list'].border-b,
+[class*='toc-popover'] > header,
+#nd-toc code,
+#fd-search-dialog-content * {
   border-style: dashed;
   border-color: var(--docs-dash);
 }
@@ -872,9 +888,11 @@ html:has(#nd-notebook-layout) ::selection {
 
 /* square chrome controls: page actions, playground header (example picker,
    view modes, open in GitHub, full screen), top bar search and theme pill,
-   their menus (.docs-menu, fumadocs popovers), sidebar items, inline code.
-   Square, dashed rule border, fg 6% on hover, accent when selected. The SRT
-   tables keep the library's own look (none of these selectors reach them). */
+   their menus (.docs-menu, fumadocs popovers and the copy page menu), the
+   search dialog, sidebar items and scroll thumb, inline code, the dashed
+   boxes above, page tab triggers. Square, dashed rule border, fg 6% on hover,
+   accent when selected. The SRT tables keep the library's own look (none of
+   these selectors reach them). */
 :is(.docs-page-bar, .docs-playground > header, .site-nav)
   :is(button, a, kbd, [role='group'], [role='combobox'], [role='tab']),
 .site-nav-search,
@@ -882,9 +900,26 @@ html:has(#nd-notebook-layout) ::selection {
 .docs-menu *,
 .bg-fd-popover,
 .bg-fd-popover *,
+[role='dialog'][class*='bg-fd-popover'],
+[role='dialog'][class*='bg-fd-popover'] *,
 :is(#nd-sidebar, #nd-sidebar-mobile) a,
-#nd-page .prose :not(pre) > code {
+.select-none > .rounded-full.bg-fd-border,
+#nd-page .prose :not(pre) > code,
+#nd-page .prose kbd,
+#nd-toc code,
+#nd-page a.rounded-lg.border,
+#nd-page .prose > .not-prose > .border,
+#nd-page [id^='props-'] > .justify-end > button,
+#nd-page .divide-y.divide-fd-border,
+#nd-page .prose [data-slot='tabs-trigger'] {
   border-radius: 0;
+}
+
+/* menus: the radius scale at 0, so utilities that force a corner inside them
+   (the command list's rounded-xl!) come out square too */
+.docs-menu,
+[role='dialog'][class*='bg-fd-popover'] {
+  --radius: 0;
 }
 
 :is(.docs-page-bar, .docs-playground > header)
@@ -892,15 +927,18 @@ html:has(#nd-notebook-layout) ::selection {
 .docs-playground > header button[aria-label='Toggle full screen'],
 .site-nav-search,
 .site-nav-search kbd,
+#fd-search-dialog-content button.border,
 .docs-menu,
-.bg-fd-popover {
+.bg-fd-popover,
+[role='dialog'][class*='bg-fd-popover'] {
   border: 1px dashed var(--docs-dash);
   background-color: transparent;
   box-shadow: none;
 }
 
 .docs-menu,
-.bg-fd-popover {
+.bg-fd-popover,
+[role='dialog'][class*='bg-fd-popover'] {
   background-color: var(--color-fd-popover);
 }
 
@@ -947,6 +985,7 @@ html:has(#nd-notebook-layout) ::selection {
   [data-slot='tabs-list']:not([data-variant='line'])
   [data-slot='tabs-trigger'][data-state='active'] {
   background-color: transparent;
+  border-color: transparent;
   box-shadow: none;
   color: var(--docs-accent);
   outline: 1px dashed var(--docs-accent);
