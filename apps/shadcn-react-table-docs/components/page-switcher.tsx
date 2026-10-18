@@ -59,6 +59,16 @@ function groupPages(section: PageTree.Folder): PageGroup[] {
 }
 
 /**
+ * The section's pages in the switcher's order, without the section's own
+ * index page: the previous / next steps of the example switcher.
+ */
+export function sectionPages(section: PageTree.Folder): PageTree.Item[] {
+  return groupPages(section)
+    .flatMap((group) => group.pages)
+    .filter((page) => page.url !== section.index?.url);
+}
+
+/**
  * cmdk's default filter is fuzzy over the whole value, so "aggre" also matches
  * "Row Dragging Example" through scattered letters. Pages are few: rank by
  * plain prefix and substring matches on the page name, then on the slug.

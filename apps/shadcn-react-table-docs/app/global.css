@@ -272,7 +272,9 @@ html > body[data-scroll-locked] {
   height: 1.75rem;
 }
 
-.docs-playground > header button[aria-label='Toggle full screen'] {
+.docs-playground
+  > header
+  :is(button[aria-label='Toggle full screen'], .docs-playground-step) {
   height: 1.75rem;
   width: 1.75rem;
 }
@@ -878,28 +880,8 @@ html:has(#nd-notebook-layout) ::selection {
   padding-inline-start: 0.75rem;
 }
 
-/* example playground caption bar: the landing demo's "live" dot and label */
-.docs-playground:not([data-fullscreen])::before {
-  content: 'Live demo';
-  display: block;
-  padding: 0.5rem 0.75rem 0.5rem 1.75rem;
-  border-bottom: var(--docs-rule);
-  background: radial-gradient(
-      circle,
-      var(--docs-accent) 0 3px,
-      transparent 3.5px
-    )
-    no-repeat 0.75rem 50% / 8px 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.25rem;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-  color: var(--color-fd-muted-foreground);
-}
-
-/* square chrome controls: page actions, playground header (example picker,
-   view modes, open in GitHub, full screen), top bar search and theme pill,
+/* square chrome controls: page actions, playground header (example picker
+   and its previous / next steps, view modes, open in GitHub, full screen), top bar search and theme pill,
    their menus (.docs-menu, fumadocs popovers and the copy page menu), the
    search dialog, sidebar items and scroll thumb, inline code, the dashed
    boxes above, page tab triggers. Square, dashed rule border, fg 6% on hover,
@@ -936,7 +918,9 @@ html:has(#nd-notebook-layout) ::selection {
 
 :is(.docs-page-bar, .docs-playground > header)
   :is(.srt-page-actions, [role='group'], [role='combobox']),
-.docs-playground > header button[aria-label='Toggle full screen'],
+.docs-playground
+  > header
+  :is(button[aria-label='Toggle full screen'], .docs-playground-step),
 .site-nav-search,
 .site-nav-search kbd,
 #fd-search-dialog-content button.border,

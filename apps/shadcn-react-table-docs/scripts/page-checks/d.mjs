@@ -48,8 +48,34 @@ export default {
     await hasText(w, 'aggregation-and-grouping', /Salary/, check);
   },
   '/docs/examples/basic': async ({ page, check }) => {
-    await example(page, 'basic', check);
+    const w = await example(page, 'basic', check);
     await singleExample(page, check);
+    // Example switcher: previous is disabled on the first example, next
+    // steps to Minimal.
+    const header = w.locator('header');
+    const prev = header.locator('button[aria-label^="Previous"]');
+    const next = header.locator('button[aria-label^="Next"]');
+    check(
+      'switcher: label',
+      (await header.getByText('Select example').count()) === 1,
+    );
+    check(
+      'switcher: prev disabled',
+      await prev.isDisabled().catch(() => false),
+    );
+    check(
+      'switcher: next names Minimal',
+      /^Next: Minimal/.test((await next.getAttribute('aria-label')) ?? ''),
+    );
+    await next.click();
+    await page
+      .waitForURL('**/docs/examples/minimal', { timeout: 30000 })
+      .catch(() => {});
+    check(
+      'switcher: next goes to minimal',
+      new URL(page.url()).pathname === '/docs/examples/minimal',
+      page.url(),
+    );
   },
   '/docs/examples/chart-detail-panel': async ({ page, check }) => {
     const w = await example(page, 'chart-detail-panel', check);

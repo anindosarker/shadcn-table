@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
-import { PageSwitcher } from '@/components/page-switcher';
+import { ExampleSwitcher } from '@/components/example-switcher';
 import { cn } from '@/lib/cn';
 
 interface Props {
@@ -116,8 +116,9 @@ const COPIED_MS = 1500;
  * (the example, then its code below) view, a file tree code explorer, Open
  * in GitHub, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
- * pages the header also carries the page switcher, so the reader can jump
- * between examples without leaving the panel. The caret menu next to Open in
+ * pages the header also carries the example switcher (previous / next and
+ * the page combobox), so the reader can step through examples without
+ * leaving the panel. The caret menu next to Open in
  * GitHub copies the install command or the agent prompt to the clipboard.
  */
 export const ExamplePlayground = ({
@@ -203,11 +204,7 @@ export const ExamplePlayground = ({
     pathname.startsWith('/docs/examples/') &&
     section?.type === 'folder' &&
     current?.type === 'page' ? (
-      <PageSwitcher
-        section={section}
-        current={current}
-        className="h-8 shrink-0 rounded-md border bg-fd-secondary px-2.5 text-sm font-medium text-fd-foreground"
-      />
+      <ExampleSwitcher section={section} current={current} />
     ) : null;
 
   return (
@@ -228,7 +225,7 @@ export const ExamplePlayground = ({
           fullscreen && 'shrink-0',
         )}
       >
-        <div className="flex min-w-0 items-center gap-3">{switcher}</div>
+        {switcher}
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <div
             role="group"

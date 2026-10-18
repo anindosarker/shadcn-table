@@ -7,7 +7,7 @@ import { gitConfig } from './shared';
 export const NAV_LINKS = [
   { text: 'Docs', url: '/docs/getting-started/install' },
   { text: 'API', url: '/docs/api' },
-  { text: 'Examples', url: '/docs/examples' },
+  { text: 'Examples', url: '/docs/examples/basic' },
   { text: 'Guides', url: '/docs/guides' },
 ] as const;
 
