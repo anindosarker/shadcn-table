@@ -229,11 +229,22 @@ export default {
     );
     const main = page.locator('main, body');
     const txt = (await main.first().textContent()) ?? '';
+    const bar = page.locator('[data-slot="agent-bar"]');
+    check('agent bar', (await bar.count()) === 1);
+    check(
+      'agent prompt',
+      txt.includes('Install shadcn-react-table in my app:'),
+    );
+    await bar.getByRole('radio', { name: 'Command' }).click();
     check(
       'install command',
-      txt.includes(
+      ((await bar.textContent()) ?? '').includes(
         'pnpm dlx shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table',
       ),
+    );
+    check(
+      'copy command label',
+      (await bar.getByRole('button', { name: 'Copy command' }).count()) === 1,
     );
     check('no V3 alert', !/was released September 5th, 2024/.test(txt));
     check(

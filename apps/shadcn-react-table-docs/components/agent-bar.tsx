@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckIcon, CopyIcon, SparklesIcon } from 'lucide-react';
+import { CheckIcon, CopyIcon, SparklesIcon, TerminalIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
@@ -8,19 +8,26 @@ import { cn } from '@/lib/cn';
 /** How long the button reads "Copied" after a click. */
 const COPIED_MS = 1500;
 
+type Mode = 'prompt' | 'command';
+
 /**
- * One line for agents: label, the prompt as visible text, Copy prompt.
- * The prompt points at /SKILL.md; the instructions live there.
+ * One line for agents: the prompt as visible text and Copy prompt. The
+ * prompt points at /SKILL.md; the instructions live there. With `command`
+ * a segmented switch on the left swaps in the manual install command.
  */
 export const AgentBar = ({
   prompt,
+  command,
   className,
 }: {
   prompt: string;
+  command?: string;
   className?: string;
 }) => {
+  const [mode, setMode] = useState<Mode>('prompt');
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const text = mode === 'command' && command ? command : prompt;
 
   useEffect(
     () => () => {
@@ -31,7 +38,7 @@ export const AgentBar = ({
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(prompt);
+      await navigator.clipboard.writeText(text);
     } catch {
       // Clipboard blocked (permissions, insecure context): nothing to show.
       return;
@@ -41,25 +48,61 @@ export const AgentBar = ({
     timer.current = setTimeout(() => setCopied(false), COPIED_MS);
   };
 
+  const label = mode === 'command' ? 'Copy command' : 'Copy prompt';
+
   return (
     <div
       data-slot="agent-bar"
+      data-mode={mode}
       className={cn(
-        'not-prose flex min-w-0 items-center gap-3 rounded-lg border border-border bg-card py-1.5 pr-1.5 pl-3.5 text-sm',
+        'not-prose flex min-w-0 items-center gap-3 rounded-lg border border-border bg-card py-1.5 pr-1.5 pl-1.5 text-sm',
         className,
       )}
     >
-      <span className="flex shrink-0 items-center gap-1.5 text-muted-foreground">
-        <SparklesIcon aria-hidden="true" className="size-3.5" />
-        Ask your agent
-      </span>
+      {command ? (
+        <div
+          role="radiogroup"
+          aria-label="Install with"
+          className="flex shrink-0 gap-0.5 rounded-md bg-muted p-0.5"
+        >
+          {(
+            [
+              ['prompt', 'Prompt', SparklesIcon],
+              ['command', 'Command', TerminalIcon],
+            ] as const
+          ).map(([value, name, Icon]) => (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={mode === value}
+              onClick={() => {
+                setMode(value);
+                setCopied(false);
+              }}
+              className={cn(
+                'flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium text-muted-foreground transition-colors',
+                mode === value && 'bg-background text-foreground shadow-sm',
+              )}
+            >
+              <Icon aria-hidden="true" className="size-3.5" />
+              {name}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <span className="flex shrink-0 items-center gap-1.5 pl-2 text-muted-foreground">
+          <SparklesIcon aria-hidden="true" className="size-3.5" />
+          Ask your agent
+        </span>
+      )}
       <span aria-hidden="true" className="h-5 w-px shrink-0 bg-border" />
       <span className="min-w-0 flex-1 overflow-x-auto py-1 font-mono text-[13px] whitespace-nowrap [scrollbar-width:none]">
-        {prompt}
+        {text}
       </span>
       <Button type="button" size="sm" onClick={copy} className="shrink-0">
         {copied ? <CheckIcon /> : <CopyIcon />}
-        {copied ? 'Copied' : 'Copy prompt'}
+        {copied ? 'Copied' : label}
       </Button>
     </div>
   );
