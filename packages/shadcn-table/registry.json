@@ -392,37 +392,37 @@
           "target": "@ui/shadcn-table/modals/ST_EditRowModal.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/checkbox.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/checkbox.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/menu.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/menu.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/menu.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/popover.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/popover.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/popover.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/select.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/select.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/select.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/slider.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/slider.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/slider.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/slot.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/slot.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/slot.tsx"
         },
         {
-          "path": "src/components/ui/shadcn-table/primitives/tooltip.tsx",
+          "path": "src/components/ui/shadcn-table/primitives/radix/tooltip.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/primitives/tooltip.tsx"
         },

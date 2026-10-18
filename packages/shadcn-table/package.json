@@ -7,6 +7,12 @@
   "homepage": "https://shadcn-table.com",
   "version": "0.1.1",
   "type": "module",
+  "imports": {
+    "#primitives/*": {
+      "st-base": "./src/components/ui/shadcn-table/primitives/base/*.tsx",
+      "default": "./src/components/ui/shadcn-table/primitives/radix/*.tsx"
+    }
+  },
   "scripts": {
     "registry:build": "node scripts/build-registry.mjs && shadcn build",
     "registry:dev": "node scripts/build-registry.mjs --dev && shadcn build .dev/registry.json --output .dev/r",

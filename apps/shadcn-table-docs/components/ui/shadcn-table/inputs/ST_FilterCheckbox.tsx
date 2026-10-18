@@ -14,8 +14,9 @@ import { ST_Tooltip } from '../ST_Tooltip';
 const filterCheckboxVariants = cva('', {
   variants: {
     color: {
+      // Radix marks the mixed state as data-state, Base UI as data-indeterminate.
       default:
-        'data-[state=indeterminate]:border-muted-foreground data-[state=indeterminate]:bg-muted-foreground dark:data-[state=indeterminate]:bg-muted-foreground',
+        'data-[state=indeterminate]:border-muted-foreground data-[state=indeterminate]:bg-muted-foreground dark:data-[state=indeterminate]:bg-muted-foreground data-indeterminate:border-muted-foreground data-indeterminate:bg-muted-foreground dark:data-indeterminate:bg-muted-foreground',
       primary: '',
     },
     density: {

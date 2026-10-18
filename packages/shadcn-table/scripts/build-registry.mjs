@@ -63,7 +63,18 @@ const walk = (dir) => {
 };
 
 const rel = (p) => path.relative(PKG, p).split(path.sep).join('/');
-const uiTarget = (relPath) => relPath.replace(/^src\/components\/ui\//, '@ui/');
+// The primitive adapters: an item ships one implementation directory at the
+// path the library imports (`primitives/<family>`); the re-export files
+// under primitives/ and the other base's directory never ship.
+const PRIMITIVES_REL = `${LIB_REL}/primitives`;
+const RADIX_PRIMITIVES_REL = `${PRIMITIVES_REL}/radix`;
+const isPrimitivesDevFile = (relPath) =>
+  relPath.startsWith(`${PRIMITIVES_REL}/`) &&
+  !relPath.startsWith(`${RADIX_PRIMITIVES_REL}/`);
+const uiTarget = (relPath) =>
+  relPath
+    .replace(`${RADIX_PRIMITIVES_REL}/`, `${PRIMITIVES_REL}/`)
+    .replace(/^src\/components\/ui\//, '@ui/');
 
 const fileEntry = (relPath) => ({
   path: relPath,
@@ -172,7 +183,8 @@ const isLocale = (p) => p.startsWith(localeDir + path.sep);
 const localeCode = (p) => path.basename(p).replace(/\.ts$/, '');
 
 const coreFiles = libFiles.filter(
-  (p) => !isLocale(p) || localeCode(p) === 'en',
+  (p) =>
+    (!isLocale(p) || localeCode(p) === 'en') && !isPrimitivesDevFile(rel(p)),
 );
 const localeFiles = libFiles.filter(
   (p) => isLocale(p) && localeCode(p) !== 'en',
