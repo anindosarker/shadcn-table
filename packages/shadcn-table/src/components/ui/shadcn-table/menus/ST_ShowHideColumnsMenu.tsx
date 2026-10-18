@@ -1,22 +1,23 @@
-import { type ComponentPropsWithRef, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
+import {
+  Menu,
+  MenuContent,
+  type MenuContentProps,
+  MenuSeparator,
+  MenuTrigger,
+} from '../primitives/menu';
 import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from './ST_ShowHideColumnsMenuItems';
 
 export interface ST_ShowHideColumnsMenuProps<TData extends ST_RowData>
-  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
+  extends MenuContentProps {
   anchorEl: HTMLElement | null;
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
@@ -46,7 +47,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — MenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
   const { columnOrder, columnPinning } = getState();
@@ -103,13 +104,13 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    <DropdownMenu
+    <Menu
       open={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
+      <MenuTrigger>
         <span
           aria-hidden
           style={{
@@ -121,14 +122,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </DropdownMenuTrigger>
+      </MenuTrigger>
       {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
-      <DropdownMenuContent
+      <MenuContent
         align="start"
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          anchorEl?.focus();
-        }}
+        onClose={() => anchorEl?.focus()}
         className={cn('w-max', className)}
         {...rest}
       >
@@ -174,7 +172,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
             </Button>
           )}
         </div>
-        <DropdownMenuSeparator />
+        <MenuSeparator />
         {allColumns.map((column, index) => (
           <ST_ShowHideColumnsMenuItems
             allColumns={allColumns}
@@ -186,7 +184,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
             table={table}
           />
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </MenuContent>
+    </Menu>
   );
 };
