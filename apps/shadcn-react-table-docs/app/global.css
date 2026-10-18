@@ -846,6 +846,37 @@ html:has(#nd-notebook-layout) ::selection {
   background: transparent;
 }
 
+/* API table type/default cells (components/prop-tables/inline-code.tsx):
+   keywords follow the theme accent; strings amber, type names blue-violet,
+   punctuation muted. Each keeps 4.5:1 on the cell's muted code fill. */
+:root {
+  --code-tok-kw: var(--docs-accent, var(--primary));
+  --code-tok-str: oklch(0.52 0.13 70);
+  --code-tok-type: oklch(0.5 0.15 280);
+  --code-tok-punc: var(--color-fd-muted-foreground);
+}
+
+.dark {
+  --code-tok-str: oklch(0.8 0.13 75);
+  --code-tok-type: oklch(0.78 0.11 280);
+}
+
+.srt-tok-kw {
+  color: var(--code-tok-kw);
+}
+
+.srt-tok-str {
+  color: var(--code-tok-str);
+}
+
+.srt-tok-type {
+  color: var(--code-tok-type);
+}
+
+.srt-tok-punc {
+  color: var(--code-tok-punc);
+}
+
 /* ---------- library css (registry item `css`, written by `lib:install`) ----------
  * `shadcn add` rewrites this rule and the keyframes in `@theme inline` on every
  * install with its own indentation; both are stored in that shape (prettier-ignore)
