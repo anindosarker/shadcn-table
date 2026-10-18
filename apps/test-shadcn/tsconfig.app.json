@@ -25,12 +25,13 @@
     "noUncheckedSideEffectImports": true,
 
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@/components/ui/shadcn-react-table/*": [
+        "../../packages/shadcn-react-table/src/components/ui/shadcn-react-table/*"
       ],
-      "shadcn-react-table-core": [
-        "../../packages/shadcn-react-table-core/src/index.ts"
-      ]
+      "@/components/ui/shadcn-react-table": [
+        "../../packages/shadcn-react-table/src/components/ui/shadcn-react-table"
+      ],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

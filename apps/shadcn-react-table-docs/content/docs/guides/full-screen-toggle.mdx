@@ -1,0 +1,52 @@
+---
+title: 'Full Screen Toggle Guide'
+description: 'How to use, customize, or disable the full screen toggle button feature of Shadcn React Table'
+---
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={
+    new Set([
+      'enableFullScreenToggle',
+      'onIsFullScreenChange',
+      'srtTableLayoutProps',
+    ])
+  }
+/>
+
+### Relevant State
+
+<StateOptionsTable onlyOptions={new Set(['isFullScreen'])} />
+
+### Disable Full Screen Toggle
+
+The full screen toggle button is enabled by default. You can hide it by setting the `enableFullScreenToggle` table option to `false`.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  enableFullScreenToggle: false,
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+### Change Z-Index of Full Screen Table
+
+Under the hood, when the table is full screen, these classes are applied to the root table container:
+
+```txt
+fixed inset-0 z-50 h-dvh max-h-dvh w-dvw max-w-dvw rounded-none border-0 m-0 p-0
+```
+
+If you need to change the `zIndex` of the full screen table, you can do so by passing in a `srtTableLayoutProps` table option with a `style` object that has a `zIndex` property (or a `z-*` Tailwind class in `className`).
+
+```jsx
+srtTableLayoutProps: ({ table }) => ({
+  style: {
+    zIndex: table.getState().isFullScreen ? 1000 : undefined,
+  },
+});
+```

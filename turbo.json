@@ -6,7 +6,6 @@
         "^build"
       ],
       "outputs": [
-        ".next/**",
         "dist/**",
         "locales/**",
         "storybook/static/**"
@@ -17,23 +16,6 @@
     },
     "lint": {
       "outputs": []
-    },
-    "docs:build": {
-      "dependsOn": ["^lib:build"],
-      "cache": false,
-      "outputs": [
-        "dist/**",
-        "build/**"
-      ]
-    },
-    "docs:dev": {
-      "cache": false
-    },
-    "docs:sitemap": {
-      "cache": false
-    },
-    "docs:start": {
-      "cache": false
     },
     "lib:build": {
       "outputs": [
@@ -54,11 +36,9 @@
     "lib:dev": {
       "cache": false
     },
-    "start": {
-      "cache": false
-    },
     "storybook": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "storybook:build": {
       "outputs": [
@@ -66,6 +46,9 @@
       ]
     },
     "storybook:dev": {
+      "cache": false
+    },
+    "test": {
       "cache": false
     }
   }

@@ -1,5 +1,5 @@
 {
-  "name": "material-react-table-turbo",
+  "name": "shadcn-react-table-monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -8,24 +8,22 @@
   "scripts": {
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
-    "docs:build": "turbo run docs:build --no-cache --force",
-    "docs:build-local": "turbo run docs:build --no-cache --force",
-    "docs:dev": "turbo run docs:dev",
-    "docs:sitemap": "turbo run docs:sitemap",
-    "docs:start": "turbo run docs:start",
-    "lib:build": "cp README.md packages/material-react-table/README.md && turbo run lib:build",
-    "lib:build-locales": "turbo run lib:build-locales",
-    "lib:build-lib": "turbo run lib:build-lib",
-    "lib:dev": "turbo run lib:dev",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
+    "lib:build-lib": "turbo run lib:build-lib",
+    "lib:build-locales": "turbo run lib:build-locales",
+    "lib:dev": "turbo run lib:dev",
     "lint": "turbo run lint",
-    "start": "turbo run start --parallel",
-    "storybook": "turbo run storybook",
-    "storybook:build": "turbo run storybook:build",
-    "storybook:dev": "turbo run storybook"
+    "registry:build": "pnpm --filter shadcn-react-table registry:build",
+    "registry:items": "node apps/shadcn-react-table-docs/scripts/build-registry-items.mjs",
+    "registry:dev": "pnpm --filter shadcn-react-table registry:dev && serve packages/shadcn-react-table/.dev -l 5310",
+    "storybook": "turbo run storybook --filter=shadcn-react-table",
+    "storybook:build": "turbo run storybook:build --filter=shadcn-react-table",
+    "storybook:dev": "turbo run storybook --filter=shadcn-react-table",
+    "test": "turbo run test --filter=shadcn-react-table"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
+    "serve": "^14.2.6",
     "turbo": "2.5.6"
   },
   "engines": {

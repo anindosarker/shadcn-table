@@ -1,0 +1,340 @@
+---
+title: 'Customize (Style) Components Guide'
+description: 'How to customize and pass props to shadcn/ui components and set up a shadcn/ui Theme in Shadcn React Table'
+---
+
+One of the strengths of Shadcn React Table is that it exposes a majority of all the underlying shadcn/ui component props used to build the table.
+
+Additionally, in one of the sections below, you will learn [how to theme your table](#theming) to customize colors, typography, or any other default CSS that is used by Shadcn React Table.
+
+### Relevant Table Options
+
+All props labeled `srt...Props` get forwarded to shadcn/ui components. Here is a list of all the props that are exposed in both the root props and column options.
+
+<TableOptionsTable
+  onlyOptions={
+    new Set([
+      'srtBottomToolbarProps',
+      'srtColumnActionsButtonProps',
+      'srtColumnDragHandleProps',
+      'srtCopyButtonProps',
+      'srtDetailPanelProps',
+      'srtEditRowDialogProps',
+      'srtEditTextFieldProps',
+      'srtExpandAllButtonProps',
+      'srtExpandButtonProps',
+      'srtFilterAutocompleteProps',
+      'srtFilterCheckboxProps',
+      'srtFilterDatePickerProps',
+      'srtFilterSliderProps',
+      'srtFilterTextFieldProps',
+      'srtLinearProgressProps',
+      'srtPaginationProps',
+      'srtRowDragHandleProps',
+      'srtSearchTextFieldProps',
+      'srtSelectAllCheckboxProps',
+      'srtSelectCheckboxProps',
+      'srtSkeletonProps',
+      'srtTableBodyCellProps',
+      'srtTableBodyProps',
+      'srtTableBodyRowProps',
+      'srtTableContainerProps',
+      'srtTableFooterCellProps',
+      'srtTableFooterProps',
+      'srtTableFooterRowProps',
+      'srtTableHeadCellProps',
+      'srtTableHeadProps',
+      'srtTableHeadRowProps',
+      'srtTableLayoutProps',
+      'srtTableProps',
+      'srtToolbarAlertBannerChipProps',
+      'srtToolbarAlertBannerProps',
+      'srtTopToolbarProps',
+    ])
+  }
+/>
+
+### Relevant Column Options
+
+Some of the column options expose the same props as above, but on a per column basis.
+
+<ColumnOptionsTable
+  onlyOptions={
+    new Set([
+      'srtColumnActionsButtonProps',
+      'srtCopyButtonProps',
+      'srtEditTextFieldProps',
+      'srtFilterAutocompleteProps',
+      'srtFilterCheckboxProps',
+      'srtFilterDatePickerProps',
+      'srtFilterSliderProps',
+      'srtFilterTextFieldProps',
+      'srtTableBodyCellProps',
+      'srtTableFooterCellProps',
+      'srtTableHeadCellProps',
+    ])
+  }
+/>
+
+### Props and Types
+
+Each prop can either be passed as an object or as a callback function where you get access to the underlying `table` instance and any other relevant callback parameters, such as `cell`, `row`, `column`, etc. This lets you easily run conditional logic on the props you pass. Let's take a look at a few examples.
+
+> All `srt...Props` props are strongly typed and you should get ts hints as you write them. Each one forwards `className`, `style` and the props of the element or [shadcn/ui component](https://ui.shadcn.com/docs/components) it targets.
+
+#### Static Prop Objects
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  enableRowSelection: true,
+  //passing the static object variant if no dynamic logic is needed
+  srtSelectCheckboxProps: {
+    className: 'rounded-full', //makes all checkboxes round
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+#### Callback Functions to Dynamically Set Prop Values
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  enableRowSelection: true,
+  //passing the callback function variant. (You should get type hints for all the callback parameters available)
+  srtSelectCheckboxProps: ({ row }) => ({
+    className: 'rounded-full',
+    disabled: row.original.isAccountLocked, //access the row data to determine if the checkbox should be disabled
+  }),
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+### Styling Components
+
+Each `srt...Props` prop accepts `className` and `style`, which are forwarded to the underlying element. Since Shadcn React Table is built with Tailwind CSS, the recommended way to style components is with Tailwind classes in `className`. They are merged with the default classes, and they can use the shadcn/ui CSS variables from your theme.
+
+1. The `style` prop works just like a style prop in any React component.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //simple styling with the `style` prop
+    style: {
+      fontWeight: 'normal',
+      fontSize: '14px',
+    },
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+2. Tailwind classes in `className` get easy access to your theme colors, no hook needed.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //shadcn/ui theme colors are available as Tailwind classes
+    className: 'text-muted-foreground',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+3. Tailwind responsive variants give you a concise way to add media queries to your styling.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //responsive variants instead of media queries
+    className:
+      'text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[14px]',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+4. Tailwind arbitrary variants let you target nested elements and states.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableHeadCellProps: {
+    //target nested elements (the buttons in the header cell) and the hover state
+    className: '[&_button]:p-0 hover:font-bold',
+  },
+});
+```
+
+You can learn more about utility classes in the official [Tailwind CSS Docs](https://tailwindcss.com/docs/styling-with-utility-classes) and about the theme variables in the [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming).
+
+### Conditional Styling
+
+Using the `style` or `className` props and the parameters from the callback functions (cell, column, row, table instance APIs, etc.), you can easily add conditional styling to your shadcn/ui components. Here's a few examples
+
+#### Style Selected Rows
+
+```jsx
+const table = useShadcnReactTable({
+  srtTableBodyRowProps: ({ row }) => ({
+    //conditionally style selected rows
+    className: row.getIsSelected() ? 'font-bold' : 'font-normal',
+  }),
+});
+```
+
+#### Style Expanded Rows
+
+```jsx
+const table = useShadcnReactTable({
+  srtTableBodyRowProps: ({ row }) => ({
+    //conditionally style expanded rows
+    className: row.getIsExpanded() ? 'font-bold' : 'font-normal',
+  }),
+});
+```
+
+#### Style Pinned Columns
+
+```jsx
+const table = useShadcnReactTable({
+  srtTableHeadCellProps: ({ column }) => ({
+    //conditionally style pinned columns
+    className: column.getIsPinned() ? 'bg-muted' : undefined,
+  }),
+  srtTableBodyCellProps: ({ column }) => ({
+    //conditionally style pinned columns
+    className: column.getIsPinned() ? 'font-bold' : 'font-normal',
+  }),
+});
+```
+
+There are hundreds of table, column, header, row, and cell instance APIs that you can use for conditional styling and other logic. See the [Table Instance APIs](/docs/api/table-instance-apis), [Column Instance APIs](/docs/api/column-instance-apis), [Row Instance APIs](/docs/api/row-instance-apis), and [Cell Instance APIs](/docs/api/cell-instance-apis) docs for more info.
+
+### Theming
+
+Shadcn React Table respects your shadcn/ui theme. If you have already set up shadcn/ui with `shadcn init`, you should already be set. The table reads the CSS variables from your global stylesheet (`--background`, `--foreground`, `--primary`, `--border`, `--muted`, etc.), so changing them changes the table along with the rest of your app. If you have not set that up, you should visit the official [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming) to learn how.
+
+```css
+/* app/globals.css: have you set up your theme variables globally in your app root? */
+:root {
+  --primary: oklch(0.45 0.2 280);
+  --border: oklch(0.9 0 0);
+}
+
+.dark {
+  --primary: oklch(0.7 0.18 280);
+  --border: oklch(0.3 0 0);
+}
+```
+
+#### Customize Theme Just for your Table
+
+Because the theme is CSS variables, you can change it just for the `<ShadcnReactTable />` component by redefining the variables on an element around just your table (or on the table root through the `srtTableLayoutProps` table option). The values only effect the `<ShadcnReactTable />` component, and not the rest of your site. Everything you do not redefine is inherited from your global theme, so you do not have to redefine everything again. You can just tweak the values you want to change.
+
+```jsx
+//in one of your normal components
+return (
+  <div className="[--primary:var(--secondary)] [--background:rgb(254,255,244)] dark:[--background:#000]">
+    <ShadcnReactTable table={table} />
+  </div>
+);
+```
+
+#### Custom Theme Example
+
+<MuiThemeExample />
+
+### Table Theme Values
+
+The colors Shadcn React Table uses internally come from the shadcn/ui theme variables, so there is no separate theme object to pass in. Here is where the default values come from, if you want to override them:
+
+- the table and toolbars use `--background` and `--foreground`
+- selected rows use `--primary` at 20% opacity, pinned rows at 10%, hovered rows use `--foreground` at 10%
+- dragging borders use `--primary`
+- filter match highlighting uses `--destructive` at 20% opacity (30% in dark mode), on the element with `data-slot="srt-match-highlight"`
+
+### Customize Table Layout Styling
+
+You can customize both the props and the styles of the internal `<SRT_TableLayout />` component that wraps the table by passing in a `srtTableLayoutProps` table option. This is useful if you want to remove the shadow, or change the border radius, or any other styling you want to do to the wrapper.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableLayoutProps: {
+    //customize wrapper styles
+    className: 'rounded-none border-dashed shadow-none',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+### Customize Table Body, Rows, Columns, and Cells
+
+#### Stripe Rows Example
+
+If you need to style many of the rows or columns in a consistent manner, it usually makes sense to style the `<TableBody />` component itself. For example if you want to stripe the rows, you can do something like this:
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableBodyProps: {
+    //stripe the rows, make odd rows a darker color
+    className: '[&_tr:nth-of-type(odd)>td]:bg-muted',
+  },
+});
+
+return <ShadcnReactTable table={table} />;
+```
+
+#### Stripe Columns Example
+
+Similarly, if you want to stripe the columns, you can do something like this:
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  srtTableBodyProps: {
+    //stripe the columns, make odd columns a darker color
+    className: '[&_td:nth-of-type(odd)]:bg-muted',
+  },
+  srtTableBodyCellProps: {
+    className: 'border-r-2', //add a border between columns
+  },
+});
+```
+
+<CustomizeTableStylesExample />
+
+### Customize No Rows overlay
+
+As part of the customization options, we allow you to override the No Records overlay.
+
+```jsx
+const table = useShadcnReactTable({
+  columns,
+  data,
+  renderEmptyRowsFallback: ({ table }) => (
+    <span>Customized No Rows Overlay</span>
+  ),
+});
+```

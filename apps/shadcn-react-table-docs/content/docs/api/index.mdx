@@ -1,0 +1,10 @@
+---
+title: 'API Reference'
+---
+
+import { routes } from '@/lib/routes';
+
+<TableOfContentsList
+  items={routes.find((item) => item.href === '/docs/api').items}
+  variant="heading"
+/>

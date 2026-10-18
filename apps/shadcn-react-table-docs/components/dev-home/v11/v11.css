@@ -1,0 +1,289 @@
+/* Hallmark · macrostructure: replay-first split hero, bento tiles, sticky-label sheet · variant 11 · theme: signal yellow · genre: atmospheric */
+
+/* Variant 11 puts the v5 replay demo above the fold. It borrows v8's arc
+ * glow, editorial headline and comparison sheet (v5.css + v8.css) and v7's
+ * dune field and mono caps labels (v4 AsciiDune). Layout lives here, scoped
+ * to .v11-*. Colours only via --dh-* tokens. Motion: transform and opacity. */
+
+.v11 {
+  --v11-wide: min(100% - 32px, 1440px);
+
+  overflow-x: clip;
+}
+@media (min-width: 768px) {
+  .v11 {
+    --v11-wide: min(100% - 64px, 1440px);
+  }
+}
+
+.v11-wide {
+  width: var(--v11-wide);
+  margin-inline: auto;
+}
+.v11 .v5-nav-row.v11-wide,
+.v11 .v5-nav-links--below.v11-wide {
+  padding-inline: 0;
+}
+
+.v11-eyebrow {
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dh-ink-faint);
+}
+.v11-eyebrow span {
+  color: var(--dh-accent);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.v11-hero {
+  position: relative;
+  isolation: isolate;
+  padding-block: 40px 72px;
+}
+@media (min-width: 1024px) {
+  .v11-hero {
+    padding-block: 64px 104px;
+  }
+}
+.v11-hero > .v5-arc {
+  z-index: -1;
+}
+
+/* the dune sits faint behind the whole hero, fading out at both ends */
+.v11-field {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  height: 100%;
+  opacity: 0.4;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 75%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 75%,
+    transparent 100%
+  );
+}
+
+/* mobile: headline, demo, install. Desktop: copy and install left, demo right */
+.v11-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'copy' 'demo' 'install';
+  gap: 32px;
+}
+@media (min-width: 1024px) {
+  .v11-hero-grid {
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'copy demo' 'install demo';
+    align-items: start;
+    column-gap: 48px;
+    row-gap: 36px;
+  }
+}
+@media (min-width: 1280px) {
+  .v11-hero-grid {
+    grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+    column-gap: 64px;
+  }
+}
+
+.v11-copy {
+  grid-area: copy;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 20px;
+}
+@media (min-width: 1024px) {
+  .v11-copy {
+    padding-top: 24px;
+  }
+}
+.v11-install {
+  grid-area: install;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 18px;
+}
+.v11-demo {
+  grid-area: demo;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.v11-h1 {
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+@media (min-width: 1024px) {
+  .v11-h1 {
+    font-size: clamp(2.75rem, 1rem + 2.6vw, 3.75rem);
+  }
+}
+.v11-h1 em {
+  font-style: normal;
+  color: var(--dh-accent);
+}
+.v11-lede {
+  max-width: 44ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--dh-ink-muted);
+  text-wrap: pretty;
+}
+
+.v11-demo-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 20px;
+}
+.v11-demo-note {
+  font-size: 0.8125rem;
+  color: var(--dh-ink-faint);
+}
+
+/* the panel sits over the dune, so it needs its own ground */
+.v11-demo .v5-panel {
+  background-color: var(--dh-paper);
+  box-shadow:
+    0 0 0 1px var(--dh-rule-strong),
+    0 48px 110px -48px color-mix(in oklch, var(--dh-accent) 32%, transparent);
+}
+
+/* the right column is narrower than v5's band: steps go under the table
+ * until there is room for both side by side */
+.v11 .v5-demo {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 1024px) {
+  .v11 .v5-steps {
+    border-top: 1px solid var(--dh-rule);
+    border-left: 0;
+  }
+}
+@media (min-width: 1280px) {
+  .v11 .v5-demo {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+  .v11 .v5-steps {
+    border-top: 0;
+    border-left: 1px solid var(--dh-rule);
+  }
+}
+
+/* ----------------------------------------------------------------- bento */
+
+.v11-features {
+  padding-block: 88px;
+  border-top: 1px solid var(--dh-rule);
+}
+@media (min-width: 1024px) {
+  .v11-features {
+    padding-block: 120px;
+  }
+}
+.v11-features-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+@media (min-width: 1024px) {
+  .v11-features-head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 56px;
+    margin-bottom: 56px;
+  }
+}
+
+/* one autoplay grid, some tiles spanning: 2 columns from sm, 4 from lg */
+@media (min-width: 640px) {
+  .v11-bento {
+    grid-auto-flow: dense;
+  }
+  .v11-bento > li:nth-child(1),
+  .v11-bento > li:nth-child(6) {
+    grid-column: span 2;
+  }
+}
+@media (min-width: 1024px) {
+  .v11-bento {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .v11-bento > li:nth-child(1) {
+    grid-row: span 2;
+  }
+}
+.v11-bento .dh-tile {
+  justify-content: space-between;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.v11-footer {
+  margin-top: auto;
+  padding-bottom: 24px;
+}
+.v11-footer-dune {
+  height: 120px;
+  border-bottom: 1px solid var(--dh-rule);
+}
+.v11-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 24px;
+  padding-block: 48px;
+}
+.v11-footer-grid > :first-child {
+  grid-column: 1 / -1;
+}
+@media (min-width: 768px) {
+  .v11-footer-grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .v11-footer-grid > :first-child {
+    grid-column: auto;
+  }
+}
+.v11-footer-base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--dh-rule);
+  font-size: 0.8125rem;
+  color: var(--dh-ink-faint);
+}
+.v11-footer-base > :last-child {
+  margin-left: auto;
+}
+
+/* v8's 26% feature column outranks its own stacked-row reset on phones */
+@media (max-width: 767px) {
+  .v11 .v8-spec tbody th {
+    width: auto;
+  }
+}

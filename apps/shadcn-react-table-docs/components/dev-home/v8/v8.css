@@ -1,0 +1,292 @@
+/* Hallmark · macrostructure: editorial hero over a wide signal band, then a sticky-label sheet · variant 8 · theme: signal lime · genre: atmospheric */
+/* Scoped to .v8 (app/dev/8). Builds on v5.css (imported alongside) for the
+ * arc, install tabs, nav, demo panel and footer. Colours only via --dh-*
+ * tokens. Motion: transform and opacity only. */
+
+.v8 {
+  --v8-wide: min(100% - 16px, 1440px);
+  --v8-band-rule: color-mix(in oklch, var(--dh-accent-ink) 22%, transparent);
+  --v8-dash: var(--dh-rule-strong);
+  --v8-dash-soft: var(--dh-rule);
+}
+@media (min-width: 768px) {
+  .v8 {
+    --v8-wide: min(100% - 48px, 1440px);
+  }
+}
+
+/* ------------------------------------------------------------------ hero */
+.v8-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 64px var(--v5-gutter) 72px;
+}
+@media (min-width: 1024px) {
+  .v8-hero {
+    gap: 56px;
+    padding-block: 112px 104px;
+  }
+}
+.v8-hero > * {
+  position: relative;
+  min-width: 0;
+}
+.v8-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+.v8-h1 {
+  max-width: 15ch;
+  font-size: clamp(2.6rem, 1.3rem + 6vw, 6.5rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+.v8-h1 em {
+  font-style: normal;
+  color: var(--dh-accent);
+}
+.v8-hero-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--dh-rule);
+}
+@media (min-width: 1024px) {
+  .v8-hero-row {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    gap: 56px;
+  }
+}
+.v8-lede {
+  max-width: 44ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--dh-ink-muted);
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------------ band */
+/* Wider than the frame: the demo runs nearly edge to edge. */
+.v8-band {
+  position: relative;
+  background: var(--dh-accent);
+  color: var(--dh-accent-ink);
+  padding-block: 40px 56px;
+  border-block: 1px solid var(--v8-band-rule);
+}
+@media (min-width: 1024px) {
+  .v8-band {
+    padding-block: 56px 72px;
+  }
+}
+.v8-band-inner {
+  width: var(--v8-wide);
+  margin-inline: auto;
+}
+.v8-band-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 20px;
+  padding-inline: 8px;
+}
+.v8-band-title {
+  font-size: clamp(1.35rem, 1rem + 1.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.v8-band-note {
+  max-width: 48ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  opacity: 0.82;
+}
+.v8-band .v5-panel {
+  box-shadow:
+    0 0 0 1px var(--v8-band-rule),
+    0 40px 80px -36px var(--v5-shadow-ink);
+}
+@media (min-width: 1024px) {
+  .v8-band .v5-demo {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+
+/* ------------------------------------------------------------------ sheet */
+.v8-sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  padding: 80px var(--v5-gutter);
+}
+@media (min-width: 1024px) {
+  .v8-sheet {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 56px;
+    padding-block: 112px;
+  }
+}
+.v8-sheet + .v8-sheet {
+  border-top: 1px solid var(--dh-rule);
+}
+.v8-sheet-label {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .v8-sheet-label {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+  }
+}
+.v8-index {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--dh-font-mono);
+  font-size: 0.75rem;
+  color: var(--dh-ink-faint);
+}
+.v8-index::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--dh-accent);
+}
+.v8-sheet-body {
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ spec */
+/* Dashed spec table on wide screens, stacked rows below 768px. */
+.v8-spec {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.v8-spec th,
+.v8-spec td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px dashed var(--v8-dash-soft);
+}
+.v8-spec thead th {
+  border-top: 0;
+  border-bottom: 1px dashed var(--v8-dash);
+  padding-block: 0 12px;
+  font-family: var(--dh-font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--dh-ink-faint);
+}
+.v8-spec thead th[data-ours] {
+  color: var(--dh-accent);
+}
+.v8-spec thead tr:first-child + tr th,
+.v8-spec tbody tr:first-child > * {
+  border-top: 0;
+}
+.v8-spec tbody th {
+  width: 26%;
+  font-weight: 500;
+  color: var(--dh-ink);
+}
+.v8-spec td {
+  color: var(--dh-ink-muted);
+}
+.v8-spec td[data-ours] {
+  background: var(--dh-accent-faint);
+  color: var(--dh-ink);
+}
+.v8-prop {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--dh-accent-soft);
+  color: var(--dh-accent);
+  font-family: var(--dh-font-mono);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+.v8-spec-note {
+  margin-top: 20px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--dh-ink-faint);
+}
+.v8-spec-note a {
+  color: var(--dh-ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.v8-spec-note a:hover {
+  color: var(--dh-ink);
+}
+@media (max-width: 767px) {
+  .v8-spec,
+  .v8-spec tbody,
+  .v8-spec tr,
+  .v8-spec th,
+  .v8-spec td {
+    display: block;
+    width: auto;
+  }
+  .v8-spec thead {
+    display: none;
+  }
+  .v8-spec tbody tr {
+    padding-block: 6px;
+    border-top: 1px dashed var(--v8-dash);
+  }
+  .v8-spec tbody tr:first-child {
+    border-top: 0;
+  }
+  .v8-spec tbody th,
+  .v8-spec td {
+    width: auto;
+    border-top: 0;
+    padding: 8px 0;
+  }
+  .v8-spec td[data-ours] {
+    padding-inline: 10px;
+    border-radius: 8px;
+  }
+  .v8-spec td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--dh-font-mono);
+    font-size: 0.7rem;
+    color: var(--dh-ink-faint);
+  }
+  .v8-spec td[data-ours]::before {
+    color: var(--dh-accent);
+  }
+}
+
+.v8-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}

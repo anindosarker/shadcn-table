@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', '.playwright']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -18,6 +18,9 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      // Editors lint from the repo root, where two package configs are
+      // candidates; pin the parser to this package.
+      parserOptions: { tsconfigRootDir: import.meta.dirname },
     },
   },
 ]);

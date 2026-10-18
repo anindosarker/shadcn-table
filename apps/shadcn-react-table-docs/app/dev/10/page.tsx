@@ -1,0 +1,166 @@
+import Link from 'next/link';
+import { ArrowRightIcon } from 'lucide-react';
+import { AutoplayTileGrid } from '@/components/dev-home/shared/autoplay-tile-grid';
+import { AsciiDune } from '@/components/dev-home/v4/ascii-dune';
+import { archivo } from '@/components/dev-home/v4/font';
+import { InstallTabs } from '@/components/dev-home/v5/install-tabs';
+import { SignalDemo } from '@/components/dev-home/v5/signal-demo';
+import {
+  GITHUB_URL,
+  SignalFooter,
+  SignalNav,
+} from '@/components/dev-home/v5/chrome';
+import { SpecSheet } from '@/components/dev-home/v8/spec-sheet';
+import { CodeStrip } from '@/components/dev-home/v10/code-strip';
+import '@/components/dev-home/v5/v5.css';
+import '@/components/dev-home/v8/v8.css';
+import '@/components/dev-home/v10/v10.css';
+
+const BUILT_ON = ['shadcn/ui', 'TanStack Table v8', 'Tailwind CSS'] as const;
+
+export default function Variant10Page() {
+  return (
+    <div data-variant="10" className={`v5 v8 v10 ${archivo.variable}`}>
+      {/* the dune runs behind nav and hero and meets the band */}
+      <div className="v10-top">
+        <AsciiDune className="v10-field" fps={9} />
+        <div className="v5-frame">
+          <SignalNav />
+
+          <section className="v8-hero" aria-labelledby="v10-title">
+            <p className="v10-eyebrow">
+              <span>{'//'}</span> React data grid on shadcn/ui
+            </p>
+            <h1 id="v10-title" className="v8-h1">
+              The shadcn table, with the <em>whole grid</em> wired in.
+            </h1>
+            <div className="v8-hero-row">
+              <div className="flex flex-col gap-6">
+                <p className="v8-lede">
+                  shadcn-react-table is a React data grid on TanStack Table v8
+                  and shadcn/ui. Sorting, filtering, pinning, grouping, editing
+                  and virtualization are table options, in source you own.
+                </p>
+                <div className="v5-built">
+                  <span className="text-xs text-(--dh-ink-faint)">
+                    Built on
+                  </span>
+                  <ul className="flex flex-wrap gap-2">
+                    {BUILT_ON.map((b) => (
+                      <li key={b} className="v5-chip">
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <InstallTabs />
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* signal band: the self-driving demo, nearly edge to edge */}
+      <section className="v8-band" aria-labelledby="v10-band-title">
+        <div className="v8-band-inner">
+          <div className="v8-band-head">
+            <h2 id="v10-band-title" className="v8-band-title">
+              Watch it work. Then take over.
+            </h2>
+            <p className="v8-band-note">
+              A real table, not a recording. Each step is one piece of table
+              state.
+            </p>
+          </div>
+          <div className="v5-panel" data-variant="10">
+            <SignalDemo />
+          </div>
+        </div>
+      </section>
+
+      <div className="v5-frame">
+        {/* features: a dense field of tiles under the heading */}
+        <section className="v10-section" aria-labelledby="v10-features-title">
+          <div className="v10-head">
+            <div>
+              <p className="v10-eyebrow">
+                <span>01</span> Features
+              </p>
+              <h2 id="v10-features-title" className="v5-h2">
+                Every feature is one prop.
+              </h2>
+            </div>
+            <div>
+              <p className="v5-section-lede">
+                The drawings act out each feature in turn as they scroll into
+                view. Hover one to hold it.
+              </p>
+              <Link href="/docs/guides" className="v5-ghost gap-1.5 self-start">
+                All feature guides
+                <ArrowRightIcon aria-hidden="true" className="size-3.5" />
+              </Link>
+            </div>
+          </div>
+          <AutoplayTileGrid size="md" />
+        </section>
+
+        {/* comparison sheet */}
+        <section className="v8-sheet" aria-labelledby="v10-compare-title">
+          <div className="v8-sheet-label">
+            <p className="v10-eyebrow">
+              <span>02</span> Comparison
+            </p>
+            <h2 id="v10-compare-title" className="v5-h2">
+              Same parts. More table.
+            </h2>
+            <p className="v5-section-lede">
+              Both ship as source through the shadcn CLI. The plain Table is
+              markup. SRT is that markup with the grid already built on top.
+            </p>
+          </div>
+          <div className="v8-sheet-body">
+            <SpecSheet />
+            <p className="v8-spec-note">
+              Option names are from the{' '}
+              <Link href="/docs/guides">feature guides</Link>. The plain column
+              describes the shadcn/ui Table component and its Data Table guide.
+            </p>
+          </div>
+        </section>
+
+        {/* install, define columns, render */}
+        <section className="v10-section" aria-labelledby="v10-start-title">
+          <div className="v10-head">
+            <div>
+              <p className="v10-eyebrow">
+                <span>03</span> Quick start
+              </p>
+              <h2 id="v10-start-title" className="v5-h2">
+                Install, define columns, render.
+              </h2>
+            </div>
+            <div>
+              <p className="v5-section-lede">
+                The whole setup, with the same hook and component as the docs.
+              </p>
+              <div className="v8-actions">
+                <Link
+                  href="/docs/getting-started/install"
+                  className="v5-cta-white"
+                >
+                  Get Started
+                </Link>
+                <a href={GITHUB_URL} className="v5-ghost">
+                  View on GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+          <CodeStrip />
+        </section>
+
+        <SignalFooter />
+      </div>
+    </div>
+  );
+}

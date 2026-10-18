@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
-} from 'shadcn-react-table-core';
-import { ShadcnReactTable } from '../components/ui/shadcn-react-table/ShadcnReactTable';
+} from '@/components/ui/shadcn-react-table';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 type Person = {
   id: number;

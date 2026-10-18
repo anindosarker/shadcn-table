@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import {
   type SRT_ColumnDef,
   useShadcnReactTable,
-} from 'shadcn-react-table-core';
-import { ShadcnReactTable } from '../components/ui/shadcn-react-table/ShadcnReactTable';
+} from '@/components/ui/shadcn-react-table';
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table/ShadcnReactTable';
 
 type Person = {
   id: number;
@@ -31,10 +31,9 @@ const seed: Person[] = Array.from({ length: 8 }, (_, i) => ({
   department: departments[i % departments.length],
 }));
 
-// editDisplayMode 'cell' + editVariant 'select' — the raw <select> is now a
-// radix Select. Tests: click cell → radix Select opens → pick option → commits
-// + exits; focus the trigger and click elsewhere WITHOUT opening → edit exits
-// (blur-exit fix).
+// editDisplayMode 'cell' + editVariant 'select' on a radix Select. Tests: click
+// cell → radix Select opens → pick option → value cached; click elsewhere →
+// trigger blur saves + exits (MUI SelectInput fires onBlur only while closed).
 export function SRT_EditSelectCellDemo() {
   const [data, setData] = useState<Person[]>(seed);
   const [lastSaved, setLastSaved] = useState('(none yet)');
@@ -72,15 +71,19 @@ export function SRT_EditSelectCellDemo() {
     enableTopToolbar: false,
     enableEditing: true,
     editDisplayMode: 'cell',
-    onEditingCellSave: ({ cell, value }) => {
-      const rowId = cell.row.original.id;
-      const colId = cell.column.id;
-      setData((prev) =>
-        prev.map((p) => (p.id === rowId ? { ...p, [colId]: value } : p)),
-      );
-      setLastSaved(`${colId} of row ${rowId} = "${value}"`);
-      console.log('[editselect-demo] cell saved', colId, rowId, value);
-    },
+    // save on blur through the text field slot, like MRT
+    srtEditTextFieldProps: ({ cell }) => ({
+      onBlur: (event) => {
+        const value = event.target.value;
+        const rowId = cell.row.original.id;
+        const colId = cell.column.id;
+        setData((prev) =>
+          prev.map((p) => (p.id === rowId ? { ...p, [colId]: value } : p)),
+        );
+        setLastSaved(`${colId} of row ${rowId} = "${value}"`);
+        console.log('[editselect-demo] cell saved', colId, rowId, value);
+      },
+    }),
   });
 
   return (
@@ -92,7 +95,7 @@ export function SRT_EditSelectCellDemo() {
       </p>
       <ul className="mb-3 ml-5 list-disc text-sm text-muted-foreground">
         <li>click City/Department cell → radix Select opens</li>
-        <li>pick an option → value commits, edit exits</li>
+        <li>pick an option, click elsewhere → value saves, edit exits</li>
         <li>focus trigger, click elsewhere without opening → edit exits</li>
       </ul>
       <div className="mb-3 rounded-md border p-3 text-sm">
