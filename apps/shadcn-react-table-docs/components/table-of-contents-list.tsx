@@ -1,27 +1,36 @@
-import { Fragment } from 'react';
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 import { routes, type RouteItem } from '@/lib/routes';
 
 export const TableOfContentsListItem = ({
   item,
   isFooter = false,
+  index = 0,
 }: {
   item: RouteItem;
   isFooter?: boolean;
-}) => (
-  <li>
-    <Link
-      href={item.href}
-      className={
-        isFooter
-          ? 'text-sm leading-[1.6rem] text-fd-muted-foreground no-underline hover:underline'
-          : 'text-xl leading-8 text-fd-primary no-underline hover:underline'
-      }
-    >
-      {item.label}
-    </Link>
-  </li>
-);
+  index?: number;
+}) =>
+  isFooter ? (
+    <li>
+      <Link
+        href={item.href}
+        className="text-sm leading-[1.6rem] text-fd-muted-foreground no-underline hover:underline"
+      >
+        {item.label}
+      </Link>
+    </li>
+  ) : (
+    <li>
+      <Link href={item.href} className="docs-index-link">
+        <span className="docs-index-num">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <span className="docs-index-label">{item.label}</span>
+        <ArrowUpRight aria-hidden className="docs-index-arrow" />
+      </Link>
+    </li>
+  );
 
 interface Props {
   items?: Array<RouteItem>;
@@ -35,22 +44,17 @@ export const TableOfContentsList = ({
   variant = 'list',
 }: Props) => {
   if (variant === 'list') {
+    // secondary items are flattened into the list, so number the flat rows
+    const rows = items.flatMap((item) => item.secondaryItems ?? [item]);
     return (
-      <ul className={isFooter ? 'list-none p-0' : undefined}>
-        {items.map((item, index) => (
-          <Fragment key={index}>
-            {item.secondaryItems ? (
-              item.secondaryItems.map((secondary, i) => (
-                <TableOfContentsListItem
-                  key={i}
-                  item={secondary}
-                  isFooter={isFooter}
-                />
-              ))
-            ) : (
-              <TableOfContentsListItem item={item} isFooter={isFooter} />
-            )}
-          </Fragment>
+      <ul className={isFooter ? 'list-none p-0' : 'docs-index not-prose'}>
+        {rows.map((item, index) => (
+          <TableOfContentsListItem
+            key={index}
+            item={item}
+            isFooter={isFooter}
+            index={index}
+          />
         ))}
       </ul>
     );
@@ -60,10 +64,8 @@ export const TableOfContentsList = ({
       <>
         {items.map((item, index) => (
           <div key={index}>
-            <h3 id={item.href.split('#')[1]}>
-              <Link href={item.href} className="no-underline hover:underline">
-                {item.label}
-              </Link>
+            <h3 id={item.href.split('#')[1]} className="docs-index-heading">
+              <Link href={item.href}>{item.label}</Link>
             </h3>
             {(item.items || item.secondaryItems) && (
               <TableOfContentsList

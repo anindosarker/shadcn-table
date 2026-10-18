@@ -726,6 +726,104 @@ html:has(#nd-notebook-layout) ::selection {
   letter-spacing: -0.02em;
 }
 
+/* overview link lists (TableOfContentsList): numbered index rows, mono accent
+   number, Archivo display label, dashed rules; the whole row is the link */
+.docs-index {
+  margin-block: 1.25rem 2rem;
+  padding: 0;
+  list-style: none;
+  border-top: var(--docs-rule);
+}
+
+.docs-index > li {
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--docs-rule);
+}
+
+.docs-index-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  min-height: 3.5rem;
+  padding: 0.875rem 0.25rem;
+  color: var(--color-fd-foreground);
+  transition: color 0.15s;
+}
+
+/* beats the prose `li > a` underline rule */
+#nd-page .docs-index .docs-index-link {
+  text-decoration: none;
+}
+
+.docs-index-num {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--docs-accent);
+}
+
+.docs-index-label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variation-settings: 'wdth' 80;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.docs-index-arrow {
+  flex: none;
+  align-self: center;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-fd-muted-foreground);
+  opacity: 0.5;
+  transition:
+    transform 0.15s,
+    color 0.15s,
+    opacity 0.15s;
+}
+
+.docs-index-link:hover,
+.docs-index-link:focus-visible {
+  color: var(--docs-accent);
+}
+
+.docs-index-link:focus-visible {
+  outline: 1px dashed var(--docs-accent);
+  outline-offset: -1px;
+}
+
+.docs-index-link:hover .docs-index-arrow,
+.docs-index-link:focus-visible .docs-index-arrow {
+  color: var(--docs-accent);
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+#nd-page .prose h3.docs-index-heading {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-variation-settings: 'wdth' 80;
+  letter-spacing: 0;
+}
+
+#nd-page .prose h3.docs-index-heading a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+#nd-page .prose h3.docs-index-heading a:hover,
+#nd-page .prose h3.docs-index-heading a:focus-visible {
+  color: var(--docs-accent);
+}
+
 /* dashed boxes: code blocks, callouts (the accent bar stays solid), cards,
    prop tables, markdown tables; the sidebar seam is --docs-rule above */
 #nd-page figure.shiki,
