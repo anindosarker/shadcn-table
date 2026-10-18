@@ -1,0 +1,295 @@
+/* Hallmark · macrostructure: field backdrop + rising figure · variant 7 · theme: dune rose · genre: atmospheric */
+
+/*
+ * Variant 7. Borrows v4's box-drawing field, Archivo display face and footer,
+ * and v5's replay demo and section heads. Layout lives here, scoped to .v7-*.
+ * Colours only via --dh-* tokens. Motion: transform and opacity only.
+ */
+
+/* ------------------------------------------------------------------- hero */
+
+.v7-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: clamp(3.5rem, 11vh, 7.5rem) clamp(9rem, 26vh, 16rem);
+  text-align: center;
+}
+
+/* the field fills the hero and fades out at both ends */
+.v7-field {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 30%,
+    black 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 30%,
+    black 78%,
+    transparent 100%
+  );
+}
+
+/* keeps the copy readable over the glyphs */
+.v7-hero-copy {
+  display: flex;
+  width: 100%;
+  max-width: 62rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.v7-eyebrow {
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dh-ink-faint);
+}
+
+.v7-eyebrow span {
+  color: var(--dh-accent);
+}
+
+.v7-wordmark {
+  max-width: 100%;
+  font-size: clamp(2.6rem, 12.5vw, 9.5rem);
+  line-height: 0.86;
+}
+
+.v7-wordmark-dash {
+  color: var(--dh-accent);
+}
+
+.v7-pitch {
+  max-width: 38rem;
+  font-size: clamp(1rem, 1.4vw, 1.1875rem);
+  line-height: 1.55;
+  color: var(--dh-ink-muted);
+  text-wrap: pretty;
+}
+
+.v7-install {
+  width: 100%;
+  max-width: 40rem;
+  background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
+}
+
+/* ----------------------------------------------------------- demo figure */
+
+.v7-rise {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(-12rem, -22vh, -7rem);
+}
+
+.v7-figure {
+  border: 1px solid var(--dh-rule-strong);
+  background-color: var(--dh-paper);
+  box-shadow: 0 48px 96px -48px
+    color-mix(in oklch, var(--dh-accent) 30%, transparent);
+  opacity: 0;
+  transform: translateY(2.5rem);
+  transition:
+    opacity var(--dh-dur-slow) var(--dh-ease-out),
+    transform var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+.v7-figure[data-risen] {
+  opacity: 1;
+  transform: none;
+}
+
+.v7-figcap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dh-rule);
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  color: var(--dh-ink-faint);
+}
+
+.v7-figcap strong {
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dh-accent);
+}
+
+/* ------------------------------------------------------------ tile band */
+
+.v7-band {
+  margin-top: clamp(5rem, 12vw, 9rem);
+  padding-block: clamp(4rem, 9vw, 7rem);
+  border-block: 1px solid var(--dh-rule);
+  background-color: var(--dh-paper-2);
+}
+
+.v7-band-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .v7-band-grid {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: start;
+  }
+  .v7-band-head {
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+.v7-band-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.v7-band-head .v5-h2 {
+  color: var(--dh-ink);
+}
+
+.v7-band-link {
+  font-family: var(--dh-font-mono);
+  font-size: 13px;
+  color: var(--dh-accent);
+  text-decoration: none;
+}
+
+.v7-band-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ------------------------------------------------------------ code strip */
+
+.v7-strip-section {
+  padding-block: clamp(4.5rem, 10vw, 8rem);
+}
+
+.v7-strip-head {
+  display: flex;
+  max-width: 40rem;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 44px;
+}
+
+.v7-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--dh-rule);
+}
+
+@media (min-width: 1024px) {
+  .v7-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.v7-step {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.5rem 1.25rem;
+}
+
+.v7-step + .v7-step {
+  border-top: 1px solid var(--dh-rule);
+}
+
+@media (min-width: 1024px) {
+  .v7-step {
+    padding: 1.75rem;
+  }
+  .v7-step + .v7-step {
+    border-top: 0;
+    border-left: 1px solid var(--dh-rule);
+  }
+}
+
+.v7-step-n {
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dh-accent);
+}
+
+.v7-step-title {
+  font-family: var(--v4-font-display-stack);
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-stretch: 68%;
+  font-variation-settings: 'wdth' 68;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--dh-ink);
+}
+
+.v7-step-body {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--dh-ink-muted);
+  text-wrap: pretty;
+}
+
+.v7-code {
+  margin-top: auto;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--dh-rule);
+  border-left: 2px solid var(--dh-accent);
+  background-color: var(--dh-paper-2);
+  font-family: var(--dh-font-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--dh-ink-muted);
+  white-space: pre;
+}
+
+.v7-code .k {
+  color: var(--dh-accent);
+}
+
+.v7-code .s {
+  color: var(--dh-ink);
+}
+
+.v7-step .v7-install-cmd {
+  margin-top: auto;
+  padding: 0.35rem 0.35rem 0.35rem 0.85rem;
+  border: 1px solid var(--dh-rule);
+  border-left: 2px solid var(--dh-accent);
+  background-color: var(--dh-paper-2);
+}
+
+/* ----------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .v7-figure {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

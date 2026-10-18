@@ -47,6 +47,27 @@ const variants: {
       'Split hero with an arc glow; an accent band holds a table that sorts, filters, pins and groups itself.',
     feature: 'sorting',
   },
+  {
+    n: 6,
+    name: 'Blueprint replay',
+    description:
+      'Spec-sheet grid with the self-playing demo as centerpiece; feature cells autoplay as you scroll.',
+    feature: 'filtering',
+  },
+  {
+    n: 7,
+    name: 'Dune replay',
+    description:
+      'Box-drawing field hero that hands over to the replaying table; feature drawings play in sequence.',
+    feature: 'row-selection',
+  },
+  {
+    n: 8,
+    name: 'Signal sheet',
+    description:
+      'Signal band hero and replay demo, followed by spec rows that act out each feature.',
+    feature: 'editing',
+  },
 ];
 
 export default function DevIndexPage() {
@@ -57,7 +78,7 @@ export default function DevIndexPage() {
           shadcn-react-table · homepage experiments
         </p>
         <h1 className="max-w-2xl text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-          Five ways to sell a data grid.
+          Eight ways to sell a data grid.
         </h1>
         <p className="max-w-xl text-base text-pretty text-(--dh-ink-muted)">
           Each variant pitches the same library: a full-featured React table

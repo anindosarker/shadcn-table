@@ -2,7 +2,7 @@
 
 /* Scoped design tokens for the experimental /dev homepages (app/dev).
  * Everything lives under .dev-home so the docs site is untouched.
- * Variants pick their accent with data-variant="1..5", either on the .dev-home
+ * Variants pick their accent with data-variant="1..8", either on the .dev-home
  * element itself or on any element inside it (app/dev/layout.tsx is .dev-home). */
 
 .dev-home {
@@ -114,6 +114,39 @@
   --dh-rule: oklch(0.31 0.012 40);
   --dh-accent: oklch(0.67 0.22 37);
   --dh-accent-ink: oklch(0.99 0.01 37);
+}
+
+/* 6 · Blueprint replay: teal */
+.dev-home[data-variant='6'],
+.dev-home [data-variant='6'] {
+  --dh-paper: oklch(0.155 0.01 200);
+  --dh-paper-2: oklch(0.195 0.013 200);
+  --dh-paper-3: oklch(0.235 0.015 200);
+  --dh-rule: oklch(0.31 0.016 200);
+  --dh-accent: oklch(0.78 0.13 195);
+  --dh-accent-ink: oklch(0.19 0.04 195);
+}
+
+/* 7 · Dune replay: rose */
+.dev-home[data-variant='7'],
+.dev-home [data-variant='7'] {
+  --dh-paper: oklch(0.15 0.01 10);
+  --dh-paper-2: oklch(0.19 0.013 10);
+  --dh-paper-3: oklch(0.23 0.015 10);
+  --dh-rule: oklch(0.31 0.016 10);
+  --dh-accent: oklch(0.7 0.19 10);
+  --dh-accent-ink: oklch(0.99 0.01 10);
+}
+
+/* 8 · Signal sheet: lime */
+.dev-home[data-variant='8'],
+.dev-home [data-variant='8'] {
+  --dh-paper: oklch(0.15 0.008 125);
+  --dh-paper-2: oklch(0.19 0.011 125);
+  --dh-paper-3: oklch(0.23 0.013 125);
+  --dh-rule: oklch(0.31 0.014 125);
+  --dh-accent: oklch(0.88 0.19 125);
+  --dh-accent-ink: oklch(0.2 0.05 125);
 }
 
 /* the dev pages never scroll sideways, whatever a variant animates */
