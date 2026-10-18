@@ -292,6 +292,31 @@ html > body[data-scroll-locked] {
   margin-inline-start: 0.75rem;
 }
 
+/* collapsible sub-group (components/sidebar-subgroup.tsx): its pages hang on
+   a 1px dashed guide line under the label; the line sits at the old indent,
+   so page text stays aligned with the label. The active page's segment of
+   the line is solid accent. Square where pill and line meet. */
+:is(#nd-sidebar, #nd-sidebar-mobile) [data-subgroup-list] {
+  margin-inline-start: 0.75rem;
+  border-inline-start: var(--docs-rule);
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile) [data-subgroup-list] a {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile)
+  [data-subgroup-list]
+  a[data-active='true']::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -1px;
+  width: 1px;
+  background: var(--docs-accent);
+}
+
 /* active item: subtle pill with the accent (primary) text, no left bar */
 :is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true'] {
   background-color: color-mix(

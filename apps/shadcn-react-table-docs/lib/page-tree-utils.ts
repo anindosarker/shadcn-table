@@ -25,6 +25,53 @@ export function separatorHasPages(
   return false;
 }
 
+/** True when the node is, or holds, the page at `url`. */
+export function containsUrl(node: PageTree.Node, url: string): boolean {
+  if (node.type === 'page') return node.url === url;
+  if (node.type !== 'folder') return false;
+  return (
+    node.index?.url === url ||
+    node.children.some((child) => containsUrl(child, url))
+  );
+}
+
+/** A run of sibling nodes, by index into the list they came from. */
+export interface SiblingGroup {
+  /** The "---X---" separator that names the group; absent for loose nodes. */
+  separator?: PageTree.Separator;
+  indices: number[];
+}
+
+/**
+ * Groups a sibling list for the sidebar: each separator takes the pages after
+ * it, up to the next separator or folder. Folders, and pages before the first
+ * separator or after a folder, stay loose. Groups with no pages are dropped.
+ * The tree itself is untouched, so the breadcrumb and page switcher keep it.
+ */
+export function groupBySeparator(nodes: PageTree.Node[]): SiblingGroup[] {
+  const groups: SiblingGroup[] = [];
+  let current: SiblingGroup | undefined;
+  nodes.forEach((node, i) => {
+    if (node.type === 'separator') {
+      current = { separator: node, indices: [] };
+      groups.push(current);
+    } else if (node.type === 'folder') {
+      current = undefined;
+      groups.push({ indices: [i] });
+    } else {
+      if (!current) {
+        current = { indices: [] };
+        groups.push(current);
+      }
+      current.indices.push(i);
+    }
+  });
+  return groups.filter(
+    (group) =>
+      !group.separator || group.indices.some((i) => hasPages(nodes[i])),
+  );
+}
+
 /** Find the sibling list that contains `node` (by reference) anywhere in the tree. */
 export function findSiblings(
   root: Pick<PageTree.Root, 'children'>,
@@ -47,12 +94,8 @@ export function findSectionName(
   root: Pick<PageTree.Root, 'children'>,
   url: string,
 ): PageTree.Folder['name'] | undefined {
-  const contains = (node: PageTree.Node): boolean =>
-    node.type === 'page'
-      ? node.url === url
-      : node.type === 'folder' &&
-        (node.index?.url === url || node.children.some(contains));
   return root.children.find(
-    (node): node is PageTree.Folder => node.type === 'folder' && contains(node),
+    (node): node is PageTree.Folder =>
+      node.type === 'folder' && containsUrl(node, url),
   )?.name;
 }
