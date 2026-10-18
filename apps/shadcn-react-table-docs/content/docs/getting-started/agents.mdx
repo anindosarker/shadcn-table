@@ -1,27 +1,31 @@
 ---
 title: 'AI agents'
-description: 'Install and use shadcn-react-table with a coding agent'
+description: 'Set up shadcn-react-table with a coding agent'
 ---
 
-### Install by prompt
+### Ask your agent
 
-The prompt carries the install command, where the files land and the pages to read. Paste it into Claude Code, Cursor or any coding agent.
+<AgentPrompt />
 
-<InstallPrompt />
+The prompt points the agent at [`/SKILL.md`](/SKILL.md): install, the usage rules, where the option references are, and how to pull any docs example into the project. Every example page also has a "Copy prompt" in its menu for that example.
 
-Every example page has the same button in its menu, with the command that installs that example and the table options it uses.
+### Skill
 
-### Docs for agents
+The same file installs as a skill, so the agent knows the table before you ask:
 
-Every page is available as markdown. Give these URLs to an agent instead of the HTML pages:
+```bash
+npx skills add anindosarker/shadcn-react-table
+```
 
-- [`/llms.txt`](/llms.txt): index of all pages with one line each
+### Docs as markdown
+
+- [`/llms.txt`](/llms.txt): index of all pages
 - [`/llms-full.txt`](/llms-full.txt): all pages in one file
-- Any page as markdown: append `/content.md` to its path under `/llms.mdx/docs`, for example [`/llms.mdx/docs/api/table-options/content.md`](/llms.mdx/docs/api/table-options/content.md). The "Copy page" button in the page bar copies the same text.
+- Any page: its path under `/llms.mdx/docs` plus `/content.md`, for example [`/llms.mdx/docs/api/table-options/content.md`](/llms.mdx/docs/api/table-options/content.md). "Copy page" in the page bar copies the same text.
 
 ### Project rules
 
-Add to the project's `CLAUDE.md` or `AGENTS.md` so the agent finds the table and its docs:
+For `CLAUDE.md` or `AGENTS.md` when the skill is not installed:
 
 ```md
 ## shadcn-react-table
@@ -35,6 +39,6 @@ Add to the project's `CLAUDE.md` or `AGENTS.md` so the agent finds the table and
   (replaces local edits in that directory).
 ```
 
-### Skill and MCP
+### MCP
 
-A skill package and a registry entry for the shadcn MCP server are planned. Until then the prompt, the markdown URLs and the rules block above are the whole setup.
+A registry entry for the shadcn MCP server is planned once the registry is served from the docs site.

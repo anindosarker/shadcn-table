@@ -1,6 +1,6 @@
 // Install commands and the agent prompt for the library item. Pure: safe to
 // import from server components and from the page checks' expectations.
-import { absoluteMarkdownUrl, libraryItem, registryRef } from './shared';
+import { gitConfig, libraryItem, registryRef, siteUrl } from './shared';
 
 export const packageManagers = ['pnpm', 'npm', 'yarn', 'bun'] as const;
 export type PackageManager = (typeof packageManagers)[number];
@@ -23,19 +23,8 @@ export const initCommand = (pm: PackageManager = 'pnpm') =>
 /** Where `shadcn add` puts the table (registry.json `target`). */
 export const installDir = `components/ui/${libraryItem}`;
 
-/** The prompt behind "Copy prompt" on the install page. */
-export const buildLibraryInstallPrompt = () =>
-  [
-    'Install shadcn-react-table, a data table for shadcn/ui built on TanStack Table, into this project.',
-    '',
-    '1. Requirements: a shadcn/ui project on the Radix base with Tailwind CSS v4 and React 18 or newer.',
-    `   No shadcn/ui yet: run ${initCommand()} first.`,
-    `2. Run: ${addCommand(libraryItem)}`,
-    `   It copies the table into ${installDir}/ and adds the shadcn/ui parts and npm dependencies it needs.`,
-    '3. Render a first table where it belongs:',
-    `   import { ShadcnReactTable } from '@/${installDir}';`,
-    '   <ShadcnReactTable columns={columns} data={data} />',
-    `   Column and data shapes: ${absoluteMarkdownUrl(['getting-started', 'usage'])}`,
-    `   Every option: ${absoluteMarkdownUrl(['api', 'table-options'])}`,
-    '4. Verify: the project type-checks and the table renders its rows.',
-  ].join('\n');
+/** The one-line prompt behind "Copy prompt": the skill file holds the rest. */
+export const agentPrompt = `Install shadcn-react-table in my app: ${siteUrl}/SKILL.md`;
+
+/** Installs the same skill file into the agent's skills directory. */
+export const skillInstallCommand = `npx skills add ${gitConfig.user}/${gitConfig.repo}`;

@@ -236,6 +236,10 @@ export default {
       ),
     );
     check('no V3 alert', !/was released September 5th, 2024/.test(txt));
+    check(
+      'agent bar',
+      (await page.locator('[data-slot="agent-bar"]').count()) === 1,
+    );
     // the live demo table is client-rendered (next/dynamic)
     const rows = page.locator('table tbody tr');
     await rows

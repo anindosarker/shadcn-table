@@ -4,6 +4,26 @@
  */
 import { codeToggle, example, names, paginationControls } from './_helpers.mjs';
 
+/** The agent bar: one visible prompt pointing at /SKILL.md, Copy prompt writes it. */
+async function agentBar(page, check) {
+  const bar = page.locator('[data-slot="agent-bar"]');
+  check('agent bar', (await bar.count()) === 1, String(await bar.count()));
+  if (!(await bar.count())) return;
+  const copy = bar.getByRole('button', { name: 'Copy prompt' });
+  await copy.click();
+  const written = await page.evaluate(() => window.__srtClipboard ?? '');
+  check(
+    'copy prompt writes the skill prompt',
+    written.startsWith('Install shadcn-react-table in my app: ') &&
+      written.endsWith('/SKILL.md'),
+    written,
+  );
+  check(
+    'copied state',
+    (await bar.getByRole('button', { name: 'Copied' }).count()) === 1,
+  );
+}
+
 export default {
   '/docs/getting-started/usage': async ({ page, check }) => {
     const w = await example(page, 'basic', check);
@@ -56,7 +76,7 @@ export default {
     );
   },
   '/docs/getting-started/install': async ({ page, check }) => {
-    const steps = page.locator('article [data-slot="step"], article .fd-step');
+    const steps = page.locator('article .fd-step');
     const tabs = page.locator('article [role="tab"]');
     check(
       'three steps',
@@ -79,31 +99,15 @@ export default {
         'shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table',
       ),
     );
-    check(
-      'agents link',
-      (await page
-        .locator('article a[href="/docs/getting-started/agents"]')
-        .count()) === 1,
-    );
+    await agentBar(page, check);
   },
   '/docs/getting-started/agents': async ({ page, check }) => {
-    const copy = page.getByRole('button', { name: 'Copy prompt' });
-    check('copy prompt button', (await copy.count()) === 1);
-    if (await copy.count()) {
-      await copy.click();
-      const written = await page.evaluate(() => window.__srtClipboard ?? '');
-      check(
-        'copy prompt writes the install prompt',
-        written.includes(
-          'shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table',
-        ) && written.includes('components/ui/shadcn-react-table'),
-        written.slice(0, 80),
-      );
-      check(
-        'copied state',
-        (await page.getByRole('button', { name: 'Copied' }).count()) === 1,
-      );
-    }
+    await agentBar(page, check);
+    const txt = (await page.locator('article').textContent()) ?? '';
+    check(
+      'skill install command',
+      txt.includes('npx skills add anindosarker/shadcn-react-table'),
+    );
     check(
       'llms link',
       (await page.locator('article a[href="/llms.txt"]').count()) === 1,

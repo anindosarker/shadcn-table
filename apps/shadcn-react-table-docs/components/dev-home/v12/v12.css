@@ -228,6 +228,48 @@
   background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
 }
 
+.v12 .v12-or {
+  width: 100%;
+  max-width: 28rem;
+  margin-block: 1.25rem 0;
+  margin-inline: auto;
+  color: var(--dh-ink-faint);
+}
+
+.v12 .v12-or > span {
+  background-color: var(--v12-dash);
+}
+
+.v12 .v12-agent {
+  width: max-content;
+  max-width: 100%;
+  margin-top: 1.25rem;
+  margin-inline: auto;
+  border-style: dashed;
+  border-color: var(--v12-dash);
+  border-radius: 2px;
+  background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
+}
+
+/* the bar's button in the hero's own button style: squared, mono, accent */
+.v12 .v12-agent [data-slot='button'] {
+  height: 2.25rem;
+  padding-inline: 0.9rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background-color: var(--dh-accent);
+  color: var(--dh-accent-ink);
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.v12 .v12-agent [data-slot='button']:hover {
+  background-color: color-mix(in oklch, var(--dh-accent) 86%, var(--dh-ink));
+}
+
 .v12-cta {
   display: flex;
   align-items: center;

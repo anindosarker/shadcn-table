@@ -1,0 +1,66 @@
+'use client';
+
+import { CheckIcon, CopyIcon, SparklesIcon } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/cn';
+
+/** How long the button reads "Copied" after a click. */
+const COPIED_MS = 1500;
+
+/**
+ * One line for agents: label, the prompt as visible text, Copy prompt.
+ * The prompt points at /SKILL.md; the instructions live there.
+ */
+export const AgentBar = ({
+  prompt,
+  className,
+}: {
+  prompt: string;
+  className?: string;
+}) => {
+  const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt);
+    } catch {
+      // Clipboard blocked (permissions, insecure context): nothing to show.
+      return;
+    }
+    setCopied(true);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+  };
+
+  return (
+    <div
+      data-slot="agent-bar"
+      className={cn(
+        'not-prose flex min-w-0 items-center gap-3 rounded-lg border border-border bg-card py-1.5 pr-1.5 pl-3.5 text-sm',
+        className,
+      )}
+    >
+      <span className="flex shrink-0 items-center gap-1.5 text-muted-foreground">
+        <SparklesIcon aria-hidden="true" className="size-3.5" />
+        Ask your agent
+      </span>
+      <span aria-hidden="true" className="h-5 w-px shrink-0 bg-border" />
+      <span className="min-w-0 flex-1 overflow-x-auto py-1 font-mono text-[13px] whitespace-nowrap [scrollbar-width:none]">
+        {prompt}
+      </span>
+      <Button type="button" size="sm" onClick={copy} className="shrink-0">
+        {copied ? <CheckIcon /> : <CopyIcon />}
+        {copied ? 'Copied' : 'Copy prompt'}
+      </Button>
+    </div>
+  );
+};
