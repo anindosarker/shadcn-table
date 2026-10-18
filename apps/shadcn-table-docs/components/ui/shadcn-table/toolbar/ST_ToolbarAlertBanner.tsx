@@ -107,8 +107,8 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
         {grouping.map((columnId, index) => (
           <Fragment key={`${index}-${columnId}`}>
             {index > 0 ? localization.thenBy : ''}
-            {/* A secondary Badge rendered as the button (shadcn `asChild`); the
-                badge's own attributes and classes merge onto the child. */}
+            {/* A secondary Badge rendered as the button: the badge's own
+                attributes and classes merge onto the child element. */}
             <Slot
               data-slot="badge"
               data-variant="secondary"
