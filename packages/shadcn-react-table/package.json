@@ -1,10 +1,9 @@
 {
   "name": "shadcn-react-table",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "review": "node scripts/review-defs.mjs",
     "registry:build": "node scripts/build-registry.mjs && shadcn build",
     "registry:dev": "node scripts/build-registry.mjs --dev && shadcn build .dev/registry.json --output .dev/r",
     "storybook": "storybook dev -p 6006",
@@ -15,9 +14,6 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
-    "@radix-ui/react-collapsible": "^1.1.12",
-    "@radix-ui/react-progress": "^1.1.7",
-    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/match-sorter-utils": "8.19.4",
     "@tanstack/react-table": "8.20.6",
@@ -41,7 +37,6 @@
     "@storybook/addon-links": "^10.6.2",
     "@storybook/addon-mcp": "^10.6.2",
     "@storybook/addon-vitest": "10.6.2",
-    "@storybook/react": "^10.6.2",
     "@storybook/react-vite": "^10.6.2",
     "@types/node": "^22.10.2",
     "@types/react": "^19.1.13",

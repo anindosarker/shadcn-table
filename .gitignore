@@ -12,9 +12,8 @@ coverage
 .next/
 out/
 build
-packages/material-react-table/locales
 
-# mrt
+# build
 *.log
 .cache
 /dist
@@ -42,3 +41,8 @@ yarn-error.log*
 
 *storybook.log
 .vscode/settings.json
+
+# third-party skills
+.agents/skills
+.claude/skills
+skills-lock.json
