@@ -245,6 +245,17 @@ html > body[data-scroll-locked] {
   font-size: 0.8125rem;
 }
 
+/* mobile TOC popover (below xl): an opaque panel stacked above the sticky
+   page bar, which shares its z-10 and comes later in the DOM; the page bar
+   already sticks below it (--fd-docs-row-3 includes the popover height) */
+[data-toc-popover] {
+  z-index: 20;
+}
+
+[data-toc-popover] > header {
+  background-color: var(--color-fd-background);
+}
+
 /* example playground (components/example-playground.tsx): dashed frame and
    header rule; the table inside keeps its own solid border */
 .docs-playground {
