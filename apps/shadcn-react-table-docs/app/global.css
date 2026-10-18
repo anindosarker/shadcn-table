@@ -477,6 +477,8 @@ html:has(#nd-notebook-layout) {
  * 0.546 reads 3.8:1 on the dark page; the others are already above) */
 html.dark:has(#nd-notebook-layout) {
   --docs-accent: oklch(from var(--primary) max(l, 0.7) c h);
+  /* sidebar and drawer sit on the page black, not the presets' grey --sidebar */
+  --sidebar: var(--background);
   --color-fd-muted-foreground: var(--muted-foreground);
 }
 
