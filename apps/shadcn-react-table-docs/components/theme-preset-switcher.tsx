@@ -13,6 +13,7 @@ import { cn } from '@/lib/cn';
 import {
   DEFAULT_THEME,
   isThemePreset,
+  RANDOMIZE_DEFAULT_THEME,
   THEME_PRESETS,
   THEME_STORAGE_KEY,
   type ThemePreset,
@@ -39,8 +40,9 @@ function getServerSnapshot(): ThemePreset {
   return DEFAULT_THEME;
 }
 
-/** Random mode: no valid preset stored, so the inline script rolls one per load. */
+/** Random mode (RANDOMIZE_DEFAULT_THEME only): no valid preset stored, so the inline script rolls one per load. */
 function getRandomSnapshot(): boolean {
+  if (!RANDOMIZE_DEFAULT_THEME) return false;
   try {
     return !isThemePreset(localStorage.getItem(THEME_STORAGE_KEY));
   } catch {
@@ -49,7 +51,7 @@ function getRandomSnapshot(): boolean {
 }
 
 function getServerRandomSnapshot(): boolean {
-  return true;
+  return RANDOMIZE_DEFAULT_THEME;
 }
 
 export function applyThemePreset(name: ThemePreset) {
@@ -62,17 +64,19 @@ export function applyThemePreset(name: ThemePreset) {
   for (const l of listeners) l();
 }
 
-/** Forgets the stored pick (random per load again) and rolls a different preset now. */
+/** Rolls a preset other than the current one. With RANDOMIZE_DEFAULT_THEME it forgets the
+ * stored pick (random per load again); otherwise it saves the roll like a normal pick. */
 export function applyRandomThemePreset() {
+  const current = document.documentElement.dataset.theme;
+  const others = THEME_PRESETS.filter((p) => p.name !== current);
+  const next = others[Math.floor(Math.random() * others.length)].name;
+  if (!RANDOMIZE_DEFAULT_THEME) return applyThemePreset(next);
   try {
     localStorage.removeItem(THEME_STORAGE_KEY);
   } catch {
     // storage unavailable: only this page re-rolls
   }
-  const current = document.documentElement.dataset.theme;
-  const others = THEME_PRESETS.filter((p) => p.name !== current);
-  document.documentElement.dataset.theme =
-    others[Math.floor(Math.random() * others.length)].name;
+  document.documentElement.dataset.theme = next;
   for (const l of listeners) l();
 }
 
