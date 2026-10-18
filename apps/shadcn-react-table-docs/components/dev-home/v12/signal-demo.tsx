@@ -3,25 +3,19 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CheckIcon, HandIcon, RotateCcwIcon } from 'lucide-react';
-import type {
-  SignalTableProps,
-  SignalTableState,
-} from '@/components/dev-home/v5/signal-table';
+import type { SignalTableProps, SignalTableState } from './signal-table';
 
-const SignalTable = dynamic(
-  () => import('@/components/dev-home/v5/signal-table'),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        role="status"
-        className="flex min-h-[26rem] items-center justify-center text-sm text-(--dh-ink-muted)"
-      >
-        Loading table
-      </div>
-    ),
-  },
-);
+const SignalTable = dynamic(() => import('./signal-table'), {
+  ssr: false,
+  loading: () => (
+    <div
+      role="status"
+      className="flex min-h-[26rem] items-center justify-center text-sm text-(--dh-ink-muted)"
+    >
+      Loading table
+    </div>
+  ),
+});
 
 interface Step {
   /** Feature name for the status line. */
@@ -34,11 +28,22 @@ interface Step {
 const BASE: SignalTableState = {
   sorting: [],
   columnFilters: [],
-  columnPinning: { left: [], right: [] },
   grouping: [],
   expanded: {},
   showColumnFilters: false,
+  rowSelection: {},
+  globalFilter: '',
+  showGlobalFilter: false,
+  salaryEdits: {},
 };
+
+/* The edit step opens Kathryn Kirlin's salary cell (row 55, top row after
+ * the sort and filter), types a new value, then saves it. */
+const EDIT_STEP = 2;
+const EDIT_ROW = '55';
+const EDIT_FROM = '97434';
+const EDIT_TO = '120000';
+const EDIT_PHASE_MS = 1000;
 
 const STEPS: readonly Step[] = [
   {
@@ -58,16 +63,36 @@ const STEPS: readonly Step[] = [
     }),
   },
   {
-    feature: 'Pinning',
-    title: 'Pin last name to the left',
-    code: "columnPinning: { left: ['lastName'] }",
-    apply: (s) => ({ ...s, columnPinning: { left: ['lastName'], right: [] } }),
+    feature: 'Editing',
+    title: 'Edit the top salary to $120,000',
+    code: "enableEditing: true, editDisplayMode: 'cell'",
+    apply: (s) => ({
+      ...s,
+      salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
+    }),
   },
   {
     feature: 'Grouping',
     title: 'Group rows by state',
     code: "grouping: ['state']",
     apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
+  },
+  {
+    feature: 'Selection',
+    title: 'Ungroup, then select the top 3 rows',
+    code: 'grouping: [], rowSelection: { 55: true, 100: true, 45: true }',
+    apply: (s) => ({
+      ...s,
+      grouping: [],
+      expanded: {},
+      rowSelection: { '55': true, '100': true, '45': true },
+    }),
+  },
+  {
+    feature: 'Search',
+    title: 'Search all columns for “el”',
+    code: "globalFilter: 'el'",
+    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'el' }),
   },
 ];
 
@@ -89,6 +114,8 @@ export function SignalDemo() {
   const [mode, setMode] = useState<Mode>('playing');
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<SignalTableState>(BASE);
+  // edit step: 0 idle, 1 cell open, 2 new value typed, 3 saved
+  const [editPhase, setEditPhase] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // reduced motion: no autoplay, land on the finished table
@@ -120,15 +147,51 @@ export function SignalDemo() {
   useEffect(() => {
     if (!running) return;
     const last = STEPS.length - 1;
-    const wait = step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS;
+    const wait =
+      step === -1
+        ? REST_MS
+        : step === last
+          ? HOLD_MS
+          : step === EDIT_STEP
+            ? STEP_MS + EDIT_PHASE_MS
+            : STEP_MS;
     const t = setTimeout(() => {
       const next = step === last ? -1 : step + 1;
       if (step === last) setFinished(true);
       setStep(next);
-      setState(stateAt(next));
+      if (next === EDIT_STEP) {
+        // open the cell on the previous state; the edit lands when saved
+        setState(stateAt(EDIT_STEP - 1));
+        setEditPhase(1);
+      } else {
+        setState(stateAt(next));
+        setEditPhase(0);
+      }
     }, wait);
     return () => clearTimeout(t);
   }, [running, step]);
+
+  // edit step: open the cell, type the new value, then save it
+  useEffect(() => {
+    if (!running || step !== EDIT_STEP || editPhase === 0 || editPhase === 3)
+      return;
+    const t = setTimeout(() => {
+      if (editPhase === 1) {
+        setEditPhase(2);
+      } else {
+        setEditPhase(3);
+        setState(stateAt(EDIT_STEP));
+      }
+    }, EDIT_PHASE_MS);
+    return () => clearTimeout(t);
+  }, [running, step, editPhase]);
+
+  const editing =
+    editPhase === 1
+      ? { rowId: EDIT_ROW, value: EDIT_FROM }
+      : editPhase === 2
+        ? { rowId: EDIT_ROW, value: EDIT_TO }
+        : null;
 
   const onChange = useCallback<SignalTableProps['onChange']>(
     (key, updater) =>
@@ -142,10 +205,22 @@ export function SignalDemo() {
     [],
   );
 
-  const takeControl = () => setMode((m) => (m === 'playing' ? 'user' : m));
+  const takeControl = () => {
+    if (mode !== 'playing') return;
+    setMode('user');
+    // a half-done replay edit is saved, so the visitor gets a normal table
+    if (editPhase === 1 || editPhase === 2) {
+      setEditPhase(0);
+      setState((s) => ({
+        ...s,
+        salaryEdits: { ...s.salaryEdits, [EDIT_ROW]: Number(EDIT_TO) },
+      }));
+    }
+  };
 
   const replay = () => {
     setFinished(false);
+    setEditPhase(0);
     setStep(-1);
     setState(BASE);
     setMode('playing');
@@ -153,6 +228,7 @@ export function SignalDemo() {
 
   const jumpTo = (i: number) => {
     setFinished(false);
+    setEditPhase(0);
     setStep(i);
     setState(stateAt(i));
     setMode('paused');
@@ -176,7 +252,7 @@ export function SignalDemo() {
         onPointerDownCapture={takeControl}
         onKeyDownCapture={takeControl}
       >
-        <SignalTable state={state} onChange={onChange} />
+        <SignalTable state={state} onChange={onChange} editing={editing} />
       </div>
 
       <aside className="v5-steps" aria-label="Demo items">

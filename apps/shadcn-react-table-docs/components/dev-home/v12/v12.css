@@ -357,6 +357,12 @@
   border-color: var(--dh-rule-strong);
 }
 
+/* six replay items: tighter rows so the list stays no taller than the
+ * table beside it */
+.v12 .v5-step {
+  padding-block: 8px;
+}
+
 /* feature tiles: frame only, the drawings stay solid */
 .v12 .dh-tile {
   border-style: dashed;
