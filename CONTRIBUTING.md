@@ -149,7 +149,7 @@ pnpm exec vite build
 ```
 
 - **Existing app.** Repeat in an app that already has `@tanstack/react-table` installed (`pnpm add @tanstack/react-table@8.20.5 @tanstack/react-query` first). The CLI merges the dependency; `package.json` must end with one `@tanstack/react-table` entry.
-- **From a pushed branch.** Example items resolve only through GitHub, and the library item can too: `pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table#<branch>`, then `anindosarker/shadcn-table/example-basic#<branch> --overwrite`. Set `GH_TOKEN` to avoid the API rate limit.
+- **From a pushed branch.** Example items resolve only through GitHub, and the library item can too: `pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table#<branch>`, then `anindosarker/shadcn-table/example-basic#<branch> --overwrite`. Set `GH_TOKEN` to avoid the API rate limit. Locale items depend on the unpinned library address, which the CLI resolves on the default branch, so from a branch install them through `registry:dev` (that is what the CI `install` job does).
 - **Rerun after changes.** `registry:dev` rebuilds `.dev/`; `add` again with `--overwrite` to update the installed files.
 
 ## 5. Update the Docs
