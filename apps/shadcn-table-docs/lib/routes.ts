@@ -389,7 +389,7 @@ export const routes: Array<RouteItem> = [
         ],
       },
       {
-        href: 'https://www.shadcn-table.dev',
+        href: 'https://storybook.shadcn-table.com',
         label: 'Extra Storybook Examples',
         external: true,
       },
