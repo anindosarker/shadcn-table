@@ -231,6 +231,8 @@ const INSTALL_PEERS = `> \`shadcn-react-table\` is distributed through the shadc
 > 2.  \`react\` and \`react-dom\` (v18+)
 >
 > The install command adds \`@tanstack/react-table\` (v8), \`@tanstack/react-virtual\`, \`lucide-react\` and the shadcn/ui components the table is built from.
+>
+> Shadcn React Table is built and tested against the \`radix-nova\` parts; other Radix themes work, Base UI and React Aria need the matching package (planned).
 `;
 
 /** guides/customize-components: MRT's "Styling MUI Components" / sx section. */

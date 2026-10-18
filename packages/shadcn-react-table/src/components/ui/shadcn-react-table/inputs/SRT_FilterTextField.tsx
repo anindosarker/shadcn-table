@@ -527,7 +527,7 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               </SelectTrigger>
               {/* slotProps.select: { MenuProps: { disableScrollLock: true }, displayEmpty: true } */}
               {/* Note: radix Select always locks scroll; SelectValue shows the placeholder. */}
-              <SelectContent>
+              <SelectContent position="popper">
                 {/* <MenuItem disabled divider hidden key="p" value="">{filterPlaceholder}</MenuItem> */}
                 {/* Note: radix items cannot carry value ""; the placeholder lives on SelectValue. */}
                 {textFieldProps.children ??
