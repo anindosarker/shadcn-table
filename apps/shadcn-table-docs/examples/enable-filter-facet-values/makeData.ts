@@ -18,7 +18,7 @@ export const data = [
   },
   {
     isActive: true,
-    name: 'Kevin Vandy',
+    name: 'Maya Patel',
     age: 51,
     salary: 80_000,
     city: 'Richmond',

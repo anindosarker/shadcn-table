@@ -817,10 +817,10 @@ export type ST_DisplayColumnIds =
  * `columns` and `data` props are the only required props, but there are over 170 other optional props.
  *
  * See more info on creating columns and data on the official docs site:
- * @link https://www.material-react-table.com/docs/getting-started/usage
+ * @link https://shadcn-table.com/docs/getting-started/usage
  *
  * See the full props list on the official docs site:
- * @link https://www.material-react-table.com/docs/api/props
+ * @link https://shadcn-table.com/docs/api/table-options
  */
 export interface ST_TableOptions<TData extends ST_RowData>
   extends Omit<
@@ -844,11 +844,11 @@ export interface ST_TableOptions<TData extends ST_RowData>
    * The columns to display in the table. `accessorKey`s or `accessorFn`s must match keys in the `data` table option.
    *
    * See more info on creating columns on the official docs site:
-   * @link https://www.material-react-table.com/docs/guides/data-columns
-   * @link https://www.material-react-table.com/docs/guides/display-columns
+   * @link https://shadcn-table.com/docs/guides/data-columns
+   * @link https://shadcn-table.com/docs/guides/display-columns
    *
    * See all Columns Options on the official docs site:
-   * @link https://www.material-react-table.com/docs/api/column-options
+   * @link https://shadcn-table.com/docs/api/column-options
    */
   columns: ST_ColumnDef<TData, any>[];
   columnVirtualizerInstanceRef?: RefObject<ST_ColumnVirtualizer | null>;
@@ -862,7 +862,7 @@ export interface ST_TableOptions<TData extends ST_RowData>
    * Pass your data as an array of objects. Objects can theoretically be any shape, but it's best to keep them consistent.
    *
    * See the usage guide for more info on creating columns and data:
-   * @link https://www.material-react-table.com/docs/getting-started/usage
+   * @link https://shadcn-table.com/docs/getting-started/usage
    */
   data: TData[];
   /**
@@ -928,17 +928,17 @@ export interface ST_TableOptions<TData extends ST_RowData>
    */
   layoutMode?: 'grid' | 'grid-no-grow' | 'semantic';
   /**
-   * Pass in either a locale imported from `material-react-table/locales/*` or a custom locale object.
+   * Pass in either a locale imported from `@/components/ui/shadcn-table/locales/*` or a custom locale object.
    *
    * See the localization (i18n) guide for more info:
-   * @link https://www.material-react-table.com/docs/guides/localization
+   * @link https://shadcn-table.com/docs/guides/localization
    */
   localization?: Partial<ST_Localization>;
   /**
    * Memoize cells, rows, or the entire table body to potentially improve render performance.
    *
    * @warning This will break some dynamic rendering features. See the memoization guide for more info:
-   * @link https://www.material-react-table.com/docs/guides/memoize-components
+   * @link https://shadcn-table.com/docs/guides/memoization
    */
   memoMode?: 'cells' | 'rows' | 'table-body';
   // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.

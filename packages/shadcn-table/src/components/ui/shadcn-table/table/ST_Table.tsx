@@ -37,7 +37,7 @@ export const ST_Table = <TData extends ST_RowData>({
        * MUI `stickyHeader` Table prop dropped (no native `<table>` attr) — sticky th
         styles live in `ST_TableHeadCell` (+ thead-level grid-mode sticky in
         `ST_TableHead`), derived from `enableStickyHeader || isFullScreen` off
-        `table`, same as MRT_TableHead does.
+        `table`, same as ST_TableHead does.
       enableStickyHeader,
        */
       enableTableFooter,

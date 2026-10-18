@@ -49,7 +49,7 @@ export const data = [
   },
   {
     isActive: true,
-    name: 'Kevin Vandy',
+    name: 'Maya Patel',
     hireDate: '2019-02-23T18:21:43.335',
     arrivalTime: '2019-02-23T18:21:43.335',
     departureTime: today(),

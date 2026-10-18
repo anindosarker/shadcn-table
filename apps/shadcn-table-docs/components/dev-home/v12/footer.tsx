@@ -18,10 +18,7 @@ const COLUMNS = [
       { label: 'GitHub', href: GITHUB_URL },
       { label: 'TanStack Table', href: 'https://tanstack.com/table' },
       { label: 'shadcn/ui', href: 'https://ui.shadcn.com' },
-      {
-        label: 'Material React Table',
-        href: 'https://www.material-react-table.com',
-      },
+      { label: 'Storybook', href: 'https://storybook.shadcn-table.com' },
     ],
   },
 ] as const;

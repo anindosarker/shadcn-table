@@ -61,7 +61,7 @@ export const Example = () => {
             className="text-primary"
             onClick={() =>
               window.open(
-                `mailto:kevinvandy@mailinator.com?subject=Hello ${row.original.firstName}!`,
+                `mailto:maya.patel@example.com?subject=Hello ${row.original.firstName}!`,
               )
             }
           >

@@ -11,7 +11,7 @@ import { useST_MediaQuery } from './useST_MediaQuery';
 import { ST_GlobalFilterTextField } from '../inputs/ST_GlobalFilterTextField';
 
 const topToolbarVariants = cva(
-  // Note: maps MRT getCommonToolbarStyles (packages/material-react-table/src/utils/style.utils.ts)
+  // Note: maps MRT getCommonToolbarStyles
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
   {
     variants: {

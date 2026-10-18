@@ -628,8 +628,8 @@ export const routes: Array<RouteItem> = [
     href: '#',
     items: [
       {
-        href: 'https://discord.gg/5wqyRx6fnm',
-        label: 'Discord',
+        href: 'https://github.com/anindosarker/shadcn-table/discussions',
+        label: 'Discussions',
         external: true,
       },
       {
