@@ -92,6 +92,7 @@ pnpm --filter shadcn-react-table-docs exec shadcn add "anindosarker/shadcn-react
 
 ```bash
 pnpm --filter shadcn-react-table-docs dev          # http://localhost:5320
+PORT=5331 pnpm --filter shadcn-react-table-docs dev  # starts a second docs server alongside the default one
 pnpm --filter shadcn-react-table-docs types:check
 pnpm --filter shadcn-react-table-docs build
 ```

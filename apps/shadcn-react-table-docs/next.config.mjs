@@ -6,8 +6,12 @@ const withMDX = createMDX({ agentRules: false });
 const config = {
   reactStrictMode: true,
   // A second `next dev` in the same folder refuses to start (.next/dev/lock).
-  // Parallel docs agents run `NEXT_DIST_DIR=.next-<x> npx next dev -p <port>`.
-  distDir: process.env.NEXT_DIST_DIR ?? '.next',
+  // `PORT=5331 pnpm dev` runs a second server (own .next-<port>).
+  distDir:
+    process.env.NEXT_DIST_DIR ??
+    (process.env.PORT && process.env.PORT !== '5320'
+      ? `.next-${process.env.PORT}`
+      : '.next'),
   // MRT's docs index is a table of contents page; the sidebar already is one.
   redirects: async () => [
     {

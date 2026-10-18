@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev -p 5320",
+    "dev": "next dev -p ${PORT:-5320}",
     "start": "next start -p 5320",
     "types:check": "next typegen && tsc --noEmit",
     "lint": "eslint",
