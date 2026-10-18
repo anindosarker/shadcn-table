@@ -14,7 +14,8 @@
  *
  * A single-letter argument limits the run to that cluster's page checks;
  * explicit /docs paths run only those pages (with their checks, if any).
- * Playwright is resolved from apps/test-shadcn/.playwright/node_modules.
+ * Playwright is resolved from packages/shadcn-react-table/node_modules
+ * (a devDependency of the library package).
  */
 import { createRequire } from 'node:module';
 import { promises as fs } from 'node:fs';
@@ -27,7 +28,15 @@ const APP_DIR = path.resolve(
 );
 const CHECKS_DIR = path.join(APP_DIR, 'scripts', 'page-checks');
 const require = createRequire(
-  path.join(APP_DIR, '..', 'test-shadcn', '.playwright', 'node_modules', '/'),
+  path.join(
+    APP_DIR,
+    '..',
+    '..',
+    'packages',
+    'shadcn-react-table',
+    'node_modules',
+    '/',
+  ),
 );
 const { chromium } = require('playwright');
 
