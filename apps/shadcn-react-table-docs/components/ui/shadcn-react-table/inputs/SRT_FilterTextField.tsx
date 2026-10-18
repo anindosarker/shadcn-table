@@ -310,14 +310,25 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
     );
   }
 
+  const hasFilterValue = (filterValue?.length ?? 0) > 0;
+
   const endAdornment =
-    !isAutocompleteFilter && !isDateFilter && !filterChipLabel ? (
+    !isAutocompleteFilter &&
+    !isDateFilter &&
+    !filterChipLabel &&
+    // Range fields are narrow, so the clear button takes no room until there
+    // is something to clear; the other fields reserve its width to avoid a
+    // layout shift when the value appears.
+    (!isRangeFilter || hasFilterValue) ? (
       <InputGroupAddon
         align="inline-end"
         className={cn(
           // mr: isSelectFilter || isMultiSelectFilter ? '20px' : undefined,
           // Note: clears MUI Select's absolute arrow; shadcn's chevron sits in flow inside the trigger.
-          (filterValue?.length ?? 0) > 0 ? 'visible' : 'invisible',
+          // The select addon overlays the trigger so the trigger spans the whole
+          // group and the popper (sized from the trigger) matches the field.
+          isSelectFilter && 'absolute inset-y-0 right-0',
+          hasFilterValue ? 'visible' : 'invisible',
         )}
       >
         <SRT_Tooltip side="right" title={localization.clearFilter ?? ''}>
@@ -389,6 +400,8 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
   };
 
   const commonDatePickerProps = {
+    // Tighter inset so the native placeholder fits at the date minimum width.
+    className: cn('px-1.5', commonTextFieldProps.className),
     onChange: (event: ChangeEvent<HTMLInputElement>) => {
       handleChange(event.target.value);
     },
@@ -422,13 +435,16 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
       <div
         className={cn(
           filterTextFieldVariants(),
+          // Note: Chromium's date input needs 126px of content for its placeholder.
           isDateFilter
             ? 'min-w-[140px]'
-            : isRangeFilter
-              ? 'min-w-[64px]'
-              : !filterChipLabel
-                ? 'min-w-[96px]'
-                : 'min-w-auto',
+            : isMultiSelectFilter
+              ? 'min-w-[120px]'
+              : isRangeFilter
+                ? 'min-w-[72px]'
+                : !filterChipLabel
+                  ? 'min-w-[96px]'
+                  : 'min-w-auto',
           // mx: '-2px', p: 0, width: 'calc(100% + 4px)',
           // Note: bleeds MUI's standard-variant underline past the cell padding; no underline here.
         )}
@@ -510,7 +526,9 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
               <SelectTrigger
                 aria-label={filterPlaceholder}
                 className={cn(
-                  'flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
+                  'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
+                  // Keeps the chevron clear of the overlaid clear button.
+                  hasFilterValue && 'pr-9',
                   textFieldProps.className,
                 )}
                 disabled={!!filterChipLabel || textFieldProps.disabled}
@@ -566,13 +584,13 @@ export const SRT_FilterTextField = <TData extends SRT_RowData>({
                   {(values: string[]) => (
                     <>
                       {values.map((value) => (
-                        <ComboboxChip key={value}>
+                        <ComboboxChip className="h-5 text-xs" key={value}>
                           {optionLabel(value)}
                         </ComboboxChip>
                       ))}
                       <ComboboxChipsInput
                         aria-label={filterPlaceholder}
-                        className="min-w-8"
+                        className="min-w-4"
                         ref={commonTextFieldProps.ref}
                         onKeyDown={(e) => {
                           e.stopPropagation();
