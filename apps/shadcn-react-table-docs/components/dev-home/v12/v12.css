@@ -319,6 +319,56 @@
   border-radius: 2px;
 }
 
+/* ------------------------------------------------------ dashed borders */
+/* Every component edge on the page uses the same 1px dashed hairline. The
+ * live SRT table inside the demo keeps the borders the library renders. */
+
+.v12 .v4-nav {
+  border-bottom: 1px dashed var(--v12-dash);
+}
+
+.v12 .v4-nav-links {
+  border-top-style: dashed;
+  border-top-color: var(--v12-dash);
+}
+
+.v12 .v4-footer-dune {
+  border-bottom: 1px dashed var(--v12-dash);
+}
+
+/* demo steps panel: its outer edge, header and footer bars, step rows */
+.v12 .v5-steps,
+.v12 .v5-steps > div,
+.v12 .v5-steps > p,
+.v12 .v5-step {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12 .v5-replay {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12 .v5-replay:hover {
+  border-color: var(--dh-rule-strong);
+}
+
+/* feature tiles: frame only, the drawings stay solid */
+.v12 .dh-tile {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12 .dh-tile:is(:hover, :focus-visible, [data-active='true']) {
+  border-color: var(--dh-rule-strong);
+}
+
+/* the two names in the hero sub */
+.v12-accent {
+  color: var(--dh-accent);
+}
+
 /* --------------------------------------------------------------- motion */
 
 @media (prefers-reduced-motion: reduce) {

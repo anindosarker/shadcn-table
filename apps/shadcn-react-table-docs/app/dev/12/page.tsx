@@ -33,9 +33,10 @@ export default function Variant12Page() {
               <span className="v7-wordmark-dash">-</span>table
             </h1>
             <p className="v12-pitch">
-              A production-ready table library built with TanStack Table and
-              shadcn/ui. Sorting, filtering, grouping, pinning, virtualization,
-              and more, all built in.
+              A production-ready table library built with{' '}
+              <span className="v12-accent">TanStack Table</span> and{' '}
+              <span className="v12-accent">shadcn/ui</span>. Sorting, filtering,
+              grouping, pinning, virtualization, and more, all built in.
             </p>
             <div className="v12-hero-row">
               <InstallCommand className="v12-install text-left" />
