@@ -1,0 +1,397 @@
+/* Hallmark · macrostructure: field backdrop + rising figure · variant 12 · theme: site theme picker (6 presets x light/dark) · genre: atmospheric */
+
+/*
+ * Variant 12. Variant 7's layout, recoloured by the docs site's own theme.
+ * app/dev/layout.tsx leaves /dev/12 out of the dark-only .dev-home shell, so
+ * this block maps the --dh-* tokens that the reused v4/v5/v7 styles and the
+ * shared tiles read onto the site's shadcn tokens. Changing the preset
+ * (html[data-theme]) or the mode (html.dark) recolours everything at once.
+ * Motion: transform and opacity only.
+ */
+
+.v12 {
+  /* surfaces + ink, from the site theme */
+  --dh-paper: var(--background);
+  --dh-paper-2: color-mix(in oklch, var(--foreground) 4%, var(--background));
+  --dh-paper-3: color-mix(in oklch, var(--foreground) 8%, var(--background));
+  --dh-ink: var(--foreground);
+  /* light: a step darker than --muted-foreground, so muted text keeps 4.5:1
+   * on the tinted band as well as on white */
+  --dh-ink-muted: color-mix(
+    in oklch,
+    var(--muted-foreground) 85%,
+    var(--foreground)
+  );
+  --dh-ink-faint: var(--dh-ink-muted);
+  --dh-rule: var(--border);
+  --dh-rule-strong: color-mix(
+    in oklch,
+    var(--foreground) 24%,
+    var(--background)
+  );
+
+  /* accent: light presets darken --primary a step so accent text keeps
+   * 4.5:1 on white; dark presets use it as is */
+  --dh-accent: color-mix(in oklch, var(--primary) 72%, var(--foreground));
+  --dh-accent-ink: var(--primary-foreground);
+  --dh-accent-soft: color-mix(in oklch, var(--dh-accent) 14%, transparent);
+  --dh-accent-faint: color-mix(in oklch, var(--dh-accent) 7%, transparent);
+  --dh-focus: var(--ring);
+
+  /* motion + type, as tokens.css */
+  --dh-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dh-dur-fast: 140ms;
+  --dh-dur: 320ms;
+  --dh-dur-slow: 640ms;
+  --dh-dur-crawl: 1600ms;
+  --dh-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --dh-font-mono:
+    ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* dashed hairlines: one colour and one 3px dash, 3px gap everywhere.
+   * Long rules and rails are gradients; component borders are native dashed */
+  --v12-dash: color-mix(in oklch, var(--foreground) 20%, var(--background));
+  --v12-dash-x: repeating-linear-gradient(
+    to right,
+    var(--v12-dash) 0 3px,
+    transparent 3px 6px
+  );
+  --v12-dash-y: repeating-linear-gradient(
+    to bottom,
+    var(--v12-dash) 0 3px,
+    transparent 3px 6px
+  );
+  /* content sits this far inside the rails */
+  --v12-pad: 12px;
+
+  /* how loud the glyph field and stars are */
+  --v12-field-opacity: 0.5;
+  --v12-star-opacity: 0.45;
+
+  color-scheme: light;
+  background-color: var(--dh-paper);
+  color: var(--dh-ink);
+}
+
+@media (min-width: 640px) {
+  .v12 {
+    --v12-pad: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .v12 {
+    --v12-pad: 28px;
+  }
+}
+
+:root.dark .v12 {
+  --dh-accent: var(--primary);
+  --dh-ink-muted: var(--muted-foreground);
+  --v12-field-opacity: 1;
+  --v12-star-opacity: 1;
+  color-scheme: dark;
+}
+
+.v12 ::selection {
+  background: var(--dh-accent-soft);
+  color: var(--dh-ink);
+}
+
+.v12 .v4-stars {
+  opacity: var(--v12-star-opacity);
+}
+
+.v12-field,
+.v12 .v4-footer-dune {
+  opacity: var(--v12-field-opacity);
+}
+
+/* ------------------------------------------------------------ page frame */
+
+.v12 .v4-shell {
+  padding-inline: calc(var(--v4-gutter) + var(--v12-pad));
+}
+
+/* full-width pieces (demo, code strip) run rail to rail */
+.v12-bleed {
+  margin-inline: calc(-1 * var(--v12-pad));
+}
+
+/* two dashed rails at the content edges, the whole page tall; drawn over
+ * the field and the sticky nav, under menus and popovers */
+.v12-rails {
+  position: absolute;
+  inset: 0;
+  z-index: 31;
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  pointer-events: none;
+}
+
+.v12-rails::before {
+  content: '';
+  position: absolute;
+  inset: 0 var(--v4-gutter);
+  background:
+    var(--v12-dash-y) left top / 1px 100% no-repeat,
+    var(--v12-dash-y) right top / 1px 100% no-repeat;
+}
+
+/* full-bleed rules: under the nav, then on top of each major section */
+.v12 .v4-nav {
+  border-bottom: 0;
+  background:
+    var(--v12-dash-x) left bottom / 100% 1px no-repeat,
+    var(--v4-nav-bg);
+}
+
+@media (max-width: 899px) {
+  .v12 .v4-nav-links {
+    border-top: 1px dashed var(--v12-dash);
+  }
+}
+
+.v12 .v4-nav-actions > div {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12-section,
+.v12 .v4-footer {
+  background: var(--v12-dash-x) left top / 100% 1px no-repeat;
+}
+
+.v12 .v4-footer-dune {
+  border-bottom: 0;
+  background: var(--v12-dash-x) left bottom / 100% 1px no-repeat;
+}
+
+/* ------------------------------------------------------------------- nav */
+
+.v12-gh {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--dh-ink-muted);
+  transition: transform var(--dh-dur-fast) var(--dh-ease-out);
+}
+
+.v12-gh:hover {
+  color: var(--dh-ink);
+  background-color: var(--dh-paper-2);
+}
+
+.v12-gh:active {
+  transform: scale(0.94);
+}
+
+.v12-gh:focus-visible {
+  outline: 2px solid var(--dh-focus);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ hero */
+
+/* compact on purpose: the demo's column headers must show above the fold */
+.v12-hero {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(1.25rem, 5vh, 4rem) clamp(1rem, 3vh, 2.25rem);
+}
+
+/* the field runs on under the top of the demo */
+.v12-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  height: calc(100% + 14rem);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 75%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 75%,
+    transparent 100%
+  );
+}
+
+.v12-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 2.2vh, 1.4rem);
+  text-align: center;
+}
+
+.v12-h1 {
+  max-width: 24ch;
+  font-size: min(clamp(2.3rem, 7.2vw, 7rem), 9vh);
+  line-height: 0.88;
+}
+
+@media (min-width: 768px) {
+  .v12-hero {
+    padding-block: clamp(2rem, 8vh, 6rem) clamp(1.5rem, 4.5vh, 3.5rem);
+  }
+  .v12-h1 {
+    font-size: min(clamp(2.3rem, 7.2vw, 7.5rem), 11vh);
+  }
+}
+
+.v12-pitch {
+  max-width: 46rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--dh-ink-muted);
+  text-wrap: pretty;
+}
+
+.v12-hero-row {
+  display: flex;
+  width: 100%;
+  max-width: 52rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.v12 .v12-install {
+  min-width: 0;
+  flex: 1 1 22rem;
+  border-style: dashed;
+  border-color: var(--v12-dash);
+  border-radius: 2px;
+  background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
+}
+
+.v12-cta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* ------------------------------------------------------------------ demo */
+
+.v12-demo {
+  position: relative;
+}
+
+/* the rule above the demo sits over the figure, so the dashes run on
+ * unbroken from edge to edge */
+.v12-demo::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: 1px;
+  background: var(--v12-dash-x);
+}
+
+/* sides come from the rails, top and bottom from the rules */
+.v12 .v7-figure {
+  border: 0;
+}
+
+.v12 .v7-figcap {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px dashed var(--v12-dash);
+  font-size: 11px;
+}
+
+@media (max-width: 639px) {
+  .v12 .v7-figcap span {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------- sections */
+
+.v12-section {
+  padding-block: clamp(4rem, 8vw, 6.5rem);
+}
+
+.v12-features {
+  background:
+    var(--v12-dash-x) left top / 100% 1px no-repeat,
+    var(--dh-paper-2);
+}
+
+.v12-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px 48px;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 1024px) {
+  .v12-head {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+  }
+}
+
+.v12-head > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.v12-head .v5-section-lede {
+  max-width: 44ch;
+}
+
+.v12-label {
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dh-accent);
+}
+
+/* ------------------------------------------------------------ code strip */
+
+.v12 .v7-strip {
+  border: 0;
+  background:
+    var(--v12-dash-x) left top / 100% 1px no-repeat,
+    var(--v12-dash-x) left bottom / 100% 1px no-repeat;
+}
+
+.v12 .v7-step + .v7-step {
+  border-top: 1px dashed var(--v12-dash);
+}
+
+@media (min-width: 1024px) {
+  .v12 .v7-step + .v7-step {
+    border-top: 0;
+    border-left: 1px dashed var(--v12-dash);
+  }
+}
+
+.v12 .v7-code,
+.v12 .v7-step .v7-install-cmd {
+  border: 1px dashed var(--v12-dash);
+  border-radius: 2px;
+}
+
+/* --------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .v12 .v4-star {
+    animation: none;
+  }
+}

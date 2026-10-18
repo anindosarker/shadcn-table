@@ -89,6 +89,13 @@ const variants: {
       'The replaying table above the fold beside the headline; features in a mixed-size grid below.',
     feature: 'column-pinning',
   },
+  {
+    n: 12,
+    name: 'Batteries included',
+    description:
+      'Variant 7 with plain copy; follows the site theme picker and light/dark mode.',
+    feature: 'export',
+  },
 ];
 
 export default function DevIndexPage() {
@@ -99,7 +106,7 @@ export default function DevIndexPage() {
           shadcn-react-table · homepage experiments
         </p>
         <h1 className="max-w-2xl text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-          Eleven ways to sell a data grid.
+          Twelve ways to sell a data grid.
         </h1>
         <p className="max-w-xl text-base text-pretty text-(--dh-ink-muted)">
           Each variant pitches the same library: a full-featured React table

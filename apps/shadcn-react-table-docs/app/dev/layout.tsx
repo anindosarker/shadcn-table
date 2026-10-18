@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { ForceDark } from '@/components/dev-home/shared/force-dark';
+import { DevShell } from '@/components/dev-home/shared/dev-shell';
 
 export const metadata: Metadata = {
   title: 'Homepage experiments',
@@ -11,12 +11,8 @@ export const metadata: Metadata = {
  * Experimental homepages. No fumadocs HomeLayout: each variant owns its nav.
  * Dark-only, whatever the site theme is. A variant page can set its accent
  * with <div data-variant="N"> on its own .dev-home wrapper, or rely on this one.
+ * DevShell exempts the variants that follow the site theme (see THEMED there).
  */
 export default function DevLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="dev-home dark flex min-h-screen w-full flex-1 flex-col bg-(--dh-paper) text-(--dh-ink) antialiased">
-      <ForceDark />
-      {children}
-    </div>
-  );
+  return <DevShell>{children}</DevShell>;
 }
