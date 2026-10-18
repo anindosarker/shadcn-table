@@ -24,8 +24,6 @@
     "async-loading",
     "pagination",
     "virtualization",
-    "---Server-Side Data---",
-    "server-side-data",
     "---Data Mutation Guides---",
     "row-selection",
     "editing",

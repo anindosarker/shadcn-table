@@ -25,6 +25,12 @@ const config = {
       destination: '/docs/getting-started/install',
       permanent: false,
     },
+    // The production tables guide started out under guides.
+    {
+      source: '/docs/guides/server-side-data',
+      destination: '/docs/getting-started/production-ready-tables',
+      permanent: false,
+    },
   ],
 };
 

@@ -1,5 +1,5 @@
 {
   "title": "Getting Started",
   "defaultOpen": true,
-  "pages": ["install", "usage", "agents"]
+  "pages": ["install", "usage", "production-ready-tables", "agents"]
 }

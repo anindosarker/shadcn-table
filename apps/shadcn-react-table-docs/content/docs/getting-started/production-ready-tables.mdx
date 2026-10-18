@@ -1,9 +1,9 @@
 ---
-title: 'Server-Side Data with React Query'
-description: 'Build a server-side table with pagination, sorting, search and column filters, using React Query and Shadcn React Table'
+title: 'Building Production-Ready Tables'
+description: 'Fetch data with React Query, translate table state with a custom hook, and wire it into a manual-state table.'
 ---
 
-In this guide you build a table where the server does the paging, sorting, search and filtering. The table only shows one page at a time. You need four pieces:
+This guide shows the pattern for a real-world table. The data comes from your API through React Query. The server does the paging, sorting, search and filtering, and the table only shows one page at a time. You need four pieces:
 
 1. **Service:** an async function that calls your API.
 2. **Query hook:** `useUsersQuery(params)` wraps the service in React Query.

@@ -107,6 +107,21 @@ export default {
     );
     await agentBar(page, check);
   },
+  '/docs/getting-started/production-ready-tables': async ({ page, check }) => {
+    const w = await example(page, 'server-side-data', check);
+    check(
+      'server-side-data: refresh button',
+      (await w.locator('button:has(.lucide-refresh-cw)').count()) === 1,
+    );
+    check('steps', (await page.locator('article h3').count()) >= 4);
+  },
+  '/docs/guides/server-side-data': async ({ page, check }) => {
+    check(
+      'redirects to production-ready-tables',
+      page.url().endsWith('/docs/getting-started/production-ready-tables'),
+      page.url(),
+    );
+  },
   '/docs/getting-started/agents': async ({ page, check }) => {
     await agentBar(page, check);
     const txt = (await page.locator('article').textContent()) ?? '';

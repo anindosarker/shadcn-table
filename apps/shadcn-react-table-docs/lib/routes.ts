@@ -43,6 +43,11 @@ export const routes: Array<RouteItem> = [
         label: 'Usage',
         keywords: ['beginner', 'guide'],
       },
+      {
+        href: '/docs/getting-started/production-ready-tables',
+        label: 'Building Production-Ready Tables',
+        keywords: ['server-side', 'react query', 'remote data', 'production'],
+      },
     ],
   },
   {
