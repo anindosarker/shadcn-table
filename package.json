@@ -1,5 +1,5 @@
 {
-  "name": "material-react-table-turbo",
+  "name": "shadcn-react-table-monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -9,7 +9,6 @@
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
-    "lib:build": "cp README.md packages/material-react-table/README.md && turbo run lib:build",
     "lib:build-lib": "turbo run lib:build-lib",
     "lib:build-locales": "turbo run lib:build-locales",
     "lib:dev": "turbo run lib:dev",
