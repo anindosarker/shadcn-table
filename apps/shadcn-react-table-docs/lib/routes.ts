@@ -31,7 +31,7 @@ export const routes: Array<RouteItem> = [
   },
   {
     label: 'Getting Started',
-    href: '/docs/getting-started',
+    href: '/docs/getting-started/install',
     items: [
       {
         href: '/docs/getting-started/install',

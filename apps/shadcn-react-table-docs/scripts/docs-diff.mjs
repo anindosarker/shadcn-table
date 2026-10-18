@@ -45,6 +45,7 @@ const SKIP = [
   'about.mdx',
   'changelog.mdx',
   'roadmap.mdx',
+  'getting-started/index.mdx',
   'getting-started/migrating-to-v3.mdx',
   'index.mdx',
 ];

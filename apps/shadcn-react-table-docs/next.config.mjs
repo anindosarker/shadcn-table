@@ -15,6 +15,12 @@ const config = {
       destination: '/docs/getting-started/install',
       permanent: false,
     },
+    // The getting-started overview was two links; the sidebar lists them.
+    {
+      source: '/docs/getting-started',
+      destination: '/docs/getting-started/install',
+      permanent: false,
+    },
   ],
 };
 

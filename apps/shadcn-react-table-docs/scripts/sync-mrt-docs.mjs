@@ -890,6 +890,8 @@ async function syncPage(rel) {
 /** MRT pages that are not ported (plan: skipped list). */
 const SKIPPED_PAGES = new Set([
   'getting-started/migrating-to-v3.mdx',
+  // two-link overview; /docs/getting-started redirects to install (next.config.mjs)
+  'getting-started/index.mdx',
   // MRT's docs TOC page; /docs redirects to the install page (next.config.mjs)
   'index.mdx',
 ]);

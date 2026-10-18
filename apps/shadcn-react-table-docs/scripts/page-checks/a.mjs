@@ -56,10 +56,11 @@ export default {
     );
   },
   '/docs/getting-started': async ({ page, check }) => {
-    const n = await page
-      .locator('article a[href^="/docs/getting-started/"]')
-      .count();
-    check('table of contents links', n >= 2, String(n));
+    check(
+      'redirects to install',
+      page.url().endsWith('/docs/getting-started/install'),
+      page.url(),
+    );
   },
   '/docs/api': async ({ page, check }) => {
     const n = await page.locator('article a[href^="/docs/api/"]').count();
