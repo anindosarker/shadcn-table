@@ -41,3 +41,8 @@ yarn-error.log*
 
 *storybook.log
 .vscode/settings.json
+
+# third-party skills
+.agents/skills
+.claude/skills
+skills-lock.json
