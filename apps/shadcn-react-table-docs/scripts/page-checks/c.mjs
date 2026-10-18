@@ -215,6 +215,20 @@ export default {
       );
     }
   },
+  '/docs/guides/server-side-data': async ({ page, check }) => {
+    const w = await example(page, 'server-side-data', check);
+    await marker(
+      w,
+      'server-side-data',
+      'refresh button',
+      'button:has(.lucide-refresh-cw)',
+      check,
+    );
+    check(
+      'server-side-data: steps',
+      (await page.locator('article h3').count()) >= 4,
+    );
+  },
   '/docs/guides/sorting': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);

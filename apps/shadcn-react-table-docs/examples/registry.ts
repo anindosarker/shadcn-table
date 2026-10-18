@@ -110,6 +110,7 @@ import ReactQueryExample from '@/examples/react-query';
 import RemoteExample from '@/examples/remote';
 import RowActionsButtonsExample from '@/examples/row-actions-buttons';
 import RowActionsMenuItemsExample from '@/examples/row-actions-menu-items';
+import ServerSideDataExample from '@/examples/server-side-data';
 import SingleRowSelectionExample from '@/examples/single-row-selection';
 import VirtualizedExample from '@/examples/virtualized';
 import BasicExamples from '@/example-groups/BasicExamples';
@@ -237,6 +238,7 @@ export const exampleComponents = {
   RemoteExample,
   RowActionsButtonsExample,
   RowActionsMenuItemsExample,
+  ServerSideDataExample,
   SingleRowSelectionExample,
   VirtualizedExample,
   BasicExamples,

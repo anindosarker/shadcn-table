@@ -546,7 +546,7 @@
     {
       "name": "example-editing-crud-cell",
       "type": "registry:block",
-      "title": "Editing CRUD Inline Example",
+      "title": "Editing CRUD Inline Cell Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline cell features",
       "registryDependencies": [
         "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
@@ -623,7 +623,7 @@
     {
       "name": "example-editing-crud-table",
       "type": "registry:block",
-      "title": "Editing CRUD Inline Example",
+      "title": "Editing CRUD Inline Table Example",
       "description": "An example of Shadcn React Table which shows how to use editing CRUD Inline table features",
       "registryDependencies": [
         "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
@@ -2329,6 +2329,27 @@
           "type": "registry:component",
           "target": "@components/examples/row-actions-menu-items/makeData.ts"
         }
+      ]
+    },
+    {
+      "name": "example-server-side-data",
+      "type": "registry:block",
+      "title": "Server Side Data",
+      "description": "Server Side Data example from shadcn-react-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-react-table/shadcn-react-table#claude/review",
+        "button",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "examples/server-side-data/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/server-side-data/server-side-data.tsx"
+        }
+      ],
+      "dependencies": [
+        "@tanstack/react-query"
       ]
     },
     {
