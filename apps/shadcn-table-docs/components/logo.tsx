@@ -12,7 +12,7 @@ export function Logo() {
           Shadcn
         </span>
         <span className="text-lg font-bold leading-none text-fd-primary">
-          React Table
+          Table
         </span>
       </span>
     </span>

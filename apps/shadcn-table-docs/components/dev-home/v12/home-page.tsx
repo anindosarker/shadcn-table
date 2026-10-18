@@ -41,8 +41,7 @@ export function HomePage({
               <span>{'//'}</span> The batteries-included table for shadcn/ui.
             </p>
             <h1 id="v12-title" className="v4-display v12-h1">
-              shadcn<span className="v7-wordmark-dash">-</span>react
-              <span className="v7-wordmark-dash">-</span>table
+              shadcn<span className="v7-wordmark-dash">-</span>table
             </h1>
             <p className="v12-pitch">
               A production-ready table library built with{' '}

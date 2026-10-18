@@ -14,7 +14,7 @@ export function Wordmark() {
         <Table2Icon aria-hidden="true" className="size-4" strokeWidth={2.5} />
       </span>
       <span className="text-[15px] font-semibold tracking-tight">
-        shadcn<span className="text-(--dh-ink-faint)">/</span>react-table
+        shadcn<span className="text-(--dh-ink-faint)">/</span>table
       </span>
     </span>
   );

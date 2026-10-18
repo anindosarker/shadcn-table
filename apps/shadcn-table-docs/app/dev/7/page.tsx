@@ -29,8 +29,7 @@ export default function Variant7Page() {
               <span>{'//'}</span> React data grid on shadcn/ui
             </p>
             <h1 id="v7-title" className="v4-display v7-wordmark">
-              shadcn<span className="v7-wordmark-dash">-</span>react
-              <span className="v7-wordmark-dash">-</span>table
+              shadcn<span className="v7-wordmark-dash">-</span>table
             </h1>
             <p className="v7-pitch">
               Sorting, filtering, pinning, grouping and virtualization on
