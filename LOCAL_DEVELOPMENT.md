@@ -34,14 +34,13 @@ pnpm registry:items      # example items: apps/shadcn-react-table-docs/registry.
 
 ### Run locally and install into a test project
 
-Repo root, two terminals:
+Repo root, one command (builds a local copy under `packages/shadcn-react-table/.dev`, gitignored, and serves it):
 
 ```bash
-REGISTRY_BASE_URL=http://localhost:5310/r pnpm registry:build   # locale items point at the local server
-pnpm registry:serve                                             # http://localhost:5310
+pnpm registry:dev                                # http://localhost:5310
 ```
 
-`registry:build` with `REGISTRY_BASE_URL` rewrites the committed `public/r/*.json`; revert with `git checkout -- packages/shadcn-react-table/public` before committing.
+Re-run it after library changes. The committed `registry.json` and `public/r` are not touched.
 
 Fresh app anywhere (radix base, nova preset; the library needs radix):
 

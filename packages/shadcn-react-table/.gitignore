@@ -26,3 +26,4 @@ dist-ssr
 
 # shadcn registry build output
 public/r
+.dev

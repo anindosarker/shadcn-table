@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Usage (inside packages/shadcn-react-table): pnpm registry:build
+// Usage (inside packages/shadcn-react-table): pnpm registry:build, or
+// pnpm registry:dev for a local copy under .dev/ served on port 5310.
 // Generates registry.json from the library tree, then `shadcn build` turns it
 // into public/r/<name>.json. The file list is never hand-maintained: every
 // file under src/components/ui/shadcn-react-table is an item file, every
@@ -14,7 +15,11 @@ const LIB_REL = 'src/components/ui/shadcn-react-table';
 const LIB_DIR = path.join(PKG, LIB_REL);
 const CHECKBOX_REL = 'src/components/ui/checkbox.tsx';
 const CSS_FILE = path.join(PKG, 'src/index.css');
-const OUT = path.join(PKG, 'registry.json');
+// `--dev` builds a local registry under .dev/ (gitignored) whose locale items
+// point at the local server started by `pnpm registry:dev`; the committed
+// registry.json is never touched. REGISTRY_BASE_URL overrides the dev URL.
+const DEV = process.argv.includes('--dev');
+const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 
 const ITEM = 'shadcn-react-table';
 const GITHUB_REPO = 'anindosarker/shadcn-react-table';
@@ -22,10 +27,8 @@ const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
 // Locale items depend on the main item. A bare name would resolve to
 // shadcn/ui's own registry, so the dependency is the GitHub item address,
 // which the CLI resolves through the root registry.json of the repo.
-// Override for a local install test against `pnpm registry:serve`:
-//   REGISTRY_BASE_URL=http://localhost:5310/r pnpm registry:build
-const MAIN_ITEM_ADDRESS = process.env.REGISTRY_BASE_URL
-  ? `${process.env.REGISTRY_BASE_URL}/${ITEM}.json`
+const MAIN_ITEM_ADDRESS = DEV
+  ? `${process.env.REGISTRY_BASE_URL ?? 'http://localhost:5310/r'}/${ITEM}.json`
   : `${GITHUB_REPO}/${ITEM}`;
 // Forked ui parts ship inside the item instead of being registryDependencies.
 const FORKED_UI = new Set(['checkbox']);
@@ -212,7 +215,8 @@ const registry = {
   items: [main, ...locales],
 };
 
+fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(registry, null, 2) + '\n');
 console.log(
-  `registry.json: ${main.files.length} files in ${ITEM}, ${locales.length} locale items, ${registryDependencies.length} registryDependencies`,
+  `${path.relative(PKG, OUT)}: ${main.files.length} files in ${ITEM}, ${locales.length} locale items, ${registryDependencies.length} registryDependencies`,
 );
