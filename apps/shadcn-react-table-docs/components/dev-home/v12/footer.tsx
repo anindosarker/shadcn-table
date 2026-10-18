@@ -27,7 +27,7 @@ const COLUMNS = [
 ] as const;
 
 /**
- * v4's ledge footer with the wordmark pointed at /dev/12: a low dune off the
+ * v4's ledge footer with the wordmark pointed at the homepage: a low dune off the
  * footer rule, then mono link columns beside the wordmark and licence line.
  */
 export function Footer() {
@@ -36,7 +36,7 @@ export function Footer() {
       <Dune fps={6} className="v4-footer-dune" />
       <div className="v4-shell v4-footer-grid">
         <div className="v4-footer-brand">
-          <Link href="/dev/12" className="v4-wordmark">
+          <Link href="/" className="v4-wordmark">
             <span aria-hidden="true" className="v4-wordmark-slash">
               {'//'}
             </span>

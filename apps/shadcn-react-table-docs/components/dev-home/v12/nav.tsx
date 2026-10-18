@@ -19,7 +19,7 @@ export function Nav() {
   return (
     <header className="v4-nav">
       <div className="v4-shell v4-nav-row">
-        <Link href="/dev/12" className="v4-wordmark">
+        <Link href="/" className="v4-wordmark">
           <span aria-hidden="true" className="v4-wordmark-slash">
             {'//'}
           </span>

@@ -160,7 +160,7 @@ const typingMs = (step: number) => {
 
 type Mode = 'playing' | 'paused' | 'user';
 
-/** v5's replaying table for /dev/12: six items on a loop, each one types
+/** v5's replaying table for the homepage: six items on a loop, each one types
  * any text letter by letter, then pulses what it changed. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);

@@ -64,7 +64,7 @@ const usd = (value: number | undefined) =>
   });
 
 /**
- * v5's signal table for /dev/12: a real SRT instance whose sorting, filters,
+ * v5's signal table for the homepage: a real SRT instance whose sorting, filters,
  * grouping, selection, global search and salary edits are held by the
  * parent, so the replay can drive it and still hand every control back to
  * the visitor. Salary cells edit in place (editDisplayMode: 'cell').
