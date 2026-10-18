@@ -19,18 +19,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { CircleUserIcon, SendIcon } from 'lucide-react';
 
 //Mock Data
-import { data } from './makeData';
-
-export type Employee = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  jobTitle: string;
-  salary: number;
-  startDate: string;
-  signatureCatchPhrase: string;
-  avatar: string;
-};
+import { data, type Employee } from './makeData';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Employee>[]>(

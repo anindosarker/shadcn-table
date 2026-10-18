@@ -19,7 +19,10 @@
  * - files: targets under `@components/examples/<slug>/`, keeping the folder
  *   layout, so the files land side by side in the project's components
  *   directory and relative imports (`./makeData`, `../hooks/...`) keep
- *   resolving
+ *   resolving. The entry file alone is renamed to `<slug>.tsx`, so no other
+ *   file may import it: the CLI reads every file from the repository at its
+ *   `path`, so the import could not be rewritten on the way out. The build
+ *   fails on such an import; move the shared export into the sibling.
  *
  * Usage:
  *   node scripts/build-registry-items.mjs            # writes registry.json
@@ -130,6 +133,14 @@ async function buildItem(slug, pages, libraryItem) {
     for (const specifier of importSpecifiers(source)) {
       if (specifier.startsWith('.')) {
         const local = path.posix.join(path.posix.dirname(name), specifier);
+        if (
+          local === ENTRY_FILE.replace(/\.tsx$/, '') ||
+          local === ENTRY_FILE
+        ) {
+          throw new Error(
+            `${slug}/${name}: imports the entry file "${specifier}", which installs as ${slug}.tsx; export the shared value from ${name} (or another sibling) instead`,
+          );
+        }
         if (
           !itemFiles.some(
             (f) => f === local || f.replace(/\.tsx?$/, '') === local,
