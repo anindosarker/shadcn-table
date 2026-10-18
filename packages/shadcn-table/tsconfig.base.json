@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.base.tsbuildinfo",
+    "customConditions": ["st-base"],
+    "paths": {
+      "@/components/ui/shadcn-table/*": ["./src/components/ui/shadcn-table/*"],
+      "@/components/ui/*": ["./base/components/ui/*"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": [
+    "src/components/ui/*.tsx",
+    "src/components/ui/shadcn-table/primitives/radix"
+  ]
+}

@@ -24,6 +24,9 @@ dist-ssr
 *.sw?
 
 
+# Storybook build of the Base UI leg (pnpm storybook:build:base)
+storybook-static-base
+
 # shadcn registry build output
 public/r
 .dev
