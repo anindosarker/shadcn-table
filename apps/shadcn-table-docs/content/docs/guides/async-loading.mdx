@@ -87,13 +87,15 @@ const table = useShadcnTable({
   columns,
   data,
   stSkeletonProps: {
-    animation: 'wave',
+    className: 'bg-muted/70',
   },
   stLinearProgressProps: {
-    color: 'secondary',
+    progressComponentProps: {
+      className: '[&>[data-slot=progress-indicator]]:bg-secondary-foreground',
+    },
   },
   stCircularProgressProps: {
-    color: 'secondary',
+    className: 'text-secondary-foreground',
   },
 });
 

@@ -47,7 +47,7 @@ const table = useShadcnTable({
 
 ### Customize Copy Buttons
 
-The click to copy feature is built on top of the Material UnstyledButton and CopyButton components. You can customize the copy button by passing in the `stCopyButtonProps` table or column option.
+The click to copy feature is built on top of the shadcn/ui Button component. You can customize the copy button by passing in the `stCopyButtonProps` table or column option.
 
 ```tsx
 const table = useShadcnTable({
@@ -55,8 +55,7 @@ const table = useShadcnTable({
   data,
   enableClickToCopy: true,
   stCopyButtonProps: {
-    style: { width: '100%' },
-    startIcon: <ContentCopy />,
+    className: 'w-full justify-start',
   },
 });
 ```
