@@ -50,13 +50,20 @@ const BASE: SignalTableState = {
   salaryEdits: {},
 };
 
-/* The edit item opens Kathryn Kirlin's salary cell (row 55, fourth in the
- * sorted search results, and a "New" state row, so it survives the filter),
- * types a new value, then saves it; she then tops the list. */
+/* The edit item closes the search first, so search shows only in its own
+ * item. It then opens Kathryn Kirlin's salary cell (row 55, seventh in the
+ * sorted table, and a "New" state row, so it survives the filter), types a
+ * new value, then saves it; she then tops the list. */
 const EDIT_STEP = 2;
 const EDIT_ROW = '55';
 const EDIT_FROM = '97434';
 const EDIT_TO = '120000';
+
+const clearSearch = (s: SignalTableState): SignalTableState => ({
+  ...s,
+  globalFilter: '',
+  showGlobalFilter: false,
+});
 
 const STEPS: readonly Step[] = [
   {
@@ -87,11 +94,11 @@ const STEPS: readonly Step[] = [
     code: "enableEditing: true, editDisplayMode: 'cell'",
     cue: 'edit',
     apply: (s) => ({
-      ...s,
+      ...clearSearch(s),
       salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
     }),
     // the typed value lives in the open cell's input until it is saved
-    typing: { text: EDIT_TO, at: (s) => s },
+    typing: { text: EDIT_TO, at: (s) => clearSearch(s) },
   },
   {
     feature: 'Filtering',
@@ -117,10 +124,10 @@ const STEPS: readonly Step[] = [
     title: 'Select rows',
     code: 'enableRowSelection: true',
     cue: 'select',
-    // the top three rows left after the search and the filter
+    // the top three rows left after the filter
     apply: (s) => ({
       ...s,
-      rowSelection: { '55': true, '144': true, '130': true },
+      rowSelection: { '55': true, '100': true, '45': true },
     }),
   },
   {
