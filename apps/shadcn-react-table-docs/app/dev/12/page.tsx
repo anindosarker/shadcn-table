@@ -28,15 +28,16 @@ export default function Variant12Page() {
           <Dune className="v12-field" fps={9} />
           <div className="v4-shell v12-hero-copy">
             <p className="v7-eyebrow v12-eyebrow">
-              <span>{'//'}</span> React data table, MIT licensed
+              <span>{'//'}</span> The batteries-included table for shadcn/ui.
             </p>
             <h1 id="v12-title" className="v4-display v12-h1">
-              The batteries-included table for shadcn/ui.
+              shadcn<span className="v7-wordmark-dash">-</span>react
+              <span className="v7-wordmark-dash">-</span>table
             </h1>
             <p className="v12-pitch">
-              Sorting, filtering, column pinning, grouping, editing, row
-              selection and virtualization are built in. Add the table with the
-              shadcn CLI, then turn features on with props.
+              A production-ready table library built with TanStack Table and
+              shadcn/ui. Sorting, filtering, grouping, pinning, virtualization,
+              and more, all built in.
             </p>
             <div className="v12-hero-row">
               <InstallCommand className="v12-install text-left" />
