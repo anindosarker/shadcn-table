@@ -136,8 +136,10 @@ const STEPS: readonly Step[] = [
 const stateAt = (step: number) =>
   STEPS.slice(0, step + 1).reduce((s, x) => x.apply(s), BASE);
 
-const STEP_MS = 2600;
-// the finished table holds this long before the replay stops
+// each item stays this long after its change lands (the 1200ms pulse fits
+// well inside)
+const STEP_MS = 3000;
+// the finished table holds this long before the replay starts over
 const HOLD_MS = 3000;
 const REST_MS = 1400;
 /* typing: a beat before the first letter, then one letter per CHAR_MS;
@@ -158,20 +160,16 @@ const typingMs = (step: number) => {
 
 type Mode = 'playing' | 'paused' | 'user';
 
-/** v5's replaying table for /dev/12: six items, each one pulses what it
- * changed and types any text letter by letter. */
+/** v5's replaying table for /dev/12: six items on a loop, each one types
+ * any text letter by letter, then pulses what it changed. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);
-  // true once the replay has run through every item at least once
-  const [finished, setFinished] = useState(false);
   const [mode, setMode] = useState<Mode>('playing');
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<SignalTableState>(BASE);
   // letters typed so far for the current item; null when it is not typing
   const [typed, setTyped] = useState<number | null>(null);
-  // the edit item pulses its cell again once the value is saved
-  const [saved, setSaved] = useState(false);
-  // bumped on Replay so the table fades back in from its plain state
+  // bumped on each restart so the table fades back in from its plain state
   const [resets, setResets] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -182,7 +180,6 @@ export function SignalDemo() {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot read of a media query
       setStep(last);
       setState(stateAt(last));
-      setFinished(true);
       setMode('paused');
     }
   }, []);
@@ -209,15 +206,16 @@ export function SignalDemo() {
       (step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS) +
       typingMs(step);
     const t = setTimeout(() => {
-      // after the last item the replay stops on the combined state
+      // after the last item, fade back to the plain table and start over
       if (step === last) {
-        setFinished(true);
-        setMode('paused');
+        setResets((n) => n + 1);
+        setStep(-1);
+        setState(BASE);
+        setTyped(null);
         return;
       }
       const next = step + 1;
       setStep(next);
-      setSaved(false);
       const typing = STEPS[next]?.typing;
       if (typing) {
         setState(typing.at(stateAt(next - 1), ''));
@@ -240,7 +238,6 @@ export function SignalDemo() {
         if (done) {
           setState(stateAt(step));
           setTyped(null);
-          setSaved(step === EDIT_STEP);
           return;
         }
         const n = typed + 1;
@@ -266,12 +263,15 @@ export function SignalDemo() {
         }
       : null;
 
-  const cueKind = step >= 0 && mode !== 'user' ? STEPS[step].cue : null;
+  // the pulse starts once the change has landed: after any typing (and,
+  // for the edit, after the value is saved)
+  const cueKind =
+    step >= 0 && mode !== 'user' && typed === null ? STEPS[step].cue : null;
   const cue: SignalCue | null =
-    cueKind === 'edit'
-      ? { kind: saved ? 'edited' : 'edit', rowId: EDIT_ROW }
-      : cueKind === 'edited' || cueKind === null
-        ? null
+    cueKind === null
+      ? null
+      : cueKind === 'edit'
+        ? { kind: 'edit', rowId: EDIT_ROW }
         : { kind: cueKind };
 
   const onChange = useCallback<SignalTableProps['onChange']>(
@@ -296,20 +296,17 @@ export function SignalDemo() {
     }
   };
 
+  // start over from the first item straight away
   const replay = () => {
     setResets((n) => n + 1);
-    setFinished(false);
     setTyped(null);
-    setSaved(false);
-    setStep(-1);
-    setState(BASE);
+    setStep(0);
+    setState(stateAt(0));
     setMode('playing');
   };
 
   const jumpTo = (i: number) => {
-    setFinished(false);
     setTyped(null);
-    setSaved(false);
     setStep(i);
     setState(stateAt(i));
     setMode('paused');
@@ -319,12 +316,8 @@ export function SignalDemo() {
     mode === 'user'
       ? 'Paused'
       : step === -1
-        ? finished
-          ? `Showed ${STEPS.length} features`
-          : 'Starting'
-        : mode === 'paused' && step === STEPS.length - 1 && finished
-          ? `Showed ${STEPS.length} features`
-          : `Now showing: ${STEPS[step].feature}`;
+        ? 'Starting'
+        : `Now showing: ${STEPS[step].feature}`;
 
   return (
     <div ref={rootRef} className="v5-demo" data-running={running || undefined}>

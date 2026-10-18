@@ -423,18 +423,18 @@
   padding-block: 8px;
 }
 
-/* replay cue: what an item changed pulses once in the accent. An overlay
- * fades in and out (opacity only); the search input, which cannot hold an
+/* replay cue: what an item changed pulses once in the accent, 1200ms for
+ * every item: in over 300ms, hold 500ms, out over 400ms. An overlay fades
+ * (opacity only); the search input, which cannot hold an
  * overlay, gets an accent outline and a small scale pop (inline style in
  * signal-table.tsx, using the keyframes below). */
 .v12 td.v12-cue,
-.v12 td.v12-cue-2,
 .v12 td.v12-cue-fill,
 .v12 .v12-cue:not(th, td, input) {
   position: relative;
 }
 
-.v12 :is(.v12-cue, .v12-cue-2, .v12-cue-fill):not(input)::after {
+.v12 :is(.v12-cue, .v12-cue-fill):not(input)::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -443,11 +443,7 @@
   background-color: var(--dh-accent-soft);
   opacity: 0;
   pointer-events: none;
-  animation: v12-cue 900ms var(--dh-ease-out);
-}
-
-.v12 .v12-cue-2::after {
-  animation-name: v12-cue-2;
+  animation: v12-cue 1200ms linear;
 }
 
 .v12 .v12-cue-fill::after {
@@ -455,20 +451,32 @@
 }
 
 @keyframes v12-cue {
-  25% {
-    opacity: 1;
+  from {
+    opacity: 0;
+    animation-timing-function: var(--dh-ease-out);
   }
-}
-
-@keyframes v12-cue-2 {
-  25% {
+  25%,
+  66.667% {
     opacity: 1;
+    animation-timing-function: var(--dh-ease-in-out);
+  }
+  to {
+    opacity: 0;
   }
 }
 
 @keyframes v12-pop {
-  40% {
+  from {
+    transform: none;
+    animation-timing-function: var(--dh-ease-out);
+  }
+  25%,
+  66.667% {
     transform: scale(1.03);
+    animation-timing-function: var(--dh-ease-in-out);
+  }
+  to {
+    transform: none;
   }
 }
 
@@ -491,7 +499,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .v12 .v4-star,
-  .v12 :is(.v12-cue, .v12-cue-2, .v12-cue-fill)::after,
+  .v12 :is(.v12-cue, .v12-cue-fill)::after,
   .v12 :is(.v12-reset-a, .v12-reset-b) {
     animation: none;
   }

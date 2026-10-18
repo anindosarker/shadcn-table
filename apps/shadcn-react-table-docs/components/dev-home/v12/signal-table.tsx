@@ -48,12 +48,10 @@ export interface SignalTableProps {
 
 export type SignalCue =
   | { kind: 'sort' | 'filter' | 'group' | 'select' | 'search' }
-  | { kind: 'edit' | 'edited'; rowId: string };
+  | { kind: 'edit'; rowId: string };
 
-/* One-shot accent pulse classes (v12.css). 'edited' uses the second class
- * so the pulse replays on the same cell once the edit is saved. */
+/* One-shot accent pulse classes (v12.css): outlined, and fill only. */
 const PULSE = 'v12-cue';
-const PULSE_AGAIN = 'v12-cue-2';
 const PULSE_FILL = 'v12-cue-fill';
 const DIM_MARKS = 'v12-dim-marks';
 
@@ -194,12 +192,10 @@ export default function SignalTable({
     }),
     srtTableBodyCellProps: ({ cell, row }) => {
       const pulse =
-        (cue?.kind === 'edit' || cue?.kind === 'edited') &&
+        cue?.kind === 'edit' &&
         row.id === cue.rowId &&
         cell.column.id === 'salary'
-          ? cue.kind === 'edit'
-            ? PULSE
-            : PULSE_AGAIN
+          ? PULSE
           : (cue?.kind === 'group' && row.getIsGrouped()) ||
               (cue?.kind === 'select' && row.getIsSelected())
             ? PULSE_FILL
@@ -222,7 +218,7 @@ export default function SignalTable({
             style: {
               outline: '1px solid var(--dh-accent)',
               outlineOffset: 1,
-              animation: 'v12-pop 600ms var(--dh-ease-out)',
+              animation: 'v12-pop 1200ms linear',
             },
           }
         : {},
