@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowRightIcon, ArrowUpRightIcon } from 'lucide-react';
 import { AutoplayTileGrid } from '@/components/dev-home/shared/autoplay-tile-grid';
 import { InstallCommand } from '@/components/dev-home/shared/install-command';
 import { archivo } from '@/components/dev-home/v4/font';
@@ -100,19 +100,20 @@ export default function Variant12Page() {
               <div>
                 <p className="v12-label">Install</p>
                 <h2 id="v12-install-title" className="v5-h2">
-                  Three steps to a working table
+                  Up and running in three steps.
                 </h2>
               </div>
               <div>
                 <p className="v5-section-lede">
-                  Start from a shadcn/ui project. The code matches the usage
-                  guide.
+                  Add the components, define your columns, and render your
+                  table. That&apos;s all it takes to get started.
                 </p>
                 <Link
                   href="/docs/getting-started/usage"
-                  className="v4-link self-start"
+                  className="v4-link inline-flex items-center gap-1 self-start"
                 >
-                  Usage guide
+                  View usage guide
+                  <ArrowUpRightIcon aria-hidden="true" className="size-4" />
                 </Link>
               </div>
             </div>

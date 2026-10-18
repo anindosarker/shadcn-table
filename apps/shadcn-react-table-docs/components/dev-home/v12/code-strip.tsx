@@ -44,29 +44,28 @@ export function CodeStrip() {
   return (
     <ol className="v7-strip">
       <li className="v7-step">
-        <p className="v7-step-n">Step 1</p>
-        <h3 className="v7-step-title">Run the CLI</h3>
+        <p className="v7-step-n">Step 01</p>
+        <h3 className="v7-step-title">Install</h3>
         <p className="v7-step-body">
-          In a shadcn/ui project, this adds the table files to
-          components/ui/shadcn-react-table.
+          Run a single command to add the table components directly to your
+          project.
         </p>
         <InstallCommand variant="bare" className="v7-install-cmd" />
       </li>
       <li className="v7-step">
-        <p className="v7-step-n">Step 2</p>
+        <p className="v7-step-n">Step 02</p>
         <h3 className="v7-step-title">Define columns</h3>
         <p className="v7-step-body">
-          Columns are TanStack Table column definitions, typed as SRT_ColumnDef.
-          Wrap them in useMemo so they stay stable between renders.
+          Describe how your data should be displayed using TanStack Table column
+          definitions.
         </p>
         <Code code={COLUMNS_SNIPPET} />
       </li>
       <li className="v7-step">
-        <p className="v7-step-n">Step 3</p>
+        <p className="v7-step-n">Step 03</p>
         <h3 className="v7-step-title">Render</h3>
         <p className="v7-step-body">
-          Pass columns, data and any table options to useShadcnReactTable, then
-          render ShadcnReactTable with the result.
+          Pass in your columns and data. Your table is ready to use.
         </p>
         <Code code={RENDER_SNIPPET} />
       </li>
