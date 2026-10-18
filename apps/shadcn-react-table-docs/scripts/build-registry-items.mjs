@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Writes apps/shadcn-react-table-docs/registry.json with one shadcn registry
- * item per docs example (examples/<slug>/TS.tsx plus makeData.ts when
- * present). The root registry.json includes this file, so the GitHub
+ * item per docs example (examples/<slug>/TS.tsx plus every other source
+ * file in the folder, subfolders included, except the index.tsx wrapper). The root registry.json includes this file, so the GitHub
  * namespace serves every example as
  * `anindosarker/shadcn-react-table/example-<slug>`.
  *
@@ -16,9 +16,10 @@
  *   imports from `@/components/ui/<part>` (library paths excluded)
  * - dependencies: third-party packages imported by the example files, other
  *   than react, react-dom and lucide-react (already library dependencies)
- * - files: targets under `@components/examples/<slug>/` so the two files land
- *   side by side in the project's components directory and `./makeData`
- *   keeps resolving
+ * - files: targets under `@components/examples/<slug>/`, keeping the folder
+ *   layout, so the files land side by side in the project's components
+ *   directory and relative imports (`./makeData`, `../hooks/...`) keep
+ *   resolving
  *
  * Usage:
  *   node scripts/build-registry-items.mjs            # writes registry.json
@@ -29,6 +30,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ENTRY_FILE, listExampleFiles } from '../lib/example-files.mjs';
 import {
   findExamplePage,
   loadExamplePages,
@@ -49,7 +51,6 @@ const LIBRARY_IMPORT = '@/components/ui/shadcn-react-table';
 const UI_IMPORT_PREFIX = '@/components/ui/';
 /** Packages the library item already installs. */
 const SKIPPED_PACKAGES = new Set(['react', 'react-dom', 'lucide-react']);
-const ITEM_FILES = ['TS.tsx', 'makeData.ts'];
 
 const args = process.argv.slice(2);
 const resolveIndex = args.indexOf('--resolve');
@@ -122,16 +123,15 @@ async function buildItem(slug, pages, libraryItem) {
   const dependencies = new Set();
   const sources = {};
 
-  for (const name of ITEM_FILES) {
-    const file = path.join(dir, name);
-    if (!(await exists(file))) continue;
-    const source = await fs.readFile(file, 'utf8');
-    sources[name] = source;
+  const itemFiles = await listExampleFiles(dir);
+  for (const name of itemFiles) {
+    const source = await fs.readFile(path.join(dir, name), 'utf8');
+    sources[`examples/${slug}/${name}`] = source;
     for (const specifier of importSpecifiers(source)) {
       if (specifier.startsWith('.')) {
-        const local = specifier.replace(/^\.\//, '');
+        const local = path.posix.join(path.posix.dirname(name), specifier);
         if (
-          !ITEM_FILES.some(
+          !itemFiles.some(
             (f) => f === local || f.replace(/\.tsx?$/, '') === local,
           )
         ) {
@@ -159,7 +159,7 @@ async function buildItem(slug, pages, libraryItem) {
     files.push({
       path: `examples/${slug}/${name}`,
       type: 'registry:component',
-      target: `@components/examples/${slug}/${name === 'TS.tsx' ? `${slug}.tsx` : name}`,
+      target: `@components/examples/${slug}/${name === ENTRY_FILE ? `${slug}.tsx` : name}`,
     });
   }
 
@@ -192,7 +192,7 @@ async function main() {
   const items = [];
   const resolved = [];
   for (const slug of slugs) {
-    if (!(await exists(path.join(EXAMPLES_DIR, slug, 'TS.tsx')))) {
+    if (!(await exists(path.join(EXAMPLES_DIR, slug, ENTRY_FILE)))) {
       console.warn(`${slug}: no TS.tsx, skipped`);
       continue;
     }
@@ -203,7 +203,7 @@ async function main() {
       ...item,
       files: item.files.map((file) => ({
         ...file,
-        content: sources[path.basename(file.path)],
+        content: sources[file.path],
       })),
     });
   }

@@ -7,7 +7,7 @@ import {
   loadExamplePages,
   readExampleExportName,
 } from './example-pages.mjs';
-import { readExampleSource } from './example-source';
+import { readExampleFiles } from './example-source';
 import { absoluteMarkdownUrl, registryRef } from './shared';
 
 interface RegistryItem {
@@ -183,15 +183,19 @@ export async function buildExamplePrompt({
 }: {
   name: string;
 }): Promise<string> {
-  const [item, source, pages, exportName] = await Promise.all([
+  const [item, files, pages, exportName] = await Promise.all([
     readRegistryItem(name),
-    readExampleSource(name),
+    readExampleFiles(name),
     loadExamplePages(path.join(process.cwd(), 'content', 'docs', 'examples')),
     readExampleExportName(path.join(process.cwd(), 'examples', name)),
   ]);
   const page = findExamplePage({ slug: name, exportName }, pages);
   const deps = item.dependencies ?? [];
-  const keys = tableOptionKeys(source);
+  // The table can live in any file of a multi-file example: the first file
+  // with a useShadcnReactTable call wins.
+  const keys =
+    files.map((file) => tableOptionKeys(file.source)).find((k) => k.length) ??
+    [];
 
   const lines = [
     `Add the "${item.title}" example of shadcn-react-table to this project.`,

@@ -60,10 +60,10 @@ export async function paginationControls(wrapper, id, check) {
 }
 
 /**
- * Code toggle of `#example-<id>` or `#props-<id>`: an example playground (Preview | Code | Split,
- * one file tab per source file) or a prop table's source toggle (no tabs).
- * Clicking Code must show the highlighted source containing `needle` with
- * its copy button, then switches a playground back to Preview. A playground
+ * Code toggle of `#example-<id>` or `#props-<id>`: an example playground (Preview | Code | Both,
+ * a code explorer with a file tree and a path bar copy button) or a prop
+ * table's source toggle (code block copy button). Clicking Code must show
+ * the highlighted source containing `needle` with its copy button, then switches a playground back to Preview. A playground
  * also gets its full screen toggle and the caret menu's copy items checked:
  * "Copy prompt" must write the install command for `example-<id>` through
  * the clipboard stub scripts/check-pages.mjs installs. The panel is located
@@ -86,13 +86,18 @@ export async function codeToggle(page, id, needle, check) {
       .textContent()
       .catch(() => '')) ?? '';
   check(`${id}: source shown`, txt.includes(needle), `len=${txt.length}`);
+  const isPlayground = (await panel.getAttribute('data-mode')) !== null;
+  const explorer = panel.locator('[data-slot="code-explorer"]');
   check(
     `${id}: copy button`,
-    (await panel.locator('figure button').count()) >= 1,
+    (await (
+      isPlayground
+        ? explorer.locator('button[aria-label^="Copy"]')
+        : panel.locator('figure button')
+    ).count()) >= 1,
   );
-  if ((await panel.getAttribute('data-mode')) !== null) {
-    const tabs = await panel.locator('[role="tab"]').count();
-    check(`${id}: file tabs`, tabs === 1 || tabs === 2, `tabs=${tabs}`);
+  if (isPlayground) {
+    check(`${id}: code explorer`, (await explorer.count()) === 1);
     // Back to Preview so later steps can interact with the table.
     await panel
       .locator('button', { hasText: /^Preview$/ })

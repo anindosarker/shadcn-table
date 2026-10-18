@@ -26,26 +26,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { PageSwitcher } from '@/components/page-switcher';
 import { cn } from '@/lib/cn';
-
-export interface PlaygroundFile {
-  /** File name shown on the tab, for example `TS.tsx`. */
-  name: string;
-  /** The highlighted source, already wrapped in a fumadocs CodeBlock. */
-  node: ReactNode;
-}
 
 interface Props {
   /** The live example. */
   children: ReactNode;
-  files: PlaygroundFile[];
+  /** Source files for the code explorer, in tree order. */
+  files: ExplorerFile[];
   /** Link to the example folder on GitHub. */
   githubUrl: string;
   /** `shadcn add` command that installs the example into a project. */
@@ -119,7 +113,8 @@ const COPIED_MS = 1500;
 
 /**
  * Static playground panel around a live example: Preview, Code or Both
- * (the example, then its code below) view, one tab per source file, Open in GitHub, full screen. The table stays
+ * (the example, then its code below) view, a file tree code explorer, Open
+ * in GitHub, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
  * pages the header also carries the page switcher, so the reader can jump
  * between examples without leaving the panel. The caret menu next to Open in
@@ -138,7 +133,6 @@ export const ExamplePlayground = ({
     getModeSnapshot,
     getModeServerSnapshot,
   );
-  const [file, setFile] = useState(files[0]?.name ?? '');
   const [fullscreen, setFullscreen] = useState(false);
   // The tooltip is controlled, as in the table's own toolbar button, so it
   // closes on click instead of lingering over the changed layout.
@@ -199,9 +193,7 @@ export const ExamplePlayground = ({
     setFullscreen((value) => !value);
   };
 
-  const showCode = mode !== 'preview';
-  const active = files.find((f) => f.name === file) ?? files[0];
-  const showTabs = showCode && files.length > 0;
+  const showCode = mode !== 'preview' && files.length > 0;
 
   // Only example pages get the switcher: inside a guide the panel is one of
   // several and switching would navigate away from the guide.
@@ -236,23 +228,7 @@ export const ExamplePlayground = ({
           fullscreen && 'shrink-0',
         )}
       >
-        <div className="flex min-w-0 items-center gap-3">
-          {switcher}
-          {switcher && showTabs && (
-            <div aria-hidden className="h-5 w-px shrink-0 bg-fd-border" />
-          )}
-          {showTabs && (
-            <Tabs value={active?.name} onValueChange={setFile}>
-              <TabsList variant="line" aria-label="Source files">
-                {files.map((f) => (
-                  <TabsTrigger key={f.name} value={f.name}>
-                    {f.name}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          )}
-        </div>
+        <div className="flex min-w-0 items-center gap-3">{switcher}</div>
         <div className="ml-auto flex flex-wrap items-center gap-2">
           <div
             role="group"
@@ -370,7 +346,7 @@ export const ExamplePlayground = ({
         >
           {children}
         </div>
-        {showCode && active && (
+        {showCode && (
           <div
             data-slot="code"
             className={cn(
@@ -378,7 +354,7 @@ export const ExamplePlayground = ({
               mode === 'both' && '[border-top:var(--docs-rule)]',
             )}
           >
-            {active.node}
+            <CodeExplorer files={files} />
           </div>
         )}
       </div>

@@ -1,3 +1,4 @@
+import path from 'node:path';
 import type { ReactNode } from 'react';
 import { highlight } from 'fumadocs-core/highlight';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
@@ -13,23 +14,34 @@ interface Props {
   children: ReactNode;
 }
 
+const LANGS: Record<string, string> = {
+  '.tsx': 'tsx',
+  '.ts': 'ts',
+  '.css': 'css',
+  '.json': 'json',
+};
+
 /**
- * Server side: reads examples/<name>/TS.tsx (and makeData.ts when present),
- * highlights them with shiki and hands the code blocks, the install command
+ * Server side: reads every source file under examples/<name> (TS.tsx first,
+ * subfolders included, the index.tsx wrapper left out), highlights each by
+ * its extension with shiki and hands the code blocks, the install command
  * and the copy prompt plus the live table to the client playground panel.
  */
 export const ExampleSnippet = async ({ name, children }: Props) => {
   const sources = await readExampleFiles(name);
   const files = await Promise.all(
     sources.map(async (file) => {
+      const lang = LANGS[path.extname(file.path)] ?? 'text';
       const rendered = await highlight(file.source, {
-        lang: file.name.endsWith('.tsx') ? 'tsx' : 'ts',
+        lang,
         components: { pre: Pre },
       });
       return {
-        name: file.name,
+        path: file.path,
+        source: file.source,
         node: (
           <CodeBlock
+            allowCopy={false}
             className="my-0 rounded-none border-0"
             viewportProps={{ className: 'max-h-[32rem]' }}
           >
