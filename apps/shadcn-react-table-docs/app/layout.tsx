@@ -40,7 +40,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             mounts its own; standalone compositions (custom-headless,
             external-toolbar, row ordering) and the home page examples need
             this one. */}
-        <RootProvider theme={{ defaultTheme: 'dark' }}>
+        <RootProvider theme={{ defaultTheme: 'dark', enableSystem: false }}>
           <TooltipProvider skipDelayDuration={0}>{children}</TooltipProvider>
         </RootProvider>
       </body>
