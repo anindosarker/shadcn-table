@@ -178,6 +178,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Strips that scroll sideways (tab lists) without a visible scrollbar; they
+   still scroll by swipe, wheel and keyboard focus. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -25,7 +25,7 @@ const OptionsSwitcher = ({ links }: Props) => {
         value={value}
         onValueChange={(next) => router.push(pathname.replace(/[^/]+$/, next))}
       >
-        <TabsList className="w-full justify-start overflow-x-auto">
+        <TabsList className="scrollbar-none w-full justify-start overflow-x-auto overflow-y-hidden">
           {links.map(({ value, label }) => (
             <TabsTrigger key={value} value={value}>
               {label}

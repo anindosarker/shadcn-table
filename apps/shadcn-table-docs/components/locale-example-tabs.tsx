@@ -38,7 +38,7 @@ export function LocaleExampleTabs({ locales, panels }: LocaleExampleTabsProps) {
       onValueChange={setCurrentLocale}
       className="not-prose my-4 gap-4"
     >
-      <div className="overflow-x-auto border-b">
+      <div className="scrollbar-none overflow-x-auto overflow-y-hidden border-b">
         <TabsList variant="line" className="h-auto">
           {locales.map((locale) => (
             <TabsTrigger key={locale} value={locale} className="px-3 py-1.5">
