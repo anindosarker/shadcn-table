@@ -11,7 +11,7 @@ export const docsContentRoute = '/llms.mdx/docs';
 export const gitConfig = {
   user: 'anindosarker',
   repo: 'shadcn-table',
-  branch: 'claude/review',
+  branch: 'master',
 };
 
 /**
