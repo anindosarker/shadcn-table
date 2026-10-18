@@ -14,7 +14,7 @@ async function openMenu(page, wrapper, label) {
   return menu;
 }
 
-export default {
+const checks = {
   '/docs/guides/accessibility': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
   },
@@ -343,3 +343,5 @@ export default {
     );
   },
 };
+
+export default checks;

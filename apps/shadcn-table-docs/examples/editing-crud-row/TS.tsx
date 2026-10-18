@@ -8,8 +8,8 @@ import {
   type ST_Row,
   type ST_TableOptions,
   useShadcnTable,
+  ST_Tooltip,
 } from '@/components/ui/shadcn-table';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { Button } from '@/components/ui/button';
 import {
   QueryClient,
@@ -39,7 +39,8 @@ const Example = () => {
         header: 'First Name',
         stEditTextFieldProps: {
           required: true,
-          'aria-invalid': !!validationErrors?.firstName,
+          error: !!validationErrors?.firstName,
+          helperText: validationErrors?.firstName,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
@@ -54,7 +55,8 @@ const Example = () => {
         header: 'Last Name',
         stEditTextFieldProps: {
           required: true,
-          'aria-invalid': !!validationErrors?.lastName,
+          error: !!validationErrors?.lastName,
+          helperText: validationErrors?.lastName,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
@@ -69,7 +71,8 @@ const Example = () => {
         stEditTextFieldProps: {
           type: 'email',
           required: true,
-          'aria-invalid': !!validationErrors?.email,
+          error: !!validationErrors?.email,
+          helperText: validationErrors?.email,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
@@ -84,7 +87,8 @@ const Example = () => {
         editVariant: 'select',
         editSelectOptions: usStates,
         stEditTextFieldProps: {
-          'aria-invalid': !!validationErrors?.state,
+          error: !!validationErrors?.state,
+          helperText: validationErrors?.state,
         },
       },
     ],

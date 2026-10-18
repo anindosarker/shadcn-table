@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, screen, waitFor } from 'storybook/test';
 import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import { Mail, UserX } from 'lucide-react';
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
@@ -96,6 +97,26 @@ export const CellActionsEnabledCustom = () => (
     ]}
   />
 );
+
+// A real right-click fires contextmenu on the cell (macOS: on mousedown),
+// then the right button's pointerup lands on whatever is under the cursor,
+// which is now the first menu item. Radix selects an item on pointerup when
+// the pointer did not go down on it, so the menu closed itself (and ran the
+// item) before the user let go. The menu must still be open afterwards.
+CellActionsEnabledCustom.play = async ({ canvas, userEvent }: StoryContext) => {
+  const cell = (await canvas.findAllByRole('cell'))[0];
+  await userEvent.pointer({ keys: '[MouseRight>]', target: cell });
+  const item = await screen.findByRole('menuitem', { name: 'Item 1' });
+  await userEvent.pointer({ keys: '[/MouseRight]', target: item });
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  await expect(screen.getByRole('menu')).toBeVisible();
+  await expect(screen.getByRole('menuitem', { name: 'Item 1' })).toBeVisible();
+  // Escape still closes it.
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() =>
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument(),
+  );
+};
 
 export const CellActionsWithClickToCopy = () => (
   <ShadcnTable

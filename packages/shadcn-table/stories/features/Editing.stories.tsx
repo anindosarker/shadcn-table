@@ -6,7 +6,8 @@ import {
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Editing Examples',
@@ -238,6 +239,56 @@ export const EditingEnabledEditModeRow = () => {
       )}
     />
   );
+};
+
+export const EditingValidationHelperText = () => {
+  const [tableData, setTableData] = useState(() => [
+    { ...data[0], firstName: '' },
+    ...data.slice(1),
+  ]);
+
+  return (
+    <ShadcnTable
+      columns={[
+        {
+          accessorKey: 'firstName',
+          header: 'First Name',
+          // MUI TextField error/helperText: validation text under the input.
+          stEditTextFieldProps: ({ cell }) => {
+            const empty = !cell.getValue<string>();
+            return {
+              error: empty,
+              helperText: empty ? 'First name is required' : undefined,
+              required: true,
+            };
+          },
+        },
+        {
+          accessorKey: 'lastName',
+          header: 'Last Name',
+        },
+        {
+          accessorKey: 'state',
+          header: 'State',
+        },
+      ]}
+      data={tableData}
+      editDisplayMode="table"
+      enableEditing
+      onEditingRowSave={({ exitEditingMode, row, values }) => {
+        tableData[row.index] = values;
+        setTableData([...tableData]);
+        exitEditingMode();
+      }}
+    />
+  );
+};
+
+EditingValidationHelperText.play = async ({ canvas }: StoryContext) => {
+  const helper = await canvas.findByText('First name is required');
+  await expect(helper).toBeVisible();
+  const input = canvas.getAllByPlaceholderText('First Name')[0];
+  await expect(input).toHaveAttribute('aria-invalid', 'true');
 };
 
 export const EditingEnabledEditModeRowCustomSave = () => {

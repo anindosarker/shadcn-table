@@ -10,7 +10,8 @@ import {
   NativeSelectOption,
 } from '@/components/ui/native-select';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { expect } from 'storybook/test';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Filtering Examples',
@@ -95,6 +96,14 @@ export const PopoverDisplayMode = () => (
     data={data}
   />
 );
+
+// The per-column filter icon is an icon-only button; its tooltip title must
+// double as its accessible name (MUI Tooltip injected aria-label, Radix does
+// not).
+PopoverDisplayMode.play = async ({ canvas }: StoryContext) => {
+  const buttons = await canvas.findAllByRole('button', { name: /filter/i });
+  await expect(buttons.length).toBeGreaterThanOrEqual(columns.length);
+};
 
 export const PopoverDisplayModeNoSorting = () => (
   <ShadcnTable

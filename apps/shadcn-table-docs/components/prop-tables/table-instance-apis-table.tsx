@@ -1,26 +1,20 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import {
-  ShadcnTable,
-  type ST_ColumnDef,
-  type ST_ColumnPinningState,
-} from '@/components/ui/shadcn-table';
+import { useMemo } from 'react';
+import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import {
   type TableInstanceAPI,
   tableInstanceAPIs,
 } from '@/lib/prop-tables/tableInstanceAPIs';
-import { useMediaQuery } from '@/lib/use-media-query';
 import { InlineCode } from './inline-code';
 import { PropLink } from './prop-link';
+import { useDesktopColumnPinning } from './use-desktop-column-pinning';
 
 interface Props {
   onlyOptions?: Set<TableInstanceAPI['tableInstanceAPI']>;
 }
 
 export const TableInstanceAPIsTable = ({ onlyOptions }: Props) => {
-  const isDesktop = useMediaQuery('(min-width: 1200px)');
-
   const columns = useMemo<ST_ColumnDef<TableInstanceAPI>[]>(
     () => [
       {
@@ -54,18 +48,8 @@ export const TableInstanceAPIsTable = ({ onlyOptions }: Props) => {
     [],
   );
 
-  const [columnPinning, setColumnPinning] = useState<ST_ColumnPinningState>({});
-
-  useEffect(() => {
-    if (isDesktop) {
-      setColumnPinning({
-        left: ['st-row-expand', 'st-row-numbers', 'tableInstanceAPI'],
-        right: ['link'],
-      });
-    } else {
-      setColumnPinning({});
-    }
-  }, [isDesktop]);
+  const [columnPinning, setColumnPinning] =
+    useDesktopColumnPinning('tableInstanceAPI');
 
   const data = useMemo(() => {
     if (onlyOptions) {
