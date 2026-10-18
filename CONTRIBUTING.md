@@ -1,17 +1,54 @@
-# Contributing to shadcn-react-table
+# Contributing to Material React Table
 
-## Suggesting features or bug fixes
+<a href="http://makeapullrequest.com" target="_blank">
+  <img alt="" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" />
+</a>
 
-Open a [GitHub issue](https://github.com/anindosarker/shadcn-react-table/issues) before a large PR so the approach can be discussed first. Small fixes can go straight to a PR.
+## Suggesting New Features or Bug Fixes
 
-## Running the project
+Before making large PRs, you may want to discuss your proposals in either the [Discord Contributing Channel](https://discord.gg/5wqyRx6fnm), the [GitHub Discussions](https://github.com/KevinVandy/material-react-table/discussions) page, or the [GitHub Issues](https://github.com/KevinVandy/material-react-table/issues) page.
 
-Setup, the architecture and the commands for the library, the playground, the registry and the docs site are in [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md).
+## Running the project locally
 
-## Pull requests
+This project uses PNPM and a TurboRepo with 2 projects.
 
-- Branch from `master`, one topic per PR.
-- Format with `pnpm prettier --write <files>` before committing.
-- Run the library checks (`tsc`, `lint`, `test`, `storybook:build`) and, when the docs change, `types:check` and `build` for the docs app. CI runs the same commands (`.github/workflows/ci.yml`).
-- Library changes that affect rendering need a Storybook story, or an update to an existing one.
-- After adding or removing library files run `pnpm registry:build`; after adding an example or changing its imports run `pnpm registry:items`. Both outputs are committed.
+- The library itself in `/packages/material-react-table` which also contains a storybook site for local development
+- The docs site in `/apps/material-react-table-docs`
+
+### 1. Fork and Clone the project
+
+Create your own fork, clone, and then make a feature/bugfix branch off of `v2`. Branch name does not really matter.
+
+### 2. Install Dependencies
+
+```bash
+pnpm i
+```
+
+### 3. Run the project(s)
+
+#### Run the Storybook for Local Development
+
+```bash
+pnpm storybook
+```
+
+The Storybook site will open on `port 6006` by default.
+
+#### Run the Docs for Local Development
+
+```bash
+pnpm docs:dev
+```
+
+The Docs site will open on `port 3000` by default.
+
+> Note: If you are contributing a new locale and are trying to test it in the docs site, you will need to run `pnpm lib:build-locales` and then `pnpm docs:dev` before it can be imported.
+
+#### Fully Build the Library
+
+```bash
+pnpm lib:build
+```
+
+> Note: After building the library, if you are running the docs site locally, it will use the compiled output of the dist folder. This can be annoying if you are trying to test changes to the library in the docs site itself. Just delete the `/dist` folder and restart the docs app to test lib changes in the docs site.
