@@ -26,6 +26,12 @@ async function agentBar(page, check) {
 
 export default {
   '/docs/getting-started/usage': async ({ page, check }) => {
+    const steps = page.locator('article .fd-step');
+    check(
+      'four steps',
+      (await steps.count()) === 4,
+      String(await steps.count()),
+    );
     const w = await example(page, 'basic', check);
     await codeToggle(page, 'basic', 'useShadcnReactTable', check);
   },

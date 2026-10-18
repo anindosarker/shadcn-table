@@ -67,5 +67,21 @@
     "- tag: <CompatibilityTable>",
     "- tag: <FAQs>",
     "description: MRT \"How to install Material React Table\" vs SRT \"Add shadcn-react-table to a shadcn/ui project\""
+  ],
+  "getting-started/usage.mdx": [
+    "+ heading: ### Create the table and render it",
+    "+ heading: ### Define the columns",
+    "+ heading: ### Define the data",
+    "+ heading: ### Import",
+    "+ heading: ### Live Example",
+    "+ tag: <Step>",
+    "+ tag: <Steps>",
+    "- heading: ### Creating Columns",
+    "- heading: ### Creating Data/Rows",
+    "- heading: ### Import MaterialReactTable and useMaterialReactTable",
+    "- heading: ### Live Code Sandbox Example",
+    "- heading: ### Setup",
+    "- heading: #### Simple Column Definition Example",
+    "- heading: #### Simple Data Example"
   ]
 }
