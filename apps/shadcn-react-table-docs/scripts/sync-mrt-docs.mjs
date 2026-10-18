@@ -159,6 +159,9 @@ const TEXT_MAP = [
     'use the shadcn/ui Pagination component instead',
   ],
   ['material react table', 'shadcn react table'],
+  // MRT prose links to its own docs site arrive here as www.shadcn-react-table.com
+  // (column-filtering, global-filtering); the docs site is served from /docs.
+  [/https:\/\/www\.shadcn-react-table\.com\/docs\//g, '/docs/'],
   [
     /https:\/\/www\.(?:shadcn|Material)-react-table\.dev\/\?path=[^\s)]+/g,
     SRT_STORIES_URL,
