@@ -10,8 +10,8 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
   ST_TableContainer,
+  ST_Tooltip,
 } from '@/components/ui/shadcn-table';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
 import { data, type Person } from './makeData';

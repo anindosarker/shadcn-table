@@ -6,8 +6,8 @@ import {
   type ST_ColumnDef,
   ST_TableContainer,
   ST_TableHeadCellFilterContainer,
+  useST_MediaQuery,
 } from '@/components/ui/shadcn-table';
-import { useST_MediaQuery } from '@/components/ui/shadcn-table/toolbar/useST_MediaQuery';
 import { data, type Person } from './makeData';
 
 const Example = () => {

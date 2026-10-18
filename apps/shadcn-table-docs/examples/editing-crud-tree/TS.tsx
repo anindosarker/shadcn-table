@@ -8,8 +8,8 @@ import {
   type ST_Row,
   type ST_TableOptions,
   useShadcnTable,
+  ST_Tooltip,
 } from '@/components/ui/shadcn-table';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { Button } from '@/components/ui/button';
 import {
   QueryClient,

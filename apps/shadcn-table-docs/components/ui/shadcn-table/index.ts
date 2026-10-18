@@ -14,6 +14,7 @@ export * from './fns/sortingFns';
 
 //hooks
 export * from './hooks/useShadcnTable';
+export * from './toolbar/useST_MediaQuery';
 export * from './hooks/useST_ColumnVirtualizer';
 export * from './hooks/useST_Effects';
 export * from './hooks/useST_RowVirtualizer';
@@ -23,6 +24,7 @@ export * from './hooks/useST_TableOptions';
 
 //components
 export * from './ShadcnTable';
+export * from './ST_Tooltip';
 //body components
 export * from './body/ST_TableBody';
 export * from './body/ST_TableBodyCell';
