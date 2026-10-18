@@ -14,9 +14,6 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
-    "@radix-ui/react-collapsible": "^1.1.12",
-    "@radix-ui/react-progress": "^1.1.7",
-    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/match-sorter-utils": "8.19.4",
     "@tanstack/react-table": "8.20.6",
@@ -40,7 +37,6 @@
     "@storybook/addon-links": "^10.6.2",
     "@storybook/addon-mcp": "^10.6.2",
     "@storybook/addon-vitest": "10.6.2",
-    "@storybook/react": "^10.6.2",
     "@storybook/react-vite": "^10.6.2",
     "@types/node": "^22.10.2",
     "@types/react": "^19.1.13",
