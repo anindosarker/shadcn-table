@@ -263,6 +263,7 @@
   }
   .v8-spec tbody th,
   .v8-spec td {
+    width: auto;
     border-top: 0;
     padding: 8px 0;
   }

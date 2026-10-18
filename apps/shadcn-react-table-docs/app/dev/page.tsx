@@ -68,6 +68,27 @@ const variants: {
       'Signal band hero and replay demo, followed by spec rows that act out each feature.',
     feature: 'editing',
   },
+  {
+    n: 9,
+    name: 'Dune sheet',
+    description:
+      'Box-drawing hero over an edge-to-edge replay band, then a sheet of feature drawings firing at random.',
+    feature: 'sorting',
+  },
+  {
+    n: 10,
+    name: 'Signal field',
+    description:
+      'Signal band layout with the box-drawing field behind it and a dense feature grid.',
+    feature: 'grouping',
+  },
+  {
+    n: 11,
+    name: 'Replay first',
+    description:
+      'The replaying table above the fold beside the headline; features in a mixed-size grid below.',
+    feature: 'column-pinning',
+  },
 ];
 
 export default function DevIndexPage() {
@@ -78,7 +99,7 @@ export default function DevIndexPage() {
           shadcn-react-table · homepage experiments
         </p>
         <h1 className="max-w-2xl text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-          Eight ways to sell a data grid.
+          Eleven ways to sell a data grid.
         </h1>
         <p className="max-w-xl text-base text-pretty text-(--dh-ink-muted)">
           Each variant pitches the same library: a full-featured React table
@@ -96,7 +117,7 @@ export default function DevIndexPage() {
               className="dh-tile-host group grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-4 border-b border-(--dh-rule) py-5 outline-2 -outline-offset-2 outline-transparent focus-visible:outline-(--dh-focus) sm:grid-cols-[2.5rem_8rem_minmax(0,1fr)_auto] sm:gap-6 sm:py-6"
             >
               <span className="hidden font-mono text-sm text-(--dh-ink-faint) tabular-nums sm:block">
-                0{v.n}
+                {String(v.n).padStart(2, '0')}
               </span>
               <span className="dh-tile block p-1.5">
                 <span className="dh-tile-glow" aria-hidden="true" />
@@ -105,7 +126,7 @@ export default function DevIndexPage() {
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="flex items-baseline gap-2 whitespace-nowrap">
                   <span className="font-mono text-xs text-(--dh-ink-faint) sm:hidden">
-                    0{v.n}
+                    {String(v.n).padStart(2, '0')}
                   </span>
                   <span className="truncate text-lg font-semibold tracking-tight text-(--dh-ink) sm:text-xl">
                     {v.name}

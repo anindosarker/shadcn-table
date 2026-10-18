@@ -11,10 +11,10 @@ import {
 } from './outline-tiles';
 
 /*
- * Autoplay tile grid: an OutlineTileGrid whose drawings act out one after
- * another, cycling through the tiles that are on screen. Hover or focus
- * pauses the cycle on that tile; leaving the grid resumes from the next
- * one. Reduced motion turns autoplay off (hover still plays a tile).
+ * Autoplay tile grid: an OutlineTileGrid whose on-screen drawings fire at
+ * random, a few overlapping at a time. Hover or focus pauses new
+ * activations and plays only that tile; leaving the grid resumes. Reduced
+ * motion turns autoplay off (hover still plays a tile).
  */
 
 export interface AutoplayTileGridProps {
@@ -24,7 +24,7 @@ export interface AutoplayTileGridProps {
   showLabel?: boolean;
   className?: string;
   tileClassName?: string;
-  /** Time each tile stays active, in ms. */
+  /** Base gap between activations, in ms; each gap is jittered 0.7x to 1.4x. */
   intervalMs?: number;
 }
 
@@ -49,13 +49,15 @@ const useReducedMotion = () =>
     () => true,
   );
 
-/** The tile that plays for `index`: itself if on screen, else the first one. */
-const shownIn = (visible: readonly number[], index: number) =>
-  visible.includes(index) ? index : (visible[0] ?? index);
-
-/** The next on-screen tile after `from`, wrapping. */
-const nextIn = (visible: readonly number[], from: number) =>
-  visible.find((i) => i > from) ?? visible[0] ?? from;
+/*
+ * How long one activation stays on. Drawings finish by 960ms
+ * (--dh-dur-slow plus at most 320ms delay); virtualization (.dh-slow) runs
+ * --dh-dur-crawl (1600ms), so it holds longer.
+ */
+const HOLD_MS = 1300;
+const HOLD_SLOW_MS = 1700;
+/** Recent picks skipped when choosing the next tile (fewer when few show). */
+const RECENT = 2;
 
 export function AutoplayTileGrid({
   features = FEATURES.map((f) => f.id),
@@ -63,15 +65,17 @@ export function AutoplayTileGrid({
   showLabel = true,
   className,
   tileClassName,
-  intervalMs = 1800,
+  intervalMs = 500,
 }: AutoplayTileGridProps) {
   const listRef = useRef<HTMLUListElement>(null);
+  const visibleRef = useRef<readonly number[]>([]);
   const [visible, setVisible] = useState<readonly number[]>([]);
-  const [cycleIndex, setCycleIndex] = useState(0);
+  const [active, setActive] = useState<readonly number[]>([]);
   const [pausedIndex, setPausedIndex] = useState<number | null>(null);
   const reducedMotion = useReducedMotion();
   const count = features.length;
   const autoplay = !reducedMotion && visible.length > 0;
+  const slowIndex = features.indexOf('virtualization');
 
   // Watch each tile, not the list: a one-column grid on a phone is far
   // taller than the viewport, so the list never reaches a useful ratio.
@@ -86,29 +90,65 @@ export function AutoplayTileGrid({
           if (entry.isIntersecting) shown.add(index);
           else shown.delete(index);
         }
-        setVisible([...shown].sort((a, b) => a - b));
+        visibleRef.current = [...shown].sort((a, b) => a - b);
+        setVisible(visibleRef.current);
       },
-      { threshold: 0.6 },
+      { threshold: 0.5 },
     );
     for (const item of Array.from(list.children)) observer.observe(item);
     return () => observer.disconnect();
   }, [count]);
 
-  // next visible tile after `from`, wrapping
+  // Every jittered tick, light a random on-screen tile that is not already
+  // playing and not one of the last few picks; it clears after its hold.
   useEffect(() => {
     if (!autoplay || pausedIndex !== null) return;
-    const timer = window.setInterval(
-      () => setCycleIndex((i) => nextIn(visible, shownIn(visible, i))),
-      intervalMs,
-    );
-    return () => window.clearInterval(timer);
-  }, [autoplay, pausedIndex, intervalMs, visible]);
+    const on = new Set<number>();
+    const recent: number[] = [];
+    const holds = new Set<number>();
+    let tick = 0;
+    const holdFor = (i: number) => (i === slowIndex ? HOLD_SLOW_MS : HOLD_MS);
 
-  const resume = () => {
-    if (pausedIndex === null) return;
-    setCycleIndex(nextIn(visible, pausedIndex));
-    setPausedIndex(null);
-  };
+    const schedule = () => {
+      const jitter = 0.7 + Math.random() * 0.7;
+      tick = window.setTimeout(fire, intervalMs * jitter);
+    };
+
+    const fire = () => {
+      // skip recent picks when possible; the window shrinks with few tiles
+      // on screen (a phone shows two or three) so picks do not settle into a
+      // fixed rotation, and with none fresh any idle one will do
+      const shown = visibleRef.current;
+      const span = Math.max(0, Math.min(RECENT, shown.length - 2));
+      const skip = span > 0 ? recent.slice(-span) : [];
+      const idle = shown.filter((i) => !on.has(i));
+      const fresh = idle.filter((i) => !skip.includes(i));
+      const candidates = fresh.length > 0 ? fresh : idle;
+      if (candidates.length > 0) {
+        const pick = candidates[Math.floor(Math.random() * candidates.length)];
+        on.add(pick);
+        recent.push(pick);
+        if (recent.length > RECENT) recent.shift();
+        setActive([...on]);
+        const hold = window.setTimeout(() => {
+          holds.delete(hold);
+          on.delete(pick);
+          setActive([...on]);
+        }, holdFor(pick));
+        holds.add(hold);
+      }
+      schedule();
+    };
+
+    fire();
+    return () => {
+      window.clearTimeout(tick);
+      for (const hold of holds) window.clearTimeout(hold);
+      setActive([]);
+    };
+  }, [autoplay, pausedIndex, intervalMs, slowIndex]);
+
+  const resume = () => setPausedIndex(null);
 
   const handleBlur = (event: FocusEvent<HTMLUListElement>) => {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
@@ -116,8 +156,7 @@ export function AutoplayTileGrid({
     }
   };
 
-  const activeIndex =
-    pausedIndex ?? (autoplay ? shownIn(visible, cycleIndex) : null);
+  const playing = pausedIndex !== null ? [pausedIndex] : autoplay ? active : [];
 
   return (
     <ul
@@ -138,7 +177,7 @@ export function AutoplayTileGrid({
             feature={id}
             size={size}
             showLabel={showLabel}
-            active={activeIndex === index}
+            active={playing.includes(index)}
             className={cn('w-full', tileClassName)}
           />
         </li>
