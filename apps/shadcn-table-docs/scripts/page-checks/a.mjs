@@ -211,3 +211,5 @@ async function propTable(page, id, count, check) {
   const rows = await names(page, id);
   check(`${id} rows`, rows.length === count, String(rows.length));
 }
+
+export default checks;
