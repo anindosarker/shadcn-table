@@ -357,6 +357,53 @@
   border-color: var(--dh-rule-strong);
 }
 
+/* match highlights: the library's tint moves to a layer behind the text so
+ * it can fade (opacity only) when a newer filter takes over */
+.v12 .v5-demo mark[data-slot='srt-match-highlight'] {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+
+.v12 .v5-demo mark[data-slot='srt-match-highlight']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: color-mix(in oklch, var(--destructive) 20%, transparent);
+  transition: opacity var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+:root.dark .v12 .v5-demo mark[data-slot='srt-match-highlight']::before {
+  background-color: color-mix(in oklch, var(--destructive) 30%, transparent);
+}
+
+.v12 .v12-dim-marks mark[data-slot='srt-match-highlight']::before {
+  opacity: 0;
+}
+
+/* Replay: the table fades back in from its plain state */
+.v12 .v12-reset-a {
+  animation: v12-reset-a var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+.v12 .v12-reset-b {
+  animation: v12-reset-b var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+@keyframes v12-reset-a {
+  from {
+    opacity: 0.35;
+  }
+}
+
+@keyframes v12-reset-b {
+  from {
+    opacity: 0.35;
+  }
+}
+
 /* the status line wraps instead of cutting "Now showing: Selection" */
 .v12 .v5-steps [aria-live] {
   overflow: visible;
@@ -444,8 +491,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .v12 .v4-star,
-  .v12 :is(.v12-cue, .v12-cue-2, .v12-cue-fill)::after {
+  .v12 :is(.v12-cue, .v12-cue-2, .v12-cue-fill)::after,
+  .v12 :is(.v12-reset-a, .v12-reset-b) {
     animation: none;
+  }
+  .v12 .v5-demo mark[data-slot='srt-match-highlight']::before {
+    transition: none;
   }
   .v12 .v5-demo input {
     animation: none !important;

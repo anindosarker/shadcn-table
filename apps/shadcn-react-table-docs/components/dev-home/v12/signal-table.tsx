@@ -55,6 +55,7 @@ export type SignalCue =
 const PULSE = 'v12-cue';
 const PULSE_AGAIN = 'v12-cue-2';
 const PULSE_FILL = 'v12-cue-fill';
+const DIM_MARKS = 'v12-dim-marks';
 
 const usd = (value: number | undefined) =>
   value?.toLocaleString?.('en-US', {
@@ -134,6 +135,10 @@ export default function SignalTable({
     [],
   );
 
+  const searchThenFilter =
+    !!state.globalFilter &&
+    state.columnFilters.some((f) => f.id === 'state' && !!f.value);
+
   const table = useShadcnReactTable({
     columns,
     data: rows,
@@ -187,8 +192,8 @@ export default function SignalTable({
           ? PULSE
           : undefined,
     }),
-    srtTableBodyCellProps: ({ cell, row }) => ({
-      className:
+    srtTableBodyCellProps: ({ cell, row }) => {
+      const pulse =
         (cue?.kind === 'edit' || cue?.kind === 'edited') &&
         row.id === cue.rowId &&
         cell.column.id === 'salary'
@@ -198,8 +203,14 @@ export default function SignalTable({
           : (cue?.kind === 'group' && row.getIsGrouped()) ||
               (cue?.kind === 'select' && row.getIsSelected())
             ? PULSE_FILL
-            : undefined,
-    }),
+            : '';
+      // once the State filter applies, the older search highlights in the
+      // other columns fade out (the search itself stays on)
+      const dim = searchThenFilter && cell.column.id !== 'state';
+      return {
+        className: [pulse, dim ? DIM_MARKS : ''].join(' ').trim() || undefined,
+      };
+    },
     srtToolbarAlertBannerProps: {
       className: cue?.kind === 'select' ? PULSE : undefined,
     },

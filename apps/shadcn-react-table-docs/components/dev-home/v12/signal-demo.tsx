@@ -50,8 +50,9 @@ const BASE: SignalTableState = {
   salaryEdits: {},
 };
 
-/* The edit item opens Kathryn Kirlin's salary cell (row 55, the top row
- * after the sort and filter), types a new value, then saves it. */
+/* The edit item opens Kathryn Kirlin's salary cell (row 55, fourth in the
+ * sorted search results, and a "New" state row, so it survives the filter),
+ * types a new value, then saves it; she then tops the list. */
 const EDIT_STEP = 2;
 const EDIT_ROW = '55';
 const EDIT_FROM = '97434';
@@ -64,6 +65,33 @@ const STEPS: readonly Step[] = [
     code: "sorting: [{ id: 'salary', desc: true }]",
     cue: 'sort',
     apply: (s) => ({ ...s, sorting: [{ id: 'salary', desc: true }] }),
+  },
+  {
+    feature: 'Search',
+    title: 'Search all columns for “in”',
+    code: "globalFilter: 'in'",
+    cue: 'search',
+    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'in' }),
+    typing: {
+      text: 'in',
+      at: (s, partial) => ({
+        ...s,
+        showGlobalFilter: true,
+        globalFilter: partial,
+      }),
+    },
+  },
+  {
+    feature: 'Editing',
+    title: 'Edit a salary to $120,000',
+    code: "enableEditing: true, editDisplayMode: 'cell'",
+    cue: 'edit',
+    apply: (s) => ({
+      ...s,
+      salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
+    }),
+    // the typed value lives in the open cell's input until it is saved
+    typing: { text: EDIT_TO, at: (s) => s },
   },
   {
     feature: 'Filtering',
@@ -85,38 +113,11 @@ const STEPS: readonly Step[] = [
     },
   },
   {
-    feature: 'Editing',
-    title: 'Edit the top salary to $120,000',
-    code: "enableEditing: true, editDisplayMode: 'cell'",
-    cue: 'edit',
-    apply: (s) => ({
-      ...s,
-      salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
-    }),
-    // the typed value lives in the open cell's input until it is saved
-    typing: { text: EDIT_TO, at: (s) => s },
-  },
-  {
-    feature: 'Search',
-    title: 'Search all columns for “in”',
-    code: "globalFilter: 'in'",
-    cue: 'search',
-    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'in' }),
-    typing: {
-      text: 'in',
-      at: (s, partial) => ({
-        ...s,
-        showGlobalFilter: true,
-        globalFilter: partial,
-      }),
-    },
-  },
-  {
     feature: 'Selection',
     title: 'Select rows',
     code: 'enableRowSelection: true',
     cue: 'select',
-    // the top three search results
+    // the top three rows left after the search and the filter
     apply: (s) => ({
       ...s,
       rowSelection: { '55': true, '144': true, '130': true },
@@ -136,7 +137,8 @@ const stateAt = (step: number) =>
   STEPS.slice(0, step + 1).reduce((s, x) => x.apply(s), BASE);
 
 const STEP_MS = 2600;
-const HOLD_MS = 4200;
+// the finished table holds this long before the replay stops
+const HOLD_MS = 3000;
 const REST_MS = 1400;
 /* typing: a beat before the first letter, then one letter per CHAR_MS;
  * an edit is saved SAVE_MS after its last letter */
@@ -169,6 +171,8 @@ export function SignalDemo() {
   const [typed, setTyped] = useState<number | null>(null);
   // the edit item pulses its cell again once the value is saved
   const [saved, setSaved] = useState(false);
+  // bumped on Replay so the table fades back in from its plain state
+  const [resets, setResets] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // reduced motion: no autoplay, land on the finished table
@@ -205,8 +209,13 @@ export function SignalDemo() {
       (step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS) +
       typingMs(step);
     const t = setTimeout(() => {
-      const next = step === last ? -1 : step + 1;
-      if (step === last) setFinished(true);
+      // after the last item the replay stops on the combined state
+      if (step === last) {
+        setFinished(true);
+        setMode('paused');
+        return;
+      }
+      const next = step + 1;
       setStep(next);
       setSaved(false);
       const typing = STEPS[next]?.typing;
@@ -288,6 +297,7 @@ export function SignalDemo() {
   };
 
   const replay = () => {
+    setResets((n) => n + 1);
     setFinished(false);
     setTyped(null);
     setSaved(false);
@@ -319,7 +329,9 @@ export function SignalDemo() {
   return (
     <div ref={rootRef} className="v5-demo" data-running={running || undefined}>
       <div
-        className="v5-demo-table min-w-0"
+        className={`v5-demo-table min-w-0 ${
+          resets === 0 ? '' : resets % 2 ? 'v12-reset-a' : 'v12-reset-b'
+        }`}
         onPointerDownCapture={takeControl}
         onKeyDownCapture={takeControl}
       >
