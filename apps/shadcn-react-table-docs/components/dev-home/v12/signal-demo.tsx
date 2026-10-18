@@ -243,7 +243,7 @@ export function SignalDemo() {
           />
           {mode === 'user'
             ? 'The replay is off. Use the table as you would in your app.'
-            : 'Click the table to try it yourself. Click an item to jump to it.'}
+            : 'Click the table to stop the replay. Click a step to jump to it.'}
         </p>
       </aside>
     </div>
