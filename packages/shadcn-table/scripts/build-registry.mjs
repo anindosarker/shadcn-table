@@ -210,7 +210,7 @@ const locales = localeFiles.map((p) => {
 
 const registry = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
-  name: 'srt',
+  name: 'st',
   homepage: HOMEPAGE,
   items: [main, ...locales],
 };
