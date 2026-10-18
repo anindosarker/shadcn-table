@@ -3,7 +3,11 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CheckIcon, HandIcon, RotateCcwIcon } from 'lucide-react';
-import type { SignalTableProps, SignalTableState } from './signal-table';
+import type {
+  SignalCue,
+  SignalTableProps,
+  SignalTableState,
+} from './signal-table';
 
 const SignalTable = dynamic(() => import('./signal-table'), {
   ssr: false,
@@ -22,7 +26,16 @@ interface Step {
   feature: string;
   title: string;
   code: string;
+  /** What pulses when this item plays. */
+  cue: SignalCue['kind'];
+  /** Final table state once the item has played. */
   apply: (s: SignalTableState) => SignalTableState;
+  /** Text the replay types letter by letter, and the table state for each
+   * partial string, applied on top of the previous item's state. */
+  typing?: {
+    text: string;
+    at: (s: SignalTableState, partial: string) => SignalTableState;
+  };
 }
 
 const BASE: SignalTableState = {
@@ -37,76 +50,111 @@ const BASE: SignalTableState = {
   salaryEdits: {},
 };
 
-/* The edit step opens Kathryn Kirlin's salary cell (row 55, top row after
- * the sort and filter), types a new value, then saves it. */
+/* The edit item opens Kathryn Kirlin's salary cell (row 55, the top row
+ * after the sort and filter), types a new value, then saves it. */
 const EDIT_STEP = 2;
 const EDIT_ROW = '55';
 const EDIT_FROM = '97434';
 const EDIT_TO = '120000';
-const EDIT_PHASE_MS = 1000;
 
 const STEPS: readonly Step[] = [
   {
     feature: 'Sorting',
     title: 'Sort by salary, highest first',
     code: "sorting: [{ id: 'salary', desc: true }]",
+    cue: 'sort',
     apply: (s) => ({ ...s, sorting: [{ id: 'salary', desc: true }] }),
   },
   {
     feature: 'Filtering',
     title: 'Filter states starting with “New”',
     code: "columnFilters: [{ id: 'state', value: 'New' }]",
+    cue: 'filter',
     apply: (s) => ({
       ...s,
       showColumnFilters: true,
       columnFilters: [{ id: 'state', value: 'New' }],
     }),
+    typing: {
+      text: 'New',
+      at: (s, partial) => ({
+        ...s,
+        showColumnFilters: true,
+        columnFilters: partial ? [{ id: 'state', value: partial }] : [],
+      }),
+    },
   },
   {
     feature: 'Editing',
     title: 'Edit the top salary to $120,000',
     code: "enableEditing: true, editDisplayMode: 'cell'",
+    cue: 'edit',
     apply: (s) => ({
       ...s,
       salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
     }),
+    // the typed value lives in the open cell's input until it is saved
+    typing: { text: EDIT_TO, at: (s) => s },
   },
   {
     feature: 'Grouping',
     title: 'Group rows by state',
     code: "grouping: ['state']",
+    cue: 'group',
     apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
   },
   {
     feature: 'Selection',
-    title: 'Ungroup, then select the top 3 rows',
-    code: 'grouping: [], rowSelection: { 55: true, 100: true, 45: true }',
-    apply: (s) => ({
-      ...s,
-      grouping: [],
-      expanded: {},
-      rowSelection: { '55': true, '100': true, '45': true },
-    }),
+    title: 'Select rows',
+    code: 'enableRowSelection: true',
+    cue: 'select',
+    // the first two rows under New York, the top group
+    apply: (s) => ({ ...s, rowSelection: { '100': true, '133': true } }),
   },
   {
     feature: 'Search',
     title: 'Search all columns for “el”',
     code: "globalFilter: 'el'",
+    cue: 'search',
     apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'el' }),
+    typing: {
+      text: 'el',
+      at: (s, partial) => ({
+        ...s,
+        showGlobalFilter: true,
+        globalFilter: partial,
+      }),
+    },
   },
 ];
 
-/** Table state with steps 0..step applied; -1 is the untouched table. */
+/** Table state with items 0..step applied; -1 is the untouched table. */
 const stateAt = (step: number) =>
   STEPS.slice(0, step + 1).reduce((s, x) => x.apply(s), BASE);
 
 const STEP_MS = 2600;
 const HOLD_MS = 4200;
 const REST_MS = 1400;
+/* typing: a beat before the first letter, then one letter per CHAR_MS;
+ * an edit is saved SAVE_MS after its last letter */
+const TYPE_LEAD_MS = 600;
+const CHAR_MS = 60;
+const SAVE_MS = 700;
+
+const typingMs = (step: number) => {
+  const typing = STEPS[step]?.typing;
+  if (!typing) return 0;
+  return (
+    TYPE_LEAD_MS +
+    typing.text.length * CHAR_MS +
+    (step === EDIT_STEP ? SAVE_MS : 0)
+  );
+};
 
 type Mode = 'playing' | 'paused' | 'user';
 
-/** v5's replaying table with plain v12 copy. */
+/** v5's replaying table for /dev/12: six items, each one pulses what it
+ * changed and types any text letter by letter. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);
   // true once the replay has run through every item at least once
@@ -114,8 +162,10 @@ export function SignalDemo() {
   const [mode, setMode] = useState<Mode>('playing');
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<SignalTableState>(BASE);
-  // edit step: 0 idle, 1 cell open, 2 new value typed, 3 saved
-  const [editPhase, setEditPhase] = useState(0);
+  // letters typed so far for the current item; null when it is not typing
+  const [typed, setTyped] = useState<number | null>(null);
+  // the edit item pulses its cell again once the value is saved
+  const [saved, setSaved] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // reduced motion: no autoplay, land on the finished table
@@ -144,54 +194,73 @@ export function SignalDemo() {
 
   const running = mode === 'playing' && visible;
 
+  // advance to the next item
   useEffect(() => {
     if (!running) return;
     const last = STEPS.length - 1;
     const wait =
-      step === -1
-        ? REST_MS
-        : step === last
-          ? HOLD_MS
-          : step === EDIT_STEP
-            ? STEP_MS + EDIT_PHASE_MS
-            : STEP_MS;
+      (step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS) +
+      typingMs(step);
     const t = setTimeout(() => {
       const next = step === last ? -1 : step + 1;
       if (step === last) setFinished(true);
       setStep(next);
-      if (next === EDIT_STEP) {
-        // open the cell on the previous state; the edit lands when saved
-        setState(stateAt(EDIT_STEP - 1));
-        setEditPhase(1);
+      setSaved(false);
+      const typing = STEPS[next]?.typing;
+      if (typing) {
+        setState(typing.at(stateAt(next - 1), ''));
+        setTyped(0);
       } else {
         setState(stateAt(next));
-        setEditPhase(0);
+        setTyped(null);
       }
     }, wait);
     return () => clearTimeout(t);
   }, [running, step]);
 
-  // edit step: open the cell, type the new value, then save it
+  // type the current item's text, one letter at a time
   useEffect(() => {
-    if (!running || step !== EDIT_STEP || editPhase === 0 || editPhase === 3)
-      return;
-    const t = setTimeout(() => {
-      if (editPhase === 1) {
-        setEditPhase(2);
-      } else {
-        setEditPhase(3);
-        setState(stateAt(EDIT_STEP));
-      }
-    }, EDIT_PHASE_MS);
+    const typing = STEPS[step]?.typing;
+    if (!running || !typing || typed === null) return;
+    const done = typed >= typing.text.length;
+    const t = setTimeout(
+      () => {
+        if (done) {
+          setState(stateAt(step));
+          setTyped(null);
+          setSaved(step === EDIT_STEP);
+          return;
+        }
+        const n = typed + 1;
+        setState(typing.at(stateAt(step - 1), typing.text.slice(0, n)));
+        setTyped(n);
+      },
+      done
+        ? step === EDIT_STEP
+          ? SAVE_MS
+          : 0
+        : typed === 0
+          ? TYPE_LEAD_MS
+          : CHAR_MS,
+    );
     return () => clearTimeout(t);
-  }, [running, step, editPhase]);
+  }, [running, step, typed]);
 
   const editing =
-    editPhase === 1
-      ? { rowId: EDIT_ROW, value: EDIT_FROM }
-      : editPhase === 2
-        ? { rowId: EDIT_ROW, value: EDIT_TO }
-        : null;
+    step === EDIT_STEP && typed !== null
+      ? {
+          rowId: EDIT_ROW,
+          value: typed === 0 ? EDIT_FROM : EDIT_TO.slice(0, typed),
+        }
+      : null;
+
+  const cueKind = step >= 0 && mode !== 'user' ? STEPS[step].cue : null;
+  const cue: SignalCue | null =
+    cueKind === 'edit'
+      ? { kind: saved ? 'edited' : 'edit', rowId: EDIT_ROW }
+      : cueKind === 'edited' || cueKind === null
+        ? null
+        : { kind: cueKind };
 
   const onChange = useCallback<SignalTableProps['onChange']>(
     (key, updater) =>
@@ -208,19 +277,17 @@ export function SignalDemo() {
   const takeControl = () => {
     if (mode !== 'playing') return;
     setMode('user');
-    // a half-done replay edit is saved, so the visitor gets a normal table
-    if (editPhase === 1 || editPhase === 2) {
-      setEditPhase(0);
-      setState((s) => ({
-        ...s,
-        salaryEdits: { ...s.salaryEdits, [EDIT_ROW]: Number(EDIT_TO) },
-      }));
+    // a half-typed item lands on its finished state
+    if (typed !== null && step >= 0) {
+      setTyped(null);
+      setState(stateAt(step));
     }
   };
 
   const replay = () => {
     setFinished(false);
-    setEditPhase(0);
+    setTyped(null);
+    setSaved(false);
     setStep(-1);
     setState(BASE);
     setMode('playing');
@@ -228,7 +295,8 @@ export function SignalDemo() {
 
   const jumpTo = (i: number) => {
     setFinished(false);
-    setEditPhase(0);
+    setTyped(null);
+    setSaved(false);
     setStep(i);
     setState(stateAt(i));
     setMode('paused');
@@ -252,7 +320,12 @@ export function SignalDemo() {
         onPointerDownCapture={takeControl}
         onKeyDownCapture={takeControl}
       >
-        <SignalTable state={state} onChange={onChange} editing={editing} />
+        <SignalTable
+          state={state}
+          onChange={onChange}
+          editing={editing}
+          cue={cue}
+        />
       </div>
 
       <aside className="v5-steps" aria-label="Demo items">
@@ -300,7 +373,8 @@ export function SignalDemo() {
                       className="v5-step-progress"
                       style={{
                         animationDuration: `${
-                          i === STEPS.length - 1 ? HOLD_MS : STEP_MS
+                          (i === STEPS.length - 1 ? HOLD_MS : STEP_MS) +
+                          typingMs(i)
                         }ms`,
                       }}
                     />

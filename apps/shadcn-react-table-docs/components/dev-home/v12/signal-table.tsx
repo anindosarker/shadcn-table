@@ -11,7 +11,6 @@ import type {
 import {
   ShadcnReactTable,
   useShadcnReactTable,
-  type SRT_Cell,
   type SRT_ColumnDef,
 } from '@/components/ui/shadcn-react-table';
 import {
@@ -43,7 +42,19 @@ export interface SignalTableProps {
   /** A salary cell the replay holds open in cell edit mode, with the value
    * shown in its input. */
   editing: { rowId: string; value: string } | null;
+  /** What the replay just changed, so it can pulse once. */
+  cue: SignalCue | null;
 }
+
+export type SignalCue =
+  | { kind: 'sort' | 'filter' | 'group' | 'select' | 'search' }
+  | { kind: 'edit' | 'edited'; rowId: string };
+
+/* One-shot accent pulse classes (v12.css). 'edited' uses the second class
+ * so the pulse replays on the same cell once the edit is saved. */
+const PULSE = 'v12-cue';
+const PULSE_AGAIN = 'v12-cue-2';
+const PULSE_FILL = 'v12-cue-fill';
 
 const usd = (value: number | undefined) =>
   value?.toLocaleString?.('en-US', {
@@ -63,6 +74,7 @@ export default function SignalTable({
   state,
   onChange,
   editing,
+  cue,
 }: SignalTableProps) {
   const rows = useMemo(
     () =>
@@ -132,6 +144,10 @@ export default function SignalTable({
     // keep the salary sort while searching (ranked results would clear it,
     // then restore it on the next replay)
     enableGlobalFilterRankedResults: false,
+    // giving the top toolbar a custom-actions slot stacks the alert banner
+    // (selected count, grouped by) on its own row, so the search field
+    // never covers it
+    renderTopToolbarCustomActions: () => null,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     initialState: {
@@ -163,6 +179,41 @@ export default function SignalTable({
               }
             },
           },
+    srtTableHeadCellProps: ({ column }) => ({
+      className:
+        (cue?.kind === 'sort' && column.id === 'salary') ||
+        (cue?.kind === 'filter' && column.id === 'state')
+          ? PULSE
+          : undefined,
+    }),
+    srtTableBodyCellProps: ({ cell, row }) => ({
+      className:
+        (cue?.kind === 'edit' || cue?.kind === 'edited') &&
+        row.id === cue.rowId &&
+        cell.column.id === 'salary'
+          ? cue.kind === 'edit'
+            ? PULSE
+            : PULSE_AGAIN
+          : (cue?.kind === 'group' && row.getIsGrouped()) ||
+              (cue?.kind === 'select' && row.getIsSelected())
+            ? PULSE_FILL
+            : undefined,
+    }),
+    srtToolbarAlertBannerProps: {
+      className: cue?.kind === 'select' ? PULSE : undefined,
+    },
+    // inline style, not a class: the top toolbar passes its own className
+    // to the search field, which replaces ours (keyframes in v12.css)
+    srtSearchTextFieldProps:
+      cue?.kind === 'search'
+        ? {
+            style: {
+              outline: '1px solid var(--dh-accent)',
+              outlineOffset: 1,
+              animation: 'v12-pop 600ms var(--dh-ease-out)',
+            },
+          }
+        : {},
     srtTableContainerProps: { className: 'max-h-[30rem]' },
     srtTableLayoutProps: { className: 'border-0 shadow-none bg-transparent' },
   });
@@ -173,11 +224,11 @@ export default function SignalTable({
   useEffect(() => {
     if (editingRowId !== undefined) {
       const cell = table
-        .getRow(editingRowId, true)
-        ?.getAllCells()
+        .getPreFilteredRowModel()
+        .rowsById[editingRowId]?.getAllCells()
         .find((c) => c.column.id === 'salary');
       if (cell) {
-        table.setEditingCell(cell as SRT_Cell<Person>);
+        table.setEditingCell(cell);
         replayEditing.current = true;
       }
     } else if (replayEditing.current) {

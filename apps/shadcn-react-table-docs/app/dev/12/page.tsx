@@ -76,14 +76,14 @@ export default function Variant12Page() {
               <div>
                 <p className="v12-label">Features</p>
                 <h2 id="v12-features-title" className="v5-h2">
-                  What ships with the table
+                  Everything you need.{' '}
+                  <span className="v12-accent">Built in.</span>
                 </h2>
               </div>
               <div>
                 <p className="v5-section-lede">
-                  Each tile is a feature you switch on or configure with table
-                  options. Export is the exception: the CSV and PDF examples add
-                  it with export-to-csv and jsPDF.
+                  Sorting, filtering, grouping, editing, virtualization, and
+                  more. All built in, fully customizable, and ready to use.
                 </p>
                 <Link href="/docs/guides" className="v4-link self-start">
                   All feature guides
