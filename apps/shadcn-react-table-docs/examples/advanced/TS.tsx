@@ -48,10 +48,11 @@ const Example = () => {
               <div className="flex items-center gap-4">
                 <img
                   alt="avatar"
+                  className="size-[30px] shrink-0 rounded-full"
                   height={30}
+                  width={30}
                   src={row.original.avatar}
                   loading="lazy"
-                  style={{ borderRadius: '50%' }}
                 />
                 {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
                 <span>{renderedCellValue}</span>
@@ -149,10 +150,11 @@ const Example = () => {
       <div className="sticky left-[30px] flex w-full max-w-[1000px] items-center justify-around">
         <img
           alt="avatar"
+          className="size-[200px] shrink-0 rounded-full"
           height={200}
+          width={200}
           src={row.original.avatar}
           loading="lazy"
-          style={{ borderRadius: '50%' }}
         />
         <div className="text-center">
           <h4>Signature Catch Phrase:</h4>
