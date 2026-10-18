@@ -68,7 +68,7 @@ export const SRT_FilterCheckbox = <TData extends SRT_RowData>({
   return (
     <SRT_Tooltip title={checkboxProps?.title ?? filterLabel}>
       <Label
-        className="-mt-1 font-normal text-muted-foreground"
+        className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
         title={undefined}
       >
         <Checkbox
