@@ -141,9 +141,10 @@ export default function SignalTable({
     enableRowSelection: true,
     enableEditing: true,
     editDisplayMode: 'cell',
-    // keep the salary sort while searching (ranked results would clear it,
-    // then restore it on the next replay)
-    enableGlobalFilterRankedResults: false,
+    // plain substring search, so the replay's term matches whole words the
+    // way the highlights show (the default fuzzy match also ranks results
+    // and drops the salary sort while searching)
+    globalFilterFn: 'contains',
     // giving the top toolbar a custom-actions slot stacks the alert banner
     // (selected count, grouped by) on its own row, so the search field
     // never covers it

@@ -97,34 +97,37 @@ const STEPS: readonly Step[] = [
     typing: { text: EDIT_TO, at: (s) => s },
   },
   {
-    feature: 'Grouping',
-    title: 'Group rows by state',
-    code: "grouping: ['state']",
-    cue: 'group',
-    apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
-  },
-  {
-    feature: 'Selection',
-    title: 'Select rows',
-    code: 'enableRowSelection: true',
-    cue: 'select',
-    // the first two rows under New York, the top group
-    apply: (s) => ({ ...s, rowSelection: { '100': true, '133': true } }),
-  },
-  {
     feature: 'Search',
-    title: 'Search all columns for “el”',
-    code: "globalFilter: 'el'",
+    title: 'Search all columns for “in”',
+    code: "globalFilter: 'in'",
     cue: 'search',
-    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'el' }),
+    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'in' }),
     typing: {
-      text: 'el',
+      text: 'in',
       at: (s, partial) => ({
         ...s,
         showGlobalFilter: true,
         globalFilter: partial,
       }),
     },
+  },
+  {
+    feature: 'Selection',
+    title: 'Select rows',
+    code: 'enableRowSelection: true',
+    cue: 'select',
+    // the top three search results
+    apply: (s) => ({
+      ...s,
+      rowSelection: { '55': true, '144': true, '130': true },
+    }),
+  },
+  {
+    feature: 'Grouping',
+    title: 'Group rows by state',
+    code: "grouping: ['state']",
+    cue: 'group',
+    apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
   },
 ];
 
