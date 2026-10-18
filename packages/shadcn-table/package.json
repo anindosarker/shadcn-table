@@ -1,6 +1,10 @@
 {
   "name": "shadcn-table",
   "private": true,
+  "license": "MIT",
+  "author": "Anindo Sarker",
+  "repository": "github:anindosarker/shadcn-table",
+  "homepage": "https://shadcn-table.com",
   "version": "0.1.0",
   "type": "module",
   "scripts": {

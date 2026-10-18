@@ -2,6 +2,10 @@
   "name": "shadcn-table-docs",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "author": "Anindo Sarker",
+  "repository": "github:anindosarker/shadcn-table",
+  "homepage": "https://shadcn-table.com",
   "scripts": {
     "build": "next build",
     "dev": "next dev -p ${PORT:-5320}",
