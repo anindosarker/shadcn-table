@@ -41,7 +41,8 @@ const Example = () => {
         header: 'First Name',
         stEditTextFieldProps: {
           required: true,
-          'aria-invalid': !!validationErrors?.firstName,
+          error: !!validationErrors?.firstName,
+          helperText: validationErrors?.firstName,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
@@ -56,7 +57,8 @@ const Example = () => {
         header: 'Last Name',
         stEditTextFieldProps: {
           required: true,
-          'aria-invalid': !!validationErrors?.lastName,
+          error: !!validationErrors?.lastName,
+          helperText: validationErrors?.lastName,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
@@ -71,7 +73,8 @@ const Example = () => {
         stEditTextFieldProps: {
           type: 'email',
           required: true,
-          'aria-invalid': !!validationErrors?.email,
+          error: !!validationErrors?.email,
+          helperText: validationErrors?.email,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
@@ -86,7 +89,8 @@ const Example = () => {
         editVariant: 'select',
         editSelectOptions: usStates,
         stEditTextFieldProps: {
-          'aria-invalid': !!validationErrors?.state,
+          error: !!validationErrors?.state,
+          helperText: validationErrors?.state,
         },
       },
     ],

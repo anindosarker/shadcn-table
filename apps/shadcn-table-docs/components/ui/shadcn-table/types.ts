@@ -604,8 +604,8 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
         column: ST_Column<TData>;
         row: ST_Row<TData>;
         table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
+      }) => InputProps & { error?: boolean; helperText?: ReactNode })
+    | (InputProps & { error?: boolean; helperText?: ReactNode });
   stFilterAutocompleteProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -995,8 +995,8 @@ export interface ST_TableOptions<TData extends ST_RowData>
         column: ST_Column<TData>;
         row: ST_Row<TData>;
         table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
+      }) => InputProps & { error?: boolean; helperText?: ReactNode })
+    | (InputProps & { error?: boolean; helperText?: ReactNode });
   stExpandAllButtonProps?:
     | ((props: { table: ST_TableInstance<TData> }) => ButtonProps)
     | ButtonProps;

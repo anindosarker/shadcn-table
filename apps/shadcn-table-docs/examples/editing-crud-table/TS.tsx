@@ -43,7 +43,8 @@ const Example = () => {
         stEditTextFieldProps: ({ cell, row }) => ({
           type: 'text',
           required: true,
-          'aria-invalid': !!validationErrors?.[cell.id],
+          error: !!validationErrors?.[cell.id],
+          helperText: validationErrors?.[cell.id],
           //store edited user in state to be saved later
           onBlur: (event) => {
             const validationError = !validateRequired(event.currentTarget.value)
@@ -63,7 +64,8 @@ const Example = () => {
         stEditTextFieldProps: ({ cell, row }) => ({
           type: 'text',
           required: true,
-          'aria-invalid': !!validationErrors?.[cell.id],
+          error: !!validationErrors?.[cell.id],
+          helperText: validationErrors?.[cell.id],
           //store edited user in state to be saved later
           onBlur: (event) => {
             const validationError = !validateRequired(event.currentTarget.value)
@@ -83,7 +85,8 @@ const Example = () => {
         stEditTextFieldProps: ({ cell, row }) => ({
           type: 'email',
           required: true,
-          'aria-invalid': !!validationErrors?.[cell.id],
+          error: !!validationErrors?.[cell.id],
+          helperText: validationErrors?.[cell.id],
           //store edited user in state to be saved later
           onBlur: (event) => {
             const validationError = !validateEmail(event.currentTarget.value)
@@ -103,7 +106,8 @@ const Example = () => {
         editVariant: 'select',
         editSelectOptions: usStates,
         stEditTextFieldProps: ({ row }) => ({
-          'aria-invalid': !!validationErrors?.state,
+          error: !!validationErrors?.state,
+          helperText: validationErrors?.state,
           onChange: (event) =>
             setEditedUsers({
               ...editedUsers,

@@ -4,11 +4,12 @@ import {
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   useId,
   useState,
 } from 'react';
 import { cn } from '@/lib/utils';
-import { Field } from '@/components/ui/field';
+import { Field, FieldDescription, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -29,6 +30,10 @@ import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   cell: ST_Cell<TData>;
+  /** MUI TextField `error`: marks the input invalid (aria-invalid) and colors the helper text. */
+  error?: boolean;
+  /** MUI TextField `helperText`: validation or hint text rendered under the input. */
+  helperText?: ReactNode;
   table: ST_TableInstance<TData>;
 }
 
@@ -60,7 +65,11 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   // MUI SelectInput openState: its handleBlur fires onBlur only while the menu is closed.
   const [open, setOpen] = useState(false);
 
-  const textFieldProps: InputProps = {
+  const {
+    error,
+    helperText,
+    ...textFieldProps
+  }: InputProps & { error?: boolean; helperText?: ReactNode } = {
     ...parseFromValuesOrFunc(stEditTextFieldProps, {
       cell,
       column,
@@ -75,6 +84,36 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     }),
     ...rest,
   };
+
+  const isFormMode = ['custom', 'modal'].includes(
+    (isCreating ? createDisplayMode : editDisplayMode) as string,
+  );
+
+  // MUI FormHelperText under the input; red (FieldError) when `error` is set.
+  const helper =
+    helperText == null || helperText === '' ? null : error ? (
+      <FieldError>{helperText}</FieldError>
+    ) : (
+      <FieldDescription>{helperText}</FieldDescription>
+    );
+
+  // Label + input in modal/custom mode (MUI TextField label); otherwise only
+  // wrap when there is helper text to place under the input.
+  const withField = (control: ReactNode) =>
+    isFormMode ? (
+      <Field data-invalid={error || undefined}>
+        <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
+        {control}
+        {helper}
+      </Field>
+    ) : helper ? (
+      <Field className="gap-1" data-invalid={error || undefined}>
+        {control}
+        {helper}
+      </Field>
+    ) : (
+      control
+    );
 
   const selectOptions = parseFromValuesOrFunc(editSelectOptions, {
     cell,
@@ -148,6 +187,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
           }}
           size="sm"
           {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
+          aria-invalid={error || textFieldProps['aria-invalid']}
           className={cn('w-full', textFieldProps.className)}
           onBlur={(event) => {
             // MUI SelectInput handleBlur: only while closed, with target { name, value }.
@@ -198,16 +238,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         </SelectContent>
       </Select>
     );
-    return ['custom', 'modal'].includes(
-      (isCreating ? createDisplayMode : editDisplayMode) as string,
-    ) ? (
-      <Field>
-        <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
-        {select}
-      </Field>
-    ) : (
-      select
-    );
+    return withField(select);
   }
 
   const input = (
@@ -234,6 +265,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
       value={value ?? ''}
       autoComplete="off"
       {...textFieldProps}
+      aria-invalid={error || textFieldProps['aria-invalid']}
       onBlur={handleBlur}
       onChange={handleChange}
       onClick={(e) => {
@@ -245,14 +277,5 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
       onCompositionEnd={() => setCompletesComposition(true)}
     />
   );
-  return ['custom', 'modal'].includes(
-    (isCreating ? createDisplayMode : editDisplayMode) as string,
-  ) ? (
-    <Field>
-      <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
-      {input}
-    </Field>
-  ) : (
-    input
-  );
+  return withField(input);
 };
