@@ -75,15 +75,15 @@ const table = useShadcnTable({
 
 ### Custom Focus Styles
 
-An outline is automatically added to all elements when they are focused. You can easily customize the color of the outline by setting `cellNavigationOutlineColor` property in the `stTheme` table option.
+An outline is automatically added to all elements when they are focused. The outline uses the shadcn `ring` color, so you can easily customize its color by overriding the `--ring` CSS variable on the table.
 
 ```tsx
 const table = useShadcnTable({
   columns,
   data,
-  stTheme: {
-    cellNavigationOutlineColor 'limegreen'
-  }
+  stTableLayoutProps: {
+    style: { '--ring': 'limegreen' } as React.CSSProperties,
+  },
 });
 ```
 

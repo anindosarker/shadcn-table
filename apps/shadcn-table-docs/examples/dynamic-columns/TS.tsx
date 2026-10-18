@@ -9,9 +9,9 @@ import {
   type ST_PaginationState,
   type ST_SortingState,
   // type ST_ColumnOrderState,
+  ST_Tooltip,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { RefreshCwIcon } from 'lucide-react';
 import {
   keepPreviousData,

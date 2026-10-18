@@ -1,7 +1,8 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import { expect } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Styling/Caption Examples',
@@ -53,6 +54,14 @@ export const BottomCaption = () => (
   />
 );
 
+// MRT's caption sits under the table by default; the table's `caption-bottom`
+// class is inherited by the <caption>, and stTableProps.className can
+// override it (TopCaption below).
+BottomCaption.play = async ({ canvas }: StoryContext) => {
+  const caption = canvas.getByText('Table Caption');
+  await expect(getComputedStyle(caption).captionSide).toBe('bottom');
+};
+
 export const TopCaption = () => (
   <ShadcnTable
     columns={columns}
@@ -63,3 +72,8 @@ export const TopCaption = () => (
     renderCaption={() => 'Table Caption'}
   />
 );
+
+TopCaption.play = async ({ canvas }: StoryContext) => {
+  const caption = canvas.getByText('Table Caption');
+  await expect(getComputedStyle(caption).captionSide).toBe('top');
+};

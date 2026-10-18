@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import {
   type ST_ColumnDef,
   ST_ToggleFullScreenButton,
+  ST_Tooltip,
 } from '@/components/ui/shadcn-table';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';

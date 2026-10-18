@@ -17,12 +17,15 @@ export interface ST_TableProps<TData extends ST_RowData> extends TableProps {
   table: ST_TableInstance<TData>;
 }
 
-const tableVariants = cva('relative w-full border-separate border-spacing-0', {
-  variants: {
-    layoutMode: { grid: 'grid', 'grid-no-grow': 'grid', semantic: '' },
+const tableVariants = cva(
+  'relative w-full caption-bottom border-separate border-spacing-0',
+  {
+    variants: {
+      layoutMode: { grid: 'grid', 'grid-no-grow': 'grid', semantic: '' },
+    },
+    defaultVariants: { layoutMode: 'semantic' },
   },
-  defaultVariants: { layoutMode: 'semantic' },
-});
+);
 
 export const ST_Table = <TData extends ST_RowData>({
   table,

@@ -169,9 +169,11 @@ const table = useShadcnTable({
   data,
   columns,
   stLinearProgressProps: ({ isTopToolbar }) => ({
-    color: 'warning',
-    style: { display: isTopToolbar ? 'block' : 'none' }, //only show top toolbar progress bar
-    value: fetchProgress, //show precise real progress value if you so desire
+    progressComponentProps: {
+      className: '[&>[data-slot=progress-indicator]]:bg-amber-500',
+      style: { display: isTopToolbar ? 'block' : 'none' }, //only show top toolbar progress bar
+      value: fetchProgress, //show precise real progress value if you so desire
+    },
   }),
   state: {
     isLoading,
@@ -195,7 +197,7 @@ const table = useShadcnTable({
   //show a custom error message if there was an error fetching data in the top toolbar
   stToolbarAlertBannerProps: isError
     ? {
-        color: 'error',
+        className: 'border-destructive text-destructive',
         children: 'Network Error. Could not fetch data.',
       }
     : undefined,

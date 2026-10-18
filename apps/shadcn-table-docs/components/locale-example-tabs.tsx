@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -13,22 +13,28 @@ export interface LocaleExampleTabsProps {
 
 /**
  * Locale switcher for example-groups/LocaleExamples.tsx: one tab per locale,
- * `es` by default, `?locale=` read after mount and kept in the URL like MRT's
- * LocaleExamples.
+ * `es` by default, `?locale=` read once the client is hydrated and kept in the URL
+ * like MRT's LocaleExamples.
  */
+
+//read-once store: `null` on the server and during hydration so both render the `es` tab
+const subscribeToNothing = () => () => {};
+const getUrlLocale = () =>
+  new URLSearchParams(window.location.search).get('locale');
+const getServerUrlLocale = () => null;
 export function LocaleExampleTabs({ locales, panels }: LocaleExampleTabsProps) {
   const pathname = usePathname();
-  const [currentLocale, _setCurrentLocale] = useState('es');
-
-  //read ?locale= after mount so the server and client render the same tab
-  useEffect(() => {
-    const locale = new URLSearchParams(window.location.search).get('locale');
-    _setCurrentLocale(locale && locale in panels ? locale : 'es');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const urlLocale = useSyncExternalStore(
+    subscribeToNothing,
+    getUrlLocale,
+    getServerUrlLocale,
+  );
+  const [selectedLocale, setSelectedLocale] = useState<string | null>(null);
+  const currentLocale =
+    selectedLocale ?? (urlLocale && urlLocale in panels ? urlLocale : 'es');
 
   const setCurrentLocale = (locale: string) => {
-    _setCurrentLocale(locale);
+    setSelectedLocale(locale);
     window.history.replaceState(null, '', `${pathname}?locale=${locale}`);
   };
 

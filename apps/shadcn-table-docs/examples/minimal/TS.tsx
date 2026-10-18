@@ -45,7 +45,7 @@ export const Example = () => {
     enableColumnFilters: false,
     enablePagination: false,
     enableSorting: false,
-    stTableBodyRowProps: { className: 'hover:[&>td]:after:bg-transparent' },
+    stTableBodyRowProps: { hover: false },
     stTableProps: {
       className:
         'bg-background border border-[rgba(81,81,81,.5)] [&_caption]:caption-top', //change default background color

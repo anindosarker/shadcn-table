@@ -15,7 +15,7 @@ const TABLE = '#relevant-props-table';
 const STATE = '#relevant-state-options-table';
 const COLUMN = '#relevant-column-options-table';
 
-export default {
+const checks = {
   '/docs/guides/editing': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, COLUMN, check);
@@ -326,3 +326,5 @@ export default {
     }
   },
 };
+
+export default checks;
