@@ -24,7 +24,7 @@ async function agentBar(page, check) {
   );
 }
 
-export default {
+const checks = {
   '/docs/getting-started/usage': async ({ page, check }) => {
     const steps = page.locator('article .fd-step');
     check(

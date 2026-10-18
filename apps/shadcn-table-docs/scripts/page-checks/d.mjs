@@ -26,7 +26,7 @@ async function singleExample(page, check) {
   check('no group tab strip', strips === 0, `tablists=${strips}`);
 }
 
-export default {
+const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
     const w = await example(page, 'advanced', check);
     await singleExample(page, check);
@@ -221,3 +221,5 @@ export default {
     await hasText(w, 'export-to-pdf', /Export All Rows/, check);
   },
 };
+
+export default checks;

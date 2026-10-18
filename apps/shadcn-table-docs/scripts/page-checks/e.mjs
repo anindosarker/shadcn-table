@@ -31,7 +31,7 @@ const examplePage =
     await codeToggle(page, id, needle, check);
   };
 
-export default {
+const checks = {
   '/docs/examples': async ({ page, check }) => {
     const links = page.locator('main a[href^="/docs/examples/"]');
     check(
@@ -276,3 +276,5 @@ export default {
     );
   },
 };
+
+export default checks;

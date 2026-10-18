@@ -8,35 +8,6 @@ import {
 } from '@/components/ui/shadcn-table';
 
 const Example = () => {
-  const columns = useMemo(
-    () =>
-      [
-        {
-          accessorKey: 'firstName',
-          enableHiding: false,
-          header: 'First Name',
-        },
-        {
-          accessorKey: 'lastName',
-          enableHiding: false,
-          header: 'Last Name',
-        },
-        {
-          accessorKey: 'address',
-          header: 'Address',
-        },
-        {
-          accessorKey: 'city',
-          header: 'City',
-        },
-        {
-          accessorKey: 'state',
-          header: 'State',
-        },
-      ] as ST_ColumnDef<(typeof data)[0]>[],
-    [],
-  );
-
   const data = useMemo(
     () => [
       //data definitions...
@@ -77,6 +48,35 @@ const Example = () => {
       },
       //end
     ],
+    [],
+  );
+
+  const columns = useMemo(
+    () =>
+      [
+        {
+          accessorKey: 'firstName',
+          enableHiding: false,
+          header: 'First Name',
+        },
+        {
+          accessorKey: 'lastName',
+          enableHiding: false,
+          header: 'Last Name',
+        },
+        {
+          accessorKey: 'address',
+          header: 'Address',
+        },
+        {
+          accessorKey: 'city',
+          header: 'City',
+        },
+        {
+          accessorKey: 'state',
+          header: 'State',
+        },
+      ] as ST_ColumnDef<(typeof data)[0]>[],
     [],
   );
 
