@@ -1,6 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -50,19 +56,61 @@ interface Props {
   prompt: string;
 }
 
-type Mode = 'preview' | 'code' | 'split';
+type Mode = 'preview' | 'code' | 'both';
 
 const MODES: { label: string; value: Mode }[] = [
   { label: 'Preview', value: 'preview' },
   { label: 'Code', value: 'code' },
-  { label: 'Split', value: 'split' },
+  { label: 'Both', value: 'both' },
 ];
 
 /** The reader's last view mode, shared by every example panel. */
 const STORAGE_KEY = 'srt-example-mode';
+const DEFAULT_MODE: Mode = 'preview';
 
 const isMode = (value: unknown): value is Mode =>
   MODES.some((mode) => mode.value === value);
+
+/* The stored mode as an external store: every panel on the page reads the
+ * same value, and the server render (and first client render) use Preview.
+ * 'split' was the old name for 'both'. */
+const modeListeners = new Set<() => void>();
+
+/** Fallback when storage is blocked, so a click still switches the view. */
+let sessionMode: Mode | null = null;
+
+const subscribeMode = (onChange: () => void) => {
+  modeListeners.add(onChange);
+  window.addEventListener('storage', onChange);
+  return () => {
+    modeListeners.delete(onChange);
+    window.removeEventListener('storage', onChange);
+  };
+};
+
+const readMode = (): Mode => {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === 'split') return 'both';
+    return isMode(stored) ? stored : DEFAULT_MODE;
+  } catch {
+    // Storage may be blocked (private mode, disabled cookies); keep Preview.
+    return DEFAULT_MODE;
+  }
+};
+
+const writeMode = (next: Mode) => {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, next);
+  } catch {
+    // Not persisted; the panels still switch for this visit.
+    sessionMode = next;
+  }
+  for (const listener of modeListeners) listener();
+};
+
+const getModeSnapshot = () => sessionMode ?? readMode();
+const getModeServerSnapshot = () => DEFAULT_MODE;
 
 type CopyTarget = 'install' | 'prompt';
 
@@ -70,8 +118,8 @@ type CopyTarget = 'install' | 'prompt';
 const COPIED_MS = 1500;
 
 /**
- * Static playground panel around a live example: Preview, Code or Split
- * view, one tab per source file, Open in GitHub, full screen. The table stays
+ * Static playground panel around a live example: Preview, Code or Both
+ * (the example, then its code below) view, one tab per source file, Open in GitHub, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
  * pages the header also carries the page switcher, so the reader can jump
  * between examples without leaving the panel. The caret menu next to Open in
@@ -85,7 +133,11 @@ export const ExamplePlayground = ({
   name,
   prompt,
 }: Props) => {
-  const [mode, setMode] = useState<Mode>('preview');
+  const mode = useSyncExternalStore(
+    subscribeMode,
+    getModeSnapshot,
+    getModeServerSnapshot,
+  );
   const [file, setFile] = useState(files[0]?.name ?? '');
   const [fullscreen, setFullscreen] = useState(false);
   // The tooltip is controlled, as in the table's own toolbar button, so it
@@ -115,17 +167,6 @@ export const ExamplePlayground = ({
     copiedTimer.current = setTimeout(() => setCopied(null), COPIED_MS);
   };
 
-  // The stored mode is read after mount so server and first client render
-  // agree (default Preview).
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (isMode(stored)) setMode(stored);
-    } catch {
-      // Storage may be blocked (private mode, disabled cookies); keep Preview.
-    }
-  }, []);
-
   // Full screen: lock the page behind the panel and close on Escape. Radix
   // layers (popover, menu) handle Escape first and mark the event, so an open
   // popover closes without leaving full screen.
@@ -151,14 +192,7 @@ export const ExamplePlayground = ({
     };
   }, [fullscreen]);
 
-  const changeMode = (next: Mode) => {
-    setMode(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // Not persisted, the panel still switches for this visit.
-    }
-  };
+  const changeMode = (next: Mode) => writeMode(next);
 
   const toggleFullscreen = () => {
     setTooltipOpen(false);
@@ -326,38 +360,27 @@ export const ExamplePlayground = ({
           </Tooltip>
         </div>
       </header>
-      {/* Split is code 3fr, preview 2fr from the @4xl container step (panel
-          body at least 56rem wide: full-width example pages, full screen);
-          narrower panels stack code above the preview. The code pane keeps
-          its own scroll in Split. */}
-      <div
-        className={cn(
-          '@container',
-          fullscreen && 'min-h-0 flex-1 overflow-auto',
-        )}
-      >
+      {/* Both stacks the live example above its code, full width at every
+          size. The example comes first in every mode so the table stays
+          mounted (hidden in Code) and keeps its state across views. */}
+      <div className={cn(fullscreen && 'min-h-0 flex-1 overflow-auto')}>
         <div
-          className={cn(mode === 'split' && 'grid @4xl:grid-cols-[3fr_2fr]')}
+          data-slot="preview"
+          className={cn('min-w-0 p-4', mode === 'code' && 'hidden')}
         >
-          {showCode && active && (
-            <div
-              data-slot="code"
-              className={cn(
-                'min-w-0',
-                mode === 'split' &&
-                  'max-h-[32rem] overflow-auto border-b @4xl:border-r @4xl:border-b-0',
-              )}
-            >
-              {active.node}
-            </div>
-          )}
-          <div
-            data-slot="preview"
-            className={cn('min-w-0 p-4', mode === 'code' && 'hidden')}
-          >
-            {children}
-          </div>
+          {children}
         </div>
+        {showCode && active && (
+          <div
+            data-slot="code"
+            className={cn(
+              'min-w-0',
+              mode === 'both' && '[border-top:var(--docs-rule)]',
+            )}
+          >
+            {active.node}
+          </div>
+        )}
       </div>
     </div>
   );
