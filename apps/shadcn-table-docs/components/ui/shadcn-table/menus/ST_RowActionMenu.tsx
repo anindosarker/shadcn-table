@@ -1,22 +1,17 @@
-import {
-  type ComponentPropsWithRef,
-  type MouseEvent,
-  type ReactNode,
-  useMemo,
-  useRef,
-} from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { type MouseEvent, type ReactNode, useMemo, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { type ST_Row, type ST_RowData, type ST_TableInstance } from '../types';
+import {
+  Menu,
+  MenuContent,
+  type MenuContentProps,
+  MenuTrigger,
+} from '../primitives/menu';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { ST_ActionMenuItem } from './ST_ActionMenuItem';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
-  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
+  extends MenuContentProps {
   anchorEl: HTMLElement | null;
   handleEdit: (event: MouseEvent) => void;
   row: ST_Row<TData>;
@@ -41,7 +36,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
       enableEditing,
       icons: { EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — MenuContent's bg-popover themes via shadcn CSS vars
       renderRowActionMenuItems,
     },
   } = table;
@@ -78,13 +73,13 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    <DropdownMenu
+    <Menu
       open={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
+      <MenuTrigger>
         <span
           aria-hidden
           style={{
@@ -96,20 +91,17 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </DropdownMenuTrigger>
+      </MenuTrigger>
       {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
-      <DropdownMenuContent
+      <MenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          anchorRef.current?.focus();
-        }}
+        onClose={() => anchorRef.current?.focus()}
         className={cn('w-max', className)}
         {...rest}
       >
         {menuItems}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </MenuContent>
+    </Menu>
   );
 };

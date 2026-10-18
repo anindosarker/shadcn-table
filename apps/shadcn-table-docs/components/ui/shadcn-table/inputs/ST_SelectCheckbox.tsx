@@ -1,8 +1,6 @@
 import { type MouseEvent } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   type CheckboxProps,
   type RadioProps,
@@ -10,6 +8,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
+import { Checkbox, RadioGroup, RadioGroupItem } from '../primitives/checkbox';
 import {
   getIsRowSelected,
   getST_RowSelectionHandler,
@@ -145,16 +144,10 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         ) : (
           <Checkbox
             {...commonProps}
-            // indeterminate={...}
-            // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
-            checked={
-              (
-                !isChecked && selectAll
-                  ? table.getIsSomeRowsSelected()
-                  : row?.getIsSomeSelected() && row.getCanSelectSubRows()
-              )
-                ? 'indeterminate'
-                : commonProps.checked
+            indeterminate={
+              !isChecked && selectAll
+                ? table.getIsSomeRowsSelected()
+                : row?.getIsSomeSelected() && row.getCanSelectSubRows()
             }
           />
         )}
