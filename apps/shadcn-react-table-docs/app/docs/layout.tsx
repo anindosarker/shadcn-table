@@ -3,6 +3,7 @@ import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
+import { SiteNav } from '@/components/site-nav';
 
 export default function Layout({ children }: LayoutProps<'/docs'>) {
   const { nav, ...base } = baseOptions();
@@ -14,6 +15,8 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
       {...base}
       nav={{ ...nav, mode: 'top' }}
       tabs={false}
+      // the landing page's top bar (components/site-nav.tsx)
+      slots={{ ...base.slots, header: SiteNav }}
       tree={source.getPageTree()}
       sidebar={{
         collapsible: false,

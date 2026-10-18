@@ -2,6 +2,7 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import './global.css';
 import { Inter } from 'next/font/google';
+import { archivo } from '@/lib/fonts';
 import {
   DEFAULT_THEME,
   RANDOMIZE_DEFAULT_THEME,
@@ -28,7 +29,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${inter.className}`}
+      className={`${inter.variable} ${archivo.variable} ${inter.className}`}
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>

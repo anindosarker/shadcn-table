@@ -120,7 +120,7 @@ export function PageSwitcher({
       </PopoverTrigger>
       {/* cmdk assigns the listbox its own id, so the trigger points at the
           popup container instead. */}
-      <PopoverContent id={listId} align="start" className="w-72 p-0">
+      <PopoverContent id={listId} align="start" className="docs-menu w-72 p-0">
         <Command filter={filterPages}>
           <CommandInput placeholder="Search pages..." />
           <CommandList>

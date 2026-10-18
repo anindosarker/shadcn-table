@@ -3,22 +3,23 @@ import { Logo } from '@/components/logo';
 import { ThemeControls } from '@/components/theme-controls';
 import { gitConfig } from './shared';
 
+/** Top bar links, shared by the fumadocs layouts and components/site-nav.tsx. */
+export const NAV_LINKS = [
+  { text: 'Docs', url: '/docs/getting-started/install' },
+  { text: 'API', url: '/docs/api' },
+  { text: 'Examples', url: '/docs/examples' },
+  { text: 'Guides', url: '/docs/guides' },
+] as const;
+
+export const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
+
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
       title: <Logo />,
     },
-    links: [
-      {
-        text: 'Get Started',
-        url: '/docs/getting-started/install',
-        active: 'nested-url',
-      },
-      { text: 'API', url: '/docs/api', active: 'nested-url' },
-      { text: 'Examples', url: '/docs/examples', active: 'nested-url' },
-      { text: 'Guides', url: '/docs/guides', active: 'nested-url' },
-    ],
-    githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
+    links: NAV_LINKS.map((l) => ({ ...l, active: 'nested-url' as const })),
+    githubUrl: GITHUB_URL,
     slots: { themeSwitch: ThemeControls },
   };
 }

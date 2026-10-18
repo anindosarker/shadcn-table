@@ -203,19 +203,21 @@ html > body[data-scroll-locked] {
 
 /* ---------- chrome: dashed frame ---------- */
 
-/* one line style for the layout seams: nav bottom, sidebar end, and the
-   divider under the page description. Components (cards,
-   code blocks, tables, inputs) keep solid borders.
+/* one line style for the layout seams (nav bottom, sidebar end, divider
+   under the page description) and for the docs chrome boxes (code blocks,
+   callouts, cards, prop tables, example frame): the landing page's dash,
+   foreground 20% over the background. Inputs and the live tables keep their
+   solid borders.
    --docs-radius: the docs chrome (code blocks, cards, callouts, search box,
    sidebar items, playground frame) keeps ~4px corners; the shadcn radius scale
    stays at the nova default for the parts. */
 :root {
-  --docs-rule: 1px dashed
-    color-mix(in oklab, var(--color-fd-border) 80%, transparent);
+  --docs-dash: color-mix(in oklch, var(--foreground) 20%, var(--background));
+  --docs-rule: 1px dashed var(--docs-dash);
   --docs-radius: 4px;
 }
 
-#nd-subnav > div {
+#nd-subnav {
   border-bottom: var(--docs-rule);
 }
 
@@ -230,6 +232,12 @@ html > body[data-scroll-locked] {
 #nd-page .docs-page-bar {
   border-bottom: var(--docs-rule);
   padding-block: 0.375rem;
+}
+
+/* the breadcrumb gives way to the page actions on narrow screens */
+#nd-page .docs-page-bar > :first-child {
+  min-width: 0;
+  overflow: hidden;
 }
 
 /* breadcrumb and page actions 13px */
@@ -291,7 +299,7 @@ html > body[data-scroll-locked] {
     var(--color-fd-foreground) 6%,
     transparent
   );
-  color: var(--color-fd-primary);
+  color: var(--docs-accent);
   font-weight: 500;
 }
 
@@ -335,8 +343,8 @@ html > body[data-scroll-locked] {
 }
 
 #nd-page .prose {
-  font-size: 0.9375rem;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 /* paragraph and list gap 12px; lists and tables keep the body size */
@@ -383,8 +391,8 @@ html > body[data-scroll-locked] {
 }
 
 #nd-page .prose :is(p, li, td) > a:hover {
-  color: var(--color-fd-primary);
-  text-decoration-color: var(--color-fd-primary);
+  color: var(--docs-accent);
+  text-decoration-color: var(--docs-accent);
 }
 
 /* inline code: 13px, subtle fill, no border */
@@ -403,18 +411,20 @@ html > body[data-scroll-locked] {
 
 #toc-title {
   color: var(--color-fd-muted-foreground);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 #nd-toc a {
   font-size: 0.8125rem;
 }
 
-/* only the active indicator line: hide the per-item grey track and the
-   travelling dot; the primary-coloured clipped path stays */
-#nd-toc a > svg,
-#nd-toc div[style*='offset-path'] {
+/* only the active indicator line and its thumb (styled under "landing
+   look"): hide the per-item grey track */
+#nd-toc a > svg {
   display: none;
 }
 
@@ -439,6 +449,388 @@ html > body[data-scroll-locked] {
 /* "Copy page" split button: one bordered group, 1px divider between halves */
 .srt-page-actions > * + * {
   border-inline-start-width: 1px;
+}
+
+/* ---------- landing look: the /dev/12 tokens, type and top bar ----------
+ * Scoped to pages with the docs layout, so /dev and the home page keep their
+ * own values. Every token derives from the active preset and mode. */
+
+html:has(#nd-notebook-layout) {
+  /* landing fonts in the same roles: Archivo display, Inter body, mono labels */
+  --font-display: var(--font-archivo), var(--font-sans);
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+  /* light: a step darker than --primary / --muted-foreground, so accent and
+   * muted text keep 4.5:1 on white and on the tinted surface */
+  --docs-accent: color-mix(in oklch, var(--primary) 72%, var(--foreground));
+  --docs-surface: color-mix(in oklch, var(--foreground) 4%, var(--background));
+  --color-fd-primary: var(--docs-accent);
+  --color-fd-muted-foreground: color-mix(
+    in oklch,
+    var(--muted-foreground) 85%,
+    var(--foreground)
+  );
+  --color-fd-card: var(--docs-surface);
+}
+
+/* dark: --primary as is, lifted to L 0.7 when a preset's is darker (blue's
+ * 0.546 reads 3.8:1 on the dark page; the others are already above) */
+html.dark:has(#nd-notebook-layout) {
+  --docs-accent: oklch(from var(--primary) max(l, 0.7) c h);
+  --color-fd-muted-foreground: var(--muted-foreground);
+}
+
+html:has(#nd-notebook-layout) ::selection {
+  background: color-mix(in oklch, var(--docs-accent) 14%, transparent);
+  color: var(--color-fd-foreground);
+}
+
+/* top bar (components/site-nav.tsx): two rows below lg (links under the
+ * brand, as on the landing page), one row from lg */
+#nd-notebook-layout:has(.site-nav) {
+  --fd-header-height: 5.75rem;
+}
+
+.site-nav {
+  position: sticky;
+  top: var(--fd-docs-row-1);
+  z-index: 10;
+  height: var(--fd-header-height);
+  background-color: color-mix(
+    in oklch,
+    var(--color-fd-background) 84%,
+    transparent
+  );
+  backdrop-filter: blur(10px);
+}
+
+.site-nav-row {
+  display: grid;
+  height: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 3.5rem 2.25rem;
+  grid-template-areas:
+    'brand actions'
+    'links links';
+  align-items: center;
+  column-gap: 1rem;
+  padding-inline: 1rem;
+}
+
+.site-nav-brand {
+  grid-area: brand;
+  display: inline-flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 0.15rem;
+  justify-self: start;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fd-foreground);
+  white-space: nowrap;
+}
+
+.site-nav-slash {
+  color: var(--docs-accent);
+  letter-spacing: -0.12em;
+  margin-right: 0.2em;
+}
+
+.site-nav-links {
+  grid-area: links;
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: 1.25rem;
+  border-top: var(--docs-rule);
+}
+
+.site-nav-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+  white-space: nowrap;
+  padding-block: 0.25rem;
+  transition: color 0.15s;
+}
+
+.site-nav-link:hover,
+.site-nav-link[data-active] {
+  color: var(--docs-accent);
+}
+
+.site-nav-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.5rem;
+}
+
+/* the theme pill, dashed like the landing page's */
+.site-nav-actions > div > div {
+  border-style: dashed;
+  border-color: var(--docs-dash);
+}
+
+.site-nav-icon {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 999px;
+  padding: 0;
+  color: var(--color-fd-muted-foreground);
+}
+
+.site-nav-icon:hover {
+  color: var(--color-fd-foreground);
+  background-color: var(--docs-surface);
+}
+
+.site-nav-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.site-nav-search {
+  width: 14rem;
+  border-style: dashed;
+  border-color: var(--docs-dash);
+  border-radius: var(--docs-radius);
+}
+
+/* visibility here, not with Tailwind's hidden utilities: these unlayered
+   rules would beat them. Search: icon below lg, field from lg. GitHub and
+   the theme pill from md (below, they sit in the sidebar drawer footer). */
+.site-nav-search,
+.site-nav-desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .site-nav-row {
+    padding-inline: 1.5rem;
+  }
+  .site-nav-desktop {
+    display: inline-grid;
+  }
+  .site-nav-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  #nd-notebook-layout:has(.site-nav) {
+    --fd-header-height: 3.75rem;
+  }
+  .site-nav-row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: 100%;
+    grid-template-areas: 'brand links actions';
+  }
+  .site-nav-links {
+    gap: 2.25rem;
+    border-top: 0;
+  }
+  .site-nav-search {
+    display: flex;
+  }
+  .site-nav-search-sm {
+    display: none;
+  }
+}
+
+/* page head: mono eyebrow (the section), Archivo title, lead description */
+#nd-page .docs-eyebrow {
+  margin-bottom: -0.25rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+}
+
+#nd-page .docs-eyebrow > span {
+  color: var(--docs-accent);
+  letter-spacing: -0.12em;
+  margin-right: 0.2em;
+}
+
+#nd-page h1.docs-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.5rem + 1.25vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+#nd-page .docs-description-rule {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+/* body measure ~70ch, Inter headings with the landing's tight tracking */
+#nd-page .prose :is(p, ul, ol, blockquote, h2, h3, h4) {
+  max-width: 70ch;
+}
+
+#nd-page .prose h2 {
+  letter-spacing: -0.02em;
+}
+
+#nd-page .prose h3 {
+  letter-spacing: -0.01em;
+}
+
+/* dashed boxes: code blocks, callouts (the accent bar stays solid), cards,
+   prop tables, markdown tables; the sidebar seam is --docs-rule above */
+#nd-page figure.shiki,
+#nd-page a.rounded-lg.border,
+#nd-page .prose > .not-prose > .border,
+#nd-page .prose table {
+  border-style: dashed;
+  border-color: var(--docs-dash);
+}
+
+#nd-page figure.shiki {
+  background-color: var(--docs-surface);
+}
+
+#nd-page .srt-callout {
+  border-style: dashed;
+  border-color: var(--docs-dash);
+  border-left-style: solid;
+  border-left-color: var(--callout-color);
+}
+
+#nd-toc {
+  border-inline-start: var(--docs-rule);
+  padding-inline-start: 0.75rem;
+}
+
+/* example playground caption bar: the landing demo's "live" dot and label */
+.docs-playground:not([data-fullscreen])::before {
+  content: 'Live demo';
+  display: block;
+  padding: 0.5rem 0.75rem 0.5rem 1.75rem;
+  border-bottom: var(--docs-rule);
+  background: radial-gradient(
+      circle,
+      var(--docs-accent) 0 3px,
+      transparent 3.5px
+    )
+    no-repeat 0.75rem 50% / 8px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+}
+
+/* square chrome controls: page actions, playground header (example picker,
+   view modes, open in GitHub, full screen), top bar search and theme pill,
+   their menus (.docs-menu, fumadocs popovers), sidebar items, inline code.
+   Square, dashed rule border, fg 6% on hover, accent when selected. The SRT
+   tables keep the library's own look (none of these selectors reach them). */
+:is(.docs-page-bar, .docs-playground > header, .site-nav)
+  :is(button, a, kbd, [role='group'], [role='combobox'], [role='tab']),
+.site-nav-search,
+.docs-menu,
+.docs-menu *,
+.bg-fd-popover,
+.bg-fd-popover *,
+#nd-sidebar a,
+#nd-page .prose :not(pre) > code {
+  border-radius: 0;
+}
+
+:is(.docs-page-bar, .docs-playground > header)
+  :is(.srt-page-actions, [role='group'], [role='combobox']),
+.docs-playground > header button[aria-label='Toggle full screen'],
+.site-nav-search,
+.site-nav-search kbd,
+.docs-menu,
+.bg-fd-popover {
+  border: 1px dashed var(--docs-dash);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.docs-menu,
+.bg-fd-popover {
+  background-color: var(--color-fd-popover);
+}
+
+/* split-button dividers */
+:is(.docs-page-bar, .docs-playground > header) .srt-page-actions > * + * {
+  border-inline-start: 1px dashed var(--docs-dash);
+}
+
+:is(.docs-page-bar, .docs-playground > header, .site-nav)
+  :is(button, a, [role='combobox']):hover,
+.site-nav-search:hover {
+  background-color: color-mix(
+    in oklch,
+    var(--color-fd-foreground) 6%,
+    transparent
+  );
+}
+
+/* selected view mode: accent text in a dashed accent outline, no pill */
+.docs-playground > header [aria-pressed='true'] {
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--docs-accent);
+  outline: 1px dashed var(--docs-accent);
+  outline-offset: -1px;
+}
+
+/* page-level tab pills (API options switchers): same square dashed look */
+#nd-page .prose [data-slot='tabs-list']:not([data-variant='line']) {
+  border: 1px dashed var(--docs-dash);
+  border-radius: 0;
+  background-color: transparent;
+}
+
+#nd-page
+  .prose
+  [data-slot='tabs-list']:not([data-variant='line'])
+  [data-slot='tabs-trigger'] {
+  border-radius: 0;
+}
+
+#nd-page
+  .prose
+  [data-slot='tabs-list']:not([data-variant='line'])
+  [data-slot='tabs-trigger'][data-state='active'] {
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--docs-accent);
+  outline: 1px dashed var(--docs-accent);
+  outline-offset: -1px;
+}
+
+/* theme pill (components/theme-controls.tsx) and its two buttons */
+.site-nav-actions > div > div,
+.site-nav-actions > div > div > * {
+  border-radius: 0;
+}
+
+/* TOC thumb: fumadocs' travelling dot on the track, as a 7px dashed accent
+   square; it still follows the active item along the offset path */
+#nd-toc div[style*='offset-path'] {
+  width: 7px;
+  height: 7px;
+  border: 1px dashed var(--docs-accent);
+  border-radius: 0;
+  background: transparent;
 }
 
 /* ---------- library css (registry item `css`, written by `lib:install`) ----------

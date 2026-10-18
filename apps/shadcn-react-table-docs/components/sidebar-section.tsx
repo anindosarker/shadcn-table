@@ -36,7 +36,7 @@ export function SidebarSection({
       onOpenChange={setOpen}
       className="mt-6 flex flex-col gap-1 first:mt-0"
     >
-      <CollapsibleTrigger className="group/section mb-1 inline-flex min-h-6 w-full cursor-pointer items-center justify-between gap-2 px-2 text-[11px] font-normal uppercase leading-none tracking-[0.04em] text-fd-muted-foreground hover:text-fd-foreground">
+      <CollapsibleTrigger className="group/section mb-1 inline-flex min-h-6 w-full cursor-pointer items-center justify-between gap-2 px-2 font-mono text-[11px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground hover:text-fd-foreground">
         {item.name}
         <ChevronDownIcon className="size-3.5 shrink-0 transition-transform group-data-[state=closed]/section:-rotate-90" />
       </CollapsibleTrigger>

@@ -41,3 +41,18 @@ export function findSiblings(
   };
   return visit(root.children);
 }
+
+/** Name of the top-level folder that holds the page at `url`, if any. */
+export function findSectionName(
+  root: Pick<PageTree.Root, 'children'>,
+  url: string,
+): PageTree.Folder['name'] | undefined {
+  const contains = (node: PageTree.Node): boolean =>
+    node.type === 'page'
+      ? node.url === url
+      : node.type === 'folder' &&
+        (node.index?.url === url || node.children.some(contains));
+  return root.children.find(
+    (node): node is PageTree.Folder => node.type === 'folder' && contains(node),
+  )?.name;
+}

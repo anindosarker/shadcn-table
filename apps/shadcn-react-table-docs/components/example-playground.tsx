@@ -261,7 +261,7 @@ export const ExamplePlayground = ({
                   <ChevronDownIcon />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuContent align="end" className="docs-menu w-52">
                 {/* The menu stays open so the "Copied" state is visible. */}
                 <DropdownMenuItem
                   onSelect={(event) => {

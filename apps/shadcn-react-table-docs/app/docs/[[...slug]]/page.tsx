@@ -13,6 +13,7 @@ import { DocsBreadcrumb, NoBreadcrumb } from '@/components/docs-breadcrumb';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getPageImageUrl, getPageMarkdownUrl, gitConfig } from '@/lib/shared';
+import { findSectionName } from '@/lib/page-tree-utils';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -21,13 +22,19 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
+  const section = findSectionName(source.getPageTree(), page.url);
 
   return (
     <DocsPage
       toc={page.data.toc}
       // Example pages have no headings worth a TOC and their playground wants
-      // the whole column, so they render full width.
-      full={page.data.full || page.slugs[0] === 'examples'}
+      // the whole column, so they render full width; so does any page without
+      // TOC entries, instead of leaving the TOC column empty.
+      full={
+        page.data.full ||
+        page.slugs[0] === 'examples' ||
+        page.data.toc.length === 0
+      }
       slots={{ breadcrumb: NoBreadcrumb }}
     >
       {/* Sticky under the top nav (and the mobile TOC popover): fumadocs
@@ -52,9 +59,12 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           </ViewOptionsPopover>
         </div>
       </div>
-      <DocsTitle className="text-2xl font-semibold leading-tight tracking-tight">
-        {page.data.title}
-      </DocsTitle>
+      {section && (
+        <p className="docs-eyebrow">
+          <span aria-hidden="true">{'//'}</span> {section}
+        </p>
+      )}
+      <DocsTitle className="docs-title">{page.data.title}</DocsTitle>
       <DocsDescription className="docs-description-rule mb-0 pb-4 text-[0.9375rem]">
         {page.data.description}
       </DocsDescription>

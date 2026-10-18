@@ -107,7 +107,7 @@ export function ThemePresetSwitcher({ className }: { className?: string }) {
           aria-hidden
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-36">
+      <DropdownMenuContent align="end" className="docs-menu min-w-36">
         <DropdownMenuItem onSelect={applyRandomThemePreset} className="gap-2">
           <ShuffleIcon className="size-3 shrink-0" aria-hidden />
           <span className="flex-1">Random</span>
