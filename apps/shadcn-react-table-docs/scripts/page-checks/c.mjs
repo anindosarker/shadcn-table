@@ -156,7 +156,9 @@ export default {
       .first()
       .click();
     const files = await w
-      .locator('[data-slot="code-explorer"] nav button:not([data-folder])')
+      .locator(
+        '[data-slot="code-explorer"] nav [data-tree-row]:not([data-folder])',
+      )
       .count();
     check(
       'server-side-data: 5 files in the tree',

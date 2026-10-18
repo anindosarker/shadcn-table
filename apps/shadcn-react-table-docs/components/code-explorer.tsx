@@ -5,7 +5,10 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
+  type CSSProperties,
   type KeyboardEvent,
+  type PointerEvent,
   type ReactNode,
 } from 'react';
 import {
@@ -17,6 +20,8 @@ import {
   FileJsonIcon,
   FolderIcon,
   FolderOpenIcon,
+  PanelLeftCloseIcon,
+  PanelLeftOpenIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -78,18 +83,103 @@ const FileTypeIcon = ({ path }: { path: string }) => {
 /** How long the copy button reads "Copied" after a click. */
 const COPIED_MS = 1500;
 
+/* Tree pane width and visibility, shared by every explorer on the page and
+ * remembered across visits. Read through useSyncExternalStore so the server
+ * render and the first client render use the defaults (no hydration
+ * mismatch), then every explorer follows the stored values. */
+const WIDTH_KEY = 'srt-code-tree-width';
+const HIDDEN_KEY = 'srt-code-tree-hidden';
+const DEFAULT_WIDTH = 220;
+const MIN_WIDTH = 160;
+const MAX_WIDTH = 420;
+/** Arrow key step on the resize handle. */
+const KEY_STEP = 16;
+
+const treeListeners = new Set<() => void>();
+/** Fallback when storage is blocked, so resizing and hiding still work. */
+const sessionTree: { width?: number; hidden?: boolean } = {};
+
+const subscribeTree = (onChange: () => void) => {
+  treeListeners.add(onChange);
+  window.addEventListener('storage', onChange);
+  return () => {
+    treeListeners.delete(onChange);
+    window.removeEventListener('storage', onChange);
+  };
+};
+
+const readStored = (key: string) => {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    // Storage may be blocked (private mode, disabled cookies).
+    return null;
+  }
+};
+
+const writeStored = (key: string, value: string) => {
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const getWidthSnapshot = () => {
+  if (sessionTree.width !== undefined) return sessionTree.width;
+  const stored = Number(readStored(WIDTH_KEY));
+  return Number.isFinite(stored) && stored >= MIN_WIDTH
+    ? Math.min(stored, MAX_WIDTH)
+    : DEFAULT_WIDTH;
+};
+
+const getHiddenSnapshot = () =>
+  sessionTree.hidden ?? readStored(HIDDEN_KEY) === 'true';
+
+const setTreeWidth = (width: number) => {
+  if (!writeStored(WIDTH_KEY, String(width))) sessionTree.width = width;
+  for (const listener of treeListeners) listener();
+};
+
+const setTreeHidden = (hidden: boolean) => {
+  if (!writeStored(HIDDEN_KEY, String(hidden))) sessionTree.hidden = hidden;
+  for (const listener of treeListeners) listener();
+};
+
+const rowClass =
+  'flex h-7 w-full items-center gap-2 pe-3 text-start text-fd-muted-foreground hover:bg-fd-foreground/6 hover:text-fd-foreground focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-dashed focus-visible:outline-(--docs-accent) [&>span]:truncate [&>svg]:size-3.5 [&>svg]:shrink-0';
+
+/** Row indent: 12px, plus 14px per level (one icon width). */
+const indentRem = (depth: number) => 0.75 + depth * 0.875;
+
 /**
  * Source view of an example: a file tree on the left, a path bar with a copy
  * button and the highlighted code of the active file. A single file shows
- * just the path bar and code. Under 640px the tree gives way to a file menu
- * in the path bar.
+ * just the path bar and code. The tree can be resized from its right edge
+ * (drag, or arrow keys on the handle) and hidden; both are remembered. Under
+ * 640px the tree gives way to a file menu in the path bar.
  */
 export const CodeExplorer = ({ files }: Props) => {
   const [activePath, setActivePath] = useState(files[0]?.path ?? '');
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const [copied, setCopied] = useState(false);
+  // Width while dragging; stored once on release.
+  const [dragWidth, setDragWidth] = useState<number | null>(null);
   const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const treeRef = useRef<HTMLUListElement>(null);
+  const drag = useRef<{ x: number; width: number } | null>(null);
+  const storedWidth = useSyncExternalStore(
+    subscribeTree,
+    getWidthSnapshot,
+    () => DEFAULT_WIDTH,
+  );
+  const hidden = useSyncExternalStore(
+    subscribeTree,
+    getHiddenSnapshot,
+    () => false,
+  );
   const tree = useMemo(() => buildTree(files.map((f) => f.path)), [files]);
 
   useEffect(
@@ -102,6 +192,17 @@ export const CodeExplorer = ({ files }: Props) => {
   const active = files.find((f) => f.path === activePath) ?? files[0];
   if (!active) return null;
   const multi = files.length > 1;
+  const width = dragWidth ?? storedWidth;
+  const activeFolder = active.path.includes('/')
+    ? active.path.slice(0, active.path.lastIndexOf('/'))
+    : '';
+
+  /** Min 160px; max 420px or half the explorer, whichever is smaller. */
+  const clampWidth = (value: number) => {
+    const half = (rootRef.current?.clientWidth ?? 2 * MAX_WIDTH) / 2;
+    const max = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, half));
+    return Math.round(Math.min(max, Math.max(MIN_WIDTH, value)));
+  };
 
   const copy = async () => {
     try {
@@ -123,6 +224,40 @@ export const CodeExplorer = ({ files }: Props) => {
       else next.add(path);
       return next;
     });
+
+  const onResizeStart = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    drag.current = { x: event.clientX, width };
+    setDragWidth(width);
+  };
+
+  const onResizeMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!drag.current) return;
+    setDragWidth(
+      clampWidth(drag.current.width + event.clientX - drag.current.x),
+    );
+  };
+
+  const onResizeEnd = () => {
+    if (!drag.current) return;
+    drag.current = null;
+    if (dragWidth !== null) setTreeWidth(dragWidth);
+    setDragWidth(null);
+  };
+
+  const onResizeKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const next = {
+      ArrowLeft: width - KEY_STEP,
+      ArrowRight: width + KEY_STEP,
+      Home: MIN_WIDTH,
+      End: MAX_WIDTH,
+    }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    setTreeWidth(clampWidth(next));
+  };
 
   // Arrow keys move between visible rows; Left and Right close and open a
   // folder, Home and End jump to the first and last row.
@@ -163,7 +298,7 @@ export const CodeExplorer = ({ files }: Props) => {
 
   const renderNodes = (nodes: TreeNode[], depth: number): ReactNode =>
     nodes.map((node) => {
-      const indent = { paddingInlineStart: `${0.75 + depth * 0.875}rem` };
+      const indent = { paddingInlineStart: `${indentRem(depth)}rem` };
       if (node.type === 'folder') {
         const open = !collapsed.has(node.path);
         return (
@@ -173,15 +308,28 @@ export const CodeExplorer = ({ files }: Props) => {
               data-tree-row
               data-folder={node.path}
               aria-expanded={open}
+              title={node.path}
               onClick={() => toggleFolder(node.path)}
               style={indent}
-              className="flex h-7 w-full items-center gap-2 pe-3 text-start text-fd-muted-foreground hover:bg-fd-foreground/6 hover:text-fd-foreground focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-dashed focus-visible:outline-(--docs-accent) [&>svg]:size-3.5 [&>svg]:shrink-0"
+              className={rowClass}
             >
               {open ? <FolderOpenIcon /> : <FolderIcon />}
-              <span className="truncate">{node.name}</span>
+              <span>{node.name}</span>
             </button>
             {open && (
-              <ul className="m-0!">{renderNodes(node.children, depth + 1)}</ul>
+              // Indent guide: a 1px line under the folder icon, down the
+              // children; brighter for the folder holding the active file.
+              <ul
+                data-guide-active={node.path === activeFolder || undefined}
+                style={
+                  {
+                    '--guide': `calc(${indentRem(depth)}rem + 7px)`,
+                  } as CSSProperties
+                }
+                className="relative m-0! before:pointer-events-none before:absolute before:inset-y-0 before:start-(--guide) before:w-px before:bg-fd-foreground/10 data-guide-active:before:bg-fd-foreground/25"
+              >
+                {renderNodes(node.children, depth + 1)}
+              </ul>
             )}
           </li>
         );
@@ -193,30 +341,43 @@ export const CodeExplorer = ({ files }: Props) => {
             type="button"
             data-tree-row
             aria-current={current ? 'true' : undefined}
+            title={node.path}
             onClick={() => setActivePath(node.path)}
             style={indent}
             className={cn(
-              'flex h-7 w-full items-center gap-2 pe-3 text-start text-fd-muted-foreground hover:bg-fd-foreground/6 hover:text-fd-foreground focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-dashed focus-visible:outline-(--docs-accent) [&>svg]:size-3.5 [&>svg]:shrink-0',
+              rowClass,
               current &&
                 'bg-fd-foreground/6 font-medium text-(--docs-accent) hover:text-(--docs-accent)',
             )}
           >
             <FileTypeIcon path={node.path} />
-            <span className="truncate">{node.name}</span>
+            <span>{node.name}</span>
           </button>
         </li>
       );
     });
 
   return (
-    <div data-slot="code-explorer" className="flex min-w-0">
-      {multi && (
+    <div ref={rootRef} data-slot="code-explorer" className="flex min-w-0">
+      {multi && !hidden && (
         <nav
           aria-label="Source files"
-          className="hidden w-[220px] shrink-0 flex-col [border-inline-end:var(--docs-rule)] sm:flex"
+          style={{ width, maxWidth: '50%' }}
+          className="relative hidden shrink-0 flex-col [border-inline-end:var(--docs-rule)] sm:flex"
         >
-          <div className="flex h-9 shrink-0 items-center px-3 font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-fd-muted-foreground [border-bottom:var(--docs-rule)]">
+          <div className="flex h-9 shrink-0 items-center justify-between gap-2 ps-3 pe-1.5 font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-fd-muted-foreground [border-bottom:var(--docs-rule)]">
             Files
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Hide file tree"
+              title="Hide file tree"
+              onClick={() => setTreeHidden(true)}
+              className="rounded-none text-fd-muted-foreground hover:text-fd-foreground"
+            >
+              <PanelLeftCloseIcon />
+            </Button>
           </div>
           <ul
             ref={treeRef}
@@ -227,10 +388,39 @@ export const CodeExplorer = ({ files }: Props) => {
           >
             {renderNodes(tree, 0)}
           </ul>
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize file tree"
+            aria-valuemin={MIN_WIDTH}
+            aria-valuemax={MAX_WIDTH}
+            aria-valuenow={width}
+            tabIndex={0}
+            data-dragging={dragWidth !== null || undefined}
+            onPointerDown={onResizeStart}
+            onPointerMove={onResizeMove}
+            onPointerUp={onResizeEnd}
+            onPointerCancel={onResizeEnd}
+            onKeyDown={onResizeKeyDown}
+            className="absolute inset-y-0 -end-[3px] z-10 w-1.5 cursor-col-resize touch-none outline-none after:absolute after:inset-y-0 after:start-[2px] after:w-px after:bg-transparent hover:after:bg-(--docs-accent) focus-visible:after:bg-(--docs-accent) data-dragging:after:bg-(--docs-accent)"
+          />
         </nav>
       )}
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-9 shrink-0 items-center justify-between gap-2 ps-3 pe-1.5 [border-bottom:var(--docs-rule)]">
+        <div className="flex h-9 shrink-0 items-center gap-2 ps-3 pe-1.5 [border-bottom:var(--docs-rule)]">
+          {multi && hidden && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Show file tree"
+              title="Show file tree"
+              onClick={() => setTreeHidden(false)}
+              className="-ms-1.5 hidden rounded-none text-fd-muted-foreground hover:text-fd-foreground sm:inline-flex"
+            >
+              <PanelLeftOpenIcon />
+            </Button>
+          )}
           {multi && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -276,7 +466,7 @@ export const CodeExplorer = ({ files }: Props) => {
             size="icon-sm"
             aria-label={copied ? 'Copied' : `Copy ${active.path}`}
             onClick={() => void copy()}
-            className="shrink-0 rounded-none text-fd-muted-foreground hover:text-fd-foreground"
+            className="ms-auto shrink-0 rounded-none text-fd-muted-foreground hover:text-fd-foreground"
           >
             {copied ? <CheckIcon /> : <CopyIcon />}
           </Button>
