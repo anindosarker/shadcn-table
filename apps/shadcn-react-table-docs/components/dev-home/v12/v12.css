@@ -209,7 +209,6 @@
 .v12-hero-row {
   display: flex;
   width: 100%;
-  max-width: 52rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -217,8 +216,12 @@
 }
 
 .v12 .v12-install {
+  /* as wide as the full command; scrolls inside only when the row is
+   * narrower than that */
+  width: max-content;
+  max-width: 100%;
   min-width: 0;
-  flex: 1 1 22rem;
+  flex: 0 1 auto;
   border-style: dashed;
   border-color: var(--v12-dash);
   border-radius: 2px;
