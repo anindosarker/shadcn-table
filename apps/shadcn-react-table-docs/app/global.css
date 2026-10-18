@@ -279,7 +279,7 @@ html > body[data-scroll-locked] {
 
 /* ---------- sidebar ---------- */
 
-#nd-sidebar a {
+:is(#nd-sidebar, #nd-sidebar-mobile) a {
   padding-block: 0.25rem;
   font-size: 0.8125rem;
   color: var(--color-fd-foreground);
@@ -288,12 +288,12 @@ html > body[data-scroll-locked] {
 
 /* pages under a sub-group label (meta.json "---Label---") indent one step;
    pages directly under a section (Overview, Installation) stay flush */
-#nd-sidebar p[data-subgroup] ~ a {
+:is(#nd-sidebar, #nd-sidebar-mobile) p[data-subgroup] ~ a {
   margin-inline-start: 0.75rem;
 }
 
 /* active item: subtle pill with the accent (primary) text, no left bar */
-#nd-sidebar a[data-active='true'] {
+:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true'] {
   background-color: color-mix(
     in oklab,
     var(--color-fd-foreground) 6%,
@@ -303,7 +303,7 @@ html > body[data-scroll-locked] {
   font-weight: 500;
 }
 
-#nd-sidebar a[data-active='true']::before {
+:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true']::before {
   display: none;
 }
 
@@ -757,7 +757,7 @@ html:has(#nd-notebook-layout) ::selection {
 .docs-menu *,
 .bg-fd-popover,
 .bg-fd-popover *,
-#nd-sidebar a,
+:is(#nd-sidebar, #nd-sidebar-mobile) a,
 #nd-page .prose :not(pre) > code {
   border-radius: 0;
 }
