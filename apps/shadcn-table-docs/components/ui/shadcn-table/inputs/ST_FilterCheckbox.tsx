@@ -1,6 +1,5 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import {
   type CheckboxProps,
@@ -8,6 +7,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
+import { Checkbox } from '../primitives/checkbox';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { ST_Tooltip } from '../ST_Tooltip';
 
@@ -72,11 +72,8 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
         title={undefined}
       >
         <Checkbox
-          checked={
-            column.getFilterValue() === undefined
-              ? 'indeterminate'
-              : column.getFilterValue() === 'true'
-          }
+          checked={column.getFilterValue() === 'true'}
+          indeterminate={column.getFilterValue() === undefined}
           // color={column.getFilterValue() === undefined ? 'default' : 'primary'}
           // size={density === 'compact' ? 'small' : 'medium'}
           // Note: MUI color/size are the cva variants on className below.

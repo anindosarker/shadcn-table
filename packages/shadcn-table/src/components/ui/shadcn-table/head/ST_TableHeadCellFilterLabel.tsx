@@ -1,11 +1,6 @@
 import { type MouseEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-} from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { ST_Tooltip } from '../ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from './ST_TableHeadCellFilterContainer';
@@ -15,6 +10,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
+import { Popover, PopoverContent } from '../primitives/popover';
 import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
 import { getValueAndLabel } from '../utils/utils';
 
@@ -155,13 +151,13 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       )}
       {columnFilterDisplayMode === 'popover' && (
         <Popover
+          anchor={anchorEl}
           onOpenChange={(open) => {
             // event.stopPropagation(); — Note: radix has no backdrop click to stop.
             if (!open) setAnchorEl(null);
           }}
           open={!!anchorEl}
         >
-          {anchorEl && <PopoverAnchor virtualRef={{ current: anchorEl }} />}
           {/* disableScrollLock — Note: radix Popover is non-modal, no scroll lock. */}
           {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: PopoverContent has no overflow clip. */}
           <PopoverContent

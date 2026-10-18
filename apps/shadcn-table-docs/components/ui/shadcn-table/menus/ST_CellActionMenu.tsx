@@ -1,17 +1,17 @@
-import { type ComponentPropsWithRef } from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { type ST_RowData, type ST_TableInstance } from '../types';
+import {
+  Menu,
+  MenuContent,
+  type MenuContentProps,
+  MenuTrigger,
+} from '../primitives/menu';
 import { openEditingCell } from '../utils/cell.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { ST_ActionMenuItem } from './ST_ActionMenuItem';
 
 export interface ST_CellActionMenuProps<TData extends ST_RowData>
-  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
+  extends MenuContentProps {
   table: ST_TableInstance<TData>;
 }
 
@@ -28,7 +28,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
       enableEditing,
       icons: { ContentCopy, EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — MenuContent's bg-popover themes via shadcn CSS vars
       renderCellActionMenuItems,
     },
     refs: { actionCellRef },
@@ -94,13 +94,13 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
 
   return (
     (!!menuItems?.length || !!internalMenuItems?.length) && (
-      <DropdownMenu
+      <Menu
         open={!!cell}
         onOpenChange={(open) => {
           if (!open) handleClose();
         }}
       >
-        <DropdownMenuTrigger asChild>
+        <MenuTrigger>
           <span
             aria-hidden
             style={{
@@ -112,10 +112,10 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
               pointerEvents: 'none',
             }}
           />
-        </DropdownMenuTrigger>
+        </MenuTrigger>
         {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
         {/* Note: MRT transformOrigin={{horizontal:-100,vertical:8}} on MUI's top/left anchorOrigin puts the menu at top = anchorTop - 8, left = anchorLeft + 100; align="start" alignOffset={100} and sideOffset={-(height + 8)} from the anchor's bottom edge land on the same point */}
-        <DropdownMenuContent
+        <MenuContent
           align="start"
           alignOffset={100}
           sideOffset={-((rect?.height ?? 0) + 8)}
@@ -130,16 +130,15 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           onPointerUpCapture={(event) => {
             if (event.button === 2) event.stopPropagation();
           }}
-          onCloseAutoFocus={(event) => {
-            event.preventDefault();
+          onClose={() => {
             if (!table.getState().editingCell) anchorEl?.focus();
           }}
           className={cn('w-max', className)}
           {...rest}
         >
           {menuItems ?? internalMenuItems}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </MenuContent>
+      </Menu>
     )
   );
 };

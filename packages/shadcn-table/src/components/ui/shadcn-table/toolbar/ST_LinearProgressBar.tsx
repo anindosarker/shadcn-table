@@ -63,7 +63,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
             isIndeterminate && 'st-progress-indeterminate',
             progressComponentProps?.className,
           )}
-          value={progressComponentProps?.value ?? undefined}
+          value={progressComponentProps?.value ?? null}
         />
       </CollapsibleContent>
     </Collapsible>

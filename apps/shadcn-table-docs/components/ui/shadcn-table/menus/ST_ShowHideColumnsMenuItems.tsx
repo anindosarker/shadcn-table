@@ -1,5 +1,4 @@
 import {
-  type ComponentPropsWithRef,
   type Dispatch,
   type DragEvent,
   type SetStateAction,
@@ -7,7 +6,6 @@ import {
   useState,
 } from 'react';
 import { cva } from 'class-variance-authority';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
@@ -16,18 +14,19 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
+import { MenuItem, type MenuItemProps } from '../primitives/menu';
 import { reorderColumn } from '../utils/column.utils';
 import { ST_ColumnPinningButtons } from '../buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '../buttons/ST_GrabHandleButton';
 import { ST_Tooltip } from '../ST_Tooltip';
 
-// Note: MRT MenuItem sx py:'6px' dropped — shadcn DropdownMenuItem padding wins.
+// Note: MRT MenuItem sx py:'6px' dropped — shadcn menu item padding wins.
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
 );
 
 export interface ST_ShowHideColumnsMenuItemsProps<TData extends ST_RowData>
-  extends ComponentPropsWithRef<typeof DropdownMenuItem> {
+  extends MenuItemProps {
   allColumns: ST_Column<TData>[];
   column: ST_Column<TData>;
   hoveredColumn: ST_Column<TData> | null;
@@ -119,9 +118,9 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   return (
     <>
       {/* Note: disableRipple dropped — no MUI ripple in shadcn. */}
-      <DropdownMenuItem
+      <MenuItem
         onDragEnter={handleDragEnter}
-        onSelect={(event) => event.preventDefault()}
+        closeOnSelect={false}
         ref={menuItemRef}
         {...rest}
         className={cn(
@@ -181,7 +180,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             <p className="self-center">{columnDef.header}</p>
           )}
         </div>
-      </DropdownMenuItem>
+      </MenuItem>
       {column.columns?.map((c: ST_Column<TData>, i) => (
         <ST_ShowHideColumnsMenuItems
           allColumns={allColumns}
