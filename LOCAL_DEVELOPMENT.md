@@ -34,29 +34,44 @@ pnpm registry:items      # example items: apps/shadcn-react-table-docs/registry.
 
 ### Run locally and install into a test project
 
-Terminal 1, repo root:
+Repo root, two terminals:
 
 ```bash
-REGISTRY_BASE_URL=http://localhost:5310/r pnpm registry:build
-pnpm registry:serve                              # http://localhost:5310
+REGISTRY_BASE_URL=http://localhost:5310/r pnpm registry:build   # locale items point at the local server
+pnpm registry:serve                                             # http://localhost:5310
 ```
 
-`REGISTRY_BASE_URL` points the locale items at the local server. It rewrites the committed `public/r/*.json`; revert with `git checkout -- packages/shadcn-react-table/public` before committing.
+`registry:build` with `REGISTRY_BASE_URL` rewrites the committed `public/r/*.json`; revert with `git checkout -- packages/shadcn-react-table/public` before committing.
 
-Terminal 2, in a project that has run `shadcn init`. Add the namespace to its `components.json`:
+Fresh app anywhere (radix base, nova preset; the library needs radix):
 
-```json
-"registries": {
-  "@srt": "http://localhost:5310/r/{name}.json"
+```bash
+pnpm create vite my-app --template react-ts && cd my-app && pnpm i
+pnpm dlx shadcn@latest init --base radix --preset nova
+pnpm dlx shadcn@latest add http://localhost:5310/r/shadcn-react-table.json
+pnpm dlx shadcn@latest add http://localhost:5310/r/shadcn-react-table-locale-de.json   # optional, one per locale
+```
+
+Mount it in `src/App.tsx`:
+
+```tsx
+import { ShadcnReactTable } from '@/components/ui/shadcn-react-table';
+
+const columns = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'age', header: 'Age' },
+];
+const data = [
+  { name: 'Ada', age: 36 },
+  { name: 'Linus', age: 54 },
+];
+
+export default function App() {
+  return <ShadcnReactTable columns={columns} data={data} />;
 }
 ```
 
-```bash
-pnpm dlx shadcn@latest add @srt/shadcn-react-table
-pnpm dlx shadcn@latest add @srt/shadcn-react-table-locale-de   # optional, one item per locale code
-```
-
-URL form without the namespace: `pnpm dlx shadcn@latest add http://localhost:5310/r/shadcn-react-table.json`.
+Re-run the `add` command after library changes (rebuild first); it overwrites the installed files.
 
 ### Install from a pushed branch
 
