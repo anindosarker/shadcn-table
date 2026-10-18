@@ -13,11 +13,20 @@ pnpm dlx shadcn@latest init --base radix
 pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table
 ```
 
+## Features
+
+- Sorting, filtering (column and global, faceted values), grouping and aggregation
+- Pagination, row and column virtualization for large data sets
+- Row selection, expanding, detail panels, row pinning, column pinning
+- Column ordering, resizing, hiding, and drag-and-drop
+- Editing in cell, row, modal and table modes
+- Toolbars, density toggle and full-screen mode
+- 38 locales, installed as separate registry items
+
 ## Docs
 
-https://github.com/anindosarker/shadcn-table
-
-The docs site link lands with v0.1.
+- Docs: https://shadcn-table.com
+- Storybook: https://storybook.shadcn-table.com
 
 ## AI agents
 
