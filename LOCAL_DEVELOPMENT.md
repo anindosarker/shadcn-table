@@ -17,12 +17,6 @@ pnpm test                                        # Vitest browser mode over the 
 pnpm --filter shadcn-react-table storybook:build
 ```
 
-## Playground (`apps/test-shadcn`)
-
-```bash
-pnpm --filter test-shadcn dev                    # imports the library source directly, no build step
-```
-
 ## Registry
 
 ### Build
@@ -105,12 +99,13 @@ pnpm --filter shadcn-react-table-docs lib:install
 git checkout -- apps/shadcn-react-table-docs/app/global.css      # lib:install rewrites it
 ```
 
-Page checks against a running dev server:
+Page checks against a running dev server (Playwright comes from `packages/shadcn-react-table/node_modules`):
 
 ```bash
 cd apps/shadcn-react-table-docs
 node scripts/check-pages.mjs --base http://localhost:5320        # all pages
 node scripts/check-pages.mjs e --base http://localhost:5320      # one cluster (a to e)
+node scripts/check-pages.mjs /docs/guides/sorting --base http://localhost:5320   # single pages
 ```
 
 Next.js appends `<distDir>/types/**/*.ts` lines to `tsconfig.json` on every `dev` and `build`; keep only the default `.next/...` pair.
