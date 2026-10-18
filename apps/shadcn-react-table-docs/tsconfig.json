@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,9 +15,7 @@
     "jsx": "react-jsx",
     "incremental": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
@@ -34,25 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    ".next-a/types/**/*.ts",
-    ".next-a/dev/types/**/*.ts",
-    ".next-b/types/**/*.ts",
-    ".next-b/dev/types/**/*.ts",
-    ".next-e/types/**/*.ts",
-    ".next-e/dev/types/**/*.ts",
-    ".next-c/types/**/*.ts",
-    ".next-c/dev/types/**/*.ts",
-    ".next-d/types/**/*.ts",
-    ".next-d/dev/types/**/*.ts",
-    ".next-v/types/**/*.ts",
-    ".next-v/dev/types/**/*.ts",
-    ".next-f/types/**/*.ts",
-    ".next-f/dev/types/**/*.ts",
-    ".next-lead/types/**/*.ts",
-    ".next-lead/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
