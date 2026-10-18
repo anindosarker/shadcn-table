@@ -19,6 +19,8 @@ import { ST_TableDetailPanel } from './ST_TableDetailPanel';
 export interface ST_TableBodyRowProps<TData extends ST_RowData>
   extends TableRowProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
+  /** MUI TableRow `hover`: false drops the hover background. Default true. */
+  hover?: boolean;
   numRows?: number;
   pinnedRowIds?: string[];
   row: ST_Row<TData>;
@@ -105,7 +107,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   const isDraggingRow = draggingRow?.id === row.id;
   const isHoveredRow = hoveredRow?.id === row.id;
 
-  const tableRowProps = {
+  const { hover = true, ...tableRowProps } = {
     ...parseFromValuesOrFunc(stTableBodyRowProps, {
       row,
       staticRowIndex,
@@ -166,9 +168,11 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       ? '[&>td]:after:bg-primary/10'
       : undefined;
 
-  const cellHighlightClassHover = isRowSelected
-    ? 'hover:[&>td]:after:bg-primary/20'
-    : 'hover:[&>td]:after:bg-foreground/10';
+  const cellHighlightClassHover = !hover
+    ? undefined
+    : isRowSelected
+      ? 'hover:[&>td]:after:bg-primary/20'
+      : 'hover:[&>td]:after:bg-foreground/10';
 
   return (
     <>

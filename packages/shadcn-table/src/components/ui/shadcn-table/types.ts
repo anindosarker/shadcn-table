@@ -1120,8 +1120,8 @@ export interface ST_TableOptions<TData extends ST_RowData>
         row: ST_Row<TData>;
         staticRowIndex: number;
         table: ST_TableInstance<TData>;
-      }) => TableRowProps)
-    | TableRowProps;
+      }) => TableRowProps & { hover?: boolean })
+    | (TableRowProps & { hover?: boolean });
   stTableContainerProps?:
     | ((props: { table: ST_TableInstance<TData> }) => DivProps)
     | DivProps;
