@@ -41,6 +41,9 @@ const Example = () => {
     columns: ST_ColumnDef<Person>[];
   } = {
     columns,
+    defaultColumn: {
+      size: 100,
+    },
     enableRowDragging: true,
     enableFullScreenToggle: false,
     stTableContainerProps: {
@@ -78,9 +81,6 @@ const Example = () => {
   const table2 = useShadcnTable({
     ...commonTableProps,
     data: data2,
-    defaultColumn: {
-      size: 100,
-    },
     getRowId: (originalRow) => `table-2-${originalRow.firstName}`,
     stRowDragHandleProps: {
       onDragEnd: () => {
@@ -106,9 +106,12 @@ const Example = () => {
   });
 
   return (
-    <div className="grid grid-cols-1 gap-4 overflow-auto p-1 lg:grid-cols-2">
-      <ShadcnTable table={table1} />
-      <ShadcnTable table={table2} />
+    // Side by side only when the wrapper is wide enough for both tables.
+    <div className="@container">
+      <div className="grid grid-cols-1 gap-4 overflow-auto p-1 @4xl:grid-cols-2">
+        <ShadcnTable table={table1} />
+        <ShadcnTable table={table2} />
+      </div>
     </div>
   );
 };
