@@ -875,13 +875,13 @@ html:has(#nd-notebook-layout) ::selection {
   background-color: var(--docs-surface);
 }
 
-/* quotes read as notes, like the callouts: full width, solid accent bar,
+/* quotes read as notes: full width, dashed accent bar,
    tinted surface, body-size italic, no typographic quote marks */
 #nd-page .prose blockquote {
   max-width: none;
   margin-inline: 0;
   padding: 0.75rem 1rem;
-  border-left: 2px solid var(--docs-accent);
+  border-left: 2px dashed var(--docs-accent);
   background-color: var(--docs-surface);
   font-size: 0.9375rem;
   font-weight: 400;
