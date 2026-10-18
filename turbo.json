@@ -6,9 +6,7 @@
         "^build"
       ],
       "outputs": [
-        "dist/**",
-        "locales/**",
-        "storybook/static/**"
+        ".next/**"
       ]
     },
     "dev": {
@@ -16,25 +14,6 @@
     },
     "lint": {
       "outputs": []
-    },
-    "lib:build": {
-      "outputs": [
-        "dist/**",
-        "locales/**"
-      ]
-    },
-    "lib:build-locales": {
-      "outputs": [
-        "locales/**"
-      ]
-    },
-    "lib:build-lib": {
-      "outputs": [
-        "dist/**"
-      ]
-    },
-    "lib:dev": {
-      "cache": false
     },
     "storybook": {
       "cache": false,
@@ -44,9 +23,6 @@
       "outputs": [
         "storybook-static/**"
       ]
-    },
-    "storybook:dev": {
-      "cache": false
     },
     "test": {
       "cache": false

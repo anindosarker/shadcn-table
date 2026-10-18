@@ -1,0 +1,72 @@
+---
+title: 'Column Instance APIs'
+description: 'All the column instance methods and objects that can be accessed from a column instance in Shadcn Table'
+---
+
+<OptionsSwitcher
+  links={[
+    {
+      label: 'Table Instance APIs',
+      value: 'table-instance-apis',
+    },
+    {
+      label: 'Column Instance APIs',
+      value: 'column-instance-apis',
+    },
+    {
+      label: 'Row Instance APIs',
+      value: 'row-instance-apis',
+    },
+    {
+      label: 'Cell Instance APIs',
+      value: 'cell-instance-apis',
+    },
+  ]}
+/>
+
+> NOTE: These are NOT [column options](/docs/api/column-options) for Shadcn Table. These are just static methods on a column instance that you can use.
+
+Each column has a `column` instance object associated with it that can be accessed in callback props and other places in the table.
+
+You can access and use a `column` instance in quite a few places, but here are some of the most common:
+
+```jsx
+const columns = [
+  {
+    accessorKey: 'username',
+    header: 'Username',
+    //you can access a column instance in many callback functions in a column definition like this
+    stTableHeadCellProps: ({ column }) => ({
+      style: {
+        color: column.getIsSorted() ? 'red' : 'black',
+      },
+    }),
+    //or in the component override callbacks
+    Header: ({ column }) => <div>{column.columnDef.header}</div>,
+    Cell: ({ cell, column }) => (
+      <span
+        style={{
+          backgroundColor: column.getIsGrouped() ? 'green' : 'white',
+        }}
+      >
+        {cell.getValue()}
+      </span>
+    ),
+  },
+];
+
+const table = useShadcnTable({
+  columns,
+  data,
+  //or in callback props like this
+  stTableBodyCellProps: ({ column }) => ({
+    style: {
+      boxShadow: column.getIsPinned() ? '0 0 0 2px red' : 'none',
+    },
+  }),
+});
+```
+
+<ColumnInstanceAPIsTable />
+
+<ColumnInstanceAPIsSource />

@@ -1,0 +1,36 @@
+---
+title: 'Custom Icons Guide'
+description: 'How to use custom icons such as from Font Awesome in Shadcn Table'
+---
+
+Shadcn Table uses [Lucide icons](https://lucide.dev) by default for all of its internal icons.
+
+If you need to, you can customize and replace some or all of the icons with your own custom icons. You can either use other Lucide icons or icons from a completely different library.
+
+### Relevant Table Options
+
+<TableOptionsTable onlyOptions={new Set(['icons'])} />
+
+### Replace with Custom Icons
+
+To replace a default icon, specify the icon in the `icons` table option. You should get TS hints for the name of the icons you can replace, but you can also consult [this source file](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/icons.ts) for a list of all the icons you can replace.
+
+```jsx
+<ShadcnTable
+  columns={columns}
+  data={data}
+  icons={{
+    //change sort icon, connect internal props so that it gets styled correctly
+    ArrowDownwardIcon: (props) =>  <FontAwesomeIcon icon={faSortDown} {...props} />,
+    SearchIcon: () => <FontAwesomeIcon icon={faSearch} />,
+    SortIcon: (props) => (<FontAwesomeIcon icon={faArrowDownWideShort} {...props} />), //best practice
+  }}
+```
+
+Some icons have `style` props that get applied to them internally. So, in order to preserve the ability of those Icons to be styled with the correct paddings, margins, or rotations, you should pass in `{...props}` to your custom icon component as a best practice.
+
+### Font Awesome Example
+
+Here is an example where we use icons from a completely different library, [Font Awesome](https://fontawesome.com/).
+
+<FontAwesomeIconsExample />

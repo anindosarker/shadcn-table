@@ -1,4 +1,4 @@
-# shadcn-react-table
+# shadcn-table
 
 A full-featured React data table built on TanStack Table v8, installed into your codebase through the shadcn CLI. A port of material-react-table to shadcn/ui.
 
@@ -10,18 +10,27 @@ v0.1. Radix base only; Base UI and React Aria are not supported.
 
 ```bash
 pnpm dlx shadcn@latest init --base radix
-pnpm dlx shadcn@latest add anindosarker/shadcn-react-table/shadcn-react-table
+pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table
 ```
+
+## Features
+
+- Sorting, filtering (column and global, faceted values), grouping and aggregation
+- Pagination, row and column virtualization for large data sets
+- Row selection, expanding, detail panels, row pinning, column pinning
+- Column ordering, resizing, hiding, and drag-and-drop
+- Editing in cell, row, modal and table modes
+- Toolbars, density toggle and full-screen mode
+- 38 locales, installed as separate registry items
 
 ## Docs
 
-https://github.com/anindosarker/shadcn-react-table
-
-The docs site link lands with v0.1.
+- Docs: https://shadcn-table.com
+- Storybook: https://storybook.shadcn-table.com
 
 ## AI agents
 
-A skill file is served at `/SKILL.md` on the docs site: `npx skills add anindosarker/shadcn-react-table`.
+A skill file is served at `/SKILL.md` on the docs site: `npx skills add anindosarker/shadcn-table`.
 
 ## Contributing
 

@@ -1,0 +1,140 @@
+---
+title: 'ST Hooks'
+description: 'All the ST hooks that can be used'
+---
+
+<OptionsSwitcher
+  links={[
+    {
+      label: 'ST Components',
+      value: 'st-components',
+    },
+    {
+      label: 'ST Hooks',
+      value: 'st-hooks',
+    },
+  ]}
+/>
+
+<br />
+
+ST has been adopting more and more of a hooks based approach for its internal logic. Its API is becoming more standardized so that you can use the same hooks that the ST components use internally to build your own custom headless table if you want to.
+
+### useShadcnTable
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useShadcnTable.ts)
+
+> This is probably the only ST hook you will need to use, unless you are writing a custom headless table.
+
+This is the main hook from Shadcn Table. It creates a TanStack Table instance with all of the features that ST provides and that you enable, and uses the proper default table options.
+
+```tsx
+import { useShadcnTable } from '@/components/ui/shadcn-table';
+
+const table = useShadcnTable({
+  ...options,
+});
+```
+
+This hook is the combination of 2 other internal ST hooks: [`useST_TableOptions`](#usesrt_tableoptions), and [`useST_TableInstance`](#usesrt_tableinstance).
+
+### useST_TableOptions
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useST_TableOptions.ts)
+
+This hook simply takes in your custom table options and merges them with the default table options. It also does some extra logic to make sure that some default table options are set correctly based on other enabled features. For example, if you enable row virtualization features, the sticky header will also be enabled by default, and the layoutMode will adjust accordingly.
+
+```tsx
+import { useST_TableOptions } from '@/components/ui/shadcn-table';
+
+const transformedTableOptions = useST_TableOptions({
+  ...options,
+});
+```
+
+### useST_TableInstance
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useST_TableInstance.ts)
+
+This is where most of the magic happens. This hook is responsible for creating the TanStack Table instance, and adding all of the ST features to it. It needs table options to be passed in to it correctly, with good defaults, and it will return the table instance.
+
+```tsx
+import { useST_TableInstance } from '@/components/ui/shadcn-table';
+
+const table = useST_TableInstance({
+  ...transformedTableOptions, //usually from useST_TableOptions
+});
+```
+
+This hook also uses the [`useST_Effects`](#usesrt_effects)
+
+### useST_Effects
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useST_Effects.ts)
+
+This hook is responsible for adding some extra useEffect hooks to the table instance. These hooks are needed by some ST features on a table wide level.
+
+### useST_Rows
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useST_Rows.ts)
+
+This hook is mostly a wrapper around `table.getRowModel`, but with a bit more custom logic for fuzzy ranking, row pinning, and more. It consumes a `table` instance and returns the rows that should be rendered in the main table body. This can be a useful hook if you are writing a custom headless table, but still want all of the extra ST enhanced behavior for fuzzy ranking, row pinning, etc. Alternatively, you can just use `table.getRowModel()` for a more vanilla TanStack Table experience.
+
+```tsx
+import {
+  useShadcnTable,
+  useST_Rows,
+} from '@/components/ui/shadcn-table';
+
+const table = useShadcnTable({
+  ...options,
+});
+
+const rows = useST_Rows(table);
+
+return rows.map((row) => {
+  //render row
+});
+```
+
+### useST_ColumnVirtualizer
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts)
+
+This hook is a wrapper around the `useVirtualizer` hook from TanStack Virtual. It consumes a `table` instance and returns a Column Virtualizer instance that is optimized for ST table columns, with considerations for other ST features like column pinning, column resizing, column hiding, and more.
+
+```tsx
+import {
+  useShadcnTable,
+  useST_ColumnVirtualizer,
+} from '@/components/ui/shadcn-table';
+
+const table = useShadcnTable({
+  ...options,
+});
+
+const columnVirtualizer = useST_ColumnVirtualizer(table);
+```
+
+You would only need to use this hook if you are writing a custom headless table and want the same default column virtualization behavior that ST provides. If you are using the ST components, this hook is already used internally by the `ST_Table` component.
+
+### useST_RowVirtualizer
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/main/packages/shadcn-table/src/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts)
+
+This hook is a wrapper around the `useVirtualizer` hook from TanStack Virtual. It consumes a `table` instance and returns a Row Virtualizer instance that is optimized for ST table rows, with considerations for other ST features like row pinning, row dragging, and more.
+
+```tsx
+import {
+  useShadcnTable,
+  useST_RowVirtualizer,
+} from '@/components/ui/shadcn-table';
+
+const table = useShadcnTable({
+  ...options,
+});
+
+const rowVirtualizer = useST_RowVirtualizer(table);
+```
+
+You would only need to use this hook if you are writing a custom headless table and want the same default row virtualization behavior that ST provides. If you are using the ST components, this hook is already used internally by the `ST_Table` component.

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "docs": {
+      "root": "apps/shadcn-table-docs",
+      "framework": "nextjs"
+    },
+    "storybook": {
+      "root": "packages/shadcn-table",
+      "framework": null,
+      "buildCommand": "pnpm storybook:build",
+      "outputDirectory": "storybook-static"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": { "pre": "storybook." } }],
+      "destination": { "service": "storybook" }
+    },
+    { "source": "/(.*)", "destination": { "service": "docs" } }
+  ]
+}

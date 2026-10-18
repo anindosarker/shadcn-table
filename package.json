@@ -1,6 +1,7 @@
 {
-  "name": "shadcn-react-table-monorepo",
+  "name": "shadcn-table-monorepo",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -9,17 +10,13 @@
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
-    "lib:build-lib": "turbo run lib:build-lib",
-    "lib:build-locales": "turbo run lib:build-locales",
-    "lib:dev": "turbo run lib:dev",
     "lint": "turbo run lint",
-    "registry:build": "pnpm --filter shadcn-react-table registry:build",
-    "registry:items": "node apps/shadcn-react-table-docs/scripts/build-registry-items.mjs",
-    "registry:dev": "pnpm --filter shadcn-react-table registry:dev && serve packages/shadcn-react-table/.dev -l 5310",
-    "storybook": "turbo run storybook --filter=shadcn-react-table",
-    "storybook:build": "turbo run storybook:build --filter=shadcn-react-table",
-    "storybook:dev": "turbo run storybook --filter=shadcn-react-table",
-    "test": "turbo run test --filter=shadcn-react-table"
+    "registry:build": "pnpm --filter shadcn-table registry:build",
+    "registry:items": "node apps/shadcn-table-docs/scripts/build-registry-items.mjs",
+    "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
+    "storybook": "turbo run storybook --filter=shadcn-table",
+    "storybook:build": "turbo run storybook:build --filter=shadcn-table",
+    "test": "turbo run test --filter=shadcn-table"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
@@ -27,7 +24,7 @@
     "turbo": "2.5.6"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=22"
   },
   "packageManager": "pnpm@10.13.1",
   "pnpm": {

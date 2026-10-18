@@ -1,0 +1,180 @@
+---
+title: 'Usage'
+description: 'A brief overview of how to use shadcn-table and create columns and data'
+---
+
+A first table in four steps. It will not cover all features of the library, but it is the shape every example builds on. [Install](/docs/getting-started/install) first.
+
+<Steps>
+
+<Step>
+
+### Import
+
+```tsx
+import {
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
+```
+
+`ShadcnTable` renders the table. `useShadcnTable` is the hook that takes the columns, the data and every other table option.
+
+The install put the table in `components/ui/shadcn-table/` (edit anything), the shadcn/ui parts it uses in `components/ui/`, and the packages `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react` and `radix-ui` in your dependencies. English is the only locale installed; the others are separate items, see [Localization](/docs/guides/localization).
+
+</Step>
+
+<Step>
+
+### Define the data
+
+An array of objects whose keys match the accessors in your column definitions. Flat objects are easiest; nested data works with a little more column setup.
+
+```jsx
+//must be memoized or stable (useState, useMemo, defined outside of the component, etc.)
+const data = [
+  {
+    name: 'John', // key "name" matches `accessorKey` in ColumnDef down below
+    age: 30, // key "age" matches `accessorKey` in ColumnDef down below
+  },
+  {
+    name: 'Sara',
+    age: 25,
+  },
+];
+```
+
+> **Common Gotcha**: `data` passed to `useShadcnTable` must be _memoized_ or _stable_ (`useState`, `useMemo`, defined outside of your table component, etc.). Otherwise you may get infinite renders.
+
+Data fetched from an API works the same way; see the [Remote Data examples](/docs/examples/react-query).
+
+</Step>
+
+<Step>
+
+### Define the columns
+
+`accessorKey` points a column at a key of your data. `accessorFn` computes the value when it needs processing. Custom markup goes in `Cell`, never in the accessor.
+
+```jsx
+//simple column definitions pointing to flat data
+const columns = useMemo(
+  () => [
+    {
+      header: 'Name',
+      accessorKey: 'name', //simple recommended way to define a column
+      //more column options can be added here to enable/disable features, customize look and feel, etc.
+      //optional custom cell render
+      Cell: ({ row }) => (
+        <span className="flex items-center gap-[2ch]">
+          <img src={row.original.imageUrl} />
+          <a href={row.profileUrl}>{row.name}</a>
+        </span>
+      ),
+    },
+    {
+      header: 'Age',
+      accessorFn: (dataRow) => parseInt(dataRow.age), //alternate way to access data if processing logic is needed
+    },
+  ],
+  [],
+);
+```
+
+> Note: Do NOT have your accessors resolve JSX or markup. That's what custom `Cell` renders are for. Accessors should only return primitive data so that the table can sort, filter, search, and group properly.
+
+</Step>
+
+<Step>
+
+### Create the table and render it
+
+```tsx
+const table = useShadcnTable({ columns, data });
+
+return <ShadcnTable table={table} />;
+```
+
+Every feature is a table option on the hook (`enableRowSelection`, `enableColumnOrdering`, ...) or a column option in the definitions. All of them: [Table Options](/docs/api/table-options), [Column Options](/docs/api/column-options).
+
+</Step>
+
+</Steps>
+
+### Full Simple Example
+
+Put it all together, and you have a basic table! You can also play around and enable some features, either per column in the column definitions, or as table options passed to `useShadcnTable`.
+
+```tsx
+import { useMemo } from 'react';
+import {
+  ShadcnTable,
+  useShadcnTable,
+  type ST_ColumnDef, //if using TypeScript (optional, but recommended)
+} from '@/components/ui/shadcn-table';
+
+//If using TypeScript, define the shape of your data (optional, but recommended)
+interface Person {
+  name: string;
+  age: number;
+}
+
+//mock data - strongly typed if you are using TypeScript (optional, but recommended)
+const data: Person[] = [
+  {
+    name: 'John',
+    age: 30,
+  },
+  {
+    name: 'Sara',
+    age: 25,
+  },
+];
+
+export default function App() {
+  //column definitions - strongly typed if you are using TypeScript (optional, but recommended)
+  const columns = useMemo<ST_ColumnDef<Person>[]>(
+    () => [
+      {
+        accessorKey: 'name', //simple recommended way to define a column
+        header: 'Name',
+        stTableHeadCellProps: { style: { color: 'green' } }, //custom props
+        enableHiding: false, //disable a feature for this column
+      },
+      {
+        accessorFn: (originalRow) => parseInt(originalRow.age), //alternate way
+        id: 'age', //id required if you use accessorFn instead of accessorKey
+        header: 'Age',
+        Header: <i style={{ color: 'red' }}>Age</i>, //optional custom markup
+        Cell: ({ cell }) => <i>{cell.getValue<number>().toLocaleString()}</i>, //optional custom cell render
+      },
+    ],
+    [],
+  );
+
+  //pass table options to useShadcnTable
+  const table = useShadcnTable({
+    columns,
+    data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+    enableRowSelection: true, //enable some features
+    enableColumnOrdering: true, //enable a feature for all columns
+    enableGlobalFilter: false, //turn off a feature
+  });
+
+  //note: you can also pass table options as props directly to <ShadcnTable /> instead of using useShadcnTable
+  //but the useShadcnTable hook will be the most recommended way to define table options
+  return <ShadcnTable table={table} />;
+}
+```
+
+> **Note:** Again, it is very important that the columns and data definitions are _memoized_ or _stable_. Otherwise, the entire table will be re-rendered during every react re-render in your application, which can lead to performance issues. To make a variable stable, store it in `useState`, wrap it in `useMemo`, define it outside of a component, or in your state management tool of choice so it does not get recreated on every render and cause an infinite re-render loop.
+
+### Live Example
+
+<BasicExample />
+
+### Next Steps
+
+There are numerous ways you can customize the behavior and look and feel of your Shadcn Table. View some of the [examples](/docs/examples) to see how you can customize your table, and visit the [props page](/docs/api/table-options) to see all the props that you can use to turn features on and off and customize the look and feel of your table.
+
+Also, be sure to check out all the [Fundamental Guides](/docs/guides#fundamentals) and any of the [Advanced Feature Guides](/docs/guides#feature-guides) you may be interested in to learn more about the different features you can toggle on and off, or customize.

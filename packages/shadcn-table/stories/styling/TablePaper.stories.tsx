@@ -1,0 +1,51 @@
+import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import { faker } from '@faker-js/faker';
+import { type Meta } from '@storybook/react-vite';
+
+const meta: Meta = {
+  title: 'Styling/Table Paper Examples',
+};
+
+export default meta;
+
+const columns: ST_ColumnDef<(typeof data)[0]>[] = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+  },
+  {
+    accessorKey: 'address',
+    header: 'Address',
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
+];
+
+const data = [...Array(25)].map(() => ({
+  address: faker.location.streetAddress(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
+  phoneNumber: faker.phone.number(),
+  state: faker.location.state(),
+}));
+
+export const NoBoxShadow = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    stTableLayoutProps={{
+      className: 'shadow-none',
+    }}
+  />
+);
