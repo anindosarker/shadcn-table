@@ -1,3 +1,4 @@
+import type { Metadata, Viewport } from 'next';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import './global.css';
@@ -9,6 +10,22 @@ import {
   THEME_PRESETS,
   THEME_STORAGE_KEY,
 } from '@/lib/theme-presets';
+import { siteName, siteUrl } from '@/lib/shared';
+
+export const metadata: Metadata = {
+  title: { default: siteName, template: `%s | ${siteName}` },
+  description:
+    'A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.',
+  metadataBase: new URL(siteUrl),
+  applicationName: siteName,
+  openGraph: { siteName, type: 'website' },
+  twitter: { card: 'summary_large_image' },
+};
+
+/** Dark is the default theme. */
+export const viewport: Viewport = {
+  themeColor: '#000000',
+};
 
 const inter = Inter({
   subsets: ['latin'],

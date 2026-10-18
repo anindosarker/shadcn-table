@@ -12,7 +12,12 @@ import { getMDXComponents } from '@/components/mdx';
 import { DocsBreadcrumb, NoBreadcrumb } from '@/components/docs-breadcrumb';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
-import { getPageImageUrl, getPageMarkdownUrl, gitConfig } from '@/lib/shared';
+import {
+  getPageImageUrl,
+  getPageMarkdownUrl,
+  gitConfig,
+  siteName,
+} from '@/lib/shared';
 import { findSectionName } from '@/lib/page-tree-utils';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
@@ -94,7 +99,10 @@ export async function generateMetadata(
   return {
     title: page.data.title,
     description: page.data.description,
+    // Replaces the root layout's openGraph object, so restate siteName.
     openGraph: {
+      siteName,
+      type: 'article',
       images: getPageImageUrl(page).url,
     },
   };

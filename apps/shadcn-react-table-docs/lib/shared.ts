@@ -1,6 +1,8 @@
 import { createGetUrl } from 'fumadocs-core/source';
 
 export const appName = 'Shadcn React Table';
+/** Lowercase name used in page titles and OG/Twitter metadata. */
+export const siteName = 'shadcn-react-table';
 export const docsRoute = '/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';
