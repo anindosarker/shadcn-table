@@ -84,14 +84,20 @@ jobs:
       matrix:
         scenario: [fresh, existing]
     steps:
+      # The repo is checked out into repo/ only for the dev registry (locale
+      # step below); the consumer app lives in ${{ runner.temp }}/app so no
+      # workspace file leaks into it.
+      - uses: actions/checkout@v4
+        with:
+          path: repo
       - uses: pnpm/action-setup@v4
         with:
           version: 10.13.1
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      # The app lives outside the checkout (there is none) so nothing from the
-      # repo, such as a workspace file, leaks into the consumer project.
+          cache: pnpm
+          cache-dependency-path: repo/pnpm-lock.yaml
       - name: Scaffold a Vite app on the Radix base
         run: pnpm dlx shadcn@latest init --template vite --base radix --preset nova --name app --yes
         working-directory: ${{ runner.temp }}
@@ -99,17 +105,15 @@ jobs:
         if: matrix.scenario == 'existing'
         run: pnpm add @tanstack/react-table@8.20.5 @tanstack/react-query
         working-directory: ${{ runner.temp }}/app
-      - name: Add the library and a locale at this SHA
+      - name: Add the library at this SHA
         run: |
           set -o pipefail
           pnpm dlx shadcn@latest add "anindosarker/shadcn-table/shadcn-table#$REF" --yes 2>&1 | tee shadcn-add.log
-          pnpm dlx shadcn@latest add "anindosarker/shadcn-table/shadcn-table-locale-de#$REF" --yes 2>&1 | tee -a shadcn-add.log
         working-directory: ${{ runner.temp }}/app
       - name: Mount a table, type-check and build
         run: |
           cat > src/App.tsx <<'TSX'
           import { ShadcnTable } from '@/components/ui/shadcn-table';
-          import { ST_Localization_DE } from '@/components/ui/shadcn-table/locales/de';
 
           const columns = [
             { accessorKey: 'name', header: 'Name' },
@@ -121,26 +125,50 @@ jobs:
           ];
 
           export default function App() {
-            return (
-              <ShadcnTable columns={columns} data={data} localization={ST_Localization_DE} />
-            );
+            return <ShadcnTable columns={columns} data={data} />;
           }
           TSX
           pnpm exec tsc --noEmit -p tsconfig.app.json
           pnpm exec vite build
         working-directory: ${{ runner.temp }}/app
+      # A locale item depends on the unpinned GitHub address of the library,
+      # which the CLI resolves on the default branch, not at this SHA. The dev
+      # registry built from the checkout pins that dependency to this SHA's
+      # library, so the locale is installed through it.
+      - name: Build and serve the dev registry from this checkout
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter shadcn-table registry:dev
+          (pnpm exec serve packages/shadcn-table/.dev -l 5310 > serve.log 2>&1 &)
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:5310/r/shadcn-table-locale-de.json > /dev/null && break
+            sleep 1
+          done
+          curl -sf http://localhost:5310/r/shadcn-table-locale-de.json > /dev/null
+        working-directory: repo
       # Example items pin the library to gitConfig.branch, so this add re-fetches
       # the library from that branch; --overwrite lets it replace the files
-      # without a prompt. The library at this SHA was proven by the step above.
-      - name: Add example-basic, mount it, type-check and build
+      # without a prompt. The library at this SHA was proven by the steps above.
+      - name: Add a locale and example-basic, mount them, type-check and build
         run: |
           set -o pipefail
+          pnpm dlx shadcn@latest add http://localhost:5310/r/shadcn-table-locale-de.json --yes --overwrite 2>&1 | tee -a shadcn-add.log
           pnpm dlx shadcn@latest add "anindosarker/shadcn-table/example-basic#$REF" --yes --overwrite 2>&1 | tee -a shadcn-add.log
           cat > src/App.tsx <<'TSX'
           import Example from '@/components/examples/basic/basic';
+          import { ShadcnTable } from '@/components/ui/shadcn-table';
+          import { ST_Localization_DE } from '@/components/ui/shadcn-table/locales/de';
+
+          const columns = [{ accessorKey: 'name', header: 'Name' }];
+          const data = [{ name: 'Ada' }];
 
           export default function App() {
-            return <Example />;
+            return (
+              <>
+                <Example />
+                <ShadcnTable columns={columns} data={data} localization={ST_Localization_DE} />
+              </>
+            );
           }
           TSX
           pnpm exec tsc --noEmit -p tsconfig.app.json
