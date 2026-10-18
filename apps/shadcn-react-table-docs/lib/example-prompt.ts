@@ -8,7 +8,7 @@ import {
   readExampleExportName,
 } from './example-pages.mjs';
 import { readExampleSource } from './example-source';
-import { getPageMarkdownUrl, gitConfig, siteUrl } from './shared';
+import { absoluteMarkdownUrl, registryRef } from './shared';
 
 interface RegistryItem {
   name: string;
@@ -17,23 +17,12 @@ interface RegistryItem {
   registryDependencies?: string[];
 }
 
-const REGISTRY_NAMESPACE = `${gitConfig.user}/${gitConfig.repo}`;
 /** Where `shadcn add` puts the example files (registry.json `target`). */
 const INSTALL_DIR = 'components/examples';
-
-/**
- * `<namespace>/<item>#<branch>`: the branch suffix only while the registry
- * is served from a branch other than the default.
- */
-const registryRef = (item: string) =>
-  `${REGISTRY_NAMESPACE}/${item}${gitConfig.branch === 'master' ? '' : `#${gitConfig.branch}`}`;
 
 /** The `shadcn add` command installing examples/<name>. */
 export const buildInstallCommand = (name: string) =>
   `pnpm dlx shadcn@latest add ${registryRef(`example-${name}`)}`;
-
-const absoluteMarkdownUrl = (slugs: string[]) =>
-  `${siteUrl}${getPageMarkdownUrl({ slugs }).url}`;
 
 async function readRegistryItem(name: string): Promise<RegistryItem> {
   const file = path.join(process.cwd(), 'registry.json');

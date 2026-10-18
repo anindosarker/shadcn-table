@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { ArrowRightIcon, ArrowUpRightIcon } from 'lucide-react';
 import { AutoplayTileGrid } from '@/components/dev-home/shared/autoplay-tile-grid';
-import { InstallCommand } from '@/components/dev-home/shared/install-command';
+import { INSTALL_COMMAND } from '@/components/dev-home/shared/install-command';
 import { archivo } from '@/components/dev-home/v4/font';
 import { Starfield } from '@/components/dev-home/v4/starfield';
 import { CodeStrip } from './code-strip';
+import { AgentBar } from '@/components/agent-bar';
+import { agentPrompt } from '@/lib/install';
 import { Dune } from './dune';
 import { Footer } from './footer';
 import { Nav } from './nav';
@@ -48,20 +50,22 @@ export function HomePage({
               <span className="v12-accent">shadcn/ui</span>. Sorting, filtering,
               grouping, pinning, virtualization, and more, all built in.
             </p>
-            <div className="v12-hero-row">
-              <InstallCommand className="v12-install text-left" />
-              <div className="v12-cta">
-                <Link
-                  href="/docs/getting-started/install"
-                  className="v4-btn v4-btn-solid v4-btn-lg"
-                >
-                  Get started
-                  <ArrowRightIcon aria-hidden="true" className="size-4" />
-                </Link>
-                <Link href="/docs/examples" className="v4-link">
-                  Examples
-                </Link>
-              </div>
+            <AgentBar
+              prompt={agentPrompt}
+              command={INSTALL_COMMAND}
+              className="v12-agent"
+            />
+            <div className="v12-cta">
+              <Link
+                href="/docs/getting-started/install"
+                className="v4-btn v4-btn-solid v4-btn-lg"
+              >
+                Get started
+                <ArrowRightIcon aria-hidden="true" className="size-4" />
+              </Link>
+              <Link href="/docs/examples" className="v4-link">
+                Examples
+              </Link>
             </div>
           </div>
         </section>

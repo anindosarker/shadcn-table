@@ -48,5 +48,40 @@
   ],
   "examples/editing-crud-inline-table.mdx": [
     "title: MRT \"Editing CRUD Inline Example - Material React Table V3 Docs\" vs SRT \"Editing CRUD Inline Table Example\""
+  ],
+  "getting-started/install.mdx": [
+    "+ heading: ### Add shadcn-react-table",
+    "+ heading: ### Import",
+    "+ heading: ### Initialize shadcn/ui",
+    "+ tag: <AgentPrompt>",
+    "+ tag: <InitCommand>",
+    "+ tag: <InstallCommand>",
+    "+ tag: <OrDivider>",
+    "+ tag: <Step>",
+    "+ tag: <Steps>",
+    "- heading: ### Common Errors",
+    "- heading: ### Compatibility",
+    "- heading: ### FAQs",
+    "- heading: ### Install With Required Peer Dependencies (Recommended)",
+    "- heading: ### Quick Install",
+    "- tag: <CompatibilityTable>",
+    "- tag: <FAQs>",
+    "description: MRT \"How to install Material React Table\" vs SRT \"Add shadcn-react-table to a shadcn/ui project\""
+  ],
+  "getting-started/usage.mdx": [
+    "+ heading: ### Create the table and render it",
+    "+ heading: ### Define the columns",
+    "+ heading: ### Define the data",
+    "+ heading: ### Import",
+    "+ heading: ### Live Example",
+    "+ tag: <Step>",
+    "+ tag: <Steps>",
+    "- heading: ### Creating Columns",
+    "- heading: ### Creating Data/Rows",
+    "- heading: ### Import MaterialReactTable and useMaterialReactTable",
+    "- heading: ### Live Code Sandbox Example",
+    "- heading: ### Setup",
+    "- heading: #### Simple Column Definition Example",
+    "- heading: #### Simple Data Example"
   ]
 }

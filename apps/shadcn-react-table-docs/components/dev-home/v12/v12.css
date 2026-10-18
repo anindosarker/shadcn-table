@@ -228,10 +228,62 @@
   background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
 }
 
+.v12 .v12-agent {
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  border-style: dashed;
+  border-color: var(--v12-dash);
+  border-radius: 2px;
+  background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
+}
+
+/* the bar's segmented switch and button in the hero's own squared style */
+.v12 .v12-agent [role='radiogroup'] {
+  border-radius: 2px;
+  background-color: var(--dh-paper-2);
+}
+
+.v12 .v12-agent [role='radio'] {
+  border-radius: 2px;
+  font-family: var(--dh-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.v12 .v12-agent [role='radio'][aria-checked='true'] {
+  background-color: var(--dh-paper);
+  color: var(--dh-ink);
+}
+
+/* the bar's button in the hero's own button style: squared, mono, muted,
+   so Get started stays the one accent in the hero */
+.v12 .v12-agent [data-slot='button'] {
+  height: 2.25rem;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--dh-rule-strong);
+  border-radius: 2px;
+  background-color: transparent;
+  color: var(--dh-ink);
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.v12 .v12-agent [data-slot='button']:hover {
+  border-color: var(--dh-ink-muted);
+  background-color: var(--dh-paper-2);
+}
+
 .v12-cta {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.25rem;
+  margin-top: 0.25rem;
 }
 
 /* ------------------------------------------------------------------ demo */
