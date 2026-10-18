@@ -1,0 +1,55 @@
+---
+title: 'Table Instance APIs'
+description: 'All the table instance methods and objects that can be accessed from the table instance in Shadcn Table'
+---
+
+<OptionsSwitcher
+  links={[
+    {
+      label: 'Table Instance APIs',
+      value: 'table-instance-apis',
+    },
+    {
+      label: 'Column Instance APIs',
+      value: 'column-instance-apis',
+    },
+    {
+      label: 'Row Instance APIs',
+      value: 'row-instance-apis',
+    },
+    {
+      label: 'Cell Instance APIs',
+      value: 'cell-instance-apis',
+    },
+  ]}
+/>
+
+> NOTE: These are NOT the [table options](/docs/api/table-options) for Shadcn Table. These are just static methods on a table instance that you can use.
+
+These are the methods available on the `table` instance that is returned from the `useShadcnTable` hook. You can use these methods to interact with the table instance.
+
+```jsx
+const columns = useMemo(() => [
+  {
+    accessor: 'name',
+    header: 'Name',
+    Cell: ({ cell, table }) => <span onClick={() => table.{/* or maybe here */}}></span>,
+  },
+], []);
+
+const table = useShadcnTable({
+  columns,
+  data,
+  renderTopToolbarCustomActions: ({ table }) => <Button onClick={() => table{/* or maybe here */}}>Click Me</Button>,
+});
+
+const someEventHandler = () => {
+  table. //call any of the table instance methods here
+};
+
+return <ShadcnTable table={table} />;
+```
+
+<TableInstanceAPIsTable />
+
+<TableInstanceAPIsSource />

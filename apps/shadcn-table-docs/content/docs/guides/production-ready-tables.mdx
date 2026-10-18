@@ -1,0 +1,383 @@
+---
+title: 'Building Production-Ready Tables'
+description: 'Fetch data with React Query, translate table state with a custom hook, and wire it into a manual-state table.'
+---
+
+This guide shows the pattern for a real-world table. The data comes from your API through React Query. The server does the paging, sorting, search and filtering, and the table only shows one page at a time. You need four pieces:
+
+1. **Service:** an async function that calls your API.
+2. **Query hook:** `useUsersQuery(params)` wraps the service in React Query.
+3. **`useTableQueryParams`:** owns the table state and turns it into the params your server accepts.
+4. **Table:** turns off client-side processing and reads its state from the hook.
+
+```text
+table state
+  ▼ useTableQueryParams
+server params
+  ▼ useUsersQuery
+  ▼ service
+GET /api/users
+  ▼
+{ data, total } ──▶ table
+```
+
+This guide assumes you know React and the basics of React Query.
+
+<ServerSideDataExample />
+
+Open the network tab and click around. Every page, sort, search or filter change sends one request to `/api/users`.
+
+### Folder Layout
+
+The live example is split the way you would split it in your app. Open the Code view above to browse the files:
+
+```text
+server-side-data/
+├── TS.tsx                      # QueryClientProvider + <UsersTable />
+├── components/
+│   └── UsersTable.tsx          # 4. the table
+├── hooks/
+│   ├── useTableQueryParams.ts  # 3. table state → server params
+│   └── useUsersQuery.ts        # 2. React Query hook
+└── lib/
+    └── users.service.ts        # 1. service + types
+```
+
+The demo server takes these params and returns `{ data, total, page, limit }`:
+
+```text
+GET /api/users?page=2&limit=10&search=tex&sortBy=lastName:desc&filter=state[$contains]=tex
+```
+
+<Steps>
+
+<Step>
+
+### Write the Service
+
+The service is a plain async function. It knows your API's URL and response shape, and nothing about tables. Type the params and the response.
+
+```ts title="lib/users.service.ts"
+export type UsersQueryParams = {
+  page: number; //1-based
+  limit: number;
+  search?: string;
+  sortBy?: string[]; //"lastName:desc"
+  filter?: string[]; //"state[$contains]=tex"
+};
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+};
+
+export async function getUsers(
+  params: UsersQueryParams,
+): Promise<PaginatedResponse<User>> {
+  const url = new URL('/api/users', location.origin);
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) continue;
+    //arrays become repeated keys: sortBy=a&sortBy=b
+    for (const item of [value].flat()) {
+      url.searchParams.append(key, String(item));
+    }
+  }
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`GET /api/users: ${response.status}`);
+  return response.json();
+}
+```
+
+Throw on a bad status. `fetch` does not, and React Query only sees an error if the function throws.
+
+If you use axios, it does the URL building for you. To send arrays as repeated keys, use `qs`:
+
+```ts
+const http = axios.create({
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }),
+});
+
+const { data } = await http.get<PaginatedResponse<User>>('/users', { params });
+```
+
+</Step>
+
+<Step>
+
+### Wrap It in a Query Hook
+
+```ts title="hooks/useUsersQuery.ts"
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { getUsers, type UsersQueryParams } from '../lib/users.service';
+
+export function useUsersQuery(params: UsersQueryParams) {
+  return useQuery({
+    queryKey: ['users', params], //new params, new cache entry, new request
+    queryFn: () => getUsers(params),
+    placeholderData: keepPreviousData, //keep the old page on screen while the next one loads
+  });
+}
+```
+
+- **`params` in the `queryKey`:** React Query refetches when the key changes. Every page, sort and filter gets its own cache entry, so going back to page 1 is instant.
+- **`keepPreviousData`:** without it, `data` is `undefined` while the next page loads, and the table flashes empty.
+
+</Step>
+
+<Step>
+
+### Turn Table State Into Server Params
+
+This hook is the link between the table and your server. It holds the table state you control, and it translates that state into the params your API expects. The table state is always the same. The params are whatever your server wants, so you shape this hook to your server.
+
+Start small. If your server only takes `page`, `limit` and `search`, this is the whole hook:
+
+```ts title="hooks/useTableQueryParams.ts"
+export function useTableQueryParams({ pageSize = 10 } = {}) {
+  const [pagination, setPagination] = useState<ST_PaginationState>({
+    pageIndex: 0,
+    pageSize,
+  });
+  const [search, setSearch] = useState('');
+
+  const handlers = {
+    onPaginationChange: setPagination,
+    onGlobalFilterChange: (value: string | undefined) => {
+      setSearch(value ?? '');
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    },
+  };
+
+  const params = {
+    page: pagination.pageIndex + 1, //table is 0-based, server is 1-based
+    limit: pagination.pageSize,
+    search: search || undefined,
+  };
+
+  return { params, handlers, state: { pagination, globalFilter: search } };
+}
+```
+
+Then grow it. The full version adds sorting, column filters and filter modes. Each change handler sends you back to the first page:
+
+```ts title="hooks/useTableQueryParams.ts"
+//filter values can be strings, numbers or Dates (date filters)
+const toParam = (value: unknown) =>
+  value instanceof Date ? value.toISOString() : String(value);
+
+export function useTableQueryParams<TData extends ST_RowData>({
+  columns,
+  pageSize = 10,
+}: {
+  columns: ST_ColumnDef<TData>[];
+  pageSize?: number;
+}) {
+  const [pagination, setPagination] = useState<ST_PaginationState>({
+    pageIndex: 0,
+    pageSize,
+  });
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState<ST_SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>(
+    [],
+  );
+  //one filter mode per column, from the column's filterFn or 'contains'
+  const [columnFilterFns, setColumnFilterFns] =
+    useState<ST_ColumnFilterFnsState>(() =>
+      Object.fromEntries(
+        columns.map((column) => [
+          column.id ?? String(column.accessorKey),
+          typeof column.filterFn === 'string' ? column.filterFn : 'contains',
+        ]),
+      ),
+    );
+
+  //new search, sort or filter: the old page number means nothing, go back to page 1
+  const resetPageIndex = () =>
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+
+  const handlers = {
+    onPaginationChange: setPagination,
+    onGlobalFilterChange: (value: string | undefined) => {
+      setSearch(value ?? '');
+      resetPageIndex();
+    },
+    onSortingChange: (updater: ST_Updater<ST_SortingState>) => {
+      setSorting(updater);
+      resetPageIndex();
+    },
+    onColumnFiltersChange: (updater: ST_Updater<ST_ColumnFiltersState>) => {
+      setColumnFilters(updater);
+      resetPageIndex();
+    },
+    onColumnFilterFnsChange: (
+      updater: ST_Updater<ST_ColumnFilterFnsState>,
+    ) => {
+      setColumnFilterFns(updater);
+      resetPageIndex();
+    },
+  };
+
+  //translate table state into the params YOUR server accepts
+  const params: UsersQueryParams = {
+    page: pagination.pageIndex + 1, //table is 0-based, server is 1-based
+    limit: pagination.pageSize,
+    search: search || undefined,
+    sortBy: sorting.map(({ id, desc }) => `${id}:${desc ? 'desc' : 'asc'}`),
+    filter: columnFilters.map(
+      ({ id, value }) =>
+        `${id}[$${columnFilterFns[id] ?? 'contains'}]=${toParam(value)}`,
+    ),
+  };
+
+  return {
+    params,
+    handlers,
+    state: {
+      pagination,
+      globalFilter: search,
+      sorting,
+      columnFilters,
+      columnFilterFns,
+    },
+  };
+}
+```
+
+The table calls each `on*Change` handler with either a value or an updater function. `useState` setters accept both, so you can pass the updater straight through. If you need the new value first, unwrap it as shown in [State Management](/docs/guides/state-management#add-side-effects-in-set-state-callbacks).
+
+**Shape it to your server.** Only the `params` block changes from one backend to another:
+
+| Table state                         | Demo server param             | Other common shapes                     |
+| ----------------------------------- | ----------------------------- | --------------------------------------- |
+| `pagination.pageIndex` (0-based)    | `page` (1-based)              | `offset = pageIndex * pageSize`, `skip` |
+| `pagination.pageSize`               | `limit`                       | `size`, `per_page`, `take`              |
+| `globalFilter`                      | `search`                      | `q`, `query`                            |
+| `sorting`                           | `sortBy=lastName:desc`        | `sort=-lastName`, `orderBy` + `order`   |
+| `columnFilters` + `columnFilterFns` | `filter=state[$contains]=tex` | `state=tex`, `filters` as JSON          |
+
+If your server has no filter operators, drop `columnFilterFns` and send `field=value`.
+
+</Step>
+
+<Step>
+
+### Build the Table
+
+Define your columns the regular way. Then wire the hooks into the table:
+
+```tsx title="components/UsersTable.tsx"
+const { params, handlers, state } = useTableQueryParams({ columns });
+const { data, isError, isFetching, isLoading, refetch } = useUsersQuery(params);
+
+const table = useShadcnTable({
+  columns,
+  data: data?.data ?? [],
+  rowCount: data?.total ?? 0, //the server knows the total, the table does not
+  manualPagination: true, //turn off client-side pagination
+  manualSorting: true, //turn off client-side sorting
+  manualFiltering: true, //turn off client-side filtering
+  enableColumnFilterModes: true,
+  //only the operators the server understands
+  columnFilterModeOptions: [
+    'contains',
+    'startsWith',
+    'endsWith',
+    'equals',
+    'notEquals',
+  ],
+  ...handlers,
+  stToolbarAlertBannerProps: isError
+    ? {
+        className: 'border-destructive text-destructive',
+        children: 'Error loading data',
+      }
+    : undefined,
+  state: {
+    ...state,
+    isLoading, //first load only: skeleton rows
+    showProgressBars: isFetching, //every later request: thin progress bar
+    showAlertBanner: isError,
+  },
+});
+```
+
+- **`manual*` flags:** the rows you pass are already paged, sorted and filtered. Without these flags, the table does it again on one page of data.
+- **`rowCount`:** the table only holds one page, so it cannot count the rows. The server tells it.
+- **State and handlers:** pass both. If you pass a handler but not its state, the table never sees the change. See [State Management](/docs/guides/state-management#manage-individual-states-as-needed).
+- **Loading:** `isLoading` is true only on the first load, when there is no data yet. Later requests keep the old page (thanks to `keepPreviousData`) and show a progress bar.
+- **Errors:** `showAlertBanner` shows the error above the table. Without it, a failed request just looks like an empty table.
+
+The search box and the text column filters already debounce their input when `manualFiltering` is on (500ms for search, 400ms for filters), so you don't need your own debounce.
+
+</Step>
+
+</Steps>
+
+### Adapting to Your Server
+
+**Extra params that aren't table state.** Merge them in before you call the query hook:
+
+```ts
+const { params, handlers, state } = useTableQueryParams({ columns });
+const query = useUsersQuery({ ...params, organizationId });
+```
+
+Add `organizationId` to `UsersQueryParams` so it ends up in the `queryKey` too.
+
+**A fixed filter the user can't remove.** Prepend it to the translated filters:
+
+```ts
+const query = useUsersQuery({
+  ...params,
+  filter: ['status[$equals]=active', ...(params.filter ?? [])],
+});
+```
+
+**Pagination only.** Turn off the features your server doesn't support, and use the minimal hook:
+
+```ts
+useShadcnTable({
+  columns,
+  data: data?.data ?? [],
+  rowCount: data?.total ?? 0,
+  manualPagination: true,
+  enableSorting: false,
+  enableGlobalFilter: false,
+  enableColumnFilters: false,
+  ...handlers,
+  state: { ...state, isLoading, showProgressBars: isFetching },
+});
+```
+
+**Refresh after a mutation.** Invalidate by the key prefix. That marks every page, sort and filter combination as stale:
+
+```ts
+const queryClient = useQueryClient();
+
+useMutation({
+  mutationFn: updateUser,
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+});
+```
+
+### Common Mistakes
+
+- **Not resetting the page.** You are on page 7, you type a search, and the result has 2 pages. Page 7 is empty. Reset `pageIndex` to 0 in every search, sort and filter handler.
+- **Mixing up 0-based and 1-based pages.** The table's `pageIndex` starts at 0. Most servers start at 1. Convert in one place: the params block.
+- **Passing `isFetching` as `isLoading`.** The whole table turns into skeletons on every page change. Use `isLoading` for the first load and `showProgressBars` for the rest.
+- **Hiding errors.** Set `showAlertBanner` from `isError`, and make the service throw on a bad status.
+- **Leaving params out of the `queryKey`.** The query never refetches, and the table is stuck on page 1.
+- **Forgetting `rowCount`.** The pagination thinks there is only one page.
+- **Adding your own debounce.** The built-in search and filter inputs already debounce in manual mode. A second debounce just adds lag.
+
+### Related
+
+- [State Management](/docs/guides/state-management)
+- [Pagination: Manual or Server-Side Pagination](/docs/guides/pagination#manual-or-server-side-pagination)
+- [Sorting: Manual Server-Side Sorting](/docs/guides/sorting#manual-server-side-sorting)
+- [Column Filtering: Manual Server-Side Column Filtering](/docs/guides/column-filtering#manual-server-side-column-filtering)
+- [Global Filtering: Manual Server-Side Global Filtering](/docs/guides/global-filtering#manual-server-side-global-filtering)
+- [React Query Example](/docs/examples/react-query)

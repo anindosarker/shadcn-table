@@ -1,0 +1,70 @@
+---
+title: 'Column Pinning Guide'
+description: 'How to use and customize the column pinning features of Shadcn Table'
+---
+
+Column pinning is a cool feature that lets users pin (freeze) columns to the left or right of the table. Pinned columns will not scroll horizontally with the rest of the columns so that they always stay visible to the user.
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={new Set(['enableColumnPinning', 'onColumnPinningChange'])}
+/>
+
+### Relevant Column Options
+
+<ColumnOptionsTable onlyOptions={new Set(['enablePinning'])} />
+
+### Relevant State
+
+<StateOptionsTable onlyOptions={new Set(['columnPinning'])} />
+
+### Enable Column Pinning
+
+Column pinning can simply be enabled by setting the `enableColumnPinning` table option to `true`.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  enableColumnPinning: true,
+});
+
+return <ShadcnTable table={table} />;
+```
+
+### Pin (Freeze) Columns By Default
+
+Columns can start out pinned in your table by setting the `columnPinning` states in `initialState` or `state`.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  enableColumnPinning: true,
+  initialState: { columnPinning: { left: ['email'] } }, //pin email column to left by default
+});
+
+return <ShadcnTable table={table} />;
+```
+
+### Apply Absolute Column Widths
+
+You might consider using the `layoutMode: 'grid-no-grow'` table option to give all columns an exact width if you don't want the columns collapsing a little while scrolling. Some people like this subtle behavior, but others do not.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  enableColumnPinning: true,
+  layoutMode: 'grid-no-grow',
+});
+
+return <ShadcnTable table={table} />;
+```
+
+#### Column Pinning Example
+
+<EnableColumnPinningExample />
+
+View Extra Storybook **[Examples](https://github.com/anindosarker/shadcn-table/tree/main/packages/shadcn-table/stories)**

@@ -1,0 +1,564 @@
+/* Hallmark · macrostructure: field backdrop + rising figure · variant 12 · theme: site theme picker (6 presets x light/dark) · genre: atmospheric */
+
+/*
+ * Variant 12. Variant 7's layout, recoloured by the docs site's own theme.
+ * app/dev/layout.tsx leaves /dev/12 out of the dark-only .dev-home shell, so
+ * this block maps the --dh-* tokens that the reused v4/v5/v7 styles and the
+ * shared tiles read onto the site's shadcn tokens. Changing the preset
+ * (html[data-theme]) or the mode (html.dark) recolours everything at once.
+ * Motion: transform and opacity only.
+ */
+
+.v12 {
+  /* surfaces + ink, from the site theme */
+  --dh-paper: var(--background);
+  --dh-paper-2: color-mix(in oklch, var(--foreground) 4%, var(--background));
+  --dh-paper-3: color-mix(in oklch, var(--foreground) 8%, var(--background));
+  --dh-ink: var(--foreground);
+  /* light: a step darker than --muted-foreground, so muted text keeps 4.5:1
+   * on the tinted band as well as on white */
+  --dh-ink-muted: color-mix(
+    in oklch,
+    var(--muted-foreground) 85%,
+    var(--foreground)
+  );
+  --dh-ink-faint: var(--dh-ink-muted);
+  --dh-rule: var(--border);
+  --dh-rule-strong: color-mix(
+    in oklch,
+    var(--foreground) 24%,
+    var(--background)
+  );
+
+  /* accent: light presets darken --primary a step so accent text keeps
+   * 4.5:1 on white; dark presets use it as is */
+  --dh-accent: color-mix(in oklch, var(--primary) 72%, var(--foreground));
+  --dh-accent-ink: var(--primary-foreground);
+  --dh-accent-soft: color-mix(in oklch, var(--dh-accent) 14%, transparent);
+  --dh-accent-faint: color-mix(in oklch, var(--dh-accent) 7%, transparent);
+  --dh-focus: var(--ring);
+
+  /* motion + type, as tokens.css */
+  --dh-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dh-dur-fast: 140ms;
+  --dh-dur: 320ms;
+  --dh-dur-slow: 640ms;
+  --dh-dur-crawl: 1600ms;
+  --dh-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --dh-font-mono:
+    ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* dashed hairline colour for component borders */
+  --v12-dash: color-mix(in oklch, var(--foreground) 20%, var(--background));
+  /* text sits this far inside the demo and code strip edges */
+  --v12-pad: 12px;
+
+  /* how loud the glyph field and stars are */
+  --v12-field-opacity: 0.5;
+  --v12-star-opacity: 0.45;
+
+  color-scheme: light;
+  background-color: var(--dh-paper);
+  color: var(--dh-ink);
+}
+
+@media (min-width: 640px) {
+  .v12 {
+    --v12-pad: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .v12 {
+    --v12-pad: 28px;
+  }
+}
+
+:root.dark .v12 {
+  --dh-accent: var(--primary);
+  --dh-ink-muted: var(--muted-foreground);
+  --v12-field-opacity: 1;
+  --v12-star-opacity: 1;
+  color-scheme: dark;
+}
+
+.v12 ::selection {
+  background: var(--dh-accent-soft);
+  color: var(--dh-ink);
+}
+
+.v12 .v4-stars {
+  opacity: var(--v12-star-opacity);
+}
+
+.v12-field,
+.v12 .v4-footer-dune {
+  opacity: var(--v12-field-opacity);
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.v12 .v4-shell {
+  padding-inline: calc(var(--v4-gutter) + var(--v12-pad));
+}
+
+/* the demo and the code strip run a little wider than the text */
+.v12-bleed {
+  margin-inline: calc(-1 * var(--v12-pad));
+}
+
+.v12 .v4-nav-actions > div {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+/* ------------------------------------------------------------------- nav */
+
+.v12-gh {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--dh-ink-muted);
+  transition: transform var(--dh-dur-fast) var(--dh-ease-out);
+}
+
+.v12-gh:hover {
+  color: var(--dh-ink);
+  background-color: var(--dh-paper-2);
+}
+
+.v12-gh:active {
+  transform: scale(0.94);
+}
+
+.v12-gh:focus-visible {
+  outline: 2px solid var(--dh-focus);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ hero */
+
+/* sized so the demo's column headers still show above the fold on most
+ * screens */
+.v12-hero {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(1.5rem, 5vh, 4rem) clamp(1.75rem, 5vh, 3rem);
+}
+
+/* the field runs on under the top of the demo */
+.v12-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  height: calc(100% + 14rem);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 75%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 75%,
+    transparent 100%
+  );
+}
+
+.v12-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.1rem, 3vh, 2rem);
+  text-align: center;
+}
+
+.v12-h1 {
+  max-width: 24ch;
+  font-size: min(clamp(2.3rem, 7.2vw, 7rem), 9vh);
+  line-height: 0.88;
+}
+
+@media (min-width: 768px) {
+  .v12-hero {
+    padding-block: clamp(3rem, 11vh, 7.5rem) clamp(3rem, 10vh, 7rem);
+  }
+  .v12-hero-copy {
+    gap: clamp(1.5rem, 4.2vh, 2.75rem);
+  }
+  .v12-h1 {
+    font-size: min(clamp(2.3rem, 7.2vw, 7.5rem), 11vh);
+  }
+}
+
+.v12-pitch {
+  max-width: 46rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.125rem);
+  line-height: 1.5;
+  color: var(--dh-ink-muted);
+  text-wrap: pretty;
+}
+
+.v12-hero-row {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.v12 .v12-install {
+  /* as wide as the full command; scrolls inside only when the row is
+   * narrower than that */
+  width: max-content;
+  max-width: 100%;
+  min-width: 0;
+  flex: 0 1 auto;
+  border-style: dashed;
+  border-color: var(--v12-dash);
+  border-radius: 2px;
+  background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
+}
+
+.v12 .v12-agent {
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  border-style: dashed;
+  border-color: var(--v12-dash);
+  border-radius: 2px;
+  background-color: color-mix(in oklch, var(--dh-paper-2) 92%, transparent);
+}
+
+/* the bar's segmented switch and button in the hero's own squared style */
+.v12 .v12-agent [role='radiogroup'] {
+  border-radius: 2px;
+  background-color: var(--dh-paper-2);
+}
+
+.v12 .v12-agent [role='radio'] {
+  border-radius: 2px;
+  font-family: var(--dh-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.v12 .v12-agent [role='radio'][aria-checked='true'] {
+  background-color: var(--dh-paper);
+  color: var(--dh-ink);
+}
+
+/* the bar's button in the hero's own button style: squared, mono, muted,
+   so Get started stays the one accent in the hero */
+.v12 .v12-agent [data-slot='button'] {
+  height: 2.25rem;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--dh-rule-strong);
+  border-radius: 2px;
+  background-color: transparent;
+  color: var(--dh-ink);
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.v12 .v12-agent [data-slot='button']:hover {
+  border-color: var(--dh-ink-muted);
+  background-color: var(--dh-paper-2);
+}
+
+.v12-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+/* ------------------------------------------------------------------ demo */
+
+.v12-demo {
+  position: relative;
+}
+
+.v12 .v7-figure {
+  border: 1px dashed var(--v12-dash);
+}
+
+.v12 .v7-figcap {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px dashed var(--v12-dash);
+  font-size: 11px;
+}
+
+@media (max-width: 639px) {
+  .v12 .v7-figcap span {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------- sections */
+
+.v12-section {
+  padding-block: clamp(4rem, 8vw, 6.5rem);
+}
+
+.v12-features {
+  background-color: var(--dh-paper-2);
+}
+
+.v12-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px 48px;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 1024px) {
+  .v12-head {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+  }
+}
+
+.v12-head > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.v12-head .v5-section-lede {
+  max-width: 44ch;
+}
+
+.v12-label {
+  font-family: var(--dh-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dh-accent);
+}
+
+/* ------------------------------------------------------------ code strip */
+
+.v12 .v7-strip {
+  border: 1px dashed var(--v12-dash);
+}
+
+.v12 .v7-step + .v7-step {
+  border-top: 1px dashed var(--v12-dash);
+}
+
+@media (min-width: 1024px) {
+  .v12 .v7-step + .v7-step {
+    border-top: 0;
+    border-left: 1px dashed var(--v12-dash);
+  }
+}
+
+.v12 .v7-code,
+.v12 .v7-step .v7-install-cmd {
+  border: 1px dashed var(--v12-dash);
+  border-radius: 2px;
+}
+
+/* ------------------------------------------------------ dashed borders */
+/* Every component edge on the page uses the same 1px dashed hairline. The
+ * live ST table inside the demo keeps the borders the library renders. */
+
+.v12 .v4-nav {
+  border-bottom: 1px dashed var(--v12-dash);
+}
+
+.v12 .v4-nav-links {
+  border-top-style: dashed;
+  border-top-color: var(--v12-dash);
+}
+
+.v12 .v4-footer-dune {
+  border-bottom: 1px dashed var(--v12-dash);
+}
+
+/* demo steps panel: its outer edge, header and footer bars, step rows */
+.v12 .v5-steps,
+.v12 .v5-steps > div,
+.v12 .v5-steps > p,
+.v12 .v5-step {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12 .v5-replay {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12 .v5-replay:hover {
+  border-color: var(--dh-rule-strong);
+}
+
+/* match highlights: the library's tint moves to a layer behind the text so
+ * it can fade (opacity only) when a newer filter takes over */
+.v12 .v5-demo mark[data-slot='st-match-highlight'] {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+
+.v12 .v5-demo mark[data-slot='st-match-highlight']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: color-mix(in oklch, var(--destructive) 20%, transparent);
+  transition: opacity var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+:root.dark .v12 .v5-demo mark[data-slot='st-match-highlight']::before {
+  background-color: color-mix(in oklch, var(--destructive) 30%, transparent);
+}
+
+.v12 .v12-dim-marks mark[data-slot='st-match-highlight']::before {
+  opacity: 0;
+}
+
+/* Replay: the table fades back in from its plain state */
+.v12 .v12-reset-a {
+  animation: v12-reset-a var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+.v12 .v12-reset-b {
+  animation: v12-reset-b var(--dh-dur-slow) var(--dh-ease-out);
+}
+
+@keyframes v12-reset-a {
+  from {
+    opacity: 0.35;
+  }
+}
+
+@keyframes v12-reset-b {
+  from {
+    opacity: 0.35;
+  }
+}
+
+/* the status line wraps instead of cutting "Now showing: Selection" */
+.v12 .v5-steps [aria-live] {
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+@media (min-width: 1024px) {
+  .v12 .v5-demo {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+}
+
+/* six replay items: tighter rows so the list stays no taller than the
+ * table beside it */
+.v12 .v5-step {
+  padding-block: 8px;
+}
+
+/* replay cue: what an item changed pulses once in the accent, 1200ms for
+ * every item: in over 300ms, hold 500ms, out over 400ms. An overlay fades
+ * (opacity only); the search input, which cannot hold an
+ * overlay, gets an accent outline and a small scale pop (inline style in
+ * signal-table.tsx, using the keyframes below). */
+.v12 td.v12-cue,
+.v12 td.v12-cue-fill,
+.v12 .v12-cue:not(th, td, input) {
+  position: relative;
+}
+
+.v12 :is(.v12-cue, .v12-cue-fill):not(input)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 1px solid var(--dh-accent);
+  background-color: var(--dh-accent-soft);
+  opacity: 0;
+  pointer-events: none;
+  animation: v12-cue 1200ms linear;
+}
+
+.v12 .v12-cue-fill::after {
+  border: 0;
+}
+
+@keyframes v12-cue {
+  from {
+    opacity: 0;
+    animation-timing-function: var(--dh-ease-out);
+  }
+  25%,
+  66.667% {
+    opacity: 1;
+    animation-timing-function: var(--dh-ease-in-out);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes v12-pop {
+  from {
+    transform: none;
+    animation-timing-function: var(--dh-ease-out);
+  }
+  25%,
+  66.667% {
+    transform: scale(1.03);
+    animation-timing-function: var(--dh-ease-in-out);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* feature tiles: frame only, the drawings stay solid */
+.v12 .dh-tile {
+  border-style: dashed;
+  border-color: var(--v12-dash);
+}
+
+.v12 .dh-tile:is(:hover, :focus-visible, [data-active='true']) {
+  border-color: var(--dh-rule-strong);
+}
+
+/* the two names in the hero sub */
+.v12-accent {
+  color: var(--dh-accent);
+}
+
+/* --------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .v12 .v4-star,
+  .v12 :is(.v12-cue, .v12-cue-fill)::after,
+  .v12 :is(.v12-reset-a, .v12-reset-b) {
+    animation: none;
+  }
+  .v12 .v5-demo mark[data-slot='st-match-highlight']::before {
+    transition: none;
+  }
+  .v12 .v5-demo input {
+    animation: none !important;
+  }
+}

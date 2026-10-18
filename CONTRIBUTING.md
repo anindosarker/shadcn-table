@@ -11,10 +11,10 @@ Local setup and every command live in [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.m
 ## Before a PR
 
 ```bash
-pnpm --filter shadcn-react-table tsc
-pnpm --filter shadcn-react-table lint
+pnpm --filter shadcn-table tsc
+pnpm --filter shadcn-table lint
 pnpm test
-pnpm --filter shadcn-react-table-docs types:check
+pnpm --filter shadcn-table-docs types:check
 ```
 
 CI runs the same jobs.

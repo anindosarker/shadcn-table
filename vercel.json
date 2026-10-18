@@ -2,11 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
     "docs": {
-      "root": "apps/shadcn-react-table-docs",
+      "root": "apps/shadcn-table-docs",
       "framework": "nextjs"
     },
     "storybook": {
-      "root": "packages/shadcn-react-table",
+      "root": "packages/shadcn-table",
       "framework": null,
       "buildCommand": "pnpm storybook:build",
       "outputDirectory": "storybook-static"

@@ -21,9 +21,9 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-react-table tsc
-      - run: pnpm --filter shadcn-react-table lint
-      - run: pnpm --filter shadcn-react-table storybook:build
+      - run: pnpm --filter shadcn-table tsc
+      - run: pnpm --filter shadcn-table lint
+      - run: pnpm --filter shadcn-table storybook:build
 
   test:
     name: test (vitest browser mode)
@@ -36,7 +36,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-react-table exec playwright install --with-deps chromium
+      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
       - run: pnpm test
 
   docs:
@@ -50,8 +50,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-react-table-docs types:check
-      - run: pnpm --filter shadcn-react-table-docs build
+      - run: pnpm --filter shadcn-table-docs types:check
+      - run: pnpm --filter shadcn-table-docs build
 
   registry:
     name: registry (validate, dry-run add)
@@ -67,6 +67,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-react-table exec shadcn registry validate "anindosarker/shadcn-react-table#${{ github.sha }}"
-      - run: pnpm --filter shadcn-react-table-docs exec shadcn add "anindosarker/shadcn-react-table/shadcn-react-table#${{ github.sha }}" --dry-run
-      - run: pnpm --filter shadcn-react-table-docs exec shadcn add "anindosarker/shadcn-react-table/example-basic#${{ github.sha }}" --dry-run
+      - run: pnpm --filter shadcn-table exec shadcn registry validate "anindosarker/shadcn-table#${{ github.sha }}"
+      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/shadcn-table#${{ github.sha }}" --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic#${{ github.sha }}" --dry-run
