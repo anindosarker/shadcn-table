@@ -54,12 +54,10 @@ Rules:
 
 Read before changing options, as markdown:
 
-- Table options: `/llms.mdx/docs/api/table-options/content.md`
-- Column options: `/llms.mdx/docs/api/column-options/content.md`
-- Table instance API: `/llms.mdx/docs/api/table-instance-apis/content.md`
-- All pages: `/llms.txt`; one feature guide per page under `/llms.mdx/docs/guides/<feature>/content.md`
-
-Paths are relative to the docs site that served this file.
+- Table options: `https://www.shadcn-table.com/llms.mdx/docs/api/table-options/content.md`
+- Column options: `https://www.shadcn-table.com/llms.mdx/docs/api/column-options/content.md`
+- Table instance API: `https://www.shadcn-table.com/llms.mdx/docs/api/table-instance-apis/content.md`
+- All pages: `https://www.shadcn-table.com/llms.txt`; one feature guide per page under `https://www.shadcn-table.com/llms.mdx/docs/guides/<feature>/content.md`
 
 ## Examples
 
