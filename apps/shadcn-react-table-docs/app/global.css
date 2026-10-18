@@ -826,7 +826,7 @@ html:has(#nd-notebook-layout) ::selection {
 
 /* dashed boxes: code blocks, callouts (the accent bar stays solid), cards
    and the prev/next footer cards, prop tables and their Code toggle, markdown
-   tables and their cells, rules and quotes, FAQ accordions (fumadocs
+   table frames, rules and quotes, FAQ accordions (fumadocs
    Accordions) and their dividers, the line tab strips (example tabs, locale
    tabs, API options switcher), the mobile TOC bar, TOC inline code, the
    search dialog's header rule and result snippets; the sidebar seam is
@@ -836,7 +836,6 @@ html:has(#nd-notebook-layout) ::selection {
 #nd-page .prose > .not-prose > .border,
 #nd-page [id^='props-'] > .justify-end > button,
 #nd-page .prose table,
-#nd-page .prose :is(th, td):not(.not-prose *),
 #nd-page .prose :is(hr, blockquote),
 #nd-page .divide-y.divide-fd-border,
 #nd-page .divide-y.divide-fd-border > *,
@@ -852,6 +851,19 @@ html:has(#nd-notebook-layout) ::selection {
 
 #nd-page figure.shiki {
   background-color: var(--docs-surface);
+}
+
+/* markdown and compatibility tables: the dashed frame above is the only
+   dashed line; rows split by quiet solid hairlines, no column dividers, the
+   header keeps its fill */
+#nd-page .prose :is(th, td):not(.not-prose *) {
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--border);
+}
+
+#nd-page .prose :is(thead th, tbody tr:not(:last-child) td):not(.not-prose *) {
+  border-bottom-width: 1px;
 }
 
 #nd-page .srt-callout {
