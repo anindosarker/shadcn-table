@@ -15,6 +15,8 @@ export type ThemePreset = (typeof THEME_PRESETS)[number]['name'];
 /** localStorage key read by the inline script before first paint. */
 export const THEME_STORAGE_KEY = 'srt-theme';
 export const DEFAULT_THEME: ThemePreset = 'violet';
+/** No saved pick: roll a random preset on each load (not persisted) instead of DEFAULT_THEME. */
+export const RANDOMIZE_DEFAULT_THEME = true;
 
 export function isThemePreset(
   value: string | null | undefined,
