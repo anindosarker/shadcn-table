@@ -1,0 +1,313 @@
+/* Hallmark · macrostructure: workbench · variant 2 · theme: mint · genre: atmospheric */
+
+/* Variant 2, Workbench. A rounded hero panel over a halftone dot field that
+ * ramps from paper (left) to accent (right); the live table overlaps its
+ * bottom edge. Everything is scoped under .v2 (the page <main>). */
+
+.v2 {
+  --v2-dot-ink: color-mix(in oklch, var(--dh-ink) 26%, transparent);
+  --v2-dot-mint: color-mix(in oklch, var(--dh-accent) 62%, transparent);
+  --v2-dot-bright: var(--dh-accent);
+  --v2-cell: 10px;
+  /* direction of the halftone ramp: down on phones, rightwards from md */
+  --v2-ramp: 180deg;
+  --v2-cut: var(--dh-paper);
+  --v2-shadow: color-mix(in oklch, var(--dh-paper) 70%, transparent);
+  --v2-code-kw: var(--dh-accent);
+  --v2-code-str: color-mix(in oklch, var(--dh-accent) 55%, var(--dh-ink));
+  --v2-code-type: var(--dh-ink);
+  --v2-code-plain: var(--dh-ink-muted);
+
+  overflow-x: clip;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .v2 {
+    --v2-ramp: 90deg;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Halftone field                                                      */
+/* ------------------------------------------------------------------ */
+
+.v2-halftone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  /* fade out where the table lands on the panel's lower edge */
+  .v2-halftone {
+    mask-image: linear-gradient(180deg, black 50%, transparent 96%);
+  }
+}
+
+.v2-ht {
+  position: absolute;
+  inset: 0;
+  background-size: var(--v2-cell) var(--v2-cell);
+}
+
+/* fine grey grain, through the middle of the ramp */
+.v2-ht-fine {
+  background-image: radial-gradient(
+    circle at center,
+    var(--v2-dot-ink) 0.7px,
+    transparent 1.2px
+  );
+  mask-image: linear-gradient(
+    var(--v2-ramp),
+    transparent 8%,
+    black 42%,
+    black 62%,
+    transparent 88%
+  );
+}
+
+/* mid mint dots */
+.v2-ht-mid {
+  background-image: radial-gradient(
+    circle at center,
+    var(--v2-dot-mint) 1.3px,
+    transparent 1.8px
+  );
+  mask-image: linear-gradient(
+    var(--v2-ramp),
+    transparent 40%,
+    black 72%,
+    black 86%,
+    transparent 100%
+  );
+}
+
+/* heavy accent dots at the far edge */
+.v2-ht-heavy {
+  background-image: radial-gradient(
+    circle at center,
+    var(--v2-dot-bright) 2.1px,
+    transparent 2.6px
+  );
+  mask-image: linear-gradient(var(--v2-ramp), transparent 68%, black 100%);
+}
+
+/* a half-cell offset lattice that breathes, filling the gaps */
+.v2-ht-shimmer {
+  background-image: radial-gradient(
+    circle at center,
+    var(--v2-dot-mint) 1px,
+    transparent 1.5px
+  );
+  background-position: calc(var(--v2-cell) / 2) calc(var(--v2-cell) / 2);
+  mask-image: linear-gradient(var(--v2-ramp), transparent 50%, black 100%);
+  opacity: 0.15;
+  animation: v2-breathe 7s var(--dh-ease-in-out) infinite alternate;
+}
+
+@keyframes v2-breathe {
+  to {
+    opacity: 0.85;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero panel + overlapping table                                      */
+/* ------------------------------------------------------------------ */
+
+.v2-panel {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--dh-rule);
+  border-radius: 28px;
+  background-color: var(--dh-paper-2);
+}
+
+.v2-stage {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  background-color: var(--dh-paper);
+  box-shadow:
+    0 0 0 6px var(--v2-cut),
+    0 30px 60px -20px var(--v2-shadow);
+}
+
+/* Inactive panels share the active one's grid cell, invisible, so the stage
+ * keeps the height of the tallest table seen and never jumps. */
+.v2-panels {
+  display: grid;
+}
+.v2-panels > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.v2-panels > [data-active='false'] {
+  visibility: hidden;
+  opacity: 0;
+}
+.v2-panels > [data-active='true'] {
+  animation: v2-fade-in var(--dh-dur) var(--dh-ease-out);
+}
+
+@keyframes v2-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* tab strip: a sliding pill under the active tab */
+.v2-tabs {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  padding: 4px;
+  border: 1px solid var(--dh-rule);
+  border-radius: 999px;
+  background-color: var(--dh-paper);
+}
+
+.v2-tab-pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / var(--v2-tab-count));
+  border-radius: 999px;
+  background-color: var(--dh-accent);
+  transform: translateX(calc(100% * var(--v2-tab-index)));
+  transition: transform var(--dh-dur) var(--dh-ease-out);
+}
+
+.v2-tab {
+  position: relative;
+  z-index: 1;
+  padding: 6px 4px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--dh-ink-muted);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: opacity var(--dh-dur-fast) linear;
+}
+@media (min-width: 640px) {
+  .v2-tab {
+    padding-inline: 16px;
+  }
+}
+.v2-tab:hover {
+  color: var(--dh-ink);
+}
+.v2-tab[aria-selected='true'] {
+  color: var(--dh-accent-ink);
+}
+.v2-tab:focus-visible {
+  outline-color: var(--dh-focus);
+}
+
+/* ------------------------------------------------------------------ */
+/* Bits                                                                */
+/* ------------------------------------------------------------------ */
+
+.v2-kicker {
+  font-family: var(--dh-font-mono);
+  color: var(--dh-accent);
+}
+
+.v2-headline {
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+/* shared focus ring for links and buttons: instant, never transitioned */
+.v2-focus {
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+}
+.v2-focus:focus-visible {
+  outline-color: var(--dh-focus);
+}
+
+.v2-press {
+  transition: transform var(--dh-dur-fast) var(--dh-ease-out);
+}
+.v2-press:active {
+  transform: scale(0.97);
+}
+
+.v2-arrow {
+  transition: transform var(--dh-dur) var(--dh-ease-out);
+}
+:is(a, button):is(:hover, :focus-visible) > .v2-arrow {
+  transform: translateX(3px);
+}
+
+.v2-code {
+  font-family: var(--dh-font-mono);
+  color: var(--v2-code-plain);
+}
+.v2-code .k {
+  color: var(--v2-code-kw);
+}
+.v2-code .s {
+  color: var(--v2-code-str);
+}
+.v2-code .t {
+  color: var(--v2-code-type);
+}
+
+/* a thin dot rule, the halftone echoed as a divider */
+.v2-dotrule {
+  height: 10px;
+  background-image: radial-gradient(
+    circle at center,
+    var(--v2-dot-mint) 1.2px,
+    transparent 1.7px
+  );
+  background-size: var(--v2-cell) var(--v2-cell);
+  mask-image: linear-gradient(90deg, transparent, black 60%);
+}
+
+/* mobile menu sheet */
+.v2-menu {
+  transform-origin: top right;
+  animation: v2-menu-in var(--dh-dur) var(--dh-ease-out);
+}
+@keyframes v2-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-ht-shimmer {
+    animation: none;
+    opacity: 0.4;
+  }
+  .v2-tab-pill,
+  .v2-arrow,
+  .v2-press {
+    transition-duration: 1ms;
+  }
+  :is(a, button):is(:hover, :focus-visible) > .v2-arrow,
+  .v2-press:active {
+    transform: none;
+  }
+}
+
+/* the closing panel keeps its dots all the way down */
+@media (min-width: 768px) {
+  .v2-halftone.v2-halftone-cta {
+    mask-image: none;
+  }
+}

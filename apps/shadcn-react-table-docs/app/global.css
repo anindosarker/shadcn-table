@@ -10,6 +10,8 @@
 @import '../themes/rose.css';
 @import '../themes/amber.css';
 @import '../themes/mono.css';
+/* experimental /dev homepages, scoped under .dev-home */
+@import '../components/dev-home/tokens.css';
 /* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
    ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
    A plain ::highlight() rule is rejected too, so app/layout.tsx inlines it in a <style> tag. */
