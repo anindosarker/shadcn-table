@@ -140,6 +140,31 @@ export default {
   '/docs/guides/memoization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
   },
+  '/docs/guides/production-ready-tables': async ({ page, check }) => {
+    const w = await example(page, 'server-side-data', check);
+    await marker(
+      w,
+      'server-side-data',
+      'refresh button',
+      'button:has(.lucide-refresh-cw)',
+      check,
+    );
+    check('steps', (await page.locator('article h3').count()) >= 4);
+  },
+  '/docs/guides/server-side-data': async ({ page, check }) => {
+    check(
+      'redirects to guides/production-ready-tables',
+      page.url().endsWith('/docs/guides/production-ready-tables'),
+      page.url(),
+    );
+  },
+  '/docs/getting-started/production-ready-tables': async ({ page, check }) => {
+    check(
+      'redirects to guides/production-ready-tables',
+      page.url().endsWith('/docs/guides/production-ready-tables'),
+      page.url(),
+    );
+  },
   '/docs/guides/row-actions': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     const menu = await example(page, 'row-actions-menu-items', check);

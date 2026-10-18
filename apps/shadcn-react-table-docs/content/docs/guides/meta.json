@@ -3,6 +3,7 @@
   "defaultOpen": true,
   "pages": [
     "---Fundamentals---",
+    "production-ready-tables",
     "best-practices",
     "data-columns",
     "display-columns",
