@@ -120,6 +120,16 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           alignOffset={100}
           sideOffset={-((rect?.height ?? 0) + 8)}
           onClick={(event) => event.stopPropagation()}
+          // The menu opens on contextmenu, which Chrome on macOS fires on
+          // mousedown, so the right button's pointerup lands on the menu item
+          // that is now under the cursor. Radix MenuItem selects on a pointerup
+          // without a prior pointerdown on it, closing the menu (and running
+          // the item) before the user lets go. Swallow right-button pointerups
+          // in the capture phase; Escape, outside click and left click still
+          // work as before.
+          onPointerUpCapture={(event) => {
+            if (event.button === 2) event.stopPropagation();
+          }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
             if (!table.getState().editingCell) anchorEl?.focus();
