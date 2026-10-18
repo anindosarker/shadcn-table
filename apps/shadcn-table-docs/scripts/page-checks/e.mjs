@@ -10,7 +10,7 @@ import { codeToggle, example } from './_helpers.mjs';
 
 /**
  * An example page renders exactly one playground panel (data-mode) and no
- * group tab strip; the only tablist is the playground's source file tabs.
+ * group tab strip; the explorer's file tree is a nav, not a tablist.
  */
 async function singleExample(page, check) {
   const panels = await page.locator('article [data-mode]').count();

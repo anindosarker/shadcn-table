@@ -64,7 +64,10 @@ export async function paginationControls(wrapper, id, check) {
  * a code explorer with a file tree and a path bar copy button) or a prop
  * table's source toggle (code block copy button). Clicking Code must show
  * the highlighted source containing `needle` with its copy button, then switches a playground back to Preview. A playground
- * also gets its full screen toggle and the caret menu's copy items checked:
+ * also gets its explorer checked (the entry file `TS.tsx` shown, a file tree
+ * with two or more entries when the example has several files, clicking the
+ * second entry swaps the shown source, the path bar copy button copies the
+ * shown file), plus its full screen toggle and the caret menu's copy items:
  * "Copy prompt" must write the install command for `example-<id>` through
  * the clipboard stub scripts/check-pages.mjs installs. The panel is located
  * by id.
@@ -98,6 +101,68 @@ export async function codeToggle(page, id, needle, check) {
   );
   if (isPlayground) {
     check(`${id}: code explorer`, (await explorer.count()) === 1);
+    // The explorer opens on the entry file. With two or more files it has a
+    // file tree (sm and up) whose rows swap the shown source; the path bar's
+    // copy button writes the shown file through the clipboard stub.
+    const copyBtn = explorer.locator('button[aria-label^="Copy"]').first();
+    const shownPath = async () =>
+      ((await copyBtn.getAttribute('aria-label').catch(() => '')) ?? '')
+        .replace(/^Copy /, '')
+        .trim();
+    const tree = explorer.locator('nav[aria-label="Source files"]');
+    const rows = tree.locator('[data-tree-row]:not([data-folder])');
+    const hasTree = (await tree.count()) === 1;
+    const fileRows = await rows.count();
+    check(
+      `${id}: file tree`,
+      hasTree ? fileRows >= 2 : fileRows === 0,
+      `tree=${hasTree} files=${fileRows}`,
+    );
+    check(
+      `${id}: entry file shown`,
+      (await shownPath()) === 'TS.tsx',
+      `shown=${await shownPath()}`,
+    );
+    const shownSource = async () =>
+      (await pre
+        .first()
+        .textContent()
+        .catch(() => '')) ?? '';
+    const norm = (s) => s.replace(/\s+/g, ' ').trim();
+    if (hasTree && (await tree.isVisible().catch(() => false))) {
+      const second = rows.nth(1);
+      const target = (await second.getAttribute('title')) ?? '';
+      await second.click();
+      await page.waitForTimeout(100);
+      const swapped = await shownSource();
+      check(
+        `${id}: file swap`,
+        target !== 'TS.tsx' &&
+          (await shownPath()) === target &&
+          norm(swapped) !== norm(txt),
+        `target=${target} shown=${await shownPath()} len=${swapped.length}`,
+      );
+      check(
+        `${id}: active row`,
+        (await tree
+          .locator('[data-tree-row][aria-current="true"]')
+          .getAttribute('title')
+          .catch(() => null)) === target,
+      );
+    }
+    await copyBtn.click();
+    await page.waitForTimeout(100);
+    const copied = await page.evaluate(() => window.__stClipboard ?? '');
+    const shown = await shownSource();
+    check(
+      `${id}: file copied`,
+      copied.length > 0 && norm(copied) === norm(shown),
+      `clip=${copied.length} shown=${shown.length}`,
+    );
+    check(
+      `${id}: copy copied state`,
+      (await explorer.locator('button[aria-label="Copied"]').count()) === 1,
+    );
     // Back to Preview so later steps can interact with the table.
     await panel
       .locator('button', { hasText: /^Preview$/ })
