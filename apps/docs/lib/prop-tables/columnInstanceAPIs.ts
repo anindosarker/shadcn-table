@@ -49,19 +49,12 @@ export const columnInstanceAPIs: ColumnInstanceAPI[] = [
     linkText: 'TanStack Table Column API Docs',
   },
   {
-    columnInstanceAPI: 'getAggregationFn',
-    type: '() => AggregationFn<TData> | undefined',
+    columnInstanceAPI: 'getAggregationFns',
+    type: '() => Array<AggregationFnDef> | undefined',
     description:
-      'Returns the aggregation function (either user-defined or automatic, depending on configuration).',
-    link: 'https://tanstack.com/table/v8/docs/api/features/grouping#getaggregationfn',
-    linkText: 'TanStack Table Grouping API Docs',
-  },
-  {
-    columnInstanceAPI: 'getAggregationFn',
-    type: '',
-    description: '',
-    link: '',
-    linkText: '',
+      'Returns the aggregation function definitions (either user-defined or automatic, depending on configuration).',
+    link: 'https://tanstack.com/table/latest/docs/framework/react/guide/grouping',
+    linkText: 'TanStack Table Grouping Docs',
   },
   {
     columnInstanceAPI: 'getAutoAggregationFn',
@@ -85,7 +78,7 @@ export const columnInstanceAPIs: ColumnInstanceAPI[] = [
     linkText: '',
   },
   {
-    columnInstanceAPI: 'getAutoSortingFn',
+    columnInstanceAPI: 'getAutoSortFn',
     type: '',
     description: '',
     link: '',
@@ -288,7 +281,7 @@ export const columnInstanceAPIs: ColumnInstanceAPI[] = [
     linkText: '',
   },
   {
-    columnInstanceAPI: 'getSortingFn',
+    columnInstanceAPI: 'getSortFn',
     type: '',
     description: '',
     link: '',

@@ -10,6 +10,9 @@ export interface TableInstanceAPI {
   type: string;
 }
 
+const V9_GUIDE =
+  'https://tanstack.com/table/latest/docs/framework/react/guide/';
+
 export const tableInstanceAPIs: TableInstanceAPI[] = [
   {
     tableInstanceAPI: 'getAllColumns',
@@ -306,49 +309,49 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftFlatHeaders',
+    tableInstanceAPI: 'getStartFlatHeaders',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftFooterGroups',
+    tableInstanceAPI: 'getStartFooterGroups',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftHeaderGroups',
+    tableInstanceAPI: 'getStartHeaderGroups',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftLeafColumns',
+    tableInstanceAPI: 'getStartLeafColumns',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftLeafHeaders',
+    tableInstanceAPI: 'getStartLeafHeaders',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftTotalSize',
+    tableInstanceAPI: 'getStartTotalSize',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getLeftVisibleLeafColumns',
+    tableInstanceAPI: 'getStartVisibleLeafColumns',
     type: '',
     description: '',
     link: '',
@@ -376,7 +379,7 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getPaginationRowModel',
+    tableInstanceAPI: 'getPaginatedRowModel',
     type: '',
     description: '',
     link: '',
@@ -404,7 +407,7 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getPrePaginationRowModel',
+    tableInstanceAPI: 'getPrePaginatedRowModel',
     type: '',
     description: '',
     link: '',
@@ -425,49 +428,49 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightFlatHeaders',
+    tableInstanceAPI: 'getEndFlatHeaders',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightFooterGroups',
+    tableInstanceAPI: 'getEndFooterGroups',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightHeaderGroups',
+    tableInstanceAPI: 'getEndHeaderGroups',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightLeafColumns',
+    tableInstanceAPI: 'getEndLeafColumns',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightLeafHeaders',
+    tableInstanceAPI: 'getEndLeafHeaders',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightTotalSize',
+    tableInstanceAPI: 'getEndTotalSize',
     type: '',
     description: '',
     link: '',
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getRightVisibleLeafColumns',
+    tableInstanceAPI: 'getEndVisibleLeafColumns',
     type: '',
     description: '',
     link: '',
@@ -502,11 +505,12 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'getState',
-    type: '',
-    description: '',
-    link: '',
-    linkText: '',
+    tableInstanceAPI: 'state',
+    type: 'ST_TableState<TData>',
+    description:
+      'The current table state: the TanStack Table slices plus the ST-only slices (density, isFullScreen, showColumnFilters, creatingRow, ...). Replaces table.getState() from TanStack Table v8.',
+    link: V9_GUIDE + 'table-state',
+    linkText: 'TanStack Table State Docs',
   },
   {
     tableInstanceAPI: 'getToggleAllColumnsVisibilityHandler',
@@ -747,7 +751,7 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'setColumnSizingInfo',
+    tableInstanceAPI: 'setColumnResizing',
     type: '',
     description: '',
     link: '',
@@ -943,11 +947,12 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     linkText: '',
   },
   {
-    tableInstanceAPI: 'setState',
-    type: '',
-    description: '',
-    link: '',
-    linkText: '',
+    tableInstanceAPI: 'store',
+    type: 'ReadonlyStore<ST_TableState<TData>>',
+    description:
+      'The TanStack Store behind table.state. Subscribe to it (or to the per-slice atoms in table.atoms) to react to state changes outside of React renders.',
+    link: V9_GUIDE + 'table-state',
+    linkText: 'TanStack Table State Docs',
   },
   {
     tableInstanceAPI: 'toggleAllColumnsVisible',

@@ -46,7 +46,7 @@ If you need to change the `zIndex` of the full screen table, you can do so by pa
 ```jsx
 stTableLayoutProps: ({ table }) => ({
   style: {
-    zIndex: table.getState().isFullScreen ? 1000 : undefined,
+    zIndex: table.state.isFullScreen ? 1000 : undefined,
   },
 });
 ```

@@ -10,7 +10,8 @@ Shadcn Table has a built-in row selection feature and makes it easy to manage th
 <TableOptionsTable
   onlyOptions={
     new Set([
-      'enableBatchRowSelection',
+      'enableRowRangeSelection',
+      'isRowRangeSelectionEvent',
       'enableMultiRowSelection',
       'enableRowSelection',
       'enableSelectAll',
@@ -59,14 +60,14 @@ const table = useShadcnTable({
 
 ### Batch Row Selection
 
-By default, when the user holds down the <kbd>Shift</kbd> key and clicks a row, all rows between the last selected row and the clicked row will be selected. This can be disabled with the `enableBatchRowSelection` table option.
+By default, when the user holds down the <kbd>Shift</kbd> key and clicks a row, all rows between the last selected row and the clicked row will be selected. This is TanStack Table's range selection; it can be disabled with the `enableRowRangeSelection` table option, and the `isRowRangeSelectionEvent` option decides which events count as a range selection.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
   enableRowSelection: true,
-  enableBatchRowSelection: false, //disable batch row selection with shift key
+  enableRowRangeSelection: false, //disable batch row selection with shift key
 });
 ```
 
@@ -104,7 +105,7 @@ const table = useShadcnTable({
   renderTopToolbarCustomActions: ({ table }) => (
     <Button
       onClick={() => {
-        const rowSelection = table.getState().rowSelection; //read state
+        const rowSelection = table.state.rowSelection; //read state
         const selectedRows = table.getSelectedRowModel().rows; //or read entire rows
       }}
     >
@@ -115,7 +116,7 @@ const table = useShadcnTable({
 
 useEffect(() => {
   //fetch data based on row selection state or something
-}, [table.getState().rowSelection]);
+}, [table.state.rowSelection]);
 
 return <ShadcnTable table={table} />;
 ```

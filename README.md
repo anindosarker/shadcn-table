@@ -1,6 +1,6 @@
 # shadcn-table
 
-A full-featured React data table built on TanStack Table v8, installed into your codebase through the shadcn CLI. A port of material-react-table to shadcn/ui.
+A full-featured React data table built on TanStack Table v9, installed into your codebase through the shadcn CLI. A port of material-react-table to shadcn/ui.
 
 ## Status
 

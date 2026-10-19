@@ -245,7 +245,7 @@ export const OneOfYourTableComponents = () => {
   });
 
   //you will have access to the entire table instance where you need it
-  console.log(table.getState());
+  console.log(table.state);
 
   return <ShadcnTable table={table} />;
 };
@@ -349,7 +349,7 @@ const table = useShadcnTable({
   //** */
 });
 
-console.log(table.getState());
+console.log(table.state);
 ```
 
 ##### Console Log Current Rendering Rows
