@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const ExportToPdfExample = () => (
-  <ExampleSnippet name="export-to-pdf">
-    <Example />
-  </ExampleSnippet>
-);
+const ExportToPdfExample = () => <ExampleSnippet name="export-to-pdf" />;
 
 export default ExportToPdfExample;

@@ -8,7 +8,13 @@ import {
   readExampleExportName,
 } from './example-pages.mjs';
 import { readExampleFiles } from './example-source';
-import { absoluteMarkdownUrl, registryRef } from './shared';
+import {
+  baseLabels,
+  defaultBase,
+  exampleAddCommand,
+  type Base,
+} from './install';
+import { absoluteMarkdownUrl } from './shared';
 
 interface RegistryItem {
   name: string;
@@ -19,10 +25,6 @@ interface RegistryItem {
 
 /** Where `shadcn add` puts the example files (registry.json `target`). */
 const INSTALL_DIR = 'components/examples';
-
-/** The `shadcn add` command installing examples/<name>. */
-export const buildInstallCommand = (name: string) =>
-  `pnpm dlx shadcn@latest add ${registryRef(`example-${name}`)}`;
 
 async function readRegistryItem(name: string): Promise<RegistryItem> {
   const file = path.join(process.cwd(), 'registry.json');
@@ -175,17 +177,20 @@ function skipString(source: string, start: number) {
 
 /**
  * Prompt a reader pastes into their coding agent to add examples/<name> to
- * their project: install command, import path, docs to read before changing
- * table options, and how to verify.
+ * their project: install command (from the hosted registry of the given
+ * base), import path, docs to read before changing table options, and how
+ * to verify.
  */
 export async function buildExamplePrompt({
   name,
+  base = defaultBase,
 }: {
   name: string;
+  base?: Base;
 }): Promise<string> {
   const [item, files, pages, exportName] = await Promise.all([
     readRegistryItem(name),
-    readExampleFiles(name),
+    readExampleFiles(name, base),
     loadExamplePages(path.join(process.cwd(), 'content', 'docs', 'examples')),
     readExampleExportName(path.join(process.cwd(), 'examples', name)),
   ]);
@@ -198,9 +203,9 @@ export async function buildExamplePrompt({
     [];
 
   const lines = [
-    `Add the "${item.title}" example of shadcn-table to this project.`,
+    `Add the "${item.title}" example of shadcn-table to this project (shadcn/ui on the ${baseLabels[base]} base).`,
     '',
-    `1. Run: ${buildInstallCommand(name)}`,
+    `1. Run: ${exampleAddCommand(name, base)}`,
     `   It installs the example into ${INSTALL_DIR}/${name}/ and, if missing,`,
     `   shadcn-table itself with its dependencies${deps.length ? `, plus: ${deps.join(', ')}` : ''}.`,
     `2. Import the default export from "@/${INSTALL_DIR}/${name}/${name}" and render it`,

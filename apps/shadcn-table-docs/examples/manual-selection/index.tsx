@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const ManualSelectionExample = () => (
-  <ExampleSnippet name="manual-selection">
-    <Example />
-  </ExampleSnippet>
-);
+const ManualSelectionExample = () => <ExampleSnippet name="manual-selection" />;
 
 export default ManualSelectionExample;

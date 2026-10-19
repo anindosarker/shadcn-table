@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const FontAwesomeIconsExample = () => (
-  <ExampleSnippet name="font-awesome-icons">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="font-awesome-icons" />
 );
 
 export default FontAwesomeIconsExample;

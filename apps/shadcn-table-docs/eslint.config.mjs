@@ -11,6 +11,10 @@ const eslintConfig = defineConfig([
     '.source/**',
     //installed library copy (overwritten by lib:install), linted in packages/shadcn-table
     'components/ui/shadcn-table/**',
+    //Base UI copy of the table and its parts (lib:install:base), same source
+    'components/ui-base/**',
+    //generated Base UI variants of the examples (lib/example-variants.mjs)
+    'examples/.base/**',
   ]),
   {
     //examples mirror MRT's; loading data and reading storage after mount is intentional there
