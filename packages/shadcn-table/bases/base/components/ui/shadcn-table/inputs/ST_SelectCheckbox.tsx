@@ -1,4 +1,5 @@
 import { type MouseEvent } from 'react';
+import { type BaseUIEvent } from '@base-ui/react/types';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -97,19 +98,21 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     disabled:
       isLoading || (row && !row.getCanSelect()) || row?.id === 'st-row-create',
     // inputProps: { 'aria-label': ... },
-    // Note: radix renders no input; `aria-label` above lands on the root button.
+    // Note: Base UI renders a span with role="checkbox" plus a hidden input; `aria-label` above lands on the root span.
     // onChange: (event) => { event.stopPropagation(); selectAll ? onSelectAllChange(event) : onSelectionChange!(event); },
-    // Note: radix change callbacks carry no DOM event (shiftKey); selection runs in onClick below.
+    // Note: Base UI change callbacks carry the DOM event only inside eventDetails; selection runs in onClick below, where shiftKey is read directly.
     // size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
     // Note: the density variant on className below.
     ...checkboxProps,
-    onClick: (e: MouseEvent<HTMLButtonElement>) => {
+    onClick: (e: BaseUIEvent<MouseEvent<HTMLSpanElement>>) => {
       e.stopPropagation();
       // Note: MUI Radio fires no change once checked; same guard here.
       if (!(enableMultiRowSelection === false && isChecked)) {
-        if (selectAll) onSelectAllChange(e);
+        // Base UI roots are spans; the handlers read only target and shiftKey.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        else onSelectionChange!(e as any);
+        const event = e as any;
+        if (selectAll) onSelectAllChange(event);
+        else onSelectionChange!(event);
       }
       checkboxProps?.onClick?.(e);
     },
@@ -120,7 +123,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       checkboxProps?.className,
     ),
     title: undefined,
-  } as CheckboxProps | RadioProps;
+  } satisfies CheckboxProps | RadioProps;
 
   return (
     <ST_Tooltip
@@ -145,16 +148,11 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         ) : (
           <Checkbox
             {...commonProps}
-            // indeterminate={...}
-            // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
-            checked={
-              (
-                !isChecked && selectAll
-                  ? table.getIsSomeRowsSelected()
-                  : row?.getIsSomeSelected() && row.getCanSelectSubRows()
-              )
-                ? 'indeterminate'
-                : commonProps.checked
+            // Note: Base UI keeps MUI `indeterminate` as its own flag beside `checked`; it lands after the spread.
+            indeterminate={
+              !isChecked && selectAll
+                ? table.getIsSomeRowsSelected()
+                : row?.getIsSomeSelected() && row.getCanSelectSubRows()
             }
           />
         )}
