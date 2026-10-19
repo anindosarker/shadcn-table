@@ -1,19 +1,34 @@
 import { themes, type ThemeVars } from 'storybook/theming';
 
 /**
+ * The base this Storybook was built for, set on the window by main.ts
+ * (`managerHead` / `previewHead`) from ST_BASE. Radix when unset.
+ */
+export const ST_BASE: 'radix' | 'base' =
+  (globalThis as { __ST_BASE__?: string }).__ST_BASE__ === 'base'
+    ? 'base'
+    : 'radix';
+
+export const ST_BASE_LABEL = ST_BASE === 'base' ? 'Base UI' : 'Radix';
+
+/** Manager title: "shadcn-table (Radix)" or "shadcn-table (Base UI)". */
+const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
+
+/**
  * Shared manager/docs themes. The dark surfaces match the shadcn `.dark`
  * `--background` (oklch(0.145 0 0) ~ #252525) so the manager chrome, the docs
  * page and the table all read as one surface, like material-react-table.dev.
  */
 export const darkTheme: ThemeVars = {
   ...themes.dark,
+  brandTitle,
   appBg: '#252525',
   appContentBg: '#252525',
   appPreviewBg: '#252525',
   barBg: '#252525',
 };
 
-export const lightTheme: ThemeVars = themes.light;
+export const lightTheme: ThemeVars = { ...themes.light, brandTitle };
 
 /** localStorage key storybook-dark-mode persists the user's choice under. */
 export const DARK_MODE_STORAGE_KEY = 'sb-addon-themes-3';
