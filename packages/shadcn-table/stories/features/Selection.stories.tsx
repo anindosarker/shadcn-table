@@ -85,7 +85,7 @@ export const BatchSelectionDisabled = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableBatchRowSelection={false}
+    enableRowRangeSelection={false}
     enableRowNumbers
     enableRowSelection
   />
@@ -363,7 +363,7 @@ export const MultiSelectRowWithHoldShift = () => {
   useEffect(() => {
     setPrevSelectedStaticRowIndex(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.getState().sorting]);
+  }, [table.state.sorting]);
 
   return <ShadcnTable table={table} />;
 };
