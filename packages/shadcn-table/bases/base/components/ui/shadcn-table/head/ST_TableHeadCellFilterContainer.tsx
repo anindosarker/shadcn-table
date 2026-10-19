@@ -33,12 +33,12 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
 
   return (
     // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
-    // Note: MUI Collapse replaced by ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
+    // Note: MUI Collapse replaced by ui/Collapsible; Base UI unmounts the closed panel (= mountOnEnter/unmountOnExit) and sets data-open/data-closed with --collapsible-panel-height for the keyframes in index.css.
     <Collapsible
       open={showColumnFilters || columnFilterDisplayMode === 'popover'}
       {...rest}
     >
-      <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+      <CollapsibleContent className="data-open:animate-[st-collapsible-down_200ms_ease-out] data-closed:animate-[st-collapsible-up_200ms_ease-out]">
         {columnDef.filterVariant === 'checkbox' ? (
           <ST_FilterCheckbox column={column} table={table} />
         ) : columnDef.filterVariant === 'range-slider' ? (
