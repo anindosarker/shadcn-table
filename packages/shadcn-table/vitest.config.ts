@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, mergeConfig } from 'vitest/config';
-import viteConfig from './vite.config';
+import viteConfig, { ST_BASE } from './vite.config';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -24,6 +24,18 @@ export default mergeConfig(
               storybookScript: 'storybook dev -p 6306 --ci',
               storybookUrl: 'http://localhost:6306',
             }),
+            {
+              // The addon sets one sb-vitest dep cache for the config dir;
+              // test and test:base must not share it (stale deps after a
+              // base switch show up as "Failed to fetch dynamically imported
+              // module"). One cache per edition, like main.ts does for dev.
+              name: 'st-base-cache-dir',
+              enforce: 'post',
+              config: (config) =>
+                config.cacheDir
+                  ? { cacheDir: `${config.cacheDir}-${ST_BASE}` }
+                  : undefined,
+            },
           ],
           test: {
             name: 'storybook',

@@ -41,6 +41,14 @@ const config: StorybookConfig = {
   managerHead: (head, { configType }) =>
     `${head}${baseScript}${devScript(configType !== 'PRODUCTION')}`,
   previewHead: (head) => `${head}${baseScript}`,
+  // Storybook keys its Vite dep cache by the config dir alone, so the Radix
+  // and Base UI servers (storybook:all) would share one optimized-deps dir
+  // and invalidate each other ("Failed to fetch dynamically imported
+  // module"). One cache per edition.
+  viteFinal: (config) =>
+    config.cacheDir
+      ? { ...config, cacheDir: `${config.cacheDir}-${ST_BASE}` }
+      : config,
   features: {
     // Components manifest for the MCP addon's docs tools.
     componentsManifest: true,
