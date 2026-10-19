@@ -11,9 +11,9 @@ import {
   type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
-import { ST_ShowHideColumnsMenuItems } from './ST_ShowHideColumnsMenuItems';
+} from '@/components/ui/shadcn-table/types';
+import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
+import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems';
 
 export interface ST_ShowHideColumnsMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {

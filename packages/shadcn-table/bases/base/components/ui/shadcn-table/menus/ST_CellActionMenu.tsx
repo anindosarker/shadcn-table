@@ -5,10 +5,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { type ST_RowData, type ST_TableInstance } from '../types';
-import { openEditingCell } from '../utils/cell.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_ActionMenuItem } from './ST_ActionMenuItem';
+import {
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
+import { openEditingCell } from '@/components/ui/shadcn-table/utils/cell.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
 
 export interface ST_CellActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {

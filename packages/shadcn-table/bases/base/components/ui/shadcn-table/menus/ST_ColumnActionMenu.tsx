@@ -14,9 +14,9 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_ActionMenuItem } from './ST_ActionMenuItem';
-import { ST_FilterOptionMenu } from './ST_FilterOptionMenu';
+} from '@/components/ui/shadcn-table/types';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
+import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/menus/ST_FilterOptionMenu';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
