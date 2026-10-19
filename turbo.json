@@ -26,9 +26,6 @@
     },
     "test": {
       "cache": false
-    },
-    "test:base": {
-      "cache": false
     }
   }
 }

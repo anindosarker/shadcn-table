@@ -16,8 +16,7 @@
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-table",
     "storybook:build": "turbo run storybook:build --filter=shadcn-table",
-    "test": "turbo run test --filter=shadcn-table",
-    "test:base": "turbo run test:base --filter=shadcn-table"
+    "test": "turbo run test --filter=shadcn-table"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

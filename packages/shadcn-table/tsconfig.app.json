@@ -28,6 +28,5 @@
       "@/*": ["./bases/radix/*"]
     }
   },
-  "include": ["bases/radix"],
-  "exclude": ["bases/radix/components/ui/shadcn-table/primitives/base"]
+  "include": ["bases/radix"]
 }

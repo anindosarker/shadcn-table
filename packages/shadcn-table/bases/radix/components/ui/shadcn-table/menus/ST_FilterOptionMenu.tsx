@@ -1,4 +1,9 @@
-import { useMemo, useRef } from 'react';
+import { type ComponentPropsWithRef, useMemo, useRef } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import {
   type ST_FilterOption,
@@ -8,12 +13,6 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
-import {
-  Menu,
-  MenuContent,
-  type MenuContentProps,
-  MenuTrigger,
-} from '../primitives/menu';
 import { ST_ActionMenuItem } from './ST_ActionMenuItem';
 
 export const stFilterOptions = (
@@ -111,7 +110,7 @@ const arrModes = ['arrIncludesSome', 'arrIncludesAll', 'arrIncludes'];
 const rangeVariants = ['range-slider', 'date-range', 'datetime-range', 'range'];
 
 export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
-  extends MenuContentProps {
+  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header?: ST_Header<TData>;
   onSelect?: () => void;
@@ -137,7 +136,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       columnFilterModeOptions,
       globalFilterModeOptions,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — MenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnFilterModeMenuItems,
       renderGlobalFilterModeMenuItems,
     },
@@ -256,13 +255,13 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    <Menu
+    <DropdownMenu
       open={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <MenuTrigger>
+      <DropdownMenuTrigger asChild>
         <span
           aria-hidden
           style={{
@@ -274,14 +273,17 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </MenuTrigger>
-      <MenuContent
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
         align="start"
         alignOffset={(rect?.height ?? 0) / 2}
         side="right"
         // disableScrollLock
         // Note: Radix DropdownMenu owns scroll-lock behavior
-        onClose={() => anchorRef.current?.focus()}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          anchorRef.current?.focus();
+        }}
         className={cn('w-max', className)}
         {...rest}
       >
@@ -321,7 +323,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
               />
             ),
           )}
-      </MenuContent>
-    </Menu>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

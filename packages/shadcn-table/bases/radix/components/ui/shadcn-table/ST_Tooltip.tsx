@@ -2,19 +2,18 @@ import * as React from 'react';
 import {
   Tooltip,
   TooltipContent,
-  type TooltipSide,
   TooltipTrigger,
-} from './primitives/tooltip';
+} from '@/components/ui/tooltip';
 import { getCommonTooltipProps } from './utils/style.utils';
 
-export interface ST_TooltipProps {
+export interface ST_TooltipProps
+  extends Pick<
+    React.ComponentProps<typeof Tooltip>,
+    'delayDuration' | 'disableHoverableContent'
+  > {
   title?: React.ReactNode;
   children: React.ReactElement;
-  side?: TooltipSide;
-  /** Open delay in ms. */
-  delayDuration?: number;
-  /** Closes when the pointer moves from the trigger onto the tooltip. */
-  disableHoverableContent?: boolean;
+  side?: React.ComponentProps<typeof TooltipContent>['side'];
   disableHoverListener?: boolean;
   open?: boolean;
 }
@@ -71,10 +70,12 @@ export const ST_Tooltip = ({
   return (
     <Tooltip
       open={open}
-      delay={delayDuration}
-      hoverable={!disableHoverableContent}
+      delayDuration={delayDuration}
+      disableHoverableContent={disableHoverableContent}
     >
-      <TooltipTrigger ref={triggerRef}>{children}</TooltipTrigger>
+      <TooltipTrigger asChild ref={triggerRef}>
+        {children}
+      </TooltipTrigger>
       <TooltipContent side={commonSide}>{title}</TooltipContent>
     </Tooltip>
   );

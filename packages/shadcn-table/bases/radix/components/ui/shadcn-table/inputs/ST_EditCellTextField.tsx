@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  type ComponentProps,
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
@@ -12,19 +13,18 @@ import { Field, FieldDescription, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   type InputProps,
   type ST_Cell,
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  type SelectTriggerProps,
-  SelectValue,
-} from '../primitives/select';
 import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
 
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
@@ -186,7 +186,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             }
           }}
           size="sm"
-          {...(textFieldProps as SelectTriggerProps)}
+          {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
           aria-invalid={error || textFieldProps['aria-invalid']}
           className={cn('w-full', textFieldProps.className)}
           onBlur={(event) => {
