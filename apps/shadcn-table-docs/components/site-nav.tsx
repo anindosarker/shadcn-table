@@ -6,8 +6,9 @@ import { usePathname } from 'next/navigation';
 import { SidebarIcon } from 'lucide-react';
 import { useNotebookLayout } from 'fumadocs-ui/layouts/notebook';
 import { GitHubIcon } from '@/components/github-icon';
+import { DiscordIcon } from '@/components/discord-icon';
 import { cn } from '@/lib/cn';
-import { GITHUB_URL, NAV_LINKS } from '@/lib/layout.shared';
+import { DISCORD_URL, GITHUB_URL, NAV_LINKS } from '@/lib/layout.shared';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
@@ -65,6 +66,15 @@ export function SiteNav(props: ComponentProps<'header'>) {
             className="site-nav-icon site-nav-desktop"
           >
             <GitHubIcon />
+          </a>
+          <a
+            href={DISCORD_URL}
+            aria-label="Discord"
+            target="_blank"
+            rel="noreferrer"
+            className="site-nav-icon site-nav-desktop"
+          >
+            <DiscordIcon />
           </a>
           {slots.themeSwitch && (
             <div className="site-nav-desktop">
