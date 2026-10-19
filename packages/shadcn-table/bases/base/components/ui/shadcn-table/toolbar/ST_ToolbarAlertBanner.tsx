@@ -106,14 +106,18 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
         {grouping.map((columnId, index) => (
           <Fragment key={`${index}-${columnId}`}>
             {index > 0 ? localization.thenBy : ''}
-            <Badge variant="secondary" asChild {...chipProps}>
-              <button
-                type="button"
-                onClick={() => table.getColumn(columnId).toggleGrouping()}
-              >
-                {table.getColumn(columnId).columnDef.header}
-                <CancelIcon data-icon="inline-end" />
-              </button>
+            <Badge
+              variant="secondary"
+              render={
+                <button
+                  type="button"
+                  onClick={() => table.getColumn(columnId).toggleGrouping()}
+                />
+              }
+              {...chipProps}
+            >
+              {table.getColumn(columnId).columnDef.header}
+              <CancelIcon data-icon="inline-end" />
             </Badge>
           </Fragment>
         ))}
@@ -125,7 +129,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
       <CollapsibleContent
         className={
           stackAlertBanner
-            ? 'data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up'
+            ? 'data-open:animate-[st-collapsible-down_200ms_ease-out] data-closed:animate-[st-collapsible-up_200ms_ease-out]'
             : undefined
         }
       >

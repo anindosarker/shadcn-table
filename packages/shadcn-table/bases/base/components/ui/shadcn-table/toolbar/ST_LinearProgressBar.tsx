@@ -44,6 +44,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
 
   // MUI LinearProgress defaults to variant="indeterminate" (CSS keyframes, no
   // React state); a slot `value` switches it to determinate like MRT's does.
+  // Base UI Progress takes `value: number | null`, null being indeterminate.
   const isIndeterminate = progressComponentProps?.value == null;
 
   return (
@@ -55,7 +56,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
         collapsibleProps?.className,
       )}
     >
-      <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+      <CollapsibleContent className="data-open:animate-[st-collapsible-down_200ms_ease-out] data-closed:animate-[st-collapsible-up_200ms_ease-out]">
         <Progress
           aria-busy="true"
           {...progressComponentProps}
@@ -63,7 +64,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
             isIndeterminate && 'st-progress-indeterminate',
             progressComponentProps?.className,
           )}
-          value={progressComponentProps?.value ?? undefined}
+          value={progressComponentProps?.value ?? null}
         />
       </CollapsibleContent>
     </Collapsible>

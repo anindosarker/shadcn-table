@@ -1,11 +1,8 @@
 import { type MouseEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-} from '@/components/ui/popover';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
+import { Popover } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { ST_Tooltip } from '../ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from './ST_TableHeadCellFilterContainer';
@@ -156,24 +153,43 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       {columnFilterDisplayMode === 'popover' && (
         <Popover
           onOpenChange={(open) => {
-            // event.stopPropagation(); — Note: radix has no backdrop click to stop.
+            // event.stopPropagation(); — Note: Base UI has no backdrop click to stop.
             if (!open) setAnchorEl(null);
           }}
           open={!!anchorEl}
         >
-          {anchorEl && <PopoverAnchor virtualRef={{ current: anchorEl }} />}
-          {/* disableScrollLock — Note: radix Popover is non-modal, no scroll lock. */}
-          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: PopoverContent has no overflow clip. */}
-          <PopoverContent
-            align="center"
-            className="w-auto"
-            onClick={(event) => event.stopPropagation()}
-            onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
-            side="top"
-          >
-            {/* <Box sx={{ p: '1rem' }}> — Note: PopoverContent already pads p-4. */}
-            <ST_TableHeadCellFilterContainer header={header} table={table} />
-          </PopoverContent>
+          {/* Base UI has no PopoverAnchor part: the anchor is a Positioner prop. The shadcn
+              PopoverContent owns its Positioner and does not forward `anchor`, so the
+              Portal, Positioner and Popup are composed here with the same classes. */}
+          {/* disableScrollLock — Note: Base UI Popover is non-modal by default, no scroll lock. */}
+          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: the popup has no overflow clip. */}
+          <PopoverPrimitive.Portal>
+            <PopoverPrimitive.Positioner
+              align="center"
+              anchor={anchorEl}
+              className="isolate z-50"
+              side="top"
+              sideOffset={4}
+            >
+              <PopoverPrimitive.Popup
+                data-slot="popover-content"
+                className={cn(
+                  'z-50 flex w-72 origin-(--transform-origin) flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
+                  'w-auto',
+                )}
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) =>
+                  event.key === 'Enter' && setAnchorEl(null)
+                }
+              >
+                {/* <Box sx={{ p: '1rem' }}> — Note: the popup already pads p-2.5. */}
+                <ST_TableHeadCellFilterContainer
+                  header={header}
+                  table={table}
+                />
+              </PopoverPrimitive.Popup>
+            </PopoverPrimitive.Positioner>
+          </PopoverPrimitive.Portal>
         </Popover>
       )}
     </>
