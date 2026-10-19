@@ -43,6 +43,7 @@ packages/shadcn-table/
   stories/                          # Storybook stories, also the test suite, run once per tree
   scripts/build-registry.mjs        # collects both registry.ts files into registry.json
   scripts/diff-bases.mjs            # files that differ between the trees beyond the allowlist
+  scripts/emit-hosted-registry.mjs  # hosted copies per base -> apps/shadcn-table-docs/public/r/<base>/ (gitignored)
   registry.json                     # generated, committed, GitHub addresses
 apps/shadcn-table-docs/
   components/ui/shadcn-table/       # installed copy of the library (never edit)
@@ -204,6 +205,7 @@ Docs pages live in `content/docs`; every example is a folder under `examples/` w
 ```bash
 pnpm registry:build                     # library items -> packages/shadcn-table/registry.json
 pnpm registry:items                     # example items -> apps/shadcn-table-docs/registry.json
+pnpm registry:hosted                    # hosted copies -> apps/shadcn-table-docs/public/r/{radix,base}/ (docs build runs it)
 ```
 
 The registry has two library items, one per tree, each with its own locale items:

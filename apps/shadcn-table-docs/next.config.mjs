@@ -13,7 +13,8 @@ const config = {
       ? `.next-${process.env.PORT}`
       : '.next'),
   // Hosted registry (public/r/<base>/<name>.json, written by
-  // scripts/emit-hosted-registry.mjs): the namespace form
+  // packages/shadcn-table/scripts/emit-hosted-registry.mjs, `pnpm registry:hosted`):
+  // the namespace form
   // `@st=https://www.shadcn-table.com/r/{style}/{name}.json` sends the
   // project's shadcn style (`radix-nova`, `base-sera`, ...), which maps onto
   // the base directory. `/r/radix/*` and `/r/base/*` are served as they are,

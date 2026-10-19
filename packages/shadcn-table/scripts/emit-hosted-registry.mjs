@@ -18,8 +18,9 @@
 // only the hosted copies get hosted addresses: the locale items depend on
 // `<HOSTED_URL>/<base>/shadcn-table.json`, and every file path is made
 // relative to the repo root so one `shadcn build` run resolves both the
-// library and the example sources. REGISTRY_HOSTED_URL overrides the default
-// https://www.shadcn-table.com/r (a preview deployment, for example).
+// library and the example sources. REGISTRY_HOSTED_URL (or NEXT_PUBLIC_SITE_URL
+// plus /r) overrides the default https://www.shadcn-table.com/r (a preview
+// deployment, for example).
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -28,8 +29,13 @@ import { PKG } from './registry-lib.mjs';
 const ROOT = path.resolve(PKG, '..', '..');
 const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 const OUT_ROOT = path.join(DOCS, 'public/r');
+// REGISTRY_HOSTED_URL wins; otherwise the docs origin (NEXT_PUBLIC_SITE_URL,
+// what lib/install.ts writes into the commands) plus /r; then production.
 const HOSTED_URL = (
-  process.env.REGISTRY_HOSTED_URL ?? 'https://www.shadcn-table.com/r'
+  process.env.REGISTRY_HOSTED_URL ??
+  (process.env.NEXT_PUBLIC_SITE_URL
+    ? `${process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')}/r`
+    : 'https://www.shadcn-table.com/r')
 ).replace(/\/$/, '');
 const SHADCN = path.join(PKG, 'node_modules/.bin/shadcn');
 

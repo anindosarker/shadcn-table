@@ -3,8 +3,8 @@
 
 # generated content
 .source
-# hosted registries, emitted by `pnpm registry:hosted` before next build
-/public/r
+# hosted registries (pnpm registry:hosted, packages/shadcn-table/scripts/emit-hosted-registry.mjs), emitted before next build
+/public/r/
 
 # test & build
 /coverage
@@ -32,9 +32,6 @@ CLAUDE.md
 
 # per-agent next dev dist dirs (NEXT_DIST_DIR)
 /.next-*/
-
-# hosted registry (scripts/emit-hosted-registry.mjs)
-/public/r/
 
 # Base UI example variants (lib/example-variants.mjs)
 /examples/.base/
