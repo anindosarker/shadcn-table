@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
     "docs": {
-      "root": "apps/shadcn-table-docs",
+      "root": "apps/docs",
       "framework": "nextjs"
     },
     "storybook": {
