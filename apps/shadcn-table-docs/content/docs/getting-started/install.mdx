@@ -13,7 +13,7 @@ description: 'Add shadcn-table to a shadcn/ui project'
 
 ### Initialize shadcn/ui
 
-Skip this if the project already uses shadcn/ui. The table needs shadcn/ui on the Radix or Base UI base, Tailwind CSS v4 and React 18 or newer; React Aria is not supported. Pick your base with the Radix | Base UI tabs: the switch in the header does the same for the whole site, the examples included.
+Skip this if the project already uses shadcn/ui. The table needs shadcn/ui on the Radix UI or Base UI base, Tailwind CSS v4 and React 18 or newer; React Aria is not supported. Pick your base with the Radix UI | Base UI tabs: the switch in the header does the same for the whole site, the examples included.
 
 <InitCommand />
 
@@ -38,10 +38,7 @@ Or register the registry once and add items by name. `{style}` stands for the `s
 ### Import
 
 ```tsx
-import {
-  ShadcnTable,
-  useShadcnTable,
-} from '@/components/ui/shadcn-table';
+import { ShadcnTable, useShadcnTable } from '@/components/ui/shadcn-table';
 ```
 
 Columns, data and the hook: [Usage](/docs/getting-started/usage). Letting an agent do all of this: [AI Agent Setup](/docs/getting-started/agents). Every [example](/docs/examples) renders, shows its source and installs for the selected base.

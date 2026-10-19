@@ -103,7 +103,7 @@ const preview: Preview = {
           </p>
           <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
             These stories render the {ST_BASE_LABEL} edition of shadcn-table.
-            The {ST_BASE === 'base' ? 'Radix' : 'Base UI'} edition is{' '}
+            The {ST_BASE === 'base' ? 'Radix UI' : 'Base UI'} edition is{' '}
             <a
               href={ST_BASE === 'base' ? '../' : './base/'}
               target="_top"

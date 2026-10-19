@@ -14,11 +14,11 @@ Shadcn Table has full support for localization (i18n). Some locales are included
 English ships with the table. Every other locale is its own registry item, `shadcn-table-locale-<code>`, installed after the table from the same base path of the registry (`/r/radix/` for a `radix-*` style in `components.json`, `/r/base/` for a `base-*` style):
 
 ```bash
-pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table-locale-de.json   # Radix
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table-locale-de.json   # Radix UI
 pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table-locale-de.json    # Base UI
 ```
 
-With the `@st` namespace registered (see [Installation](/docs/getting-started/install)), `pnpm dlx shadcn@latest add @st/shadcn-table-locale-de` picks the path from the project's style. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix) and `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
+With the `@st` namespace registered (see [Installation](/docs/getting-started/install)), `pnpm dlx shadcn@latest add @st/shadcn-table-locale-de` picks the path from the project's style. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
 
 The item lands in `components/ui/shadcn-table/locales/<code>.ts` and is imported from `'@/components/ui/shadcn-table/locales/<code>'`. Available codes:
 

@@ -120,7 +120,7 @@ const checks = {
     );
     check(
       'compatibility sentence',
-      txt.includes('Radix or Base UI base') &&
+      txt.includes('Radix UI or Base UI base') &&
         txt.includes('React Aria is not supported'),
     );
     // The Base UI tab (the site-wide base group) switches both commands and
@@ -148,7 +148,7 @@ const checks = {
         .textContent()) === 'Base UI',
     );
     await page
-      .locator('article [role="tab"]', { hasText: 'Radix' })
+      .locator('article [role="tab"]', { hasText: 'Radix UI' })
       .first()
       .click();
     await page.waitForTimeout(200);

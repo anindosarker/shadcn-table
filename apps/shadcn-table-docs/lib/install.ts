@@ -24,7 +24,7 @@ export type Base = (typeof bases)[number];
 export const defaultBase: Base = 'radix';
 
 export const baseLabels: Record<Base, string> = {
-  radix: 'Radix',
+  radix: 'Radix UI',
   base: 'Base UI',
 };
 

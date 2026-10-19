@@ -77,7 +77,7 @@ export function SiteNav(props: ComponentProps<'header'>) {
           >
             <DiscordIcon />
           </a>
-          {/* the site-wide base (Radix | Base UI) next to the theme pill */}
+          {/* the site-wide base (Radix UI | Base UI) next to the theme pill */}
           <div className="site-nav-desktop">
             <BaseSwitch />
           </div>

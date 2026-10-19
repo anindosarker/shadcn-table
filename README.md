@@ -31,7 +31,7 @@ pnpm dlx shadcn@latest registry add @st=https://www.shadcn-table.com/r/{style}/{
 pnpm dlx shadcn@latest add @st/shadcn-table
 ```
 
-GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table` (Radix) and `anindosarker/shadcn-table/shadcn-table-base` (Base UI).
+GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-base` (Base UI).
 
 ## Features
 

@@ -5,7 +5,7 @@ import { useBase } from '@/components/base-selector';
 import type { Base } from '@/lib/install';
 
 /**
- * One Storybook host serves both trees: the Radix build at the root and the
+ * One Storybook host serves both trees: the Radix UI build at the root and the
  * Base UI build under /base/ (packages/shadcn-table `storybook:build:base`).
  */
 export const storybookUrl: Record<Base, string> = {

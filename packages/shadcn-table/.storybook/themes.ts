@@ -9,9 +9,9 @@ export const ST_BASE: 'radix' | 'base' =
     ? 'base'
     : 'radix';
 
-export const ST_BASE_LABEL = ST_BASE === 'base' ? 'Base UI' : 'Radix';
+export const ST_BASE_LABEL = ST_BASE === 'base' ? 'Base UI' : 'Radix UI';
 
-/** Manager title: "shadcn-table (Radix)" or "shadcn-table (Base UI)". */
+/** Manager title: "shadcn-table (Radix UI)" or "shadcn-table (Base UI)". */
 const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
 
 /**

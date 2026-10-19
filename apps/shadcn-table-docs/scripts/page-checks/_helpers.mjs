@@ -318,7 +318,7 @@ export async function baseSwitch(page, id, check) {
       !baseSource.includes("'@/components/ui/"),
     `len=${baseSource.length}`,
   );
-  await header.getByRole('tab', { name: 'Radix' }).click();
+  await header.getByRole('tab', { name: 'Radix UI' }).click();
   await page.waitForTimeout(200);
   const radixSource = await source();
   check(

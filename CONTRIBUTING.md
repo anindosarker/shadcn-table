@@ -33,7 +33,7 @@ packages/shadcn-table/
   bases/radix/
     components.json                 # style radix-nova
     components/ui/shadcn-table/     # the library, Radix edition; locales under locales/
-    components/ui/                  # shadcn/ui parts the library uses (Radix)
+    components/ui/                  # shadcn/ui parts the library uses (Radix UI)
     registry.ts                     # item definition: shadcn-table + locale items
   bases/base/
     components.json                 # style base-nova
