@@ -16,14 +16,13 @@ export const ST_ToggleFiltersButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleFiltersButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { FilterListIcon, FilterListOffIcon },
       localization,
     },
     setShowColumnFilters,
   } = table;
-  const { showColumnFilters } = getState();
+  const { showColumnFilters } = table.state;
 
   const handleToggleShowFilters = () => {
     setShowColumnFilters(!showColumnFilters);

@@ -68,7 +68,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   // Note: MUI useTheme dropped project-wide — shadcn CSS vars handle theming.
 
   const {
-    getState,
     options: {
       enableRowOrdering,
       enableRowPinning,
@@ -98,7 +97,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     hoveredRow,
     isFullScreen,
     rowPinning,
-  } = getState();
+  } = table.state;
 
   const visibleCells = row.getVisibleCells();
 

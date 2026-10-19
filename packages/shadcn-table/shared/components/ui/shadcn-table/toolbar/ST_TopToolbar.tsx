@@ -34,7 +34,6 @@ export const ST_TopToolbar = <TData extends ST_RowData>({
   table,
 }: ST_TopToolbarProps<TData>) => {
   const {
-    getState,
     options: {
       enableGlobalFilter,
       enablePagination,
@@ -49,7 +48,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>({
     refs: { topToolbarRef },
   } = table;
 
-  const { isFullScreen, showGlobalFilter } = getState();
+  const { isFullScreen, showGlobalFilter } = table.state;
 
   const isMobile = useST_MediaQuery('(max-width:720px)');
   const isTablet = useST_MediaQuery('(max-width:1024px)');

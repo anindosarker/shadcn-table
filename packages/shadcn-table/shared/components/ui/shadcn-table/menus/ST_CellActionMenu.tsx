@@ -24,7 +24,6 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
   ...rest
 }: ST_CellActionMenuProps<TData>) => {
   const {
-    getState,
     options: {
       editDisplayMode,
       enableClickToCopy,
@@ -36,7 +35,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
     },
     refs: { actionCellRef },
   } = table;
-  const { actionCell } = getState();
+  const { actionCell } = table.state;
   const cell = actionCell!;
   const { row } = cell;
   const { column } = cell;
@@ -135,7 +134,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
-            if (!table.getState().editingCell) anchorEl?.focus();
+            if (!table.state.editingCell) anchorEl?.focus();
           }}
           className={cn('w-max', className)}
           {...rest}

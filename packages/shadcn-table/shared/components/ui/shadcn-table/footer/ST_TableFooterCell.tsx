@@ -32,14 +32,13 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
 }: ST_TableFooterCellProps<TData>) => {
   // const theme = useTheme();
   const {
-    getState,
     options: {
       enableColumnPinning,
       stTableFooterCellProps,
       enableKeyboardShortcuts,
     },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
   const { column } = footer;
   const { columnDef } = column;
   const { columnDefType } = columnDef;

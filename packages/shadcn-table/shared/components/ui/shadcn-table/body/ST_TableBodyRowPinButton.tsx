@@ -29,10 +29,9 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
   const {
-    getState,
     options: { enableRowPinning, rowPinningDisplayMode },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canPin = parseFromValuesOrFunc(enableRowPinning, row as any);

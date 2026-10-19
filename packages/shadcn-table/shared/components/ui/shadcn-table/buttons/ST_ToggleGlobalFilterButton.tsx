@@ -16,7 +16,6 @@ export const ST_ToggleGlobalFilterButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleGlobalFilterButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { SearchIcon, SearchOffIcon },
       localization,
@@ -24,7 +23,7 @@ export const ST_ToggleGlobalFilterButton = <TData extends ST_RowData>({
     refs: { searchInputRef },
     setShowGlobalFilter,
   } = table;
-  const { globalFilter, showGlobalFilter } = getState();
+  const { globalFilter, showGlobalFilter } = table.state;
 
   const handleToggleSearch = () => {
     setShowGlobalFilter(!showGlobalFilter);

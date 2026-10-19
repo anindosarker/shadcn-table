@@ -31,11 +31,10 @@ export const ST_TableFooter = <TData extends ST_RowData>({
   ...rest
 }: ST_TableFooterProps<TData>) => {
   const {
-    getState,
     options: { enableStickyFooter, layoutMode, stTableFooterProps },
     refs: { tableFooterRef },
   } = table;
-  const { isFullScreen } = getState();
+  const { isFullScreen } = table.state;
 
   const tableFooterProps = {
     ...parseFromValuesOrFunc(stTableFooterProps, { table }),

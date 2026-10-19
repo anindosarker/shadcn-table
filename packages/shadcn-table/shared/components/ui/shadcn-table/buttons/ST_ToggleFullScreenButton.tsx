@@ -17,14 +17,13 @@ export const ST_ToggleFullScreenButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleFullScreenButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { FullscreenExitIcon, FullscreenIcon },
       localization,
     },
     setIsFullScreen,
   } = table;
-  const { isFullScreen } = getState();
+  const { isFullScreen } = table.state;
 
   const [tooltipOpened, setTooltipOpened] = useState(false);
 

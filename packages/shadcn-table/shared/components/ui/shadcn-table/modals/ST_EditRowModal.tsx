@@ -32,7 +32,6 @@ export const ST_EditRowModal = <TData extends ST_RowData>({
   ...rest
 }: ST_EditRowModalProps<TData>) => {
   const {
-    getState,
     options: {
       localization,
       stCreateRowModalProps,
@@ -45,7 +44,7 @@ export const ST_EditRowModal = <TData extends ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
-  const { creatingRow, editingRow } = getState();
+  const { creatingRow, editingRow } = table.state;
   const row = (creatingRow ?? editingRow) as ST_Row<TData>;
 
   const dialogProps = {

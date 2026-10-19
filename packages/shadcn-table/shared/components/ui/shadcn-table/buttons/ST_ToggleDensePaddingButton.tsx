@@ -16,14 +16,13 @@ export const ST_ToggleDensePaddingButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleDensePaddingButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { DensityLargeIcon, DensityMediumIcon, DensitySmallIcon },
       localization,
     },
     setDensity,
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
 
   const handleToggleDensePadding = () => {
     const nextDensity =

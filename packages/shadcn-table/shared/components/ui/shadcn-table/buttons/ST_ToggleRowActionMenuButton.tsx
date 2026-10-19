@@ -34,7 +34,6 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleRowActionMenuButtonProps<TData>) => {
   const {
-    getState,
     options: {
       createDisplayMode,
       editDisplayMode,
@@ -47,7 +46,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
     setEditingRow,
   } = table;
 
-  const { creatingRow, editingRow } = getState();
+  const { creatingRow, editingRow } = table.state;
 
   const isCreating = creatingRow?.id === row.id;
   const isEditing = editingRow?.id === row.id;

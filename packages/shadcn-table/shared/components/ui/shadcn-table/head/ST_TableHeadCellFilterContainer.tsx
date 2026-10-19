@@ -23,10 +23,9 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadCellFilterContainerProps<TData>) => {
   const {
-    getState,
     options: { columnFilterDisplayMode },
   } = table;
-  const { showColumnFilters } = getState();
+  const { showColumnFilters } = table.state;
   const { column } = header;
   const { columnDef } = column;
   const { isRangeFilter } = getColumnFilterInfo({ header, table });

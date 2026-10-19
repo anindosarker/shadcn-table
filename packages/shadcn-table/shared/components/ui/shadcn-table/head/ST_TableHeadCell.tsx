@@ -42,7 +42,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 }: ST_TableHeadCellProps<TData>) => {
   // const theme = useTheme();
   const {
-    getState,
     options: {
       columnFilterDisplayMode,
       columnResizeDirection,
@@ -64,14 +63,14 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     setHoveredColumn,
   } = table;
   const {
-    columnSizingInfo,
+    columnResizing,
     density,
     draggingColumn,
     grouping,
     hoveredColumn,
     isFullScreen,
     showColumnFilters,
-  } = getState();
+  } = table.state;
   const { column } = header;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -116,7 +115,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 
   const draggingBorders = useMemo(() => {
     const showResizeBorder =
-      columnSizingInfo.isResizingColumn === column.id &&
+      columnResizing.isResizingColumn === column.id &&
       columnResizeMode === 'onChange' &&
       !header.subHeaders.length;
 
@@ -144,7 +143,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 
     return draggingBorders;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draggingColumn, hoveredColumn, columnSizingInfo.isResizingColumn]);
+  }, [draggingColumn, hoveredColumn, columnResizing.isResizingColumn]);
 
   const handleDragEnter = () => {
     if (enableGrouping && hoveredColumn?.id === 'drop-zone') {

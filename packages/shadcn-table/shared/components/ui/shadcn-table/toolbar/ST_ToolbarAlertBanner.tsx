@@ -39,7 +39,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   const {
     getFilteredSelectedRowModel,
     getCoreRowModel,
-    getState,
     options: {
       enableRowSelection,
       enableSelectAll,
@@ -54,7 +53,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
     },
     refs: { tableLayoutRef },
   } = table;
-  const { density, grouping, rowSelection, showAlertBanner } = getState();
+  const { density, grouping, rowSelection, showAlertBanner } = table.state;
 
   const alertProps = {
     ...parseFromValuesOrFunc(stToolbarAlertBannerProps, {

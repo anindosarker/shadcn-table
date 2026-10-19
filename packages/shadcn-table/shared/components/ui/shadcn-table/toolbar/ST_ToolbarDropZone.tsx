@@ -28,14 +28,13 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   ...rest
 }: ST_ToolbarDropZoneProps<TData>) => {
   const {
-    getState,
     options: { enableGrouping, localization },
     setHoveredColumn,
     setShowToolbarDropZone,
   } = table;
 
   const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } =
-    getState();
+    table.state;
 
   const handleDragEnter = () => {
     setHoveredColumn({ id: 'drop-zone' });

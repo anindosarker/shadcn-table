@@ -35,7 +35,6 @@ export const ST_TableLayout = <TData extends ST_RowData>({
   ...rest
 }: ST_TableLayoutProps<TData>) => {
   const {
-    getState,
     options: {
       enableBottomToolbar,
       enableTopToolbar,
@@ -47,7 +46,7 @@ export const ST_TableLayout = <TData extends ST_RowData>({
     },
     refs: { tableLayoutRef },
   } = table;
-  const { isFullScreen } = getState();
+  const { isFullScreen } = table.state;
 
   const layoutDivProps = {
     ...parseFromValuesOrFunc(stTableLayoutProps, { table }),

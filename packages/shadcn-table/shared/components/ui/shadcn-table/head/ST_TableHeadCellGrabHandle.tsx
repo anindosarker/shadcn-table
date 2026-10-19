@@ -23,7 +23,6 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
   const {
-    getState,
     options: { enableColumnOrdering, stColumnDragHandleProps },
     setColumnOrder,
     setColumnPinning,
@@ -31,7 +30,7 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
     setHoveredColumn,
   } = table;
   const { columnDef } = column;
-  const { columnOrder, draggingColumn, hoveredColumn } = getState();
+  const { columnOrder, draggingColumn, hoveredColumn } = table.state;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stColumnDragHandleProps, { column, table }),
@@ -71,9 +70,9 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
         columnOrder,
       );
       setColumnOrder(reorderedColumns);
-      setColumnPinning(({ left = [], right = [] }) => ({
-        left: reorderedColumns.filter((header) => left.includes(header)),
-        right: reorderedColumns.filter((header) => right.includes(header)),
+      setColumnPinning(({ start = [], end = [] }) => ({
+        start: reorderedColumns.filter((header) => start.includes(header)),
+        end: reorderedColumns.filter((header) => end.includes(header)),
       }));
     }
     setDraggingColumn(null);

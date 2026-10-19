@@ -38,7 +38,6 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
   ...rest
 }: ST_BottomToolbarProps<TData>) => {
   const {
-    getState,
     options: {
       enablePagination,
       stBottomToolbarProps,
@@ -49,7 +48,7 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
     },
     refs: { bottomToolbarRef },
   } = table;
-  const { isFullScreen } = getState();
+  const { isFullScreen } = table.state;
 
   const isMobile = useST_MediaQuery('(max-width:720px)');
 

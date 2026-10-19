@@ -28,9 +28,9 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   return cn(
     "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:left-0 data-[pinned=true]:before:-z-[1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
     column
-      ? isPinned === 'left' && column.getIsLastColumn(isPinned)
+      ? isPinned === 'start' && column.getIsLastColumn(isPinned)
         ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
-        : isPinned === 'right' && column.getIsFirstColumn(isPinned)
+        : isPinned === 'end' && column.getIsFirstColumn(isPinned)
           ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
           : undefined
       : undefined,
@@ -49,10 +49,9 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   tableCellProps: TableCellProps;
 }) => {
   const {
-    getState,
     options: { enableColumnVirtualization, layoutMode },
+    state: { draggingColumn, hoveredColumn },
   } = table;
-  const { draggingColumn } = getState();
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
@@ -89,12 +88,12 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
           ),
           style: {
             left:
-              isColumnPinned === 'left'
-                ? `${column.getStart('left')}px`
+              isColumnPinned === 'start'
+                ? `${column.getStart('start')}px`
                 : undefined,
             right:
-              isColumnPinned === 'right'
-                ? `${column.getAfter('right')}px`
+              isColumnPinned === 'end'
+                ? `${column.getAfter('end')}px`
                 : undefined,
           },
         }
@@ -106,8 +105,7 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
       // backgroundImage: 'inherit',
       // Note: no ancestor sets a background-image without MUI Paper.
       layoutMode?.startsWith('grid') && 'flex',
-      table.getState().draggingColumn?.id === column.id ||
-        table.getState().hoveredColumn?.id === column.id
+      draggingColumn?.id === column.id || hoveredColumn?.id === column.id
         ? 'opacity-50'
         : 'opacity-100',
       'relative',

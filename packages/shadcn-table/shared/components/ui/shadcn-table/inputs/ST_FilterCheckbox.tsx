@@ -43,10 +43,9 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterCheckboxProps<TData>) => {
   const {
-    getState,
     options: { localization, stFilterCheckboxProps },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
   const { columnDef } = column;
 
   const checkboxProps = {

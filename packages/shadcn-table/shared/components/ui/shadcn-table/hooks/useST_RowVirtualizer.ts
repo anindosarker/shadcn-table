@@ -19,7 +19,6 @@ export const useST_RowVirtualizer = <
 ): ST_RowVirtualizer<TScrollElement, TItemElement> | undefined => {
   const {
     getRowModel,
-    getState,
     options: {
       enableRowVirtualization,
       renderDetailPanel,
@@ -28,7 +27,7 @@ export const useST_RowVirtualizer = <
     },
     refs: { tableContainerRef },
   } = table;
-  const { density, draggingRow, expanded } = getState();
+  const { density, draggingRow, expanded } = table.state;
 
   if (!enableRowVirtualization) return undefined;
 

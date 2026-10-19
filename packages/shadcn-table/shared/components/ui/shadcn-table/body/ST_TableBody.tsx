@@ -38,7 +38,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
     getBottomRows,
     getIsSomeRowsPinned,
     getRowModel,
-    getState,
     getTopRows,
     options: {
       enableStickyFooter,
@@ -53,7 +52,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
     },
     refs: { tableFooterRef, tableHeadRef, tableLayoutRef },
   } = table;
-  const { columnFilters, globalFilter, isFullScreen, rowPinning } = getState();
+  const { columnFilters, globalFilter, isFullScreen, rowPinning } = table.state;
 
   const tableBodyProps = {
     ...parseFromValuesOrFunc(stTableBodyProps, { table }),

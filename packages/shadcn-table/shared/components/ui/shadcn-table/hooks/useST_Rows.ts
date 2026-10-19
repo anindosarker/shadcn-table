@@ -11,7 +11,6 @@ export const useST_Rows = <TData extends ST_RowData>(
 ): ST_Row<TData>[] => {
   const {
     getRowModel,
-    getState,
     options: { data, enableGlobalFilterRankedResults, positionCreatingRow },
   } = table;
   const {
@@ -21,7 +20,7 @@ export const useST_Rows = <TData extends ST_RowData>(
     pagination,
     rowPinning,
     sorting,
-  } = getState();
+  } = table.state;
 
   const rows = useMemo(
     () => getST_Rows(table),

@@ -30,7 +30,6 @@ export const ST_TableHead = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadProps<TData>) => {
   const {
-    getState,
     options: {
       enableStickyHeader,
       layoutMode,
@@ -39,7 +38,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
     },
     refs: { tableHeadRef },
   } = table;
-  const { isFullScreen, showAlertBanner } = getState();
+  const { isFullScreen, showAlertBanner } = table.state;
 
   const tableHeadProps = {
     ...parseFromValuesOrFunc(stTableHeadProps, { table }),

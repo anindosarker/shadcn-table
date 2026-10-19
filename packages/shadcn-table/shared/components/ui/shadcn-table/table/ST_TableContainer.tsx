@@ -33,7 +33,6 @@ export const ST_TableContainer = <TData extends ST_RowData>({
   ...rest
 }: ST_TableContainerProps<TData>) => {
   const {
-    getState,
     options: {
       createDisplayMode,
       editDisplayMode,
@@ -50,7 +49,7 @@ export const ST_TableContainer = <TData extends ST_RowData>({
     isFullScreen,
     isLoading,
     showLoadingOverlay,
-  } = getState();
+  } = table.state;
 
   const loading =
     showLoadingOverlay !== false && (isLoading || showLoadingOverlay);

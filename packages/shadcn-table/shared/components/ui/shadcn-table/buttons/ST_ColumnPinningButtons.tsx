@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import {
   type DivProps,
   type ST_Column,
+  type ST_ColumnPinningPosition,
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
@@ -30,7 +31,7 @@ export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
     },
   } = table;
 
-  const handlePinColumn = (pinDirection: 'left' | 'right' | false) => {
+  const handlePinColumn = (pinDirection: ST_ColumnPinningPosition) => {
     column.pin(pinDirection);
   };
 
@@ -51,7 +52,7 @@ export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
         <>
           <ST_Tooltip title={localization.pinToLeft}>
             <Button
-              onClick={() => handlePinColumn('left')}
+              onClick={() => handlePinColumn('start')}
               size="icon-sm"
               type="button"
               variant="ghost"
@@ -61,7 +62,7 @@ export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
           </ST_Tooltip>
           <ST_Tooltip title={localization.pinToRight}>
             <Button
-              onClick={() => handlePinColumn('right')}
+              onClick={() => handlePinColumn('end')}
               size="icon-sm"
               type="button"
               variant="ghost"

@@ -36,7 +36,6 @@ export const ST_Table = <TData extends ST_RowData>({
 }: ST_TableProps<TData>) => {
   const {
     getFlatHeaders,
-    getState,
     options: {
       columns,
       /**
@@ -57,7 +56,7 @@ export const ST_Table = <TData extends ST_RowData>({
   /**
    * Stickyheader dropped, so gotta drop isFullScreen from deps too, since it only affects stickyheader.
    */
-  const { columnSizing, columnSizingInfo, columnVisibility } = getState();
+  const { columnSizing, columnResizing, columnVisibility } = table.state;
 
   const tableProps = {
     ...parseFromValuesOrFunc(stTableProps, { table }),
@@ -77,7 +76,7 @@ export const ST_Table = <TData extends ST_RowData>({
     }
     return colSizes;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, columnSizing, columnSizingInfo, columnVisibility]);
+  }, [columns, columnSizing, columnResizing, columnVisibility]);
 
   const columnVirtualizer = useST_ColumnVirtualizer(table);
 
@@ -99,7 +98,7 @@ export const ST_Table = <TData extends ST_RowData>({
     >
       {!!Caption && <caption>{Caption}</caption>}
       {enableTableHead && <ST_TableHead {...commonTableGroupProps} />}
-      {memoMode === 'table-body' || columnSizingInfo.isResizingColumn ? (
+      {memoMode === 'table-body' || columnResizing.isResizingColumn ? (
         <Memo_ST_TableBody {...commonTableGroupProps} />
       ) : (
         <ST_TableBody {...commonTableGroupProps} />

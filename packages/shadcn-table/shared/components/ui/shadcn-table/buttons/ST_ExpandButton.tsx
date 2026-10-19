@@ -38,7 +38,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
 }: ST_ExpandButtonProps<TData>) => {
   // Note: MRT's useTheme dropped — ST has no theme.direction (rtl).
   const {
-    getState,
     options: {
       icons: { ExpandMoreIcon },
       localization,
@@ -47,7 +46,7 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
       stExpandButtonProps,
     },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
 
   const iconButtonProps = parseFromValuesOrFunc(stExpandButtonProps, {
     row,

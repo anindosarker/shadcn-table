@@ -131,7 +131,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterOptionMenuProps<TData>) => {
   const {
-    getState,
     options: {
       columnFilterModeOptions,
       globalFilterModeOptions,
@@ -143,7 +142,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     setColumnFilterFns,
     setGlobalFilterFn,
   } = table;
-  const { globalFilterFn } = getState();
+  const { globalFilterFn } = table.state;
   const { column } = header ?? {};
   const { columnDef } = column ?? {};
   const currentFilterValue = column?.getFilterValue();

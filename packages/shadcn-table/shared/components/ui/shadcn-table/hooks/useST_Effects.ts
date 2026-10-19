@@ -12,8 +12,7 @@ export const useST_Effects = <TData extends ST_RowData>(
 ) => {
   const {
     getIsSomeRowsPinned,
-    getPrePaginationRowModel,
-    getState,
+    getPrePaginatedRowModel,
     options: { enablePagination, enableRowPinning, rowCount },
   } = table;
   const {
@@ -25,10 +24,10 @@ export const useST_Effects = <TData extends ST_RowData>(
     pagination,
     showSkeletons,
     sorting,
-  } = getState();
+  } = table.state;
 
   const totalColumnCount = table.options.columns.length;
-  const totalRowCount = rowCount ?? getPrePaginationRowModel().rows.length;
+  const totalRowCount = rowCount ?? getPrePaginatedRowModel().rows.length;
 
   const rerender = useReducer(() => ({}), {})[1];
   const initialBodyHeight = useRef<string>(null);
