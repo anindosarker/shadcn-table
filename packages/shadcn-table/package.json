@@ -9,8 +9,8 @@
   "type": "module",
   "imports": {
     "#primitives/*": {
-      "st-base": "./src/components/ui/shadcn-table/primitives/base/*.tsx",
-      "default": "./src/components/ui/shadcn-table/primitives/radix/*.tsx"
+      "st-base": "./bases/radix/components/ui/shadcn-table/primitives/base/*.tsx",
+      "default": "./bases/radix/components/ui/shadcn-table/primitives/radix/*.tsx"
     }
   },
   "scripts": {

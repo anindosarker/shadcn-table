@@ -2,7 +2,7 @@ import type { Preview } from '@storybook/react-vite';
 import { addons, useEffect, useState } from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
-import '../src/index.css';
+import '../bases/radix/index.css';
 import './preview.css';
 
 const channel = addons.getChannel();

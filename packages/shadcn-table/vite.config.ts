@@ -8,7 +8,7 @@ import { defaultClientConditions, defineConfig, type Plugin } from 'vite';
 // `#primitives/*` import map in package.json); the default is Radix.
 const onBase = process.env.ST_BASE === 'base';
 
-const SRC_UI = path.resolve(__dirname, './src/components/ui');
+const SRC_UI = path.resolve(__dirname, './bases/radix/components/ui');
 const BASE_UI = path.resolve(__dirname, './base/components/ui');
 
 /**
@@ -39,7 +39,7 @@ export default defineConfig({
   plugins: [...(onBase ? [baseParts()] : []), react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './bases/radix'),
     },
     conditions: onBase
       ? ['st-base', ...defaultClientConditions]

@@ -3,18 +3,18 @@
 // pnpm registry:dev for a local copy under .dev/ served on port 5310.
 // Generates registry.json from the library tree, then `shadcn build` turns it
 // into public/r/<name>.json. The file list is never hand-maintained: every
-// file under src/components/ui/shadcn-table is an item file, every
+// file under bases/radix/components/ui/shadcn-table is an item file, every
 // `@/components/ui/<name>` import is a registryDependency, and the ST-only
-// CSS rules in src/index.css ship through the item's `css` field.
+// CSS rules in bases/radix/index.css ship through the item's `css` field.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const PKG = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const LIB_REL = 'src/components/ui/shadcn-table';
+const LIB_REL = 'bases/radix/components/ui/shadcn-table';
 const LIB_DIR = path.join(PKG, LIB_REL);
-const CHECKBOX_REL = 'src/components/ui/checkbox.tsx';
-const CSS_FILE = path.join(PKG, 'src/index.css');
+const CHECKBOX_REL = 'bases/radix/components/ui/checkbox.tsx';
+const CSS_FILE = path.join(PKG, 'bases/radix/index.css');
 // `--dev` builds a local registry under .dev/ (gitignored) whose locale items
 // point at the local server started by `pnpm registry:dev`; the committed
 // registry.json is never touched. REGISTRY_BASE_URL overrides the dev URL.
@@ -74,7 +74,7 @@ const isPrimitivesDevFile = (relPath) =>
 const uiTarget = (relPath) =>
   relPath
     .replace(`${RADIX_PRIMITIVES_REL}/`, `${PRIMITIVES_REL}/`)
-    .replace(/^src\/components\/ui\//, '@ui/');
+    .replace(/^bases\/radix\/components\/ui\//, '@ui/');
 
 const fileEntry = (relPath) => ({
   path: relPath,
@@ -109,7 +109,7 @@ const uiImports = (files) => {
 // Minimal CSS block parser: returns the top-level rules of a stylesheet as
 // [selectorOrAtRule, body] pairs, where body is either a declaration object
 // or a nested map of the same shape. Comments are dropped. Good enough for
-// the plain keyframes/rules in src/index.css; not a general CSS parser.
+// the plain keyframes/rules in bases/radix/index.css; not a general CSS parser.
 const parseBlocks = (css) => {
   const out = {};
   let i = 0;
@@ -170,7 +170,7 @@ const stCss = () => {
     if (/\bst-/.test(key)) picked[key] = value;
   }
   if (Object.keys(picked).length === 0) {
-    console.error('build-registry: no st-* rules found in src/index.css');
+    console.error('build-registry: no st-* rules found in bases/radix/index.css');
     process.exit(1);
   }
   return picked;

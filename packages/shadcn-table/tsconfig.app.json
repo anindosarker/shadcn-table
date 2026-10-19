@@ -25,9 +25,9 @@
     "noUncheckedSideEffectImports": true,
 
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./bases/radix/*"]
     }
   },
-  "include": ["src"],
-  "exclude": ["src/components/ui/shadcn-table/primitives/base"]
+  "include": ["bases/radix"],
+  "exclude": ["bases/radix/components/ui/shadcn-table/primitives/base"]
 }

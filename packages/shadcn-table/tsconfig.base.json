@@ -4,14 +4,14 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.base.tsbuildinfo",
     "customConditions": ["st-base"],
     "paths": {
-      "@/components/ui/shadcn-table/*": ["./src/components/ui/shadcn-table/*"],
+      "@/components/ui/shadcn-table/*": ["./bases/radix/components/ui/shadcn-table/*"],
       "@/components/ui/*": ["./base/components/ui/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./bases/radix/*"]
     }
   },
-  "include": ["src"],
+  "include": ["bases/radix"],
   "exclude": [
-    "src/components/ui/*.tsx",
-    "src/components/ui/shadcn-table/primitives/radix"
+    "bases/radix/components/ui/*.tsx",
+    "bases/radix/components/ui/shadcn-table/primitives/radix"
   ]
 }

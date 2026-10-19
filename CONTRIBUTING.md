@@ -8,7 +8,7 @@ This repo holds shadcn-table, a React data table on TanStack Table v8 that ships
 4. **Registry:** what users install, built from the library source.
 
 ```text
-packages/shadcn-table/src
+packages/shadcn-table/bases/radix
   ▼ stories + vitest            (prove the change)
   ▼ registry:build              (what users install)
   ▼ lib:install                 (docs app copy)
@@ -21,8 +21,8 @@ The goal of this guide: make a change, prove it, open a PR. Release steps live i
 
 ```text
 packages/shadcn-table/
-  src/components/ui/shadcn-table/   # the library; locales under locales/
-  src/components/ui/                # shadcn/ui parts the library uses
+  bases/radix/components/ui/shadcn-table/   # the library; locales under locales/
+  bases/radix/components/ui/                # shadcn/ui parts the library uses
   stories/                          # Storybook stories, also the test suite
   scripts/build-registry.mjs        # library item + one item per locale
   registry.json                     # generated, committed, GitHub addresses
@@ -71,7 +71,7 @@ pnpm --filter shadcn-table exec playwright install chromium
 
 ## 2. Change the Library
 
-Edit `packages/shadcn-table/src`, then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested.
+Edit `packages/shadcn-table/bases/radix`, then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested.
 
 ```bash
 pnpm storybook                          # http://localhost:6006
@@ -81,7 +81,7 @@ pnpm --filter shadcn-table lint
 ```
 
 - **Stories are tests.** `pnpm test` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it.
-- **shadcn/ui parts.** `src/components/ui/*.tsx` are plain shadcn components; change them only when the table needs it, since users get their own copies.
+- **shadcn/ui parts.** `bases/radix/components/ui/*.tsx` are plain shadcn components; change them only when the table needs it, since users get their own copies.
 
 ## 3. Sync the Docs App
 
@@ -186,7 +186,7 @@ On a push, CI also validates the registry at the pushed SHA and installs the lib
 
 ## Common Mistakes
 
-- **Editing the docs copy.** `apps/shadcn-table-docs/components/ui/shadcn-table` is overwritten by `lib:install`. Change `packages/shadcn-table/src` and sync.
+- **Editing the docs copy.** `apps/shadcn-table-docs/components/ui/shadcn-table` is overwritten by `lib:install`. Change `packages/shadcn-table/bases/radix` and sync.
 - **Forgetting `lib:install`.** The docs app, the page gate and the examples keep running on the old library.
 - **Committing `tsconfig.json` include noise.** Only the two `.next/...` lines belong there.
 - **`registry.json` rewritten with localhost.** Use `pnpm registry:dev`, which writes to the gitignored `.dev/`.
