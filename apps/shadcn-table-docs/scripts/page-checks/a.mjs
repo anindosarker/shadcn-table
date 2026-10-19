@@ -2,7 +2,13 @@
  * Cluster A page checks: docs/index, getting-started, api/*.
  * Each entry: async ({ page, check }) => void, run after load at the first width.
  */
-import { codeToggle, example, names, paginationControls } from './_helpers.mjs';
+import {
+  baseSwitch,
+  codeToggle,
+  example,
+  names,
+  paginationControls,
+} from './_helpers.mjs';
 
 /** The agent bar: one visible prompt pointing at /SKILL.md, Copy prompt writes it. */
 async function agentBar(page, check) {
@@ -34,6 +40,9 @@ const checks = {
     );
     const w = await example(page, 'basic', check);
     await codeToggle(page, 'basic', 'useShadcnTable', check);
+    // The header's base switch re-renders the example on Base UI and the
+    // code view shows that variant's imports; Radix again afterwards.
+    await baseSwitch(page, 'basic', check);
   },
   '/docs/guides/pagination': async ({ page, check }) => {
     const propNames = await names(page, '#relevant-props-table');
@@ -94,14 +103,58 @@ const checks = {
       (await tabs.count()) >= 8,
       String(await tabs.count()),
     );
-    const txt = (await page.locator('article').textContent()) ?? '';
+    const article = async () =>
+      (await page.locator('article').textContent()) ?? '';
+    // The hosted registry URL: the origin is the dev server's in dev.
+    const addCommand = (base, item) =>
+      new RegExp(`shadcn@latest add \\S+/r/${base}/${item}\\.json`);
+    let txt = await article();
     check(
       'init on the radix base',
       txt.includes('shadcn@latest init --base radix'),
     );
+    check('install command', addCommand('radix', 'shadcn-table').test(txt));
     check(
-      'install command',
-      txt.includes('shadcn@latest add anindosarker/shadcn-table/shadcn-table'),
+      'namespace form',
+      txt.includes('registry add @st=') && txt.includes('add @st/shadcn-table'),
+    );
+    check(
+      'compatibility sentence',
+      txt.includes('Radix or Base UI base') &&
+        txt.includes('React Aria is not supported'),
+    );
+    // The Base UI tab (the site-wide base group) switches both commands and
+    // the header switch with them.
+    await page
+      .locator('article [role="tab"]', { hasText: 'Base UI' })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+    txt = await article();
+    check(
+      'base ui tab: init on the base ui base',
+      txt.includes('shadcn@latest init --base base'),
+    );
+    check(
+      'base ui tab: install command',
+      addCommand('base', 'shadcn-table').test(txt),
+    );
+    check(
+      'base ui tab: header switch follows',
+      (await page
+        .locator(
+          '#nd-subnav [aria-label="shadcn base"] [role="tab"][data-active]',
+        )
+        .textContent()) === 'Base UI',
+    );
+    await page
+      .locator('article [role="tab"]', { hasText: 'Radix' })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+    check(
+      'radix tab again: install command',
+      addCommand('radix', 'shadcn-table').test(await article()),
     );
     await agentBar(page, check);
   },
