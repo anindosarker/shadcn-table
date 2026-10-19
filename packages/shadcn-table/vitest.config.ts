@@ -8,7 +8,7 @@ import viteConfig from './vite.config';
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Every story in ./stories runs as a render test in headless Chromium through
-// Storybook's Vitest addon. See .ai/plans/storybook-tests.md.
+// Storybook's Vitest addon. See .ai/plans/storybook-tests/anindosarker/storybook-tests-plan.md.
 export default mergeConfig(
   viteConfig,
   defineConfig({

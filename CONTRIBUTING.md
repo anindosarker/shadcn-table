@@ -15,7 +15,7 @@ packages/shadcn-table/src
 apps/shadcn-table-docs          (docs, examples, page gate)
 ```
 
-The goal of this guide: make a change, prove it, open a PR. Release steps live in `.ai/plans/release-v0.1.md`; Vercel and table internals are out of scope here.
+The goal of this guide: make a change, prove it, open a PR. Release steps live in `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`; Vercel and table internals are out of scope here.
 
 ## Folder Layout
 
@@ -195,7 +195,7 @@ On a push, CI also validates the registry at the pushed SHA and installs the lib
 
 ## Related
 
-- `.ai/plans/release-v0.1.md`, the release checklist
+- `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`, the release checklist
 - `.github/workflows/ci.yml`, the jobs behind step 6
 - `apps/shadcn-table-docs/content/docs/getting-started/install.mdx`, the user-facing install page
 - `LICENSE`
