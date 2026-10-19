@@ -7,15 +7,17 @@ import {
 } from 'react';
 import {
   type AccessorFn,
-  type AggregationFn,
+  type AggregationFnDef,
   type Cell,
   type Column,
   type ColumnDef,
   type ColumnFiltersState,
   type ColumnOrderState,
+  type ColumnPinningPosition,
   type ColumnPinningState,
-  type ColumnSizingInfoState,
   type ColumnSizingState,
+  type ColumnVisibilityState,
+  type columnResizingState,
   type DeepKeys,
   type DeepValue,
   type ExpandedState,
@@ -25,15 +27,14 @@ import {
   type HeaderGroup,
   type OnChangeFn,
   type PaginationState,
+  type ReactTable,
   type Row,
   type RowSelectionState,
-  type SortingFn,
+  type SortFn,
   type SortingState,
-  type Table,
   type TableOptions,
   type TableState,
   type Updater,
-  type VisibilityState,
 } from '@tanstack/react-table';
 import {
   type VirtualItem,
@@ -46,10 +47,11 @@ import { type Collapsible } from '@/components/ui-base/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui-base/dialog';
 import { type RadioGroupItem } from '@/components/ui-base/radio-group';
 import { type Slider } from '@/components/ui-base/slider';
-import { type ST_AggregationFns } from './fns/aggregationFns';
-import { type ST_FilterFns } from './fns/filterFns';
-import { type ST_SortingFns } from './fns/sortingFns';
-import { type ST_Icons } from './icons';
+import { type ST_AggregationFns } from '@/components/ui-base/shadcn-table/fns/aggregationFns';
+import { type ST_FilterFns } from '@/components/ui-base/shadcn-table/fns/filterFns';
+import { type ST_SortFns } from '@/components/ui-base/shadcn-table/fns/sortFns';
+import { type ST_Icons } from '@/components/ui-base/shadcn-table/icons';
+import { type ST_Features } from '@/components/ui-base/shadcn-table/utils/tanstack.features';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 
@@ -132,8 +134,9 @@ export type ST_RowData = Record<string, any>;
 
 export type ST_ColumnFiltersState = ColumnFiltersState;
 export type ST_ColumnOrderState = ColumnOrderState;
+export type ST_ColumnPinningPosition = ColumnPinningPosition;
 export type ST_ColumnPinningState = ColumnPinningState;
-export type ST_ColumnSizingInfoState = ColumnSizingInfoState;
+export type ST_ColumnResizingState = columnResizingState;
 export type ST_ColumnSizingState = ColumnSizingState;
 export type ST_ExpandedState = ExpandedState;
 export type ST_GroupingState = GroupingState;
@@ -142,7 +145,7 @@ export type ST_RowSelectionState = RowSelectionState;
 export type ST_SortingState = SortingState;
 export type ST_Updater<T> = Updater<T>;
 export type ST_VirtualItem = VirtualItem;
-export type ST_VisibilityState = VisibilityState;
+export type ST_VisibilityState = ColumnVisibilityState;
 
 export type ST_VirtualizerOptions<
   TScrollElement extends Element | Window = Element | Window,
@@ -287,7 +290,7 @@ export interface ST_RowModel<TData extends ST_RowData> {
 }
 
 export type ST_TableInstance<TData extends ST_RowData> = Omit<
-  Table<TData>,
+  ReactTable<ST_Features, TData, ST_TableState<TData>>,
   | 'getAllColumns'
   | 'getAllFlatColumns'
   | 'getAllLeafColumns'
@@ -300,14 +303,13 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
   | 'getFooterGroups'
   | 'getHeaderGroups'
   | 'getLeafHeaders'
-  | 'getLeftLeafColumns'
-  | 'getPaginationRowModel'
+  | 'getEndLeafColumns'
+  | 'getPaginatedRowModel'
   | 'getPreFilteredRowModel'
-  | 'getPrePaginationRowModel'
-  | 'getRightLeafColumns'
+  | 'getPrePaginatedRowModel'
   | 'getRowModel'
   | 'getSelectedRowModel'
-  | 'getState'
+  | 'getStartLeafColumns'
   | 'getTopRows'
   | 'options'
 > & {
@@ -323,14 +325,13 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
   getFooterGroups: () => ST_HeaderGroup<TData>[];
   getHeaderGroups: () => ST_HeaderGroup<TData>[];
   getLeafHeaders: () => ST_Header<TData>[];
-  getLeftLeafColumns: () => ST_Column<TData>[];
-  getPaginationRowModel: () => ST_RowModel<TData>;
+  getEndLeafColumns: () => ST_Column<TData>[];
+  getPaginatedRowModel: () => ST_RowModel<TData>;
   getPreFilteredRowModel: () => ST_RowModel<TData>;
-  getPrePaginationRowModel: () => ST_RowModel<TData>;
-  getRightLeafColumns: () => ST_Column<TData>[];
+  getPrePaginatedRowModel: () => ST_RowModel<TData>;
   getRowModel: () => ST_RowModel<TData>;
   getSelectedRowModel: () => ST_RowModel<TData>;
-  getState: () => ST_TableState<TData>;
+  getStartLeafColumns: () => ST_Column<TData>[];
   getTopRows: () => ST_Row<TData>[];
   options: ST_StatefulTableOptions<TData>;
   refs: {
@@ -338,7 +339,6 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
     bottomToolbarRef: RefObject<HTMLDivElement | null>;
     editInputRefs: RefObject<Record<string, HTMLInputElement> | null>;
     filterInputRefs: RefObject<Record<string, HTMLInputElement> | null>;
-    lastSelectedRowId: RefObject<null | string>;
     searchInputRef: RefObject<HTMLInputElement | null>;
     tableContainerRef: RefObject<HTMLDivElement | null>;
     tableFooterRef: RefObject<HTMLTableSectionElement | null>;
@@ -381,7 +381,7 @@ export type ST_StatefulTableOptions<TData extends ST_RowData> =
       ST_TableState<TData>,
       | 'columnFilterFns'
       | 'columnOrder'
-      | 'columnSizingInfo'
+      | 'columnResizing'
       | 'creatingRow'
       | 'density'
       | 'draggingColumn'
@@ -401,7 +401,8 @@ export type ST_StatefulTableOptions<TData extends ST_RowData> =
     >;
   };
 
-export interface ST_TableState<TData extends ST_RowData> extends TableState {
+export interface ST_TableState<TData extends ST_RowData>
+  extends TableState<ST_Features> {
   actionCell?: ST_Cell<TData> | null;
   columnFilterFns: ST_ColumnFilterFnsState;
   creatingRow: ST_Row<TData> | null;
@@ -427,7 +428,7 @@ export interface ST_TableState<TData extends ST_RowData> extends TableState {
 
 export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
   extends Omit<
-    ColumnDef<TData, TValue>,
+    ColumnDef<ST_Features, TData, TValue>,
     | 'accessorKey'
     | 'aggregatedCell'
     | 'aggregationFn'
@@ -437,7 +438,7 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
     | 'footer'
     | 'header'
     | 'id'
-    | 'sortingFn'
+    | 'sortFn'
   > {
   /**
    * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
@@ -700,7 +701,7 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
     onSelectFilterMode: (filterMode: ST_FilterOption) => void;
     table: ST_TableInstance<TData>;
   }) => ReactNode[];
-  sortingFn?: ST_SortingFn<TData>;
+  sortFn?: ST_SortFn<TData>;
   visibleInShowHideMenu?: boolean;
 }
 
@@ -726,7 +727,7 @@ export type ST_DefinedColumnDef<
 };
 
 export type ST_Column<TData extends ST_RowData, TValue = unknown> = Omit<
-  Column<TData, TValue>,
+  Column<ST_Features, TData, TValue>,
   'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
 > & {
   columnDef: ST_DefinedColumnDef<TData, TValue>;
@@ -737,21 +738,21 @@ export type ST_Column<TData extends ST_RowData, TValue = unknown> = Omit<
 };
 
 export type ST_Header<TData extends ST_RowData> = Omit<
-  Header<TData, unknown>,
+  Header<ST_Features, TData, unknown>,
   'column'
 > & {
   column: ST_Column<TData>;
 };
 
 export type ST_HeaderGroup<TData extends ST_RowData> = Omit<
-  HeaderGroup<TData>,
+  HeaderGroup<ST_Features, TData>,
   'headers'
 > & {
   headers: ST_Header<TData>[];
 };
 
 export type ST_Row<TData extends ST_RowData> = Omit<
-  Row<TData>,
+  Row<ST_Features, TData>,
   | '_valuesCache'
   | 'getAllCells'
   | 'getParentRow'
@@ -770,7 +771,7 @@ export type ST_Row<TData extends ST_RowData> = Omit<
 };
 
 export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
-  Cell<TData, TValue>,
+  Cell<ST_Features, TData, TValue>,
   'column' | 'row'
 > & {
   column: ST_Column<TData, TValue>;
@@ -780,21 +781,19 @@ export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
 export type ST_AggregationOption = string & keyof typeof ST_AggregationFns;
 
 export type ST_AggregationFn<TData extends ST_RowData> =
-  | AggregationFn<TData>
+  | AggregationFnDef<ST_Features, TData, any, any>
   | ST_AggregationOption;
 
-export type ST_SortingOption = LiteralUnion<
-  string & keyof typeof ST_SortingFns
->;
+export type ST_SortingOption = LiteralUnion<string & keyof typeof ST_SortFns>;
 
-export type ST_SortingFn<TData extends ST_RowData> =
-  | ST_SortingOption
-  | SortingFn<TData>;
+export type ST_SortFn<TData extends ST_RowData> =
+  | SortFn<ST_Features, TData>
+  | ST_SortingOption;
 
 export type ST_FilterOption = LiteralUnion<string & keyof typeof ST_FilterFns>;
 
 export type ST_FilterFn<TData extends ST_RowData> =
-  | FilterFn<TData>
+  | FilterFn<ST_Features, TData>
   | ST_FilterOption;
 
 export type ST_InternalFilterOption = {
@@ -824,18 +823,24 @@ export type ST_DisplayColumnIds =
  */
 export interface ST_TableOptions<TData extends ST_RowData>
   extends Omit<
-    Partial<TableOptions<TData>>,
+    Partial<TableOptions<ST_Features, TData>>,
     | 'columns'
     | 'data'
     | 'defaultColumn'
     | 'enableRowSelection'
-    | 'expandRowsFn'
+    | 'features'
     | 'getRowId'
     | 'globalFilterFn'
     | 'initialState'
-    | 'onStateChange'
     | 'state'
   > {
+  /**
+   * Custom aggregation functions, by name, on top of the built-in ones. A column's `aggregationFn` string resolves against this map.
+   */
+  aggregationFns?: Record<
+    string,
+    AggregationFnDef<ST_Features, TData, any, any>
+  >;
   columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
     LiteralUnion<string & ST_FilterOption>
@@ -877,7 +882,6 @@ export interface ST_TableOptions<TData extends ST_RowData>
     [key in ST_DisplayColumnIds]: Partial<ST_DisplayColumnDef<TData>>;
   }>;
   editDisplayMode?: 'cell' | 'custom' | 'modal' | 'row' | 'table';
-  enableBatchRowSelection?: boolean;
   enableBottomToolbar?: boolean;
   enableCellActions?: ((cell: ST_Cell<TData>) => boolean) | boolean;
   enableClickToCopy?:
@@ -913,6 +917,10 @@ export interface ST_TableOptions<TData extends ST_RowData>
   enableToolbarInternalActions?: boolean;
   enableTopToolbar?: boolean;
   expandRowsFn?: (dataRow: TData) => TData[];
+  /**
+   * Custom filter functions, by name, on top of the built-in ones. A column's `filterFn` string and `globalFilterFn` resolve against this map.
+   */
+  filterFns?: Record<string, FilterFn<ST_Features, TData>>;
   getRowId?: (
     originalRow: TData,
     index: number,
@@ -1309,6 +1317,10 @@ export interface ST_TableOptions<TData extends ST_RowData>
       }) => Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>)
     | Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>;
   selectAllMode?: 'all' | 'page';
+  /**
+   * Custom sorting functions, by name, on top of the built-in ones. A column's `sortFn` string resolves against this map.
+   */
+  sortFns?: Record<string, SortFn<ST_Features, TData>>;
   /**
    * Manage state externally any way you want, then pass it back into MRT.
    */

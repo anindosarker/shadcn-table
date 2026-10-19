@@ -1,13 +1,13 @@
 import { type ReactNode } from 'react';
-import { ST_ExpandAllButton } from '../../buttons/ST_ExpandAllButton';
-import { ST_ExpandButton } from '../../buttons/ST_ExpandButton';
-import { ST_Tooltip } from '../../ST_Tooltip';
+import { ST_ExpandAllButton } from '@/components/ui-base/shadcn-table/buttons/ST_ExpandAllButton';
+import { ST_ExpandButton } from '@/components/ui-base/shadcn-table/buttons/ST_ExpandButton';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 import {
   type ST_ColumnDef,
   type ST_RowData,
   type ST_StatefulTableOptions,
-} from '../../types';
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils';
+} from '@/components/ui-base/shadcn-table/types';
+import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
 
 export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,

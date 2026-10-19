@@ -1,10 +1,10 @@
-import { ST_DefaultDisplayColumn } from '../useST_TableOptions';
+import { ST_DefaultDisplayColumn } from '@/components/ui-base/shadcn-table/hooks/useST_TableOptions';
 import {
   type ST_ColumnDef,
   type ST_RowData,
   type ST_StatefulTableOptions,
-} from '../../types';
-import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils';
+} from '@/components/ui-base/shadcn-table/types';
+import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
 
 const blankColProps = {
   children: null,

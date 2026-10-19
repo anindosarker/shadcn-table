@@ -4,7 +4,7 @@ import {
   type DivProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
+} from '@/components/ui-base/shadcn-table/types';
 
 export interface ST_ToolbarDropZoneProps<TData extends ST_RowData>
   extends DivProps {
@@ -28,14 +28,13 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   ...rest
 }: ST_ToolbarDropZoneProps<TData>) => {
   const {
-    getState,
     options: { enableGrouping, localization },
     setHoveredColumn,
     setShowToolbarDropZone,
   } = table;
 
   const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } =
-    getState();
+    table.state;
 
   const handleDragEnter = () => {
     setHoveredColumn({ id: 'drop-zone' });

@@ -1,13 +1,16 @@
 import { useMemo } from 'react';
-import { type ST_Row, type ST_RowData, type ST_TableInstance } from '../types';
-import { getST_Rows } from '../utils/row.utils';
+import {
+  type ST_Row,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui-base/shadcn-table/types';
+import { getST_Rows } from '@/components/ui-base/shadcn-table/utils/row.utils';
 
 export const useST_Rows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ): ST_Row<TData>[] => {
   const {
     getRowModel,
-    getState,
     options: { data, enableGlobalFilterRankedResults, positionCreatingRow },
   } = table;
   const {
@@ -17,7 +20,7 @@ export const useST_Rows = <TData extends ST_RowData>(
     pagination,
     rowPinning,
     sorting,
-  } = getState();
+  } = table.state;
 
   const rows = useMemo(
     () => getST_Rows(table),

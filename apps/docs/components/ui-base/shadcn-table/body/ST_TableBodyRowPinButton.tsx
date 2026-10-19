@@ -4,9 +4,9 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_RowPinButton } from '../buttons/ST_RowPinButton';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_RowPinButton } from '@/components/ui-base/shadcn-table/buttons/ST_RowPinButton';
 
 export interface ST_TableBodyRowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -29,10 +29,9 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
   const {
-    getState,
     options: { enableRowPinning, rowPinningDisplayMode },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canPin = parseFromValuesOrFunc(enableRowPinning, row as any);

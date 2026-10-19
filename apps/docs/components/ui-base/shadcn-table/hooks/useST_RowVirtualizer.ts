@@ -5,9 +5,9 @@ import {
   type ST_RowData,
   type ST_RowVirtualizer,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { extraIndexRangeExtractor } from '../utils/virtualization.utils';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { extraIndexRangeExtractor } from '@/components/ui-base/shadcn-table/utils/virtualization.utils';
 
 export const useST_RowVirtualizer = <
   TData extends ST_RowData,
@@ -19,7 +19,6 @@ export const useST_RowVirtualizer = <
 ): ST_RowVirtualizer<TScrollElement, TItemElement> | undefined => {
   const {
     getRowModel,
-    getState,
     options: {
       enableRowVirtualization,
       renderDetailPanel,
@@ -28,7 +27,7 @@ export const useST_RowVirtualizer = <
     },
     refs: { tableContainerRef },
   } = table;
-  const { density, draggingRow, expanded } = getState();
+  const { density, draggingRow, expanded } = table.state;
 
   if (!enableRowVirtualization) return undefined;
 

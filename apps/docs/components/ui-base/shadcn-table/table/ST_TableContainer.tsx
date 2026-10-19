@@ -5,12 +5,12 @@ import {
   type DivProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Table } from './ST_Table';
-import { ST_TableLoadingOverlay } from './ST_TableLoadingOverlay';
-import { ST_CellActionMenu } from '../menus/ST_CellActionMenu';
-import { ST_EditRowModal } from '../modals/ST_EditRowModal';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_Table } from '@/components/ui-base/shadcn-table/table/ST_Table';
+import { ST_TableLoadingOverlay } from '@/components/ui-base/shadcn-table/table/ST_TableLoadingOverlay';
+import { ST_CellActionMenu } from '@/components/ui-base/shadcn-table/menus/ST_CellActionMenu';
+import { ST_EditRowModal } from '@/components/ui-base/shadcn-table/modals/ST_EditRowModal';
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -33,7 +33,6 @@ export const ST_TableContainer = <TData extends ST_RowData>({
   ...rest
 }: ST_TableContainerProps<TData>) => {
   const {
-    getState,
     options: {
       createDisplayMode,
       editDisplayMode,
@@ -50,7 +49,7 @@ export const ST_TableContainer = <TData extends ST_RowData>({
     isFullScreen,
     isLoading,
     showLoadingOverlay,
-  } = getState();
+  } = table.state;
 
   const loading =
     showLoadingOverlay !== false && (isLoading || showLoadingOverlay);

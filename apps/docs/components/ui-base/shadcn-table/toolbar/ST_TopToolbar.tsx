@@ -1,14 +1,17 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { type ST_RowData, type ST_TableInstance } from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_LinearProgressBar } from './ST_LinearProgressBar';
-import { ST_TablePagination } from './ST_TablePagination';
-import { ST_ToolbarAlertBanner } from './ST_ToolbarAlertBanner';
-import { ST_ToolbarDropZone } from './ST_ToolbarDropZone';
-import { ST_ToolbarInternalButtons } from './ST_ToolbarInternalButtons';
-import { useST_MediaQuery } from './useST_MediaQuery';
-import { ST_GlobalFilterTextField } from '../inputs/ST_GlobalFilterTextField';
+import {
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_LinearProgressBar } from '@/components/ui-base/shadcn-table/toolbar/ST_LinearProgressBar';
+import { ST_TablePagination } from '@/components/ui-base/shadcn-table/toolbar/ST_TablePagination';
+import { ST_ToolbarAlertBanner } from '@/components/ui-base/shadcn-table/toolbar/ST_ToolbarAlertBanner';
+import { ST_ToolbarDropZone } from '@/components/ui-base/shadcn-table/toolbar/ST_ToolbarDropZone';
+import { ST_ToolbarInternalButtons } from '@/components/ui-base/shadcn-table/toolbar/ST_ToolbarInternalButtons';
+import { useST_MediaQuery } from '@/components/ui-base/shadcn-table/toolbar/useST_MediaQuery';
+import { ST_GlobalFilterTextField } from '@/components/ui-base/shadcn-table/inputs/ST_GlobalFilterTextField';
 
 const topToolbarVariants = cva(
   // Note: maps MRT getCommonToolbarStyles
@@ -31,7 +34,6 @@ export const ST_TopToolbar = <TData extends ST_RowData>({
   table,
 }: ST_TopToolbarProps<TData>) => {
   const {
-    getState,
     options: {
       enableGlobalFilter,
       enablePagination,
@@ -46,7 +48,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>({
     refs: { topToolbarRef },
   } = table;
 
-  const { isFullScreen, showGlobalFilter } = getState();
+  const { isFullScreen, showGlobalFilter } = table.state;
 
   const isMobile = useST_MediaQuery('(max-width:720px)');
   const isTablet = useST_MediaQuery('(max-width:1024px)');

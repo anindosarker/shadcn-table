@@ -4,12 +4,12 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getColumnFilterInfo } from '../utils/column.utils';
-import { ST_FilterCheckbox } from '../inputs/ST_FilterCheckbox';
-import { ST_FilterRangeFields } from '../inputs/ST_FilterRangeFields';
-import { ST_FilterRangeSlider } from '../inputs/ST_FilterRangeSlider';
-import { ST_FilterTextField } from '../inputs/ST_FilterTextField';
+} from '@/components/ui-base/shadcn-table/types';
+import { getColumnFilterInfo } from '@/components/ui-base/shadcn-table/utils/column.utils';
+import { ST_FilterCheckbox } from '@/components/ui-base/shadcn-table/inputs/ST_FilterCheckbox';
+import { ST_FilterRangeFields } from '@/components/ui-base/shadcn-table/inputs/ST_FilterRangeFields';
+import { ST_FilterRangeSlider } from '@/components/ui-base/shadcn-table/inputs/ST_FilterRangeSlider';
+import { ST_FilterTextField } from '@/components/ui-base/shadcn-table/inputs/ST_FilterTextField';
 
 export interface ST_TableHeadCellFilterContainerProps<TData extends ST_RowData>
   extends CollapseProps {
@@ -23,10 +23,9 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadCellFilterContainerProps<TData>) => {
   const {
-    getState,
     options: { columnFilterDisplayMode },
   } = table;
-  const { showColumnFilters } = getState();
+  const { showColumnFilters } = table.state;
   const { column } = header;
   const { columnDef } = column;
   const { isRangeFilter } = getColumnFilterInfo({ header, table });

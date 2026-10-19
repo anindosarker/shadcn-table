@@ -11,9 +11,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui-base/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { type ST_Row, type ST_RowData, type ST_TableInstance } from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_ActionMenuItem } from './ST_ActionMenuItem';
+import {
+  type ST_Row,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_ActionMenuItem } from '@/components/ui-base/shadcn-table/menus/ST_ActionMenuItem';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {

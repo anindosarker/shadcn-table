@@ -13,10 +13,10 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_EditActionButtons } from '../buttons/ST_EditActionButtons';
-import { ST_EditCellTextField } from '../inputs/ST_EditCellTextField';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_EditActionButtons } from '@/components/ui-base/shadcn-table/buttons/ST_EditActionButtons';
+import { ST_EditCellTextField } from '@/components/ui-base/shadcn-table/inputs/ST_EditCellTextField';
 
 const editRowModalVariants = cva('max-h-[calc(100%-4rem)]');
 
@@ -32,7 +32,6 @@ export const ST_EditRowModal = <TData extends ST_RowData>({
   ...rest
 }: ST_EditRowModalProps<TData>) => {
   const {
-    getState,
     options: {
       localization,
       stCreateRowModalProps,
@@ -45,7 +44,7 @@ export const ST_EditRowModal = <TData extends ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
-  const { creatingRow, editingRow } = getState();
+  const { creatingRow, editingRow } = table.state;
   const row = (creatingRow ?? editingRow) as ST_Row<TData>;
 
   const dialogProps = {

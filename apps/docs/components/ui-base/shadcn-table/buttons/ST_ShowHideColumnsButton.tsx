@@ -4,9 +4,9 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { ST_ShowHideColumnsMenu } from '../menus/ST_ShowHideColumnsMenu';
+} from '@/components/ui-base/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_ShowHideColumnsMenu } from '@/components/ui-base/shadcn-table/menus/ST_ShowHideColumnsMenu';
 
 export interface ST_ShowHideColumnsButtonProps<TData extends ST_RowData>
   extends ButtonProps {

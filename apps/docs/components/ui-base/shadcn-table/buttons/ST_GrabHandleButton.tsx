@@ -6,8 +6,8 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui-base/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 
 const grabHandleButtonVariants = cva(
   'my-0 -mx-[0.1rem] cursor-grab transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',

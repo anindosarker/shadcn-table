@@ -1,17 +1,20 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
-import { useST_ColumnVirtualizer } from '../hooks/useST_ColumnVirtualizer';
+import { useST_ColumnVirtualizer } from '@/components/ui-base/shadcn-table/hooks/useST_ColumnVirtualizer';
 import {
   type ST_RowData,
   type ST_TableInstance,
   type TableProps,
-} from '../types';
-import { parseCSSVarId } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { Memo_ST_TableBody, ST_TableBody } from '../body/ST_TableBody';
-import { ST_TableFooter } from '../footer/ST_TableFooter';
-import { ST_TableHead } from '../head/ST_TableHead';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseCSSVarId } from '@/components/ui-base/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import {
+  Memo_ST_TableBody,
+  ST_TableBody,
+} from '@/components/ui-base/shadcn-table/body/ST_TableBody';
+import { ST_TableFooter } from '@/components/ui-base/shadcn-table/footer/ST_TableFooter';
+import { ST_TableHead } from '@/components/ui-base/shadcn-table/head/ST_TableHead';
 
 export interface ST_TableProps<TData extends ST_RowData> extends TableProps {
   table: ST_TableInstance<TData>;
@@ -33,7 +36,6 @@ export const ST_Table = <TData extends ST_RowData>({
 }: ST_TableProps<TData>) => {
   const {
     getFlatHeaders,
-    getState,
     options: {
       columns,
       /**
@@ -54,7 +56,7 @@ export const ST_Table = <TData extends ST_RowData>({
   /**
    * Stickyheader dropped, so gotta drop isFullScreen from deps too, since it only affects stickyheader.
    */
-  const { columnSizing, columnSizingInfo, columnVisibility } = getState();
+  const { columnSizing, columnResizing, columnVisibility } = table.state;
 
   const tableProps = {
     ...parseFromValuesOrFunc(stTableProps, { table }),
@@ -74,7 +76,7 @@ export const ST_Table = <TData extends ST_RowData>({
     }
     return colSizes;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, columnSizing, columnSizingInfo, columnVisibility]);
+  }, [columns, columnSizing, columnResizing, columnVisibility]);
 
   const columnVirtualizer = useST_ColumnVirtualizer(table);
 
@@ -96,7 +98,7 @@ export const ST_Table = <TData extends ST_RowData>({
     >
       {!!Caption && <caption>{Caption}</caption>}
       {enableTableHead && <ST_TableHead {...commonTableGroupProps} />}
-      {memoMode === 'table-body' || columnSizingInfo.isResizingColumn ? (
+      {memoMode === 'table-body' || columnResizing.isResizingColumn ? (
         <Memo_ST_TableBody {...commonTableGroupProps} />
       ) : (
         <ST_TableBody {...commonTableGroupProps} />

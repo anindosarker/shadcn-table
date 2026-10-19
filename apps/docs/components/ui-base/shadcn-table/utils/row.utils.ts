@@ -1,7 +1,11 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
-import { rankGlobalFuzzy } from '../fns/sortingFns';
-import { type ST_Row, type ST_RowData, type ST_TableInstance } from '../types';
-import { parseFromValuesOrFunc } from './utils';
+import { rankGlobalFuzzy } from '@/components/ui-base/shadcn-table/fns/sortFns';
+import {
+  type ST_Row,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
 
 export const getST_Rows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
@@ -9,9 +13,8 @@ export const getST_Rows = <TData extends ST_RowData>(
 ): ST_Row<TData>[] => {
   const {
     getCenterRows,
-    getPrePaginationRowModel,
+    getPrePaginatedRowModel,
     getRowModel,
-    getState,
     getTopRows,
     options: {
       createDisplayMode,
@@ -21,8 +24,8 @@ export const getST_Rows = <TData extends ST_RowData>(
       positionCreatingRow,
       rowPinningDisplayMode,
     },
+    state: { creatingRow, pagination },
   } = table;
-  const { creatingRow, pagination } = getState();
 
   const isRankingRows = getIsRankingRows(table);
 
@@ -31,14 +34,12 @@ export const getST_Rows = <TData extends ST_RowData>(
     rows =
       !enableRowPinning || rowPinningDisplayMode?.includes('sticky')
         ? all
-          ? getPrePaginationRowModel().rows
+          ? getPrePaginatedRowModel().rows
           : getRowModel().rows
         : getCenterRows();
   } else {
     // fuzzy ranking adjustments
-    rows = getPrePaginationRowModel().rows.sort((a, b) =>
-      rankGlobalFuzzy(a, b),
-    );
+    rows = getPrePaginatedRowModel().rows.sort((a, b) => rankGlobalFuzzy(a, b));
     if (enablePagination && !manualPagination && !all) {
       const start = pagination.pageIndex * pagination.pageSize;
       rows = rows.slice(start, start + pagination.pageSize);
@@ -84,7 +85,6 @@ export const getCanRankRows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) => {
   const {
-    getState,
     options: {
       enableGlobalFilterRankedResults,
       manualExpanding,
@@ -92,8 +92,8 @@ export const getCanRankRows = <TData extends ST_RowData>(
       manualGrouping,
       manualSorting,
     },
+    state: { expanded, globalFilterFn },
   } = table;
-  const { expanded, globalFilterFn } = getState();
 
   return (
     !manualExpanding &&
@@ -110,7 +110,7 @@ export const getCanRankRows = <TData extends ST_RowData>(
 export const getIsRankingRows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) => {
-  const { globalFilter, sorting } = table.getState();
+  const { globalFilter, sorting } = table.state;
 
   return (
     getCanRankRows(table) &&
@@ -141,7 +141,6 @@ export const getIsRowSelected = <TData extends ST_RowData>({
 export const getST_RowSelectionHandler =
   <TData extends ST_RowData>({
     row,
-    staticRowIndex = 0,
     table,
   }: {
     row: ST_Row<TData>;
@@ -153,67 +152,32 @@ export const getST_RowSelectionHandler =
     value?: boolean,
   ) => {
     const {
-      getState,
-      options: {
-        enableBatchRowSelection,
-        enableMultiRowSelection,
-        enableRowPinning,
-        manualPagination,
-        rowPinningDisplayMode,
-      },
-      refs: { lastSelectedRowId: lastSelectedRowId },
+      options: { enableRowPinning, rowPinningDisplayMode },
     } = table;
-    const {
-      pagination: { pageIndex, pageSize },
-    } = getState();
-
-    const paginationOffset = manualPagination ? 0 : pageSize * pageIndex;
 
     const wasCurrentRowChecked = getIsRowSelected({ row, table });
+    const checked = value ?? !wasCurrentRowChecked;
 
-    // toggle selection of this row
-    row.toggleSelected(value ?? !wasCurrentRowChecked);
+    // toggle selection of this row; with Shift held (or any event that
+    // `isRowRangeSelectionEvent` accepts) TanStack extends the toggle to the
+    // rows between the last toggled row and this one (`enableRowRangeSelection`)
+    const selectionBefore = table.baseAtoms.rowSelection.get();
+    row.getToggleSelectedHandler()({
+      nativeEvent: (event as any).nativeEvent,
+      shiftKey: (event as any).shiftKey,
+      target: { checked },
+    });
+    const selectionAfter = table.baseAtoms.rowSelection.get();
 
     const changedRowIds = new Set<string>([row.id]);
-
-    // if shift key is pressed, select all rows between last selected and this one
-    if (
-      enableBatchRowSelection &&
-      enableMultiRowSelection &&
-      (event as any).nativeEvent.shiftKey &&
-      lastSelectedRowId.current !== null
-    ) {
-      const rows = getST_Rows(table, true);
-
-      const lastIndex = rows.findIndex(
-        (r) => r.id === lastSelectedRowId.current,
-      );
-
-      if (lastIndex !== -1) {
-        const isLastIndexChecked = getIsRowSelected({
-          row: rows?.[lastIndex],
-          table,
-        });
-
-        const currentIndex = staticRowIndex + paginationOffset;
-        const [start, end] =
-          lastIndex < currentIndex
-            ? [lastIndex, currentIndex]
-            : [currentIndex, lastIndex];
-
-        // toggle selection of all rows between last selected and this one
-        // but only if the last selected row is not the same as the current one
-        if (wasCurrentRowChecked !== isLastIndexChecked) {
-          for (let i = start; i <= end; i++) {
-            rows[i].toggleSelected(!wasCurrentRowChecked);
-            changedRowIds.add(rows[i].id);
-          }
-        }
+    for (const rowId of new Set([
+      ...Object.keys(selectionBefore),
+      ...Object.keys(selectionAfter),
+    ])) {
+      if (!!selectionBefore[rowId] !== !!selectionAfter[rowId]) {
+        changedRowIds.add(rowId);
       }
     }
-
-    // record the last selected row id
-    lastSelectedRowId.current = row.id;
 
     // if all sub rows were selected, unselect them
     if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
@@ -243,7 +207,6 @@ export const getST_SelectAllHandler =
   ) => {
     const {
       options: { enableRowPinning, rowPinningDisplayMode, selectAllMode },
-      refs: { lastSelectedRowId },
     } = table;
 
     selectAllMode === 'all' || forceAll
@@ -252,5 +215,4 @@ export const getST_SelectAllHandler =
     if (enableRowPinning && rowPinningDisplayMode?.includes('select')) {
       table.setRowPinning({ bottom: [], top: [] });
     }
-    lastSelectedRowId.current = null;
   };

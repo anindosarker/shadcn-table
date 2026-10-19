@@ -10,16 +10,16 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type TableCellProps,
-} from '../types';
-import { cellKeyboardShortcuts } from '../utils/cell.utils';
-import { getCommonSRTCellStyles } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableHeadCellColumnActionsButton } from './ST_TableHeadCellColumnActionsButton';
-import { ST_TableHeadCellFilterContainer } from './ST_TableHeadCellFilterContainer';
-import { ST_TableHeadCellFilterLabel } from './ST_TableHeadCellFilterLabel';
-import { ST_TableHeadCellGrabHandle } from './ST_TableHeadCellGrabHandle';
-import { ST_TableHeadCellResizeHandle } from './ST_TableHeadCellResizeHandle';
-import { ST_TableHeadCellSortLabel } from './ST_TableHeadCellSortLabel';
+} from '@/components/ui-base/shadcn-table/types';
+import { cellKeyboardShortcuts } from '@/components/ui-base/shadcn-table/utils/cell.utils';
+import { getCommonSRTCellStyles } from '@/components/ui-base/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_TableHeadCellColumnActionsButton } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellColumnActionsButton';
+import { ST_TableHeadCellFilterContainer } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellFilterContainer';
+import { ST_TableHeadCellFilterLabel } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellFilterLabel';
+import { ST_TableHeadCellGrabHandle } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellGrabHandle';
+import { ST_TableHeadCellResizeHandle } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellResizeHandle';
+import { ST_TableHeadCellSortLabel } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellSortLabel';
 
 export interface ST_TableHeadCellProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -42,7 +42,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 }: ST_TableHeadCellProps<TData>) => {
   // const theme = useTheme();
   const {
-    getState,
     options: {
       columnFilterDisplayMode,
       columnResizeDirection,
@@ -64,14 +63,14 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     setHoveredColumn,
   } = table;
   const {
-    columnSizingInfo,
+    columnResizing,
     density,
     draggingColumn,
     grouping,
     hoveredColumn,
     isFullScreen,
     showColumnFilters,
-  } = getState();
+  } = table.state;
   const { column } = header;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -116,7 +115,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 
   const draggingBorders = useMemo(() => {
     const showResizeBorder =
-      columnSizingInfo.isResizingColumn === column.id &&
+      columnResizing.isResizingColumn === column.id &&
       columnResizeMode === 'onChange' &&
       !header.subHeaders.length;
 
@@ -144,7 +143,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 
     return draggingBorders;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draggingColumn, hoveredColumn, columnSizingInfo.isResizingColumn]);
+  }, [draggingColumn, hoveredColumn, columnResizing.isResizingColumn]);
 
   const handleDragEnter = () => {
     if (enableGrouping && hoveredColumn?.id === 'drop-zone') {

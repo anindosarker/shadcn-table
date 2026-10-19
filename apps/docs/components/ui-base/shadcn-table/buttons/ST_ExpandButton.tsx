@@ -7,9 +7,9 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 
 const expandButtonVariants = cva('', {
   variants: {
@@ -38,7 +38,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
 }: ST_ExpandButtonProps<TData>) => {
   // Note: MRT's useTheme dropped — ST has no theme.direction (rtl).
   const {
-    getState,
     options: {
       icons: { ExpandMoreIcon },
       localization,
@@ -47,7 +46,7 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
       stExpandButtonProps,
     },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
 
   const iconButtonProps = parseFromValuesOrFunc(stExpandButtonProps, {
     row,

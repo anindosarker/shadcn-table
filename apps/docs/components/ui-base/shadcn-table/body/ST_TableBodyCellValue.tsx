@@ -1,5 +1,9 @@
 import { type ReactNode, type RefObject } from 'react';
-import { type ST_Cell, type ST_RowData, type ST_TableInstance } from '../types';
+import {
+  type ST_Cell,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui-base/shadcn-table/types';
 import highlightWords from 'highlight-words';
 
 const allowedTypes = ['string', 'number'];
@@ -20,7 +24,6 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   table,
 }: ST_TableBodyCellValueProps<TData>) => {
   const {
-    getState,
     options: {
       enableFilterMatchHighlighting,
       // mrtTheme: { matchHighlightColor },
@@ -29,7 +32,7 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;
-  const { globalFilter, globalFilterFn } = getState();
+  const { globalFilter, globalFilterFn } = table.state;
   const filterValue = column.getFilterValue();
 
   let renderedCellValue =

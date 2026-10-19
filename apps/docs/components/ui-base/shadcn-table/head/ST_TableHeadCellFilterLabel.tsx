@@ -4,16 +4,19 @@ import { Button } from '@/components/ui-base/button';
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import { Popover } from '@/components/ui-base/popover';
 import { cn } from '@/lib/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { ST_TableHeadCellFilterContainer } from './ST_TableHeadCellFilterContainer';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_TableHeadCellFilterContainer } from '@/components/ui-base/shadcn-table/head/ST_TableHeadCellFilterContainer';
 import {
   type ButtonProps,
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
-import { getValueAndLabel } from '../utils/utils';
+} from '@/components/ui-base/shadcn-table/types';
+import {
+  getColumnFilterInfo,
+  useDropdownOptions,
+} from '@/components/ui-base/shadcn-table/utils/column.utils';
+import { getValueAndLabel } from '@/components/ui-base/shadcn-table/utils/utils';
 
 // Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(

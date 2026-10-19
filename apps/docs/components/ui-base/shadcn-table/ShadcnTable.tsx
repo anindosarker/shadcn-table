@@ -1,12 +1,12 @@
 import { TooltipProvider } from '@/components/ui-base/tooltip';
-import { useShadcnTable } from './hooks/useShadcnTable';
+import { useShadcnTable } from '@/components/ui-base/shadcn-table/hooks/useShadcnTable';
 import {
   type ST_RowData,
   type ST_TableInstance,
   type ST_TableOptions,
   type Xor,
-} from './types';
-import { ST_TableLayout } from './table/ST_TableLayout';
+} from '@/components/ui-base/shadcn-table/types';
+import { ST_TableLayout } from '@/components/ui-base/shadcn-table/table/ST_TableLayout';
 
 type TableInstanceProp<TData extends ST_RowData> = {
   table: ST_TableInstance<TData>;

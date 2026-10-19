@@ -26,14 +26,14 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type SelectProps,
-} from '../types';
+} from '@/components/ui-base/shadcn-table/types';
 import {
   getPaginationItems,
   type ST_UsePaginationItem,
-} from '../utils/pagination.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { useST_MediaQuery } from './useST_MediaQuery';
+} from '@/components/ui-base/shadcn-table/utils/pagination.utils';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { useST_MediaQuery } from '@/components/ui-base/shadcn-table/toolbar/useST_MediaQuery';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 
@@ -63,7 +63,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   const isMobile = useST_MediaQuery('(max-width:720px)');
 
   const {
-    getState,
     options: {
       enableToolbarInternalActions,
       icons: { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon },
@@ -75,7 +74,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   } = table;
   const {
     pagination: { pageIndex = 0, pageSize = 10 },
-  } = getState();
+  } = table.state;
 
   const paginationProps = {
     ...parseFromValuesOrFunc(stPaginationProps, {

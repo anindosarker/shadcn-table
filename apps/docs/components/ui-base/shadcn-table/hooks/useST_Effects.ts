@@ -3,17 +3,16 @@ import {
   type ST_RowData,
   type ST_SortingState,
   type ST_TableInstance,
-} from '../types';
-import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
-import { getCanRankRows } from '../utils/row.utils';
+} from '@/components/ui-base/shadcn-table/types';
+import { getDefaultColumnOrderIds } from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
+import { getCanRankRows } from '@/components/ui-base/shadcn-table/utils/row.utils';
 
 export const useST_Effects = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) => {
   const {
     getIsSomeRowsPinned,
-    getPrePaginationRowModel,
-    getState,
+    getPrePaginatedRowModel,
     options: { enablePagination, enableRowPinning, rowCount },
   } = table;
   const {
@@ -25,10 +24,10 @@ export const useST_Effects = <TData extends ST_RowData>(
     pagination,
     showSkeletons,
     sorting,
-  } = getState();
+  } = table.state;
 
   const totalColumnCount = table.options.columns.length;
-  const totalRowCount = rowCount ?? getPrePaginationRowModel().rows.length;
+  const totalRowCount = rowCount ?? getPrePaginatedRowModel().rows.length;
 
   const rerender = useReducer(() => ({}), {})[1];
   const initialBodyHeight = useRef<string>(null);

@@ -2,9 +2,9 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type ST_TableOptions,
-} from '../types';
-import { useST_TableInstance } from './useST_TableInstance';
-import { useST_TableOptions } from './useST_TableOptions';
+} from '@/components/ui-base/shadcn-table/types';
+import { useST_TableInstance } from '@/components/ui-base/shadcn-table/hooks/useST_TableInstance';
+import { useST_TableOptions } from '@/components/ui-base/shadcn-table/hooks/useST_TableOptions';
 
 export const useShadcnTable = <TData extends ST_RowData>(
   tableOptions: ST_TableOptions<TData>,

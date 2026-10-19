@@ -5,8 +5,8 @@ import {
   type ST_CircularProgressProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
 
 export interface ST_TableLoadingOverlayProps<TData extends ST_RowData>
   extends ST_CircularProgressProps {

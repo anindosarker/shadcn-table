@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useReactTable } from '@tanstack/react-table';
+import { useTable } from '@tanstack/react-table';
 import {
   type ST_Cell,
   type ST_Column,
   type ST_ColumnDef,
   type ST_ColumnFilterFnsState,
   type ST_ColumnOrderState,
-  type ST_ColumnSizingInfoState,
+  type ST_ColumnResizingState,
   type ST_DefinedTableOptions,
   type ST_DensityState,
   type ST_FilterOption,
@@ -18,13 +18,13 @@ import {
   type ST_TableInstance,
   type ST_TableState,
   type ST_Updater,
-} from '../types';
+} from '@/components/ui-base/shadcn-table/types';
 import {
   getAllLeafColumnDefs,
   getColumnId,
   getDefaultColumnFilterFn,
   prepareColumns,
-} from '../utils/column.utils';
+} from '@/components/ui-base/shadcn-table/utils/column.utils';
 import {
   getDefaultColumnOrderIds,
   showRowActionsColumn,
@@ -34,26 +34,26 @@ import {
   showRowPinningColumn,
   showRowSelectionColumn,
   showRowSpacerColumn,
-} from '../utils/displayColumn.utils';
-import { createRow } from '../utils/tanstack.helpers';
-import { getST_RowActionsColumnDef } from './display-columns/getST_RowActionsColumnDef';
-import { getST_RowDragColumnDef } from './display-columns/getST_RowDragColumnDef';
-import { getST_RowExpandColumnDef } from './display-columns/getST_RowExpandColumnDef';
-import { getST_RowNumbersColumnDef } from './display-columns/getST_RowNumbersColumnDef';
-import { getST_RowPinningColumnDef } from './display-columns/getST_RowPinningColumnDef';
-import { getST_RowSelectColumnDef } from './display-columns/getST_RowSelectColumnDef';
-import { getST_RowSpacerColumnDef } from './display-columns/getST_RowSpacerColumnDef';
-import { useST_Effects } from './useST_Effects';
+} from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
+import { stFeatures } from '@/components/ui-base/shadcn-table/utils/tanstack.features';
+import { createRow } from '@/components/ui-base/shadcn-table/utils/tanstack.helpers';
+import { getST_RowActionsColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef';
+import { getST_RowDragColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowDragColumnDef';
+import { getST_RowExpandColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowExpandColumnDef';
+import { getST_RowNumbersColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowNumbersColumnDef';
+import { getST_RowPinningColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowPinningColumnDef';
+import { getST_RowSelectColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowSelectColumnDef';
+import { getST_RowSpacerColumnDef } from '@/components/ui-base/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef';
+import { useST_Effects } from '@/components/ui-base/shadcn-table/hooks/useST_Effects';
 
 /**
- * The MRT hook that wraps the TanStack useReactTable hook and adds additional functionality
+ * The MRT hook that wraps the TanStack useTable hook and adds additional functionality
  * @param definedTableOptions - table options with proper defaults set
  * @returns the MRT table instance
  */
 export const useST_TableInstance = <TData extends ST_RowData>(
   definedTableOptions: ST_DefinedTableOptions<TData>,
 ): ST_TableInstance<TData> => {
-  const lastSelectedRowId = useRef<null | string>(null);
   const actionCellRef = useRef<HTMLTableCellElement>(null);
   const bottomToolbarRef = useRef<HTMLDivElement>(null);
   const editInputRefs = useRef<Record<string, HTMLInputElement>>({});
@@ -79,6 +79,14 @@ export const useST_TableInstance = <TData extends ST_RowData>(
         },
       } as ST_StatefulTableOptions<TData>);
     initState.globalFilterFn = definedTableOptions.globalFilterFn ?? 'fuzzy';
+    // v9 spreads a partial `columnPinning` over its defaults without filling
+    // the other side, so `{ start: [...] }` alone would read `end` as undefined
+    if (initState.columnPinning) {
+      initState.columnPinning = {
+        start: initState.columnPinning.start ?? [],
+        end: initState.columnPinning.end ?? [],
+      };
+    }
     return initState;
   }, []);
 
@@ -109,9 +117,9 @@ export const useST_TableInstance = <TData extends ST_RowData>(
   const [columnOrder, onColumnOrderChange] = useState<ST_ColumnOrderState>(
     initialState.columnOrder ?? [],
   );
-  const [columnSizingInfo, onColumnSizingInfoChange] =
-    useState<ST_ColumnSizingInfoState>(
-      initialState.columnSizingInfo ?? ({} as ST_ColumnSizingInfoState),
+  const [columnResizing, onColumnResizingChange] =
+    useState<ST_ColumnResizingState>(
+      initialState.columnResizing ?? ({} as ST_ColumnResizingState),
     );
   const [density, setDensity] = useState<ST_DensityState>(
     initialState?.density ?? 'comfortable',
@@ -178,7 +186,7 @@ export const useST_TableInstance = <TData extends ST_RowData>(
     actionCell,
     columnFilterFns,
     columnOrder,
-    columnSizingInfo,
+    columnResizing,
     creatingRow,
     density,
     draggingColumn,
@@ -205,7 +213,7 @@ export const useST_TableInstance = <TData extends ST_RowData>(
   //don't recompute columnDefs while resizing column or dragging column/row
   const columnDefsRef = useRef<ST_ColumnDef<TData>[]>([]);
   statefulTableOptions.columns =
-    statefulTableOptions.state.columnSizingInfo.isResizingColumn ||
+    statefulTableOptions.state.columnResizing.isResizingColumn ||
     statefulTableOptions.state.draggingColumn ||
     statefulTableOptions.state.draggingRow
       ? columnDefsRef.current
@@ -263,68 +271,80 @@ export const useST_TableInstance = <TData extends ST_RowData>(
     ],
   );
 
-  // @ts-expect-error ST options carry keys beyond TanStack TableOptions
-  const table = useReactTable({
-    onColumnOrderChange,
-    onColumnSizingInfoChange,
-    onGroupingChange,
-    onPaginationChange,
-    ...statefulTableOptions,
-    globalFilterFn: statefulTableOptions.filterFns?.[globalFilterFn ?? 'fuzzy'],
-  }) as ST_TableInstance<TData>;
+  // The ST-only state slices (density, isFullScreen, ...) live in React state
+  // and in `options.state`, not in TanStack's store, so the selector folds
+  // them into `table.state` next to the TanStack slices: one read for both.
+  const tanstackTable = useTable(
+    {
+      onColumnOrderChange,
+      onColumnResizingChange,
+      onGroupingChange,
+      onPaginationChange,
+      ...statefulTableOptions,
+      features: stFeatures,
+      globalFilterFn:
+        statefulTableOptions.filterFns?.[globalFilterFn ?? 'fuzzy'],
+    } as any,
+    (state) => ({ ...state, ...statefulTableOptions.state }),
+  );
 
-  table.refs = {
-    actionCellRef,
-    bottomToolbarRef,
-    editInputRefs,
-    filterInputRefs,
-    lastSelectedRowId,
-    searchInputRef,
-    tableContainerRef,
-    tableFooterRef,
-    tableHeadCellRefs,
-    tableHeadRef,
-    tableLayoutRef,
-    topToolbarRef,
-  };
-
-  table.setActionCell =
-    statefulTableOptions.onActionCellChange ?? setActionCell;
-  table.setCreatingRow = (row: ST_Updater<ST_Row<TData> | null | true>) => {
-    let _row = row;
-    if (row === true) {
-      _row = createRow(table);
-    }
-    statefulTableOptions?.onCreatingRowChange?.(_row as ST_Row<TData> | null) ??
-      _setCreatingRow(_row as ST_Row<TData> | null);
-  };
-  table.setColumnFilterFns =
-    statefulTableOptions.onColumnFilterFnsChange ?? setColumnFilterFns;
-  table.setDensity = statefulTableOptions.onDensityChange ?? setDensity;
-  table.setDraggingColumn =
-    statefulTableOptions.onDraggingColumnChange ?? setDraggingColumn;
-  table.setDraggingRow =
-    statefulTableOptions.onDraggingRowChange ?? setDraggingRow;
-  table.setEditingCell =
-    statefulTableOptions.onEditingCellChange ?? setEditingCell;
-  table.setEditingRow =
-    statefulTableOptions.onEditingRowChange ?? setEditingRow;
-  table.setGlobalFilterFn =
-    statefulTableOptions.onGlobalFilterFnChange ?? setGlobalFilterFn;
-  table.setHoveredColumn =
-    statefulTableOptions.onHoveredColumnChange ?? setHoveredColumn;
-  table.setHoveredRow =
-    statefulTableOptions.onHoveredRowChange ?? setHoveredRow;
-  table.setIsFullScreen =
-    statefulTableOptions.onIsFullScreenChange ?? setIsFullScreen;
-  table.setShowAlertBanner =
-    statefulTableOptions.onShowAlertBannerChange ?? setShowAlertBanner;
-  table.setShowColumnFilters =
-    statefulTableOptions.onShowColumnFiltersChange ?? setShowColumnFilters;
-  table.setShowGlobalFilter =
-    statefulTableOptions.onShowGlobalFilterChange ?? setShowGlobalFilter;
-  table.setShowToolbarDropZone =
-    statefulTableOptions.onShowToolbarDropZoneChange ?? setShowToolbarDropZone;
+  // v9 assigns the row, column, cell and header APIs on prototypes, so those
+  // objects must never be spread; the table instance keeps its APIs as own
+  // properties and `Object.assign` extends it in place.
+  const table = Object.assign(
+    tanstackTable as unknown as ST_TableInstance<TData>,
+    {
+      refs: {
+        actionCellRef,
+        bottomToolbarRef,
+        editInputRefs,
+        filterInputRefs,
+        searchInputRef,
+        tableContainerRef,
+        tableFooterRef,
+        tableHeadCellRefs,
+        tableHeadRef,
+        tableLayoutRef,
+        topToolbarRef,
+      },
+      setActionCell: statefulTableOptions.onActionCellChange ?? setActionCell,
+      setCreatingRow: (row: ST_Updater<ST_Row<TData> | null | true>) => {
+        let _row = row;
+        if (row === true) {
+          _row = createRow(table);
+        }
+        statefulTableOptions?.onCreatingRowChange?.(
+          _row as ST_Row<TData> | null,
+        ) ?? _setCreatingRow(_row as ST_Row<TData> | null);
+      },
+      setColumnFilterFns:
+        statefulTableOptions.onColumnFilterFnsChange ?? setColumnFilterFns,
+      setDensity: statefulTableOptions.onDensityChange ?? setDensity,
+      setDraggingColumn:
+        statefulTableOptions.onDraggingColumnChange ?? setDraggingColumn,
+      setDraggingRow:
+        statefulTableOptions.onDraggingRowChange ?? setDraggingRow,
+      setEditingCell:
+        statefulTableOptions.onEditingCellChange ?? setEditingCell,
+      setEditingRow: statefulTableOptions.onEditingRowChange ?? setEditingRow,
+      setGlobalFilterFn:
+        statefulTableOptions.onGlobalFilterFnChange ?? setGlobalFilterFn,
+      setHoveredColumn:
+        statefulTableOptions.onHoveredColumnChange ?? setHoveredColumn,
+      setHoveredRow: statefulTableOptions.onHoveredRowChange ?? setHoveredRow,
+      setIsFullScreen:
+        statefulTableOptions.onIsFullScreenChange ?? setIsFullScreen,
+      setShowAlertBanner:
+        statefulTableOptions.onShowAlertBannerChange ?? setShowAlertBanner,
+      setShowColumnFilters:
+        statefulTableOptions.onShowColumnFiltersChange ?? setShowColumnFilters,
+      setShowGlobalFilter:
+        statefulTableOptions.onShowGlobalFilterChange ?? setShowGlobalFilter,
+      setShowToolbarDropZone:
+        statefulTableOptions.onShowToolbarDropZoneChange ??
+        setShowToolbarDropZone,
+    },
+  );
 
   useST_Effects(table);
 

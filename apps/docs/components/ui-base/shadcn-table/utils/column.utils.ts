@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type Row } from '@tanstack/react-table';
+import { constructAggregationFn } from '@tanstack/react-table';
 import {
   type DropdownOption,
   type ST_Column,
@@ -11,7 +11,7 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
+} from '@/components/ui-base/shadcn-table/types';
 
 export const getColumnId = <TData extends ST_RowData>(
   columnDef: ST_ColumnDef<TData>,
@@ -46,7 +46,7 @@ export const prepareColumns = <TData extends ST_RowData>({
     aggregationFns = {},
     defaultDisplayColumn,
     filterFns = {},
-    sortingFns = {},
+    sortFns = {},
     state: { columnFilterFns = {} } = {},
   } = tableOptions;
   return columnDefs.map((columnDef) => {
@@ -62,17 +62,21 @@ export const prepareColumns = <TData extends ST_RowData>({
         tableOptions,
       });
     } else if (columnDef.columnDefType === 'data') {
+      //assign aggregationFns by name, including the custom ones from the
+      //table option (v9 only resolves names against the static registry)
+      if (
+        typeof columnDef.aggregationFn === 'string' &&
+        Object.keys(aggregationFns).includes(columnDef.aggregationFn)
+      ) {
+        columnDef.aggregationFn = aggregationFns[columnDef.aggregationFn];
+      }
       //assign aggregationFns if multiple aggregationFns are provided
       if (Array.isArray(columnDef.aggregationFn)) {
         const aggFns = columnDef.aggregationFn as string[];
-        columnDef.aggregationFn = (
-          columnId: string,
-          leafRows: Row<TData>[],
-          childRows: Row<TData>[],
-        ) =>
-          aggFns.map((fn) =>
-            aggregationFns[fn]?.(columnId, leafRows, childRows),
-          );
+        columnDef.aggregationFn = constructAggregationFn({
+          aggregate: (context) =>
+            aggFns.map((fn) => aggregationFns[fn]?.aggregate(context)),
+        });
       }
 
       //assign filterFns
@@ -83,10 +87,9 @@ export const prepareColumns = <TData extends ST_RowData>({
           columnFilterFns[columnDef.id];
       }
 
-      //assign sortingFns
-      if (Object.keys(sortingFns).includes(columnDef.sortingFn as string)) {
-        // @ts-expect-error sortingFn name indexes the sortingFns map
-        columnDef.sortingFn = sortingFns[columnDef.sortingFn];
+      //assign sortFns
+      if (Object.keys(sortFns).includes(columnDef.sortFn as string)) {
+        columnDef.sortFn = sortFns[columnDef.sortFn as string];
       }
     } else if (columnDef.columnDefType === 'display') {
       columnDef = {
@@ -126,6 +129,8 @@ export const getDefaultColumnFilterFn = <TData extends ST_RowData>(
   return 'fuzzy';
 };
 
+const emptyFacetedUniqueValues = new Map<any, number>();
+
 export const getColumnFilterInfo = <TData extends ST_RowData>({
   header,
   table,
@@ -134,7 +139,7 @@ export const getColumnFilterInfo = <TData extends ST_RowData>({
   table: ST_TableInstance<TData>;
 }) => {
   const {
-    options: { columnFilterModeOptions },
+    options: { columnFilterModeOptions, enableFacetedValues },
   } = table;
   const { column } = header;
   const { columnDef } = column;
@@ -159,7 +164,11 @@ export const getColumnFilterInfo = <TData extends ST_RowData>({
   const allowedColumnFilterOptions =
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
 
-  const facetedUniqueValues = column.getFacetedUniqueValues();
+  // v9 computes facets as soon as the row model is registered; the option
+  // keeps v8's "empty until enabled" behaviour
+  const facetedUniqueValues = enableFacetedValues
+    ? column.getFacetedUniqueValues()
+    : emptyFacetedUniqueValues;
 
   return {
     allowedColumnFilterOptions,

@@ -4,8 +4,11 @@ import {
   type ST_Localization,
   type ST_RowData,
   type ST_StatefulTableOptions,
-} from '../types';
-import { getAllLeafColumnDefs, getColumnId } from './column.utils';
+} from '@/components/ui-base/shadcn-table/types';
+import {
+  getAllLeafColumnDefs,
+  getColumnId,
+} from '@/components/ui-base/shadcn-table/utils/column.utils';
 
 export function defaultDisplayColumnProps<TData extends ST_RowData>({
   header,

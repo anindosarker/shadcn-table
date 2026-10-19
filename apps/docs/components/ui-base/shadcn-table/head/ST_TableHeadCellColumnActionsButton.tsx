@@ -7,10 +7,10 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { ST_ColumnActionMenu } from '../menus/ST_ColumnActionMenu';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_ColumnActionMenu } from '@/components/ui-base/shadcn-table/menus/ST_ColumnActionMenu';
 
 // Note: base maps MRT's sx (m -8px -4px, opacity .3, hover opacity 1, transition all 150ms); 2rem box is icon-sm.
 const columnActionsButtonVariants = cva(

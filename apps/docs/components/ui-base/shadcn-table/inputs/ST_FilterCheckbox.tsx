@@ -7,9 +7,9 @@ import {
   type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui-base/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 
 const filterCheckboxVariants = cva('', {
   variants: {
@@ -43,10 +43,9 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterCheckboxProps<TData>) => {
   const {
-    getState,
     options: { localization, stFilterCheckboxProps },
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
   const { columnDef } = column;
 
   const checkboxProps = {
