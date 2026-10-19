@@ -5,12 +5,15 @@
 // registry.json, then `shadcn build` turns it into public/r/<name>.json.
 import fs from 'node:fs';
 import path from 'node:path';
+import { registry as base } from '../bases/base/registry.ts';
 import { registry as radix } from '../bases/radix/registry.ts';
 import { DEV, PKG } from './registry-lib.mjs';
 
 const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 
-const bases = [radix];
+// Radix first: its main item keeps the name and the GitHub address v0.1.x
+// published (`shadcn-table`); the Base UI edition is `shadcn-table-base`.
+const bases = [radix, base];
 
 const registry = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',

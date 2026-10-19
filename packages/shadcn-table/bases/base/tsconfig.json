@@ -1,8 +1,14 @@
 {
+  // The editor project for this tree (nearest tsconfig.json) and the alias
+  // the shadcn CLI reads when parts are added from this directory. The
+  // package-level tsconfig.app.json / tsconfig.base.json run the gates.
+  "extends": "../../tsconfig.app.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
-  }
+  },
+  "include": ["."],
+  "exclude": ["node_modules"]
 }
