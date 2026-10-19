@@ -261,25 +261,3 @@ jobs:
           echo "::group::package.json"; cat package.json; echo "::endgroup::"
           echo "::group::shadcn output"; cat shadcn-add.log 2>/dev/null || true; echo "::endgroup::"
         working-directory: ${{ runner.temp }}/app
-
-  # The two trees are meant to differ only in the files the script allowlists
-  # (the base-specific primitives and the files that wrap them). The script
-  # prints a markdown table and always exits 0; the job never blocks a merge.
-  diff-bases:
-    name: diff-bases (report, non-blocking)
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Diff bases/radix against bases/base
-        run: |
-          set -o pipefail
-          script=packages/shadcn-table/scripts/diff-bases.mjs
-          if [ -f "$script" ]; then
-            node "$script" 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
-          else
-            echo "## diff-bases: $script is not in this checkout; nothing compared." | tee -a "$GITHUB_STEP_SUMMARY"
-          fi

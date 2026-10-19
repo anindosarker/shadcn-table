@@ -1,7 +1,8 @@
 /**
- * Docs pages that render an example. Shared by scripts/build-registry-items.mjs
- * (registry item title and description) and lib/example-prompt.ts (the page
- * URL in the copy prompt), so both resolve an example to the same page.
+ * Docs pages that render an example. Shared by
+ * packages/shadcn-table/registry/examples.mjs (registry item title and
+ * description) and lib/example-prompt.ts (the page URL in the copy prompt),
+ * so both resolve an example to the same page.
  *
  * Plain ESM so the Node script can import it without a TypeScript loader;
  * tsconfig has `allowJs`, so the app imports it with types from the JSDoc.

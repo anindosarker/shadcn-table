@@ -48,8 +48,18 @@ Gates: `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `lint`, `test`, `te
 
 ## How to add a shadcn part
 
-Parts are per base. Until `registry/add-part.mjs` lands, copy the part by hand: run
-`pnpm dlx shadcn@latest add <part>` in a scratch project initialised with the base's style
-(`radix-nova` or `base-nova`, see `bases/<base>/components.json`), copy the generated
-`components/ui/<part>.tsx` into `bases/<base>/components/ui/`, and import it from the library
-as `@/components/ui/<part>`; the registry build turns that import into a `registryDependency`.
+Parts are per base. From the repo root:
+
+```bash
+pnpm add-part radix tooltip        # bases/radix/components/ui/tooltip.tsx, style radix-nova
+pnpm add-part base tooltip         # bases/base/components/ui/tooltip.tsx, style base-nova
+```
+
+`registry/add-part.mjs` fetches the part in the base's style (`bases/<base>/components.json`),
+lets the shadcn CLI install it into a scratch project so the file goes through the CLI's own
+transforms, rewrites the upstream `cn` package import to `@/lib/utils`, formats the file and
+prints the part's `dependencies` (npm) and `registryDependencies` (other parts) for you to add
+on purpose; it never writes those. Re-adding a part the base already has refreshes it from
+upstream, so the diff shows what changed there (a forked part such as `checkbox` will differ).
+Import the part from the library as `@/components/ui/<part>`; the registry build turns that
+import into a `registryDependency`.
