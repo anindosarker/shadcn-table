@@ -77,6 +77,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableToolbarInternalActions = true,
   enableTopToolbar = true,
   filterFns,
+  getRowCanExpand,
   icons,
   id = useId(),
   layoutMode,
@@ -94,6 +95,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   positionPagination = 'bottom',
   positionToolbarAlertBanner = 'top',
   positionToolbarDropZone = 'top',
+  renderDetailPanel,
   rowNumberDisplayMode = 'static',
   rowPinningDisplayMode = 'sticky',
   selectAllMode = 'page',
@@ -206,6 +208,14 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableToolbarInternalActions,
     enableTopToolbar,
     filterFns,
+    // v9 makes `row.toggleExpanded()` a no-op when `row.getCanExpand()` is
+    // false (v8 toggled regardless) and detail-panel rows have no sub rows, so
+    // a table with `renderDetailPanel` treats every row as expandable.
+    getRowCanExpand:
+      getRowCanExpand ??
+      ((row) =>
+        !!renderDetailPanel ||
+        ((enableExpanding ?? true) && !!row.subRows?.length)),
     getSubRows: (row) => row?.subRows,
     icons,
     id,
@@ -224,6 +234,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     positionPagination,
     positionToolbarAlertBanner,
     positionToolbarDropZone,
+    renderDetailPanel,
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
