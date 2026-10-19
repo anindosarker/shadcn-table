@@ -4,8 +4,8 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 export interface ST_ToggleFullScreenButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -17,14 +17,13 @@ export const ST_ToggleFullScreenButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleFullScreenButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { FullscreenExitIcon, FullscreenIcon },
       localization,
     },
     setIsFullScreen,
   } = table;
-  const { isFullScreen } = getState();
+  const { isFullScreen } = table.state;
 
   const [tooltipOpened, setTooltipOpened] = useState(false);
 

@@ -18,17 +18,17 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type TableCellProps,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 import {
   isCellEditable,
   cellKeyboardShortcuts,
   openEditingCell,
-} from '../utils/cell.utils';
-import { getCommonSRTCellStyles } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableBodyCellValue } from './ST_TableBodyCellValue';
-import { ST_CopyButton } from '../buttons/ST_CopyButton';
-import { ST_EditCellTextField } from '../inputs/ST_EditCellTextField';
+} from '@/components/ui/shadcn-table/utils/cell.utils';
+import { getCommonSRTCellStyles } from '@/components/ui/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_TableBodyCellValue } from '@/components/ui/shadcn-table/body/ST_TableBodyCellValue';
+import { ST_CopyButton } from '@/components/ui/shadcn-table/buttons/ST_CopyButton';
+import { ST_EditCellTextField } from '@/components/ui/shadcn-table/inputs/ST_EditCellTextField';
 
 export interface ST_TableBodyCellProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -55,7 +55,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
 }: ST_TableBodyCellProps<TData>) => {
   // const theme = useTheme();
   const {
-    getState,
     options: {
       columnResizeDirection,
       columnResizeMode,
@@ -77,7 +76,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   } = table;
   const {
     actionCell,
-    columnSizingInfo,
+    columnResizing,
     creatingRow,
     density,
     draggingColumn,
@@ -88,7 +87,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     hoveredRow,
     isLoading,
     showSkeletons,
-  } = getState();
+  } = table.state;
   const { column, row } = cell;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -127,7 +126,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     const isFirstColumn = column.getIsFirstColumn();
     const isLastColumn = column.getIsLastColumn();
     const isLastRow = numRows && staticRowIndex === numRows - 1;
-    const isResizingColumn = columnSizingInfo.isResizingColumn === column.id;
+    const isResizingColumn = columnResizing.isResizingColumn === column.id;
     const showResizeBorder =
       isResizingColumn && columnResizeMode === 'onChange';
 
@@ -169,7 +168,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
       : undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    columnSizingInfo.isResizingColumn,
+    columnResizing.isResizingColumn,
     draggingColumn,
     draggingRow,
     hoveredColumn,

@@ -40,7 +40,7 @@ const Example = () => {
     enableSorting: false,
     stRowDragHandleProps: ({ table }) => ({
       onDragEnd: () => {
-        const { draggingRow, hoveredRow } = table.getState();
+        const { draggingRow, hoveredRow } = table.state;
         if (hoveredRow && draggingRow) {
           data.splice(
             (hoveredRow as ST_Row<Person>).index,

@@ -4,13 +4,13 @@ import {
   type DivProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_LinearProgressBar } from './ST_LinearProgressBar';
-import { ST_TablePagination } from './ST_TablePagination';
-import { ST_ToolbarAlertBanner } from './ST_ToolbarAlertBanner';
-import { ST_ToolbarDropZone } from './ST_ToolbarDropZone';
-import { useST_MediaQuery } from './useST_MediaQuery';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_LinearProgressBar } from '@/components/ui/shadcn-table/toolbar/ST_LinearProgressBar';
+import { ST_TablePagination } from '@/components/ui/shadcn-table/toolbar/ST_TablePagination';
+import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/toolbar/ST_ToolbarAlertBanner';
+import { ST_ToolbarDropZone } from '@/components/ui/shadcn-table/toolbar/ST_ToolbarDropZone';
+import { useST_MediaQuery } from '@/components/ui/shadcn-table/toolbar/useST_MediaQuery';
 
 export interface ST_BottomToolbarProps<TData extends ST_RowData>
   extends DivProps {
@@ -38,7 +38,6 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
   ...rest
 }: ST_BottomToolbarProps<TData>) => {
   const {
-    getState,
     options: {
       enablePagination,
       stBottomToolbarProps,
@@ -49,7 +48,7 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
     },
     refs: { bottomToolbarRef },
   } = table;
-  const { isFullScreen } = getState();
+  const { isFullScreen } = table.state;
 
   const isMobile = useST_MediaQuery('(max-width:720px)');
 

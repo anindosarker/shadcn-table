@@ -5,9 +5,9 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 const expandAllButtonVariants = cva('', {
   variants: {
@@ -35,7 +35,6 @@ export const ST_ExpandAllButton = <TData extends ST_RowData>({
     getCanSomeRowsExpand,
     getIsAllRowsExpanded,
     getIsSomeRowsExpanded,
-    getState,
     options: {
       icons: { KeyboardDoubleArrowDownIcon },
       localization,
@@ -44,7 +43,7 @@ export const ST_ExpandAllButton = <TData extends ST_RowData>({
     },
     toggleAllRowsExpanded,
   } = table;
-  const { density, isLoading } = getState();
+  const { density, isLoading } = table.state;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stExpandAllButtonProps, {

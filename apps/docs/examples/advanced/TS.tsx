@@ -99,7 +99,7 @@ const Example = () => {
             header: 'Start Date',
             filterVariant: 'date',
             filterFn: 'lessThan',
-            sortingFn: 'datetime',
+            sortFn: 'datetime',
             Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(), //render Date as a string
             Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
             stFilterTextFieldProps: {
@@ -126,8 +126,8 @@ const Example = () => {
       showColumnFilters: true,
       showGlobalFilter: true,
       columnPinning: {
-        left: ['st-row-expand', 'st-row-select'],
-        right: ['st-row-actions'],
+        start: ['st-row-expand', 'st-row-select'],
+        end: ['st-row-actions'],
       },
     },
     paginationDisplayMode: 'pages',

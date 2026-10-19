@@ -74,11 +74,9 @@ const Example = () => {
           Export All Data
         </Button>
         <Button
-          disabled={table.getPrePaginationRowModel().rows.length === 0}
+          disabled={table.getPrePaginatedRowModel().rows.length === 0}
           //export all rows, including from the next page, (still respects filtering and sorting)
-          onClick={() =>
-            handleExportRows(table.getPrePaginationRowModel().rows)
-          }
+          onClick={() => handleExportRows(table.getPrePaginatedRowModel().rows)}
         >
           <DownloadIcon />
           Export All Rows
@@ -92,9 +90,7 @@ const Example = () => {
           Export Page Rows
         </Button>
         <Button
-          disabled={
-            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
+          disabled={!table.getIsSomeRowsSelected()}
           //only export selected rows
           onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
         >

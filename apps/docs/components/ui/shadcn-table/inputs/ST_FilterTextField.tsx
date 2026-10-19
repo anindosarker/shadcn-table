@@ -42,16 +42,19 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
+} from '@/components/ui/shadcn-table/types';
+import {
+  getColumnFilterInfo,
+  useDropdownOptions,
+} from '@/components/ui/shadcn-table/utils/column.utils';
 import {
   createFilterOptions,
   debounce,
   getValueAndLabel,
   parseFromValuesOrFunc,
-} from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { ST_FilterOptionMenu } from '../menus/ST_FilterOptionMenu';
+} from '@/components/ui/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/menus/ST_FilterOptionMenu';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',

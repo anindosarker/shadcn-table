@@ -145,7 +145,7 @@ export const rowInstanceAPIs: RowInstanceAPI[] = [
     linkText: '',
   },
   {
-    rowInstanceAPI: 'getLeftVisibleCells',
+    rowInstanceAPI: 'getStartVisibleCells',
     type: '',
     description: '',
     link: '',
@@ -173,7 +173,7 @@ export const rowInstanceAPIs: RowInstanceAPI[] = [
     linkText: '',
   },
   {
-    rowInstanceAPI: 'getRightVisibleCells',
+    rowInstanceAPI: 'getEndVisibleCells',
     type: '',
     description: '',
     link: '',

@@ -268,6 +268,7 @@ export const RowAndColumnPinning = () => (
         end: ['lastName'],
       },
       rowPinning: {
+        bottom: [],
         top: ['3', '5'],
       },
     }}

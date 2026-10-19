@@ -42,7 +42,7 @@ const table = useShadcnTable({
   data,
   columns,
   enableColumnPinning: true,
-  initialState: { columnPinning: { left: ['email'] } }, //pin email column to left by default
+  initialState: { columnPinning: { start: ['email'] } }, //pin email column to the start (left in LTR) by default
 });
 
 return <ShadcnTable table={table} />;

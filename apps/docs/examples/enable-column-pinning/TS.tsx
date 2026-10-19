@@ -63,7 +63,7 @@ const Example = () => {
       <DropdownMenuItem key="action">Action</DropdownMenuItem>,
     ],
     initialState: {
-      columnPinning: { left: ['st-row-actions', 'state'], right: ['city'] },
+      columnPinning: { start: ['st-row-actions', 'state'], end: ['city'] },
     },
   });
 

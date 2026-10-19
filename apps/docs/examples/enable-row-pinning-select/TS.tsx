@@ -44,6 +44,7 @@ const Example = () => {
     getRowId: (row) => row.email,
     initialState: {
       rowPinning: {
+        bottom: [],
         top: ['ereinger@mailinator.com'],
       },
       rowSelection: {
@@ -54,7 +55,7 @@ const Example = () => {
       className: 'max-h-[400px]',
     },
     stTableBodyRowProps: ({ row, table }) => {
-      const { density } = table.getState();
+      const { density } = table.state;
       return {
         style: {
           //Set a fixed height for pinned rows

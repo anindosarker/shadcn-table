@@ -114,7 +114,7 @@ const table = useShadcnTable({
 const someEventHandler = (event) => {
   console.info(table.getRowModel().rows); //example - get access to all page rows in the table
   console.info(table.getSelectedRowModel()); //example - get access to all selected rows in the table
-  console.info(table.getState().sorting); //example - get access to the current sorting state without having to manage it yourself
+  console.info(table.state.sorting); //example - get access to the current sorting state without having to manage it yourself
 };
 
 return (

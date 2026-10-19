@@ -1,8 +1,8 @@
 import { memo, useMemo } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { useST_Rows } from '../hooks/useST_Rows';
-import { useST_RowVirtualizer } from '../hooks/useST_RowVirtualizer';
+import { useST_Rows } from '@/components/ui/shadcn-table/hooks/useST_Rows';
+import { useST_RowVirtualizer } from '@/components/ui/shadcn-table/hooks/useST_RowVirtualizer';
 import {
   type ST_ColumnVirtualizer,
   type ST_Row,
@@ -10,9 +10,12 @@ import {
   type ST_TableInstance,
   type ST_VirtualItem,
   type TableBodyProps,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableBodyRow, Memo_ST_TableBodyRow } from './ST_TableBodyRow';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import {
+  ST_TableBodyRow,
+  Memo_ST_TableBodyRow,
+} from '@/components/ui/shadcn-table/body/ST_TableBodyRow';
 
 export interface ST_TableBodyProps<TData extends ST_RowData>
   extends TableBodyProps {
@@ -35,7 +38,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
     getBottomRows,
     getIsSomeRowsPinned,
     getRowModel,
-    getState,
     getTopRows,
     options: {
       enableStickyFooter,
@@ -50,7 +52,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
     },
     refs: { tableFooterRef, tableHeadRef, tableLayoutRef },
   } = table;
-  const { columnFilters, globalFilter, isFullScreen, rowPinning } = getState();
+  const { columnFilters, globalFilter, isFullScreen, rowPinning } = table.state;
 
   const tableBodyProps = {
     ...parseFromValuesOrFunc(stTableBodyProps, { table }),

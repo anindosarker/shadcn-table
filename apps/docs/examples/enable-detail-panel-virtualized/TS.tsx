@@ -47,7 +47,7 @@ const Example = () => {
       </div>
     ),
     rowVirtualizerOptions: ({ table }) => {
-      const { density, expanded } = table.getState();
+      const { density, expanded } = table.state;
       return {
         //adjust to your needs
         estimateSize: (index) =>

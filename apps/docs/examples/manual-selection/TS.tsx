@@ -85,10 +85,11 @@ const Example = () => {
     stTableBodyRowProps: ({ row }) => ({
       //implement row selection click events manually
       onClick: () =>
-        setRowSelection((prev) => ({
-          ...prev,
-          [row.id]: !prev[row.id], //this is a simple toggle implementation
-        })),
+        setRowSelection((prev) => {
+          //this is a simple toggle implementation (rowSelection only holds `true` entries)
+          const { [row.id]: wasSelected, ...rest } = prev;
+          return wasSelected ? rest : { ...rest, [row.id]: true };
+        }),
       'data-selected': rowSelection[row.id] || undefined,
       className: 'cursor-pointer',
     }),

@@ -8,9 +8,9 @@ import {
   type ST_TableInstance,
   type ST_VirtualItem,
   type TableRowProps,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableFooterCell } from './ST_TableFooterCell';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_TableFooterCell } from '@/components/ui/shadcn-table/footer/ST_TableFooterCell';
 
 export interface ST_TableFooterRowProps<TData extends ST_RowData>
   extends TableRowProps {

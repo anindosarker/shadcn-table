@@ -45,12 +45,12 @@ export const stateOptions: StateOption[] = [
   {
     defaultValue: '{ left: [], right: [] }',
     description:
-      'an object with left and right properties, each of which is an array of strings representing the columns that are pinned to the left or right side of the table',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-pinning',
+      'an object with start and end properties, each of which is an array of strings representing the columns that are pinned to the start (left in LTR) or end (right in LTR) side of the table',
+    link: 'https://tanstack.com/table/latest/docs/framework/react/guide/column-pinning',
     linkText: 'TanStack Table Column Pinning Docs',
     source: 'TanStack Table',
     stateOption: 'columnPinning',
-    type: '{ left: Array<string>, right: Array<string> }',
+    type: '{ start: Array<string>, end: Array<string> }',
   },
   {
     defaultValue: '{}',
@@ -64,12 +64,13 @@ export const stateOptions: StateOption[] = [
   },
   {
     defaultValue: '{}',
-    description: 'an object containing information about column sizing',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-sizing',
+    description:
+      'an object containing information about the column resize in progress (was columnSizingInfo in TanStack Table v8)',
+    link: 'https://tanstack.com/table/latest/docs/framework/react/guide/column-sizing',
     linkText: 'TanStack Table Column Sizing Docs',
     source: 'TanStack Table',
-    stateOption: 'columnSizingInfo',
-    type: 'See TanStack Docs',
+    stateOption: 'columnResizing',
+    type: 'ST_ColumnResizingState',
   },
   {
     defaultValue: '{}',

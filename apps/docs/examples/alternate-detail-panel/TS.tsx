@@ -67,7 +67,9 @@ const Example = () => {
       expanded: true,
     },
     state: {
-      columnPinning: isMobile ? { right: ['st-row-expand'] } : {}, //alternative
+      columnPinning: isMobile
+        ? { start: [], end: ['st-row-expand'] }
+        : { start: [], end: [] }, //alternative
     },
     renderDetailPanel: ({ row }) => (
       <div className="m-auto grid w-full grid-cols-2">

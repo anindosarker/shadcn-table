@@ -3,9 +3,12 @@ import {
   type ST_Cell,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getST_RowSelectionHandler, getST_SelectAllHandler } from './row.utils';
-import { parseFromValuesOrFunc } from './utils';
+} from '@/components/ui/shadcn-table/types';
+import {
+  getST_RowSelectionHandler,
+  getST_SelectAllHandler,
+} from '@/components/ui/shadcn-table/utils/row.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
 
 const isWinCtrlMacMeta = (event: React.KeyboardEvent<HTMLTableCellElement>) => {
   return (

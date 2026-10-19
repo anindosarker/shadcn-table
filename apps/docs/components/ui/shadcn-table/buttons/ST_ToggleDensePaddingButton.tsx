@@ -3,8 +3,8 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 export interface ST_ToggleDensePaddingButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -16,14 +16,13 @@ export const ST_ToggleDensePaddingButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleDensePaddingButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { DensityLargeIcon, DensityMediumIcon, DensitySmallIcon },
       localization,
     },
     setDensity,
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
 
   const handleToggleDensePadding = () => {
     const nextDensity =

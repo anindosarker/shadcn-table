@@ -7,8 +7,8 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 export interface ST_EditActionButtonsProps<TData extends ST_RowData>
   extends DivProps {
@@ -26,7 +26,6 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
   ...rest
 }: ST_EditActionButtonsProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { CancelIcon, SaveIcon },
       localization,
@@ -39,7 +38,7 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
-  const { creatingRow, editingRow, isSaving } = getState();
+  const { creatingRow, editingRow, isSaving } = table.state;
 
   const isCreating = creatingRow?.id === row.id;
   const isEditing = editingRow?.id === row.id;

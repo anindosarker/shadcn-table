@@ -16,7 +16,6 @@ Shadcn Table has built-in aggregation features. There are options for both autom
       'enableExpandAll',
       'enableGrouping',
       'enableStickyFooter',
-      'getGroupedRowModel',
       'groupedColumnMode',
       'manualGrouping',
       'stToolbarAlertBannerChipProps',
@@ -62,7 +61,7 @@ There are several built-in aggregation functions available that you can use. The
 - `uniqueCount` - Finds the number of unique values of a group of rows
 - `unique` - Finds the unique values of a group of rows
 
-_All of these built-in aggregation functions are from [TanStack Table](https://tanstack.com/table/v8/docs/api/features/grouping#aggregation-functions)_
+_All of these built-in aggregation functions are from [TanStack Table](https://tanstack.com/table/latest/docs/framework/react/guide/aggregation#built-in-definitions)_
 
 ```jsx
 const columns = [
@@ -94,16 +93,25 @@ return <ShadcnTable table={table} />;
 
 #### Custom Aggregation Functions
 
-If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation function. The aggregation function will be passed in an array of values from the column that you are aggregating. It should return a single value that will be displayed in the aggregated cell.
+If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation definition. Since TanStack Table v9 a custom aggregation is a `constructAggregationFn({ aggregate, merge? })` definition, not a plain callable: `aggregate` receives a context with the `rows` to aggregate and a `getValue(row)` accessor and returns the single value that will be displayed in the aggregated cell.
 
-If you are specifying a custom aggregation function, it must implement the following type:
+```tsx
+import { constructAggregationFn } from '@tanstack/react-table';
 
-```jsx
-export type AggregationFn<TData extends AnyData> = (
-  getLeafRows: () => Row<TData>[],
-  getChildRows: () => Row<TData>[]
-) => any
+const columns = [
+  {
+    accessorKey: 'points',
+    header: 'Points',
+    aggregationFn: constructAggregationFn({
+      aggregate: ({ rows, getValue }) =>
+        rows.reduce((sum, row) => sum + Number(getValue(row) ?? 0), 0),
+    }),
+    AggregatedCell: ({ cell }) => <div>Team Score: {cell.getValue()}</div>,
+  },
+];
 ```
+
+Register reusable definitions by name in the `aggregationFns` table option and reference them from `aggregationFn: 'myAggregation'`.
 
 ### Aggregation on All Rows in Footer
 

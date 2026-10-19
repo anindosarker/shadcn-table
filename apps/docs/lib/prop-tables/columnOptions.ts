@@ -121,12 +121,12 @@ export const columnOptions: ColumnOption[] = [
     columnOption: 'aggregationFn',
     defaultValue: "'count'",
     description:
-      'Specify which aggregate function should be used for grouped columns.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/grouping#aggregationfn-1',
+      'Specify which aggregate function(s) should be used for grouped columns: a built-in name, a name from the aggregationFns table option, a constructAggregationFn({ aggregate, merge? }) definition, or an array of those.',
+    link: 'https://tanstack.com/table/latest/docs/framework/react/guide/grouping',
     linkText: 'TanStack Table Grouping Docs',
     source: 'TanStack Table',
     required: false,
-    type: '',
+    type: 'ST_AggregationFn<TData> | Array<ST_AggregationFn<TData>>',
   },
   {
     columnOption: 'columns',
@@ -593,14 +593,15 @@ export const columnOptions: ColumnOption[] = [
     type: 'boolean',
   },
   {
-    columnOption: 'sortingFn',
+    columnOption: 'sortFn',
     defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    description:
+      'The sorting function to use for this column: the name of a built-in or custom (sortFns table option) sorting function, or a sorting function itself (was sortingFn in TanStack Table v8).',
+    link: 'https://tanstack.com/table/latest/docs/framework/react/guide/sorting',
+    linkText: 'TanStack Table Sorting Docs',
     source: 'TanStack Table',
     required: false,
-    type: 'SortingFnOption',
+    type: 'SortFnOption',
   },
   {
     columnOption: 'sortUndefined',
