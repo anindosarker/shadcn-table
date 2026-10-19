@@ -37,7 +37,7 @@ export const perBase = <T>(fn: (base: Base) => T): Record<Base, T> =>
 
 /**
  * Hosted registry item for a base: `pnpm registry:hosted`
- * (packages/shadcn-table/scripts/emit-hosted-registry.mjs) serves
+ * (packages/shadcn-table/registry/hosted.mjs) serves
  * both editions under the same item names, `/r/radix/<item>.json` and
  * `/r/base/<item>.json`.
  */

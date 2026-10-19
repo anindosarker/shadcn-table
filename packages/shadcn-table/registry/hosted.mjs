@@ -24,10 +24,8 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { PKG } from './registry-lib.mjs';
+import { DOCS, PKG, ROOT } from './lib.mjs';
 
-const ROOT = path.resolve(PKG, '..', '..');
-const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 const OUT_ROOT = path.join(DOCS, 'public/r');
 // REGISTRY_HOSTED_URL wins; otherwise the docs origin (NEXT_PUBLIC_SITE_URL,
 // what lib/install.ts writes into the commands) plus /r; then production.
@@ -71,7 +69,7 @@ for (const { base, committedName } of BASES) {
   );
   if (!main || locales.length === 0) {
     console.error(
-      `emit-hosted-registry: ${committedName} or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
+      `hosted.mjs: ${committedName} or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
     );
     process.exit(1);
   }

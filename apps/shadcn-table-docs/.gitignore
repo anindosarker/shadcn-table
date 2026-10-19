@@ -3,7 +3,7 @@
 
 # generated content
 .source
-# hosted registries (pnpm registry:hosted, packages/shadcn-table/scripts/emit-hosted-registry.mjs), emitted before next build
+# hosted registries (pnpm registry:hosted, packages/shadcn-table/registry/hosted.mjs), emitted before next build
 /public/r/
 
 # test & build

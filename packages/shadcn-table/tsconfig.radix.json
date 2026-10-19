@@ -36,6 +36,6 @@
     "shared/components/ui/shadcn-table/index.ts",
     "shared/components/ui/shadcn-table/locales"
   ],
-  // Node-only item definition, read by scripts/build-registry.mjs.
+  // Node-only item definition, read by registry/build.mjs.
   "exclude": ["bases/radix/registry.ts"]
 }

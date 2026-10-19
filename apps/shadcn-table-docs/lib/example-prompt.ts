@@ -34,7 +34,7 @@ async function readRegistryItem(name: string): Promise<RegistryItem> {
   const item = registry.items.find((i) => i.name === `example-${name}`);
   if (!item) {
     throw new Error(
-      `registry.json has no item "example-${name}"; run scripts/build-registry-items.mjs`,
+      `registry.json has no item "example-${name}"; run pnpm registry:items`,
     );
   }
   return item;

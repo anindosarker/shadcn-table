@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Writes apps/shadcn-table-docs/registry.json with one shadcn registry
- * item per docs example (examples/<slug>/TS.tsx plus every other source
- * file in the folder, subfolders included, except the index.tsx wrapper). The root registry.json includes this file, so the GitHub
- * namespace serves every example as
- * `anindosarker/shadcn-table/example-<slug>`.
+ * Writes the docs app's registry.json with one shadcn registry item per
+ * docs example (examples/<slug>/TS.tsx plus every other source file in the
+ * folder, subfolders included, except the index.tsx wrapper). The root
+ * registry.json includes this file, so the GitHub namespace serves every
+ * example as `anindosarker/shadcn-table/example-<slug>`.
  *
  * Per item:
  * - name `example-<slug>`, type `registry:block`
@@ -25,26 +25,25 @@
  *   `path`, so the import could not be rewritten on the way out. The build
  *   fails on such an import; move the shared export into the sibling.
  *
- * Usage:
- *   node scripts/build-registry-items.mjs            # writes registry.json
- *   node scripts/build-registry-items.mjs --resolve <dir>
+ * Usage (repo root):
+ *   pnpm registry:items                               # writes registry.json
+ *   node packages/shadcn-table/registry/examples.mjs --resolve <dir>
  *     also writes one resolved item json (files[].content filled in) per
  *     example into <dir>, for local `shadcn add <file> --dry-run` checks
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { ENTRY_FILE, listExampleFiles } from '../lib/example-files.mjs';
-import {
-  findExamplePage,
-  loadExamplePages,
-  readExampleExportName,
-} from '../lib/example-pages.mjs';
+import { pathToFileURL } from 'node:url';
+import { DOCS } from './lib.mjs';
 
-const APP_DIR = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '..',
-);
+// The example helpers are the docs app's own (its playground imports them
+// too), so they are loaded from there.
+const docsLib = (file) => import(pathToFileURL(path.join(DOCS, 'lib', file)));
+const { ENTRY_FILE, listExampleFiles } = await docsLib('example-files.mjs');
+const { findExamplePage, loadExamplePages, readExampleExportName } =
+  await docsLib('example-pages.mjs');
+
+const APP_DIR = DOCS;
 const EXAMPLES_DIR = path.join(APP_DIR, 'examples');
 const PAGES_DIR = path.join(APP_DIR, 'content', 'docs', 'examples');
 const OUT_FILE = path.join(APP_DIR, 'registry.json');

@@ -1,7 +1,6 @@
-// Types of scripts/registry-lib.mjs for the per-base item definitions
+// Types of registry/lib.mjs for the per-base item definitions
 // (bases/<base>/registry.ts), which import the .mjs from TypeScript. Node
-// strips the types at run time; the editor and `tsc -p bases/<base>` check
-// against these signatures.
+// strips the types at run time; the editor checks against these signatures.
 import type { RegistryItem } from 'shadcn/schema';
 
 declare global {
@@ -15,9 +14,13 @@ declare global {
 
 /** Absolute path of packages/shadcn-table. */
 export const PKG: string;
+/** Absolute path of the repo root. */
+export const ROOT: string;
+/** Absolute path of the docs app. */
+export const DOCS: string;
 export const GITHUB_REPO: string;
 export const HOMEPAGE: string;
-/** True when build-registry.mjs runs with `--dev`. */
+/** True when build.mjs runs with `--dev`. */
 export const DEV: boolean;
 
 export interface BaseDependency {
@@ -27,7 +30,7 @@ export interface BaseDependency {
 }
 
 export interface BaseItemsOptions {
-  /** The tree directory (bases/<base>). */
+  /** The base directory (bases/<base>). */
   dir: string;
   name: string;
   title: string;
@@ -39,7 +42,7 @@ export interface BaseItemsOptions {
 }
 
 /**
- * The items of one base tree: the main item first, then one item per
+ * The items of one base: the main item first, then one item per
  * non-English locale.
  */
 export function baseItems(base: BaseItemsOptions): RegistryItem[];
