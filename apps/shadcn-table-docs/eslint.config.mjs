@@ -5,6 +5,8 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   globalIgnores([
     '.next/**',
+    //per-agent next dev dist dirs (NEXT_DIST_DIR, see next.config.mjs)
+    '.next-*/**',
     'out/**',
     'build/**',
     'next-env.d.ts',
