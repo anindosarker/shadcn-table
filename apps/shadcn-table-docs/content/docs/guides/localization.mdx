@@ -11,17 +11,20 @@ Shadcn Table has full support for localization (i18n). Some locales are included
 
 ### Built-in Locales
 
-English ships with the table. Every other locale is its own registry item, `shadcn-table-locale-<code>`, installed with the same command as the table:
+English ships with the table. Every other locale is its own registry item, `shadcn-table-locale-<code>`, installed after the table from the same base path of the registry (`/r/radix/` for a `radix-*` style in `components.json`, `/r/base/` for a `base-*` style):
 
 ```bash
-pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table-locale-de
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table-locale-de.json   # Radix
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table-locale-de.json    # Base UI
 ```
+
+With the `@st` namespace registered (see [Installation](/docs/getting-started/install)), `pnpm dlx shadcn@latest add @st/shadcn-table-locale-de` picks the path from the project's style. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix) and `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
 
 The item lands in `components/ui/shadcn-table/locales/<code>.ts` and is imported from `'@/components/ui/shadcn-table/locales/<code>'`. Available codes:
 
 `ar`, `az`, `bg`, `cs`, `da`, `de`, `el`, `en`, `es`, `et`, `fa`, `fi`, `fr`, `he`, `hr`, `hu`, `hy`, `id`, `it`, `ja`, `ko`, `nl`, `no`, `np`, `pl`, `pt`, `pt-BR`, `ro`, `ru`, `sk`, `sr-Cyrl-RS`, `sr-Latn-RS`, `sv`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`
 
-> If your language is not yet supported, please consider making a PR to add it to the library! See [here on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/src/components/ui/shadcn-table/locales).
+> If your language is not yet supported, please consider making a PR to add it to the library! See [here on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/bases/radix/components/ui/shadcn-table/locales). A locale is data, duplicated in both trees: add the same file under `bases/radix` and `bases/base`.
 
 #### Built-in Locale Examples
 
@@ -55,7 +58,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-For a full list of all available translation keys, see [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/src/components/ui/shadcn-table/locales/en.ts).
+For a full list of all available translation keys, see [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/bases/radix/components/ui/shadcn-table/locales/en.ts).
 Please note that each localization object should include a `language` property containing a valid BCP 47 language tag to ensure proper number formatting.
 
 If you end up fully translating ST into another language that is not yet supported, please consider making a PR to add it to the library so that everyone can use it!
