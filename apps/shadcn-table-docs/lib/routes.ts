@@ -633,7 +633,7 @@ export const routes: Array<RouteItem> = [
         external: true,
       },
       {
-        href: 'https://discord.gg/ya4dwaDqD',
+        href: 'https://discord.gg/hsF37t6EKe',
         label: 'Discord',
         external: true,
       },

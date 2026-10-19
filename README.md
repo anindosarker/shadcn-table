@@ -30,7 +30,7 @@ pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table
 
 ## Community
 
-- Discord for questions and help: https://discord.gg/ya4dwaDqD
+- Discord for questions and help: https://discord.gg/hsF37t6EKe
 - [GitHub Discussions](https://github.com/anindosarker/shadcn-table/discussions) for proposals
 - [Issues](https://github.com/anindosarker/shadcn-table/issues) for bugs
 
