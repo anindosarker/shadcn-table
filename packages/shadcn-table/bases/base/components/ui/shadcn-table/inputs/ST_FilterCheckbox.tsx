@@ -14,9 +14,9 @@ import { ST_Tooltip } from '../ST_Tooltip';
 const filterCheckboxVariants = cva('', {
   variants: {
     color: {
-      // Radix marks the mixed state as data-state, Base UI as data-indeterminate.
+      // Base UI marks the mixed state with data-indeterminate.
       default:
-        'data-[state=indeterminate]:border-muted-foreground data-[state=indeterminate]:bg-muted-foreground dark:data-[state=indeterminate]:bg-muted-foreground data-indeterminate:border-muted-foreground data-indeterminate:bg-muted-foreground dark:data-indeterminate:bg-muted-foreground',
+        'data-indeterminate:border-muted-foreground data-indeterminate:bg-muted-foreground dark:data-indeterminate:bg-muted-foreground',
       primary: '',
     },
     density: {
@@ -73,16 +73,15 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
         title={undefined}
       >
         <Checkbox
-          checked={
-            column.getFilterValue() === undefined
-              ? 'indeterminate'
-              : column.getFilterValue() === 'true'
-          }
+          // Base UI keeps the mixed state in its own `indeterminate` flag;
+          // `checked` is always a boolean.
+          checked={column.getFilterValue() === 'true'}
+          indeterminate={column.getFilterValue() === undefined}
           // color={column.getFilterValue() === undefined ? 'default' : 'primary'}
           // size={density === 'compact' ? 'small' : 'medium'}
           // Note: MUI color/size are the cva variants on className below.
           {...checkboxProps}
-          onCheckedChange={(checked) => {
+          onCheckedChange={(checked, details) => {
             column.setFilterValue(
               column.getFilterValue() === undefined
                 ? 'true'
@@ -90,7 +89,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
                   ? 'false'
                   : undefined,
             );
-            checkboxProps?.onCheckedChange?.(checked);
+            checkboxProps?.onCheckedChange?.(checked, details);
           }}
           onClick={(e) => {
             e.stopPropagation();
