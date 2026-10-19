@@ -2,8 +2,10 @@
 
 import { CheckIcon, CopyIcon, SparklesIcon, TerminalIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useBase } from '@/components/base-selector';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
+import type { Base } from '@/lib/install';
 
 /** How long the button reads "Copied" after a click. */
 const COPIED_MS = 1500;
@@ -13,20 +15,23 @@ type Mode = 'prompt' | 'command';
 /**
  * One line for agents: the prompt as visible text and Copy prompt. The
  * prompt points at /SKILL.md; the instructions live there. With `command`
- * a segmented switch on the left swaps in the manual install command.
+ * a segmented switch on the left swaps in the manual install command, one
+ * per base when the command differs (the site-wide base selector picks it).
  */
 export const AgentBar = ({
   prompt,
-  command,
+  command: commands,
   className,
 }: {
   prompt: string;
-  command?: string;
+  command?: string | Record<Base, string>;
   className?: string;
 }) => {
   const [mode, setMode] = useState<Mode>('prompt');
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const base = useBase();
+  const command = typeof commands === 'string' ? commands : commands?.[base];
   const text = mode === 'command' && command ? command : prompt;
 
   useEffect(

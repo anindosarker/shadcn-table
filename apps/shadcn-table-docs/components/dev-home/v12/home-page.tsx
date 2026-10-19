@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { ArrowRightIcon, ArrowUpRightIcon } from 'lucide-react';
 import { AutoplayTileGrid } from '@/components/dev-home/shared/autoplay-tile-grid';
-import { INSTALL_COMMAND } from '@/components/dev-home/shared/install-command';
 import { archivo } from '@/components/dev-home/v4/font';
 import { Starfield } from '@/components/dev-home/v4/starfield';
 import { CodeStrip } from './code-strip';
 import { AgentBar } from '@/components/agent-bar';
-import { agentPrompt } from '@/lib/install';
+import { agentPrompt, libraryAddCommand, perBase } from '@/lib/install';
 import { Dune } from './dune';
 import { Footer } from './footer';
 import { Nav } from './nav';
@@ -51,7 +50,7 @@ export function HomePage({
             </p>
             <AgentBar
               prompt={agentPrompt}
-              command={INSTALL_COMMAND}
+              command={perBase((base) => libraryAddCommand(base))}
               className="v12-agent"
             />
             <div className="v12-cta">

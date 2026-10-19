@@ -5,14 +5,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { SidebarIcon } from 'lucide-react';
 import { useNotebookLayout } from 'fumadocs-ui/layouts/notebook';
+import { BaseSwitch } from '@/components/base-selector';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
 import { GITHUB_URL, NAV_LINKS } from '@/lib/layout.shared';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
- * "// shadcn-table" wordmark, mono caps links, GitHub and the theme
- * pill), plus the search and sidebar triggers the docs need. Keeps fumadocs'
+ * "// shadcn-table" wordmark, mono caps links, GitHub, the base switch and
+ * the theme pill), plus the search and sidebar triggers the docs need. Keeps fumadocs'
  * `#nd-subnav` id and grid area so the layout and the sticky offsets still
  * apply. Below lg the links wrap to a second row, as on the landing page.
  * Styles: app/global.css ("landing look").
@@ -66,6 +67,10 @@ export function SiteNav(props: ComponentProps<'header'>) {
           >
             <GitHubIcon />
           </a>
+          {/* the site-wide base (Radix | Base UI) next to the theme pill */}
+          <div className="site-nav-desktop">
+            <BaseSwitch />
+          </div>
           {slots.themeSwitch && (
             <div className="site-nav-desktop">
               <slots.themeSwitch />
