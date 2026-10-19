@@ -1,5 +1,5 @@
 /**
- * Cluster A page checks: docs/index, getting-started, api/*.
+ * Cluster A page checks: home, docs/index, getting-started, api/*.
  * Each entry: async ({ page, check }) => void, run after load at the first width.
  */
 import {
@@ -30,7 +30,73 @@ async function agentBar(page, check) {
   );
 }
 
+/**
+ * The hero's command bar (components/agent-bar.tsx): the Command tab names
+ * the site-wide base and its chevron menu sets it, so the command follows.
+ * The tab text is uppercased by CSS; compare case-insensitively.
+ */
+async function commandBarBase(page, check) {
+  const bar = page.locator('[data-slot="agent-bar"]');
+  check('agent bar', (await bar.count()) === 1, String(await bar.count()));
+  if (!(await bar.count())) return;
+  const tab = bar.getByRole('radio', { name: /^command/i });
+  const label = async () => ((await tab.textContent()) ?? '').trim();
+  const command = async () =>
+    (await bar.locator('span.font-mono').textContent()) ?? '';
+  const pick = async (base) => {
+    await bar.getByRole('button', { name: 'Choose base' }).click();
+    const item = page.getByRole('menuitemradio', { name: base, exact: true });
+    await item.waitFor({ timeout: 5000 });
+    await item.click();
+    await page.waitForTimeout(200);
+  };
+  check(
+    'command tab names radix ui',
+    /radix ui/i.test(await label()),
+    await label(),
+  );
+  await tab.click();
+  check(
+    'radix command',
+    (await command()).includes('/r/radix/'),
+    await command(),
+  );
+  await bar.getByRole('button', { name: 'Choose base' }).click();
+  const items = page.getByRole('menuitemradio');
+  check(
+    'base menu items',
+    (await items.allTextContents()).join(',') === 'Radix UI,Base UI',
+    (await items.allTextContents()).join(','),
+  );
+  check(
+    'base menu: radix ui checked',
+    (await items.first().getAttribute('aria-checked')) === 'true',
+  );
+  await page.keyboard.press('Escape');
+  await pick('Base UI');
+  check(
+    'base ui: command',
+    (await command()).includes('/r/base/'),
+    await command(),
+  );
+  check('base ui: tab label', /base ui/i.test(await label()), await label());
+  await pick('Radix UI');
+  check(
+    'radix ui again: command',
+    (await command()).includes('/r/radix/'),
+    await command(),
+  );
+  check(
+    'radix ui again: tab label',
+    /radix ui/i.test(await label()),
+    await label(),
+  );
+}
+
 const checks = {
+  '/': async ({ page, check }) => {
+    await commandBarBase(page, check);
+  },
   '/docs/getting-started/usage': async ({ page, check }) => {
     const steps = page.locator('article .fd-step');
     check(
