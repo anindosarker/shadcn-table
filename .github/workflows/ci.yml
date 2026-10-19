@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [master, claude/review, r3-ci]
+    branches: [master, claude/review]
   pull_request:
 
 concurrency:
