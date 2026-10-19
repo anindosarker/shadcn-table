@@ -92,17 +92,22 @@ jobs:
       - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic#${{ github.sha }}" --dry-run
 
   install:
-    name: install (${{ matrix.scenario }} vite app)
+    name: install (${{ matrix.scenario }} app)
     if: github.event_name == 'push'
     needs: registry
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
       REF: ${{ github.sha }}
+      # fresh, existing and nextjs run on the Radix base and install the
+      # shadcn-table item; base scaffolds on Base UI and installs the
+      # shadcn-table-base item (its locale item is shadcn-table-base-locale-de).
+      BASE: ${{ matrix.scenario == 'base' && 'base' || 'radix' }}
+      ITEM: ${{ matrix.scenario == 'base' && 'shadcn-table-base' || 'shadcn-table' }}
     strategy:
       fail-fast: false
       matrix:
-        scenario: [fresh, existing]
+        scenario: [fresh, existing, base, nextjs]
     steps:
       # The repo is checked out into repo/ only for the dev registry (locale
       # step below); the consumer app lives in ${{ runner.temp }}/app so no
@@ -118,8 +123,13 @@ jobs:
           node-version: 22
           cache: pnpm
           cache-dependency-path: repo/pnpm-lock.yaml
-      - name: Scaffold a Vite app on the Radix base
-        run: pnpm dlx shadcn@latest init --template vite --base radix --preset nova --name app --yes
+      - name: Scaffold a Vite app on the scenario's base
+        if: matrix.scenario != 'nextjs'
+        run: pnpm dlx shadcn@latest init --template vite --base "$BASE" --preset nova --name app --yes
+        working-directory: ${{ runner.temp }}
+      - name: Scaffold a Next.js app on the Radix base
+        if: matrix.scenario == 'nextjs'
+        run: pnpm dlx shadcn@latest init --template next --base radix --preset nova --name app --yes
         working-directory: ${{ runner.temp }}
       - name: Pre-install TanStack packages (existing app only)
         if: matrix.scenario == 'existing'
@@ -128,9 +138,10 @@ jobs:
       - name: Add the library at this SHA
         run: |
           set -o pipefail
-          pnpm dlx shadcn@latest add "anindosarker/shadcn-table/shadcn-table#$REF" --yes 2>&1 | tee shadcn-add.log
+          pnpm dlx shadcn@latest add "anindosarker/shadcn-table/$ITEM#$REF" --yes 2>&1 | tee shadcn-add.log
         working-directory: ${{ runner.temp }}/app
-      - name: Mount a table, type-check and build
+      - name: Mount a table, type-check and build (Vite)
+        if: matrix.scenario != 'nextjs'
         run: |
           cat > src/App.tsx <<'TSX'
           import { ShadcnTable } from '@/components/ui/shadcn-table';
@@ -151,28 +162,67 @@ jobs:
           pnpm exec tsc --noEmit -p tsconfig.app.json
           pnpm exec vite build
         working-directory: ${{ runner.temp }}/app
-      # A locale item depends on the unpinned GitHub address of the library,
+      # The table runs hooks, so it mounts in a client component; the server
+      # component page imports that component. next build type-checks and
+      # compiles both.
+      - name: Mount a table in a client component and run next build
+        if: matrix.scenario == 'nextjs'
+        run: |
+          cat > components/table-demo.tsx <<'TSX'
+          'use client';
+
+          import { ShadcnTable } from '@/components/ui/shadcn-table';
+
+          const columns = [
+            { accessorKey: 'name', header: 'Name' },
+            { accessorKey: 'age', header: 'Age' },
+          ];
+          const data = [
+            { name: 'Ada', age: 36 },
+            { name: 'Linus', age: 54 },
+          ];
+
+          export function TableDemo() {
+            return <ShadcnTable columns={columns} data={data} />;
+          }
+          TSX
+          cat > app/page.tsx <<'TSX'
+          import { TableDemo } from '@/components/table-demo';
+
+          export default function Page() {
+            return (
+              <main className="p-6">
+                <TableDemo />
+              </main>
+            );
+          }
+          TSX
+          pnpm exec next build
+        working-directory: ${{ runner.temp }}/app
+      # A locale item depends on the unpinned GitHub address of its main item,
       # which the CLI resolves on the default branch, not at this SHA. The dev
       # registry built from the checkout pins that dependency to this SHA's
       # library, so the locale is installed through it.
       - name: Build and serve the dev registry from this checkout
+        if: matrix.scenario != 'nextjs'
         run: |
           pnpm install --frozen-lockfile
           pnpm --filter shadcn-table registry:dev
           (pnpm exec serve packages/shadcn-table/.dev -l 5310 > serve.log 2>&1 &)
           for i in $(seq 1 30); do
-            curl -sf http://localhost:5310/r/shadcn-table-locale-de.json > /dev/null && break
+            curl -sf "http://localhost:5310/r/$ITEM-locale-de.json" > /dev/null && break
             sleep 1
           done
-          curl -sf http://localhost:5310/r/shadcn-table-locale-de.json > /dev/null
+          curl -sf "http://localhost:5310/r/$ITEM-locale-de.json" > /dev/null
         working-directory: repo
       # Example items pin the library to gitConfig.branch, so this add re-fetches
       # the library from that branch; --overwrite lets it replace the files
       # without a prompt. The library at this SHA was proven by the steps above.
       - name: Add a locale and example-basic, mount them, type-check and build
+        if: matrix.scenario != 'nextjs'
         run: |
           set -o pipefail
-          pnpm dlx shadcn@latest add http://localhost:5310/r/shadcn-table-locale-de.json --yes --overwrite 2>&1 | tee -a shadcn-add.log
+          pnpm dlx shadcn@latest add "http://localhost:5310/r/$ITEM-locale-de.json" --yes --overwrite 2>&1 | tee -a shadcn-add.log
           pnpm dlx shadcn@latest add "anindosarker/shadcn-table/example-basic#$REF" --yes --overwrite 2>&1 | tee -a shadcn-add.log
           cat > src/App.tsx <<'TSX'
           import Example from '@/components/examples/basic/basic';
@@ -200,9 +250,15 @@ jobs:
           node -e 'const p=require("./package.json");console.log("@tanstack/react-table", p.dependencies["@tanstack/react-table"])'
           test "$count" = "1"
         working-directory: ${{ runner.temp }}/app
+      - name: No radix-ui on the Base UI base
+        if: matrix.scenario == 'base'
+        run: |
+          node -e 'const p=require("./package.json");const all={...p.dependencies,...p.devDependencies};if("radix-ui" in all){console.error("radix-ui installed:",all["radix-ui"]);process.exit(1)};console.log("@base-ui/react", all["@base-ui/react"])'
+        working-directory: ${{ runner.temp }}/app
       - name: Show package.json and shadcn output
         if: failure()
         run: |
           echo "::group::package.json"; cat package.json; echo "::endgroup::"
           echo "::group::shadcn output"; cat shadcn-add.log 2>/dev/null || true; echo "::endgroup::"
         working-directory: ${{ runner.temp }}/app
+
