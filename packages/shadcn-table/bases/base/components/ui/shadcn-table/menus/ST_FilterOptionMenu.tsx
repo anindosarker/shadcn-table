@@ -249,6 +249,9 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   const filterOption =
     !!header && columnDef ? columnDef._filterFn : globalFilterFn;
 
+  // Base UI reads the popup's finalFocus when the menu closes, after this
+  // component re-rendered with anchorEl cleared; the ref keeps the element
+  // from the last open render.
   const anchorRef = useRef<HTMLElement | null>(null);
   if (anchorEl) anchorRef.current = anchorEl;
 
@@ -261,28 +264,34 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        // The library anchors its menus to an invisible span, not a button.
+        nativeButton={false}
+        render={
+          <span
+            aria-hidden
+            style={{
+              position: 'fixed',
+              left: rect?.left ?? 0,
+              top: rect?.top ?? 0,
+              width: rect?.width ?? 0,
+              height: rect?.height ?? 0,
+              pointerEvents: 'none',
+            }}
+          />
+        }
+      />
       <DropdownMenuContent
         align="start"
         alignOffset={(rect?.height ?? 0) / 2}
         side="right"
         // disableScrollLock
-        // Note: Radix DropdownMenu owns scroll-lock behavior
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
+        // Note: Base UI Menu owns scroll-lock behavior
+        // Focus goes back to the real anchor; returning false keeps Base UI
+        // off the invisible trigger.
+        finalFocus={() => {
           anchorRef.current?.focus();
+          return false;
         }}
         className={cn('w-max', className)}
         {...rest}
