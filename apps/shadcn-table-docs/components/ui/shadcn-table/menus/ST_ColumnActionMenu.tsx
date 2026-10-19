@@ -1,21 +1,20 @@
-import { type MouseEvent, useState } from 'react';
+import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
-import {
-  Menu,
-  MenuContent,
-  type MenuContentProps,
-  MenuTrigger,
-} from '../primitives/menu';
 import { ST_ActionMenuItem } from './ST_ActionMenuItem';
 import { ST_FilterOptionMenu } from './ST_FilterOptionMenu';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
-  extends MenuContentProps {
+  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header: ST_Header<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
@@ -56,7 +55,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         VisibilityOffIcon,
       },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — MenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnActionsMenuItems,
     },
     refs: { filterInputRefs },
@@ -328,13 +327,13 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
 
   return (
     // Note: disableScrollLock dropped — Radix DropdownMenu keeps its modal default (scroll-locks), owner ruling.
-    <Menu
+    <DropdownMenu
       open={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <MenuTrigger>
+      <DropdownMenuTrigger asChild>
         <span
           aria-hidden
           style={{
@@ -346,10 +345,13 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </MenuTrigger>
-      <MenuContent
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
         align="start"
-        onClose={() => anchorEl?.focus()}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          anchorEl?.focus();
+        }}
         className={cn('w-max', className)}
         {...rest}
       >
@@ -366,7 +368,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
             table,
           }) ??
           internalColumnMenuItems}
-      </MenuContent>
-    </Menu>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

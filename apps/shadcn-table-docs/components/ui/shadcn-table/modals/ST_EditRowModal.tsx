@@ -71,7 +71,7 @@ export const ST_EditRowModal = <TData extends ST_RowData>({
 
   return (
     <Dialog
-      onOpenChange={(nextOpen, ...details) => {
+      onOpenChange={(nextOpen) => {
         if (nextOpen) return;
         if (creatingRow) {
           onCreatingRowCancel?.({ row, table });
@@ -82,7 +82,7 @@ export const ST_EditRowModal = <TData extends ST_RowData>({
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         row._valuesCache = {} as any; //reset values cache
-        onOpenChange?.(nextOpen, ...details);
+        onOpenChange?.(nextOpen);
       }}
       open={open}
     >

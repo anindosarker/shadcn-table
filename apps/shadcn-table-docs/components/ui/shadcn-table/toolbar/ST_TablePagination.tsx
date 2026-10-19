@@ -13,6 +13,13 @@ import {
   PaginationEllipsis,
   PaginationItem,
 } from '@/components/ui/pagination';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
   type ST_PaginationProps,
@@ -20,13 +27,6 @@ import {
   type ST_TableInstance,
   type SelectProps,
 } from '../types';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../primitives/select';
 import {
   getPaginationItems,
   type ST_UsePaginationItem,
@@ -166,9 +166,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
           ) : (
             <Select
               disabled={disabled}
-              onValueChange={(value) => {
-                if (value !== null) table.setPageSize(+value);
-              }}
+              onValueChange={(value) => table.setPageSize(+value)}
               value={String(pageSize)}
             >
               <SelectTrigger

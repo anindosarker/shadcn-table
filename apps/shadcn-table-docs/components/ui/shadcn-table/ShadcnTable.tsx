@@ -1,4 +1,4 @@
-import { TooltipProvider } from './primitives/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useShadcnTable } from './hooks/useShadcnTable';
 import {
   type ST_RowData,
@@ -41,7 +41,7 @@ export const ShadcnTable = <TData extends ST_RowData>(
   // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
   // including portalled content (portals preserve React context).
   return (
-    <TooltipProvider>
+    <TooltipProvider skipDelayDuration={0}>
       <ST_TableLayout table={table} />
     </TooltipProvider>
   );

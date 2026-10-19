@@ -1,13 +1,13 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { Slider } from '@/components/ui/slider';
 import {
   type SliderProps,
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
-import { Slider } from '../primitives/slider';
 import { parseFromValuesOrFunc } from '../utils/utils';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>

@@ -1,12 +1,11 @@
 import { Alert, AlertTitle } from '@/components/ui/alert';
-import { badgeVariants } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment, useMemo } from 'react';
 import { type ST_RowData, type ST_TableInstance } from '../types';
-import { Slot } from '../primitives/slot';
 import { getST_SelectAllHandler } from '../utils/row.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { ST_SelectCheckbox } from '../inputs/ST_SelectCheckbox';
@@ -107,17 +106,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
         {grouping.map((columnId, index) => (
           <Fragment key={`${index}-${columnId}`}>
             {index > 0 ? localization.thenBy : ''}
-            {/* A secondary Badge rendered as the button: the badge's own
-                attributes and classes merge onto the child element. */}
-            <Slot
-              data-slot="badge"
-              data-variant="secondary"
-              {...chipProps}
-              className={cn(
-                badgeVariants({ variant: 'secondary' }),
-                chipProps?.className,
-              )}
-            >
+            <Badge variant="secondary" asChild {...chipProps}>
               <button
                 type="button"
                 onClick={() => table.getColumn(columnId).toggleGrouping()}
@@ -125,7 +114,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
                 {table.getColumn(columnId).columnDef.header}
                 <CancelIcon data-icon="inline-end" />
               </button>
-            </Slot>
+            </Badge>
           </Fragment>
         ))}
       </span>

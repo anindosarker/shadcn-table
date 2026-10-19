@@ -1,20 +1,22 @@
-import { type ReactNode } from 'react';
+import { type ComponentPropsWithRef, type ReactNode } from 'react';
 import { cva } from 'class-variance-authority';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { type ST_RowData, type ST_TableInstance } from '../types';
-import { MenuItem, type MenuItemProps } from '../primitives/menu';
 
 // min-w-[120px] py-1.5
-// Note: MenuItem defaults govern padding; Content governs width.
+// Note: DropdownMenuItem defaults govern padding; Content governs width.
 const actionMenuItemVariants = cva('items-center justify-between my-0');
 
 export interface ST_ActionMenuItemProps<TData extends ST_RowData>
-  extends MenuItemProps {
+  extends ComponentPropsWithRef<typeof DropdownMenuItem> {
   divider?: boolean;
   icon: ReactNode;
   label: string;
-  onOpenSubMenu?: MenuItemProps['onClick'] | MenuItemProps['onMouseEnter'];
+  onOpenSubMenu?:
+    | ComponentPropsWithRef<typeof DropdownMenuItem>['onClick']
+    | ComponentPropsWithRef<typeof DropdownMenuItem>['onMouseEnter'];
   table: ST_TableInstance<TData>;
 }
 
@@ -34,7 +36,7 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
   } = table;
 
   return (
-    <MenuItem
+    <DropdownMenuItem
       tabIndex={0}
       {...rest}
       className={cn(
@@ -60,6 +62,6 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
           <ArrowRightIcon />
         </Button>
       )}
-    </MenuItem>
+    </DropdownMenuItem>
   );
 };

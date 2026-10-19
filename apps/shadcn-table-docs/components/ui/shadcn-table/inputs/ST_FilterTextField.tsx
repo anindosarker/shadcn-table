@@ -30,19 +30,19 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   type DropdownOption,
   type InputProps,
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
 } from '../types';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../primitives/select';
 import { getColumnFilterInfo, useDropdownOptions } from '../utils/column.utils';
 import {
   createFilterOptions,
@@ -545,7 +545,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               </SelectTrigger>
               {/* slotProps.select: { MenuProps: { disableScrollLock: true }, displayEmpty: true } */}
               {/* Note: radix Select always locks scroll; SelectValue shows the placeholder. */}
-              <SelectContent alignWithTrigger={false}>
+              <SelectContent position="popper">
                 {/* <MenuItem disabled divider hidden key="p" value="">{filterPlaceholder}</MenuItem> */}
                 {/* Note: radix items cannot carry value ""; the placeholder lives on SelectValue. */}
                 {textFieldProps.children ??
