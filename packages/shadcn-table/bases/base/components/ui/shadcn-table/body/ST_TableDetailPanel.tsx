@@ -50,7 +50,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   ...rest
 }: ST_TableDetailPanelProps<TData>) => {
   const {
-    getState,
     getVisibleLeafColumns,
     options: {
       layoutMode,
@@ -61,7 +60,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
       stTableBodyRowProps,
     },
   } = table;
-  const { isLoading } = getState();
+  const { isLoading } = table.state;
 
   // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

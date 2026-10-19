@@ -30,10 +30,9 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
   ...rest
 }: ST_LinearProgressBarProps<TData>) => {
   const {
-    getState,
     options: { stLinearProgressProps },
   } = table;
-  const { isSaving, showProgressBars } = getState();
+  const { isSaving, showProgressBars } = table.state;
 
   const { progressComponentProps, collapsibleProps } = {
     ...parseFromValuesOrFunc(stLinearProgressProps, { isTopToolbar, table }),

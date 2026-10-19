@@ -24,7 +24,6 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
   ...rest
 }: ST_CellActionMenuProps<TData>) => {
   const {
-    getState,
     options: {
       editDisplayMode,
       enableClickToCopy,
@@ -36,7 +35,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
     },
     refs: { actionCellRef },
   } = table;
-  const { actionCell } = getState();
+  const { actionCell } = table.state;
   const cell = actionCell!;
   const { row } = cell;
   const { column } = cell;
@@ -147,7 +146,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           // Focus goes back to the cell unless editing started; returning
           // false keeps Base UI off the invisible trigger.
           finalFocus={() => {
-            if (!table.getState().editingCell) anchorRef.current?.focus();
+            if (!table.state.editingCell) anchorRef.current?.focus();
             return false;
           }}
           className={cn('w-max', className)}

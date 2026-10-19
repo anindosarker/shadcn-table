@@ -48,7 +48,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   ...rest
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
   const {
-    getState,
     options: {
       enableColumnOrdering,
       enableColumnPinning,
@@ -60,7 +59,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     setColumnOrder,
     setColumnPinning,
   } = table;
-  const { columnOrder } = getState();
+  const { columnOrder } = table.state;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
@@ -99,9 +98,9 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
         columnOrder,
       );
       setColumnOrder(reorderedColumns);
-      setColumnPinning(({ left = [], right = [] }) => ({
-        left: reorderedColumns.filter((header) => left.includes(header)),
-        right: reorderedColumns.filter((header) => right.includes(header)),
+      setColumnPinning(({ start = [], end = [] }) => ({
+        start: reorderedColumns.filter((header) => start.includes(header)),
+        end: reorderedColumns.filter((header) => end.includes(header)),
       }));
     }
   };

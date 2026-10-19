@@ -35,7 +35,6 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   ...rest
 }: ST_GlobalFilterTextFieldProps<TData>) => {
   const {
-    getState,
     options: {
       enableGlobalFilterModes,
       icons: { CloseIcon, SearchIcon },
@@ -46,7 +45,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     refs: { searchInputRef },
     setGlobalFilter,
   } = table;
-  const { globalFilter, showGlobalFilter } = getState();
+  const { globalFilter, showGlobalFilter } = table.state;
 
   const textFieldProps = {
     ...parseFromValuesOrFunc(stSearchTextFieldProps, {
