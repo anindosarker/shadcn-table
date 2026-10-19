@@ -8,11 +8,6 @@
       "type": "registry:block",
       "title": "Advanced Example",
       "description": "Advanced Shadcn Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button",
-        "dropdown-menu"
-      ],
       "files": [
         {
           "path": "examples/advanced/TS.tsx",
@@ -24,6 +19,10 @@
           "type": "registry:component",
           "target": "@components/examples/advanced/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button",
+        "dropdown-menu"
       ]
     },
     {
@@ -31,9 +30,6 @@
       "type": "registry:block",
       "title": "Aggregation and Grouping Example",
       "description": "A Shadcn Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/aggregation-and-grouping/TS.tsx",
@@ -52,9 +48,6 @@
       "type": "registry:block",
       "title": "Aggregation Multi",
       "description": "Aggregation Multi example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/aggregation-multi/TS.tsx",
@@ -73,9 +66,6 @@
       "type": "registry:block",
       "title": "Popover Filters Example",
       "description": "An example of Shadcn Table which shows an excel-like column filters.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/alternate-column-filtering/TS.tsx",
@@ -94,9 +84,6 @@
       "type": "registry:block",
       "title": "Alternate Detail Panel",
       "description": "Alternate Detail Panel example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/alternate-detail-panel/TS.tsx",
@@ -115,9 +102,6 @@
       "type": "registry:block",
       "title": "Alternate Pagination",
       "description": "Alternate Pagination example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/alternate-pagination/TS.tsx",
@@ -136,9 +120,6 @@
       "type": "registry:block",
       "title": "Basic Example",
       "description": "A basic example of Shadcn Table which includes sorting, filtering, search, and pagination features by default",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/basic/TS.tsx",
@@ -152,9 +133,6 @@
       "type": "registry:block",
       "title": "Chart Detail Panel Example",
       "description": "A Shadcn Table example demonstrating how to use Recharts with the Detail Panel feature.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/chart-detail-panel/TS.tsx",
@@ -176,9 +154,6 @@
       "type": "registry:block",
       "title": "Column Actions Space",
       "description": "Column Actions Space example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/column-actions-space/TS.tsx",
@@ -197,9 +172,6 @@
       "type": "registry:block",
       "title": "Column Alignment",
       "description": "Column Alignment example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/column-alignment/TS.tsx",
@@ -218,10 +190,6 @@
       "type": "registry:block",
       "title": "Custom Column Actions",
       "description": "Custom Column Actions example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "dropdown-menu"
-      ],
       "files": [
         {
           "path": "examples/custom-column-actions/TS.tsx",
@@ -233,6 +201,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-column-actions/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "dropdown-menu"
       ]
     },
     {
@@ -240,9 +211,6 @@
       "type": "registry:block",
       "title": "Custom Filter UI Example",
       "description": "An example of Shadcn Table which shows custom filter ui in a sidebar.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/custom-column-filtering-ui/TS.tsx",
@@ -261,10 +229,6 @@
       "type": "registry:block",
       "title": "Custom Headless Example",
       "description": "A custom headless example of Shadcn Table which shows how you can use the useShadcnTable hook to build with your own UI components",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "table"
-      ],
       "files": [
         {
           "path": "examples/custom-headless/TS.tsx",
@@ -276,6 +240,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-headless/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "table"
       ]
     },
     {
@@ -283,10 +250,6 @@
       "type": "registry:block",
       "title": "Custom Top Toolbar",
       "description": "Custom Top Toolbar example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/custom-top-toolbar/TS.tsx",
@@ -298,6 +261,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-top-toolbar/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -305,10 +271,6 @@
       "type": "registry:block",
       "title": "Customize Display Columns",
       "description": "Customize Display Columns example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/customize-display-columns/TS.tsx",
@@ -320,6 +282,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-display-columns/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -327,9 +292,6 @@
       "type": "registry:block",
       "title": "Customize Filter Components",
       "description": "Customize Filter Components example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/customize-filter-components/TS.tsx",
@@ -343,10 +305,6 @@
       "type": "registry:block",
       "title": "Filter Switching Example",
       "description": "An example of Shadcn Table which shows how to let the user switch between multiple filtering modes.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "dropdown-menu"
-      ],
       "files": [
         {
           "path": "examples/customize-filter-modes/TS.tsx",
@@ -358,6 +316,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-modes/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "dropdown-menu"
       ]
     },
     {
@@ -365,9 +326,6 @@
       "type": "registry:block",
       "title": "Filter Variants Example",
       "description": "An example of Shadcn Table which shows all of the powerful built-in filter variants.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/customize-filter-variants/TS.tsx",
@@ -386,9 +344,6 @@
       "type": "registry:block",
       "title": "Customize Global Filter Component",
       "description": "Customize Global Filter Component example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/customize-global-filter-component/TS.tsx",
@@ -407,9 +362,6 @@
       "type": "registry:block",
       "title": "Customized Grouping Example",
       "description": "A Shadcn Table example demonstrating various ways to customize the grouping UI.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/customize-remove-column-grouping/TS.tsx",
@@ -428,9 +380,6 @@
       "type": "registry:block",
       "title": "Customize Row Selection",
       "description": "Customize Row Selection example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/customize-row-selection/TS.tsx",
@@ -449,9 +398,6 @@
       "type": "registry:block",
       "title": "Customize Table Styles",
       "description": "Customize Table Styles example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/customize-table-styles/TS.tsx",
@@ -470,9 +416,6 @@
       "type": "registry:block",
       "title": "Disable Column Actions",
       "description": "Disable Column Actions example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/disable-column-actions/TS.tsx",
@@ -491,9 +434,6 @@
       "type": "registry:block",
       "title": "Disable Column Hiding",
       "description": "Disable Column Hiding example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/disable-column-hiding/TS.tsx",
@@ -507,9 +447,6 @@
       "type": "registry:block",
       "title": "Disable Density Toggle",
       "description": "Disable Density Toggle example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/disable-density-toggle/TS.tsx",
@@ -528,16 +465,15 @@
       "type": "registry:block",
       "title": "Dynamic Columns Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and generate columns dynamically",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/dynamic-columns/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/dynamic-columns/dynamic-columns.tsx"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -548,11 +484,6 @@
       "type": "registry:block",
       "title": "Editing CRUD Inline Cell Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline cell features",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button",
-        "spinner"
-      ],
       "files": [
         {
           "path": "examples/editing-crud-cell/TS.tsx",
@@ -565,6 +496,10 @@
           "target": "@components/examples/editing-crud-cell/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button",
+        "spinner"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -574,11 +509,6 @@
       "type": "registry:block",
       "title": "Editing CRUD Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD features",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button",
-        "dialog"
-      ],
       "files": [
         {
           "path": "examples/editing-crud-modal/TS.tsx",
@@ -591,6 +521,10 @@
           "target": "@components/examples/editing-crud-modal/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button",
+        "dialog"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -600,10 +534,6 @@
       "type": "registry:block",
       "title": "Editing CRUD Inline Row Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/editing-crud-row/TS.tsx",
@@ -616,6 +546,9 @@
           "target": "@components/examples/editing-crud-row/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -625,11 +558,6 @@
       "type": "registry:block",
       "title": "Editing CRUD Inline Table Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline table features",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button",
-        "spinner"
-      ],
       "files": [
         {
           "path": "examples/editing-crud-table/TS.tsx",
@@ -642,6 +570,10 @@
           "target": "@components/examples/editing-crud-table/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button",
+        "spinner"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -651,10 +583,6 @@
       "type": "registry:block",
       "title": "Editing CRUD Tree Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD features with expanding sub rows",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/editing-crud-tree/TS.tsx",
@@ -667,6 +595,9 @@
           "target": "@components/examples/editing-crud-tree/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -676,10 +607,6 @@
       "type": "registry:block",
       "title": "Enable Cell Actions",
       "description": "Enable Cell Actions example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "dropdown-menu"
-      ],
       "files": [
         {
           "path": "examples/enable-cell-actions/TS.tsx",
@@ -691,6 +618,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-cell-actions/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "dropdown-menu"
       ]
     },
     {
@@ -698,9 +628,6 @@
       "type": "registry:block",
       "title": "Enable Click To Copy",
       "description": "Enable Click To Copy example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-click-to-copy/TS.tsx",
@@ -719,11 +646,6 @@
       "type": "registry:block",
       "title": "Column Grouping Example",
       "description": "A Shadcn Table example demonstrating different grouping UI modes.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "label",
-        "radio-group"
-      ],
       "files": [
         {
           "path": "examples/enable-column-grouping/TS.tsx",
@@ -735,6 +657,10 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "label",
+        "radio-group"
       ]
     },
     {
@@ -742,9 +668,6 @@
       "type": "registry:block",
       "title": "Column DnD Ordering Example",
       "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-column-ordering/TS.tsx",
@@ -763,10 +686,6 @@
       "type": "registry:block",
       "title": "Column Pinning Example",
       "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "dropdown-menu"
-      ],
       "files": [
         {
           "path": "examples/enable-column-pinning/TS.tsx",
@@ -778,6 +697,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-pinning/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "dropdown-menu"
       ]
     },
     {
@@ -785,9 +707,6 @@
       "type": "registry:block",
       "title": "Enable Column Resizing",
       "description": "Enable Column Resizing example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-column-resizing/TS.tsx",
@@ -806,9 +725,6 @@
       "type": "registry:block",
       "title": "Column Virtualization Example",
       "description": "An example of a Shadcn Table with column virtualization enabled to achieve higher performance when rendering large data sets",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-column-virtualization/TS.tsx",
@@ -827,9 +743,6 @@
       "type": "registry:block",
       "title": "Detail Panel Example",
       "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-detail-panel-conditionally/TS.tsx",
@@ -848,9 +761,6 @@
       "type": "registry:block",
       "title": "Enable Detail Panel Virtualized",
       "description": "Enable Detail Panel Virtualized example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-detail-panel-virtualized/TS.tsx",
@@ -869,9 +779,6 @@
       "type": "registry:block",
       "title": "Enable Expanding Tree",
       "description": "Enable Expanding Tree example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-expanding-tree/TS.tsx",
@@ -885,9 +792,6 @@
       "type": "registry:block",
       "title": "Faceted Values Example",
       "description": "An example of Shadcn Table which shows how to use faceted values to automatically populate filter suggestions.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-filter-facet-values/TS.tsx",
@@ -906,9 +810,6 @@
       "type": "registry:block",
       "title": "Row Dragging Example",
       "description": "An example of Shadcn Table which shows how to drag and drop rows for various use cases.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-dragging/TS.tsx",
@@ -927,9 +828,6 @@
       "type": "registry:block",
       "title": "Enable Row Numbers Original",
       "description": "Enable Row Numbers Original example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-numbers-original/TS.tsx",
@@ -948,9 +846,6 @@
       "type": "registry:block",
       "title": "Enable Row Numbers Static",
       "description": "Enable Row Numbers Static example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-numbers-static/TS.tsx",
@@ -969,9 +864,6 @@
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
       "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-ordering/TS.tsx",
@@ -990,9 +882,6 @@
       "type": "registry:block",
       "title": "Sticky Row Selection Example",
       "description": "An example of Shadcn Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-pinning-select/TS.tsx",
@@ -1011,9 +900,6 @@
       "type": "registry:block",
       "title": "Static Row Pinning Example",
       "description": "An example of Shadcn Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-pinning-static/TS.tsx",
@@ -1032,9 +918,6 @@
       "type": "registry:block",
       "title": "Sticky Row Pinning Example",
       "description": "An example of Shadcn Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-pinning-sticky/TS.tsx",
@@ -1053,9 +936,6 @@
       "type": "registry:block",
       "title": "Enable Row Selection",
       "description": "Enable Row Selection example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-selection/TS.tsx",
@@ -1069,9 +949,6 @@
       "type": "registry:block",
       "title": "Row Virtualization Example",
       "description": "An example of a Shadcn Table with row virtualization enabled to achieve higher performance when rendering large data sets",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-row-virtualization/TS.tsx",
@@ -1090,9 +967,6 @@
       "type": "registry:block",
       "title": "Sticky Header Example",
       "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/enable-sticky-header/TS.tsx",
@@ -1111,9 +985,6 @@
       "type": "registry:block",
       "title": "Expanding Tree Example",
       "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/expanding-tree-expanded/TS.tsx",
@@ -1127,9 +998,6 @@
       "type": "registry:block",
       "title": "Expanding Parsed Tree Example",
       "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/expanding-tree-flat-parse/TS.tsx",
@@ -1143,16 +1011,15 @@
       "type": "registry:block",
       "title": "Expanding Tree Root Expanded",
       "description": "Expanding Tree Root Expanded example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/expanding-tree-root-expanded/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-root-expanded/expanding-tree-root-expanded.tsx"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -1160,10 +1027,6 @@
       "type": "registry:block",
       "title": "CSV Export Example",
       "description": "An example of how to export data to CSV using Shadcn Table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/export-to-csv/TS.tsx",
@@ -1176,6 +1039,9 @@
           "target": "@components/examples/export-to-csv/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button"
+      ],
       "dependencies": [
         "export-to-csv"
       ]
@@ -1185,10 +1051,6 @@
       "type": "registry:block",
       "title": "PDF Export Example",
       "description": "An example of how to export data to PDF using Shadcn Table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/export-to-pdf/TS.tsx",
@@ -1201,6 +1063,9 @@
           "target": "@components/examples/export-to-pdf/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "button"
+      ],
       "dependencies": [
         "jspdf",
         "jspdf-autotable"
@@ -1211,10 +1076,6 @@
       "type": "registry:block",
       "title": "External Toolbar",
       "description": "External Toolbar example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/external-toolbar/TS.tsx",
@@ -1226,6 +1087,9 @@
           "type": "registry:component",
           "target": "@components/examples/external-toolbar/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -1233,9 +1097,6 @@
       "type": "registry:block",
       "title": "Font Awesome Icons",
       "description": "Font Awesome Icons example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/font-awesome-icons/TS.tsx",
@@ -1259,9 +1120,6 @@
       "type": "registry:block",
       "title": "Infinite Scrolling Example",
       "description": "An example of Shadcn Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/infinite-scrolling/TS.tsx",
@@ -1278,17 +1136,16 @@
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
       "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "alert",
-        "spinner"
-      ],
       "files": [
         {
           "path": "examples/lazy-detail-panel/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/lazy-detail-panel/lazy-detail-panel.tsx"
         }
+      ],
+      "registryDependencies": [
+        "alert",
+        "spinner"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -1299,9 +1156,6 @@
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
       "description": "A Shadcn Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/lazy-sub-rows/TS.tsx",
@@ -1318,10 +1172,6 @@
       "type": "registry:block",
       "title": "Linear Progress",
       "description": "Linear Progress example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/linear-progress/TS.tsx",
@@ -1333,6 +1183,9 @@
           "type": "registry:component",
           "target": "@components/examples/linear-progress/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -1340,9 +1193,6 @@
       "type": "registry:block",
       "title": "Loading",
       "description": "Loading example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/loading/TS.tsx",
@@ -1361,9 +1211,6 @@
       "type": "registry:block",
       "title": "Localization I18n Ar",
       "description": "Localization I18n Ar example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-ar/TS.tsx",
@@ -1382,9 +1229,6 @@
       "type": "registry:block",
       "title": "Localization I18n Az",
       "description": "Localization I18n Az example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-az/TS.tsx",
@@ -1403,9 +1247,6 @@
       "type": "registry:block",
       "title": "Localization I18n Bg",
       "description": "Localization I18n Bg example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-bg/TS.tsx",
@@ -1424,9 +1265,6 @@
       "type": "registry:block",
       "title": "Localization I18n Cs",
       "description": "Localization I18n Cs example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-cs/TS.tsx",
@@ -1445,9 +1283,6 @@
       "type": "registry:block",
       "title": "Localization I18n Da",
       "description": "Localization I18n Da example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-da/TS.tsx",
@@ -1466,9 +1301,6 @@
       "type": "registry:block",
       "title": "Localization I18n De",
       "description": "Localization I18n De example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-de/TS.tsx",
@@ -1487,9 +1319,6 @@
       "type": "registry:block",
       "title": "Localization I18n El",
       "description": "Localization I18n El example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-el/TS.tsx",
@@ -1508,9 +1337,6 @@
       "type": "registry:block",
       "title": "Localization I18n En",
       "description": "Localization I18n En example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-en/TS.tsx",
@@ -1529,9 +1355,6 @@
       "type": "registry:block",
       "title": "Localization I18n Es",
       "description": "Localization I18n Es example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-es/TS.tsx",
@@ -1550,9 +1373,6 @@
       "type": "registry:block",
       "title": "Localization I18n Et",
       "description": "Localization I18n Et example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-et/TS.tsx",
@@ -1571,9 +1391,6 @@
       "type": "registry:block",
       "title": "Localization I18n Fa",
       "description": "Localization I18n Fa example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-fa/TS.tsx",
@@ -1592,9 +1409,6 @@
       "type": "registry:block",
       "title": "Localization I18n Fi",
       "description": "Localization I18n Fi example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-fi/TS.tsx",
@@ -1613,9 +1427,6 @@
       "type": "registry:block",
       "title": "Localization I18n Fr",
       "description": "Localization I18n Fr example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-fr/TS.tsx",
@@ -1634,9 +1445,6 @@
       "type": "registry:block",
       "title": "Localization I18n He",
       "description": "Localization I18n He example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-he/TS.tsx",
@@ -1655,9 +1463,6 @@
       "type": "registry:block",
       "title": "Localization I18n Hr",
       "description": "Localization I18n Hr example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-hr/TS.tsx",
@@ -1676,9 +1481,6 @@
       "type": "registry:block",
       "title": "Localization I18n Hu",
       "description": "Localization I18n Hu example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-hu/TS.tsx",
@@ -1697,9 +1499,6 @@
       "type": "registry:block",
       "title": "Localization I18n Hy",
       "description": "Localization I18n Hy example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-hy/TS.tsx",
@@ -1718,9 +1517,6 @@
       "type": "registry:block",
       "title": "Localization I18n Id",
       "description": "Localization I18n Id example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-id/TS.tsx",
@@ -1739,9 +1535,6 @@
       "type": "registry:block",
       "title": "Localization I18n It",
       "description": "Localization I18n It example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-it/TS.tsx",
@@ -1760,9 +1553,6 @@
       "type": "registry:block",
       "title": "Localization I18n Ja",
       "description": "Localization I18n Ja example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-ja/TS.tsx",
@@ -1781,9 +1571,6 @@
       "type": "registry:block",
       "title": "Localization I18n Ko",
       "description": "Localization I18n Ko example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-ko/TS.tsx",
@@ -1802,9 +1589,6 @@
       "type": "registry:block",
       "title": "Localization I18n Nl",
       "description": "Localization I18n Nl example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-nl/TS.tsx",
@@ -1823,9 +1607,6 @@
       "type": "registry:block",
       "title": "Localization I18n No",
       "description": "Localization I18n No example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-no/TS.tsx",
@@ -1844,9 +1625,6 @@
       "type": "registry:block",
       "title": "Localization I18n Np",
       "description": "Localization I18n Np example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-np/TS.tsx",
@@ -1865,9 +1643,6 @@
       "type": "registry:block",
       "title": "Localization I18n Pl",
       "description": "Localization I18n Pl example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-pl/TS.tsx",
@@ -1886,9 +1661,6 @@
       "type": "registry:block",
       "title": "Localization I18n Pt",
       "description": "Localization I18n Pt example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-pt/TS.tsx",
@@ -1907,9 +1679,6 @@
       "type": "registry:block",
       "title": "Localization I18n Pt BR",
       "description": "Localization I18n Pt BR example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-pt-BR/TS.tsx",
@@ -1928,9 +1697,6 @@
       "type": "registry:block",
       "title": "Localization I18n Ro",
       "description": "Localization I18n Ro example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-ro/TS.tsx",
@@ -1949,9 +1715,6 @@
       "type": "registry:block",
       "title": "Localization I18n Ru",
       "description": "Localization I18n Ru example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-ru/TS.tsx",
@@ -1970,9 +1733,6 @@
       "type": "registry:block",
       "title": "Localization I18n Sk",
       "description": "Localization I18n Sk example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-sk/TS.tsx",
@@ -1991,9 +1751,6 @@
       "type": "registry:block",
       "title": "Localization I18n Sr Cyrl RS",
       "description": "Localization I18n Sr Cyrl RS example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-sr-Cyrl-RS/TS.tsx",
@@ -2012,9 +1769,6 @@
       "type": "registry:block",
       "title": "Localization I18n Sr Latn RS",
       "description": "Localization I18n Sr Latn RS example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-sr-Latn-RS/TS.tsx",
@@ -2033,9 +1787,6 @@
       "type": "registry:block",
       "title": "Localization I18n Sv",
       "description": "Localization I18n Sv example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-sv/TS.tsx",
@@ -2054,9 +1805,6 @@
       "type": "registry:block",
       "title": "Localization I18n Tr",
       "description": "Localization I18n Tr example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-tr/TS.tsx",
@@ -2075,9 +1823,6 @@
       "type": "registry:block",
       "title": "Localization I18n Uk",
       "description": "Localization I18n Uk example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-uk/TS.tsx",
@@ -2096,9 +1841,6 @@
       "type": "registry:block",
       "title": "Localization I18n Vi",
       "description": "Localization I18n Vi example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-vi/TS.tsx",
@@ -2117,9 +1859,6 @@
       "type": "registry:block",
       "title": "Localization I18n Zh Hans",
       "description": "Localization I18n Zh Hans example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-zh-hans/TS.tsx",
@@ -2138,9 +1877,6 @@
       "type": "registry:block",
       "title": "Localization I18n Zh Hant",
       "description": "Localization I18n Zh Hant example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/localization-i18n-zh-hant/TS.tsx",
@@ -2159,9 +1895,6 @@
       "type": "registry:block",
       "title": "Manual Selection",
       "description": "Manual Selection example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/manual-selection/TS.tsx",
@@ -2175,9 +1908,6 @@
       "type": "registry:block",
       "title": "Minimal Example",
       "description": "A minimal example of Shadcn Table which turns off most of the advanced features",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/minimal/TS.tsx",
@@ -2196,9 +1926,6 @@
       "type": "registry:block",
       "title": "Mui Theme",
       "description": "Mui Theme example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/mui-theme/TS.tsx",
@@ -2212,10 +1939,6 @@
       "type": "registry:block",
       "title": "Multi Sorting",
       "description": "Multi Sorting example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/multi-sorting/TS.tsx",
@@ -2227,6 +1950,9 @@
           "type": "registry:component",
           "target": "@components/examples/multi-sorting/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -2234,10 +1960,6 @@
       "type": "registry:block",
       "title": "Persistent State",
       "description": "Persistent State example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/persistent-state/TS.tsx",
@@ -2249,6 +1971,9 @@
           "type": "registry:component",
           "target": "@components/examples/persistent-state/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -2256,17 +1981,16 @@
       "type": "registry:block",
       "title": "React Query Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button",
-        "tooltip"
-      ],
       "files": [
         {
           "path": "examples/react-query/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/react-query/react-query.tsx"
         }
+      ],
+      "registryDependencies": [
+        "button",
+        "tooltip"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -2277,9 +2001,6 @@
       "type": "registry:block",
       "title": "Remote Data Fetching Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/remote/TS.tsx",
@@ -2293,10 +2014,6 @@
       "type": "registry:block",
       "title": "Row Actions Buttons",
       "description": "Row Actions Buttons example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button"
-      ],
       "files": [
         {
           "path": "examples/row-actions-buttons/TS.tsx",
@@ -2308,6 +2025,9 @@
           "type": "registry:component",
           "target": "@components/examples/row-actions-buttons/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "button"
       ]
     },
     {
@@ -2315,9 +2035,6 @@
       "type": "registry:block",
       "title": "Row Actions Menu Items",
       "description": "Row Actions Menu Items example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/row-actions-menu-items/TS.tsx",
@@ -2336,11 +2053,6 @@
       "type": "registry:block",
       "title": "Server Side Data",
       "description": "Server Side Data example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master",
-        "button",
-        "tooltip"
-      ],
       "files": [
         {
           "path": "examples/server-side-data/TS.tsx",
@@ -2368,6 +2080,10 @@
           "target": "@components/examples/server-side-data/lib/users.service.ts"
         }
       ],
+      "registryDependencies": [
+        "button",
+        "tooltip"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -2377,9 +2093,6 @@
       "type": "registry:block",
       "title": "Single Row Selection",
       "description": "Single Row Selection example from shadcn-table.",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/single-row-selection/TS.tsx",
@@ -2393,9 +2106,6 @@
       "type": "registry:block",
       "title": "Virtualized Example",
       "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",
-      "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table#master"
-      ],
       "files": [
         {
           "path": "examples/virtualized/TS.tsx",
