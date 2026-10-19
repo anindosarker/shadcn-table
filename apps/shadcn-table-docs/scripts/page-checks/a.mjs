@@ -243,9 +243,12 @@ const checks = {
   },
 };
 
-/** OptionsSwitcher: `count` tabs, the one for this page active. */
+/**
+ * OptionsSwitcher: `count` tabs, the one for this page active. The header's
+ * base switch (components/base-selector.tsx) has two tabs of its own.
+ */
 async function switcher(page, active, count, check) {
-  const tabs = page.locator('[role="tab"]');
+  const tabs = page.locator('[role="tab"]:not(#nd-subnav *)');
   check(
     'switcher tabs',
     (await tabs.count()) === count,
