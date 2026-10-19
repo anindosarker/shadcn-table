@@ -89,7 +89,7 @@ const Example = () => {
   //do something when the row selection changes...
   useEffect(() => {
     console.info({ rowSelection }); //read your managed row selection state
-    // console.info(table.getState().rowSelection); //alternate way to get the row selection state
+    // console.info(table.state.rowSelection); //alternate way to get the row selection state
   }, [rowSelection]);
 
   return <ShadcnTable table={table} />;

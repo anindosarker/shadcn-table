@@ -4,12 +4,12 @@ import {
   type DivProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_ShowHideColumnsButton } from '../buttons/ST_ShowHideColumnsButton';
-import { ST_ToggleDensePaddingButton } from '../buttons/ST_ToggleDensePaddingButton';
-import { ST_ToggleFiltersButton } from '../buttons/ST_ToggleFiltersButton';
-import { ST_ToggleFullScreenButton } from '../buttons/ST_ToggleFullScreenButton';
-import { ST_ToggleGlobalFilterButton } from '../buttons/ST_ToggleGlobalFilterButton';
+} from '@/components/ui/shadcn-table/types';
+import { ST_ShowHideColumnsButton } from '@/components/ui/shadcn-table/buttons/ST_ShowHideColumnsButton';
+import { ST_ToggleDensePaddingButton } from '@/components/ui/shadcn-table/buttons/ST_ToggleDensePaddingButton';
+import { ST_ToggleFiltersButton } from '@/components/ui/shadcn-table/buttons/ST_ToggleFiltersButton';
+import { ST_ToggleFullScreenButton } from '@/components/ui/shadcn-table/buttons/ST_ToggleFullScreenButton';
+import { ST_ToggleGlobalFilterButton } from '@/components/ui/shadcn-table/buttons/ST_ToggleGlobalFilterButton';
 
 export interface ST_ToolbarInternalButtonsProps<TData extends ST_RowData>
   extends DivProps {

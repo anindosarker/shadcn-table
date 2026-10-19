@@ -48,7 +48,7 @@ const Example = () => {
       className: 'max-h-[400px]',
     },
     stTableBodyRowProps: ({ row, table }) => {
-      const { density } = table.getState();
+      const { density } = table.state;
       return {
         style: {
           //Set a fixed height for pinned rows

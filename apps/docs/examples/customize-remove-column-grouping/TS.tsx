@@ -55,7 +55,7 @@ const Example = () => {
           </div>
         ),
         GroupedCell: ({ row, table }) => {
-          const { grouping } = table.getState();
+          const { grouping } = table.state;
           return row.getValue(grouping[grouping.length - 1]);
         },
         enableResizing: true,

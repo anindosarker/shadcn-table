@@ -8,11 +8,11 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { ST_EditActionButtons } from './ST_EditActionButtons';
-import { ST_RowActionMenu } from '../menus/ST_RowActionMenu';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_EditActionButtons } from '@/components/ui/shadcn-table/buttons/ST_EditActionButtons';
+import { ST_RowActionMenu } from '@/components/ui/shadcn-table/menus/ST_RowActionMenu';
 
 // height: '2rem', width: '2rem', opacity: 0.5, '&:hover': { opacity: 1 }, transition: 'opacity 150ms'
 // Note: size/opacity overrides dropped per the buttons sweep ruling.
@@ -34,7 +34,6 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleRowActionMenuButtonProps<TData>) => {
   const {
-    getState,
     options: {
       createDisplayMode,
       editDisplayMode,
@@ -47,7 +46,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
     setEditingRow,
   } = table;
 
-  const { creatingRow, editingRow } = getState();
+  const { creatingRow, editingRow } = table.state;
 
   const isCreating = creatingRow?.id === row.id;
   const isEditing = editingRow?.id === row.id;

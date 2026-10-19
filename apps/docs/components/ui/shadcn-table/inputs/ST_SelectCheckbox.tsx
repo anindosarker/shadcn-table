@@ -9,14 +9,14 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 import {
   getIsRowSelected,
   getST_RowSelectionHandler,
   getST_SelectAllHandler,
-} from '../utils/row.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/utils/row.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 const selectCheckboxVariants = cva('z-0', {
   variants: {
@@ -45,7 +45,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   ...rest
 }: ST_SelectCheckboxProps<TData>) => {
   const {
-    getState,
     options: {
       enableMultiRowSelection,
       localization,
@@ -54,7 +53,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       stSelectCheckboxProps,
     },
   } = table;
-  const { density, isLoading } = getState();
+  const { density, isLoading } = table.state;
 
   const selectAll = !row;
 
@@ -147,11 +146,16 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
             {...commonProps}
             // indeterminate={...}
             // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
+            // v9: getIsSomeRowsSelected / getIsSomeSelected mean "at least one"
+            // (the all-selected case included), so the all-selected check gates
+            // the indeterminate state.
             checked={
               (
                 !isChecked && selectAll
-                  ? table.getIsSomeRowsSelected()
-                  : row?.getIsSomeSelected() && row.getCanSelectSubRows()
+                  ? table.getIsSomeRowsSelected() && !allRowsSelected
+                  : row?.getIsSomeSelected() &&
+                    !row.getIsAllSubRowsSelected() &&
+                    row.getCanSelectSubRows()
               )
                 ? 'indeterminate'
                 : commonProps.checked

@@ -5,7 +5,7 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 
 export interface ST_TableHeadCellResizeHandleProps<TData extends ST_RowData>
   extends React.ComponentProps<typeof Separator> {
@@ -52,11 +52,10 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadCellResizeHandleProps<TData>) => {
   const {
-    getState,
     options: { columnResizeDirection, columnResizeMode },
-    setColumnSizingInfo,
+    setColumnResizing,
   } = table;
-  const { density } = getState();
+  const { density } = table.state;
   const { column } = header;
 
   const handler = header.getResizeHandler();
@@ -74,7 +73,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           : '[&:active>[data-slot=separator]]:opacity-0',
       )}
       onDoubleClick={() => {
-        setColumnSizingInfo((old) => ({
+        setColumnResizing((old) => ({
           ...old,
           isResizingColumn: false,
         }));
@@ -87,7 +86,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           column.getIsResizing() && columnResizeMode === 'onEnd'
             ? `translateX(${
                 (columnResizeDirection === 'rtl' ? -1 : 1) *
-                (getState().columnSizingInfo.deltaOffset ?? 0)
+                (table.state.columnResizing.deltaOffset ?? 0)
               }px)`
             : undefined,
       }}

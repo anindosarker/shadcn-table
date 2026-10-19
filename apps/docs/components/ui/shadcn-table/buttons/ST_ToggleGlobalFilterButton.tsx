@@ -3,8 +3,8 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 export interface ST_ToggleGlobalFilterButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -16,7 +16,6 @@ export const ST_ToggleGlobalFilterButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleGlobalFilterButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { SearchIcon, SearchOffIcon },
       localization,
@@ -24,7 +23,7 @@ export const ST_ToggleGlobalFilterButton = <TData extends ST_RowData>({
     refs: { searchInputRef },
     setShowGlobalFilter,
   } = table;
-  const { globalFilter, showGlobalFilter } = getState();
+  const { globalFilter, showGlobalFilter } = table.state;
 
   const handleToggleSearch = () => {
     setShowGlobalFilter(!showGlobalFilter);

@@ -5,10 +5,10 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type TableHeadProps,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_ToolbarAlertBanner } from '../toolbar/ST_ToolbarAlertBanner';
-import { ST_TableHeadRow } from './ST_TableHeadRow';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/toolbar/ST_ToolbarAlertBanner';
+import { ST_TableHeadRow } from '@/components/ui/shadcn-table/head/ST_TableHeadRow';
 
 export interface ST_TableHeadProps<TData extends ST_RowData>
   extends TableHeadProps {
@@ -30,7 +30,6 @@ export const ST_TableHead = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadProps<TData>) => {
   const {
-    getState,
     options: {
       enableStickyHeader,
       layoutMode,
@@ -39,7 +38,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
     },
     refs: { tableHeadRef },
   } = table;
-  const { isFullScreen, showAlertBanner } = getState();
+  const { isFullScreen, showAlertBanner } = table.state;
 
   const tableHeadProps = {
     ...parseFromValuesOrFunc(stTableHeadProps, { table }),

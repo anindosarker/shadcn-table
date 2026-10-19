@@ -7,8 +7,8 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
@@ -34,7 +34,12 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterRangeSliderProps<TData>) => {
   const {
-    options: { enableColumnFilterModes, localization, stFilterSliderProps },
+    options: {
+      enableColumnFilterModes,
+      enableFacetedValues,
+      localization,
+      stFilterSliderProps,
+    },
     refs: { filterInputRefs },
   } = table;
   const { column } = header;
@@ -54,7 +59,9 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   let [min, max] =
     sliderProps.min !== undefined && sliderProps.max !== undefined
       ? [sliderProps.min, sliderProps.max]
-      : (column.getFacetedMinMaxValues() ?? [0, 1]);
+      : ((enableFacetedValues
+          ? column.getFacetedMinMaxValues()
+          : undefined) ?? [0, 1]);
 
   //fix potential TanStack Table bugs where min or max is an array
   if (Array.isArray(min)) min = min[0];

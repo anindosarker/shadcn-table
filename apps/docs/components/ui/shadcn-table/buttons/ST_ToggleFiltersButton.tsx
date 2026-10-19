@@ -3,8 +3,8 @@ import {
   type ButtonProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 export interface ST_ToggleFiltersButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -16,14 +16,13 @@ export const ST_ToggleFiltersButton = <TData extends ST_RowData>({
   ...rest
 }: ST_ToggleFiltersButtonProps<TData>) => {
   const {
-    getState,
     options: {
       icons: { FilterListIcon, FilterListOffIcon },
       localization,
     },
     setShowColumnFilters,
   } = table;
-  const { showColumnFilters } = getState();
+  const { showColumnFilters } = table.state;
 
   const handleToggleShowFilters = () => {
     setShowColumnFilters(!showColumnFilters);

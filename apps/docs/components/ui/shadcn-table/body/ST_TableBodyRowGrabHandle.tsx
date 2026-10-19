@@ -4,9 +4,9 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_GrabHandleButton } from '../buttons/ST_GrabHandleButton';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/buttons/ST_GrabHandleButton';
 
 export interface ST_TableBodyRowGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {

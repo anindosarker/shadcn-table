@@ -10,11 +10,14 @@ import {
   type ST_TableInstance,
   type ST_VirtualItem,
   type TableRowProps,
-} from '../types';
-import { getIsRowSelected } from '../utils/row.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableBodyCell, Memo_ST_TableBodyCell } from './ST_TableBodyCell';
-import { ST_TableDetailPanel } from './ST_TableDetailPanel';
+} from '@/components/ui/shadcn-table/types';
+import { getIsRowSelected } from '@/components/ui/shadcn-table/utils/row.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import {
+  ST_TableBodyCell,
+  Memo_ST_TableBodyCell,
+} from '@/components/ui/shadcn-table/body/ST_TableBodyCell';
+import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/body/ST_TableDetailPanel';
 
 export interface ST_TableBodyRowProps<TData extends ST_RowData>
   extends TableRowProps {
@@ -65,7 +68,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   // Note: MUI useTheme dropped project-wide — shadcn CSS vars handle theming.
 
   const {
-    getState,
     options: {
       enableRowOrdering,
       enableRowPinning,
@@ -95,7 +97,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     hoveredRow,
     isFullScreen,
     rowPinning,
-  } = getState();
+  } = table.state;
 
   const visibleCells = row.getVisibleCells();
 
