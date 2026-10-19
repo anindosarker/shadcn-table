@@ -11,6 +11,16 @@ export const ST_BASE: 'radix' | 'base' =
 
 export const ST_BASE_LABEL = ST_BASE === 'base' ? 'Base UI' : 'Radix UI';
 
+/** The other edition, the one the manager's edition button opens. */
+export const ST_OTHER_BASE_LABEL = ST_BASE === 'base' ? 'Radix UI' : 'Base UI';
+
+/**
+ * Whether this manager runs under `storybook dev` (set by main.ts on the
+ * window from the build's config type). Static builds leave it false.
+ */
+export const ST_DEV: boolean =
+  (globalThis as { __ST_DEV__?: boolean }).__ST_DEV__ === true;
+
 /** Manager title: "shadcn-table (Radix UI)" or "shadcn-table (Base UI)". */
 const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
 

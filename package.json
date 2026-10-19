@@ -17,6 +17,7 @@
     "diff-bases": "node packages/shadcn-table/scripts/diff-bases.mjs",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-table",
+    "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook(:base)?$/\"",
     "storybook:build": "turbo run storybook:build --filter=shadcn-table",
     "test": "turbo run test --filter=shadcn-table",
     "test:base": "turbo run test:base --filter=shadcn-table"
