@@ -28,5 +28,7 @@
       "@/*": ["./bases/radix/*"]
     }
   },
-  "include": ["bases/radix"]
+  "include": ["bases/radix"],
+  // Node-only item definition, read by scripts/build-registry.mjs.
+  "exclude": ["bases/radix/registry.ts"]
 }

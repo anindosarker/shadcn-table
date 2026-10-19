@@ -1,0 +1,39 @@
+// Item definition of the Radix edition: `shadcn-table` plus one locale item
+// per language, both read by scripts/build-registry.mjs (Node strips the
+// types). Every file under components/ui/shadcn-table is an item file, every
+// `@/components/ui/<part>` import is a registryDependency and the ST-only CSS
+// rules in index.css ship through the item's `css` field; see
+// scripts/registry-lib.mjs.
+import { registryItemSchema, type Registry } from 'shadcn/schema';
+import { baseItems, HOMEPAGE } from '../../scripts/registry-lib.mjs';
+
+const items = baseItems({
+  dir: import.meta.dirname,
+  name: 'shadcn-table',
+  title: 'Shadcn Table',
+  description:
+    'A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.',
+  // npm packages the library imports (bare specifiers). Pinned ones take
+  // their version from package.json.
+  dependencies: [
+    { name: '@tanstack/react-table', pinned: true },
+    { name: '@tanstack/react-virtual', pinned: true },
+    { name: '@tanstack/match-sorter-utils', pinned: true },
+    { name: 'highlight-words', pinned: true },
+    { name: 'class-variance-authority' },
+    { name: 'lucide-react' },
+    { name: 'radix-ui' },
+  ],
+  devDependencies: [{ name: 'tw-animate-css' }],
+  // shadcn parts the item ships as its own files (checkbox: minus icon for
+  // the indeterminate state) instead of as registryDependencies.
+  forkedUi: ['checkbox'],
+});
+
+registryItemSchema.array().parse(items);
+
+export const registry = {
+  name: 'st',
+  homepage: HOMEPAGE,
+  items,
+} satisfies Registry;
