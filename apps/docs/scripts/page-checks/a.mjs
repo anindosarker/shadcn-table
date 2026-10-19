@@ -46,7 +46,7 @@ const checks = {
   },
   '/docs/guides/pagination': async ({ page, check }) => {
     const propNames = await names(page, '#relevant-props-table');
-    check('table options rows', propNames.length === 9, propNames.join(','));
+    check('table options rows', propNames.length === 8, propNames.join(','));
     const stateNames = await names(page, '#relevant-state-options-table');
     check(
       'state options rows',
@@ -170,6 +170,22 @@ const checks = {
       (await page.locator('article a[href="/llms.txt"]').count()) === 1,
     );
   },
+  '/docs/getting-started/migrating-v1': async ({ page, check }) => {
+    const txt = (await page.locator('article').textContent()) ?? '';
+    check('dependency bump', txt.includes('@tanstack/react-table 9.3.1'));
+    check(
+      'rename table lists sortFn and table.state',
+      txt.includes('sortFn') && txt.includes('table.state'),
+    );
+    check(
+      'tanstack migration guide link',
+      (await page
+        .locator(
+          'article a[href="https://tanstack.com/table/latest/docs/framework/react/guide/migrating"]',
+        )
+        .count()) === 1,
+    );
+  },
   '/docs/getting-started': async ({ page, check }) => {
     check(
       'redirects to install',
@@ -183,7 +199,7 @@ const checks = {
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
-    await propTable(page, '#props-table', 210, check);
+    await propTable(page, '#props-table', 201, check);
     await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {
@@ -208,7 +224,7 @@ const checks = {
   },
   '/docs/api/column-instance-apis': async ({ page, check }) => {
     await switcher(page, 'Column Instance APIs', 4, check);
-    await propTable(page, '#column-instance-apis-table', 56, check);
+    await propTable(page, '#column-instance-apis-table', 55, check);
     await codeToggle(
       page,
       'column-instance-apis',
