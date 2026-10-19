@@ -19,8 +19,7 @@
     "lint": "eslint .",
     "tsc:radix": "tsc -p tsconfig.radix.json --noEmit",
     "tsc:baseui": "tsc -p tsconfig.baseui.json --noEmit",
-    "tsc": "pnpm tsc:radix",
-    "tsc:base": "pnpm tsc:baseui"
+    "tsc": "pnpm tsc:radix"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

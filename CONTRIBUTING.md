@@ -101,7 +101,7 @@ Edit `packages/shadcn-table/shared/components/ui/shadcn-table` (or the base's ov
 ```bash
 pnpm storybook                          # http://localhost:6006
 pnpm test                               # every story, headless Chromium
-pnpm --filter shadcn-table tsc
+pnpm --filter shadcn-table tsc:radix
 pnpm --filter shadcn-table lint
 ```
 
@@ -110,7 +110,7 @@ The Base UI loop, the same stories against `bases/base`:
 ```bash
 pnpm --filter shadcn-table storybook:base    # http://localhost:6007
 pnpm test:base
-pnpm --filter shadcn-table tsc:base
+pnpm --filter shadcn-table tsc:baseui
 ```
 
 - **Stories are tests.** `pnpm test` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it, and the story must pass on both bases. A behavior that differs on purpose gets a `<name>.radix.stories.tsx` or `<name>.base.stories.tsx`, included only on that base.
@@ -228,8 +228,8 @@ Both list the same 23 shadcn parts as bare `registryDependencies`, so the user's
 CI runs these, in this order; run them first.
 
 ```bash
-pnpm --filter shadcn-table tsc
-pnpm --filter shadcn-table tsc:base
+pnpm --filter shadcn-table tsc:radix
+pnpm --filter shadcn-table tsc:baseui
 pnpm --filter shadcn-table lint
 pnpm --filter shadcn-table storybook:build
 pnpm --filter shadcn-table storybook:build:base

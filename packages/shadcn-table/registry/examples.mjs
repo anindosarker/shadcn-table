@@ -1,18 +1,10 @@
 #!/usr/bin/env node
 /**
-<<<<<<<< HEAD:apps/docs/scripts/build-registry-items.mjs
- * Writes apps/docs/registry.json with one shadcn registry
- * item per docs example (examples/<slug>/TS.tsx plus every other source
- * file in the folder, subfolders included, except the index.tsx wrapper). The root registry.json includes this file, so the GitHub
- * namespace serves every example as
- * `anindosarker/shadcn-table/example-<slug>`.
-========
  * Writes the docs app's registry.json with one shadcn registry item per
  * docs example (examples/<slug>/TS.tsx plus every other source file in the
  * folder, subfolders included, except the index.tsx wrapper). The root
  * registry.json includes this file, so the GitHub namespace serves every
  * example as `anindosarker/shadcn-table/example-<slug>`.
->>>>>>>> origin/sc-registry:packages/shadcn-table/registry/examples.mjs
  *
  * Per item:
  * - name `example-<slug>`, type `registry:block`

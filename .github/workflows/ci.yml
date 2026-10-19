@@ -10,8 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # The library is two trees, one per shadcn base: bases/radix (the default
-  # scripts) and bases/base (the `:base` scripts, ST_BASE=base).
+  # The library is one shared source (shared/) plus per-base overrides, one
+  # per shadcn base: bases/radix (the default scripts) and bases/base (the
+  # `:base` scripts, ST_BASE=base).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     runs-on: ubuntu-latest
@@ -27,9 +28,9 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-table tsc
+      - run: pnpm --filter shadcn-table tsc:radix
         if: matrix.base == 'radix'
-      - run: pnpm --filter shadcn-table tsc:base
+      - run: pnpm --filter shadcn-table tsc:baseui
         if: matrix.base == 'base'
       - run: pnpm --filter shadcn-table lint
       - run: pnpm --filter shadcn-table storybook:build
