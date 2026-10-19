@@ -1,6 +1,7 @@
 export * from '@/components/ui/shadcn-table/types';
 
 //helpers
+export * from '@/components/ui/shadcn-table/utils/tanstack.features';
 export * from '@/components/ui/shadcn-table/utils/tanstack.helpers';
 export * from '@/components/ui/shadcn-table/utils/cell.utils';
 export * from '@/components/ui/shadcn-table/utils/column.utils';
