@@ -13,7 +13,7 @@ jobs:
   # The library is two trees, one per shadcn base: bases/radix (the default
   # scripts) and bases/base (the `:base` scripts, ST_BASE=base).
   library:
-    name: "library (${{ matrix.base }}: tsc, lint, storybook build)"
+    name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -38,7 +38,7 @@ jobs:
         if: matrix.base == 'base'
 
   test:
-    name: "test (${{ matrix.base }}: vitest browser mode)"
+    name: 'test (${{ matrix.base }}: vitest browser mode)'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
