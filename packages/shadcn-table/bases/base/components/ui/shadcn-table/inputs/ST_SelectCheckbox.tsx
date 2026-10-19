@@ -1,5 +1,3 @@
-import { type MouseEvent } from 'react';
-import { type BaseUIEvent } from '@base-ui/react/types';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -18,6 +16,12 @@ import {
 } from '../utils/row.utils';
 import { parseFromValuesOrFunc } from '../utils/utils';
 import { ST_Tooltip } from '../ST_Tooltip';
+
+// Base UI's BaseUIEvent<MouseEvent<HTMLSpanElement>>, read off the part instead
+// of '@base-ui/react/types': under verbatimModuleSyntax an inline `type`
+// import keeps a side-effect import that Vite's dep scanner misses, and the
+// late re-optimization reloads Storybook mid-run.
+type SelectClickEvent = Parameters<NonNullable<CheckboxProps['onClick']>>[0];
 
 const selectCheckboxVariants = cva('z-0', {
   variants: {
@@ -104,7 +108,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     // size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
     // Note: the density variant on className below.
     ...checkboxProps,
-    onClick: (e: BaseUIEvent<MouseEvent<HTMLSpanElement>>) => {
+    onClick: (e: SelectClickEvent) => {
       e.stopPropagation();
       // Note: MUI Radio fires no change once checked; same guard here.
       if (!(enableMultiRowSelection === false && isChecked)) {
