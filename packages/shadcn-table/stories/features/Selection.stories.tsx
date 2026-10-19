@@ -3,6 +3,7 @@ import { Minus, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   type ST_ColumnDef,
+  type ST_RowSelectionState,
   ST_SelectCheckbox,
   getST_RowSelectionHandler,
   useShadcnTable,
@@ -134,7 +135,7 @@ export const SelectionEnabledWithRowClick = () => (
 );
 
 export const ManualSelection = () => {
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const [rowSelection, setRowSelection] = useState<ST_RowSelectionState>({});
 
   console.info(rowSelection);
 
@@ -146,10 +147,10 @@ export const ManualSelection = () => {
         className: 'cursor-pointer',
         'data-selected': rowSelection[row.id] || undefined,
         onClick: () =>
-          setRowSelection((prev) => ({
-            ...prev,
-            [row.id]: !prev[row.id],
-          })),
+          setRowSelection((prev) => {
+            const { [row.id]: wasSelected, ...rest } = prev;
+            return wasSelected ? rest : { ...rest, [row.id]: true };
+          }),
       })}
       state={{ rowSelection }}
     />
@@ -344,7 +345,7 @@ export const MultiSelectRowWithHoldShift = () => {
     (opts: { end: number; start: number }) => {
       const { end, start } = opts;
       const rows = table.getRowModel().rows;
-      const res: Record<string, boolean> = {};
+      const res: ST_RowSelectionState = {};
       for (let i = end; i >= start; i--) {
         if (!rows[i]?.getCanSelect()) {
           continue;
@@ -362,7 +363,6 @@ export const MultiSelectRowWithHoldShift = () => {
   // TODO: Reset prevSelectedStaticRowIndex when sorting changes
   useEffect(() => {
     setPrevSelectedStaticRowIndex(undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.state.sorting]);
 
   return <ShadcnTable table={table} />;
