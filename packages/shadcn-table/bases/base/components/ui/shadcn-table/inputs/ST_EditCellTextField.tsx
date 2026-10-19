@@ -164,15 +164,30 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   if (isSelectEdit) {
     const select = (
       <Select
+        // `items` gives the trigger the option label; Base UI's SelectValue
+        // shows the raw value otherwise. Custom children fall back to the value.
+        items={
+          textFieldProps.children
+            ? undefined
+            : Object.fromEntries(
+                selectOptions?.map((option) => {
+                  const { label, value } = getValueAndLabel(option);
+                  return [value, label];
+                }) ?? [],
+              )
+        }
         name={column.id}
         onOpenChange={setOpen}
-        onValueChange={(newValue) =>
+        onValueChange={(newValue: string | null) =>
           // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
+          // Base UI reports null when a null-valued item is chosen; none here.
           handleChange({
-            target: { name: column.id, value: newValue },
+            target: { name: column.id, value: newValue ?? '' },
           } as ChangeEvent<HTMLInputElement>)
         }
-        value={value ?? ''}
+        // Stays controlled for an undefined cell value; Base UI shows the
+        // placeholder for null, never for "".
+        value={value || null}
       >
         <SelectTrigger
           disabled={
@@ -206,7 +221,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             );
           }}
           // onKeyDown={handleEnterKeyDown}
-          // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); radix opens on Enter.
+          // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); Base UI opens on Enter.
           onKeyDown={(e) =>
             textFieldProps.onKeyDown?.(
               e as unknown as KeyboardEvent<HTMLInputElement>,
@@ -224,7 +239,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
           />
         </SelectTrigger>
         {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
-        {/* Note: radix Select always locks scroll. */}
+        {/* Note: Base UI Select locks scroll while modal (the default). */}
         <SelectContent>
           {textFieldProps.children ??
             selectOptions?.map((option) => {

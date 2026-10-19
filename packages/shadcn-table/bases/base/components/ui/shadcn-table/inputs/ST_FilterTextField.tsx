@@ -521,8 +521,24 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : isSelectFilter ? (
             // onChange={handleTextFieldChange}
-            // Note: radix Select raises no ChangeEvent, so the user onChange cannot fire.
-            <Select onValueChange={handleChange} value={filterValue as string}>
+            // Note: Base UI Select raises no ChangeEvent, so the user onChange cannot fire.
+            // `items` gives the trigger the option label; Base UI's SelectValue
+            // shows the raw value otherwise. Custom children fall back to the value.
+            <Select
+              items={
+                textFieldProps.children
+                  ? undefined
+                  : Object.fromEntries(
+                      dropdownOptions?.map((option) => {
+                        const { label, value } = getValueAndLabel(option);
+                        return [value, `${label}${optionCount(value)}`];
+                      }) ?? [],
+                    )
+              }
+              // Base UI shows the placeholder for null, never for "".
+              onValueChange={(value: string | null) => handleChange(value)}
+              value={(filterValue as string) || null}
+            >
               <SelectTrigger
                 aria-label={filterPlaceholder}
                 className={cn(
@@ -544,10 +560,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 <SelectValue placeholder={filterPlaceholder} />
               </SelectTrigger>
               {/* slotProps.select: { MenuProps: { disableScrollLock: true }, displayEmpty: true } */}
-              {/* Note: radix Select always locks scroll; SelectValue shows the placeholder. */}
-              <SelectContent position="popper">
+              {/* Note: Base UI Select locks scroll while modal (the default); SelectValue shows the placeholder. */}
+              <SelectContent alignItemWithTrigger={false}>
                 {/* <MenuItem disabled divider hidden key="p" value="">{filterPlaceholder}</MenuItem> */}
-                {/* Note: radix items cannot carry value ""; the placeholder lives on SelectValue. */}
+                {/* Note: Base UI reserves the null value for the placeholder item; the placeholder lives on SelectValue. */}
                 {textFieldProps.children ??
                   dropdownOptions?.map((option, index) => {
                     const { label, value } = getValueAndLabel(option);
