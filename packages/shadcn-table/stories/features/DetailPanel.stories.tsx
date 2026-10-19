@@ -1,6 +1,7 @@
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Detail Panel Examples',
@@ -43,6 +44,21 @@ export const DetailPanelEnabledSemantic = () => (
     )}
   />
 );
+
+// Detail-panel rows have no sub rows; the expand buttons must still open them.
+DetailPanelEnabledSemantic.play = async ({
+  canvas,
+  userEvent,
+}: StoryContext) => {
+  await expect(canvas.queryAllByText(/^City:/)).toHaveLength(0);
+  const [firstRowExpand] = await canvas.findAllByRole('button', {
+    name: 'Expand',
+  });
+  await userEvent.click(firstRowExpand);
+  await waitFor(() => expect(canvas.getAllByText(/^City:/)).toHaveLength(1));
+  await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
+  await waitFor(() => expect(canvas.getAllByText(/^City:/)).toHaveLength(5));
+};
 
 export const DetailPanelEnabledGrid = () => (
   <ShadcnTable
