@@ -26,14 +26,14 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type SelectProps,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 import {
   getPaginationItems,
   type ST_UsePaginationItem,
-} from '../utils/pagination.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { useST_MediaQuery } from './useST_MediaQuery';
+} from '@/components/ui/shadcn-table/utils/pagination.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useST_MediaQuery } from '@/components/ui/shadcn-table/toolbar/useST_MediaQuery';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 

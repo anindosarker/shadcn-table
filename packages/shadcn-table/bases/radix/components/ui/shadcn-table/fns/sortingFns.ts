@@ -1,6 +1,9 @@
 import { type RankingInfo, compareItems } from '@tanstack/match-sorter-utils';
 import { type Row, sortingFns } from '@tanstack/react-table';
-import { type ST_Row, type ST_RowData } from '../types';
+import {
+  type ST_Row,
+  type ST_RowData,
+} from '@/components/ui/shadcn-table/types';
 
 const fuzzy = <TData extends ST_RowData>(
   rowA: Row<TData>,

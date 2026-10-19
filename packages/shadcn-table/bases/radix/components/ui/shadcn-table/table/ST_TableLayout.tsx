@@ -4,11 +4,11 @@ import {
   type DivProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_BottomToolbar } from '../toolbar/ST_BottomToolbar';
-import { ST_TopToolbar } from '../toolbar/ST_TopToolbar';
-import { ST_TableContainer } from './ST_TableContainer';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_BottomToolbar } from '@/components/ui/shadcn-table/toolbar/ST_BottomToolbar';
+import { ST_TopToolbar } from '@/components/ui/shadcn-table/toolbar/ST_TopToolbar';
+import { ST_TableContainer } from '@/components/ui/shadcn-table/table/ST_TableContainer';
 
 export interface ST_TableLayoutProps<TData extends ST_RowData>
   extends DivProps {

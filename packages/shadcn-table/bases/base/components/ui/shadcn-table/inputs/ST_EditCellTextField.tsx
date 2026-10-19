@@ -24,8 +24,11 @@ import {
   type ST_Cell,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
+} from '@/components/ui/shadcn-table/types';
+import {
+  getValueAndLabel,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/utils/utils';
 
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   extends InputProps {

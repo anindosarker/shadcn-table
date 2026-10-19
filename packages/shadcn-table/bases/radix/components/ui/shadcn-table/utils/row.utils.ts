@@ -1,7 +1,11 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
-import { rankGlobalFuzzy } from '../fns/sortingFns';
-import { type ST_Row, type ST_RowData, type ST_TableInstance } from '../types';
-import { parseFromValuesOrFunc } from './utils';
+import { rankGlobalFuzzy } from '@/components/ui/shadcn-table/fns/sortingFns';
+import {
+  type ST_Row,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
 
 export const getST_Rows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,

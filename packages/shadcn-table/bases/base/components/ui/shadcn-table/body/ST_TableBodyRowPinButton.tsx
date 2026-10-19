@@ -4,9 +4,9 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_RowPinButton } from '../buttons/ST_RowPinButton';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_RowPinButton } from '@/components/ui/shadcn-table/buttons/ST_RowPinButton';
 
 export interface ST_TableBodyRowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {

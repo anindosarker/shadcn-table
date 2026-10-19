@@ -3,9 +3,9 @@ import {
   type ST_RowData,
   type ST_SortingState,
   type ST_TableInstance,
-} from '../types';
-import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
-import { getCanRankRows } from '../utils/row.utils';
+} from '@/components/ui/shadcn-table/types';
+import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
+import { getCanRankRows } from '@/components/ui/shadcn-table/utils/row.utils';
 
 export const useST_Effects = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,

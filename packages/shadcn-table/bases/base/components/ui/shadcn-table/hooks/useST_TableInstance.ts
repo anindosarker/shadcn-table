@@ -18,13 +18,13 @@ import {
   type ST_TableInstance,
   type ST_TableState,
   type ST_Updater,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 import {
   getAllLeafColumnDefs,
   getColumnId,
   getDefaultColumnFilterFn,
   prepareColumns,
-} from '../utils/column.utils';
+} from '@/components/ui/shadcn-table/utils/column.utils';
 import {
   getDefaultColumnOrderIds,
   showRowActionsColumn,
@@ -34,16 +34,16 @@ import {
   showRowPinningColumn,
   showRowSelectionColumn,
   showRowSpacerColumn,
-} from '../utils/displayColumn.utils';
-import { createRow } from '../utils/tanstack.helpers';
-import { getST_RowActionsColumnDef } from './display-columns/getST_RowActionsColumnDef';
-import { getST_RowDragColumnDef } from './display-columns/getST_RowDragColumnDef';
-import { getST_RowExpandColumnDef } from './display-columns/getST_RowExpandColumnDef';
-import { getST_RowNumbersColumnDef } from './display-columns/getST_RowNumbersColumnDef';
-import { getST_RowPinningColumnDef } from './display-columns/getST_RowPinningColumnDef';
-import { getST_RowSelectColumnDef } from './display-columns/getST_RowSelectColumnDef';
-import { getST_RowSpacerColumnDef } from './display-columns/getST_RowSpacerColumnDef';
-import { useST_Effects } from './useST_Effects';
+} from '@/components/ui/shadcn-table/utils/displayColumn.utils';
+import { createRow } from '@/components/ui/shadcn-table/utils/tanstack.helpers';
+import { getST_RowActionsColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef';
+import { getST_RowDragColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowDragColumnDef';
+import { getST_RowExpandColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowExpandColumnDef';
+import { getST_RowNumbersColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowNumbersColumnDef';
+import { getST_RowPinningColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowPinningColumnDef';
+import { getST_RowSelectColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowSelectColumnDef';
+import { getST_RowSpacerColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef';
+import { useST_Effects } from '@/components/ui/shadcn-table/hooks/useST_Effects';
 
 /**
  * The MRT hook that wraps the TanStack useReactTable hook and adds additional functionality

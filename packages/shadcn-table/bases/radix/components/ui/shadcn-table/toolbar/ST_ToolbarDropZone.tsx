@@ -4,7 +4,7 @@ import {
   type DivProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 
 export interface ST_ToolbarDropZoneProps<TData extends ST_RowData>
   extends DivProps {

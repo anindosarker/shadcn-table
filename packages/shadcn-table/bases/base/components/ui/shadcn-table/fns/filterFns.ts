@@ -4,7 +4,7 @@ import {
   rankings,
 } from '@tanstack/match-sorter-utils';
 import { type Row, filterFns } from '@tanstack/react-table';
-import { type ST_RowData } from '../types';
+import { type ST_RowData } from '@/components/ui/shadcn-table/types';
 
 const fuzzy = <TData extends ST_RowData>(
   row: Row<TData>,

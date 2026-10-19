@@ -6,8 +6,8 @@ import {
   type ST_LinearProgressProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
 
 export interface ST_LinearProgressBarProps<TData extends ST_RowData>
   extends ST_LinearProgressProps {

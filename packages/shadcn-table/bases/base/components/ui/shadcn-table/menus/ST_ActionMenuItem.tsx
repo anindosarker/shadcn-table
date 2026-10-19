@@ -3,7 +3,10 @@ import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { type ST_RowData, type ST_TableInstance } from '../types';
+import {
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
 
 // min-w-[120px] py-1.5
 // Note: DropdownMenuItem defaults govern padding; Content governs width.

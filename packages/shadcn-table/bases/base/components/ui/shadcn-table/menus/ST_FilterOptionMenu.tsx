@@ -12,8 +12,8 @@ import {
   type ST_Localization,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_ActionMenuItem } from './ST_ActionMenuItem';
+} from '@/components/ui/shadcn-table/types';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
 
 export const stFilterOptions = (
   localization: ST_Localization,

@@ -17,10 +17,13 @@ import {
   type InputProps,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { debounce, parseFromValuesOrFunc } from '../utils/utils';
-import { ST_Tooltip } from '../ST_Tooltip';
-import { ST_FilterOptionMenu } from '../menus/ST_FilterOptionMenu';
+} from '@/components/ui/shadcn-table/types';
+import {
+  debounce,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/utils/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/menus/ST_FilterOptionMenu';
 
 export interface ST_GlobalFilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {

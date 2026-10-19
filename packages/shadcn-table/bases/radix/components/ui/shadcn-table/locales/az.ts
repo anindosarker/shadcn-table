@@ -1,4 +1,4 @@
-import { type ST_Localization } from '..';
+import { type ST_Localization } from '@/components/ui/shadcn-table';
 
 export const ST_Localization_AZ: ST_Localization = {
   language: 'az',

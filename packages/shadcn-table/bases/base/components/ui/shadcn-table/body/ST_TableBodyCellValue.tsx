@@ -1,5 +1,9 @@
 import { type ReactNode, type RefObject } from 'react';
-import { type ST_Cell, type ST_RowData, type ST_TableInstance } from '../types';
+import {
+  type ST_Cell,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
 import highlightWords from 'highlight-words';
 
 const allowedTypes = ['string', 'number'];

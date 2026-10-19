@@ -11,8 +11,11 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getAllLeafColumnDefs, getColumnId } from './column.utils';
+} from '@/components/ui/shadcn-table/types';
+import {
+  getAllLeafColumnDefs,
+  getColumnId,
+} from '@/components/ui/shadcn-table/utils/column.utils';
 
 export const flexRender = _flexRender as (
   Comp: Renderable<any>,

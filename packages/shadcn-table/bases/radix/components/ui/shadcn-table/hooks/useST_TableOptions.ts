@@ -10,16 +10,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
 } from '@tanstack/react-table';
-import { ST_AggregationFns } from '../fns/aggregationFns';
-import { ST_FilterFns } from '../fns/filterFns';
-import { ST_SortingFns } from '../fns/sortingFns';
-import { ST_Default_Icons } from '../icons';
-import { ST_Localization_EN } from '../locales/en';
+import { ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
+import { ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
+import { ST_SortingFns } from '@/components/ui/shadcn-table/fns/sortingFns';
+import { ST_Default_Icons } from '@/components/ui/shadcn-table/icons';
+import { ST_Localization_EN } from '@/components/ui/shadcn-table/locales/en';
 import {
   type ST_DefinedTableOptions,
   type ST_RowData,
   type ST_TableOptions,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 
 export const ST_DefaultColumn = {
   filterVariant: 'text',

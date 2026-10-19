@@ -15,11 +15,11 @@ import {
   type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { reorderColumn } from '../utils/column.utils';
-import { ST_ColumnPinningButtons } from '../buttons/ST_ColumnPinningButtons';
-import { ST_GrabHandleButton } from '../buttons/ST_GrabHandleButton';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { reorderColumn } from '@/components/ui/shadcn-table/utils/column.utils';
+import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/buttons/ST_ColumnPinningButtons';
+import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/buttons/ST_GrabHandleButton';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 // Note: MRT MenuItem sx py:'6px' dropped — shadcn DropdownMenuItem padding wins.
 const showHideColumnsMenuItemVariants = cva(

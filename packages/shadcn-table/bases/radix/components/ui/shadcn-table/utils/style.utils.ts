@@ -1,13 +1,13 @@
 import { type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
-import { type ST_TooltipProps } from '../ST_Tooltip';
+import { type ST_TooltipProps } from '@/components/ui/shadcn-table/ST_Tooltip';
 import {
   type ST_Column,
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
   type TableCellProps,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 

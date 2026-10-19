@@ -11,7 +11,7 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 
 export const getColumnId = <TData extends ST_RowData>(
   columnDef: ST_ColumnDef<TData>,

@@ -1,4 +1,4 @@
-import { type DropdownOption } from '../types';
+import { type DropdownOption } from '@/components/ui/shadcn-table/types';
 
 export const parseFromValuesOrFunc = <T, U>(
   fn: ((arg: U) => T) | T | undefined,

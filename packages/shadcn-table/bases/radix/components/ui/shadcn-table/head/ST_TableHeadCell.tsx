@@ -10,16 +10,16 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type TableCellProps,
-} from '../types';
-import { cellKeyboardShortcuts } from '../utils/cell.utils';
-import { getCommonSRTCellStyles } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableHeadCellColumnActionsButton } from './ST_TableHeadCellColumnActionsButton';
-import { ST_TableHeadCellFilterContainer } from './ST_TableHeadCellFilterContainer';
-import { ST_TableHeadCellFilterLabel } from './ST_TableHeadCellFilterLabel';
-import { ST_TableHeadCellGrabHandle } from './ST_TableHeadCellGrabHandle';
-import { ST_TableHeadCellResizeHandle } from './ST_TableHeadCellResizeHandle';
-import { ST_TableHeadCellSortLabel } from './ST_TableHeadCellSortLabel';
+} from '@/components/ui/shadcn-table/types';
+import { cellKeyboardShortcuts } from '@/components/ui/shadcn-table/utils/cell.utils';
+import { getCommonSRTCellStyles } from '@/components/ui/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_TableHeadCellColumnActionsButton } from '@/components/ui/shadcn-table/head/ST_TableHeadCellColumnActionsButton';
+import { ST_TableHeadCellFilterContainer } from '@/components/ui/shadcn-table/head/ST_TableHeadCellFilterContainer';
+import { ST_TableHeadCellFilterLabel } from '@/components/ui/shadcn-table/head/ST_TableHeadCellFilterLabel';
+import { ST_TableHeadCellGrabHandle } from '@/components/ui/shadcn-table/head/ST_TableHeadCellGrabHandle';
+import { ST_TableHeadCellResizeHandle } from '@/components/ui/shadcn-table/head/ST_TableHeadCellResizeHandle';
+import { ST_TableHeadCellSortLabel } from '@/components/ui/shadcn-table/head/ST_TableHeadCellSortLabel';
 
 export interface ST_TableHeadCellProps<TData extends ST_RowData>
   extends TableCellProps {

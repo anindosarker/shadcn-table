@@ -18,17 +18,17 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type TableCellProps,
-} from '../types';
+} from '@/components/ui/shadcn-table/types';
 import {
   isCellEditable,
   cellKeyboardShortcuts,
   openEditingCell,
-} from '../utils/cell.utils';
-import { getCommonSRTCellStyles } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_TableBodyCellValue } from './ST_TableBodyCellValue';
-import { ST_CopyButton } from '../buttons/ST_CopyButton';
-import { ST_EditCellTextField } from '../inputs/ST_EditCellTextField';
+} from '@/components/ui/shadcn-table/utils/cell.utils';
+import { getCommonSRTCellStyles } from '@/components/ui/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_TableBodyCellValue } from '@/components/ui/shadcn-table/body/ST_TableBodyCellValue';
+import { ST_CopyButton } from '@/components/ui/shadcn-table/buttons/ST_CopyButton';
+import { ST_EditCellTextField } from '@/components/ui/shadcn-table/inputs/ST_EditCellTextField';
 
 export interface ST_TableBodyCellProps<TData extends ST_RowData>
   extends TableCellProps {

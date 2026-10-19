@@ -4,10 +4,10 @@ import {
   type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { reorderColumn } from '../utils/column.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_GrabHandleButton } from '../buttons/ST_GrabHandleButton';
+} from '@/components/ui/shadcn-table/types';
+import { reorderColumn } from '@/components/ui/shadcn-table/utils/column.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/buttons/ST_GrabHandleButton';
 
 export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {

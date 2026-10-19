@@ -4,9 +4,9 @@ import {
   type ST_ColumnVirtualizer,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { extraIndexRangeExtractor } from '../utils/virtualization.utils';
+} from '@/components/ui/shadcn-table/types';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { extraIndexRangeExtractor } from '@/components/ui/shadcn-table/utils/virtualization.utils';
 
 export const useST_ColumnVirtualizer = <
   TData extends ST_RowData,

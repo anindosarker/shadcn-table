@@ -8,10 +8,10 @@ import {
   type ST_RowData,
   type ST_TableInstance,
   type TableCellProps,
-} from '../types';
-import { cellKeyboardShortcuts } from '../utils/cell.utils';
-import { getCommonSRTCellStyles } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
+} from '@/components/ui/shadcn-table/types';
+import { cellKeyboardShortcuts } from '@/components/ui/shadcn-table/utils/cell.utils';
+import { getCommonSRTCellStyles } from '@/components/ui/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
 
 export interface ST_TableFooterCellProps<TData extends ST_RowData>
   extends TableCellProps {

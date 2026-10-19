@@ -5,8 +5,8 @@ import {
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_Tooltip } from '../ST_Tooltip';
+} from '@/components/ui/shadcn-table/types';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 export interface ST_TableHeadCellSortLabelProps<TData extends ST_RowData>
   extends ButtonProps {

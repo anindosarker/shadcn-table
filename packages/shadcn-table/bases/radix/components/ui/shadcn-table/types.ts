@@ -46,10 +46,10 @@ import { type Collapsible } from '@/components/ui/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui/dialog';
 import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
-import { type ST_AggregationFns } from './fns/aggregationFns';
-import { type ST_FilterFns } from './fns/filterFns';
-import { type ST_SortingFns } from './fns/sortingFns';
-import { type ST_Icons } from './icons';
+import { type ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
+import { type ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
+import { type ST_SortingFns } from '@/components/ui/shadcn-table/fns/sortingFns';
+import { type ST_Icons } from '@/components/ui/shadcn-table/icons';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 

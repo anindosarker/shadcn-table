@@ -1,17 +1,20 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
-import { useST_ColumnVirtualizer } from '../hooks/useST_ColumnVirtualizer';
+import { useST_ColumnVirtualizer } from '@/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer';
 import {
   type ST_RowData,
   type ST_TableInstance,
   type TableProps,
-} from '../types';
-import { parseCSSVarId } from '../utils/style.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { Memo_ST_TableBody, ST_TableBody } from '../body/ST_TableBody';
-import { ST_TableFooter } from '../footer/ST_TableFooter';
-import { ST_TableHead } from '../head/ST_TableHead';
+} from '@/components/ui/shadcn-table/types';
+import { parseCSSVarId } from '@/components/ui/shadcn-table/utils/style.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import {
+  Memo_ST_TableBody,
+  ST_TableBody,
+} from '@/components/ui/shadcn-table/body/ST_TableBody';
+import { ST_TableFooter } from '@/components/ui/shadcn-table/footer/ST_TableFooter';
+import { ST_TableHead } from '@/components/ui/shadcn-table/head/ST_TableHead';
 
 export interface ST_TableProps<TData extends ST_RowData> extends TableProps {
   table: ST_TableInstance<TData>;
