@@ -2,7 +2,8 @@ import type { Preview } from '@storybook/react-vite';
 import { addons, useEffect, useState } from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
-import '../bases/radix/index.css';
+// Resolved inside the tree ST_BASE selects (vite.config.ts).
+import '@/index.css';
 import './preview.css';
 
 const channel = addons.getChannel();

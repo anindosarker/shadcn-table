@@ -11,10 +11,14 @@
     "registry:build": "node scripts/build-registry.mjs && shadcn build",
     "registry:dev": "node scripts/build-registry.mjs --dev && shadcn build .dev/registry.json --output .dev/r",
     "storybook": "storybook dev -p 6006",
+    "storybook:base": "ST_BASE=base storybook dev -p 6007",
     "storybook:build": "storybook build",
+    "storybook:build:base": "ST_BASE=base storybook build -o storybook-static-base",
     "test": "vitest run",
+    "test:base": "ST_BASE=base vitest run",
     "lint": "eslint .",
-    "tsc": "tsc -p tsconfig.app.json --noEmit"
+    "tsc": "tsc -p tsconfig.app.json --noEmit",
+    "tsc:base": "tsc -p tsconfig.base.json --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

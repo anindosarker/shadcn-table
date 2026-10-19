@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist', 'storybook-static']),
+  globalIgnores(['dist', 'storybook-static', 'storybook-static-base']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -28,8 +28,8 @@ export default defineConfig([
     // .eslintrc lints them (no-explicit-any / no-unused-vars off, no
     // react-hooks plugin).
     files: [
-      'bases/radix/components/ui/shadcn-table/{fns,hooks,utils}/**/*.{ts,tsx}',
-      'bases/radix/components/ui/shadcn-table/{icons,types}.ts',
+      'bases/*/components/ui/shadcn-table/{fns,hooks,utils}/**/*.{ts,tsx}',
+      'bases/*/components/ui/shadcn-table/{icons,types}.ts',
     ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
