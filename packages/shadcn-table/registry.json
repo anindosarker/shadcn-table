@@ -9,7 +9,7 @@
       "title": "Shadcn Table",
       "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.",
       "dependencies": [
-        "@tanstack/react-table@8.20.6",
+        "@tanstack/react-table@9.3.1",
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
@@ -167,9 +167,9 @@
           "target": "@ui/shadcn-table/fns/filterFns.ts"
         },
         {
-          "path": "shared/components/ui/shadcn-table/fns/sortingFns.ts",
+          "path": "shared/components/ui/shadcn-table/fns/sortFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/sortingFns.ts"
+          "target": "@ui/shadcn-table/fns/sortFns.ts"
         },
         {
           "path": "shared/components/ui/shadcn-table/footer/ST_TableFooter.tsx",
@@ -485,6 +485,11 @@
           "path": "shared/components/ui/shadcn-table/utils/style.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/utils/style.utils.ts"
+        },
+        {
+          "path": "shared/components/ui/shadcn-table/utils/tanstack.features.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/utils/tanstack.features.ts"
         },
         {
           "path": "shared/components/ui/shadcn-table/utils/tanstack.helpers.ts",
@@ -1151,7 +1156,7 @@
       "title": "Shadcn Table (Base UI)",
       "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table.",
       "dependencies": [
-        "@tanstack/react-table@8.20.6",
+        "@tanstack/react-table@9.3.1",
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
@@ -1309,9 +1314,9 @@
           "target": "@ui/shadcn-table/fns/filterFns.ts"
         },
         {
-          "path": "shared/components/ui/shadcn-table/fns/sortingFns.ts",
+          "path": "shared/components/ui/shadcn-table/fns/sortFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/sortingFns.ts"
+          "target": "@ui/shadcn-table/fns/sortFns.ts"
         },
         {
           "path": "shared/components/ui/shadcn-table/footer/ST_TableFooter.tsx",
@@ -1627,6 +1632,11 @@
           "path": "bases/base/components/ui/shadcn-table/utils/style.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/utils/style.utils.ts"
+        },
+        {
+          "path": "shared/components/ui/shadcn-table/utils/tanstack.features.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/utils/tanstack.features.ts"
         },
         {
           "path": "shared/components/ui/shadcn-table/utils/tanstack.helpers.ts",
