@@ -166,7 +166,23 @@ export const ST_TablePagination = <TData extends ST_RowData>({
           ) : (
             <Select
               disabled={disabled}
-              onValueChange={(value) => table.setPageSize(+value)}
+              // `items` gives the trigger the option label; Base UI's SelectValue
+              // shows the raw value otherwise. Custom children fall back to the value.
+              items={
+                selectPropsChildren
+                  ? undefined
+                  : Object.fromEntries(
+                      rowsPerPageOptions.map((option) =>
+                        typeof option !== 'number'
+                          ? [String(option.value), option.label]
+                          : [String(option), `${option}`],
+                      ),
+                    )
+              }
+              onValueChange={(value: string | null) => {
+                // Base UI reports null when a null-valued item is chosen; none here.
+                if (value !== null) table.setPageSize(+value);
+              }}
               value={String(pageSize)}
             >
               <SelectTrigger
