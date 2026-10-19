@@ -36,12 +36,14 @@ export const ShadcnTable = <TData extends ST_RowData>(
 
   // Note: the provider lives here at the ST root because the latest shadcn
   // tooltip (registry change 2026-07) no longer self-wraps each Tooltip in a
-  // TooltipProvider — Radix Tooltip.Root throws without a provider ancestor.
-  // Mounting it once at the outermost component keeps consumer boilerplate at
-  // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
-  // including portalled content (portals preserve React context).
+  // TooltipProvider — Base UI Tooltip.Root works without one, but the provider
+  // owns the shared open delay and the skip window (`timeout`), which the
+  // library turns off. Mounting it once at the outermost component keeps
+  // consumer boilerplate at zero (MRT/MUI ergonomics) and covers every toolbar,
+  // menu, modal, and cell, including portalled content (portals preserve React
+  // context).
   return (
-    <TooltipProvider skipDelayDuration={0}>
+    <TooltipProvider timeout={0}>
       <ST_TableLayout table={table} />
     </TooltipProvider>
   );

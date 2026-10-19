@@ -148,6 +148,8 @@ export const getCommonTooltipProps = (
   delayDuration: 1000,
   disableHoverableContent: true,
   // enterNextDelay: 1000,
-  // Note: Radix keeps the skip window on TooltipProvider (skipDelayDuration).
+  // Note: Base UI keeps the skip window on TooltipProvider (`timeout`); the
+  // delay applies through the TooltipProvider that ST_Tooltip wraps around
+  // each tooltip.
   side,
 });

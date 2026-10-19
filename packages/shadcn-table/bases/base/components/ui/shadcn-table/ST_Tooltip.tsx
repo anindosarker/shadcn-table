@@ -2,18 +2,19 @@ import * as React from 'react';
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { getCommonTooltipProps } from './utils/style.utils';
 
-export interface ST_TooltipProps
-  extends Pick<
-    React.ComponentProps<typeof Tooltip>,
-    'delayDuration' | 'disableHoverableContent'
-  > {
+export interface ST_TooltipProps {
   title?: React.ReactNode;
   children: React.ReactElement;
   side?: React.ComponentProps<typeof TooltipContent>['side'];
+  /** Open delay in ms. Base UI reads it from the nearest TooltipProvider. */
+  delayDuration?: number;
+  /** Maps to Base UI Root `disableHoverablePopup`. */
+  disableHoverableContent?: boolean;
   disableHoverListener?: boolean;
   open?: boolean;
 }
@@ -25,7 +26,7 @@ const LABEL_TARGET_SELECTOR =
   'button, a[href], input, select, textarea, [role="button"], [role="switch"], [role="checkbox"]';
 
 /**
- * MUI Tooltip set `aria-label` on an unnamed child; Radix does not. Give the
+ * MUI Tooltip set `aria-label` on an unnamed child; Base UI does not. Give the
  * trigger (or the control it wraps) the title string as its accessible name
  * when it has no text content and no label of its own.
  */
@@ -67,16 +68,23 @@ export const ST_Tooltip = ({
     return <>{children}</>;
   }
 
-  return (
-    <Tooltip
-      open={open}
-      delayDuration={delayDuration}
-      disableHoverableContent={disableHoverableContent}
-    >
-      <TooltipTrigger asChild ref={triggerRef}>
-        {children}
-      </TooltipTrigger>
+  // `render` makes the child the trigger element itself: one button, no
+  // wrapper button around it.
+  const tooltip = (
+    <Tooltip open={open} disableHoverablePopup={disableHoverableContent}>
+      <TooltipTrigger render={children} ref={triggerRef} />
       <TooltipContent side={commonSide}>{title}</TooltipContent>
     </Tooltip>
+  );
+
+  // Base UI has no per-root delay; the open delay comes from the nearest
+  // TooltipProvider, so a per-tooltip delay gets a provider of its own.
+  // `timeout={0}` keeps the skip window off, like the root provider.
+  return delayDuration === undefined ? (
+    tooltip
+  ) : (
+    <TooltipProvider delay={delayDuration} timeout={0}>
+      {tooltip}
+    </TooltipProvider>
   );
 };
