@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const LocalizationI18nHeExample = () => (
-  <ExampleSnippet name="localization-i18n-he">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="localization-i18n-he" />
 );
 
 export default LocalizationI18nHeExample;

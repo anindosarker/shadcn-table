@@ -31,24 +31,32 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useBase } from '@/components/base-selector';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
+import type { Base } from '@/lib/install';
 
-interface Props {
-  /** The live example. */
-  children: ReactNode;
+/** What differs per base: the sources (import paths) and the commands. */
+export interface ExampleVariantData {
   /** Source files for the code explorer, in tree order. */
   files: ExplorerFile[];
-  /** Link to the example folder on GitHub. */
-  githubUrl: string;
   /** `shadcn add` command that installs the example into a project. */
   installCommand: string;
-  /** Example folder name, used as the panel's anchor id. */
-  name: string;
   /** Prompt for a coding agent: install, import, docs to read, verify. */
   prompt: string;
+}
+
+interface Props {
+  /** The live example (components/example-variant.tsx picks the base). */
+  children: ReactNode;
+  /** Link to the example folder on GitHub. */
+  githubUrl: string;
+  /** Example folder name, used as the panel's anchor id. */
+  name: string;
+  /** Sources and commands per base; the site-wide selector picks one. */
+  variants: Record<Base, ExampleVariantData>;
 }
 
 type Mode = 'preview' | 'code' | 'both';
@@ -121,16 +129,17 @@ const COPIED_MS = 1500;
  * the page combobox), so the reader can step through examples without
  * leaving the panel. Copy prompt writes the agent prompt to the clipboard;
  * the caret menu next to it copies the install command or opens the
- * example in GitHub.
+ * example in GitHub. Code, prompt and command are those of the selected
+ * base (the header switch), as is the live example.
  */
 export const ExamplePlayground = ({
   children,
-  files,
   githubUrl,
-  installCommand,
   name,
-  prompt,
+  variants,
 }: Props) => {
+  const base = useBase();
+  const { files, installCommand, prompt } = variants[base];
   const mode = useSyncExternalStore(
     subscribeMode,
     getModeSnapshot,

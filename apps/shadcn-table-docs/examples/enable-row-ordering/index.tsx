@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const EnableRowOrderingExample = () => (
-  <ExampleSnippet name="enable-row-ordering">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="enable-row-ordering" />
 );
 
 export default EnableRowOrderingExample;

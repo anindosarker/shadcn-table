@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const MuiThemeExample = () => (
-  <ExampleSnippet name="mui-theme">
-    <Example />
-  </ExampleSnippet>
-);
+const MuiThemeExample = () => <ExampleSnippet name="mui-theme" />;
 
 export default MuiThemeExample;

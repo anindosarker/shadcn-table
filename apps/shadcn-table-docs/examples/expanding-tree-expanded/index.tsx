@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const ExpandingTreeExpandedExample = () => (
-  <ExampleSnippet name="expanding-tree-expanded">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="expanding-tree-expanded" />
 );
 
 export default ExpandingTreeExpandedExample;

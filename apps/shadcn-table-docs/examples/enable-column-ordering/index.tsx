@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const EnableColumnOrderingExample = () => (
-  <ExampleSnippet name="enable-column-ordering">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="enable-column-ordering" />
 );
 
 export default EnableColumnOrderingExample;

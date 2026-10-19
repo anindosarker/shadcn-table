@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const ExternalToolbarExample = () => (
-  <ExampleSnippet name="external-toolbar">
-    <Example />
-  </ExampleSnippet>
-);
+const ExternalToolbarExample = () => <ExampleSnippet name="external-toolbar" />;
 
 export default ExternalToolbarExample;

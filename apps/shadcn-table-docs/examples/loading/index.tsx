@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const LoadingExample = () => (
-  <ExampleSnippet name="loading">
-    <Example />
-  </ExampleSnippet>
-);
+const LoadingExample = () => <ExampleSnippet name="loading" />;
 
 export default LoadingExample;

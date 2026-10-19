@@ -268,3 +268,72 @@ export async function exampleGroup(page, tabs, check) {
     await example(page, id, check);
   }
 }
+
+/**
+ * Site-wide base switch (components/base-selector.tsx, in the docs header):
+ * Base UI re-renders example `#example-<id>` (rows again, Base UI markup:
+ * Base UI collapsibles set data-open/data-closed, Radix's set data-state) and
+ * the Code view shows the Base UI variant's `@/components/ui-base/` imports;
+ * then Radix again, imports back to `@/components/ui/`. No console errors
+ * is asserted by the runner.
+ */
+export async function baseSwitch(page, id, check) {
+  const panel = page.locator(`[id="example-${id}"]`);
+  const header = page.locator('#nd-subnav [aria-label="shadcn base"]');
+  check('base switch in header', (await header.count()) === 1);
+  if (!(await header.count())) return;
+  const rows = panel.locator('table tbody tr');
+  const source = async () =>
+    (await panel
+      .locator('pre')
+      .first()
+      .textContent()
+      .catch(() => '')) ?? '';
+  const baseMarkup = () => panel.locator('[data-open], [data-closed]').count();
+  check(`${id}: radix markup`, (await baseMarkup()) === 0);
+  await header.getByRole('tab', { name: 'Base UI' }).click();
+  await rows
+    .first()
+    .waitFor({ timeout: 60000 })
+    .catch(() => {});
+  check(
+    `${id}: base ui rows`,
+    (await rows.count()) > 0,
+    `rows=${await rows.count()}`,
+  );
+  check(
+    `${id}: base ui markup`,
+    (await baseMarkup()) > 0,
+    `base=${await baseMarkup()}`,
+  );
+  await panel
+    .locator('button', { hasText: /^Code$/ })
+    .first()
+    .click();
+  await page.waitForTimeout(200);
+  const baseSource = await source();
+  check(
+    `${id}: base ui source`,
+    baseSource.includes("'@/components/ui-base/shadcn-table'") &&
+      !baseSource.includes("'@/components/ui/"),
+    `len=${baseSource.length}`,
+  );
+  await header.getByRole('tab', { name: 'Radix' }).click();
+  await page.waitForTimeout(200);
+  const radixSource = await source();
+  check(
+    `${id}: radix source again`,
+    radixSource.includes("'@/components/ui/shadcn-table'") &&
+      !radixSource.includes('ui-base'),
+    `len=${radixSource.length}`,
+  );
+  await panel
+    .locator('button', { hasText: /^Preview$/ })
+    .first()
+    .click();
+  await rows
+    .first()
+    .waitFor({ timeout: 60000 })
+    .catch(() => {});
+  check(`${id}: radix rows again`, (await rows.count()) > 0);
+}

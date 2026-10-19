@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { CheckIcon, CopyIcon } from 'lucide-react';
+import { useBase } from '@/components/base-selector';
 import { cn } from '@/lib/cn';
-
-export const INSTALL_COMMAND =
-  'pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table';
+import { libraryAddCommand } from '@/lib/install';
 
 interface InstallCommandProps {
   /** 'boxed' draws a hairline box; 'bare' is just the line + button. */
   variant?: 'boxed' | 'bare';
+  /** Defaults to the library's `shadcn add` for the selected base. */
   command?: string;
   className?: string;
 }
@@ -17,9 +17,11 @@ interface InstallCommandProps {
 /** The install command in mono with a silent copy button. */
 export function InstallCommand({
   variant = 'boxed',
-  command = INSTALL_COMMAND,
+  command: givenCommand,
   className,
 }: InstallCommandProps) {
+  const base = useBase();
+  const command = givenCommand ?? libraryAddCommand(base);
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 

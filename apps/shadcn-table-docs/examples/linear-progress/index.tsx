@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const LinearProgressExample = () => (
-  <ExampleSnippet name="linear-progress">
-    <Example />
-  </ExampleSnippet>
-);
+const LinearProgressExample = () => <ExampleSnippet name="linear-progress" />;
 
 export default LinearProgressExample;

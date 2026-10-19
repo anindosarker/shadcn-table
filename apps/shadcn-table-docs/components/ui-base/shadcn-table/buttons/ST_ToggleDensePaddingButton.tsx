@@ -1,0 +1,59 @@
+import { Button } from '@/components/ui-base/button';
+import {
+  type ButtonProps,
+  type ST_RowData,
+  type ST_TableInstance,
+} from '../types';
+import { ST_Tooltip } from '../ST_Tooltip';
+
+export interface ST_ToggleDensePaddingButtonProps<TData extends ST_RowData>
+  extends ButtonProps {
+  table: ST_TableInstance<TData>;
+}
+
+export const ST_ToggleDensePaddingButton = <TData extends ST_RowData>({
+  table,
+  ...rest
+}: ST_ToggleDensePaddingButtonProps<TData>) => {
+  const {
+    getState,
+    options: {
+      icons: { DensityLargeIcon, DensityMediumIcon, DensitySmallIcon },
+      localization,
+    },
+    setDensity,
+  } = table;
+  const { density } = getState();
+
+  const handleToggleDensePadding = () => {
+    const nextDensity =
+      density === 'comfortable'
+        ? 'compact'
+        : density === 'compact'
+          ? 'spacious'
+          : 'comfortable';
+    setDensity(nextDensity);
+  };
+
+  return (
+    <ST_Tooltip title={rest?.title ?? localization.toggleDensity}>
+      <Button
+        aria-label={localization.toggleDensity}
+        onClick={handleToggleDensePadding}
+        size="icon"
+        type="button"
+        variant="ghost"
+        {...rest}
+        title={undefined}
+      >
+        {density === 'compact' ? (
+          <DensitySmallIcon />
+        ) : density === 'comfortable' ? (
+          <DensityMediumIcon />
+        ) : (
+          <DensityLargeIcon />
+        )}
+      </Button>
+    </ST_Tooltip>
+  );
+};

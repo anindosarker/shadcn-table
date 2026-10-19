@@ -7,12 +7,16 @@
   "repository": "github:anindosarker/shadcn-table",
   "homepage": "https://shadcn-table.com",
   "scripts": {
-    "build": "next build",
+    "build": "pnpm -w registry:build && pnpm -w registry:items && node scripts/emit-hosted-registry.mjs && node lib/example-variants.mjs && next build",
+    "predev": "node lib/example-variants.mjs",
     "dev": "next dev -p ${PORT:-5320}",
     "start": "next start -p 5320",
-    "types:check": "next typegen && tsc --noEmit",
+    "types:check": "node lib/example-variants.mjs && next typegen && tsc --noEmit",
+    "registry:hosted": "node scripts/emit-hosted-registry.mjs",
+    "examples:variants": "node lib/example-variants.mjs",
     "lint": "eslint",
-    "lib:install": "shadcn add ../../packages/shadcn-table/public/r/shadcn-table.json --overwrite --yes"
+    "lib:install": "shadcn add ../../packages/shadcn-table/public/r/shadcn-table.json --overwrite --yes",
+    "lib:install:base": "node scripts/install-base.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

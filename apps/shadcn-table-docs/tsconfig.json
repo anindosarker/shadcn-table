@@ -27,6 +27,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "examples/.base/**/*.ts",
+    "examples/.base/**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

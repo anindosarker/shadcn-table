@@ -12,6 +12,24 @@ const config = {
     (process.env.PORT && process.env.PORT !== '5320'
       ? `.next-${process.env.PORT}`
       : '.next'),
+  // Hosted registry (public/r/<base>/<name>.json, written by
+  // scripts/emit-hosted-registry.mjs): the namespace form
+  // `@st=https://www.shadcn-table.com/r/{style}/{name}.json` sends the
+  // project's shadcn style (`radix-nova`, `base-sera`, ...), which maps onto
+  // the base directory. `/r/radix/*` and `/r/base/*` are served as they are,
+  // the catalogs `/r/<base>/registry.json` included.
+  rewrites: async () => ({
+    afterFiles: [
+      {
+        source: '/r/:style(radix-.*)/:name.json',
+        destination: '/r/radix/:name.json',
+      },
+      {
+        source: '/r/:style(base-.*)/:name.json',
+        destination: '/r/base/:name.json',
+      },
+    ],
+  }),
   // MRT's docs index is a table of contents page; the sidebar already is one.
   redirects: async () => [
     {

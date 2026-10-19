@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const AlternatePaginationExample = () => (
-  <ExampleSnippet name="alternate-pagination">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="alternate-pagination" />
 );
 
 export default AlternatePaginationExample;

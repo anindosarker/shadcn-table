@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const EditingCrudRowExample = () => (
-  <ExampleSnippet name="editing-crud-row">
-    <Example />
-  </ExampleSnippet>
-);
+const EditingCrudRowExample = () => <ExampleSnippet name="editing-crud-row" />;
 
 export default EditingCrudRowExample;
