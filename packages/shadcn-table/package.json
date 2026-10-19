@@ -13,7 +13,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:base": "ST_BASE=base storybook dev -p 6007",
     "storybook:build": "storybook build",
-    "storybook:build:base": "ST_BASE=base storybook build -o storybook-static-base",
+    "storybook:build:base": "ST_BASE=base storybook build -o storybook-static/base",
     "test": "vitest run",
     "test:base": "ST_BASE=base vitest run",
     "lint": "eslint .",
