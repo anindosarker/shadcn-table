@@ -633,6 +633,11 @@ export const routes: Array<RouteItem> = [
         external: true,
       },
       {
+        href: 'https://discord.gg/ya4dwaDqD',
+        label: 'Discord',
+        external: true,
+      },
+      {
         href: 'https://github.com/anindosarker/shadcn-table',
         label: 'GitHub',
         external: true,

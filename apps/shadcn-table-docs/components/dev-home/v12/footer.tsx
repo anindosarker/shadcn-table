@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Dune } from './dune';
 import { GITHUB_URL } from '@/components/dev-home/v4/nav';
+import { DISCORD_URL } from '@/lib/layout.shared';
 
 const COLUMNS = [
   {
@@ -16,6 +17,7 @@ const COLUMNS = [
     head: 'Source',
     links: [
       { label: 'GitHub', href: GITHUB_URL },
+      { label: 'Discord', href: DISCORD_URL },
       { label: 'TanStack Table', href: 'https://tanstack.com/table' },
       { label: 'shadcn/ui', href: 'https://ui.shadcn.com' },
       { label: 'Storybook', href: 'https://storybook.shadcn-table.com' },

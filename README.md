@@ -28,6 +28,12 @@ pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table
 - Docs: https://shadcn-table.com
 - Storybook: https://storybook.shadcn-table.com
 
+## Community
+
+- Discord for questions and help: https://discord.gg/ya4dwaDqD
+- [GitHub Discussions](https://github.com/anindosarker/shadcn-table/discussions) for proposals
+- [Issues](https://github.com/anindosarker/shadcn-table/issues) for bugs
+
 ## AI agents
 
 A skill file is served at `/SKILL.md` on the docs site: `npx skills add anindosarker/shadcn-table`.
