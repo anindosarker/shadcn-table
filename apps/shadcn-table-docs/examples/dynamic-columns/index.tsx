@@ -1,10 +1,5 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
-const DynamicColumnsExample = () => (
-  <ExampleSnippet name="dynamic-columns">
-    <Example />
-  </ExampleSnippet>
-);
+const DynamicColumnsExample = () => <ExampleSnippet name="dynamic-columns" />;
 
 export default DynamicColumnsExample;

@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const ChartDetailPanelExample = () => (
-  <ExampleSnippet name="chart-detail-panel">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="chart-detail-panel" />
 );
 
 export default ChartDetailPanelExample;

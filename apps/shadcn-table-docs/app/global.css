@@ -22,7 +22,8 @@
  * Verbatim from `shadcn init --preset nova --base radix` (neutral, css variables),
  * except the next/font bridge (`--font-sans`, `--font-mono`) which the docs set in
  * the `@theme` block below, and the ST keyframes that `lib:install` appends to
- * `@theme inline` (kept at the CLI's own indentation so the install is idempotent). */
+ * `@theme inline` (kept at the CLI's own indentation so the install is idempotent;
+ * the Base UI copy's keyframes follow the block under their own names). */
 @custom-variant dark (&:is(.dark *));
 
 /* Colors come from the shadcn tokens below (fumadocs' shadcn preset maps
@@ -105,6 +106,56 @@
     width: 0;
     overflow: hidden;
     }
+  }
+}
+
+/* ---------- Base UI collapsible keyframes (components/ui-base) ----------
+ * The Base UI copy of the table (`lib:install:base`) animates its collapsibles
+ * with these: Base UI's Collapsible.Panel measures itself into
+ * --collapsible-panel-width/-height instead of the Radix variable, and its item
+ * ships the keyframes under the same st-collapsible-* names as the Radix pair
+ * above. Tailwind emits `@theme` keyframes last, so a same-named redefinition
+ * here would lose and `lib:install` rewrites the pair inside `@theme inline`;
+ * the installer renames them to st-base-collapsible-* in the copy instead and
+ * drops the item's css. Radix animates heights with tw-animate-css'
+ * collapsible-down/up, so the height pair exists only here. */
+@keyframes st-base-collapsible-right {
+  from {
+    width: 0;
+    overflow: hidden;
+  }
+  to {
+    width: var(--collapsible-panel-width);
+    overflow: hidden;
+  }
+}
+
+@keyframes st-base-collapsible-left {
+  from {
+    width: var(--collapsible-panel-width);
+    overflow: hidden;
+  }
+  to {
+    width: 0;
+    overflow: hidden;
+  }
+}
+
+@keyframes st-base-collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--collapsible-panel-height);
+  }
+}
+
+@keyframes st-base-collapsible-up {
+  from {
+    height: var(--collapsible-panel-height);
+  }
+  to {
+    height: 0;
   }
 }
 

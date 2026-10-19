@@ -8,7 +8,7 @@
     "storybook": {
       "root": "packages/shadcn-table",
       "framework": "storybook",
-      "buildCommand": "pnpm storybook:build",
+      "buildCommand": "pnpm storybook:build && pnpm storybook:build:base",
       "outputDirectory": "storybook-static"
     }
   },

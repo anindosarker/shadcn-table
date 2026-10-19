@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const EnableFilterFacetValuesExample = () => (
-  <ExampleSnippet name="enable-filter-facet-values">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="enable-filter-facet-values" />
 );
 
 export default EnableFilterFacetValuesExample;

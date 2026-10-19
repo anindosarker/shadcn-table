@@ -1,8 +1,13 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
 import { TableOfContentsList } from './table-of-contents-list';
-import { InitCommand, InstallCommand } from './mdx/install-command';
+import {
+  InitCommand,
+  InstallCommand,
+  NamespaceCommand,
+} from './mdx/install-command';
 import { AgentPrompt } from './mdx/agent-prompt';
+import { StorybookLink } from './mdx/storybook-link';
 import { OrDivider } from './or-divider';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
@@ -31,7 +36,9 @@ export function getMDXComponents(components?: MDXComponents) {
     TableOfContentsList,
     InitCommand,
     InstallCommand,
+    NamespaceCommand,
     AgentPrompt,
+    StorybookLink,
     OrDivider,
     Step,
     Steps,

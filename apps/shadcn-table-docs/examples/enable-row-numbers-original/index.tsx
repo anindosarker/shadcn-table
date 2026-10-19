@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const EnableRowNumbersOriginalExample = () => (
-  <ExampleSnippet name="enable-row-numbers-original">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="enable-row-numbers-original" />
 );
 
 export default EnableRowNumbersOriginalExample;

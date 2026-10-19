@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const LazyDetailPanelExample = () => (
-  <ExampleSnippet name="lazy-detail-panel">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="lazy-detail-panel" />
 );
 
 export default LazyDetailPanelExample;

@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const CustomizeTableStylesExample = () => (
-  <ExampleSnippet name="customize-table-styles">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="customize-table-styles" />
 );
 
 export default CustomizeTableStylesExample;

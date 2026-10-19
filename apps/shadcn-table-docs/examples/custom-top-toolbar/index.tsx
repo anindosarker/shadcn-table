@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const CustomTopToolbarExample = () => (
-  <ExampleSnippet name="custom-top-toolbar">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="custom-top-toolbar" />
 );
 
 export default CustomTopToolbarExample;

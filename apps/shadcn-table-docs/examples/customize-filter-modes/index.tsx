@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const CustomizeFilterModesExample = () => (
-  <ExampleSnippet name="customize-filter-modes">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="customize-filter-modes" />
 );
 
 export default CustomizeFilterModesExample;

@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const EnableColumnPinningExample = () => (
-  <ExampleSnippet name="enable-column-pinning">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="enable-column-pinning" />
 );
 
 export default EnableColumnPinningExample;

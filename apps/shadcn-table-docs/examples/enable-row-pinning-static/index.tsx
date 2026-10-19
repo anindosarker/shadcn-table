@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const EnableRowPinningStaticExample = () => (
-  <ExampleSnippet name="enable-row-pinning-static">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="enable-row-pinning-static" />
 );
 
 export default EnableRowPinningStaticExample;

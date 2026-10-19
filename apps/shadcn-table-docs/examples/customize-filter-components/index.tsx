@@ -1,10 +1,7 @@
 import { ExampleSnippet } from '@/components/mdx/example-snippet';
-import Example from './TS';
 
 const CustomizeFilterComponentsExample = () => (
-  <ExampleSnippet name="customize-filter-components">
-    <Example />
-  </ExampleSnippet>
+  <ExampleSnippet name="customize-filter-components" />
 );
 
 export default CustomizeFilterComponentsExample;

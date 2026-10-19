@@ -4,14 +4,34 @@ A full-featured React data table built on TanStack Table v8, installed into your
 
 ## Status
 
-v0.1. Radix base only; Base UI and React Aria are not supported.
+v0.2. Radix and Base UI bases, one edition each; React Aria is not supported.
 
 ## Install
 
+The registry is served under one path per shadcn base. The project's base is the `style` in `components.json` (`radix-*` or `base-*`).
+
+Radix:
+
 ```bash
 pnpm dlx shadcn@latest init --base radix
-pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table.json
 ```
+
+Base UI:
+
+```bash
+pnpm dlx shadcn@latest init --base base
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table.json
+```
+
+Namespace form, either base (`{style}` resolves to the project's style):
+
+```bash
+pnpm dlx shadcn@latest registry add @st=https://www.shadcn-table.com/r/{style}/{name}.json
+pnpm dlx shadcn@latest add @st/shadcn-table
+```
+
+GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table` (Radix) and `anindosarker/shadcn-table/shadcn-table-base` (Base UI).
 
 ## Features
 
