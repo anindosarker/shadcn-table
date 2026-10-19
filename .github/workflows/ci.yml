@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [master, claude/review, feat/tanstack-v9]
+    branches: [master, claude/review]
   pull_request:
 
 concurrency:
