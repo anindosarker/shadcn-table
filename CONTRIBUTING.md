@@ -179,7 +179,7 @@ pnpm --filter shadcn-table-docs build
 
 On a push, CI also validates the registry at the pushed SHA and installs the library, a locale and `example-basic` into a fresh Vite app and into one that already has TanStack packages (the `registry` and `install` jobs).
 
-- **Large changes.** Open a GitHub issue first, so the direction is agreed before the diff exists.
+- **Large changes.** Ask on [Discord](https://discord.gg/ya4dwaDqD) first if unsure, then open a GitHub issue, so the direction is agreed before the diff exists.
 - **Format.** `pnpm prettier --write <changed files>` for `ts`, `tsx`, `mjs` and `mdx`; `md` and `json` files are prettier-ignored.
 - **Commit messages.** `type: short summary` in the imperative (`fix: keep pinned rows visible in grid mode`), one concern per commit.
 - **Stage explicit paths.** No `git add -A`: generated files, `.next-*` dirs and `tsconfig.json` noise slip in otherwise.

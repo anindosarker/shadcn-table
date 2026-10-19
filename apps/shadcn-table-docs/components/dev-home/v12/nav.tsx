@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { ThemeControls } from '@/components/theme-controls';
 import { GitHubIcon } from '@/components/dev-home/v2/github-icon';
+import { DiscordIcon } from '@/components/discord-icon';
 import { GITHUB_URL } from '@/components/dev-home/v4/nav';
+import { DISCORD_URL } from '@/lib/layout.shared';
 
 const LINKS = [
   { label: 'Docs', href: '/docs/getting-started/install' },
@@ -12,7 +14,7 @@ const LINKS = [
 
 /**
  * v4's split bar: slash wordmark, mono links, then the docs site's own
- * controls on the right (GitHub, theme preset, light/dark), so this page
+ * controls on the right (GitHub, Discord, theme preset, light/dark), so this page
  * follows the same theme as the docs.
  */
 export function Nav() {
@@ -35,6 +37,15 @@ export function Nav() {
         <div className="v4-nav-actions">
           <a href={GITHUB_URL} aria-label="GitHub" className="v12-gh">
             <GitHubIcon className="size-4" />
+          </a>
+          <a
+            href={DISCORD_URL}
+            aria-label="Discord"
+            target="_blank"
+            rel="noreferrer"
+            className="v12-gh"
+          >
+            <DiscordIcon className="size-4" />
           </a>
           <ThemeControls />
         </div>
