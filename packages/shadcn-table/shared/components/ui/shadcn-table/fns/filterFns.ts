@@ -3,14 +3,18 @@ import {
   rankItem,
   rankings,
 } from '@tanstack/match-sorter-utils';
-import { type Row, filterFns } from '@tanstack/react-table';
-import { type ST_RowData } from '@/components/ui/shadcn-table/types';
+import {
+  type Row,
+  type RowData,
+  type TableFeatures,
+  filterFns,
+} from '@tanstack/react-table';
 
-const fuzzy = <TData extends ST_RowData>(
-  row: Row<TData>,
+const fuzzy = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: number | string,
-  addMeta: (item: RankingInfo) => void,
+  addMeta?: (item: RankingInfo) => void,
 ): boolean => {
   const itemRank = rankItem(
     row.getValue<string | number | null>(columnId),
@@ -19,14 +23,14 @@ const fuzzy = <TData extends ST_RowData>(
       threshold: rankings.MATCHES,
     },
   );
-  addMeta(itemRank);
+  addMeta?.(itemRank);
   return itemRank.passed;
 };
 
 fuzzy.autoRemove = (val: any) => !val;
 
-const contains = <TData extends ST_RowData>(
-  row: Row<TData>,
+const contains = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -39,8 +43,8 @@ const contains = <TData extends ST_RowData>(
 
 contains.autoRemove = (val: any) => !val;
 
-const startsWith = <TData extends ST_RowData>(
-  row: Row<TData>,
+const startsWith = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -53,8 +57,8 @@ const startsWith = <TData extends ST_RowData>(
 
 startsWith.autoRemove = (val: any) => !val;
 
-const endsWith = <TData extends ST_RowData>(
-  row: Row<TData>,
+const endsWith = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -67,8 +71,8 @@ const endsWith = <TData extends ST_RowData>(
 
 endsWith.autoRemove = (val: any) => !val;
 
-const equals = <TData extends ST_RowData>(
-  row: Row<TData>,
+const equals = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -77,8 +81,8 @@ const equals = <TData extends ST_RowData>(
 
 equals.autoRemove = (val: any) => !val;
 
-const notEquals = <TData extends ST_RowData>(
-  row: Row<TData>,
+const notEquals = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -87,8 +91,8 @@ const notEquals = <TData extends ST_RowData>(
 
 notEquals.autoRemove = (val: any) => !val;
 
-const greaterThan = <TData extends ST_RowData>(
-  row: Row<TData>,
+const greaterThan = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -101,16 +105,19 @@ const greaterThan = <TData extends ST_RowData>(
 
 greaterThan.autoRemove = (val: any) => !val;
 
-const greaterThanOrEqualTo = <TData extends ST_RowData>(
-  row: Row<TData>,
+const greaterThanOrEqualTo = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean => equals(row, id, filterValue) || greaterThan(row, id, filterValue);
 
 greaterThanOrEqualTo.autoRemove = (val: any) => !val;
 
-const lessThan = <TData extends ST_RowData>(
-  row: Row<TData>,
+const lessThan = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean =>
@@ -123,16 +130,19 @@ const lessThan = <TData extends ST_RowData>(
 
 lessThan.autoRemove = (val: any) => !val;
 
-const lessThanOrEqualTo = <TData extends ST_RowData>(
-  row: Row<TData>,
+const lessThanOrEqualTo = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValue: number | string,
 ): boolean => equals(row, id, filterValue) || lessThan(row, id, filterValue);
 
 lessThanOrEqualTo.autoRemove = (val: any) => !val;
 
-const between = <TData extends ST_RowData>(
-  row: Row<TData>,
+const between = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValues: [number | string, number | string],
 ): boolean =>
@@ -146,8 +156,11 @@ const between = <TData extends ST_RowData>(
 
 between.autoRemove = (val: any) => !val;
 
-const betweenInclusive = <TData extends ST_RowData>(
-  row: Row<TData>,
+const betweenInclusive = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
   id: string,
   filterValues: [number | string, number | string],
 ): boolean =>
@@ -161,16 +174,16 @@ const betweenInclusive = <TData extends ST_RowData>(
 
 betweenInclusive.autoRemove = (val: any) => !val;
 
-const empty = <TData extends ST_RowData>(
-  row: Row<TData>,
+const empty = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   _filterValue: number | string,
 ): boolean => !row.getValue<number | string | null>(id)?.toString().trim();
 
 empty.autoRemove = (val: any) => !val;
 
-const notEmpty = <TData extends ST_RowData>(
-  row: Row<TData>,
+const notEmpty = <TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
   id: string,
   _filterValue: number | string,
 ): boolean => !!row.getValue<number | string | null>(id)?.toString().trim();

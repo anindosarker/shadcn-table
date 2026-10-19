@@ -10,7 +10,7 @@ export * from '@/components/ui/shadcn-table/utils/row.utils';
 //fns
 export * from '@/components/ui/shadcn-table/fns/aggregationFns';
 export * from '@/components/ui/shadcn-table/fns/filterFns';
-export * from '@/components/ui/shadcn-table/fns/sortingFns';
+export * from '@/components/ui/shadcn-table/fns/sortFns';
 
 //hooks
 export * from '@/components/ui/shadcn-table/hooks/useShadcnTable';

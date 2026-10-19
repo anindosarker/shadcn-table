@@ -1,6 +1,6 @@
 import { type ReactNode, type JSX } from 'react';
 import {
-  createRow as _createRow,
+  constructRow,
   flexRender as _flexRender,
   type Renderable,
 } from '@tanstack/react-table';
@@ -12,6 +12,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { type ST_Features } from '@/components/ui/shadcn-table/utils/tanstack.features';
 import {
   getAllLeafColumnDefs,
   getColumnId,
@@ -50,7 +51,7 @@ export const createRow = <TData extends ST_RowData>(
   subRows?: ST_Row<TData>[],
   parentId?: string,
 ): ST_Row<TData> =>
-  _createRow(
+  constructRow<ST_Features, TData>(
     table as any,
     'st-row-create',
     originalRow ??

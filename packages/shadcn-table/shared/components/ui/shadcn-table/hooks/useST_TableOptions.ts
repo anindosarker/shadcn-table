@@ -1,18 +1,7 @@
 import { useId, useMemo } from 'react';
-import {
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getGroupedRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-} from '@tanstack/react-table';
 import { ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
 import { ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
-import { ST_SortingFns } from '@/components/ui/shadcn-table/fns/sortingFns';
+import { ST_SortFns } from '@/components/ui/shadcn-table/fns/sortFns';
 import { ST_Default_Icons } from '@/components/ui/shadcn-table/icons';
 import { ST_Localization_EN } from '@/components/ui/shadcn-table/locales/en';
 import {
@@ -55,7 +44,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   defaultColumn,
   defaultDisplayColumn,
   editDisplayMode = 'modal',
-  enableBatchRowSelection = true,
   enableBottomToolbar = true,
   enableColumnActions = true,
   enableColumnFilters = true,
@@ -109,7 +97,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   rowNumberDisplayMode = 'static',
   rowPinningDisplayMode = 'sticky',
   selectAllMode = 'page',
-  sortingFns,
+  sortFns,
   ...rest
 }: ST_TableOptions<TData>) => {
   icons = useMemo(() => ({ ...ST_Default_Icons, ...icons }), [icons]);
@@ -127,7 +115,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     [],
   );
   filterFns = useMemo(() => ({ ...ST_FilterFns, ...filterFns }), []);
-  sortingFns = useMemo(() => ({ ...ST_SortingFns, ...sortingFns }), []);
+  sortFns = useMemo(() => ({ ...ST_SortFns, ...sortFns }), []);
   defaultColumn = useMemo(
     () => ({ ...ST_DefaultColumn, ...defaultColumn }),
     [defaultColumn],
@@ -185,7 +173,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     defaultColumn,
     defaultDisplayColumn,
     editDisplayMode,
-    enableBatchRowSelection,
     enableBottomToolbar,
     enableColumnActions,
     enableColumnFilters,
@@ -219,29 +206,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableToolbarInternalActions,
     enableTopToolbar,
     filterFns,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel:
-      enableExpanding || enableGrouping ? getExpandedRowModel() : undefined,
-    getFacetedMinMaxValues: enableFacetedValues
-      ? getFacetedMinMaxValues()
-      : undefined,
-    getFacetedRowModel: enableFacetedValues ? getFacetedRowModel() : undefined,
-    getFacetedUniqueValues: enableFacetedValues
-      ? getFacetedUniqueValues()
-      : undefined,
-    getFilteredRowModel:
-      (enableColumnFilters || enableGlobalFilter || enableFilters) &&
-      !manualFiltering
-        ? getFilteredRowModel()
-        : undefined,
-    getGroupedRowModel:
-      enableGrouping && !manualGrouping ? getGroupedRowModel() : undefined,
-    getPaginationRowModel:
-      enablePagination && !manualPagination
-        ? getPaginationRowModel()
-        : undefined,
-    getSortedRowModel:
-      enableSorting && !manualSorting ? getSortedRowModel() : undefined,
     getSubRows: (row) => row?.subRows,
     icons,
     id,
@@ -263,7 +227,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
-    sortingFns,
+    sortFns,
     ...rest,
   } as ST_DefinedTableOptions<TData>;
 };
