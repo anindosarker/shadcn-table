@@ -25,10 +25,17 @@
     "noUncheckedSideEffectImports": true,
 
     "paths": {
-      "@/*": ["./bases/radix/*"]
+      "@/*": ["./bases/radix/*", "./shared/*"]
     }
   },
-  "include": ["bases/radix"],
+  // The shared library is pulled in through its entry point and the locales,
+  // every `@/` import resolving base-first, so a shared file that this base
+  // overrides is never checked against this base's parts.
+  "include": [
+    "bases/radix",
+    "shared/components/ui/shadcn-table/index.ts",
+    "shared/components/ui/shadcn-table/locales"
+  ],
   // Node-only item definition, read by scripts/build-registry.mjs.
   "exclude": ["bases/radix/registry.ts"]
 }
