@@ -36,10 +36,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     getCenterLeafColumns,
     getIsAllColumnsVisible,
     getIsSomeColumnsPinned,
+    getEndLeafColumns,
     getIsSomeColumnsVisible,
-    getLeftLeafColumns,
-    getRightLeafColumns,
-    getState,
+    getStartLeafColumns,
     initialState,
     options: {
       enableColumnOrdering,
@@ -49,7 +48,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
-  const { columnOrder, columnPinning } = getState();
+  const { columnOrder, columnPinning } = table.state;
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -65,11 +64,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       !columns.some((col) => col.columnDef.columnDefType === 'group')
     ) {
       return [
-        ...getLeftLeafColumns(),
+        ...getStartLeafColumns(),
         ...Array.from(new Set(columnOrder)).map((colId) =>
           getCenterLeafColumns().find((col) => col?.id === colId),
         ),
-        ...getRightLeafColumns(),
+        ...getEndLeafColumns(),
       ].filter(Boolean);
     }
     return columns;
@@ -78,8 +77,8 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     columnPinning,
     getAllColumns(),
     getCenterLeafColumns(),
-    getLeftLeafColumns(),
-    getRightLeafColumns(),
+    getStartLeafColumns(),
+    getEndLeafColumns(),
   ]) as ST_Column<TData>[];
   /* eslint-enable react-hooks/exhaustive-deps */
 

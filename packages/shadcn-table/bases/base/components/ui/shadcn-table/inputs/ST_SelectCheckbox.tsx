@@ -50,7 +50,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   ...rest
 }: ST_SelectCheckboxProps<TData>) => {
   const {
-    getState,
     options: {
       enableMultiRowSelection,
       localization,
@@ -59,7 +58,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       stSelectCheckboxProps,
     },
   } = table;
-  const { density, isLoading } = getState();
+  const { density, isLoading } = table.state;
 
   const selectAll = !row;
 
@@ -153,10 +152,15 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           <Checkbox
             {...commonProps}
             // Note: Base UI keeps MUI `indeterminate` as its own flag beside `checked`; it lands after the spread.
+            // v9: getIsSomeRowsSelected / getIsSomeSelected mean "at least one"
+            // (the all-selected case included), so the all-selected check gates
+            // the indeterminate state.
             indeterminate={
               !isChecked && selectAll
-                ? table.getIsSomeRowsSelected()
-                : row?.getIsSomeSelected() && row.getCanSelectSubRows()
+                ? table.getIsSomeRowsSelected() && !allRowsSelected
+                : row?.getIsSomeSelected() &&
+                  !row.getIsAllSubRowsSelected() &&
+                  row.getCanSelectSubRows()
             }
           />
         )}
