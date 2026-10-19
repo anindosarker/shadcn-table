@@ -61,8 +61,12 @@ const getServerSnapshot = () => defaultBase;
 export const useBase = () =>
   useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-/** Called by the controls below; fumadocs already wrote the group's storage. */
-const setBase = (next: Base) => {
+/**
+ * Set the site-wide base. Called by the controls below (fumadocs already
+ * wrote the group's storage then) and by controls outside the group, such as
+ * the command bar's base menu (components/agent-bar.tsx).
+ */
+export const setBase = (next: Base) => {
   try {
     sessionStorage.setItem(BASE_GROUP_ID, TAB_VALUES[next]);
     localStorage.setItem(BASE_GROUP_ID, TAB_VALUES[next]);

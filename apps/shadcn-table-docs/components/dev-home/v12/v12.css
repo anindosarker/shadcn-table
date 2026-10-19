@@ -252,9 +252,15 @@
   text-transform: uppercase;
 }
 
-.v12 .v12-agent [role='radio'][aria-checked='true'] {
+.v12 .v12-agent [role='radio'][aria-checked='true'],
+.v12 .v12-agent [role='radiogroup'] [data-active] {
   background-color: var(--dh-paper);
   color: var(--dh-ink);
+}
+
+/* the base menu's chevron shares the Command tab's squared corners */
+.v12 .v12-agent [role='radiogroup'] [aria-label='Choose base'] {
+  border-radius: 2px;
 }
 
 /* the bar's button in the hero's own button style: squared, mono, muted,

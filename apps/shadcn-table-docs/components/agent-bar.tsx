@@ -1,11 +1,24 @@
 'use client';
 
-import { CheckIcon, CopyIcon, SparklesIcon, TerminalIcon } from 'lucide-react';
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  CopyIcon,
+  SparklesIcon,
+  TerminalIcon,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { useBase } from '@/components/base-selector';
+import { setBase, useBase } from '@/components/base-selector';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/cn';
-import type { Base } from '@/lib/install';
+import { baseLabels, bases, isBase, type Base } from '@/lib/install';
 
 /** How long the button reads "Copied" after a click. */
 const COPIED_MS = 1500;
@@ -16,7 +29,10 @@ type Mode = 'prompt' | 'command';
  * One line for agents: the prompt as visible text and Copy prompt. The
  * prompt points at /SKILL.md; the instructions live there. With `command`
  * a segmented switch on the left swaps in the manual install command, one
- * per base when the command differs (the site-wide base selector picks it).
+ * per base when the command differs: the Command tab then names the
+ * site-wide base and a chevron next to it opens a menu that sets it (the
+ * same group the docs header pill drives). The prompt is base-agnostic, so
+ * the Prompt tab shows no base.
  */
 export const AgentBar = ({
   prompt,
@@ -31,6 +47,7 @@ export const AgentBar = ({
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const base = useBase();
+  const perBase = typeof commands === 'object';
   const command = typeof commands === 'string' ? commands : commands?.[base];
   const text = mode === 'command' && command ? command : prompt;
 
@@ -55,6 +72,17 @@ export const AgentBar = ({
 
   const label = mode === 'command' ? 'Copy command' : 'Copy prompt';
 
+  const select = (value: Mode) => {
+    setMode(value);
+    setCopied(false);
+  };
+
+  const tabClass = (value: Mode) =>
+    cn(
+      'flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium text-muted-foreground transition-colors',
+      mode === value && 'bg-background text-foreground shadow-sm',
+    );
+
   return (
     <div
       data-slot="agent-bar"
@@ -70,30 +98,61 @@ export const AgentBar = ({
           aria-label="Install with"
           className="flex shrink-0 gap-0.5 rounded-md bg-muted p-0.5"
         >
-          {(
-            [
-              ['prompt', 'Prompt', SparklesIcon],
-              ['command', 'Command', TerminalIcon],
-            ] as const
-          ).map(([value, name, Icon]) => (
+          <button
+            type="button"
+            role="radio"
+            aria-checked={mode === 'prompt'}
+            onClick={() => select('prompt')}
+            className={tabClass('prompt')}
+          >
+            <SparklesIcon aria-hidden="true" className="size-3.5" />
+            Prompt
+          </button>
+          {/* Split control: the tab switches the mode, the chevron picks
+              the base the command installs on. */}
+          <div className="flex items-stretch">
             <button
-              key={value}
               type="button"
               role="radio"
-              aria-checked={mode === value}
-              onClick={() => {
-                setMode(value);
-                setCopied(false);
-              }}
-              className={cn(
-                'flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium text-muted-foreground transition-colors',
-                mode === value && 'bg-background text-foreground shadow-sm',
-              )}
+              aria-checked={mode === 'command'}
+              onClick={() => select('command')}
+              className={cn(tabClass('command'), perBase && 'rounded-r-none')}
             >
-              <Icon aria-hidden="true" className="size-3.5" />
-              {name}
+              <TerminalIcon aria-hidden="true" className="size-3.5" />
+              {perBase ? `Command: ${baseLabels[base]}` : 'Command'}
             </button>
-          ))}
+            {perBase && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="Choose base"
+                    data-active={mode === 'command' || undefined}
+                    className={cn(
+                      tabClass('command'),
+                      'rounded-l-none border-l border-border/60 px-1',
+                    )}
+                  >
+                    <ChevronDownIcon aria-hidden="true" className="size-3.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="docs-menu w-40">
+                  <DropdownMenuRadioGroup
+                    value={base}
+                    onValueChange={(value) => {
+                      if (isBase(value)) setBase(value);
+                    }}
+                  >
+                    {bases.map((b) => (
+                      <DropdownMenuRadioItem key={b} value={b}>
+                        {baseLabels[b]}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
       ) : (
         <span className="flex shrink-0 items-center gap-1.5 pl-2 text-muted-foreground">
