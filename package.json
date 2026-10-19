@@ -14,6 +14,7 @@
     "registry:build": "pnpm --filter shadcn-table registry:build",
     "registry:items": "node packages/shadcn-table/registry/examples.mjs",
     "registry:hosted": "node packages/shadcn-table/registry/hosted.mjs",
+    "add-part": "node packages/shadcn-table/registry/add-part.mjs",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-table",
     "storybook:build": "turbo run storybook:build --filter=shadcn-table",
