@@ -3,6 +3,8 @@
 
 # generated content
 .source
+# hosted registries, emitted by `pnpm registry:hosted` before next build
+/public/r
 
 # test & build
 /coverage
