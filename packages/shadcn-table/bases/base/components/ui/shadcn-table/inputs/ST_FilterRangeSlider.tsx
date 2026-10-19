@@ -67,6 +67,11 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
 
   const isMounted = useRef(false);
 
+  // Base UI reports a bare number for a single-thumb slider; the range filter
+  // always works on one value per thumb.
+  const toArray = (value: number | readonly number[]) =>
+    typeof value === 'number' ? [value] : [...value];
+
   // prevent moving the focus to the next/prev cell when using the arrow keys
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -89,14 +94,17 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
     <div className="flex flex-col">
       <Slider
         // disableSwap
-        // Note: radix Slider has no disableSwap; thumbs sort on cross.
+        // Note: Base UI Slider defaults thumbCollisionBehavior="push", so thumbs never cross (= MUI disableSwap).
         max={max}
         min={min}
         onValueChange={(values) => {
-          setFilterValues(values);
+          setFilterValues(toArray(values));
         }}
-        onValueCommit={(value) => {
-          if (Array.isArray(value)) {
+        // Base UI fires onValueCommitted once per interaction, on release, and
+        // not when the value did not change.
+        onValueCommitted={(committed) => {
+          const value = toArray(committed);
+          if (value.length === 2) {
             if (value[0] <= min && value[1] >= max) {
               //if the user has selected the entire range, remove the filter
               column.setFilterValue(undefined);
@@ -108,16 +116,18 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
         onKeyDown={handleKeyDown}
         value={filterValues}
         // valueLabelDisplay="auto"
-        // Note: radix Slider has no value label.
+        // Note: Base UI has a Slider.Value part, but the shadcn slider does not render it.
         {...sliderProps}
         ref={(node) => {
           if (node) {
+            // Base UI Thumb renders a div with a nested <input type="range">;
+            // the input is the focus target.
             filterInputRefs.current![`${column.id}-0`] =
               node.querySelector<HTMLInputElement>(
-                '[data-slot="slider-thumb"]',
+                '[data-slot="slider-thumb"] input',
               )!;
             if (sliderProps?.ref) {
-              // @ts-expect-error MRT no-op: node onto the ref prop (radix has no input slot; root ref)
+              // @ts-expect-error MRT no-op: node onto the ref prop (Base UI exposes no input slot; root div ref)
               sliderProps.ref = node;
             }
           }
