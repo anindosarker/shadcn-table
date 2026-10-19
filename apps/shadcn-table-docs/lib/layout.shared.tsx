@@ -14,7 +14,7 @@ export const NAV_LINKS = [
 
 export const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 /** Official Discord server: questions and help. */
-export const DISCORD_URL = 'https://discord.gg/ya4dwaDqD';
+export const DISCORD_URL = 'https://discord.gg/hsF37t6EKe';
 
 export function baseOptions(): BaseLayoutProps {
   return {
