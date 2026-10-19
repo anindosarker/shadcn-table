@@ -135,9 +135,9 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
           row.getIsExpanded() && DetailPanel
         ) : (
           // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
-          // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
+          // Note: MUI Collapse → ui/Collapsible; Base UI unmounts the closed panel (= mountOnEnter/unmountOnExit) and sets data-open/data-closed with --collapsible-panel-height for the keyframes in index.css.
           <Collapsible open={row.getIsExpanded()}>
-            <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+            <CollapsibleContent className="overflow-hidden data-open:animate-[st-collapsible-down_200ms_ease-out] data-closed:animate-[st-collapsible-up_200ms_ease-out]">
               {DetailPanel}
             </CollapsibleContent>
           </Collapsible>

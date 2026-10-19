@@ -95,9 +95,9 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
 
   return (
     // <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal" unmountOnExit>
-    // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit); the horizontal width keyframes (MUI duration.standard, easeInOut) live in the app stylesheet.
+    // Note: MUI Collapse → ui/Collapsible; Base UI unmounts the closed panel (= mountOnEnter/unmountOnExit) and sets data-open/data-closed with --collapsible-panel-width; the horizontal width keyframes (MUI duration.standard, easeInOut) live in the app stylesheet.
     <Collapsible open={showGlobalFilter}>
-      <CollapsibleContent className="data-[state=closed]:animate-[st-collapsible-left_300ms_var(--ease-in-out)] data-[state=open]:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
+      <CollapsibleContent className="data-closed:animate-[st-collapsible-left_300ms_var(--ease-in-out)] data-open:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
         {/* <TextField size="small" variant="outlined" InputProps={{ ...textFieldProps.InputProps, sx: { mb: 0 } }} /> */}
         {/* Note: InputGroup is MUI's Input root in shadcn's default variant; the slot type is input props, so InputProps and its sx have no target. */}
         <InputGroup>
