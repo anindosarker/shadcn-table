@@ -1,11 +1,11 @@
 {
   "name": "shadcn-table-docs",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "license": "MIT",
   "author": "Anindo Sarker",
   "repository": "github:anindosarker/shadcn-table",
-  "homepage": "https://shadcn-table.com",
+  "homepage": "https://www.shadcn-table.com",
   "scripts": {
     "build": "pnpm -w registry:build && pnpm -w registry:items && pnpm -w registry:hosted && node lib/example-variants.mjs && next build",
     "predev": "node lib/example-variants.mjs",

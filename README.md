@@ -4,7 +4,7 @@ A full-featured React data table built on TanStack Table v8, installed into your
 
 ## Status
 
-v0.2. Radix and Base UI bases, one edition each; React Aria is not supported.
+v0.2.0. Radix and Base UI bases, one edition each; React Aria is not supported.
 
 ## Install
 
@@ -45,7 +45,7 @@ GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table` (Radix
 
 ## Docs
 
-- Docs: https://shadcn-table.com
+- Docs: https://www.shadcn-table.com
 - Storybook: https://storybook.shadcn-table.com
 
 ## Community
