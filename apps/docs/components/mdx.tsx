@@ -28,7 +28,7 @@ import {
   TableInstanceAPIsSource,
   TableOptionsSource,
 } from './prop-tables/prop-table-source';
-import { exampleComponents } from '@/examples/registry';
+import { exampleComponents } from '@/examples/map';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {

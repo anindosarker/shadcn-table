@@ -79,7 +79,7 @@ export const ExampleSnippet = async ({ name }: Props) => {
       bases.map(async (base) => [base, await variantFor(base)] as const),
     ),
   ) as Record<Base, ExampleVariantData>;
-  const githubUrl = `https://github.com/${gitConfig.user}/${gitConfig.repo}/tree/${gitConfig.branch}/apps/shadcn-table-docs/examples/${name}`;
+  const githubUrl = `https://github.com/${gitConfig.user}/${gitConfig.repo}/tree/${gitConfig.branch}/apps/docs/examples/${name}`;
 
   return (
     <ExamplePlayground githubUrl={githubUrl} name={name} variants={variants}>

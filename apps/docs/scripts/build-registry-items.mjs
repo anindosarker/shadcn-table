@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Writes apps/shadcn-table-docs/registry.json with one shadcn registry
+ * Writes apps/docs/registry.json with one shadcn registry
  * item per docs example (examples/<slug>/TS.tsx plus every other source
  * file in the folder, subfolders included, except the index.tsx wrapper). The root registry.json includes this file, so the GitHub
  * namespace serves every example as

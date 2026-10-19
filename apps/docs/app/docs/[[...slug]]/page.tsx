@@ -56,7 +56,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           </MarkdownCopyButton>
           <ViewOptionsPopover
             markdownUrl={markdownUrl}
-            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/apps/shadcn-table-docs/content/docs/${page.path}`}
+            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/apps/docs/content/docs/${page.path}`}
             className="gap-0 border-l px-2"
             aria-label="Page options"
           >
