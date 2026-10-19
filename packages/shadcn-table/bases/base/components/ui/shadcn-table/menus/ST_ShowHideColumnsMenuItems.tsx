@@ -121,7 +121,9 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
       {/* Note: disableRipple dropped — no MUI ripple in shadcn. */}
       <DropdownMenuItem
         onDragEnter={handleDragEnter}
-        onSelect={(event) => event.preventDefault()}
+        // Toggling a column keeps the menu open: Base UI closes on an item
+        // click only when closeOnClick is true.
+        closeOnClick={false}
         ref={menuItemRef}
         {...rest}
         className={cn(

@@ -38,6 +38,10 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
   return (
     <DropdownMenuItem
       tabIndex={0}
+      // Base UI closes the menu on a plain item's click by default but keeps
+      // it open for checkbox and radio items; explicit so every library item
+      // closes unless the caller opts out.
+      closeOnClick
       {...rest}
       className={cn(
         actionMenuItemVariants(),

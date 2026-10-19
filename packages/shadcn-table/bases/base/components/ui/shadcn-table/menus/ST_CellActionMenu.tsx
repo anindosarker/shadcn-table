@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, useRef } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -90,6 +90,11 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
     renderCellActionMenuItems?.(renderActionProps);
 
   const anchorEl = actionCellRef.current;
+  // Base UI reads the popup's finalFocus when the menu closes, after
+  // handleClose cleared actionCellRef; the ref keeps the element from the
+  // last open render.
+  const anchorRef = useRef<HTMLElement | null>(null);
+  if (anchorEl) anchorRef.current = anchorEl;
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
@@ -100,20 +105,24 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           if (!open) handleClose();
         }}
       >
-        <DropdownMenuTrigger asChild>
-          <span
-            aria-hidden
-            style={{
-              position: 'fixed',
-              left: rect?.left ?? 0,
-              top: rect?.top ?? 0,
-              width: rect?.width ?? 0,
-              height: rect?.height ?? 0,
-              pointerEvents: 'none',
-            }}
-          />
-        </DropdownMenuTrigger>
-        {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
+        <DropdownMenuTrigger
+          // The library anchors its menus to an invisible span, not a button.
+          nativeButton={false}
+          render={
+            <span
+              aria-hidden
+              style={{
+                position: 'fixed',
+                left: rect?.left ?? 0,
+                top: rect?.top ?? 0,
+                width: rect?.width ?? 0,
+                height: rect?.height ?? 0,
+                pointerEvents: 'none',
+              }}
+            />
+          }
+        />
+        {/* Note: MRT disableScrollLock dropped — Base UI Menu owns scroll-lock behavior */}
         {/* Note: MRT transformOrigin={{horizontal:-100,vertical:8}} on MUI's top/left anchorOrigin puts the menu at top = anchorTop - 8, left = anchorLeft + 100; align="start" alignOffset={100} and sideOffset={-(height + 8)} from the anchor's bottom edge land on the same point */}
         <DropdownMenuContent
           align="start"
@@ -121,18 +130,22 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           sideOffset={-((rect?.height ?? 0) + 8)}
           onClick={(event) => event.stopPropagation()}
           // The menu opens on contextmenu, which Chrome on macOS fires on
-          // mousedown, so the right button's pointerup lands on the menu item
-          // that is now under the cursor. Radix MenuItem selects on a pointerup
-          // without a prior pointerdown on it, closing the menu (and running
-          // the item) before the user lets go. Swallow right-button pointerups
-          // in the capture phase; Escape, outside click and left click still
-          // work as before.
-          onPointerUpCapture={(event) => {
+          // mousedown, so the right button's mouseup lands on the menu item
+          // that is now under the cursor. Base UI's MenuItem turns a mouseup
+          // into a click only after a mousedown on the trigger armed it
+          // (allowMouseUpTriggerRef), which the invisible span never gets, and
+          // activates on click, which a right-button release does not fire.
+          // Swallow right-button mouseups in the capture phase anyway so the
+          // item's onMouseUp never sees the release; Escape, outside click and
+          // left click still work as before.
+          onMouseUpCapture={(event) => {
             if (event.button === 2) event.stopPropagation();
           }}
-          onCloseAutoFocus={(event) => {
-            event.preventDefault();
-            if (!table.getState().editingCell) anchorEl?.focus();
+          // Focus goes back to the cell unless editing started; returning
+          // false keeps Base UI off the invisible trigger.
+          finalFocus={() => {
+            if (!table.getState().editingCell) anchorRef.current?.focus();
+            return false;
           }}
           className={cn('w-max', className)}
           {...rest}

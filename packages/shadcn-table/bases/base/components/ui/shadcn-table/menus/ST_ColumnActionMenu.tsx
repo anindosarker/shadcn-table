@@ -1,4 +1,9 @@
-import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type MouseEvent,
+  useRef,
+  useState,
+} from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -323,34 +328,46 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
       : []),
   ].filter(Boolean);
 
+  // Base UI reads the popup's finalFocus when the menu closes, after this
+  // component re-rendered with anchorEl cleared; the ref keeps the element
+  // from the last open render.
+  const anchorRef = useRef<HTMLElement | null>(null);
+  if (anchorEl) anchorRef.current = anchorEl;
+
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    // Note: disableScrollLock dropped — Radix DropdownMenu keeps its modal default (scroll-locks), owner ruling.
+    // Note: disableScrollLock dropped — Base UI Menu keeps its modal default (scroll-locks), owner ruling.
     <DropdownMenu
       open={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        // The library anchors its menus to an invisible span, not a button.
+        nativeButton={false}
+        render={
+          <span
+            aria-hidden
+            style={{
+              position: 'fixed',
+              left: rect?.left ?? 0,
+              top: rect?.top ?? 0,
+              width: rect?.width ?? 0,
+              height: rect?.height ?? 0,
+              pointerEvents: 'none',
+            }}
+          />
+        }
+      />
       <DropdownMenuContent
         align="start"
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          anchorEl?.focus();
+        // Focus goes back to the real anchor; returning false keeps Base UI
+        // off the invisible trigger.
+        finalFocus={() => {
+          anchorRef.current?.focus();
+          return false;
         }}
         className={cn('w-max', className)}
         {...rest}

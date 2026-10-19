@@ -46,6 +46,9 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     },
   } = table;
 
+  // Base UI reads the popup's finalFocus when the menu closes, after this
+  // component re-rendered with anchorEl cleared; the ref keeps the element
+  // from the last open render.
   const anchorRef = useRef<HTMLElement | null>(null);
   if (anchorEl) anchorRef.current = anchorEl;
 
@@ -84,26 +87,32 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
-      </DropdownMenuTrigger>
-      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
+      <DropdownMenuTrigger
+        // The library anchors its menus to an invisible span, not a button.
+        nativeButton={false}
+        render={
+          <span
+            aria-hidden
+            style={{
+              position: 'fixed',
+              left: rect?.left ?? 0,
+              top: rect?.top ?? 0,
+              width: rect?.width ?? 0,
+              height: rect?.height ?? 0,
+              pointerEvents: 'none',
+            }}
+          />
+        }
+      />
+      {/* Note: MRT disableScrollLock dropped — Base UI Menu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
+        // Focus goes back to the real anchor; returning false keeps Base UI
+        // off the invisible trigger.
+        finalFocus={() => {
           anchorRef.current?.focus();
+          return false;
         }}
         className={cn('w-max', className)}
         {...rest}
