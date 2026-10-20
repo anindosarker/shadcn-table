@@ -275,7 +275,9 @@ export async function exampleGroup(page, tabs, check) {
  * Base UI collapsibles set data-open/data-closed, Radix's set data-state) and
  * the Code view shows the Base UI variant's `@/components/ui-base/` imports;
  * then Radix again, imports back to `@/components/ui/`. No console errors
- * is asserted by the runner.
+ * is asserted by the runner. The explorer highlights the active file in the
+ * browser, so the code view's text is read only once a `code` element is in
+ * the explorer.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
@@ -283,12 +285,20 @@ export async function baseSwitch(page, id, check) {
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
   const rows = panel.locator('table tbody tr');
-  const source = async () =>
-    (await panel
-      .locator('pre')
+  const code = panel.locator('[data-slot="code-explorer"] code');
+  const source = async () => {
+    await code
       .first()
-      .textContent()
-      .catch(() => '')) ?? '';
+      .waitFor({ timeout: 15000 })
+      .catch(() => {});
+    return (
+      (await panel
+        .locator('pre')
+        .first()
+        .textContent()
+        .catch(() => '')) ?? ''
+    );
+  };
   const baseMarkup = () => panel.locator('[data-open], [data-closed]').count();
   check(`${id}: radix markup`, (await baseMarkup()) === 0);
   await header.getByRole('tab', { name: 'Base UI' }).click();
