@@ -73,7 +73,7 @@ export const RowOrderingEnabled = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.getState();
+          const { draggingRow, hoveredRow } = table.state;
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<Person>).index,
@@ -215,7 +215,7 @@ export const RowOrderingWithRowVirtualization = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.getState();
+          const { draggingRow, hoveredRow } = table.state;
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<Person>).index,
@@ -263,7 +263,7 @@ export const RowOrderingWithColumnVirtualization = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.getState();
+          const { draggingRow, hoveredRow } = table.state;
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<(typeof fakeData)[0]>).index,

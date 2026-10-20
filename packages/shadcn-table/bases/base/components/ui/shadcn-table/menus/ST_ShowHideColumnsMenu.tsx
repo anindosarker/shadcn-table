@@ -11,9 +11,9 @@ import {
   type ST_Column,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getDefaultColumnOrderIds } from '../utils/displayColumn.utils';
-import { ST_ShowHideColumnsMenuItems } from './ST_ShowHideColumnsMenuItems';
+} from '@/components/ui/shadcn-table/types';
+import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
+import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems';
 
 export interface ST_ShowHideColumnsMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -36,10 +36,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     getCenterLeafColumns,
     getIsAllColumnsVisible,
     getIsSomeColumnsPinned,
+    getEndLeafColumns,
     getIsSomeColumnsVisible,
-    getLeftLeafColumns,
-    getRightLeafColumns,
-    getState,
+    getStartLeafColumns,
     initialState,
     options: {
       enableColumnOrdering,
@@ -49,7 +48,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
-  const { columnOrder, columnPinning } = getState();
+  const { columnOrder, columnPinning } = table.state;
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -65,11 +64,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       !columns.some((col) => col.columnDef.columnDefType === 'group')
     ) {
       return [
-        ...getLeftLeafColumns(),
+        ...getStartLeafColumns(),
         ...Array.from(new Set(columnOrder)).map((colId) =>
           getCenterLeafColumns().find((col) => col?.id === colId),
         ),
-        ...getRightLeafColumns(),
+        ...getEndLeafColumns(),
       ].filter(Boolean);
     }
     return columns;
@@ -78,8 +77,8 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     columnPinning,
     getAllColumns(),
     getCenterLeafColumns(),
-    getLeftLeafColumns(),
-    getRightLeafColumns(),
+    getStartLeafColumns(),
+    getEndLeafColumns(),
   ]) as ST_Column<TData>[];
   /* eslint-enable react-hooks/exhaustive-deps */
 

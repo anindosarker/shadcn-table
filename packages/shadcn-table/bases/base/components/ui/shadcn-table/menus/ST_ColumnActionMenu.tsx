@@ -11,12 +11,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import {
+  type ST_ColumnPinningPosition,
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { ST_ActionMenuItem } from './ST_ActionMenuItem';
-import { ST_FilterOptionMenu } from './ST_FilterOptionMenu';
+} from '@/components/ui/shadcn-table/types';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
+import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/menus/ST_FilterOptionMenu';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -36,7 +37,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
 }: ST_ColumnActionMenuProps<TData>) => {
   const {
     getAllLeafColumns,
-    getState,
     options: {
       columnFilterDisplayMode,
       columnFilterModeOptions,
@@ -66,12 +66,12 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     refs: { filterInputRefs },
     setColumnFilterFns,
     setColumnOrder,
-    setColumnSizingInfo,
+    setColumnResizing,
     setShowColumnFilters,
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  const { columnSizing, columnVisibility, showColumnFilters } = getState();
+  const { columnSizing, columnVisibility, showColumnFilters } = table.state;
   const columnFilterValue = column.getFilterValue();
 
   const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
@@ -93,7 +93,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   };
 
   const handleResetColumnSize = () => {
-    setColumnSizingInfo((old) => ({ ...old, isResizingColumn: false }));
+    setColumnResizing((old) => ({ ...old, isResizingColumn: false }));
     column.resetSize();
     setAnchorEl(null);
   };
@@ -103,7 +103,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     setAnchorEl(null);
   };
 
-  const handlePinColumn = (pinDirection: 'left' | 'right' | false) => {
+  const handlePinColumn = (pinDirection: ST_ColumnPinningPosition) => {
     column.pin(pinDirection);
     setAnchorEl(null);
   };
@@ -259,19 +259,19 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     ...(enableColumnPinning && column.getCanPin()
       ? [
           <ST_ActionMenuItem
-            disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
+            disabled={column.getIsPinned() === 'start' || !column.getCanPin()}
             icon={<PushPinIcon style={{ transform: 'rotate(90deg)' }} />}
             key={7}
             label={localization.pinToLeft}
-            onClick={() => handlePinColumn('left')}
+            onClick={() => handlePinColumn('start')}
             table={table}
           />,
           <ST_ActionMenuItem
-            disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
+            disabled={column.getIsPinned() === 'end' || !column.getCanPin()}
             icon={<PushPinIcon style={{ transform: 'rotate(-90deg)' }} />}
             key={8}
             label={localization.pinToRight}
-            onClick={() => handlePinColumn('right')}
+            onClick={() => handlePinColumn('end')}
             table={table}
           />,
           <ST_ActionMenuItem

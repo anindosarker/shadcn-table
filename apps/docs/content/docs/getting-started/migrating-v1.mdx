@@ -1,0 +1,47 @@
+---
+title: 'Migrating to v1 (TanStack Table v9)'
+description: 'What changes when updating shadcn-table from v0.x (TanStack Table v8) to v1 (TanStack Table v9)'
+---
+
+shadcn-table v1 is built on TanStack Table v9. The table keeps its own option names (`enableRowPinning`, `st*Props`, `renderDetailPanel`, ...); where TanStack renamed something, the table and its `ST_*` types follow TanStack, with no aliases for the old names. Update with the install command and `--overwrite`, then apply the changes below to your own code. TanStack's own list is in the [TanStack Table v9 migration guide](https://tanstack.com/table/latest/docs/framework/react/guide/migrating).
+
+### Dependency
+
+- `@tanstack/react-table` 9.3.1 is required (it brings `@tanstack/table-core` 9.3.1, `@tanstack/react-store` and `@tanstack/store` 0.11.2). The install command updates it; a project that pins v8 elsewhere has to move to v9, TanStack Table v8 is no longer supported.
+
+### Renamed names
+
+| v0.x (TanStack Table v8)                                                                                            | v1 (TanStack Table v9)                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `table.getState()`                                                                                                  | `table.state` (`ST_TableState<TData>`: the TanStack slices plus `density`, `isFullScreen`, `creatingRow`, ... in one object)                           |
+| column option `sortingFn`                                                                                           | `sortFn`                                                                                                                                               |
+| table option `sortingFns`                                                                                           | `sortFns`                                                                                                                                              |
+| type `ST_SortingFn`, registry `ST_SortingFns`                                                                       | `ST_SortFn`, `ST_SortFns`                                                                                                                              |
+| `@/components/ui/shadcn-table/fns/sortingFns`                                                                       | `@/components/ui/shadcn-table/fns/sortFns`                                                                                                             |
+| state `columnSizingInfo`, type `ST_ColumnSizingInfoState`                                                           | `columnResizing`, `ST_ColumnResizingState`                                                                                                             |
+| `table.setColumnSizingInfo`, option `onColumnSizingInfoChange`                                                      | `table.setColumnResizing`, `onColumnResizingChange`                                                                                                    |
+| `columnPinning: { left, right }`                                                                                    | `columnPinning: { start, end }` (logical sides; `start` is left in LTR)                                                                                |
+| `column.pin('left' \| 'right' \| false)`                                                                            | `column.pin('start' \| 'end' \| false)`, `column.getIsPinned()` returns `'start' \| 'end' \| false` (new type `ST_ColumnPinningPosition`)              |
+| `table.getLeftLeafColumns()`, `table.getRightLeafColumns()`                                                         | `table.getStartLeafColumns()`, `table.getEndLeafColumns()`                                                                                             |
+| every other `Left`/`Right` method (`getLeftVisibleLeafColumns`, `getLeftTotalSize`, `row.getLeftVisibleCells`, ...) | the `Start`/`End` name; `column.getStart()`, `getAfter()`, `getIsFirstColumn()`, `getIsLastColumn()`, `getIndex()` take `'start' \| 'end' \| 'center'` |
+| `table.getPaginationRowModel()`, `table.getPrePaginationRowModel()`                                                 | `table.getPaginatedRowModel()`, `table.getPrePaginatedRowModel()`                                                                                      |
+
+### Row selection
+
+- The `enableBatchRowSelection` table option is removed. Shift-click range selection is TanStack's `enableRowRangeSelection` (default `true`); `isRowRangeSelectionEvent` customises which events count as a range selection.
+- `table.refs.lastSelectedRowId` is removed (TanStack keeps the range anchor internally). `getST_RowSelectionHandler({ row, table })` no longer reads `staticRowIndex` (it is still accepted in the props type).
+- `table.getIsSomeRowsSelected()`, `table.getIsSomePageRowsSelected()` and `row.getIsSomeSelected()` now mean "at least one" (the all-selected case included), per TanStack. The library gates its own indeterminate checkboxes with the matching `getIsAll*` check; do the same when one of these drives an indeterminate state in your code: `table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()`.
+
+### Aggregation and the function registries
+
+- Custom aggregation functions are v9 definitions: `constructAggregationFn({ aggregate: (context) => ..., merge? })` objects instead of `(columnId, leafRows, childRows)` callables. `ST_AggregationFn<TData>` is a definition or a name; `ST_AggregationFns.*` are definitions (call `.aggregate(context)`). A string `aggregationFn`, including names from the `aggregationFns` table option, is resolved by the library; an `aggregationFn` array still yields an array of results.
+- The `filterFns`, `sortFns` and `aggregationFns` table options are typed by the library: `Record<string, FilterFn<ST_Features, TData>>`, `Record<string, SortFn<ST_Features, TData>>` and `Record<string, AggregationFnDef<ST_Features, TData, any, any>>`. The built-in registries live on the static features object; custom names are resolved by name.
+- `ST_FilterFns.*` and `ST_SortFns.fuzzy` have v9 signatures (filter functions generic over the features with an optional `addMeta`; the fuzzy sort is built with `constructSortFn`).
+
+### Table instance and types
+
+- New exports `stFeatures` and `ST_Features` (`utils/tanstack.features.ts`, also from the index): the `tableFeatures({...})` object with all 15 features, 8 row models and 3 registries. Use `createColumnHelper<ST_Features, TData>()` or TanStack types as `Column<ST_Features, TData, TValue>`; the public `ST_*` types keep their `<TData>` and `<TData, TValue>` signatures.
+- `ST_TableInstance<TData>` is built on `ReactTable<ST_Features, TData, ST_TableState<TData>>`: `table.store`, `table.atoms`, `table.baseAtoms`, `table.Subscribe` and `table.FlexRender` are available.
+- `ST_TableOptions` no longer accepts `features`, `onStateChange` or the `get*RowModel` options; the row models and `features` are set by the library.
+- `ST_VisibilityState` now aliases TanStack's `ColumnVisibilityState` (same shape); `ST_ColumnResizingState` aliases TanStack's `columnResizingState`.
+- `initialState.columnPinning` may still be partial (`{ start }` or `{ end }` alone); the library fills the missing side with `[]` because v9 does not. The `state.columnPinning` and `rowPinning` objects need both sides (`{ start: [], end: [...] }`, `{ top: [...], bottom: [] }`), and `rowSelection` only holds `true` entries (`Record<string, true>`).

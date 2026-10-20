@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { getCommonTooltipProps } from './utils/style.utils';
+import { getCommonTooltipProps } from '@/components/ui/shadcn-table/utils/style.utils';
 
 export interface ST_TooltipProps {
   title?: React.ReactNode;

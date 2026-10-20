@@ -10,8 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # The library is two trees, one per shadcn base: bases/radix (the default
-  # scripts) and bases/base (the `:base` scripts, ST_BASE=base).
+  # The library is one shared source (shared/) plus per-base overrides, one
+  # per shadcn base: bases/radix (the default scripts) and bases/base (the
+  # `:base` scripts, ST_BASE=base).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     runs-on: ubuntu-latest
@@ -27,9 +28,9 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-table tsc
+      - run: pnpm --filter shadcn-table tsc:radix
         if: matrix.base == 'radix'
-      - run: pnpm --filter shadcn-table tsc:base
+      - run: pnpm --filter shadcn-table tsc:baseui
         if: matrix.base == 'base'
       - run: pnpm --filter shadcn-table lint
       - run: pnpm --filter shadcn-table storybook:build
@@ -133,7 +134,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - name: Pre-install TanStack packages (existing app only)
         if: matrix.scenario == 'existing'
-        run: pnpm add @tanstack/react-table@8.20.5 @tanstack/react-query
+        run: pnpm add @tanstack/react-table@9.3.1 @tanstack/react-query
         working-directory: ${{ runner.temp }}/app
       - name: Add the library at this SHA
         run: |
@@ -244,11 +245,14 @@ jobs:
           pnpm exec tsc --noEmit -p tsconfig.app.json
           pnpm exec vite build
         working-directory: ${{ runner.temp }}/app
-      - name: One @tanstack/react-table entry in package.json
+      - name: One @tanstack/react-table entry in package.json, installed version 9.x
         run: |
           count=$(node -e 'const p=require("./package.json");const all={...p.dependencies,...p.devDependencies};console.log(Object.keys(all).filter(k=>k==="@tanstack/react-table").length)')
           node -e 'const p=require("./package.json");console.log("@tanstack/react-table", p.dependencies["@tanstack/react-table"])'
           test "$count" = "1"
+          installed=$(node -e 'console.log(require("@tanstack/react-table/package.json").version)')
+          echo "installed @tanstack/react-table $installed"
+          case "$installed" in 9.*) ;; *) echo "expected a 9.x install"; exit 1;; esac
         working-directory: ${{ runner.temp }}/app
       - name: No radix-ui on the Base UI base
         if: matrix.scenario == 'base'
@@ -261,25 +265,3 @@ jobs:
           echo "::group::package.json"; cat package.json; echo "::endgroup::"
           echo "::group::shadcn output"; cat shadcn-add.log 2>/dev/null || true; echo "::endgroup::"
         working-directory: ${{ runner.temp }}/app
-
-  # The two trees are meant to differ only in the files the script allowlists
-  # (the base-specific primitives and the files that wrap them). The script
-  # prints a markdown table and always exits 0; the job never blocks a merge.
-  diff-bases:
-    name: diff-bases (report, non-blocking)
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Diff bases/radix against bases/base
-        run: |
-          set -o pipefail
-          script=packages/shadcn-table/scripts/diff-bases.mjs
-          if [ -f "$script" ]; then
-            node "$script" 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
-          else
-            echo "## diff-bases: $script is not in this checkout; nothing compared." | tee -a "$GITHUB_STEP_SUMMARY"
-          fi

@@ -5,10 +5,13 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment, useMemo } from 'react';
-import { type ST_RowData, type ST_TableInstance } from '../types';
-import { getST_SelectAllHandler } from '../utils/row.utils';
-import { parseFromValuesOrFunc } from '../utils/utils';
-import { ST_SelectCheckbox } from '../inputs/ST_SelectCheckbox';
+import {
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
+import { getST_SelectAllHandler } from '@/components/ui/shadcn-table/utils/row.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
+import { ST_SelectCheckbox } from '@/components/ui/shadcn-table/inputs/ST_SelectCheckbox';
 
 export interface ST_ToolbarAlertBannerProps<TData extends ST_RowData>
   extends React.ComponentProps<typeof Alert> {
@@ -36,7 +39,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   const {
     getFilteredSelectedRowModel,
     getCoreRowModel,
-    getState,
     options: {
       enableRowSelection,
       enableSelectAll,
@@ -51,7 +53,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
     },
     refs: { tableLayoutRef },
   } = table;
-  const { density, grouping, rowSelection, showAlertBanner } = getState();
+  const { density, grouping, rowSelection, showAlertBanner } = table.state;
 
   const alertProps = {
     ...parseFromValuesOrFunc(stToolbarAlertBannerProps, {

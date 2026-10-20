@@ -2,13 +2,13 @@
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.radix.json"
     }
   ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./bases/radix/*"]
+      "@/*": ["./bases/radix/*", "./shared/*"]
     }
   }
 }

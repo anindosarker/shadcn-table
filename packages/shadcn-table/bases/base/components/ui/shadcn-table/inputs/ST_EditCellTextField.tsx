@@ -24,8 +24,11 @@ import {
   type ST_Cell,
   type ST_RowData,
   type ST_TableInstance,
-} from '../types';
-import { getValueAndLabel, parseFromValuesOrFunc } from '../utils/utils';
+} from '@/components/ui/shadcn-table/types';
+import {
+  getValueAndLabel,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/utils/utils';
 
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   extends InputProps {
@@ -43,7 +46,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   ...rest
 }: ST_EditCellTextFieldProps<TData>) => {
   const {
-    getState,
     options: { createDisplayMode, editDisplayMode, stEditTextFieldProps },
     refs: { editInputRefs },
     setCreatingRow,
@@ -52,7 +54,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;
-  const { creatingRow, editingRow } = getState();
+  const { creatingRow, editingRow } = table.state;
   const { editSelectOptions, editVariant } = columnDef;
   // MUI TextField useId(idOverride): one id links label and input.
   const id = useId();

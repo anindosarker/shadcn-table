@@ -1,11 +1,12 @@
 // Item definition of the Radix edition: `shadcn-table` plus one locale item
-// per language, both read by scripts/build-registry.mjs (Node strips the
-// types). Every file under components/ui/shadcn-table is an item file, every
+// per language, both read by registry/build.mjs (Node strips the
+// types). Every shared library file is an item file, replaced by the override
+// at the same path under components/ui/shadcn-table where one exists; every
 // `@/components/ui/<part>` import is a registryDependency and the ST-only CSS
 // rules in index.css ship through the item's `css` field; see
-// scripts/registry-lib.mjs.
+// registry/lib.mjs.
 import { registryItemSchema, type Registry } from 'shadcn/schema';
-import { baseItems, HOMEPAGE } from '../../scripts/registry-lib.mjs';
+import { baseItems, HOMEPAGE } from '../../registry/lib.mjs';
 
 const items = baseItems({
   dir: import.meta.dirname,

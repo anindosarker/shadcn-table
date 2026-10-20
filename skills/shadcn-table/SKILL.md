@@ -51,6 +51,7 @@ Rules:
 - `columns` and `data` must be stable: `useMemo`, `useState`, or module scope. Inline arrays re-render forever.
 - All features are table options passed to `useShadcnTable` (`enableRowSelection`, `enableColumnFilters`, `enableGrouping`, `enableRowVirtualization`, `renderDetailPanel`, ...). Do not wrap the table to add behaviour before checking the option exists.
 - Column behaviour is a column option (`filterVariant`, `enableSorting`, `Cell`, `size`, `aggregationFn`, ...).
+- The table is built on TanStack Table v9 and uses its names: `sortFn` (not `sortingFn`), `columnPinning: { start, end }` and `column.pin('start' | 'end')` (not left/right), `columnResizing` state (not `columnSizingInfo`), `table.state` (not `table.getState()`), `getPaginatedRowModel()`. Custom aggregations are `constructAggregationFn({ aggregate })` definitions.
 - Styling: the table uses the project's shadcn/ui tokens; override per part with the `st*Props` options (`stTableBodyCellProps`, `stTableHeadCellProps`, ...) taking a `className`.
 
 ## Reference

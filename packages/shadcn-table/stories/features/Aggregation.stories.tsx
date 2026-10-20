@@ -1,4 +1,5 @@
 import { type Meta } from '@storybook/react-vite';
+import { constructAggregationFn } from '@tanstack/react-table';
 import {
   ST_AggregationFns,
   type ST_ColumnDef,
@@ -165,7 +166,7 @@ export const AggregationRemoveModeCustomGroupedCell = () => (
       'st-row-expand': {
         //last item in array of grouping state
         GroupedCell: ({ row, table }) => {
-          const { grouping } = table.getState();
+          const { grouping } = table.state;
           return row.getValue(grouping[grouping.length - 1]);
         },
       },
@@ -229,10 +230,12 @@ export const MultiAggregationPerColumn = () => (
         ),
         accessorKey: 'age',
         //manually set multiple aggregation functions
-        aggregationFn: (columnId, leafRows, childRows) => [
-          ST_AggregationFns.min(columnId, leafRows, childRows),
-          ST_AggregationFns.max(columnId, leafRows, childRows),
-        ],
+        aggregationFn: constructAggregationFn({
+          aggregate: (context) => [
+            ST_AggregationFns.min.aggregate(context),
+            ST_AggregationFns.max.aggregate(context),
+          ],
+        }),
         header: 'Age',
       },
       {
