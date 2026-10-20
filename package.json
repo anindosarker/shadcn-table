@@ -15,6 +15,7 @@
     "registry:items": "node packages/shadcn-table/registry/examples.mjs",
     "registry:hosted": "node packages/shadcn-table/registry/hosted.mjs",
     "add-part": "node packages/shadcn-table/registry/add-part.mjs",
+    "check:bases": "node packages/shadcn-table/scripts/registry/check-bases.mjs",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-table",
     "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook(:base)?$/\"",

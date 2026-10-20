@@ -3,14 +3,10 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.baseui.tsbuildinfo",
     "paths": {
-      "@/*": ["./bases/base/*", "./shared/*"]
+      "@/*": ["./registry/base/*"]
     }
   },
-  "include": [
-    "bases/base",
-    "shared/components/ui/shadcn-table/index.ts",
-    "shared/components/ui/shadcn-table/locales"
-  ],
-  // Node-only item definition, read by registry/build.mjs.
-  "exclude": ["bases/base/registry.ts"]
+  "include": ["registry/base"],
+  // Node-only item definition, read by scripts/registry/build.mjs.
+  "exclude": ["registry/base/registry.ts"]
 }
