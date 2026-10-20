@@ -3,12 +3,12 @@
   "references": [
     {
       "path": "./tsconfig.radix.json"
+    },
+    {
+      "path": "./tsconfig.baseui.json"
+    },
+    {
+      "path": "./tsconfig.stories.json"
     }
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./bases/radix/*", "./shared/*"]
-    }
-  }
+  ]
 }
