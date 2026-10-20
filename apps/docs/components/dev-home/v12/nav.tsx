@@ -1,9 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { ThemeControls } from '@/components/theme-controls';
 import { GitHubIcon } from '@/components/dev-home/v2/github-icon';
 import { DiscordIcon } from '@/components/discord-icon';
 import { GITHUB_URL } from '@/components/dev-home/v4/nav';
 import { DISCORD_URL } from '@/lib/layout.shared';
+import { trackOutboundClicked } from '@/lib/analytics';
 
 const LINKS = [
   { label: 'Docs', href: '/docs/getting-started/install' },
@@ -35,7 +38,14 @@ export function Nav() {
           ))}
         </nav>
         <div className="v4-nav-actions">
-          <a href={GITHUB_URL} aria-label="GitHub" className="v12-gh">
+          <a
+            href={GITHUB_URL}
+            aria-label="GitHub"
+            className="v12-gh"
+            onClick={() =>
+              trackOutboundClicked({ target: 'github', surface: 'nav' })
+            }
+          >
             <GitHubIcon className="size-4" />
           </a>
           <a
@@ -44,6 +54,9 @@ export function Nav() {
             target="_blank"
             rel="noreferrer"
             className="v12-gh"
+            onClick={() =>
+              trackOutboundClicked({ target: 'discord', surface: 'nav' })
+            }
           >
             <DiscordIcon className="size-4" />
           </a>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore, type ReactNode } from 'react';
+import { useRef, useSyncExternalStore, type ReactNode } from 'react';
 import {
   TabsContent,
   TabsList,
@@ -9,6 +9,7 @@ import {
 import { Tabs } from 'fumadocs-ui/components/ui/tabs';
 import { baseLabels, bases, defaultBase, type Base } from '@/lib/install';
 import { cn } from '@/lib/cn';
+import { trackBaseSwitched, type Surface } from '@/lib/analytics';
 
 /**
  * The site-wide base (Radix UI | Base UI) is one fumadocs tab group, `base`,
@@ -77,9 +78,36 @@ export const setBase = (next: Base) => {
   for (const listener of listeners) listener();
 };
 
-const onTabChange = (value: string) => {
-  const next = fromTab(value);
-  if (next) setBase(next);
+/**
+ * Props for a Tabs control in the base group: the controlled value and the
+ * change handling. fumadocs fans a change out to every Tabs in the group, so
+ * each control's `onValueChange` runs on every switch, wherever it came
+ * from. Only the control the reader used reports `base_switched`: its own
+ * click or key event sets a flag that is cleared once the event is handled.
+ */
+const useBaseTabs = (surface: Surface) => {
+  const base = useBase();
+  const interacted = useRef(false);
+  const onInteract = () => {
+    interacted.current = true;
+    queueMicrotask(() => {
+      interacted.current = false;
+    });
+  };
+  const onValueChange = (value: string) => {
+    const next = fromTab(value);
+    if (!next) return;
+    if (interacted.current && next !== base) {
+      trackBaseSwitched({ from: base, to: next, surface });
+    }
+    setBase(next);
+  };
+  return {
+    value: TAB_VALUES[base],
+    onValueChange,
+    onClickCapture: onInteract,
+    onKeyDownCapture: onInteract,
+  };
 };
 
 /**
@@ -87,13 +115,12 @@ const onTabChange = (value: string) => {
  * and anywhere else a page needs the switch without content panels.
  */
 export const BaseSwitch = ({ className }: { className?: string }) => {
-  const base = useBase();
+  const tabs = useBaseTabs('header');
   return (
     <Tabs
       groupId={BASE_GROUP_ID}
       persist
-      value={TAB_VALUES[base]}
-      onValueChange={onTabChange}
+      {...tabs}
       className={cn('inline-flex', className)}
     >
       <TabsList
@@ -123,14 +150,13 @@ export const BaseTabs = ({
   base,
   className,
 }: Record<Base, ReactNode> & { className?: string }) => {
-  const selected = useBase();
+  const tabs = useBaseTabs('tabs');
   const content: Record<Base, ReactNode> = { radix, base };
   return (
     <Tabs
       groupId={BASE_GROUP_ID}
       persist
-      value={TAB_VALUES[selected]}
-      onValueChange={onTabChange}
+      {...tabs}
       className={cn(
         'my-4 flex flex-col overflow-hidden rounded-xl border bg-fd-secondary',
         className,

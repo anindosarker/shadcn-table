@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/cn';
 import { baseLabels, bases, isBase, type Base } from '@/lib/install';
+import { libraryItem } from '@/lib/shared';
+import { trackBaseSwitched, trackInstallCommandCopied } from '@/lib/analytics';
 
 /** How long the button reads "Copied" after a click. */
 const COPIED_MS = 1500;
@@ -32,7 +34,9 @@ type Mode = 'prompt' | 'command';
  * per base when the command differs: the Command tab then names the
  * site-wide base and a chevron next to it opens a menu that sets it (the
  * same group the docs header pill drives). The prompt is base-agnostic, so
- * the Prompt tab shows no base.
+ * the Prompt tab shows no base. The command is the library's `shadcn add`
+ * with pnpm (components/dev-home/v12/home-page.tsx), which is what a copy
+ * of it reports.
  */
 export const AgentBar = ({
   prompt,
@@ -68,6 +72,14 @@ export const AgentBar = ({
     setCopied(true);
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+    if (mode === 'command' && command) {
+      trackInstallCommandCopied({
+        item: libraryItem,
+        base,
+        package_manager: 'pnpm',
+        surface: 'home',
+      });
+    }
   };
 
   const label = mode === 'command' ? 'Copy command' : 'Copy prompt';
@@ -140,7 +152,13 @@ export const AgentBar = ({
                   <DropdownMenuRadioGroup
                     value={base}
                     onValueChange={(value) => {
-                      if (isBase(value)) setBase(value);
+                      if (!isBase(value) || value === base) return;
+                      trackBaseSwitched({
+                        from: base,
+                        to: value,
+                        surface: 'command_bar',
+                      });
+                      setBase(value);
                     }}
                   >
                     {bases.map((b) => (

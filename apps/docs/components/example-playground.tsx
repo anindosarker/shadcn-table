@@ -37,6 +37,10 @@ import { ExampleSwitcher } from '@/components/example-switcher';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
 import type { Base } from '@/lib/install';
+import {
+  trackExampleCodeOpened,
+  trackInstallCommandCopied,
+} from '@/lib/analytics';
 
 /** What differs per base: the sources (import paths) and the commands. */
 export interface ExampleVariantData {
@@ -171,6 +175,14 @@ export const ExamplePlayground = ({
     setCopied(target);
     if (copiedTimer.current) clearTimeout(copiedTimer.current);
     copiedTimer.current = setTimeout(() => setCopied(null), COPIED_MS);
+    if (target === 'install') {
+      trackInstallCommandCopied({
+        item: `example-${name}`,
+        base,
+        package_manager: 'pnpm',
+        surface: 'example',
+      });
+    }
   };
 
   // Full screen: lock the page behind the panel and close on Escape. Radix
@@ -198,7 +210,12 @@ export const ExamplePlayground = ({
     };
   }, [fullscreen]);
 
-  const changeMode = (next: Mode) => writeMode(next);
+  const changeMode = (next: Mode) => {
+    if (next !== mode && next !== 'preview') {
+      trackExampleCodeOpened({ example: name, base, mode: next });
+    }
+    writeMode(next);
+  };
 
   const toggleFullscreen = () => {
     setTooltipOpen(false);
@@ -387,7 +404,7 @@ export const ExamplePlayground = ({
               mode === 'both' && '[border-top:var(--docs-rule)]',
             )}
           >
-            <CodeExplorer files={files} />
+            <CodeExplorer files={files} example={name} base={base} />
           </div>
         )}
       </div>
