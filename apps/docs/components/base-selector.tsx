@@ -82,17 +82,21 @@ export const setBase = (next: Base) => {
  * Props for a Tabs control in the base group: the controlled value and the
  * change handling. fumadocs fans a change out to every Tabs in the group, so
  * each control's `onValueChange` runs on every switch, wherever it came
- * from. Only the control the reader used reports `base_switched`: its own
- * click or key event sets a flag that is cleared once the event is handled.
+ * from, and once more on mount from the persisted value. Only the control
+ * the reader used reports `base_switched`: a flag set in the capture phase
+ * of the events Base UI activates a tab from (focus for a mouse press, click,
+ * a key) and cleared in the bubble phase of the same event, on this root.
+ * React runs its capture and bubble passes from two native listeners with a
+ * microtask checkpoint between them, so a microtask would clear too early.
  */
 const useBaseTabs = (surface: Surface) => {
   const base = useBase();
   const interacted = useRef(false);
-  const onInteract = () => {
+  const begin = () => {
     interacted.current = true;
-    queueMicrotask(() => {
-      interacted.current = false;
-    });
+  };
+  const end = () => {
+    interacted.current = false;
   };
   const onValueChange = (value: string) => {
     const next = fromTab(value);
@@ -105,8 +109,12 @@ const useBaseTabs = (surface: Surface) => {
   return {
     value: TAB_VALUES[base],
     onValueChange,
-    onClickCapture: onInteract,
-    onKeyDownCapture: onInteract,
+    onFocusCapture: begin,
+    onFocus: end,
+    onClickCapture: begin,
+    onClick: end,
+    onKeyDownCapture: begin,
+    onKeyDown: end,
   };
 };
 
