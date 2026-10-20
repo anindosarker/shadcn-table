@@ -1,0 +1,1144 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/shadcn.css';
+@import 'fumadocs-ui/css/preset.css';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+/* theme presets: <html data-theme="..."> (components/theme-preset-switcher.tsx) */
+@import '../themes/violet.css';
+@import '../themes/blue.css';
+@import '../themes/emerald.css';
+@import '../themes/rose.css';
+@import '../themes/amber.css';
+@import '../themes/mono.css';
+/* experimental /dev homepages, scoped under .dev-home */
+@import '../components/dev-home/tokens.css';
+/* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
+   ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
+   A plain ::highlight() rule is rejected too, so app/layout.tsx inlines it in a style element
+   (the word is spelled out here: `shadcn add` escapes a literal angle bracket in comments). */
+@source not inline("[&_::highlight(fd-search)]:underline [&_::highlight(fd-search)]:text-fd-primary");
+
+/* ---------- shadcn: `shadcn init` output for the radix-nova generation ----------
+ * Verbatim from `shadcn init --preset nova --base radix` (neutral, css variables),
+ * except the next/font bridge (`--font-sans`, `--font-mono`) which the docs set in
+ * the `@theme` block below, and the ST keyframes that `lib:install` appends to
+ * `@theme inline` (kept at the CLI's own indentation so the install is idempotent;
+ * the Base UI copy's keyframes follow the block under their own names). */
+@custom-variant dark (&:is(.dark *));
+
+/* Colors come from the shadcn tokens below (fumadocs' shadcn preset maps
+ * --color-fd-* onto --background, --primary, ...). Only the font is set here. */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* prettier-ignore */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  @keyframes st-linear-progress-indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+    }
+  60% {
+    left: 100%;
+    right: -90%;
+    }
+  100% {
+    left: 100%;
+    right: -90%;
+    }
+  }
+  @keyframes st-collapsible-right {
+  from {
+    width: 0;
+    overflow: hidden;
+    }
+  to {
+    width: var(--radix-collapsible-content-width);
+    overflow: hidden;
+    }
+  }
+  @keyframes st-collapsible-left {
+  from {
+    width: var(--radix-collapsible-content-width);
+    overflow: hidden;
+    }
+  to {
+    width: 0;
+    overflow: hidden;
+    }
+  }
+}
+
+/* ---------- Base UI collapsible keyframes (components/ui-base) ----------
+ * The Base UI copy of the table (`lib:install:base`) animates its collapsibles
+ * with these: Base UI's Collapsible.Panel measures itself into
+ * --collapsible-panel-width/-height instead of the Radix variable, and its item
+ * ships the keyframes under the same st-collapsible-* names as the Radix pair
+ * above. Tailwind emits `@theme` keyframes last, so a same-named redefinition
+ * here would lose and `lib:install` rewrites the pair inside `@theme inline`;
+ * the installer renames them to st-base-collapsible-* in the copy instead and
+ * drops the item's css. Radix animates heights with tw-animate-css'
+ * collapsible-down/up, so the height pair exists only here. */
+@keyframes st-base-collapsible-right {
+  from {
+    width: 0;
+    overflow: hidden;
+  }
+  to {
+    width: var(--collapsible-panel-width);
+    overflow: hidden;
+  }
+}
+
+@keyframes st-base-collapsible-left {
+  from {
+    width: var(--collapsible-panel-width);
+    overflow: hidden;
+  }
+  to {
+    width: 0;
+    overflow: hidden;
+  }
+}
+
+@keyframes st-base-collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--collapsible-panel-height);
+  }
+}
+
+@keyframes st-base-collapsible-up {
+  from {
+    height: var(--collapsible-panel-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+/* base tokens: neutral (used only until the preset script sets data-theme) */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Strips that scroll sideways (tab lists) without a visible scrollbar; they
+   still scroll by swipe, wheel and keyboard focus. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ---------- docs overrides (fumadocs chrome) ---------- */
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+/* ---------- chrome: dashed frame ---------- */
+
+/* one line style for the layout seams (nav bottom, sidebar end, divider
+   under the page description) and for the docs chrome boxes (code blocks,
+   callouts, cards, prop tables, example frame): the landing page's dash,
+   foreground 20% over the background. Inputs and the live tables keep their
+   solid borders.
+   --docs-radius: the docs chrome (code blocks, cards, callouts, search box,
+   sidebar items, playground frame) is square; the shadcn radius scale stays
+   at the nova default for the parts. */
+:root {
+  --docs-dash: color-mix(in oklch, var(--foreground) 20%, var(--background));
+  --docs-rule: 1px dashed var(--docs-dash);
+  --docs-radius: 0;
+}
+
+#nd-subnav {
+  border-bottom: var(--docs-rule);
+}
+
+#nd-sidebar {
+  border-inline-end: var(--docs-rule);
+}
+
+#nd-page .docs-description-rule {
+  border-bottom: var(--docs-rule);
+}
+
+#nd-page .docs-page-bar {
+  border-bottom: var(--docs-rule);
+  padding-block: 0.375rem;
+}
+
+/* the breadcrumb gives way to the page actions on narrow screens */
+#nd-page .docs-page-bar > :first-child {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* breadcrumb and page actions 13px */
+#nd-page .docs-page-bar > * {
+  font-size: 0.8125rem;
+}
+
+/* mobile TOC popover (below xl): an opaque panel stacked above the sticky
+   page bar, which shares its z-10 and comes later in the DOM; the page bar
+   already sticks below it (--fd-docs-row-3 includes the popover height) */
+[data-toc-popover] {
+  z-index: 20;
+}
+
+[data-toc-popover] > header {
+  background-color: var(--color-fd-background);
+}
+
+/* example playground (components/example-playground.tsx): dashed frame and
+   header rule; the table inside keeps its own solid border */
+.docs-playground {
+  border: var(--docs-rule);
+  border-radius: var(--docs-radius);
+}
+
+/* page margin; full screen pins the panel to the viewport instead */
+.docs-playground:not([data-fullscreen]) {
+  margin-block: 1.25rem;
+}
+
+.docs-playground[data-fullscreen] {
+  border-radius: 0;
+}
+
+/* header 6px vertical padding around 28px controls */
+.docs-playground > header {
+  border-bottom: var(--docs-rule);
+  min-height: 2.5rem;
+  padding-block: 0.375rem;
+}
+
+.docs-playground > header :is([role='group'], [role='combobox']) {
+  height: 1.75rem;
+}
+
+.docs-playground
+  > header
+  :is(button[aria-label='Toggle full screen'], .docs-playground-step) {
+  height: 1.75rem;
+  width: 1.75rem;
+}
+
+/* ---------- sidebar ---------- */
+
+:is(#nd-sidebar, #nd-sidebar-mobile) a {
+  padding-block: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-fd-foreground);
+  border-radius: var(--docs-radius);
+}
+
+/* pages under a sub-group label (meta.json "---Label---") indent one step;
+   pages directly under a section (Overview, Installation) stay flush */
+:is(#nd-sidebar, #nd-sidebar-mobile) p[data-subgroup] ~ a {
+  margin-inline-start: 0.75rem;
+}
+
+/* collapsible sub-group (components/sidebar-subgroup.tsx): its pages hang on
+   a 1px dashed guide line under the label; the line sits at the old indent,
+   so page text stays aligned with the label. The active page's segment of
+   the line is solid accent. Square where pill and line meet. */
+:is(#nd-sidebar, #nd-sidebar-mobile) [data-subgroup-list] {
+  margin-inline-start: 0.75rem;
+  border-inline-start: var(--docs-rule);
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile) [data-subgroup-list] a {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile)
+  [data-subgroup-list]
+  a[data-active='true']::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: -1px;
+  width: 1px;
+  background: var(--docs-accent);
+}
+
+/* active item: subtle pill with the accent (primary) text, no left bar */
+:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true'] {
+  background-color: color-mix(
+    in oklab,
+    var(--color-fd-foreground) 6%,
+    transparent
+  );
+  color: var(--docs-accent);
+  font-weight: 500;
+}
+
+:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true']::before {
+  display: none;
+}
+
+/* ---------- full-width layout ---------- */
+
+/* notebook layout boxes the grid to --fd-layout-width (97rem) and centres it;
+   make the page column fill the viewport so sidebar and TOC sit at the edges */
+#nd-notebook-layout {
+  --fd-layout-width: 100%;
+}
+
+/* ---------- content column ---------- */
+
+/* centre the content column between sidebar and TOC */
+#nd-page:not([data-full='true']) > * {
+  width: 100%;
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+/* full pages (example pages, frontmatter `full`): fumadocs caps children at
+   1285px; keep them centred too */
+#nd-page[data-full='true'] > * {
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* typography plugin radii (inline code 5px, table 8px) are not tailwind tokens */
+#nd-page .prose :not(pre) > code,
+#nd-page .prose table {
+  border-radius: var(--docs-radius);
+}
+
+/* code blocks (fumadocs CodeBlock figure, rounded-xl) */
+#nd-page figure.shiki {
+  border-radius: var(--docs-radius);
+}
+
+#nd-page .prose {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* paragraph and list gap 12px; lists and tables keep the body size */
+#nd-page .prose :is(p, ul, ol) {
+  margin-block: 0.75rem;
+}
+
+#nd-page .prose table {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* headings 600, not 800; h2 20px with a 2.5rem gap above, h3 17px */
+#nd-page .prose :is(h1, h2, h3, h4) {
+  font-weight: 600;
+}
+
+#nd-page .prose h2 {
+  font-size: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+#nd-page .prose h3 {
+  font-size: 1.0625rem;
+}
+
+/* code blocks 13px (fumadocs sets text-sm on the figure) */
+#nd-page pre,
+#nd-page pre code {
+  font-size: 0.8125rem;
+}
+
+/* body links: foreground, underlined; accent on hover */
+#nd-page .prose :is(p, li, td) > a {
+  color: var(--color-fd-foreground);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(
+    in oklab,
+    var(--color-fd-foreground) 40%,
+    transparent
+  );
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+
+#nd-page .prose :is(p, li, td) > a:hover {
+  color: var(--docs-accent);
+  text-decoration-color: var(--docs-accent);
+}
+
+/* inline code: 13px, subtle fill, no border */
+#nd-page .prose :not(pre) > code {
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.3125rem;
+  border-width: 0;
+  background-color: color-mix(
+    in oklab,
+    var(--color-fd-foreground) 8%,
+    transparent
+  );
+}
+
+/* ---------- table of contents ---------- */
+
+#toc-title {
+  color: var(--color-fd-muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+#nd-toc a {
+  font-size: 0.8125rem;
+}
+
+/* only the active indicator line and its thumb (styled under "landing
+   look"): hide the per-item grey track */
+#nd-toc a > svg {
+  display: none;
+}
+
+#toc-title svg {
+  display: none;
+}
+
+/* ---------- search dialog: small corners on the box ---------- */
+
+[role='dialog'].bg-fd-popover {
+  border-radius: var(--docs-radius);
+}
+
+/* ---------- callouts: hide fumadocs' inner bar; the border-left in components/callout.tsx replaces it ---------- */
+
+.st-callout > div[role='none'] {
+  display: none;
+}
+
+/* ---------- page header ---------- */
+
+/* "Copy page" split button: one bordered group, 1px divider between halves */
+.st-page-actions > * + * {
+  border-inline-start-width: 1px;
+}
+
+/* ---------- landing look: the /dev/12 tokens, type and top bar ----------
+ * Scoped to pages with the docs layout, so /dev and the home page keep their
+ * own values. Every token derives from the active preset and mode. */
+
+html:has(#nd-notebook-layout) {
+  /* landing fonts in the same roles: Archivo display, Inter body, mono labels */
+  --font-display: var(--font-archivo), var(--font-sans);
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+  /* light: a step darker than --primary / --muted-foreground, so accent and
+   * muted text keep 4.5:1 on white and on the tinted surface */
+  --docs-accent: color-mix(in oklch, var(--primary) 72%, var(--foreground));
+  --docs-surface: color-mix(in oklch, var(--foreground) 4%, var(--background));
+  --color-fd-primary: var(--docs-accent);
+  --color-fd-muted-foreground: color-mix(
+    in oklch,
+    var(--muted-foreground) 85%,
+    var(--foreground)
+  );
+  --color-fd-card: var(--docs-surface);
+}
+
+/* dark: --primary as is, lifted to L 0.7 when a preset's is darker (blue's
+ * 0.546 reads 3.8:1 on the dark page; the others are already above) */
+html.dark:has(#nd-notebook-layout) {
+  --docs-accent: oklch(from var(--primary) max(l, 0.7) c h);
+  /* sidebar and drawer sit on the page black, not the presets' grey --sidebar */
+  --sidebar: var(--background);
+  --color-fd-muted-foreground: var(--muted-foreground);
+}
+
+html:has(#nd-notebook-layout) ::selection {
+  background: color-mix(in oklch, var(--docs-accent) 14%, transparent);
+  color: var(--color-fd-foreground);
+}
+
+/* top bar (components/site-nav.tsx): two rows below lg (links under the
+ * brand, as on the landing page), one row from lg */
+#nd-notebook-layout:has(.site-nav) {
+  --fd-header-height: 5.75rem;
+}
+
+.site-nav {
+  position: sticky;
+  top: var(--fd-docs-row-1);
+  z-index: 10;
+  height: var(--fd-header-height);
+  background-color: color-mix(
+    in oklch,
+    var(--color-fd-background) 84%,
+    transparent
+  );
+  backdrop-filter: blur(10px);
+}
+
+.site-nav-row {
+  display: grid;
+  height: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 3.5rem 2.25rem;
+  grid-template-areas:
+    'brand actions'
+    'links links';
+  align-items: center;
+  column-gap: 1rem;
+  padding-inline: 1rem;
+}
+
+.site-nav-brand {
+  grid-area: brand;
+  display: inline-flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 0.15rem;
+  justify-self: start;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fd-foreground);
+  white-space: nowrap;
+}
+
+.site-nav-slash {
+  color: var(--docs-accent);
+  letter-spacing: -0.12em;
+  margin-right: 0.2em;
+}
+
+.site-nav-links {
+  grid-area: links;
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: 1.25rem;
+  border-top: var(--docs-rule);
+}
+
+.site-nav-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+  white-space: nowrap;
+  padding-block: 0.25rem;
+  transition: color 0.15s;
+}
+
+.site-nav-link:hover,
+.site-nav-link[data-active] {
+  color: var(--docs-accent);
+}
+
+.site-nav-actions {
+  grid-area: actions;
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.5rem;
+}
+
+/* the theme pill, dashed like the landing page's */
+.site-nav-actions > div > div {
+  border-style: dashed;
+  border-color: var(--docs-dash);
+}
+
+.site-nav-icon {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 999px;
+  padding: 0;
+  color: var(--color-fd-muted-foreground);
+}
+
+.site-nav-icon:hover {
+  color: var(--color-fd-foreground);
+  background-color: var(--docs-surface);
+}
+
+.site-nav-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.site-nav-search {
+  width: 14rem;
+  border-style: dashed;
+  border-color: var(--docs-dash);
+  border-radius: var(--docs-radius);
+}
+
+/* visibility here, not with Tailwind's hidden utilities: these unlayered
+   rules would beat them. Search: icon below lg, field from lg. GitHub and
+   the theme pill from md (below, they sit in the sidebar drawer footer). */
+.site-nav-search,
+.site-nav-desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .site-nav-row {
+    padding-inline: 1.5rem;
+  }
+  .site-nav-desktop {
+    display: inline-grid;
+  }
+  .site-nav-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  #nd-notebook-layout:has(.site-nav) {
+    --fd-header-height: 3.75rem;
+  }
+  .site-nav-row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: 100%;
+    grid-template-areas: 'brand links actions';
+  }
+  .site-nav-links {
+    gap: 2.25rem;
+    border-top: 0;
+  }
+  .site-nav-search {
+    display: flex;
+  }
+  .site-nav-search-sm {
+    display: none;
+  }
+}
+
+/* page head: mono eyebrow (the section), Archivo title, lead description */
+#nd-page .docs-eyebrow {
+  margin-bottom: -0.25rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-fd-muted-foreground);
+}
+
+#nd-page .docs-eyebrow > span {
+  color: var(--docs-accent);
+  letter-spacing: -0.12em;
+  margin-right: 0.2em;
+}
+
+/* the landing's display cut (Archivo 800, condensed: wdth 68 there), in
+   normal case and a little wider for long doc titles */
+#nd-page h1.docs-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.6rem + 1.25vw, 2.75rem);
+  font-weight: 800;
+  font-variation-settings: 'wdth' 75;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+#nd-page .docs-description-rule {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+/* body measure ~70ch, Inter headings with the landing's tight tracking */
+#nd-page .prose :is(p, ul, ol, h2, h3, h4) {
+  max-width: 70ch;
+}
+
+/* h2: the same display cut one step down (sections read as landing card
+   titles); h3 stays Inter 600 with the landing's tight tracking, for dense
+   guides */
+#nd-page .prose h2 {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  font-variation-settings: 'wdth' 80;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+#nd-page .prose h3 {
+  letter-spacing: -0.02em;
+}
+
+/* overview link lists (TableOfContentsList): numbered index rows, mono accent
+   number, Archivo display label, dashed rules; the whole row is the link */
+.docs-index {
+  margin-block: 1.25rem 2rem;
+  padding: 0;
+  list-style: none;
+  border-top: var(--docs-rule);
+}
+
+.docs-index > li {
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--docs-rule);
+}
+
+.docs-index-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  min-height: 3.5rem;
+  padding: 0.875rem 0.25rem;
+  color: var(--color-fd-foreground);
+  transition: color 0.15s;
+}
+
+/* beats the prose `li > a` underline rule */
+#nd-page .docs-index .docs-index-link {
+  text-decoration: none;
+}
+
+.docs-index-num {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--docs-accent);
+}
+
+.docs-index-label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variation-settings: 'wdth' 80;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.docs-index-arrow {
+  flex: none;
+  align-self: center;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-fd-muted-foreground);
+  opacity: 0.5;
+  transition:
+    transform 0.15s,
+    color 0.15s,
+    opacity 0.15s;
+}
+
+.docs-index-link:hover,
+.docs-index-link:focus-visible {
+  color: var(--docs-accent);
+}
+
+.docs-index-link:focus-visible {
+  outline: 1px dashed var(--docs-accent);
+  outline-offset: -1px;
+}
+
+.docs-index-link:hover .docs-index-arrow,
+.docs-index-link:focus-visible .docs-index-arrow {
+  color: var(--docs-accent);
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+#nd-page .prose h3.docs-index-heading {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  font-variation-settings: 'wdth' 80;
+  letter-spacing: 0;
+}
+
+#nd-page .prose h3.docs-index-heading a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+#nd-page .prose h3.docs-index-heading a:hover,
+#nd-page .prose h3.docs-index-heading a:focus-visible {
+  color: var(--docs-accent);
+}
+
+/* dashed boxes: code blocks, callouts (the accent bar stays solid), cards
+   and the prev/next footer cards, prop tables and their Code toggle, markdown
+   table frames, rules, FAQ accordions (fumadocs
+   Accordions) and their dividers, the line tab strips (example tabs, locale
+   tabs, API options switcher), the mobile TOC bar, TOC inline code, the
+   search dialog's header rule and result snippets; the sidebar seam is
+   --docs-rule above */
+#nd-page figure.shiki,
+#nd-page a.rounded-lg.border,
+#nd-page .prose > .not-prose > .border,
+#nd-page [id^='props-'] > .justify-end > button,
+#nd-page .prose table,
+#nd-page .prose hr,
+#nd-page .divide-y.divide-fd-border,
+#nd-page .divide-y.divide-fd-border > *,
+#nd-page .prose > .not-prose.border-b,
+#nd-page [data-slot='tabs'] > .border-b,
+#nd-page [data-slot='tabs-list'].border-b,
+[class*='toc-popover'] > header,
+#nd-toc code,
+#fd-search-dialog-content * {
+  border-style: dashed;
+  border-color: var(--docs-dash);
+}
+
+#nd-page figure.shiki {
+  background-color: var(--docs-surface);
+}
+
+/* quotes read as notes: full width, dashed accent bar,
+   tinted surface, body-size italic, no typographic quote marks */
+#nd-page .prose blockquote {
+  max-width: none;
+  margin-inline: 0;
+  padding: 0.75rem 1rem;
+  border-left: 2px dashed var(--docs-accent);
+  background-color: var(--docs-surface);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-fd-foreground);
+}
+#nd-page .prose blockquote p {
+  max-width: none;
+  margin-block: 0.5em;
+}
+#nd-page .prose blockquote p:first-of-type::before,
+#nd-page .prose blockquote p:last-of-type::after {
+  content: none;
+}
+
+/* markdown and compatibility tables: the dashed frame above is the only
+   dashed line; rows split by quiet solid hairlines, no column dividers, the
+   header keeps its fill */
+#nd-page .prose :is(th, td):not(.not-prose *) {
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--border);
+}
+
+#nd-page .prose :is(thead th, tbody tr:not(:last-child) td):not(.not-prose *) {
+  border-bottom-width: 1px;
+}
+
+#nd-page .st-callout {
+  border-style: dashed;
+  border-color: var(--docs-dash);
+  border-left-style: solid;
+  border-left-color: var(--callout-color);
+}
+
+#nd-toc {
+  border-inline-start: var(--docs-rule);
+  padding-inline-start: 0.75rem;
+}
+
+/* square chrome controls: page actions, playground header (example picker
+   and its previous / next steps, view modes, copy prompt, full screen), top bar search and theme pill,
+   their menus (.docs-menu, fumadocs popovers and the copy page menu), the
+   search dialog, sidebar items and scroll thumb, inline code, the dashed
+   boxes above, page tab triggers. Square, dashed rule border, fg 6% on hover,
+   accent when selected. The ST tables keep the library's own look (none of
+   these selectors reach them). */
+:is(.docs-page-bar, .docs-playground > header, .site-nav)
+  :is(button, a, kbd, [role='group'], [role='combobox'], [role='tab']),
+.site-nav-search,
+.docs-menu,
+.docs-menu *,
+.bg-fd-popover,
+.bg-fd-popover *,
+[role='dialog'][class*='bg-fd-popover'],
+[role='dialog'][class*='bg-fd-popover'] *,
+:is(#nd-sidebar, #nd-sidebar-mobile) a,
+.select-none > .rounded-full.bg-fd-border,
+#nd-page .prose :not(pre) > code,
+#nd-page .prose kbd,
+#nd-toc code,
+#nd-page a.rounded-lg.border,
+#nd-page .prose > .not-prose > .border,
+#nd-page [id^='props-'] > .justify-end > button,
+#nd-page .divide-y.divide-fd-border,
+#nd-page .prose [data-slot='tabs-trigger'] {
+  border-radius: 0;
+}
+
+/* menus: the radius scale at 0, so utilities that force a corner inside them
+   (the command list's rounded-xl!) come out square too */
+.docs-menu,
+[role='dialog'][class*='bg-fd-popover'] {
+  --radius: 0;
+}
+
+:is(.docs-page-bar, .docs-playground > header)
+  :is(.st-page-actions, [role='group'], [role='combobox']),
+.docs-playground
+  > header
+  :is(button[aria-label='Toggle full screen'], .docs-playground-step),
+.site-nav-search,
+.site-nav-search kbd,
+#fd-search-dialog-content button.border,
+.docs-menu,
+.bg-fd-popover,
+[role='dialog'][class*='bg-fd-popover'] {
+  border: 1px dashed var(--docs-dash);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.docs-menu,
+.bg-fd-popover,
+[role='dialog'][class*='bg-fd-popover'] {
+  background-color: var(--color-fd-popover);
+}
+
+/* split-button dividers */
+:is(.docs-page-bar, .docs-playground > header) .st-page-actions > * + * {
+  border-inline-start: 1px dashed var(--docs-dash);
+}
+
+:is(.docs-page-bar, .docs-playground > header, .site-nav)
+  :is(button, a, [role='combobox']):hover,
+.site-nav-search:hover {
+  background-color: color-mix(
+    in oklch,
+    var(--color-fd-foreground) 6%,
+    transparent
+  );
+}
+
+/* selected view mode: accent text in a dashed accent outline, no pill */
+.docs-playground > header [aria-pressed='true'] {
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--docs-accent);
+  outline: 1px dashed var(--docs-accent);
+  outline-offset: -1px;
+}
+
+/* page-level tab pills (API options switchers): same square dashed look */
+#nd-page .prose [data-slot='tabs-list']:not([data-variant='line']) {
+  border: 1px dashed var(--docs-dash);
+  border-radius: 0;
+  background-color: transparent;
+}
+
+#nd-page
+  .prose
+  [data-slot='tabs-list']:not([data-variant='line'])
+  [data-slot='tabs-trigger'] {
+  border-radius: 0;
+}
+
+#nd-page
+  .prose
+  [data-slot='tabs-list']:not([data-variant='line'])
+  [data-slot='tabs-trigger'][data-state='active'] {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--docs-accent);
+  outline: 1px dashed var(--docs-accent);
+  outline-offset: -1px;
+}
+
+/* theme pill (components/theme-controls.tsx) and its two buttons */
+.site-nav-actions > div > div,
+.site-nav-actions > div > div > * {
+  border-radius: 0;
+}
+
+/* TOC thumb: fumadocs' travelling dot on the track, as a 7px dashed accent
+   square; it still follows the active item along the offset path */
+#nd-toc div[style*='offset-path'] {
+  width: 7px;
+  height: 7px;
+  border: 1px dashed var(--docs-accent);
+  border-radius: 0;
+  background: transparent;
+}
+
+/* API table type/default cells (components/prop-tables/inline-code.tsx):
+   keywords follow the theme accent; strings amber, type names blue-violet,
+   punctuation muted. Each keeps 4.5:1 on the cell's muted code fill. */
+:root {
+  --code-tok-kw: var(--docs-accent, var(--primary));
+  --code-tok-str: oklch(0.52 0.13 70);
+  --code-tok-type: oklch(0.5 0.15 280);
+  --code-tok-punc: var(--color-fd-muted-foreground);
+}
+
+.dark {
+  --code-tok-str: oklch(0.8 0.13 75);
+  --code-tok-type: oklch(0.78 0.11 280);
+}
+
+.st-tok-kw {
+  color: var(--code-tok-kw);
+}
+
+.st-tok-str {
+  color: var(--code-tok-str);
+}
+
+.st-tok-type {
+  color: var(--code-tok-type);
+}
+
+.st-tok-punc {
+  color: var(--code-tok-punc);
+}
+
+/* ---------- library css (registry item `css`, written by `lib:install`) ----------
+ * `shadcn add` rewrites this rule and the keyframes in `@theme inline` on every
+ * install with its own indentation; both are stored in that shape (prettier-ignore)
+ * so the install only touches the file's final newline. */
+/* prettier-ignore */
+.st-progress-indeterminate [data-slot='progress-indicator'] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: auto;
+    transform: none;
+    transition: none;
+    animation: st-linear-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}

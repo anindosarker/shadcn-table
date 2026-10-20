@@ -5,3 +5,4 @@ types
 *.json
 .next
 *.md
+apps/docs/examples/.base

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.radix.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.baseui.tsbuildinfo",
+    "paths": {
+      "@/*": ["./bases/base/*", "./shared/*"]
+    }
+  },
+  "include": [
+    "bases/base",
+    "shared/components/ui/shadcn-table/index.ts",
+    "shared/components/ui/shadcn-table/locales"
+  ],
+  // Node-only item definition, read by registry/build.mjs.
+  "exclude": ["bases/base/registry.ts"]
+}

@@ -1,8 +1,15 @@
 import type { Preview } from '@storybook/react-vite';
 import { addons, useEffect, useState } from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
-import { darkTheme, lightTheme, readStoredMode } from './themes';
-import '../src/index.css';
+import {
+  darkTheme,
+  lightTheme,
+  readStoredMode,
+  ST_BASE,
+  ST_BASE_LABEL,
+} from './themes';
+// Resolved inside the tree ST_BASE selects (vite.config.ts).
+import '@/index.css';
 import './preview.css';
 
 const channel = addons.getChannel();
@@ -89,6 +96,17 @@ const preview: Preview = {
               href="https://shadcn-table.com"
               target="_blank"
               rel="noopener"
+              className="underline"
+            >
+              here.
+            </a>
+          </p>
+          <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
+            These stories render the {ST_BASE_LABEL} edition of shadcn-table.
+            The {ST_BASE === 'base' ? 'Radix UI' : 'Base UI'} edition is{' '}
+            <a
+              href={ST_BASE === 'base' ? '../' : './base/'}
+              target="_top"
               className="underline"
             >
               here.

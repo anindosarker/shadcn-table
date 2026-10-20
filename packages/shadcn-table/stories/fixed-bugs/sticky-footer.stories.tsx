@@ -138,7 +138,9 @@ export const PinnedColumnsWithStickyFooter = () => {
       enableColumnPinning
       enableStickyFooter
       enableStickyHeader
-      initialState={{ columnPinning: { left: ['no', 'name', 'firstName'] } }}
+      initialState={{
+        columnPinning: { start: ['no', 'name', 'firstName'], end: [] },
+      }}
       stTableBodyCellProps={{
         align: 'center',
         className: 'border-l border-black',
