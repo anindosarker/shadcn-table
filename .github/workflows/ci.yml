@@ -10,9 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # The library is one shared source (shared/) plus per-base overrides, one
-  # per shadcn base: bases/radix (the default scripts) and bases/base (the
-  # `:base` scripts, ST_BASE=base).
+  # The library exists once per shadcn base, two complete trees:
+  # registry/radix (the default scripts) and registry/base (the `:base`
+  # scripts, ST_BASE=base).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     runs-on: ubuntu-latest
@@ -37,6 +37,18 @@ jobs:
         if: matrix.base == 'radix'
       - run: pnpm --filter shadcn-table storybook:build:base
         if: matrix.base == 'base'
+
+  # A common library file must be byte-identical in both trees; the files that
+  # differ on purpose are listed in scripts/registry/base-diff.json.
+  bases:
+    name: bases (two-tree guard)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node packages/shadcn-table/scripts/registry/check-bases.mjs
 
   test:
     name: 'test (${{ matrix.base }}: vitest browser mode)'
