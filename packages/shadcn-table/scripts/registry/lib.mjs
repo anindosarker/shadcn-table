@@ -1,9 +1,8 @@
-// Shared by the per-base item definitions (bases/<base>/registry.ts): lists
-// an item's files (the shared library files, each replaced by the base's
-// override at the same relative path, plus the forked parts), derives the
-// registryDependencies from the `@/components/ui/<part>` imports, picks the
-// ST-only CSS rules out of the base's index.css and pins npm versions from
-// package.json. The file list is never hand-maintained.
+// Shared by the per-base item definitions (registry/<base>/registry.ts):
+// lists an item's files (the tree's library files plus the forked parts),
+// derives the registryDependencies from the `@/components/ui/<part>` imports,
+// picks the ST-only CSS rules out of the tree's index.css and pins npm
+// versions from package.json. The file list is never hand-maintained.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,15 +10,14 @@ import { fileURLToPath } from 'node:url';
 export const PKG = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
+  '..',
 );
 export const ROOT = path.resolve(PKG, '..', '..');
 // The docs app: examples.mjs writes its registry.json, hosted.mjs its
 // public/r/. The one place the folder name lives in the registry scripts.
 export const DOCS = path.join(ROOT, 'apps/docs');
-// Library files relative to a components/ui directory, both under shared/
-// and under bases/<base>/ (the overrides).
+// The library below a tree's components/ui directory.
 const LIB_REL = 'components/ui/shadcn-table';
-const SHARED_LIB = path.join(PKG, 'shared', LIB_REL);
 export const GITHUB_REPO = 'anindosarker/shadcn-table';
 export const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
 // `--dev` builds a local registry under .dev/ (gitignored) whose locale items
@@ -148,13 +146,10 @@ const stCss = (cssFile) => {
 };
 
 /**
- * The items of one base: the main item (every library file except the
- * non-English locales, plus the forked ui parts) and one item per locale. A
- * library file is the shared copy under shared/components/ui/shadcn-table
- * unless bases/<base>/components/ui/shadcn-table holds a file at the same
- * relative path, which replaces it. `path` values are relative to the
- * package, `target` values are the alias paths the CLI installs to, the same
- * for a shared file and an override.
+ * The items of one base: the main item (every library file of the tree
+ * except the non-English locales, plus the forked ui parts) and one item per
+ * locale. `path` values are relative to the package, `target` values are the
+ * alias paths the CLI installs to.
  *
  * @param {{
  *   dir: string,
@@ -176,7 +171,7 @@ export const baseItems = ({
   forkedUi,
 }) => {
   const uiDir = path.join(dir, 'components/ui');
-  const overrideDir = path.join(uiDir, 'shadcn-table');
+  const libDir = path.join(dir, LIB_REL);
   // An item file: its package-relative `path` and the install `target`,
   // `@ui/` plus the path below its own components/ui directory.
   const fileEntry = (uiRoot, p) => ({
@@ -185,30 +180,11 @@ export const baseItems = ({
     target: `@ui/${path.relative(uiRoot, p).split(path.sep).join('/')}`,
   });
 
-  // Library files keyed by their path below components/ui/shadcn-table:
-  // the shared copies first, then the overrides on top. An override without
-  // a shared copy is a typo in its path (the folder mirrors shared/).
-  const libFiles = new Map();
-  for (const p of walk(SHARED_LIB)) {
-    libFiles.set(
-      path.relative(SHARED_LIB, p),
-      fileEntry(path.join(PKG, 'shared/components/ui'), p),
-    );
-  }
-  const overrides = fs.existsSync(overrideDir) ? walk(overrideDir) : [];
-  for (const p of overrides) {
-    const key = path.relative(overrideDir, p);
-    if (!libFiles.has(key)) {
-      console.error(
-        `lib.mjs: ${rel(p)} overrides nothing; no shared/${LIB_REL}/${key}`,
-      );
-      process.exit(1);
-    }
-    libFiles.set(key, fileEntry(uiDir, p));
-  }
-  const libEntries = [...libFiles.keys()]
-    .sort()
-    .map((key) => [key, libFiles.get(key)]);
+  // Library files keyed by their path below components/ui/shadcn-table.
+  const libEntries = walk(libDir).map((p) => [
+    path.relative(libDir, p),
+    fileEntry(uiDir, p),
+  ]);
 
   const isLocale = (key) => key.startsWith(`locales${path.sep}`);
   const localeCode = (key) => path.basename(key).replace(/\.ts$/, '');

@@ -1,6 +1,6 @@
 /**
  * Source files of one docs example folder (examples/<slug>/). Shared by
- * packages/shadcn-table/registry/examples.mjs (the registry item's files)
+ * packages/shadcn-table/scripts/registry/examples.mjs (the registry item's files)
  * and lib/example-source.ts (the playground's code explorer), so both see
  * the same files in the same order.
  *

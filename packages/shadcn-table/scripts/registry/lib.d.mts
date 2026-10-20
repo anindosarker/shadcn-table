@@ -1,5 +1,5 @@
-// Types of registry/lib.mjs for the per-base item definitions
-// (bases/<base>/registry.ts), which import the .mjs from TypeScript. Node
+// Types of scripts/registry/lib.mjs for the per-base item definitions
+// (registry/<base>/registry.ts), which import the .mjs from TypeScript. Node
 // strips the types at run time; the editor checks against these signatures.
 import type { RegistryItem } from 'shadcn/schema';
 
@@ -30,7 +30,7 @@ export interface BaseDependency {
 }
 
 export interface BaseItemsOptions {
-  /** The base directory (bases/<base>). */
+  /** The tree directory (registry/<base>). */
   dir: string;
   name: string;
   title: string;

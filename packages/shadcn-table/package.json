@@ -8,8 +8,8 @@
   "version": "0.3.0",
   "type": "module",
   "scripts": {
-    "registry:build": "node registry/build.mjs && shadcn build",
-    "registry:dev": "node registry/build.mjs --dev && shadcn build .dev/registry.json --output .dev/r",
+    "registry:build": "node scripts/registry/build.mjs && shadcn build",
+    "registry:dev": "node scripts/registry/build.mjs --dev && shadcn build .dev/registry.json --output .dev/r",
     "storybook": "storybook dev -p 6006",
     "storybook:base": "ST_BASE=base storybook dev -p 6007",
     "storybook:build": "storybook build",

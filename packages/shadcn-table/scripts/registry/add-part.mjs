@@ -2,8 +2,8 @@
 // Usage (repo root): pnpm add-part <radix|base> <part> [<part> ...]
 //
 // Fetches a shadcn part for one base, in that base's style
-// (bases/<base>/components.json: `radix-nova` or `base-nova`), and writes
-// its files into bases/<base>/components/ui/. Parts are per base and are
+// (registry/<base>/components.json: `radix-nova` or `base-nova`), and writes
+// its files into registry/<base>/components/ui/. Parts are per base and are
 // never shared, so a part the library needs on both bases is added twice.
 //
 // The item JSON (https://ui.shadcn.com/r/styles/<style>/<part>.json) is
@@ -31,7 +31,7 @@ if (!BASES.includes(base) || parts.length === 0) {
   process.exit(1);
 }
 
-const baseDir = path.join(PKG, 'bases', base);
+const baseDir = path.join(PKG, 'registry', base);
 const uiDir = path.join(baseDir, 'components/ui');
 const components = JSON.parse(
   fs.readFileSync(path.join(baseDir, 'components.json'), 'utf8'),
@@ -138,7 +138,7 @@ try {
     const dependencies = (item.dependencies ?? []).filter((d) => d !== 'cn');
     const registryDependencies = item.registryDependencies ?? [];
     console.log(
-      `${item.name} (${components.style}) -> bases/${base}/components/ui/`,
+      `${item.name} (${components.style}) -> registry/${base}/components/ui/`,
     );
     for (const file of written.filter((p) =>
       item.files.some((f) => path.basename(f.path) === path.basename(p)),

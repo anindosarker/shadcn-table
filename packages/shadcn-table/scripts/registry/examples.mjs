@@ -27,7 +27,7 @@
  *
  * Usage (repo root):
  *   pnpm registry:items                               # writes registry.json
- *   node packages/shadcn-table/registry/examples.mjs --resolve <dir>
+ *   node packages/shadcn-table/scripts/registry/examples.mjs --resolve <dir>
  *     also writes one resolved item json (files[].content filled in) per
  *     example into <dir>, for local `shadcn add <file> --dry-run` checks
  */
