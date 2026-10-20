@@ -29,8 +29,23 @@ const config = {
         source: '/r/:style(base-.*)/:name.json',
         destination: '/r/base/:name.json',
       },
+      // PostHog ingest reverse proxy (components/posthog-provider.tsx sets
+      // api_host '/ingest'): the events leave from this origin, so ad
+      // blockers that drop posthog.com requests do not drop them. External
+      // rewrites run on the edge, no function invocations.
+      {
+        source: '/ingest/static/:path*',
+        destination: 'https://us-assets.i.posthog.com/static/:path*',
+      },
+      {
+        source: '/ingest/:path*',
+        destination: 'https://us.i.posthog.com/:path*',
+      },
     ],
   }),
+  // PostHog paths end with a slash (/ingest/e/, /ingest/batch/); without
+  // this Next would redirect them to the slash-less form.
+  skipTrailingSlashRedirect: true,
   // MRT's docs index is a table of contents page; the sidebar already is one.
   redirects: async () => [
     {

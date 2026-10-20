@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { PostHogProvider } from '@/components/posthog-provider';
 import './global.css';
 import { Inter } from 'next/font/google';
 import { archivo } from '@/lib/fonts';
@@ -59,7 +60,11 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             external-toolbar, row ordering) and the home page examples need
             this one. */}
         <RootProvider theme={{ defaultTheme: 'dark', enableSystem: false }}>
-          <TooltipProvider skipDelayDuration={0}>{children}</TooltipProvider>
+          {/* Analytics (components/posthog-provider.tsx); a no-op without
+              NEXT_PUBLIC_POSTHOG_KEY. */}
+          <PostHogProvider>
+            <TooltipProvider skipDelayDuration={0}>{children}</TooltipProvider>
+          </PostHogProvider>
         </RootProvider>
       </body>
     </html>
