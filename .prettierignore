@@ -5,4 +5,4 @@ types
 *.json
 .next
 *.md
-apps/docs/examples/.base
+apps/shadcn-table-docs/examples/.base

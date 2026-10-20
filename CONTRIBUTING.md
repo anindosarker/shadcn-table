@@ -4,7 +4,7 @@ This repo holds shadcn-table, a React data table on TanStack Table v9 that ships
 
 1. **Library:** `packages/shadcn-table`, the two trees and the shared Storybook stories.
 2. **Tests:** Vitest runs every story in headless Chromium, once per base.
-3. **Docs:** `apps/docs`, which holds an installed copy of the library.
+3. **Docs:** `apps/shadcn-table-docs`, which holds an installed copy of the library.
 4. **Registry:** what users install, one item per base built from that base's tree.
 
 ```text
@@ -12,7 +12,7 @@ packages/shadcn-table/registry/radix | registry/base
   ▼ stories + vitest (both bases)   (prove the change)
   ▼ registry:build                  (what users install)
   ▼ lib:install                     (docs app copy, Radix edition)
-apps/docs              (docs, examples, page gate)
+apps/shadcn-table-docs              (docs, examples, page gate)
 ```
 
 The goal of this guide: make a change, prove it, open a PR. Release steps live in `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`; Vercel and table internals are out of scope here.
@@ -44,13 +44,13 @@ packages/shadcn-table/
   stories/                          # Storybook stories, also the test suite, run once per base
   scripts/registry/lib.mjs          # item helpers: tree files + forked parts + css
   scripts/registry/build.mjs        # collects both registry.ts files into registry.json
-  scripts/registry/examples.mjs     # example items -> apps/docs/registry.json
-  scripts/registry/hosted.mjs       # hosted copies per base -> apps/docs/public/r/<base>/ (gitignored)
+  scripts/registry/examples.mjs     # example items -> apps/shadcn-table-docs/registry.json
+  scripts/registry/hosted.mjs       # hosted copies per base -> apps/shadcn-table-docs/public/r/<base>/ (gitignored)
   scripts/registry/add-part.mjs     # pnpm add-part <base> <part>: fetch a shadcn part into registry/<base>/components/ui/
   scripts/registry/check-bases.mjs  # pnpm check:bases: the two-tree guard, reads base-diff.json
   scripts/registry/base-diff.json   # library files allowed to differ between the trees
   registry.json                     # generated, committed, GitHub addresses
-apps/docs/
+apps/shadcn-table-docs/
   components/ui/shadcn-table/       # installed copy of the library (never edit)
   examples/                         # one folder per docs example
   content/docs/                     # MDX pages
@@ -131,12 +131,12 @@ The docs app renders the installed copy in `components/ui/shadcn-table`, not the
 ```bash
 pnpm registry:build
 pnpm --filter shadcn-table-docs lib:install
-git checkout -- apps/docs/app/global.css      # lib:install rewrites it
+git checkout -- apps/shadcn-table-docs/app/global.css      # lib:install rewrites it
 pnpm --filter shadcn-table-docs dev                        # http://localhost:5320
 pnpm --filter shadcn-table-docs types:check
 ```
 
-Page gate, with the dev server running, from `apps/docs`:
+Page gate, with the dev server running, from `apps/shadcn-table-docs`:
 
 ```bash
 node scripts/check-pages.mjs a --base http://localhost:5320          # one cluster
@@ -145,7 +145,7 @@ node scripts/check-pages.mjs --base http://localhost:5320            # everythin
 ```
 
 - **Clusters.** `a` is getting-started and the API pages, `b` and `c` the guides, `d` and `e` the examples; `e` also covers the home page. The gate loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
-- **`tsconfig.json` include noise.** Next.js appends `<distDir>/types/**/*.ts` lines to `apps/docs/tsconfig.json` on every `dev` and `build`. Keep only the default `.next/...` pair; do not commit the others.
+- **`tsconfig.json` include noise.** Next.js appends `<distDir>/types/**/*.ts` lines to `apps/shadcn-table-docs/tsconfig.json` on every `dev` and `build`. Keep only the default `.next/...` pair; do not commit the others.
 - **Second server.** `PORT=5331 pnpm --filter shadcn-table-docs dev` runs a second docs server next to the default one, with its own build dir.
 
 ## 4. Prove the Install
@@ -208,8 +208,8 @@ Docs pages live in `content/docs`; every example is a folder under `examples/` w
 
 ```bash
 pnpm registry:build                     # library items -> packages/shadcn-table/registry.json
-pnpm registry:items                     # example items -> apps/docs/registry.json
-pnpm registry:hosted                    # hosted copies -> apps/docs/public/r/{radix,base}/ (docs build runs it)
+pnpm registry:items                     # example items -> apps/shadcn-table-docs/registry.json
+pnpm registry:hosted                    # hosted copies -> apps/shadcn-table-docs/public/r/{radix,base}/ (docs build runs it)
 ```
 
 The registry has two library items, one per base, each with its own locale items; each lists every file of its tree:
@@ -252,7 +252,7 @@ On a push, CI also validates the registry at the pushed SHA, installs the librar
 
 ## Common Mistakes
 
-- **Editing the docs copy.** `apps/docs/components/ui/shadcn-table` is overwritten by `lib:install`. Change `packages/shadcn-table/registry/<base>` and sync.
+- **Editing the docs copy.** `apps/shadcn-table-docs/components/ui/shadcn-table` is overwritten by `lib:install`. Change `packages/shadcn-table/registry/<base>` and sync.
 - **Editing one tree only.** The other edition keeps the old code; `pnpm check:bases` red is the sign, as is `pnpm test` green and `pnpm test:base` red (or the reverse). Make the change in the other tree too, or add the path to `base-diff.json` when the difference is meant.
 - **Forgetting `lib:install`.** The docs app, the page gate and the examples keep running on the old library.
 - **Committing `tsconfig.json` include noise.** Only the two `.next/...` lines belong there.
@@ -267,5 +267,5 @@ On a push, CI also validates the registry at the pushed SHA, installs the librar
 - `.ai/plans/v0.4.0/anindosarker/decisions.md`, the two-tree layout and why
 - `packages/shadcn-table/registry/README.md`, what lives where
 - `.github/workflows/ci.yml`, the jobs behind step 6
-- `apps/docs/content/docs/getting-started/install.mdx`, the user-facing install page
+- `apps/shadcn-table-docs/content/docs/getting-started/install.mdx`, the user-facing install page
 - `LICENSE`
