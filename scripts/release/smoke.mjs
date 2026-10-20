@@ -121,11 +121,13 @@ for (const { base, committedName } of BASES) {
   const catalogUrl = `${SITE}/r/${base}/registry.json`;
   const catalog = await get(catalogUrl);
   if (checkStatus(`${catalogUrl} 200 JSON`, catalog, 'json')) {
-    const expected = expectedItems(committedName);
-    const actual = (parseJson(catalog.text)?.items ?? []).map((i) => i.name);
+    const expected = expectedItems(committedName).sort();
+    const actual = (parseJson(catalog.text)?.items ?? [])
+      .map((i) => i.name)
+      .sort();
     const same =
       expected.length === actual.length &&
-      [...expected].sort().every((n, i) => n === [...actual].sort()[i]);
+      expected.every((n, i) => n === actual[i]);
     check(
       `${catalogUrl} lists the ${expected.length} committed items`,
       same,
