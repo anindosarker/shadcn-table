@@ -1,0 +1,38 @@
+# deps
+/node_modules
+
+# generated content
+.source
+# hosted registries (pnpm registry:hosted, packages/shadcn-table/scripts/registry/hosted.mjs), emitted before next build
+/public/r/
+
+# test & build
+/coverage
+/.next/
+/out/
+/build
+*.tsbuildinfo
+
+# misc
+.DS_Store
+*.pem
+/.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# others
+.env*.local
+.vercel
+next-env.d.ts
+# agent rules written by next/fumadocs on dev
+AGENTS.md
+CLAUDE.md
+
+# per-agent next dev dist dirs (NEXT_DIST_DIR)
+/.next-*/
+
+# generated example variants per base (lib/example-variants.mjs)
+/examples/.radix/
+/examples/.base/

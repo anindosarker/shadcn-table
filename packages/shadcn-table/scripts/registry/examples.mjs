@@ -172,7 +172,7 @@ async function buildItem(slug, pages) {
 async function main() {
   const pages = await loadExamplePages(PAGES_DIR);
   const slugs = (await fs.readdir(EXAMPLES_DIR, { withFileTypes: true }))
-    // Skip generated dot-directories (examples/.base holds the Base UI variants).
+    // Skip generated dot-directories (examples/.radix and .base hold the per-base variants).
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
     .map((entry) => entry.name)
     .sort();
