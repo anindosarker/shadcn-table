@@ -206,7 +206,7 @@ export const AgentBar = ({
         type="button"
         size="sm"
         onClick={copy}
-        aria-label={label}
+        aria-label={copied ? 'Copied' : label}
         className="shrink-0 max-sm:size-7 max-sm:px-0"
       >
         {copied ? <CheckIcon /> : <CopyIcon />}

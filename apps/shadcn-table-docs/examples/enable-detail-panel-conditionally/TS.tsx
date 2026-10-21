@@ -42,13 +42,16 @@ const Example = () => {
       className: 'bg-black/10 dark:bg-[rgba(255,210,244,0.1)]',
     }),
     //custom expand button rotation
-    stExpandButtonProps: ({ row, table }) => ({
-      onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //only 1 detail panel open at a time
-      style: {
-        transform: row.getIsExpanded() ? 'rotate(180deg)' : 'rotate(-90deg)',
-        transition: 'transform 0.2s',
-      },
-    }),
+    stExpandButtonProps: ({ row, table }) => {
+      const isExpanded = row.getIsExpanded(); //read at render: the button toggles the row before this onClick runs
+      return {
+        onClick: () => table.setExpanded({ [row.id]: !isExpanded }), //only 1 detail panel open at a time
+        style: {
+          transform: isExpanded ? 'rotate(180deg)' : 'rotate(-90deg)',
+          transition: 'transform 0.2s',
+        },
+      };
+    },
     //conditionally render detail panel
     renderDetailPanel: ({ row }) =>
       row.original.address ? (

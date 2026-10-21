@@ -71,9 +71,12 @@ const table = useShadcnTable({
   data,
   columns,
   renderDetailPanel: ({ row }) => <DetailPanelContent />,
-  stExpandButtonProps: ({ row, table }) => ({
-    onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //set only this row to be expanded
-  }),
+  stExpandButtonProps: ({ row, table }) => {
+    const isExpanded = row.getIsExpanded(); //read at render: the button toggles the row before this onClick runs
+    return {
+      onClick: () => table.setExpanded({ [row.id]: !isExpanded }), //set only this row to be expanded
+    };
+  },
 });
 ```
 
@@ -83,7 +86,7 @@ If you don't like the default rotation styles for the expand icons, you can pass
 
 ### Replace Expand Icon
 
-You can easily use a custom expand icon either by following the [Custom Icons Guide](/docs/guides/custom-icons) or by passing in custom `children` to the `stExpandButtonProps` and `stExpandAllButtonProps` table options.
+You can easily use a custom expand icon either by following the [Custom Icons Guide](/docs/guides/customize-icons) or by passing in custom `children` to the `stExpandButtonProps` and `stExpandAllButtonProps` table options.
 
 ```jsx
 const table = useShadcnTable({
@@ -158,7 +161,7 @@ The detail panel can be used to show a variety of content. Here's an example of 
 
 If you are using row virtualization, detail panels will now work more properly as of version 2.6.0. However, there are some caveats to be aware of. In order for row virtualization to work well, many of the animation/transitions have been disabled. This means that the detail panel will not animate open and closed. It will simply appear and disappear.
 
-You also may need to specify some more accurate row height estimations for the row virtualizer in order to achieve the best scrollbar behavior. See the [Row Virtualization Guide](/docs/guides/row-virtualization) for the full details on this topic, but here's an example of how you might do that.
+You also may need to specify some more accurate row height estimations for the row virtualizer in order to achieve the best scrollbar behavior. See the [Row Virtualization Guide](/docs/guides/virtualization#enable-row-virtualization) for the full details on this topic, but here's an example of how you might do that.
 
 ```jsx
 const table = useShadcnTable({

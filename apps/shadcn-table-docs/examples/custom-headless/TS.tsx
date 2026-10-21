@@ -84,7 +84,8 @@ const Example = () => {
                       : flexRender(
                           header.column.columnDef.Header ??
                             header.column.columnDef.header,
-                          header.getContext(),
+                          //pass the ST table: `header.getContext().table` is the plain TanStack table, without `table.state`
+                          { ...header.getContext(), table },
                         )}
                   </TableHead>
                 ))}
