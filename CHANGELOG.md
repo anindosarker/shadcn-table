@@ -25,6 +25,17 @@ publishes the section as the GitHub release notes.
 - The CI install matrix (fresh, existing, base, nextjs) lives in the reusable
   `.github/workflows/install.yml`; `ci.yml` and `release.yml` both call it.
 
+### Fixed
+
+- The docs home page no longer crashes with React error #185 ("Maximum update depth
+  exceeded") about 9 seconds after load: the live demo opened its edited salary cell from
+  an effect that re-ran on every render, because `useShadcnTable` returns a new table
+  object each render. The effect now runs only when the replayed row changes.
+- `radix-ui` is bumped to 1.8.1, which carries Radix's fix for the React 19 re-render loop
+  in `Select` composed refs (`@radix-ui/react-select` 2.4.1,
+  `@radix-ui/react-compose-refs` 1.1.5). The registry item already installs the fixed
+  version for new users.
+
 ## 0.3.0 - 2026-10-20
 
 Everything since v0.1.1 in one branch for review: the Base UI edition, the shared-source

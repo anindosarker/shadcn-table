@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import type {
   ColumnFiltersState,
   ExpandedState,
@@ -226,10 +226,20 @@ export default function SignalTable({
     stTableLayoutProps: { className: 'border-0 shadow-none bg-transparent' },
   });
 
+  // useShadcnTable returns a new table object every render, so the edit
+  // effect below reads the latest one through this ref instead of depending
+  // on it: a table dependency re-ran the effect, whose setEditingCell
+  // re-rendered, on every commit (React error #185).
+  const tableRef = useRef(table);
+  useLayoutEffect(() => {
+    tableRef.current = table;
+  });
+
   // open or close the salary cell the replay is editing
   const replayEditing = useRef(false);
   const editingRowId = editing?.rowId;
   useEffect(() => {
+    const table = tableRef.current;
     if (editingRowId !== undefined) {
       const cell = table
         .getPreFilteredRowModel()
@@ -243,7 +253,7 @@ export default function SignalTable({
       table.setEditingCell(null);
       replayEditing.current = false;
     }
-  }, [editingRowId, table]);
+  }, [editingRowId]);
 
   return <ShadcnTable table={table} />;
 }

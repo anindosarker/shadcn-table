@@ -349,3 +349,72 @@ export async function baseSwitch(page, id, check) {
     .catch(() => {});
   check(`${id}: radix rows again`, (await rows.count()) > 0);
 }
+
+const DEMO_LAST = 'Now showing: Grouping';
+const DEMO_MIN_HOLD_MS = 15000;
+const DEMO_TIMEOUT_MS = 30000;
+
+/**
+ * Holds the home page through the full live demo loop on both bases. The
+ * demo (components/dev-home/v12/signal-demo.tsx) plays only while it is on
+ * screen, so it is scrolled into view; each hold waits until its aria-live
+ * status reads the last step and lasts at least DEMO_MIN_HOLD_MS. The first
+ * hold runs on the default base (Radix UI); the second picks Base UI through
+ * the agent bar's base menu and reloads. A render loop or crash that needs
+ * time or the demo's step changes to surface fails here (v0.3.0 died with
+ * React error #185 about 9.6 s after load, when the demo's replay edit effect
+ * re-ran on every render): the runner's pageerror and console listeners stay
+ * attached across the reload, and a renderer crash fails
+ * `demo: no renderer crash`.
+ */
+export async function demoLoop(page, check) {
+  let crashed = false;
+  page.once('crash', () => {
+    crashed = true;
+  });
+  const hold = async () => {
+    const start = Date.now();
+    const status = page.locator('[aria-label="Demo items"] [aria-live]');
+    await status.first().scrollIntoViewIfNeeded({ timeout: DEMO_TIMEOUT_MS });
+    await status
+      .filter({ hasText: DEMO_LAST })
+      .first()
+      .waitFor({ timeout: DEMO_TIMEOUT_MS });
+    const rest = DEMO_MIN_HOLD_MS - (Date.now() - start);
+    if (rest > 0) await page.waitForTimeout(rest);
+    return Date.now() - start;
+  };
+  const run = async (name, before) => {
+    try {
+      if (before) await before();
+      const ms = await hold();
+      check(name, !crashed, `held=${ms}ms`);
+    } catch (e) {
+      check(name, false, String(e.message).split('\n')[0].slice(0, 160));
+    }
+  };
+  await run('demo: radix ui reaches Grouping');
+  if (!crashed) {
+    await run('demo: base ui reaches Grouping', async () => {
+      const bar = page.locator('[data-slot="agent-bar"]');
+      await bar.getByRole('button', { name: 'Choose base' }).click();
+      const item = page.getByRole('menuitemradio', {
+        name: 'Base UI',
+        exact: true,
+      });
+      await item.waitFor({ timeout: 5000 });
+      await item.click();
+      await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+      const label =
+        (await bar
+          .getByRole('radio', { name: /^command/i })
+          .textContent()
+          .catch(() => '')) ?? '';
+      if (!/base ui/i.test(label))
+        throw new Error(`base not kept after reload: ${label.trim()}`);
+    });
+  } else {
+    check('demo: base ui reaches Grouping', false, 'skipped after crash');
+  }
+  check('demo: no renderer crash', !crashed);
+}
