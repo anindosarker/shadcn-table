@@ -65,4 +65,4 @@ export const trackOutboundClicked = (p: {
 }) => capture('outbound_clicked', p);
 
 /** The search dialog opened. */
-export const trackSearchOpened = () => capture('search_opened');
+export const trackSearchUsed = () => capture('search_used');

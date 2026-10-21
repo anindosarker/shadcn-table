@@ -5,7 +5,7 @@ import posthog from 'posthog-js';
 import { PostHogProvider as PostHogClientProvider } from 'posthog-js/react';
 import { useSearchContext } from 'fumadocs-ui/contexts/search';
 import { useBase } from '@/components/base-selector';
-import { trackSearchOpened } from '@/lib/analytics';
+import { trackSearchUsed } from '@/lib/analytics';
 
 /** Project key; unset locally and in previews without the Vercel env. */
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -18,7 +18,7 @@ const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
  * history changes and no autocapture: the custom events in lib/analytics.ts
  * are the signal. The selected base is a super property, so every report can
  * break down by base. Nothing calls `identify`. fumadocs exposes the search
- * dialog's open state through its context, which is where `search_opened`
+ * dialog's open state through its context, which is where `search_used`
  * comes from.
  */
 export const PostHogProvider = ({ children }: { children: ReactNode }) => {
@@ -42,7 +42,7 @@ export const PostHogProvider = ({ children }: { children: ReactNode }) => {
   }, [base]);
 
   useEffect(() => {
-    if (searchOpen) trackSearchOpened();
+    if (searchOpen) trackSearchUsed();
   }, [searchOpen]);
 
   if (!POSTHOG_KEY) return children;
