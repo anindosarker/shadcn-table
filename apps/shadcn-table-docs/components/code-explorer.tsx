@@ -23,14 +23,14 @@ import {
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui-radix/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui-radix/dropdown-menu';
 import { cn } from '@/lib/cn';
 
 export interface ExplorerFile {

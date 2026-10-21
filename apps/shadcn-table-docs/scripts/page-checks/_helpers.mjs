@@ -272,10 +272,11 @@ export async function exampleGroup(page, tabs, check) {
 /**
  * Site-wide base switch (components/base-selector.tsx, in the docs header):
  * Base UI re-renders example `#example-<id>` (rows again, Base UI markup:
- * Base UI collapsibles set data-open/data-closed, Radix's set data-state) and
- * the Code view shows the Base UI variant's `@/components/ui-base/` imports;
- * then Radix again, imports back to `@/components/ui/`. No console errors
- * is asserted by the runner.
+ * Base UI collapsibles set data-open/data-closed, Radix's set data-state)
+ * while the Code view keeps showing the base-neutral source, with
+ * `@/components/ui/shadcn-table` imports and no `ui-radix` or `ui-base`;
+ * then Radix again, same source. No console errors is asserted by the
+ * runner.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
@@ -311,11 +312,14 @@ export async function baseSwitch(page, id, check) {
     .first()
     .click();
   await page.waitForTimeout(200);
+  const neutral = (text) =>
+    text.includes("'@/components/ui/shadcn-table'") &&
+    !text.includes('ui-radix') &&
+    !text.includes('ui-base');
   const baseSource = await source();
   check(
     `${id}: base ui source`,
-    baseSource.includes("'@/components/ui-base/shadcn-table'") &&
-      !baseSource.includes("'@/components/ui/"),
+    neutral(baseSource),
     `len=${baseSource.length}`,
   );
   await header.getByRole('tab', { name: 'Radix UI' }).click();
@@ -323,8 +327,7 @@ export async function baseSwitch(page, id, check) {
   const radixSource = await source();
   check(
     `${id}: radix source again`,
-    radixSource.includes("'@/components/ui/shadcn-table'") &&
-      !radixSource.includes('ui-base'),
+    neutral(radixSource),
     `len=${radixSource.length}`,
   );
   await panel

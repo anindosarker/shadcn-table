@@ -21,9 +21,10 @@
 /* ---------- shadcn: `shadcn init` output for the radix-nova generation ----------
  * Verbatim from `shadcn init --preset nova --base radix` (neutral, css variables),
  * except the next/font bridge (`--font-sans`, `--font-mono`) which the docs set in
- * the `@theme` block below, and the ST keyframes that `lib:install` appends to
- * `@theme inline` (kept at the CLI's own indentation so the install is idempotent;
- * the Base UI copy's keyframes follow the block under their own names). */
+ * the `@theme` block below, and the ST keyframes of the Radix copy inside
+ * `@theme inline` (the item's `css` block, kept here by hand: `lib:install`
+ * restores this file after `shadcn add`; the Base UI copy's keyframes follow
+ * the block under their own names). */
 @custom-variant dark (&:is(.dark *));
 
 /* Colors come from the shadcn tokens below (fumadocs' shadcn preset maps
@@ -110,14 +111,13 @@
 }
 
 /* ---------- Base UI collapsible keyframes (components/ui-base) ----------
- * The Base UI copy of the table (`lib:install:base`) animates its collapsibles
+ * The Base UI copy of the table (`lib:install base`) animates its collapsibles
  * with these: Base UI's Collapsible.Panel measures itself into
  * --collapsible-panel-width/-height instead of the Radix variable, and its item
  * ships the keyframes under the same st-collapsible-* names as the Radix pair
  * above. Tailwind emits `@theme` keyframes last, so a same-named redefinition
- * here would lose and `lib:install` rewrites the pair inside `@theme inline`;
- * the installer renames them to st-base-collapsible-* in the copy instead and
- * drops the item's css. Radix animates heights with tw-animate-css'
+ * here would lose; the installer renames them to st-base-collapsible-* in the
+ * copy instead. Radix animates heights with tw-animate-css'
  * collapsible-down/up, so the height pair exists only here. */
 @keyframes st-base-collapsible-right {
   from {
@@ -1128,10 +1128,10 @@ html:has(#nd-notebook-layout) ::selection {
   color: var(--code-tok-punc);
 }
 
-/* ---------- library css (registry item `css`, written by `lib:install`) ----------
- * `shadcn add` rewrites this rule and the keyframes in `@theme inline` on every
- * install with its own indentation; both are stored in that shape (prettier-ignore)
- * so the install only touches the file's final newline. */
+/* ---------- library css (the registry item's `css` block, kept by hand) ----------
+ * `lib:install` drops the item's css and restores this file after `shadcn add`,
+ * so this rule and the keyframes in `@theme inline` are maintained here, in the
+ * CLI's own shape (prettier-ignore) so they compare one to one with the item. */
 /* prettier-ignore */
 .st-progress-indeterminate [data-slot='progress-indicator'] {
     position: absolute;

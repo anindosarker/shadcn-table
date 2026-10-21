@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui-radix/dropdown-menu';
 import { cn } from '@/lib/cn';
 import {
   DEFAULT_THEME,

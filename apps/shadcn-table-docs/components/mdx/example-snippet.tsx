@@ -1,5 +1,4 @@
 import path from 'node:path';
-import type { ReactNode } from 'react';
 import { highlight } from 'fumadocs-core/highlight';
 import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import { buildExamplePrompt } from '@/lib/example-prompt';
@@ -25,54 +24,40 @@ const LANGS: Record<string, string> = {
 };
 
 /**
- * Server side: for each base, reads every source file of the example
- * (TS.tsx first, subfolders included, the index.tsx wrapper left out; the
- * Base UI variant from examples/.base), highlights each by its extension
- * with shiki and hands the code blocks, the install command and the copy
- * prompt to the client playground panel, which shows the selected base's
- * set next to the lazily loaded live table of that base.
+ * Server side: reads every source file of the example once (TS.tsx first,
+ * subfolders included, the index.tsx wrapper left out; the base-neutral
+ * source with its `@/components/ui/` imports, shown on both bases),
+ * highlights each by its extension with shiki and hands the code blocks
+ * plus, per base, the install command and the copy prompt to the client
+ * playground panel, which shows them next to the lazily loaded live table
+ * of the selected base.
  */
 export const ExampleSnippet = async ({ name }: Props) => {
-  // Files without a ui import are identical on both bases; highlight once.
-  const highlighted = new Map<string, Promise<ReactNode>>();
-  const render = (source: string, lang: string) => {
-    const key = `${lang}\n${source}`;
-    let node = highlighted.get(key);
-    if (!node) {
-      node = highlight(source, { lang, components: { pre: Pre } }).then(
-        (rendered) => (
-          <CodeBlock
-            allowCopy={false}
-            className="my-0 rounded-none border-0"
-            viewportProps={{ className: 'max-h-[32rem]' }}
-          >
-            {rendered}
-          </CodeBlock>
-        ),
-      );
-      highlighted.set(key, node);
-    }
-    return node;
-  };
+  const render = (source: string, lang: string) =>
+    highlight(source, { lang, components: { pre: Pre } }).then((rendered) => (
+      <CodeBlock
+        allowCopy={false}
+        className="my-0 rounded-none border-0"
+        viewportProps={{ className: 'max-h-[32rem]' }}
+      >
+        {rendered}
+      </CodeBlock>
+    ));
 
-  const variantFor = async (base: Base): Promise<ExampleVariantData> => {
-    const sources = await readExampleFiles(name, base);
-    const files = await Promise.all(
-      sources.map(async (file) => ({
-        path: file.path,
-        source: file.source,
-        node: await render(
-          file.source,
-          LANGS[path.extname(file.path)] ?? 'text',
-        ),
-      })),
-    );
-    return {
-      files,
-      installCommand: exampleAddCommand(name, base),
-      prompt: await buildExamplePrompt({ name, base }),
-    };
-  };
+  const sources = await readExampleFiles(name);
+  const files = await Promise.all(
+    sources.map(async (file) => ({
+      path: file.path,
+      source: file.source,
+      node: await render(file.source, LANGS[path.extname(file.path)] ?? 'text'),
+    })),
+  );
+
+  const variantFor = async (base: Base): Promise<ExampleVariantData> => ({
+    files,
+    installCommand: exampleAddCommand(name, base),
+    prompt: await buildExamplePrompt({ name, base }),
+  });
 
   const variants = Object.fromEntries(
     await Promise.all(

@@ -190,7 +190,7 @@ export async function buildExamplePrompt({
 }): Promise<string> {
   const [item, files, pages, exportName] = await Promise.all([
     readRegistryItem(name),
-    readExampleFiles(name, base),
+    readExampleFiles(name),
     loadExamplePages(path.join(process.cwd(), 'content', 'docs', 'examples')),
     readExampleExportName(path.join(process.cwd(), 'examples', name)),
   ]);

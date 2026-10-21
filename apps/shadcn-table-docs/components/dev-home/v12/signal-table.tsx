@@ -12,11 +12,11 @@ import {
   ShadcnTable,
   useShadcnTable,
   type ST_ColumnDef,
-} from '@/components/ui/shadcn-table';
+} from '@/components/ui-radix/shadcn-table';
 import {
   data,
   type Person,
-} from '@/examples/aggregation-and-grouping/makeData';
+} from '@/examples/.radix/aggregation-and-grouping/makeData';
 
 export interface SignalTableState {
   sorting: SortingState;

@@ -27,10 +27,19 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "examples/.radix/**/*.ts",
+    "examples/.radix/**/*.tsx",
     "examples/.base/**/*.ts",
     "examples/.base/**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "examples/*/TS.tsx",
+    "examples/*/*.ts",
+    "examples/*/components",
+    "examples/*/hooks",
+    "examples/*/lib"
+  ]
 }

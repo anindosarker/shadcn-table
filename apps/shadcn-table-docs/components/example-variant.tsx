@@ -8,15 +8,15 @@ type Module = { default: ComponentType };
 type Loader = (name: string) => Promise<Module>;
 
 /**
- * One chunk per example and base: the Radix example is examples/<name>/TS,
- * the Base UI one its generated variant under examples/.base/<name>/TS
- * (lib/example-variants.mjs, folder name in lib/example-variant-dir.mjs;
- * spelled out here so the bundler sees one dynamic segment). The bundler
- * turns each template into a map of every matching module, loaded on
- * demand.
+ * One chunk per example and base: each base's generated variant of
+ * examples/<name>/TS, under examples/.radix/<name>/TS and
+ * examples/.base/<name>/TS (lib/example-variants.mjs, folder names in
+ * lib/example-variant-dir.mjs; spelled out here so the bundler sees one
+ * dynamic segment). The bundler turns each template into a map of every
+ * matching module, loaded on demand.
  */
 const loaders: Record<Base, Loader> = {
-  radix: (name) => import(`@/examples/${name}/TS`),
+  radix: (name) => import(`@/examples/.radix/${name}/TS`),
   base: (name) => import(`@/examples/.base/${name}/TS`),
 };
 

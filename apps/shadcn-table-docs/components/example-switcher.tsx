@@ -4,12 +4,12 @@ import { useMemo } from 'react';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui-radix/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/ui-radix/tooltip';
 import { PageSwitcher, sectionPages } from '@/components/page-switcher';
 
 interface Props {

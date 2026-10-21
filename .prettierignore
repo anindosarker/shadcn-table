@@ -5,4 +5,8 @@ types
 *.json
 .next
 *.md
+apps/shadcn-table-docs/examples/.radix
 apps/shadcn-table-docs/examples/.base
+# installed copies of the library and its parts, written by pnpm lib:install <base>
+apps/shadcn-table-docs/components/ui-radix
+apps/shadcn-table-docs/components/ui-base

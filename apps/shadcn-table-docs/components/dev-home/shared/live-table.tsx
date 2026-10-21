@@ -20,74 +20,86 @@ const Loading = () => (
  * next/dynamic wants each import and options object written out literally.
  */
 const examples = {
-  advanced: dynamic(() => import('@/examples/advanced/TS'), {
+  advanced: dynamic(() => import('@/examples/.radix/advanced/TS'), {
     ssr: false,
     loading: Loading,
   }),
-  basic: dynamic(() => import('@/examples/basic/TS'), {
+  basic: dynamic(() => import('@/examples/.radix/basic/TS'), {
     ssr: false,
     loading: Loading,
   }),
-  sorting: dynamic(() => import('@/examples/multi-sorting/TS'), {
+  sorting: dynamic(() => import('@/examples/.radix/multi-sorting/TS'), {
     ssr: false,
     loading: Loading,
   }),
-  filtering: dynamic(() => import('@/examples/customize-filter-variants/TS'), {
-    ssr: false,
-    loading: Loading,
-  }),
+  filtering: dynamic(
+    () => import('@/examples/.radix/customize-filter-variants/TS'),
+    {
+      ssr: false,
+      loading: Loading,
+    },
+  ),
   'column-pinning': dynamic(
-    () => import('@/examples/enable-column-pinning/TS'),
+    () => import('@/examples/.radix/enable-column-pinning/TS'),
     {
       ssr: false,
       loading: Loading,
     },
   ),
-  grouping: dynamic(() => import('@/examples/aggregation-and-grouping/TS'), {
+  grouping: dynamic(
+    () => import('@/examples/.radix/aggregation-and-grouping/TS'),
+    {
+      ssr: false,
+      loading: Loading,
+    },
+  ),
+  virtualization: dynamic(() => import('@/examples/.radix/virtualized/TS'), {
     ssr: false,
     loading: Loading,
   }),
-  virtualization: dynamic(() => import('@/examples/virtualized/TS'), {
+  editing: dynamic(() => import('@/examples/.radix/editing-crud-table/TS'), {
     ssr: false,
     loading: Loading,
   }),
-  editing: dynamic(() => import('@/examples/editing-crud-table/TS'), {
-    ssr: false,
-    loading: Loading,
-  }),
-  'row-selection': dynamic(() => import('@/examples/enable-row-selection/TS'), {
-    ssr: false,
-    loading: Loading,
-  }),
+  'row-selection': dynamic(
+    () => import('@/examples/.radix/enable-row-selection/TS'),
+    {
+      ssr: false,
+      loading: Loading,
+    },
+  ),
   'detail-panel': dynamic(
-    () => import('@/examples/enable-detail-panel-conditionally/TS'),
+    () => import('@/examples/.radix/enable-detail-panel-conditionally/TS'),
     {
       ssr: false,
       loading: Loading,
     },
   ),
-  export: dynamic(() => import('@/examples/export-to-csv/TS'), {
+  export: dynamic(() => import('@/examples/.radix/export-to-csv/TS'), {
     ssr: false,
     loading: Loading,
   }),
   'column-resizing': dynamic(
-    () => import('@/examples/enable-column-resizing/TS'),
+    () => import('@/examples/.radix/enable-column-resizing/TS'),
     {
       ssr: false,
       loading: Loading,
     },
   ),
   'column-ordering': dynamic(
-    () => import('@/examples/enable-column-ordering/TS'),
+    () => import('@/examples/.radix/enable-column-ordering/TS'),
     {
       ssr: false,
       loading: Loading,
     },
   ),
-  localization: dynamic(() => import('@/examples/localization-i18n-es/TS'), {
-    ssr: false,
-    loading: Loading,
-  }),
+  localization: dynamic(
+    () => import('@/examples/.radix/localization-i18n-es/TS'),
+    {
+      ssr: false,
+      loading: Loading,
+    },
+  ),
 };
 
 export type LiveExampleKey = keyof typeof examples;

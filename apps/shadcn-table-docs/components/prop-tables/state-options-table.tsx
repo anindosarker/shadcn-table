@@ -1,7 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import {
+  ShadcnTable,
+  type ST_ColumnDef,
+} from '@/components/ui-radix/shadcn-table';
 import { type StateOption, stateOptions } from '@/lib/prop-tables/stateOptions';
 import { InlineCode } from './inline-code';
 import { PropLink } from './prop-link';

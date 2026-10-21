@@ -11,11 +11,12 @@ const eslintConfig = defineConfig([
     'build/**',
     'next-env.d.ts',
     '.source/**',
-    //installed library copy (overwritten by lib:install), linted in packages/shadcn-table
-    'components/ui/shadcn-table/**',
-    //Base UI copy of the table and its parts (lib:install:base), same source
+    //installed Radix UI copy of the table and its parts (lib:install radix), linted in packages/shadcn-table
+    'components/ui-radix/**',
+    //installed Base UI copy of the table and its parts (lib:install base), same source
     'components/ui-base/**',
-    //generated Base UI variants of the examples (lib/example-variants.mjs)
+    //generated per-base variants of the examples (lib/example-variants.mjs)
+    'examples/.radix/**',
     'examples/.base/**',
   ]),
   {

@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import {
   type ST_ColumnFiltersState,
   type ST_SortingState,
-} from '@/components/ui/shadcn-table';
+} from '@/components/ui-radix/shadcn-table';
 
 import { getData, isLessThan } from './db';
 

@@ -2,7 +2,12 @@
 
 import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui-radix/tabs';
 
 export interface LocaleExampleTabsProps {
   /** Locale codes in display order. */

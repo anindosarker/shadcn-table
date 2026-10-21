@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { type ST_SortingState } from '@/components/ui/shadcn-table';
+import { type ST_SortingState } from '@/components/ui-radix/shadcn-table';
 
 //This is all fake mock code. Don't be inspired by it.
 export async function GET(request: NextRequest) {

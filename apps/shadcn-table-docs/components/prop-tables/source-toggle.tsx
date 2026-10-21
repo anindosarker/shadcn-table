@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { CodeIcon, CodeXmlIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui-radix/button';
 
 interface Props {
   /** The highlighted source, already wrapped in a fumadocs CodeBlock. */

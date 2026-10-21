@@ -9,7 +9,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/ui-radix/collapsible';
 import { SidebarSubgroup } from '@/components/sidebar-subgroup';
 import { containsUrl, groupBySeparator, hasPages } from '@/lib/page-tree-utils';
 

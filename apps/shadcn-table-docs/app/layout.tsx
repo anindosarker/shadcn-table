@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { RootProvider } from 'fumadocs-ui/provider/next';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui-radix/tooltip';
 import './global.css';
 import { Inter } from 'next/font/google';
 import { archivo } from '@/lib/fonts';

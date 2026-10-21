@@ -9,14 +9,14 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { setBase, useBase } from '@/components/base-selector';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui-radix/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui-radix/dropdown-menu';
 import { cn } from '@/lib/cn';
 import { baseLabels, bases, isBase, type Base } from '@/lib/install';
 

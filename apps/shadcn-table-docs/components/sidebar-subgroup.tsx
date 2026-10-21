@@ -7,7 +7,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/ui-radix/collapsible';
 
 /**
  * A "---Label---" sub-group inside a section: the label toggles the pages

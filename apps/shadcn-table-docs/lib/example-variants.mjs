@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 /**
- * Base UI variants of the docs examples: examples/.base/<slug>/* (gitignored)
- * is every source file of examples/<slug>/ (TS.tsx, helpers, data; not the
- * index.tsx docs wrapper) rewritten for the Base UI copy of the table and
- * its shadcn parts that `pnpm lib:install:base` installs under
- * components/ui-base: `@/components/ui/` imports point at
- * `@/components/ui-base/`, and Radix's `asChild` on a part becomes Base UI's
- * `render` prop (the one Radix-only prop the examples use). <ExampleSnippet>
- * lazy-loads the variant for the selected base and shows its source in the
- * code view, so the output is formatted with the repo's prettier config.
+ * Per-base variants of the docs examples. examples/<slug>/ is base-neutral
+ * source that imports `@/components/ui/...` (the path a user has after
+ * `shadcn add`; the code view shows it as is). For each base, every source
+ * file of examples/<slug>/ (TS.tsx, helpers, data; not the index.tsx docs
+ * wrapper) is rewritten into examples/<variant dir>/<slug>/* (gitignored,
+ * folder names in lib/example-variant-dir.mjs) for that base's installed copy
+ * of the table and its shadcn parts (`pnpm lib:install <base>`, under
+ * components/ui-<base>): `@/components/ui/` imports point at
+ * `@/components/ui-<base>/`, and on the Base UI base Radix's `asChild` on a
+ * part becomes Base UI's `render` prop (the one Radix-only prop the examples
+ * use). components/example-variant.tsx lazy-loads the variant for the
+ * selected base; the output is formatted with the repo's prettier config.
  *
  * Runs before `next build` and `next dev` (package.json `build`, `predev`)
  * and from `pnpm examples:variants`. Stale variant folders are removed.
@@ -19,19 +22,22 @@ import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import ts from 'typescript';
 import { listExampleFiles } from './example-files.mjs';
-import { BASE_VARIANT_DIR } from './example-variant-dir.mjs';
+import { VARIANT_DIRS } from './example-variant-dir.mjs';
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const EXAMPLES = path.join(APP, 'examples');
-const OUT = path.join(EXAMPLES, BASE_VARIANT_DIR);
 
 /**
  * `@/components/ui/<part>` and `@/components/ui/shadcn-table...` imports to
- * the Base UI copy. Both quote styles; nothing else changes.
+ * the base's installed copy. Both quote styles; nothing else changes.
  * @param {string} source
+ * @param {keyof typeof VARIANT_DIRS} base
  */
-export const rewriteImports = (source) =>
-  source.replace(/(['"])@\/components\/ui\//g, '$1@/components/ui-base/');
+export const rewriteImports = (source, base) =>
+  source.replace(
+    /(['"])@\/components\/ui\//g,
+    `$1@/components/ui-${base}/`,
+  );
 
 /**
  * `<Trigger asChild><Child {...props}>{content}</Child></Trigger>` to
@@ -108,13 +114,17 @@ export const rewriteAsChild = (source, fileName) => {
 };
 
 /**
- * The Base UI variant of one example source file, formatted.
- * @param {string} source
- * @param {string} fileName absolute path, for prettier's parser choice
+ * One base's variant of one example source file, formatted. The Radix
+ * variant only changes the imports; the Base UI one also turns `asChild`
+ * into `render`.
+ * @param {{ source: string, fileName: string, base: keyof typeof VARIANT_DIRS }} file
+ *   fileName is absolute, for prettier's parser choice
  */
-export const toBaseVariant = async (source, fileName) => {
-  let text = rewriteImports(source);
-  if (/\.tsx$/.test(fileName)) text = rewriteAsChild(text, fileName);
+export const toVariant = async ({ source, fileName, base }) => {
+  let text = rewriteImports(source, base);
+  if (base === 'base' && /\.tsx$/.test(fileName)) {
+    text = rewriteAsChild(text, fileName);
+  }
   if (text === source) return source;
   const config = await prettier.resolveConfig(fileName);
   return prettier.format(text, { ...config, filepath: fileName });
@@ -126,7 +136,7 @@ async function main() {
     .map((e) => e.name)
     .sort();
   const kept = new Set();
-  let files = 0;
+  const sources = new Map();
   for (const slug of slugs) {
     const dir = path.join(EXAMPLES, slug);
     try {
@@ -135,24 +145,33 @@ async function main() {
       continue;
     }
     kept.add(slug);
-    for (const rel of await listExampleFiles(dir)) {
-      const source = await fs.readFile(path.join(dir, rel), 'utf8');
-      const target = path.join(OUT, slug, rel);
-      await fs.mkdir(path.dirname(target), { recursive: true });
-      await fs.writeFile(target, await toBaseVariant(source, target));
-      files += 1;
-    }
+    sources.set(slug, await listExampleFiles(dir));
   }
-  // Variant folders whose example is gone.
-  await fs.mkdir(OUT, { recursive: true });
-  for (const entry of await fs.readdir(OUT, { withFileTypes: true })) {
-    if (entry.isDirectory() && !kept.has(entry.name)) {
-      await fs.rm(path.join(OUT, entry.name), { recursive: true });
+  for (const [base, variantDir] of Object.entries(VARIANT_DIRS)) {
+    const out = path.join(EXAMPLES, variantDir);
+    let files = 0;
+    for (const [slug, rels] of sources) {
+      const dir = path.join(EXAMPLES, slug);
+      for (const rel of rels) {
+        const source = await fs.readFile(path.join(dir, rel), 'utf8');
+        const target = path.join(out, slug, rel);
+        await fs.mkdir(path.dirname(target), { recursive: true });
+        await fs.writeFile(
+          target,
+          await toVariant({ source, fileName: target, base }),
+        );
+        files += 1;
+      }
     }
+    // Variant folders whose example is gone.
+    await fs.mkdir(out, { recursive: true });
+    for (const entry of await fs.readdir(out, { withFileTypes: true })) {
+      if (entry.isDirectory() && !kept.has(entry.name)) {
+        await fs.rm(path.join(out, entry.name), { recursive: true });
+      }
+    }
+    console.log(`examples/${variantDir}: ${kept.size} examples, ${files} files`);
   }
-  console.log(
-    `examples/${BASE_VARIANT_DIR}: ${kept.size} examples, ${files} files`,
-  );
 }
 
 await main();

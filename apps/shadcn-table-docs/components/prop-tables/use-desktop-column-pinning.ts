@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { ST_ColumnPinningState } from '@/components/ui/shadcn-table';
+import type { ST_ColumnPinningState } from '@/components/ui-radix/shadcn-table';
 import { useMediaQuery } from '@/lib/use-media-query';
 
 /**
