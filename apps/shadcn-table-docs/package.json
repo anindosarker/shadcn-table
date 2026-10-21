@@ -15,8 +15,7 @@
     "registry:hosted": "pnpm -w registry:hosted",
     "examples:variants": "node lib/example-variants.mjs",
     "lint": "eslint",
-    "lib:install": "node scripts/install.mjs",
-    "lib:install:base": "node scripts/install-base.mjs"
+    "lib:install": "node scripts/install.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

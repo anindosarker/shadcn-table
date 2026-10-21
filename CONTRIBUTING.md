@@ -11,7 +11,7 @@ This repo holds shadcn-table, a React data table on TanStack Table v9 that ships
 packages/shadcn-table/registry/radix | registry/base
   ▼ stories + vitest (both bases)   (prove the change)
   ▼ registry:build                  (what users install)
-  ▼ lib:install                     (docs app copy, Radix edition)
+  ▼ lib:install <base>              (docs app copies, one per base)
 apps/shadcn-table-docs              (docs, examples, page gate)
 ```
 
@@ -51,8 +51,11 @@ packages/shadcn-table/
   scripts/registry/base-diff.json   # library files allowed to differ between the trees
   registry.json                     # generated, committed, GitHub addresses
 apps/shadcn-table-docs/
-  components/ui/shadcn-table/       # installed copy of the library (never edit)
-  examples/                         # one folder per docs example
+  components/ui-radix/              # installed Radix UI copy of the library and its parts (never edit)
+  components/ui-base/               # installed Base UI copy, same shape (never edit)
+  examples/<slug>/                  # one folder per docs example, imports @/components/ui/ like a user's project
+  examples/.radix/ .base/           # generated per-base variants of the examples (gitignored)
+  scripts/install.mjs               # pnpm lib:install <base>: reinstalls one copy from the built registry
   content/docs/                     # MDX pages
   registry.json                     # generated example items, committed
   scripts/check-pages.mjs           # page gate against a running dev server
@@ -126,15 +129,17 @@ pnpm --filter shadcn-table tsc:baseui
 
 ## 3. Sync the Docs App
 
-The docs app renders the installed copy in `components/ui/shadcn-table`, not the package source, so a library change is invisible there until you reinstall it. The docs run the Radix edition.
+The docs app renders the installed copies in `components/ui-radix` and `components/ui-base`, not the package source, so a library change is invisible there until you reinstall them. Each copy comes from that base's built item; the installer restores `components.json`, `app/global.css`, `package.json` and the lockfile afterwards, so a reinstall of an unchanged library leaves `git status` clean.
 
 ```bash
 pnpm registry:build
-pnpm --filter shadcn-table-docs lib:install
-git checkout -- apps/shadcn-table-docs/app/global.css      # lib:install rewrites it
+pnpm --filter shadcn-table-docs lib:install radix
+pnpm --filter shadcn-table-docs lib:install base
 pnpm --filter shadcn-table-docs dev                        # http://localhost:5320
 pnpm --filter shadcn-table-docs types:check
 ```
+
+The example sources under `examples/<slug>/` import `@/components/ui/...`, the path a reader has after `shadcn add`, and that is what the code view shows on both bases. The live examples run on generated variants, `examples/.radix/` and `examples/.base/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies.
 
 Page gate, with the dev server running, from `apps/shadcn-table-docs`:
 
@@ -252,9 +257,9 @@ On a push, CI also validates the registry at the pushed SHA, installs the librar
 
 ## Common Mistakes
 
-- **Editing the docs copy.** `apps/shadcn-table-docs/components/ui/shadcn-table` is overwritten by `lib:install`. Change `packages/shadcn-table/registry/<base>` and sync.
+- **Editing the docs copy.** `apps/shadcn-table-docs/components/ui-radix` and `components/ui-base` are overwritten by `lib:install <base>`. Change `packages/shadcn-table/registry/<base>` and sync.
 - **Editing one tree only.** The other edition keeps the old code; `pnpm check:bases` red is the sign, as is `pnpm test` green and `pnpm test:base` red (or the reverse). Make the change in the other tree too, or add the path to `base-diff.json` when the difference is meant.
-- **Forgetting `lib:install`.** The docs app, the page gate and the examples keep running on the old library.
+- **Forgetting `lib:install <base>`.** The docs app, the page gate and the examples keep running on the old library on that base.
 - **Committing `tsconfig.json` include noise.** Only the two `.next/...` lines belong there.
 - **`registry.json` rewritten with localhost.** Use `pnpm registry:dev`, which writes to the gitignored `.dev/`.
 - **A port already in use.** Pick another with `PORT=` (docs), `storybook dev -p` (Storybook) or `REGISTRY_BASE_URL` plus your own `serve` (registry).
