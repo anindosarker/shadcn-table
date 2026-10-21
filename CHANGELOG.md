@@ -41,9 +41,6 @@ publishes the section as the GitHub release notes.
 
 - The install command bar on the home page stacks on small screens and no longer
   overflows at 390 and 440 px.
-
-### Fixed
-
 - The docs home page no longer crashes with React error #185 ("Maximum update depth
   exceeded") about 9 seconds after load: the live demo opened its edited salary cell from
   an effect that re-ran on every render, because `useShadcnTable` returns a new table
@@ -52,6 +49,12 @@ publishes the section as the GitHub release notes.
   in `Select` composed refs (`@radix-ui/react-select` 2.4.1,
   `@radix-ui/react-compose-refs` 1.1.5). The registry item already installs the fixed
   version for new users.
+- Docs: internal links to pages that do not exist (`/docs/api/props`,
+  `/docs/features/*`, `/docs/guides/aggregation-and-grouping` and other old guide paths,
+  in pages and in the option tables) point at the right pages. The custom headless example
+  renders again: it passed `header.getContext()`, whose `table` has no `table.state`, to
+  the select-all header. The one-panel-at-a-time detail panel example opens its panel.
+  The command bar's copy button is named "Copied" again after a click, not only its text.
 
 ## 0.3.0 - 2026-10-20
 
