@@ -36,7 +36,9 @@ type Mode = 'prompt' | 'command';
  * same group the docs header pill drives). The prompt is base-agnostic, so
  * the Prompt tab shows no base. The command is the library's `shadcn add`
  * with pnpm (components/dev-home/v12/home-page.tsx), which is what a copy
- * of it reports.
+ * of it reports. Below `sm` the bar stacks: the switch on the first row with
+ * the short base name, the text and an icon-only copy button on the second.
+ * The text scrolls sideways under a right-edge fade.
  */
 export const AgentBar = ({
   prompt,
@@ -100,7 +102,7 @@ export const AgentBar = ({
       data-slot="agent-bar"
       data-mode={mode}
       className={cn(
-        'not-prose flex min-w-0 items-center gap-3 rounded-lg border border-border bg-card py-1.5 pr-1.5 pl-1.5 text-sm',
+        'not-prose flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border bg-card py-1.5 pr-1.5 pl-1.5 text-sm sm:flex-nowrap',
         className,
       )}
     >
@@ -131,7 +133,18 @@ export const AgentBar = ({
               className={cn(tabClass('command'), perBase && 'rounded-r-none')}
             >
               <TerminalIcon aria-hidden="true" className="size-3.5" />
-              {perBase ? `Command: ${baseLabels[base]}` : 'Command'}
+              {perBase ? (
+                <>
+                  <span className="sm:hidden">
+                    {baseLabels[base].replace(/ UI$/, '')}
+                  </span>
+                  <span className="max-sm:hidden">
+                    Command: {baseLabels[base]}
+                  </span>
+                </>
+              ) : (
+                'Command'
+              )}
             </button>
             {perBase && (
               <DropdownMenu>
@@ -178,13 +191,26 @@ export const AgentBar = ({
           Ask your agent
         </span>
       )}
-      <span aria-hidden="true" className="h-5 w-px shrink-0 bg-border" />
-      <span className="min-w-0 flex-1 overflow-x-auto py-1 font-mono text-[13px] whitespace-nowrap [scrollbar-width:none]">
+      {/* Below sm the divider turns into a zero-height full-width break that
+          pushes the text and the button onto the second row. */}
+      <span
+        aria-hidden="true"
+        className="h-5 w-px shrink-0 bg-border max-sm:h-0 max-sm:basis-full"
+      />
+      {/* The end padding matches the fade, so text that fits never sits
+          under it and the last characters stay readable once scrolled. */}
+      <span className="min-w-0 flex-1 overflow-x-auto py-1 pr-6 font-mono text-[13px] whitespace-nowrap [mask-image:linear-gradient(to_right,black_calc(100%-1.5rem),transparent)] [scrollbar-width:none]">
         {text}
       </span>
-      <Button type="button" size="sm" onClick={copy} className="shrink-0">
+      <Button
+        type="button"
+        size="sm"
+        onClick={copy}
+        aria-label={label}
+        className="shrink-0 max-sm:size-7 max-sm:px-0"
+      >
         {copied ? <CheckIcon /> : <CopyIcon />}
-        {copied ? 'Copied' : label}
+        <span className="max-sm:hidden">{copied ? 'Copied' : label}</span>
       </Button>
     </div>
   );
