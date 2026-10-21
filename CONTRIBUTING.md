@@ -83,6 +83,7 @@ Optional environment variables:
 | `NEXT_PUBLIC_SITE_URL` | absolute site URL in deployments (install snippets, agent prompt); the dev port otherwise |
 | `REGISTRY_BASE_URL`    | base URL written into the dev registry instead of `http://localhost:5310/r`              |
 | `ST_BASE`              | `base` aliases `@/` to `registry/base` in Vitest and Storybook (the `:base` scripts set it); unset means `registry/radix` |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project key for the docs app; unset means analytics load nothing (see Analytics)   |
 
 ## 1. Set Up
 
@@ -249,6 +250,28 @@ On a push, CI also validates the registry at the pushed SHA, installs the librar
 - **Format.** `pnpm prettier --write <changed files>` for `ts`, `tsx`, `mjs` and `mdx`; `md` and `json` files are prettier-ignored.
 - **Commit messages.** `type: short summary` in the imperative (`fix: keep pinned rows visible in grid mode`), one concern per commit.
 - **Stage explicit paths.** No `git add -A`: generated files, `.next-*` dirs and `tsconfig.json` noise slip in otherwise.
+
+## Analytics
+
+The docs app reports to PostHog (US cloud); the library is untouched. How it is wired:
+
+1. `apps/docs/components/posthog-provider.tsx` initialises `posthog-js` once in a `useEffect`, only when `NEXT_PUBLIC_POSTHOG_KEY` is set, with `api_host: '/ingest'`, page views on history changes, no autocapture and no `identify`; it registers the selected base as a super property, so every report can break down by `base`. Without the key it renders its children and loads nothing.
+2. `apps/docs/app/layout.tsx` mounts it inside fumadocs' `RootProvider`.
+3. `apps/docs/next.config.mjs` rewrites `/ingest/static/*` to `us-assets.i.posthog.com` and `/ingest/*` to `us.i.posthog.com`, with `skipTrailingSlashRedirect` because PostHog paths end with a slash. Events leave from the site's own origin, so ad blockers that drop `posthog.com` requests do not drop them.
+4. `apps/docs/lib/analytics.ts` holds one function per event with typed properties: `base_switched`, `install_command_copied`, `example_code_opened`, `example_file_viewed`, `storybook_opened`, `outbound_clicked`, `search_used`. Components call these functions and never `posthog` directly, so renaming an event is a change to that file alone.
+5. The key lives in the Vercel project env (Production and Preview) and in a local `.env.local`; it is never committed.
+
+To run with a key locally, put `NEXT_PUBLIC_POSTHOG_KEY=phc_...` in `apps/docs/.env.local` (gitignored) and start the dev server or `next build && next start`. The key is public by design: it only lets a browser send events. Without it, the Network tab shows no `/ingest` request and nothing logs. With it, every route change sends a `$pageview` to `/ingest/e/` or `/ingest/batch/`, and each action above sends its event; PostHog's "Activity" page lists them live.
+
+Reading the data in the PostHog UI:
+
+- **Web analytics** (left nav): visitors, page views, top pages, referrers, countries, devices. The daily glance.
+- **Product analytics, Trends:** pick an event, for example `install_command_copied`, break down by `base` and `package_manager`. Save it as an insight and pin it to a dashboard named "shadcn-table".
+- **Funnels:** `$pageview` filtered to an example page, then `example_code_opened`, then `install_command_copied`; a breakdown by `base` shows which base converts.
+- **Paths:** start at `$pageview` on the install page to see where readers go next.
+- Three insights to create on day one: page views by base, install copies by base and package manager, the example-to-install funnel.
+
+Session replay, surveys, feature flags and error tracking are not enabled. There is no cookie banner: `person_profiles: 'identified_only'` without `identify` stores an anonymous id only; revisit if an EU audience grows.
 
 ## Common Mistakes
 

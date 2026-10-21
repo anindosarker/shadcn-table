@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { useBase } from '@/components/base-selector';
 import type { Base } from '@/lib/install';
+import { trackStorybookOpened } from '@/lib/analytics';
 
 /**
  * One Storybook host serves both trees: the Radix UI build at the root and the
@@ -20,7 +21,12 @@ export const storybookUrl: Record<Base, string> = {
 export const StorybookLink = ({ children }: { children?: ReactNode }) => {
   const base = useBase();
   return (
-    <a href={storybookUrl[base]} target="_blank" rel="noreferrer">
+    <a
+      href={storybookUrl[base]}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() => trackStorybookOpened({ base, surface: 'mdx_link' })}
+    >
       {children ?? 'Examples'}
     </a>
   );

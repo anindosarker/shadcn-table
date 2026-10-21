@@ -1,7 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import { Dune } from './dune';
 import { GITHUB_URL } from '@/components/dev-home/v4/nav';
 import { DISCORD_URL } from '@/lib/layout.shared';
+import { useBase } from '@/components/base-selector';
+import { storybookUrl } from '@/components/mdx/storybook-link';
+import type { Base } from '@/lib/install';
+import { trackOutboundClicked, trackStorybookOpened } from '@/lib/analytics';
 
 const COLUMNS = [
   {
@@ -16,11 +22,26 @@ const COLUMNS = [
   {
     head: 'Source',
     links: [
-      { label: 'GitHub', href: GITHUB_URL },
-      { label: 'Discord', href: DISCORD_URL },
+      {
+        label: 'GitHub',
+        href: GITHUB_URL,
+        track: () =>
+          trackOutboundClicked({ target: 'github', surface: 'footer' }),
+      },
+      {
+        label: 'Discord',
+        href: DISCORD_URL,
+        track: () =>
+          trackOutboundClicked({ target: 'discord', surface: 'footer' }),
+      },
       { label: 'TanStack Table', href: 'https://tanstack.com/table' },
       { label: 'shadcn/ui', href: 'https://ui.shadcn.com' },
-      { label: 'Storybook', href: 'https://storybook.shadcn-table.com' },
+      {
+        label: 'Storybook',
+        href: storybookUrl.radix,
+        track: (base: Base) =>
+          trackStorybookOpened({ base, surface: 'footer' }),
+      },
     ],
   },
 ] as const;
@@ -35,6 +56,7 @@ export function Footer({
   /** Link back to the /dev index; only the /dev/12 copy shows it. */
   showVariantsLink?: boolean;
 }) {
+  const base = useBase();
   return (
     <footer className="v4-footer">
       <Dune fps={6} className="v4-footer-dune" />
@@ -58,7 +80,11 @@ export function Footer({
               {col.links.map((l) => (
                 <li key={l.label}>
                   {l.href.startsWith('http') ? (
-                    <a href={l.href} className="v4-footer-link">
+                    <a
+                      href={l.href}
+                      className="v4-footer-link"
+                      onClick={'track' in l ? () => l.track(base) : undefined}
+                    >
                       {l.label}
                     </a>
                   ) : (

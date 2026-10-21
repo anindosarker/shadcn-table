@@ -5,6 +5,8 @@ import { CheckIcon, CopyIcon } from 'lucide-react';
 import { useBase } from '@/components/base-selector';
 import { cn } from '@/lib/cn';
 import { libraryAddCommand } from '@/lib/install';
+import { libraryItem } from '@/lib/shared';
+import { trackInstallCommandCopied } from '@/lib/analytics';
 
 interface InstallCommandProps {
   /** 'boxed' draws a hairline box; 'bare' is just the line + button. */
@@ -14,7 +16,11 @@ interface InstallCommandProps {
   className?: string;
 }
 
-/** The install command in mono with a silent copy button. */
+/**
+ * The install command in mono with a silent copy button. A copy of the
+ * default command (the library, pnpm) is reported; a given `command` is not,
+ * as its item is unknown here.
+ */
 export function InstallCommand({
   variant = 'boxed',
   command: givenCommand,
@@ -36,6 +42,14 @@ export function InstallCommand({
     setCopied(true);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), 1500);
+    if (givenCommand === undefined) {
+      trackInstallCommandCopied({
+        item: libraryItem,
+        base,
+        package_manager: 'pnpm',
+        surface: 'home',
+      });
+    }
   };
 
   return (

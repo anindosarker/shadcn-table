@@ -33,6 +33,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/cn';
+import type { Base } from '@/lib/install';
+import { trackExampleFileViewed } from '@/lib/analytics';
 
 export interface ExplorerFile {
   /** Path relative to the example folder, for example `hooks/useUsersQuery.ts`. */
@@ -46,6 +48,9 @@ export interface ExplorerFile {
 interface Props {
   /** In tree order: the entry file first, then folders before files. */
   files: ExplorerFile[];
+  /** Example folder name and base, reported with each file the reader opens. */
+  example: string;
+  base: Base;
 }
 
 type TreeNode =
@@ -164,7 +169,7 @@ const indentRem = (depth: number) => 0.75 + depth * 0.875;
  * arrow keys on the handle) and hidden; both are remembered. Under 640px the
  * tree gives way to a file menu in the path bar.
  */
-export const CodeExplorer = ({ files }: Props) => {
+export const CodeExplorer = ({ files, example, base }: Props) => {
   const [activePath, setActivePath] = useState(files[0]?.path ?? '');
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const [copied, setCopied] = useState(false);
@@ -206,6 +211,13 @@ export const CodeExplorer = ({ files }: Props) => {
     const half = (rootRef.current?.clientWidth ?? 2 * MAX_WIDTH) / 2;
     const max = Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, half));
     return Math.round(Math.min(max, Math.max(MIN_WIDTH, value)));
+  };
+
+  /** The tree and the file menu both land here; opening a file reports it. */
+  const viewFile = (path: string) => {
+    if (path === active.path) return;
+    trackExampleFileViewed({ example, base, file: path });
+    setActivePath(path);
   };
 
   const copy = async () => {
@@ -346,7 +358,7 @@ export const CodeExplorer = ({ files }: Props) => {
             data-tree-row
             aria-current={current ? 'true' : undefined}
             title={node.path}
-            onClick={() => setActivePath(node.path)}
+            onClick={() => viewFile(node.path)}
             style={indent}
             className={cn(
               rowClass,
@@ -441,7 +453,7 @@ export const CodeExplorer = ({ files }: Props) => {
               <DropdownMenuContent align="start" className="docs-menu min-w-56">
                 <DropdownMenuRadioGroup
                   value={active.path}
-                  onValueChange={setActivePath}
+                  onValueChange={viewFile}
                 >
                   {files.map((f) => (
                     <DropdownMenuRadioItem

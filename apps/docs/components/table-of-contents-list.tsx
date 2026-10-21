@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import { useBase } from '@/components/base-selector';
+import { storybookUrl } from '@/components/mdx/storybook-link';
 import { routes, type RouteItem } from '@/lib/routes';
+import { trackStorybookOpened } from '@/lib/analytics';
 
 export const TableOfContentsListItem = ({
   item,
@@ -10,19 +15,25 @@ export const TableOfContentsListItem = ({
   item: RouteItem;
   isFooter?: boolean;
   index?: number;
-}) =>
-  isFooter ? (
+}) => {
+  const base = useBase();
+  // The examples index lists the Storybook next to the example pages.
+  const onClick = item.href.startsWith(storybookUrl.radix)
+    ? () => trackStorybookOpened({ base, surface: 'nav' })
+    : undefined;
+  return isFooter ? (
     <li>
       <Link
         href={item.href}
         className="text-sm leading-[1.6rem] text-fd-muted-foreground no-underline hover:underline"
+        onClick={onClick}
       >
         {item.label}
       </Link>
     </li>
   ) : (
     <li>
-      <Link href={item.href} className="docs-index-link">
+      <Link href={item.href} className="docs-index-link" onClick={onClick}>
         <span className="docs-index-num">
           {String(index + 1).padStart(2, '0')}
         </span>
@@ -31,6 +42,7 @@ export const TableOfContentsListItem = ({
       </Link>
     </li>
   );
+};
 
 interface Props {
   items?: Array<RouteItem>;
