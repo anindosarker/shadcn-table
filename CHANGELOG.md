@@ -19,11 +19,28 @@ publishes the section as the GitHub release notes.
 - `GET /version.txt` on the docs site returns the library version.
 - `release.yml` on `workflow_dispatch` with `dry_run` runs every check and skips the
   release.
+- Privacy-preserving analytics on the docs site with PostHog, sent through a first-party
+  `/ingest` proxy; no cookie banner, no session replay. The events are listed in
+  `CONTRIBUTING.md`.
 
 ### Changed
 
 - The CI install matrix (fresh, existing, base, nextjs) lives in the reusable
   `.github/workflows/install.yml`; `ci.yml` and `release.yml` both call it.
+- The library source is two complete trees, `registry/radix` and `registry/base`, kept in
+  step by the CI guard `pnpm check:bases`; registry scripts live under `scripts/registry`.
+  Install addresses are unchanged.
+- Docs pages are far lighter: example code is highlighted in the browser on demand
+  (`/docs/guides/editing` went from 4.7 MB to 1.05 MB).
+- The docs app is back at `apps/shadcn-table-docs`, with one installed copy per base
+  (`components/ui-radix`, `components/ui-base`) and one installer,
+  `scripts/install.mjs <base>`. The example code view shows `@/components/ui` imports,
+  as a user has them.
+
+### Fixed
+
+- The install command bar on the home page stacks on small screens and no longer
+  overflows at 390 and 440 px.
 
 ### Fixed
 
