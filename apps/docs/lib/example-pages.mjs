@@ -1,6 +1,6 @@
 /**
  * Docs pages that render an example. Shared by
- * packages/shadcn-table/registry/examples.mjs (registry item title and
+ * packages/shadcn-table/scripts/registry/examples.mjs (registry item title and
  * description) and lib/example-prompt.ts (the page URL in the copy prompt),
  * so both resolve an example to the same page.
  *

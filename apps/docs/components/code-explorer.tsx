@@ -23,6 +23,7 @@ import {
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
 } from 'lucide-react';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -38,10 +39,10 @@ import { trackExampleFileViewed } from '@/lib/analytics';
 export interface ExplorerFile {
   /** Path relative to the example folder, for example `hooks/useUsersQuery.ts`. */
   path: string;
-  /** Raw source, for the copy button. */
+  /** Raw source, for the copy button and the highlighter. */
   source: string;
-  /** The highlighted source, already wrapped in a fumadocs CodeBlock. */
-  node: ReactNode;
+  /** Shiki language from the extension: tsx, ts, css, json or text. */
+  lang: string;
 }
 
 interface Props {
@@ -160,10 +161,13 @@ const indentRem = (depth: number) => 0.75 + depth * 0.875;
 
 /**
  * Source view of an example: a file tree on the left, a path bar with a copy
- * button and the highlighted code of the active file. A single file shows
- * just the path bar and code. The tree can be resized from its right edge
- * (drag, or arrow keys on the handle) and hidden; both are remembered. Under
- * 640px the tree gives way to a file menu in the path bar.
+ * button and the code of the active file. The active file is highlighted in
+ * the browser by DynamicCodeBlock when the reader opens it (the server sends
+ * raw strings only, which keeps the pages small); until the grammar has
+ * loaded the raw source shows in a plain pre. A single file shows just the
+ * path bar and code. The tree can be resized from its right edge (drag, or
+ * arrow keys on the handle) and hidden; both are remembered. Under 640px the
+ * tree gives way to a file menu in the path bar.
  */
 export const CodeExplorer = ({ files, example, base }: Props) => {
   const [activePath, setActivePath] = useState(files[0]?.path ?? '');
@@ -483,7 +487,17 @@ export const CodeExplorer = ({ files, example, base }: Props) => {
             {copied ? <CheckIcon /> : <CopyIcon />}
           </Button>
         </div>
-        <div className="min-w-0 flex-1">{active.node}</div>
+        <div className="min-w-0 flex-1">
+          <DynamicCodeBlock
+            lang={active.lang}
+            code={active.source}
+            codeblock={{
+              allowCopy: false,
+              className: 'rounded-none border-0',
+              viewportProps: { className: 'max-h-[32rem]' },
+            }}
+          />
+        </div>
       </div>
     </div>
   );
