@@ -1,57 +1,61 @@
 # Contributing
 
-This repo holds shadcn-table, a React data table on TanStack Table v8 that ships as a shadcn registry: the source is copied into the user's app by the shadcn CLI, there is no npm package, and the Radix and Base UI bases are supported through one edition each. The library source lives once in `packages/shadcn-table/shared/`; each base under `packages/shadcn-table/bases/` holds its shadcn parts and the few library files that differ. A change goes through four pieces:
+This repo holds shadcn-table, a React data table on TanStack Table v9 that ships as a shadcn registry: the source is copied into the user's app by the shadcn CLI, there is no npm package, and the Radix and Base UI bases are supported through one edition each. The library source lives once per base, as two complete trees under `packages/shadcn-table/registry/`: `radix` and `base`, each with its shadcn parts and every library file. A change goes through four pieces:
 
-1. **Library:** `packages/shadcn-table`, the shared source, the per-base overrides and the shared Storybook stories.
+1. **Library:** `packages/shadcn-table`, the two trees and the shared Storybook stories.
 2. **Tests:** Vitest runs every story in headless Chromium, once per base.
-3. **Docs:** `apps/docs`, which holds an installed copy of the library.
-4. **Registry:** what users install, one item per base built from the shared files plus that base's overrides.
+3. **Docs:** `apps/shadcn-table-docs`, which holds an installed copy of the library.
+4. **Registry:** what users install, one item per base built from that base's tree.
 
 ```text
-packages/shadcn-table/shared  +  bases/radix | bases/base
+packages/shadcn-table/registry/radix | registry/base
   ▼ stories + vitest (both bases)   (prove the change)
   ▼ registry:build                  (what users install)
-  ▼ lib:install                     (docs app copy, Radix edition)
-apps/docs              (docs, examples, page gate)
+  ▼ lib:install <base>              (docs app copies, one per base)
+apps/shadcn-table-docs              (docs, examples, page gate)
 ```
 
 The goal of this guide: make a change, prove it, open a PR. Release steps live in `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`; Vercel and table internals are out of scope here.
 
-## Shared Source, Per-Base Overrides
+## Two Trees
 
-`shared/components/ui/shadcn-table/` is the library. Each base builds on its own shadcn parts (Radix in `radix-ui`, Base UI in `@base-ui/react`), and where a library file has to differ for those parts, the base holds a copy at the same relative path under `bases/<base>/components/ui/shadcn-table/`, which replaces the shared file for that base. Every `@/` import resolves base-first, then `shared/`; no adapter layer, no codemod, nothing generated. The override folder listing is the complete list of differences between the editions. The rule for a library change:
+`registry/<base>/components/ui/shadcn-table/` is the library, once per base. Each tree builds on its own shadcn parts (Radix in `radix-ui`, Base UI in `@base-ui/react`); `@/` is a plain alias to the tree, so no adapter layer, no codemod, nothing generated. `scripts/registry/base-diff.json` lists the library files that differ between the trees on purpose; every other library file must be byte-identical in both, and `pnpm check:bases` (the CI job `bases`) fails otherwise. The rule for a library change:
 
-- **Edit the shared file** when both editions take the change, or
-- **edit (or add) the override** when only one base does, and say so in the PR.
+- **Edit both trees** when both editions take the change (the guard reports a missed twin), or
+- **edit one tree and add the path to `base-diff.json`** in the same commit when only one base does, and say so in the PR.
 
-`packages/shadcn-table/bases/README.md` has the resolution rules, how to add or retire an override and the gates.
+`packages/shadcn-table/registry/README.md` has what lives where, how to add a part and the gates.
 
 ## Folder Layout
 
 ```text
 packages/shadcn-table/
-  shared/components/ui/shadcn-table/  # the library, one copy; locales under locales/
-  bases/radix/
+  registry/radix/
     components.json                 # style radix-nova
     components/ui/                  # shadcn/ui parts the library uses (Radix UI)
-    components/ui/shadcn-table/     # Radix UI overrides of shared files (none today)
+    components/ui/shadcn-table/     # the library, Radix UI edition; locales under locales/
     registry.ts                     # item definition: shadcn-table + locale items
-  bases/base/
+  registry/base/
     components.json                 # style base-nova
     components/ui/                  # shadcn/ui parts the library uses (Base UI)
-    components/ui/shadcn-table/     # Base UI overrides of shared files (23 today)
+    components/ui/shadcn-table/     # the library, Base UI edition (23 files differ)
     registry.ts                     # item definition: shadcn-table-base + locale items
-  bases/README.md                   # how overrides resolve, how to add a part
+  registry/README.md                # what lives where, how to change a file, how to add a part
   stories/                          # Storybook stories, also the test suite, run once per base
-  registry/lib.mjs                  # item helpers: shared files + overrides + forked parts + css
-  registry/build.mjs                # collects both registry.ts files into registry.json
-  registry/examples.mjs             # example items -> apps/docs/registry.json
-  registry/hosted.mjs               # hosted copies per base -> apps/docs/public/r/<base>/ (gitignored)
-  registry/add-part.mjs             # pnpm add-part <base> <part>: fetch a shadcn part into bases/<base>/components/ui/
+  scripts/registry/lib.mjs          # item helpers: tree files + forked parts + css
+  scripts/registry/build.mjs        # collects both registry.ts files into registry.json
+  scripts/registry/examples.mjs     # example items -> apps/shadcn-table-docs/registry.json
+  scripts/registry/hosted.mjs       # hosted copies per base -> apps/shadcn-table-docs/public/r/<base>/ (gitignored)
+  scripts/registry/add-part.mjs     # pnpm add-part <base> <part>: fetch a shadcn part into registry/<base>/components/ui/
+  scripts/registry/check-bases.mjs  # pnpm check:bases: the two-tree guard, reads base-diff.json
+  scripts/registry/base-diff.json   # library files allowed to differ between the trees
   registry.json                     # generated, committed, GitHub addresses
-apps/docs/
-  components/ui/shadcn-table/       # installed copy of the library (never edit)
-  examples/                         # one folder per docs example
+apps/shadcn-table-docs/
+  components/ui-radix/              # installed Radix UI copy of the library and its parts (never edit)
+  components/ui-base/               # installed Base UI copy, same shape (never edit)
+  examples/<slug>/                  # one folder per docs example, imports @/components/ui/ like a user's project
+  examples/.radix/ .base/           # generated per-base variants of the examples (gitignored)
+  scripts/install.mjs               # pnpm lib:install <base>: reinstalls one copy from the built registry
   content/docs/                     # MDX pages
   registry.json                     # generated example items, committed
   scripts/check-pages.mjs           # page gate against a running dev server
@@ -81,7 +85,8 @@ Optional environment variables:
 | `NEXT_DIST_DIR`        | docs build dir, so two `next dev` or `next build` runs do not share `.next`               |
 | `NEXT_PUBLIC_SITE_URL` | absolute site URL in deployments (install snippets, agent prompt); the dev port otherwise |
 | `REGISTRY_BASE_URL`    | base URL written into the dev registry instead of `http://localhost:5310/r`              |
-| `ST_BASE`              | `base` resolves `@/` through `bases/base` before `shared/` in Vitest and Storybook (the `:base` scripts set it); unset means `bases/radix` |
+| `ST_BASE`              | `base` aliases `@/` to `registry/base` in Vitest and Storybook (the `:base` scripts set it); unset means `registry/radix` |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project key for the docs app; unset means analytics load nothing (see Analytics)   |
 
 ## 1. Set Up
 
@@ -96,16 +101,17 @@ pnpm --filter shadcn-table exec playwright install chromium
 
 ## 2. Change the Library
 
-Edit `packages/shadcn-table/shared/components/ui/shadcn-table` (or the base's override of that file under `bases/<base>/components/ui/shadcn-table`, when one exists), then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested. The Radix loop:
+Edit `packages/shadcn-table/registry/radix/components/ui/shadcn-table` and its twin under `registry/base/components/ui/shadcn-table` (or one tree plus `scripts/registry/base-diff.json` for a base-only change), then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested. The Radix loop:
 
 ```bash
 pnpm storybook                          # http://localhost:6006
 pnpm test                               # every story, headless Chromium
 pnpm --filter shadcn-table tsc:radix
 pnpm --filter shadcn-table lint
+pnpm check:bases
 ```
 
-The Base UI loop, the same stories against `bases/base`:
+The Base UI loop, the same stories against `registry/base`:
 
 ```bash
 pnpm --filter shadcn-table storybook:base    # http://localhost:6007
@@ -114,27 +120,29 @@ pnpm --filter shadcn-table tsc:baseui
 ```
 
 - **Stories are tests.** `pnpm test` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it, and the story must pass on both bases. A behavior that differs on purpose gets a `<name>.radix.stories.tsx` or `<name>.base.stories.tsx`, included only on that base.
-- **shadcn/ui parts.** `bases/<base>/components/ui/*.tsx` are plain shadcn components; change them only when the table needs it, since users get their own copies. Add or refresh one with `pnpm add-part`, which fetches it in the base's style (`bases/<base>/components.json`) and prints the dependencies to add:
+- **shadcn/ui parts.** `registry/<base>/components/ui/*.tsx` are plain shadcn components; change them only when the table needs it, since users get their own copies. Add or refresh one with `pnpm add-part`, which fetches it in the base's style (`registry/<base>/components.json`) and prints the dependencies to add:
 
   ```bash
   pnpm add-part base tooltip               # or: pnpm add-part radix tooltip
   ```
 
-- **Props differ per base.** Menu, select, tooltip, checkbox, slider and popover take different props on Base UI (`render` instead of `asChild`, `closeOnClick`, `alignItemWithTrigger`, the `indeterminate` prop, `onValueCommitted`, ...). The Base UI overrides are plain code against those parts; do not port a Radix prop over and expect it to type-check.
+- **Props differ per base.** Menu, select, tooltip, checkbox, slider and popover take different props on Base UI (`render` instead of `asChild`, `closeOnClick`, `alignItemWithTrigger`, the `indeterminate` prop, `onValueCommitted`, ...). The files in `base-diff.json` are plain code against those parts; do not port a Radix prop over and expect it to type-check.
 
 ## 3. Sync the Docs App
 
-The docs app renders the installed copy in `components/ui/shadcn-table`, not the package source, so a library change is invisible there until you reinstall it. The docs run the Radix edition.
+The docs app renders the installed copies in `components/ui-radix` and `components/ui-base`, not the package source, so a library change is invisible there until you reinstall them. Each copy comes from that base's built item; the installer restores `components.json`, `app/global.css`, `package.json` and the lockfile afterwards, so a reinstall of an unchanged library leaves `git status` clean.
 
 ```bash
 pnpm registry:build
-pnpm --filter shadcn-table-docs lib:install
-git checkout -- apps/docs/app/global.css      # lib:install rewrites it
+pnpm --filter shadcn-table-docs lib:install radix
+pnpm --filter shadcn-table-docs lib:install base
 pnpm --filter shadcn-table-docs dev                        # http://localhost:5320
 pnpm --filter shadcn-table-docs types:check
 ```
 
-Page gate, with the dev server running, from `apps/docs`:
+The example sources under `examples/<slug>/` import `@/components/ui/...`, the path a reader has after `shadcn add`, and that is what the code view shows on both bases. The live examples run on generated variants, `examples/.radix/` and `examples/.base/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies.
+
+Page gate, with the dev server running, from `apps/shadcn-table-docs`:
 
 ```bash
 node scripts/check-pages.mjs a --base http://localhost:5320          # one cluster
@@ -143,7 +151,7 @@ node scripts/check-pages.mjs --base http://localhost:5320            # everythin
 ```
 
 - **Clusters.** `a` is getting-started and the API pages, `b` and `c` the guides, `d` and `e` the examples; `e` also covers the home page. The gate loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
-- **`tsconfig.json` include noise.** Next.js appends `<distDir>/types/**/*.ts` lines to `apps/docs/tsconfig.json` on every `dev` and `build`. Keep only the default `.next/...` pair; do not commit the others.
+- **`tsconfig.json` include noise.** Next.js appends `<distDir>/types/**/*.ts` lines to `apps/shadcn-table-docs/tsconfig.json` on every `dev` and `build`. Keep only the default `.next/...` pair; do not commit the others.
 - **Second server.** `PORT=5331 pnpm --filter shadcn-table-docs dev` runs a second docs server next to the default one, with its own build dir.
 
 ## 4. Prove the Install
@@ -206,20 +214,20 @@ Docs pages live in `content/docs`; every example is a folder under `examples/` w
 
 ```bash
 pnpm registry:build                     # library items -> packages/shadcn-table/registry.json
-pnpm registry:items                     # example items -> apps/docs/registry.json
-pnpm registry:hosted                    # hosted copies -> apps/docs/public/r/{radix,base}/ (docs build runs it)
+pnpm registry:items                     # example items -> apps/shadcn-table-docs/registry.json
+pnpm registry:hosted                    # hosted copies -> apps/shadcn-table-docs/public/r/{radix,base}/ (docs build runs it)
 ```
 
-The registry has two library items, one per base, each with its own locale items; both list the shared files, the Base UI item with its overrides in place of the shared copies:
+The registry has two library items, one per base, each with its own locale items; each lists every file of its tree:
 
-| Base          | Item                | Locales                           | npm dependency   |
-| ------------- | ------------------- | --------------------------------- | ---------------- |
-| `bases/radix` | `shadcn-table`      | `shadcn-table-locale-<code>`      | `radix-ui`       |
-| `bases/base`  | `shadcn-table-base` | `shadcn-table-base-locale-<code>` | `@base-ui/react` |
+| Tree             | Item                | Locales                           | npm dependency   |
+| ---------------- | ------------------- | --------------------------------- | ---------------- |
+| `registry/radix` | `shadcn-table`      | `shadcn-table-locale-<code>`      | `radix-ui`       |
+| `registry/base`  | `shadcn-table-base` | `shadcn-table-base-locale-<code>` | `@base-ui/react` |
 
 Both list the same 23 shadcn parts as bare `registryDependencies`, so the user's CLI installs its own base's parts. Users install from the hosted registry on the docs site, one path per base with the same item names on both: `https://www.shadcn-table.com/r/radix/shadcn-table.json` and `https://www.shadcn-table.com/r/base/shadcn-table.json` (locales `/r/<base>/shadcn-table-locale-<code>.json`, examples `/r/<base>/example-<slug>.json`), or through the namespace `@st=https://www.shadcn-table.com/r/{style}/{name}.json`. The GitHub addresses (`anindosarker/shadcn-table/<item>`) stay as the fallback.
 
-- **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `packages/shadcn-table/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
+- **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `packages/shadcn-table/scripts/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
 - **Example items are base-neutral.** They use the public API only and pin no library item, so one example item serves both bases; the docs say to install the table first. Examples pin shadcn parts to the branch in `lib/shared.ts` (`gitConfig.branch`).
 - **Page checks.** A new page that renders live examples or prop tables needs an entry in `scripts/page-checks/<cluster>.mjs`.
 
@@ -231,6 +239,7 @@ CI runs these, in this order; run them first.
 pnpm --filter shadcn-table tsc:radix
 pnpm --filter shadcn-table tsc:baseui
 pnpm --filter shadcn-table lint
+pnpm check:bases
 pnpm --filter shadcn-table storybook:build
 pnpm --filter shadcn-table storybook:build:base
 pnpm test
@@ -247,11 +256,33 @@ On a push, CI also validates the registry at the pushed SHA, installs the librar
 - **Commit messages.** `type: short summary` in the imperative (`fix: keep pinned rows visible in grid mode`), one concern per commit.
 - **Stage explicit paths.** No `git add -A`: generated files, `.next-*` dirs and `tsconfig.json` noise slip in otherwise.
 
+## Analytics
+
+The docs app reports to PostHog (US cloud); the library is untouched. How it is wired:
+
+1. `apps/shadcn-table-docs/components/posthog-provider.tsx` initialises `posthog-js` once in a `useEffect`, only when `NEXT_PUBLIC_POSTHOG_KEY` is set, with `api_host: '/ingest'`, page views on history changes, no autocapture and no `identify`; it registers the selected base as a super property, so every report can break down by `base`. Without the key it renders its children and loads nothing.
+2. `apps/shadcn-table-docs/app/layout.tsx` mounts it inside fumadocs' `RootProvider`.
+3. `apps/shadcn-table-docs/next.config.mjs` rewrites `/ingest/static/*` to `us-assets.i.posthog.com` and `/ingest/*` to `us.i.posthog.com`, with `skipTrailingSlashRedirect` because PostHog paths end with a slash. Events leave from the site's own origin, so ad blockers that drop `posthog.com` requests do not drop them.
+4. `apps/shadcn-table-docs/lib/analytics.ts` holds one function per event with typed properties: `base_switched`, `install_command_copied`, `example_code_opened`, `example_file_viewed`, `storybook_opened`, `outbound_clicked`, `search_used`. Components call these functions and never `posthog` directly, so renaming an event is a change to that file alone.
+5. The key lives in the Vercel project env (Production and Preview) and in a local `.env.local`; it is never committed.
+
+To run with a key locally, put `NEXT_PUBLIC_POSTHOG_KEY=phc_...` in `apps/shadcn-table-docs/.env.local` (gitignored) and start the dev server or `next build && next start`. The key is public by design: it only lets a browser send events. Without it, the Network tab shows no `/ingest` request and nothing logs. With it, every route change sends a `$pageview` to `/ingest/e/` or `/ingest/batch/`, and each action above sends its event; PostHog's "Activity" page lists them live.
+
+Reading the data in the PostHog UI:
+
+- **Web analytics** (left nav): visitors, page views, top pages, referrers, countries, devices. The daily glance.
+- **Product analytics, Trends:** pick an event, for example `install_command_copied`, break down by `base` and `package_manager`. Save it as an insight and pin it to a dashboard named "shadcn-table".
+- **Funnels:** `$pageview` filtered to an example page, then `example_code_opened`, then `install_command_copied`; a breakdown by `base` shows which base converts.
+- **Paths:** start at `$pageview` on the install page to see where readers go next.
+- Three insights to create on day one: page views by base, install copies by base and package manager, the example-to-install funnel.
+
+Session replay, surveys, feature flags and error tracking are not enabled. There is no cookie banner: `person_profiles: 'identified_only'` without `identify` stores an anonymous id only; revisit if an EU audience grows.
+
 ## Common Mistakes
 
-- **Editing the docs copy.** `apps/docs/components/ui/shadcn-table` is overwritten by `lib:install`. Change `packages/shadcn-table/shared` (or the base's override) and sync.
-- **Editing the shared file when the base has an override.** The override wins on that base, so the change is invisible there; `pnpm test` green and `pnpm test:base` red (or the reverse) is the sign. Make the change in the override too, or retire the override if the two became identical.
-- **Forgetting `lib:install`.** The docs app, the page gate and the examples keep running on the old library.
+- **Editing the docs copy.** `apps/shadcn-table-docs/components/ui-radix` and `components/ui-base` are overwritten by `lib:install <base>`. Change `packages/shadcn-table/registry/<base>` and sync.
+- **Editing one tree only.** The other edition keeps the old code; `pnpm check:bases` red is the sign, as is `pnpm test` green and `pnpm test:base` red (or the reverse). Make the change in the other tree too, or add the path to `base-diff.json` when the difference is meant.
+- **Forgetting `lib:install <base>`.** The docs app, the page gate and the examples keep running on the old library on that base.
 - **Committing `tsconfig.json` include noise.** Only the two `.next/...` lines belong there.
 - **`registry.json` rewritten with localhost.** Use `pnpm registry:dev`, which writes to the gitignored `.dev/`.
 - **A port already in use.** Pick another with `PORT=` (docs), `storybook dev -p` (Storybook) or `REGISTRY_BASE_URL` plus your own `serve` (registry).
@@ -261,8 +292,8 @@ On a push, CI also validates the registry at the pushed SHA, installs the librar
 
 - `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`, the release checklist
 - `.ai/plans/v0.2-base-ui/anindosarker/v0.2-base-ui-plan.md`, the Base UI edition and why
-- `.ai/plans/structure-cleanup/anindosarker/structure-cleanup-plan.md`, the shared source layout and why
-- `packages/shadcn-table/bases/README.md`, how overrides resolve
+- `.ai/plans/v0.4.0/anindosarker/decisions.md`, the two-tree layout and why
+- `packages/shadcn-table/registry/README.md`, what lives where
 - `.github/workflows/ci.yml`, the jobs behind step 6
-- `apps/docs/content/docs/getting-started/install.mdx`, the user-facing install page
+- `apps/shadcn-table-docs/content/docs/getting-started/install.mdx`, the user-facing install page
 - `LICENSE`
