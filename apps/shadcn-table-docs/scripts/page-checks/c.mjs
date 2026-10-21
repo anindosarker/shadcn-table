@@ -99,7 +99,8 @@ const checks = {
   },
   '/docs/guides/localization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
-    const tabs = await page.locator('[role="tab"]').count();
+    // 38 locale files; the header's base switch (#nd-subnav) has two tabs of its own.
+    const tabs = await page.locator('[role="tab"]:not(#nd-subnav *)').count();
     check('locale tabs', tabs === 38, `tabs=${tabs}`);
     const es = await example(page, 'localization-i18n-es', check);
     await marker(
