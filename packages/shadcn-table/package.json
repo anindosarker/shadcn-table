@@ -5,7 +5,7 @@
   "author": "Anindo Sarker",
   "repository": "github:anindosarker/shadcn-table",
   "homepage": "https://shadcn-table.com",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "scripts": {
     "registry:build": "node scripts/registry/build.mjs && shadcn build",
