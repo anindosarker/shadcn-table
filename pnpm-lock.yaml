@@ -22,7 +22,7 @@ importers:
         specifier: 2.5.6
         version: 2.5.6
 
-  apps/docs:
+  apps/shadcn-table-docs:
     dependencies:
       '@base-ui/react':
         specifier: ^1.9.0

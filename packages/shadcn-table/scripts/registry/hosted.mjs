@@ -4,8 +4,8 @@
 // `next build`).
 //
 // Emits the hosted registries the docs site serves, one directory per base:
-//   apps/docs/public/r/radix/   from the Radix items
-//   apps/docs/public/r/base/    from the Base UI items
+//   apps/shadcn-table-docs/public/r/radix/   from the Radix items
+//   apps/shadcn-table-docs/public/r/base/    from the Base UI items
 // Each directory gets its own registry.json catalog (the base's main item, its
 // locale items and every example item) and the resolved item files `shadcn
 // build` produces from it. The item names are the same in both directories

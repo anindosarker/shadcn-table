@@ -4,6 +4,6 @@
   "homepage": "https://github.com/anindosarker/shadcn-table",
   "include": [
     "packages/shadcn-table/registry.json",
-    "apps/docs/registry.json"
+    "apps/shadcn-table-docs/registry.json"
   ]
 }
