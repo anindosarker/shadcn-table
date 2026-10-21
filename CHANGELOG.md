@@ -8,6 +8,8 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+## 0.3.1 - 2026-10-21
+
 ### Added
 
 - Automated releases: `pnpm release <version>` bumps both `package.json` versions,
