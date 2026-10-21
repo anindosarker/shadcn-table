@@ -4,9 +4,10 @@
  * panel (no group tab strip), so a page asserts that panel, its table rows,
  * the Code toggle and the page's feature marker. The home page asserts the new
  * landing: hero, install command, live demo rows, feature and install
- * headings, guide links.
+ * headings, guide links, then holds the page through the full live demo loop
+ * on Radix UI and on Base UI (demoLoop in _helpers.mjs).
  */
-import { codeToggle, example } from './_helpers.mjs';
+import { codeToggle, demoLoop, example } from './_helpers.mjs';
 
 /**
  * An example page renders exactly one playground panel (data-mode) and no
@@ -276,6 +277,7 @@ const checks = {
       'no contributors section',
       !txt.includes('Maintainers and Contributors'),
     );
+    await demoLoop(page, check);
   },
 };
 
