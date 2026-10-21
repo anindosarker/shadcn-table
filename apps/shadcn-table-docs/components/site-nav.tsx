@@ -10,6 +10,7 @@ import { GitHubIcon } from '@/components/github-icon';
 import { DiscordIcon } from '@/components/discord-icon';
 import { cn } from '@/lib/cn';
 import { DISCORD_URL, GITHUB_URL, NAV_LINKS } from '@/lib/layout.shared';
+import { trackOutboundClicked } from '@/lib/analytics';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
@@ -65,6 +66,9 @@ export function SiteNav(props: ComponentProps<'header'>) {
             href={GITHUB_URL}
             aria-label="GitHub"
             className="site-nav-icon site-nav-desktop"
+            onClick={() =>
+              trackOutboundClicked({ target: 'github', surface: 'header' })
+            }
           >
             <GitHubIcon />
           </a>
@@ -74,6 +78,9 @@ export function SiteNav(props: ComponentProps<'header'>) {
             target="_blank"
             rel="noreferrer"
             className="site-nav-icon site-nav-desktop"
+            onClick={() =>
+              trackOutboundClicked({ target: 'discord', surface: 'header' })
+            }
           >
             <DiscordIcon />
           </a>

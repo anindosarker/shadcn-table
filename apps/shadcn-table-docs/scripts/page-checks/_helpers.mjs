@@ -276,7 +276,8 @@ export async function exampleGroup(page, tabs, check) {
  * while the Code view keeps showing the base-neutral source, with
  * `@/components/ui/shadcn-table` imports and no `ui-radix` or `ui-base`;
  * then Radix again, same source. No console errors is asserted by the
- * runner.
+ * runner. The explorer highlights the active file in the browser, so the
+ * code view's text is read only once a `code` element is in the explorer.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
@@ -284,12 +285,20 @@ export async function baseSwitch(page, id, check) {
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
   const rows = panel.locator('table tbody tr');
-  const source = async () =>
-    (await panel
-      .locator('pre')
+  const code = panel.locator('[data-slot="code-explorer"] code');
+  const source = async () => {
+    await code
       .first()
-      .textContent()
-      .catch(() => '')) ?? '';
+      .waitFor({ timeout: 15000 })
+      .catch(() => {});
+    return (
+      (await panel
+        .locator('pre')
+        .first()
+        .textContent()
+        .catch(() => '')) ?? ''
+    );
+  };
   const baseMarkup = () => panel.locator('[data-open], [data-closed]').count();
   check(`${id}: radix markup`, (await baseMarkup()) === 0);
   await header.getByRole('tab', { name: 'Base UI' }).click();

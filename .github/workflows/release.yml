@@ -1,0 +1,124 @@
+name: release
+
+# A tag v<version> (pushed by `pnpm release <version>`) verifies production
+# and creates the GitHub release; any failed job means no release. The same
+# checks run on workflow_dispatch, where dry_run (the default) skips the
+# release job: that run proves the workflow without a tag.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The version production must serve (the content of /version.txt, no v prefix)
+        type: string
+        required: true
+      dry_run:
+        description: Run every check and skip `gh release create`
+        type: boolean
+        default: true
+
+concurrency:
+  group: release-${{ github.ref }}
+
+permissions:
+  contents: read
+
+env:
+  SITE: https://www.shadcn-table.com
+
+jobs:
+  wait-for-production:
+    name: wait for production
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Resolve the version (tag name without the v, or the dispatch input)
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            version="$INPUT_VERSION"
+          else
+            case "$GITHUB_REF_NAME" in
+              v*) version="${GITHUB_REF_NAME#v}" ;;
+              *) echo "::error::$GITHUB_REF_NAME is not a v* tag"; exit 1 ;;
+            esac
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "verifying $version"
+      # Vercel builds master on the version commit, so the deployment that
+      # serves the version is the tagged commit. 20 minutes covers a docs
+      # build plus propagation.
+      - name: Poll ${{ env.SITE }}/version.txt every 30 s, 20 min timeout
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          deadline=$((SECONDS + 1200))
+          while :; do
+            served=$(curl -fsS --max-time 20 -H 'Cache-Control: no-cache' "$SITE/version.txt" 2>/dev/null | tr -d '[:space:]' || true)
+            if [ "$served" = "$VERSION" ]; then
+              echo "production serves $VERSION"
+              exit 0
+            fi
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "::error::production serves '${served:-nothing}' after 20 min, expected $VERSION"
+              exit 1
+            fi
+            echo "production serves '${served:-nothing}', waiting for $VERSION"
+            sleep 30
+          done
+
+  smoke:
+    name: smoke (registry, Storybook, SKILL.md, docs pages)
+    needs: wait-for-production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: node scripts/release/smoke.mjs
+      # The page checks need Playwright from packages/shadcn-table.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
+      - run: pnpm --filter shadcn-table-docs exec node scripts/check-pages.mjs --base "$SITE"
+
+  install:
+    needs: smoke
+    uses: ./.github/workflows/install.yml
+    with:
+      source: https://www.shadcn-table.com/r/<base>/shadcn-table.json
+
+  release:
+    name: gh release create
+    needs: [wait-for-production, install]
+    # A dispatch with dry_run proves the checks without releasing; on a tag
+    # push inputs.dry_run is empty, so the release runs.
+    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.wait-for-production.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/release/notes.mjs "$VERSION" > notes.md
+      # --verify-tag refuses to create the tag itself: the release is for the
+      # tag pnpm release pushed. A prerelease version (one with a hyphen) is
+      # marked as such instead of becoming the latest release.
+      - run: |
+          case "$VERSION" in
+            *-*) flag=--prerelease ;;
+            *) flag=--latest ;;
+          esac
+          gh release create "v$VERSION" --verify-tag --title "v$VERSION" --notes-file notes.md "$flag"

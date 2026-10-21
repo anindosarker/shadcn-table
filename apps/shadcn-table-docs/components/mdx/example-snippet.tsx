@@ -1,6 +1,4 @@
 import path from 'node:path';
-import { highlight } from 'fumadocs-core/highlight';
-import { CodeBlock, Pre } from 'fumadocs-ui/components/codeblock';
 import { buildExamplePrompt } from '@/lib/example-prompt';
 import { readExampleFiles } from '@/lib/example-source';
 import { bases, exampleAddCommand, type Base } from '@/lib/install';
@@ -26,32 +24,20 @@ const LANGS: Record<string, string> = {
 /**
  * Server side: reads every source file of the example once (TS.tsx first,
  * subfolders included, the index.tsx wrapper left out; the base-neutral
- * source with its `@/components/ui/` imports, shown on both bases),
- * highlights each by its extension with shiki and hands the code blocks
- * plus, per base, the install command and the copy prompt to the client
- * playground panel, which shows them next to the lazily loaded live table
- * of the selected base.
+ * source with its `@/components/ui/` imports, shown on both bases) and hands
+ * the raw sources with their shiki language plus, per base, the install
+ * command and the copy prompt to the client playground panel, which shows
+ * them next to the lazily loaded live table of the selected base. Nothing is
+ * highlighted here: the explorer highlights the active file in the browser,
+ * so the page carries strings instead of a rendered tree per file.
  */
 export const ExampleSnippet = async ({ name }: Props) => {
-  const render = (source: string, lang: string) =>
-    highlight(source, { lang, components: { pre: Pre } }).then((rendered) => (
-      <CodeBlock
-        allowCopy={false}
-        className="my-0 rounded-none border-0"
-        viewportProps={{ className: 'max-h-[32rem]' }}
-      >
-        {rendered}
-      </CodeBlock>
-    ));
-
   const sources = await readExampleFiles(name);
-  const files = await Promise.all(
-    sources.map(async (file) => ({
-      path: file.path,
-      source: file.source,
-      node: await render(file.source, LANGS[path.extname(file.path)] ?? 'text'),
-    })),
-  );
+  const files = sources.map((file) => ({
+    path: file.path,
+    source: file.source,
+    lang: LANGS[path.extname(file.path)] ?? 'text',
+  }));
 
   const variantFor = async (base: Base): Promise<ExampleVariantData> => ({
     files,
