@@ -1,11 +1,15 @@
 name: release
 
-# A tag v<version> (pushed by `pnpm release <version>`) verifies production
-# and creates the GitHub release; any failed job means no release. The same
-# checks run on workflow_dispatch, where dry_run (the default) skips the
+# A push to master whose packages/shadcn-table/package.json version has no
+# v<version> tag yet (the merged pull request from `pnpm release <version>`)
+# creates that tag, verifies production and creates the GitHub release; any
+# failed job means no release. A push to master whose version is already
+# tagged skips every job. A v* tag pushed by hand runs the same checks and
+# release for that tag. On workflow_dispatch, dry_run (the default) skips the
 # release job: that run proves the workflow without a tag.
 on:
   push:
+    branches: [master]
     tags: ['v*']
   workflow_dispatch:
     inputs:
@@ -26,34 +30,54 @@ permissions:
 
 env:
   SITE: https://www.shadcn-table.com
+  LIB_PACKAGE: packages/shadcn-table/package.json
 
 jobs:
   wait-for-production:
     name: wait for production
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    permissions:
+      contents: write
     outputs:
       version: ${{ steps.version.outputs.version }}
+      skip: ${{ steps.version.outputs.skip }}
     steps:
-      - name: Resolve the version (tag name without the v, or the dispatch input)
+      - uses: actions/checkout@v4
+      - name: Resolve the version (dispatch input, tag name without the v, or the package version on master) and tag it
         id: version
         env:
           INPUT_VERSION: ${{ inputs.version }}
+          EVENT: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
         run: |
+          skip=false
           if [ -n "$INPUT_VERSION" ]; then
             version="$INPUT_VERSION"
-          else
+          elif [ "$REF_TYPE" = tag ]; then
             case "$GITHUB_REF_NAME" in
               v*) version="${GITHUB_REF_NAME#v}" ;;
               *) echo "::error::$GITHUB_REF_NAME is not a v* tag"; exit 1 ;;
             esac
+          else
+            version=$(node -p "require('./$LIB_PACKAGE').version")
+            if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null; then
+              echo "v$version is already tagged; nothing to release"
+              skip=true
+            else
+              git tag "v$version" "$GITHUB_SHA"
+              git push origin "refs/tags/v$version"
+              echo "tagged v$version at $GITHUB_SHA"
+            fi
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "verifying $version"
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          [ "$skip" = true ] || echo "verifying $version"
       # Vercel builds master on the version commit, so the deployment that
       # serves the version is the tagged commit. 20 minutes covers a docs
       # build plus propagation.
       - name: Poll ${{ env.SITE }}/version.txt every 30 s, 20 min timeout
+        if: steps.version.outputs.skip != 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
@@ -75,6 +99,8 @@ jobs:
   smoke:
     name: smoke (registry, Storybook, SKILL.md, docs pages)
     needs: wait-for-production
+    # A skipped smoke skips install and release with it.
+    if: needs.wait-for-production.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -98,8 +124,8 @@ jobs:
   release:
     name: gh release create
     needs: [wait-for-production, install]
-    # A dispatch with dry_run proves the checks without releasing; on a tag
-    # push inputs.dry_run is empty, so the release runs.
+    # A dispatch with dry_run proves the checks without releasing; on a push
+    # inputs.dry_run is empty, so the release runs.
     if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
     runs-on: ubuntu-latest
     permissions:
@@ -114,8 +140,8 @@ jobs:
           node-version: 22
       - run: node scripts/release/notes.mjs "$VERSION" > notes.md
       # --verify-tag refuses to create the tag itself: the release is for the
-      # tag pnpm release pushed. A prerelease version (one with a hyphen) is
-      # marked as such instead of becoming the latest release.
+      # tag this workflow or a hand push created. A prerelease version (one
+      # with a hyphen) is marked as such instead of becoming the latest release.
       - run: |
           case "$VERSION" in
             *-*) flag=--prerelease ;;

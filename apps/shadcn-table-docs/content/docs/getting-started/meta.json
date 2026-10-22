@@ -1,5 +1,5 @@
 {
   "title": "Getting Started",
   "defaultOpen": true,
-  "pages": ["install", "usage", "agents", "migrating-v1"]
+  "pages": ["install", "usage", "agents"]
 }

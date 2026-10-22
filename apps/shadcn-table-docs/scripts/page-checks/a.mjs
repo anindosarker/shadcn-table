@@ -236,22 +236,6 @@ const checks = {
       (await page.locator('article a[href="/llms.txt"]').count()) === 1,
     );
   },
-  '/docs/getting-started/migrating-v1': async ({ page, check }) => {
-    const txt = (await page.locator('article').textContent()) ?? '';
-    check('dependency bump', txt.includes('@tanstack/react-table 9.3.1'));
-    check(
-      'rename table lists sortFn and table.state',
-      txt.includes('sortFn') && txt.includes('table.state'),
-    );
-    check(
-      'tanstack migration guide link',
-      (await page
-        .locator(
-          'article a[href="https://tanstack.com/table/latest/docs/framework/react/guide/migrating"]',
-        )
-        .count()) === 1,
-    );
-  },
   '/docs/getting-started': async ({ page, check }) => {
     check(
       'redirects to install',

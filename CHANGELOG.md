@@ -8,7 +8,32 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+## 0.3.3 - 2026-10-22
+
+### Removed
+
+- The "Migrating to v1" docs page and its sidebar entry. The table has shipped on TanStack
+  Table v9 since 0.3.0; there is no v1 and no migration to document.
+- Version-specific wording in the docs: the v9 and v8 mentions on the install page, the
+  API option pages, the aggregation guide and the prop tables.
+
+### Changed
+
+- The prop tables link to the current TanStack Table docs (`/table/latest/`) instead of
+  the v8 docs.
+- Releases happen by merging a pull request. `pnpm release <version>` now bumps the
+  versions, closes the `Unreleased` changelog section, pushes a `release/<version>` branch
+  and opens the pull request; `release.yml` runs on every push to `master`, tags
+  `v<version>` when the tag is missing, then verifies production and creates the GitHub
+  release as before. Pushing a `v*` tag by hand still works.
+
 ## 0.3.2 - 2026-10-21
+
+### Fixed
+
+- Docs site: broken internal links on eight docs pages, the `custom-headless` example
+  (crashed on `r.state`), the detail-panel conditional check and the localization tab
+  count, so the release smoke passes on production.
 
 ## 0.3.1 - 2026-10-21
 

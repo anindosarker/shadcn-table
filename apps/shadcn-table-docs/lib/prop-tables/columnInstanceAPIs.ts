@@ -16,28 +16,28 @@ export const columnInstanceAPIs: ColumnInstanceAPI[] = [
     type: 'AccessorFn<TData>',
     description:
       'The resolved accessor function to use when extracting the value for the column from each row.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/column#accessorfn',
+    link: 'https://tanstack.com/table/latest/docs/api/core/column#accessorfn',
     linkText: 'TanStack Table Column API Docs',
   },
   {
     columnInstanceAPI: 'clearSorting',
     type: '() => void',
     description: "Removes this column from the table's sorting state.",
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#clearsorting',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#clearsorting',
     linkText: 'TanStack Table Sorting API Docs',
   },
   {
     columnInstanceAPI: 'columnDef',
     type: 'ColumnDef<TData>',
     description: 'The original column def used to create the column.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/column#columndef',
+    link: 'https://tanstack.com/table/latest/docs/api/core/column#columndef',
     linkText: 'TanStack Table Column API Docs',
   },
   {
     columnInstanceAPI: 'columns',
     type: 'ST_ColumnDef<TData>[]',
     description: 'The child column (if the column is a group column).',
-    link: 'https://tanstack.com/table/v8/docs/api/core/column#columns',
+    link: 'https://tanstack.com/table/latest/docs/api/core/column#columns',
     linkText: 'TanStack Table Column API Docs',
   },
   {
@@ -45,7 +45,7 @@ export const columnInstanceAPIs: ColumnInstanceAPI[] = [
     type: 'number',
     description:
       'The depth of the column (if grouped) relative to the root column def array.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/column#depth',
+    link: 'https://tanstack.com/table/latest/docs/api/core/column#depth',
     linkText: 'TanStack Table Column API Docs',
   },
   {
