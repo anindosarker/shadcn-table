@@ -136,15 +136,16 @@ export async function codeToggle(page, id, needle, check) {
       const second = rows.nth(1);
       const target = (await second.getAttribute('title')) ?? '';
       await second.click();
-      // The shown file swaps on the next render; poll instead of a fixed wait.
+      // The path bar updates at once; the code pane keeps the previous file
+      // until DynamicCodeBlock has highlighted the new one. Poll the pane.
       await page
         .waitForFunction(
-          (t) =>
-            document
-              .querySelector('button[aria-label^="Copy"]')
-              ?.getAttribute('aria-label') === `Copy ${t}`,
-          target,
-          { timeout: 3000 },
+          ([sel, prev]) => {
+            const pre = document.querySelector(sel)?.querySelector('pre');
+            return !!pre && pre.textContent.replace(/\s+/g, '') !== prev;
+          },
+          [`[id="example-${id}"]`, norm(txt)],
+          { timeout: 5000 },
         )
         .catch(() => {});
       const swapped = await shownSource();
