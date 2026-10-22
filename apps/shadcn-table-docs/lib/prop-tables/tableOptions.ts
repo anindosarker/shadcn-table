@@ -29,7 +29,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Set this option to override any of the autoReset... feature options.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#autoresetall',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#autoresetall',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -40,7 +40,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Enable this setting to automatically reset the expanded state of the table when grouping state changes.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/expanding#autoresetexpanded',
+    link: 'https://tanstack.com/table/latest/docs/api/features/expanding#autoresetexpanded',
     linkText: 'TanStack Table Expanding Docs',
     required: false,
     source: 'TanStack Table',
@@ -51,7 +51,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If set to true, pagination will be reset to the first page when page-altering state changes eg. data is updated, filters change, grouping changes, etc.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/pagination#autoresetpagination',
+    link: 'https://tanstack.com/table/latest/docs/api/features/pagination#autoresetpagination',
     linkText: 'TanStack Table Pagination Docs',
     required: false,
     source: 'TanStack Table',
@@ -73,7 +73,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: "muiTheme.direction || 'ltr'",
     description:
       'Determines the direction of column resizing. ltr = left to right, rtl = right to left.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-sizing#columnresizedirection',
+    link: 'https://tanstack.com/table/latest/docs/api/features/column-sizing#columnresizedirection',
     linkText: 'ST Column Resizing Docs',
     required: false,
     source: 'TanStack Table',
@@ -135,7 +135,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'false',
     description:
       'Set this option to true to output all debugging information to the console.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#debugall',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#debugall',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -146,7 +146,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'false',
     description:
       'Set this option to true to output column debugging information to the console.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#debugcolumns',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#debugcolumns',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -157,7 +157,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'false',
     description:
       'Set this option to true to output header debugging information to the console.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#debugheaders',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#debugheaders',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -168,7 +168,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'false',
     description:
       'Set this option to true to output row debugging information to the console.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#debugrows',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#debugrows',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -179,7 +179,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'false',
     description:
       'Set this option to true to output table debugging information to the console.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#debugcolumns',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#debugcolumns',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -190,7 +190,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Default column options to use for all column defs supplied to the table. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#defaultcolumn',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#defaultcolumn',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -365,7 +365,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'true',
     description:
       'Enable or disable the calculation of faceted values. Facet values are a list of all unique values in a column. These are useful for advanced filtering components with selection, autocomplete, etc.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#enablefilters',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#enablefilters',
     linkText: 'TanStack Filters Docs',
     required: false,
     source: 'TanStack Table',
@@ -386,7 +386,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'enableFilters',
     defaultValue: 'true',
     description: 'Enable or disable both the global and column filters.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#enablefilters',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#enablefilters',
     linkText: 'TanStack Filters Docs',
     required: false,
     source: 'TanStack Table',
@@ -457,7 +457,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'enableMultiRemove',
     defaultValue: '',
     description: '',
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#enablemultiremove',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#enablemultiremove',
     linkText: 'TanStack Sorting Docs',
     required: false,
     source: 'TanStack Table',
@@ -762,7 +762,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'filterFns',
     defaultValue: '',
     description: `This option allows you to define custom filter functions that can be referenced in a column's filterFn option by their key`,
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#filterfns',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#filterfns',
     linkText: 'TanStack Table Filters Docs',
     required: false,
     source: 'TanStack Table',
@@ -772,7 +772,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'filterFromLeafRows',
     defaultValue: 'false',
     description: '',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#filterfromleafrows',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#filterfromleafrows',
     linkText: 'TanStack Filtering Docs',
     required: false,
     source: 'TanStack Table',
@@ -793,7 +793,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, allows you to override the default behavior of determining whether a row is currently expanded.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/expanding#getisrowexpanded',
+    link: 'https://tanstack.com/table/latest/docs/api/features/expanding#getisrowexpanded',
     linkText: 'TanStack Table Expanding Docs',
     required: false,
     source: 'TanStack Table',
@@ -804,7 +804,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, allows you to override the default behavior of determining whether a row can be expanded.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/expanding#getrowcanexpand',
+    link: 'https://tanstack.com/table/latest/docs/api/features/expanding#getrowcanexpand',
     linkText: 'TanStack Table Expanding Docs',
     required: false,
     source: 'TanStack Table',
@@ -814,7 +814,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'getRowId',
     defaultValue: '',
     description: `This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with . using their grandparents' index eg. index.index.index). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.`,
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#getrowid',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#getrowid',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -825,7 +825,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#getsubrows',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#getsubrows',
     linkText: 'TanStack Table Core Table Docs',
     required: false,
     source: 'TanStack Table',
@@ -846,7 +846,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: 'reorder',
     description:
       'Grouping columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/grouping#groupedcolumnmode',
+    link: 'https://tanstack.com/table/latest/docs/api/features/grouping#groupedcolumnmode',
     linkText: 'TanStack Table Grouping Docs',
     required: false,
     source: 'TanStack Table',
@@ -878,7 +878,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Pass a custom function that will be used to determine if a multi-sort event should be triggered. It is passed the event from the sort toggle handler and should return true if the event should trigger a multi-sort.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#ismultisortevent',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#ismultisortevent',
     linkText: 'TanStack Table Sorting Docs',
     required: false,
     source: 'TanStack Table',
@@ -909,7 +909,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Enables manual row expansion. If this is set to true, getExpandedRowModel will not be used to expand rows and you would be expected to perform the expansion in your own data model. This is useful if you are doing server-side expansion.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/expanding#manualexpanding',
+    link: 'https://tanstack.com/table/latest/docs/api/features/expanding#manualexpanding',
     linkText: 'TanStack Table Expanding Docs',
     required: false,
     source: 'TanStack Table',
@@ -920,7 +920,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Disables the getFilteredRowModel from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#manualfiltering',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#manualfiltering',
     linkText: 'TanStack Table Filters Docs',
     required: false,
     source: 'TanStack Table',
@@ -931,7 +931,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Enables manual grouping. If this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to manually group the rows before passing them to the table. This is useful if you are doing server-side grouping and aggregation.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/grouping#manualgrouping',
+    link: 'https://tanstack.com/table/latest/docs/api/features/grouping#manualgrouping',
     linkText: 'TanStack Table Grouping Docs',
     required: false,
     source: 'TanStack Table',
@@ -942,7 +942,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Enables manual pagination. If this option is set to true, the table will not automatically paginate rows using getPaginationRowModel() and instead will expect you to manually paginate the rows before passing them to the table. This is useful if you are doing server-side pagination and aggregation.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/pagination#manualpagination',
+    link: 'https://tanstack.com/table/latest/docs/api/features/pagination#manualpagination',
     linkText: 'TanStack Table Pagination Docs',
     required: false,
     source: 'TanStack Table',
@@ -953,7 +953,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Enables manual sorting for the table. If this is true, you will be expected to sort your data before it is passed to the table. This is useful if you are doing server-side sorting.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#manualsorting',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#manualsorting',
     linkText: 'TanStack Table Sorting Docs',
     required: false,
     source: 'TanStack Table',
@@ -964,7 +964,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '100',
     description:
       'Set a maximum number leaf row depth that will be filtered. Preserve child rows of filtered rows by setting this to "0"',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#maxleafrowfilterdepth',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#maxleafrowfilterdepth',
     linkText: 'TanStack Table Filtering Docs',
     required: false,
     source: 'TanStack Table',
@@ -974,7 +974,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'maxMultiSortColCount',
     defaultValue: '',
     description: 'Set a maximum number of columns that can be multi-sorted.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#maxmultisortcolcount',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#maxmultisortcolcount',
     linkText: 'TanStack Table Sorting Docs',
     required: false,
     source: 'TanStack Table',
@@ -995,7 +995,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'This option is used to optionally implement the merging of table options. Some framework like solid-js use proxies to track reactivity and usage, so merging reactive objects needs to be handled carefully. This option inverts control of this process to the adapter.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#mergeoptions',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#mergeoptions',
     linkText: 'TanStack Table Core Docs',
     required: false,
     source: 'TanStack Table',
@@ -1006,7 +1006,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'You can pass any object to options.meta and access it anywhere the table is available via table.options.meta This type is global to all tables.',
-    link: 'https://tanstack.com/table/v8/docs/api/core/table#meta',
+    link: 'https://tanstack.com/table/latest/docs/api/core/table#meta',
     linkText: 'TanStack Table Core Docs',
     required: false,
     source: 'TanStack Table',
@@ -1407,7 +1407,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.columnFilters changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#oncolumnfilterschange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#oncolumnfilterschange',
     linkText: 'TanStack Table Filter Docs',
     required: false,
     source: 'TanStack Table',
@@ -1418,7 +1418,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.columnOrder changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-ordering#oncolumnorderchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/column-ordering#oncolumnorderchange',
     linkText: 'TanStack Table Column Ordering Docs',
     required: false,
     source: 'TanStack Table',
@@ -1429,7 +1429,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.columnPinning changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-pinning#oncolumnpinningchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/column-pinning#oncolumnpinningchange',
     linkText: 'TanStack Table Column Pinning Docs',
     required: false,
     source: 'TanStack Table',
@@ -1440,7 +1440,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'This optional function will be called when the columnSizing state changes. If you provide this function, you will be responsible for maintaining its state yourself. You can pass this state back to the table via the state.columnSizing table option.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnsizingchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/column-sizing#oncolumnsizingchange',
     linkText: 'TanStack Table Column Sizing Docs',
     required: false,
     source: 'TanStack Table',
@@ -1462,7 +1462,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.columnVisibility changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/column-visibility#oncolumnvisibilitychange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/column-visibility#oncolumnvisibilitychange',
     linkText: 'TanStack Table Column Visibility Docs',
     required: false,
     source: 'TanStack Table',
@@ -1533,7 +1533,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.globalFilter changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#onglobalfilterchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#onglobalfilterchange',
     linkText: 'TanStack Table Filters Docs',
     required: false,
     source: 'TanStack Table',
@@ -1564,7 +1564,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'This function is called when the expanded table state changes. If a function is provided, you will be responsible for managing this state on your own. To pass the managed state back to the table, use the tableOptions.state.expanded option.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/expanding#onexpandedchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/expanding#onexpandedchange',
     linkText: 'TanStack Table Expanding Docs',
     required: false,
     source: 'TanStack Table',
@@ -1575,7 +1575,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.globalFilter changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/filters#onglobalfilterchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/filters#onglobalfilterchange',
     linkText: 'TanStack Table Filters Docs',
     required: false,
     source: 'TanStack Table',
@@ -1586,7 +1586,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If this function is provided, it will be called when the grouping state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the tableOptions.state.grouping option.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/grouping#ongroupingchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/grouping#ongroupingchange',
     linkText: 'TanStack Table Grouping Docs',
     required: false,
     source: 'TanStack Table',
@@ -1657,7 +1657,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If this function is provided, it will be called when the pagination state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the tableOptions.state.pagination option.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/pagination#onpaginationchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/pagination#onpaginationchange',
     linkText: 'TanStack Table Pagination Docs',
     required: false,
     source: 'TanStack Table',
@@ -1668,7 +1668,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.rowPinning changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/pinning#onrowpinningchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/pinning#onrowpinningchange',
     linkText: 'TanStack Table Pinning Docs',
     required: false,
     source: 'TanStack Table',
@@ -1679,7 +1679,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.rowSelection changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/row-selection#onrowselectionchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/row-selection#onrowselectionchange',
     linkText: 'TanStack Table Row Selection Docs',
     required: false,
     source: 'TanStack Table',
@@ -1730,7 +1730,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If provided, this function will be called with an updaterFn when state.sorting changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#onsortingchange',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#onsortingchange',
     linkText: 'TanStack Table Sorting Docs',
     required: false,
     source: 'TanStack Table',
@@ -1741,7 +1741,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'When manually controlling pagination, you should supply a total pageCount value to the table if you know it. If you do not know how many pages there are, you can set this to -1.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/pagination#pagecount',
+    link: 'https://tanstack.com/table/latest/docs/api/features/pagination#pagecount',
     linkText: 'TanStack Table Pagination Docs',
     required: false,
     source: 'TanStack Table',
@@ -1752,7 +1752,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'If true expanded rows will be paginated along with the rest of the table (which means expanded rows may span multiple pages). If false expanded rows will not be considered for pagination (which means expanded rows will always render on their parents page. This also means more rows will be rendered than the set page size)',
-    link: 'https://tanstack.com/table/v8/docs/api/features/expanding#paginateexpandedrows',
+    link: 'https://tanstack.com/table/latest/docs/api/features/expanding#paginateexpandedrows',
     linkText: 'TanStack Table Expanding Docs',
     required: false,
     source: 'TanStack Table',
@@ -2034,7 +2034,7 @@ export const tableOptions: TableOption[] = [
     defaultValue: '',
     description:
       'Set to true for sorting toggles on this column to start in the descending direction.',
-    link: 'https://tanstack.com/table/v8/docs/api/features/sorting#sortdescfirst',
+    link: 'https://tanstack.com/table/latest/docs/api/features/sorting#sortdescfirst',
     linkText: 'TanStack Table Sorting Docs',
     required: false,
     source: 'TanStack Table',

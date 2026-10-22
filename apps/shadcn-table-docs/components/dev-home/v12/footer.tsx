@@ -69,7 +69,7 @@ export function Footer({
             <span>shadcn-table</span>
           </Link>
           <p>
-            MIT licensed. Built on TanStack Table v8 and shadcn/ui. Ported from
+            MIT licensed. Built on TanStack Table and shadcn/ui. Ported from
             Material React Table.
           </p>
         </div>

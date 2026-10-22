@@ -93,7 +93,7 @@ return <ShadcnTable table={table} />;
 
 #### Custom Aggregation Functions
 
-If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation definition. Since TanStack Table v9 a custom aggregation is a `constructAggregationFn({ aggregate, merge? })` definition, not a plain callable: `aggregate` receives a context with the `rows` to aggregate and a `getValue(row)` accessor and returns the single value that will be displayed in the aggregated cell.
+If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation definition. A custom aggregation is a `constructAggregationFn({ aggregate, merge? })` definition: `aggregate` receives a context with the `rows` to aggregate and a `getValue(row)` accessor and returns the single value that will be displayed in the aggregated cell.
 
 ```tsx
 import { constructAggregationFn } from '@tanstack/react-table';

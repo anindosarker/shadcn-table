@@ -4,16 +4,18 @@
 // The one release command. Guards, in order: clean tree; branch `master`;
 // local `master` equals `origin/master` after a fetch; <version> is semver
 // and greater than the library version; tag v<version> does not exist yet;
-// CHANGELOG.md has a `## Unreleased` or `## <version>` section. A failed
-// guard exits non-zero before anything is written.
+// branch release/<version> does not exist yet; CHANGELOG.md has a
+// `## Unreleased` or `## <version>` section; `gh` is installed and signed in.
+// A failed guard exits non-zero before anything is written.
 //
 // Then it writes <version> into packages/shadcn-table/package.json and the
 // docs app package.json, renames `## Unreleased` to `## <version> - <date>`
-// (local date), commits `chore: version <version>` with only those files,
-// tags v<version>
-// and pushes commit and tag. It does not publish to npm and runs no checks:
-// the tag push runs .github/workflows/release.yml, which verifies production
-// and creates the GitHub release.
+// (local date), commits `chore: version <version>` with only those files on
+// a new branch release/<version>, pushes the branch and opens the pull
+// request into `master`, then returns to `master`. It does not publish to
+// npm and runs no checks. `master` only takes pull requests; merging this
+// one runs .github/workflows/release.yml, which tags v<version>, verifies
+// production and creates the GitHub release.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -114,6 +116,20 @@ if (git('ls-remote', '--tags', 'origin', `refs/tags/${tag}`)) {
   fail(`tag ${tag} already exists on origin`);
 }
 
+const releaseBranch = `release/${version}`;
+if (git('branch', '--list', releaseBranch)) {
+  fail(`branch ${releaseBranch} already exists locally`);
+}
+if (git('ls-remote', '--heads', 'origin', `refs/heads/${releaseBranch}`)) {
+  fail(`branch ${releaseBranch} already exists on origin`);
+}
+
+try {
+  execFileSync('gh', ['auth', 'status'], { stdio: 'ignore' });
+} catch {
+  fail('gh is not installed or not signed in; the pull request needs it');
+}
+
 const changelog = read(CHANGELOG);
 const unreleased = /^## Unreleased[ \t]*$/m;
 const released = new RegExp(`^## ${escapeRegExp(version)}(?:\\s|$)`, 'm');
@@ -156,11 +172,26 @@ if (released.test(changelog)) {
   );
 }
 
+git('checkout', '--quiet', '-b', releaseBranch);
 git('add', '--', LIB_PACKAGE, docsPkg, CHANGELOG);
 git('commit', '--quiet', '-m', `chore: version ${version}`);
-git('tag', tag);
-console.log(`committed chore: version ${version}, tagged ${tag}`);
-git('push', 'origin', 'master', tag);
-console.log(
-  `pushed master and ${tag}; .github/workflows/release.yml takes it from here`,
-);
+git('push', '--quiet', '-u', 'origin', releaseBranch);
+console.log(`committed chore: version ${version} on ${releaseBranch}, pushed`);
+const pr = execFileSync(
+  'gh',
+  [
+    'pr',
+    'create',
+    '--base',
+    'master',
+    '--head',
+    releaseBranch,
+    '--title',
+    `chore: version ${version}`,
+    '--body',
+    `Release ${version}. Merging runs .github/workflows/release.yml: it tags ${tag}, waits for production to serve ${version}, smokes the site, installs the table per base and creates the GitHub release from the \`## ${version}\` section of CHANGELOG.md.`,
+  ],
+  { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] },
+).trim();
+git('checkout', '--quiet', 'master');
+console.log(`opened ${pr}; merge it to release`);

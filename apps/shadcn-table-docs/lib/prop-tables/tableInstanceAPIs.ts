@@ -10,8 +10,7 @@ export interface TableInstanceAPI {
   type: string;
 }
 
-const V9_GUIDE =
-  'https://tanstack.com/table/latest/docs/framework/react/guide/';
+const GUIDE = 'https://tanstack.com/table/latest/docs/framework/react/guide/';
 
 export const tableInstanceAPIs: TableInstanceAPI[] = [
   {
@@ -508,8 +507,8 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     tableInstanceAPI: 'state',
     type: 'ST_TableState<TData>',
     description:
-      'The current table state: the TanStack Table slices plus the ST-only slices (density, isFullScreen, showColumnFilters, creatingRow, ...). Replaces table.getState() from TanStack Table v8.',
-    link: V9_GUIDE + 'table-state',
+      'The current table state: the TanStack Table slices plus the ST-only slices (density, isFullScreen, showColumnFilters, creatingRow, ...).',
+    link: GUIDE + 'table-state',
     linkText: 'TanStack Table State Docs',
   },
   {
@@ -951,7 +950,7 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     type: 'ReadonlyStore<ST_TableState<TData>>',
     description:
       'The TanStack Store behind table.state. Subscribe to it (or to the per-slice atoms in table.atoms) to react to state changes outside of React renders.',
-    link: V9_GUIDE + 'table-state',
+    link: GUIDE + 'table-state',
     linkText: 'TanStack Table State Docs',
   },
   {
