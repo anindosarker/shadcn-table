@@ -129,12 +129,24 @@ export async function codeToggle(page, id, needle, check) {
         .first()
         .textContent()
         .catch(() => '')) ?? '';
-    const norm = (s) => s.replace(/\s+/g, ' ').trim();
+    // Whitespace is dropped entirely: once the client-side highlight has
+    // rendered, textContent of the line spans carries no newlines.
+    const norm = (s) => s.replace(/\s+/g, '');
     if (hasTree && (await tree.isVisible().catch(() => false))) {
       const second = rows.nth(1);
       const target = (await second.getAttribute('title')) ?? '';
       await second.click();
-      await page.waitForTimeout(100);
+      // The shown file swaps on the next render; poll instead of a fixed wait.
+      await page
+        .waitForFunction(
+          (t) =>
+            document
+              .querySelector('button[aria-label^="Copy"]')
+              ?.getAttribute('aria-label') === `Copy ${t}`,
+          target,
+          { timeout: 3000 },
+        )
+        .catch(() => {});
       const swapped = await shownSource();
       check(
         `${id}: file swap`,
