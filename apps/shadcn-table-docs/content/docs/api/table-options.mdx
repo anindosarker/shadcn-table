@@ -1,0 +1,44 @@
+---
+title: 'Table Options'
+description: 'All the table options that can be used in the useShadcnTable hook'
+---
+
+<OptionsSwitcher
+  links={[
+    {
+      label: 'Table Options',
+      value: 'table-options',
+    },
+    {
+      label: 'Column Options',
+      value: 'column-options',
+    },
+    {
+      label: 'State Options',
+      value: 'state-options',
+    },
+  ]}
+/>
+
+> Many of the options you can pass to `useShadcnTable` are the same as the ones you can pass to the TanStack Table [useTable](https://tanstack.com/table/latest/docs/guide/tables) hook. The row model factories and the `features` object are set by the library (`stFeatures`), so they are not table options here.
+
+Here is a list of all the table options that you can pass to the `useShadcnTable` hook.
+
+```jsx
+const table = useShadcnTable({
+  // all the options that you can pass here (recommended)
+});
+
+//or all of the props that could be passed to `<ShadcnTable />` IF not using `useShadcnTable` hook
+return (
+  <ShadcnTable
+  // all of the props that could be passed here if no `table` prop is passed
+  />
+);
+
+return <ShadcnTable table={table} />; //recommended
+```
+
+<TableOptionsTable />
+
+<TableOptionsSource />

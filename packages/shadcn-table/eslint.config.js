@@ -28,8 +28,8 @@ export default defineConfig([
     // .eslintrc lints them (no-explicit-any / no-unused-vars off, no
     // react-hooks plugin).
     files: [
-      '{shared,bases/*}/components/ui/shadcn-table/{fns,hooks,utils}/**/*.{ts,tsx}',
-      '{shared,bases/*}/components/ui/shadcn-table/{icons,types}.ts',
+      'registry/*/components/ui/shadcn-table/{fns,hooks,utils}/**/*.{ts,tsx}',
+      'registry/*/components/ui/shadcn-table/{icons,types}.ts',
     ],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
@@ -37,27 +37,6 @@ export default defineConfig([
       '@typescript-eslint/no-unused-vars': 'off',
       'react-hooks/exhaustive-deps': 'off',
       'react-hooks/rules-of-hooks': 'off',
-    },
-  },
-  {
-    // Library files import each other through `@/components/ui/shadcn-table/...`
-    // so a per-base override under bases/<base> and the shared copy resolve
-    // the same way (see vite.config.ts); a relative import would pin the
-    // importer to its own folder.
-    files: ['{shared,bases/*}/components/ui/shadcn-table/**/*.{ts,tsx}'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: ['.', '..', './*', '../*'],
-              message:
-                'Import library files through @/components/ui/shadcn-table/<path>.',
-            },
-          ],
-        },
-      ],
     },
   },
 ]);

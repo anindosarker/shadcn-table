@@ -42,3 +42,6 @@ yarn-error.log*
 *storybook.log
 .vscode/settings.json
 
+
+# vercel link
+.vercel

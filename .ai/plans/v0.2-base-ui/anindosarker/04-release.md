@@ -1,4 +1,4 @@
-# 04: R4, release 0.2.0
+# 04: R4, release 0.2.0 (superseded by v0.4.0 part 01, `../../v0.4.0/anindosarker/01-release-automation.md`)
 
 Part of `v0.2-base-ui-plan.md`. Lead runs it after R3 is merged and CI on `claude/review` is
 green.
