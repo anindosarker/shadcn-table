@@ -1,9 +1,4 @@
-import {
-  type ContextType,
-  useCallback,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 import {
   constructAggregationFn,
   createTableHook,
@@ -110,27 +105,7 @@ export function useST_Atom<TValue>(atom: ST_AtomSource<TValue>): TValue {
 export const ST_TableProvider = <TData extends ST_RowData>({
   children,
   table,
-}: ST_TableProviderProps<TData>) => {
-  // The context carries a stable handle, the first instance: its store,
-  // atoms, refs and setters are live, and keeping it stable spares context
-  // readers a re-render on every table state change. Its options are
-  // refreshed from each render's instance, so option reads stay current; the
-  // library never reads its `state`.
-  const [handle] = useState(() => {
-    // Custom renderers handed the handle (`render*`, `st*Props` of the context
-    // components) may read `table.state`. The first instance holds only the
-    // first render's selected slices, so the handle serves the live store.
-    Object.defineProperty(table, 'state', {
-      configurable: true,
-      enumerable: true,
-      get: () => table.store.state,
-    });
-    return table;
-  });
-  handle.options = table.options;
-
-  // The context is typed for any core table; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
+}: ST_TableProviderProps<TData>) => (
   // Note: the tooltip provider lives here at the ST root because the latest
   // shadcn tooltip (registry change 2026-07) no longer self-wraps each Tooltip
   // in a TooltipProvider, and Radix Tooltip.Root throws without a provider
@@ -138,13 +113,7 @@ export const ST_TableProvider = <TData extends ST_RowData>({
   // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
   // including portalled content (portals preserve React context) and
   // components hand-composed under this provider.
-  return (
-    <TooltipProvider skipDelayDuration={0}>
-      <tableContext.Provider
-        value={handle as unknown as ContextType<typeof tableContext>}
-      >
-        {children}
-      </tableContext.Provider>
-    </TooltipProvider>
-  );
-};
+  <TooltipProvider skipDelayDuration={0}>
+    <table.AppTable>{children}</table.AppTable>
+  </TooltipProvider>
+);
