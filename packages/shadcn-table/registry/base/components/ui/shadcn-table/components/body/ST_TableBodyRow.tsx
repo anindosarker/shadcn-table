@@ -69,6 +69,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       enableRowOrdering,
       enableRowPinning,
       enableStickyFooter,
+      enableStickyHeader,
       layoutMode,
       // mrtTheme: {
       //   baseBackgroundColor,
@@ -80,7 +81,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       renderDetailPanel,
       rowPinningDisplayMode,
     },
-    refs: { tableFooterRef, tableHeadRef },
+    refs: { tableContainerRef, tableFooterRef, tableHeadRef },
     setHoveredRow,
   } = table;
 
@@ -167,6 +168,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       selector={(state) => ({
         density: state.density,
         isDraggingRow: state.draggingRow?.id === row.id,
+        isFullScreen: state.isFullScreen,
         isHoveredRow: state.hoveredRow?.id === row.id,
         // Reads the live selection, so only this row's own change re-renders it.
         isRowSelected: getIsRowSelected({ row, table }),
@@ -174,7 +176,13 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       })}
       source={table.store}
     >
-      {({ density, isDraggingRow, isHoveredRow, isRowSelected }) => {
+      {({
+        density,
+        isDraggingRow,
+        isFullScreen,
+        isHoveredRow,
+        isRowSelected,
+      }) => {
         const isRowPinned = enableRowPinning && row.getIsPinned();
 
         const [bottomPinnedIndex, topPinnedIndex] =
@@ -188,10 +196,10 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                 pinnedRowIds.indexOf(row.id),
               ];
 
-        // A sticky pinned row stays below the head, sticky or not: with more
-        // pinned rows than the scrollport holds, the bottom inset pulls the
-        // row up to the table top, and the top inset wins that conflict.
-        const tableHeadHeight = tableHeadRef.current?.clientHeight || 0;
+        const tableHeadHeight =
+          ((enableStickyHeader || isFullScreen) &&
+            tableHeadRef.current?.clientHeight) ||
+          0;
         const tableFooterHeight =
           (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
 
@@ -199,6 +207,16 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
           density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69;
 
         const rowHeight = customRowHeight || defaultRowHeight;
+
+        // With more sticky pinned rows than the scrollport holds, the bottom
+        // inset pulls a row up over the head. Dropping it keeps the row at its
+        // flow position below the head, sticking at the top inset on scroll.
+        const pinnedStackOverflows =
+          !!pinnedRowIds &&
+          pinnedRowIds.length * rowHeight +
+            (tableHeadRef.current?.clientHeight || 0) +
+            tableFooterHeight >
+            (tableContainerRef.current?.clientHeight ?? Infinity);
 
         const cellHighlightClass = isRowSelected
           ? '[&>td]:after:bg-primary/20'
@@ -240,11 +258,16 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                   : topPinnedIndex !== undefined && isRowPinned
                     ? `${
                         topPinnedIndex * rowHeight +
-                        Math.max(tableHeadHeight - 1, 0)
+                        (enableStickyHeader || isFullScreen
+                          ? tableHeadHeight - 1
+                          : 0)
                       }px`
                     : undefined,
                 bottom:
-                  !virtualRow && bottomPinnedIndex !== undefined && isRowPinned
+                  !virtualRow &&
+                  !pinnedStackOverflows &&
+                  bottomPinnedIndex !== undefined &&
+                  isRowPinned
                     ? `${
                         bottomPinnedIndex * rowHeight +
                         (enableStickyFooter ? tableFooterHeight - 1 : 0)
