@@ -5,6 +5,7 @@ import {
   createTableHookContexts,
   tableFeatures,
 } from '@tanstack/react-table';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   type ST_Features,
   stFeatures,
@@ -74,7 +75,8 @@ export function useSTContext<
 
 /**
  * Provides a table to hand-composed ST components, such as an
- * `ST_TableContainer` rendered outside `ShadcnTable`.
+ * `ST_TableContainer` rendered outside `ShadcnTable`, and the tooltip provider
+ * their `ST_Tooltip`s need.
  */
 export const ST_TableProvider = <TData extends ST_RowData>({
   children,
@@ -90,11 +92,20 @@ export const ST_TableProvider = <TData extends ST_RowData>({
 
   // The context is typed for any core table; the ST wrapper types re-type its
   // getters, so TypeScript cannot relate the two without the cast.
+  // Note: the tooltip provider lives here at the ST root because the latest
+  // shadcn tooltip (registry change 2026-07) no longer self-wraps each Tooltip
+  // in a TooltipProvider, and Radix Tooltip.Root throws without a provider
+  // ancestor. Mounting it once with the table keeps consumer boilerplate at
+  // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
+  // including portalled content (portals preserve React context) and
+  // components hand-composed under this provider.
   return (
-    <tableContext.Provider
-      value={handle as unknown as ContextType<typeof tableContext>}
-    >
-      {children}
-    </tableContext.Provider>
+    <TooltipProvider skipDelayDuration={0}>
+      <tableContext.Provider
+        value={handle as unknown as ContextType<typeof tableContext>}
+      >
+        {children}
+      </tableContext.Provider>
+    </TooltipProvider>
   );
 };

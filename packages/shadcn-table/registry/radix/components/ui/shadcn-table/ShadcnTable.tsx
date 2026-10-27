@@ -1,4 +1,3 @@
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { ST_TableProvider } from '@/components/ui/shadcn-table/hooks/stTableHook';
 import { useShadcnTable } from '@/components/ui/shadcn-table/hooks/useShadcnTable';
 import {
@@ -35,17 +34,10 @@ export const ShadcnTable = <TData extends ST_RowData>(
     table = useShadcnTable(props);
   }
 
-  // Note: the provider lives here at the ST root because the latest shadcn
-  // tooltip (registry change 2026-07) no longer self-wraps each Tooltip in a
-  // TooltipProvider — Radix Tooltip.Root throws without a provider ancestor.
-  // Mounting it once at the outermost component keeps consumer boilerplate at
-  // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
-  // including portalled content (portals preserve React context).
+  // `ST_TableProvider` also mounts the tooltip provider.
   return (
-    <TooltipProvider skipDelayDuration={0}>
-      <ST_TableProvider table={table}>
-        <ST_TableLayout table={table} />
-      </ST_TableProvider>
-    </TooltipProvider>
+    <ST_TableProvider table={table}>
+      <ST_TableLayout table={table} />
+    </ST_TableProvider>
   );
 };

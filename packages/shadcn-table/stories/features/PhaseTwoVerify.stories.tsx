@@ -216,9 +216,9 @@ export const HeadlessDisplayColumnHeaderComponents = () => (
   <HeadlessHeaders component />
 );
 
-// No play function: the `Header` components read `table.state`, which the
-// core header context does not carry until phase 03. The verify script reads
-// the boundary's message.
+HeadlessDisplayColumnHeaderComponents.play = async ({
+  canvasElement,
+}: StoryContext) => expectHeadlessRendered(canvasElement);
 
 export const ColumnFiltersWithEveryFilterFlagOff = () => (
   <ShadcnTable
