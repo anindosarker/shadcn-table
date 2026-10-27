@@ -29,18 +29,9 @@ import {
   useSTContext,
 } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_GlobalFilterTextFieldProps extends InputProps {
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the context.
-   * The top toolbar outside this cluster still passes it; the integration
-   * step removes it.
-   */
-  table?: unknown;
-}
+export type ST_GlobalFilterTextFieldProps = InputProps;
 
 export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the input
-  table: _table,
   ...rest
 }: ST_GlobalFilterTextFieldProps) => {
   const table = useSTContext<TData>();

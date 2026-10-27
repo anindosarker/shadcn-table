@@ -12,12 +12,6 @@ import { ST_RowPinButton } from '@/components/ui/shadcn-table/components/buttons
 export interface ST_TableBodyRowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from `row`. The
-   * display column outside this cluster still passes it; the integration
-   * step removes it.
-   */
-  table?: unknown;
 }
 
 const rowPinWrapperVariants = cva('flex', {
@@ -31,8 +25,6 @@ const rowPinWrapperVariants = cva('flex', {
 
 export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   row,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the buttons
-  table: _table,
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
   // The row carries the core table; the ST wrapper types re-type its getters.

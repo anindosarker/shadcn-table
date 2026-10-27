@@ -10,12 +10,6 @@ import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inpu
 export interface ST_FilterRangeFieldsProps<TData extends ST_RowData>
   extends DivProps {
   header: ST_Header<TData>;
-  /**
-   * Transition, part 01 phase 03: ignored, each field reads its table from
-   * `header`. The filter container outside this cluster still passes it; the
-   * integration step removes it.
-   */
-  table?: unknown;
 }
 
 // Note: MRT's sx is display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr'; the gap is tighter and each track keeps its input's min width so a narrow column grows to fit Min and Max side by side instead of overlapping them.
@@ -25,8 +19,6 @@ const filterRangeFieldsVariants = cva(
 
 export const ST_FilterRangeFields = <TData extends ST_RowData>({
   header,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the div
-  table: _table,
   ...rest
 }: ST_FilterRangeFieldsProps<TData>) => {
   return (

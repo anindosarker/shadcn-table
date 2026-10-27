@@ -26,12 +26,6 @@ export interface ST_RowActionMenuProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   staticRowIndex?: number;
-  /**
-   * Transition, part 01 phase 03: ignored, the menu reads `row.table`.
-   * `ST_ToggleRowActionMenuButton` still passes it until its cluster lands;
-   * the integration step removes this prop.
-   */
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_RowActionMenu = <TData extends ST_RowData>({
@@ -41,8 +35,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   row,
   setAnchorEl,
   staticRowIndex,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
-  table: _transitionTable,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
   // The row carries the core table; the ST wrapper types re-type its options

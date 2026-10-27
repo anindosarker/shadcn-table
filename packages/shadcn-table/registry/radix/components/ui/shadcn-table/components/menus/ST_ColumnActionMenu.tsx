@@ -21,12 +21,6 @@ export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   anchorEl: HTMLElement | null;
   header: ST_Header<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  /**
-   * Transition, part 01 phase 03: ignored, the menu reads `header.table`.
-   * `ST_TableHeadCellColumnActionsButton` still passes it until its cluster
-   * lands; the integration step removes this prop.
-   */
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ColumnActionMenu = <TData extends ST_RowData>({
@@ -34,8 +28,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   anchorEl,
   header,
   setAnchorEl,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
-  table: _transitionTable,
   ...rest
 }: ST_ColumnActionMenuProps<TData>) => {
   // The header carries the core table; the ST wrapper types re-type its

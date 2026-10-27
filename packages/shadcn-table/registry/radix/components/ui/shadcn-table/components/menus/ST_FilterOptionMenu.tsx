@@ -12,7 +12,6 @@ import {
   type ST_InternalFilterOption,
   type ST_Localization,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
@@ -120,12 +119,6 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilterValue?: (filterValue: any) => void;
-  /**
-   * Transition, part 01 phase 03: ignored, the menu reads the table from
-   * context. `ST_FilterTextField` and `ST_GlobalFilterTextField` still pass
-   * it until their cluster lands; the integration step removes this prop.
-   */
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_FilterOptionMenu = <TData extends ST_RowData>({
@@ -135,8 +128,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   onSelect,
   setAnchorEl,
   setFilterValue,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
-  table: _transitionTable,
   ...rest
 }: ST_FilterOptionMenuProps<TData>) => {
   // Context, not `header.table`: the global filter menu has no header, and a

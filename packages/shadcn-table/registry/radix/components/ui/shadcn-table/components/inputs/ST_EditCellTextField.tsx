@@ -38,18 +38,10 @@ export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   error?: boolean;
   /** MUI TextField `helperText`: validation or hint text rendered under the input. */
   helperText?: ReactNode;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from `cell`. The
-   * edit modal outside this cluster still passes it; the integration step
-   * removes it.
-   */
-  table?: unknown;
 }
 
 export const ST_EditCellTextField = <TData extends ST_RowData>({
   cell,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the input
-  table: _table,
   ...rest
 }: ST_EditCellTextFieldProps<TData>) => {
   // The cell carries the core table; the ST wrapper types re-type its getters.

@@ -65,19 +65,11 @@ export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
   rangeFilterIndex?: number;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from `header`. The
-   * filter container outside this cluster still passes it; the integration
-   * step removes it.
-   */
-  table?: unknown;
 }
 
 export const ST_FilterTextField = <TData extends ST_RowData>({
   header,
   rangeFilterIndex,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the input
-  table: _table,
   ...rest
 }: ST_FilterTextFieldProps<TData>) => {
   // The header carries the core table; the ST wrapper types re-type its getters.

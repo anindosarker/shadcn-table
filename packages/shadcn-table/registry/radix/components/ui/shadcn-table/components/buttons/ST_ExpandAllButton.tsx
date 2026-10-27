@@ -20,19 +20,9 @@ const expandAllButtonVariants = cva('', {
   },
 });
 
-export interface ST_ExpandAllButtonProps extends ButtonProps {
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the context.
-   * Goes in the integration step, once no caller passes it.
-   */
-  table?: unknown;
-}
+export type ST_ExpandAllButtonProps = ButtonProps;
 
-export const ST_ExpandAllButton = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
-  table: _table,
-  ...rest
-}: ST_ExpandAllButtonProps) => {
+export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
   const table = useSTContext();
   const {
     getCanSomeRowsExpand,

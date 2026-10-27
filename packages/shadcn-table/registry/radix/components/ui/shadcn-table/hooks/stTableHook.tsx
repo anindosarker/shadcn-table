@@ -114,12 +114,12 @@ export const ST_TableProvider = <TData extends ST_RowData>({
   // The context carries a stable handle, the first instance: its store,
   // atoms, refs and setters are live, and keeping it stable spares context
   // readers a re-render on every table state change. Its options are
-  // refreshed from each render's instance, so option reads stay current; only
-  // its `state` is unused.
+  // refreshed from each render's instance, so option reads stay current; the
+  // library never reads its `state`.
   const [handle] = useState(() => {
-    // Transition, part 01 phase 03: components not yet on their own
-    // subscriptions read `table.state`, so the handle serves the live store
-    // until every component subscribes; `ST_TableLayout` re-renders them.
+    // Custom renderers handed the handle (`render*`, `st*Props` of the context
+    // components) may read `table.state`. The first instance holds only the
+    // first render's selected slices, so the handle serves the live store.
     Object.defineProperty(table, 'state', {
       configurable: true,
       enumerable: true,

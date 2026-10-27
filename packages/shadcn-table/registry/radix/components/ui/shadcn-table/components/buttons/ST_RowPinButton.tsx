@@ -13,18 +13,11 @@ export interface ST_RowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   pinningPosition: RowPinningPosition;
   row: ST_Row<TData>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the row. Goes
-   * in the integration step, once no caller passes it.
-   */
-  table?: unknown;
 }
 
 export const ST_RowPinButton = <TData extends ST_RowData>({
   pinningPosition,
   row,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
-  table: _table,
   ...rest
 }: ST_RowPinButtonProps<TData>) => {
   // The row carries the core table, which holds the ST options, atoms, refs

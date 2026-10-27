@@ -37,19 +37,11 @@ export interface ST_SelectCheckboxProps<TData extends ST_RowData>
   extends CheckboxProps {
   row?: ST_Row<TData>;
   staticRowIndex?: number;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the context.
-   * Parents outside this cluster still pass it; the integration step removes
-   * it.
-   */
-  table?: unknown;
 }
 
 export const ST_SelectCheckbox = <TData extends ST_RowData>({
   row,
   staticRowIndex,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the checkbox
-  table: _table,
   ...rest
 }: ST_SelectCheckboxProps<TData>) => {
   // Context for both forms: the select-all checkbox has no instance, and one

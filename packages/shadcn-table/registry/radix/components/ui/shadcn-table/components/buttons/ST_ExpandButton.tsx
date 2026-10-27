@@ -29,11 +29,6 @@ export interface ST_ExpandButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
   staticRowIndex?: number;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the row. Goes
-   * in the integration step, once no caller passes it.
-   */
-  table?: unknown;
 }
 
 export const ST_ExpandButton = <TData extends ST_RowData>({

@@ -26,17 +26,10 @@ export interface ST_GrabHandleButtonProps extends ButtonProps {
   location?: 'column' | 'row';
   onDragEnd: DragEventHandler<HTMLButtonElement>;
   onDragStart: DragEventHandler<HTMLButtonElement>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the context.
-   * Goes in the integration step, once no caller passes it.
-   */
-  table?: unknown;
 }
 
 export const ST_GrabHandleButton = ({
   location,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
-  table: _table,
   ...rest
 }: ST_GrabHandleButtonProps) => {
   const table = useSTContext();
