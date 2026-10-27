@@ -17,7 +17,9 @@ publishes the section as the GitHub release notes.
 - `filterFns`, `sortFns` and `aggregationFns` names are resolved by TanStack Table core. A
   `filterFn`, `globalFilterFn`, `sortFn` or `aggregationFn` string must be a built-in name or
   one registered through the table option of the same name; an unknown name logs core's
-  development warning and filters, sorts or aggregates nothing.
+  development warning and filters, sorts or aggregates nothing. A column's `filterFn` keeps
+  the name: `columnDef.filterFn` holds the current filter mode name instead of the resolved
+  function, and `columnDef._filterFn` is removed.
 - Every ST setter (`table.setDensity`, `setIsFullScreen`, `setShowAlertBanner`,
   `setShowToolbarDropZone`, `setDraggingColumn`, `setHoveredColumn`, `setDraggingRow`,
   `setHoveredRow`, `setCreatingRow`, `setEditingCell`, `setEditingRow`,
@@ -42,6 +44,16 @@ publishes the section as the GitHub release notes.
   ST state, refs and setters.
 - A custom `aggregationFn` name typechecks: `ST_AggregationOption` accepts any string, as
   `ST_FilterOption` and `ST_SortingOption` do.
+- `enablePagination: false` with `manualPagination: false` shows every row instead of the
+  first page.
+- With `enableFilters`, `enableColumnFilters` and `enableGlobalFilter` all `false`, filters
+  in state no longer filter the rows.
+- Row pinning on select (`rowPinningDisplayMode: 'select-*'`) follows the selection state:
+  a Shift range pins every row in it under controlled `rowSelection` or an external
+  `atoms.rowSelection` too, select all pins the rows it selects (it cleared every pin), and
+  programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
+  unpins.
+- Switching a column's filter mode re-filters the current filter value with the new mode.
 
 ## 0.3.3 - 2026-10-22
 
