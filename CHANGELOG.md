@@ -20,6 +20,14 @@ publishes the section as the GitHub release notes.
   `table.store.state` or `table.atoms.<slice>.get()` there. `table.store.state` is typed over
   `ST_RowData`; cast the row slices (`draggingRow`, `hoveredRow`) through
   `ST_TableState<TData>` when the row type matters.
+- The props types of components that render no row, cell, header or column
+  (`ST_TableLayoutProps`, `ST_TableContainerProps`, `ST_TableProps`, `ST_TableBodyProps`,
+  `ST_TableHeadProps`, `ST_TableFooterProps`, the toolbar, toggle button, menu and modal
+  props) no longer take a `TData` parameter. Drop the type argument.
+- On the table that `render*` and `st*Props` callbacks of those components receive,
+  `table.state` is a live, unsubscribed read of the store. Prefer `table.store.state`.
+- `ST_TableProvider` keeps the first table it is given. Swapping its `table` prop after
+  mount needs a `key`.
 - `ST_TopToolbarProps` is removed; `ST_TopToolbar` takes no props.
 - `memoMode` is removed, with the memoized row and cell components
   (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
@@ -44,6 +52,13 @@ publishes the section as the GitHub release notes.
 - mk (Macedonian) locale.
 - `ST_TableProvider` puts a table on the context the library's components read.
   `ShadcnTable` renders it around its layout.
+- `getColumnFilterFnName` and `selectST_TransformState` are exported from the barrel.
+
+### Changed
+
+- Components subscribe to the state slices they render. A state change re-renders the
+  components that show it, not the whole table; `ShadcnTable` itself re-renders only on
+  the slices its column and data transforms read.
 
 ### Fixed
 
@@ -70,6 +85,11 @@ publishes the section as the GitHub release notes.
   call so the row model re-filters; a handler that only stores the value needs no change.
 - Editing a cell from the cell action menu (`editDisplayMode: 'cell'`) keeps the edit input
   focused when the menu closes.
+- Rendering an ST display column header headless
+  (`flexRender(header.column.columnDef.Header, header.getContext())`) no longer throws.
+- A callback `ref` in `stTableLayoutProps`, `stTableContainerProps`, `stTableHeadProps`,
+  `stTableFooterProps`, `stTopToolbarProps` or `stBottomToolbarProps` receives the node;
+  only ref objects did.
 
 ## 0.3.3 - 2026-10-22
 
