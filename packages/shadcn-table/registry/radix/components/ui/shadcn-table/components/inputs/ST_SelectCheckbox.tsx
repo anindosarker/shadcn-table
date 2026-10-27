@@ -9,6 +9,7 @@ import {
   type RadioProps,
   type ST_Row,
   type ST_RowData,
+  type ST_TableOptions,
   type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import {
@@ -48,14 +49,17 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   // source keeps a single hook order whether or not `row` is given.
   const table = useSTContext<TData>();
   const {
-    options: {
-      enableMultiRowSelection,
-      localization,
-      selectAllMode,
-      stSelectAllCheckboxProps,
-      stSelectCheckboxProps,
-    },
+    options: { enableMultiRowSelection, localization, selectAllMode },
   } = table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Checkbox and RadioGroupItem.
+  const {
+    stSelectAllCheckboxProps,
+    stSelectCheckboxProps,
+  }: Pick<
+    ST_TableOptions<TData>,
+    'stSelectAllCheckboxProps' | 'stSelectCheckboxProps'
+  > = table.options;
 
   const selectAll = !row;
 
