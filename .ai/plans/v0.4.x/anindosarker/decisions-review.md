@@ -105,9 +105,17 @@ nothing here re-decides those, items here extend them.
       Compiler, Radix or TanStack constraint.
     - Em dashes replaced in what survives; the standard stays "none anywhere".
 
+## Hook selector
+
+13. `useShadcnTable(options, selector?)` takes the optional selector `useAppTable` takes, so
+    the hook style can narrow its owner re-renders like the props style. Default unchanged
+    (full state). The guide that introduces `useShadcnTable` gets one paragraph: pass options
+    to `ShadcnTable` or give the hook a selector for narrow re-renders; with the default the
+    owner re-renders on every state change, as TanStack documents.
+
 ## Unchanged after review
 
-13. The props-style root (`ShadcnTable` built from options) selects only the slices its
+14. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
