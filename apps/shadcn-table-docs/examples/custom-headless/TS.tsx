@@ -4,6 +4,7 @@ import {
   ST_GlobalFilterTextField,
   ST_TableBodyCellValue,
   ST_TablePagination,
+  ST_TableProvider,
   ST_ToolbarAlertBanner,
   flexRender,
   type ST_ColumnDef,
@@ -60,61 +61,62 @@ const Example = () => {
   });
 
   return (
-    <div className="my-8 flex flex-col">
-      <h4>My Custom Headless Table</h4>
-      <div className="flex items-center justify-between">
-        {/**
-         * Use ST components along side your own markup.
-         * They just need the `table` instance passed as a prop to work!
-         */}
-        <ST_GlobalFilterTextField table={table} />
-        <ST_TablePagination table={table} />
+    <ST_TableProvider table={table}>
+      <div className="my-8 flex flex-col">
+        <h4>My Custom Headless Table</h4>
+        <div className="flex items-center justify-between">
+          {/**
+           * Use ST components along side your own markup.
+           * They read the table from the `ST_TableProvider` around them.
+           */}
+          <ST_GlobalFilterTextField />
+          <ST_TablePagination />
+        </div>
+        {/* Using Vanilla shadcn Table components here */}
+        <div>
+          <Table>
+            {/* Use your own markup, customize however you want using the power of TanStack Table */}
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead className="text-center" key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.Header ??
+                              header.column.columnDef.header,
+                            //pass the ST table: `header.getContext().table` is the plain TanStack table, without `table.state`
+                            { ...header.getContext(), table },
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map((row, rowIndex) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() ? 'selected' : undefined}
+                >
+                  {row.getVisibleCells().map((cell, _columnIndex) => (
+                    <TableCell className="text-center" key={cell.id}>
+                      {/* Use ST's cell renderer that provides better logic than flexRender */}
+                      <ST_TableBodyCellValue
+                        cell={cell}
+                        staticRowIndex={rowIndex} //just for batch row selection to work
+                      />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <ST_ToolbarAlertBanner stackAlertBanner />
       </div>
-      {/* Using Vanilla shadcn Table components here */}
-      <div>
-        <Table>
-          {/* Use your own markup, customize however you want using the power of TanStack Table */}
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead className="text-center" key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.Header ??
-                            header.column.columnDef.header,
-                          //pass the ST table: `header.getContext().table` is the plain TanStack table, without `table.state`
-                          { ...header.getContext(), table },
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row, rowIndex) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() ? 'selected' : undefined}
-              >
-                {row.getVisibleCells().map((cell, _columnIndex) => (
-                  <TableCell className="text-center" key={cell.id}>
-                    {/* Use ST's cell renderer that provides better logic than flexRender */}
-                    <ST_TableBodyCellValue
-                      cell={cell}
-                      table={table}
-                      staticRowIndex={rowIndex} //just for batch row selection to work
-                    />
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      <ST_ToolbarAlertBanner stackAlertBanner table={table} />
-    </div>
+    </ST_TableProvider>
   );
 };
 

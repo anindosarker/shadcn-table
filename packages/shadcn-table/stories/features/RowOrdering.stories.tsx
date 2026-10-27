@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { type ST_ColumnDef, type ST_Row } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import {
+  type ST_ColumnDef,
+  type ST_Row,
+  type ST_TableState,
+  ShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 
@@ -73,7 +77,8 @@ export const RowOrderingEnabled = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.state;
+          const { draggingRow, hoveredRow } = table.store
+            .state as ST_TableState<Person>;
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<Person>).index,
@@ -215,7 +220,8 @@ export const RowOrderingWithRowVirtualization = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.state;
+          const { draggingRow, hoveredRow } = table.store
+            .state as ST_TableState<Person>;
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<Person>).index,
@@ -263,7 +269,7 @@ export const RowOrderingWithColumnVirtualization = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.state;
+          const { draggingRow, hoveredRow } = table.store.state;
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<(typeof fakeData)[0]>).index,

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 
@@ -179,34 +178,6 @@ export const EnableRowVirtualizationWithDetailPanel = () => (
     enableRowNumbers
     enableRowVirtualization
     renderDetailPanel={() => <div>Detail Panel</div>}
-  />
-);
-
-export const EnableRowVirtualizationWithMemoizedCells = () => (
-  <ShadcnTable
-    columns={longColumns}
-    data={longData}
-    enableBottomToolbar={false}
-    enableDensityToggle={false}
-    enablePagination={false}
-    enableRowNumbers
-    enableRowVirtualization
-    initialState={{ density: 'compact' }}
-    memoMode="cells"
-  />
-);
-
-export const EnableRowVirtualizationWithMemoizedRows = () => (
-  <ShadcnTable
-    columns={longColumns}
-    data={longData}
-    enableBottomToolbar={false}
-    enableDensityToggle={false}
-    enablePagination={false}
-    enableRowNumbers
-    enableRowVirtualization
-    initialState={{ density: 'compact' }}
-    memoMode="rows"
   />
 );
 

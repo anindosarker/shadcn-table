@@ -2,8 +2,8 @@ import { useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_SortingState,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 

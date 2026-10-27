@@ -5,8 +5,9 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
-import { extraIndexRangeExtractor } from '@/components/ui/shadcn-table/utils/virtualization.utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { extraIndexRangeExtractor } from '@/components/ui/shadcn-table/shared/utils/virtualization.utils';
+import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export const useST_ColumnVirtualizer = <
   TData extends ST_RowData,
@@ -24,9 +25,13 @@ export const useST_ColumnVirtualizer = <
     },
     refs: { tableContainerRef },
   } = table;
-  const { columnPinning, columnVisibility, draggingColumn } = table.state;
 
   if (!enableColumnVirtualization) return undefined;
+
+  // These feed the memos and the virtualizer, so they are hook subscriptions.
+  const columnPinning = useST_Atom(table.atoms.columnPinning);
+  const columnVisibility = useST_Atom(table.atoms.columnVisibility);
+  const draggingColumn = useST_Atom(table.atoms.draggingColumn);
 
   const columnVirtualizerProps = parseFromValuesOrFunc(
     columnVirtualizerOptions,

@@ -1,10 +1,4 @@
-import {
-  type ComponentPropsWithRef,
-  type Dispatch,
-  type ReactNode,
-  type RefObject,
-  type SetStateAction,
-} from 'react';
+import { type ComponentPropsWithRef, type ReactNode } from 'react';
 import {
   type AccessorFn,
   type AggregationFnDef,
@@ -47,11 +41,15 @@ import { type Collapsible } from '@/components/ui/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui/dialog';
 import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
-import { type ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
-import { type ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
-import { type ST_SortFns } from '@/components/ui/shadcn-table/fns/sortFns';
+import { type ST_AggregationFns } from '@/components/ui/shadcn-table/shared/fns/aggregationFns';
+import { type ST_FilterFns } from '@/components/ui/shadcn-table/shared/fns/filterFns';
+import { type ST_SortFns } from '@/components/ui/shadcn-table/shared/fns/sortFns';
 import { type ST_Icons } from '@/components/ui/shadcn-table/icons';
-import { type ST_Features } from '@/components/ui/shadcn-table/utils/tanstack.features';
+import {
+  type ST_ColumnDef_Config,
+  type ST_TableOptions_Config,
+} from '@/components/ui/shadcn-table/features/stConfigFeature';
+import { type ST_Features } from '@/components/ui/shadcn-table/features/stFeatures';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 
@@ -100,6 +98,37 @@ export type DialogProps = Pick<
   'onOpenChange'
 > &
   ComponentPropsWithRef<typeof DialogContent>;
+
+/**
+ * The props types of the shadcn parts that the part-prop options
+ * (`stFilterCheckboxProps`, `stEditRowDialogProps`, ...) pass on, by part.
+ * They resolve to this tree's parts, Radix UI or Base UI.
+ */
+export interface ST_PartPropTypes {
+  checkbox: CheckboxProps;
+  dialog: DialogProps;
+  radio: RadioProps;
+  slider: SliderProps;
+}
+
+/**
+ * A part's props, tree-neutral: every tree's part props fit it. `object`, not
+ * `Record<string, unknown>`: the parts' props types are interfaces, which have
+ * no index signature.
+ */
+export type ST_PartProps = object;
+
+/**
+ * `ST_PartPropTypes` with every part tree-neutral. The feature-map
+ * augmentation (stConfigFeature) and the table instance types (`table.options`,
+ * `column.columnDef`) use it, so they stay identical across trees; the options
+ * a user writes (`ST_TableOptions`, `ST_ColumnDef`) take this tree's
+ * `ST_PartPropTypes`.
+ */
+export type ST_NeutralPartPropTypes = Record<
+  keyof ST_PartPropTypes,
+  ST_PartProps
+>;
 
 export type ST_LinearProgressProps = {
   collapsibleProps?: DivProps;
@@ -333,40 +362,11 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
   getSelectedRowModel: () => ST_RowModel<TData>;
   getStartLeafColumns: () => ST_Column<TData>[];
   getTopRows: () => ST_Row<TData>[];
-  options: ST_StatefulTableOptions<TData>;
-  refs: {
-    actionCellRef: RefObject<HTMLTableCellElement | null>;
-    bottomToolbarRef: RefObject<HTMLDivElement | null>;
-    editInputRefs: RefObject<Record<string, HTMLInputElement> | null>;
-    filterInputRefs: RefObject<Record<string, HTMLInputElement> | null>;
-    searchInputRef: RefObject<HTMLInputElement | null>;
-    tableContainerRef: RefObject<HTMLDivElement | null>;
-    tableFooterRef: RefObject<HTMLTableSectionElement | null>;
-    tableHeadCellRefs: RefObject<Record<string, HTMLTableCellElement> | null>;
-    tableHeadRef: RefObject<HTMLTableSectionElement | null>;
-    tableLayoutRef: RefObject<HTMLDivElement | null>;
-    topToolbarRef: RefObject<HTMLDivElement | null>;
-  };
-  setActionCell: Dispatch<SetStateAction<ST_Cell<TData> | null>>;
-  setColumnFilterFns: Dispatch<SetStateAction<ST_ColumnFilterFnsState>>;
-  setCreatingRow: Dispatch<SetStateAction<ST_Row<TData> | null | true>>;
-  setDensity: Dispatch<SetStateAction<ST_DensityState>>;
-  setDraggingColumn: Dispatch<SetStateAction<ST_Column<TData> | null>>;
-  setDraggingRow: Dispatch<SetStateAction<ST_Row<TData> | null>>;
-  setEditingCell: Dispatch<SetStateAction<ST_Cell<TData> | null>>;
-  setEditingRow: Dispatch<SetStateAction<ST_Row<TData> | null>>;
-  setGlobalFilterFn: Dispatch<SetStateAction<ST_FilterOption>>;
-  setHoveredColumn: Dispatch<SetStateAction<Partial<ST_Column<TData>> | null>>;
-  setHoveredRow: Dispatch<SetStateAction<Partial<ST_Row<TData>> | null>>;
-  setIsFullScreen: Dispatch<SetStateAction<boolean>>;
-  setShowAlertBanner: Dispatch<SetStateAction<boolean>>;
-  setShowColumnFilters: Dispatch<SetStateAction<boolean>>;
-  setShowGlobalFilter: Dispatch<SetStateAction<boolean>>;
-  setShowToolbarDropZone: Dispatch<SetStateAction<boolean>>;
+  options: ST_DefinedTableOptions<TData>;
 };
 
 export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
-  ST_TableOptions<TData>,
+  ST_TableOptions<TData, ST_NeutralPartPropTypes>,
   // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   'icons' | 'localization' // | 'mrtTheme'
 > & {
@@ -377,69 +377,64 @@ export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
 
 export type ST_StatefulTableOptions<TData extends ST_RowData> =
   ST_DefinedTableOptions<TData> & {
-    state: Pick<
-      ST_TableState<TData>,
-      | 'columnFilterFns'
-      | 'columnOrder'
-      | 'columnResizing'
-      | 'creatingRow'
-      | 'density'
-      | 'draggingColumn'
-      | 'draggingRow'
-      | 'editingCell'
-      | 'editingRow'
-      | 'globalFilterFn'
-      | 'grouping'
-      | 'hoveredColumn'
-      | 'hoveredRow'
-      | 'isFullScreen'
-      | 'pagination'
-      | 'showAlertBanner'
-      | 'showColumnFilters'
-      | 'showGlobalFilter'
-      | 'showToolbarDropZone'
-    >;
+    state: ST_TableState<TData>;
   };
 
-export interface ST_TableState<TData extends ST_RowData>
-  extends TableState<ST_Features> {
-  actionCell?: ST_Cell<TData> | null;
-  columnFilterFns: ST_ColumnFilterFnsState;
+/**
+ * The table state of `ST_Features`, with the slices that hold a row, cell or
+ * column typed for `TData`. The feature state maps are not generic, so the
+ * features store them typed for `ST_RowData`.
+ */
+export type ST_TableState<TData extends ST_RowData> = Omit<
+  TableState<ST_Features>,
+  | 'actionCell'
+  | 'creatingRow'
+  | 'draggingColumn'
+  | 'draggingRow'
+  | 'editingCell'
+  | 'editingRow'
+  | 'hoveredColumn'
+  | 'hoveredRow'
+> & {
+  actionCell: ST_Cell<TData> | null;
   creatingRow: ST_Row<TData> | null;
-  density: ST_DensityState;
   draggingColumn: ST_Column<TData> | null;
   draggingRow: ST_Row<TData> | null;
   editingCell: ST_Cell<TData> | null;
   editingRow: ST_Row<TData> | null;
-  globalFilterFn: ST_FilterOption;
   hoveredColumn: Partial<ST_Column<TData>> | null;
   hoveredRow: Partial<ST_Row<TData>> | null;
-  isFullScreen: boolean;
-  isLoading: boolean;
-  isSaving: boolean;
-  showAlertBanner: boolean;
-  showColumnFilters: boolean;
-  showGlobalFilter: boolean;
-  showLoadingOverlay: boolean;
-  showProgressBars: boolean;
-  showSkeletons: boolean;
-  showToolbarDropZone: boolean;
-}
+};
 
-export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
-  extends Omit<
-    ColumnDef<ST_Features, TData, TValue>,
-    | 'accessorKey'
-    | 'aggregatedCell'
-    | 'aggregationFn'
-    | 'cell'
-    | 'columns'
-    | 'filterFn'
-    | 'footer'
-    | 'header'
-    | 'id'
-    | 'sortFn'
-  > {
+/**
+ * The column members that pass props to a shadcn part, typed for `TParts`.
+ */
+type ST_ColumnDef_PartKeys = 'stFilterCheckboxProps' | 'stFilterSliderProps';
+
+/**
+ * A column definition. The ST-only members come from `stConfigFeature`; this
+ * interface narrows the core members whose ST shape differs, and types the
+ * part-prop members for `TParts` (this tree's parts by default).
+ */
+export interface ST_ColumnDef<
+  TData extends ST_RowData,
+  TValue = unknown,
+  TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
+> extends Omit<
+      ColumnDef<ST_Features, TData, TValue>,
+      | 'accessorKey'
+      | 'aggregatedCell'
+      | 'aggregationFn'
+      | 'cell'
+      | 'columns'
+      | 'filterFn'
+      | 'footer'
+      | 'header'
+      | 'id'
+      | 'sortFn'
+      | ST_ColumnDef_PartKeys
+    >,
+    Pick<ST_ColumnDef_Config<TData, TValue, TParts>, ST_ColumnDef_PartKeys> {
   /**
    * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
    * Specify a function here to point to the correct property in the data object.
@@ -456,119 +451,17 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
    * @example accessorKey: 'name.firstName' //deep key dot notation
    */
   accessorKey?: DeepKeys<TData> | (string & {});
-  AggregatedCell?: (props: {
-    cell: ST_Cell<TData, TValue>;
-    column: ST_Column<TData, TValue>;
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-  }) => ReactNode;
   aggregationFn?: Array<ST_AggregationFn<TData>> | ST_AggregationFn<TData>;
-  Cell?: (props: {
-    cell: ST_Cell<TData, TValue>;
-    column: ST_Column<TData, TValue>;
-    renderedCellValue: ReactNode;
-    row: ST_Row<TData>;
-    rowRef?: RefObject<HTMLTableRowElement | null>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  /**
-   * Specify what type of column this is. Either `data`, `display`, or `group`. Defaults to `data`.
-   * Leave this blank if you are just creating a normal data column.
-   *
-   * @default 'data'
-   *
-   * @example columnDefType: 'display'
-   */
-  columnDefType?: 'data' | 'display' | 'group';
-  columnFilterModeOptions?: Array<
-    LiteralUnion<string & ST_FilterOption>
-  > | null;
-  columns?: ST_ColumnDef<TData, TValue>[];
-  Edit?: (props: {
-    cell: ST_Cell<TData, TValue>;
-    column: ST_Column<TData, TValue>;
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  editSelectOptions?:
-    | ((props: {
-        cell: ST_Cell<TData, TValue>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => DropdownOption[])
-    | DropdownOption[];
-  editVariant?: 'select' | 'text';
-  enableClickToCopy?:
-    | 'context-menu'
-    | ((cell: ST_Cell<TData>) => 'context-menu' | boolean)
-    | boolean;
-  enableColumnActions?: boolean;
-  enableColumnDragging?: boolean;
-  enableColumnFilterModes?: boolean;
-  enableColumnOrdering?: boolean;
-  enableEditing?: ((row: ST_Row<TData>) => boolean) | boolean;
-  enableFilterMatchHighlighting?: boolean;
-  Filter?: (props: {
-    column: ST_Column<TData, TValue>;
-    header: ST_Header<TData>;
-    rangeFilterIndex?: number;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
+  columns?: ST_ColumnDef<TData, TValue, TParts>[];
   filterFn?: ST_FilterFn<TData>;
-  filterSelectOptions?: DropdownOption[];
-  filterVariant?:
-    | 'autocomplete'
-    | 'checkbox'
-    | 'date'
-    | 'date-range'
-    | 'datetime'
-    | 'datetime-range'
-    | 'multi-select'
-    | 'range'
-    | 'range-slider'
-    | 'select'
-    | 'text'
-    | 'time'
-    | 'time-range';
   /**
    * footer must be a string. If you want custom JSX to render the footer, you can also specify a `Footer` option. (Capital F)
    */
   footer?: string;
-  Footer?:
-    | ((props: {
-        column: ST_Column<TData, TValue>;
-        footer: ST_Header<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ReactNode)
-    | ReactNode;
-  GroupedCell?: (props: {
-    cell: ST_Cell<TData, TValue>;
-    column: ST_Column<TData, TValue>;
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-  }) => ReactNode;
-  /**
-   * If `layoutMode` is `'grid'` or `'grid-no-grow'`, you can specify the flex grow value for individual columns to still grow and take up remaining space, or set to `false`/0 to not grow.
-   */
-  grow?: boolean | number;
   /**
    * header must be a string. If you want custom JSX to render the header, you can also specify a `Header` option. (Capital H)
    */
   header: string;
-  Header?:
-    | ((props: {
-        column: ST_Column<TData, TValue>;
-        header: ST_Header<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ReactNode)
-    | ReactNode;
   /**
    * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
    *
@@ -579,136 +472,14 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
    * @default gets set to the same value as `accessorKey` by default
    */
   id?: LiteralUnion<string & keyof TData>;
-  stColumnActionsButtonProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stColumnDragHandleProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stCopyButtonProps?:
-    | ((props: {
-        cell: ST_Cell<TData, TValue>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stEditTextFieldProps?:
-    | ((props: {
-        cell: ST_Cell<TData, TValue>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => InputProps & { error?: boolean; helperText?: ReactNode })
-    | (InputProps & { error?: boolean; helperText?: ReactNode });
-  stFilterAutocompleteProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterCheckboxProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => CheckboxProps)
-    | CheckboxProps;
-  stFilterDatePickerProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterDateTimePickerProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterSliderProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => SliderProps)
-    | SliderProps;
-  stFilterTextFieldProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterTimePickerProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stTableBodyCellProps?:
-    | ((props: {
-        cell: ST_Cell<TData, TValue>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  stTableFooterCellProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  stTableHeadCellProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  PlaceholderCell?: (props: {
-    cell: ST_Cell<TData, TValue>;
-    column: ST_Column<TData, TValue>;
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderCellActionMenuItems?: (props: {
-    cell: ST_Cell<TData>;
-    closeMenu: () => void;
-    column: ST_Column<TData>;
-    internalMenuItems: ReactNode[];
-    row: ST_Row<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
-  renderColumnActionsMenuItems?: (props: {
-    closeMenu: () => void;
-    column: ST_Column<TData>;
-    internalColumnMenuItems: ReactNode[];
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
-  renderColumnFilterModeMenuItems?: (props: {
-    column: ST_Column<TData>;
-    internalFilterOptions: ST_InternalFilterOption[];
-    onSelectFilterMode: (filterMode: ST_FilterOption) => void;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
   sortFn?: ST_SortFn<TData>;
-  visibleInShowHideMenu?: boolean;
 }
 
 export type ST_DisplayColumnDef<
   TData extends ST_RowData,
   TValue = unknown,
-> = Omit<ST_ColumnDef<TData, TValue>, 'accessorFn' | 'accessorKey'>;
+  TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
+> = Omit<ST_ColumnDef<TData, TValue, TParts>, 'accessorFn' | 'accessorKey'>;
 
 export type ST_GroupColumnDef<TData extends ST_RowData> = ST_DisplayColumnDef<
   TData,
@@ -720,9 +491,13 @@ export type ST_GroupColumnDef<TData extends ST_RowData> = ST_DisplayColumnDef<
 export type ST_DefinedColumnDef<
   TData extends ST_RowData,
   TValue = unknown,
-> = Omit<ST_ColumnDef<TData, TValue>, 'defaultDisplayColumn' | 'id'> & {
-  _filterFn: ST_FilterOption;
-  defaultDisplayColumn: Partial<ST_ColumnDef<TData, TValue>>;
+> = Omit<
+  ST_ColumnDef<TData, TValue, ST_NeutralPartPropTypes>,
+  'defaultDisplayColumn' | 'id'
+> & {
+  defaultDisplayColumn: Partial<
+    ST_ColumnDef<TData, TValue, ST_NeutralPartPropTypes>
+  >;
   id: string;
 };
 
@@ -778,7 +553,9 @@ export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
   row: ST_Row<TData>;
 };
 
-export type ST_AggregationOption = string & keyof typeof ST_AggregationFns;
+export type ST_AggregationOption = LiteralUnion<
+  string & keyof typeof ST_AggregationFns
+>;
 
 export type ST_AggregationFn<TData extends ST_RowData> =
   | AggregationFnDef<ST_Features, TData, any, any>
@@ -813,6 +590,20 @@ export type ST_DisplayColumnIds =
   | 'st-row-spacer';
 
 /**
+ * The table options that pass props to a shadcn part or hold column defs that
+ * do, typed for `TParts`.
+ */
+type ST_TableOptions_PartKeys =
+  | 'defaultDisplayColumn'
+  | 'displayColumnDefOptions'
+  | 'stCreateRowModalProps'
+  | 'stEditRowDialogProps'
+  | 'stFilterCheckboxProps'
+  | 'stFilterSliderProps'
+  | 'stSelectAllCheckboxProps'
+  | 'stSelectCheckboxProps';
+
+/**
  * `columns` and `data` props are the only required props, but there are over 170 other optional props.
  *
  * See more info on creating columns and data on the official docs site:
@@ -820,31 +611,34 @@ export type ST_DisplayColumnIds =
  *
  * See the full props list on the official docs site:
  * @link https://shadcn-table.com/docs/api/table-options
+ *
+ * The part-prop members are typed for `TParts` (this tree's parts by default).
  */
-export interface ST_TableOptions<TData extends ST_RowData>
-  extends Omit<
-    Partial<TableOptions<ST_Features, TData>>,
-    | 'columns'
-    | 'data'
-    | 'defaultColumn'
-    | 'enableRowSelection'
-    | 'features'
-    | 'getRowId'
-    | 'globalFilterFn'
-    | 'initialState'
-    | 'state'
-  > {
-  /**
-   * Custom aggregation functions, by name, on top of the built-in ones. A column's `aggregationFn` string resolves against this map.
-   */
-  aggregationFns?: Record<
-    string,
-    AggregationFnDef<ST_Features, TData, any, any>
-  >;
-  columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
-  columnFilterModeOptions?: Array<
-    LiteralUnion<string & ST_FilterOption>
-  > | null;
+export interface ST_TableOptions<
+  TData extends ST_RowData,
+  TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
+> extends Omit<
+      Partial<TableOptions<ST_Features, TData>>,
+      | 'columns'
+      | 'data'
+      | 'defaultColumn'
+      | 'enableRowSelection'
+      | 'features'
+      | 'getRowId'
+      | 'globalFilterFn'
+      | 'initialState'
+      | 'onActionCellChange'
+      | 'onCreatingRowChange'
+      | 'onDraggingColumnChange'
+      | 'onDraggingRowChange'
+      | 'onEditingCellChange'
+      | 'onEditingRowChange'
+      | 'onHoveredColumnChange'
+      | 'onHoveredRowChange'
+      | 'state'
+      | ST_TableOptions_PartKeys
+    >,
+    Pick<ST_TableOptions_Config<TData, TParts>, ST_TableOptions_PartKeys> {
   /**
    * The columns to display in the table. `accessorKey`s or `accessorFn`s must match keys in the `data` table option.
    *
@@ -855,14 +649,7 @@ export interface ST_TableOptions<TData extends ST_RowData>
    * See all Columns Options on the official docs site:
    * @link https://shadcn-table.com/docs/api/column-options
    */
-  columns: ST_ColumnDef<TData, any>[];
-  columnVirtualizerInstanceRef?: RefObject<ST_ColumnVirtualizer | null>;
-  columnVirtualizerOptions?:
-    | ((props: {
-        table: ST_TableInstance<TData>;
-      }) => Partial<VirtualizerOptions<HTMLDivElement, HTMLTableCellElement>>)
-    | Partial<VirtualizerOptions<HTMLDivElement, HTMLTableCellElement>>;
-  createDisplayMode?: 'custom' | 'modal' | 'row';
+  columns: ST_ColumnDef<TData, any, TParts>[];
   /**
    * Pass your data as an array of objects. Objects can theoretically be any shape, but it's best to keep them consistent.
    *
@@ -873,456 +660,30 @@ export interface ST_TableOptions<TData extends ST_RowData>
   /**
    * Instead of specifying a bunch of the same options for each column, you can just change an option in the `defaultColumn` table option to change a default option for all columns.
    */
-  defaultColumn?: Partial<ST_ColumnDef<TData>>;
-  /**
-   * Change the default options for display columns.
-   */
-  defaultDisplayColumn?: Partial<ST_DisplayColumnDef<TData>>;
-  displayColumnDefOptions?: Partial<{
-    [key in ST_DisplayColumnIds]: Partial<ST_DisplayColumnDef<TData>>;
-  }>;
-  editDisplayMode?: 'cell' | 'custom' | 'modal' | 'row' | 'table';
-  enableBottomToolbar?: boolean;
-  enableCellActions?: ((cell: ST_Cell<TData>) => boolean) | boolean;
-  enableClickToCopy?:
-    | 'context-menu'
-    | ((cell: ST_Cell<TData>) => 'context-menu' | boolean)
-    | boolean;
-  enableColumnActions?: boolean;
-  enableColumnDragging?: boolean;
-  enableColumnFilterModes?: boolean;
-  enableColumnOrdering?: boolean;
-  enableColumnVirtualization?: boolean;
-  enableDensityToggle?: boolean;
-  enableEditing?: ((row: ST_Row<TData>) => boolean) | boolean;
-  enableExpandAll?: boolean;
-  enableFacetedValues?: boolean;
-  enableFilterMatchHighlighting?: boolean;
-  enableFullScreenToggle?: boolean;
-  enableGlobalFilterModes?: boolean;
-  enableGlobalFilterRankedResults?: boolean;
-  enableKeyboardShortcuts?: boolean;
-  enablePagination?: boolean;
-  enableRowActions?: boolean;
-  enableRowDragging?: boolean;
-  enableRowNumbers?: boolean;
-  enableRowOrdering?: boolean;
+  defaultColumn?: Partial<ST_ColumnDef<TData, unknown, TParts>>;
   enableRowSelection?: ((row: ST_Row<TData>) => boolean) | boolean;
-  enableRowVirtualization?: boolean;
-  enableSelectAll?: boolean;
-  enableStickyFooter?: boolean;
-  enableStickyHeader?: boolean;
-  enableTableFooter?: boolean;
-  enableTableHead?: boolean;
-  enableToolbarInternalActions?: boolean;
-  enableTopToolbar?: boolean;
-  expandRowsFn?: (dataRow: TData) => TData[];
-  /**
-   * Custom filter functions, by name, on top of the built-in ones. A column's `filterFn` string and `globalFilterFn` resolve against this map.
-   */
-  filterFns?: Record<string, FilterFn<ST_Features, TData>>;
   getRowId?: (
     originalRow: TData,
     index: number,
     parentRow: ST_Row<TData>,
   ) => string;
   globalFilterFn?: ST_FilterOption;
-  globalFilterModeOptions?: ST_FilterOption[] | null;
-  icons?: Partial<ST_Icons>;
-  id?: string;
   initialState?: Partial<ST_TableState<TData>>;
-  /**
-   * Changes which kind of CSS layout is used to render the table. `semantic` uses default semantic HTML elements, while `grid` adds CSS grid and flexbox styles
-   */
-  layoutMode?: 'grid' | 'grid-no-grow' | 'semantic';
-  /**
-   * Pass in either a locale imported from `@/components/ui/shadcn-table/locales/*` or a custom locale object.
-   *
-   * See the localization (i18n) guide for more info:
-   * @link https://shadcn-table.com/docs/guides/localization
-   */
-  localization?: Partial<ST_Localization>;
-  /**
-   * Memoize cells, rows, or the entire table body to potentially improve render performance.
-   *
-   * @warning This will break some dynamic rendering features. See the memoization guide for more info:
-   * @link https://shadcn-table.com/docs/guides/memoization
-   */
-  memoMode?: 'cells' | 'rows' | 'table-body';
-  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
-  // mrtTheme?: ((theme: Theme) => Partial<ST_Theme>) | Partial<ST_Theme>;
-  stBottomToolbarProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => DivProps)
-    | DivProps;
-  stCircularProgressProps?:
-    | ((props: {
-        table: ST_TableInstance<TData>;
-      }) => ST_CircularProgressProps & { Component?: ReactNode })
-    | (ST_CircularProgressProps & { Component?: ReactNode });
-  stColumnActionsButtonProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stColumnDragHandleProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stCopyButtonProps?:
-    | ((props: {
-        cell: ST_Cell<TData>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stCreateRowModalProps?:
-    | ((props: {
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => DialogProps)
-    | DialogProps;
-  stDetailPanelProps?:
-    | ((props: {
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  stEditRowDialogProps?:
-    | ((props: {
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => DialogProps)
-    | DialogProps;
-  stEditTextFieldProps?:
-    | ((props: {
-        cell: ST_Cell<TData>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => InputProps & { error?: boolean; helperText?: ReactNode })
-    | (InputProps & { error?: boolean; helperText?: ReactNode });
-  stExpandAllButtonProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => ButtonProps)
-    | ButtonProps;
-  stExpandButtonProps?:
-    | ((props: {
-        row: ST_Row<TData>;
-        staticRowIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stFilterAutocompleteProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterCheckboxProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => CheckboxProps)
-    | CheckboxProps;
-  stFilterDatePickerProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterDateTimePickerProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterSliderProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => SliderProps)
-    | SliderProps;
-  stFilterTextFieldProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stFilterTimePickerProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => InputProps)
-    | InputProps;
-  stLinearProgressProps?:
-    | ((props: {
-        isTopToolbar: boolean;
-        table: ST_TableInstance<TData>;
-      }) => ST_LinearProgressProps)
-    | ST_LinearProgressProps;
-  stPaginationProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => Partial<
-        ST_PaginationProps & {
-          SelectProps?: Partial<SelectProps>;
-          disabled?: boolean;
-          rowsPerPageOptions?: { label: string; value: number }[] | number[];
-          showRowsPerPage?: boolean;
-        }
-      >)
-    | Partial<
-        ST_PaginationProps & {
-          SelectProps?: Partial<SelectProps>;
-          disabled?: boolean;
-          rowsPerPageOptions?: { label: string; value: number }[] | number[];
-          showRowsPerPage?: boolean;
-        }
-      >;
-  stRowDragHandleProps?:
-    | ((props: {
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
-  stSearchTextFieldProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => InputProps)
-    | InputProps;
-  stSelectAllCheckboxProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => CheckboxProps)
-    | CheckboxProps;
-  stSelectCheckboxProps?:
-    | ((props: {
-        row: ST_Row<TData>;
-        staticRowIndex?: number;
-        table: ST_TableInstance<TData>;
-      }) => CheckboxProps | RadioProps)
-    | (CheckboxProps | RadioProps);
-  stSkeletonProps?:
-    | ((props: {
-        cell: ST_Cell<TData>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => DivProps)
-    | DivProps;
-  stTableBodyCellProps?:
-    | ((props: {
-        cell: ST_Cell<TData>;
-        column: ST_Column<TData>;
-        row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  stTableBodyProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => TableBodyProps)
-    | TableBodyProps;
-  stTableBodyRowProps?:
-    | ((props: {
-        isDetailPanel?: boolean;
-        row: ST_Row<TData>;
-        staticRowIndex: number;
-        table: ST_TableInstance<TData>;
-      }) => TableRowProps & { hover?: boolean })
-    | (TableRowProps & { hover?: boolean });
-  stTableContainerProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => DivProps)
-    | DivProps;
-  stTableFooterCellProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  stTableFooterProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => TableFooterProps)
-    | TableFooterProps;
-  stTableFooterRowProps?:
-    | ((props: {
-        footerGroup: ST_HeaderGroup<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableRowProps)
-    | TableRowProps;
-  stTableHeadCellProps?:
-    | ((props: {
-        column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableCellProps)
-    | TableCellProps;
-  stTableHeadProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => TableHeadProps)
-    | TableHeadProps;
-  stTableHeadRowProps?:
-    | ((props: {
-        headerGroup: ST_HeaderGroup<TData>;
-        table: ST_TableInstance<TData>;
-      }) => TableRowProps)
-    | TableRowProps;
-  stTableLayoutProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => DivProps)
-    | DivProps;
-  stTableProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => TableProps)
-    | TableProps;
-  stToolbarAlertBannerChipProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => ButtonProps)
-    | ButtonProps;
-  stToolbarAlertBannerProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => DivProps)
-    | DivProps;
-  stTopToolbarProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => DivProps)
-    | DivProps;
   onActionCellChange?: OnChangeFn<ST_Cell<TData> | null>;
-  onColumnFilterFnsChange?: OnChangeFn<{ [key: string]: ST_FilterOption }>;
-  onCreatingRowCancel?: (props: {
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => void;
   onCreatingRowChange?: OnChangeFn<ST_Row<TData> | null>;
-  onCreatingRowSave?: (props: {
-    exitCreatingMode: () => void;
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-    values: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
-  }) => Promise<void> | void;
-  onDensityChange?: OnChangeFn<ST_DensityState>;
   onDraggingColumnChange?: OnChangeFn<ST_Column<TData> | null>;
   onDraggingRowChange?: OnChangeFn<ST_Row<TData> | null>;
   onEditingCellChange?: OnChangeFn<ST_Cell<TData> | null>;
-  onEditingRowCancel?: (props: {
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => void;
   onEditingRowChange?: OnChangeFn<ST_Row<TData> | null>;
-  onEditingRowSave?: (props: {
-    exitEditingMode: () => void;
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-    values: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
-  }) => Promise<void> | void;
-  onGlobalFilterFnChange?: OnChangeFn<ST_FilterOption>;
   onHoveredColumnChange?: OnChangeFn<Partial<ST_Column<TData>> | null>;
   onHoveredRowChange?: OnChangeFn<Partial<ST_Row<TData>> | null>;
-  onIsFullScreenChange?: OnChangeFn<boolean>;
-  onShowAlertBannerChange?: OnChangeFn<boolean>;
-  onShowColumnFiltersChange?: OnChangeFn<boolean>;
-  onShowGlobalFilterChange?: OnChangeFn<boolean>;
-  onShowToolbarDropZoneChange?: OnChangeFn<boolean>;
-  paginationDisplayMode?: 'custom' | 'default' | 'pages';
-  positionActionsColumn?: 'first' | 'last';
-  positionCreatingRow?: 'bottom' | 'top' | number;
-  positionExpandColumn?: 'first' | 'last';
-  positionGlobalFilter?: 'left' | 'none' | 'right';
-  positionPagination?: 'both' | 'bottom' | 'none' | 'top';
-  positionToolbarAlertBanner?: 'bottom' | 'head-overlay' | 'none' | 'top';
-  positionToolbarDropZone?: 'both' | 'bottom' | 'none' | 'top';
-  renderBottomToolbar?:
-    | ((props: { table: ST_TableInstance<TData> }) => ReactNode)
-    | ReactNode;
-  renderBottomToolbarCustomActions?: (props: {
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderCaption?:
-    | ((props: { table: ST_TableInstance<TData> }) => ReactNode)
-    | ReactNode;
-  renderCellActionMenuItems?: (props: {
-    cell: ST_Cell<TData>;
-    closeMenu: () => void;
-    column: ST_Column<TData>;
-    internalMenuItems: ReactNode[];
-    row: ST_Row<TData>;
-    staticColumnIndex?: number;
-    staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
-  renderColumnActionsMenuItems?: (props: {
-    closeMenu: () => void;
-    column: ST_Column<TData>;
-    internalColumnMenuItems: ReactNode[];
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
-  renderColumnFilterModeMenuItems?: (props: {
-    column: ST_Column<TData>;
-    internalFilterOptions: ST_InternalFilterOption[];
-    onSelectFilterMode: (filterMode: ST_FilterOption) => void;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
-  renderCreateRowDialogContent?: (props: {
-    internalEditComponents: ReactNode[];
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderDetailPanel?: (props: {
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderEditRowDialogContent?: (props: {
-    internalEditComponents: ReactNode[];
-    row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderEmptyRowsFallback?: (props: {
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderGlobalFilterModeMenuItems?: (props: {
-    internalFilterOptions: ST_InternalFilterOption[];
-    onSelectFilterMode: (filterMode: ST_FilterOption) => void;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[];
-  renderRowActionMenuItems?: (props: {
-    closeMenu: () => void;
-    row: ST_Row<TData>;
-    staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode[] | undefined;
-  renderRowActions?: (props: {
-    cell: ST_Cell<TData>;
-    row: ST_Row<TData>;
-    staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderToolbarAlertBannerContent?: (props: {
-    groupedAlert: ReactNode | null;
-    selectedAlert: ReactNode | null;
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderToolbarInternalActions?: (props: {
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  renderTopToolbar?:
-    | ((props: { table: ST_TableInstance<TData> }) => ReactNode)
-    | ReactNode;
-  renderTopToolbarCustomActions?: (props: {
-    table: ST_TableInstance<TData>;
-  }) => ReactNode;
-  rowNumberDisplayMode?: 'original' | 'static';
-  rowPinningDisplayMode?:
-    | 'bottom'
-    | 'select-bottom'
-    | 'select-sticky'
-    | 'select-top'
-    | 'sticky'
-    | 'top'
-    | 'top-and-bottom';
-  rowVirtualizerInstanceRef?: RefObject<ST_RowVirtualizer | null>;
-  rowVirtualizerOptions?:
-    | ((props: {
-        table: ST_TableInstance<TData>;
-      }) => Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>)
-    | Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>;
-  selectAllMode?: 'all' | 'page';
-  /**
-   * Custom sorting functions, by name, on top of the built-in ones. A column's `sortFn` string resolves against this map.
-   */
-  sortFns?: Record<string, SortFn<ST_Features, TData>>;
   /**
    * Manage state externally any way you want, then pass it back into MRT.
    */
   state?: Partial<ST_TableState<TData>>;
 }
+
+export type ST_TableProviderProps<TData extends ST_RowData> = {
+  children: ReactNode;
+  table: ST_TableInstance<TData>;
+};

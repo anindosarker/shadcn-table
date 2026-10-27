@@ -21,6 +21,7 @@ import ID_Table from '@/examples/localization-i18n-id';
 import IT_Table from '@/examples/localization-i18n-it';
 import JA_Table from '@/examples/localization-i18n-ja';
 import KO_Table from '@/examples/localization-i18n-ko';
+import MK_Table from '@/examples/localization-i18n-mk';
 import NL_Table from '@/examples/localization-i18n-nl';
 import NO_Table from '@/examples/localization-i18n-no';
 import NP_Table from '@/examples/localization-i18n-np';
@@ -61,6 +62,7 @@ const supportedLocales = [
   'it',
   'ja',
   'ko',
+  'mk',
   'nl',
   'no',
   'np',
@@ -102,6 +104,7 @@ const tables: Record<string, ReactNode> = {
   it: <IT_Table />,
   ja: <JA_Table />,
   ko: <KO_Table />,
+  mk: <MK_Table />,
   nl: <NL_Table />,
   no: <NO_Table />,
   np: <NP_Table />,
