@@ -1,10 +1,4 @@
-import {
-  Component,
-  Profiler,
-  type ProfilerOnRenderCallback,
-  type ReactNode,
-  useState,
-} from 'react';
+import { Profiler, type ProfilerOnRenderCallback, useState } from 'react';
 import {
   ShadcnTable,
   type ST_ColumnDef,
@@ -12,7 +6,6 @@ import {
   type ST_PaginationState,
   type ST_RowSelectionState,
   ST_ShowHideColumnsButton,
-  ST_TablePagination,
   ST_ToggleDensePaddingButton,
   ST_ToggleFiltersButton,
   ST_ToggleFullScreenButton,
@@ -22,11 +15,15 @@ import {
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
-// Fixtures for the part 01 phase 03 verify list. Fixed data so every assertion
-// is deterministic. Part 03 consolidates this file.
+// Render counts and the subscriptions behind them (decisions item 5): a
+// 1,000-row table under a React Profiler with counters on rows, cells, head
+// cells and toolbar buttons, measured after one hover, one density toggle
+// and one row select; the root opts out of state renders; the body follows
+// every row model slice, new `data`, controlled `state` and external
+// `atoms`. Fixed data so every assertion is deterministic.
 
 const meta: Meta = {
-  title: 'Features/Phase Three Verify',
+  title: 'Styling/Render Counts',
 };
 
 export default meta;
@@ -47,68 +44,6 @@ const bodyText = (root: HTMLElement) =>
   Array.from(root.querySelectorAll('tbody tr'))
     .map((row) => row.textContent)
     .join();
-
-// `table.setGlobalFilterFn` from outside the menu re-filters a live search:
-// `ily` matches Lily under fuzzy and nothing under Starts With.
-export const ProgrammaticGlobalFilterMode = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableGlobalFilterModes
-      initialState={{ globalFilter: 'ily', showGlobalFilter: true }}
-      renderTopToolbarCustomActions={({ table }) => (
-        <button
-          onClick={() => table.setGlobalFilterFn('startsWith')}
-          type="button"
-        >
-          Starts With
-        </button>
-      )}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitFor(() => expect(bodyText(canvasElement)).toContain('Lily'));
-    await userEvent.click(within(canvasElement).getByText('Starts With'));
-    await waitFor(() => expect(bodyText(canvasElement)).not.toContain('Lily'));
-  },
-};
-
-// `table.setColumnFilterFns` from outside the menu re-filters a live column
-// filter: `ack` matches Jackson under fuzzy and nothing under Starts With.
-export const ProgrammaticColumnFilterMode = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      enableColumnFilterModes
-      initialState={{
-        columnFilters: [{ id: 'firstName', value: 'ack' }],
-        showColumnFilters: true,
-      }}
-      renderTopToolbarCustomActions={({ table }) => (
-        <button
-          onClick={() =>
-            table.setColumnFilterFns((old) => ({
-              ...old,
-              firstName: 'startsWith',
-            }))
-          }
-          type="button"
-        >
-          Starts With
-        </button>
-      )}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitFor(() => expect(bodyText(canvasElement)).toContain('Jackson'));
-    await userEvent.click(within(canvasElement).getByText('Starts With'));
-    await waitFor(() =>
-      expect(bodyText(canvasElement)).not.toContain('Jackson'),
-    );
-  },
-};
 
 type Numbered = { firstName: string; age: number };
 
@@ -521,47 +456,6 @@ export const ProfiledThousandRows = {
   },
 };
 
-const OptionChangeTable = () => {
-  const [german, setGerman] = useState(false);
-  const [selectable, setSelectable] = useState(false);
-  return (
-    <>
-      <button onClick={() => setGerman(true)} type="button">
-        German labels
-      </button>
-      <button onClick={() => setSelectable(true)} type="button">
-        Enable selection
-      </button>
-      <ShadcnTable
-        columns={columns}
-        data={data}
-        enableRowSelection={selectable}
-        localization={german ? { toggleDensity: 'Dichte umschalten' } : {}}
-      />
-    </>
-  );
-};
-
-// `localization` and an `enable*` option change after mount: the density
-// button (a context reader) shows the new label, and the select column shows
-// up, both through the owner's re-render.
-export const OptionChangeAfterMount = {
-  render: () => <OptionChangeTable />,
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
-    expect(canvas.queryAllByLabelText('Toggle select row').length).toBe(0);
-    await userEvent.click(canvas.getByText('German labels'));
-    await waitFor(() =>
-      expect(canvas.getByLabelText('Dichte umschalten')).toBeTruthy(),
-    );
-    await userEvent.click(canvas.getByText('Enable selection'));
-    await waitFor(() =>
-      expect(canvas.getAllByLabelText('Toggle select row').length).toBe(3),
-    );
-  },
-};
-
 type Tree = { age: number; firstName: string; subRows?: Tree[] };
 
 const tree: Tree[] = Array.from({ length: 25 }, (_, i) => ({
@@ -675,183 +569,6 @@ export const RowModelFollowsState = {
   },
 };
 
-const innerRows: Person[] = [
-  { firstName: 'Inner1' },
-  { firstName: 'Inner2' },
-  { firstName: 'Inner3' },
-  { firstName: 'Inner4' },
-  { firstName: 'Inner5' },
-];
-
-// A reader inside each table's toolbar: the row summary tells which table the
-// context served (`1-3 of 3` outer, `1-5 of 5` inner).
-const PaginationReader = ({ label }: { label: string }) => (
-  <div data-testid={label}>
-    <ST_TablePagination showRowsPerPage={false} />
-  </div>
-);
-
-// Custom renderers print `table.options.data.length`: the outer renderers
-// see 3, the inner ones 5, and each one proves `table` arrived.
-export const NestedDetailPanelTable = {
-  render: () => (
-    <ShadcnTable
-      columns={[
-        {
-          accessorKey: 'firstName',
-          header: 'First Name',
-          Cell: ({ renderedCellValue, table }) => (
-            <span data-testid="outer-cell">
-              {renderedCellValue} ({table.options.data.length})
-            </span>
-          ),
-          Header: ({ table }) => (
-            <span data-testid="outer-header">
-              First Name ({table.options.data.length})
-            </span>
-          ),
-          Footer: ({ table }) => (
-            <span data-testid="outer-footer">
-              Footer ({table.options.data.length})
-            </span>
-          ),
-        },
-      ]}
-      data={data}
-      enableRowActions
-      initialState={{ expanded: true }}
-      renderDetailPanel={({ row, table }) => (
-        <div data-testid={`detail-${row.id}`}>
-          <span data-testid="outer-detail">
-            Detail ({table.options.data.length})
-          </span>
-          <ShadcnTable
-            columns={[
-              {
-                accessorKey: 'firstName',
-                header: 'Inner',
-                Cell: ({ renderedCellValue, table }) => (
-                  <span data-testid="inner-cell">
-                    {renderedCellValue} ({table.options.data.length})
-                  </span>
-                ),
-              },
-            ]}
-            data={innerRows}
-            enableBottomToolbar={false}
-            renderTopToolbarCustomActions={() => (
-              <PaginationReader label="inner-reader" />
-            )}
-          />
-        </div>
-      )}
-      renderRowActions={({ table }) => (
-        <span data-testid="outer-row-actions">
-          Actions ({table.options.data.length})
-        </span>
-      )}
-      renderTopToolbarCustomActions={() => (
-        <PaginationReader label="outer-reader" />
-      )}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    await waitFor(() =>
-      expect(canvas.getByTestId('outer-reader')).toHaveTextContent('1-3 of 3'),
-    );
-    expect(canvas.getAllByTestId('inner-reader')[0]).toHaveTextContent(
-      '1-5 of 5',
-    );
-    expect(canvas.getAllByTestId('outer-cell')[0]).toHaveTextContent('(3)');
-    expect(canvas.getByTestId('outer-header')).toHaveTextContent('(3)');
-    expect(canvas.getByTestId('outer-footer')).toHaveTextContent('(3)');
-    expect(canvas.getAllByTestId('outer-row-actions')[0]).toHaveTextContent(
-      '(3)',
-    );
-    expect(canvas.getAllByTestId('outer-detail')[0]).toHaveTextContent('(3)');
-    expect(canvas.getAllByTestId('inner-cell')[0]).toHaveTextContent('(5)');
-    // inner tables: 3 panels of 5 rows each, beside the 3 outer rows
-    expect(canvas.getAllByTestId('inner-cell').length).toBe(15);
-  },
-};
-
-// Menus, dialogs and tooltips render through Radix portals outside the table
-// element; each reads its labels from the context, so a missing context would
-// throw instead of showing them. The dialog opens through `setCreatingRow`.
-export const PortalsReadContext = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      createDisplayMode="modal"
-      data={data}
-      enableEditing
-      enableRowActions
-      renderTopToolbarCustomActions={({ table }) => (
-        <button onClick={() => table.setCreatingRow(true)} type="button">
-          Create
-        </button>
-      )}
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
-    await userEvent.click(canvas.getAllByLabelText('Column Actions')[0]);
-    await waitFor(() =>
-      expect(body.getByText('Sort by First Name ascending')).toBeTruthy(),
-    );
-    await userEvent.keyboard('{Escape}');
-    await userEvent.click(canvas.getByText('Create'));
-    await waitFor(() => expect(body.getByRole('dialog')).toBeTruthy());
-    expect(body.getByRole('dialog').querySelector('input')).not.toBeNull();
-    await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(body.queryByRole('dialog')).toBeNull());
-    await userEvent.hover(canvas.getByLabelText('Toggle density'));
-    await waitFor(() =>
-      expect(body.getAllByText('Toggle density').length).toBeGreaterThan(0),
-    );
-  },
-};
-
-// Renders the thrown message into the DOM, so the assertion reads it instead
-// of Storybook's error overlay.
-class MessageBoundary extends Component<
-  { children: ReactNode },
-  { message: string | null }
-> {
-  state = { message: null };
-
-  static getDerivedStateFromError(error: Error) {
-    return { message: error.message };
-  }
-
-  render() {
-    return this.state.message === null ? (
-      this.props.children
-    ) : (
-      <pre data-testid="no-provider-error">{this.state.message}</pre>
-    );
-  }
-}
-
-// A context component outside every provider throws at mount.
-export const NoProviderThrows = {
-  render: () => (
-    <MessageBoundary>
-      <ST_TablePagination />
-    </MessageBoundary>
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    await waitFor(() =>
-      expect(
-        within(canvasElement).getByTestId('no-provider-error'),
-      ).toHaveTextContent('`useTableContext` must be used within'),
-    );
-  },
-};
-
 const ControlledDensityAndSelectionTable = () => {
   const [density, setDensity] = useState<ST_DensityState>('comfortable');
   const [rowSelection, setRowSelection] = useState<ST_RowSelectionState>({});
@@ -948,35 +665,5 @@ export const ExternalAtomsDensityAndSelection = {
     expect(
       canvas.getByLabelText('Toggle select all').getAttribute('aria-checked'),
     ).toBe('mixed');
-  },
-};
-
-// Edit from the cell action menu: the menu's close must not refocus the cell,
-// so the edit input it opened keeps focus.
-export const CellActionMenuEditKeepsFocus = {
-  render: () => (
-    <ShadcnTable
-      columns={columns}
-      data={data}
-      editDisplayMode="cell"
-      enableCellActions
-      enableClickToCopy="context-menu"
-      enableEditing
-    />
-  ),
-  play: async ({ canvasElement }: StoryContext) => {
-    const body = within(document.body);
-    await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
-    const cell = canvasElement.querySelector('tbody td') as HTMLElement;
-    await userEvent.pointer({ keys: '[MouseRight]', target: cell });
-    await userEvent.click(await body.findByText('Edit'));
-    await waitFor(() => {
-      const input = cell.querySelector('input');
-      expect(input).not.toBeNull();
-      expect(document.activeElement).toBe(input);
-    });
-    // still focused once the menu has fully closed
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(document.activeElement).toBe(cell.querySelector('input'));
   },
 };
