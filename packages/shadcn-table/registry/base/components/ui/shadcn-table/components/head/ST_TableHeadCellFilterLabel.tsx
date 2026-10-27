@@ -5,7 +5,7 @@ import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import { Popover } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
-import { ST_TableHeadCellFilterContainer } from '@/components/ui/shadcn-table/head/ST_TableHeadCellFilterContainer';
+import { ST_TableHeadCellFilterContainer } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import {
   type ButtonProps,
   type ST_Header,
@@ -15,8 +15,9 @@ import {
 import {
   getColumnFilterInfo,
   useDropdownOptions,
-} from '@/components/ui/shadcn-table/utils/column.utils';
-import { getValueAndLabel } from '@/components/ui/shadcn-table/utils/utils';
+} from '@/components/ui/shadcn-table/shared/utils/column.utils';
+import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
@@ -34,14 +35,15 @@ const tableHeadCellFilterLabelVariants = cva(
 export interface ST_TableHeadCellFilterLabelProps<TData extends ST_RowData>
   extends ButtonProps {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
 }
 
 export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   header,
-  table,
   ...rest
 }: ST_TableHeadCellFilterLabelProps<TData>) => {
+  // The core table behind the header; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       columnFilterDisplayMode,
@@ -53,6 +55,11 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
+
+  // The filter value and the faceted values behind the dropdown options memo
+  // follow the column and global filters, so both are hook subscriptions.
+  useST_Atom(table.atoms.columnFilters);
+  useST_Atom(table.atoms.globalFilter);
 
   const filterValue = column.getFilterValue() as [string, string] | string;
 
@@ -119,13 +126,13 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   return (
     <>
-      {/* <Grow in={...} unmountOnExit> — Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit); the span carries its enter (fade + zoom-in-75, 150ms), exit is instant. */}
+      {/* <Grow in={...} unmountOnExit>. Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit); the span carries its enter (fade + zoom-in-75, 150ms), exit is instant. */}
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
           <ST_Tooltip side="top" title={filterTooltip}>
-            {/* disableRipple — Note: shadcn Button has no ripple. */}
+            {/* disableRipple. Note: shadcn Button has no ripple. */}
             <Button
               onClick={(event: MouseEvent<HTMLButtonElement>) => {
                 if (columnFilterDisplayMode === 'popover') {
@@ -156,7 +163,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       {columnFilterDisplayMode === 'popover' && (
         <Popover
           onOpenChange={(open) => {
-            // event.stopPropagation(); — Note: Base UI has no backdrop click to stop.
+            // event.stopPropagation(); Note: Base UI has no backdrop click to stop.
             if (!open) setAnchorEl(null);
           }}
           open={!!anchorEl}
@@ -164,8 +171,8 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
           {/* Base UI has no PopoverAnchor part: the anchor is a Positioner prop. The shadcn
               PopoverContent owns its Positioner and does not forward `anchor`, so the
               Portal, Positioner and Popup are composed here with the same classes. */}
-          {/* disableScrollLock — Note: Base UI Popover is non-modal by default, no scroll lock. */}
-          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: the popup has no overflow clip. */}
+          {/* disableScrollLock. Note: Base UI Popover is non-modal by default, no scroll lock. */}
+          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }}. Note: the popup has no overflow clip. */}
           <PopoverPrimitive.Portal>
             <PopoverPrimitive.Positioner
               align="center"
@@ -185,11 +192,8 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
                   event.key === 'Enter' && setAnchorEl(null)
                 }
               >
-                {/* <Box sx={{ p: '1rem' }}> — Note: the popup already pads p-2.5. */}
-                <ST_TableHeadCellFilterContainer
-                  header={header}
-                  table={table}
-                />
+                {/* <Box sx={{ p: '1rem' }}>. Note: the popup already pads p-2.5. */}
+                <ST_TableHeadCellFilterContainer header={header} />
               </PopoverPrimitive.Popup>
             </PopoverPrimitive.Positioner>
           </PopoverPrimitive.Portal>
