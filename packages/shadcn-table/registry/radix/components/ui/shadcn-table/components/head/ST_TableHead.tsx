@@ -56,7 +56,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
         grouping: state.grouping,
         isFullScreen: state.isFullScreen,
         rowSelection: isHeadOverlay ? state.rowSelection : null,
-        showAlertBanner: state.showAlertBanner,
+        showAlertBanner: isHeadOverlay ? state.showAlertBanner : null,
       })}
       source={table.store}
     >
