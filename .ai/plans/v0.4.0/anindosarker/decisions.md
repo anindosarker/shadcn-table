@@ -222,6 +222,11 @@ branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](f
      user custom feature's `declare module` block. A type cannot build a mismatched table.
    - Docs: `api/table-options.mdx:23` drops its mention of `stFeatures`.
 
-## Pending
-
-- D5, `expandRowsFn`: drop or keep as a documented no-op.
+7. D5, `expandRowsFn` (decided 2026-10-27). Dropped.
+   - Never implemented. MRT added it as a type line in `403629fe5` (v1.4, 2022-12-02) and no
+     MRT version through v3.0.0 reads it; its prop-table entry carries an empty description
+     and a `//?`. Ours copied the same three lines in the first commit `7633f11` and never
+     read it either.
+   - Remove `types.ts:919` and the `Omit` key, `lib/prop-tables/tableOptions.ts:752`, and
+     the key in `guides/expanding-sub-rows.mdx:19`. Changelog, Removed: "`expandRowsFn`,
+     never implemented".
