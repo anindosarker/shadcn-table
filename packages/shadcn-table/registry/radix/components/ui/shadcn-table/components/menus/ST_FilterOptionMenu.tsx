@@ -13,6 +13,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 
 export const stFilterOptions = (
@@ -180,7 +181,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     column?.table.options.onColumnFiltersChange?.((old) => [...old]);
 
   const handleSelectFilterMode = (option: ST_FilterOption) => {
-    const prevFilterMode = columnDef?._filterFn ?? '';
+    const prevFilterMode = columnDef ? getColumnFilterFnName(columnDef) : '';
     if (!header || !column) {
       // global filter mode
       setGlobalFilterFn(option);
@@ -254,7 +255,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   };
 
   const filterOption =
-    !!header && columnDef ? columnDef._filterFn : globalFilterFn;
+    !!header && columnDef ? getColumnFilterFnName(columnDef) : globalFilterFn;
 
   const anchorRef = useRef<HTMLElement | null>(null);
   if (anchorEl) anchorRef.current = anchorEl;

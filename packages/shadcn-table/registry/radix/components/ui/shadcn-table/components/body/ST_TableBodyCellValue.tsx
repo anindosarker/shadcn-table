@@ -4,6 +4,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import highlightWords from 'highlight-words';
 
 const allowedTypes = ['string', 'number'];
@@ -78,7 +79,8 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   ) {
     const chunks = highlightWords?.({
       matchExactly:
-        (filterValue ? columnDef._filterFn : globalFilterFn) !== 'fuzzy',
+        (filterValue ? getColumnFilterFnName(columnDef) : globalFilterFn) !==
+        'fuzzy',
       query: (filterValue ?? globalFilter ?? '').toString(),
       text: renderedCellValue?.toString() as string,
     });

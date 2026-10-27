@@ -11,6 +11,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 
@@ -112,7 +113,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   const handleClearFilter = () => {
     column.setFilterValue(undefined);
     setAnchorEl(null);
-    if (['empty', 'notEmpty'].includes(columnDef._filterFn)) {
+    if (['empty', 'notEmpty'].includes(getColumnFilterFnName(columnDef))) {
       setColumnFilterFns((prev) => ({
         ...prev,
         [header.id]: allowedColumnFilterOptions?.[0] ?? 'fuzzy',

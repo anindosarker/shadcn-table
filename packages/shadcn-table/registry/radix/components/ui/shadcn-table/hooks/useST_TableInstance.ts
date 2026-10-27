@@ -61,7 +61,7 @@ export const useST_TableInstance = <TData extends ST_RowData>(
 ): ST_TableInstance<TData> => {
   // One table hook per mounted table: the call's `filterFns`, `sortFns` and
   // `aggregationFns` are registered on its features, read on the first render
-  const [{ appFeatures, useAppTable }] = useState(() =>
+  const [{ useAppTable }] = useState(() =>
     createSTTableHook(definedTableOptions),
   );
   const tableRef = useRef<ST_TableInstance<TData> | null>(null);
@@ -104,13 +104,9 @@ export const useST_TableInstance = <TData extends ST_RowData>(
   }, []);
 
   // The transforms read the live store of the table built on an earlier
-  // render, with this render's controlled `state` on top; the registries are
-  // the ones the table resolves names against.
+  // render, with this render's controlled `state` on top.
   const statefulTableOptions: ST_StatefulTableOptions<TData> = {
     ...definedTableOptions,
-    aggregationFns: appFeatures.aggregationFns,
-    filterFns: appFeatures.filterFns,
-    sortFns: appFeatures.sortFns,
     state: {
       ...transformStateDefaults,
       ...initialState,
