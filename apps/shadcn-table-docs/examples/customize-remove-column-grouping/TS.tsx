@@ -50,12 +50,12 @@ const Example = () => {
       'st-row-expand': {
         Header: () => (
           <div className="flex flex-row items-center">
-            <ST_ExpandAllButton table={table} />
+            <ST_ExpandAllButton />
             <div>Groups</div>
           </div>
         ),
         GroupedCell: ({ row, table }) => {
-          const { grouping } = table.state;
+          const { grouping } = table.store.state;
           return row.getValue(grouping[grouping.length - 1]);
         },
         enableResizing: true,

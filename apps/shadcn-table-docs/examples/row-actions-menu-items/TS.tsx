@@ -43,20 +43,18 @@ export const Example = () => {
       columns={columns}
       data={data}
       enableRowActions
-      renderRowActionMenuItems={({ row, table }) => [
+      renderRowActionMenuItems={({ row }) => [
         <ST_ActionMenuItem //or just use a normal shadcn DropdownMenuItem component
           icon={<Pencil />}
           key="edit"
           label="Edit"
           onClick={() => console.info('Edit')}
-          table={table}
         />,
         <ST_ActionMenuItem
           icon={<Trash2 />}
           key="delete"
           label="Delete"
           onClick={() => console.info('Delete')}
-          table={table}
         />,
       ]}
     />
