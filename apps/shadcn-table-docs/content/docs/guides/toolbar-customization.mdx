@@ -62,8 +62,14 @@ const table = useShadcnTable({
 });
 
 //This ST sub-component does not contain the code for the toolbars. ST_TableLayout and ShadcnTable do.
-return <ST_TableContainer table={table} />;
+return (
+  <ST_TableProvider table={table}>
+    <ST_TableContainer />
+  </ST_TableProvider>
+);
 ```
+
+Sub-components rendered outside `<ShadcnTable />` read the table from an `ST_TableProvider`. See [Compose with ST_TableProvider](#compose-with-st_tableprovider).
 
 #### No Toolbars Example
 
@@ -87,15 +93,15 @@ import {
 const table = useShadcnTable({
   data,
   columns,
-  renderToolbarInternalActions: ({ table }) => (
+  renderToolbarInternalActions: () => (
     <>
       {/* add your own custom print button or something */}
       <IconButton onClick={() => showPrintPreview(true)}>
         <PrintIcon />
       </IconButton>
-      {/* built-in buttons (must pass in table prop for them to work!) */}
-      <ST_ShowHideColumnsButton table={table} />
-      <ST_ToggleFullScreenButton table={table} />
+      {/* built-in buttons (they read the table from ShadcnTable) */}
+      <ST_ShowHideColumnsButton />
+      <ST_ToggleFullScreenButton />
     </>
   ),
 });
@@ -218,7 +224,7 @@ The drawback to this approach is that you will not get all the automatic feature
 
 ```jsx
 import {
-  ST_GlobalFilterTextInput, //import ST sub components!
+  ST_GlobalFilterTextField, //import ST sub components!
   ST_TablePagination,
   ShadcnTable,
   useShadcnTable,
@@ -227,10 +233,10 @@ import {
 const table = useShadcnTable({
   data,
   columns,
-  renderTopToolbar: ({ table }) => (
+  renderTopToolbar: () => (
     <span className="flex items-center justify-between">
-      <ST_GlobalFilterTextInput table={table} />
-      <ST_TablePagination table={table} />
+      <ST_GlobalFilterTextField />
+      <ST_TablePagination />
     </span>
   ),
   renderBottomToolbar: ({ table }) => (
@@ -248,3 +254,29 @@ return <ShadcnTable table={table} />;
 Instead of overriding the toolbar components up above, you may want 100% control over the layout and styling of your table controls and where they are on the page. You can do this by just using a ST sub component such as `<ST_TableContainer />` for the table component, which does not have the internal toolbar components built-in. Optionally, build your own custom toolbar components using the other ST sub components.
 
 <ExternalToolbarExample />
+
+### Compose with ST_TableProvider
+
+`<ShadcnTable />` puts its table on a context that every ST sub-component reads, so sub-components take no `table` prop. Inside `render...` table options and custom `Cell` or `Header` renders, they work as is. Anywhere else, wrap them in `ST_TableProvider`:
+
+```jsx
+import {
+  ST_GlobalFilterTextField,
+  ST_TableContainer,
+  ST_TablePagination,
+  ST_TableProvider,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
+
+const table = useShadcnTable({ columns, data });
+
+return (
+  <ST_TableProvider table={table}>
+    <ST_GlobalFilterTextField />
+    <ST_TableContainer />
+    <ST_TablePagination />
+  </ST_TableProvider>
+);
+```
+
+`ST_TableProvider` keeps the first table it is given. To swap tables, give it a `key`.

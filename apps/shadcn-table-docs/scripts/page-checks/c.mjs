@@ -99,9 +99,9 @@ const checks = {
   },
   '/docs/guides/localization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
-    // 38 locale files; the header's base switch (#nd-subnav) has two tabs of its own.
+    // 39 locale files; the header's base switch (#nd-subnav) has two tabs of its own.
     const tabs = await page.locator('[role="tab"]:not(#nd-subnav *)').count();
-    check('locale tabs', tabs === 38, `tabs=${tabs}`);
+    check('locale tabs', tabs === 39, `tabs=${tabs}`);
     const es = await example(page, 'localization-i18n-es', check);
     await marker(
       es,
@@ -115,6 +115,7 @@ const checks = {
       [
         ['de', 'localization-i18n-de'],
         ['fa', 'localization-i18n-fa'],
+        ['mk', 'localization-i18n-mk'],
         ['zh-Hant', 'localization-i18n-zh-hant'],
       ],
       check,
@@ -137,9 +138,6 @@ const checks = {
       '[style*="direction: rtl"]',
       check,
     );
-  },
-  '/docs/guides/memoization': async ({ page, check }) => {
-    await propTable(page, TABLE, check);
   },
   '/docs/guides/production-ready-tables': async ({ page, check }) => {
     const w = await example(page, 'server-side-data', check);
@@ -298,6 +296,10 @@ const checks = {
     await propTable(page, TABLE, check);
     await propTable(page, STATE, check);
     await example(page, 'minimal', check);
+    const provider = await page
+      .locator('article h3', { hasText: 'Compose with ST_TableProvider' })
+      .count();
+    check('table provider section', provider === 1, `h3=${provider}`);
     const custom = await example(page, 'custom-top-toolbar', check);
     await marker(
       custom,

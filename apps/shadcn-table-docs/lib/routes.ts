@@ -430,10 +430,6 @@ export const routes: Array<RouteItem> = [
             label: 'Event Listeners (onClicks)',
           },
           {
-            href: '/docs/guides/memoization',
-            label: 'Memoization (Performance)',
-          },
-          {
             href: '/docs/guides/state-management',
             label: 'State Management',
           },
