@@ -7,7 +7,7 @@
 The library is kept once under `shared/` with 23 Base UI override files under `bases/base/`,
 resolved base-first by TypeScript `paths` and a Vite plugin. Every edit needs knowing which
 files have a twin, and the editor cannot resolve shared files. Decision:
-[decisions.md](decisions.md) "Package" 1 to 3: two complete trees, the shadcn repo folder
+[decisions-archive.md](decisions-archive.md) "Package" 1 to 3: two complete trees, the shadcn repo folder
 layout, a CI guard instead of override resolution.
 
 ### 1.2 Goals

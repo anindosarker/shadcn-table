@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The docs app has no analytics. Decision: [decisions.md](decisions.md) "Docs site" 2.
+The docs app has no analytics. Decision: [decisions-archive.md](decisions-archive.md) "Docs site" 2.
 Product and web analytics on PostHog US cloud, in the docs app only; the library is
 untouched.
 

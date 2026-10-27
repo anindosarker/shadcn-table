@@ -93,7 +93,7 @@ shadcn-table/
 └── index.ts                              ← full barrel, unchanged
 ```
 
-Folder decisions and the D3 mechanism: `decisions.md`, "TanStack Table v9 architecture" items 2 and 3.
+Folder decisions and the D3 mechanism: `decisions.md` items 2 and 4.
 
 ### 1.5 Flow
 

@@ -6,7 +6,7 @@
 
 The docs app folder was renamed to `apps/docs` without being asked, its two installed library
 copies are named `ui` and `ui-base`, and the Base UI code view shows `ui-base` imports that
-no user has after install. Decision: [decisions.md](decisions.md) "Docs app" 1 and 2.
+no user has after install. Decision: [decisions-archive.md](decisions-archive.md) "Docs app" 1 and 2.
 Runs after [04](04-package-layout.md) (the installer reads `registry/<base>/`) and
 [02](02-docs-weight.md) (shares `example-snippet.tsx`, `code-explorer.tsx`,
 `example-variants.mjs`; 02 merges first).
