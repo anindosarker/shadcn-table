@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
@@ -16,9 +17,9 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { reorderColumn } from '@/components/ui/shadcn-table/utils/column.utils';
-import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/buttons/ST_ColumnPinningButtons';
-import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/buttons/ST_GrabHandleButton';
+import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.utils';
+import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons';
+import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
 // Note: MRT MenuItem sx py:'6px' dropped — shadcn DropdownMenuItem padding wins.
@@ -33,7 +34,6 @@ export interface ST_ShowHideColumnsMenuItemsProps<TData extends ST_RowData>
   hoveredColumn: ST_Column<TData> | null;
   isNestedColumns: boolean;
   setHoveredColumn: Dispatch<SetStateAction<ST_Column<TData> | null>>;
-  table: ST_TableInstance<TData>;
 }
 
 export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
@@ -44,9 +44,11 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   isNestedColumns,
   setHoveredColumn,
   style,
-  table,
   ...rest
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
+  // The column carries the core table; the ST wrapper types re-type its
+  // options and getters, so TypeScript cannot relate the two without the cast.
+  const table = column.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       enableColumnOrdering,
@@ -59,14 +61,12 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     setColumnOrder,
     setColumnPinning,
   } = table;
-  const { columnOrder } = table.state;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
-  const switchChecked = column.getIsVisible();
-
   const handleToggleColumnHidden = (column: ST_Column<TData>) => {
     if (columnDefType === 'group') {
+      const switchChecked = column.getIsVisible();
       column?.columns?.forEach?.((childColumn: ST_Column<TData>) => {
         childColumn.toggleVisibility(!switchChecked);
       });
@@ -95,7 +95,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
       const reorderedColumns = reorderColumn(
         column,
         hoveredColumn,
-        columnOrder,
+        table.atoms.columnOrder.get(),
       );
       setColumnOrder(reorderedColumns);
       setColumnPinning(({ start = [], end = [] }) => ({
@@ -147,14 +147,13 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
               <ST_GrabHandleButton
                 onDragEnd={handleDragEnd}
                 onDragStart={handleDragStart}
-                table={table}
               />
             ) : (
               <div className="w-7" />
             ))}
           {enableColumnPinning &&
             (column.getCanPin() ? (
-              <ST_ColumnPinningButtons column={column} table={table} />
+              <ST_ColumnPinningButtons column={column} />
             ) : (
               <div className="w-[70px]" />
             ))}
@@ -162,11 +161,15 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             <Label>
               <ST_Tooltip title={localization.toggleVisibility}>
                 <span className="inline-flex">
-                  <Switch
-                    checked={switchChecked}
-                    disabled={!column.getCanHide()}
-                    onCheckedChange={() => handleToggleColumnHidden(column)}
-                  />
+                  <Subscribe source={table.atoms.columnVisibility}>
+                    {() => (
+                      <Switch
+                        checked={column.getIsVisible()}
+                        disabled={!column.getCanHide()}
+                        onCheckedChange={() => handleToggleColumnHidden(column)}
+                      />
+                    )}
+                  </Subscribe>
                 </span>
               </ST_Tooltip>
               <span
@@ -191,7 +194,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
           isNestedColumns={isNestedColumns}
           key={`${i}-${c.id}`}
           setHoveredColumn={setHoveredColumn}
-          table={table}
         />
       ))}
     </>

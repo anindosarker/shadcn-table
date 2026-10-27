@@ -2,7 +2,6 @@ import {
   type ComponentPropsWithRef,
   type MouseEvent,
   type ReactNode,
-  useMemo,
   useRef,
 } from 'react';
 import {
@@ -16,8 +15,8 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/utils/utils';
-import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -26,7 +25,6 @@ export interface ST_RowActionMenuProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   staticRowIndex?: number;
-  table: ST_TableInstance<TData>;
 }
 
 export const ST_RowActionMenu = <TData extends ST_RowData>({
@@ -36,16 +34,18 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   row,
   setAnchorEl,
   staticRowIndex,
-  table,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
+  // The row carries the core table; the ST wrapper types re-type its options
+  // and getters, so TypeScript cannot relate the two without the cast.
+  const table = row.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       editDisplayMode,
       enableEditing,
       icons: { EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderRowActionMenuItems,
     },
   } = table;
@@ -56,29 +56,24 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   const anchorRef = useRef<HTMLElement | null>(null);
   if (anchorEl) anchorRef.current = anchorEl;
 
-  const menuItems = useMemo(() => {
-    const items: ReactNode[] = [];
-    const editItem = parseFromValuesOrFunc(enableEditing, row) &&
-      ['modal', 'row'].includes(editDisplayMode!) && (
-        <ST_ActionMenuItem
-          key={'edit'}
-          icon={<EditIcon />}
-          label={localization.edit}
-          onClick={handleEdit}
-          table={table}
-        />
-      );
-    if (editItem) items.push(editItem);
-    const rowActionMenuItems = renderRowActionMenuItems?.({
-      closeMenu: () => setAnchorEl(null),
-      row,
-      staticRowIndex,
-      table,
-    });
-    if (rowActionMenuItems?.length) items.push(...rowActionMenuItems);
-    return items;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [renderRowActionMenuItems, row, staticRowIndex, table]);
+  const menuItems: ReactNode[] = [];
+  const editItem = parseFromValuesOrFunc(enableEditing, row) &&
+    ['modal', 'row'].includes(editDisplayMode!) && (
+      <ST_ActionMenuItem
+        key={'edit'}
+        icon={<EditIcon />}
+        label={localization.edit}
+        onClick={handleEdit}
+      />
+    );
+  if (editItem) menuItems.push(editItem);
+  const rowActionMenuItems = renderRowActionMenuItems?.({
+    closeMenu: () => setAnchorEl(null),
+    row,
+    staticRowIndex,
+    table,
+  });
+  if (rowActionMenuItems?.length) menuItems.push(...rowActionMenuItems);
 
   if (!menuItems.length) return null;
 
@@ -108,7 +103,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
           />
         }
       />
-      {/* Note: MRT disableScrollLock dropped — Base UI Menu owns scroll-lock behavior */}
+      {/* Note: MRT disableScrollLock dropped: Base UI Menu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
