@@ -84,6 +84,7 @@ import LocalizationI18nIdExample from '@/examples/localization-i18n-id';
 import LocalizationI18nItExample from '@/examples/localization-i18n-it';
 import LocalizationI18nJaExample from '@/examples/localization-i18n-ja';
 import LocalizationI18nKoExample from '@/examples/localization-i18n-ko';
+import LocalizationI18nMkExample from '@/examples/localization-i18n-mk';
 import LocalizationI18nNlExample from '@/examples/localization-i18n-nl';
 import LocalizationI18nNoExample from '@/examples/localization-i18n-no';
 import LocalizationI18nNpExample from '@/examples/localization-i18n-np';
@@ -212,6 +213,7 @@ export const exampleComponents = {
   LocalizationI18nItExample,
   LocalizationI18nJaExample,
   LocalizationI18nKoExample,
+  LocalizationI18nMkExample,
   LocalizationI18nNlExample,
   LocalizationI18nNoExample,
   LocalizationI18nNpExample,
