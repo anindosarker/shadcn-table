@@ -8,6 +8,37 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Breaking
+
+- `memoMode` is removed, with the memoized row and cell components
+  (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
+- `expandRowsFn` is removed. It was never implemented.
+- The `stFeatures` value is no longer exported. `ST_Features` stays, as a type.
+- `filterFns`, `sortFns` and `aggregationFns` names are resolved by TanStack Table core. A
+  `filterFn`, `globalFilterFn`, `sortFn` or `aggregationFn` string must be a built-in name or
+  one registered through the table option of the same name; an unknown name logs core's
+  development warning and filters, sorts or aggregates nothing.
+- `table.setDensity`, `setIsFullScreen`, `setShowAlertBanner`, `setShowToolbarDropZone`,
+  `setDraggingColumn`, `setHoveredColumn`, `setDraggingRow` and `setHoveredRow` hand their
+  `on*Change` handler a function updater, as TanStack's own setters do. A handler that
+  expected the new value needs `functionalUpdate`, or a React state setter.
+
+### Added
+
+- `ST_TableProvider` puts a table on the context the library's components read.
+  `ShadcnTable` renders it around its layout.
+
+### Fixed
+
+- `isLoading` and `isSaving` default to `false`, and every loading slice (`isLoading`,
+  `isSaving`, `showLoadingOverlay`, `showProgressBars`, `showSkeletons`) is in the table
+  store from the first render. The three `show*` slices start unset, so they still follow
+  `isLoading` and `isSaving` until they are set.
+- The core table at `row.table`, `cell.table` and `header.getContext().table` carries the
+  ST state, refs and setters.
+- A custom `aggregationFn` name typechecks: `ST_AggregationOption` accepts any string, as
+  `ST_FilterOption` and `ST_SortingOption` do.
+
 ## 0.3.3 - 2026-10-22
 
 ### Removed
