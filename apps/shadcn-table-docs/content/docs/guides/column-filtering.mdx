@@ -157,7 +157,7 @@ By default, Shadcn Table uses a `fuzzy` filtering algorithm based on the popular
 
 ##### Pre-built ST Filter Functions
 
-> Pre-built filter functions from Shadcn Table include `between`, `betweenInclusive`, `contains`, `empty`, `endsWith`, `equals`, `fuzzy`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `notEmpty`, `notEquals`, and `startsWith`. View these algorithms [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/src/components/ui/shadcn-table/fns/filterFns.ts)
+> Pre-built filter functions from Shadcn Table include `between`, `betweenInclusive`, `contains`, `empty`, `endsWith`, `equals`, `fuzzy`, `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`, `notEmpty`, `notEquals`, and `startsWith`. View these algorithms [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/shared/fns/filterFns.ts)
 
 ##### Pre-built TanStack Table Filter Functions
 
@@ -215,7 +215,7 @@ const table = useShadcnTable({
   data,
   filterFns: {
     customFilterFn: (row, id, filterValue) => {
-      return row.customField === value;
+      return row.original.customField === filterValue;
     },
   },
 });

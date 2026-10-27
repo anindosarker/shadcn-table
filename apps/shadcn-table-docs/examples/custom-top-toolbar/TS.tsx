@@ -78,8 +78,8 @@ const Example = () => {
           <Printer />
         </Button>
         {/* along-side built-in buttons in whatever order you want them */}
-        <ST_ToggleDensePaddingButton table={table} />
-        <ST_ToggleFullScreenButton table={table} />
+        <ST_ToggleDensePaddingButton />
+        <ST_ToggleFullScreenButton />
       </div>
     ),
   });

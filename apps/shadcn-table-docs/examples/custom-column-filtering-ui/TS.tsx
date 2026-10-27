@@ -6,6 +6,7 @@ import {
   type ST_ColumnDef,
   ST_TableContainer,
   ST_TableHeadCellFilterContainer,
+  ST_TableProvider,
   useST_MediaQuery,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
@@ -55,26 +56,29 @@ const Example = () => {
   });
 
   return (
-    <div className={`flex gap-2 ${isMobile ? 'flex-col-reverse' : 'flex-row'}`}>
-      <ST_TableContainer table={table} />
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col gap-2 p-2">
-          {table
-            .getLeafHeaders()
-            .map(
-              (header) =>
-                header.column.getCanFilter() && (
-                  <ST_TableHeadCellFilterContainer
-                    key={header.id}
-                    header={header}
-                    table={table}
-                    open
-                  />
-                ),
-            )}
+    <ST_TableProvider table={table}>
+      <div
+        className={`flex gap-2 ${isMobile ? 'flex-col-reverse' : 'flex-row'}`}
+      >
+        <ST_TableContainer />
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+          <div className="flex flex-col gap-2 p-2">
+            {table
+              .getLeafHeaders()
+              .map(
+                (header) =>
+                  header.column.getCanFilter() && (
+                    <ST_TableHeadCellFilterContainer
+                      key={header.id}
+                      header={header}
+                      open
+                    />
+                  ),
+              )}
+          </div>
         </div>
       </div>
-    </div>
+    </ST_TableProvider>
   );
 };
 
