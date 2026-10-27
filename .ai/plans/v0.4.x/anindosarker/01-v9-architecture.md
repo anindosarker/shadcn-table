@@ -9,10 +9,12 @@ setters and refs bolted on with `Object.assign`, names resolved to functions bef
 That shape is invisible on the core table that `row.table`, `cell.table` and
 `getContext().table` hand out, which is the root of the headless crash, the stale
 `editingCell` read and the unseeded `isSaving` in [findings.md](findings.md). This part
-rebuilds the internals on v9's own primitives: custom features, a `createTableHook` instance
+rebuilds the internals of `registry/radix` on v9's own primitives: custom features, a `createTableHook` instance
 per mounted table, `instance.table` and context instead of a `table` prop, subscriptions
 instead of `table.state`. Decisions: [decisions.md](decisions.md) items 1 to 8. MRT's v9
-port is the coverage checklist, not the target (MRT is deprecated). Ships as `0.4.0`.
+port is the coverage checklist, not the target (MRT is deprecated). Radix tree only; the
+Base UI tree is [02-base-tree.md](02-base-tree.md), stories [03-storybook.md](03-storybook.md),
+docs [04-docs.md](04-docs.md), release [05-release.md](05-release.md). Ships as `0.4.0`.
 
 ### 1.2 Goals
 
@@ -34,8 +36,8 @@ port is the coverage checklist, not the target (MRT is deprecated). Ships as `0.
   every `ST_*` option, prop and type name, user-side `table.state`, the locale items
 - Every file with an MRT twin is covered by the twin map in `01-00-comparison.md`; a
   deliberate divergence is one tracker line
-- Both trees green on every gate; stories on both bases; registry builds; CI install
-  matrix passes; the findings in [findings.md](findings.md) closed
+- Radix tree green on every radix gate; registry builds; the findings in
+  [findings.md](findings.md) closed in the radix tree
 
 ### 1.3 Current structure
 
@@ -136,11 +138,11 @@ sequenceDiagram
 
 #### 1.6.1 Data artifacts
 
-- `base-diff.json` gains any new per-base file (none expected; features are base-neutral)
 - `CHANGELOG.md` `## Unreleased`, written as work lands; closed as `## 0.4.0` at release
 - Registry items unchanged in name; `files[]` lists follow the folder moves (`features/*`,
   `components/*`, `shared/*`), lose `utils/tanstack.features.ts`, gain `locales/mk.ts`
-- `scripts/registry/lib.mjs` path globs follow the folder moves
+- `scripts/registry/lib.mjs` path globs and `scripts/registry/base-diff.json` paths follow
+  the folder moves (the base tree itself is part 02)
 
 #### 1.6.2 Comparison report
 
@@ -276,10 +278,8 @@ export const ST_TableProvider = ({ table, children }) => <tableContext.Provider 
 - `ST_SelectCheckbox` indeterminate gated with `getIsSomeRowsSelected() && !getIsAllRowsSelected()`
   (v9 semantics)
 - `memoMode` branches (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) removed
-- A file in `base-diff.json` is edited by hand in both trees; every other file is edited in
-  `registry/radix` and copied to `registry/base`; `pnpm check:bases` confirms
-- Does NOT change markup, class names or the 23 Base UI diff files beyond what the rewrite
-  forces
+- Radix tree only; part 02 ports to `registry/base`
+- Does NOT change markup or class names beyond what the rewrite forces
 
 **Stays unchanged:** every prop except `table`, class names, shadcn parts used.
 
@@ -287,20 +287,16 @@ export const ST_TableProvider = ({ table, children }) => <tableContext.Provider 
 
 - `ST_TableLayout.tsx`, `ST_Tooltip.tsx`, `useST_MediaQuery.ts`, `pagination.utils.ts`: kept
   as recorded deviations
-- `shared/locales/mk.ts`: added, locale item on both bases, docs locale list updated
+- `shared/locales/mk.ts`: added (92 keys matching `en.ts`); the registry emits its item
 - The 38 locale files import `types.ts` directly, not `index.ts`
 - `ST_TablePaper`: stays out
 
-#### 1.6.9 Docs and release
+#### 1.6.9 Changelog
 
-- Guides that compose sub-components with `table={table}` (7 guides, 2 docs-app layout
-  files, about 15 stories) switch to `ST_TableProvider`; `memo-mode` guide and story
-  removed; `expanding-sub-rows.mdx` loses `expandRowsFn`; `api/table-options.mdx:23` loses
-  the `stFeatures` mention; the prop tables follow
-- `CHANGELOG.md` `## Unreleased`: Breaking (table prop, `memoMode`, `expandRowsFn`,
-  `stFeatures` value), Fixed (findings), Added (`ST_TableProvider`, `mk` locale)
-- `pnpm release 0.4.0` opens the release PR; merging it tags and releases (v0.3.x
-  decisions, Release)
+- `CHANGELOG.md` `## Unreleased`, written as each phase lands: Breaking (table prop,
+  `memoMode`, `expandRowsFn`, `stFeatures` value, `filterFns` resolution now in core),
+  Fixed (findings), Added (`ST_TableProvider`, `mk` locale). Docs, stories and the release
+  are parts 03 to 05
 
 ### 1.7 Dependencies and env
 
@@ -319,8 +315,10 @@ https://tanstack.com/table/latest/docs/framework/react/guide/.
 
 Tracker `01-tracker.md`, decisions and deviations only. One Workflow run per phase,
 resumable; agents in `shadcn-react-table.worktrees/<name>` on their own branches, push only;
-the lead merges onto `v0.4/v9-architecture`, then `dev`. Each phase ends with every gate in
-2.2 green on both trees and one commit per cluster. Before phase 01: merge `dev` into
+the lead merges onto `v0.4/v9-architecture`; the part merges into `dev` when the final
+phase is green. Each phase ends with every gate in 2.2 green and one commit per cluster.
+The base tree is not touched in this part; `pnpm check:bases` is expected red until part 02
+lands and is not a gate here. Before phase 01: merge `dev` into
 `v0.4/v9-architecture` and move `06-00-comparison.md` to
 `.ai/plans/v0.4.x/anindosarker/01-00-comparison.md` on that branch.
 
@@ -353,27 +351,28 @@ Done, `01-00-comparison.md`.
 #### 2.1.4 Phase 03: Components
 
 - 1.6.7, per cluster: coder, reviewer who walks the twin and checks every state read is a
-  subscription or a `.get()`, verifier who runs the gates and the cluster's stories on both
-  bases through Playwright
+  subscription or a `.get()`, verifier who runs the gates and the cluster's stories on the
+  radix Storybook through Playwright
 - Verify: decisions items 4 and 5 lists (nested table, portals, custom renderers, no
   provider throws; React Profiler counts for hover, density, select; data replacement;
-  cell action menu edit keeps focus)
+  cell action menu edit keeps focus), on the radix Storybook
 
-#### 2.1.5 Phase 04: Our-only files, locales, docs
+#### 2.1.5 Phase 04: Our-only files and locales
 
-- 1.6.8, 1.6.9 docs changes, `check-pages.mjs a` and `e` green on production preview
+- 1.6.8
 
-#### 2.1.6 Final phase: Cleanup and release
+#### 2.1.6 Final phase: Cleanup
 
 - Delete every helper the features made dead; `index.ts` exports per decisions 2, 6
-- `CHANGELOG.md`; `pnpm format`; every gate in 2.2; `pnpm release 0.4.0`
+- `CHANGELOG.md` `## Unreleased` complete for the library; `pnpm format`; every gate in
+  2.2; merge into `dev`
 
-### 2.2 Gates
+### 2.2 Gates (radix)
 
-- `pnpm check:bases`
-- `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc -p tsconfig.stories.json`,
-  `lint`; `test` and `test:base`; `storybook:build` and `storybook:build:base`;
-  `node scripts/check-storybook.mjs`
-- `grep -rn "table\.state" packages/shadcn-table/registry/*/components/ui/shadcn-table/components` returns nothing
-- `pnpm registry:build`; CI install matrix green
-- Docs `types:check`, `lint`, `build`; `check-pages.mjs a` and `e`
+- `pnpm --filter shadcn-table tsc:radix`, `tsc -p tsconfig.stories.json`, `lint`; `test`
+  (vitest browser mode, radix); `storybook:build`; `node scripts/check-storybook.mjs`
+- `grep -rn "table\.state" packages/shadcn-table/registry/radix/components/ui/shadcn-table/components` returns nothing
+- `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install radix` leaves
+  `components/ui-radix` consistent with the registry
+- Stories that compose sub-components with `table={table}` are updated in this part only as
+  far as `test` needs to pass; the rest is part 03
