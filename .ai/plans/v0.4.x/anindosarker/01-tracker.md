@@ -52,3 +52,36 @@ Browser: radix Storybook, Playwright against `iframe.html`, DOM text and console
 - [x] `useSTContext()` inside a component rendered by `<ShadcnTable>` and beside it under `ST_TableProvider` returns its own table with two mounted: `provider-with-two-tables`, readers `first:2`, `first:2`, `second:4`, `second:4`.
 - [x] No remount of `AppTable` across re-renders: `controlled-input-in-custom-toolbar`, typing `focus kept` keeps `document.activeElement` on the input, echo `focus kept`.
 - [x] Filter-mode submenu opens from the item's arrow button only; clicking the item itself closes the Radix menu (same on claude/review).
+
+## Phase 02
+
+TanStack reference: `React-table/tanstack-table` at `c14e0221b` (not pulled, same as phase 01). Installed `@tanstack/react-table` 9.3.1.
+
+### Deviations
+
+- `useST_TableOptions`: `manualPagination` is forced `true` whenever `enablePagination` is `false`, and `manualFiltering` when `enableFilters`, `enableColumnFilters` and `enableGlobalFilter` are all `false`; the twin keeps the `manualPagination === undefined` guard and has no filtering guard. Everything else already matched the twin.
+- `prepareColumns` writes the `columnFilterFns` name onto `columnDef.filterFn`, except while a `filterFn` function still runs under its own name (its initial mode is `fn.name`); sort and single aggregation names pass through untouched. The twin still swaps names for functions and sets `_filterFn`.
+- An `aggregationFn` array still becomes one `constructAggregationFn` that returns an array, as the aggregation guide documents; each name resolves at aggregate time through `context.table._rowModelFns.aggregationFns`. Core's own multiple aggregation returns an object keyed by name, which would break `AggregatedCell` readers.
+- New `getColumnFilterFnName(columnDef)` in `column.utils`: the mode name, or `''` while a function runs (where `_filterFn` was undefined). `getColumnFilterInfo` (so `ST_FilterTextField` and `ST_TableHeadCellFilterLabel`), `ST_FilterOptionMenu`, `ST_FilterRangeSlider`, `ST_ColumnActionMenu` and `ST_TableBodyCellValue` read it; `getDefaultColumnFilterFn` reads only `filterVariant` and is unchanged.
+- `ST_FilterOptionMenu` column switch keeps the `onColumnFiltersChange((old) => [...old])` nudge and its comment: core memoizes the filtered row model on the pre-filtered model and the `columnFilters` and `globalFilter` atoms only, so neither the new `columnDef.filterFn` name nor the `columnFilterFns` change re-runs it. With the nudge off, the rows lag one switch behind (`ar`: Starts With showed the fuzzy rows).
+- Global filter mode switch through the menu is not stale: `ST_GlobalFilterTextField` clears the search on select (`onSelect={handleClear}`, as in the twin), so no nudge was added. A programmatic `table.setGlobalFilterFn` (or `setColumnFilterFns`) with a live filter value stays stale until the value changes; fixing it needs a re-run in the `stFilterModesFeature` setters (owner call).
+- `useST_Effects`: one `table.atoms.rowSelection.subscribe` per mount, in an effect with `[]` deps that returns the unsubscribe. It diffs the previous and next selection and reads `enableRowPinning` and `rowPinningDisplayMode` from the latest render's options through a ref. One `setRowPinning` update covers every changed row (selected rows are appended to `top`, or `bottom` under `select-bottom`; unselected rows are removed), instead of one `row.pin` per row. The twin has no subscription and pins in the handler.
+- `row.utils`: `getST_RowSelectionHandler` loses the `baseAtoms` diff and the pin loop (the sub-row unselect stays). `getST_SelectAllHandler` loses `setRowPinning({ bottom: [], top: [] })`, so select all now pins the rows it selects and unselect all unpins them; the twin clears every pin.
+- Step 4 skipped: `useST_Rows`, `useST_RowVirtualizer` and `useST_ColumnVirtualizer` differ from the twins only in import paths, `T[]` array types, `table.state` versus a destructured `state`, and the known virtualizer `as any` and `@ts-expect-error`.
+- Extra commit `80f28a0`: `stories/features/RowPinningOnSelect.stories.tsx` (five fixtures with play functions) and `PaginationDisabledManualPaginationFalse` in the pagination stories.
+
+### Verify list (plan 2.1.3, decisions item 8)
+
+Browser: radix Storybook, static server on 5362, Playwright against `iframe.html`, DOM `tbody tr[data-pinned]` and `tr[data-selected]`. Story ids under `features-row-pinning-on-select--`. Gates on `1dbac8d`: `tsc:radix`, stories tsc, `lint`, `test` (56 files, 409 tests), `storybook:build`, `check-storybook` (14 of 14; base manager output from the failing `storybook:build:base`), `registry:build` green.
+
+- [x] Shift range, internal selection: `shift-range-internal-state`, pinned `Anderson`, `Lily`, `Tom`, `Brooke`.
+- [x] Shift range, controlled selection: `shift-range-controlled-state`, the same four pinned; unselecting `Lily` unpins her.
+- [x] Shift range, external `atoms.rowSelection` (`createAtom` from `@tanstack/store`, `select-top`): the same four pinned; `atom.set({ 0: true, 3: true })` pins `Mason` and `Tom` and unpins the rest. Temporary story, not committed: the package has no direct `@tanstack/store` dependency.
+- [x] Select all, `selectAllMode: 'page'`: `select-all-page-mode`, the five page rows pinned; unselect all unpins every row.
+- [x] Select all, `selectAllMode: 'all'`: `select-all-all-mode`, all eight rows pinned across pages.
+- [x] `row.toggleSelected(true)` from a toolbar button: `programmatic-toggle-selected`, `Jackson` pinned at the bottom (`select-bottom`).
+- [x] `enablePagination: false` with `manualPagination: false`: `features-pagination-examples--pagination-disabled-manual-pagination-false`, all 21 rows.
+- [x] Column filter mode switch re-filters an unchanged value: `features-filtering-examples--filtering-change-mode-enabled`, `ar` under fuzzy 10 rows, Starts With 2 rows (same as retyping), Contains 10 rows; label `Filter Mode: Starts With` / `Filter Mode: Contains`.
+- [x] `aggregationFn: ['count', 'mean']` renders `[3,35]` per group (temporary story).
+- [x] Decisions item 3 fixtures (`features-fn-registries--`) stay green in `pnpm test`.
+- [ ] Headless render of a display column header still crashes: `ST_SelectCheckbox` destructures `table.state`, which the core table at `header.getContext().table` does not have (`TypeError: Cannot destructure property 'density' of 'n.state' as it is undefined`). Needs the phase 03 component reads (decision 5); components are fenced in this phase.
