@@ -91,6 +91,21 @@ publishes the section as the GitHub release notes.
   `atoms.rowSelection` too, select all pins the rows it selects (it cleared every pin), and
   programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
   unpins.
+- Under `rowPinningDisplayMode: 'select-*'`, unselect all (the select-all checkbox, its
+  keyboard toggle and `Clear selection`) clears every pin, rows pinned by hand included, as
+  0.3.3 did.
+- Rows pinned together on select (a Shift range, select all) keep the row model order,
+  whatever order the selection lists them in. Under `select-sticky` the rows pinned on
+  another page show above or below the page rows in row model order; they came first.
+- Under `rowPinningDisplayMode: 'select-*'` the pagination label covers the pinned rows
+  kept from other pages (`keepPinnedRows`): select all with `selectAllMode: 'all'` on 8 rows
+  at page size 5 reads `1-8 of 8`, the rows the body shows, not `1-5 of 8`.
+- Sticky pinned rows (`rowPinningDisplayMode: 'sticky'` or `'select-sticky'`) stay below
+  the table head: with more pinned rows than the container holds they covered the head and
+  its select-all checkbox. Their top offset counts the head height whether or not the head
+  is sticky, so under a head that is not sticky a scrolled pinned row stops a head height
+  below the container top. Pinned rows kept from another page take their place in the
+  sticky offsets; they were offset by minus one row.
 - Switching a column's filter mode re-filters the current filter value with the new mode.
   While a column or global filter is set, a controlled `onColumnFiltersChange` receives an
   identity updater (`(old) => [...old]`) on each `setColumnFilterFns` and `setGlobalFilterFn`
