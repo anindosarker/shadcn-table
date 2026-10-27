@@ -1,9 +1,7 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import {
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ST_RowData } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_LinearProgressBar } from '@/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar';
 import { ST_TablePagination } from '@/components/ui/shadcn-table/components/toolbar/ST_TablePagination';
@@ -27,15 +25,8 @@ const topToolbarVariants = cva(
   },
 );
 
-export interface ST_TopToolbarProps<TData extends ST_RowData> {
-  table?: ST_TableInstance<TData>;
-}
-
-export const ST_TopToolbar = <TData extends ST_RowData>({
-  table: tableProp,
-}: ST_TopToolbarProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+export const ST_TopToolbar = <TData extends ST_RowData>() => {
+  const table = useSTContext<TData>();
   const {
     options: {
       enableGlobalFilter,
@@ -51,76 +42,94 @@ export const ST_TopToolbar = <TData extends ST_RowData>({
     refs: { topToolbarRef },
   } = table;
 
-  const { isFullScreen, showGlobalFilter } = table.state;
-
   const isMobile = useST_MediaQuery('(max-width:720px)');
   const isTablet = useST_MediaQuery('(max-width:1024px)');
 
   const toolbarProps = parseFromValuesOrFunc(stTopToolbarProps, { table });
 
-  const stackAlertBanner =
-    isMobile ||
-    !!renderTopToolbarCustomActions ||
-    (showGlobalFilter && isTablet);
-
   const globalFilterProps = {
     className: !isTablet ? 'z-[2]' : undefined,
-    table,
   };
 
-  return (
-    <div
-      {...toolbarProps}
-      ref={(ref: HTMLDivElement) => {
-        topToolbarRef.current = ref;
-        if (toolbarProps?.ref) {
-          // @ts-expect-error MRT forwards the user ref via mutable ref object
-          toolbarProps.ref.current = ref;
-        }
-      }}
-      className={cn(
-        topToolbarVariants({ fullscreen: isFullScreen }),
-        toolbarProps?.className,
+  // Created outside the state subscription, so a full screen or global filter
+  // change re-renders only the toolbar element, the alert banner and the
+  // actions row.
+  const dropZone = ['both', 'top'].includes(positionToolbarDropZone ?? '') && (
+    <ST_ToolbarDropZone />
+  );
+  const actions = (
+    <>
+      {enableGlobalFilter && positionGlobalFilter === 'left' && (
+        <ST_GlobalFilterTextField {...globalFilterProps} />
       )}
-    >
-      {positionToolbarAlertBanner === 'top' && (
-        <ST_ToolbarAlertBanner
-          stackAlertBanner={stackAlertBanner}
-          table={table}
-        />
-      )}
-      {['both', 'top'].includes(positionToolbarDropZone ?? '') && (
-        <ST_ToolbarDropZone table={table} />
-      )}
-      <div
-        className={cn(
-          'box-border flex w-full items-start justify-between gap-2 p-2 right-0 top-0',
-          stackAlertBanner ? 'relative' : 'absolute',
-        )}
-      >
-        {enableGlobalFilter && positionGlobalFilter === 'left' && (
-          <ST_GlobalFilterTextField {...globalFilterProps} />
-        )}
-        {renderTopToolbarCustomActions?.({ table }) ?? <span />}
-        {enableToolbarInternalActions ? (
-          <div className="flex flex-wrap-reverse items-center justify-end gap-2">
-            {enableGlobalFilter && positionGlobalFilter === 'right' && (
-              <ST_GlobalFilterTextField {...globalFilterProps} />
-            )}
-            <ST_ToolbarInternalButtons table={table} />
-          </div>
-        ) : (
-          enableGlobalFilter &&
-          positionGlobalFilter === 'right' && (
+      {renderTopToolbarCustomActions?.({ table }) ?? <span />}
+      {enableToolbarInternalActions ? (
+        <div className="flex flex-wrap-reverse items-center justify-end gap-2">
+          {enableGlobalFilter && positionGlobalFilter === 'right' && (
             <ST_GlobalFilterTextField {...globalFilterProps} />
-          )
-        )}
-      </div>
-      {enablePagination &&
-        ['both', 'top'].includes(positionPagination ?? '') && (
-          <ST_TablePagination position="top" table={table} />
-        )}
-      <ST_LinearProgressBar isTopToolbar table={table} />
-    </div>
+          )}
+          <ST_ToolbarInternalButtons />
+        </div>
+      ) : (
+        enableGlobalFilter &&
+        positionGlobalFilter === 'right' && (
+          <ST_GlobalFilterTextField {...globalFilterProps} />
+        )
+      )}
+    </>
+  );
+  const pagination = enablePagination &&
+    ['both', 'top'].includes(positionPagination ?? '') && (
+      <ST_TablePagination position="top" />
+    );
+  const progressBar = <ST_LinearProgressBar isTopToolbar />;
+
+  return (
+    <Subscribe
+      selector={(state) => ({
+        isFullScreen: state.isFullScreen,
+        showGlobalFilter: state.showGlobalFilter,
+      })}
+      source={table.store}
+    >
+      {({ isFullScreen, showGlobalFilter }) => {
+        const stackAlertBanner =
+          isMobile ||
+          !!renderTopToolbarCustomActions ||
+          (showGlobalFilter && isTablet);
+
+        return (
+          <div
+            {...toolbarProps}
+            ref={(ref: HTMLDivElement) => {
+              topToolbarRef.current = ref;
+              if (toolbarProps?.ref) {
+                // @ts-expect-error MRT forwards the user ref via mutable ref object
+                toolbarProps.ref.current = ref;
+              }
+            }}
+            className={cn(
+              topToolbarVariants({ fullscreen: isFullScreen }),
+              toolbarProps?.className,
+            )}
+          >
+            {positionToolbarAlertBanner === 'top' && (
+              <ST_ToolbarAlertBanner stackAlertBanner={stackAlertBanner} />
+            )}
+            {dropZone}
+            <div
+              className={cn(
+                'box-border flex w-full items-start justify-between gap-2 p-2 right-0 top-0',
+                stackAlertBanner ? 'relative' : 'absolute',
+              )}
+            >
+              {actions}
+            </div>
+            {pagination}
+            {progressBar}
+          </div>
+        );
+      }}
+    </Subscribe>
   );
 };
