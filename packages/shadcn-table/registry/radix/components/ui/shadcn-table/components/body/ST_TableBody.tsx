@@ -64,7 +64,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
     return getRowModel()
       .rows.filter((row) => row.getIsPinned())
       .map((r) => r.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- recomputes on the row model rows, which getRowModel returns
   }, [rowPinning, getRowModel().rows]);
 
   // useST_Rows subscribes this body to every slice that feeds the row model
@@ -144,7 +144,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
         columnVisibility: state.columnVisibility,
         globalFilter: state.globalFilter,
         isFullScreen: state.isFullScreen,
-        rowPinning: state.rowPinning,
       })}
       source={table.store}
     >
