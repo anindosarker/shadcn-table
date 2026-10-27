@@ -1,6 +1,7 @@
 import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_ColumnDef,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
@@ -8,7 +9,7 @@ import { defaultDisplayColumnProps } from '@/components/ui-radix/shadcn-table/sh
 
 export const getST_RowNumbersColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
-): ST_ColumnDef<TData> => {
+): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
   const { localization, rowNumberDisplayMode } = tableOptions;
 
   return {
