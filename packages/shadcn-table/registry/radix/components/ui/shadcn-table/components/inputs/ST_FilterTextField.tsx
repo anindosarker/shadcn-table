@@ -55,7 +55,7 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -65,17 +65,23 @@ export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
   rangeFilterIndex?: number;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from `header`. The
+   * filter container outside this cluster still passes it; the integration
+   * step removes it.
+   */
+  table?: unknown;
 }
 
 export const ST_FilterTextField = <TData extends ST_RowData>({
   header,
   rangeFilterIndex,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the input
+  table: _table,
   ...rest
 }: ST_FilterTextFieldProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The header carries the core table; the ST wrapper types re-type its getters.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       enableColumnFilterModes,
@@ -94,6 +100,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
   const { filterVariant } = columnDef;
+  // The filter value and the faceted values feed the value state, its sync
+  // effect and the dropdown memo, so they are hook subscriptions: the facets
+  // follow the other columns' filters and the global filter.
+  useST_Atom(table.atoms.columnFilters);
+  useST_Atom(table.atoms.globalFilter);
 
   const args = { column, rangeFilterIndex, table };
 
@@ -651,7 +662,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         header={header}
         setAnchorEl={setAnchorEl}
         setFilterValue={setFilterValue}
-        table={table}
       />
     </>
   );

@@ -1,3 +1,4 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,7 +11,6 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const filterCheckboxVariants = cva('', {
   variants: {
@@ -35,20 +35,25 @@ const filterCheckboxVariants = cva('', {
 export interface ST_FilterCheckboxProps<TData extends ST_RowData>
   extends CheckboxProps {
   column: ST_Column<TData>;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from `column`.
+   * The filter container outside this cluster still passes it; the
+   * integration step removes it.
+   */
+  table?: unknown;
 }
 
 export const ST_FilterCheckbox = <TData extends ST_RowData>({
   column,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the checkbox
+  table: _table,
   ...rest
 }: ST_FilterCheckboxProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The column carries the core table; the ST wrapper types re-type its getters.
+  const table = column.table as unknown as ST_TableInstance<TData>;
   const {
     options: { localization, stFilterCheckboxProps },
   } = table;
-  const { density } = table.state;
   const { columnDef } = column;
 
   const checkboxProps = {
@@ -69,50 +74,62 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   );
 
   return (
-    <ST_Tooltip title={checkboxProps?.title ?? filterLabel}>
-      <Label
-        className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
-        title={undefined}
-      >
-        <Checkbox
-          checked={
-            column.getFilterValue() === undefined
-              ? 'indeterminate'
-              : column.getFilterValue() === 'true'
-          }
-          // color={column.getFilterValue() === undefined ? 'default' : 'primary'}
-          // size={density === 'compact' ? 'small' : 'medium'}
-          // Note: MUI color/size are the cva variants on className below.
-          {...checkboxProps}
-          onCheckedChange={(checked) => {
-            column.setFilterValue(
-              column.getFilterValue() === undefined
-                ? 'true'
-                : column.getFilterValue() === 'true'
-                  ? 'false'
-                  : undefined,
-            );
-            checkboxProps?.onCheckedChange?.(checked);
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            checkboxProps?.onClick?.(e);
-          }}
-          // sx={{ height: '2.5rem', width: '2.5rem' }}
-          // Note: MUI sized the padded hit area, not the visible box.
-          className={cn(
-            filterCheckboxVariants({
-              color:
-                column.getFilterValue() === undefined ? 'default' : 'primary',
-              density,
-            }),
-            checkboxProps?.className,
-          )}
-        />
-        {/* disableTypography */}
-        {/* Note: shadcn Label renders the text directly. */}
-        {checkboxProps.title ?? filterLabel}
-      </Label>
-    </ST_Tooltip>
+    <Subscribe
+      selector={(state) => ({
+        density: state.density,
+        filterValue: column.getFilterValue(),
+      })}
+      source={table.store}
+    >
+      {({ density }) => (
+        <ST_Tooltip title={checkboxProps?.title ?? filterLabel}>
+          <Label
+            className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
+            title={undefined}
+          >
+            <Checkbox
+              checked={
+                column.getFilterValue() === undefined
+                  ? 'indeterminate'
+                  : column.getFilterValue() === 'true'
+              }
+              // color={column.getFilterValue() === undefined ? 'default' : 'primary'}
+              // size={density === 'compact' ? 'small' : 'medium'}
+              // Note: MUI color/size are the cva variants on className below.
+              {...checkboxProps}
+              onCheckedChange={(checked) => {
+                column.setFilterValue(
+                  column.getFilterValue() === undefined
+                    ? 'true'
+                    : column.getFilterValue() === 'true'
+                      ? 'false'
+                      : undefined,
+                );
+                checkboxProps?.onCheckedChange?.(checked);
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                checkboxProps?.onClick?.(e);
+              }}
+              // sx={{ height: '2.5rem', width: '2.5rem' }}
+              // Note: MUI sized the padded hit area, not the visible box.
+              className={cn(
+                filterCheckboxVariants({
+                  color:
+                    column.getFilterValue() === undefined
+                      ? 'default'
+                      : 'primary',
+                  density,
+                }),
+                checkboxProps?.className,
+              )}
+            />
+            {/* disableTypography */}
+            {/* Note: shadcn Label renders the text directly. */}
+            {checkboxProps.title ?? filterLabel}
+          </Label>
+        </ST_Tooltip>
+      )}
+    </Subscribe>
   );
 };
