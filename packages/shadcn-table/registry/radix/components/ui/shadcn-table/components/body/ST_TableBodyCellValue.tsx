@@ -41,6 +41,7 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
         filterValue: column.getFilterValue(),
         globalFilter: state.globalFilter,
         globalFilterFn: state.globalFilterFn,
+        columnFilterFns: state.columnFilterFns,
         grouping: state.grouping,
       })}
       source={table.store}
