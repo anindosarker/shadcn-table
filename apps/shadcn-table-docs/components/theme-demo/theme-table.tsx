@@ -104,7 +104,7 @@ const MEMBERS: Member[] = [
 export default function ThemeTable({ compact = false }: ThemeTableProps) {
   const columns = useMemo<ST_ColumnDef<Member>[]>(
     () => [
-      { header: 'Name', accessorKey: 'name', size: 160 },
+      { header: 'Name', accessorKey: 'name', size: compact ? 100 : 160 },
       ...(compact
         ? []
         : [
@@ -120,7 +120,9 @@ export default function ThemeTable({ compact = false }: ThemeTableProps) {
       {
         header: 'Status',
         accessorKey: 'status',
-        size: 120,
+        size: compact ? 100 : 120,
+        // in compact, the spare width goes to Name
+        grow: compact ? false : undefined,
         filterVariant: 'select',
         filterSelectOptions: STATUSES,
         Cell: ({ cell }) => {
@@ -128,7 +130,7 @@ export default function ThemeTable({ compact = false }: ThemeTableProps) {
           return <Badge variant={STATUS_BADGE[status]}>{status}</Badge>;
         },
       },
-      { header: 'Seats', accessorKey: 'seats', size: 90 },
+      ...(compact ? [] : [{ header: 'Seats', accessorKey: 'seats', size: 90 }]),
     ],
     [compact],
   );
@@ -142,6 +144,17 @@ export default function ThemeTable({ compact = false }: ThemeTableProps) {
     enableTopToolbar: !compact,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
+    // compact fits a ~300px card: columns fill the width, slim display
+    // columns, no column menus, and pagination without the page size select
+    ...(compact && {
+      layoutMode: 'grid',
+      enableColumnActions: false,
+      displayColumnDefOptions: {
+        'st-row-select': { size: 40, grow: false },
+        'st-row-actions': { size: 48, grow: false, header: '' },
+      },
+      stPaginationProps: { showRowsPerPage: false },
+    }),
     initialState: {
       density: 'compact',
       pagination: { pageIndex: 0, pageSize: compact ? 4 : 5 },
