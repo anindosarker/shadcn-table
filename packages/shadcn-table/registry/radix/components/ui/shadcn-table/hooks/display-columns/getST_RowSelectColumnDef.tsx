@@ -12,16 +12,12 @@ export const getST_RowSelectColumnDef = <TData extends ST_RowData>(
   const { enableMultiRowSelection, enableSelectAll } = tableOptions;
 
   return {
-    Cell: ({ row, staticRowIndex, table }) => (
-      <ST_SelectCheckbox
-        row={row}
-        staticRowIndex={staticRowIndex}
-        table={table}
-      />
+    Cell: ({ row, staticRowIndex }) => (
+      <ST_SelectCheckbox row={row} staticRowIndex={staticRowIndex} />
     ),
     Header:
       enableSelectAll && enableMultiRowSelection
-        ? ({ table }) => <ST_SelectCheckbox table={table} />
+        ? () => <ST_SelectCheckbox />
         : undefined,
     grow: false,
     ...defaultDisplayColumnProps({
