@@ -30,7 +30,7 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
 
   return {
     Cell: ({ cell, column, row, staticRowIndex, table }) => {
-      const expandButtonProps = { row, staticRowIndex, table };
+      const expandButtonProps = { row, staticRowIndex };
       const subRowsLength = row.subRows?.length;
       if (groupedColumnMode === 'remove' && row.groupingColumnId) {
         return (
@@ -58,7 +58,7 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
       ? ({ table }) => {
           return (
             <>
-              <ST_ExpandAllButton table={table} />
+              <ST_ExpandAllButton />
               {groupedColumnMode === 'remove' &&
                 grouping
                   ?.map(

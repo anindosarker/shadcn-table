@@ -10,9 +10,7 @@ export const getST_RowPinningColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
 ): ST_ColumnDef<TData> => {
   return {
-    Cell: ({ row, table }) => (
-      <ST_TableBodyRowPinButton row={row} table={table} />
-    ),
+    Cell: ({ row }) => <ST_TableBodyRowPinButton row={row} />,
     grow: false,
     ...defaultDisplayColumnProps({
       header: 'pin',
