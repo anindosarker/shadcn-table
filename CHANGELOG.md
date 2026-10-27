@@ -18,10 +18,13 @@ publishes the section as the GitHub release notes.
   `filterFn`, `globalFilterFn`, `sortFn` or `aggregationFn` string must be a built-in name or
   one registered through the table option of the same name; an unknown name logs core's
   development warning and filters, sorts or aggregates nothing.
-- `table.setDensity`, `setIsFullScreen`, `setShowAlertBanner`, `setShowToolbarDropZone`,
-  `setDraggingColumn`, `setHoveredColumn`, `setDraggingRow` and `setHoveredRow` hand their
-  `on*Change` handler a function updater, as TanStack's own setters do. A handler that
-  expected the new value needs `functionalUpdate`, or a React state setter.
+- Every ST setter (`table.setDensity`, `setIsFullScreen`, `setShowAlertBanner`,
+  `setShowToolbarDropZone`, `setDraggingColumn`, `setHoveredColumn`, `setDraggingRow`,
+  `setHoveredRow`, `setCreatingRow`, `setEditingCell`, `setEditingRow`,
+  `setColumnFilterFns`, `setGlobalFilterFn`, `setShowColumnFilters`, `setShowGlobalFilter`
+  and `setActionCell`) hands its `on*Change` handler a function updater, as TanStack's own
+  setters do. A handler that expected the new value needs `functionalUpdate`, or a React
+  state setter.
 
 ### Added
 

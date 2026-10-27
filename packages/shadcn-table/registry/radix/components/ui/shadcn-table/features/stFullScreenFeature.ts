@@ -27,7 +27,7 @@ export interface ST_Table_FullScreen {
   setIsFullScreen: (updater: ST_Updater<boolean>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging needs the TanStack type parameters, used or not */
+/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stFullScreenFeature: TableFeature;

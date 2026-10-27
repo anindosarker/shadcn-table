@@ -12,9 +12,12 @@ import type {
   RowData,
   TableFeature,
   TableFeatures,
-  Updater,
 } from '@tanstack/react-table';
-import type { ST_Row, ST_RowData } from '@/components/ui/shadcn-table/types';
+import type {
+  ST_Row,
+  ST_RowData,
+  ST_Updater,
+} from '@/components/ui/shadcn-table/types';
 
 // TableState_FeatureMap is not generic over TData, so the state slice and its
 // on*Change options hold the row with its data type erased to ST_RowData
@@ -33,11 +36,11 @@ export interface ST_TableOptions_RowDragging {
 }
 
 export interface ST_Table_RowDragging<TData extends ST_RowData> {
-  setDraggingRow: (updater: Updater<ST_Row<TData> | null>) => void;
-  setHoveredRow: (updater: Updater<Partial<ST_Row<TData>> | null>) => void;
+  setDraggingRow: (updater: ST_Updater<ST_Row<TData> | null>) => void;
+  setHoveredRow: (updater: ST_Updater<Partial<ST_Row<TData>> | null>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- merged declarations must repeat the core's type parameters */
+/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stRowDraggingFeature: TableFeature;
@@ -73,13 +76,13 @@ export const stRowDraggingFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('stRowDraggingFeature', table, {
       table_setDraggingRow: {
-        fn: (updater: Updater<ST_ErasedRow | null>) =>
+        fn: (updater: ST_Updater<ST_ErasedRow | null>) =>
           (table.options as ST_TableOptions_RowDragging).onDraggingRowChange?.(
             (old) => functionalUpdate(updater, old),
           ),
       },
       table_setHoveredRow: {
-        fn: (updater: Updater<Partial<ST_ErasedRow> | null>) =>
+        fn: (updater: ST_Updater<Partial<ST_ErasedRow> | null>) =>
           (table.options as ST_TableOptions_RowDragging).onHoveredRowChange?.(
             (old) => functionalUpdate(updater, old),
           ),
