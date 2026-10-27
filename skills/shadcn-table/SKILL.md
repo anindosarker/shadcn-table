@@ -19,7 +19,7 @@ A shadcn registry item: the table source is copied into the project, not install
 
 What the command adds: `components/ui/shadcn-table/` (the table), the shadcn/ui parts it uses in `components/ui/` when missing, and the npm packages `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, plus `radix-ui` (Radix UI) or `@base-ui/react` (Base UI). Re-run with `--overwrite` to update; local edits in that directory are replaced.
 
-Other languages are separate items, one per locale code, under the same base path: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/shadcn-table-locale-de.json`, imported from `@/components/ui/shadcn-table/locales/de`. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
+Other languages are separate items, one per locale code, under the same base path: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/shadcn-table-locale-de.json`, imported from `@/components/ui/shadcn-table/shared/locales/de`. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
 
 ## Use
 
@@ -52,6 +52,8 @@ Rules:
 - All features are table options passed to `useShadcnTable` (`enableRowSelection`, `enableColumnFilters`, `enableGrouping`, `enableRowVirtualization`, `renderDetailPanel`, ...). Do not wrap the table to add behaviour before checking the option exists.
 - Column behaviour is a column option (`filterVariant`, `enableSorting`, `Cell`, `size`, `aggregationFn`, ...).
 - The table is built on TanStack Table v9 and uses its names: `sortFn` (not `sortingFn`), `columnPinning: { start, end }` and `column.pin('start' | 'end')` (not left/right), `columnResizing` state (not `columnSizingInfo`), `table.state` (not `table.getState()`), `getPaginatedRowModel()`. Custom aggregations are `constructAggregationFn({ aggregate })` definitions.
+- `<ShadcnTable table={table} />` is the whole table. Sub-components (`ST_TableContainer`, `ST_TopToolbar`, `ST_GlobalFilterTextField`, ...) take no `table` prop: inside `ShadcnTable` and its renderers they find the table themselves; wrap hand-composed pieces in `<ST_TableProvider table={table}>`.
+- In row, cell, header and column renderers (`Cell`, `Header`, `renderRowActions`, ...) the `table` argument has no `state`: read `table.store.state` there.
 - Styling: the table uses the project's shadcn/ui tokens; override per part with the `st*Props` options (`stTableBodyCellProps`, `stTableHeadCellProps`, ...) taking a `className`.
 
 ## Reference
