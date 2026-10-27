@@ -4,7 +4,7 @@
 import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
 
 //Import Shadcn Table Translations
-import { ST_Localization_KO } from '@/components/ui/shadcn-table/locales/ko';
+import { ST_Localization_KO } from '@/components/ui/shadcn-table/shared/locales/ko';
 
 //mock data
 import { data, type Person } from './makeData';

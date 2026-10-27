@@ -186,7 +186,9 @@ export const baseItems = ({
     fileEntry(uiDir, p),
   ]);
 
-  const isLocale = (key) => key.startsWith(`locales${path.sep}`);
+  // Locales sit in shared/locales; the Base UI tree keeps them in locales/
+  // until it moves to the same layout.
+  const isLocale = (key) => /^(shared[\\/])?locales[\\/]/.test(key);
   const localeCode = (key) => path.basename(key).replace(/\.ts$/, '');
 
   const coreFiles = libEntries

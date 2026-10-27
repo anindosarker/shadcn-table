@@ -1,9 +1,9 @@
 import { useId, useMemo } from 'react';
-import { ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
-import { ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
-import { ST_SortFns } from '@/components/ui/shadcn-table/fns/sortFns';
+import { ST_AggregationFns } from '@/components/ui/shadcn-table/shared/fns/aggregationFns';
+import { ST_FilterFns } from '@/components/ui/shadcn-table/shared/fns/filterFns';
+import { ST_SortFns } from '@/components/ui/shadcn-table/shared/fns/sortFns';
 import { ST_Default_Icons } from '@/components/ui/shadcn-table/icons';
-import { ST_Localization_EN } from '@/components/ui/shadcn-table/locales/en';
+import { ST_Localization_EN } from '@/components/ui/shadcn-table/shared/locales/en';
 import {
   type ST_DefinedTableOptions,
   type ST_RowData,

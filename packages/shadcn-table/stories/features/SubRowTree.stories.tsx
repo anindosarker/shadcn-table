@@ -1,6 +1,6 @@
 import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
-import { ST_Localization_HE } from '@/components/ui/shadcn-table/locales/he';
+import { ST_Localization_HE } from '@/components/ui/shadcn-table/shared/locales/he';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 

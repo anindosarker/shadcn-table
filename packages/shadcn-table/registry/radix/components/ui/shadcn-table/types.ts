@@ -47,11 +47,11 @@ import { type Collapsible } from '@/components/ui/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui/dialog';
 import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
-import { type ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
-import { type ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
-import { type ST_SortFns } from '@/components/ui/shadcn-table/fns/sortFns';
+import { type ST_AggregationFns } from '@/components/ui/shadcn-table/shared/fns/aggregationFns';
+import { type ST_FilterFns } from '@/components/ui/shadcn-table/shared/fns/filterFns';
+import { type ST_SortFns } from '@/components/ui/shadcn-table/shared/fns/sortFns';
 import { type ST_Icons } from '@/components/ui/shadcn-table/icons';
-import { type ST_Features } from '@/components/ui/shadcn-table/utils/tanstack.features';
+import { type ST_Features } from '@/components/ui/shadcn-table/shared/utils/tanstack.features';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 
@@ -936,7 +936,7 @@ export interface ST_TableOptions<TData extends ST_RowData>
    */
   layoutMode?: 'grid' | 'grid-no-grow' | 'semantic';
   /**
-   * Pass in either a locale imported from `@/components/ui/shadcn-table/locales/*` or a custom locale object.
+   * Pass in either a locale imported from `@/components/ui/shadcn-table/shared/locales/*` or a custom locale object.
    *
    * See the localization (i18n) guide for more info:
    * @link https://shadcn-table.com/docs/guides/localization

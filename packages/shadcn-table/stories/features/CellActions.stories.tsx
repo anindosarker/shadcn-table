@@ -3,7 +3,7 @@ import { expect, screen, waitFor } from 'storybook/test';
 import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import { Mail, UserX } from 'lucide-react';
 import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
-import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { faker } from '@faker-js/faker';
 

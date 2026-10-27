@@ -24,7 +24,7 @@ import {
   getColumnId,
   getDefaultColumnFilterFn,
   prepareColumns,
-} from '@/components/ui/shadcn-table/utils/column.utils';
+} from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import {
   getDefaultColumnOrderIds,
   showRowActionsColumn,
@@ -34,9 +34,9 @@ import {
   showRowPinningColumn,
   showRowSelectionColumn,
   showRowSpacerColumn,
-} from '@/components/ui/shadcn-table/utils/displayColumn.utils';
-import { stFeatures } from '@/components/ui/shadcn-table/utils/tanstack.features';
-import { createRow } from '@/components/ui/shadcn-table/utils/tanstack.helpers';
+} from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
+import { stFeatures } from '@/components/ui/shadcn-table/shared/utils/tanstack.features';
+import { createRow } from '@/components/ui/shadcn-table/shared/utils/tanstack.helpers';
 import { getST_RowActionsColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef';
 import { getST_RowDragColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowDragColumnDef';
 import { getST_RowExpandColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowExpandColumnDef';
