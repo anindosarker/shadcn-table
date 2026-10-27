@@ -55,6 +55,10 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
   const columnSizing = useST_Atom(table.atoms.columnSizing);
   const columnResizing = useST_Atom(table.atoms.columnResizing);
   const columnVisibility = useST_Atom(table.atoms.columnVisibility);
+  // Pinning, reordering and grouping split or merge header groups, which changes the parent header ids.
+  const columnOrder = useST_Atom(table.atoms.columnOrder);
+  const columnPinning = useST_Atom(table.atoms.columnPinning);
+  const grouping = useST_Atom(table.atoms.grouping);
 
   const tableProps = {
     ...parseFromValuesOrFunc(stTableProps, { table }),
@@ -73,8 +77,16 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
       colSizes[`--col-${parseCSSVarId(header.column.id)}-size`] = colSize;
     }
     return colSizes;
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- getFlatHeaders is a stable table method; the header set follows columns, columnSizing, columnResizing and columnVisibility
-  }, [columns, columnSizing, columnResizing, columnVisibility]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- getFlatHeaders is a stable table method; the header set follows columns, columnSizing, columnResizing, columnVisibility, columnOrder, columnPinning and grouping
+  }, [
+    columns,
+    columnSizing,
+    columnResizing,
+    columnVisibility,
+    columnOrder,
+    columnPinning,
+    grouping,
+  ]);
 
   const columnVirtualizer = useST_ColumnVirtualizer(table);
 
