@@ -93,10 +93,10 @@ export const CustomToolbarInternalActions = () => (
     data={data}
     enableGrouping
     enableRowSelection
-    renderToolbarInternalActions={({ table }) => {
+    renderToolbarInternalActions={() => {
       return (
         <>
-          <ST_ToggleFullScreenButton table={table} />
+          <ST_ToggleFullScreenButton />
         </>
       );
     }}

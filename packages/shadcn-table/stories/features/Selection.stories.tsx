@@ -257,10 +257,10 @@ export const CustomAlertBannerHeadOverlay = () => (
       className: 'bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-100',
     }}
     positionToolbarAlertBanner="head-overlay"
-    renderToolbarAlertBannerContent={({ selectedAlert, table }) => (
+    renderToolbarAlertBannerContent={({ selectedAlert }) => (
       <div className="flex w-full justify-between">
         <div className="flex w-full items-center gap-1.5 px-3 py-1">
-          <ST_SelectCheckbox table={table} /> {selectedAlert}{' '}
+          <ST_SelectCheckbox /> {selectedAlert}{' '}
         </div>
         <div className="flex gap-1.5">
           <Button className="bg-green-600 text-white hover:bg-green-700">

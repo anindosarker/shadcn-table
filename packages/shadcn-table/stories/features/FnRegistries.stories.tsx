@@ -3,11 +3,11 @@ import { constructAggregationFn } from '@tanstack/react-table';
 import {
   type ST_ColumnDef,
   type ST_FilterFn,
+  ST_TablePagination,
   ST_TableProvider,
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 import { expect, waitFor } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
@@ -326,14 +326,13 @@ ControlledInputInCustomToolbar.play = async ({
   );
 };
 
-const ContextReader = ({ label }: { label: string }) => {
-  const table = useSTContext<Person>();
-  return (
-    <div data-testid={label}>
-      {table.options.id}:{table.getRowModel().rows.length}
-    </div>
-  );
-};
+// A library sub-component reads the table from the nearest provider; its
+// row summary (`1-2 of 2`) shows which table it found.
+const ContextReader = ({ label }: { label: string }) => (
+  <div data-testid={label}>
+    <ST_TablePagination showRowsPerPage={false} />
+  </div>
+);
 
 const ProvidedTable = ({ id, rows }: { id: string; rows: Person[] }) => {
   const table = useShadcnTable({
@@ -363,12 +362,12 @@ export const ProviderWithTwoTables = () => (
 );
 
 ProviderWithTwoTables.play = async ({ canvas }: StoryContext) => {
-  await expect(canvas.getByTestId('first-outer')).toHaveTextContent('first:2');
-  await expect(canvas.getByTestId('first-inner')).toHaveTextContent('first:2');
+  await expect(canvas.getByTestId('first-outer')).toHaveTextContent('1-2 of 2');
+  await expect(canvas.getByTestId('first-inner')).toHaveTextContent('1-2 of 2');
   await expect(canvas.getByTestId('second-outer')).toHaveTextContent(
-    'second:4',
+    '1-4 of 4',
   );
   await expect(canvas.getByTestId('second-inner')).toHaveTextContent(
-    'second:4',
+    '1-4 of 4',
   );
 };
