@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { ST_TableProvider } from '@/components/ui/shadcn-table/hooks/stTableHook';
 import { useShadcnTable } from '@/components/ui/shadcn-table/hooks/useShadcnTable';
 import {
   type ST_RowData,
@@ -34,6 +36,11 @@ export const ShadcnTable = <TData extends ST_RowData>(
     table = useShadcnTable(props);
   }
 
+  // The context carries the first instance: its store, atoms, refs and
+  // setters are live, and keeping it stable spares context readers a
+  // re-render on every table state change.
+  const [contextTable] = useState(() => table);
+
   // Note: the provider lives here at the ST root because the latest shadcn
   // tooltip (registry change 2026-07) no longer self-wraps each Tooltip in a
   // TooltipProvider — Radix Tooltip.Root throws without a provider ancestor.
@@ -42,7 +49,9 @@ export const ShadcnTable = <TData extends ST_RowData>(
   // including portalled content (portals preserve React context).
   return (
     <TooltipProvider skipDelayDuration={0}>
-      <ST_TableLayout table={table} />
+      <ST_TableProvider table={contextTable}>
+        <ST_TableLayout table={table} />
+      </ST_TableProvider>
     </TooltipProvider>
   );
 };
