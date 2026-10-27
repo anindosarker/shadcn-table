@@ -275,6 +275,7 @@ export const useST_TableInstance = <TData extends ST_RowData>(
   // and in `options.state`, not in TanStack's store, so the selector folds
   // them into `table.state` next to the TanStack slices: one read for both.
   const tanstackTable = useTable(
+    // @ts-expect-error ST_FilterFn accepts any string name, TanStack only registered ones
     {
       onColumnOrderChange,
       onColumnResizingChange,
@@ -284,7 +285,7 @@ export const useST_TableInstance = <TData extends ST_RowData>(
       features: stFeatures,
       globalFilterFn:
         statefulTableOptions.filterFns?.[globalFilterFn ?? 'fuzzy'],
-    } as any,
+    },
     (state) => ({ ...state, ...statefulTableOptions.state }),
   );
 

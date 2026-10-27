@@ -15,7 +15,7 @@ export const PKG = path.resolve(
 export const ROOT = path.resolve(PKG, '..', '..');
 // The docs app: examples.mjs writes its registry.json, hosted.mjs its
 // public/r/. The one place the folder name lives in the registry scripts.
-export const DOCS = path.join(ROOT, 'apps/docs');
+export const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 // The library below a tree's components/ui directory.
 const LIB_REL = 'components/ui/shadcn-table';
 export const GITHUB_REPO = 'anindosarker/shadcn-table';
