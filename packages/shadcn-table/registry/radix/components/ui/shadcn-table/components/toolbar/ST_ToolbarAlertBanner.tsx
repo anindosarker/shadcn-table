@@ -6,24 +6,15 @@ import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-import {
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ST_RowData } from '@/components/ui/shadcn-table/types';
 import { getST_SelectAllHandler } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ToolbarAlertBannerProps<TData extends ST_RowData>
+export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {
   stackAlertBanner?: boolean;
-  /**
-   * Transition, part 01 phase 03: ignored, the banner reads the table from
-   * context. `ST_TableHead` still passes it until its cluster lands; the
-   * integration step removes this prop.
-   */
-  table?: ST_TableInstance<TData>;
 }
 
 const toolbarAlertBannerVariants = cva(
@@ -40,10 +31,8 @@ const toolbarAlertBannerVariants = cva(
 
 export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   stackAlertBanner,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the Alert element until the integration step removes it
-  table: _transitionTable,
   ...rest
-}: ST_ToolbarAlertBannerProps<TData>) => {
+}: ST_ToolbarAlertBannerProps) => {
   const table = useSTContext<TData>();
   const {
     getFilteredSelectedRowModel,

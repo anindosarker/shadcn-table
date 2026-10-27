@@ -5,17 +5,9 @@ import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_ShowHideColumnsMenu } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ShowHideColumnsButtonProps extends ButtonProps {
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the context.
-   * Goes in the integration step, once no caller passes it.
-   */
-  table?: unknown;
-}
+export type ST_ShowHideColumnsButtonProps = ButtonProps;
 
 export const ST_ShowHideColumnsButton = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
-  table: _table,
   ...rest
 }: ST_ShowHideColumnsButtonProps) => {
   const table = useSTContext();

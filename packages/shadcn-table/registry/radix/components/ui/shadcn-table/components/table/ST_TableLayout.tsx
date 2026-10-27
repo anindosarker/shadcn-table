@@ -6,10 +6,7 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_BottomToolbar } from '@/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar';
 import { ST_TopToolbar } from '@/components/ui/shadcn-table/components/toolbar/ST_TopToolbar';
 import { ST_TableContainer } from '@/components/ui/shadcn-table/components/table/ST_TableContainer';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_TableLayoutProps = DivProps;
 
@@ -42,12 +39,6 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
     },
     refs: { tableLayoutRef },
   } = table;
-
-  // Transition, part 01 phase 03: re-renders this tree on every table state
-  // change for the components not yet on their own subscriptions. Goes, with
-  // the live `state` on the `ST_TableProvider` handle, once every component
-  // subscribes.
-  useST_Atom(table.store);
 
   const layoutDivProps = {
     ...parseFromValuesOrFunc(stTableLayoutProps, { table }),

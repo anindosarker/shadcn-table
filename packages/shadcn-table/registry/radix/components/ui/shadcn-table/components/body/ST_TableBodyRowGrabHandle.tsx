@@ -12,19 +12,11 @@ export interface ST_TableBodyRowGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
   rowRef: RefObject<HTMLTableRowElement | null>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from `row`. The
-   * display column outside this cluster still passes it; the integration
-   * step removes it.
-   */
-  table?: unknown;
 }
 
 export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   row,
   rowRef,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the button
-  table: _table,
   ...rest
 }: ST_TableBodyRowGrabHandleProps<TData>) => {
   // The row carries the core table; the ST wrapper types re-type its getters.

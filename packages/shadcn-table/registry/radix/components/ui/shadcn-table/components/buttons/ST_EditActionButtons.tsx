@@ -14,11 +14,6 @@ import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 export interface ST_EditActionButtonsProps<TData extends ST_RowData>
   extends DivProps {
   row: ST_Row<TData>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the row. Goes
-   * in the integration step, once no caller passes it.
-   */
-  table?: unknown;
   variant?: 'icon' | 'text';
 }
 

@@ -11,7 +11,6 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
@@ -21,27 +20,19 @@ import {
   useSTContext,
 } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ShowHideColumnsMenuProps<TData extends ST_RowData>
+export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  /**
-   * Transition, part 01 phase 03: ignored, the menu reads the table from
-   * context. `ST_ShowHideColumnsButton` still passes it until its cluster
-   * lands; the integration step removes this prop.
-   */
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
   anchorEl,
   setAnchorEl,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
-  table: _transitionTable,
   ...rest
-}: ST_ShowHideColumnsMenuProps<TData>) => {
+}: ST_ShowHideColumnsMenuProps) => {
   const table = useSTContext<TData>();
   const {
     getAllColumns,

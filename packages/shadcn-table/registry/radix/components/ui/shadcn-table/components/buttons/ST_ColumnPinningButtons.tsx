@@ -16,18 +16,11 @@ const columnPinningButtonsVariants = cva('min-w-[70px] text-center');
 export interface ST_ColumnPinningButtonsProps<TData extends ST_RowData>
   extends DivProps {
   column: ST_Column<TData>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the column.
-   * Goes in the integration step, once no caller passes it.
-   */
-  table?: unknown;
 }
 
 export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
   className,
   column,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
-  table: _table,
   ...rest
 }: ST_ColumnPinningButtonsProps<TData>) => {
   // The column carries the core table, which holds the ST options, atoms,

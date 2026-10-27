@@ -19,17 +19,10 @@ const copyButtonVariants = cva(
 export interface ST_CopyButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   cell: ST_Cell<TData>;
-  /**
-   * Transition, part 01 phase 03: ignored, the table comes from the cell.
-   * Goes in the integration step, once no caller passes it.
-   */
-  table?: unknown;
 }
 
 export const ST_CopyButton = <TData extends ST_RowData>({
   cell,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
-  table: _table,
   ...rest
 }: ST_CopyButtonProps<TData>) => {
   // The cell carries the core table, which holds the ST options, atoms, refs
