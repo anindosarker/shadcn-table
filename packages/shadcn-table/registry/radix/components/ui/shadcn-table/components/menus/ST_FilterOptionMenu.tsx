@@ -138,7 +138,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       columnFilterModeOptions,
       globalFilterModeOptions,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnFilterModeMenuItems,
       renderGlobalFilterModeMenuItems,
     },
@@ -168,7 +168,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
               globalFilterModeOptions.includes(filterOption.option)) &&
             ['contains', 'fuzzy', 'startsWith'].includes(filterOption.option),
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- options are read once per mount, as in MRT
     [],
   );
 
@@ -327,7 +327,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
                           handleSelectFilterMode(option as ST_FilterOption)
                         }
                         // value={option}
-                        // Note: MUI MenuItem value dropped — form semantics only, no visual role
+                        // Note: MUI MenuItem value dropped: form semantics only, no visual role
                       />
                     ),
                   )}
