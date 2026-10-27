@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { type TableOptions } from '@tanstack/react-table';
+import { type TableOptions, type TableState } from '@tanstack/react-table';
 import {
   type ST_ColumnDef,
   type ST_DefinedTableOptions,
@@ -52,12 +52,33 @@ const transformStateDefaults = {
 };
 
 /**
+ * Selects the state the option-time transforms below read on a render: the
+ * filter modes written onto the columns and passed as `globalFilterFn`, the
+ * grouping and creating row that add display columns, and the loading flags
+ * and page size behind the skeleton rows. Passed as the table selector, it
+ * re-renders the owner on these slices only; every other state change
+ * reaches the components through their own subscriptions.
+ */
+export const selectST_TransformState = (state: TableState<ST_Features>) => ({
+  columnFilterFns: state.columnFilterFns,
+  creatingRow: state.creatingRow,
+  globalFilterFn: state.globalFilterFn,
+  grouping: state.grouping,
+  isLoading: state.isLoading,
+  pageSize: state.pagination.pageSize,
+  showSkeletons: state.showSkeletons,
+});
+
+/**
  * The MRT hook that wraps the TanStack useTable hook and adds additional functionality
  * @param definedTableOptions - table options with proper defaults set
+ * @param selector - the state that re-renders the owner, all of it by default;
+ * with a narrower selector `table.state` holds only the selection
  * @returns the MRT table instance
  */
 export const useST_TableInstance = <TData extends ST_RowData>(
   definedTableOptions: ST_DefinedTableOptions<TData>,
+  selector?: (state: TableState<ST_Features>) => unknown,
 ): ST_TableInstance<TData> => {
   // One table hook per mounted table: the call's `filterFns`, `sortFns` and
   // `aggregationFns` are registered on its features, read on the first render
@@ -180,16 +201,16 @@ export const useST_TableInstance = <TData extends ST_RowData>(
   // since `Row` is invariant in `TData`, so the options go in under core's
   // type; the result cast re-applies the ST wrapper types to the row, column,
   // cell and header getters.
-  const table = useAppTable({
-    ...definedTableOptions,
-    columns,
-    data,
-    globalFilterFn: statefulTableOptions.state.globalFilterFn,
-    initialState,
-  } as Omit<
-    TableOptions<ST_Features, TData>,
-    'features'
-  >) as unknown as ST_TableInstance<TData>;
+  const table = useAppTable(
+    {
+      ...definedTableOptions,
+      columns,
+      data,
+      globalFilterFn: statefulTableOptions.state.globalFilterFn,
+      initialState,
+    } as Omit<TableOptions<ST_Features, TData>, 'features'>,
+    selector,
+  ) as unknown as ST_TableInstance<TData>;
 
   tableRef.current = table;
 

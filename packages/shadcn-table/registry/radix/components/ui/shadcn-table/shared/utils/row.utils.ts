@@ -4,6 +4,7 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
+  type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 
@@ -24,8 +25,9 @@ export const getST_Rows = <TData extends ST_RowData>(
       positionCreatingRow,
       rowPinningDisplayMode,
     },
-    state: { creatingRow, pagination },
   } = table;
+  // The live store: the caller's subscription lists these slices.
+  const { creatingRow, pagination } = table.store.state as ST_TableState<TData>;
 
   const isRankingRows = getIsRankingRows(table);
 
@@ -92,8 +94,8 @@ export const getCanRankRows = <TData extends ST_RowData>(
       manualGrouping,
       manualSorting,
     },
-    state: { expanded, globalFilterFn },
   } = table;
+  const { expanded, globalFilterFn } = table.store.state;
 
   return (
     !manualExpanding &&
@@ -110,7 +112,7 @@ export const getCanRankRows = <TData extends ST_RowData>(
 export const getIsRankingRows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) => {
-  const { globalFilter, sorting } = table.state;
+  const { globalFilter, sorting } = table.store.state;
 
   return (
     getCanRankRows(table) &&

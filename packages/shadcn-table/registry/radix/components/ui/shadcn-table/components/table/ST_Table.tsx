@@ -2,11 +2,7 @@ import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
 import { useST_ColumnVirtualizer } from '@/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer';
-import {
-  type ST_RowData,
-  type ST_TableInstance,
-  type TableProps,
-} from '@/components/ui/shadcn-table/types';
+import { type TableProps } from '@/components/ui/shadcn-table/types';
 import { parseCSSVarId } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import {
@@ -15,11 +11,12 @@ import {
 } from '@/components/ui/shadcn-table/components/body/ST_TableBody';
 import { ST_TableFooter } from '@/components/ui/shadcn-table/components/footer/ST_TableFooter';
 import { ST_TableHead } from '@/components/ui/shadcn-table/components/head/ST_TableHead';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import {
+  useST_Atom,
+  useSTContext,
+} from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_TableProps<TData extends ST_RowData> extends TableProps {
-  table?: ST_TableInstance<TData>;
-}
+export type ST_TableProps = TableProps;
 
 const tableVariants = cva(
   'relative w-full caption-bottom border-separate border-spacing-0',
@@ -31,12 +28,8 @@ const tableVariants = cva(
   },
 );
 
-export const ST_Table = <TData extends ST_RowData>({
-  table: tableProp,
-  ...rest
-}: ST_TableProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+export const ST_Table = ({ ...rest }: ST_TableProps) => {
+  const table = useSTContext();
   const {
     getFlatHeaders,
     options: {
@@ -58,7 +51,10 @@ export const ST_Table = <TData extends ST_RowData>({
   /**
    * Stickyheader dropped, so gotta drop isFullScreen from deps too, since it only affects stickyheader.
    */
-  const { columnSizing, columnResizing, columnVisibility } = table.state;
+  // These feed the column size memo, so they are hook subscriptions.
+  const columnSizing = useST_Atom(table.atoms.columnSizing);
+  const columnResizing = useST_Atom(table.atoms.columnResizing);
+  const columnVisibility = useST_Atom(table.atoms.columnVisibility);
 
   const tableProps = {
     ...parseFromValuesOrFunc(stTableProps, { table }),
@@ -84,7 +80,6 @@ export const ST_Table = <TData extends ST_RowData>({
 
   const commonTableGroupProps = {
     columnVirtualizer,
-    table,
   };
 
   return (

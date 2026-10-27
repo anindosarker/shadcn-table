@@ -50,8 +50,9 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 }) => {
   const {
     options: { enableColumnVirtualization, layoutMode },
-    state: { draggingColumn, hoveredColumn },
   } = table;
+  // The live store: the caller's subscription lists these slices.
+  const { draggingColumn, hoveredColumn } = table.store.state;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
