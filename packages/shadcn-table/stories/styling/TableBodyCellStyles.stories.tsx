@@ -1,7 +1,6 @@
 import { type Meta } from '@storybook/react-vite';
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Styling/Style Table Body Cells',
@@ -39,7 +38,7 @@ export const DefaultTableBodyCellStyles = () => (
 );
 
 // Style every body cell via the table-level `stTableBodyCellProps` slot
-// (shadcn equivalent of MRT's muiTableBodyCellProps — DOM props, not sx).
+// (shadcn equivalent of MRT's muiTableBodyCellProps: DOM props, not sx).
 export const StyleAllMuiTableBodyCell = () => (
   <ShadcnTable
     columns={columns}

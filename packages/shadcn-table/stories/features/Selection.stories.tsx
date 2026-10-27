@@ -7,8 +7,8 @@ import {
   ST_SelectCheckbox,
   getST_RowSelectionHandler,
   useShadcnTable,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 
@@ -360,10 +360,14 @@ export const MultiSelectRowWithHoldShift = () => {
     [],
   );
 
-  // TODO: Reset prevSelectedStaticRowIndex when sorting changes
+  // Reset prevSelectedStaticRowIndex when sorting changes. The handle's state
+  // is a first-render snapshot, so subscribe to the sorting atom instead.
   useEffect(() => {
-    setPrevSelectedStaticRowIndex(undefined);
-  }, [table.state.sorting]);
+    const subscription = table.atoms.sorting.subscribe(() =>
+      setPrevSelectedStaticRowIndex(undefined),
+    );
+    return () => subscription.unsubscribe();
+  }, [table]);
 
   return <ShadcnTable table={table} />;
 };

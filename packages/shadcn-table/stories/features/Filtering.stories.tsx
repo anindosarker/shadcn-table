@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_ColumnFiltersState,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { Button } from '@/components/ui/button';
 import {
   NativeSelect,
