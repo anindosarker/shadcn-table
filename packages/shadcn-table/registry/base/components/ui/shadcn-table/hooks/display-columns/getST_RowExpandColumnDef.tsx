@@ -4,6 +4,7 @@ import { ST_ExpandButton } from '@/components/ui/shadcn-table/components/buttons
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import {
   type ST_ColumnDef,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui/shadcn-table/types';
@@ -11,7 +12,7 @@ import { defaultDisplayColumnProps } from '@/components/ui/shadcn-table/shared/u
 
 export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
-): ST_ColumnDef<TData> => {
+): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
   const {
     defaultColumn,
     enableExpandAll,

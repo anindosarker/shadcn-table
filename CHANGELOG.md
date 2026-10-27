@@ -91,6 +91,11 @@ publishes the section as the GitHub release notes.
 - A callback `ref` in `stTableLayoutProps`, `stTableContainerProps`, `stTableHeadProps`,
   `stTableFooterProps`, `stTopToolbarProps` or `stBottomToolbarProps` receives the node;
   only ref objects did.
+- Both installed trees type-check in one program: a project holding the Radix UI and the
+  Base UI copy no longer fails with TS2717 on `stConfigFeature`, and each copy types
+  `stFilterCheckboxProps`, `stFilterSliderProps`, `stSelectCheckboxProps`,
+  `stSelectAllCheckboxProps`, `stEditRowDialogProps` and `stCreateRowModalProps` for its
+  own parts. `table.options` and `column.columnDef` hold them as `ST_PartProps` (`object`).
 
 ## 0.3.3 - 2026-10-22
 
