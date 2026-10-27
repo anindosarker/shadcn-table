@@ -3,9 +3,9 @@ import { constructAggregationFn } from '@tanstack/react-table';
 import {
   ST_AggregationFns,
   type ST_ColumnDef,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Features/Aggregation Examples',
