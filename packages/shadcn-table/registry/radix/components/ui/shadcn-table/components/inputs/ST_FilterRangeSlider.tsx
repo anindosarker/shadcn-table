@@ -8,6 +8,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
@@ -45,7 +46,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  const currentFilterOption = columnDef._filterFn;
+  const currentFilterOption = getColumnFilterFnName(columnDef);
 
   const showChangeModeButton =
     enableColumnFilterModes && columnDef.enableColumnFilterModes !== false;

@@ -445,7 +445,6 @@ export type ST_DefinedColumnDef<
   TData extends ST_RowData,
   TValue = unknown,
 > = Omit<ST_ColumnDef<TData, TValue>, 'defaultDisplayColumn' | 'id'> & {
-  _filterFn: ST_FilterOption;
   defaultDisplayColumn: Partial<ST_ColumnDef<TData, TValue>>;
   id: string;
 };

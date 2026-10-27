@@ -42,13 +42,8 @@ export const prepareColumns = <TData extends ST_RowData>({
   columnDefs: ST_ColumnDef<TData>[];
   tableOptions: ST_DefinedTableOptions<TData>;
 }): ST_DefinedColumnDef<TData>[] => {
-  const {
-    aggregationFns = {},
-    defaultDisplayColumn,
-    filterFns = {},
-    sortFns = {},
-    state: { columnFilterFns = {} } = {},
-  } = tableOptions;
+  const { defaultDisplayColumn, state: { columnFilterFns = {} } = {} } =
+    tableOptions;
   return columnDefs.map((columnDef) => {
     //assign columnId
     if (!columnDef.id) columnDef.id = getColumnId(columnDef);
@@ -62,34 +57,31 @@ export const prepareColumns = <TData extends ST_RowData>({
         tableOptions,
       });
     } else if (columnDef.columnDefType === 'data') {
-      //assign aggregationFns by name, including the custom ones from the
-      //table option (v9 only resolves names against the static registry)
-      if (
-        typeof columnDef.aggregationFn === 'string' &&
-        Object.keys(aggregationFns).includes(columnDef.aggregationFn)
-      ) {
-        columnDef.aggregationFn = aggregationFns[columnDef.aggregationFn];
-      }
-      //assign aggregationFns if multiple aggregationFns are provided
+      //assign aggregationFns if multiple aggregationFns are provided; each
+      //name resolves against the table's registry when it aggregates
       if (Array.isArray(columnDef.aggregationFn)) {
         const aggFns = columnDef.aggregationFn as string[];
         columnDef.aggregationFn = constructAggregationFn({
           aggregate: (context) =>
-            aggFns.map((fn) => aggregationFns[fn]?.aggregate(context)),
+            aggFns.map((fn) =>
+              context.table._rowModelFns.aggregationFns?.[fn]?.aggregate(
+                context,
+              ),
+            ),
         });
       }
 
-      //assign filterFns
-      if (Object.keys(filterFns).includes(columnFilterFns[columnDef.id])) {
-        columnDef.filterFn =
-          filterFns[columnFilterFns[columnDef.id]] ?? filterFns.fuzzy;
-        (columnDef as ST_DefinedColumnDef<TData>)._filterFn =
-          columnFilterFns[columnDef.id];
-      }
-
-      //assign sortFns
-      if (Object.keys(sortFns).includes(columnDef.sortFn as string)) {
-        columnDef.sortFn = sortFns[columnDef.sortFn as string];
+      //assign the current filter mode by name, which core resolves; a
+      //filterFn function keeps running until another mode is picked
+      const filterFn = columnFilterFns[columnDef.id];
+      if (
+        filterFn &&
+        !(
+          columnDef.filterFn instanceof Function &&
+          columnDef.filterFn.name === filterFn
+        )
+      ) {
+        columnDef.filterFn = filterFn;
       }
     } else if (columnDef.columnDefType === 'display') {
       columnDef = {
@@ -117,6 +109,15 @@ export const reorderColumn = <TData extends ST_RowData>(
   );
   return newColumnOrder;
 };
+
+/**
+ * The column's current filter mode name, or an empty string while it runs a
+ * filterFn function.
+ */
+export const getColumnFilterFnName = <TData extends ST_RowData>(
+  columnDef: ST_DefinedColumnDef<TData>,
+): ST_FilterOption =>
+  typeof columnDef.filterFn === 'string' ? columnDef.filterFn : '';
 
 export const getDefaultColumnFilterFn = <TData extends ST_RowData>(
   columnDef: ST_ColumnDef<TData>,
@@ -152,14 +153,14 @@ export const getColumnFilterInfo = <TData extends ST_RowData>({
   const isRangeFilter =
     filterVariant?.includes('range') ||
     ['between', 'betweenInclusive', 'inNumberRange'].includes(
-      columnDef._filterFn,
+      getColumnFilterFnName(columnDef),
     );
   const isSelectFilter = filterVariant === 'select';
   const isMultiSelectFilter = filterVariant === 'multi-select';
   const isTextboxFilter =
     ['autocomplete', 'text'].includes(filterVariant!) ||
     (!isSelectFilter && !isMultiSelectFilter);
-  const currentFilterOption = columnDef._filterFn;
+  const currentFilterOption = getColumnFilterFnName(columnDef);
 
   const allowedColumnFilterOptions =
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
