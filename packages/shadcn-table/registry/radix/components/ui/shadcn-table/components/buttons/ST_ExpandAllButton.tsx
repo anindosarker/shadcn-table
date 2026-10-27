@@ -49,10 +49,12 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
   return (
     <Subscribe
       selector={(state) => ({
+        columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
         density: state.density,
         expanded: state.expanded,
         globalFilter: state.globalFilter,
+        globalFilterFn: state.globalFilterFn,
         grouping: state.grouping,
         isLoading: state.isLoading,
         pagination: state.pagination,
