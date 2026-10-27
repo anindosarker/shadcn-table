@@ -1,4 +1,4 @@
-import { type ContextType } from 'react';
+import { type ContextType, useState } from 'react';
 import {
   constructAggregationFn,
   createTableHook,
@@ -79,12 +79,22 @@ export function useSTContext<
 export const ST_TableProvider = <TData extends ST_RowData>({
   children,
   table,
-}: ST_TableProviderProps<TData>) => (
+}: ST_TableProviderProps<TData>) => {
+  // The context carries a stable handle, the first instance: its store,
+  // atoms, refs and setters are live, and keeping it stable spares context
+  // readers a re-render on every table state change. Its options are
+  // refreshed from each render's instance, so option reads stay current; only
+  // its `state` is unused.
+  const [handle] = useState(() => table);
+  handle.options = table.options;
+
   // The context is typed for any core table; the ST wrapper types re-type its
   // getters, so TypeScript cannot relate the two without the cast.
-  <tableContext.Provider
-    value={table as unknown as ContextType<typeof tableContext>}
-  >
-    {children}
-  </tableContext.Provider>
-);
+  return (
+    <tableContext.Provider
+      value={handle as unknown as ContextType<typeof tableContext>}
+    >
+      {children}
+    </tableContext.Provider>
+  );
+};
