@@ -625,16 +625,6 @@ export interface ST_ColumnDef_Config<
         table: ST_TableInstance<TData>;
       }) => ReactNode)
     | ReactNode;
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   *
-   * If you have also specified an `accessorFn`, MRT still needs to have a valid `id` to be able to identify the column uniquely.
-   *
-   * `id` defaults to the `accessorKey` or `header` if not specified.
-   *
-   * @default gets set to the same value as `accessorKey` by default
-   */
-  id?: LiteralUnion<string & keyof TData>;
   stColumnActionsButtonProps?:
     | ((props: {
         column: ST_Column<TData>;
