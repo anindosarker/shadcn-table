@@ -84,7 +84,7 @@ File map: 123 twins. Ours only: `fns/sortFns.ts` (MRT `fns/sortingFns.ts`), `ST_
 
 ### 1.4 Target structure
 
-Per tree, both bases:
+Per tree (`registry/radix` in this part, `registry/base` in part 02):
 
 ```
 shadcn-table/
@@ -334,7 +334,7 @@ Done, `01-00-comparison.md`.
 #### 2.1.2 Phase 01: Folders, features, hook, types
 
 - Folder moves per decisions 2 (`components/`, `shared/`), registry globs and
-  `base-diff.json` paths follow; `pnpm check:bases` green before any feature lands
+  `base-diff.json` paths follow; `tsc:radix` green before any feature lands
 - 1.6.3, 1.6.4, 1.6.5; one coder per feature, reviewer bounce up to 3, gates on the merged
   result
 - Verify: decisions item 3 list (custom names through `filterFns`, `sortFns`,
