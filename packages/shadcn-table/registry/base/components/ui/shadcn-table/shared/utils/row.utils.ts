@@ -56,11 +56,28 @@ export const getST_Rows = <TData extends ST_RowData>(
     const centerPinnedRowIds = rows
       .filter((row) => row.getIsPinned())
       .map((r) => r.id);
+    const keptPinnedRows = getTopRows().filter(
+      (row) => !centerPinnedRowIds.includes(row.id),
+    );
 
-    rows = [
-      ...getTopRows().filter((row) => !centerPinnedRowIds.includes(row.id)),
-      ...rows,
-    ];
+    if (rowPinningDisplayMode.startsWith('select') && rows.length) {
+      // The selection pins keep the row model order: rows pinned on an
+      // earlier page go above the page rows, rows pinned on a later page
+      // below them.
+      const positions = new Map(
+        getPrePaginatedRowModel().flatRows.map((row, index) => [row.id, index]),
+      );
+      const position = (row: ST_Row<TData>) => positions.get(row.id) ?? -1;
+      const pageStart = position(rows[0]);
+      keptPinnedRows.sort((a, b) => position(a) - position(b));
+      rows = [
+        ...keptPinnedRows.filter((row) => position(row) < pageStart),
+        ...rows,
+        ...keptPinnedRows.filter((row) => position(row) >= pageStart),
+      ];
+    } else {
+      rows = [...keptPinnedRows, ...rows];
+    }
   }
   // blank inserted creating row adjustments
   if (
@@ -179,10 +196,28 @@ export const getST_SelectAllHandler =
     forceAll?: boolean,
   ) => {
     const {
-      options: { selectAllMode },
+      options: { enableRowPinning, rowPinningDisplayMode, selectAllMode },
     } = table;
+    const isAllMode = selectAllMode === 'all' || forceAll;
+    // The checkbox roots and the keyboard handler's cell carry no `checked`;
+    // select all then toggles, as TanStack does without a value.
+    const checked =
+      value ??
+      (event.target as { checked?: boolean }).checked ??
+      !(isAllMode
+        ? table.getIsAllRowsSelected()
+        : table.getIsAllPageRowsSelected());
 
-    selectAllMode === 'all' || forceAll
-      ? table.toggleAllRowsSelected(value ?? (event as any).target.checked)
-      : table.toggleAllPageRowsSelected(value ?? (event as any).target.checked);
+    isAllMode
+      ? table.toggleAllRowsSelected(checked)
+      : table.toggleAllPageRowsSelected(checked);
+    // Unselect all clears every pin, hand-pinned rows included; the selection
+    // subscription in useST_Effects pins and unpins the rows that changed.
+    if (
+      !checked &&
+      enableRowPinning &&
+      rowPinningDisplayMode?.includes('select')
+    ) {
+      table.setRowPinning({ bottom: [], top: [] });
+    }
   };

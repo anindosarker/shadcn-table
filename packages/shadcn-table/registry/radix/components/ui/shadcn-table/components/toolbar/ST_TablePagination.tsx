@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import {
   getPaginationItems,
+  getST_ShownRowRange,
   type ST_UsePaginationItem,
 } from '@/components/ui/shadcn-table/shared/utils/pagination.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
@@ -117,7 +118,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   };
 
   // The row and page counts come from the pre-paginated row model, so the
-  // selector lists every slice that feeds it.
+  // selector lists every slice that feeds it, and the row pins the label
+  // range counts.
   return (
     <Subscribe
       selector={(state) => ({
@@ -128,6 +130,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         globalFilterFn: state.globalFilterFn,
         grouping: state.grouping,
         pagination: state.pagination,
+        rowPinning: state.rowPinning,
       })}
       source={table.store}
     >
@@ -137,13 +140,17 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         const showFirstLastPageButtons = numberOfPages > 2;
         const showFirstPageButton = showFirstButton ?? showFirstLastPageButtons;
         const showLastPageButton = showLastButton ?? showFirstLastPageButtons;
-        const firstRowIndex = pageIndex * pageSize;
         const lastRowIndex = Math.min(
           pageIndex * pageSize + pageSize,
           totalRowCount,
         );
         const disableBack = pageIndex <= 0 || disabled;
         const disableNext = lastRowIndex >= totalRowCount || disabled;
+        const shownRowRange = getST_ShownRowRange(table, {
+          pageIndex,
+          pageSize,
+          totalRowCount,
+        });
 
         return (
           <div
@@ -273,10 +280,12 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             ) : paginationDisplayMode === 'default' ? (
               <>
                 <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
-                  lastRowIndex === 0
+                  shownRowRange.lastRowIndex === 0
                     ? 0
-                    : (firstRowIndex + 1).toLocaleString(localization.language)
-                }-${lastRowIndex.toLocaleString(localization.language)} ${
+                    : (shownRowRange.firstRowIndex + 1).toLocaleString(
+                        localization.language,
+                      )
+                }-${shownRowRange.lastRowIndex.toLocaleString(localization.language)} ${
                   localization.of
                 } ${totalRowCount.toLocaleString(localization.language)}`}</span>
                 <div>

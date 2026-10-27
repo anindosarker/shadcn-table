@@ -203,6 +203,18 @@ export const useST_Effects = <TData extends ST_RowData>(
         const selectedRowIds = [...changedRowIds].filter(
           (rowId) => rowSelection[rowId],
         );
+        // Rows pinned together (a Shift range, select all) keep the row model
+        // order, whatever order the selection lists them in.
+        if (selectedRowIds.length > 1) {
+          const positions = new Map(
+            table
+              .getPrePaginatedRowModel()
+              .flatRows.map((row, index) => [row.id, index]),
+          );
+          const position = (rowId: string) =>
+            positions.get(rowId) ?? positions.size;
+          selectedRowIds.sort((a, b) => position(a) - position(b));
+        }
         table.setRowPinning(({ bottom = [], top = [] }) =>
           rowPinningDisplayMode.includes('bottom')
             ? {
