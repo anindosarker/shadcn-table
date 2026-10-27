@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons';
@@ -48,7 +47,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
   // The column carries the core table; the ST wrapper types re-type its
   // options and getters, so TypeScript cannot relate the two without the cast.
-  const table = column.table as unknown as ST_TableInstance<TData>;
+  const table = column.table;
   const {
     options: {
       enableColumnOrdering,

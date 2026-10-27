@@ -24,7 +24,6 @@ import {
   type InputProps,
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import {
   getValueAndLabel,
@@ -45,7 +44,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   ...rest
 }: ST_EditCellTextFieldProps<TData>) => {
   // The cell carries the core table; the ST wrapper types re-type its getters.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
+  const table = cell.table;
   const {
     options: { createDisplayMode, editDisplayMode, stEditTextFieldProps },
     refs: { editInputRefs },

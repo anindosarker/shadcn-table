@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import { cellKeyboardShortcuts } from '@/components/ui/shadcn-table/shared/utils/cell.utils';
@@ -31,7 +30,7 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
 }: ST_TableFooterCellProps<TData>) => {
   // The header carries the core-typed table; the ST wrapper types re-type its
   // getters, as `useSTContext` does.
-  const table = footer.table as unknown as ST_TableInstance<TData>;
+  const table = footer.table;
   // const theme = useTheme();
   const {
     options: {

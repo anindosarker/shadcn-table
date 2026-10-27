@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 
 export interface ST_TableHeadCellResizeHandleProps<TData extends ST_RowData>
@@ -52,7 +51,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
 }: ST_TableHeadCellResizeHandleProps<TData>) => {
   // The core table behind the header; the ST wrapper types re-type its
   // getters, so TypeScript cannot relate the two without the cast.
-  const table = header.table as unknown as ST_TableInstance<TData>;
+  const table = header.table;
   const {
     options: { columnResizeDirection, columnResizeMode },
     setColumnResizing,

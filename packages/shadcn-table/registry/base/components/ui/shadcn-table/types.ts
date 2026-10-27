@@ -508,20 +508,22 @@ export type ST_DefinedColumnDef<
 
 export type ST_Column<TData extends ST_RowData, TValue = unknown> = Omit<
   Column<ST_Features, TData, TValue>,
-  'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
+  'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header' | 'table'
 > & {
   columnDef: ST_DefinedColumnDef<TData, TValue>;
   columns?: ST_Column<TData, TValue>[];
   filterFn?: ST_FilterFn<TData>;
   footer: string;
   header: string;
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_Header<TData extends ST_RowData> = Omit<
   Header<ST_Features, TData, unknown>,
-  'column'
+  'column' | 'table'
 > & {
   column: ST_Column<TData>;
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_HeaderGroup<TData extends ST_RowData> = Omit<
@@ -540,6 +542,7 @@ export type ST_Row<TData extends ST_RowData> = Omit<
   | 'getRow'
   | 'getVisibleCells'
   | 'subRows'
+  | 'table'
 > & {
   _valuesCache: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   getAllCells: () => ST_Cell<TData>[];
@@ -548,14 +551,16 @@ export type ST_Row<TData extends ST_RowData> = Omit<
   getRow: () => ST_Row<TData>;
   getVisibleCells: () => ST_Cell<TData>[];
   subRows?: ST_Row<TData>[];
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
   Cell<ST_Features, TData, TValue>,
-  'column' | 'row'
+  'column' | 'row' | 'table'
 > & {
   column: ST_Column<TData, TValue>;
   row: ST_Row<TData>;
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_AggregationOption = LiteralUnion<

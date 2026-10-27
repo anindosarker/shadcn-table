@@ -6,7 +6,6 @@ import {
   type ButtonProps,
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
@@ -27,7 +26,7 @@ export const ST_CopyButton = <TData extends ST_RowData>({
 }: ST_CopyButtonProps<TData>) => {
   // The cell carries the core table, which holds the ST options, atoms, refs
   // and setters; the ST wrapper types do not re-type it.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
+  const table = cell.table;
   const {
     options: { localization, stCopyButtonProps },
   } = table;

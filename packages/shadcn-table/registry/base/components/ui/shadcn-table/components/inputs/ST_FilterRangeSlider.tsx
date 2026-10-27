@@ -9,7 +9,6 @@ import {
   type ST_ColumnDef,
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
@@ -37,7 +36,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterRangeSliderProps<TData>) => {
   // The header carries the core table; the ST wrapper types re-type its getters.
-  const table = header.table as unknown as ST_TableInstance<TData>;
+  const table = header.table;
   const {
     options: { enableColumnFilterModes, enableFacetedValues, localization },
     refs: { filterInputRefs },

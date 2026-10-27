@@ -8,7 +8,6 @@ import {
   type ST_Column,
   type ST_ColumnDef,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
@@ -44,7 +43,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterCheckboxProps<TData>) => {
   // The column carries the core table; the ST wrapper types re-type its getters.
-  const table = column.table as unknown as ST_TableInstance<TData>;
+  const table = column.table;
   const {
     options: { localization },
   } = table;
