@@ -115,7 +115,13 @@ nothing here re-decides those, items here extend them.
 
 ## Unchanged after review
 
-14. The props-style root (`ShadcnTable` built from options) selects only the slices its
+14. The part prop options in the `stConfigFeature` augmentation stay tree-neutral
+    (`object`), precise on `ST_TableOptions` and `ST_ColumnDef` through `TParts`, because
+    the docs app compiles both installed trees in one TypeScript program. Instance-side
+    reads of `st*Props` need a `Pick<ST_TableOptions<TData>, ...>` annotation, as the four
+    library components do.
+
+15. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
