@@ -10,7 +10,7 @@ import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/ut
 import { getCanRankRows } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 
 export const useST_Effects = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
+  table: ST_TableInstance<TData, unknown>,
 ) => {
   const {
     getPrePaginatedRowModel,
