@@ -69,7 +69,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       enableRowOrdering,
       enableRowPinning,
       enableStickyFooter,
-      enableStickyHeader,
       layoutMode,
       // mrtTheme: {
       //   baseBackgroundColor,
@@ -168,7 +167,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       selector={(state) => ({
         density: state.density,
         isDraggingRow: state.draggingRow?.id === row.id,
-        isFullScreen: state.isFullScreen,
         isHoveredRow: state.hoveredRow?.id === row.id,
         // Reads the live selection, so only this row's own change re-renders it.
         isRowSelected: getIsRowSelected({ row, table }),
@@ -176,13 +174,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       })}
       source={table.store}
     >
-      {({
-        density,
-        isDraggingRow,
-        isFullScreen,
-        isHoveredRow,
-        isRowSelected,
-      }) => {
+      {({ density, isDraggingRow, isHoveredRow, isRowSelected }) => {
         const isRowPinned = enableRowPinning && row.getIsPinned();
 
         const [bottomPinnedIndex, topPinnedIndex] =
@@ -196,10 +188,10 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                 pinnedRowIds.indexOf(row.id),
               ];
 
-        const tableHeadHeight =
-          ((enableStickyHeader || isFullScreen) &&
-            tableHeadRef.current?.clientHeight) ||
-          0;
+        // A sticky pinned row stays below the head, sticky or not: with more
+        // pinned rows than the scrollport holds, the bottom inset pulls the
+        // row up to the table top, and the top inset wins that conflict.
+        const tableHeadHeight = tableHeadRef.current?.clientHeight || 0;
         const tableFooterHeight =
           (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
 
@@ -248,9 +240,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                   : topPinnedIndex !== undefined && isRowPinned
                     ? `${
                         topPinnedIndex * rowHeight +
-                        (enableStickyHeader || isFullScreen
-                          ? tableHeadHeight - 1
-                          : 0)
+                        Math.max(tableHeadHeight - 1, 0)
                       }px`
                     : undefined,
                 bottom:

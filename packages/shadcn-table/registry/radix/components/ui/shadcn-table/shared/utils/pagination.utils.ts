@@ -1,4 +1,9 @@
 // Note: MUI usePagination minus useControlled/onChange/onClick/aria-current (page is table state; ST_TablePagination wires clicks and aria-current).
+import {
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
+
 export type ST_UsePaginationItem = {
   disabled: boolean;
   page: number | null;
@@ -159,4 +164,52 @@ export const getPaginationItems = ({
   });
 
   return items;
+};
+
+// The rows the body shows for the page, as zero-based first and exclusive last
+// positions in the pre-paginated rows, for the `1-5 of 8` label. Under
+// `rowPinningDisplayMode: 'select-*'` the rows pinned on other pages show
+// beside the page (`keepPinnedRows`), so the range covers them too.
+export const getST_ShownRowRange = <TData extends ST_RowData>(
+  table: ST_TableInstance<TData>,
+  {
+    pageIndex,
+    pageSize,
+    totalRowCount,
+  }: { pageIndex: number; pageSize: number; totalRowCount: number },
+) => {
+  const {
+    options: {
+      enableRowPinning,
+      keepPinnedRows,
+      manualPagination,
+      rowPinningDisplayMode,
+    },
+  } = table;
+  // The live store: the caller's subscription lists this slice.
+  const { rowPinning } = table.store.state;
+
+  let firstRowIndex = pageIndex * pageSize;
+  let lastRowIndex = Math.min(firstRowIndex + pageSize, totalRowCount);
+
+  if (
+    enableRowPinning &&
+    rowPinningDisplayMode?.startsWith('select') &&
+    keepPinnedRows !== false &&
+    !manualPagination
+  ) {
+    // `select-sticky` shows the top pins only.
+    const shownPinnedRowIds = new Set([
+      ...rowPinning.top,
+      ...(rowPinningDisplayMode.includes('sticky') ? [] : rowPinning.bottom),
+    ]);
+    table.getPrePaginatedRowModel().rows.forEach((row, index) => {
+      if (shownPinnedRowIds.has(row.id)) {
+        firstRowIndex = Math.min(firstRowIndex, index);
+        lastRowIndex = Math.max(lastRowIndex, index + 1);
+      }
+    });
+  }
+
+  return { firstRowIndex, lastRowIndex };
 };

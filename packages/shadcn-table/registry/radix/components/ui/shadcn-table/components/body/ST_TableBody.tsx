@@ -34,7 +34,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
   const {
     getBottomRows,
     getIsSomeRowsPinned,
-    getRowModel,
     getTopRows,
     options: {
       enableStickyFooter,
@@ -57,18 +56,17 @@ export const ST_TableBody = <TData extends ST_RowData>({
   // Feeds the pinned row memo, so it is a hook subscription.
   const rowPinning = useSelector(table.atoms.rowPinning);
 
-  const pinnedRowIds = useMemo(() => {
-    if (!rowPinning.bottom?.length && !rowPinning.top?.length) return [];
-    return getRowModel()
-      .rows.filter((row) => row.getIsPinned())
-      .map((r) => r.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- recomputes on the row model rows, which getRowModel returns
-  }, [rowPinning, getRowModel().rows]);
-
   // useST_Rows subscribes this body to every slice that feeds the row model
   // (filters, global filter, sorting, grouping, expanded, pagination, row
   // pinning, creating row), so the row model reads below stay current.
   const rows = useST_Rows(table);
+
+  // The sticky stacking order: the pinned rows as the body shows them, the
+  // rows kept from other pages included.
+  const pinnedRowIds = useMemo(() => {
+    if (!rowPinning.bottom?.length && !rowPinning.top?.length) return [];
+    return rows.filter((row) => row.getIsPinned()).map((r) => r.id);
+  }, [rowPinning, rows]);
 
   const rowVirtualizer = useST_RowVirtualizer(table, rows);
 
