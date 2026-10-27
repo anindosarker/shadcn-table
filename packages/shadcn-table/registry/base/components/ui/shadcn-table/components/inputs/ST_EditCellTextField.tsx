@@ -8,6 +8,7 @@ import {
   useId,
   useState,
 } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { Field, FieldDescription, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -28,7 +29,7 @@ import {
 import {
   getValueAndLabel,
   parseFromValuesOrFunc,
-} from '@/components/ui/shadcn-table/utils/utils';
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   extends InputProps {
@@ -37,14 +38,14 @@ export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   error?: boolean;
   /** MUI TextField `helperText`: validation or hint text rendered under the input. */
   helperText?: ReactNode;
-  table: ST_TableInstance<TData>;
 }
 
 export const ST_EditCellTextField = <TData extends ST_RowData>({
   cell,
-  table,
   ...rest
 }: ST_EditCellTextFieldProps<TData>) => {
+  // The cell carries the core table; the ST wrapper types re-type its getters.
+  const table = cell.table as unknown as ST_TableInstance<TData>;
   const {
     options: { createDisplayMode, editDisplayMode, stEditTextFieldProps },
     refs: { editInputRefs },
@@ -54,13 +55,9 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;
-  const { creatingRow, editingRow } = table.state;
   const { editSelectOptions, editVariant } = columnDef;
   // MUI TextField useId(idOverride): one id links label and input.
   const id = useId();
-
-  const isCreating = creatingRow?.id === row.id;
-  const isEditing = editingRow?.id === row.id;
 
   const [value, setValue] = useState(() => cell.getValue<string>());
   const [completesComposition, setCompletesComposition] = useState(true);
@@ -87,34 +84,12 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const isFormMode = ['custom', 'modal'].includes(
-    (isCreating ? createDisplayMode : editDisplayMode) as string,
-  );
-
   // MUI FormHelperText under the input; red (FieldError) when `error` is set.
   const helper =
     helperText == null || helperText === '' ? null : error ? (
       <FieldError>{helperText}</FieldError>
     ) : (
       <FieldDescription>{helperText}</FieldDescription>
-    );
-
-  // Label + input in modal/custom mode (MUI TextField label); otherwise only
-  // wrap when there is helper text to place under the input.
-  const withField = (control: ReactNode) =>
-    isFormMode ? (
-      <Field data-invalid={error || undefined}>
-        <Label htmlFor={textFieldProps.id ?? id}>{columnDef.header}</Label>
-        {control}
-        {helper}
-      </Field>
-    ) : helper ? (
-      <Field className="gap-1" data-invalid={error || undefined}>
-        {control}
-        {helper}
-      </Field>
-    ) : (
-      control
     );
 
   const selectOptions = parseFromValuesOrFunc(editSelectOptions, {
@@ -131,9 +106,10 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   const saveInputValueToRowCache = (newValue: string) => {
     //@ts-expect-error _valuesCache is TanStack-internal
     row._valuesCache[column.id] = newValue;
-    if (isCreating) {
+    const { creatingRow, editingRow } = table.store.state;
+    if (creatingRow?.id === row.id) {
       setCreatingRow(row);
-    } else if (isEditing) {
+    } else if (editingRow?.id === row.id) {
       setEditingRow(row);
     }
   };
@@ -163,74 +139,153 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     return <>{columnDef.Edit?.({ cell, column, row, table })}</>;
   }
 
-  if (isSelectEdit) {
-    const select = (
-      <Select
-        // `items` gives the trigger the option label; Base UI's SelectValue
-        // shows the raw value otherwise. Custom children fall back to the value.
-        items={
-          textFieldProps.children
-            ? undefined
-            : Object.fromEntries(
-                selectOptions?.map((option) => {
-                  const { label, value } = getValueAndLabel(option);
-                  return [value, label];
-                }) ?? [],
-              )
+  return (
+    <Subscribe
+      selector={(state) => ({
+        isCreating: state.creatingRow?.id === row.id,
+      })}
+      source={table.store}
+    >
+      {({ isCreating }) => {
+        const isFormMode = ['custom', 'modal'].includes(
+          (isCreating ? createDisplayMode : editDisplayMode) as string,
+        );
+
+        // Label + input in modal/custom mode (MUI TextField label); otherwise only
+        // wrap when there is helper text to place under the input.
+        const withField = (control: ReactNode) =>
+          isFormMode ? (
+            <Field data-invalid={error || undefined}>
+              <Label htmlFor={textFieldProps.id ?? id}>
+                {columnDef.header}
+              </Label>
+              {control}
+              {helper}
+            </Field>
+          ) : helper ? (
+            <Field className="gap-1" data-invalid={error || undefined}>
+              {control}
+              {helper}
+            </Field>
+          ) : (
+            control
+          );
+
+        if (isSelectEdit) {
+          const select = (
+            <Select
+              // `items` gives the trigger the option label; Base UI's SelectValue
+              // shows the raw value otherwise. Custom children fall back to the value.
+              items={
+                textFieldProps.children
+                  ? undefined
+                  : Object.fromEntries(
+                      selectOptions?.map((option) => {
+                        const { label, value } = getValueAndLabel(option);
+                        return [value, label];
+                      }) ?? [],
+                    )
+              }
+              name={column.id}
+              onOpenChange={setOpen}
+              onValueChange={(newValue: string | null) =>
+                // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
+                // Base UI reports null when a null-valued item is chosen; none here.
+                handleChange({
+                  target: { name: column.id, value: newValue ?? '' },
+                } as ChangeEvent<HTMLInputElement>)
+              }
+              // Stays controlled for an undefined cell value; Base UI shows the
+              // placeholder for null, never for "".
+              value={value || null}
+            >
+              <SelectTrigger
+                disabled={
+                  parseFromValuesOrFunc(columnDef.enableEditing, row) === false
+                }
+                id={id}
+                ref={(inputRef) => {
+                  if (inputRef) {
+                    editInputRefs.current![column.id] =
+                      inputRef as unknown as HTMLInputElement;
+                  }
+                }}
+                size="sm"
+                {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
+                aria-invalid={error || textFieldProps['aria-invalid']}
+                className={cn('w-full', textFieldProps.className)}
+                onBlur={(event) => {
+                  // MUI SelectInput handleBlur: only while closed, with target { name, value }.
+                  if (!open) {
+                    Object.defineProperty(event, 'target', {
+                      writable: true,
+                      value: { name: column.id, value },
+                    });
+                    handleBlur(
+                      event as unknown as FocusEvent<HTMLInputElement>,
+                    );
+                  }
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  textFieldProps?.onClick?.(
+                    e as unknown as MouseEvent<HTMLInputElement>,
+                  );
+                }}
+                // onKeyDown={handleEnterKeyDown}
+                // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); Base UI opens on Enter.
+                onKeyDown={(e) =>
+                  textFieldProps.onKeyDown?.(
+                    e as unknown as KeyboardEvent<HTMLInputElement>,
+                  )
+                }
+              >
+                <SelectValue
+                  placeholder={
+                    !['custom', 'modal'].includes(
+                      (isCreating
+                        ? createDisplayMode
+                        : editDisplayMode) as string,
+                    )
+                      ? columnDef.header
+                      : undefined
+                  }
+                />
+              </SelectTrigger>
+              {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
+              {/* Note: Base UI Select locks scroll while modal (the default). */}
+              <SelectContent>
+                {textFieldProps.children ??
+                  selectOptions?.map((option) => {
+                    const { label, value } = getValueAndLabel(option);
+                    return (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    );
+                  })}
+              </SelectContent>
+            </Select>
+          );
+          return withField(select);
         }
-        name={column.id}
-        onOpenChange={setOpen}
-        onValueChange={(newValue: string | null) =>
-          // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
-          // Base UI reports null when a null-valued item is chosen; none here.
-          handleChange({
-            target: { name: column.id, value: newValue ?? '' },
-          } as ChangeEvent<HTMLInputElement>)
-        }
-        // Stays controlled for an undefined cell value; Base UI shows the
-        // placeholder for null, never for "".
-        value={value || null}
-      >
-        <SelectTrigger
-          disabled={
-            parseFromValuesOrFunc(columnDef.enableEditing, row) === false
-          }
-          id={id}
-          ref={(inputRef) => {
-            if (inputRef) {
-              editInputRefs.current![column.id] =
-                inputRef as unknown as HTMLInputElement;
+
+        const input = (
+          <Input
+            disabled={
+              parseFromValuesOrFunc(columnDef.enableEditing, row) === false
             }
-          }}
-          size="sm"
-          {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
-          aria-invalid={error || textFieldProps['aria-invalid']}
-          className={cn('w-full', textFieldProps.className)}
-          onBlur={(event) => {
-            // MUI SelectInput handleBlur: only while closed, with target { name, value }.
-            if (!open) {
-              Object.defineProperty(event, 'target', {
-                writable: true,
-                value: { name: column.id, value },
-              });
-              handleBlur(event as unknown as FocusEvent<HTMLInputElement>);
-            }
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            textFieldProps?.onClick?.(
-              e as unknown as MouseEvent<HTMLInputElement>,
-            );
-          }}
-          // onKeyDown={handleEnterKeyDown}
-          // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); Base UI opens on Enter.
-          onKeyDown={(e) =>
-            textFieldProps.onKeyDown?.(
-              e as unknown as KeyboardEvent<HTMLInputElement>,
-            )
-          }
-        >
-          <SelectValue
+            id={id}
+            ref={(inputRef) => {
+              if (inputRef) {
+                editInputRefs.current![column.id] = inputRef;
+                // if (textFieldProps.inputRef) textFieldProps.inputRef = inputRef;
+                // Note: no-op in MRT too; a user ref already wins through the spread below.
+              }
+            }}
+            // fullWidth, margin="none", select, size="small", variant="standard", InputProps
+            // Note: MUI TextField root props; shadcn Input is w-full with one variant and no underline.
+            name={column.id}
             placeholder={
               !['custom', 'modal'].includes(
                 (isCreating ? createDisplayMode : editDisplayMode) as string,
@@ -238,61 +293,23 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                 ? columnDef.header
                 : undefined
             }
+            value={value ?? ''}
+            autoComplete="off"
+            {...textFieldProps}
+            aria-invalid={error || textFieldProps['aria-invalid']}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            onClick={(e) => {
+              e.stopPropagation();
+              textFieldProps?.onClick?.(e);
+            }}
+            onKeyDown={handleEnterKeyDown}
+            onCompositionStart={() => setCompletesComposition(false)}
+            onCompositionEnd={() => setCompletesComposition(true)}
           />
-        </SelectTrigger>
-        {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
-        {/* Note: Base UI Select locks scroll while modal (the default). */}
-        <SelectContent>
-          {textFieldProps.children ??
-            selectOptions?.map((option) => {
-              const { label, value } = getValueAndLabel(option);
-              return (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              );
-            })}
-        </SelectContent>
-      </Select>
-    );
-    return withField(select);
-  }
-
-  const input = (
-    <Input
-      disabled={parseFromValuesOrFunc(columnDef.enableEditing, row) === false}
-      id={id}
-      ref={(inputRef) => {
-        if (inputRef) {
-          editInputRefs.current![column.id] = inputRef;
-          // if (textFieldProps.inputRef) textFieldProps.inputRef = inputRef;
-          // Note: no-op in MRT too; a user ref already wins through the spread below.
-        }
+        );
+        return withField(input);
       }}
-      // fullWidth, margin="none", select, size="small", variant="standard", InputProps
-      // Note: MUI TextField root props; shadcn Input is w-full with one variant and no underline.
-      name={column.id}
-      placeholder={
-        !['custom', 'modal'].includes(
-          (isCreating ? createDisplayMode : editDisplayMode) as string,
-        )
-          ? columnDef.header
-          : undefined
-      }
-      value={value ?? ''}
-      autoComplete="off"
-      {...textFieldProps}
-      aria-invalid={error || textFieldProps['aria-invalid']}
-      onBlur={handleBlur}
-      onChange={handleChange}
-      onClick={(e) => {
-        e.stopPropagation();
-        textFieldProps?.onClick?.(e);
-      }}
-      onKeyDown={handleEnterKeyDown}
-      onCompositionStart={() => setCompletesComposition(false)}
-      onCompositionEnd={() => setCompletesComposition(true)}
-    />
+    </Subscribe>
   );
-  return withField(input);
 };
