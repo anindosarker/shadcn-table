@@ -12,10 +12,7 @@ import {
   type TableBodyProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import {
-  ST_TableBodyRow,
-  Memo_ST_TableBodyRow,
-} from '@/components/ui/shadcn-table/components/body/ST_TableBodyRow';
+import { ST_TableBodyRow } from '@/components/ui/shadcn-table/components/body/ST_TableBodyRow';
 
 export interface ST_TableBodyProps<TData extends ST_RowData>
   extends TableBodyProps {
@@ -44,7 +41,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
       enableStickyHeader,
       layoutMode,
       localization,
-      memoMode,
       renderDetailPanel,
       renderEmptyRowsFallback,
       rowPinningDisplayMode,
@@ -107,11 +103,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                 row,
                 staticRowIndex,
               };
-              return memoMode === 'rows' ? (
-                <Memo_ST_TableBodyRow key={row.id} {...props} />
-              ) : (
-                <ST_TableBodyRow key={row.id} {...props} />
-              );
+              return <ST_TableBodyRow key={row.id} {...props} />;
             })}
           </tbody>
         )}
@@ -188,11 +180,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                     : undefined,
                 };
                 const key = `${row.id}-${row.index}`;
-                return memoMode === 'rows' ? (
-                  <Memo_ST_TableBodyRow key={key} {...props} />
-                ) : (
-                  <ST_TableBodyRow key={key} {...props} />
-                );
+                return <ST_TableBodyRow key={key} {...props} />;
               })}
             </>
           ))}
@@ -216,11 +204,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                 row,
                 staticRowIndex,
               };
-              return memoMode === 'rows' ? (
-                <Memo_ST_TableBodyRow key={row.id} {...props} />
-              ) : (
-                <ST_TableBodyRow key={row.id} {...props} />
-              );
+              return <ST_TableBodyRow key={row.id} {...props} />;
             })}
           </tbody>
         )}

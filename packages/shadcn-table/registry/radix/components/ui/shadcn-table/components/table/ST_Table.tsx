@@ -48,7 +48,6 @@ export const ST_Table = <TData extends ST_RowData>({
       enableTableFooter,
       enableTableHead,
       layoutMode,
-      memoMode,
       stTableProps,
       renderCaption,
     },
@@ -98,7 +97,7 @@ export const ST_Table = <TData extends ST_RowData>({
     >
       {!!Caption && <caption>{Caption}</caption>}
       {enableTableHead && <ST_TableHead {...commonTableGroupProps} />}
-      {memoMode === 'table-body' || columnResizing.isResizingColumn ? (
+      {columnResizing.isResizingColumn ? (
         <Memo_ST_TableBody {...commonTableGroupProps} />
       ) : (
         <ST_TableBody {...commonTableGroupProps} />
