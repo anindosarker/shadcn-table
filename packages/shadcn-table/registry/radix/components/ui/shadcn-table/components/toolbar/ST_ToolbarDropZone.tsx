@@ -53,8 +53,7 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
         draggingColumn.columnDef.enableGrouping !== false &&
         !grouping.includes(draggingColumn.id),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableGrouping, draggingColumn, grouping]);
+  }, [enableGrouping, draggingColumn, grouping, setShowToolbarDropZone]);
 
   return (
     <Subscribe
