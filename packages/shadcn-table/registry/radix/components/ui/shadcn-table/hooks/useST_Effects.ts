@@ -60,7 +60,9 @@ export const useST_Effects = <TData extends ST_RowData>(
   //recalculate column order when columns change or features are toggled on/off
   useEffect(() => {
     if (totalColumnCount !== columnOrder.length) {
-      table.setColumnOrder(getDefaultColumnOrderIds(table.options));
+      table.setColumnOrder(
+        getDefaultColumnOrderIds({ ...table.options, state: table.state }),
+      );
     }
   }, [totalColumnCount]);
 

@@ -146,7 +146,10 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
               variant="ghost"
               onClick={() =>
                 table.setColumnOrder(
-                  getDefaultColumnOrderIds(table.options, true),
+                  getDefaultColumnOrderIds(
+                    { ...table.options, state: table.state },
+                    true,
+                  ),
                 )
               }
               disabled={!hasColumnOrderChanged}

@@ -3,7 +3,6 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type RefObject,
-  memo,
   useEffect,
   useMemo,
   useState,
@@ -362,8 +361,3 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     </td>
   );
 };
-
-export const Memo_ST_TableBodyCell = memo(
-  ST_TableBodyCell,
-  (prev, next) => next.cell === prev.cell,
-) as typeof ST_TableBodyCell;

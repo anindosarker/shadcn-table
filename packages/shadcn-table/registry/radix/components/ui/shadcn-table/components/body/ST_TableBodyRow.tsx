@@ -1,4 +1,4 @@
-import { type DragEvent, memo, useMemo, useRef } from 'react';
+import { type DragEvent, useMemo, useRef } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -13,10 +13,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getIsRowSelected } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import {
-  ST_TableBodyCell,
-  Memo_ST_TableBodyCell,
-} from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
+import { ST_TableBodyCell } from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
 import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/components/body/ST_TableDetailPanel';
 
 export interface ST_TableBodyRowProps<TData extends ST_RowData>
@@ -74,7 +71,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       enableStickyFooter,
       enableStickyHeader,
       layoutMode,
-      memoMode,
       // mrtTheme: {
       //   baseBackgroundColor,
       //   pinnedRowBackgroundColor,
@@ -88,16 +84,8 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     refs: { tableFooterRef, tableHeadRef },
     setHoveredRow,
   } = table;
-  const {
-    density,
-    draggingColumn,
-    draggingRow,
-    editingCell,
-    editingRow,
-    hoveredRow,
-    isFullScreen,
-    rowPinning,
-  } = table.state;
+  const { density, draggingRow, hoveredRow, isFullScreen, rowPinning } =
+    table.state;
 
   const visibleCells = row.getVisibleCells();
 
@@ -257,18 +245,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               table,
             };
             const key = `${cell.id}-${staticRowIndex}`;
-            return cell ? (
-              memoMode === 'cells' &&
-              cell.column.columnDef.columnDefType === 'data' &&
-              !draggingColumn &&
-              !draggingRow &&
-              editingCell?.id !== cell.id &&
-              editingRow?.id !== row.id ? (
-                <Memo_ST_TableBodyCell key={key} {...props} />
-              ) : (
-                <ST_TableBodyCell key={key} {...props} />
-              )
-            ) : null;
+            return cell ? <ST_TableBodyCell key={key} {...props} /> : null;
           },
         )}
         {virtualPaddingRight ? (
@@ -288,9 +265,3 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     </>
   );
 };
-
-export const Memo_ST_TableBodyRow = memo(
-  ST_TableBodyRow,
-  (prev, next) =>
-    prev.row === next.row && prev.staticRowIndex === next.staticRowIndex,
-) as typeof ST_TableBodyRow;
