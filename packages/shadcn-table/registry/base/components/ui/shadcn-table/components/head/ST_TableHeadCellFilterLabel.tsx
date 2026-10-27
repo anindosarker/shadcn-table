@@ -1,4 +1,5 @@
 import { type MouseEvent, useState } from 'react';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
@@ -17,7 +18,6 @@ import {
   useDropdownOptions,
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
@@ -58,8 +58,8 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   // The filter value and the faceted values behind the dropdown options memo
   // follow the column and global filters, so both are hook subscriptions.
-  useST_Atom(table.atoms.columnFilters);
-  useST_Atom(table.atoms.globalFilter);
+  useSelector(table.atoms.columnFilters);
+  useSelector(table.atoms.globalFilter);
 
   const filterValue = column.getFilterValue() as [string, string] | string;
 

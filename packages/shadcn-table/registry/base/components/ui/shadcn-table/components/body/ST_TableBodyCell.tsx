@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSelector } from '@tanstack/react-store';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
@@ -75,8 +75,8 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     setHoveredColumn,
   } = table;
   // These feed the skeleton width effect, so they are hook subscriptions.
-  const isLoading = useST_Atom(table.atoms.isLoading);
-  const showSkeletons = useST_Atom(table.atoms.showSkeletons);
+  const isLoading = useSelector(table.atoms.isLoading);
+  const showSkeletons = useSelector(table.atoms.showSkeletons);
   const { column, row } = cell;
   const { columnDef } = column;
   const { columnDefType } = columnDef;

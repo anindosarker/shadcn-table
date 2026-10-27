@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { useST_Rows } from '@/components/ui/shadcn-table/hooks/useST_Rows';
@@ -13,10 +14,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableBodyRow } from '@/components/ui/shadcn-table/components/body/ST_TableBodyRow';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyProps extends TableBodyProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
@@ -57,7 +55,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
   };
 
   // Feeds the pinned row memo, so it is a hook subscription.
-  const rowPinning = useST_Atom(table.atoms.rowPinning);
+  const rowPinning = useSelector(table.atoms.rowPinning);
 
   const pinnedRowIds = useMemo(() => {
     if (!rowPinning.bottom?.length && !rowPinning.top?.length) return [];
