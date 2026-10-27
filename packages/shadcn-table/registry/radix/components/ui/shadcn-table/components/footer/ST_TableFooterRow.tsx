@@ -5,7 +5,6 @@ import {
   type ST_Header,
   type ST_HeaderGroup,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_VirtualItem,
   type TableRowProps,
 } from '@/components/ui/shadcn-table/types';
@@ -17,7 +16,6 @@ export interface ST_TableFooterRowProps<TData extends ST_RowData>
   extends TableRowProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
   footerGroup: ST_HeaderGroup<TData>;
-  table?: ST_TableInstance<TData>;
 }
 
 const tableFooterRowVariants = cva('relative w-full bg-background', {
@@ -29,16 +27,14 @@ const tableFooterRowVariants = cva('relative w-full bg-background', {
 export const ST_TableFooterRow = <TData extends ST_RowData>({
   columnVirtualizer,
   footerGroup,
-  table: tableProp,
   ...rest
 }: ST_TableFooterRowProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  const table = useSTContext<TData>();
   const {
     options: {
       layoutMode,
       // mrtTheme: { baseBackgroundColor },
-      // Note: mrtTheme registry dropped project-wide — bg-background handles theming
+      // Note: mrtTheme registry dropped project-wide: bg-background handles theming
       stTableFooterRowProps,
     },
   } = table;
@@ -92,7 +88,6 @@ export const ST_TableFooterRow = <TData extends ST_RowData>({
               footer={footer}
               key={footer.id}
               staticColumnIndex={staticColumnIndex}
-              table={table}
             />
           ) : null;
         },

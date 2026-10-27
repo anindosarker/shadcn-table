@@ -1,5 +1,5 @@
 import { type KeyboardEvent } from 'react';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { Subscribe } from '@tanstack/react-table';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped. align->text-start (logical, rtl-safe).
 import { cva } from 'class-variance-authority';
@@ -18,7 +18,6 @@ export interface ST_TableFooterCellProps<TData extends ST_RowData>
   extends TableCellProps {
   footer: ST_Header<TData>;
   staticColumnIndex?: number;
-  table?: ST_TableInstance<TData>;
 }
 
 const footerCellVariants = cva(
@@ -28,11 +27,11 @@ const footerCellVariants = cva(
 export const ST_TableFooterCell = <TData extends ST_RowData>({
   footer,
   staticColumnIndex,
-  table: tableProp,
   ...rest
 }: ST_TableFooterCellProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The header carries the core-typed table; the ST wrapper types re-type its
+  // getters, as `useSTContext` does.
+  const table = footer.table as unknown as ST_TableInstance<TData>;
   // const theme = useTheme();
   const {
     options: {
@@ -41,15 +40,9 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
       enableKeyboardShortcuts,
     },
   } = table;
-  const { density } = table.state;
   const { column } = footer;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
-
-  const isColumnPinned =
-    enableColumnPinning &&
-    columnDef.columnDefType !== 'group' &&
-    column.getIsPinned();
 
   const args = { column, table };
   const tableCellProps = {
@@ -67,57 +60,86 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
     });
   };
 
-  const commonCellStyles = getCommonSRTCellStyles({
-    column,
-    header: footer,
-    table,
-    tableCellProps,
-  });
-
   return (
-    <td
-      // align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
-      // Note: MUI align classes mapped in className below; user `align` wins like the MRT spread.
-      colSpan={footer.colSpan}
-      data-index={staticColumnIndex}
-      data-pinned={!!isColumnPinned || undefined}
-      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
-      // variant="footer"
-      // Note: no td analogue. MUI footer-variant defaults folded into footerCellVariants.
-      {...tableCellProps}
-      onKeyDown={handleKeyDown}
-      className={cn(
-        footerCellVariants(),
-        tableCellProps.align === 'center'
-          ? 'text-center'
-          : tableCellProps.align === 'right'
-            ? 'text-right flex-row-reverse'
-            : tableCellProps.align === 'left'
-              ? 'text-left'
-              : tableCellProps.align === 'justify'
-                ? 'text-justify'
-                : columnDefType === 'group'
-                  ? 'text-center'
-                  : 'text-start',
-        density === 'compact'
-          ? 'p-2'
-          : density === 'comfortable'
-            ? 'p-4'
-            : 'p-6',
-        commonCellStyles.className,
-      )}
-      style={commonCellStyles.style}
+    // The pinned offsets and edge shadows follow the column sizing, order,
+    // pinning and visibility; a custom `Footer` often totals the filtered or
+    // grouped rows.
+    <Subscribe
+      selector={(state) => ({
+        columnFilters: state.columnFilters,
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnResizing: state.columnResizing,
+        columnSizing: state.columnSizing,
+        columnVisibility: state.columnVisibility,
+        density: state.density,
+        draggingColumn: state.draggingColumn,
+        globalFilter: state.globalFilter,
+        grouping: state.grouping,
+        hoveredColumn: state.hoveredColumn,
+      })}
+      source={table.store}
     >
-      {tableCellProps.children ??
-        (footer.isPlaceholder
-          ? null
-          : (parseFromValuesOrFunc(columnDef.Footer, {
-              column,
-              footer,
-              table,
-            }) ??
-            columnDef.footer ??
-            null))}
-    </td>
+      {({ density }) => {
+        const isColumnPinned =
+          enableColumnPinning &&
+          columnDef.columnDefType !== 'group' &&
+          column.getIsPinned();
+
+        const commonCellStyles = getCommonSRTCellStyles({
+          column,
+          header: footer,
+          table,
+          tableCellProps,
+        });
+
+        return (
+          <td
+            // align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
+            // Note: MUI align classes mapped in className below; user `align` wins like the MRT spread.
+            colSpan={footer.colSpan}
+            data-index={staticColumnIndex}
+            data-pinned={!!isColumnPinned || undefined}
+            tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+            // variant="footer"
+            // Note: no td analogue. MUI footer-variant defaults folded into footerCellVariants.
+            {...tableCellProps}
+            onKeyDown={handleKeyDown}
+            className={cn(
+              footerCellVariants(),
+              tableCellProps.align === 'center'
+                ? 'text-center'
+                : tableCellProps.align === 'right'
+                  ? 'text-right flex-row-reverse'
+                  : tableCellProps.align === 'left'
+                    ? 'text-left'
+                    : tableCellProps.align === 'justify'
+                      ? 'text-justify'
+                      : columnDefType === 'group'
+                        ? 'text-center'
+                        : 'text-start',
+              density === 'compact'
+                ? 'p-2'
+                : density === 'comfortable'
+                  ? 'p-4'
+                  : 'p-6',
+              commonCellStyles.className,
+            )}
+            style={commonCellStyles.style}
+          >
+            {tableCellProps.children ??
+              (footer.isPlaceholder
+                ? null
+                : (parseFromValuesOrFunc(columnDef.Footer, {
+                    column,
+                    footer,
+                    table,
+                  }) ??
+                  columnDef.footer ??
+                  null))}
+          </td>
+        );
+      }}
+    </Subscribe>
   );
 };
