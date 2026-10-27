@@ -10,6 +10,14 @@ publishes the section as the GitHub release notes.
 
 ### Breaking
 
+- Sub-components no longer take a `table` prop. They read it from the `row`, `cell`,
+  `header` or `column` they render (`instance.table`), or from the `ST_TableProvider`
+  context; wrap hand-composed pieces in `ST_TableProvider`.
+- Renderers and `st*Props` callbacks of components that render a row, cell, header or
+  column (`Cell`, `GroupedCell`, `Header`, `Footer`, `renderRowActions`,
+  `renderRowActionMenuItems`, `renderColumnActionsMenuItems`, `renderDetailPanel`,
+  `stRowDragHandleProps` and the like) receive `instance.table`, which has no `state`. Read
+  `table.store.state` or `table.atoms.<slice>.get()` there.
 - `memoMode` is removed, with the memoized row and cell components
   (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
 - `expandRowsFn` is removed. It was never implemented.
@@ -54,6 +62,8 @@ publishes the section as the GitHub release notes.
   programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
   unpins.
 - Switching a column's filter mode re-filters the current filter value with the new mode.
+- Editing a cell from the cell action menu (`editDisplayMode: 'cell'`) keeps the edit input
+  focused when the menu closes.
 
 ## 0.3.3 - 2026-10-22
 
