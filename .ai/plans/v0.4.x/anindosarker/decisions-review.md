@@ -36,6 +36,8 @@ nothing here re-decides those, items here extend them.
      wrapper through core's `tableRef` (`createTableHook.tsx:983-1021`), survives cached
      owner output (React Compiler, `memo`), and a different table gives a different
      component, so React remounts the subtree instead of silently serving the first table.
+   - The Radix `TooltipProvider` stays in `ST_TableProvider` (moved there from
+     `ShadcnTable` in part 01) so hand-composed pieces have tooltips.
    - Custom renderers read `table.state` as the snapshot of the render they run in, the
      v9 model. No `key` is needed to swap tables. No user-owned object is mutated.
    - Narrow re-renders (decision 5) are carried by the root selector in the props style,
