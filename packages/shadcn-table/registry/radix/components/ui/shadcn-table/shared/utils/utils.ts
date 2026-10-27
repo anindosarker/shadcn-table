@@ -1,9 +1,22 @@
+import { type Ref } from 'react';
 import { type DropdownOption } from '@/components/ui/shadcn-table/types';
 
 export const parseFromValuesOrFunc = <T, U>(
   fn: ((arg: U) => T) | T | undefined,
   arg: U,
 ): T | undefined => (fn instanceof Function ? fn(arg) : fn);
+
+/**
+ * Hands a DOM node to a user `ref` prop, a callback ref or a ref object, from
+ * the library's own ref callback.
+ */
+export const assignRef = <T>(ref: Ref<T> | undefined, node: T | null) => {
+  if (typeof ref === 'function') {
+    ref(node);
+  } else if (ref) {
+    ref.current = node;
+  }
+};
 
 export const getValueAndLabel = (
   option?: DropdownOption | null,

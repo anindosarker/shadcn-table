@@ -6,7 +6,10 @@ import {
   type ST_RowData,
   type TableHeadProps,
 } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  assignRef,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_TableHeadRow } from '@/components/ui/shadcn-table/components/head/ST_TableHeadRow';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
@@ -68,10 +71,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
             {...tableHeadProps}
             ref={(ref: HTMLTableSectionElement) => {
               tableHeadRef.current = ref;
-              if (tableHeadProps?.ref) {
-                //@ts-expect-error ref can be either RefCallback or RefObject
-                tableHeadProps.ref.current = ref;
-              }
+              assignRef(tableHeadProps?.ref, ref);
             }}
             className={cn(
               tableHeadVariants({

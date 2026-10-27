@@ -6,7 +6,10 @@ import {
   type ST_RowData,
   type TableFooterProps,
 } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  assignRef,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableFooterRow } from '@/components/ui/shadcn-table/components/footer/ST_TableFooterRow';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
@@ -77,10 +80,7 @@ export const ST_TableFooter = <TData extends ST_RowData>({
             {...tableFooterProps}
             ref={(ref: HTMLTableSectionElement) => {
               tableFooterRef.current = ref;
-              if (tableFooterProps?.ref) {
-                //@ts-expect-error ref can be either RefCallback or RefObject
-                tableFooterProps.ref.current = ref;
-              }
+              assignRef(tableFooterProps?.ref, ref);
             }}
             className={cn(
               tableFooterVariants({

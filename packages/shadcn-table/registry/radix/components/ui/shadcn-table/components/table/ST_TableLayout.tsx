@@ -2,7 +2,10 @@ import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { type DivProps } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  assignRef,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_BottomToolbar } from '@/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar';
 import { ST_TopToolbar } from '@/components/ui/shadcn-table/components/toolbar/ST_TopToolbar';
 import { ST_TableContainer } from '@/components/ui/shadcn-table/components/table/ST_TableContainer';
@@ -68,10 +71,7 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
           {...layoutDivProps}
           ref={(ref: HTMLDivElement) => {
             tableLayoutRef.current = ref;
-            if (layoutDivProps?.ref) {
-              //@ts-expect-error ref can be either RefCallback or RefObject
-              layoutDivProps.ref.current = ref;
-            }
+            assignRef(layoutDivProps?.ref, ref);
           }}
           className={cn(
             tableLayoutVariants({

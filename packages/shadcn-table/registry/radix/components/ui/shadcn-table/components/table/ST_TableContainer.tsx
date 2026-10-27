@@ -3,7 +3,10 @@ import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type DivProps } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  assignRef,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Table } from '@/components/ui/shadcn-table/components/table/ST_Table';
 import { ST_TableLoadingOverlay } from '@/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay';
 import { ST_CellActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_CellActionMenu';
@@ -124,10 +127,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
             ref={(node: HTMLDivElement) => {
               if (node) {
                 tableContainerRef.current = node;
-                if (tableContainerProps?.ref) {
-                  //@ts-expect-error ref can be either RefCallback or RefObject
-                  tableContainerProps.ref.current = node;
-                }
+                assignRef(tableContainerProps?.ref, node);
               }
             }}
             style={{
