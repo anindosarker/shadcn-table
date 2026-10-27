@@ -39,7 +39,7 @@ export const ST_TableHeadRow = <TData extends ST_RowData>({
       enableStickyHeader,
       layoutMode,
       // mrtTheme: { baseBackgroundColor },
-      // Note: mrtTheme registry dropped project-wide — bg-background handles theming
+      // Note: mrtTheme registry dropped project-wide: bg-background handles theming
       stTableHeadRowProps,
     },
   } = table;
