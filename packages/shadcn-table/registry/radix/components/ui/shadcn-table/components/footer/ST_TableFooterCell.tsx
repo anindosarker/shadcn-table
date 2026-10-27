@@ -62,21 +62,32 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
 
   return (
     // The pinned offsets and edge shadows follow the column sizing, order,
-    // pinning and visibility; a custom `Footer` often totals the filtered or
-    // grouped rows.
+    // pinning and visibility; a custom `Footer` often totals the filtered,
+    // grouped, paginated or selected rows.
     <Subscribe
       selector={(state) => ({
         columnFilters: state.columnFilters,
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
-        columnResizing: state.columnResizing,
-        columnSizing: state.columnSizing,
         columnVisibility: state.columnVisibility,
         density: state.density,
         draggingColumn: state.draggingColumn,
+        expanded: state.expanded,
         globalFilter: state.globalFilter,
         grouping: state.grouping,
         hoveredColumn: state.hoveredColumn,
+        isResizingColumn: state.columnResizing.isResizingColumn === column.id,
+        pagination: state.pagination,
+        // A pinned cell's offset follows the other columns' sizes; widths
+        // come from the CSS vars ST_Table sets.
+        pinnedColumnSizing:
+          enableColumnPinning &&
+          columnDef.columnDefType !== 'group' &&
+          column.getIsPinned()
+            ? state.columnSizing
+            : undefined,
+        rowSelection: state.rowSelection,
+        sorting: state.sorting,
       })}
       source={table.store}
     >
