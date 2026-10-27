@@ -1326,3 +1326,8 @@ export interface ST_TableOptions<TData extends ST_RowData>
    */
   state?: Partial<ST_TableState<TData>>;
 }
+
+export type ST_TableProviderProps<TData extends ST_RowData> = {
+  children: ReactNode;
+  table: ST_TableInstance<TData>;
+};
