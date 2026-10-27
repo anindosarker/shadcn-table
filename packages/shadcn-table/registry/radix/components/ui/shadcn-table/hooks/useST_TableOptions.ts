@@ -142,8 +142,12 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableStickyHeader = true;
   }
 
-  if (enablePagination === false && manualPagination === undefined) {
+  if (enablePagination === false) {
     manualPagination = true;
+  }
+
+  if (!enableFilters && !enableColumnFilters && !enableGlobalFilter) {
+    manualFiltering = true;
   }
 
   if (!rest.data?.length) {
