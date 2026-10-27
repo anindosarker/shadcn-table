@@ -97,10 +97,16 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
         <div
           {...toolbarProps}
           ref={(node: HTMLDivElement) => {
-            if (node) {
-              bottomToolbarRef.current = node;
-              assignRef(toolbarProps?.ref, node);
-            }
+            bottomToolbarRef.current = node;
+            const cleanup = assignRef(toolbarProps?.ref, node);
+            return () => {
+              if (typeof cleanup === 'function') {
+                cleanup();
+              } else {
+                assignRef(toolbarProps?.ref, null);
+              }
+              bottomToolbarRef.current = null;
+            };
           }}
           className={cn(
             bottomToolbarVariants({
