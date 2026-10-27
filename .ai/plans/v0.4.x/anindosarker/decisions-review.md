@@ -66,9 +66,17 @@ nothing here re-decides those, items here extend them.
    The `as unknown as ST_TableInstance<TData>` casts at every `instance.table` read in
    `components/` go. Public names unchanged; only the `table` member narrows.
 
+## Row pinning on select
+
+9. Unselect all under `rowPinningDisplayMode: 'select-*'` clears every pin, hand-pinned rows
+   included, as 0.3.3 did (`getST_SelectAllHandler` called `setRowPinning({ top: [], bottom: [] })`).
+   The decision 8 subscription keeps pinning and unpinning the changed rows; the select-all
+   path adds the full clear on unselect. Bugs found in the same stories are in
+   [findings-review.md](findings-review.md).
+
 ## Unchanged after review
 
-8. The props-style root (`ShadcnTable` built from options) selects only the slices its
+10. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
