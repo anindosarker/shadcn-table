@@ -1,4 +1,5 @@
-import { type DragEvent, useMemo, useRef } from 'react';
+import { type DragEvent, useRef } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -15,7 +16,6 @@ import { getIsRowSelected } from '@/components/ui/shadcn-table/shared/utils/row.
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableBodyCell } from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
 import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/components/body/ST_TableDetailPanel';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyRowProps<TData extends ST_RowData>
   extends TableRowProps {
@@ -27,7 +27,6 @@ export interface ST_TableBodyRowProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   rowVirtualizer?: ST_RowVirtualizer;
   staticRowIndex: number;
-  table?: ST_TableInstance<TData>;
   virtualRow?: ST_VirtualItem;
 }
 
@@ -58,12 +57,11 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
-  table: tableProp,
   virtualRow,
   ...rest
 }: ST_TableBodyRowProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The row carries the core table; the ST wrapper types re-type its getters.
+  const table = row.table as unknown as ST_TableInstance<TData>;
   // const theme = useTheme();
   // Note: MUI useTheme dropped project-wide — shadcn CSS vars handle theming.
 
@@ -87,18 +85,9 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     refs: { tableFooterRef, tableHeadRef },
     setHoveredRow,
   } = table;
-  const { density, draggingRow, hoveredRow, isFullScreen, rowPinning } =
-    table.state;
-
-  const visibleCells = row.getVisibleCells();
 
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
-
-  const isRowSelected = getIsRowSelected({ row, table });
-  const isRowPinned = enableRowPinning && row.getIsPinned();
-  const isDraggingRow = draggingRow?.id === row.id;
-  const isHoveredRow = hoveredRow?.id === row.id;
 
   const { hover = true, ...tableRowProps } = {
     ...parseFromValuesOrFunc(stTableBodyRowProps, {
@@ -109,42 +98,15 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const [bottomPinnedIndex, topPinnedIndex] = useMemo(() => {
-    if (
-      !enableRowPinning ||
-      !rowPinningDisplayMode?.includes('sticky') ||
-      !pinnedRowIds ||
-      !row.getIsPinned()
-    )
-      return [];
-    return [
-      [...pinnedRowIds].reverse().indexOf(row.id),
-      pinnedRowIds.indexOf(row.id),
-    ];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pinnedRowIds, rowPinning]);
-
-  const tableHeadHeight =
-    ((enableStickyHeader || isFullScreen) &&
-      tableHeadRef.current?.clientHeight) ||
-    0;
-  const tableFooterHeight =
-    (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
-
   // const sx = parseFromValuesOrFunc(tableRowProps?.sx, theme as any);
   // Note: no MUI sx in ST; customRowHeight drops MRT's `?? sx?.height` fallback.
-
-  const defaultRowHeight =
-    density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69;
 
   const customRowHeight =
     // @ts-expect-error style.height is string | number; parseInt expects a string
     parseInt(tableRowProps?.style?.height, 10) || undefined;
 
-  const rowHeight = customRowHeight || defaultRowHeight;
-
   const handleDragEnter = () => {
-    if (enableRowOrdering && draggingRow) {
+    if (enableRowOrdering && table.atoms.draggingRow.get()) {
       setHoveredRow(row);
     }
   };
@@ -155,84 +117,22 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
 
   const rowRef = useRef<HTMLTableRowElement | null>(null);
 
-  const cellHighlightClass = isRowSelected
-    ? '[&>td]:after:bg-primary/20'
-    : isRowPinned
-      ? '[&>td]:after:bg-primary/10'
-      : undefined;
-
-  const cellHighlightClassHover = !hover
-    ? undefined
-    : isRowSelected
-      ? 'hover:[&>td]:after:bg-primary/20'
-      : 'hover:[&>td]:after:bg-foreground/10';
-
-  return (
-    <>
-      <tr
-        data-index={renderDetailPanel ? staticRowIndex * 2 : staticRowIndex}
-        data-pinned={!!isRowPinned || undefined}
-        data-selected={isRowSelected || undefined}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragOver}
-        ref={(node: HTMLTableRowElement | null) => {
-          if (node) {
-            rowRef.current = node;
-            rowVirtualizer?.measureElement(node);
-          }
-        }}
-        // selected={isRowSelected}
-        // Note: MUI TableRow prop; data-selected + the td:after overlay carry selection.
-        {...tableRowProps}
-        style={{
-          transform: virtualRow
-            ? `translateY(${virtualRow.start}px)`
-            : undefined,
-          top: virtualRow
-            ? 0
-            : topPinnedIndex !== undefined && isRowPinned
-              ? `${
-                  topPinnedIndex * rowHeight +
-                  (enableStickyHeader || isFullScreen ? tableHeadHeight - 1 : 0)
-                }px`
-              : undefined,
-          bottom:
-            !virtualRow && bottomPinnedIndex !== undefined && isRowPinned
-              ? `${
-                  bottomPinnedIndex * rowHeight +
-                  (enableStickyFooter ? tableFooterHeight - 1 : 0)
-                }px`
-              : undefined,
-          ...tableRowProps?.style,
-        }}
-        className={cn(
-          tableBodyRowVariants({
-            layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-            opacity: isRowPinned
-              ? 'pinned'
-              : isDraggingRow || isHoveredRow
-                ? 'dimmed'
-                : 'normal',
-            position: virtualRow
-              ? 'absolute'
-              : rowPinningDisplayMode?.includes('sticky') && isRowPinned
-                ? 'sticky'
-                : 'relative',
-            transition: virtualRow ? 'none' : 'animated',
-            zIndex:
-              rowPinningDisplayMode?.includes('sticky') && isRowPinned
-                ? 'high'
-                : 'base',
-          }),
-          cellHighlightClass,
-          cellHighlightClassHover,
-          tableRowProps?.className,
-        )}
-      >
-        {virtualPaddingLeft ? (
-          <td style={{ display: 'flex', width: virtualPaddingLeft }} />
-        ) : null}
-        {(virtualColumns ?? visibleCells).map(
+  // The cells and the detail panel are created outside the row's state
+  // subscription, so a selection, hover or pinning change re-renders the row
+  // element only. The cells follow the column layout slices themselves.
+  const cells = (
+    <Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnVisibility: state.columnVisibility,
+        grouping: state.grouping,
+      })}
+      source={table.store}
+    >
+      {() => {
+        const visibleCells = row.getVisibleCells();
+        return (virtualColumns ?? visibleCells).map(
           (cellOrVirtualCell, staticColumnIndex) => {
             let cell = cellOrVirtualCell as ST_Cell<TData>;
             if (columnVirtualizer) {
@@ -245,26 +145,160 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               rowRef,
               staticColumnIndex,
               staticRowIndex,
-              table,
             };
             const key = `${cell.id}-${staticRowIndex}`;
             return cell ? <ST_TableBodyCell key={key} {...props} /> : null;
           },
-        )}
-        {virtualPaddingRight ? (
-          <td style={{ display: 'flex', width: virtualPaddingRight }} />
-        ) : null}
-      </tr>
-      {renderDetailPanel && !row.getIsGrouped() && (
-        <ST_TableDetailPanel
-          parentRowRef={rowRef}
-          row={row}
-          rowVirtualizer={rowVirtualizer}
-          staticRowIndex={staticRowIndex}
-          table={table}
-          virtualRow={virtualRow}
-        />
-      )}
-    </>
+        );
+      }}
+    </Subscribe>
+  );
+
+  const detailPanel = renderDetailPanel && !row.getIsGrouped() && (
+    <ST_TableDetailPanel
+      parentRowRef={rowRef}
+      row={row}
+      rowVirtualizer={rowVirtualizer}
+      staticRowIndex={staticRowIndex}
+      virtualRow={virtualRow}
+    />
+  );
+
+  return (
+    <Subscribe
+      selector={(state) => ({
+        density: state.density,
+        isDraggingRow: state.draggingRow?.id === row.id,
+        isFullScreen: state.isFullScreen,
+        isHoveredRow: state.hoveredRow?.id === row.id,
+        // Reads the live selection, so only this row's own change re-renders it.
+        isRowSelected: getIsRowSelected({ row, table }),
+        rowPinning: state.rowPinning,
+      })}
+      source={table.store}
+    >
+      {({
+        density,
+        isDraggingRow,
+        isFullScreen,
+        isHoveredRow,
+        isRowSelected,
+      }) => {
+        const isRowPinned = enableRowPinning && row.getIsPinned();
+
+        const [bottomPinnedIndex, topPinnedIndex] =
+          !enableRowPinning ||
+          !rowPinningDisplayMode?.includes('sticky') ||
+          !pinnedRowIds ||
+          !row.getIsPinned()
+            ? []
+            : [
+                [...pinnedRowIds].reverse().indexOf(row.id),
+                pinnedRowIds.indexOf(row.id),
+              ];
+
+        const tableHeadHeight =
+          ((enableStickyHeader || isFullScreen) &&
+            tableHeadRef.current?.clientHeight) ||
+          0;
+        const tableFooterHeight =
+          (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
+
+        const defaultRowHeight =
+          density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69;
+
+        const rowHeight = customRowHeight || defaultRowHeight;
+
+        const cellHighlightClass = isRowSelected
+          ? '[&>td]:after:bg-primary/20'
+          : isRowPinned
+            ? '[&>td]:after:bg-primary/10'
+            : undefined;
+
+        const cellHighlightClassHover = !hover
+          ? undefined
+          : isRowSelected
+            ? 'hover:[&>td]:after:bg-primary/20'
+            : 'hover:[&>td]:after:bg-foreground/10';
+
+        return (
+          <>
+            <tr
+              data-index={
+                renderDetailPanel ? staticRowIndex * 2 : staticRowIndex
+              }
+              data-pinned={!!isRowPinned || undefined}
+              data-selected={isRowSelected || undefined}
+              onDragEnter={handleDragEnter}
+              onDragOver={handleDragOver}
+              ref={(node: HTMLTableRowElement | null) => {
+                if (node) {
+                  rowRef.current = node;
+                  rowVirtualizer?.measureElement(node);
+                }
+              }}
+              // selected={isRowSelected}
+              // Note: MUI TableRow prop; data-selected + the td:after overlay carry selection.
+              {...tableRowProps}
+              style={{
+                transform: virtualRow
+                  ? `translateY(${virtualRow.start}px)`
+                  : undefined,
+                top: virtualRow
+                  ? 0
+                  : topPinnedIndex !== undefined && isRowPinned
+                    ? `${
+                        topPinnedIndex * rowHeight +
+                        (enableStickyHeader || isFullScreen
+                          ? tableHeadHeight - 1
+                          : 0)
+                      }px`
+                    : undefined,
+                bottom:
+                  !virtualRow && bottomPinnedIndex !== undefined && isRowPinned
+                    ? `${
+                        bottomPinnedIndex * rowHeight +
+                        (enableStickyFooter ? tableFooterHeight - 1 : 0)
+                      }px`
+                    : undefined,
+                ...tableRowProps?.style,
+              }}
+              className={cn(
+                tableBodyRowVariants({
+                  layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+                  opacity: isRowPinned
+                    ? 'pinned'
+                    : isDraggingRow || isHoveredRow
+                      ? 'dimmed'
+                      : 'normal',
+                  position: virtualRow
+                    ? 'absolute'
+                    : rowPinningDisplayMode?.includes('sticky') && isRowPinned
+                      ? 'sticky'
+                      : 'relative',
+                  transition: virtualRow ? 'none' : 'animated',
+                  zIndex:
+                    rowPinningDisplayMode?.includes('sticky') && isRowPinned
+                      ? 'high'
+                      : 'base',
+                }),
+                cellHighlightClass,
+                cellHighlightClassHover,
+                tableRowProps?.className,
+              )}
+            >
+              {virtualPaddingLeft ? (
+                <td style={{ display: 'flex', width: virtualPaddingLeft }} />
+              ) : null}
+              {cells}
+              {virtualPaddingRight ? (
+                <td style={{ display: 'flex', width: virtualPaddingRight }} />
+              ) : null}
+            </tr>
+            {detailPanel}
+          </>
+        );
+      }}
+    </Subscribe>
   );
 };
