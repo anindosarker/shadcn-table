@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { shallow, useSelector } from '@tanstack/react-store';
 import { type TableOptions, type TableState } from '@tanstack/react-table';
 import {
   type ST_ColumnDef,
@@ -74,7 +75,8 @@ export const selectST_TransformState = (state: TableState<ST_Features>) => ({
  * The MRT hook that wraps the TanStack useTable hook and adds additional functionality
  * @param definedTableOptions - table options with proper defaults set
  * @param selector - the state that re-renders the owner, all of it by default;
- * with a narrower selector `table.state` holds only the selection
+ * with a narrower selector `table.state` holds only the selection, and the
+ * owner still re-renders on the `selectST_TransformState` slices
  * @returns the MRT table instance
  */
 export const useST_TableInstance = <
@@ -231,6 +233,10 @@ export const useST_TableInstance = <
   ) as unknown as ST_TableInstance<TData, TSelected>;
 
   tableRef.current = table;
+
+  // The transforms above run on owner renders, so the owner follows their
+  // slices whatever `selector` picks for `table.state`.
+  useSelector(table.store, selectST_TransformState, { compare: shallow });
 
   useST_Effects(table);
 

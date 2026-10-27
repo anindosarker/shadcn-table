@@ -38,8 +38,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   staticColumnIndex,
   ...rest
 }: ST_TableHeadCellProps<TData>) => {
-  // The core table behind the header; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
   const table = header.table;
   // const theme = useTheme();
   const {

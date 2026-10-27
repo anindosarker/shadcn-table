@@ -206,6 +206,51 @@ export const HookSelectorSkipsStateRenders = {
   },
 };
 
+// A hook selector that leaves out the transform slices: the owner still
+// re-renders on them, so grouping set from outside adds the expand column.
+const HookPaginationSelectorTable = () => {
+  const table = useShadcnTable(
+    {
+      columns: numberedColumns,
+      data: numbered,
+      enableGrouping: true,
+      initialState: { pagination: { pageIndex: 0, pageSize: 5 } },
+    },
+    (state) => state.pagination,
+  );
+  return (
+    <>
+      <button onClick={() => table.setGrouping(['age'])} type="button">
+        Group by age
+      </button>
+      <span data-testid="owner-page-size">{table.state.pageSize}</span>
+      <ShadcnTable table={table} />
+    </>
+  );
+};
+
+export const HookSelectorFollowsTransformState = {
+  render: () => <HookPaginationSelectorTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+    expect(canvas.getByTestId('owner-page-size').textContent).toBe('5');
+    const headCells = canvasElement.querySelectorAll('thead th').length;
+    expect(
+      canvas.queryByRole('button', { name: 'Expand all' }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByText('Group by age'));
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('button', { name: 'Expand all' }),
+      ).toBeInTheDocument(),
+    );
+    expect(canvasElement.querySelectorAll('thead th').length).toBe(
+      headCells + 1,
+    );
+  },
+};
+
 const DataReplacementTable = () => {
   const [rows, setRows] = useState(numbered.slice(0, 3));
   return (
