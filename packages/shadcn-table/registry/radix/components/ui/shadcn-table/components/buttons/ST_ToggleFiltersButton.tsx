@@ -1,23 +1,23 @@
+import { Subscribe } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import {
-  type ButtonProps,
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ButtonProps } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ToggleFiltersButtonProps<TData extends ST_RowData>
-  extends ButtonProps {
-  table?: ST_TableInstance<TData>;
+export interface ST_ToggleFiltersButtonProps extends ButtonProps {
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from the context.
+   * Goes in the integration step, once no caller passes it.
+   */
+  table?: unknown;
 }
 
-export const ST_ToggleFiltersButton = <TData extends ST_RowData>({
-  table: tableProp,
+export const ST_ToggleFiltersButton = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
+  table: _table,
   ...rest
-}: ST_ToggleFiltersButtonProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_ToggleFiltersButtonProps) => {
+  const table = useSTContext();
   const {
     options: {
       icons: { FilterListIcon, FilterListOffIcon },
@@ -25,10 +25,9 @@ export const ST_ToggleFiltersButton = <TData extends ST_RowData>({
     },
     setShowColumnFilters,
   } = table;
-  const { showColumnFilters } = table.state;
 
   const handleToggleShowFilters = () => {
-    setShowColumnFilters(!showColumnFilters);
+    setShowColumnFilters(!table.atoms.showColumnFilters.get());
   };
 
   return (
@@ -42,7 +41,11 @@ export const ST_ToggleFiltersButton = <TData extends ST_RowData>({
         {...rest}
         title={undefined}
       >
-        {showColumnFilters ? <FilterListOffIcon /> : <FilterListIcon />}
+        <Subscribe source={table.atoms.showColumnFilters}>
+          {(showColumnFilters) =>
+            showColumnFilters ? <FilterListOffIcon /> : <FilterListIcon />
+          }
+        </Subscribe>
       </Button>
     </ST_Tooltip>
   );
