@@ -129,13 +129,13 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   return (
     <>
-      {/* <Grow in={...} unmountOnExit> — Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit); the span carries its enter (fade + zoom-in-75, 150ms), exit is instant. */}
+      {/* <Grow in={...} unmountOnExit>. Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit); the span carries its enter (fade + zoom-in-75, 150ms), exit is instant. */}
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
           <ST_Tooltip side="top" title={filterTooltip}>
-            {/* disableRipple — Note: shadcn Button has no ripple. */}
+            {/* disableRipple. Note: shadcn Button has no ripple. */}
             <Button
               onClick={(event: MouseEvent<HTMLButtonElement>) => {
                 if (columnFilterDisplayMode === 'popover') {
@@ -166,14 +166,14 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       {columnFilterDisplayMode === 'popover' && (
         <Popover
           onOpenChange={(open) => {
-            // event.stopPropagation(); — Note: radix has no backdrop click to stop.
+            // event.stopPropagation(); Note: radix has no backdrop click to stop.
             if (!open) setAnchorEl(null);
           }}
           open={!!anchorEl}
         >
           {anchorEl && <PopoverAnchor virtualRef={{ current: anchorEl }} />}
-          {/* disableScrollLock — Note: radix Popover is non-modal, no scroll lock. */}
-          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }} — Note: PopoverContent has no overflow clip. */}
+          {/* disableScrollLock. Note: radix Popover is non-modal, no scroll lock. */}
+          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }}. Note: PopoverContent has no overflow clip. */}
           <PopoverContent
             align="center"
             className="w-auto"
@@ -181,7 +181,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
             onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
             side="top"
           >
-            {/* <Box sx={{ p: '1rem' }}> — Note: PopoverContent already pads p-4. */}
+            {/* <Box sx={{ p: '1rem' }}>. Note: PopoverContent already pads p-4. */}
             <ST_TableHeadCellFilterContainer header={header} />
           </PopoverContent>
         </Popover>

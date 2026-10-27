@@ -2,7 +2,7 @@ import { type DragEvent, type KeyboardEvent } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
-// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground.
+// Note: useTheme dropped: align->text-start, grey[500]->muted-foreground.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -58,7 +58,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       enableStickyHeader,
       layoutMode,
       // mrtTheme: { draggingBorderColor },
-      // Note: mrtTheme registry dropped — draggingBorderColor → var(--color-primary).
+      // Note: mrtTheme registry dropped: draggingBorderColor → var(--color-primary).
       stTableHeadCellProps,
     },
     refs: { tableHeadCellRefs },
@@ -136,7 +136,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
-        columnSizing: state.columnSizing,
         columnVisibility: state.columnVisibility,
         density: state.density,
         draggingColumn: state.draggingColumn,
@@ -144,6 +143,14 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
         hoveredColumn: state.hoveredColumn,
         isFullScreen: state.isFullScreen,
         isResizingColumn: state.columnResizing.isResizingColumn,
+        // A pinned cell's offset follows the other columns' sizes; widths
+        // come from the CSS vars ST_Table sets.
+        pinnedColumnSizing:
+          enableColumnPinning &&
+          columnDef.columnDefType !== 'group' &&
+          column.getIsPinned()
+            ? state.columnSizing
+            : undefined,
         showColumnFilters: state.showColumnFilters,
         sorting: state.sorting,
       })}
