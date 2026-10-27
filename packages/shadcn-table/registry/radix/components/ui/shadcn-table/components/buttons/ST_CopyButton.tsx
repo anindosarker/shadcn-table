@@ -10,9 +10,8 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-// Note: text-inheritance cva — user exception to the no-className ruling (copy cells render as cell text).
+// Note: text-inheritance cva: user exception to the no-className ruling (copy cells render as cell text).
 const copyButtonVariants = cva(
   'm-[-0.25rem] h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
 );
@@ -20,16 +19,22 @@ const copyButtonVariants = cva(
 export interface ST_CopyButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   cell: ST_Cell<TData>;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from the cell.
+   * Goes in the integration step, once no caller passes it.
+   */
+  table?: unknown;
 }
 
 export const ST_CopyButton = <TData extends ST_RowData>({
   cell,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
+  table: _table,
   ...rest
 }: ST_CopyButtonProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The cell carries the core table, which holds the ST options, atoms, refs
+  // and setters; the ST wrapper types do not re-type it.
+  const table = cell.table as unknown as ST_TableInstance<TData>;
   const {
     options: { localization, stCopyButtonProps },
   } = table;

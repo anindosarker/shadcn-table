@@ -1,5 +1,5 @@
-import { type DragEvent, type KeyboardEvent, useMemo } from 'react';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { type DragEvent, type KeyboardEvent } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground.
@@ -27,7 +27,6 @@ export interface ST_TableHeadCellProps<TData extends ST_RowData>
   columnVirtualizer?: ST_ColumnVirtualizer;
   header: ST_Header<TData>;
   staticColumnIndex?: number;
-  table?: ST_TableInstance<TData>;
 }
 
 const headCellVariants = cva(
@@ -38,11 +37,11 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   columnVirtualizer,
   header,
   staticColumnIndex,
-  table: tableProp,
   ...rest
 }: ST_TableHeadCellProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The core table behind the header; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   // const theme = useTheme();
   const {
     options: {
@@ -65,15 +64,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     refs: { tableHeadCellRefs },
     setHoveredColumn,
   } = table;
-  const {
-    columnResizing,
-    density,
-    draggingColumn,
-    grouping,
-    hoveredColumn,
-    isFullScreen,
-    showColumnFilters,
-  } = table.state;
   const { column } = header;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -87,68 +77,13 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const isColumnPinned =
-    enableColumnPinning &&
-    columnDef.columnDefType !== 'group' &&
-    column.getIsPinned();
-
   const showColumnActions =
     (enableColumnActions || columnDef.enableColumnActions) &&
     columnDef.enableColumnActions !== false;
 
-  const showDragHandle =
-    enableColumnDragging !== false &&
-    columnDef.enableColumnDragging !== false &&
-    (enableColumnDragging ||
-      (enableColumnOrdering && columnDef.enableColumnOrdering !== false) ||
-      (enableGrouping &&
-        columnDef.enableGrouping !== false &&
-        !grouping.includes(column.id)));
-
-  const stickyHeader = enableStickyHeader || isFullScreen;
-
-  const headerPL = useMemo(() => {
-    let pl = 0;
-    if (column.getCanSort()) pl += 1;
-    if (showColumnActions) pl += 1.75;
-    if (showDragHandle) pl += 1.5;
-    return pl;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showColumnActions, showDragHandle]);
-
-  const draggingBorders = useMemo(() => {
-    const showResizeBorder =
-      columnResizing.isResizingColumn === column.id &&
-      columnResizeMode === 'onChange' &&
-      !header.subHeaders.length;
-
-    // Note: MRT's `!important` dropped — inline style objects can't express it; draggingBorders spreads last anyway.
-    const borderStyle = showResizeBorder
-      ? `2px solid var(--color-primary)`
-      : draggingColumn?.id === column.id
-        ? `1px dashed var(--color-muted-foreground)`
-        : hoveredColumn?.id === column.id
-          ? `2px dashed var(--color-primary)`
-          : undefined;
-
-    if (showResizeBorder) {
-      return columnResizeDirection === 'ltr'
-        ? { borderRight: borderStyle }
-        : { borderLeft: borderStyle };
-    }
-    const draggingBorders = borderStyle
-      ? {
-          borderLeft: borderStyle,
-          borderRight: borderStyle,
-          borderTop: borderStyle,
-        }
-      : undefined;
-
-    return draggingBorders;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draggingColumn, hoveredColumn, columnResizing.isResizingColumn]);
-
   const handleDragEnter = () => {
+    const draggingColumn = table.atoms.draggingColumn.get();
+    const hoveredColumn = table.atoms.hoveredColumn.get();
     if (enableGrouping && hoveredColumn?.id === 'drop-zone') {
       setHoveredColumn(null);
     }
@@ -175,168 +110,249 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     });
   };
 
-  const HeaderElement =
-    parseFromValuesOrFunc(columnDef.Header, {
-      column,
-      header,
-      table,
-    }) ?? columnDef.header;
-
-  const commonCellStyles = getCommonSRTCellStyles({
-    column,
-    header,
-    table,
-    tableCellProps,
-  });
+  // The children subscribe to what they render, so they are created outside
+  // this cell's subscription. The drag image reads the cell node when the
+  // drag starts, after this render.
+  const filterLabel = <ST_TableHeadCellFilterLabel header={header} />;
+  const sortLabel = <ST_TableHeadCellSortLabel header={header} />;
+  const grabHandle = (
+    <ST_TableHeadCellGrabHandle
+      column={column}
+      tableHeadCellRef={{
+        get current() {
+          return tableHeadCellRefs.current?.[column.id] ?? null;
+        },
+      }}
+    />
+  );
+  const columnActionsButton = (
+    <ST_TableHeadCellColumnActionsButton header={header} />
+  );
+  const resizeHandle = <ST_TableHeadCellResizeHandle header={header} />;
+  const filterContainer = <ST_TableHeadCellFilterContainer header={header} />;
 
   return (
-    <th
-      aria-sort={
-        column.getIsSorted()
-          ? column.getIsSorted() === 'asc'
-            ? 'ascending'
-            : 'descending'
-          : 'none'
-      }
-      colSpan={header.colSpan}
-      data-can-sort={column.getCanSort() || undefined}
-      data-index={staticColumnIndex}
-      data-pinned={!!isColumnPinned || undefined}
-      data-sort={column.getIsSorted() || undefined}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      ref={(node: HTMLTableCellElement) => {
-        if (node) {
-          tableHeadCellRefs.current![column.id] = node;
-          if (columnDefType !== 'group') {
-            columnVirtualizer?.measureElement?.(node);
-          }
-        }
-      }}
-      scope="col"
-      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
-      {...tableCellProps}
-      onKeyDown={handleKeyDown}
-      className={cn(
-        headCellVariants(),
-        tableCellProps.align === 'center'
-          ? 'text-center'
-          : tableCellProps.align === 'right'
-            ? 'text-right flex-row-reverse'
-            : tableCellProps.align === 'left'
-              ? 'text-left'
-              : tableCellProps.align === 'justify'
-                ? 'text-justify'
-                : columnDefType === 'group'
-                  ? 'text-center'
-                  : 'text-start',
-        layoutMode?.startsWith('grid') && 'flex-col',
-        density === 'compact'
-          ? 'p-2'
-          : density === 'comfortable'
-            ? columnDefType === 'display'
-              ? 'p-3'
-              : 'p-4'
-            : columnDefType === 'display'
-              ? 'px-5 py-4'
-              : 'p-6',
-        columnDefType === 'display'
-          ? 'pb-0'
-          : showColumnFilters || density === 'compact'
-            ? 'pb-[0.4rem]'
-            : 'pb-[0.6rem]',
-        columnDefType === 'group' || density === 'compact'
-          ? 'pt-1'
-          : density === 'comfortable'
-            ? 'pt-3'
-            : 'pt-5',
-        enableMultiSort && column.getCanSort() && 'select-none',
-        stickyHeader && 'sticky top-0 z-[2] bg-background',
-        commonCellStyles.className,
-      )}
-      style={{
-        ...commonCellStyles.style,
-        ...draggingBorders,
-      }}
+    <Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnSizing: state.columnSizing,
+        columnVisibility: state.columnVisibility,
+        density: state.density,
+        draggingColumn: state.draggingColumn,
+        grouping: state.grouping,
+        hoveredColumn: state.hoveredColumn,
+        isFullScreen: state.isFullScreen,
+        isResizingColumn: state.columnResizing.isResizingColumn,
+        showColumnFilters: state.showColumnFilters,
+        sorting: state.sorting,
+      })}
+      source={table.store}
     >
-      {header.isPlaceholder
-        ? null
-        : (tableCellProps.children ?? (
-            <div
-              className={cn(
-                'relative flex w-full items-center',
-                tableCellProps?.align === 'right' && 'flex-row-reverse',
-                columnDefType === 'group' || tableCellProps?.align === 'center'
-                  ? 'justify-center'
-                  : column.getCanResize()
-                    ? 'justify-between'
-                    : 'justify-start',
-              )}
-            >
-              <div
-                className={cn(
-                  'flex items-center',
-                  tableCellProps?.align === 'right' && 'flex-row-reverse',
-                  column.getCanSort() &&
-                    columnDefType !== 'group' &&
-                    'cursor-pointer',
-                  columnDefType === 'data' && 'overflow-hidden',
-                )}
-                onClick={column.getToggleSortingHandler()}
-                style={
-                  tableCellProps?.align === 'center'
-                    ? { paddingLeft: `${headerPL}rem` }
-                    : undefined
+      {({
+        density,
+        draggingColumn,
+        grouping,
+        hoveredColumn,
+        isFullScreen,
+        isResizingColumn,
+        showColumnFilters,
+      }) => {
+        const isColumnPinned =
+          enableColumnPinning &&
+          columnDef.columnDefType !== 'group' &&
+          column.getIsPinned();
+
+        const showDragHandle =
+          enableColumnDragging !== false &&
+          columnDef.enableColumnDragging !== false &&
+          (enableColumnDragging ||
+            (enableColumnOrdering &&
+              columnDef.enableColumnOrdering !== false) ||
+            (enableGrouping &&
+              columnDef.enableGrouping !== false &&
+              !grouping.includes(column.id)));
+
+        const stickyHeader = enableStickyHeader || isFullScreen;
+
+        let headerPL = 0;
+        if (column.getCanSort()) headerPL += 1;
+        if (showColumnActions) headerPL += 1.75;
+        if (showDragHandle) headerPL += 1.5;
+
+        const showResizeBorder =
+          isResizingColumn === column.id &&
+          columnResizeMode === 'onChange' &&
+          !header.subHeaders.length;
+
+        // Note: MRT's `!important` dropped: inline style objects can't express it; draggingBorders spreads last anyway.
+        const borderStyle = showResizeBorder
+          ? `2px solid var(--color-primary)`
+          : draggingColumn?.id === column.id
+            ? `1px dashed var(--color-muted-foreground)`
+            : hoveredColumn?.id === column.id
+              ? `2px dashed var(--color-primary)`
+              : undefined;
+
+        const draggingBorders = showResizeBorder
+          ? columnResizeDirection === 'ltr'
+            ? { borderRight: borderStyle }
+            : { borderLeft: borderStyle }
+          : borderStyle
+            ? {
+                borderLeft: borderStyle,
+                borderRight: borderStyle,
+                borderTop: borderStyle,
+              }
+            : undefined;
+
+        const HeaderElement =
+          parseFromValuesOrFunc(columnDef.Header, {
+            column,
+            header,
+            table,
+          }) ?? columnDef.header;
+
+        const commonCellStyles = getCommonSRTCellStyles({
+          column,
+          header,
+          table,
+          tableCellProps,
+        });
+
+        return (
+          <th
+            aria-sort={
+              column.getIsSorted()
+                ? column.getIsSorted() === 'asc'
+                  ? 'ascending'
+                  : 'descending'
+                : 'none'
+            }
+            colSpan={header.colSpan}
+            data-can-sort={column.getCanSort() || undefined}
+            data-index={staticColumnIndex}
+            data-pinned={!!isColumnPinned || undefined}
+            data-sort={column.getIsSorted() || undefined}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            ref={(node: HTMLTableCellElement) => {
+              if (node) {
+                tableHeadCellRefs.current![column.id] = node;
+                if (columnDefType !== 'group') {
+                  columnVirtualizer?.measureElement?.(node);
                 }
-              >
-                <div
-                  className={cn(
-                    'text-ellipsis hover:text-clip',
-                    columnDefType === 'data' && 'overflow-hidden',
-                    (columnDef.header?.length ?? 0) < 20
-                      ? 'whitespace-nowrap'
-                      : 'whitespace-normal',
-                  )}
-                  style={{
-                    minWidth: `${Math.min(columnDef.header?.length ?? 0, 4)}ch`,
-                  }}
-                >
-                  {HeaderElement}
-                </div>
-                {column.getCanFilter() && (
-                  <ST_TableHeadCellFilterLabel header={header} table={table} />
-                )}
-                {column.getCanSort() && (
-                  <ST_TableHeadCellSortLabel header={header} table={table} />
-                )}
-              </div>
-              {columnDefType !== 'group' && (
-                <div className="flex items-center whitespace-nowrap">
-                  {showDragHandle && (
-                    <ST_TableHeadCellGrabHandle
-                      column={column}
-                      table={table}
-                      tableHeadCellRef={{
-                        current: tableHeadCellRefs.current?.[column.id] ?? null,
-                      }}
-                    />
-                  )}
-                  {showColumnActions && (
-                    <ST_TableHeadCellColumnActionsButton
-                      header={header}
-                      table={table}
-                    />
-                  )}
-                </div>
-              )}
-              {column.getCanResize() && (
-                <ST_TableHeadCellResizeHandle header={header} table={table} />
-              )}
-            </div>
-          ))}
-      {columnFilterDisplayMode === 'subheader' && column.getCanFilter() && (
-        <ST_TableHeadCellFilterContainer header={header} table={table} />
-      )}
-    </th>
+              }
+            }}
+            scope="col"
+            tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+            {...tableCellProps}
+            onKeyDown={handleKeyDown}
+            className={cn(
+              headCellVariants(),
+              tableCellProps.align === 'center'
+                ? 'text-center'
+                : tableCellProps.align === 'right'
+                  ? 'text-right flex-row-reverse'
+                  : tableCellProps.align === 'left'
+                    ? 'text-left'
+                    : tableCellProps.align === 'justify'
+                      ? 'text-justify'
+                      : columnDefType === 'group'
+                        ? 'text-center'
+                        : 'text-start',
+              layoutMode?.startsWith('grid') && 'flex-col',
+              density === 'compact'
+                ? 'p-2'
+                : density === 'comfortable'
+                  ? columnDefType === 'display'
+                    ? 'p-3'
+                    : 'p-4'
+                  : columnDefType === 'display'
+                    ? 'px-5 py-4'
+                    : 'p-6',
+              columnDefType === 'display'
+                ? 'pb-0'
+                : showColumnFilters || density === 'compact'
+                  ? 'pb-[0.4rem]'
+                  : 'pb-[0.6rem]',
+              columnDefType === 'group' || density === 'compact'
+                ? 'pt-1'
+                : density === 'comfortable'
+                  ? 'pt-3'
+                  : 'pt-5',
+              enableMultiSort && column.getCanSort() && 'select-none',
+              stickyHeader && 'sticky top-0 z-[2] bg-background',
+              commonCellStyles.className,
+            )}
+            style={{
+              ...commonCellStyles.style,
+              ...draggingBorders,
+            }}
+          >
+            {header.isPlaceholder
+              ? null
+              : (tableCellProps.children ?? (
+                  <div
+                    className={cn(
+                      'relative flex w-full items-center',
+                      tableCellProps?.align === 'right' && 'flex-row-reverse',
+                      columnDefType === 'group' ||
+                        tableCellProps?.align === 'center'
+                        ? 'justify-center'
+                        : column.getCanResize()
+                          ? 'justify-between'
+                          : 'justify-start',
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        'flex items-center',
+                        tableCellProps?.align === 'right' && 'flex-row-reverse',
+                        column.getCanSort() &&
+                          columnDefType !== 'group' &&
+                          'cursor-pointer',
+                        columnDefType === 'data' && 'overflow-hidden',
+                      )}
+                      onClick={column.getToggleSortingHandler()}
+                      style={
+                        tableCellProps?.align === 'center'
+                          ? { paddingLeft: `${headerPL}rem` }
+                          : undefined
+                      }
+                    >
+                      <div
+                        className={cn(
+                          'text-ellipsis hover:text-clip',
+                          columnDefType === 'data' && 'overflow-hidden',
+                          (columnDef.header?.length ?? 0) < 20
+                            ? 'whitespace-nowrap'
+                            : 'whitespace-normal',
+                        )}
+                        style={{
+                          minWidth: `${Math.min(columnDef.header?.length ?? 0, 4)}ch`,
+                        }}
+                      >
+                        {HeaderElement}
+                      </div>
+                      {column.getCanFilter() && filterLabel}
+                      {column.getCanSort() && sortLabel}
+                    </div>
+                    {columnDefType !== 'group' && (
+                      <div className="flex items-center whitespace-nowrap">
+                        {showDragHandle && grabHandle}
+                        {showColumnActions && columnActionsButton}
+                      </div>
+                    )}
+                    {column.getCanResize() && resizeHandle}
+                  </div>
+                ))}
+            {columnFilterDisplayMode === 'subheader' &&
+              column.getCanFilter() &&
+              filterContainer}
+          </th>
+        );
+      }}
+    </Subscribe>
   );
 };

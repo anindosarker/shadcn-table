@@ -75,7 +75,7 @@ export const CellActionsEnabledCustom = () => (
     columns={columns}
     data={data}
     enableCellActions
-    renderCellActionMenuItems={({ closeMenu, table }) => [
+    renderCellActionMenuItems={({ closeMenu }) => [
       <ST_ActionMenuItem
         icon={<Mail />}
         key={1}
@@ -83,7 +83,6 @@ export const CellActionsEnabledCustom = () => (
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
       <ST_ActionMenuItem
         icon={<UserX />}
@@ -92,7 +91,6 @@ export const CellActionsEnabledCustom = () => (
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
     ]}
   />
@@ -124,7 +122,7 @@ export const CellActionsWithClickToCopy = () => (
     data={data}
     enableCellActions
     enableClickToCopy
-    renderCellActionMenuItems={({ closeMenu, table }) => [
+    renderCellActionMenuItems={({ closeMenu }) => [
       <ST_ActionMenuItem
         icon={<Mail />}
         key={1}
@@ -132,7 +130,6 @@ export const CellActionsWithClickToCopy = () => (
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
       <ST_ActionMenuItem
         icon={<UserX />}
@@ -141,7 +138,6 @@ export const CellActionsWithClickToCopy = () => (
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
     ]}
   />
@@ -155,7 +151,7 @@ export const CellActionsWithBuiltIns = () => (
     enableCellActions
     enableClickToCopy="context-menu"
     enableEditing
-    renderCellActionMenuItems={({ closeMenu, internalMenuItems, table }) => [
+    renderCellActionMenuItems={({ closeMenu, internalMenuItems }) => [
       ...internalMenuItems,
       <DropdownMenuSeparator key="divider" />,
       <ST_ActionMenuItem
@@ -165,7 +161,6 @@ export const CellActionsWithBuiltIns = () => (
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
       <ST_ActionMenuItem
         icon={<UserX />}
@@ -174,7 +169,6 @@ export const CellActionsWithBuiltIns = () => (
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
     ]}
   />
