@@ -1,9 +1,6 @@
 import { useId, useMemo } from 'react';
-import { ST_AggregationFns } from '@/components/ui/shadcn-table/fns/aggregationFns';
-import { ST_FilterFns } from '@/components/ui/shadcn-table/fns/filterFns';
-import { ST_SortFns } from '@/components/ui/shadcn-table/fns/sortFns';
 import { ST_Default_Icons } from '@/components/ui/shadcn-table/icons';
-import { ST_Localization_EN } from '@/components/ui/shadcn-table/locales/en';
+import { ST_Localization_EN } from '@/components/ui/shadcn-table/shared/locales/en';
 import {
   type ST_DefinedTableOptions,
   type ST_RowData,
@@ -35,7 +32,6 @@ export const ST_DefaultDisplayColumn = {
 export const useST_TableOptions: <TData extends ST_RowData>(
   tableOptions: ST_TableOptions<TData>,
 ) => ST_DefinedTableOptions<TData> = <TData extends ST_RowData>({
-  aggregationFns,
   autoResetExpanded = false,
   columnFilterDisplayMode = 'subheader',
   columnResizeDirection,
@@ -76,7 +72,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableTableHead = true,
   enableToolbarInternalActions = true,
   enableTopToolbar = true,
-  filterFns,
   getRowCanExpand,
   icons,
   id = useId(),
@@ -99,7 +94,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   rowNumberDisplayMode = 'static',
   rowPinningDisplayMode = 'sticky',
   selectAllMode = 'page',
-  sortFns,
   ...rest
 }: ST_TableOptions<TData>) => {
   icons = useMemo(() => ({ ...ST_Default_Icons, ...icons }), [icons]);
@@ -112,12 +106,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   );
   // mrtTheme = useMemo(() => getMRTTheme(mrtTheme, theme), [mrtTheme, theme]);
   // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
-  aggregationFns = useMemo(
-    () => ({ ...ST_AggregationFns, ...aggregationFns }),
-    [],
-  );
-  filterFns = useMemo(() => ({ ...ST_FilterFns, ...filterFns }), []);
-  sortFns = useMemo(() => ({ ...ST_SortFns, ...sortFns }), []);
   defaultColumn = useMemo(
     () => ({ ...ST_DefaultColumn, ...defaultColumn }),
     [defaultColumn],
@@ -154,8 +142,12 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableStickyHeader = true;
   }
 
-  if (enablePagination === false && manualPagination === undefined) {
+  if (enablePagination === false) {
     manualPagination = true;
+  }
+
+  if (!enableFilters && !enableColumnFilters && !enableGlobalFilter) {
+    manualFiltering = true;
   }
 
   if (!rest.data?.length) {
@@ -166,7 +158,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   }
 
   return {
-    aggregationFns,
     autoResetExpanded,
     columnFilterDisplayMode,
     columnResizeDirection,
@@ -207,7 +198,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableTableHead,
     enableToolbarInternalActions,
     enableTopToolbar,
-    filterFns,
     // v9 makes `row.toggleExpanded()` a no-op when `row.getCanExpand()` is
     // false (v8 toggled regardless) and detail-panel rows have no sub rows, so
     // a table with `renderDetailPanel` treats every row as expandable.
@@ -238,7 +228,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
-    sortFns,
     ...rest,
   } as ST_DefinedTableOptions<TData>;
 };

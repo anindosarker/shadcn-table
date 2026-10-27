@@ -4,7 +4,7 @@ import {
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-base/shadcn-table/types';
-import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
+import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/shared/utils/displayColumn.utils';
 
 const blankColProps = {
   children: null,

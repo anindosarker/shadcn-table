@@ -1,21 +1,20 @@
-import { ST_ToggleRowActionMenuButton } from '@/components/ui-base/shadcn-table/buttons/ST_ToggleRowActionMenuButton';
+import { ST_ToggleRowActionMenuButton } from '@/components/ui-base/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton';
 import {
   type ST_ColumnDef,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-base/shadcn-table/types';
-import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
+import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/shared/utils/displayColumn.utils';
 
 export const getST_RowActionsColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
 ): ST_ColumnDef<TData> => {
   return {
-    Cell: ({ cell, row, staticRowIndex, table }) => (
+    Cell: ({ cell, row, staticRowIndex }) => (
       <ST_ToggleRowActionMenuButton
         cell={cell}
         row={row}
         staticRowIndex={staticRowIndex}
-        table={table}
       />
     ),
     ...defaultDisplayColumnProps({
