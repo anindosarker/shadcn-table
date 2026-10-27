@@ -1,5 +1,5 @@
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
+import { ShadcnTable } from '@/components/ui/shadcn-table';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 
@@ -304,11 +304,37 @@ export const DetailPanelSingleExpand = () => {
           <span>Phone: {row.original.phone}</span>
         </div>
       )}
+      // ST_ExpandButton toggles the row through row.toggleExpanded() before it
+      // calls this onClick; the handler only collapses the other rows.
       stExpandButtonProps={({ row, table }) => ({
-        onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }),
+        onClick: () =>
+          table.setExpanded((expanded) =>
+            expanded !== true && expanded[row.id] ? { [row.id]: true } : {},
+          ),
       })}
     />
   );
+};
+
+// One panel open at a time: opening a second row closes the first, and the
+// same button closes its own panel.
+DetailPanelSingleExpand.play = async ({ canvas, userEvent }: StoryContext) => {
+  await expect(canvas.queryAllByText(/^City:/)).toHaveLength(0);
+  const expandButtons = await canvas.findAllByRole('button', {
+    name: 'Expand',
+  });
+  await userEvent.click(expandButtons[0]);
+  await waitFor(() => expect(canvas.getAllByText(/^City:/)).toHaveLength(1));
+  await userEvent.click(expandButtons[1]);
+  await waitFor(() => expect(canvas.getAllByText(/^City:/)).toHaveLength(1));
+  await waitFor(() =>
+    expect(
+      canvas.getAllByRole('button', { name: 'Expand' })[1].closest('tr')
+        ?.nextElementSibling,
+    ).toHaveTextContent(/City:/),
+  );
+  await userEvent.click(canvas.getAllByRole('button', { name: 'Expand' })[1]);
+  await waitFor(() => expect(canvas.queryAllByText(/^City:/)).toHaveLength(0));
 };
 
 export const DetailPanelExpandColumnLast = () => (

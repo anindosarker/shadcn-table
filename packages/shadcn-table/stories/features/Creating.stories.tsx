@@ -4,10 +4,10 @@ import {
   type ST_Row,
   type ST_TableOptions,
   createRow,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { Plus } from 'lucide-react';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { Button } from '@/components/ui/button';
 import {
   Select,

@@ -1,6 +1,8 @@
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
-import { ST_Localization_HE } from '@/components/ui/shadcn-table/shared/locales/he';
+import {
+  type ST_ColumnDef,
+  type ST_Localization,
+  ShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 
@@ -9,6 +11,27 @@ const meta: Meta = {
 };
 
 export default meta;
+
+// Partial Hebrew localization for the RTL stories. The full locale ships as its
+// own registry file under shared/locales; the stories import only the barrel.
+const localizationHE: Partial<ST_Localization> = {
+  language: 'he',
+  actions: 'פעולות',
+  collapse: 'צמצום',
+  collapseAll: 'צמצום הכל',
+  expand: 'הרחב',
+  expandAll: 'הרחב הכל',
+  goToNextPage: 'לדף הבא',
+  goToPreviousPage: 'לדף הקודם',
+  of: 'מתוך',
+  rowsPerPage: 'שורות לעמוד',
+  search: 'חיפוש',
+  showHideColumns: 'הצג/הסתר עמודות',
+  showHideFilters: 'הצג/הסתר סינונים',
+  showHideSearch: 'הצג/הסתר חיפוש',
+  toggleDensity: 'שנה צפיפות',
+  toggleFullScreen: 'מסך מלא',
+};
 
 const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
@@ -112,7 +135,7 @@ export const SubRowTreeEnabledDefaultRTL = () => (
       columns={columns}
       data={data}
       enableExpanding
-      localization={ST_Localization_HE}
+      localization={localizationHE}
     />
   </div>
 );
@@ -123,7 +146,7 @@ export const SubRowTreeEnabledDefaultRTLAndPositionLast = () => (
       columns={columns}
       data={data}
       enableExpanding
-      localization={ST_Localization_HE}
+      localization={localizationHE}
       positionActionsColumn="last"
     />
   </div>
