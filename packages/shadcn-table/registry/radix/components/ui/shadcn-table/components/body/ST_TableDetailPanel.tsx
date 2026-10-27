@@ -1,4 +1,5 @@
 import { type RefObject } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
@@ -11,7 +12,6 @@ import {
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -19,7 +19,6 @@ export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   rowVirtualizer?: ST_RowVirtualizer;
   staticRowIndex: number;
-  table?: ST_TableInstance<TData>;
   virtualRow?: ST_VirtualItem;
 }
 
@@ -46,12 +45,11 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
-  table: tableProp,
   virtualRow,
   ...rest
 }: ST_TableDetailPanelProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The row carries the core table; the ST wrapper types re-type its getters.
+  const table = row.table as unknown as ST_TableInstance<TData>;
   const {
     getVisibleLeafColumns,
     options: {
@@ -63,7 +61,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
       stTableBodyRowProps,
     },
   } = table;
-  const { isLoading } = table.state;
 
   // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -83,68 +80,85 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
-
   return (
-    <tr
-      data-index={renderDetailPanel ? staticRowIndex * 2 + 1 : staticRowIndex}
-      ref={(node: HTMLTableRowElement) => {
-        if (node) {
-          rowVirtualizer?.measureElement?.(node);
-        }
-      }}
-      {...tableRowProps}
-      style={{
-        position: virtualRow ? 'absolute' : undefined,
-        top: virtualRow
-          ? `${parentRowRef.current?.getBoundingClientRect()?.height}px`
-          : undefined,
-        transform: virtualRow
-          ? `translateY(${virtualRow?.start}px)`
-          : undefined,
-        ...tableRowProps?.style,
-      }}
-      className={cn(
-        detailPanelRowVariants({
-          layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-        }),
-        tableRowProps?.className,
-      )}
+    <Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnVisibility: state.columnVisibility,
+        grouping: state.grouping,
+        isExpanded: row.getIsExpanded(),
+        isLoading: state.isLoading,
+      })}
+      source={table.store}
     >
-      <td
-        colSpan={getVisibleLeafColumns().length}
-        {...tableCellProps}
-        className={cn(
-          detailPanelCellVariants({
-            layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-            expanded: row.getIsExpanded(),
-            padded: !!DetailPanel && row.getIsExpanded(),
-            virtual: !!virtualRow,
-          }),
-          tableCellProps.align === 'center'
-            ? 'text-center'
-            : tableCellProps.align === 'right'
-              ? 'text-right flex-row-reverse'
-              : tableCellProps.align === 'left'
-                ? 'text-left'
-                : tableCellProps.align === 'justify'
-                  ? 'text-justify'
-                  : 'text-start',
-          tableCellProps?.className,
-        )}
-      >
-        {virtualRow ? (
-          row.getIsExpanded() && DetailPanel
-        ) : (
-          // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
-          // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
-          <Collapsible open={row.getIsExpanded()}>
-            <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-              {DetailPanel}
-            </CollapsibleContent>
-          </Collapsible>
-        )}
-      </td>
-    </tr>
+      {({ isLoading }) => {
+        const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
+
+        return (
+          <tr
+            data-index={
+              renderDetailPanel ? staticRowIndex * 2 + 1 : staticRowIndex
+            }
+            ref={(node: HTMLTableRowElement) => {
+              if (node) {
+                rowVirtualizer?.measureElement?.(node);
+              }
+            }}
+            {...tableRowProps}
+            style={{
+              position: virtualRow ? 'absolute' : undefined,
+              top: virtualRow
+                ? `${parentRowRef.current?.getBoundingClientRect()?.height}px`
+                : undefined,
+              transform: virtualRow
+                ? `translateY(${virtualRow?.start}px)`
+                : undefined,
+              ...tableRowProps?.style,
+            }}
+            className={cn(
+              detailPanelRowVariants({
+                layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+              }),
+              tableRowProps?.className,
+            )}
+          >
+            <td
+              colSpan={getVisibleLeafColumns().length}
+              {...tableCellProps}
+              className={cn(
+                detailPanelCellVariants({
+                  layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+                  expanded: row.getIsExpanded(),
+                  padded: !!DetailPanel && row.getIsExpanded(),
+                  virtual: !!virtualRow,
+                }),
+                tableCellProps.align === 'center'
+                  ? 'text-center'
+                  : tableCellProps.align === 'right'
+                    ? 'text-right flex-row-reverse'
+                    : tableCellProps.align === 'left'
+                      ? 'text-left'
+                      : tableCellProps.align === 'justify'
+                        ? 'text-justify'
+                        : 'text-start',
+                tableCellProps?.className,
+              )}
+            >
+              {virtualRow ? (
+                row.getIsExpanded() && DetailPanel
+              ) : (
+                // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
+                // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
+                <Collapsible open={row.getIsExpanded()}>
+                  <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+                    {DetailPanel}
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+            </td>
+          </tr>
+        );
+      }}
+    </Subscribe>
   );
 };

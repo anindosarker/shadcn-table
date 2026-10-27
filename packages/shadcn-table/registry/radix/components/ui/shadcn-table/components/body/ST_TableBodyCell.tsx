@@ -4,10 +4,10 @@ import {
   type MouseEvent,
   type RefObject,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { Subscribe } from '@tanstack/react-table';
+import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
@@ -37,7 +37,6 @@ export interface ST_TableBodyCellProps<TData extends ST_RowData>
   rowRef: RefObject<HTMLTableRowElement | null>;
   staticColumnIndex?: number;
   staticRowIndex: number;
-  table?: ST_TableInstance<TData>;
 }
 
 const bodyCellVariants = cva(
@@ -50,11 +49,10 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   rowRef,
   staticColumnIndex,
   staticRowIndex,
-  table: tableProp,
   ...rest
 }: ST_TableBodyCellProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The cell carries the core table; the ST wrapper types re-type its getters.
+  const table = cell.table as unknown as ST_TableInstance<TData>;
   // const theme = useTheme();
   const {
     options: {
@@ -76,20 +74,9 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     },
     setHoveredColumn,
   } = table;
-  const {
-    actionCell,
-    columnResizing,
-    creatingRow,
-    density,
-    draggingColumn,
-    draggingRow,
-    editingCell,
-    editingRow,
-    hoveredColumn,
-    hoveredRow,
-    isLoading,
-    showSkeletons,
-  } = table.state;
+  // These feed the skeleton width effect, so they are hook subscriptions.
+  const isLoading = useST_Atom(table.atoms.isLoading);
+  const showSkeletons = useST_Atom(table.atoms.showSkeletons);
   const { column, row } = cell;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -120,81 +107,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, showSkeletons]);
 
-  const draggingBorders = useMemo(() => {
-    const isDraggingColumn = draggingColumn?.id === column.id;
-    const isHoveredColumn = hoveredColumn?.id === column.id;
-    const isDraggingRow = draggingRow?.id === row.id;
-    const isHoveredRow = hoveredRow?.id === row.id;
-    const isFirstColumn = column.getIsFirstColumn();
-    const isLastColumn = column.getIsLastColumn();
-    const isLastRow = numRows && staticRowIndex === numRows - 1;
-    const isResizingColumn = columnResizing.isResizingColumn === column.id;
-    const showResizeBorder =
-      isResizingColumn && columnResizeMode === 'onChange';
-
-    // Note: MRT's `!important` dropped — React style objects can't express it; draggingBorders spread last anyway.
-    const borderStyle = showResizeBorder
-      ? `2px solid var(--color-primary)`
-      : isDraggingColumn || isDraggingRow
-        ? `1px dashed var(--color-muted-foreground)`
-        : isHoveredColumn || isHoveredRow || isResizingColumn
-          ? `2px dashed var(--color-primary)`
-          : undefined;
-
-    if (showResizeBorder) {
-      return columnResizeDirection === 'ltr'
-        ? { borderRight: borderStyle }
-        : { borderLeft: borderStyle };
-    }
-
-    return borderStyle
-      ? {
-          borderBottom:
-            isDraggingRow || isHoveredRow || (isLastRow && !isResizingColumn)
-              ? borderStyle
-              : undefined,
-          borderLeft:
-            isDraggingColumn ||
-            isHoveredColumn ||
-            ((isDraggingRow || isHoveredRow) && isFirstColumn)
-              ? borderStyle
-              : undefined,
-          borderRight:
-            isDraggingColumn ||
-            isHoveredColumn ||
-            ((isDraggingRow || isHoveredRow) && isLastColumn)
-              ? borderStyle
-              : undefined,
-          borderTop: isDraggingRow || isHoveredRow ? borderStyle : undefined,
-        }
-      : undefined;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    columnResizing.isResizingColumn,
-    draggingColumn,
-    draggingRow,
-    hoveredColumn,
-    hoveredRow,
-    staticRowIndex,
-  ]);
-
-  const isColumnPinned =
-    enableColumnPinning &&
-    columnDef.columnDefType !== 'group' &&
-    column.getIsPinned();
-
   const isEditable = isCellEditable({ cell, table });
-
-  const isEditing =
-    isEditable &&
-    !['custom', 'modal'].includes(editDisplayMode as string) &&
-    (editDisplayMode === 'table' ||
-      editingRow?.id === row.id ||
-      editingCell?.id === cell.id) &&
-    !row.getIsGrouped();
-
-  const isCreating =
-    isEditable && createDisplayMode === 'row' && creatingRow?.id === row.id;
 
   const showClickToCopyButton =
     (parseFromValuesOrFunc(enableClickToCopy, cell) === true ||
@@ -206,13 +119,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
 
   const isRightClickable = parseFromValuesOrFunc(enableCellActions, cell);
 
-  const cellValueProps = {
-    cell,
-    table,
-    staticColumnIndex,
-    staticRowIndex,
-  };
-
   const handleDoubleClick = (event: MouseEvent<HTMLTableCellElement>) => {
     tableCellProps?.onDoubleClick?.(event);
     openEditingCell({ cell, table });
@@ -220,10 +126,10 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
 
   const handleDragEnter = (e: DragEvent<HTMLTableCellElement>) => {
     tableCellProps?.onDragEnter?.(e);
-    if (enableGrouping && hoveredColumn?.id === 'drop-zone') {
+    if (enableGrouping && table.atoms.hoveredColumn.get()?.id === 'drop-zone') {
       setHoveredColumn(null);
     }
-    if (enableColumnOrdering && draggingColumn) {
+    if (enableColumnOrdering && table.atoms.draggingColumn.get()) {
       setHoveredColumn(
         columnDef.enableColumnOrdering !== false ? column : null,
       );
@@ -255,112 +161,223 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     });
   };
 
-  const commonCellStyles = getCommonSRTCellStyles({
-    column,
-    table,
-    tableCellProps,
-  });
+  // Created outside the cell's state subscription, so a density, editing or
+  // dragging change re-renders the td, not the value.
+  const cellValue = (
+    <ST_TableBodyCellValue
+      cell={cell}
+      staticColumnIndex={staticColumnIndex}
+      staticRowIndex={staticRowIndex}
+    />
+  );
 
   return (
-    <td
-      data-index={staticColumnIndex}
-      data-pinned={!!isColumnPinned || undefined}
-      tabIndex={enableKeyboardShortcuts ? 0 : undefined}
-      {...tableCellProps}
-      onKeyDown={handleKeyDown}
-      onContextMenu={handleContextMenu}
-      onDoubleClick={handleDoubleClick}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      style={{
-        ...commonCellStyles.style,
-        ...draggingBorders,
-      }}
-      className={cn(
-        bodyCellVariants(),
-        tableCellProps.align === 'center'
-          ? 'text-center'
-          : tableCellProps.align === 'right'
-            ? 'text-right flex-row-reverse'
-            : tableCellProps.align === 'left'
-              ? 'text-left'
-              : tableCellProps.align === 'justify'
-                ? 'text-justify'
-                : 'text-start',
-        layoutMode?.startsWith('grid') && 'items-center',
-        density === 'compact'
-          ? columnDefType === 'display'
-            ? 'px-2 py-0'
-            : 'p-2'
-          : density === 'comfortable'
-            ? columnDefType === 'display'
-              ? 'px-3 py-2'
-              : 'p-4'
-            : columnDefType === 'display'
-              ? 'px-5 py-4'
-              : 'p-6',
-        columnDefType !== 'display' && 'text-ellipsis',
-        row.getIsPinned() || density === 'compact'
-          ? 'whitespace-nowrap'
-          : 'whitespace-normal',
-        isRightClickable
-          ? 'cursor-context-menu'
-          : isEditable && editDisplayMode === 'cell'
-            ? 'cursor-pointer'
-            : undefined,
-        actionCell?.id === cell.id &&
-          'outline outline-1 outline-muted-foreground',
-        (actionCell?.id === cell.id ||
-          (editDisplayMode === 'cell' && isEditable) ||
-          (editDisplayMode === 'table' && (isCreating || isEditing))) &&
-          'hover:outline hover:outline-1 hover:outline-muted-foreground',
-        commonCellStyles.className,
-      )}
+    <Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnVisibility: state.columnVisibility,
+        density: state.density,
+        grouping: state.grouping,
+        // Per cell, so an action, edit, drag or hover change re-renders only
+        // the cells it concerns.
+        isActionCell: state.actionCell?.id === cell.id,
+        isCreatingRow: state.creatingRow?.id === row.id,
+        isDraggingColumn: state.draggingColumn?.id === column.id,
+        isDraggingRow: state.draggingRow?.id === row.id,
+        isEditingCell: state.editingCell?.id === cell.id,
+        isEditingRow: state.editingRow?.id === row.id,
+        isHoveredColumn: state.hoveredColumn?.id === column.id,
+        isHoveredRow: state.hoveredRow?.id === row.id,
+        isResizingColumn: state.columnResizing.isResizingColumn === column.id,
+        // A pinned cell's offset follows the other columns' sizes.
+        pinnedColumnSizing: column.getIsPinned()
+          ? state.columnSizing
+          : undefined,
+        rowPinning: state.rowPinning,
+      })}
+      source={table.store}
     >
-      {tableCellProps.children ?? (
-        <>
-          {cell.getIsPlaceholder() ? (
-            (columnDef.PlaceholderCell?.({ cell, column, row, table }) ?? null)
-          ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
-            // Note: MUI Skeleton animation="wave" dropped — ui/skeleton's animate-pulse is the stand-in.
-            <Skeleton
-              {...skeletonProps}
-              style={{
-                height: 20,
-                width: skeletonWidth,
-                ...skeletonProps?.style,
-              }}
-            />
-          ) : columnDefType === 'display' &&
-            (['st-row-expand', 'st-row-numbers', 'st-row-select'].includes(
-              column.id,
-            ) ||
-              !row.getIsGrouped()) ? (
-            columnDef.Cell?.({
-              cell,
-              column,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              renderedCellValue: cell.renderValue() as any,
-              row,
-              rowRef,
-              staticColumnIndex,
-              staticRowIndex,
-              table,
-            })
-          ) : isCreating || isEditing ? (
-            <ST_EditCellTextField cell={cell} table={table} />
-          ) : showClickToCopyButton && columnDef.enableClickToCopy !== false ? (
-            <ST_CopyButton cell={cell} table={table}>
-              <ST_TableBodyCellValue {...cellValueProps} />
-            </ST_CopyButton>
-          ) : (
-            <ST_TableBodyCellValue {...cellValueProps} />
-          )}
-          {cell.getIsGrouped() && !columnDef.GroupedCell && (
-            <> ({row.subRows?.length})</>
-          )}
-        </>
-      )}
-    </td>
+      {({
+        density,
+        isActionCell,
+        isCreatingRow,
+        isDraggingColumn,
+        isDraggingRow,
+        isEditingCell,
+        isEditingRow,
+        isHoveredColumn,
+        isHoveredRow,
+        isResizingColumn,
+      }) => {
+        const isFirstColumn = column.getIsFirstColumn();
+        const isLastColumn = column.getIsLastColumn();
+        const isLastRow = numRows && staticRowIndex === numRows - 1;
+        const showResizeBorder =
+          isResizingColumn && columnResizeMode === 'onChange';
+
+        // Note: MRT's `!important` dropped; React style objects can't express it; draggingBorders spread last anyway.
+        const borderStyle = showResizeBorder
+          ? `2px solid var(--color-primary)`
+          : isDraggingColumn || isDraggingRow
+            ? `1px dashed var(--color-muted-foreground)`
+            : isHoveredColumn || isHoveredRow || isResizingColumn
+              ? `2px dashed var(--color-primary)`
+              : undefined;
+
+        const draggingBorders = showResizeBorder
+          ? columnResizeDirection === 'ltr'
+            ? { borderRight: borderStyle }
+            : { borderLeft: borderStyle }
+          : borderStyle
+            ? {
+                borderBottom:
+                  isDraggingRow ||
+                  isHoveredRow ||
+                  (isLastRow && !isResizingColumn)
+                    ? borderStyle
+                    : undefined,
+                borderLeft:
+                  isDraggingColumn ||
+                  isHoveredColumn ||
+                  ((isDraggingRow || isHoveredRow) && isFirstColumn)
+                    ? borderStyle
+                    : undefined,
+                borderRight:
+                  isDraggingColumn ||
+                  isHoveredColumn ||
+                  ((isDraggingRow || isHoveredRow) && isLastColumn)
+                    ? borderStyle
+                    : undefined,
+                borderTop:
+                  isDraggingRow || isHoveredRow ? borderStyle : undefined,
+              }
+            : undefined;
+
+        const isColumnPinned =
+          enableColumnPinning &&
+          columnDef.columnDefType !== 'group' &&
+          column.getIsPinned();
+
+        const isEditing =
+          isEditable &&
+          !['custom', 'modal'].includes(editDisplayMode as string) &&
+          (editDisplayMode === 'table' || isEditingRow || isEditingCell) &&
+          !row.getIsGrouped();
+
+        const isCreating =
+          isEditable && createDisplayMode === 'row' && isCreatingRow;
+
+        const commonCellStyles = getCommonSRTCellStyles({
+          column,
+          table,
+          tableCellProps,
+        });
+
+        return (
+          <td
+            data-index={staticColumnIndex}
+            data-pinned={!!isColumnPinned || undefined}
+            tabIndex={enableKeyboardShortcuts ? 0 : undefined}
+            {...tableCellProps}
+            onKeyDown={handleKeyDown}
+            onContextMenu={handleContextMenu}
+            onDoubleClick={handleDoubleClick}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            style={{
+              ...commonCellStyles.style,
+              ...draggingBorders,
+            }}
+            className={cn(
+              bodyCellVariants(),
+              tableCellProps.align === 'center'
+                ? 'text-center'
+                : tableCellProps.align === 'right'
+                  ? 'text-right flex-row-reverse'
+                  : tableCellProps.align === 'left'
+                    ? 'text-left'
+                    : tableCellProps.align === 'justify'
+                      ? 'text-justify'
+                      : 'text-start',
+              layoutMode?.startsWith('grid') && 'items-center',
+              density === 'compact'
+                ? columnDefType === 'display'
+                  ? 'px-2 py-0'
+                  : 'p-2'
+                : density === 'comfortable'
+                  ? columnDefType === 'display'
+                    ? 'px-3 py-2'
+                    : 'p-4'
+                  : columnDefType === 'display'
+                    ? 'px-5 py-4'
+                    : 'p-6',
+              columnDefType !== 'display' && 'text-ellipsis',
+              row.getIsPinned() || density === 'compact'
+                ? 'whitespace-nowrap'
+                : 'whitespace-normal',
+              isRightClickable
+                ? 'cursor-context-menu'
+                : isEditable && editDisplayMode === 'cell'
+                  ? 'cursor-pointer'
+                  : undefined,
+              isActionCell && 'outline outline-1 outline-muted-foreground',
+              (isActionCell ||
+                (editDisplayMode === 'cell' && isEditable) ||
+                (editDisplayMode === 'table' && (isCreating || isEditing))) &&
+                'hover:outline hover:outline-1 hover:outline-muted-foreground',
+              commonCellStyles.className,
+            )}
+          >
+            {tableCellProps.children ?? (
+              <>
+                {cell.getIsPlaceholder() ? (
+                  (columnDef.PlaceholderCell?.({ cell, column, row, table }) ??
+                  null)
+                ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
+                  // Note: MUI Skeleton animation="wave" dropped; ui/skeleton's animate-pulse is the stand-in.
+                  <Skeleton
+                    {...skeletonProps}
+                    style={{
+                      height: 20,
+                      width: skeletonWidth,
+                      ...skeletonProps?.style,
+                    }}
+                  />
+                ) : columnDefType === 'display' &&
+                  ([
+                    'st-row-expand',
+                    'st-row-numbers',
+                    'st-row-select',
+                  ].includes(column.id) ||
+                    !row.getIsGrouped()) ? (
+                  columnDef.Cell?.({
+                    cell,
+                    column,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    renderedCellValue: cell.renderValue() as any,
+                    row,
+                    rowRef,
+                    staticColumnIndex,
+                    staticRowIndex,
+                    table,
+                  })
+                ) : isCreating || isEditing ? (
+                  <ST_EditCellTextField cell={cell} />
+                ) : showClickToCopyButton &&
+                  columnDef.enableClickToCopy !== false ? (
+                  <ST_CopyButton cell={cell}>{cellValue}</ST_CopyButton>
+                ) : (
+                  cellValue
+                )}
+                {cell.getIsGrouped() && !columnDef.GroupedCell && (
+                  <> ({row.subRows?.length})</>
+                )}
+              </>
+            )}
+          </td>
+        );
+      }}
+    </Subscribe>
   );
 };
