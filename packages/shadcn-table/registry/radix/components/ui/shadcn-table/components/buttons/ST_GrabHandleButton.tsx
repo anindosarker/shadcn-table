@@ -2,11 +2,7 @@ import { type DragEventHandler } from 'react';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import {
-  type ButtonProps,
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ButtonProps } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
@@ -25,22 +21,25 @@ const grabHandleButtonVariants = cva(
   },
 );
 
-export interface ST_GrabHandleButtonProps<TData extends ST_RowData>
-  extends ButtonProps {
+export interface ST_GrabHandleButtonProps extends ButtonProps {
   iconButtonProps?: ButtonProps;
   location?: 'column' | 'row';
   onDragEnd: DragEventHandler<HTMLButtonElement>;
   onDragStart: DragEventHandler<HTMLButtonElement>;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from the context.
+   * Goes in the integration step, once no caller passes it.
+   */
+  table?: unknown;
 }
 
-export const ST_GrabHandleButton = <TData extends ST_RowData>({
+export const ST_GrabHandleButton = ({
   location,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
+  table: _table,
   ...rest
-}: ST_GrabHandleButtonProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_GrabHandleButtonProps) => {
+  const table = useSTContext();
   const {
     options: {
       icons: { DragHandleIcon },

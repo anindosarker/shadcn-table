@@ -1,4 +1,5 @@
 import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,13 +15,17 @@ import {
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header: ST_Header<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  /**
+   * Transition, part 01 phase 03: ignored, the menu reads `header.table`.
+   * `ST_TableHeadCellColumnActionsButton` still passes it until its cluster
+   * lands; the integration step removes this prop.
+   */
   table?: ST_TableInstance<TData>;
 }
 
@@ -29,11 +34,13 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   anchorEl,
   header,
   setAnchorEl,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
+  table: _transitionTable,
   ...rest
 }: ST_ColumnActionMenuProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The header carries the core table; the ST wrapper types re-type its
+  // options and getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     getAllLeafColumns,
     options: {
@@ -70,8 +77,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  const { columnSizing, columnVisibility, showColumnFilters } = table.state;
-  const columnFilterValue = column.getFilterValue();
 
   const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
     useState<HTMLElement | null>(null);
@@ -154,179 +159,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     (allowedColumnFilterOptions === undefined ||
       !!allowedColumnFilterOptions?.length);
 
-  const internalColumnMenuItems = [
-    ...(enableSorting && column.getCanSort()
-      ? [
-          enableSortingRemoval !== false && (
-            <ST_ActionMenuItem
-              disabled={column.getIsSorted() === false}
-              icon={<ClearAllIcon />}
-              key={0}
-              label={localization.clearSort}
-              onClick={handleClearSort}
-              table={table}
-            />
-          ),
-          <ST_ActionMenuItem
-            disabled={column.getIsSorted() === 'asc'}
-            icon={
-              <SortIcon style={{ transform: 'rotate(180deg) scaleX(-1)' }} />
-            }
-            key={1}
-            label={localization.sortByColumnAsc?.replace(
-              '{column}',
-              String(columnDef.header),
-            )}
-            onClick={handleSortAsc}
-            table={table}
-          />,
-          <ST_ActionMenuItem
-            disabled={column.getIsSorted() === 'desc'}
-            divider={enableColumnFilters || enableGrouping || enableHiding}
-            icon={<SortIcon />}
-            key={2}
-            label={localization.sortByColumnDesc?.replace(
-              '{column}',
-              String(columnDef.header),
-            )}
-            onClick={handleSortDesc}
-            table={table}
-          />,
-        ]
-      : []),
-    ...(enableColumnFilters && column.getCanFilter()
-      ? [
-          <ST_ActionMenuItem
-            disabled={
-              !columnFilterValue ||
-              (Array.isArray(columnFilterValue) &&
-                !columnFilterValue.filter((value) => value).length)
-            }
-            icon={<FilterListOffIcon />}
-            key={3}
-            label={localization.clearFilter}
-            onClick={handleClearFilter}
-            table={table}
-          />,
-          columnFilterDisplayMode === 'subheader' && (
-            <ST_ActionMenuItem
-              disabled={showColumnFilters && !enableColumnFilterModes}
-              divider={enableGrouping || enableHiding}
-              icon={<FilterListIcon />}
-              key={4}
-              label={localization.filterByColumn?.replace(
-                '{column}',
-                String(columnDef.header),
-              )}
-              onClick={
-                showColumnFilters
-                  ? handleOpenFilterModeMenu
-                  : handleFilterByColumn
-              }
-              onOpenSubMenu={
-                showFilterModeSubMenu ? handleOpenFilterModeMenu : undefined
-              }
-              table={table}
-            />
-          ),
-          showFilterModeSubMenu && (
-            <ST_FilterOptionMenu
-              anchorEl={filterMenuAnchorEl}
-              header={header}
-              key={5}
-              onSelect={handleFilterByColumn}
-              setAnchorEl={setFilterMenuAnchorEl}
-              table={table}
-            />
-          ),
-        ].filter(Boolean)
-      : []),
-    ...(enableGrouping && column.getCanGroup()
-      ? [
-          <ST_ActionMenuItem
-            divider={enableColumnPinning}
-            icon={<DynamicFeedIcon />}
-            key={6}
-            label={localization[
-              column.getIsGrouped() ? 'ungroupByColumn' : 'groupByColumn'
-            ]?.replace('{column}', String(columnDef.header))}
-            onClick={handleGroupByColumn}
-            table={table}
-          />,
-        ]
-      : []),
-    ...(enableColumnPinning && column.getCanPin()
-      ? [
-          <ST_ActionMenuItem
-            disabled={column.getIsPinned() === 'start' || !column.getCanPin()}
-            icon={<PushPinIcon style={{ transform: 'rotate(90deg)' }} />}
-            key={7}
-            label={localization.pinToLeft}
-            onClick={() => handlePinColumn('start')}
-            table={table}
-          />,
-          <ST_ActionMenuItem
-            disabled={column.getIsPinned() === 'end' || !column.getCanPin()}
-            icon={<PushPinIcon style={{ transform: 'rotate(-90deg)' }} />}
-            key={8}
-            label={localization.pinToRight}
-            onClick={() => handlePinColumn('end')}
-            table={table}
-          />,
-          <ST_ActionMenuItem
-            disabled={!column.getIsPinned()}
-            divider={enableHiding}
-            icon={<PushPinIcon />}
-            key={9}
-            label={localization.unpin}
-            onClick={() => handlePinColumn(false)}
-            table={table}
-          />,
-        ]
-      : []),
-    ...(enableColumnResizing && column.getCanResize()
-      ? [
-          <ST_ActionMenuItem
-            disabled={columnSizing[column.id] === undefined}
-            icon={<RestartAltIcon />}
-            key={10}
-            label={localization.resetColumnSize}
-            onClick={handleResetColumnSize}
-            table={table}
-          />,
-        ]
-      : []),
-    ...(enableHiding
-      ? [
-          <ST_ActionMenuItem
-            disabled={!column.getCanHide()}
-            icon={<VisibilityOffIcon />}
-            key={11}
-            label={localization.hideColumn?.replace(
-              '{column}',
-              String(columnDef.header),
-            )}
-            onClick={handleHideColumn}
-            table={table}
-          />,
-          <ST_ActionMenuItem
-            disabled={
-              !Object.values(columnVisibility).filter((visible) => !visible)
-                .length
-            }
-            icon={<ViewColumnIcon />}
-            key={12}
-            label={localization.showAllColumns?.replace(
-              '{column}',
-              String(columnDef.header),
-            )}
-            onClick={handleShowAllColumns}
-            table={table}
-          />,
-        ]
-      : []),
-  ].filter(Boolean);
-
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
@@ -359,19 +191,217 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         className={cn('w-max', className)}
         {...rest}
       >
-        {columnDef.renderColumnActionsMenuItems?.({
-          closeMenu: () => setAnchorEl(null),
-          column,
-          internalColumnMenuItems,
-          table,
-        }) ??
-          renderColumnActionsMenuItems?.({
-            closeMenu: () => setAnchorEl(null),
-            column,
-            internalColumnMenuItems,
-            table,
-          }) ??
-          internalColumnMenuItems}
+        <Subscribe
+          selector={(state) => ({
+            columnFilters: state.columnFilters,
+            columnPinning: state.columnPinning,
+            columnSizing: state.columnSizing,
+            columnVisibility: state.columnVisibility,
+            grouping: state.grouping,
+            showColumnFilters: state.showColumnFilters,
+            sorting: state.sorting,
+          })}
+          source={table.store}
+        >
+          {({ columnSizing, columnVisibility, showColumnFilters }) => {
+            const columnFilterValue = column.getFilterValue();
+
+            const internalColumnMenuItems = [
+              ...(enableSorting && column.getCanSort()
+                ? [
+                    enableSortingRemoval !== false && (
+                      <ST_ActionMenuItem
+                        disabled={column.getIsSorted() === false}
+                        icon={<ClearAllIcon />}
+                        key={0}
+                        label={localization.clearSort}
+                        onClick={handleClearSort}
+                      />
+                    ),
+                    <ST_ActionMenuItem
+                      disabled={column.getIsSorted() === 'asc'}
+                      icon={
+                        <SortIcon
+                          style={{ transform: 'rotate(180deg) scaleX(-1)' }}
+                        />
+                      }
+                      key={1}
+                      label={localization.sortByColumnAsc?.replace(
+                        '{column}',
+                        String(columnDef.header),
+                      )}
+                      onClick={handleSortAsc}
+                    />,
+                    <ST_ActionMenuItem
+                      disabled={column.getIsSorted() === 'desc'}
+                      divider={
+                        enableColumnFilters || enableGrouping || enableHiding
+                      }
+                      icon={<SortIcon />}
+                      key={2}
+                      label={localization.sortByColumnDesc?.replace(
+                        '{column}',
+                        String(columnDef.header),
+                      )}
+                      onClick={handleSortDesc}
+                    />,
+                  ]
+                : []),
+              ...(enableColumnFilters && column.getCanFilter()
+                ? [
+                    <ST_ActionMenuItem
+                      disabled={
+                        !columnFilterValue ||
+                        (Array.isArray(columnFilterValue) &&
+                          !columnFilterValue.filter((value) => value).length)
+                      }
+                      icon={<FilterListOffIcon />}
+                      key={3}
+                      label={localization.clearFilter}
+                      onClick={handleClearFilter}
+                    />,
+                    columnFilterDisplayMode === 'subheader' && (
+                      <ST_ActionMenuItem
+                        disabled={showColumnFilters && !enableColumnFilterModes}
+                        divider={enableGrouping || enableHiding}
+                        icon={<FilterListIcon />}
+                        key={4}
+                        label={localization.filterByColumn?.replace(
+                          '{column}',
+                          String(columnDef.header),
+                        )}
+                        onClick={
+                          showColumnFilters
+                            ? handleOpenFilterModeMenu
+                            : handleFilterByColumn
+                        }
+                        onOpenSubMenu={
+                          showFilterModeSubMenu
+                            ? handleOpenFilterModeMenu
+                            : undefined
+                        }
+                      />
+                    ),
+                    showFilterModeSubMenu && (
+                      <ST_FilterOptionMenu
+                        anchorEl={filterMenuAnchorEl}
+                        header={header}
+                        key={5}
+                        onSelect={handleFilterByColumn}
+                        setAnchorEl={setFilterMenuAnchorEl}
+                      />
+                    ),
+                  ].filter(Boolean)
+                : []),
+              ...(enableGrouping && column.getCanGroup()
+                ? [
+                    <ST_ActionMenuItem
+                      divider={enableColumnPinning}
+                      icon={<DynamicFeedIcon />}
+                      key={6}
+                      label={localization[
+                        column.getIsGrouped()
+                          ? 'ungroupByColumn'
+                          : 'groupByColumn'
+                      ]?.replace('{column}', String(columnDef.header))}
+                      onClick={handleGroupByColumn}
+                    />,
+                  ]
+                : []),
+              ...(enableColumnPinning && column.getCanPin()
+                ? [
+                    <ST_ActionMenuItem
+                      disabled={
+                        column.getIsPinned() === 'start' || !column.getCanPin()
+                      }
+                      icon={
+                        <PushPinIcon style={{ transform: 'rotate(90deg)' }} />
+                      }
+                      key={7}
+                      label={localization.pinToLeft}
+                      onClick={() => handlePinColumn('start')}
+                    />,
+                    <ST_ActionMenuItem
+                      disabled={
+                        column.getIsPinned() === 'end' || !column.getCanPin()
+                      }
+                      icon={
+                        <PushPinIcon style={{ transform: 'rotate(-90deg)' }} />
+                      }
+                      key={8}
+                      label={localization.pinToRight}
+                      onClick={() => handlePinColumn('end')}
+                    />,
+                    <ST_ActionMenuItem
+                      disabled={!column.getIsPinned()}
+                      divider={enableHiding}
+                      icon={<PushPinIcon />}
+                      key={9}
+                      label={localization.unpin}
+                      onClick={() => handlePinColumn(false)}
+                    />,
+                  ]
+                : []),
+              ...(enableColumnResizing && column.getCanResize()
+                ? [
+                    <ST_ActionMenuItem
+                      disabled={columnSizing[column.id] === undefined}
+                      icon={<RestartAltIcon />}
+                      key={10}
+                      label={localization.resetColumnSize}
+                      onClick={handleResetColumnSize}
+                    />,
+                  ]
+                : []),
+              ...(enableHiding
+                ? [
+                    <ST_ActionMenuItem
+                      disabled={!column.getCanHide()}
+                      icon={<VisibilityOffIcon />}
+                      key={11}
+                      label={localization.hideColumn?.replace(
+                        '{column}',
+                        String(columnDef.header),
+                      )}
+                      onClick={handleHideColumn}
+                    />,
+                    <ST_ActionMenuItem
+                      disabled={
+                        !Object.values(columnVisibility).filter(
+                          (visible) => !visible,
+                        ).length
+                      }
+                      icon={<ViewColumnIcon />}
+                      key={12}
+                      label={localization.showAllColumns?.replace(
+                        '{column}',
+                        String(columnDef.header),
+                      )}
+                      onClick={handleShowAllColumns}
+                    />,
+                  ]
+                : []),
+            ].filter(Boolean);
+
+            return (
+              <>
+                {columnDef.renderColumnActionsMenuItems?.({
+                  closeMenu: () => setAnchorEl(null),
+                  column,
+                  internalColumnMenuItems,
+                  table,
+                }) ??
+                  renderColumnActionsMenuItems?.({
+                    closeMenu: () => setAnchorEl(null),
+                    column,
+                    internalColumnMenuItems,
+                    table,
+                  }) ??
+                  internalColumnMenuItems}
+              </>
+            );
+          }}
+        </Subscribe>
       </DropdownMenuContent>
     </DropdownMenu>
   );

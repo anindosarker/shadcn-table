@@ -1,16 +1,16 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { type DragEvent, useEffect } from 'react';
 import {
   type DivProps,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import {
+  useST_Atom,
+  useSTContext,
+} from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ToolbarDropZoneProps<TData extends ST_RowData>
-  extends DivProps {
-  table?: ST_TableInstance<TData>;
-}
+export type ST_ToolbarDropZoneProps = DivProps;
 
 const toolbarDropZoneVariants = cva(
   'absolute z-[4] box-border flex h-full w-full items-center justify-center border-2 border-dashed border-primary backdrop-blur-sm',
@@ -25,19 +25,18 @@ const toolbarDropZoneVariants = cva(
 );
 
 export const ST_ToolbarDropZone = <TData extends ST_RowData>({
-  table: tableProp,
   ...rest
-}: ST_ToolbarDropZoneProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_ToolbarDropZoneProps) => {
+  const table = useSTContext<TData>();
   const {
     options: { enableGrouping, localization },
     setHoveredColumn,
     setShowToolbarDropZone,
   } = table;
 
-  const { draggingColumn, grouping, hoveredColumn, showToolbarDropZone } =
-    table.state;
+  // These feed the drop zone effect, so they are hook subscriptions.
+  const draggingColumn = useST_Atom(table.atoms.draggingColumn);
+  const grouping = useST_Atom(table.atoms.grouping);
 
   const handleDragEnter = () => {
     setHoveredColumn({ id: 'drop-zone' });
@@ -57,24 +56,34 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableGrouping, draggingColumn, grouping]);
 
-  if (!showToolbarDropZone) return null;
-
   return (
-    <div
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      {...rest}
-      className={toolbarDropZoneVariants({
-        hovered: hoveredColumn?.id === 'drop-zone',
-        className: rest.className,
+    <Subscribe
+      selector={(state) => ({
+        hoveredColumn: state.hoveredColumn,
+        showToolbarDropZone: state.showToolbarDropZone,
       })}
+      source={table.store}
     >
-      <p className="italic">
-        {localization.dropToGroupBy.replace(
-          '{column}',
-          draggingColumn?.columnDef?.header ?? '',
-        )}
-      </p>
-    </div>
+      {({ hoveredColumn, showToolbarDropZone }) =>
+        showToolbarDropZone ? (
+          <div
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            {...rest}
+            className={toolbarDropZoneVariants({
+              hovered: hoveredColumn?.id === 'drop-zone',
+              className: rest.className,
+            })}
+          >
+            <p className="italic">
+              {localization.dropToGroupBy.replace(
+                '{column}',
+                draggingColumn?.columnDef?.header ?? '',
+              )}
+            </p>
+          </div>
+        ) : null
+      }
+    </Subscribe>
   );
 };

@@ -1,24 +1,24 @@
 import { useState } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import {
-  type ButtonProps,
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ButtonProps } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ToggleFullScreenButtonProps<TData extends ST_RowData>
-  extends ButtonProps {
-  table?: ST_TableInstance<TData>;
+export interface ST_ToggleFullScreenButtonProps extends ButtonProps {
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from the context.
+   * Goes in the integration step, once no caller passes it.
+   */
+  table?: unknown;
 }
 
-export const ST_ToggleFullScreenButton = <TData extends ST_RowData>({
-  table: tableProp,
+export const ST_ToggleFullScreenButton = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
+  table: _table,
   ...rest
-}: ST_ToggleFullScreenButtonProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_ToggleFullScreenButtonProps) => {
+  const table = useSTContext();
   const {
     options: {
       icons: { FullscreenExitIcon, FullscreenIcon },
@@ -26,13 +26,12 @@ export const ST_ToggleFullScreenButton = <TData extends ST_RowData>({
     },
     setIsFullScreen,
   } = table;
-  const { isFullScreen } = table.state;
 
   const [tooltipOpened, setTooltipOpened] = useState(false);
 
   const handleToggleFullScreen = () => {
     setTooltipOpened(false);
-    setIsFullScreen(!isFullScreen);
+    setIsFullScreen(!table.atoms.isFullScreen.get());
   };
 
   return (
@@ -53,7 +52,11 @@ export const ST_ToggleFullScreenButton = <TData extends ST_RowData>({
         {...rest}
         title={undefined}
       >
-        {isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+        <Subscribe source={table.atoms.isFullScreen}>
+          {(isFullScreen) =>
+            isFullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />
+          }
+        </Subscribe>
       </Button>
     </ST_Tooltip>
   );

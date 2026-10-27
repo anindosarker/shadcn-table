@@ -8,23 +8,21 @@ import {
 import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
   column: ST_Column<TData>;
-  table?: ST_TableInstance<TData>;
   tableHeadCellRef: RefObject<HTMLTableCellElement | null>;
 }
 
 export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   column,
-  table: tableProp,
   tableHeadCellRef,
   ...rest
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The core table behind the column; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = column.table as unknown as ST_TableInstance<TData>;
   const {
     options: { enableColumnOrdering, stColumnDragHandleProps },
     setColumnOrder,
@@ -33,7 +31,6 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
     setHoveredColumn,
   } = table;
   const { columnDef } = column;
-  const { columnOrder, draggingColumn, hoveredColumn } = table.state;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stColumnDragHandleProps, { column, table }),
@@ -60,6 +57,8 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
 
   const handleDragEnd = (event: DragEvent<HTMLButtonElement>) => {
     iconButtonProps?.onDragEnd?.(event);
+    const draggingColumn = table.atoms.draggingColumn.get();
+    const hoveredColumn = table.atoms.hoveredColumn.get();
     if (hoveredColumn?.id === 'drop-zone') {
       column.toggleGrouping();
     } else if (
@@ -70,7 +69,7 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
       const reorderedColumns = reorderColumn(
         column,
         hoveredColumn as ST_Column<TData>,
-        columnOrder,
+        table.atoms.columnOrder.get(),
       );
       setColumnOrder(reorderedColumns);
       setColumnPinning(({ start = [], end = [] }) => ({
@@ -87,7 +86,6 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
       {...iconButtonProps}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
-      table={table}
     />
   );
 };

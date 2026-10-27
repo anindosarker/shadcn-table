@@ -1,9 +1,9 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type DivProps,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_LinearProgressBar } from '@/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar';
@@ -13,10 +13,7 @@ import { ST_ToolbarDropZone } from '@/components/ui/shadcn-table/components/tool
 import { useST_MediaQuery } from '@/components/ui/shadcn-table/components/toolbar/useST_MediaQuery';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_BottomToolbarProps<TData extends ST_RowData>
-  extends DivProps {
-  table?: ST_TableInstance<TData>;
-}
+export type ST_BottomToolbarProps = DivProps;
 
 // Note: base maps MRT's shared getCommonToolbarStyles (min-h-14 = 3.5rem,
 // bg-background = baseBackgroundColor) plus the bottom-toolbar extras (inset
@@ -35,11 +32,9 @@ const bottomToolbarVariants = cva(
 );
 
 export const ST_BottomToolbar = <TData extends ST_RowData>({
-  table: tableProp,
   ...rest
-}: ST_BottomToolbarProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_BottomToolbarProps) => {
+  const table = useSTContext<TData>();
   const {
     options: {
       enablePagination,
@@ -51,7 +46,6 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
     },
     refs: { bottomToolbarRef },
   } = table;
-  const { isFullScreen } = table.state;
 
   const isMobile = useST_MediaQuery('(max-width:720px)');
 
@@ -62,34 +56,16 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
 
   const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
-  return (
-    <div
-      {...toolbarProps}
-      ref={(node: HTMLDivElement) => {
-        if (node) {
-          bottomToolbarRef.current = node;
-          if (toolbarProps?.ref) {
-            //@ts-expect-error ref can be either RefCallback or RefObject
-            toolbarProps.ref.current = node;
-          }
-        }
-      }}
-      className={cn(
-        bottomToolbarVariants({
-          fullscreen: isFullScreen,
-          className: toolbarProps.className,
-        }),
-      )}
-    >
-      <ST_LinearProgressBar isTopToolbar={false} table={table} />
+  // Created outside the full screen subscription, so toggling full screen
+  // re-renders only the toolbar element.
+  const toolbarContent = (
+    <>
+      <ST_LinearProgressBar isTopToolbar={false} />
       {positionToolbarAlertBanner === 'bottom' && (
-        <ST_ToolbarAlertBanner
-          stackAlertBanner={stackAlertBanner}
-          table={table}
-        />
+        <ST_ToolbarAlertBanner stackAlertBanner={stackAlertBanner} />
       )}
       {['both', 'bottom'].includes(positionToolbarDropZone ?? '') && (
-        <ST_ToolbarDropZone table={table} />
+        <ST_ToolbarDropZone />
       )}
       <div className="flex w-full box-border items-center justify-between p-2">
         {renderBottomToolbarCustomActions ? (
@@ -105,10 +81,37 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
         >
           {enablePagination &&
             ['both', 'bottom'].includes(positionPagination ?? '') && (
-              <ST_TablePagination position="bottom" table={table} />
+              <ST_TablePagination position="bottom" />
             )}
         </div>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <Subscribe source={table.atoms.isFullScreen}>
+      {(isFullScreen) => (
+        <div
+          {...toolbarProps}
+          ref={(node: HTMLDivElement) => {
+            if (node) {
+              bottomToolbarRef.current = node;
+              if (toolbarProps?.ref) {
+                //@ts-expect-error ref can be either RefCallback or RefObject
+                toolbarProps.ref.current = node;
+              }
+            }
+          }}
+          className={cn(
+            bottomToolbarVariants({
+              fullscreen: isFullScreen,
+              className: toolbarProps.className,
+            }),
+          )}
+        >
+          {toolbarContent}
+        </div>
+      )}
+    </Subscribe>
   );
 };

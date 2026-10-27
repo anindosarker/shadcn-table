@@ -11,11 +11,10 @@ export const getST_RowDragColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
 ): ST_ColumnDef<TData> => {
   return {
-    Cell: ({ row, rowRef, table }) => (
+    Cell: ({ row, rowRef }) => (
       <ST_TableBodyRowGrabHandle
         row={row}
         rowRef={rowRef as RefObject<HTMLTableRowElement | null>}
-        table={table}
       />
     ),
     grow: false,

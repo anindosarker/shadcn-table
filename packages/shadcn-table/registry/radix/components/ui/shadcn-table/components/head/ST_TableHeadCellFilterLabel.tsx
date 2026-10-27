@@ -20,7 +20,7 @@ import {
   useDropdownOptions,
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
@@ -38,16 +38,15 @@ const tableHeadCellFilterLabelVariants = cva(
 export interface ST_TableHeadCellFilterLabelProps<TData extends ST_RowData>
   extends ButtonProps {
   header: ST_Header<TData>;
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   header,
-  table: tableProp,
   ...rest
 }: ST_TableHeadCellFilterLabelProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The core table behind the header; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       columnFilterDisplayMode,
@@ -59,6 +58,11 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
+
+  // The filter value and the faceted values behind the dropdown options memo
+  // follow the column and global filters, so both are hook subscriptions.
+  useST_Atom(table.atoms.columnFilters);
+  useST_Atom(table.atoms.globalFilter);
 
   const filterValue = column.getFilterValue() as [string, string] | string;
 
@@ -178,7 +182,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
             side="top"
           >
             {/* <Box sx={{ p: '1rem' }}> — Note: PopoverContent already pads p-4. */}
-            <ST_TableHeadCellFilterContainer header={header} table={table} />
+            <ST_TableHeadCellFilterContainer header={header} />
           </PopoverContent>
         </Popover>
       )}

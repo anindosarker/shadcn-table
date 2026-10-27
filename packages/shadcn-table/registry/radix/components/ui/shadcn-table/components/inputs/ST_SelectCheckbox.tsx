@@ -9,7 +9,6 @@ import {
   type RadioProps,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import {
@@ -38,17 +37,24 @@ export interface ST_SelectCheckboxProps<TData extends ST_RowData>
   extends CheckboxProps {
   row?: ST_Row<TData>;
   staticRowIndex?: number;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from the context.
+   * Parents outside this cluster still pass it; the integration step removes
+   * it.
+   */
+  table?: unknown;
 }
 
 export const ST_SelectCheckbox = <TData extends ST_RowData>({
   row,
   staticRowIndex,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the checkbox
+  table: _table,
   ...rest
 }: ST_SelectCheckboxProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // Context for both forms: the select-all checkbox has no instance, and one
+  // source keeps a single hook order whether or not `row` is given.
+  const table = useSTContext<TData>();
   const {
     options: {
       enableMultiRowSelection,
@@ -61,15 +67,13 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
 
   const selectAll = !row;
 
-  const allRowsSelected = selectAll
-    ? selectAllMode === 'page'
+  const getAllRowsSelected = () =>
+    selectAllMode === 'page'
       ? table.getIsAllPageRowsSelected()
-      : table.getIsAllRowsSelected()
-    : undefined;
+      : table.getIsAllRowsSelected();
 
-  const isChecked = selectAll
-    ? allRowsSelected
-    : getIsRowSelected({ row, table });
+  const getIsChecked = () =>
+    selectAll ? getAllRowsSelected() : getIsRowSelected({ row, table });
 
   const checkboxProps = {
     ...(selectAll
@@ -94,8 +98,11 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
 
   const getCommonProps = ({
     density,
+    isChecked,
     isLoading,
-  }: Pick<ST_TableState<TData>, 'density' | 'isLoading'>) =>
+  }: Pick<ST_TableState<TData>, 'density' | 'isLoading'> & {
+    isChecked: boolean | undefined;
+  }) =>
     ({
       'aria-label': selectAll
         ? localization.toggleSelectAll
@@ -115,7 +122,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       onClick: (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         // Note: MUI Radio fires no change once checked; same guard here.
-        if (!(enableMultiRowSelection === false && isChecked)) {
+        if (!(enableMultiRowSelection === false && getIsChecked())) {
           if (selectAll) onSelectAllChange(e);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           else onSelectionChange!(e as any);
@@ -131,18 +138,36 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       title: undefined,
     }) as CheckboxProps | RadioProps;
 
-  // The table here may be the core table from a header context, which has no
-  // `state`; the store subscription works on both.
   return (
     <Subscribe
       selector={(state) => ({
         density: state.density,
         isLoading: state.isLoading,
+        // A row checkbox follows its own row only; the select-all checkbox
+        // follows the selection and every slice of the row models it counts.
+        ...(selectAll
+          ? {
+              columnFilterFns: state.columnFilterFns,
+              columnFilters: state.columnFilters,
+              expanded: state.expanded,
+              globalFilter: state.globalFilter,
+              globalFilterFn: state.globalFilterFn,
+              grouping: state.grouping,
+              pagination: state.pagination,
+              rowSelection: state.rowSelection,
+              sorting: state.sorting,
+            }
+          : {
+              isRowSelected: getIsRowSelected({ row, table }),
+              isSomeSelected: row.getIsSomeSelected(),
+            }),
       })}
       source={table.store}
     >
-      {(state) => {
-        const commonProps = getCommonProps(state);
+      {({ density, isLoading }) => {
+        const allRowsSelected = selectAll ? getAllRowsSelected() : undefined;
+        const isChecked = getIsChecked();
+        const commonProps = getCommonProps({ density, isChecked, isLoading });
         return (
           <ST_Tooltip
             title={

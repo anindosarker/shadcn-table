@@ -1,3 +1,4 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
@@ -7,12 +8,16 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_RowPinButton } from '@/components/ui/shadcn-table/components/buttons/ST_RowPinButton';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyRowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from `row`. The
+   * display column outside this cluster still passes it; the integration
+   * step removes it.
+   */
+  table?: unknown;
 }
 
 const rowPinWrapperVariants = cva('flex', {
@@ -26,15 +31,15 @@ const rowPinWrapperVariants = cva('flex', {
 
 export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   row,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the buttons
+  table: _table,
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The row carries the core table; the ST wrapper types re-type its getters.
+  const table = row.table as unknown as ST_TableInstance<TData>;
   const {
     options: { enableRowPinning, rowPinningDisplayMode },
   } = table;
-  const { density } = table.state;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canPin = parseFromValuesOrFunc(enableRowPinning, row as any);
@@ -43,27 +48,36 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
 
   const rowPinButtonProps = {
     row,
-    table,
     ...rest,
   };
 
-  if (rowPinningDisplayMode === 'top-and-bottom' && !row.getIsPinned()) {
-    return (
-      <div
-        className={rowPinWrapperVariants({
-          density: density === 'compact' ? 'compact' : 'other',
-        })}
-      >
-        <ST_RowPinButton pinningPosition="top" {...rowPinButtonProps} />
-        <ST_RowPinButton pinningPosition="bottom" {...rowPinButtonProps} />
-      </div>
-    );
-  }
-
   return (
-    <ST_RowPinButton
-      pinningPosition={rowPinningDisplayMode === 'bottom' ? 'bottom' : 'top'}
-      {...rowPinButtonProps}
-    />
+    <Subscribe
+      selector={(state) => ({
+        density: state.density,
+        rowPinning: state.rowPinning,
+      })}
+      source={table.store}
+    >
+      {({ density }) =>
+        rowPinningDisplayMode === 'top-and-bottom' && !row.getIsPinned() ? (
+          <div
+            className={rowPinWrapperVariants({
+              density: density === 'compact' ? 'compact' : 'other',
+            })}
+          >
+            <ST_RowPinButton pinningPosition="top" {...rowPinButtonProps} />
+            <ST_RowPinButton pinningPosition="bottom" {...rowPinButtonProps} />
+          </div>
+        ) : (
+          <ST_RowPinButton
+            pinningPosition={
+              rowPinningDisplayMode === 'bottom' ? 'bottom' : 'top'
+            }
+            {...rowPinButtonProps}
+          />
+        )
+      }
+    </Subscribe>
   );
 };
