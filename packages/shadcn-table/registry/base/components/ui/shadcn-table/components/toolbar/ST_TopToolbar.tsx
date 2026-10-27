@@ -104,9 +104,17 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
         return (
           <div
             {...toolbarProps}
-            ref={(ref: HTMLDivElement) => {
-              topToolbarRef.current = ref;
-              assignRef(toolbarProps?.ref, ref);
+            ref={(node: HTMLDivElement) => {
+              topToolbarRef.current = node;
+              const cleanup = assignRef(toolbarProps?.ref, node);
+              return () => {
+                if (typeof cleanup === 'function') {
+                  cleanup();
+                } else {
+                  assignRef(toolbarProps?.ref, null);
+                }
+                topToolbarRef.current = null;
+              };
             }}
             className={cn(
               topToolbarVariants({ fullscreen: isFullScreen }),
