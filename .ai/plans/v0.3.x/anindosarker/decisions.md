@@ -1,8 +1,8 @@
-# v0.4.0 cycle decisions, archived 2026-10-27
+# v0.3.x cycle decisions
 
 Everything here except the v9 architecture item shipped in 0.3.1 to 0.3.3. The v9
-architecture item is superseded by [decisions.md](decisions.md), which holds the part 06
-rulings. Kept for the why behind the docs app, package layout, docs site and release flow.
+architecture item is superseded by [../../v0.4.x/anindosarker/decisions.md](../../v0.4.x/anindosarker/decisions.md).
+Frozen 2026-10-27.
 
 ## Docs app
 

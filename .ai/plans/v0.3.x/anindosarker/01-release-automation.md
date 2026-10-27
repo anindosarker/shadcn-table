@@ -5,7 +5,7 @@
 ### 1.1 Overview
 
 Releases today are a six-step manual checklist (`.ai/plans/v0.2-base-ui/anindosarker/
-04-release.md`). Decision: [decisions-archive.md](decisions-archive.md) "Release". A release is one command;
+04-release.md`). Decision: [decisions.md](decisions.md) "Release". A release is one command;
 a workflow does the verification and the GitHub release, or fails without releasing.
 
 ### 1.2 Goals

@@ -1,9 +1,9 @@
-# v0.4.0 part 06, TanStack Table v9 architecture: decisions
+# v0.4.x part 01, TanStack Table v9 architecture: decisions
 
 Decisions for the part 06 rewrite, taken 2026-10-21 to 2026-10-27. Earlier cycle decisions
 (docs app, package layout, docs site, release flow, intermediate releases; all shipped in
-0.3.1 to 0.3.3) are in [decisions-archive.md](decisions-archive.md). Plan:
-[06-v9-architecture.md](06-v9-architecture.md). Phase 00 report: `06-00-comparison.md` on
+0.3.1 to 0.3.3) are in [../../v0.3.x/anindosarker/decisions.md](../../v0.3.x/anindosarker/decisions.md). Plan:
+[01-v9-architecture.md](01-v9-architecture.md). Phase 00 report: `01-00-comparison.md` on
 branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](findings.md).
 
 ## TanStack Table v9 architecture
@@ -21,7 +21,7 @@ branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](f
    - Public API (`useShadcnTable`, `ShadcnTable`, `ST_TableOptions`, the per-call fn
      registries, user-side `table.state`) stays. The table hook and column helper stay
      internal.
-   - MRT is deprecated. The 123-file twin map from `06-00-comparison.md` is a coverage
+   - MRT is deprecated. The 123-file twin map from `01-00-comparison.md` is a coverage
      checklist; where MRT's port is wrong or incomplete (fn registries, `table.state` in
      nested components, `memoMode`), ours diverges and the tracker says so in one line.
    - Why v9 primitives: the core table is what `row.table`, `cell.table`, `header.table` and

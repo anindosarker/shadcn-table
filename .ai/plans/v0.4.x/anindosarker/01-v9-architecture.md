@@ -1,4 +1,4 @@
-# 06: v9 architecture
+# 01: v9 architecture
 
 ## 1. Architecture
 
@@ -8,7 +8,7 @@ Our TanStack Table v9 port kept the v8-shaped hooks and registered only built-in
 material-react-table's v9 port, now living in the TanStack repo, moved its own state into v9
 custom features behind one `createTableHook`. Decisions: [decisions.md](decisions.md),
 items 1 to 6: v9 primitives, MRT as checklist, public API unchanged, ships as `0.4.0`.
-Runs after [04](04-package-layout.md) and [05](05-docs-app-layout.md); phase 00 may start
+Runs after [v0.3.x 04](../../v0.3.x/anindosarker/04-package-layout.md) and [05](../../v0.3.x/anindosarker/05-docs-app-layout.md); phase 00 may start
 once 04 is merged.
 
 ### 1.2 Goals
@@ -125,7 +125,7 @@ sequenceDiagram
 
 #### 1.6.2 Comparison report
 
-`06-00-comparison.md`, read-only output of phase 00, read by the owner before phase 01.
+`01-00-comparison.md`, read-only output of phase 00, read by the owner before phase 01.
 
 - Per twin file: v9 API divergences (state reads, setters, feature APIs, `Subscribe`, types),
   one line each with the MRT line reference
@@ -229,7 +229,7 @@ display columns. 48 files read `table.state` today; MRT's port reads it in 6.
 
 - API pages for any option added or removed; a note on `getting-started/migrating-v1` for
   internals a user who copied the source might have touched
-- `CHANGELOG.md` `## 0.4.0`, then `pnpm release 0.4.0` per [01](01-release-automation.md)
+- `CHANGELOG.md` `## 0.4.0`, then `pnpm release 0.4.0` per [v0.3.x 01](../../v0.3.x/anindosarker/01-release-automation.md)
 
 ### 1.7 Dependencies and env
 
@@ -243,7 +243,7 @@ https://tanstack.com/table/latest/docs/framework/react/guide/.
 
 ## 2. Instructions for AI
 
-Tracker `06-v9-architecture-tracker.md`, decisions and deviations only. One Workflow run per
+Tracker `01-tracker.md`, decisions and deviations only. One Workflow run per
 phase, resumable; agents in `shadcn-react-table.worktrees/<name>` on their own branches,
 push only; the lead merges onto `v0.4/v9-architecture`, then `claude/review`. Each phase
 ends with every gate in 2.2 green on both trees and one commit per cluster.
@@ -256,7 +256,7 @@ review bounces, an unfixable gate, a finding that contradicts a recorded decisio
 #### 2.1.1 Phase 00: Comparison
 
 - One comparison agent per cluster in parallel, one for hooks and types, one for the state
-  ownership map; a verifier per finding; a merge agent writes `06-00-comparison.md` (1.6.2)
+  ownership map; a verifier per finding; a merge agent writes `01-00-comparison.md` (1.6.2)
 - Owner reads it before phase 01 starts
 
 #### 2.1.2 Phase 01: Features and hook

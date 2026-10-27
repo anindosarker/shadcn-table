@@ -1,8 +1,8 @@
-# Part 06 overview: current package vs the v9 architecture
+# Part 01 overview: current package vs the v9 architecture
 
 Written 2026-10-26 for the owner, before the D1 to D5 rulings. Radix base only; the base tree
-is identical in shape. Companion to `06-v9-architecture.md` (the plan) and
-`06-00-comparison.md` (the per-file report on branch `v0.4/v9-architecture`).
+is identical in shape. Companion to `01-v9-architecture.md` (the plan) and
+`01-00-comparison.md` (the per-file report on branch `v0.4/v9-architecture`).
 
 ## 1. How the current package works
 
@@ -53,7 +53,7 @@ What this shape costs (see `findings.md`):
 
 ## 2. What the v9 architecture changes
 
-Target per `06-v9-architecture.md` section 1.4, mirroring the MRT v9 port at
+Target per `01-v9-architecture.md` section 1.4, mirroring the MRT v9 port at
 `../tanstack-table/examples/react/material-react-table/src/material-react-table/`.
 
 ```TypeScript

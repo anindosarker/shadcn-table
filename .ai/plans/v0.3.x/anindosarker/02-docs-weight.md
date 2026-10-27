@@ -6,7 +6,7 @@
 
 `components/mdx/example-snippet.tsx` highlights every file of every example for both bases at
 build time and passes the React trees to the client as props, so docs pages weigh 1 to 5 MB
-each and fill Vercel's deployment storage. Decision: [decisions-archive.md](decisions-archive.md) "Docs
+each and fill Vercel's deployment storage. Decision: [decisions.md](decisions.md) "Docs
 site" 1, highlight on the client, on demand.
 
 ### 1.2 Goals
