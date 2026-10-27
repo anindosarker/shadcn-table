@@ -6,8 +6,8 @@
 
 Our TanStack Table v9 port kept the v8-shaped hooks and registered only built-in features;
 material-react-table's v9 port, now living in the TanStack repo, moved its own state into v9
-custom features behind one `createTableHook`. Decision: [decisions.md](decisions.md)
-"TanStack Table v9 architecture": same shape for us, public API unchanged, ships as `0.4.0`.
+custom features behind one `createTableHook`. Decisions: [decisions.md](decisions.md),
+items 1 to 6: v9 primitives, MRT as checklist, public API unchanged, ships as `0.4.0`.
 Runs after [04](04-package-layout.md) and [05](05-docs-app-layout.md); phase 00 may start
 once 04 is merged.
 

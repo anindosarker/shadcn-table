@@ -125,8 +125,9 @@ branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](f
    - Components that receive an instance (`row`, `cell`, `header`, `column`) read
      `instance.table`. About 35 of 57 files: body rows and cells, head cells and their menus,
      filter and edit inputs, row buttons, cell action menu. No context, no provider needed, so
-     they compose anywhere. Depends on phase 01 putting ST state, refs and setters on the core
+     they compose anywhere. Depends on phase 01 putting ST atoms, setters and `refs` on the core
      table; today `row.table` is the bare core table (findings: headless display columns).
+     The core table never carries `table.state`; see item 5.
    - Components with no instance read `useSTContext()`. About 20 files: `ST_TableContainer`,
      `ST_TableLayout`, `ST_Table`, head, body and footer roots, toolbars and toolbar buttons,
      pagination, alert banner, drop zone, global filter field, edit modal, show-hide menu.
