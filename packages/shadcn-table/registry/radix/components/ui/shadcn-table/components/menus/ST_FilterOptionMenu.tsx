@@ -175,14 +175,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     [],
   );
 
-  // v9 drops a filter update whose value is structurally unchanged, so setting
-  // the current value again would leave the row model on the previous mode's
-  // function. Emitting the same filters as a new array re-runs filtering once
-  // the columns pick up the new mode. The handler is read off the core table:
-  // its options carry the default handler when the caller passes none.
-  const rerunColumnFilters = () =>
-    column?.table.options.onColumnFiltersChange?.((old) => [...old]);
-
   const handleSelectFilterMode = (option: ST_FilterOption) => {
     const prevFilterMode = columnDef ? getColumnFilterFnName(columnDef) : '';
     if (!header || !column) {
@@ -204,8 +196,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           !emptyModes.includes(prevFilterMode)
         ) {
           column.setFilterValue(' ');
-        } else if (currentFilterValue) {
-          rerunColumnFilters(); // perform new filter render
         }
       } else if (
         columnDef?.filterVariant === 'multi-select' ||
@@ -219,8 +209,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         ) {
           column.setFilterValue([]);
           setFilterValue?.([]);
-        } else if (currentFilterValue) {
-          rerunColumnFilters(); // perform new filter render
         }
       } else if (
         columnDef?.filterVariant?.includes('range') ||
@@ -235,8 +223,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         ) {
           column.setFilterValue(['', '']);
           setFilterValue?.('');
-        } else {
-          rerunColumnFilters(); // perform new filter render
         }
       } else {
         // will now be single value filter mode
@@ -248,8 +234,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           emptyModes.includes(prevFilterMode)
         ) {
           column.setFilterValue(undefined);
-        } else {
-          rerunColumnFilters(); // perform new filter render
         }
       }
     }

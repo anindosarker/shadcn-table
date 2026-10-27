@@ -10,6 +10,7 @@ import {
   type RowData,
   type TableFeature,
   type TableFeatures,
+  type TableOptions_ColumnFiltering,
 } from '@tanstack/react-table';
 import {
   type ST_ColumnFilterFnsState,
@@ -76,19 +77,35 @@ export const stFilterModesFeature: TableFeature = {
     onShowGlobalFilterChange: makeStateUpdater('showGlobalFilter', table),
   }),
   constructTableAPIs: (table) => {
-    const options = () => table.options as ST_TableOptions_FilterModes;
+    const options = () =>
+      table.options as ST_TableOptions_FilterModes &
+        Pick<
+          TableOptions_ColumnFiltering<TableFeatures, RowData>,
+          'onColumnFiltersChange'
+        >;
+    // Core memoizes the filtered row model on the `columnFilters` and
+    // `globalFilter` atoms, so a mode change alone leaves the rows on the
+    // previous mode's function. Emitting the same filters as a new array
+    // re-runs filtering once the columns pick up the new mode; the raw handler,
+    // because `setColumnFilters` would drop filters by the old mode's rules.
+    const rerunFilters = () =>
+      options().onColumnFiltersChange?.((old) => [...old]);
     assignTableAPIs('stFilterModesFeature', table, {
       table_setColumnFilterFns: {
-        fn: (updater: ST_Updater<ST_ColumnFilterFnsState>) =>
+        fn: (updater: ST_Updater<ST_ColumnFilterFnsState>) => {
           options().onColumnFilterFnsChange?.((old) =>
             functionalUpdate(updater, old),
-          ),
+          );
+          rerunFilters();
+        },
       },
       table_setGlobalFilterFn: {
-        fn: (updater: ST_Updater<ST_FilterOption>) =>
+        fn: (updater: ST_Updater<ST_FilterOption>) => {
           options().onGlobalFilterFnChange?.((old) =>
             functionalUpdate(updater, old),
-          ),
+          );
+          rerunFilters();
+        },
       },
       table_setShowColumnFilters: {
         fn: (updater: ST_Updater<boolean>) =>
