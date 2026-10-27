@@ -182,34 +182,6 @@ export const EnableRowVirtualizationWithDetailPanel = () => (
   />
 );
 
-export const EnableRowVirtualizationWithMemoizedCells = () => (
-  <ShadcnTable
-    columns={longColumns}
-    data={longData}
-    enableBottomToolbar={false}
-    enableDensityToggle={false}
-    enablePagination={false}
-    enableRowNumbers
-    enableRowVirtualization
-    initialState={{ density: 'compact' }}
-    memoMode="cells"
-  />
-);
-
-export const EnableRowVirtualizationWithMemoizedRows = () => (
-  <ShadcnTable
-    columns={longColumns}
-    data={longData}
-    enableBottomToolbar={false}
-    enableDensityToggle={false}
-    enablePagination={false}
-    enableRowNumbers
-    enableRowVirtualization
-    initialState={{ density: 'compact' }}
-    memoMode="rows"
-  />
-);
-
 export const EnableRowVirtualizationStickyFooter = () => (
   <ShadcnTable
     columns={[
