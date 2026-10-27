@@ -5,9 +5,11 @@ import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import {
   type SliderProps,
+  type ST_ColumnDef,
   type ST_Header,
   type ST_RowData,
   type ST_TableInstance,
+  type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
@@ -37,16 +39,20 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   // The header carries the core table; the ST wrapper types re-type its getters.
   const table = header.table as unknown as ST_TableInstance<TData>;
   const {
-    options: {
-      enableColumnFilterModes,
-      enableFacetedValues,
-      localization,
-      stFilterSliderProps,
-    },
+    options: { enableColumnFilterModes, enableFacetedValues, localization },
     refs: { filterInputRefs },
   } = table;
   const { column } = header;
   const { columnDef } = column;
+  // table.options and the column def hold the part props tree-neutral
+  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
+  // ST_ColumnDef) type them for this tree's Slider.
+  const {
+    stFilterSliderProps,
+  }: Pick<ST_TableOptions<TData>, 'stFilterSliderProps'> = table.options;
+  const {
+    stFilterSliderProps: columnFilterSliderProps,
+  }: Pick<ST_ColumnDef<TData>, 'stFilterSliderProps'> = columnDef;
   // The filter value and the faceted range feed the sync effect, so they are
   // hook subscriptions: the facets follow the other columns' filters and the
   // global filter.
@@ -60,7 +66,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
 
   const sliderProps = {
     ...parseFromValuesOrFunc(stFilterSliderProps, { column, table }),
-    ...parseFromValuesOrFunc(columnDef.stFilterSliderProps, { column, table }),
+    ...parseFromValuesOrFunc(columnFilterSliderProps, { column, table }),
     ...rest,
   };
 

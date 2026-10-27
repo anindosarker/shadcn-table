@@ -261,6 +261,10 @@ On `819b7c6`, clean tree, from `packages/shadcn-table` unless noted:
 - Worktree root, `pnpm registry:build`: pass, `Building registry.`, then `git status` clean.
 - Worktree root, `pnpm --filter shadcn-table-docs lib:install radix`: pass, `143 table files (38 locales merged in), 28 parts`, then `git status` clean.
 
+### Two trees in one program
+
+- The docs app compiles both installed copies, so both `declare module '@tanstack/react-table'` blocks merge and each feature-map member must have identical types, checked deeply. `stConfigFeature` types its eight part-prop members (`stCreateRowModalProps`, `stEditRowDialogProps`, `stFilterCheckboxProps`, `stFilterSliderProps`, `stSelectAllCheckboxProps`, `stSelectCheckboxProps`, `defaultDisplayColumn`, `displayColumnDefOptions`; column `stFilterCheckboxProps`, `stFilterSliderProps`) through a `TParts` parameter that defaults to `ST_NeutralPartPropTypes` (`ST_PartProps = object`); the augmentation and everything it reaches (`ST_TableInstance.options` as `ST_DefinedTableOptions`, `column.columnDef` as `ST_DefinedColumnDef`, the display column defs and `column.utils`) use the neutral map, while `ST_TableOptions`, `ST_ColumnDef` and `ST_DisplayColumnDef` default `TParts` to this tree's `ST_PartPropTypes`, and the four reading components (`ST_FilterCheckbox`, `ST_FilterRangeSlider`, `ST_SelectCheckbox`, `ST_EditRowModal`) re-type the members with a `Pick<ST_TableOptions<TData>, ...>` or `Pick<ST_ColumnDef<TData>, ...>` annotation. Overlaying only `ST_TableOptions` and `ST_ColumnDef` was tried first: it makes `ST_TableInstance`, `ST_Row`, `ST_Cell` and `ST_Column` tree-specific, and five features then fail TS2717 (282 errors in the docs tsc).
+
 ### Known red, deferred
 
 - Part 02: `pnpm storybook:build:base` (run, `UNLOADABLE_DEPENDENCY`: stories import radix-only `components/` and `shared/` paths); `pnpm check:bases`, `pnpm tsc:baseui` (expected red, not run).

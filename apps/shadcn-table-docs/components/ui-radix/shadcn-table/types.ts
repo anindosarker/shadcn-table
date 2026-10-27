@@ -45,6 +45,10 @@ import { type ST_AggregationFns } from '@/components/ui-radix/shadcn-table/share
 import { type ST_FilterFns } from '@/components/ui-radix/shadcn-table/shared/fns/filterFns';
 import { type ST_SortFns } from '@/components/ui-radix/shadcn-table/shared/fns/sortFns';
 import { type ST_Icons } from '@/components/ui-radix/shadcn-table/icons';
+import {
+  type ST_ColumnDef_Config,
+  type ST_TableOptions_Config,
+} from '@/components/ui-radix/shadcn-table/features/stConfigFeature';
 import { type ST_Features } from '@/components/ui-radix/shadcn-table/features/stFeatures';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
@@ -94,6 +98,37 @@ export type DialogProps = Pick<
   'onOpenChange'
 > &
   ComponentPropsWithRef<typeof DialogContent>;
+
+/**
+ * The props types of the shadcn parts that the part-prop options
+ * (`stFilterCheckboxProps`, `stEditRowDialogProps`, ...) pass on, by part.
+ * They resolve to this tree's parts, Radix UI or Base UI.
+ */
+export interface ST_PartPropTypes {
+  checkbox: CheckboxProps;
+  dialog: DialogProps;
+  radio: RadioProps;
+  slider: SliderProps;
+}
+
+/**
+ * A part's props, tree-neutral: every tree's part props fit it. `object`, not
+ * `Record<string, unknown>`: the parts' props types are interfaces, which have
+ * no index signature.
+ */
+export type ST_PartProps = object;
+
+/**
+ * `ST_PartPropTypes` with every part tree-neutral. The feature-map
+ * augmentation (stConfigFeature) and the table instance types (`table.options`,
+ * `column.columnDef`) use it, so they stay identical across trees; the options
+ * a user writes (`ST_TableOptions`, `ST_ColumnDef`) take this tree's
+ * `ST_PartPropTypes`.
+ */
+export type ST_NeutralPartPropTypes = Record<
+  keyof ST_PartPropTypes,
+  ST_PartProps
+>;
 
 export type ST_LinearProgressProps = {
   collapsibleProps?: DivProps;
@@ -331,7 +366,7 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
 };
 
 export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
-  ST_TableOptions<TData>,
+  ST_TableOptions<TData, ST_NeutralPartPropTypes>,
   // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   'icons' | 'localization' // | 'mrtTheme'
 > & {
@@ -372,23 +407,34 @@ export type ST_TableState<TData extends ST_RowData> = Omit<
 };
 
 /**
- * A column definition. The ST-only members come from `stConfigFeature`; this
- * interface narrows the core members whose ST shape differs.
+ * The column members that pass props to a shadcn part, typed for `TParts`.
  */
-export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
-  extends Omit<
-    ColumnDef<ST_Features, TData, TValue>,
-    | 'accessorKey'
-    | 'aggregatedCell'
-    | 'aggregationFn'
-    | 'cell'
-    | 'columns'
-    | 'filterFn'
-    | 'footer'
-    | 'header'
-    | 'id'
-    | 'sortFn'
-  > {
+type ST_ColumnDef_PartKeys = 'stFilterCheckboxProps' | 'stFilterSliderProps';
+
+/**
+ * A column definition. The ST-only members come from `stConfigFeature`; this
+ * interface narrows the core members whose ST shape differs, and types the
+ * part-prop members for `TParts` (this tree's parts by default).
+ */
+export interface ST_ColumnDef<
+  TData extends ST_RowData,
+  TValue = unknown,
+  TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
+> extends Omit<
+      ColumnDef<ST_Features, TData, TValue>,
+      | 'accessorKey'
+      | 'aggregatedCell'
+      | 'aggregationFn'
+      | 'cell'
+      | 'columns'
+      | 'filterFn'
+      | 'footer'
+      | 'header'
+      | 'id'
+      | 'sortFn'
+      | ST_ColumnDef_PartKeys
+    >,
+    Pick<ST_ColumnDef_Config<TData, TValue, TParts>, ST_ColumnDef_PartKeys> {
   /**
    * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
    * Specify a function here to point to the correct property in the data object.
@@ -406,7 +452,7 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
    */
   accessorKey?: DeepKeys<TData> | (string & {});
   aggregationFn?: Array<ST_AggregationFn<TData>> | ST_AggregationFn<TData>;
-  columns?: ST_ColumnDef<TData, TValue>[];
+  columns?: ST_ColumnDef<TData, TValue, TParts>[];
   filterFn?: ST_FilterFn<TData>;
   /**
    * footer must be a string. If you want custom JSX to render the footer, you can also specify a `Footer` option. (Capital F)
@@ -432,7 +478,8 @@ export interface ST_ColumnDef<TData extends ST_RowData, TValue = unknown>
 export type ST_DisplayColumnDef<
   TData extends ST_RowData,
   TValue = unknown,
-> = Omit<ST_ColumnDef<TData, TValue>, 'accessorFn' | 'accessorKey'>;
+  TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
+> = Omit<ST_ColumnDef<TData, TValue, TParts>, 'accessorFn' | 'accessorKey'>;
 
 export type ST_GroupColumnDef<TData extends ST_RowData> = ST_DisplayColumnDef<
   TData,
@@ -444,8 +491,13 @@ export type ST_GroupColumnDef<TData extends ST_RowData> = ST_DisplayColumnDef<
 export type ST_DefinedColumnDef<
   TData extends ST_RowData,
   TValue = unknown,
-> = Omit<ST_ColumnDef<TData, TValue>, 'defaultDisplayColumn' | 'id'> & {
-  defaultDisplayColumn: Partial<ST_ColumnDef<TData, TValue>>;
+> = Omit<
+  ST_ColumnDef<TData, TValue, ST_NeutralPartPropTypes>,
+  'defaultDisplayColumn' | 'id'
+> & {
+  defaultDisplayColumn: Partial<
+    ST_ColumnDef<TData, TValue, ST_NeutralPartPropTypes>
+  >;
   id: string;
 };
 
@@ -538,6 +590,20 @@ export type ST_DisplayColumnIds =
   | 'st-row-spacer';
 
 /**
+ * The table options that pass props to a shadcn part or hold column defs that
+ * do, typed for `TParts`.
+ */
+type ST_TableOptions_PartKeys =
+  | 'defaultDisplayColumn'
+  | 'displayColumnDefOptions'
+  | 'stCreateRowModalProps'
+  | 'stEditRowDialogProps'
+  | 'stFilterCheckboxProps'
+  | 'stFilterSliderProps'
+  | 'stSelectAllCheckboxProps'
+  | 'stSelectCheckboxProps';
+
+/**
  * `columns` and `data` props are the only required props, but there are over 170 other optional props.
  *
  * See more info on creating columns and data on the official docs site:
@@ -545,28 +611,34 @@ export type ST_DisplayColumnIds =
  *
  * See the full props list on the official docs site:
  * @link https://shadcn-table.com/docs/api/table-options
+ *
+ * The part-prop members are typed for `TParts` (this tree's parts by default).
  */
-export interface ST_TableOptions<TData extends ST_RowData>
-  extends Omit<
-    Partial<TableOptions<ST_Features, TData>>,
-    | 'columns'
-    | 'data'
-    | 'defaultColumn'
-    | 'enableRowSelection'
-    | 'features'
-    | 'getRowId'
-    | 'globalFilterFn'
-    | 'initialState'
-    | 'onActionCellChange'
-    | 'onCreatingRowChange'
-    | 'onDraggingColumnChange'
-    | 'onDraggingRowChange'
-    | 'onEditingCellChange'
-    | 'onEditingRowChange'
-    | 'onHoveredColumnChange'
-    | 'onHoveredRowChange'
-    | 'state'
-  > {
+export interface ST_TableOptions<
+  TData extends ST_RowData,
+  TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
+> extends Omit<
+      Partial<TableOptions<ST_Features, TData>>,
+      | 'columns'
+      | 'data'
+      | 'defaultColumn'
+      | 'enableRowSelection'
+      | 'features'
+      | 'getRowId'
+      | 'globalFilterFn'
+      | 'initialState'
+      | 'onActionCellChange'
+      | 'onCreatingRowChange'
+      | 'onDraggingColumnChange'
+      | 'onDraggingRowChange'
+      | 'onEditingCellChange'
+      | 'onEditingRowChange'
+      | 'onHoveredColumnChange'
+      | 'onHoveredRowChange'
+      | 'state'
+      | ST_TableOptions_PartKeys
+    >,
+    Pick<ST_TableOptions_Config<TData, TParts>, ST_TableOptions_PartKeys> {
   /**
    * The columns to display in the table. `accessorKey`s or `accessorFn`s must match keys in the `data` table option.
    *
@@ -577,7 +649,7 @@ export interface ST_TableOptions<TData extends ST_RowData>
    * See all Columns Options on the official docs site:
    * @link https://shadcn-table.com/docs/api/column-options
    */
-  columns: ST_ColumnDef<TData, any>[];
+  columns: ST_ColumnDef<TData, any, TParts>[];
   /**
    * Pass your data as an array of objects. Objects can theoretically be any shape, but it's best to keep them consistent.
    *
@@ -588,7 +660,7 @@ export interface ST_TableOptions<TData extends ST_RowData>
   /**
    * Instead of specifying a bunch of the same options for each column, you can just change an option in the `defaultColumn` table option to change a default option for all columns.
    */
-  defaultColumn?: Partial<ST_ColumnDef<TData>>;
+  defaultColumn?: Partial<ST_ColumnDef<TData, unknown, TParts>>;
   enableRowSelection?: ((row: ST_Row<TData>) => boolean) | boolean;
   getRowId?: (
     originalRow: TData,

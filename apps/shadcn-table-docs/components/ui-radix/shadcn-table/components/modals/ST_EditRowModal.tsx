@@ -13,6 +13,7 @@ import {
   type DialogProps,
   type ST_Row,
   type ST_RowData,
+  type ST_TableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_EditActionButtons } from '@/components/ui-radix/shadcn-table/components/buttons/ST_EditActionButtons';
@@ -33,8 +34,6 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
   const {
     options: {
       localization,
-      stCreateRowModalProps,
-      stEditRowDialogProps,
       onCreatingRowCancel,
       onEditingRowCancel,
       renderCreateRowDialogContent,
@@ -43,6 +42,15 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Dialog.
+  const {
+    stCreateRowModalProps,
+    stEditRowDialogProps,
+  }: Pick<
+    ST_TableOptions<TData>,
+    'stCreateRowModalProps' | 'stEditRowDialogProps'
+  > = table.options;
 
   return (
     <Subscribe

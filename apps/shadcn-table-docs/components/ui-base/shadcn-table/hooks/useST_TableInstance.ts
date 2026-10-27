@@ -3,6 +3,7 @@ import { type TableOptions, type TableState } from '@tanstack/react-table';
 import {
   type ST_ColumnDef,
   type ST_DefinedTableOptions,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_StatefulTableOptions,
   type ST_TableInstance,
@@ -93,7 +94,11 @@ export const useST_TableInstance = <TData extends ST_RowData>(
     initState.columnFilterFns = Object.assign(
       {},
       ...getAllLeafColumnDefs(
-        definedTableOptions.columns as ST_ColumnDef<TData>[],
+        definedTableOptions.columns as ST_ColumnDef<
+          TData,
+          unknown,
+          ST_NeutralPartPropTypes
+        >[],
       ).map((col) => ({
         [getColumnId(col)]:
           col.filterFn instanceof Function
@@ -137,7 +142,9 @@ export const useST_TableInstance = <TData extends ST_RowData>(
   };
 
   //don't recompute columnDefs while resizing column or dragging column/row
-  const columnDefsRef = useRef<ST_ColumnDef<TData>[]>([]);
+  const columnDefsRef = useRef<
+    ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[]
+  >([]);
   const columns =
     statefulTableOptions.state.columnResizing.isResizingColumn ||
     statefulTableOptions.state.draggingColumn ||
@@ -158,12 +165,20 @@ export const useST_TableInstance = <TData extends ST_RowData>(
                 getST_RowSelectColumnDef(statefulTableOptions),
               showRowNumbersColumn(statefulTableOptions) &&
                 getST_RowNumbersColumnDef(statefulTableOptions),
-            ].filter(Boolean) as ST_ColumnDef<TData>[]),
+            ].filter(Boolean) as ST_ColumnDef<
+              TData,
+              unknown,
+              ST_NeutralPartPropTypes
+            >[]),
             ...statefulTableOptions.columns,
             ...([
               showRowSpacerColumn(statefulTableOptions) &&
                 getST_RowSpacerColumnDef(statefulTableOptions),
-            ].filter(Boolean) as ST_ColumnDef<TData>[]),
+            ].filter(Boolean) as ST_ColumnDef<
+              TData,
+              unknown,
+              ST_NeutralPartPropTypes
+            >[]),
           ],
           tableOptions: statefulTableOptions,
         });

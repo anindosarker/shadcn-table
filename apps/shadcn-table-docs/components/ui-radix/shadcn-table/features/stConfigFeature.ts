@@ -9,15 +9,11 @@ import {
 import { type VirtualizerOptions } from '@tanstack/react-virtual';
 import {
   type ButtonProps,
-  type CheckboxProps,
-  type DialogProps,
   type DivProps,
   type DropdownOption,
   type InputProps,
   type LiteralUnion,
-  type RadioProps,
   type SelectProps,
-  type SliderProps,
   type ST_AggregationFn,
   type ST_Cell,
   type ST_CircularProgressProps,
@@ -33,6 +29,7 @@ import {
   type ST_InternalFilterOption,
   type ST_LinearProgressProps,
   type ST_Localization,
+  type ST_NeutralPartPropTypes,
   type ST_PaginationProps,
   type ST_Row,
   type ST_RowData,
@@ -70,7 +67,10 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export interface ST_TableOptions_Config<TData extends ST_RowData> {
+export interface ST_TableOptions_Config<
+  TData extends ST_RowData,
+  TParts extends ST_NeutralPartPropTypes = ST_NeutralPartPropTypes,
+> {
   /**
    * Custom aggregation functions, by name, on top of the built-in ones. A column's `aggregationFn` string resolves against this map.
    */
@@ -89,9 +89,11 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
   /**
    * Change the default options for display columns.
    */
-  defaultDisplayColumn?: Partial<ST_DisplayColumnDef<TData>>;
+  defaultDisplayColumn?: Partial<ST_DisplayColumnDef<TData, unknown, TParts>>;
   displayColumnDefOptions?: Partial<{
-    [key in ST_DisplayColumnIds]: Partial<ST_DisplayColumnDef<TData>>;
+    [key in ST_DisplayColumnIds]: Partial<
+      ST_DisplayColumnDef<TData, unknown, TParts>
+    >;
   }>;
   editDisplayMode?: 'cell' | 'custom' | 'modal' | 'row' | 'table';
   enableBottomToolbar?: boolean;
@@ -176,8 +178,8 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
     | ((props: {
         row: ST_Row<TData>;
         table: ST_TableInstance<TData>;
-      }) => DialogProps)
-    | DialogProps;
+      }) => TParts['dialog'])
+    | TParts['dialog'];
   stDetailPanelProps?:
     | ((props: {
         row: ST_Row<TData>;
@@ -188,8 +190,8 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
     | ((props: {
         row: ST_Row<TData>;
         table: ST_TableInstance<TData>;
-      }) => DialogProps)
-    | DialogProps;
+      }) => TParts['dialog'])
+    | TParts['dialog'];
   stEditTextFieldProps?:
     | ((props: {
         cell: ST_Cell<TData>;
@@ -218,8 +220,8 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
     | ((props: {
         column: ST_Column<TData>;
         table: ST_TableInstance<TData>;
-      }) => CheckboxProps)
-    | CheckboxProps;
+      }) => TParts['checkbox'])
+    | TParts['checkbox'];
   stFilterDatePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -238,8 +240,8 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
     | ((props: {
         column: ST_Column<TData>;
         table: ST_TableInstance<TData>;
-      }) => SliderProps)
-    | SliderProps;
+      }) => TParts['slider'])
+    | TParts['slider'];
   stFilterTextFieldProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -287,15 +289,15 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
     | ((props: { table: ST_TableInstance<TData> }) => InputProps)
     | InputProps;
   stSelectAllCheckboxProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => CheckboxProps)
-    | CheckboxProps;
+    | ((props: { table: ST_TableInstance<TData> }) => TParts['checkbox'])
+    | TParts['checkbox'];
   stSelectCheckboxProps?:
     | ((props: {
         row: ST_Row<TData>;
         staticRowIndex?: number;
         table: ST_TableInstance<TData>;
-      }) => CheckboxProps | RadioProps)
-    | (CheckboxProps | RadioProps);
+      }) => TParts['checkbox'] | TParts['radio'])
+    | (TParts['checkbox'] | TParts['radio']);
   stSkeletonProps?:
     | ((props: {
         cell: ST_Cell<TData>;
@@ -505,6 +507,7 @@ export interface ST_TableOptions_Config<TData extends ST_RowData> {
 export interface ST_ColumnDef_Config<
   TData extends ST_RowData,
   TValue = unknown,
+  TParts extends ST_NeutralPartPropTypes = ST_NeutralPartPropTypes,
 > {
   AggregatedCell?: (props: {
     cell: ST_Cell<TData, TValue>;
@@ -659,8 +662,8 @@ export interface ST_ColumnDef_Config<
     | ((props: {
         column: ST_Column<TData>;
         table: ST_TableInstance<TData>;
-      }) => CheckboxProps)
-    | CheckboxProps;
+      }) => TParts['checkbox'])
+    | TParts['checkbox'];
   stFilterDatePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -679,8 +682,8 @@ export interface ST_ColumnDef_Config<
     | ((props: {
         column: ST_Column<TData>;
         table: ST_TableInstance<TData>;
-      }) => SliderProps)
-    | SliderProps;
+      }) => TParts['slider'])
+    | TParts['slider'];
   stFilterTextFieldProps?:
     | ((props: {
         column: ST_Column<TData>;
