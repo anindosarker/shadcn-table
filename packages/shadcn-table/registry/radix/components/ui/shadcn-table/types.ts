@@ -319,8 +319,11 @@ export interface ST_RowModel<TData extends ST_RowData> {
   rowsById: { [key: string]: ST_Row<TData> };
 }
 
-export type ST_TableInstance<TData extends ST_RowData> = Omit<
-  ReactTable<ST_Features, TData, ST_TableState<TData>>,
+export type ST_TableInstance<
+  TData extends ST_RowData,
+  TSelected = ST_TableState<TData>,
+> = Omit<
+  ReactTable<ST_Features, TData, TSelected>,
   | 'getAllColumns'
   | 'getAllFlatColumns'
   | 'getAllLeafColumns'
@@ -687,5 +690,5 @@ export interface ST_TableOptions<
 
 export type ST_TableProviderProps<TData extends ST_RowData> = {
   children: ReactNode;
-  table: ST_TableInstance<TData>;
+  table: ST_TableInstance<TData, unknown>;
 };

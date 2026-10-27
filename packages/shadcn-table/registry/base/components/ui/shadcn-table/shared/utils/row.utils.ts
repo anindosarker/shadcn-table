@@ -84,7 +84,7 @@ export const getST_Rows = <TData extends ST_RowData>(
 };
 
 export const getCanRankRows = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
+  table: ST_TableInstance<TData, unknown>,
 ) => {
   const {
     options: {

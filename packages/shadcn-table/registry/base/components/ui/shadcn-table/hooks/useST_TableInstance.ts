@@ -77,16 +77,19 @@ export const selectST_TransformState = (state: TableState<ST_Features>) => ({
  * with a narrower selector `table.state` holds only the selection
  * @returns the MRT table instance
  */
-export const useST_TableInstance = <TData extends ST_RowData>(
+export const useST_TableInstance = <
+  TData extends ST_RowData,
+  TSelected = ST_TableState<TData>,
+>(
   definedTableOptions: ST_DefinedTableOptions<TData>,
-  selector?: (state: TableState<ST_Features>) => unknown,
-): ST_TableInstance<TData> => {
+  selector?: (state: TableState<ST_Features>) => TSelected,
+): ST_TableInstance<TData, TSelected> => {
   // One table hook per mounted table: the call's `filterFns`, `sortFns` and
   // `aggregationFns` are registered on its features, read on the first render
   const [{ useAppTable }] = useState(() =>
     createSTTableHook(definedTableOptions),
   );
-  const tableRef = useRef<ST_TableInstance<TData> | null>(null);
+  const tableRef = useRef<ST_TableInstance<TData, TSelected> | null>(null);
 
   //transform initial state with proper column order and filter modes
   const initialState: Partial<ST_TableState<TData>> = useMemo(() => {
@@ -225,7 +228,7 @@ export const useST_TableInstance = <TData extends ST_RowData>(
       initialState,
     } as Omit<TableOptions<ST_Features, TData>, 'features'>,
     selector,
-  ) as unknown as ST_TableInstance<TData>;
+  ) as unknown as ST_TableInstance<TData, TSelected>;
 
   tableRef.current = table;
 
