@@ -1,29 +1,20 @@
 import { cva } from 'class-variance-authority';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
-import {
-  type ST_CircularProgressProps,
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ST_CircularProgressProps } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_TableLoadingOverlayProps<TData extends ST_RowData>
-  extends ST_CircularProgressProps {
-  table?: ST_TableInstance<TData>;
-}
+export type ST_TableLoadingOverlayProps = ST_CircularProgressProps;
 
 const tableLoadingOverlayVariants = cva(
   'absolute inset-0 z-[3] flex max-h-screen w-full items-center justify-center bg-background/50',
 );
 
-export const ST_TableLoadingOverlay = <TData extends ST_RowData>({
-  table: tableProp,
+export const ST_TableLoadingOverlay = ({
   ...rest
-}: ST_TableLoadingOverlayProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_TableLoadingOverlayProps) => {
+  const table = useSTContext();
   const {
     options: {
       id,

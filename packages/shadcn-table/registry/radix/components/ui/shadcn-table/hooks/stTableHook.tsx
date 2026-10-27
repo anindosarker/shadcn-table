@@ -1,4 +1,9 @@
-import { type ContextType, useState } from 'react';
+import {
+  type ContextType,
+  useCallback,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import {
   constructAggregationFn,
   createTableHook,
@@ -74,6 +79,30 @@ export function useSTContext<
 }
 
 /**
+ * A table state atom, `table.atoms.<slice>`, as `useST_Atom` reads it.
+ */
+type ST_AtomSource<TValue> = {
+  get: () => TValue;
+  subscribe: (listener: (value: TValue) => void) => { unsubscribe: () => void };
+};
+
+/**
+ * Subscribes the calling component to one table atom, `table.atoms.<slice>`,
+ * for a value that feeds a hook (a memo, an effect, a virtualizer) and so
+ * cannot be read inside a `Subscribe` render function. The component
+ * re-renders when the atom changes; atom values are immutable, so the snapshot
+ * is stable between changes.
+ */
+export function useST_Atom<TValue>(atom: ST_AtomSource<TValue>): TValue {
+  const subscribe = useCallback(
+    (onChange: () => void) => atom.subscribe(onChange).unsubscribe,
+    [atom],
+  );
+  const getSnapshot = () => atom.get();
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+}
+
+/**
  * Provides a table to hand-composed ST components, such as an
  * `ST_TableContainer` rendered outside `ShadcnTable`, and the tooltip provider
  * their `ST_Tooltip`s need.
@@ -87,7 +116,17 @@ export const ST_TableProvider = <TData extends ST_RowData>({
   // readers a re-render on every table state change. Its options are
   // refreshed from each render's instance, so option reads stay current; only
   // its `state` is unused.
-  const [handle] = useState(() => table);
+  const [handle] = useState(() => {
+    // Transition, part 01 phase 03: components not yet on their own
+    // subscriptions read `table.state`, so the handle serves the live store
+    // until every component subscribes; `ST_TableLayout` re-renders them.
+    Object.defineProperty(table, 'state', {
+      configurable: true,
+      enumerable: true,
+      get: () => table.store.state,
+    });
+    return table;
+  });
   handle.options = table.options;
 
   // The context is typed for any core table; the ST wrapper types re-type its

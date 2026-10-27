@@ -1,11 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import {
-  type DivProps,
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type DivProps } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Table } from '@/components/ui/shadcn-table/components/table/ST_Table';
 import { ST_TableLoadingOverlay } from '@/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay';
@@ -16,10 +13,7 @@ import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-export interface ST_TableContainerProps<TData extends ST_RowData>
-  extends DivProps {
-  table?: ST_TableInstance<TData>;
-}
+export type ST_TableContainerProps = DivProps;
 
 // Thin, always-visible scrollbars so the horizontal bar is not hidden by
 // overlay scrollbars on macOS. Chromium ignores the ::-webkit-scrollbar rules
@@ -29,12 +23,8 @@ const tableContainerVariants = cva(
   'relative min-w-0 max-w-full overflow-auto supports-[not_selector(::-webkit-scrollbar)]:[scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent',
 );
 
-export const ST_TableContainer = <TData extends ST_RowData>({
-  table: tableProp,
-  ...rest
-}: ST_TableContainerProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
+  const table = useSTContext();
   const {
     options: {
       createDisplayMode,
@@ -45,17 +35,6 @@ export const ST_TableContainer = <TData extends ST_RowData>({
     },
     refs: { bottomToolbarRef, tableContainerRef, topToolbarRef },
   } = table;
-  const {
-    actionCell,
-    creatingRow,
-    editingRow,
-    isFullScreen,
-    isLoading,
-    showLoadingOverlay,
-  } = table.state;
-
-  const loading =
-    showLoadingOverlay !== false && (isLoading || showLoadingOverlay);
 
   const [totalToolbarHeight, setTotalToolbarHeight] = useState(0);
 
@@ -66,55 +45,97 @@ export const ST_TableContainer = <TData extends ST_RowData>({
     ...rest,
   };
 
+  // The toolbars change height on state this container does not render (an
+  // alert banner on selection), so their size is observed, not only measured
+  // after this container renders.
   useIsomorphicLayoutEffect(() => {
-    const topToolbarHeight =
-      typeof document !== 'undefined'
-        ? (topToolbarRef.current?.offsetHeight ?? 0)
-        : 0;
+    const measureToolbars = () => {
+      const topToolbarHeight =
+        typeof document !== 'undefined'
+          ? (topToolbarRef.current?.offsetHeight ?? 0)
+          : 0;
 
-    const bottomToolbarHeight =
-      typeof document !== 'undefined'
-        ? (bottomToolbarRef?.current?.offsetHeight ?? 0)
-        : 0;
+      const bottomToolbarHeight =
+        typeof document !== 'undefined'
+          ? (bottomToolbarRef?.current?.offsetHeight ?? 0)
+          : 0;
 
-    setTotalToolbarHeight(topToolbarHeight + bottomToolbarHeight);
+      setTotalToolbarHeight(topToolbarHeight + bottomToolbarHeight);
+    };
+    measureToolbars();
+    if (typeof ResizeObserver === 'undefined') return;
+    const resizeObserver = new ResizeObserver(measureToolbars);
+    [topToolbarRef.current, bottomToolbarRef.current].forEach(
+      (toolbar) => toolbar && resizeObserver.observe(toolbar),
+    );
+    return () => resizeObserver.disconnect();
   });
 
-  const createModalOpen = createDisplayMode === 'modal' && creatingRow;
-  const editModalOpen = editDisplayMode === 'modal' && editingRow;
+  // Created outside the state subscription, so a loading or editing change
+  // re-renders only the container element.
+  const tableElement = <ST_Table />;
 
   return (
-    <div
-      aria-busy={loading}
-      aria-describedby={loading ? 'st-progress' : undefined}
-      {...tableContainerProps}
-      ref={(node: HTMLDivElement) => {
-        if (node) {
-          tableContainerRef.current = node;
-          if (tableContainerProps?.ref) {
-            //@ts-expect-error ref can be either RefCallback or RefObject
-            tableContainerProps.ref.current = node;
-          }
-        }
-      }}
-      style={{
-        maxHeight: isFullScreen
-          ? `calc(100vh - ${totalToolbarHeight}px)`
-          : enableStickyHeader
-            ? `clamp(350px, calc(100vh - ${totalToolbarHeight}px), 9999px)`
-            : undefined,
-        ...tableContainerProps?.style,
-      }}
-      className={cn(
-        tableContainerVariants({ className: tableContainerProps.className }),
-      )}
+    <Subscribe
+      selector={(state) => ({
+        actionCell: state.actionCell,
+        creatingRow: state.creatingRow,
+        editingRow: state.editingRow,
+        isFullScreen: state.isFullScreen,
+        isLoading: state.isLoading,
+        showLoadingOverlay: state.showLoadingOverlay,
+      })}
+      source={table.store}
     >
-      {loading ? <ST_TableLoadingOverlay table={table} /> : null}
-      <ST_Table table={table} />
-      {(createModalOpen || editModalOpen) && (
-        <ST_EditRowModal open table={table} />
-      )}
-      {enableCellActions && actionCell && <ST_CellActionMenu table={table} />}
-    </div>
+      {({
+        actionCell,
+        creatingRow,
+        editingRow,
+        isFullScreen,
+        isLoading,
+        showLoadingOverlay,
+      }) => {
+        const loading =
+          showLoadingOverlay !== false && (isLoading || showLoadingOverlay);
+
+        const createModalOpen = createDisplayMode === 'modal' && creatingRow;
+        const editModalOpen = editDisplayMode === 'modal' && editingRow;
+
+        return (
+          <div
+            aria-busy={loading}
+            aria-describedby={loading ? 'st-progress' : undefined}
+            {...tableContainerProps}
+            ref={(node: HTMLDivElement) => {
+              if (node) {
+                tableContainerRef.current = node;
+                if (tableContainerProps?.ref) {
+                  //@ts-expect-error ref can be either RefCallback or RefObject
+                  tableContainerProps.ref.current = node;
+                }
+              }
+            }}
+            style={{
+              maxHeight: isFullScreen
+                ? `calc(100vh - ${totalToolbarHeight}px)`
+                : enableStickyHeader
+                  ? `clamp(350px, calc(100vh - ${totalToolbarHeight}px), 9999px)`
+                  : undefined,
+              ...tableContainerProps?.style,
+            }}
+            className={cn(
+              tableContainerVariants({
+                className: tableContainerProps.className,
+              }),
+            )}
+          >
+            {loading ? <ST_TableLoadingOverlay /> : null}
+            {tableElement}
+            {(createModalOpen || editModalOpen) && <ST_EditRowModal open />}
+            {enableCellActions && actionCell && <ST_CellActionMenu />}
+          </div>
+        );
+      }}
+    </Subscribe>
   );
 };
