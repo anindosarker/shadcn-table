@@ -43,8 +43,6 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   header,
   ...rest
 }: ST_TableHeadCellFilterLabelProps<TData>) => {
-  // The core table behind the header; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
   const table = header.table;
   const {
     options: {

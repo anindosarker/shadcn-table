@@ -35,8 +35,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   staticRowIndex,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its options
-  // and getters, so TypeScript cannot relate the two without the cast.
   const table = row.table;
   const {
     options: {

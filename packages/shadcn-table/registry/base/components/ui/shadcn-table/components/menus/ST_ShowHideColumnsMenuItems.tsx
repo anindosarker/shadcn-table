@@ -45,8 +45,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   style,
   ...rest
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
-  // The column carries the core table; the ST wrapper types re-type its
-  // options and getters, so TypeScript cannot relate the two without the cast.
   const table = column.table;
   const {
     options: {

@@ -19,8 +19,6 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   tableHeadCellRef,
   ...rest
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
-  // The core table behind the column; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
   const table = column.table;
   const {
     options: { enableColumnOrdering, stColumnDragHandleProps },

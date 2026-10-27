@@ -34,8 +34,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   setAnchorEl,
   ...rest
 }: ST_ColumnActionMenuProps<TData>) => {
-  // The header carries the core table; the ST wrapper types re-type its
-  // options and getters, so TypeScript cannot relate the two without the cast.
   const table = header.table;
   const {
     getAllLeafColumns,
