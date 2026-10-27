@@ -20,6 +20,8 @@ import {
 
 `ShadcnTable` renders the table. `useShadcnTable` is the hook that takes the columns, the data and every other table option.
 
+By default, the component that calls `useShadcnTable` re-renders on every table state change, as TanStack Table documents for `useTable`. For narrower re-renders, pass the options as props to `ShadcnTable`, or give the hook a selector as its second argument: `useShadcnTable(options, (state) => ({ sorting: state.sorting }))` re-renders the owner only when `sorting` changes. See the TanStack [table context guide](https://tanstack.com/table/latest/docs/framework/react/guide/table-context).
+
 The install put the table in `components/ui/shadcn-table/` (edit anything), the shadcn/ui parts it uses in `components/ui/`, and the packages `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react` and `radix-ui` in your dependencies. English is the only locale installed; the others are separate items, imported from `@/components/ui/shadcn-table/shared/locales/<code>`, see [Localization](/docs/guides/localization).
 
 </Step>

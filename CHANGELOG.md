@@ -24,10 +24,6 @@ publishes the section as the GitHub release notes.
   (`ST_TableLayoutProps`, `ST_TableContainerProps`, `ST_TableProps`, `ST_TableBodyProps`,
   `ST_TableHeadProps`, `ST_TableFooterProps`, the toolbar, toggle button, menu and modal
   props) no longer take a `TData` parameter. Drop the type argument.
-- On the table that `render*` and `st*Props` callbacks of those components receive,
-  `table.state` is a live, unsubscribed read of the store. Prefer `table.store.state`.
-- `ST_TableProvider` keeps the first table it is given. Swapping its `table` prop after
-  mount needs a `key`.
 - `ST_TopToolbarProps` is removed; `ST_TopToolbar` takes no props.
 - `memoMode` is removed, with the memoized row and cell components
   (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
@@ -44,14 +40,19 @@ publishes the section as the GitHub release notes.
   `setHoveredRow`, `setCreatingRow`, `setEditingCell`, `setEditingRow`,
   `setColumnFilterFns`, `setGlobalFilterFn`, `setShowColumnFilters`, `setShowGlobalFilter`
   and `setActionCell`) hands its `on*Change` handler a function updater, as TanStack's own
-  setters do. A handler that expected the new value needs `functionalUpdate`, or a React
-  state setter.
+  setters do since v9. A handler resolves it with `functionalUpdate` or a React state
+  setter.
 
 ### Added
 
 - mk (Macedonian) locale.
 - `ST_TableProvider` puts a table on the context the library's components read.
   `ShadcnTable` renders it around its layout.
+- `ST_TableProvider` renders the table's `table.AppTable`. Swapping its `table` prop for a
+  different table remounts the subtree.
+- `useShadcnTable` takes an optional selector as its second argument, as `useTable` does,
+  so the owner re-renders only on the state it selects.
+- `@tanstack/react-store` is a dependency.
 - `getColumnFilterFnName` and `selectST_TransformState` are exported from the barrel.
 - Docs: the `localization-i18n-mk` example, and a "Compose with ST_TableProvider" section
   in the toolbar customization guide, linked from the ST components page.
