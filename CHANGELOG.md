@@ -62,6 +62,7 @@ publishes the section as the GitHub release notes.
 
 ### Fixed
 
+- The row action Edit button hands the edit modal the live row; a spread copy lost the v9 row prototype and `row.getAllCells` threw.
 - `isLoading` and `isSaving` default to `false`, and every loading slice (`isLoading`,
   `isSaving`, `showLoadingOverlay`, `showProgressBars`, `showSkeletons`) is in the table
   store from the first render. The three `show*` slices start unset, so they still follow
