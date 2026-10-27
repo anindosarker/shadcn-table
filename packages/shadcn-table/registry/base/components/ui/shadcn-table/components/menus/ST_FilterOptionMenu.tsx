@@ -1,4 +1,5 @@
 import { type ComponentPropsWithRef, useMemo, useRef } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,9 +12,10 @@ import {
   type ST_InternalFilterOption,
   type ST_Localization,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/menus/ST_ActionMenuItem';
+import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
+import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export const stFilterOptions = (
   localization: ST_Localization,
@@ -117,7 +119,6 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilterValue?: (filterValue: any) => void;
-  table: ST_TableInstance<TData>;
 }
 
 export const ST_FilterOptionMenu = <TData extends ST_RowData>({
@@ -127,25 +128,25 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   onSelect,
   setAnchorEl,
   setFilterValue,
-  table,
   ...rest
 }: ST_FilterOptionMenuProps<TData>) => {
+  // Context, not `header.table`: the global filter menu has no header, and a
+  // hook cannot be called conditionally.
+  const table = useSTContext<TData>();
   const {
     options: {
       columnFilterModeOptions,
       globalFilterModeOptions,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnFilterModeMenuItems,
       renderGlobalFilterModeMenuItems,
     },
     setColumnFilterFns,
     setGlobalFilterFn,
   } = table;
-  const { globalFilterFn } = table.state;
   const { column } = header ?? {};
   const { columnDef } = column ?? {};
-  const currentFilterValue = column?.getFilterValue();
 
   let allowedColumnFilterOptions =
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
@@ -167,17 +168,18 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
               globalFilterModeOptions.includes(filterOption.option)) &&
             ['contains', 'fuzzy', 'startsWith'].includes(filterOption.option),
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- options are read once per mount, as in MRT
     [],
   );
 
   const handleSelectFilterMode = (option: ST_FilterOption) => {
-    const prevFilterMode = columnDef?._filterFn ?? '';
+    const prevFilterMode = columnDef ? getColumnFilterFnName(columnDef) : '';
     if (!header || !column) {
       // global filter mode
       setGlobalFilterFn(option);
     } else if (option !== prevFilterMode) {
       // column filter mode
+      const currentFilterValue = column.getFilterValue();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setColumnFilterFns((prev: { [key: string]: any }) => ({
         ...prev,
@@ -192,8 +194,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           !emptyModes.includes(prevFilterMode)
         ) {
           column.setFilterValue(' ');
-        } else if (currentFilterValue) {
-          column.setFilterValue(currentFilterValue); // perform new filter render
         }
       } else if (
         columnDef?.filterVariant === 'multi-select' ||
@@ -207,8 +207,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         ) {
           column.setFilterValue([]);
           setFilterValue?.([]);
-        } else if (currentFilterValue) {
-          column.setFilterValue(currentFilterValue); // perform new filter render
         }
       } else if (
         columnDef?.filterVariant?.includes('range') ||
@@ -223,8 +221,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         ) {
           column.setFilterValue(['', '']);
           setFilterValue?.('');
-        } else {
-          column.setFilterValue(currentFilterValue); // perform new filter render
         }
       } else {
         // will now be single value filter mode
@@ -236,17 +232,12 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           emptyModes.includes(prevFilterMode)
         ) {
           column.setFilterValue(undefined);
-        } else {
-          column.setFilterValue(currentFilterValue); // perform new filter render
         }
       }
     }
     setAnchorEl(null);
     onSelect?.();
   };
-
-  const filterOption =
-    !!header && columnDef ? columnDef._filterFn : globalFilterFn;
 
   // Base UI reads the popup's finalFocus when the menu closes, after this
   // component re-rendered with anchorEl cleared; the ref keeps the element
@@ -295,42 +286,64 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         className={cn('w-max', className)}
         {...rest}
       >
-        {(header && column && columnDef
-          ? (columnDef.renderColumnFilterModeMenuItems?.({
-              column,
-              internalFilterOptions,
-              onSelectFilterMode: handleSelectFilterMode,
-              table,
-            }) ??
-            renderColumnFilterModeMenuItems?.({
-              column,
-              internalFilterOptions,
-              onSelectFilterMode: handleSelectFilterMode,
-              table,
-            }))
-          : renderGlobalFilterModeMenuItems?.({
-              internalFilterOptions,
-              onSelectFilterMode: handleSelectFilterMode,
-              table,
-            })) ??
-          internalFilterOptions.map(
-            ({ divider, label, option, symbol }, index) => (
-              <ST_ActionMenuItem
-                // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
-                className={option === filterOption ? 'bg-accent' : undefined}
-                divider={divider}
-                icon={symbol}
-                key={index}
-                label={label}
-                onClick={() =>
-                  handleSelectFilterMode(option as ST_FilterOption)
-                }
-                table={table}
-                // value={option}
-                // Note: MUI MenuItem value dropped — form semantics only, no visual role
-              />
-            ),
-          )}
+        {/* The column mode name is written onto the column def from
+            `columnFilterFns` in the root render, so that slice is selected. */}
+        <Subscribe
+          selector={(state) => ({
+            columnFilterFns: state.columnFilterFns,
+            globalFilterFn: state.globalFilterFn,
+          })}
+          source={table.store}
+        >
+          {({ globalFilterFn }) => {
+            const filterOption =
+              !!header && columnDef
+                ? getColumnFilterFnName(columnDef)
+                : globalFilterFn;
+
+            return (
+              <>
+                {(header && column && columnDef
+                  ? (columnDef.renderColumnFilterModeMenuItems?.({
+                      column,
+                      internalFilterOptions,
+                      onSelectFilterMode: handleSelectFilterMode,
+                      table,
+                    }) ??
+                    renderColumnFilterModeMenuItems?.({
+                      column,
+                      internalFilterOptions,
+                      onSelectFilterMode: handleSelectFilterMode,
+                      table,
+                    }))
+                  : renderGlobalFilterModeMenuItems?.({
+                      internalFilterOptions,
+                      onSelectFilterMode: handleSelectFilterMode,
+                      table,
+                    })) ??
+                  internalFilterOptions.map(
+                    ({ divider, label, option, symbol }, index) => (
+                      <ST_ActionMenuItem
+                        // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
+                        className={
+                          option === filterOption ? 'bg-accent' : undefined
+                        }
+                        divider={divider}
+                        icon={symbol}
+                        key={index}
+                        label={label}
+                        onClick={() =>
+                          handleSelectFilterMode(option as ST_FilterOption)
+                        }
+                        // value={option}
+                        // Note: MUI MenuItem value dropped: form semantics only, no visual role
+                      />
+                    ),
+                  )}
+              </>
+            );
+          }}
+        </Subscribe>
       </DropdownMenuContent>
     </DropdownMenu>
   );

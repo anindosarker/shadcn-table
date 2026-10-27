@@ -1,4 +1,5 @@
 import { type ComponentPropsWithRef, useMemo, useRef, useState } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,26 +11,29 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableInstance,
+  type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
-import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
-import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems';
+import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
+import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
+import {
+  useST_Atom,
+  useSTContext,
+} from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_ShowHideColumnsMenuProps<TData extends ST_RowData>
+export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  table: ST_TableInstance<TData>;
 }
 
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
   anchorEl,
   setAnchorEl,
-  table,
   ...rest
-}: ST_ShowHideColumnsMenuProps<TData>) => {
+}: ST_ShowHideColumnsMenuProps) => {
+  const table = useSTContext<TData>();
   const {
     getAllColumns,
     getAllLeafColumns,
@@ -48,7 +52,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
-  const { columnOrder, columnPinning } = table.state;
+  // These feed the column list memos, so they are hook subscriptions.
+  const columnOrder = useST_Atom(table.atoms.columnOrder);
+  const columnPinning = useST_Atom(table.atoms.columnPinning);
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -143,48 +149,58 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
         className={cn('w-max', className)}
         {...rest}
       >
-        <div className="flex justify-between p-2 pt-0">
-          {enableHiding && (
-            <Button
-              variant="ghost"
-              disabled={!getIsSomeColumnsVisible()}
-              onClick={() => handleToggleAllColumns(false)}
-            >
-              {localization.hideAll}
-            </Button>
+        <Subscribe source={table.atoms.columnVisibility}>
+          {() => (
+            <div className="flex justify-between p-2 pt-0">
+              {enableHiding && (
+                <Button
+                  variant="ghost"
+                  disabled={!getIsSomeColumnsVisible()}
+                  onClick={() => handleToggleAllColumns(false)}
+                >
+                  {localization.hideAll}
+                </Button>
+              )}
+              {enableColumnOrdering && (
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    table.setColumnOrder(
+                      getDefaultColumnOrderIds(
+                        {
+                          ...table.options,
+                          state: table.store.state as ST_TableState<TData>,
+                        },
+                        true,
+                      ),
+                    )
+                  }
+                  disabled={!hasColumnOrderChanged}
+                >
+                  {localization.resetOrder}
+                </Button>
+              )}
+              {enableColumnPinning && (
+                <Button
+                  variant="ghost"
+                  disabled={!getIsSomeColumnsPinned()}
+                  onClick={() => table.resetColumnPinning(true)}
+                >
+                  {localization.unpinAll}
+                </Button>
+              )}
+              {enableHiding && (
+                <Button
+                  variant="ghost"
+                  disabled={getIsAllColumnsVisible()}
+                  onClick={() => handleToggleAllColumns(true)}
+                >
+                  {localization.showAll}
+                </Button>
+              )}
+            </div>
           )}
-          {enableColumnOrdering && (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                table.setColumnOrder(
-                  getDefaultColumnOrderIds(table.options, true),
-                )
-              }
-              disabled={!hasColumnOrderChanged}
-            >
-              {localization.resetOrder}
-            </Button>
-          )}
-          {enableColumnPinning && (
-            <Button
-              variant="ghost"
-              disabled={!getIsSomeColumnsPinned()}
-              onClick={() => table.resetColumnPinning(true)}
-            >
-              {localization.unpinAll}
-            </Button>
-          )}
-          {enableHiding && (
-            <Button
-              variant="ghost"
-              disabled={getIsAllColumnsVisible()}
-              onClick={() => handleToggleAllColumns(true)}
-            >
-              {localization.showAll}
-            </Button>
-          )}
-        </div>
+        </Subscribe>
         <DropdownMenuSeparator />
         {allColumns.map((column, index) => (
           <ST_ShowHideColumnsMenuItems
@@ -194,7 +210,6 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
             isNestedColumns={isNestedColumns}
             key={`${index}-${column.id}`}
             setHoveredColumn={setHoveredColumn}
-            table={table}
           />
         ))}
       </DropdownMenuContent>
