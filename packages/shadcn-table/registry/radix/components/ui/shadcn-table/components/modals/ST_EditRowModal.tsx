@@ -72,14 +72,17 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
           <Dialog
             onOpenChange={(nextOpen) => {
               if (nextOpen) return;
-              if (table.atoms.creatingRow.get()) {
-                onCreatingRowCancel?.({ row, table });
+              const liveCreatingRow = table.atoms.creatingRow.get();
+              const liveRow = (liveCreatingRow ??
+                table.atoms.editingRow.get()) as ST_Row<TData>;
+              if (liveCreatingRow) {
+                onCreatingRowCancel?.({ row: liveRow, table });
                 setCreatingRow(null);
               } else {
-                onEditingRowCancel?.({ row, table });
+                onEditingRowCancel?.({ row: liveRow, table });
                 setEditingRow(null);
               }
-              row._valuesCache = {} as ST_Row<TData>['_valuesCache']; //reset values cache
+              liveRow._valuesCache = {} as ST_Row<TData>['_valuesCache']; //reset values cache
               onOpenChange?.(nextOpen);
             }}
             open={open}
