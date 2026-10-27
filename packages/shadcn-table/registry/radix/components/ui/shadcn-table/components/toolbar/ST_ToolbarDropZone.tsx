@@ -45,14 +45,12 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   };
 
   useEffect(() => {
-    if (table.options.state?.showToolbarDropZone !== undefined) {
-      setShowToolbarDropZone(
-        !!enableGrouping &&
-          !!draggingColumn &&
-          draggingColumn.columnDef.enableGrouping !== false &&
-          !grouping.includes(draggingColumn.id),
-      );
-    }
+    setShowToolbarDropZone(
+      !!enableGrouping &&
+        !!draggingColumn &&
+        draggingColumn.columnDef.enableGrouping !== false &&
+        !grouping.includes(draggingColumn.id),
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableGrouping, draggingColumn, grouping]);
 
