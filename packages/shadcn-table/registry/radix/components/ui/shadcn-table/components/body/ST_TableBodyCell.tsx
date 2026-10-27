@@ -16,7 +16,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import {
@@ -52,7 +51,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   ...rest
 }: ST_TableBodyCellProps<TData>) => {
   // The cell carries the core table; the ST wrapper types re-type its getters.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
+  const table = cell.table;
   // const theme = useTheme();
   const {
     options: {

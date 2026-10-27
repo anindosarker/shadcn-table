@@ -5,7 +5,6 @@ import {
   type ButtonProps,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
@@ -22,7 +21,7 @@ export const ST_RowPinButton = <TData extends ST_RowData>({
 }: ST_RowPinButtonProps<TData>) => {
   // The row carries the core table, which holds the ST options, atoms, refs
   // and setters; the ST wrapper types do not re-type it.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     options: {
       icons: { CloseIcon, PushPinIcon },

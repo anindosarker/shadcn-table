@@ -42,7 +42,6 @@ import {
   type InputProps,
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import {
   getColumnFilterInfo,
@@ -73,7 +72,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   ...rest
 }: ST_FilterTextFieldProps<TData>) => {
   // The header carries the core table; the ST wrapper types re-type its getters.
-  const table = header.table as unknown as ST_TableInstance<TData>;
+  const table = header.table;
   const {
     options: {
       enableColumnFilterModes,

@@ -7,7 +7,6 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_RowVirtualizer,
-  type ST_TableInstance,
   type ST_VirtualItem,
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
@@ -49,7 +48,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   ...rest
 }: ST_TableDetailPanelProps<TData>) => {
   // The row carries the core table; the ST wrapper types re-type its getters.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     getVisibleLeafColumns,
     options: {
