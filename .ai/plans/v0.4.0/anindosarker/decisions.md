@@ -230,3 +230,22 @@ branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](f
    - Remove `types.ts:919` and the `Omit` key, `lib/prop-tables/tableOptions.ts:752`, and
      the key in `guides/expanding-sub-rows.mdx:19`. Changelog, Removed: "`expandRowsFn`,
      never implemented".
+
+8. Row pinning on select follows the selection store (decided 2026-10-27).
+   - Bug (findings, `utils/row.utils.ts:164-180`): the handler diffs
+     `table.baseAtoms.rowSelection` around core's toggle to find the Shift range, then pins
+     each changed row under `rowPinningDisplayMode: 'select-*'`. Controlled selection never
+     writes the base atom, so only the clicked row pins. `baseAtoms` is internal.
+   - Mechanism: one subscription in `useST_Effects` on `table.atoms.rowSelection`; on change,
+     diff previous and next and pin or unpin each changed row per `rowPinningDisplayMode`.
+     The diff in `getST_RowSelectionHandler` and the pin loop in `getST_SelectAllHandler` go.
+     The sub-row unselect in the row handler stays.
+   - Covers Shift range, select-all, controlled state (after the parent commits), external
+     `atoms.rowSelection`, and programmatic `row.toggleSelected()`.
+   - Caveat: the pin lands one commit after the selection; under controlled state that is the
+     same latency as the checkbox itself.
+   - Why not computing the range in the handler from `refs.lastSelectedRowId`: duplicates
+     core's `selectRowRange` and still misses programmatic selection.
+   - Verify in phase 02: Shift-click range with internal, controlled and external-atom
+     selection pins the whole range; select-all pins the page or all rows per
+     `selectAllMode`; unselect unpins; `row.toggleSelected(true)` from a button pins.
