@@ -67,16 +67,16 @@ shadcn-table/
 │   ├── stToolbarsFeature.ts  stFullScreenFeature.ts  stFilterModesFeature.ts
 │   └── stCellActionsFeature.ts  stColumnDraggingFeature.ts  stRowDraggingFeature.ts  stConfigFeature.ts
 ├── hooks/
-│   ├── stTableHook.ts                     new: createTableHook({ features: stFeatures }) gives
-│   │                                      useAppTable, useTableContext, createAppColumnHelper
-│   ├── useST_TableInstance.ts             shrinks: no useState, no Object.assign; builds initialState
-│   │                                      and display columns, then useAppTable(options)
+│   ├── stTableHook.ts                     new: createSTTableHook(options) wraps createTableHook with the call's
+│   │                                      fn registries merged; useSTContext, ST_TableProvider
+│   ├── useST_TableInstance.ts             shrinks: createSTTableHook once per mount, initialState,
+│   │                                      display columns, then useAppTable(options)
 │   ├── useShadcnTable.ts  useST_TableOptions.ts  useST_Effects.ts  useST_Rows.ts  virtualizers
 │   └── display-columns/                   same roles
 ├── utils/                                 tanstack.features.ts removed (moved to features/)
 ├── types.ts                               ST_TableState, ST_TableOptions, ST_TableInstance derived from ST_Features
 ├── ShadcnTable.tsx                        wraps the layout in <table.AppTable> (context provider)
-├── body/ head/ ... (57 components)        D1 decides whether the table prop stays, becomes optional, or goes
+├── components/ (57 components)            no table prop: instance.table or useSTContext(); Subscribe for reads
 └── fns/  locales/ (+mk)  icons.ts  index.ts  ST_Tooltip.tsx
 ```
 

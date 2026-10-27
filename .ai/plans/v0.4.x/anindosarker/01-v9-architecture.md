@@ -4,24 +4,38 @@
 
 ### 1.1 Overview
 
-Our TanStack Table v9 port kept the v8-shaped hooks and registered only built-in features;
-material-react-table's v9 port, now living in the TanStack repo, moved its own state into v9
-custom features behind one `createTableHook`. Decisions: [decisions.md](decisions.md),
-items 1 to 6: v9 primitives, MRT as checklist, public API unchanged, ships as `0.4.0`.
-Runs after [v0.3.x 04](../../v0.3.x/anindosarker/04-package-layout.md) and [05](../../v0.3.x/anindosarker/05-docs-app-layout.md); phase 00 may start
-once 04 is merged.
+Our TanStack Table v9 port (0.3.0) kept the v8-shaped hooks: ST state in 21 `useState` calls,
+setters and refs bolted on with `Object.assign`, names resolved to functions before core.
+That shape is invisible on the core table that `row.table`, `cell.table` and
+`getContext().table` hand out, which is the root of the headless crash, the stale
+`editingCell` read and the unseeded `isSaving` in [findings.md](findings.md). This part
+rebuilds the internals on v9's own primitives: custom features, a `createTableHook` instance
+per mounted table, `instance.table` and context instead of a `table` prop, subscriptions
+instead of `table.state`. Decisions: [decisions.md](decisions.md) items 1 to 8. MRT's v9
+port is the coverage checklist, not the target (MRT is deprecated). Ships as `0.4.0`.
 
 ### 1.2 Goals
 
-- `features/` holds the library's own state and APIs as v9 custom features; one
-  `createTableHook` in `hooks/stTableHook.ts`; `useST_TableInstance` wraps `useAppTable`;
-  `utils/tanstack.features.ts` gone
-- Public surface unchanged: `useShadcnTable`, `ShadcnTable`, `ST_TableOptions`, every `ST_*`
-  option, prop and type name, the locale items
-- Every file with an MRT twin matches the twin's shape or has a one-line tracker entry
-  saying why not
-- Both trees green on every gate; stories 400/400 on both bases; registry builds; CI install
-  matrix passes
+- `features/` holds every ST state slice, option, setter and ref as v9 custom features;
+  `utils/tanstack.features.ts` gone (decisions 1, 2)
+- Folder layout per decisions 2: `features/`, `hooks/`, `components/`, `shared/{fns,utils,locales}`,
+  root files, full `index.ts`
+- `hooks/stTableHook.ts` exports `createSTTableHook(options)`; `useST_TableInstance` calls it
+  once per mount with the call's `filterFns`, `sortFns`, `aggregationFns` merged into the
+  registry slots, so core resolves names (decision 3)
+- No `table` prop on any component: instance-bearing components read `instance.table`,
+  the rest read `useSTContext()`; `ST_TableProvider` exported for hand composition
+  (decision 4)
+- No `table.state` under `components/`: render reads through `Subscribe`, handler reads
+  through `.get()`, root provides a stable handle; `memoMode` removed (decision 5)
+- `ST_Features` exported as a type only; `expandRowsFn` removed (decisions 6, 7)
+- Row pinning on select follows the `rowSelection` store (decision 8)
+- Public surface otherwise unchanged: `useShadcnTable`, `ShadcnTable`, `ST_TableOptions`,
+  every `ST_*` option, prop and type name, user-side `table.state`, the locale items
+- Every file with an MRT twin is covered by the twin map in `01-00-comparison.md`; a
+  deliberate divergence is one tracker line
+- Both trees green on every gate; stories on both bases; registry builds; CI install
+  matrix passes; the findings in [findings.md](findings.md) closed
 
 ### 1.3 Current structure
 
@@ -102,61 +116,71 @@ sequenceDiagram
   participant App
   participant useShadcnTable
   participant useST_TableInstance
-  participant useAppTable as useAppTable (stTableHook)
-  participant stFeatures
-  App->>useShadcnTable: options
+  participant createSTTableHook as createSTTableHook (once per mount)
+  participant useAppTable
+  participant core as core table (features, store, atoms)
+  App->>useShadcnTable: options (columns, data, filterFns, ...)
   useShadcnTable->>useST_TableInstance: defined options
-  useST_TableInstance->>useAppTable: options + display columns + initial state
-  useAppTable->>stFeatures: build table with custom + stock features
-  stFeatures-->>useAppTable: table with state atoms, setters, refs
-  useAppTable-->>useST_TableInstance: table
-  useST_TableInstance-->>App: ST_TableInstance (same public shape)
+  useST_TableInstance->>createSTTableHook: options.filterFns/sortFns/aggregationFns
+  createSTTableHook-->>useST_TableInstance: useAppTable bound to stFeatures + call registries
+  useST_TableInstance->>useAppTable: options + display columns + initialState
+  useAppTable->>core: constructTable once; features install atoms, setters, refs
+  useAppTable-->>useST_TableInstance: wrapper (core + state)
+  useST_TableInstance-->>App: ST_TableInstance (wrapper, default selector)
+  App->>ShadcnTable: table
+  ShadcnTable->>ST_TableProvider: stable handle (first wrapper, kept in a ref)
+  ST_TableProvider-->>components: useSTContext() or instance.table, Subscribe for reads
 ```
 
 ### 1.6 Components
 
 #### 1.6.1 Data artifacts
 
-- `base-diff.json` gains any new per-base feature file (none expected; features are
-  base-neutral)
-- `CHANGELOG.md` `## 0.4.0` section
-- Registry items unchanged in name; `files[]` lists gain `features/*` and lose
-  `utils/tanstack.features.ts`
+- `base-diff.json` gains any new per-base file (none expected; features are base-neutral)
+- `CHANGELOG.md` `## Unreleased`, written as work lands; closed as `## 0.4.0` at release
+- Registry items unchanged in name; `files[]` lists follow the folder moves (`features/*`,
+  `components/*`, `shared/*`), lose `utils/tanstack.features.ts`, gain `locales/mk.ts`
+- `scripts/registry/lib.mjs` path globs follow the folder moves
 
 #### 1.6.2 Comparison report
 
-`01-00-comparison.md`, read-only output of phase 00, read by the owner before phase 01.
-
-- Per twin file: v9 API divergences (state reads, setters, feature APIs, `Subscribe`, types),
-  one line each with the MRT line reference
-- State ownership map: every piece of state, ref and setter our hooks hold today and which
-  MRT feature owns it; the work list for 1.6.3
-- Our-only and MRT-only files: keep, align or drop, with reason
-- Every finding verified by a second agent against both sources before it enters the file
+`01-00-comparison.md`, phase 00 output, done (`d1a3a12`). 123 twin files, 209 divergence
+rows, 53 ownership entries. D1 to D5 in its section 1.1 are ruled (decisions 3 to 7). Its
+`apps/docs/` paths read `apps/shadcn-table-docs/`.
 
 #### 1.6.3 Features and `stFeatures`
 
-Twelve custom features under `st` names, mirroring MRT's.
+`features/`, one file per state group, mirroring MRT's twelve (decisions 1, 2).
 
-- Each feature: `getInitialState`, `getDefaultTableOptions`, table, row, column, cell and
-  header APIs as the twin has them, plus MRT's module augmentation (`Plugins`,
+- Each feature: `getInitialState`, `getDefaultTableOptions`, `constructTableAPIs` and the
+  row, column, cell, header hooks the twin has, plus the `declare module` block (`Plugins`,
   `TableState_FeatureMap`, `TableOptions_FeatureMap`, `Table_FeatureMap`, and the row,
   column, cell, header maps where present)
-- `stFeatures.ts` registers stock features, the twelve, every row model factory and the
-  three Fn registries, as `mrtFeatures.ts` does
-- Does NOT add options or state the twin does not have
+- `stConfigFeature.ts` declares every ST-only option that has no state (the list in
+  `types.ts` today, minus `expandRowsFn`), plus the three registry options `filterFns`,
+  `sortFns`, `aggregationFns` and `memoMode` removed
+- `stLoadingFeature.ts` defaults `isLoading`, `isSaving`, `showLoadingOverlay`,
+  `showProgressBars`, `showSkeletons` to `false` (findings)
+- `stRefsFeature.ts` puts `table.refs` on the core table as plain `{ current }` objects
+- `stFeatures.ts` registers `...stockFeatures`, the eleven, every row model factory and the
+  three built-in registries from `shared/fns`
+- Does NOT add options or state the twin does not have, except the three registry options
+  and `ST_TableProvider` (decisions 3, 4)
 
 **Operations:**
 
-| Operation                      | Status | Notes                                |
-| ------------------------------ | ------ | ------------------------------------ |
-| `features/st*Feature.ts` (12)  | new    | one per MRT feature                  |
-| `features/stFeatures.ts`       | new    | replaces `utils/tanstack.features.ts` |
-| `utils/tanstack.features.ts`   | refactor | removed                            |
+| Operation                      | Status   | Notes                                           |
+| ------------------------------ | -------- | ----------------------------------------------- |
+| `features/st*Feature.ts` (11)  | new      | one per MRT feature                             |
+| `features/stFeatures.ts`       | new      | replaces `utils/tanstack.features.ts`           |
+| `utils/tanstack.features.ts`   | removed  |                                                 |
+| `shared/fns/*.ts`              | refactor | built-ins through `constructFilterFn` /         |
+|                                |          | `constructAggregationFn`; `sortFns.ts` name kept |
 
 **Interfaces:**
 
 ```typescript
+// features/stFeatures.ts
 export const stFeatures = tableFeatures({
   ...stockFeatures,
   stCellActionsFeature, stColumnDraggingFeature, stConfigFeature, stDensityFeature,
@@ -165,16 +189,32 @@ export const stFeatures = tableFeatures({
   coreRowModel: createCoreRowModel(), /* other row models as today */
   filterFns: ST_FilterFns, sortFns: ST_SortFns, aggregationFns: ST_AggregationFns,
 });
-export type ST_Features = typeof stFeatures;
+export type ST_Features = typeof stFeatures;   // exported from index.ts as a type only
 ```
 
-#### 1.6.4 Table hook
+#### 1.6.4 Table hook and context
 
-`hooks/stTableHook.ts`, internal.
+`hooks/stTableHook.ts` (decisions 3, 4).
 
-- `createTableHook({ features: stFeatures, ... })` exporting `useAppTable`, `useTableContext`,
-  `useCellContext`, `useHeaderContext`
-- Does NOT appear in `index.ts`
+```typescript
+export const createSTTableHook = <TData>(o: ST_DefinedTableOptions<TData>) =>
+  createTableHook({
+    features: tableFeatures({
+      ...stFeatures,
+      filterFns:      { ...ST_FilterFns,      ...o.filterFns },
+      sortFns:        { ...ST_SortFns,        ...o.sortFns },
+      aggregationFns: { ...ST_AggregationFns, ...o.aggregationFns },
+    }),
+  });
+
+export const { tableContext, useTableContext: useSTContext } = createTableHookContexts<ST_Features>();
+export const ST_TableProvider = ({ table, children }) => <tableContext.Provider value={table}>{children}</tableContext.Provider>;
+```
+
+- `createSTTableHook` and `useSTContext` internal; `ST_TableProvider` public
+- The shared module-scoped context is the one `createTableHook` uses by default, so
+  `useSTContext` reads any table regardless of which instance built it
+- Does NOT register `tableComponents`, `cellComponents`, `headerComponents` (empty maps, as MRT)
 
 #### 1.6.5 Types
 
@@ -182,112 +222,158 @@ export type ST_Features = typeof stFeatures;
 
 - `ST_TableInstance`, `ST_TableState`, `ST_DefinedTableOptions`,
   `ST_StatefulTableOptions` collapse to thin wrappers over the feature-carried surface
+- `ST_FilterOption`, `ST_SortingOption`, `ST_AggregationOption` stay `LiteralUnion` over the
+  built-in keys (custom names typecheck as any string, as today)
+- `memoMode`, `expandRowsFn` and the `table` prop types removed; `ST_TableProviderProps` added
 - Does NOT rename any public `ST_*` type
-
-**Stays unchanged:** every exported option and prop name.
 
 #### 1.6.6 Instance and options
 
-- `useST_TableInstance` wraps `useAppTable`; hand-rolled state, setter aliases, refs and
-  `table.state` patching that features now provide are removed; display-column injection,
-  skeleton rows and initial-state massaging stay, as in MRT
-- `useST_TableOptions`: defaults that MRT moved into a feature's `getDefaultTableOptions`
-  move too
-- `useST_Effects`, `useST_Rows`, the virtualizer hooks aligned with their twins
+- `useST_TableInstance`: `const [{ useAppTable }] = useState(() => createSTTableHook(options))`;
+  builds `initialState` (pagination, columnOrder, grouping, columnResizing defaults) and the
+  columns with display columns; calls `useAppTable`; returns the wrapper. No `useState` for ST
+  slices, no `Object.assign`, no `@ts-expect-error`
+- `useST_TableOptions`: defaults that moved into a feature's `getDefaultTableOptions` go;
+  the registry merge at `:119-120` goes; `manualPagination` forced `true` whenever
+  `enablePagination` is `false` (findings); `manualFiltering` forced when every filter flag
+  is off
+- `shared/utils/column.utils.ts`: the name-to-function swap and `_filterFn` go;
+  `prepareColumns` writes the current mode name onto `columnDef.filterFn`
+- `useST_Effects`: one store subscription on `rowSelection` that pins and unpins per
+  `rowPinningDisplayMode` (decision 8); the diff in `getST_RowSelectionHandler` and the pin
+  loop in `getST_SelectAllHandler` go
+- `useST_Rows`, the virtualizer hooks: aligned with their twins
 
 **Operations:**
 
-| Operation                 | Status   | Notes                      |
-| ------------------------- | -------- | -------------------------- |
-| `useST_TableInstance()`   | refactor | wraps `useAppTable`        |
-| `useST_TableOptions()`    | refactor | defaults move to features  |
-| `useST_Effects()` and co. | refactor | aligned                    |
-| `useShadcnTable()`        | keep     | public entry               |
+| Operation                     | Status   | Notes                                       |
+| ----------------------------- | -------- | ------------------------------------------- |
+| `useST_TableInstance()`       | refactor | per-mount hook, then `useAppTable`           |
+| `useST_TableOptions()`        | refactor | defaults to features, guards fixed           |
+| `column.utils.ts`             | refactor | names stay names                             |
+| `useST_Effects()`             | refactor | pin-on-select subscription                   |
+| `row.utils.ts`                | refactor | handler diff and select-all pin loop removed |
+| `useShadcnTable()`            | keep     | public entry                                 |
 
 #### 1.6.7 Component clusters
 
-Render-tree order: table, head, body, footer, toolbar, inputs, menus, buttons, modals,
-display columns. 48 files read `table.state` today; MRT's port reads it in 6.
+`components/`: table, head, body, footer, toolbar, inputs, menus, buttons, modals; plus
+`hooks/display-columns/`. 57 components, 51 read `table.state` today.
 
-- Per file: state reads through feature APIs or `table.Subscribe` where the twin does; props
-  and markup unchanged
+- Table access (decision 4): a component with `row`, `cell`, `header` or `column` reads
+  `instance.table` and drops the `table` prop (about 35 files); a component with no instance
+  reads `useSTContext()` (about 20 files). No pass-down of `table` anywhere
+- State reads (decision 5): every render read inside `<Subscribe source={table.atoms.x}>` or
+  `<Subscribe source={table.store} selector={...}>`; handler and effect reads through
+  `table.atoms.x.get()` or `table.store.state.x`; writes `table.setX`. Grep gate: zero
+  `table.state` under `components/`
+- `ShadcnTable.tsx`: resolves the table from the `table` prop or from options, keeps the
+  first wrapper in a ref as the stable handle, wraps `ST_TableLayout` in `ST_TableProvider`
+- `ST_TableBody` subscribes to every slice that feeds `getRowModel()` (filters, global
+  filter, sorting, grouping, expanded, pagination, row pinning) and to `data` through the
+  owner render
+- `ST_CellActionMenu` `onCloseAutoFocus` reads `table.atoms.editingCell.get()` (findings)
+- `ST_SelectCheckbox` indeterminate gated with `getIsSomeRowsSelected() && !getIsAllRowsSelected()`
+  (v9 semantics)
+- `memoMode` branches (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) removed
 - A file in `base-diff.json` is edited by hand in both trees; every other file is edited in
   `registry/radix` and copied to `registry/base`; `pnpm check:bases` confirms
-- Does NOT change markup, styling or the 23 Base UI diff files beyond what the rewrite forces
+- Does NOT change markup, class names or the 23 Base UI diff files beyond what the rewrite
+  forces
 
-**Stays unchanged:** component props, class names, shadcn parts used.
+**Stays unchanged:** every prop except `table`, class names, shadcn parts used.
 
 #### 1.6.8 Our-only files and locales
 
 - `ST_TableLayout.tsx`, `ST_Tooltip.tsx`, `useST_MediaQuery.ts`, `pagination.utils.ts`: kept
-  as recorded deviations unless the comparison found a v9 reason to change
-- `fns/sortFns.ts`: name kept, contents aligned with `sortingFns.ts`
-- `locales/mk.ts`: added, locale item on both bases
-- `ST_TablePaper`: stays out unless the comparison shows a dependency
+  as recorded deviations
+- `shared/locales/mk.ts`: added, locale item on both bases, docs locale list updated
+- The 38 locale files import `types.ts` directly, not `index.ts`
+- `ST_TablePaper`: stays out
 
 #### 1.6.9 Docs and release
 
-- API pages for any option added or removed; a note on `getting-started/migrating-v1` for
-  internals a user who copied the source might have touched
-- `CHANGELOG.md` `## 0.4.0`, then `pnpm release 0.4.0` per [v0.3.x 01](../../v0.3.x/anindosarker/01-release-automation.md)
+- Guides that compose sub-components with `table={table}` (7 guides, 2 docs-app layout
+  files, about 15 stories) switch to `ST_TableProvider`; `memo-mode` guide and story
+  removed; `expanding-sub-rows.mdx` loses `expandRowsFn`; `api/table-options.mdx:23` loses
+  the `stFeatures` mention; the prop tables follow
+- `CHANGELOG.md` `## Unreleased`: Breaking (table prop, `memoMode`, `expandRowsFn`,
+  `stFeatures` value), Fixed (findings), Added (`ST_TableProvider`, `mk` locale)
+- `pnpm release 0.4.0` opens the release PR; merging it tags and releases (v0.3.x
+  decisions, Release)
 
 ### 1.7 Dependencies and env
 
 Reused: `@tanstack/react-table` 9.3.1 (pinned in both `package.json` files, both
-`registry.ts`, the registry items, the CI `existing` scenario). The reference clone is
-updated with `git -C ../tanstack-table pull` before each phase; the tracker records the head
-commit used. Name map: `MRT_` to `ST_`, `useMRT_` to `useST_`, `mrt*Feature` to
-`st*Feature`, `MaterialReactTable` to `ShadcnTable`; MRT's `components/<group>/` is our
-`<group>/`. v9 docs: migration and custom features guides under
+`registry.ts`, the registry items, the CI `existing` scenario). Reference clone
+`../tanstack-table` (sparse: docs, the MRT and shadcn examples, `packages/table-core` and
+`packages/react-table` source), updated with `git -C ../tanstack-table pull` before each
+phase; the tracker records the head commit used. Name map: `MRT_` to `ST_`, `useMRT_` to
+`useST_`, `mrt*Feature` to `st*Feature`, `MaterialReactTable` to `ShadcnTable`; MRT
+`components/<group>/` is our `components/<group>/`, `fns/` `utils/` `locales/` are under
+`shared/`. v9 guides: custom-features, composable-tables, table-context, table-state,
+react-compiler, column-filtering under
 https://tanstack.com/table/latest/docs/framework/react/guide/.
 
 ## 2. Instructions for AI
 
-Tracker `01-tracker.md`, decisions and deviations only. One Workflow run per
-phase, resumable; agents in `shadcn-react-table.worktrees/<name>` on their own branches,
-push only; the lead merges onto `v0.4/v9-architecture`, then `claude/review`. Each phase
-ends with every gate in 2.2 green on both trees and one commit per cluster.
+Tracker `01-tracker.md`, decisions and deviations only. One Workflow run per phase,
+resumable; agents in `shadcn-react-table.worktrees/<name>` on their own branches, push only;
+the lead merges onto `v0.4/v9-architecture`, then `dev`. Each phase ends with every gate in
+2.2 green on both trees and one commit per cluster. Before phase 01: merge `dev` into
+`v0.4/v9-architecture` and move `06-00-comparison.md` to
+`.ai/plans/v0.4.x/anindosarker/01-00-comparison.md` on that branch.
 
-Halt and ask the owner on: a public API choice not covered by the decisions, more than 3
+Halt and ask the owner on: a public API choice not covered by `decisions.md`, more than 3
 review bounces, an unfixable gate, a finding that contradicts a recorded decision.
 
 ### 2.1 Phases
 
 #### 2.1.1 Phase 00: Comparison
 
-- One comparison agent per cluster in parallel, one for hooks and types, one for the state
-  ownership map; a verifier per finding; a merge agent writes `01-00-comparison.md` (1.6.2)
-- Owner reads it before phase 01 starts
+Done, `01-00-comparison.md`.
 
-#### 2.1.2 Phase 01: Features and hook
+#### 2.1.2 Phase 01: Folders, features, hook, types
 
+- Folder moves per decisions 2 (`components/`, `shared/`), registry globs and
+  `base-diff.json` paths follow; `pnpm check:bases` green before any feature lands
 - 1.6.3, 1.6.4, 1.6.5; one coder per feature, reviewer bounce up to 3, gates on the merged
   result
+- Verify: decisions item 3 list (custom names through `filterFns`, `sortFns`,
+  `aggregationFns` resolve in core; two tables with different registries; unknown name
+  warns; no `@ts-expect-error`)
 
 #### 2.1.3 Phase 02: Instance and options
 
 - 1.6.6
+- Verify: decisions item 8 list (pin-on-select under internal, controlled and external-atom
+  selection); `enablePagination: false` with `manualPagination: false` shows all rows;
+  headless render of a display column header no longer crashes
 
 #### 2.1.4 Phase 03: Components
 
-- 1.6.7, per cluster: coder, reviewer who walks the MRT twin top to bottom, verifier who
-  runs the gates and the cluster's stories on both editions through Playwright
+- 1.6.7, per cluster: coder, reviewer who walks the twin and checks every state read is a
+  subscription or a `.get()`, verifier who runs the gates and the cluster's stories on both
+  bases through Playwright
+- Verify: decisions items 4 and 5 lists (nested table, portals, custom renderers, no
+  provider throws; React Profiler counts for hover, density, select; data replacement;
+  cell action menu edit keeps focus)
 
-#### 2.1.5 Phase 04: Our-only files and locales
+#### 2.1.5 Phase 04: Our-only files, locales, docs
 
-- 1.6.8
+- 1.6.8, 1.6.9 docs changes, `check-pages.mjs a` and `e` green on production preview
 
 #### 2.1.6 Final phase: Cleanup and release
 
-- Delete `utils/tanstack.features.ts` and any helper the features made dead; update
-  `index.ts` exports
-- 1.6.9 docs; `CHANGELOG.md`; `pnpm format`, every gate in 2.2; `pnpm release 0.4.0`
+- Delete every helper the features made dead; `index.ts` exports per decisions 2, 6
+- `CHANGELOG.md`; `pnpm format`; every gate in 2.2; `pnpm release 0.4.0`
 
 ### 2.2 Gates
 
 - `pnpm check:bases`
 - `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc -p tsconfig.stories.json`,
-  `lint`; `test` and `test:base` 400/400; `storybook:build` and `storybook:build:base`;
+  `lint`; `test` and `test:base`; `storybook:build` and `storybook:build:base`;
   `node scripts/check-storybook.mjs`
+- `grep -rn "table\.state" packages/shadcn-table/registry/*/components/ui/shadcn-table/components` returns nothing
 - `pnpm registry:build`; CI install matrix green
 - Docs `types:check`, `lint`, `build`; `check-pages.mjs a` and `e`
