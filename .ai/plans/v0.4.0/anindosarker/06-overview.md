@@ -8,7 +8,7 @@ is identical in shape. Companion to `06-v9-architecture.md` (the plan) and
 
 Root: `packages/shadcn-table/registry/radix/components/ui/shadcn-table/`.
 
-```
+```TypeScript
 shadcn-table/
 ├── ShadcnTable.tsx            <ShadcnTable table={table} /> or options as props; renders table/ST_TableLayout
 ├── hooks/
@@ -56,7 +56,7 @@ What this shape costs (see `findings.md`):
 Target per `06-v9-architecture.md` section 1.4, mirroring the MRT v9 port at
 `../tanstack-table/examples/react/material-react-table/src/material-react-table/`.
 
-```
+```TypeScript
 shadcn-table/
 ├── features/                              new
 │   ├── stFeatures.ts                      tableFeatures({ ...stockFeatures, 11 st*Feature, row models, fn registries })
@@ -115,15 +115,15 @@ The public API does not move: `useShadcnTable`, `ShadcnTable`, option names, `ta
 
 ## 3. Where the findings land
 
-| Finding (`findings.md`)                                  | Resolved by                                   |
-| -------------------------------------------------------- | --------------------------------------------- |
-| `as any` on `useTable` options                           | done, `1e71d80`                               |
-| `filterFn` string type, unregistered user fns            | D3 ruling, then phase 01                      |
-| `getContext().table` has no state, refs, setters         | phase 01 and 02 (features on the core table)  |
-| `isSaving`, `showProgressBars` never seeded              | phase 01, `stLoadingFeature` defaults         |
-| `ST_CellActionMenu` stale `editingCell`                  | phase 03 reads `table.atoms.editingCell.get()`; hotfix possible now with a ref flag |
-| `getST_RowSelectionHandler` diffs `baseAtoms`            | phase 02 or 04, read `table.atoms.rowSelection` before and after |
-| `manualPagination` guard, `columnFilters` without filters | phase 02, `useST_TableOptions`               |
+| Finding (`findings.md`)                                     | Resolved by                                                                           |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `as any` on `useTable` options                            | done, `1e71d80`                                                                     |
+| `filterFn` string type, unregistered user fns               | D3 ruling, then phase 01                                                              |
+| `getContext().table` has no state, refs, setters            | phase 01 and 02 (features on the core table)                                          |
+| `isSaving`, `showProgressBars` never seeded               | phase 01, `stLoadingFeature` defaults                                               |
+| `ST_CellActionMenu` stale `editingCell`                   | phase 03 reads `table.atoms.editingCell.get()`; hotfix possible now with a ref flag |
+| `getST_RowSelectionHandler` diffs `baseAtoms`             | phase 02 or 04, read `table.atoms.rowSelection` before and after                    |
+| `manualPagination` guard, `columnFilters` without filters | phase 02, `useST_TableOptions`                                                      |
 
 ## 4. Core v9 changes relevant to the decisions
 

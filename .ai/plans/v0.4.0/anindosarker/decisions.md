@@ -94,6 +94,95 @@ shadcn-react-table/
    - Ships as `0.4.0`.
    - Plan: `.ai/plans/v9-architecture/anindosarker/v9-architecture-plan.md`.
 
+2. Library folder structure (decided 2026-10-27). Per base, `registry/<base>/components/ui/shadcn-table/`:
+
+   ```
+   shadcn-table/
+   ├── features/        stFeatures.ts + one st*Feature.ts per state group (11)
+   ├── hooks/           stTableHook.ts, useShadcnTable.ts, useST_*.ts, display-columns/
+   ├── components/      table/ head/ body/ footer/ toolbar/ buttons/ inputs/ menus/ modals/
+   ├── shared/
+   │   ├── fns/         filterFns.ts  sortFns.ts  aggregationFns.ts
+   │   ├── utils/       cell, column, row, style, pagination, virtualization, displayColumn, utils
+   │   └── locales/     38 + mk
+   ├── ShadcnTable.tsx  ST_Tooltip.tsx  types.ts  icons.ts
+   └── index.ts
+   ```
+
+   - Four top-level folders, one kind each: what a table is, how it is built, how it looks,
+     plain data and helpers. `shared/` not `lib/`, because `@/lib` is the user's own folder in
+     a shadcn project.
+   - Twin map: `components/<x>` to MRT `components/<x>`, `shared/fns` to `fns`, `shared/utils`
+     to `utils`, `shared/locales` to `locales`. `utils/tanstack.features.ts` is removed, its
+     content becomes `features/stFeatures.ts`.
+   - `index.ts` stays a full barrel, every module exported, as today and as MRT. The docs and
+     stories import 14 internal components, 18 types and several hooks through it, and the one
+     public import path is what lets the folders above move without a breaking change.
+   - Internal files import siblings by path, never the barrel. The 38 locale files that import
+     `index.ts` today switch to `types.ts` (phase 04).
+
+3. D3, fn registries (decided 2026-10-27). `filterFns`, `sortFns`, `aggregationFns` stay
+   per-call table options, same as v8 and MRT v2.
+   - Mechanism: v9 keeps the registries inside the `features` object and copies them once at
+     construction (`table-core/src/core/table/constructTable.ts:70`), and `useAppTable` omits
+     `features` from per-table options (`react-table/src/createTableHook.tsx:953`). So
+     `useST_TableInstance` creates its own `createTableHook` instance once per mount, inside a
+     `useState` initializer, with the call's registries merged over the built-ins:
+
+     ```ts
+     // hooks/stTableHook.ts
+     export const createSTTableHook = (o) => createTableHook({
+       features: tableFeatures({
+         ...stFeatures,
+         filterFns:      { ...ST_FilterFns,      ...o.filterFns },
+         sortFns:        { ...ST_SortFns,        ...o.sortFns },
+         aggregationFns: { ...ST_AggregationFns, ...o.aggregationFns },
+       }),
+     });
+     export const { useTableContext: useSTContext } = createTableHookContexts<ST_Features>();
+
+     // hooks/useST_TableInstance.ts
+     const [{ useAppTable }] = useState(() => createSTTableHook(definedOptions));
+     const table = useAppTable({ ...definedOptions, columns, initialState });
+     ```
+
+   - Core resolves every name itself. Removed: the registry merge in
+     `useST_TableOptions.ts:119-120`, the name-to-function swap and `_filterFn` in
+     `column.utils.ts:83-93`, the hand-resolved `globalFilterFn` in
+     `useST_TableInstance.ts:286-287`. `prepareColumns` writes the current mode name onto
+     `columnDef.filterFn`; `globalFilterFn` is passed as a name.
+   - `useSTContext` is defined once at module level on the shared context that
+     `createTableHook` uses by default (`createTableHook.tsx:46-50, 713-715`), so components
+     read any table regardless of which instance built it.
+   - Deviation from MRT: MRT's port passes the options through unread, so a custom name
+     silently filters nothing. Not copied. One tracker line.
+   - Why not the alternatives: resolving names to functions before core skips core's lookup;
+     a cast past `Omit<..., 'features'>` and a feature that rewrites `_rowModelFns` lean on
+     internals; a per-project `createShadcnTable` factory and `useTable` without
+     `useAppTable` change the public API or drop the hook.
+   - Caveats, accepted:
+     - `createTableHook` runs once per mounted table instead of once per app. A few closures
+       and three small components.
+     - Registries are read on the first render only, as today (`useMemo(..., [])`).
+     - Exact string typing for custom names is not available; `ST_FilterOption` stays
+       `LiteralUnion`, as today.
+     - Aggregation: plain callables passed in `aggregationFns` are wrapped with
+       `constructAggregationFn` before registration.
+   - Verify in phase 01 and 02 (tests, both bases):
+     - A column with `filterFn: 'customFilterFn'` from the call's `filterFns` filters rows.
+     - `globalFilterFn: 'customFilterFn'` filters rows; `'fuzzy'` default still works.
+     - A custom `sortFn` name sorts; a custom `aggregationFn` name aggregates.
+     - Two tables on one page with different `filterFns` do not see each other's names.
+     - Filter-mode switch via `ST_FilterOptionMenu` changes the applied function; the menu
+       label, `ST_FilterTextField`, `ST_FilterRangeSlider`, `ST_ColumnActionMenu` and the fuzzy
+       highlight in `ST_TableBodyCellValue` read the name from `columnDef.filterFn`.
+     - An unknown name logs core's dev warning and filters nothing, no throw.
+     - `useAppTable` call has no `@ts-expect-error`; `pnpm tsc:radix` and `tsc:baseui` clean.
+     - `useSTContext()` inside a component rendered by `<ShadcnTable>` returns the right table
+       when two tables are mounted.
+     - No remount of `AppTable` across re-renders (controlled input in a custom toolbar keeps
+       focus while typing).
+
 ## Docs site
 
 1. Code view highlights on the client, on demand.

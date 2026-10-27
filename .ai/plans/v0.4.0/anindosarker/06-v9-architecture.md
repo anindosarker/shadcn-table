@@ -73,19 +73,27 @@ Per tree, both bases:
 ```
 shadcn-table/
 ├── features/
-│   ├── stFeatures.ts                     ← tableFeatures({ ...stockFeatures, ...custom, row models, fn registries })
+│   ├── stFeatures.ts                     ← tableFeatures({ ...stockFeatures, ...custom, row models, built-in fn registries })
 │   ├── stCellActionsFeature.ts  stColumnDraggingFeature.ts  stConfigFeature.ts  stDensityFeature.ts
 │   ├── stEditingFeature.ts  stFilterModesFeature.ts  stFullScreenFeature.ts  stLoadingFeature.ts
 │   └── stRefsFeature.ts  stRowDraggingFeature.ts  stToolbarsFeature.ts
 ├── hooks/
-│   ├── stTableHook.ts                    ← createTableHook, internal
-│   ├── useST_TableInstance.ts            ← wraps useAppTable
-│   └── (others as today, aligned with twins)
-├── utils/                                ← tanstack.features.ts removed
-├── fns/sortFns.ts                        ← name kept, contents aligned
-├── locales/mk.ts                         ← added
-└── types.ts                              ← derived from ST_Features
+│   ├── stTableHook.ts                    ← createSTTableHook(options): createTableHook with the call's
+│   │                                        fn registries merged (decisions.md D3); useSTContext on the shared context
+│   ├── useST_TableInstance.ts            ← createSTTableHook once per mount (useState initializer), then useAppTable
+│   ├── useShadcnTable.ts  useST_TableOptions.ts  useST_Effects.ts  useST_Rows.ts  virtualizers
+│   └── display-columns/
+├── components/                           ← table/ head/ body/ footer/ toolbar/ buttons/ inputs/ menus/ modals/
+├── shared/
+│   ├── fns/                              ← filterFns.ts  sortFns.ts  aggregationFns.ts (name kept, contents aligned)
+│   ├── utils/                            ← tanstack.features.ts removed
+│   └── locales/                          ← 38 + mk.ts
+├── ShadcnTable.tsx  ST_Tooltip.tsx  icons.ts
+├── types.ts                              ← derived from ST_Features
+└── index.ts                              ← full barrel, unchanged
 ```
+
+Folder decisions and the D3 mechanism: `decisions.md`, "TanStack Table v9 architecture" items 2 and 3.
 
 ### 1.5 Flow
 
