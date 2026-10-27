@@ -121,3 +121,41 @@ Browser: radix Storybook dev server on 6026, Playwright against `iframe.html` sc
 - [x] FnRegistries stories (decisions item 3): 9 of 9 play functions finish without an exception or page error in the browser, and stay green in `pnpm test`.
 - [x] Column filter mode switch re-filters an unchanged value: `features-filtering-examples--filtering-change-mode-enabled` (random data, so the term is the first two letters of the first row's name, `bi` in this run): fuzzy 6 rows (`Abigale`, `Bianka`, `Boris`, `Gabrielle`, `Jabari`, `Libbie`), Starts With `Bianka` (same after retyping `bi`), Contains `Abigale`, `Bianka`, `Libbie`; labels `Filter Mode: Starts With` / `Filter Mode: Contains`; input still `bi`.
 - [x] Global filter mode switch via the search field's menu: `global-filter-mode-switch`, `ily` under fuzzy `Lily`; Starts With clears the search, `ily` then `No results found`, `Li` `Lily`; Contains `ily` `Lily`.
+
+## Phase 03
+
+TanStack reference: `React-table/tanstack-table` at `c14e0221b` (not pulled, same as phase 02). Installed `@tanstack/react-table` 9.3.1.
+
+### Pattern (decisions 4, 5)
+
+- Table access: a component with `row`, `cell`, `header` or `column` reads `instance.table`; one without reads `useSTContext()` from `hooks/stTableHook`. No `table` prop, never passed to a child.
+- Render reads: one slice `<Subscribe source={table.atoms.density}>`, several `<Subscribe source={table.store} selector={(s) => ({ ... })}>` (the `Subscribe` exported by `@tanstack/react-table`), inside the component that renders the value; row model and state getters sit inside it and the selector lists every slice that feeds them. A value that feeds a hook (memo, effect deps, virtualizer) comes from `useST_Atom(table.atoms.x)`, one call per slice.
+- Handlers, effects and callbacks read `table.atoms.x.get()` or `table.store.state.x`; writes stay `table.setX`. Shared utils read `table.store.state` and the caller's selector lists their slices: `getCommonSRTCellStyles` `draggingColumn`, `hoveredColumn`; `getST_Rows` `creatingRow`, `pagination` plus `getIsRankingRows` and `getCanRankRows` `globalFilter`, `sorting`, `expanded`, `globalFilterFn`.
+- Root: `ShadcnTable` built from options calls `useST_TableInstance(options, selectST_TransformState)`, which hands the selector to `useAppTable(options, selector)`; it re-renders only on the slices its option-time transforms read. `ShadcnTable table={table}` re-renders with its owner; `useShadcnTable` keeps the default selector.
+- Provider: `ST_TableProvider` keeps the first instance as the context handle (`useState`), refreshes `handle.options` each render, and its context value never changes identity.
+- Custom renderer arguments (`Cell`, `Header`, `Footer`, `render*`, `st*Props`) still receive `table`: the handle or `instance.table`.
+
+### Transition
+
+- `ecde993`: the 58 components with a required `table` prop take it optionally and resolve `props.table ?? useSTContext()`, so the clusters work in parallel with `tsc` green. Each cluster drops the prop in its files.
+- `ST_TableLayout` calls `useST_Atom(table.store)` and `ST_TableProvider` puts a live `state` getter (`table.store.state`) on the handle, so components not yet on subscriptions keep rendering current state. Both go in the integration step after the five clusters merge; the decision 5 Profiler counts are only meaningful after that.
+
+### Deviations
+
+- Root selector is not `() => null`: the option-time transforms run in the root render. `selectST_TransformState` selects `columnFilterFns` (`prepareColumns` writes the mode name onto `columnDef.filterFn`), `globalFilterFn` (passed as the core option), `grouping` and `creatingRow` (display columns), `isLoading`, `showSkeletons` and `pagination.pageSize` (skeleton rows). The freeze guards (`isResizingColumn`, `draggingColumn`, `draggingRow`) read the live store, not selected.
+- `useST_Atom` is new in `hooks/stTableHook.tsx`: `useSyncExternalStore` over one atom's `subscribe` and `get`. `Subscribe` cannot feed a hook and `useSelector` lives in `@tanstack/react-store`, not a direct dependency. Used by `ST_Table` (column size memo, `isResizingColumn`) and `useST_ColumnVirtualizer`.
+- `useST_Effects` has no render reads: column order and the page check run on owner renders against the store; full screen body styles, the page check after state changes (`table.store.subscribe`), the ranking sort (`atoms.globalFilter`, `atoms.sorting`) and the pinned row re-render (`atoms.density`) are subscriptions. The full screen styles and the store-triggered page check wait a task (`setTimeout`), for the layout commit and so the row count is not memoized before the root writes a new filter mode.
+- `getST_RowNumbersColumnDef`: the `Cell` subscribes to `table.atoms.pagination`; the column defs rebuild on root renders only, so static numbers no longer close over the page.
+- `ST_TableContainer` observes the toolbars with a `ResizeObserver` besides the per-render measure: the alert banner changes the top toolbar height on state the container does not subscribe to.
+- `ST_TableLayout`, `ST_TableContainer`, `ST_Table`, `ST_TableLoadingOverlay` props are plain aliases (`DivProps`, `TableProps`, `ST_CircularProgressProps`) without `TData`, as in the twins. Children are created outside the `Subscribe` render function, so a slice change re-renders only the element that shows it.
+- `stFilterModesFeature`: `setColumnFilterFns` and `setGlobalFilterFn` emit `onColumnFiltersChange((old) => [...old])` after the change; the raw handler, since `setColumnFilters` would drop filters by the old mode's auto-remove rules. `ST_FilterOptionMenu` loses its four nudge branches. A programmatic switch with a live value now re-filters (phase 02 owner call).
+- Fixtures in `stories/features/PhaseThreeVerify.stories.tsx`, ids under `features-phase-three-verify--`: `programmatic-global-filter-mode`, `programmatic-column-filter-mode`, `root-skips-state-renders` (a proxy on `displayColumnDefOptions` counts root renders: none over paging, sorting, density, selection, search and full screen), `data-replacement`, `controlled-pagination`.
+
+### Phase 02 leftovers
+
+- [x] The tooltip provider lives in `ST_TableProvider` (`c09047d`): every ST tooltip under the provider, hand-composed pieces included, has its Radix provider.
+- [x] Headless `flexRender(header.column.columnDef.Header, header.getContext())` for the expand and select columns renders without a throw: `headless-display-column-header-components`, attempt 2 on `c09047d`, still green in `pnpm test`.
+
+### Gates
+
+On `2922bf6`: `tsc:radix`, stories tsc, `lint`, `test` (58 files, 420 tests), `registry:build` green. `grep "table\.state" components` has 39 hits, all in cluster files; `hooks/display-columns` has none.
