@@ -352,6 +352,66 @@
           "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/features/stCellActionsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stColumnDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stColumnDraggingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stConfigFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stConfigFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stDensityFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stDensityFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stEditingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stEditingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFeatures.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFeatures.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFilterModesFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFullScreenFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFullScreenFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stLoadingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stLoadingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stRefsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRefsFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stRowDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRowDraggingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stToolbarsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx"
@@ -385,6 +445,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/stTableHook.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
@@ -480,11 +545,6 @@
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/style.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/style.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/shared/utils/tanstack.features.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/shared/utils/tanstack.features.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/tanstack.helpers.ts",
