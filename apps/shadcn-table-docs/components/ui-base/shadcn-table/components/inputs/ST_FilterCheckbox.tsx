@@ -6,8 +6,10 @@ import { Label } from '@/components/ui-base/label';
 import {
   type CheckboxProps,
   type ST_Column,
+  type ST_ColumnDef,
   type ST_RowData,
   type ST_TableInstance,
+  type ST_TableOptions,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
@@ -44,16 +46,25 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   // The column carries the core table; the ST wrapper types re-type its getters.
   const table = column.table as unknown as ST_TableInstance<TData>;
   const {
-    options: { localization, stFilterCheckboxProps },
+    options: { localization },
   } = table;
   const { columnDef } = column;
+  // table.options and the column def hold the part props tree-neutral
+  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
+  // ST_ColumnDef) type them for this tree's Checkbox.
+  const {
+    stFilterCheckboxProps,
+  }: Pick<ST_TableOptions<TData>, 'stFilterCheckboxProps'> = table.options;
+  const {
+    stFilterCheckboxProps: columnFilterCheckboxProps,
+  }: Pick<ST_ColumnDef<TData>, 'stFilterCheckboxProps'> = columnDef;
 
   const checkboxProps = {
     ...parseFromValuesOrFunc(stFilterCheckboxProps, {
       column,
       table,
     }),
-    ...parseFromValuesOrFunc(columnDef.stFilterCheckboxProps, {
+    ...parseFromValuesOrFunc(columnFilterCheckboxProps, {
       column,
       table,
     }),
