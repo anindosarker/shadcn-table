@@ -55,3 +55,14 @@ New stories: `CustomFilterFns` `AggregationFnArray`, `ColumnFilterModeSwitch` (d
 - `pnpm storybook:build`, `pnpm storybook:build:base`: `Storybook build completed successfully`.
 - `node scripts/check-storybook.mjs --base http://localhost:6066` on a Python static server over `storybook-static`: `14 passed, 0 failed`.
 - Greps over `stories/`: `memoMode` none; `table={table}` only on `ShadcnTable` and `ST_TableProvider`; `shadcn-table/{hooks,features,shared,components}/` and `shadcn-table/ShadcnTable` none; `table.state` none; em dash none.
+
+## Gates, verifier run (clean tree at `0cb8715`)
+
+- `npx tsc -p tsconfig.stories.json --noEmit`: pass, no output. The same command with `ST_BASE=base`: pass, no output (the env is not read by that tsconfig, see above).
+- `pnpm lint`: pass, exit 0, no output.
+- `pnpm test`: `Test Files 62 passed (62)`, `Tests 438 passed (438)`.
+- `pnpm test:base`: `Test Files 62 passed (62)`, `Tests 438 passed (438)`.
+- `pnpm storybook:build`, `pnpm storybook:build:base`: `Storybook build completed successfully`, both.
+- `node scripts/check-storybook.mjs --base http://127.0.0.1:6066` (Python static server over `storybook-static`): `14 passed, 0 failed`.
+- Greps over `stories/`: `memoMode` none; `table={table}` only on `ShadcnTable` and `ST_TableProvider`; `shadcn-table/{hooks,features,shared,components}/` none; `table.state` none; em dash none.
+- Playwright over the eight target files, 43 stories each, radix build on `:6066` and base build on `:6067` (`storybook-static/base`): every story `storyFinished` with `status: success`, no `playFunctionThrewException`, no page error. One console error on both bases, `features-table-provider--no-provider-throws`: React's default caught-error log for the `useTableContext` throw that the story's error boundary catches on purpose; the play asserts that message, so this is the story's expected output, not a defect.
