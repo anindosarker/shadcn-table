@@ -35,7 +35,7 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
     options: {
       columns,
       /**
-       * MUI `stickyHeader` Table prop dropped (no native `<table>` attr) — sticky th
+       * MUI `stickyHeader` Table prop dropped (no native `<table>` attr); sticky th
         styles live in `ST_TableHeadCell` (+ thead-level grid-mode sticky in
         `ST_TableHead`), derived from `enableStickyHeader || isFullScreen` off
         `table`, same as ST_TableHead does.
@@ -73,7 +73,7 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
       colSizes[`--col-${parseCSSVarId(header.column.id)}-size`] = colSize;
     }
     return colSizes;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- getFlatHeaders is a stable table method; the header set follows columns, columnSizing, columnResizing and columnVisibility
   }, [columns, columnSizing, columnResizing, columnVisibility]);
 
   const columnVirtualizer = useST_ColumnVirtualizer(table);
