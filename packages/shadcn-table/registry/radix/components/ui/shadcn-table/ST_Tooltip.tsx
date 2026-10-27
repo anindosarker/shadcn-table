@@ -4,7 +4,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { getCommonTooltipProps } from '@/components/ui/shadcn-table/utils/style.utils';
+import { getCommonTooltipProps } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export interface ST_TooltipProps
   extends Pick<

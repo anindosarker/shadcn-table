@@ -179,9 +179,10 @@ branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](f
      - No `table.state` anywhere under `components/`.
    - Root opts out of state re-renders, or subscriptions below it are decoration:
      `ShadcnTable` provides a stable handle on context, not the per-render wrapper. The
-     handle is the first wrapper kept in a ref (`useState(() => table)`): its `store`,
-     `atoms`, `refs` and setters are live, its `state` is unused. Data and option changes
-     still flow because `useAppTable` re-renders the owner and `AppTable` republishes.
+     handle is the first wrapper kept in a ref (`useState(() => table)`) inside
+     `ST_TableProvider`, so `ShadcnTable` and hand-composed tables match: its `store`,
+     `atoms`, `refs` and setters are live, its `options` are refreshed from each render's
+     wrapper, its `state` is unused. Data and option changes still flow.
    - Public surface unchanged: `useShadcnTable` returns the wrapper with the default
      selector, so user code reading `table.state.sorting` keeps re-rendering and working.
    - `memoMode` option removed. Its job (skip cell and row re-renders) is done by the
@@ -209,6 +210,8 @@ branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](f
      - Every `table.state` read under `components/` is gone (grep gate in the tracker).
      - Controlled state (`state` plus `on*Change`) and external `atoms` both drive the
        subscriptions.
+     - Change `localization` or an `enable*` prop after mount: a context reader shows the
+       new value.
 
 6. D4, `stFeatures` export (decided 2026-10-27). `ST_Features` stays public as a type;
    `stFeatures` the value leaves the barrel and stays internal to `features/`.

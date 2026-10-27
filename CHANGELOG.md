@@ -8,6 +8,89 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Breaking
+
+- Sub-components no longer take a `table` prop. They read it from the `row`, `cell`,
+  `header` or `column` they render (`instance.table`), or from the `ST_TableProvider`
+  context; wrap hand-composed pieces in `ST_TableProvider`.
+- Renderers and `st*Props` callbacks of components that render a row, cell, header or
+  column (`Cell`, `GroupedCell`, `Header`, `Footer`, `renderRowActions`,
+  `renderRowActionMenuItems`, `renderColumnActionsMenuItems`, `renderDetailPanel`,
+  `stRowDragHandleProps` and the like) receive `instance.table`, which has no `state`. Read
+  `table.store.state` or `table.atoms.<slice>.get()` there. `table.store.state` is typed over
+  `ST_RowData`; cast the row slices (`draggingRow`, `hoveredRow`) through
+  `ST_TableState<TData>` when the row type matters.
+- The props types of components that render no row, cell, header or column
+  (`ST_TableLayoutProps`, `ST_TableContainerProps`, `ST_TableProps`, `ST_TableBodyProps`,
+  `ST_TableHeadProps`, `ST_TableFooterProps`, the toolbar, toggle button, menu and modal
+  props) no longer take a `TData` parameter. Drop the type argument.
+- On the table that `render*` and `st*Props` callbacks of those components receive,
+  `table.state` is a live, unsubscribed read of the store. Prefer `table.store.state`.
+- `ST_TableProvider` keeps the first table it is given. Swapping its `table` prop after
+  mount needs a `key`.
+- `ST_TopToolbarProps` is removed; `ST_TopToolbar` takes no props.
+- `memoMode` is removed, with the memoized row and cell components
+  (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
+- `expandRowsFn` is removed. It was never implemented.
+- The `stFeatures` value is no longer exported. `ST_Features` stays, as a type.
+- `filterFns`, `sortFns` and `aggregationFns` names are resolved by TanStack Table core. A
+  `filterFn`, `globalFilterFn`, `sortFn` or `aggregationFn` string must be a built-in name or
+  one registered through the table option of the same name; an unknown name logs core's
+  development warning and filters, sorts or aggregates nothing. A column's `filterFn` keeps
+  the name: `columnDef.filterFn` holds the current filter mode name instead of the resolved
+  function, and `columnDef._filterFn` is removed.
+- Every ST setter (`table.setDensity`, `setIsFullScreen`, `setShowAlertBanner`,
+  `setShowToolbarDropZone`, `setDraggingColumn`, `setHoveredColumn`, `setDraggingRow`,
+  `setHoveredRow`, `setCreatingRow`, `setEditingCell`, `setEditingRow`,
+  `setColumnFilterFns`, `setGlobalFilterFn`, `setShowColumnFilters`, `setShowGlobalFilter`
+  and `setActionCell`) hands its `on*Change` handler a function updater, as TanStack's own
+  setters do. A handler that expected the new value needs `functionalUpdate`, or a React
+  state setter.
+
+### Added
+
+- mk (Macedonian) locale.
+- `ST_TableProvider` puts a table on the context the library's components read.
+  `ShadcnTable` renders it around its layout.
+- `getColumnFilterFnName` and `selectST_TransformState` are exported from the barrel.
+
+### Changed
+
+- Components subscribe to the state slices they render. A state change re-renders the
+  components that show it, not the whole table; `ShadcnTable` itself re-renders only on
+  the slices its column and data transforms read.
+
+### Fixed
+
+- `isLoading` and `isSaving` default to `false`, and every loading slice (`isLoading`,
+  `isSaving`, `showLoadingOverlay`, `showProgressBars`, `showSkeletons`) is in the table
+  store from the first render. The three `show*` slices start unset, so they still follow
+  `isLoading` and `isSaving` until they are set.
+- The core table at `row.table`, `cell.table` and `header.getContext().table` carries the
+  ST state, refs and setters.
+- A custom `aggregationFn` name typechecks: `ST_AggregationOption` accepts any string, as
+  `ST_FilterOption` and `ST_SortingOption` do.
+- `enablePagination: false` with `manualPagination: false` shows every row instead of the
+  first page.
+- With `enableFilters`, `enableColumnFilters` and `enableGlobalFilter` all `false`, filters
+  in state no longer filter the rows.
+- Row pinning on select (`rowPinningDisplayMode: 'select-*'`) follows the selection state:
+  a Shift range pins every row in it under controlled `rowSelection` or an external
+  `atoms.rowSelection` too, select all pins the rows it selects (it cleared every pin), and
+  programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
+  unpins.
+- Switching a column's filter mode re-filters the current filter value with the new mode.
+  While a column or global filter is set, a controlled `onColumnFiltersChange` receives an
+  identity updater (`(old) => [...old]`) on each `setColumnFilterFns` and `setGlobalFilterFn`
+  call so the row model re-filters; a handler that only stores the value needs no change.
+- Editing a cell from the cell action menu (`editDisplayMode: 'cell'`) keeps the edit input
+  focused when the menu closes.
+- Rendering an ST display column header headless
+  (`flexRender(header.column.columnDef.Header, header.getContext())`) no longer throws.
+- A callback `ref` in `stTableLayoutProps`, `stTableContainerProps`, `stTableHeadProps`,
+  `stTableFooterProps`, `stTopToolbarProps` or `stBottomToolbarProps` receives the node;
+  only ref objects did.
+
 ## 0.3.3 - 2026-10-22
 
 ### Removed
