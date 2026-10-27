@@ -13,11 +13,12 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableBodyRow } from '@/components/ui/shadcn-table/components/body/ST_TableBodyRow';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyProps<TData extends ST_RowData>
   extends TableBodyProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableBodyVariants = cva('', {
@@ -28,9 +29,11 @@ const tableBodyVariants = cva('', {
 
 export const ST_TableBody = <TData extends ST_RowData>({
   columnVirtualizer,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableBodyProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getBottomRows,
     getIsSomeRowsPinned,
@@ -214,5 +217,5 @@ export const ST_TableBody = <TData extends ST_RowData>({
 
 export const Memo_ST_TableBody = memo(
   ST_TableBody,
-  (prev, next) => prev.table.options.data === next.table.options.data,
+  (prev, next) => prev.table?.options.data === next.table?.options.data,
 ) as typeof ST_TableBody;

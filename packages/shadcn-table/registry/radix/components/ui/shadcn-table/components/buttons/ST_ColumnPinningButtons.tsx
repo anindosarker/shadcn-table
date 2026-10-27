@@ -9,21 +9,24 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const columnPinningButtonsVariants = cva('min-w-[70px] text-center');
 
 export interface ST_ColumnPinningButtonsProps<TData extends ST_RowData>
   extends DivProps {
   column: ST_Column<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
   className,
   column,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ColumnPinningButtonsProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { PushPinIcon },

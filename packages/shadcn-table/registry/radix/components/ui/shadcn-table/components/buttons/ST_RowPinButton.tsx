@@ -8,20 +8,23 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_RowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   pinningPosition: RowPinningPosition;
   row: ST_Row<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_RowPinButton = <TData extends ST_RowData>({
   pinningPosition,
   row,
-  table,
+  table: tableProp,
   ...rest
 }: ST_RowPinButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { CloseIcon, PushPinIcon },

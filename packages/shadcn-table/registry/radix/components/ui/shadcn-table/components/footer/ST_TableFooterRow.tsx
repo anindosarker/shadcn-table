@@ -11,12 +11,13 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableFooterCell } from '@/components/ui/shadcn-table/components/footer/ST_TableFooterCell';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableFooterRowProps<TData extends ST_RowData>
   extends TableRowProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
   footerGroup: ST_HeaderGroup<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableFooterRowVariants = cva('relative w-full bg-background', {
@@ -28,9 +29,11 @@ const tableFooterRowVariants = cva('relative w-full bg-background', {
 export const ST_TableFooterRow = <TData extends ST_RowData>({
   columnVirtualizer,
   footerGroup,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableFooterRowProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       layoutMode,

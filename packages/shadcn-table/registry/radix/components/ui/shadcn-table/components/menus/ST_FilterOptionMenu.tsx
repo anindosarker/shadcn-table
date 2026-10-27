@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export const stFilterOptions = (
   localization: ST_Localization,
@@ -118,7 +119,7 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilterValue?: (filterValue: any) => void;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_FilterOptionMenu = <TData extends ST_RowData>({
@@ -128,9 +129,11 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   onSelect,
   setAnchorEl,
   setFilterValue,
-  table,
+  table: tableProp,
   ...rest
 }: ST_FilterOptionMenuProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       columnFilterModeOptions,

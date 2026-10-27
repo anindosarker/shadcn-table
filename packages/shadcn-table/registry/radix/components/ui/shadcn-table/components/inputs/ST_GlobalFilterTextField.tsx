@@ -24,16 +24,19 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_GlobalFilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_GlobalFilterTextFieldProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableGlobalFilterModes,

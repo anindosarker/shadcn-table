@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -26,7 +27,7 @@ export interface ST_RowActionMenuProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   staticRowIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_RowActionMenu = <TData extends ST_RowData>({
@@ -36,9 +37,11 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   row,
   setAnchorEl,
   staticRowIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       editDisplayMode,

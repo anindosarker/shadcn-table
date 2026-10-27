@@ -10,11 +10,12 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const filterRangeSliderVariants = cva('m-auto w-[calc(100%-8px)] px-1', {
@@ -31,9 +32,11 @@ const filterRangeSliderVariants = cva('m-auto w-[calc(100%-8px)] px-1', {
 
 export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   header,
-  table,
+  table: tableProp,
   ...rest
 }: ST_FilterRangeSliderProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableColumnFilterModes,

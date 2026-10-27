@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const selectCheckboxVariants = cva('z-0', {
   variants: {
@@ -37,15 +38,17 @@ export interface ST_SelectCheckboxProps<TData extends ST_RowData>
   extends CheckboxProps {
   row?: ST_Row<TData>;
   staticRowIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_SelectCheckbox = <TData extends ST_RowData>({
   row,
   staticRowIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_SelectCheckboxProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableMultiRowSelection,

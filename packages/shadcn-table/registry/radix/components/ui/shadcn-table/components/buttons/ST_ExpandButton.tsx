@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const expandButtonVariants = cva('', {
   variants: {
@@ -28,14 +29,16 @@ export interface ST_ExpandButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
   staticRowIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ExpandButton = <TData extends ST_RowData>({
   row,
   staticRowIndex,
-  table,
+  table: tableProp,
 }: ST_ExpandButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   // Note: MRT's useTheme dropped — ST has no theme.direction (rtl).
   const {
     options: {

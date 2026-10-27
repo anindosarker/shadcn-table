@@ -20,6 +20,7 @@ import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.
 import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: MRT MenuItem sx py:'6px' dropped — shadcn DropdownMenuItem padding wins.
 const showHideColumnsMenuItemVariants = cva(
@@ -33,7 +34,7 @@ export interface ST_ShowHideColumnsMenuItemsProps<TData extends ST_RowData>
   hoveredColumn: ST_Column<TData> | null;
   isNestedColumns: boolean;
   setHoveredColumn: Dispatch<SetStateAction<ST_Column<TData> | null>>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
@@ -44,9 +45,11 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   isNestedColumns,
   setHoveredColumn,
   style,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableColumnOrdering,

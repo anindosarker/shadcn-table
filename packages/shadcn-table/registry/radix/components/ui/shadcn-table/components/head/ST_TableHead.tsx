@@ -9,11 +9,12 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_TableHeadRow } from '@/components/ui/shadcn-table/components/head/ST_TableHeadRow';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadProps<TData extends ST_RowData>
   extends TableHeadProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableHeadVariants = cva('opacity-[0.97]', {
@@ -26,9 +27,11 @@ const tableHeadVariants = cva('opacity-[0.97]', {
 
 export const ST_TableHead = <TData extends ST_RowData>({
   columnVirtualizer,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableHeadProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableStickyHeader,

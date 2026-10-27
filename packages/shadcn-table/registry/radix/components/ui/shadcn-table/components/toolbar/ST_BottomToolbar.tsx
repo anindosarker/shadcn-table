@@ -11,10 +11,11 @@ import { ST_TablePagination } from '@/components/ui/shadcn-table/components/tool
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_ToolbarDropZone } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarDropZone';
 import { useST_MediaQuery } from '@/components/ui/shadcn-table/components/toolbar/useST_MediaQuery';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_BottomToolbarProps<TData extends ST_RowData>
   extends DivProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 // Note: base maps MRT's shared getCommonToolbarStyles (min-h-14 = 3.5rem,
@@ -34,9 +35,11 @@ const bottomToolbarVariants = cva(
 );
 
 export const ST_BottomToolbar = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_BottomToolbarProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enablePagination,

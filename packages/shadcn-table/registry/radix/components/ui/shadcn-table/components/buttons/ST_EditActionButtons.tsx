@@ -9,11 +9,12 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_EditActionButtonsProps<TData extends ST_RowData>
   extends DivProps {
   row: ST_Row<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
   variant?: 'icon' | 'text';
 }
 
@@ -21,10 +22,12 @@ const editActionButtonsVariants = cva('flex gap-3');
 
 export const ST_EditActionButtons = <TData extends ST_RowData>({
   row,
-  table,
+  table: tableProp,
   variant = 'icon',
   ...rest
 }: ST_EditActionButtonsProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { CancelIcon, SaveIcon },

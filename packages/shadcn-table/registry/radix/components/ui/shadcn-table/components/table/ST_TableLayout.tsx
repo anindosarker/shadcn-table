@@ -9,10 +9,11 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_BottomToolbar } from '@/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar';
 import { ST_TopToolbar } from '@/components/ui/shadcn-table/components/toolbar/ST_TopToolbar';
 import { ST_TableContainer } from '@/components/ui/shadcn-table/components/table/ST_TableContainer';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableLayoutProps<TData extends ST_RowData>
   extends DivProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableLayoutVariants = cva(
@@ -31,9 +32,11 @@ const tableLayoutVariants = cva(
 );
 
 export const ST_TableLayout = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableLayoutProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableBottomToolbar,

@@ -5,10 +5,11 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ToolbarDropZoneProps<TData extends ST_RowData>
   extends DivProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const toolbarDropZoneVariants = cva(
@@ -24,9 +25,11 @@ const toolbarDropZoneVariants = cva(
 );
 
 export const ST_ToolbarDropZone = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_ToolbarDropZoneProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { enableGrouping, localization },
     setHoveredColumn,

@@ -12,11 +12,12 @@ import {
 import { getST_SelectAllHandler } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ToolbarAlertBannerProps<TData extends ST_RowData>
   extends React.ComponentProps<typeof Alert> {
   stackAlertBanner?: boolean;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const toolbarAlertBannerVariants = cva(
@@ -33,9 +34,11 @@ const toolbarAlertBannerVariants = cva(
 
 export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   stackAlertBanner,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ToolbarAlertBannerProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getFilteredSelectedRowModel,
     getCoreRowModel,

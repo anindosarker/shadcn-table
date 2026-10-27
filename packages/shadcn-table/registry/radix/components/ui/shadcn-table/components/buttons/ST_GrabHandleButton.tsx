@@ -8,6 +8,7 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const grabHandleButtonVariants = cva(
   'my-0 -mx-[0.1rem] cursor-grab transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',
@@ -30,14 +31,16 @@ export interface ST_GrabHandleButtonProps<TData extends ST_RowData>
   location?: 'column' | 'row';
   onDragEnd: DragEventHandler<HTMLButtonElement>;
   onDragStart: DragEventHandler<HTMLButtonElement>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_GrabHandleButton = <TData extends ST_RowData>({
   location,
-  table,
+  table: tableProp,
   ...rest
 }: ST_GrabHandleButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { DragHandleIcon },

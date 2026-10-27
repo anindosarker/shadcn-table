@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
@@ -36,7 +37,7 @@ export interface ST_TableBodyCellProps<TData extends ST_RowData>
   rowRef: RefObject<HTMLTableRowElement | null>;
   staticColumnIndex?: number;
   staticRowIndex: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const bodyCellVariants = cva(
@@ -49,9 +50,11 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   rowRef,
   staticColumnIndex,
   staticRowIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableBodyCellProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   // const theme = useTheme();
   const {
     options: {

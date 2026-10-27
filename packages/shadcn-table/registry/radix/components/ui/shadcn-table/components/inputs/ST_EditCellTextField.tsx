@@ -29,6 +29,7 @@ import {
   getValueAndLabel,
   parseFromValuesOrFunc,
 } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   extends InputProps {
@@ -37,14 +38,16 @@ export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   error?: boolean;
   /** MUI TextField `helperText`: validation or hint text rendered under the input. */
   helperText?: ReactNode;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_EditCellTextField = <TData extends ST_RowData>({
   cell,
-  table,
+  table: tableProp,
   ...rest
 }: ST_EditCellTextFieldProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { createDisplayMode, editDisplayMode, stEditTextFieldProps },
     refs: { editInputRefs },

@@ -14,13 +14,14 @@ import {
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header: ST_Header<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ColumnActionMenu = <TData extends ST_RowData>({
@@ -28,9 +29,11 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   anchorEl,
   header,
   setAnchorEl,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ColumnActionMenuProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getAllLeafColumns,
     options: {

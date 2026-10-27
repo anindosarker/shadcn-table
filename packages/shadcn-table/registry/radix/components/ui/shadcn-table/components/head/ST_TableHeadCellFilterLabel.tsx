@@ -20,6 +20,7 @@ import {
   useDropdownOptions,
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
@@ -37,14 +38,16 @@ const tableHeadCellFilterLabelVariants = cva(
 export interface ST_TableHeadCellFilterLabelProps<TData extends ST_RowData>
   extends ButtonProps {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   header,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableHeadCellFilterLabelProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       columnFilterDisplayMode,
