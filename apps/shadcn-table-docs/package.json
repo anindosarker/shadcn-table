@@ -11,6 +11,7 @@
     "predev": "node lib/example-variants.mjs",
     "dev": "next dev -p ${PORT:-5320}",
     "start": "next start -p 5320",
+    "preview": "NEXT_DIST_DIR=.next-preview pnpm build && NEXT_DIST_DIR=.next-preview next start -p 5330",
     "types:check": "node lib/example-variants.mjs && next typegen && tsc --noEmit",
     "registry:hosted": "pnpm -w registry:hosted",
     "examples:variants": "node lib/example-variants.mjs",

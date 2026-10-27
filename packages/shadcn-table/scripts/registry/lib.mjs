@@ -21,7 +21,7 @@ const LIB_REL = 'components/ui/shadcn-table';
 export const GITHUB_REPO = 'anindosarker/shadcn-table';
 export const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
 // `--dev` builds a local registry under .dev/ (gitignored) whose locale items
-// point at the local server started by `pnpm registry:dev`; the committed
+// point at the local server started by `pnpm registry:dev` or `pnpm preview`; the committed
 // registry.json is never touched. REGISTRY_BASE_URL overrides the dev URL.
 export const DEV = process.argv.includes('--dev');
 

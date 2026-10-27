@@ -8,6 +8,7 @@
   "version": "0.3.3",
   "type": "module",
   "scripts": {
+    "preview": "node scripts/preview.mjs",
     "registry:build": "node scripts/registry/build.mjs && shadcn build",
     "registry:dev": "node scripts/registry/build.mjs --dev && shadcn build .dev/registry.json --output .dev/r",
     "storybook": "storybook dev -p 6006",

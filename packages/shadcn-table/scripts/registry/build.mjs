@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Usage (inside packages/shadcn-table): pnpm registry:build, or
-// pnpm registry:dev for a local copy under .dev/ served on port 5310.
+// pnpm registry:dev for a local copy under .dev/ (pnpm preview builds it and
+// serves it on port 5310).
 // Collects the items of every base (registry/<base>/registry.ts) into
 // registry.json, then `shadcn build` turns it into public/r/<name>.json.
 import fs from 'node:fs';
