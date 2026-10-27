@@ -35,7 +35,7 @@ import {
   showRowSelectionColumn,
   showRowSpacerColumn,
 } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
-import { stFeatures } from '@/components/ui/shadcn-table/shared/utils/tanstack.features';
+import { stFeatures } from '@/components/ui/shadcn-table/features/stFeatures';
 import { createRow } from '@/components/ui/shadcn-table/shared/utils/tanstack.helpers';
 import { getST_RowActionsColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef';
 import { getST_RowDragColumnDef } from '@/components/ui/shadcn-table/hooks/display-columns/getST_RowDragColumnDef';
