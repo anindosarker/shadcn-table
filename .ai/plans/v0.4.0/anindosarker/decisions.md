@@ -224,6 +224,55 @@ shadcn-react-table/
        mount, not a silent undefined.
      - Every guide example that composes sub-components renders in `check-pages.mjs`.
 
+5. D2, state reads (decided 2026-10-27). Full subscriber pattern inside the library. Replaces
+   the item 1 wording "components read state through feature APIs instead of `table.state`".
+   - Fact behind it: `useTable` returns a fresh wrapper per render with `state` attached
+     (`react-table/src/useTable.ts:207, 223`); the core table at `row.table`, `cell.table`,
+     `header.table`, `column.table` is stable and has no `state`, only `store`, `atoms`,
+     `Subscribe` and the setters. D1 group 1 lands on the core table.
+   - Rules:
+     - Render reads subscribe. One slice: `<Subscribe source={table.atoms.density}>`.
+       Several: `<Subscribe source={table.store} selector={(s) => ({ ... })}>`. The
+       `Subscribe` sits inside the component that renders the value, per the React Compiler
+       guide, never around a child that is handed a stable instance.
+     - Handlers and effects read the current value: `table.atoms.x.get()` or
+       `table.store.state.x`. Never `table.state` (findings: `ST_CellActionMenu`
+       `onCloseAutoFocus` reads a stale snapshot).
+     - Writes stay `table.setX(...)`.
+     - No `table.state` anywhere under `components/`.
+   - Root opts out of state re-renders, or subscriptions below it are decoration:
+     `ShadcnTable` provides a stable handle on context, not the per-render wrapper. The
+     handle is the first wrapper kept in a ref (`useState(() => table)`): its `store`,
+     `atoms`, `refs` and setters are live, its `state` is unused. Data and option changes
+     still flow because `useAppTable` re-renders the owner and `AppTable` republishes.
+   - Public surface unchanged: `useShadcnTable` returns the wrapper with the default
+     selector, so user code reading `table.state.sorting` keeps re-rendering and working.
+   - `memoMode` option removed. Its job (skip cell and row re-renders) is done by the
+     subscriptions, without the frozen density, selection and pinning MRT documents.
+     Breaking line in the 0.4.0 changelog; `memo-mode` guide and the Storybook story go.
+   - Why full rather than MRT's shape (default selector, `table.state` in 55 of 57 files,
+     `Subscribe` in two): we ship to row counts we do not control; narrow re-renders are the
+     product, not an optimization to add later. The guide's "start with the default selector"
+     is advice for one app table.
+   - Caveats, accepted:
+     - Every component declares the slices it renders. A missed slice is a stale render,
+       same class as today's `memoMode` bugs, now explicit and testable.
+     - Larger rewrite than the MRT mirror in phase 03; the twin diff grows in every
+       component. MRT is deprecated, the twin map is a checklist, not a target.
+     - `table.getRowModel()` depends on filtering, sorting, grouping, expansion and
+       pagination; the body subscription selector must list every slice that feeds it.
+   - Verify in phase 03 (Storybook and tests, both bases):
+     - Hover a row in a 1,000-row table: only that row's cells re-render (React Profiler).
+     - Toggle density: cells and head cells re-render, toolbar buttons do not.
+     - Select a row: that row's checkbox and the select-all header update; other rows do not
+       render.
+     - Sort, filter, paginate, expand, group: the body re-renders with the new row model.
+     - Replace `data` from outside: the body shows the new rows with no state change.
+     - Cell action menu edit (`editDisplayMode="cell"`) keeps the input focused on close.
+     - Every `table.state` read under `components/` is gone (grep gate in the tracker).
+     - Controlled state (`state` plus `on*Change`) and external `atoms` both drive the
+       subscriptions.
+
 ## Docs site
 
 1. Code view highlights on the client, on demand.
