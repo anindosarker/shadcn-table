@@ -17,7 +17,10 @@ publishes the section as the GitHub release notes.
   column (`Cell`, `GroupedCell`, `Header`, `Footer`, `renderRowActions`,
   `renderRowActionMenuItems`, `renderColumnActionsMenuItems`, `renderDetailPanel`,
   `stRowDragHandleProps` and the like) receive `instance.table`, which has no `state`. Read
-  `table.store.state` or `table.atoms.<slice>.get()` there.
+  `table.store.state` or `table.atoms.<slice>.get()` there. `table.store.state` is typed over
+  `ST_RowData`; cast the row slices (`draggingRow`, `hoveredRow`) through
+  `ST_TableState<TData>` when the row type matters.
+- `ST_TopToolbarProps` is removed; `ST_TopToolbar` takes no props.
 - `memoMode` is removed, with the memoized row and cell components
   (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
 - `expandRowsFn` is removed. It was never implemented.
@@ -62,6 +65,9 @@ publishes the section as the GitHub release notes.
   programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
   unpins.
 - Switching a column's filter mode re-filters the current filter value with the new mode.
+  While a column or global filter is set, a controlled `onColumnFiltersChange` receives an
+  identity updater (`(old) => [...old]`) on each `setColumnFilterFns` and `setGlobalFilterFn`
+  call so the row model re-filters; a handler that only stores the value needs no change.
 - Editing a cell from the cell action menu (`editDisplayMode: 'cell'`) keeps the edit input
   focused when the menu closes.
 
