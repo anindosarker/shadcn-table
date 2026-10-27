@@ -1,3 +1,4 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,24 +10,29 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const columnPinningButtonsVariants = cva('min-w-[70px] text-center');
 
 export interface ST_ColumnPinningButtonsProps<TData extends ST_RowData>
   extends DivProps {
   column: ST_Column<TData>;
-  table?: ST_TableInstance<TData>;
+  /**
+   * Transition, part 01 phase 03: ignored, the table comes from the column.
+   * Goes in the integration step, once no caller passes it.
+   */
+  table?: unknown;
 }
 
 export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
   className,
   column,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition: kept off the DOM until the callers drop it
+  table: _table,
   ...rest
 }: ST_ColumnPinningButtonsProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The column carries the core table, which holds the ST options, atoms,
+  // refs and setters; the ST wrapper types do not re-type it.
+  const table = column.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       icons: { PushPinIcon },
@@ -39,42 +45,49 @@ export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
   };
 
   return (
-    <div {...rest} className={cn(columnPinningButtonsVariants(), className)}>
-      {column.getIsPinned() ? (
-        <ST_Tooltip title={localization.unpin}>
-          <Button
-            onClick={() => handlePinColumn(false)}
-            size="icon-sm"
-            type="button"
-            variant="ghost"
-          >
-            <PushPinIcon />
-          </Button>
-        </ST_Tooltip>
-      ) : (
-        <>
-          <ST_Tooltip title={localization.pinToLeft}>
-            <Button
-              onClick={() => handlePinColumn('start')}
-              size="icon-sm"
-              type="button"
-              variant="ghost"
-            >
-              <PushPinIcon className="rotate-90" />
-            </Button>
-          </ST_Tooltip>
-          <ST_Tooltip title={localization.pinToRight}>
-            <Button
-              onClick={() => handlePinColumn('end')}
-              size="icon-sm"
-              type="button"
-              variant="ghost"
-            >
-              <PushPinIcon className="-rotate-90" />
-            </Button>
-          </ST_Tooltip>
-        </>
+    <Subscribe source={table.atoms.columnPinning}>
+      {() => (
+        <div
+          {...rest}
+          className={cn(columnPinningButtonsVariants(), className)}
+        >
+          {column.getIsPinned() ? (
+            <ST_Tooltip title={localization.unpin}>
+              <Button
+                onClick={() => handlePinColumn(false)}
+                size="icon-sm"
+                type="button"
+                variant="ghost"
+              >
+                <PushPinIcon />
+              </Button>
+            </ST_Tooltip>
+          ) : (
+            <>
+              <ST_Tooltip title={localization.pinToLeft}>
+                <Button
+                  onClick={() => handlePinColumn('start')}
+                  size="icon-sm"
+                  type="button"
+                  variant="ghost"
+                >
+                  <PushPinIcon className="rotate-90" />
+                </Button>
+              </ST_Tooltip>
+              <ST_Tooltip title={localization.pinToRight}>
+                <Button
+                  onClick={() => handlePinColumn('end')}
+                  size="icon-sm"
+                  type="button"
+                  variant="ghost"
+                >
+                  <PushPinIcon className="-rotate-90" />
+                </Button>
+              </ST_Tooltip>
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </Subscribe>
   );
 };
