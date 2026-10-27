@@ -53,12 +53,23 @@ publishes the section as the GitHub release notes.
 - `ST_TableProvider` puts a table on the context the library's components read.
   `ShadcnTable` renders it around its layout.
 - `getColumnFilterFnName` and `selectST_TransformState` are exported from the barrel.
+- Docs: the `localization-i18n-mk` example, and a "Compose with ST_TableProvider" section
+  in the toolbar customization guide, linked from the ST components page.
 
 ### Changed
 
 - Components subscribe to the state slices they render. A state change re-renders the
   components that show it, not the whole table; `ShadcnTable` itself re-renders only on
   the slices its column and data transforms read.
+- Docs: examples and guides compose sub-components without a `table` prop, under
+  `ST_TableProvider` outside `ShadcnTable`. Locale imports read
+  `@/components/ui/shadcn-table/shared/locales/<code>` in the guides, `/SKILL.md` and the
+  registry README. The prop tables follow the name resolution in core, the function
+  updater on the ST `on*Change` handlers and the unset `show*` loading slices.
+
+### Removed
+
+- Docs: the memoization guide and the `memoMode` and `expandRowsFn` prop table entries.
 
 ### Fixed
 
