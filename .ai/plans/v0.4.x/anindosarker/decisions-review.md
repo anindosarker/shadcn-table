@@ -74,9 +74,14 @@ nothing here re-decides those, items here extend them.
    path adds the full clear on unselect. Bugs found in the same stories are in
    [findings-review.md](findings-review.md).
 
+## Barrel
+
+10. `getColumnFilterFnName` and `selectST_TransformState` stay exported from the barrel.
+    Harmless, and the stories use them.
+
 ## Unchanged after review
 
-10. The props-style root (`ShadcnTable` built from options) selects only the slices its
+11. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
