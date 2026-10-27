@@ -1,3 +1,4 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -7,12 +8,10 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadCellSortLabelProps<TData extends ST_RowData>
   extends ButtonProps {
   header: ST_Header<TData>;
-  table?: ST_TableInstance<TData>;
 }
 
 const tableHeadCellSortLabelVariants = cva(
@@ -33,11 +32,11 @@ const tableHeadCellSortLabelVariants = cva(
 
 export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
   header,
-  table: tableProp,
   ...rest
 }: ST_TableHeadCellSortLabelProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The core table behind the header; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       icons: { ArrowDownwardIcon, SyncAltIcon },
@@ -46,65 +45,86 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  const { isLoading, showSkeletons, sorting } = table.state;
-
-  const isSorted = !!column.getIsSorted();
-
-  const sortTooltip =
-    isLoading || showSkeletons
-      ? ''
-      : column.getIsSorted()
-        ? column.getIsSorted() === 'desc'
-          ? localization.sortedByColumnDesc.replace(
-              '{column}',
-              columnDef.header,
-            )
-          : localization.sortedByColumnAsc.replace('{column}', columnDef.header)
-        : column.getNextSortingOrder() === 'desc'
-          ? localization.sortByColumnDesc.replace('{column}', columnDef.header)
-          : localization.sortByColumnAsc.replace('{column}', columnDef.header);
-
-  const direction = isSorted
-    ? (column.getIsSorted() as 'asc' | 'desc')
-    : undefined;
 
   return (
-    <ST_Tooltip side="top" title={sortTooltip}>
-      <span className="relative inline-flex shrink-0 align-middle">
-        <button
-          type="button"
-          /* active dropped. Note: MUI TableSortLabel `active` is always true here; its styles are baked into the cva. */
-          aria-label={sortTooltip}
-          onClick={(e) => {
-            e.stopPropagation();
-            header.column.getToggleSortingHandler()?.(e);
-          }}
-          {...rest}
-          className={cn(
-            tableHeadCellSortLabelVariants({
-              direction,
-              isSorted,
-              className: rest.className,
-            }),
-          )}
-        >
-          {!isSorted ? (
-            <SyncAltIcon
-              style={{
-                transform: 'rotate(-90deg) scaleX(0.9) translateX(-1px)',
-              }}
-            />
-          ) : (
-            <ArrowDownwardIcon />
-          )}
-        </button>
-        {/* badgeContent={sorting.length > 1 ? column.getSortIndex() + 1 : 0} dropped. Note: MUI Badge showZero=false hides 0 (column outside the multi-sort). */}
-        {sorting.length > 1 && column.getSortIndex() >= 0 && (
-          <span className="absolute top-[14%] right-[14%] z-[1] flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
-            {column.getSortIndex() + 1}
-          </span>
-        )}
-      </span>
-    </ST_Tooltip>
+    <Subscribe
+      selector={(state) => ({
+        isLoading: state.isLoading,
+        showSkeletons: state.showSkeletons,
+        sorting: state.sorting,
+      })}
+      source={table.store}
+    >
+      {({ isLoading, showSkeletons, sorting }) => {
+        const isSorted = !!column.getIsSorted();
+
+        const sortTooltip =
+          isLoading || showSkeletons
+            ? ''
+            : column.getIsSorted()
+              ? column.getIsSorted() === 'desc'
+                ? localization.sortedByColumnDesc.replace(
+                    '{column}',
+                    columnDef.header,
+                  )
+                : localization.sortedByColumnAsc.replace(
+                    '{column}',
+                    columnDef.header,
+                  )
+              : column.getNextSortingOrder() === 'desc'
+                ? localization.sortByColumnDesc.replace(
+                    '{column}',
+                    columnDef.header,
+                  )
+                : localization.sortByColumnAsc.replace(
+                    '{column}',
+                    columnDef.header,
+                  );
+
+        const direction = isSorted
+          ? (column.getIsSorted() as 'asc' | 'desc')
+          : undefined;
+
+        return (
+          <ST_Tooltip side="top" title={sortTooltip}>
+            <span className="relative inline-flex shrink-0 align-middle">
+              <button
+                type="button"
+                /* active dropped. Note: MUI TableSortLabel `active` is always true here; its styles are baked into the cva. */
+                aria-label={sortTooltip}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  header.column.getToggleSortingHandler()?.(e);
+                }}
+                {...rest}
+                className={cn(
+                  tableHeadCellSortLabelVariants({
+                    direction,
+                    isSorted,
+                    className: rest.className,
+                  }),
+                )}
+              >
+                {!isSorted ? (
+                  <SyncAltIcon
+                    style={{
+                      transform: 'rotate(-90deg) scaleX(0.9) translateX(-1px)',
+                    }}
+                  />
+                ) : (
+                  <ArrowDownwardIcon />
+                )}
+              </button>
+              {/* badgeContent={sorting.length > 1 ? column.getSortIndex() + 1 : 0} dropped. Note: MUI Badge showZero=false hides 0 (column outside the multi-sort). */}
+              {sorting.length > 1 && column.getSortIndex() >= 0 && (
+                <span className="absolute top-[14%] right-[14%] z-[1] flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
+                  {column.getSortIndex() + 1}
+                </span>
+              )}
+            </span>
+          </ST_Tooltip>
+        );
+      }}
+    </Subscribe>
   );
 };

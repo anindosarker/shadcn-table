@@ -1,3 +1,4 @@
+import { Subscribe } from '@tanstack/react-table';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   type CollapseProps,
@@ -10,47 +11,53 @@ import { ST_FilterCheckbox } from '@/components/ui/shadcn-table/components/input
 import { ST_FilterRangeFields } from '@/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields';
 import { ST_FilterRangeSlider } from '@/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider';
 import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_FilterTextField';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadCellFilterContainerProps<TData extends ST_RowData>
   extends CollapseProps {
   header: ST_Header<TData>;
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   header,
-  table: tableProp,
   ...rest
 }: ST_TableHeadCellFilterContainerProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The core table behind the header; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     options: { columnFilterDisplayMode },
   } = table;
-  const { showColumnFilters } = table.state;
   const { column } = header;
   const { columnDef } = column;
   const { isRangeFilter } = getColumnFilterInfo({ header, table });
 
+  // The filter input subscribes to its own value, so it is created outside
+  // the open state subscription.
+  const filterInput =
+    columnDef.filterVariant === 'checkbox' ? (
+      <ST_FilterCheckbox column={column} />
+    ) : columnDef.filterVariant === 'range-slider' ? (
+      <ST_FilterRangeSlider header={header} />
+    ) : isRangeFilter ? (
+      <ST_FilterRangeFields header={header} />
+    ) : (
+      <ST_FilterTextField header={header} />
+    );
+
   return (
-    // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
-    // Note: MUI Collapse replaced by ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
-    <Collapsible
-      open={showColumnFilters || columnFilterDisplayMode === 'popover'}
-      {...rest}
-    >
-      <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-        {columnDef.filterVariant === 'checkbox' ? (
-          <ST_FilterCheckbox column={column} table={table} />
-        ) : columnDef.filterVariant === 'range-slider' ? (
-          <ST_FilterRangeSlider header={header} table={table} />
-        ) : isRangeFilter ? (
-          <ST_FilterRangeFields header={header} table={table} />
-        ) : (
-          <ST_FilterTextField header={header} table={table} />
-        )}
-      </CollapsibleContent>
-    </Collapsible>
+    <Subscribe source={table.atoms.showColumnFilters}>
+      {(showColumnFilters) => (
+        // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
+        // Note: MUI Collapse replaced by ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
+        <Collapsible
+          open={showColumnFilters || columnFilterDisplayMode === 'popover'}
+          {...rest}
+        >
+          <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+            {filterInput}
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+    </Subscribe>
   );
 };

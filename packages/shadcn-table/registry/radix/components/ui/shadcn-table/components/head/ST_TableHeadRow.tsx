@@ -5,7 +5,6 @@ import {
   type ST_Header,
   type ST_HeaderGroup,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_VirtualItem,
   type TableRowProps,
 } from '@/components/ui/shadcn-table/types';
@@ -17,7 +16,6 @@ export interface ST_TableHeadRowProps<TData extends ST_RowData>
   extends TableRowProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
   headerGroup: ST_HeaderGroup<TData>;
-  table?: ST_TableInstance<TData>;
 }
 
 const tableHeadRowVariants = cva(
@@ -33,11 +31,9 @@ const tableHeadRowVariants = cva(
 export const ST_TableHeadRow = <TData extends ST_RowData>({
   columnVirtualizer,
   headerGroup,
-  table: tableProp,
   ...rest
 }: ST_TableHeadRowProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  const table = useSTContext<TData>();
   const {
     options: {
       enableStickyHeader,
@@ -87,7 +83,6 @@ export const ST_TableHeadRow = <TData extends ST_RowData>({
               header={header}
               key={header.id}
               staticColumnIndex={staticColumnIndex}
-              table={table}
             />
           ) : null;
         },
