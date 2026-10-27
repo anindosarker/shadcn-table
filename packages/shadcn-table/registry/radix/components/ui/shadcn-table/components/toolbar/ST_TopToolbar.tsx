@@ -2,7 +2,10 @@ import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  assignRef,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_LinearProgressBar } from '@/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar';
 import { ST_TablePagination } from '@/components/ui/shadcn-table/components/toolbar/ST_TablePagination';
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
@@ -103,10 +106,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
             {...toolbarProps}
             ref={(ref: HTMLDivElement) => {
               topToolbarRef.current = ref;
-              if (toolbarProps?.ref) {
-                // @ts-expect-error MRT forwards the user ref via mutable ref object
-                toolbarProps.ref.current = ref;
-              }
+              assignRef(toolbarProps?.ref, ref);
             }}
             className={cn(
               topToolbarVariants({ fullscreen: isFullScreen }),

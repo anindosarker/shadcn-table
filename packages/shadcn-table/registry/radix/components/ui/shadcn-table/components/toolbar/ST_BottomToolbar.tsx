@@ -5,7 +5,10 @@ import {
   type DivProps,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  assignRef,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_LinearProgressBar } from '@/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar';
 import { ST_TablePagination } from '@/components/ui/shadcn-table/components/toolbar/ST_TablePagination';
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
@@ -96,10 +99,7 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
           ref={(node: HTMLDivElement) => {
             if (node) {
               bottomToolbarRef.current = node;
-              if (toolbarProps?.ref) {
-                //@ts-expect-error ref can be either RefCallback or RefObject
-                toolbarProps.ref.current = node;
-              }
+              assignRef(toolbarProps?.ref, node);
             }
           }}
           className={cn(
