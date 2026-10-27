@@ -1,9 +1,9 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ST_ColumnVirtualizer,
   type ST_RowData,
-  type ST_TableInstance,
   type TableHeadProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
@@ -11,10 +11,8 @@ import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/t
 import { ST_TableHeadRow } from '@/components/ui/shadcn-table/components/head/ST_TableHeadRow';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_TableHeadProps<TData extends ST_RowData>
-  extends TableHeadProps {
+export interface ST_TableHeadProps extends TableHeadProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
-  table?: ST_TableInstance<TData>;
 }
 
 const tableHeadVariants = cva('opacity-[0.97]', {
@@ -27,11 +25,9 @@ const tableHeadVariants = cva('opacity-[0.97]', {
 
 export const ST_TableHead = <TData extends ST_RowData>({
   columnVirtualizer,
-  table: tableProp,
   ...rest
-}: ST_TableHeadProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_TableHeadProps) => {
+  const table = useSTContext<TData>();
   const {
     options: {
       enableStickyHeader,
@@ -41,61 +37,83 @@ export const ST_TableHead = <TData extends ST_RowData>({
     },
     refs: { tableHeadRef },
   } = table;
-  const { isFullScreen, showAlertBanner } = table.state;
 
   const tableHeadProps = {
     ...parseFromValuesOrFunc(stTableHeadProps, { table }),
     ...rest,
   };
 
-  const stickyHeader = enableStickyHeader || isFullScreen;
+  const isHeadOverlay = positionToolbarAlertBanner === 'head-overlay';
 
+  // The header groups follow column order, pinning, visibility and grouping;
+  // the selected rows only matter while the alert banner overlays the head.
   return (
-    <thead
-      {...tableHeadProps}
-      ref={(ref: HTMLTableSectionElement) => {
-        tableHeadRef.current = ref;
-        if (tableHeadProps?.ref) {
-          //@ts-expect-error ref can be either RefCallback or RefObject
-          tableHeadProps.ref.current = ref;
-        }
-      }}
-      className={cn(
-        tableHeadVariants({
-          layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-          sticky: stickyHeader,
-        }),
-        tableHeadProps.className,
-      )}
+    <Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnVisibility: state.columnVisibility,
+        grouping: state.grouping,
+        isFullScreen: state.isFullScreen,
+        rowSelection: isHeadOverlay ? state.rowSelection : null,
+        showAlertBanner: state.showAlertBanner,
+      })}
+      source={table.store}
     >
-      {positionToolbarAlertBanner === 'head-overlay' &&
-      (showAlertBanner || table.getSelectedRowModel().rows.length > 0) ? (
-        <tr
-          style={{
-            display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
-          }}
-        >
-          <th
-            colSpan={table.getVisibleLeafColumns().length}
-            style={{
-              display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
-              padding: 0,
+      {({ isFullScreen, showAlertBanner }) => {
+        const stickyHeader = enableStickyHeader || isFullScreen;
+
+        return (
+          <thead
+            {...tableHeadProps}
+            ref={(ref: HTMLTableSectionElement) => {
+              tableHeadRef.current = ref;
+              if (tableHeadProps?.ref) {
+                //@ts-expect-error ref can be either RefCallback or RefObject
+                tableHeadProps.ref.current = ref;
+              }
             }}
+            className={cn(
+              tableHeadVariants({
+                layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+                sticky: stickyHeader,
+              }),
+              tableHeadProps.className,
+            )}
           >
-            <ST_ToolbarAlertBanner table={table} />
-          </th>
-        </tr>
-      ) : (
-        table.getHeaderGroups().map((headerGroup) => (
-          <ST_TableHeadRow
-            columnVirtualizer={columnVirtualizer}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            headerGroup={headerGroup as any}
-            key={headerGroup.id}
-            table={table}
-          />
-        ))
-      )}
-    </thead>
+            {isHeadOverlay &&
+            (showAlertBanner || table.getSelectedRowModel().rows.length > 0) ? (
+              <tr
+                style={{
+                  display: layoutMode?.startsWith('grid') ? 'grid' : undefined,
+                }}
+              >
+                <th
+                  colSpan={table.getVisibleLeafColumns().length}
+                  style={{
+                    display: layoutMode?.startsWith('grid')
+                      ? 'grid'
+                      : undefined,
+                    padding: 0,
+                  }}
+                >
+                  <ST_ToolbarAlertBanner />
+                </th>
+              </tr>
+            ) : (
+              table
+                .getHeaderGroups()
+                .map((headerGroup) => (
+                  <ST_TableHeadRow
+                    columnVirtualizer={columnVirtualizer}
+                    headerGroup={headerGroup}
+                    key={headerGroup.id}
+                  />
+                ))
+            )}
+          </thead>
+        );
+      }}
+    </Subscribe>
   );
 };

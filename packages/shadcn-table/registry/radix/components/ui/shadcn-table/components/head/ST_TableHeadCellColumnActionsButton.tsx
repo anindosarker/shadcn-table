@@ -11,7 +11,6 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_ColumnActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: base maps MRT's sx (m -8px -4px, opacity .3, hover opacity 1, transition all 150ms); 2rem box is icon-sm.
 const columnActionsButtonVariants = cva(
@@ -22,16 +21,15 @@ export interface ST_TableHeadCellColumnActionsButtonProps<
   TData extends ST_RowData,
 > extends ButtonProps {
   header: ST_Header<TData>;
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
   header,
-  table: tableProp,
   ...rest
 }: ST_TableHeadCellColumnActionsButtonProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The core table behind the header; the ST wrapper types re-type its
+  // getters, so TypeScript cannot relate the two without the cast.
+  const table = header.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       icons: { MoreVertIcon },
@@ -89,7 +87,6 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
           anchorEl={anchorEl}
           header={header}
           setAnchorEl={setAnchorEl}
-          table={table}
         />
       )}
     </>
