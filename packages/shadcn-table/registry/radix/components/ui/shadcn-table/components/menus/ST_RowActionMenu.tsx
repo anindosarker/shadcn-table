@@ -2,7 +2,6 @@ import {
   type ComponentPropsWithRef,
   type MouseEvent,
   type ReactNode,
-  useMemo,
   useRef,
 } from 'react';
 import {
@@ -46,7 +45,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
       enableEditing,
       icons: { EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
+      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderRowActionMenuItems,
     },
   } = table;
@@ -54,28 +53,24 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   const anchorRef = useRef<HTMLElement | null>(null);
   if (anchorEl) anchorRef.current = anchorEl;
 
-  const menuItems = useMemo(() => {
-    const items: ReactNode[] = [];
-    const editItem = parseFromValuesOrFunc(enableEditing, row) &&
-      ['modal', 'row'].includes(editDisplayMode!) && (
-        <ST_ActionMenuItem
-          key={'edit'}
-          icon={<EditIcon />}
-          label={localization.edit}
-          onClick={handleEdit}
-        />
-      );
-    if (editItem) items.push(editItem);
-    const rowActionMenuItems = renderRowActionMenuItems?.({
-      closeMenu: () => setAnchorEl(null),
-      row,
-      staticRowIndex,
-      table,
-    });
-    if (rowActionMenuItems?.length) items.push(...rowActionMenuItems);
-    return items;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [renderRowActionMenuItems, row, staticRowIndex, table]);
+  const menuItems: ReactNode[] = [];
+  const editItem = parseFromValuesOrFunc(enableEditing, row) &&
+    ['modal', 'row'].includes(editDisplayMode!) && (
+      <ST_ActionMenuItem
+        key={'edit'}
+        icon={<EditIcon />}
+        label={localization.edit}
+        onClick={handleEdit}
+      />
+    );
+  if (editItem) menuItems.push(editItem);
+  const rowActionMenuItems = renderRowActionMenuItems?.({
+    closeMenu: () => setAnchorEl(null),
+    row,
+    staticRowIndex,
+    table,
+  });
+  if (rowActionMenuItems?.length) menuItems.push(...rowActionMenuItems);
 
   if (!menuItems.length) return null;
 
@@ -101,7 +96,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
+      {/* Note: MRT disableScrollLock dropped: Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
