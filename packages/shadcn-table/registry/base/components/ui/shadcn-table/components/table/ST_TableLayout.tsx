@@ -69,9 +69,17 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
         <div
           onKeyDown={(e) => e.key === 'Escape' && table.setIsFullScreen(false)}
           {...layoutDivProps}
-          ref={(ref: HTMLDivElement) => {
-            tableLayoutRef.current = ref;
-            assignRef(layoutDivProps?.ref, ref);
+          ref={(node: HTMLDivElement) => {
+            tableLayoutRef.current = node;
+            const cleanup = assignRef(layoutDivProps?.ref, node);
+            return () => {
+              if (typeof cleanup === 'function') {
+                cleanup();
+              } else {
+                assignRef(layoutDivProps?.ref, null);
+              }
+              tableLayoutRef.current = null;
+            };
           }}
           className={cn(
             tableLayoutVariants({

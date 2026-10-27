@@ -116,6 +116,10 @@ publishes the section as the GitHub release notes.
 - A callback `ref` in `stTableLayoutProps`, `stTableContainerProps`, `stTableHeadProps`,
   `stTableFooterProps`, `stTopToolbarProps` or `stBottomToolbarProps` receives the node;
   only ref objects did.
+- Those six refs follow React 19 ref cleanup: a cleanup the callback ref returns runs on
+  unmount, and a callback that returns none, or a ref object, gets `null`. The
+  `stTableContainerProps` and `stBottomToolbarProps` refs never got `null`, and no cleanup
+  ran.
 - Both installed trees type-check in one program: a project holding the Radix UI and the
   Base UI copy no longer fails with TS2717 on `stConfigFeature`, and each copy types
   `stFilterCheckboxProps`, `stFilterSliderProps`, `stSelectCheckboxProps`,

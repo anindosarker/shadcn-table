@@ -8,12 +8,15 @@ export const parseFromValuesOrFunc = <T, U>(
 
 /**
  * Hands a DOM node to a user `ref` prop, a callback ref or a ref object, from
- * the library's own ref callback.
+ * the library's own ref callback. Returns what a callback ref returns: under
+ * React 19 that can be a cleanup, which the caller runs in place of handing
+ * the ref `null`.
  */
 export const assignRef = <T>(ref: Ref<T> | undefined, node: T | null) => {
   if (typeof ref === 'function') {
-    ref(node);
-  } else if (ref) {
+    return ref(node);
+  }
+  if (ref) {
     ref.current = node;
   }
 };
