@@ -133,13 +133,14 @@ export const ST_TableProvider = <TData extends ST_RowData>({
   // getters, so TypeScript cannot relate the two without the cast.
   // Note: the tooltip provider lives here at the ST root because the latest
   // shadcn tooltip (registry change 2026-07) no longer self-wraps each Tooltip
-  // in a TooltipProvider, and Radix Tooltip.Root throws without a provider
-  // ancestor. Mounting it once with the table keeps consumer boilerplate at
-  // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
-  // including portalled content (portals preserve React context) and
-  // components hand-composed under this provider.
+  // in a TooltipProvider; Base UI Tooltip.Root works without one, but the
+  // provider owns the shared open delay and the skip window (`timeout`), which
+  // the library turns off. Mounting it once with the table keeps consumer
+  // boilerplate at zero (MRT/MUI ergonomics) and covers every toolbar, menu,
+  // modal, and cell, including portalled content (portals preserve React
+  // context) and components hand-composed under this provider.
   return (
-    <TooltipProvider skipDelayDuration={0}>
+    <TooltipProvider timeout={0}>
       <tableContext.Provider
         value={handle as unknown as ContextType<typeof tableContext>}
       >

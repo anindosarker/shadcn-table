@@ -1,6 +1,5 @@
 [
   "ST_Tooltip.tsx",
-  "ShadcnTable.tsx",
   "components/body/ST_TableDetailPanel.tsx",
   "components/head/ST_TableHeadCellFilterContainer.tsx",
   "components/head/ST_TableHeadCellFilterLabel.tsx",
@@ -21,5 +20,6 @@
   "components/toolbar/ST_LinearProgressBar.tsx",
   "components/toolbar/ST_TablePagination.tsx",
   "components/toolbar/ST_ToolbarAlertBanner.tsx",
+  "hooks/stTableHook.tsx",
   "shared/utils/style.utils.ts"
 ]
