@@ -6,7 +6,7 @@ Decisions for the part 06 rewrite, taken 2026-10-21 to 2026-10-27. Earlier cycle
 [06-v9-architecture.md](06-v9-architecture.md). Phase 00 report: `06-00-comparison.md` on
 branch `v0.4/v9-architecture`. Findings that feed these rulings: [findings.md](findings.md).
 
-## Architecture
+## TanStack Table v9 architecture
 
 1. Rewrite the library internals on TanStack Table v9's own primitives, using MRT's v9 port
    as the checklist, not the target.
