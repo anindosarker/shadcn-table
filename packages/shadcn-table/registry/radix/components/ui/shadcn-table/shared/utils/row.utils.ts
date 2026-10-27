@@ -151,50 +151,21 @@ export const getST_RowSelectionHandler =
     event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLTableRowElement>,
     value?: boolean,
   ) => {
-    const {
-      options: { enableRowPinning, rowPinningDisplayMode },
-    } = table;
-
     const wasCurrentRowChecked = getIsRowSelected({ row, table });
     const checked = value ?? !wasCurrentRowChecked;
 
     // toggle selection of this row; with Shift held (or any event that
     // `isRowRangeSelectionEvent` accepts) TanStack extends the toggle to the
     // rows between the last toggled row and this one (`enableRowRangeSelection`)
-    const selectionBefore = table.baseAtoms.rowSelection.get();
     row.getToggleSelectedHandler()({
       nativeEvent: (event as any).nativeEvent,
       shiftKey: (event as any).shiftKey,
       target: { checked },
     });
-    const selectionAfter = table.baseAtoms.rowSelection.get();
-
-    const changedRowIds = new Set<string>([row.id]);
-    for (const rowId of new Set([
-      ...Object.keys(selectionBefore),
-      ...Object.keys(selectionAfter),
-    ])) {
-      if (!!selectionBefore[rowId] !== !!selectionAfter[rowId]) {
-        changedRowIds.add(rowId);
-      }
-    }
 
     // if all sub rows were selected, unselect them
     if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
       row.subRows?.forEach((r) => r.toggleSelected(false));
-    }
-
-    if (enableRowPinning && rowPinningDisplayMode?.includes('select')) {
-      changedRowIds.forEach((rowId) => {
-        const rowToTogglePin = table.getRow(rowId);
-        rowToTogglePin.pin(
-          !wasCurrentRowChecked //was not previously pinned or selected
-            ? rowPinningDisplayMode?.includes('bottom')
-              ? 'bottom'
-              : 'top'
-            : false,
-        );
-      });
     }
   };
 
@@ -206,13 +177,10 @@ export const getST_SelectAllHandler =
     forceAll?: boolean,
   ) => {
     const {
-      options: { enableRowPinning, rowPinningDisplayMode, selectAllMode },
+      options: { selectAllMode },
     } = table;
 
     selectAllMode === 'all' || forceAll
       ? table.toggleAllRowsSelected(value ?? (event as any).target.checked)
       : table.toggleAllPageRowsSelected(value ?? (event as any).target.checked);
-    if (enableRowPinning && rowPinningDisplayMode?.includes('select')) {
-      table.setRowPinning({ bottom: [], top: [] });
-    }
   };

@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef } from 'react';
 import {
   type ST_RowData,
+  type ST_RowSelectionState,
   type ST_SortingState,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
@@ -104,4 +105,51 @@ export const useST_Effects = <TData extends ST_RowData>(
       }, 150);
     }
   }, [density]);
+
+  //pin or unpin every row whose selection changed, whatever changed it (a
+  //click, a Shift range, select all, controlled state or the table APIs)
+  const latestTable = useRef(table);
+  latestTable.current = table;
+  useEffect(() => {
+    let previousSelection: ST_RowSelectionState =
+      table.atoms.rowSelection.get();
+    const { unsubscribe } = table.atoms.rowSelection.subscribe(
+      (rowSelection) => {
+        const changedRowIds = new Set(
+          [
+            ...Object.keys(previousSelection),
+            ...Object.keys(rowSelection),
+          ].filter(
+            (rowId) => !!previousSelection[rowId] !== !!rowSelection[rowId],
+          ),
+        );
+        previousSelection = rowSelection;
+        const { enableRowPinning, rowPinningDisplayMode } =
+          latestTable.current.options;
+        if (
+          !changedRowIds.size ||
+          !enableRowPinning ||
+          !rowPinningDisplayMode?.includes('select')
+        ) {
+          return;
+        }
+        const isUnchanged = (rowId: string) => !changedRowIds.has(rowId);
+        const selectedRowIds = [...changedRowIds].filter(
+          (rowId) => rowSelection[rowId],
+        );
+        table.setRowPinning(({ bottom = [], top = [] }) =>
+          rowPinningDisplayMode.includes('bottom')
+            ? {
+                bottom: [...bottom.filter(isUnchanged), ...selectedRowIds],
+                top: top.filter(isUnchanged),
+              }
+            : {
+                bottom: bottom.filter(isUnchanged),
+                top: [...top.filter(isUnchanged), ...selectedRowIds],
+              },
+        );
+      },
+    );
+    return unsubscribe;
+  }, []);
 };
