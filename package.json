@@ -26,6 +26,7 @@
     "test:base": "turbo run test:base --filter=shadcn-table"
   },
   "devDependencies": {
+    "concurrently": "^9.2.5",
     "prettier": "^3.6.2",
     "serve": "^14.2.6",
     "turbo": "2.5.6"
