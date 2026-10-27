@@ -247,6 +247,20 @@ On `35f9d16`, from `packages/shadcn-table`:
 - `grep -rn "table\.state" .../shadcn-table/components`: no hits.
 - Worktree root: `pnpm registry:build` `Building registry.`; `pnpm --filter shadcn-table-docs lib:install radix` `143 table files (38 locales merged in), 28 parts`, then `git status` clean.
 
+### Gates, final
+
+On `819b7c6`, clean tree, from `packages/shadcn-table` unless noted:
+
+- `pnpm tsc:radix`: pass, exit 0, no output.
+- `npx tsc -p tsconfig.stories.json --noEmit`: pass, exit 0, no output.
+- `pnpm lint`: pass, exit 0, no output.
+- `pnpm test`: pass, `Test Files 58 passed (58)`, `Tests 429 passed (429)`.
+- `pnpm storybook:build`: pass, `Storybook build completed successfully`.
+- `node scripts/check-storybook.mjs --base http://localhost:6046` (static server on 6046, base manager output from the failing `storybook:build:base`, part 02): pass, `14 passed, 0 failed`.
+- `grep -rn "table\.state"` over `components/` and `hooks/display-columns/`: pass, no hits.
+- Worktree root, `pnpm registry:build`: pass, `Building registry.`, then `git status` clean.
+- Worktree root, `pnpm --filter shadcn-table-docs lib:install radix`: pass, `143 table files (38 locales merged in), 28 parts`, then `git status` clean.
+
 ### Known red, deferred
 
 - Part 02: `pnpm storybook:build:base` (run, `UNLOADABLE_DEPENDENCY`: stories import radix-only `components/` and `shared/` paths); `pnpm check:bases`, `pnpm tsc:baseui` (expected red, not run).
