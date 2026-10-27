@@ -50,8 +50,9 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 }) => {
   const {
     options: { enableColumnVirtualization, layoutMode },
-    state: { draggingColumn, hoveredColumn },
   } = table;
+  // The live store: the caller's subscription lists these slices.
+  const { draggingColumn, hoveredColumn } = table.store.state;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
@@ -137,8 +138,6 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 
 export const getCommonToolbarStyles = () =>
   'relative z-[1] grid min-h-14 flex-wrap-reverse items-start overflow-hidden bg-background transition-all duration-150 ease-in-out';
-
-export const flipIconStyles = () => ({ className: 'rtl:-scale-x-100' });
 
 export const getCommonTooltipProps = (
   side?: ST_TooltipProps['side'],
