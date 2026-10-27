@@ -3,7 +3,7 @@ import {
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui/shadcn-table/types';
-import { defaultDisplayColumnProps } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
+import { defaultDisplayColumnProps } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
 
 export const getST_RowNumbersColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,

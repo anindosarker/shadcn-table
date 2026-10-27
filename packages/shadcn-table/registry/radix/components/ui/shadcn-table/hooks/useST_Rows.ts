@@ -4,7 +4,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { getST_Rows } from '@/components/ui/shadcn-table/utils/row.utils';
+import { getST_Rows } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 
 export const useST_Rows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,

@@ -6,7 +6,7 @@ import {
   type ST_TableOptions,
   type Xor,
 } from '@/components/ui/shadcn-table/types';
-import { ST_TableLayout } from '@/components/ui/shadcn-table/table/ST_TableLayout';
+import { ST_TableLayout } from '@/components/ui/shadcn-table/components/table/ST_TableLayout';
 
 type TableInstanceProp<TData extends ST_RowData> = {
   table: ST_TableInstance<TData>;

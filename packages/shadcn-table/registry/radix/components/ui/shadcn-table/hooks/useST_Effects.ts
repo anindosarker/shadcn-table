@@ -4,8 +4,8 @@ import {
   type ST_SortingState,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
-import { getCanRankRows } from '@/components/ui/shadcn-table/utils/row.utils';
+import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
+import { getCanRankRows } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 
 export const useST_Effects = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,

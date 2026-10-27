@@ -1,10 +1,10 @@
-import { ST_SelectCheckbox } from '@/components/ui/shadcn-table/inputs/ST_SelectCheckbox';
+import { ST_SelectCheckbox } from '@/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox';
 import {
   type ST_ColumnDef,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui/shadcn-table/types';
-import { defaultDisplayColumnProps } from '@/components/ui/shadcn-table/utils/displayColumn.utils';
+import { defaultDisplayColumnProps } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
 
 export const getST_RowSelectColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
