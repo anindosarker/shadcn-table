@@ -8,6 +8,10 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Added
+
+- mk (Macedonian) locale.
+
 ## 0.3.3 - 2026-10-22
 
 ### Removed
