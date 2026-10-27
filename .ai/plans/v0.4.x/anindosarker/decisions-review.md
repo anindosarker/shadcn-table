@@ -59,9 +59,16 @@ nothing here re-decides those, items here extend them.
    dependency of the package and of the registry items (installed transitively today at
    0.11.2; the pinned version follows what `@tanstack/react-table` 9.3.1 resolves).
 
+## Instance types
+
+7. `ST_Row`, `ST_Cell`, `ST_Column` and `ST_Header` declare `table: ST_TableInstance<TData>`
+   through the same `Omit` plus overlay technique `types.ts` uses for the re-typed getters.
+   The `as unknown as ST_TableInstance<TData>` casts at every `instance.table` read in
+   `components/` go. Public names unchanged; only the `table` member narrows.
+
 ## Unchanged after review
 
-6. The props-style root (`ShadcnTable` built from options) selects only the slices its
+8. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
