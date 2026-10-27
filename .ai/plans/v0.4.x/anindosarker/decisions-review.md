@@ -79,9 +79,17 @@ nothing here re-decides those, items here extend them.
 10. `getColumnFilterFnName` and `selectST_TransformState` stay exported from the barrel.
     Harmless, and the stories use them.
 
+## Forwarded refs
+
+11. The six components that forward a ref (`ST_TableLayout`, `ST_TableContainer`,
+    `ST_TableHead`, `ST_TableFooter`, `ST_TopToolbar`, `ST_BottomToolbar`) support React 19
+    callback refs in full: `assignRef` returns the callback's result, each wrapper's ref
+    callback returns a cleanup that runs the user's cleanup (or assigns `null` when the
+    callback returned nothing) and clears the internal ref. The `if (node)` guards go.
+
 ## Unchanged after review
 
-11. The props-style root (`ShadcnTable` built from options) selects only the slices its
+12. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
