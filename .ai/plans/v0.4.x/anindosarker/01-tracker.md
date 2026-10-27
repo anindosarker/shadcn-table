@@ -210,3 +210,45 @@ Re-run after the container fix (`1005a83`: the toolbar height goes to a `--st-to
 - [x] Container fix, sticky header: `styling-sticky-header-examples--enable-sticky-header` computed `max-height` `888px` = `clamp(350px, 1000 - 112, 9999px)`.
 - [x] Hover, density, sort/filter/paginate/expand/group, data replacement, cell action menu edit focus, nested detail panel table, portals, custom renderers, no provider throws, controlled state, external atoms, option change after mount, root opts out, programmatic filter modes, existing Filtering change-mode, FnRegistries and RowPinningOnSelect stories: same evidence as attempt 1, all green.
 - [ ] Decision 4 "every guide example that composes sub-components renders in `check-pages.mjs`": `apps/` is part 04, not run here.
+
+## Final phase
+
+### Deleted
+
+- `flipIconStyles` (`shared/utils/style.utils.ts`, `a799752`): no reference in LIB, stories or the docs app outside the installed copies, not exported by the barrel (`style.utils` is not re-exported). Already unread on claude/review.
+- Nothing else qualified. Proof: every `export` under LIB checked for references across LIB, `stories/` and the docs app (`content`, `examples`, `example-groups`, `app`, `lib`, `components` minus `ui-radix` and `ui-base`), against the same scan on claude/review. Newly unreferenced since claude/review: the per-feature `ST_TableState_*`, `ST_TableOptions_*`, `ST_Table_*` and `ST_TableRefs` types (read by their own `declare module` blocks) and `ST_GroupingState` (`types.ts`, barrel, kept). `tsc:radix` runs with `noUnusedLocals` and `noUnusedParameters`, and `eslint --report-unused-disable-directives registry/radix` is clean, so no dead import, local or disable is left. Greps under LIB for `memoMode`, `expandRowsFn`, `_filterFn`, `Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`, `tanstack.features`, `baseAtoms` and the old registry lookups: no hits. Every option declared in `features/` is read outside `features/`.
+
+### Ref helper
+
+- `assignRef(ref, node)` in `shared/utils/utils.ts` (`f1442c5`): calls a callback ref, sets a ref object's `current`. Replaces the six `@ts-expect-error` copies in `ST_TableLayout`, `ST_TableContainer`, `ST_TableHead`, `ST_TableFooter`, `ST_TopToolbar` and `ST_BottomToolbar`; each keeps its own null guard. Ref objects behave as before; a callback ref, which got a `current` property set on the function before, now receives the node (changelog Fixed).
+- Kept: `ST_FilterRangeSlider` assigns the node onto the `sliderProps.ref` prop (twin no-op, recorded with its own reason), and the two virtualizer `@ts-expect-error`s.
+
+### Barrel versus claude/review
+
+- `index.ts` unchanged in this phase; it already follows decisions 2 and 6 (full barrel as MRT, `ST_Features` type only, `ST_TableProvider` added; `stFeatures`, `createSTTableHook`, `useSTContext`, `tableContext`, `useTableContext`, `useST_Atom` not exported). No story imports an internal hook path.
+- Export names, TypeScript `getExportsOfModule` on both trees, 237 each. Removed: `stFeatures`, `Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`, `ST_TopToolbarProps`. Added: `ST_TableProvider`, `ST_TableProviderProps`, `getColumnFilterFnName`, `selectST_TransformState`.
+
+### Changelog, format, registry
+
+- `## Unreleased` completed (`1a761e9`): Breaking adds the props types without `TData`, the live `table.state` read on the handle and the `ST_TableProvider` `key` note; Added the two new helper exports; Changed the subscription re-render scope; Fixed the headless display column header and callback refs.
+- `pnpm format` pass `f1ca0b7`: only `apps/shadcn-table-docs/lib/utils.ts`.
+- `35f9d16`: `components/ui-radix/shadcn-table` reinstalled; the installer does not delete, so the 110 files of the old layout (`body/`, `buttons/`, `fns/`, `footer/`, `head/`, `inputs/`, `locales/`, `menus/`, `modals/`, `table/`, `toolbar/`, `utils/`) were removed by hand. The copy now has the same 143 paths as LIB; contents equal after the `@/components/ui/` to `@/components/ui-radix/` rewrite, except the shadcn CLI drops the leading file comment of the eleven `features/st*Feature.ts` and `shared/utils/pagination.utils.ts`. `packages/shadcn-table/registry.json` unchanged.
+
+### Gates
+
+On `35f9d16`, from `packages/shadcn-table`:
+
+- `pnpm tsc:radix`: exit 0, no output.
+- `npx tsc -p tsconfig.stories.json --noEmit`: exit 0, no output.
+- `pnpm lint`: exit 0, no output.
+- `pnpm test`: `Test Files 58 passed (58)`, `Tests 429 passed (429)`.
+- `pnpm storybook:build`: `Storybook build completed successfully`.
+- `node scripts/check-storybook.mjs --base http://localhost:6046` (static server on 6046, base manager output from the failing `storybook:build:base`): `14 passed, 0 failed`.
+- `grep -rn "table\.state" .../shadcn-table/components`: no hits.
+- Worktree root: `pnpm registry:build` `Building registry.`; `pnpm --filter shadcn-table-docs lib:install radix` `143 table files (38 locales merged in), 28 parts`, then `git status` clean.
+
+### Known red, deferred
+
+- Part 02: `pnpm storybook:build:base` (run, `UNLOADABLE_DEPENDENCY`: stories import radix-only `components/` and `shared/` paths); `pnpm check:bases`, `pnpm tsc:baseui` (expected red, not run).
+- Part 04: the docs app `types:check`, `lint`, `build` and `check-pages.mjs` (expected red, not run: guides and examples still use the `table` prop and removed names).
+- Open from phase 03: a `table: ST_TableInstance<TData>` override on `ST_Row`, `ST_Cell`, `ST_Column`, `ST_Header` would drop the `X.table as unknown as ST_TableInstance<TData>` casts; not done here (public type change, owner call).
