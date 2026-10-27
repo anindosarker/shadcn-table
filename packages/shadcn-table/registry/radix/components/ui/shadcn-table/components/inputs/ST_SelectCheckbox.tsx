@@ -150,6 +150,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               sorting: state.sorting,
             }
           : {
+              isAllSubRowsSelected: row.getIsAllSubRowsSelected(),
               isRowSelected: getIsRowSelected({ row, table }),
               isSomeSelected: row.getIsSomeSelected(),
             }),
