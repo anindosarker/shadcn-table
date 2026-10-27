@@ -1,7 +1,7 @@
 export * from '@/components/ui/shadcn-table/types';
 
 //helpers
-export * from '@/components/ui/shadcn-table/features/stFeatures';
+export type { ST_Features } from '@/components/ui/shadcn-table/features/stFeatures';
 export * from '@/components/ui/shadcn-table/shared/utils/tanstack.helpers';
 export * from '@/components/ui/shadcn-table/shared/utils/cell.utils';
 export * from '@/components/ui/shadcn-table/shared/utils/column.utils';
@@ -14,6 +14,7 @@ export * from '@/components/ui/shadcn-table/shared/fns/filterFns';
 export * from '@/components/ui/shadcn-table/shared/fns/sortFns';
 
 //hooks
+export { ST_TableProvider } from '@/components/ui/shadcn-table/hooks/stTableHook';
 export * from '@/components/ui/shadcn-table/hooks/useShadcnTable';
 export * from '@/components/ui/shadcn-table/components/toolbar/useST_MediaQuery';
 export * from '@/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer';
