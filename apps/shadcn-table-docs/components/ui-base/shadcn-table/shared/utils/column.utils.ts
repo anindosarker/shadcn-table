@@ -9,20 +9,27 @@ import {
   type ST_DefinedTableOptions,
   type ST_FilterOption,
   type ST_Header,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 
 export const getColumnId = <TData extends ST_RowData>(
-  columnDef: ST_ColumnDef<TData>,
+  columnDef: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>,
 ): string =>
   columnDef.id ?? columnDef.accessorKey?.toString?.() ?? columnDef.header;
 
 export const getAllLeafColumnDefs = <TData extends ST_RowData>(
-  columns: ST_ColumnDef<TData>[],
-): ST_ColumnDef<TData>[] => {
-  const allLeafColumnDefs: ST_ColumnDef<TData>[] = [];
-  const getLeafColumns = (cols: ST_ColumnDef<TData>[]) => {
+  columns: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[],
+): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[] => {
+  const allLeafColumnDefs: ST_ColumnDef<
+    TData,
+    unknown,
+    ST_NeutralPartPropTypes
+  >[] = [];
+  const getLeafColumns = (
+    cols: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[],
+  ) => {
     cols.forEach((col) => {
       if (col.columns) {
         getLeafColumns(col.columns);
@@ -39,7 +46,7 @@ export const prepareColumns = <TData extends ST_RowData>({
   columnDefs,
   tableOptions,
 }: {
-  columnDefs: ST_ColumnDef<TData>[];
+  columnDefs: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[];
   tableOptions: ST_DefinedTableOptions<TData>;
 }): ST_DefinedColumnDef<TData>[] => {
   const { defaultDisplayColumn, state: { columnFilterFns = {} } = {} } =
@@ -85,7 +92,11 @@ export const prepareColumns = <TData extends ST_RowData>({
       }
     } else if (columnDef.columnDefType === 'display') {
       columnDef = {
-        ...(defaultDisplayColumn as ST_ColumnDef<TData>),
+        ...(defaultDisplayColumn as ST_ColumnDef<
+          TData,
+          unknown,
+          ST_NeutralPartPropTypes
+        >),
         ...columnDef,
       };
     }
@@ -120,7 +131,7 @@ export const getColumnFilterFnName = <TData extends ST_RowData>(
   typeof columnDef.filterFn === 'string' ? columnDef.filterFn : '';
 
 export const getDefaultColumnFilterFn = <TData extends ST_RowData>(
-  columnDef: ST_ColumnDef<TData>,
+  columnDef: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>,
 ): ST_FilterOption => {
   const { filterVariant } = columnDef;
   if (filterVariant === 'multi-select') return 'arrIncludesSome';

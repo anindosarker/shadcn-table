@@ -1,6 +1,7 @@
 import { ST_SelectCheckbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_SelectCheckbox';
 import {
   type ST_ColumnDef,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-base/shadcn-table/types';
@@ -8,7 +9,7 @@ import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/sha
 
 export const getST_RowSelectColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
-): ST_ColumnDef<TData> => {
+): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
   const { enableMultiRowSelection, enableSelectAll } = tableOptions;
 
   return {
