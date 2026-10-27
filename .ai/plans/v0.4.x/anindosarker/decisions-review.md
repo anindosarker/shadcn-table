@@ -89,9 +89,25 @@ nothing here re-decides those, items here extend them.
     callback returns a cleanup that runs the user's cleanup (or assigns `null` when the
     callback returned nothing) and clears the internal ref. The `if (node)` guards go.
 
+## Comments
+
+12. The library's comments are cut to the ones a reader cannot derive from the code, both
+    trees, one comment-only commit per tree (874 comment lines in 18,351 today, 63 of them
+    process history).
+    - Delete: comments that restate the code or narrate steps; process history (phase,
+      part, decision number, MRT twin, "today", "before the rewrite", "0.3.x"), which
+      belongs in the trackers and the changelog; file header blurbs; JSDoc on internal
+      functions whose name says it.
+    - Keep: the reason after an `eslint-disable --`; a workaround with the upstream quirk
+      it works around (the filter-mode nudge, `assignRef`, the `declare module` type
+      parameter note); the JSDoc of a public type that the docs prop tables read (check
+      `apps/shadcn-table-docs/lib/prop-tables` first); a why that comes from a React
+      Compiler, Radix or TanStack constraint.
+    - Em dashes replaced in what survives; the standard stays "none anywhere".
+
 ## Unchanged after review
 
-12. The props-style root (`ShadcnTable` built from options) selects only the slices its
+13. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
