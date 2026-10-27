@@ -28,6 +28,7 @@ publishes the section as the GitHub release notes.
 
 ### Added
 
+- mk (Macedonian) locale.
 - `ST_TableProvider` puts a table on the context the library's components read.
   `ShadcnTable` renders it around its layout.
 

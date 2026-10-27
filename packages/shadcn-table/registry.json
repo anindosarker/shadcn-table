@@ -939,6 +939,22 @@
       ]
     },
     {
+      "name": "shadcn-table-locale-mk",
+      "type": "registry:ui",
+      "title": "Shadcn Table locale: mk",
+      "description": "The mk localization for shadcn-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/mk.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/mk.ts"
+        }
+      ]
+    },
+    {
       "name": "shadcn-table-locale-nl",
       "type": "registry:ui",
       "title": "Shadcn Table locale: nl",
