@@ -1,5 +1,6 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -13,7 +14,6 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
@@ -56,8 +56,8 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   // The filter value and the faceted range feed the sync effect, so they are
   // hook subscriptions: the facets follow the other columns' filters and the
   // global filter.
-  useST_Atom(table.atoms.columnFilters);
-  useST_Atom(table.atoms.globalFilter);
+  useSelector(table.atoms.columnFilters);
+  useSelector(table.atoms.globalFilter);
 
   const currentFilterOption = getColumnFilterFnName(columnDef);
 

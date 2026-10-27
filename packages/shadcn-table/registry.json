@@ -10,6 +10,7 @@
       "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
+        "@tanstack/react-store@0.11.2",
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
@@ -1233,6 +1234,7 @@
       "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
+        "@tanstack/react-store@0.11.2",
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",

@@ -1,5 +1,6 @@
 import { type ComponentPropsWithRef, useMemo, useRef, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -15,10 +16,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -53,8 +51,8 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     },
   } = table;
   // These feed the column list memos, so they are hook subscriptions.
-  const columnOrder = useST_Atom(table.atoms.columnOrder);
-  const columnPinning = useST_Atom(table.atoms.columnPinning);
+  const columnOrder = useSelector(table.atoms.columnOrder);
+  const columnPinning = useSelector(table.atoms.columnPinning);
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()

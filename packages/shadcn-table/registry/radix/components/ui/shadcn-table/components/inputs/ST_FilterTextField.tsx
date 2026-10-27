@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -55,7 +56,6 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
-import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -95,8 +95,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // The filter value and the faceted values feed the value state, its sync
   // effect and the dropdown memo, so they are hook subscriptions: the facets
   // follow the other columns' filters and the global filter.
-  useST_Atom(table.atoms.columnFilters);
-  useST_Atom(table.atoms.globalFilter);
+  useSelector(table.atoms.columnFilters);
+  useSelector(table.atoms.globalFilter);
 
   const args = { column, rangeFilterIndex, table };
 

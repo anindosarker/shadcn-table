@@ -1,4 +1,3 @@
-import { useCallback, useSyncExternalStore } from 'react';
 import {
   constructAggregationFn,
   createTableHook,
@@ -71,30 +70,6 @@ export function useSTContext<
   // The context carries the core-typed table; the ST wrapper types re-type
   // its row, column, cell and header getters.
   return useTableContext() as unknown as ST_TableInstance<TData>;
-}
-
-/**
- * A table state atom, `table.atoms.<slice>`, as `useST_Atom` reads it.
- */
-type ST_AtomSource<TValue> = {
-  get: () => TValue;
-  subscribe: (listener: (value: TValue) => void) => { unsubscribe: () => void };
-};
-
-/**
- * Subscribes the calling component to one table atom, `table.atoms.<slice>`,
- * for a value that feeds a hook (a memo, an effect, a virtualizer) and so
- * cannot be read inside a `Subscribe` render function. The component
- * re-renders when the atom changes; atom values are immutable, so the snapshot
- * is stable between changes.
- */
-export function useST_Atom<TValue>(atom: ST_AtomSource<TValue>): TValue {
-  const subscribe = useCallback(
-    (onChange: () => void) => atom.subscribe(onChange).unsubscribe,
-    [atom],
-  );
-  const getSnapshot = () => atom.get();
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
 
 /**

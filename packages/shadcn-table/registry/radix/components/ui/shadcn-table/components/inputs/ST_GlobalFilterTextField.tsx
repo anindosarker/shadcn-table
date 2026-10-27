@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   InputGroup,
@@ -24,10 +25,7 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_GlobalFilterTextFieldProps = InputProps;
 
@@ -48,7 +46,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   } = table;
   // Feeds the search value state and its sync effect, so it is a hook
   // subscription.
-  const globalFilter = useST_Atom(table.atoms.globalFilter);
+  const globalFilter = useSelector(table.atoms.globalFilter);
 
   const textFieldProps = {
     ...parseFromValuesOrFunc(stSearchTextFieldProps, {
