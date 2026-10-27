@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
-import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -27,6 +26,11 @@ export interface ST_RowActionMenuProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   staticRowIndex?: number;
+  /**
+   * Transition, part 01 phase 03: ignored, the menu reads `row.table`.
+   * `ST_ToggleRowActionMenuButton` still passes it until its cluster lands;
+   * the integration step removes this prop.
+   */
   table?: ST_TableInstance<TData>;
 }
 
@@ -37,11 +41,13 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   row,
   setAnchorEl,
   staticRowIndex,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
+  table: _transitionTable,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // The row carries the core table; the ST wrapper types re-type its options
+  // and getters, so TypeScript cannot relate the two without the cast.
+  const table = row.table as unknown as ST_TableInstance<TData>;
   const {
     options: {
       editDisplayMode,
@@ -65,7 +71,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
           icon={<EditIcon />}
           label={localization.edit}
           onClick={handleEdit}
-          table={table}
         />
       );
     if (editItem) items.push(editItem);
