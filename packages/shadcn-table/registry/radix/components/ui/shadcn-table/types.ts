@@ -2,6 +2,7 @@ import { type ComponentPropsWithRef, type ReactNode } from 'react';
 import {
   type AccessorFn,
   type AggregationFnDef,
+  type AppTableComponent,
   type Cell,
   type Column,
   type ColumnDef,
@@ -342,6 +343,7 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
   | 'getTopRows'
   | 'options'
 > & {
+  AppTable: AppTableComponent<ST_Features>;
   getAllColumns: () => ST_Column<TData>[];
   getAllFlatColumns: () => ST_Column<TData>[];
   getAllLeafColumns: () => ST_Column<TData>[];
