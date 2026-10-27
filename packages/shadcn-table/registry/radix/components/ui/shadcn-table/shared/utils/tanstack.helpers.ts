@@ -12,7 +12,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
-import { type ST_Features } from '@/components/ui/shadcn-table/shared/utils/tanstack.features';
+import { type ST_Features } from '@/components/ui/shadcn-table/features/stFeatures';
 import {
   getAllLeafColumnDefs,
   getColumnId,

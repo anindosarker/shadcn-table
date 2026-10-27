@@ -51,7 +51,7 @@ import { type ST_AggregationFns } from '@/components/ui/shadcn-table/shared/fns/
 import { type ST_FilterFns } from '@/components/ui/shadcn-table/shared/fns/filterFns';
 import { type ST_SortFns } from '@/components/ui/shadcn-table/shared/fns/sortFns';
 import { type ST_Icons } from '@/components/ui/shadcn-table/icons';
-import { type ST_Features } from '@/components/ui/shadcn-table/shared/utils/tanstack.features';
+import { type ST_Features } from '@/components/ui/shadcn-table/features/stFeatures';
 
 export type DivProps = ComponentPropsWithRef<'div'>;
 
