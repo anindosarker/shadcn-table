@@ -3,6 +3,7 @@
 // `setEditingRow` table APIs. `setCreatingRow(true)` creates a blank row.
 import {
   assignTableAPIs,
+  functionalUpdate,
   makeStateUpdater,
   type OnChangeFn,
   type RowData,
@@ -88,19 +89,21 @@ export const stEditingFeature: TableFeature = {
     assignTableAPIs('stEditingFeature', table, {
       table_setCreatingRow: {
         fn: (updater: ST_Updater<ST_Row<ST_RowData> | null | true>) =>
-          options().onCreatingRowChange?.(
-            typeof updater === 'function'
-              ? (old) => resolveCreatingRow(updater(old))
-              : resolveCreatingRow(updater),
+          options().onCreatingRowChange?.((old) =>
+            resolveCreatingRow(functionalUpdate(updater, old)),
           ),
       },
       table_setEditingCell: {
         fn: (updater: ST_Updater<ST_Cell<ST_RowData> | null>) =>
-          options().onEditingCellChange?.(updater),
+          options().onEditingCellChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
       },
       table_setEditingRow: {
         fn: (updater: ST_Updater<ST_Row<ST_RowData> | null>) =>
-          options().onEditingRowChange?.(updater),
+          options().onEditingRowChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
       },
     });
   },

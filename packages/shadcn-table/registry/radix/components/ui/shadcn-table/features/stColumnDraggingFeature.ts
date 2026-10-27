@@ -12,9 +12,12 @@ import type {
   RowData,
   TableFeature,
   TableFeatures,
-  Updater,
 } from '@tanstack/react-table';
-import type { ST_Column, ST_RowData } from '@/components/ui/shadcn-table/types';
+import type {
+  ST_Column,
+  ST_RowData,
+  ST_Updater,
+} from '@/components/ui/shadcn-table/types';
 
 // TableState_FeatureMap is not generic over TData, so the state slice and its
 // on*Change options hold the column with its data type erased to ST_RowData
@@ -33,13 +36,13 @@ export interface ST_TableOptions_ColumnDragging {
 }
 
 export interface ST_Table_ColumnDragging<TData extends ST_RowData> {
-  setDraggingColumn: (updater: Updater<ST_Column<TData> | null>) => void;
+  setDraggingColumn: (updater: ST_Updater<ST_Column<TData> | null>) => void;
   setHoveredColumn: (
-    updater: Updater<Partial<ST_Column<TData>> | null>,
+    updater: ST_Updater<Partial<ST_Column<TData>> | null>,
   ) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- merged declarations must repeat the core's type parameters */
+/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stColumnDraggingFeature: TableFeature;
@@ -75,13 +78,13 @@ export const stColumnDraggingFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('stColumnDraggingFeature', table, {
       table_setDraggingColumn: {
-        fn: (updater: Updater<ST_ErasedColumn | null>) =>
+        fn: (updater: ST_Updater<ST_ErasedColumn | null>) =>
           (
             table.options as ST_TableOptions_ColumnDragging
           ).onDraggingColumnChange?.((old) => functionalUpdate(updater, old)),
       },
       table_setHoveredColumn: {
-        fn: (updater: Updater<Partial<ST_ErasedColumn> | null>) =>
+        fn: (updater: ST_Updater<Partial<ST_ErasedColumn> | null>) =>
           (
             table.options as ST_TableOptions_ColumnDragging
           ).onHoveredColumnChange?.((old) => functionalUpdate(updater, old)),

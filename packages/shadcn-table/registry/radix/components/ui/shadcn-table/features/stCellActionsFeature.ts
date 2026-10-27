@@ -2,6 +2,7 @@
 // `onActionCellChange` option and the `setActionCell` table API.
 import {
   assignTableAPIs,
+  functionalUpdate,
   makeStateUpdater,
   type OnChangeFn,
   type RowData,
@@ -68,7 +69,7 @@ export const stCellActionsFeature: TableFeature = {
       table_setActionCell: {
         fn: (updater: ST_Updater<ST_Cell<ST_RowData> | null>) =>
           (table.options as ST_TableOptions_CellActions).onActionCellChange?.(
-            updater,
+            (old) => functionalUpdate(updater, old),
           ),
       },
     });

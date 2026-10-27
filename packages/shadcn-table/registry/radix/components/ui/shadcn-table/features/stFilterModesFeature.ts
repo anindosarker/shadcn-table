@@ -4,6 +4,7 @@
 // The column defs seed `columnFilterFns` through `initialState`.
 import {
   assignTableAPIs,
+  functionalUpdate,
   makeStateUpdater,
   type OnChangeFn,
   type RowData,
@@ -79,19 +80,27 @@ export const stFilterModesFeature: TableFeature = {
     assignTableAPIs('stFilterModesFeature', table, {
       table_setColumnFilterFns: {
         fn: (updater: ST_Updater<ST_ColumnFilterFnsState>) =>
-          options().onColumnFilterFnsChange?.(updater),
+          options().onColumnFilterFnsChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
       },
       table_setGlobalFilterFn: {
         fn: (updater: ST_Updater<ST_FilterOption>) =>
-          options().onGlobalFilterFnChange?.(updater),
+          options().onGlobalFilterFnChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
       },
       table_setShowColumnFilters: {
         fn: (updater: ST_Updater<boolean>) =>
-          options().onShowColumnFiltersChange?.(updater),
+          options().onShowColumnFiltersChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
       },
       table_setShowGlobalFilter: {
         fn: (updater: ST_Updater<boolean>) =>
-          options().onShowGlobalFilterChange?.(updater),
+          options().onShowGlobalFilterChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
       },
     });
   },
