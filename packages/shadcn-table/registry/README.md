@@ -10,7 +10,14 @@ nothing is shared, resolved or generated between them. Both install to
 ```
 registry/<base>/
   components/ui/*.tsx                  the shadcn parts this edition builds on
-  components/ui/shadcn-table/**        the library, every file
+  components/ui/shadcn-table/          the library, every file
+    features/                          stFeatures.ts and one st*Feature.ts per state group
+    hooks/                             stTableHook, useShadcnTable, useST_*, display-columns/
+    components/                        table/ head/ body/ footer/ toolbar/ buttons/ inputs/ menus/ modals/
+    shared/fns/                        filterFns.ts  sortFns.ts  aggregationFns.ts
+    shared/utils/                      cell, column, row, style, pagination, virtualization, ...
+    shared/locales/                    one <code>.ts per language
+    ShadcnTable.tsx  ST_Tooltip.tsx  types.ts  icons.ts  index.ts
   lib/utils.ts  index.css  components.json  registry.ts
 registry/README.md                     this file
 scripts/registry/base-diff.json        the library files that differ between the trees
@@ -61,7 +68,9 @@ as `@/components/ui/<part>`; the registry build turns that import into a
 
 `registry/<base>/registry.ts` defines the base's items (`shadcn-table` or
 `shadcn-table-base`, plus one locale item per language) through
-`scripts/registry/lib.mjs`, which lists every file of the tree's
-`components/ui/shadcn-table/` plus the forked parts. `pnpm registry:build` collects both
+`scripts/registry/lib.mjs`. The main item lists every file of the tree's
+`components/ui/shadcn-table/` except the non-English locales, plus the forked parts. Each
+locale item (`<item>-locale-<code>`, `mk` included) ships its one
+`shared/locales/<code>.ts`. `pnpm registry:build` collects both
 into `registry.json` at the package root, which stays there because the CLI resolves
 `files[].path` relative to it.
