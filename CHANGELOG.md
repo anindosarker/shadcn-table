@@ -102,10 +102,9 @@ publishes the section as the GitHub release notes.
   at page size 5 reads `1-8 of 8`, the rows the body shows, not `1-5 of 8`.
 - Sticky pinned rows (`rowPinningDisplayMode: 'sticky'` or `'select-sticky'`) stay below
   the table head: with more pinned rows than the container holds they covered the head and
-  its select-all checkbox. Their top offset counts the head height whether or not the head
-  is sticky, so under a head that is not sticky a scrolled pinned row stops a head height
-  below the container top. Pinned rows kept from another page take their place in the
-  sticky offsets; they were offset by minus one row.
+  its select-all checkbox. A pinned stack taller than the container keeps its rows below the
+  head and sticks them at the top only. Pinned rows kept from another page take their place
+  in the sticky offsets; they were offset by minus one row.
 - Switching a column's filter mode re-filters the current filter value with the new mode.
   While a column or global filter is set, a controlled `onColumnFiltersChange` receives an
   identity updater (`(old) => [...old]`) on each `setColumnFilterFns` and `setGlobalFilterFn`
