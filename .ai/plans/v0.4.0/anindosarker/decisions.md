@@ -273,6 +273,18 @@ shadcn-react-table/
      - Controlled state (`state` plus `on*Change`) and external `atoms` both drive the
        subscriptions.
 
+6. D4, `stFeatures` export (decided 2026-10-27). `ST_Features` stays public as a type;
+   `stFeatures` the value leaves the barrel and stays internal to `features/`.
+   - Why the value goes: with D3 the features a table runs on are built per mount with the
+     call's registries merged in; the exported bundle is not what any table uses, and
+     `createColumnHelper<typeof stFeatures, T>()` would type names the table does not have.
+     Nothing outside the library imports it today. Matches MRT.
+   - Why the type stays: every common generic is wrapped (`ST_Row`, `ST_ColumnDef`,
+     `ST_FilterFn`, ...); the type is for the raw ones we do not wrap, such as
+     `createColumnHelper<ST_Features, T>()`, explicit `constructAggregationFn` generics, or a
+     user custom feature's `declare module` block. A type cannot build a mismatched table.
+   - Docs: `api/table-options.mdx:23` drops its mention of `stFeatures`.
+
 ## Docs site
 
 1. Code view highlights on the client, on demand.
