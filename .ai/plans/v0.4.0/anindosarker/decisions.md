@@ -183,6 +183,47 @@ shadcn-react-table/
      - No remount of `AppTable` across re-renders (controlled input in a custom toolbar keeps
        focus while typing).
 
+4. D1, the `table` prop (decided 2026-10-27). Dropped from every component. Two ways to reach
+   the table, per the TanStack table-context guide:
+   - Components that receive an instance (`row`, `cell`, `header`, `column`) read
+     `instance.table`. About 35 of 57 files: body rows and cells, head cells and their menus,
+     filter and edit inputs, row buttons, cell action menu. No context, no provider needed, so
+     they compose anywhere. Depends on phase 01 putting ST state, refs and setters on the core
+     table; today `row.table` is the bare core table (findings: headless display columns).
+   - Components with no instance read `useSTContext()`. About 20 files: `ST_TableContainer`,
+     `ST_TableLayout`, `ST_Table`, head, body and footer roots, toolbars and toolbar buttons,
+     pagination, alert banner, drop zone, global filter field, edit modal, show-hide menu.
+     `useSTContext` is the `useTableContext` from `createTableHookContexts<ST_Features>()` in
+     `hooks/stTableHook.ts`; it throws outside a provider.
+   - `ShadcnTable.tsx` wraps `ST_TableLayout` in `tableContext.Provider`. New public export
+     `ST_TableProvider`, a typed wrapper over that provider, for hand composition:
+
+     ```tsx
+     const table = useShadcnTable({ columns, data });
+     return (
+       <ST_TableProvider table={table}>
+         <ST_TableContainer />
+       </ST_TableProvider>
+     );
+     ```
+
+   - Why dropped rather than optional: no users yet, so compatibility buys nothing; one code
+     path per component instead of a `prop ?? context` fallback in 20 files; an optional prop
+     can be added later without a break, removing one cannot. Matches MRT's port.
+   - Breaking, 0.4.0 changelog: sub-components no longer take `table`; wrap hand-composed
+     pieces in `ST_TableProvider`. Docs: 7 guides and 2 docs-app layout files pass
+     `table={table}` to sub-components today (`toolbar-customization`, `column-pinning`,
+     `density-toggle`, `full-screen-toggle`, `row-actions`, `sorting`, `global-filtering`
+     among them); about 15 stories. Rewritten in phase 03.
+   - Verify in phase 03:
+     - Nested table in `renderDetailPanel`: inner `ShadcnTable` consumers read the inner table.
+     - Radix portals (menus, dialogs, tooltips) still see the context.
+     - Custom renderers (`Cell`, `Header`, `renderRowActions`, `renderDetailPanel`) still
+       receive `table` in their argument object; that surface is unchanged.
+     - A group 2 component rendered without a provider throws the `useSTContext` error at
+       mount, not a silent undefined.
+     - Every guide example that composes sub-components renders in `check-pages.mjs`.
+
 ## Docs site
 
 1. Code view highlights on the client, on demand.
