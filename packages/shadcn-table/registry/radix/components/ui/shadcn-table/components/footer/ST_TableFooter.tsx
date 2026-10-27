@@ -1,19 +1,17 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ST_ColumnVirtualizer,
   type ST_RowData,
-  type ST_TableInstance,
   type TableFooterProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableFooterRow } from '@/components/ui/shadcn-table/components/footer/ST_TableFooterRow';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export interface ST_TableFooterProps<TData extends ST_RowData>
-  extends TableFooterProps {
+export interface ST_TableFooterProps extends TableFooterProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
-  table?: ST_TableInstance<TData>;
 }
 
 const tableFooterVariants = cva('', {
@@ -28,68 +26,80 @@ const tableFooterVariants = cva('', {
 
 export const ST_TableFooter = <TData extends ST_RowData>({
   columnVirtualizer,
-  table: tableProp,
   ...rest
-}: ST_TableFooterProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_TableFooterProps) => {
+  const table = useSTContext<TData>();
   const {
     options: { enableStickyFooter, layoutMode, stTableFooterProps },
     refs: { tableFooterRef },
   } = table;
-  const { isFullScreen } = table.state;
 
   const tableFooterProps = {
     ...parseFromValuesOrFunc(stTableFooterProps, { table }),
     ...rest,
   };
 
-  const stickFooter =
-    (isFullScreen || enableStickyFooter) && enableStickyFooter !== false;
-
-  const footerGroups = table.getFooterGroups();
-
-  //if no footer cells at all, skip footer
-  if (
-    !footerGroups.some((footerGroup) =>
-      footerGroup.headers?.some(
-        (header) =>
-          (typeof header.column.columnDef.footer === 'string' &&
-            !!header.column.columnDef.footer) ||
-          header.column.columnDef.Footer,
-      ),
-    )
-  ) {
-    return null;
-  }
-
   return (
-    <tfoot
-      {...tableFooterProps}
-      ref={(ref: HTMLTableSectionElement) => {
-        tableFooterRef.current = ref;
-        if (tableFooterProps?.ref) {
-          //@ts-expect-error ref can be either RefCallback or RefObject
-          tableFooterProps.ref.current = ref;
-        }
-      }}
-      className={cn(
-        tableFooterVariants({
-          layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-          sticky: !!stickFooter,
-        }),
-        tableFooterProps.className,
-      )}
+    // The footer groups follow the column order, pinning, visibility and
+    // grouping.
+    <Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnVisibility: state.columnVisibility,
+        grouping: state.grouping,
+        isFullScreen: state.isFullScreen,
+      })}
+      source={table.store}
     >
-      {footerGroups.map((footerGroup) => (
-        <ST_TableFooterRow
-          columnVirtualizer={columnVirtualizer}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          footerGroup={footerGroup as any}
-          key={footerGroup.id}
-          table={table}
-        />
-      ))}
-    </tfoot>
+      {({ isFullScreen }) => {
+        const stickFooter =
+          (isFullScreen || enableStickyFooter) && enableStickyFooter !== false;
+
+        const footerGroups = table.getFooterGroups();
+
+        //if no footer cells at all, skip footer
+        if (
+          !footerGroups.some((footerGroup) =>
+            footerGroup.headers?.some(
+              (header) =>
+                (typeof header.column.columnDef.footer === 'string' &&
+                  !!header.column.columnDef.footer) ||
+                header.column.columnDef.Footer,
+            ),
+          )
+        ) {
+          return null;
+        }
+
+        return (
+          <tfoot
+            {...tableFooterProps}
+            ref={(ref: HTMLTableSectionElement) => {
+              tableFooterRef.current = ref;
+              if (tableFooterProps?.ref) {
+                //@ts-expect-error ref can be either RefCallback or RefObject
+                tableFooterProps.ref.current = ref;
+              }
+            }}
+            className={cn(
+              tableFooterVariants({
+                layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+                sticky: !!stickFooter,
+              }),
+              tableFooterProps.className,
+            )}
+          >
+            {footerGroups.map((footerGroup) => (
+              <ST_TableFooterRow
+                columnVirtualizer={columnVirtualizer}
+                footerGroup={footerGroup}
+                key={footerGroup.id}
+              />
+            ))}
+          </tfoot>
+        );
+      }}
+    </Subscribe>
   );
 };
