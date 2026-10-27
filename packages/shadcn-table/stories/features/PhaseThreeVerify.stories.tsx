@@ -378,8 +378,11 @@ const settle = async (canvasElement: HTMLElement) => {
 // functions count the renders of the cell, head cell and row components, the
 // probe column counts the commits inside their subscriptions, and a Profiler
 // around each toolbar button counts its commits.
+type ProfiledArgs = { positionToolbarAlertBanner: 'none' | 'top' };
+
 export const ProfiledThousandRows = {
-  render: () => (
+  args: { positionToolbarAlertBanner: 'top' },
+  render: (args: ProfiledArgs) => (
     <>
       <CountsReadout />
       <Profiler
@@ -394,6 +397,20 @@ export const ProfiledThousandRows = {
           enablePagination={false}
           enableRowSelection
           getRowId={(row) => row.firstName}
+          positionToolbarAlertBanner={args.positionToolbarAlertBanner}
+          renderTopToolbarCustomActions={({ table }) => (
+            <div className="flex gap-2">
+              <button
+                onClick={() => table.setHoveredRow({ id: 'First0006' })}
+                type="button"
+              >
+                Hover row 6
+              </button>
+              <button onClick={() => table.setHoveredRow(null)} type="button">
+                Clear hover
+              </button>
+            </div>
+          )}
           renderToolbarInternalActions={() => (
             <>
               <Profiler id="search" onRender={onButtonRender}>
@@ -454,6 +471,33 @@ export const ProfiledThousandRows = {
     expect(afterDensity.buttonCommits['filters'] ?? 0).toBe(0);
     expect(afterDensity.buttonCommits['search'] ?? 0).toBe(0);
 
+    // Hover: a mouse hover is CSS only (`hover:[&>td]:after:*` on the row), so
+    // nothing commits. The library writes `hoveredRow` only while a row drags
+    // (`onDragEnter`), so the drag hover is driven through `setHoveredRow`:
+    // the hovered row's cells commit once (`isHoveredRow` in the td selector),
+    // no other row's cells do, and no cell or row component renders.
+    await settle(canvasElement);
+    await userEvent.click(canvas.getByText('Reset counts'));
+    await userEvent.hover(canvasElement.querySelectorAll('tbody tr')[3]);
+    await userEvent.unhover(canvasElement.querySelectorAll('tbody tr')[3]);
+    await settle(canvasElement);
+    const afterMouseHover = readCounts(canvasElement);
+    expect(sum(afterMouseHover.probeCell), 'mouse hover: probe cells').toBe(0);
+    expect(afterMouseHover.tableCommits, 'mouse hover: table commits').toBe(0);
+    await userEvent.click(canvas.getByText('Hover row 6'));
+    await settle(canvasElement);
+    const afterHover = readCounts(canvasElement);
+    expect(afterHover.probeCell, 'hovered row: probe cells').toEqual({
+      First0006: 1,
+    });
+    expect(sum(afterHover.bodyRowProps), 'hovered row: row renders').toBe(0);
+    expect(sum(afterHover.bodyCellProps), 'hovered row: cell renders').toBe(0);
+    await userEvent.click(canvas.getByText('Clear hover'));
+    await settle(canvasElement);
+    expect(readCounts(canvasElement).probeCell, 'cleared hover').toEqual({
+      First0006: 2,
+    });
+
     // Selection: the row's checkbox and the select-all header update; no
     // probe cell commits (the cells do not subscribe to the selection) and no
     // row or cell component renders.
@@ -474,6 +518,47 @@ export const ProfiledThousandRows = {
     expect(sum(afterSelect.probeCell), 'select: probe cells').toBe(0);
     expect(sum(afterSelect.bodyRowProps), 'select: row renders').toBe(0);
     expect(sum(afterSelect.bodyCellProps), 'select: cell renders').toBe(0);
+  },
+};
+
+const OptionChangeTable = () => {
+  const [german, setGerman] = useState(false);
+  const [selectable, setSelectable] = useState(false);
+  return (
+    <>
+      <button onClick={() => setGerman(true)} type="button">
+        German labels
+      </button>
+      <button onClick={() => setSelectable(true)} type="button">
+        Enable selection
+      </button>
+      <ShadcnTable
+        columns={columns}
+        data={data}
+        enableRowSelection={selectable}
+        localization={german ? { toggleDensity: 'Dichte umschalten' } : {}}
+      />
+    </>
+  );
+};
+
+// `localization` and an `enable*` option change after mount: the density
+// button (a context reader) shows the new label, and the select column shows
+// up, both through the owner's re-render.
+export const OptionChangeAfterMount = {
+  render: () => <OptionChangeTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
+    expect(canvas.queryAllByLabelText('Toggle select row').length).toBe(0);
+    await userEvent.click(canvas.getByText('German labels'));
+    await waitFor(() =>
+      expect(canvas.getByLabelText('Dichte umschalten')).toBeTruthy(),
+    );
+    await userEvent.click(canvas.getByText('Enable selection'));
+    await waitFor(() =>
+      expect(canvas.getAllByLabelText('Toggle select row').length).toBe(3),
+    );
   },
 };
 
