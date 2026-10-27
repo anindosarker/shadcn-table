@@ -28,3 +28,17 @@ Deviations only. Plan: [04-docs.md](04-docs.md). Rulings: [decisions.md](decisio
 ### Open (library)
 
 - `check-pages.mjs b` and `d` fail one check each, examples untouched by this part: `enable-detail-panel-virtualized` renders no body rows (`tbody` sized, 0 `tr`), `enable-column-virtualization` renders no header or body cells (0 `th`, empty `tr`). Both virtualizers return no items; `getScrollElement: () => tableContainerRef.current` in `hooks/useST_ColumnVirtualizer.ts:75` and `hooks/useST_RowVirtualizer.ts:68` likely reads null on the first layout effect and `ST_Table` / `ST_TableBody` no longer re-render after mount.
+
+## Gates (verifier, 2026-10-28, HEAD f4efcb3)
+
+Run from the worktree root on a clean tree.
+
+- `types:check`: pass (`✓ Types generated successfully`, `tsc --noEmit` exit 0).
+- `lint`: pass (`✖ 3 problems (0 errors, 3 warnings)`, all `react-hooks/exhaustive-deps` in example sources).
+- `build`: pass (`✓ Generating static pages using 14 workers (292/292)`).
+- `next start -p 5330` with `NEXT_DIST_DIR=.next`; `check-pages.mjs a --base http://localhost:5330`: `260 passed, 0 failed`; `e`: `595 passed, 0 failed`; `c` (this part's checks): `280 passed, 0 failed`.
+- Grep `<ST_[A-Za-z]+[^>]*table=\{table\}`: 18 hits, all `<ST_TableProvider table={table}>`; empty after `| grep -v ST_TableProvider`.
+- Grep `memoMode\|expandRowsFn` in `content`, `lib`: empty.
+- Grep `shadcn-table/locales/` in `content`, `examples`, `skills`, `registry/README.md`: empty.
+- Playwright (scratch script, desktop width, Radix UI then Base UI via the header switch): `guides/column-grouping`, `guides/toolbar-customization` (`minimal`, `custom-top-toolbar`, `external-toolbar`), `api/st-components` (`ST_TableProvider` h4), `examples/advanced`, `examples/custom-filter-ui`, `examples/custom-headless`, `examples/customized-grouping`, `examples/editing-crud`, `guides/row-ordering-dnd`, `examples/minimal`, `guides/localization` (`mk` tab): every panel renders rows, no page error, no console error on either base. 150 checks, 0 failed.
+- Vercel: `vercel whoami` logged in; `vercel ls shadcn-table` shows no preview for `v0.4/docs` (newest preview is from 2026-10-20, before the branch). a.mjs and e.mjs not run against a preview.
