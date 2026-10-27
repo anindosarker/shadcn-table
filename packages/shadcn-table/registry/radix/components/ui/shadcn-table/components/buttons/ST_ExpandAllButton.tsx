@@ -1,3 +1,4 @@
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -43,7 +44,6 @@ export const ST_ExpandAllButton = <TData extends ST_RowData>({
     },
     toggleAllRowsExpanded,
   } = table;
-  const { density, isLoading } = table.state;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stExpandAllButtonProps, {
@@ -54,44 +54,58 @@ export const ST_ExpandAllButton = <TData extends ST_RowData>({
 
   const isAllRowsExpanded = getIsAllRowsExpanded();
 
+  // The table here may be the core table from a header context, which has no
+  // `state`; the store subscription works on both.
   return (
-    <ST_Tooltip
-      title={
-        iconButtonProps?.title ??
-        (isAllRowsExpanded ? localization.collapseAll : localization.expandAll)
-      }
+    <Subscribe
+      selector={(state) => ({
+        density: state.density,
+        isLoading: state.isLoading,
+      })}
+      source={table.store}
     >
-      <span>
-        <Button
-          aria-label={localization.expandAll}
-          disabled={
-            isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
+      {({ density, isLoading }) => (
+        <ST_Tooltip
+          title={
+            iconButtonProps?.title ??
+            (isAllRowsExpanded
+              ? localization.collapseAll
+              : localization.expandAll)
           }
-          onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
-          size="icon"
-          type="button"
-          variant="ghost"
-          {...iconButtonProps}
-          title={undefined}
-          className={cn(
-            expandAllButtonVariants({ density }),
-            iconButtonProps?.className,
-          )}
         >
-          {iconButtonProps?.children ?? (
-            <KeyboardDoubleArrowDownIcon
+          <span>
+            <Button
+              aria-label={localization.expandAll}
+              disabled={
+                isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
+              }
+              onClick={() => toggleAllRowsExpanded(!isAllRowsExpanded)}
+              size="icon"
+              type="button"
+              variant="ghost"
+              {...iconButtonProps}
+              title={undefined}
               className={cn(
-                'transition-transform duration-150',
-                isAllRowsExpanded
-                  ? '-rotate-180'
-                  : getIsSomeRowsExpanded()
-                    ? '-rotate-90'
-                    : 'rotate-0',
+                expandAllButtonVariants({ density }),
+                iconButtonProps?.className,
               )}
-            />
-          )}
-        </Button>
-      </span>
-    </ST_Tooltip>
+            >
+              {iconButtonProps?.children ?? (
+                <KeyboardDoubleArrowDownIcon
+                  className={cn(
+                    'transition-transform duration-150',
+                    isAllRowsExpanded
+                      ? '-rotate-180'
+                      : getIsSomeRowsExpanded()
+                        ? '-rotate-90'
+                        : 'rotate-0',
+                  )}
+                />
+              )}
+            </Button>
+          </span>
+        </ST_Tooltip>
+      )}
+    </Subscribe>
   );
 };

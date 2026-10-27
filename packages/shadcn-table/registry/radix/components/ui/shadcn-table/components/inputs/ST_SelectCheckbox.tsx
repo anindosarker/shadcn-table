@@ -1,4 +1,5 @@
 import { type MouseEvent } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -9,6 +10,7 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_TableInstance,
+  type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import {
   getIsRowSelected,
@@ -53,7 +55,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       stSelectCheckboxProps,
     },
   } = table;
-  const { density, isLoading } = table.state;
 
   const selectAll = !row;
 
@@ -88,81 +89,102 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
 
   const onSelectAllChange = getST_SelectAllHandler({ table });
 
-  const commonProps = {
-    'aria-label': selectAll
-      ? localization.toggleSelectAll
-      : localization.toggleSelectRow,
-    checked: isChecked,
-    disabled:
-      isLoading || (row && !row.getCanSelect()) || row?.id === 'st-row-create',
-    // inputProps: { 'aria-label': ... },
-    // Note: radix renders no input; `aria-label` above lands on the root button.
-    // onChange: (event) => { event.stopPropagation(); selectAll ? onSelectAllChange(event) : onSelectionChange!(event); },
-    // Note: radix change callbacks carry no DOM event (shiftKey); selection runs in onClick below.
-    // size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
-    // Note: the density variant on className below.
-    ...checkboxProps,
-    onClick: (e: MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation();
-      // Note: MUI Radio fires no change once checked; same guard here.
-      if (!(enableMultiRowSelection === false && isChecked)) {
-        if (selectAll) onSelectAllChange(e);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        else onSelectionChange!(e as any);
-      }
-      checkboxProps?.onClick?.(e);
-    },
-    // sx: (theme) => ({ height, m, width, zIndex: 0, ...parseFromValuesOrFunc(checkboxProps?.sx, theme) }),
-    // Note: MUI sized the padded hit area; the density variant sizes the visible box.
-    className: cn(
-      selectCheckboxVariants({ density }),
-      checkboxProps?.className,
-    ),
-    title: undefined,
-  } as CheckboxProps | RadioProps;
+  const getCommonProps = ({
+    density,
+    isLoading,
+  }: Pick<ST_TableState<TData>, 'density' | 'isLoading'>) =>
+    ({
+      'aria-label': selectAll
+        ? localization.toggleSelectAll
+        : localization.toggleSelectRow,
+      checked: isChecked,
+      disabled:
+        isLoading ||
+        (row && !row.getCanSelect()) ||
+        row?.id === 'st-row-create',
+      // inputProps: { 'aria-label': ... },
+      // Note: radix renders no input; `aria-label` above lands on the root button.
+      // onChange: (event) => { event.stopPropagation(); selectAll ? onSelectAllChange(event) : onSelectionChange!(event); },
+      // Note: radix change callbacks carry no DOM event (shiftKey); selection runs in onClick below.
+      // size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
+      // Note: the density variant on className below.
+      ...checkboxProps,
+      onClick: (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        // Note: MUI Radio fires no change once checked; same guard here.
+        if (!(enableMultiRowSelection === false && isChecked)) {
+          if (selectAll) onSelectAllChange(e);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          else onSelectionChange!(e as any);
+        }
+        checkboxProps?.onClick?.(e);
+      },
+      // sx: (theme) => ({ height, m, width, zIndex: 0, ...parseFromValuesOrFunc(checkboxProps?.sx, theme) }),
+      // Note: MUI sized the padded hit area; the density variant sizes the visible box.
+      className: cn(
+        selectCheckboxVariants({ density }),
+        checkboxProps?.className,
+      ),
+      title: undefined,
+    }) as CheckboxProps | RadioProps;
 
+  // The table here may be the core table from a header context, which has no
+  // `state`; the store subscription works on both.
   return (
-    <ST_Tooltip
-      title={
-        checkboxProps?.title ??
-        (selectAll
-          ? localization.toggleSelectAll
-          : localization.toggleSelectRow)
-      }
+    <Subscribe
+      selector={(state) => ({
+        density: state.density,
+        isLoading: state.isLoading,
+      })}
+      source={table.store}
     >
-      <span className="inline-flex">
-        {enableMultiRowSelection === false ? (
-          // <Radio {...(commonProps as any)} />
-          // Note: shadcn RadioGroupItem needs its RadioGroup; one group per row stands in for MUI's standalone Radio.
-          <RadioGroup value={isChecked ? 'on' : null}>
-            <RadioGroupItem
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              {...(commonProps as any)}
-              value="on"
-            />
-          </RadioGroup>
-        ) : (
-          <Checkbox
-            {...commonProps}
-            // indeterminate={...}
-            // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
-            // v9: getIsSomeRowsSelected / getIsSomeSelected mean "at least one"
-            // (the all-selected case included), so the all-selected check gates
-            // the indeterminate state.
-            checked={
-              (
-                !isChecked && selectAll
-                  ? table.getIsSomeRowsSelected() && !allRowsSelected
-                  : row?.getIsSomeSelected() &&
-                    !row.getIsAllSubRowsSelected() &&
-                    row.getCanSelectSubRows()
-              )
-                ? 'indeterminate'
-                : commonProps.checked
+      {(state) => {
+        const commonProps = getCommonProps(state);
+        return (
+          <ST_Tooltip
+            title={
+              checkboxProps?.title ??
+              (selectAll
+                ? localization.toggleSelectAll
+                : localization.toggleSelectRow)
             }
-          />
-        )}
-      </span>
-    </ST_Tooltip>
+          >
+            <span className="inline-flex">
+              {enableMultiRowSelection === false ? (
+                // <Radio {...(commonProps as any)} />
+                // Note: shadcn RadioGroupItem needs its RadioGroup; one group per row stands in for MUI's standalone Radio.
+                <RadioGroup value={isChecked ? 'on' : null}>
+                  <RadioGroupItem
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    {...(commonProps as any)}
+                    value="on"
+                  />
+                </RadioGroup>
+              ) : (
+                <Checkbox
+                  {...commonProps}
+                  // indeterminate={...}
+                  // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
+                  // v9: getIsSomeRowsSelected / getIsSomeSelected mean "at least one"
+                  // (the all-selected case included), so the all-selected check gates
+                  // the indeterminate state.
+                  checked={
+                    (
+                      !isChecked && selectAll
+                        ? table.getIsSomeRowsSelected() && !allRowsSelected
+                        : row?.getIsSomeSelected() &&
+                          !row.getIsAllSubRowsSelected() &&
+                          row.getCanSelectSubRows()
+                    )
+                      ? 'indeterminate'
+                      : commonProps.checked
+                  }
+                />
+              )}
+            </span>
+          </ST_Tooltip>
+        );
+      }}
+    </Subscribe>
   );
 };
