@@ -17,7 +17,7 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'aggregationFns',
     defaultValue: '',
-    description: `This option allows you to define custom aggregation functions that can be referenced in a column's aggregationFn option by their key. Each one is a constructAggregationFn({ aggregate, merge? }) definition.`,
+    description: `This option allows you to define custom aggregation functions that can be referenced in a column's aggregationFn option by their key. Each one is a constructAggregationFn({ aggregate, merge? }) definition. TanStack Table core resolves the names: an aggregationFn string must be a built-in name or a key registered here, and an unknown name aggregates nothing.`,
     link: 'https://tanstack.com/table/latest/docs/framework/react/guide/grouping',
     linkText: 'TanStack Table Grouping Docs',
     required: false,
@@ -749,19 +749,9 @@ export const tableOptions: TableOption[] = [
     type: 'Array<ST_FilterOption | string> | null',
   },
   {
-    tableOption: 'expandRowsFn',
-    defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
-    required: false,
-    source: '',
-    type: '(dataRow: TData) => TData[]', //?
-  },
-  {
     tableOption: 'filterFns',
     defaultValue: '',
-    description: `This option allows you to define custom filter functions that can be referenced in a column's filterFn option by their key`,
+    description: `This option allows you to define custom filter functions that can be referenced in a column's filterFn option, or the globalFilterFn option, by their key. TanStack Table core resolves the names: a filterFn or globalFilterFn string must be a built-in name or a key registered here, and an unknown name filters nothing.`,
     link: 'https://tanstack.com/table/latest/docs/api/features/filters#filterfns',
     linkText: 'TanStack Table Filters Docs',
     required: false,
@@ -979,16 +969,6 @@ export const tableOptions: TableOption[] = [
     required: false,
     source: 'TanStack Table',
     type: 'number',
-  },
-  {
-    tableOption: 'memoMode',
-    defaultValue: '',
-    description: '',
-    link: '/docs/guides/memoization',
-    linkText: 'Memoize Components Guide',
-    required: false,
-    source: 'ST',
-    type: `'cells' | 'rows' | 'table-body'`,
   },
   {
     tableOption: 'mergeOptions',
@@ -1471,7 +1451,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onDraggingColumnChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1481,7 +1462,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onDraggingRowChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1491,7 +1473,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onEditingCellChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1501,7 +1484,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onCreatingRowChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1511,7 +1495,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onEditingRowChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1521,7 +1506,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onColumnFilterFnsChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1532,7 +1518,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'onGlobalFilterFnChange',
     defaultValue: '',
     description:
-      'If provided, this function will be called with an updaterFn when state.globalFilter changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.',
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: 'https://tanstack.com/table/latest/docs/api/features/filters#onglobalfilterchange',
     linkText: 'TanStack Table Filters Docs',
     required: false,
@@ -1542,7 +1528,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onHoveredColumnChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1552,7 +1539,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onHoveredRowChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1595,7 +1583,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onDensityChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '/docs/guides/density-toggle',
     linkText: 'ST Density Toggle Docs',
     required: false,
@@ -1605,7 +1594,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onIsFullScreenChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '/docs/guides/full-screen-toggle',
     linkText: 'ST Full Screen Toggle Docs',
     required: false,
@@ -1688,7 +1678,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onShowAlertBannerChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1698,7 +1689,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onShowColumnFiltersChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1708,7 +1700,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onShowGlobalFilterChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -1718,7 +1711,8 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'onShowToolbarDropZoneChange',
     defaultValue: '',
-    description: '',
+    description:
+      'Receives a function updater, as the TanStack Table on*Change handlers do. Resolve it with functionalUpdate, or pass a React state setter.',
     link: '',
     linkText: '',
     required: false,
@@ -2044,7 +2038,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'sortFns',
     defaultValue: '',
     description:
-      "This option allows you to define custom sorting functions that can be referenced in a column's sortFn option by their key. Example:",
+      "This option allows you to define custom sorting functions that can be referenced in a column's sortFn option by their key. TanStack Table core resolves the names: a sortFn string must be a built-in name or a key registered here, and an unknown name sorts nothing.",
     link: 'https://tanstack.com/table/latest/docs/framework/react/guide/sorting',
     linkText: 'TanStack Table Sorting Docs',
     required: false,
