@@ -1,4 +1,8 @@
-import { type ComponentPropsWithRef, type ReactNode } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react';
 import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -15,9 +19,7 @@ export interface ST_ActionMenuItemProps
   divider?: boolean;
   icon: ReactNode;
   label: string;
-  onOpenSubMenu?:
-    | ComponentPropsWithRef<typeof DropdownMenuItem>['onClick']
-    | ComponentPropsWithRef<typeof DropdownMenuItem>['onMouseEnter'];
+  onOpenSubMenu?: MouseEventHandler<HTMLElement>;
 }
 
 export const ST_ActionMenuItem = <TData extends ST_RowData>({
@@ -54,10 +56,8 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
           type="button"
           variant="ghost"
           size="icon-xs"
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onClick={onOpenSubMenu as any}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onMouseEnter={onOpenSubMenu as any}
+          onClick={onOpenSubMenu}
+          onMouseEnter={onOpenSubMenu}
         >
           <ArrowRightIcon />
         </Button>
