@@ -3,17 +3,14 @@ import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import {
-  type ST_RowData,
-  type ST_TableInstance,
-} from '@/components/ui/shadcn-table/types';
+import { type ST_RowData } from '@/components/ui/shadcn-table/types';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // min-w-[120px] py-1.5
 // Note: DropdownMenuItem defaults govern padding; Content governs width.
 const actionMenuItemVariants = cva('items-center justify-between my-0');
 
-export interface ST_ActionMenuItemProps<TData extends ST_RowData>
+export interface ST_ActionMenuItemProps
   extends ComponentPropsWithRef<typeof DropdownMenuItem> {
   divider?: boolean;
   icon: ReactNode;
@@ -21,7 +18,6 @@ export interface ST_ActionMenuItemProps<TData extends ST_RowData>
   onOpenSubMenu?:
     | ComponentPropsWithRef<typeof DropdownMenuItem>['onClick']
     | ComponentPropsWithRef<typeof DropdownMenuItem>['onMouseEnter'];
-  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ActionMenuItem = <TData extends ST_RowData>({
@@ -30,11 +26,9 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
   icon,
   label,
   onOpenSubMenu,
-  table: tableProp,
   ...rest
-}: ST_ActionMenuItemProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+}: ST_ActionMenuItemProps) => {
+  const table = useSTContext<TData>();
   const {
     options: {
       icons: { ArrowRightIcon },

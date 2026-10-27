@@ -1,4 +1,5 @@
 import { type ComponentPropsWithRef, useMemo, useRef } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -119,6 +120,11 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFilterValue?: (filterValue: any) => void;
+  /**
+   * Transition, part 01 phase 03: ignored, the menu reads the table from
+   * context. `ST_FilterTextField` and `ST_GlobalFilterTextField` still pass
+   * it until their cluster lands; the integration step removes this prop.
+   */
   table?: ST_TableInstance<TData>;
 }
 
@@ -129,11 +135,13 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   onSelect,
   setAnchorEl,
   setFilterValue,
-  table: tableProp,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- transition prop, kept off the menu content until the integration step removes it
+  table: _transitionTable,
   ...rest
 }: ST_FilterOptionMenuProps<TData>) => {
-  const context = useSTContext<TData>();
-  const table = tableProp ?? context;
+  // Context, not `header.table`: the global filter menu has no header, and a
+  // hook cannot be called conditionally.
+  const table = useSTContext<TData>();
   const {
     options: {
       columnFilterModeOptions,
@@ -146,10 +154,8 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     setColumnFilterFns,
     setGlobalFilterFn,
   } = table;
-  const { globalFilterFn } = table.state;
   const { column } = header ?? {};
   const { columnDef } = column ?? {};
-  const currentFilterValue = column?.getFilterValue();
 
   let allowedColumnFilterOptions =
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
@@ -182,6 +188,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       setGlobalFilterFn(option);
     } else if (option !== prevFilterMode) {
       // column filter mode
+      const currentFilterValue = column.getFilterValue();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setColumnFilterFns((prev: { [key: string]: any }) => ({
         ...prev,
@@ -241,9 +248,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     onSelect?.();
   };
 
-  const filterOption =
-    !!header && columnDef ? getColumnFilterFnName(columnDef) : globalFilterFn;
-
   const anchorRef = useRef<HTMLElement | null>(null);
   if (anchorEl) anchorRef.current = anchorEl;
 
@@ -282,42 +286,64 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         className={cn('w-max', className)}
         {...rest}
       >
-        {(header && column && columnDef
-          ? (columnDef.renderColumnFilterModeMenuItems?.({
-              column,
-              internalFilterOptions,
-              onSelectFilterMode: handleSelectFilterMode,
-              table,
-            }) ??
-            renderColumnFilterModeMenuItems?.({
-              column,
-              internalFilterOptions,
-              onSelectFilterMode: handleSelectFilterMode,
-              table,
-            }))
-          : renderGlobalFilterModeMenuItems?.({
-              internalFilterOptions,
-              onSelectFilterMode: handleSelectFilterMode,
-              table,
-            })) ??
-          internalFilterOptions.map(
-            ({ divider, label, option, symbol }, index) => (
-              <ST_ActionMenuItem
-                // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
-                className={option === filterOption ? 'bg-accent' : undefined}
-                divider={divider}
-                icon={symbol}
-                key={index}
-                label={label}
-                onClick={() =>
-                  handleSelectFilterMode(option as ST_FilterOption)
-                }
-                table={table}
-                // value={option}
-                // Note: MUI MenuItem value dropped — form semantics only, no visual role
-              />
-            ),
-          )}
+        {/* The column mode name is written onto the column def from
+            `columnFilterFns` in the root render, so that slice is selected. */}
+        <Subscribe
+          selector={(state) => ({
+            columnFilterFns: state.columnFilterFns,
+            globalFilterFn: state.globalFilterFn,
+          })}
+          source={table.store}
+        >
+          {({ globalFilterFn }) => {
+            const filterOption =
+              !!header && columnDef
+                ? getColumnFilterFnName(columnDef)
+                : globalFilterFn;
+
+            return (
+              <>
+                {(header && column && columnDef
+                  ? (columnDef.renderColumnFilterModeMenuItems?.({
+                      column,
+                      internalFilterOptions,
+                      onSelectFilterMode: handleSelectFilterMode,
+                      table,
+                    }) ??
+                    renderColumnFilterModeMenuItems?.({
+                      column,
+                      internalFilterOptions,
+                      onSelectFilterMode: handleSelectFilterMode,
+                      table,
+                    }))
+                  : renderGlobalFilterModeMenuItems?.({
+                      internalFilterOptions,
+                      onSelectFilterMode: handleSelectFilterMode,
+                      table,
+                    })) ??
+                  internalFilterOptions.map(
+                    ({ divider, label, option, symbol }, index) => (
+                      <ST_ActionMenuItem
+                        // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
+                        className={
+                          option === filterOption ? 'bg-accent' : undefined
+                        }
+                        divider={divider}
+                        icon={symbol}
+                        key={index}
+                        label={label}
+                        onClick={() =>
+                          handleSelectFilterMode(option as ST_FilterOption)
+                        }
+                        // value={option}
+                        // Note: MUI MenuItem value dropped — form semantics only, no visual role
+                      />
+                    ),
+                  )}
+              </>
+            );
+          }}
+        </Subscribe>
       </DropdownMenuContent>
     </DropdownMenu>
   );
