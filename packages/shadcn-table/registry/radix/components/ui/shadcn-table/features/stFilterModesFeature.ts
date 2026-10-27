@@ -15,6 +15,8 @@ import {
 import {
   type ST_ColumnFilterFnsState,
   type ST_FilterOption,
+  type ST_RowData,
+  type ST_TableInstance,
   type ST_Updater,
 } from '@/components/ui/shadcn-table/types';
 
@@ -88,8 +90,13 @@ export const stFilterModesFeature: TableFeature = {
     // previous mode's function. Emitting the same filters as a new array
     // re-runs filtering once the columns pick up the new mode; the raw handler,
     // because `setColumnFilters` would drop filters by the old mode's rules.
-    const rerunFilters = () =>
+    // With no filter set there is nothing to re-run, so no handler call.
+    const rerunFilters = () => {
+      const { atoms } = table as unknown as ST_TableInstance<ST_RowData>;
+      if (!atoms.columnFilters.get().length && !atoms.globalFilter.get())
+        return;
       options().onColumnFiltersChange?.((old) => [...old]);
+    };
     assignTableAPIs('stFilterModesFeature', table, {
       table_setColumnFilterFns: {
         fn: (updater: ST_Updater<ST_ColumnFilterFnsState>) => {
