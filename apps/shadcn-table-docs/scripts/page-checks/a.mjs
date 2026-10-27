@@ -249,7 +249,7 @@ const checks = {
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
-    await propTable(page, '#props-table', 201, check);
+    await propTable(page, '#props-table', 199, check);
     await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {

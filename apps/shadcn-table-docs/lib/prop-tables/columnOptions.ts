@@ -121,7 +121,7 @@ export const columnOptions: ColumnOption[] = [
     columnOption: 'aggregationFn',
     defaultValue: "'count'",
     description:
-      'Specify which aggregate function(s) should be used for grouped columns: a built-in name, a name from the aggregationFns table option, a constructAggregationFn({ aggregate, merge? }) definition, or an array of those.',
+      'Specify which aggregate function(s) should be used for grouped columns: a built-in name, a name from the aggregationFns table option, a constructAggregationFn({ aggregate, merge? }) definition, or an array of those. TanStack Table core resolves the names, and an unknown name aggregates nothing.',
     link: 'https://tanstack.com/table/latest/docs/framework/react/guide/grouping',
     linkText: 'TanStack Table Grouping Docs',
     source: 'TanStack Table',
@@ -322,7 +322,8 @@ export const columnOptions: ColumnOption[] = [
   {
     columnOption: 'filterFn',
     defaultValue: "'fuzzy'",
-    description: '',
+    description:
+      'A built-in filter name, a name registered through the filterFns table option, or a filter function. TanStack Table core resolves the name, and an unknown name filters nothing. After the table prepares its columns, columnDef.filterFn holds the current filter mode name; read it with getColumnFilterFnName(columnDef).',
     link: '',
     linkText: '',
     source: 'ST',
@@ -596,7 +597,7 @@ export const columnOptions: ColumnOption[] = [
     columnOption: 'sortFn',
     defaultValue: '',
     description:
-      'The sorting function to use for this column: the name of a built-in or custom (sortFns table option) sorting function, or a sorting function itself.',
+      'The sorting function to use for this column: the name of a built-in or custom (sortFns table option) sorting function, or a sorting function itself. TanStack Table core resolves the name, and an unknown name sorts nothing.',
     link: 'https://tanstack.com/table/latest/docs/framework/react/guide/sorting',
     linkText: 'TanStack Table Sorting Docs',
     source: 'TanStack Table',

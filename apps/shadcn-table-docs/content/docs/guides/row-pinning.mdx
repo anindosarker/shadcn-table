@@ -55,7 +55,7 @@ const table = useShadcnTable({
   data,
   enableRowPinning: true,
   stTableBodyRowProps: ({ row, table }) => {
-    const { density } = table.state;
+    const { density } = table.store.state;
     return {
       style: {
         //Set a fixed height for pinned rows

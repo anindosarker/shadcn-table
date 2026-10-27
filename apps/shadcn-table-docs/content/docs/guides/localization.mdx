@@ -20,11 +20,11 @@ pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table-loca
 
 With the `@st` namespace registered (see [Installation](/docs/getting-started/install)), `pnpm dlx shadcn@latest add @st/shadcn-table-locale-de` picks the path from the project's style. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
 
-The item lands in `components/ui/shadcn-table/locales/<code>.ts` and is imported from `'@/components/ui/shadcn-table/locales/<code>'`. Available codes:
+The item lands in `components/ui/shadcn-table/shared/locales/<code>.ts` and is imported from `'@/components/ui/shadcn-table/shared/locales/<code>'`. Available codes:
 
-`ar`, `az`, `bg`, `cs`, `da`, `de`, `el`, `en`, `es`, `et`, `fa`, `fi`, `fr`, `he`, `hr`, `hu`, `hy`, `id`, `it`, `ja`, `ko`, `nl`, `no`, `np`, `pl`, `pt`, `pt-BR`, `ro`, `ru`, `sk`, `sr-Cyrl-RS`, `sr-Latn-RS`, `sv`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`
+`ar`, `az`, `bg`, `cs`, `da`, `de`, `el`, `en`, `es`, `et`, `fa`, `fi`, `fr`, `he`, `hr`, `hu`, `hy`, `id`, `it`, `ja`, `ko`, `mk`, `nl`, `no`, `np`, `pl`, `pt`, `pt-BR`, `ro`, `ru`, `sk`, `sr-Cyrl-RS`, `sr-Latn-RS`, `sv`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`
 
-> If your language is not yet supported, please consider making a PR to add it to the library! See [here on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/shared/components/ui/shadcn-table/locales). A locale is data shared by both bases: add one file under `shared/`.
+> If your language is not yet supported, please consider making a PR to add it to the library! See [here on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/shared/locales). Add the same file to both bases, under `registry/radix/` and `registry/base/`.
 
 #### Built-in Locale Examples
 
@@ -58,7 +58,7 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-For a full list of all available translation keys, see [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/shared/components/ui/shadcn-table/locales/en.ts).
+For a full list of all available translation keys, see [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/shared/locales/en.ts).
 Please note that each localization object should include a `language` property containing a valid BCP 47 language tag to ensure proper number formatting.
 
 If you end up fully translating ST into another language that is not yet supported, please consider making a PR to add it to the library so that everyone can use it!

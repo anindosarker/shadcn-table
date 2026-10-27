@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import {
   ST_Table, //import alternative sub-component if we do not want toolbars
+  ST_TableProvider,
   type ST_ColumnDef,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
@@ -61,7 +62,11 @@ export const Example = () => {
   });
 
   //using ST_Table instead of ShadcnTable if we do not need any of the toolbar components or features
-  return <ST_Table table={table} />;
+  return (
+    <ST_TableProvider table={table}>
+      <ST_Table />
+    </ST_TableProvider>
+  );
 };
 
 export default Example;

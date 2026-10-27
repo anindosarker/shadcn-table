@@ -507,7 +507,7 @@ export const tableInstanceAPIs: TableInstanceAPI[] = [
     tableInstanceAPI: 'state',
     type: 'ST_TableState<TData>',
     description:
-      'The current table state: the TanStack Table slices plus the ST-only slices (density, isFullScreen, showColumnFilters, creatingRow, ...).',
+      'The current table state: the TanStack Table slices plus the ST-only slices (density, isFullScreen, showColumnFilters, creatingRow, ...). The table that row, cell, header and column renderers receive has no state; read table.store.state or table.atoms.<slice>.get() there.',
     link: GUIDE + 'table-state',
     linkText: 'TanStack Table State Docs',
   },

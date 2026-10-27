@@ -1585,6 +1585,24 @@
       ]
     },
     {
+      "name": "example-localization-i18n-mk",
+      "type": "registry:block",
+      "title": "Localization I18n Mk",
+      "description": "Localization I18n Mk example from shadcn-table.",
+      "files": [
+        {
+          "path": "examples/localization-i18n-mk/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-mk/localization-i18n-mk.tsx"
+        },
+        {
+          "path": "examples/localization-i18n-mk/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/localization-i18n-mk/makeData.ts"
+        }
+      ]
+    },
+    {
       "name": "example-localization-i18n-nl",
       "type": "registry:block",
       "title": "Localization I18n Nl",
