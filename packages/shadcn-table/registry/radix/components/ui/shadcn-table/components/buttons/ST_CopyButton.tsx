@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: text-inheritance cva — user exception to the no-className ruling (copy cells render as cell text).
 const copyButtonVariants = cva(
@@ -19,14 +20,16 @@ const copyButtonVariants = cva(
 export interface ST_CopyButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   cell: ST_Cell<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_CopyButton = <TData extends ST_RowData>({
   cell,
-  table,
+  table: tableProp,
   ...rest
 }: ST_CopyButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { localization, stCopyButtonProps },
   } = table;

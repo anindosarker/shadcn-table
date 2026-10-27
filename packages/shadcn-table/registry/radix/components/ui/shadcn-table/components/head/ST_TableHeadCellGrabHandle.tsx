@@ -8,20 +8,23 @@ import {
 import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
   column: ST_Column<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
   tableHeadCellRef: RefObject<HTMLTableCellElement | null>;
 }
 
 export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   column,
-  table,
+  table: tableProp,
   tableHeadCellRef,
   ...rest
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { enableColumnOrdering, stColumnDragHandleProps },
     setColumnOrder,

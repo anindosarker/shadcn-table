@@ -55,6 +55,7 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -64,15 +65,17 @@ export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
   rangeFilterIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_FilterTextField = <TData extends ST_RowData>({
   header,
   rangeFilterIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_FilterTextFieldProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableColumnFilterModes,

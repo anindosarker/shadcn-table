@@ -17,20 +17,23 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_EditCellTextField } from '@/components/ui/shadcn-table/components/inputs/ST_EditCellTextField';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const editRowModalVariants = cva('max-h-[calc(100%-4rem)]');
 
 export interface ST_EditRowModalProps<TData extends ST_RowData>
   extends Partial<DialogProps> {
   open: boolean;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_EditRowModal = <TData extends ST_RowData>({
   open,
-  table,
+  table: tableProp,
   ...rest
 }: ST_EditRowModalProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       localization,

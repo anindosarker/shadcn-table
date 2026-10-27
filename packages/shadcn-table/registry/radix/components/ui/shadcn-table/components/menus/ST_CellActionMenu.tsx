@@ -12,17 +12,20 @@ import {
 import { openEditingCell } from '@/components/ui/shadcn-table/shared/utils/cell.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_CellActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_CellActionMenu = <TData extends ST_RowData>({
   className,
-  table,
+  table: tableProp,
   ...rest
 }: ST_CellActionMenuProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       editDisplayMode,

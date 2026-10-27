@@ -13,6 +13,7 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_RowActionMenu';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // height: '2rem', width: '2rem', opacity: 0.5, '&:hover': { opacity: 1 }, transition: 'opacity 150ms'
 // Note: size/opacity overrides dropped per the buttons sweep ruling.
@@ -23,16 +24,18 @@ export interface ST_ToggleRowActionMenuButtonProps<TData extends ST_RowData>
   cell: ST_Cell<TData>;
   row: ST_Row<TData>;
   staticRowIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   cell,
   row,
   staticRowIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ToggleRowActionMenuButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       createDisplayMode,

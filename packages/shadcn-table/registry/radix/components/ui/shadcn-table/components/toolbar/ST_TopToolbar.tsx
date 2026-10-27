@@ -12,6 +12,7 @@ import { ST_ToolbarDropZone } from '@/components/ui/shadcn-table/components/tool
 import { ST_ToolbarInternalButtons } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons';
 import { useST_MediaQuery } from '@/components/ui/shadcn-table/components/toolbar/useST_MediaQuery';
 import { ST_GlobalFilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_GlobalFilterTextField';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const topToolbarVariants = cva(
   // Note: maps MRT getCommonToolbarStyles
@@ -27,12 +28,14 @@ const topToolbarVariants = cva(
 );
 
 export interface ST_TopToolbarProps<TData extends ST_RowData> {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TopToolbar = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
 }: ST_TopToolbarProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableGlobalFilter,

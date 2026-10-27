@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const expandAllButtonVariants = cva('', {
   variants: {
@@ -25,13 +26,15 @@ const expandAllButtonVariants = cva('', {
 
 export interface ST_ExpandAllButtonProps<TData extends ST_RowData>
   extends ButtonProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ExpandAllButton = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_ExpandAllButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getCanSomeRowsExpand,
     getIsAllRowsExpanded,

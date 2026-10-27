@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const filterCheckboxVariants = cva('', {
   variants: {
@@ -34,14 +35,16 @@ const filterCheckboxVariants = cva('', {
 export interface ST_FilterCheckboxProps<TData extends ST_RowData>
   extends CheckboxProps {
   column: ST_Column<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_FilterCheckbox = <TData extends ST_RowData>({
   column,
-  table,
+  table: tableProp,
   ...rest
 }: ST_FilterCheckboxProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { localization, stFilterCheckboxProps },
   } = table;

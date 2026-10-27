@@ -7,11 +7,12 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadCellSortLabelProps<TData extends ST_RowData>
   extends ButtonProps {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableHeadCellSortLabelVariants = cva(
@@ -32,9 +33,11 @@ const tableHeadCellSortLabelVariants = cva(
 
 export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
   header,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableHeadCellSortLabelProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { ArrowDownwardIcon, SyncAltIcon },

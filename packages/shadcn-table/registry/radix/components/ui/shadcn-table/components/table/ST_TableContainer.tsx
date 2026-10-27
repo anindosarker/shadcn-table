@@ -11,13 +11,14 @@ import { ST_Table } from '@/components/ui/shadcn-table/components/table/ST_Table
 import { ST_TableLoadingOverlay } from '@/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay';
 import { ST_CellActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_CellActionMenu';
 import { ST_EditRowModal } from '@/components/ui/shadcn-table/components/modals/ST_EditRowModal';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export interface ST_TableContainerProps<TData extends ST_RowData>
   extends DivProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 // Thin, always-visible scrollbars so the horizontal bar is not hidden by
@@ -29,9 +30,11 @@ const tableContainerVariants = cva(
 );
 
 export const ST_TableContainer = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableContainerProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       createDisplayMode,

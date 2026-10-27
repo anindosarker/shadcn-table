@@ -15,6 +15,7 @@ import { getIsRowSelected } from '@/components/ui/shadcn-table/shared/utils/row.
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableBodyCell } from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
 import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/components/body/ST_TableDetailPanel';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyRowProps<TData extends ST_RowData>
   extends TableRowProps {
@@ -26,7 +27,7 @@ export interface ST_TableBodyRowProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   rowVirtualizer?: ST_RowVirtualizer;
   staticRowIndex: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
   virtualRow?: ST_VirtualItem;
 }
 
@@ -57,10 +58,12 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
-  table,
+  table: tableProp,
   virtualRow,
   ...rest
 }: ST_TableBodyRowProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   // const theme = useTheme();
   // Note: MUI useTheme dropped project-wide — shadcn CSS vars handle theming.
 

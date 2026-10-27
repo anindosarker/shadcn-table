@@ -6,11 +6,12 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableHeadCellResizeHandleProps<TData extends ST_RowData>
   extends React.ComponentProps<typeof Separator> {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const resizeHandleVariants = cva(
@@ -48,9 +49,11 @@ const resizeHandleVariants = cva(
 
 export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
   header,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableHeadCellResizeHandleProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { columnResizeDirection, columnResizeMode },
     setColumnResizing,

@@ -1,4 +1,5 @@
 import { type KeyboardEvent } from 'react';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 // import { useTheme } from '@mui/material/styles';
 // Note: useTheme dropped. align->text-start (logical, rtl-safe).
 import { cva } from 'class-variance-authority';
@@ -17,7 +18,7 @@ export interface ST_TableFooterCellProps<TData extends ST_RowData>
   extends TableCellProps {
   footer: ST_Header<TData>;
   staticColumnIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const footerCellVariants = cva(
@@ -27,9 +28,11 @@ const footerCellVariants = cva(
 export const ST_TableFooterCell = <TData extends ST_RowData>({
   footer,
   staticColumnIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableFooterCellProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   // const theme = useTheme();
   const {
     options: {

@@ -10,19 +10,22 @@ import { ST_ToggleDensePaddingButton } from '@/components/ui/shadcn-table/compon
 import { ST_ToggleFiltersButton } from '@/components/ui/shadcn-table/components/buttons/ST_ToggleFiltersButton';
 import { ST_ToggleFullScreenButton } from '@/components/ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton';
 import { ST_ToggleGlobalFilterButton } from '@/components/ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ToolbarInternalButtonsProps<TData extends ST_RowData>
   extends DivProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 // Note: base maps MRT's sx (alignItems: 'center', display: 'flex', zIndex: 3).
 const toolbarInternalButtonsVariants = cva('z-[3] flex items-center');
 
 export const ST_ToolbarInternalButtons = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_ToolbarInternalButtonsProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       columnFilterDisplayMode,

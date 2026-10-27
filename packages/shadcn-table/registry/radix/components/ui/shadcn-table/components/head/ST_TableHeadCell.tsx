@@ -1,4 +1,5 @@
 import { type DragEvent, type KeyboardEvent, useMemo } from 'react';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 // import { useTheme } from '@mui/material/styles';
 // import { type Theme } from '@mui/material/styles';
 // Note: useTheme dropped — align->text-start, grey[500]->muted-foreground.
@@ -26,7 +27,7 @@ export interface ST_TableHeadCellProps<TData extends ST_RowData>
   columnVirtualizer?: ST_ColumnVirtualizer;
   header: ST_Header<TData>;
   staticColumnIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const headCellVariants = cva(
@@ -37,9 +38,11 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   columnVirtualizer,
   header,
   staticColumnIndex,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableHeadCellProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   // const theme = useTheme();
   const {
     options: {

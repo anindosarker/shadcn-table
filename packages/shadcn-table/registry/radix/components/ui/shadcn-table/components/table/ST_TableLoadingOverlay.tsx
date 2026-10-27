@@ -7,10 +7,11 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableLoadingOverlayProps<TData extends ST_RowData>
   extends ST_CircularProgressProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableLoadingOverlayVariants = cva(
@@ -18,9 +19,11 @@ const tableLoadingOverlayVariants = cva(
 );
 
 export const ST_TableLoadingOverlay = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableLoadingOverlayProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       id,

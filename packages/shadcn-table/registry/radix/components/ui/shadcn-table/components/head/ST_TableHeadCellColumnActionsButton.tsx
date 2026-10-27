@@ -11,6 +11,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_ColumnActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Note: base maps MRT's sx (m -8px -4px, opacity .3, hover opacity 1, transition all 150ms); 2rem box is icon-sm.
 const columnActionsButtonVariants = cva(
@@ -21,14 +22,16 @@ export interface ST_TableHeadCellColumnActionsButtonProps<
   TData extends ST_RowData,
 > extends ButtonProps {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
   header,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableHeadCellColumnActionsButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { MoreVertIcon },

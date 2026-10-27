@@ -11,6 +11,7 @@ import {
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -18,7 +19,7 @@ export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   row: ST_Row<TData>;
   rowVirtualizer?: ST_RowVirtualizer;
   staticRowIndex: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
   virtualRow?: ST_VirtualItem;
 }
 
@@ -45,10 +46,12 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
-  table,
+  table: tableProp,
   virtualRow,
   ...rest
 }: ST_TableDetailPanelProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getVisibleLeafColumns,
     options: {

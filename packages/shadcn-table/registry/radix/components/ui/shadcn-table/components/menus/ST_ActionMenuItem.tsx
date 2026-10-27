@@ -7,6 +7,7 @@ import {
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // min-w-[120px] py-1.5
 // Note: DropdownMenuItem defaults govern padding; Content governs width.
@@ -20,7 +21,7 @@ export interface ST_ActionMenuItemProps<TData extends ST_RowData>
   onOpenSubMenu?:
     | ComponentPropsWithRef<typeof DropdownMenuItem>['onClick']
     | ComponentPropsWithRef<typeof DropdownMenuItem>['onMouseEnter'];
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ActionMenuItem = <TData extends ST_RowData>({
@@ -29,9 +30,11 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
   icon,
   label,
   onOpenSubMenu,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ActionMenuItemProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { ArrowRightIcon },

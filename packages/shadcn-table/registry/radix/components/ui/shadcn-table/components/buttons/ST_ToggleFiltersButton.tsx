@@ -5,16 +5,19 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ToggleFiltersButtonProps<TData extends ST_RowData>
   extends ButtonProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ToggleFiltersButton = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_ToggleFiltersButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { FilterListIcon, FilterListOffIcon },

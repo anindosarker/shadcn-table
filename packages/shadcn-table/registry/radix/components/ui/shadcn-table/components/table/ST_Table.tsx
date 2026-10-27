@@ -15,9 +15,10 @@ import {
 } from '@/components/ui/shadcn-table/components/body/ST_TableBody';
 import { ST_TableFooter } from '@/components/ui/shadcn-table/components/footer/ST_TableFooter';
 import { ST_TableHead } from '@/components/ui/shadcn-table/components/head/ST_TableHead';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableProps<TData extends ST_RowData> extends TableProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableVariants = cva(
@@ -31,9 +32,11 @@ const tableVariants = cva(
 );
 
 export const ST_Table = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getFlatHeaders,
     options: {

@@ -8,11 +8,12 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_TableFooterRow } from '@/components/ui/shadcn-table/components/footer/ST_TableFooterRow';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableFooterProps<TData extends ST_RowData>
   extends TableFooterProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tableFooterVariants = cva('', {
@@ -27,9 +28,11 @@ const tableFooterVariants = cva('', {
 
 export const ST_TableFooter = <TData extends ST_RowData>({
   columnVirtualizer,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableFooterProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { enableStickyFooter, layoutMode, stTableFooterProps },
     refs: { tableFooterRef },

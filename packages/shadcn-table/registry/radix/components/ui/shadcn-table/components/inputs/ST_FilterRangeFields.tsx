@@ -7,11 +7,12 @@ import {
   type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_FilterTextField';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_FilterRangeFieldsProps<TData extends ST_RowData>
   extends DivProps {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 // Note: MRT's sx is display: 'grid', gap: '1rem', gridTemplateColumns: '1fr 1fr'; the gap is tighter and each track keeps its input's min width so a narrow column grows to fit Min and Max side by side instead of overlapping them.
@@ -21,9 +22,11 @@ const filterRangeFieldsVariants = cva(
 
 export const ST_FilterRangeFields = <TData extends ST_RowData>({
   header,
-  table,
+  table: tableProp,
   ...rest
 }: ST_FilterRangeFieldsProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   return (
     <div
       {...rest}

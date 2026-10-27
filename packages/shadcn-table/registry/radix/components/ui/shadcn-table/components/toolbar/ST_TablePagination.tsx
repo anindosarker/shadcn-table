@@ -34,6 +34,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { useST_MediaQuery } from '@/components/ui/shadcn-table/components/toolbar/useST_MediaQuery';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
 
@@ -46,7 +47,7 @@ export interface ST_TablePaginationProps<TData extends ST_RowData>
     }
   > {
   position?: 'bottom' | 'top';
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const tablePaginationVariants = cva(
@@ -55,9 +56,11 @@ const tablePaginationVariants = cva(
 
 export const ST_TablePagination = <TData extends ST_RowData>({
   position = 'bottom',
-  table,
+  table: tableProp,
   ...rest
 }: ST_TablePaginationProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   // const theme = useTheme();
   // Note: rtl via `rtl:rotate-180` class.
   const isMobile = useST_MediaQuery('(max-width:720px)');

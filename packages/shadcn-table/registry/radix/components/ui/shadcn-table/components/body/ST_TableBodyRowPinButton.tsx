@@ -7,11 +7,12 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_RowPinButton } from '@/components/ui/shadcn-table/components/buttons/ST_RowPinButton';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyRowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 const rowPinWrapperVariants = cva('flex', {
@@ -25,9 +26,11 @@ const rowPinWrapperVariants = cva('flex', {
 
 export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   row,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { enableRowPinning, rowPinningDisplayMode },
   } = table;

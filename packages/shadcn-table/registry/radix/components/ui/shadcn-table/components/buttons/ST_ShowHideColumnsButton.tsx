@@ -7,16 +7,19 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_ShowHideColumnsMenu } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ShowHideColumnsButtonProps<TData extends ST_RowData>
   extends ButtonProps {
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ShowHideColumnsButton = <TData extends ST_RowData>({
-  table,
+  table: tableProp,
   ...rest
 }: ST_ShowHideColumnsButtonProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       icons: { ViewColumnIcon },

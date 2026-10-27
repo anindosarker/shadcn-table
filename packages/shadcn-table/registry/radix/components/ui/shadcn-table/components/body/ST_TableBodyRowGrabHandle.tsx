@@ -7,20 +7,23 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_TableBodyRowGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
   row: ST_Row<TData>;
   rowRef: RefObject<HTMLTableRowElement | null>;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   row,
   rowRef,
-  table,
+  table: tableProp,
   ...rest
 }: ST_TableBodyRowGrabHandleProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: { stRowDragHandleProps },
   } = table;

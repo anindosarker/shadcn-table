@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import highlightWords from 'highlight-words';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const allowedTypes = ['string', 'number'];
 
@@ -14,7 +15,7 @@ export interface ST_TableBodyCellValueProps<TData extends ST_RowData> {
   rowRef?: RefObject<HTMLTableRowElement | null>;
   staticColumnIndex?: number;
   staticRowIndex?: number;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_TableBodyCellValue = <TData extends ST_RowData>({
@@ -22,8 +23,10 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   rowRef,
   staticColumnIndex,
   staticRowIndex,
-  table,
+  table: tableProp,
 }: ST_TableBodyCellValueProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     options: {
       enableFilterMatchHighlighting,

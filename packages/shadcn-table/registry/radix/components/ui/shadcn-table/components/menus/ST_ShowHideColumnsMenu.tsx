@@ -14,22 +14,25 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ShowHideColumnsMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  table: ST_TableInstance<TData>;
+  table?: ST_TableInstance<TData>;
 }
 
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
   anchorEl,
   setAnchorEl,
-  table,
+  table: tableProp,
   ...rest
 }: ST_ShowHideColumnsMenuProps<TData>) => {
+  const context = useSTContext<TData>();
+  const table = tableProp ?? context;
   const {
     getAllColumns,
     getAllLeafColumns,
