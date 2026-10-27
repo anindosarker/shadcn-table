@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -36,8 +36,6 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
     refs: { bottomToolbarRef, tableContainerRef, topToolbarRef },
   } = table;
 
-  const [totalToolbarHeight, setTotalToolbarHeight] = useState(0);
-
   const tableContainerProps = {
     ...parseFromValuesOrFunc(stTableContainerProps, {
       table,
@@ -45,31 +43,48 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
     ...rest,
   };
 
+  const toolbarObserverRef = useRef<{
+    observer: ResizeObserver;
+    toolbars: (HTMLDivElement | null)[];
+  } | null>(null);
+
   // The toolbars change height on state this container does not render (an
   // alert banner on selection), so their size is observed, not only measured
-  // after this container renders.
+  // after this container renders. The height is written to a CSS variable on
+  // the container node, not to React state, so a toolbar resize does not
+  // re-render the container and the table inside it.
   useIsomorphicLayoutEffect(() => {
     const measureToolbars = () => {
-      const topToolbarHeight =
-        typeof document !== 'undefined'
-          ? (topToolbarRef.current?.offsetHeight ?? 0)
-          : 0;
-
-      const bottomToolbarHeight =
-        typeof document !== 'undefined'
-          ? (bottomToolbarRef?.current?.offsetHeight ?? 0)
-          : 0;
-
-      setTotalToolbarHeight(topToolbarHeight + bottomToolbarHeight);
+      const topToolbarHeight = topToolbarRef.current?.offsetHeight ?? 0;
+      const bottomToolbarHeight = bottomToolbarRef?.current?.offsetHeight ?? 0;
+      tableContainerRef.current?.style.setProperty(
+        '--st-toolbar-height',
+        `${topToolbarHeight + bottomToolbarHeight}px`,
+      );
     };
     measureToolbars();
     if (typeof ResizeObserver === 'undefined') return;
-    const resizeObserver = new ResizeObserver(measureToolbars);
-    [topToolbarRef.current, bottomToolbarRef.current].forEach(
-      (toolbar) => toolbar && resizeObserver.observe(toolbar),
-    );
-    return () => resizeObserver.disconnect();
+    const toolbars = [topToolbarRef.current, bottomToolbarRef.current];
+    const current = toolbarObserverRef.current;
+    if (
+      current &&
+      current.toolbars.every((toolbar, i) => toolbar === toolbars[i])
+    ) {
+      return;
+    }
+    current?.observer.disconnect();
+    const observer = new ResizeObserver(measureToolbars);
+    toolbars.forEach((toolbar) => toolbar && observer.observe(toolbar));
+    toolbarObserverRef.current = { observer, toolbars };
   });
+
+  useEffect(
+    () => () => {
+      toolbarObserverRef.current?.observer.disconnect();
+      toolbarObserverRef.current = null;
+    },
+    [],
+  );
 
   // Created outside the state subscription, so a loading or editing change
   // re-renders only the container element.
@@ -117,9 +132,9 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
             }}
             style={{
               maxHeight: isFullScreen
-                ? `calc(100vh - ${totalToolbarHeight}px)`
+                ? 'calc(100vh - var(--st-toolbar-height, 0px))'
                 : enableStickyHeader
-                  ? `clamp(350px, calc(100vh - ${totalToolbarHeight}px), 9999px)`
+                  ? 'clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px)'
                   : undefined,
               ...tableContainerProps?.style,
             }}
