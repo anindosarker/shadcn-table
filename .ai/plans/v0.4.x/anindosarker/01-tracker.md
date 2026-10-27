@@ -32,11 +32,12 @@ TanStack reference: `React-table/tanstack-table` at `c14e0221b`. Installed `@tan
 - `pnpm storybook:build:base` fails since the folder move in 42d83ad (stories import radix-only `components/` and `shared/` paths); part 02.
 - Em dashes already in comments of touched component files left as found; none added.
 - `pnpm format` rewrites `apps/shadcn-table-docs/lib/utils.ts` every run (pre-existing); reverted before each commit, never committed.
+- `ST_FilterOptionMenu.handleSelectFilterMode`: the four `perform new filter render` branches emit `column.table.options.onColumnFiltersChange((old) => [...old])` instead of `column.setFilterValue(currentFilterValue)`; v9 `setStateSlice` drops a structurally equal update, so the filtered row model stayed on the previous mode's function. Handler read off the core table because the ST instance's `options` are the raw caller options. The global filter mode switch (`setGlobalFilterFn`) is not covered and may have the same staleness.
 - Verify story `stories/features/FnRegistries.stories.tsx` imports `useSTContext` from `hooks/stTableHook` because no public reader exists until phase 03 drops the `table` prop; part 03 consolidates the story.
 
 ### Verify list (decisions item 3)
 
-Browser: radix Storybook, Playwright against `iframe.html`, DOM text and console assertions. Story ids under `features-fn-registries--`.
+Browser: radix Storybook, Playwright against `iframe.html`, DOM text and console assertions. Story ids under `features-fn-registries--`. Re-run on `4b02bb7`: 10 of 10 browser checks pass; gates `tsc:radix`, stories tsc, `lint`, `test` (55 files, 403 tests), `storybook:build`, `check-storybook` (14 of 14 against a static server on 5362, base manager output from the failing `storybook:build:base`), `registry:build` green. `grep "table\.state" components` has 44 hits; that gate belongs to phase 03 (decision 5).
 
 - [x] Column `filterFn: 'customFilterFn'` from the call's `filterFns` filters rows: `custom-column-filter-fn`, rows `["Mason"]`.
 - [x] `globalFilterFn: 'customFilterFn'` filters rows: `custom-global-filter-fn`, rows `["Jackson","Lily","Mason","Tom"]`.
@@ -46,7 +47,7 @@ Browser: radix Storybook, Playwright against `iframe.html`, DOM text and console
 - [x] Two tables with different `filterFns` do not see each other's names: `two-tables-different-registries`, table A `["Mason"]`, table B `["Brooke"]`, console `filterFn 'tableAFilterFn' for column 'firstName' is not registered`.
 - [x] Unknown name logs core's dev warning, filters nothing, no throw: `unknown-filter-fn-name`, 6 rows, console `filterFn 'doesNotExist' for column 'firstName' is not registered`, no page error.
 - [x] Filter-mode switch via the column action menu changes the applied function on the next value change: `features-filtering-examples--filtering-change-mode-enabled`, fuzzy `egane` shows `Megane`, Starts With hides it, Contains shows it; label `Filter Mode: Starts With` / `Filter Mode: Contains`.
-- [ ] Filter-mode switch re-filters an unchanged value: same story, value typed first, then Starts With, row `Megane` stays until the value is retyped. Same on claude/review `3aa3257` (checked in a throwaway worktree), so pre-existing, not phase 01; `ST_FilterOptionMenu.handleSelectFilterMode` calls `column.setFilterValue(currentFilterValue)` and the row model does not recompute.
+- [x] Filter-mode switch re-filters an unchanged value: same story, value `ils` typed under fuzzy (row `Nils` shown), Starts With via the column action menu hides it with the value untouched, Contains shows it again; label `Filter Mode: Starts With` / `Filter Mode: Contains`, no page error. Fixed in `4b02bb7`.
 - [x] No `@ts-expect-error` on the `useAppTable` call; `pnpm tsc:radix` clean. `tsc:baseui` is part 02. Remaining `as any` and `@ts-expect-error` hits under `hooks/` are the virtualizer ones already on claude/review (`useST_RowVirtualizer.ts:79,82`, `useST_ColumnVirtualizer.ts:93,118,122`).
 - [x] `useSTContext()` inside a component rendered by `<ShadcnTable>` and beside it under `ST_TableProvider` returns its own table with two mounted: `provider-with-two-tables`, readers `first:2`, `first:2`, `second:4`, `second:4`.
 - [x] No remount of `AppTable` across re-renders: `controlled-input-in-custom-toolbar`, typing `focus kept` keeps `document.activeElement` on the input, echo `focus kept`.
