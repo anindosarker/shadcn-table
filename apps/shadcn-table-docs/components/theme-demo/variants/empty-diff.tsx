@@ -496,12 +496,6 @@ function SiteApp({ site }: { site: (typeof SITES)[DemoThemeId] }) {
           </Button>
         </div>
       </div>
-      <div>
-        <h3 className="text-lg font-semibold tracking-tight">Members</h3>
-        <p className="text-sm text-muted-foreground">
-          Everyone with access to {site.domain}.
-        </p>
-      </div>
       <ThemeTable />
     </>
   );
@@ -622,9 +616,9 @@ export function EmptyDiff() {
             )}
           />
           <span>
-            <span className="text-(--dh-ink)">{site.domain}</span>: globals.css
-            changed <PerMode light={light.changed} dark={dark.changed} />{' '}
-            tokens, data-table.tsx changed none.
+            <span className="text-(--dh-ink)">{site.domain}</span> · globals.css
+            +<PerMode light={light.changed} dark={dark.changed} /> ·
+            data-table.tsx 0
           </span>
         </p>
         <div className="flex gap-1.5">

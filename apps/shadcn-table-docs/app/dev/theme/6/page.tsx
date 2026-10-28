@@ -15,14 +15,14 @@ export default function Page() {
       <Nav />
       <main className="flex w-full flex-col gap-8 py-12 sm:py-16">
         <header className="v4-shell flex flex-col gap-3">
-          <p className="v12-label">Theming</p>
+          <p className="v7-eyebrow v12-eyebrow">
+            <span>{'//'}</span> theming
+          </p>
           <h1 className="text-3xl font-semibold tracking-tight text-balance text-(--dh-ink) sm:text-4xl">
-            Change your theme. Not your table.
+            Your theme. Zero changes.
           </h1>
           <p className="max-w-2xl text-base text-pretty text-(--dh-ink-muted)">
-            Whatever shadcn/ui theme your app already has, the table follows it.
-            Five sites, five globals.css files, and the same data-table.tsx on
-            every one.
+            Any shadcn/ui theme. The table follows.
           </p>
         </header>
         {/* wider than the shell: the full table fits beside the editor */}
