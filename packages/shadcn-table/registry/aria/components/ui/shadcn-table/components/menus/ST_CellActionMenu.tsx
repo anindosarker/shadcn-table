@@ -1,8 +1,8 @@
 import { type ComponentPropsWithRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -15,9 +15,7 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-export type ST_CellActionMenuProps = ComponentPropsWithRef<
-  typeof DropdownMenuContent
->;
+export type ST_CellActionMenuProps = ComponentPropsWithRef<typeof DropdownMenu>;
 
 export const ST_CellActionMenu = <TData extends ST_RowData>({
   className,
@@ -94,20 +92,22 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
           columnDef.renderCellActionMenuItems?.(renderActionProps) ??
           renderCellActionMenuItems?.(renderActionProps);
 
-        const anchorEl = actionCellRef.current;
-        const rect = anchorEl?.getBoundingClientRect();
+        const rect = actionCellRef.current?.getBoundingClientRect();
 
         return (
           (!!menuItems?.length || !!internalMenuItems?.length) && (
-            <DropdownMenu
-              open={!!cell}
+            <DropdownMenuTrigger
+              isOpen={!!cell}
               onOpenChange={(open) => {
                 if (!open) handleClose();
               }}
             >
-              <DropdownMenuTrigger asChild>
+              {/* MenuTrigger positions the menu against its pressable child. */}
+              <Pressable>
                 <span
                   aria-hidden
+                  role="button"
+                  tabIndex={-1}
                   style={{
                     position: 'fixed',
                     left: rect?.left ?? 0,
@@ -117,33 +117,19 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
                     pointerEvents: 'none',
                   }}
                 />
-              </DropdownMenuTrigger>
-              {/* align, alignOffset and sideOffset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
-              <DropdownMenuContent
-                align="start"
-                alignOffset={100}
-                sideOffset={-((rect?.height ?? 0) + 8)}
+              </Pressable>
+              {/* placement, crossOffset and offset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
+              <DropdownMenu
+                placement="bottom start"
+                crossOffset={100}
+                offset={-((rect?.height ?? 0) + 8)}
                 onClick={(event) => event.stopPropagation()}
-                // The menu opens on contextmenu, which Chrome on macOS fires on
-                // mousedown, so the right button's pointerup lands on the menu item
-                // that is now under the cursor. Radix MenuItem selects on a pointerup
-                // without a prior pointerdown on it, closing the menu (and running
-                // the item) before the user lets go. Swallow right-button pointerups
-                // in the capture phase; Escape, outside click and left click still
-                // work.
-                onPointerUpCapture={(event) => {
-                  if (event.button === 2) event.stopPropagation();
-                }}
-                onCloseAutoFocus={(event) => {
-                  event.preventDefault();
-                  if (!table.atoms.editingCell.get()) anchorEl?.focus();
-                }}
                 className={cn('w-max', className)}
                 {...rest}
               >
                 {menuItems ?? internalMenuItems}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </DropdownMenu>
+            </DropdownMenuTrigger>
           )
         );
       }}
