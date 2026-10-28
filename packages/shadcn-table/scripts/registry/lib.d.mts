@@ -56,8 +56,16 @@ export interface BaseItemsOptions {
 export function baseItems(base: BaseItemsOptions): RegistryItem[];
 
 /**
+ * The GitHub shorthand aliases: every DEFAULT_EDITION item under its plain
+ * name, same files and dependencies, a description naming the alias.
+ */
+export function aliasItems<T extends { name: string; description?: string }>(
+  items: T[],
+): T[];
+
+/**
  * One edition's main item and locale items in a catalog built from the
- * committed registry.json.
+ * committed registry.json, aliases skipped.
  */
 export function editionItems(
   catalog: { items: RegistryItem[] },
@@ -66,7 +74,7 @@ export function editionItems(
 
 /**
  * One edition's example items in the docs catalog (examples.mjs), each under
- * its hosted name, the plain `example-<slug>`.
+ * its hosted name, the plain `example-<slug>`; aliases skipped.
  */
 export function editionExampleItems(
   catalog: { items: RegistryItem[] },
