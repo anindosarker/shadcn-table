@@ -13,8 +13,8 @@
  *   example's component), else the slug in Title Case
  * - registryDependencies: the shadcn parts the example imports from
  *   `@/components/ui/<part>` (library paths excluded). No dependency on the
- *   library item: the example works on the Radix item and on the Base UI
- *   item alike, so the docs say to install the table first.
+ *   library item: the example works on every edition's item alike, so the
+ *   docs say to install the table first.
  * - dependencies: third-party packages imported by the example files, other
  *   than react, react-dom and lucide-react (already library dependencies)
  * - files: targets under `@components/examples/<slug>/`, keeping the folder
@@ -172,7 +172,7 @@ async function buildItem(slug, pages) {
 async function main() {
   const pages = await loadExamplePages(PAGES_DIR);
   const slugs = (await fs.readdir(EXAMPLES_DIR, { withFileTypes: true }))
-    // Skip generated dot-directories (examples/.radix and .base hold the per-base variants).
+    // Skip generated dot-directories (examples/.<edition> hold the per-edition variants).
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
     .map((entry) => entry.name)
     .sort();
