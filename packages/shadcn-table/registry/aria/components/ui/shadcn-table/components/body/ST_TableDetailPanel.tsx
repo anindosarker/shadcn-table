@@ -11,6 +11,7 @@ import {
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -143,10 +144,14 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                // React Aria keeps a collapsed panel's children mounted; the
-                // panel renders them only while expanded, as Radix does.
+                // React Aria sets --disclosure-panel-height, which the
+                // st-collapsible-* keyframes read, and keeps a collapsed
+                // panel's children mounted.
                 <Collapsible isExpanded={row.getIsExpanded()}>
-                  <CollapsibleContent className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out">
+                  <style href="st-collapsible" precedence="low">
+                    {stCollapsibleKeyframes}
+                  </style>
+                  <CollapsibleContent className="overflow-hidden aria-[hidden=false]:animate-[st-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-collapsible-up_200ms_ease-out]">
                     {row.getIsExpanded() && DetailPanel}
                   </CollapsibleContent>
                 </Collapsible>

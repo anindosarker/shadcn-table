@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export interface ST_LinearProgressBarProps extends ST_LinearProgressProps {
   isTopToolbar: boolean;
@@ -94,8 +95,11 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
             <style href="st-linear-progress" precedence="low">
               {linearProgressKeyframes}
             </style>
+            <style href="st-collapsible" precedence="low">
+              {stCollapsibleKeyframes}
+            </style>
             {/* React Aria keeps a collapsed panel's children mounted. */}
-            <CollapsibleContent className="h-(--disclosure-panel-height) transition-[height] duration-200 ease-out">
+            <CollapsibleContent className="aria-[hidden=false]:animate-[st-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-collapsible-up_200ms_ease-out]">
               {isExpanded && (
                 <Progress
                   aria-busy="true"
