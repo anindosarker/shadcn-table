@@ -11,4 +11,4 @@
 ## Release impact
 
 - [ ] One `release:` label is set: `release:patch`, `release:minor`, `release:major`, or `release:skip` for a change that ships nothing (CI, plans, tooling).
-- [ ] For `release:patch`, `release:minor` or `release:major`: `CHANGELOG.md` has this change's line under `## Unreleased`, below `### Breaking`, `### Added`, `### Changed`, `### Fixed` or `### Docs`.
+- [ ] For `release:patch`, `release:minor` or `release:major`: `CHANGELOG.md` has this change's line under `## Unreleased`, below `### Breaking`, `### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`.

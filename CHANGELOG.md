@@ -3,9 +3,22 @@
 All notable changes to shadcn-table are recorded here, newest first, in the
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. Entries are
 written while the work happens, under `## Unreleased`, below `### Breaking`,
-`### Added`, `### Changed`, `### Fixed` or `### Docs`. The version pull request
+`### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`. The version pull request
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
+
+## Unreleased
+
+### Changed
+
+- Release flow: `.github/workflows/pr.yml` replaces `ci.yml` and adds a `release impact` job
+  that asks every pull request for one `release:` label (`release:patch`, `release:minor`,
+  `release:major`, `release:skip`); the `registry` and `install` jobs now run on every pull
+  request. `.github/workflows/release.yml` computes the next version from that label or the
+  `## Unreleased` headings (`scripts/release/next-version.mjs`), opens or updates the
+  `chore: version <v>` pull request from `release/next`, and on its merge tags, smokes,
+  installs, publishes the GitHub release and comments on the shipped pull requests.
+  `scripts/release.mjs` and the root `release` script are gone.
 
 ## 0.5.0 - 2026-10-28
 
