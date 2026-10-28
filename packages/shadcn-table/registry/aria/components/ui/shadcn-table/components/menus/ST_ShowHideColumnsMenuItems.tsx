@@ -3,11 +3,11 @@ import {
   type Dispatch,
   type DragEvent,
   type SetStateAction,
-  useRef,
   useState,
 } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
+import { composeRenderProps } from 'react-aria-components';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -69,14 +69,17 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     }
   };
 
-  const menuItemRef = useRef<HTMLDivElement>(null);
-
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragStart = (e: DragEvent<HTMLButtonElement>) => {
     setIsDragging(true);
     try {
-      e.dataTransfer.setDragImage(menuItemRef.current as HTMLElement, 0, 0);
+      // The part's MenuItem takes no ref, so the drag image is found from the handle.
+      e.dataTransfer.setDragImage(
+        e.currentTarget.closest('[role="menuitem"]') as HTMLElement,
+        0,
+        0,
+      );
     } catch (e) {
       console.error(e);
     }
@@ -112,9 +115,15 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   return (
     <>
       <DropdownMenuItem
-        onDragEnter={handleDragEnter}
-        onSelect={(event) => event.preventDefault()}
-        ref={menuItemRef}
+        // MenuItem passes no drag handlers through, so its element takes them.
+        render={(props) =>
+          'href' in props ? (
+            <a {...props} />
+          ) : (
+            <div {...props} onDragEnter={handleDragEnter} />
+          )
+        }
+        shouldCloseOnSelect={false}
         {...rest}
         className={cn(
           showHideColumnsMenuItemVariants(),
@@ -125,10 +134,10 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             'outline-2 outline-dashed outline-primary',
           className,
         )}
-        style={{
+        style={composeRenderProps(style, (style) => ({
           paddingLeft: `${(column.depth + 0.5) * 2}rem`,
           ...style,
-        }}
+        }))}
       >
         <div className="flex flex-nowrap gap-2">
           {columnDefType !== 'group' &&
@@ -155,9 +164,9 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
                   <Subscribe source={table.atoms.columnVisibility}>
                     {() => (
                       <Switch
-                        checked={column.getIsVisible()}
-                        disabled={!column.getCanHide()}
-                        onCheckedChange={() => handleToggleColumnHidden(column)}
+                        isSelected={column.getIsVisible()}
+                        isDisabled={!column.getCanHide()}
+                        onChange={() => handleToggleColumnHidden(column)}
                       />
                     )}
                   </Subscribe>

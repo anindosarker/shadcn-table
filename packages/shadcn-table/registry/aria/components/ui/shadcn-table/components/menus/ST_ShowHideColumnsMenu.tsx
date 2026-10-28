@@ -1,10 +1,10 @@
 import { type ComponentPropsWithRef, useMemo, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
+import { Header, Pressable } from 'react-aria-components';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -19,7 +19,7 @@ import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/compon
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_ShowHideColumnsMenuProps
-  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
+  extends ComponentPropsWithRef<typeof DropdownMenu> {
   anchorEl: HTMLElement | null;
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
@@ -105,15 +105,18 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
+    <DropdownMenuTrigger
+      isOpen={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
+      {/* MenuTrigger positions the menu against its pressable child. */}
+      <Pressable>
         <span
           aria-hidden
+          role="button"
+          tabIndex={-1}
           style={{
             position: 'fixed',
             left: rect?.left ?? 0,
@@ -123,23 +126,20 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="start"
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          anchorEl?.focus();
-        }}
+      </Pressable>
+      <DropdownMenu
+        placement="bottom start"
         className={cn('w-max', className)}
         {...rest}
       >
         <Subscribe source={table.atoms.columnVisibility}>
           {() => (
-            <div className="flex justify-between p-2 pt-0">
+            // A Menu renders only collection nodes; Header carries the buttons.
+            <Header className="flex justify-between p-2 pt-0">
               {enableHiding && (
                 <Button
                   variant="ghost"
-                  disabled={!getIsSomeColumnsVisible()}
+                  isDisabled={!getIsSomeColumnsVisible()}
                   onClick={() => handleToggleAllColumns(false)}
                 >
                   {localization.hideAll}
@@ -159,7 +159,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
                       ),
                     )
                   }
-                  disabled={!hasColumnOrderChanged}
+                  isDisabled={!hasColumnOrderChanged}
                 >
                   {localization.resetOrder}
                 </Button>
@@ -167,7 +167,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
               {enableColumnPinning && (
                 <Button
                   variant="ghost"
-                  disabled={!getIsSomeColumnsPinned()}
+                  isDisabled={!getIsSomeColumnsPinned()}
                   onClick={() => table.resetColumnPinning(true)}
                 >
                   {localization.unpinAll}
@@ -176,13 +176,13 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
               {enableHiding && (
                 <Button
                   variant="ghost"
-                  disabled={getIsAllColumnsVisible()}
+                  isDisabled={getIsAllColumnsVisible()}
                   onClick={() => handleToggleAllColumns(true)}
                 >
                   {localization.showAll}
                 </Button>
               )}
-            </div>
+            </Header>
           )}
         </Subscribe>
         <DropdownMenuSeparator />
@@ -196,7 +196,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
             setHoveredColumn={setHoveredColumn}
           />
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </DropdownMenu>
+    </DropdownMenuTrigger>
   );
 };
