@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="apps/shadcn-table-docs/app/icon.svg" alt="shadcn-table logo" width="72" height="72" />
+
 # shadcn-table
 
 A full-featured React data table built on TanStack Table v9, installed into your codebase through the shadcn CLI.
