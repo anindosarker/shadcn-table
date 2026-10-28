@@ -8,12 +8,10 @@ import {
 } from '@tanstack/react-table';
 import { type VirtualizerOptions } from '@tanstack/react-virtual';
 import {
-  type ButtonProps,
   type DivProps,
   type DropdownOption,
   type InputProps,
   type LiteralUnion,
-  type SelectProps,
   type ST_AggregationFn,
   type ST_Cell,
   type ST_CircularProgressProps,
@@ -143,22 +141,22 @@ export interface ST_TableOptions_Config<
     | ((props: {
         column: ST_Column<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stColumnDragHandleProps?:
     | ((props: {
         column: ST_Column<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stCopyButtonProps?:
     | ((props: {
         cell: ST_Cell<TData>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stCreateRowModalProps?:
     | ((props: {
         row: ST_Row<TData>;
@@ -186,15 +184,15 @@ export interface ST_TableOptions_Config<
       }) => InputProps & { error?: boolean; helperText?: ReactNode })
     | (InputProps & { error?: boolean; helperText?: ReactNode });
   stExpandAllButtonProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => ButtonProps)
-    | ButtonProps;
+    | ((props: { table: ST_TableInstance<TData> }) => TParts['button'])
+    | TParts['button'];
   stExpandButtonProps?:
     | ((props: {
         row: ST_Row<TData>;
         staticRowIndex?: number;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stFilterAutocompleteProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -250,7 +248,7 @@ export interface ST_TableOptions_Config<
   stPaginationProps?:
     | ((props: { table: ST_TableInstance<TData> }) => Partial<
         ST_PaginationProps & {
-          SelectProps?: Partial<SelectProps>;
+          SelectProps?: Partial<TParts['select']>;
           disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
@@ -258,7 +256,7 @@ export interface ST_TableOptions_Config<
       >)
     | Partial<
         ST_PaginationProps & {
-          SelectProps?: Partial<SelectProps>;
+          SelectProps?: Partial<TParts['select']>;
           disabled?: boolean;
           rowsPerPageOptions?: { label: string; value: number }[] | number[];
           showRowsPerPage?: boolean;
@@ -268,8 +266,8 @@ export interface ST_TableOptions_Config<
     | ((props: {
         row: ST_Row<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stSearchTextFieldProps?:
     | ((props: { table: ST_TableInstance<TData> }) => InputProps)
     | InputProps;
@@ -350,8 +348,8 @@ export interface ST_TableOptions_Config<
     | ((props: { table: ST_TableInstance<TData> }) => TableProps)
     | TableProps;
   stToolbarAlertBannerChipProps?:
-    | ((props: { table: ST_TableInstance<TData> }) => ButtonProps)
-    | ButtonProps;
+    | ((props: { table: ST_TableInstance<TData> }) => TParts['button'])
+    | TParts['button'];
   stToolbarAlertBannerProps?:
     | ((props: { table: ST_TableInstance<TData> }) => DivProps)
     | DivProps;
@@ -593,22 +591,22 @@ export interface ST_ColumnDef_Config<
     | ((props: {
         column: ST_Column<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stColumnDragHandleProps?:
     | ((props: {
         column: ST_Column<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stCopyButtonProps?:
     | ((props: {
         cell: ST_Cell<TData, TValue>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
         table: ST_CoreTableInstance<TData>;
-      }) => ButtonProps)
-    | ButtonProps;
+      }) => TParts['button'])
+    | TParts['button'];
   stEditTextFieldProps?:
     | ((props: {
         cell: ST_Cell<TData, TValue>;

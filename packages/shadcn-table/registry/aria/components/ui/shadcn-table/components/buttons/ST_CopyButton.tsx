@@ -5,7 +5,9 @@ import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type ST_Cell,
+  type ST_ColumnDef,
   type ST_RowData,
+  type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
@@ -25,10 +27,19 @@ export const ST_CopyButton = <TData extends ST_RowData>({
 }: ST_CopyButtonProps<TData>) => {
   const table = cell.table;
   const {
-    options: { localization, stCopyButtonProps },
+    options: { localization },
   } = table;
+  // table.options and the column def hold the part props tree-neutral
+  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
+  // ST_ColumnDef) type them for this tree's Button.
+  const {
+    stCopyButtonProps,
+  }: Pick<ST_TableOptions<TData>, 'stCopyButtonProps'> = table.options;
   const { column, row } = cell;
   const { columnDef } = column;
+  const {
+    stCopyButtonProps: columnCopyButtonProps,
+  }: Pick<ST_ColumnDef<TData>, 'stCopyButtonProps'> = columnDef;
 
   const [copied, setCopied] = useState(false);
 
@@ -46,7 +57,7 @@ export const ST_CopyButton = <TData extends ST_RowData>({
       row,
       table,
     }),
-    ...parseFromValuesOrFunc(columnDef.stCopyButtonProps, {
+    ...parseFromValuesOrFunc(columnCopyButtonProps, {
       cell,
       column,
       row,
