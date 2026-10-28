@@ -60,10 +60,6 @@ export const createSTTableHook = <TData extends ST_RowData>({
   return createTableHook({ features, tableContext });
 };
 
-/**
- * Reads the table from the nearest `ST_TableProvider`, which `ShadcnTable`
- * renders around its layout. Throws outside a provider.
- */
 export function useSTContext<
   TData extends ST_RowData = ST_RowData,
 >(): ST_TableInstance<TData> {
@@ -72,23 +68,14 @@ export function useSTContext<
   return useTableContext() as unknown as ST_TableInstance<TData>;
 }
 
-/**
- * Provides a table to hand-composed ST components, such as an
- * `ST_TableContainer` rendered outside `ShadcnTable`, and the tooltip provider
- * their `ST_Tooltip`s need.
- */
 export const ST_TableProvider = <TData extends ST_RowData>({
   children,
   table,
 }: ST_TableProviderProps<TData>) => (
-  // Note: the tooltip provider lives here at the ST root because the latest
-  // shadcn tooltip (registry change 2026-07) no longer self-wraps each Tooltip
-  // in a TooltipProvider; Base UI Tooltip.Root works without one, but the
-  // provider owns the shared open delay and the skip window (`timeout`), which
-  // the library turns off. Mounting it once with the table keeps consumer
-  // boilerplate at zero (MRT/MUI ergonomics) and covers every toolbar, menu,
-  // modal, and cell, including portalled content (portals preserve React
-  // context) and components hand-composed under this provider.
+  // Base UI Tooltip.Root works without a TooltipProvider, but the provider
+  // owns the shared open delay and the skip window (`timeout`), which the
+  // library turns off. Mounting it with the table covers every tooltip below,
+  // portalled content included.
   <TooltipProvider timeout={0}>
     <table.AppTable>{children}</table.AppTable>
   </TooltipProvider>

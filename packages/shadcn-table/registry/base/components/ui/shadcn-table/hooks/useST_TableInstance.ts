@@ -54,12 +54,9 @@ const transformStateDefaults = {
 };
 
 /**
- * Selects the state the option-time transforms below read on a render: the
- * filter modes written onto the columns and passed as `globalFilterFn`, the
- * grouping and creating row that add display columns, and the loading flags
- * and page size behind the skeleton rows. Passed as the table selector, it
- * re-renders the owner on these slices only; every other state change
- * reaches the components through their own subscriptions.
+ * Passed as the table selector, it re-renders the owner on these slices only;
+ * every other state change reaches the components through their own
+ * subscriptions.
  */
 export const selectST_TransformState = (state: TableState<ST_Features>) => ({
   columnFilterFns: state.columnFilterFns,
@@ -71,14 +68,6 @@ export const selectST_TransformState = (state: TableState<ST_Features>) => ({
   showSkeletons: state.showSkeletons,
 });
 
-/**
- * The MRT hook that wraps the TanStack useTable hook and adds additional functionality
- * @param definedTableOptions - table options with proper defaults set
- * @param selector - the state that re-renders the owner, all of it by default;
- * with a narrower selector `table.state` holds only the selection, and the
- * owner still re-renders on the `selectST_TransformState` slices
- * @returns the MRT table instance
- */
 export const useST_TableInstance = <
   TData extends ST_RowData,
   TSelected = ST_TableState<TData>,
@@ -93,7 +82,6 @@ export const useST_TableInstance = <
   );
   const tableRef = useRef<ST_TableInstance<TData, TSelected> | null>(null);
 
-  //transform initial state with proper column order and filter modes
   const initialState: Partial<ST_TableState<TData>> = useMemo(() => {
     const initState = definedTableOptions.initialState ?? {};
     initState.columnFilterFns = Object.assign(
@@ -146,7 +134,6 @@ export const useST_TableInstance = <
     } as ST_TableState<TData>,
   };
 
-  //don't recompute columnDefs while resizing column or dragging column/row
   const columnDefsRef = useRef<
     ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[]
   >([]);
@@ -189,7 +176,6 @@ export const useST_TableInstance = <
         });
   columnDefsRef.current = columns;
 
-  //if loading, generate blank rows to show skeleton loaders
   const data = useMemo(
     () =>
       (statefulTableOptions.state.isLoading ||

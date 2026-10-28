@@ -23,8 +23,6 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
   variant = 'icon',
   ...rest
 }: ST_EditActionButtonsProps<TData>) => {
-  // The row carries the core table, which holds the ST options, atoms, refs
-  // and setters; the ST wrapper types do not re-type it.
   const table = row.table;
   const {
     options: {
@@ -49,7 +47,7 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
       onEditingRowCancel?.({ row, table });
       setEditingRow(null);
     }
-    row._valuesCache = {} as ST_Row<TData>['_valuesCache']; //reset values cache
+    row._valuesCache = {} as ST_Row<TData>['_valuesCache'];
   };
 
   const handleSubmitRow = () => {
@@ -121,7 +119,6 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
                   <ST_Tooltip title={localization.save}>
                     <Button
                       aria-label={localization.save}
-                      // color="info" // Note: no info color token on shadcn Button.
                       disabled={isSaving}
                       onClick={handleSubmitRow}
                       size="icon"
@@ -135,12 +132,7 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
               </>
             ) : (
               <>
-                <Button
-                  onClick={handleCancel}
-                  // sx={{ minWidth: '100px' }} // Note: sizing override dropped per ruling.
-                  type="button"
-                  variant="ghost"
-                >
+                <Button onClick={handleCancel} type="button" variant="ghost">
                   {localization.cancel}
                 </Button>
                 <Button

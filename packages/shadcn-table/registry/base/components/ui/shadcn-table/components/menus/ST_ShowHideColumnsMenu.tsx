@@ -47,7 +47,6 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
   // These feed the column list memos, so they are hook subscriptions.
@@ -135,7 +134,6 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
           />
         }
       />
-      {/* Note: MRT disableScrollLock dropped — Base UI Menu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         // Focus goes back to the real anchor; returning false keeps Base UI

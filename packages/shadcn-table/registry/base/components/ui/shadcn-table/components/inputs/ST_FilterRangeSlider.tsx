@@ -35,7 +35,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   header,
   ...rest
 }: ST_FilterRangeSliderProps<TData>) => {
-  // The header carries the core table; the ST wrapper types re-type its getters.
   const table = header.table;
   const {
     options: { enableColumnFilterModes, enableFacetedValues, localization },
@@ -115,8 +114,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
       {() => (
         <div className="flex flex-col">
           <Slider
-            // disableSwap
-            // Note: Base UI Slider defaults thumbCollisionBehavior="push", so thumbs never cross (= MUI disableSwap).
             max={max}
             min={min}
             onValueChange={(values) => {
@@ -128,7 +125,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
               const value = toArray(committed);
               if (value.length === 2) {
                 if (value[0] <= min && value[1] >= max) {
-                  //if the user has selected the entire range, remove the filter
                   column.setFilterValue(undefined);
                 } else {
                   column.setFilterValue(value as [number, number]);
@@ -137,8 +133,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
             }}
             onKeyDown={handleKeyDown}
             value={filterValues}
-            // valueLabelDisplay="auto"
-            // Note: Base UI has a Slider.Value part, but the shadcn slider does not render it.
             {...sliderProps}
             ref={(node) => {
               if (node) {
@@ -149,7 +143,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
                     '[data-slot="slider-thumb"] input',
                   )!;
                 if (sliderProps?.ref) {
-                  // @ts-expect-error MRT no-op: node onto the ref prop (Base UI exposes no input slot; root div ref)
+                  // @ts-expect-error the slider root node goes onto the ref prop
                   sliderProps.ref = node;
                 }
               }

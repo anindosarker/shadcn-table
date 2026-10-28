@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
 
-// Note: base maps MRT's sx (size-4 p-2 = MRT 16px border-box + 8px padding, ml 4px, scale .75, transition all 150ms ease-in-out); active toggles opacity 1 / .3.
 const tableHeadCellFilterLabelVariants = cva(
   'ml-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
   {
@@ -123,13 +122,11 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   return (
     <>
-      {/* <Grow in={...} unmountOnExit>. Note: MUI Grow dropped; its `in` expression gates the render (= unmountOnExit); the span carries its enter (fade + zoom-in-75, 150ms), exit is instant. */}
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
           <ST_Tooltip side="top" title={filterTooltip}>
-            {/* disableRipple. Note: shadcn Button has no ripple. */}
             <Button
               onClick={(event: MouseEvent<HTMLButtonElement>) => {
                 if (columnFilterDisplayMode === 'popover') {
@@ -160,7 +157,6 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       {columnFilterDisplayMode === 'popover' && (
         <Popover
           onOpenChange={(open) => {
-            // event.stopPropagation(); Note: Base UI has no backdrop click to stop.
             if (!open) setAnchorEl(null);
           }}
           open={!!anchorEl}
@@ -168,8 +164,6 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
           {/* Base UI has no PopoverAnchor part: the anchor is a Positioner prop. The shadcn
               PopoverContent owns its Positioner and does not forward `anchor`, so the
               Portal, Positioner and Popup are composed here with the same classes. */}
-          {/* disableScrollLock. Note: Base UI Popover is non-modal by default, no scroll lock. */}
-          {/* slotProps={{ paper: { sx: { overflow: 'visible' } } }}. Note: the popup has no overflow clip. */}
           <PopoverPrimitive.Portal>
             <PopoverPrimitive.Positioner
               align="center"
@@ -189,7 +183,6 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
                   event.key === 'Enter' && setAnchorEl(null)
                 }
               >
-                {/* <Box sx={{ p: '1rem' }}>. Note: the popup already pads p-2.5. */}
                 <ST_TableHeadCellFilterContainer header={header} />
               </PopoverPrimitive.Popup>
             </PopoverPrimitive.Positioner>

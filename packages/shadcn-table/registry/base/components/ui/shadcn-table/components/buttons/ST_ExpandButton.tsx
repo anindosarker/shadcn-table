@@ -34,10 +34,7 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
   row,
   staticRowIndex,
 }: ST_ExpandButtonProps<TData>) => {
-  // The row carries the core table, which holds the ST options, atoms, refs
-  // and setters; the ST wrapper types do not re-type it.
   const table = row.table;
-  // Note: MRT's useTheme dropped; ST has no theme.direction (rtl).
   const {
     options: {
       icons: { ExpandMoreIcon },
@@ -97,7 +94,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
                 )}
                 onClick={handleToggleExpand}
                 style={{
-                  // Note: rtl 'mr'/'ml' switch dropped, positionExpandColumn only.
                   ...(positionExpandColumn === 'last'
                     ? { marginRight: `${row.depth * 16}px` }
                     : { marginLeft: `${row.depth * 16}px` }),
@@ -110,8 +106,7 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
                     style={{
                       transform: `rotate(${
                         !canExpand && !renderDetailPanel
-                          ? // Note: rtl 90deg branch dropped, no theme.direction in ST.
-                            positionExpandColumn === 'last'
+                          ? positionExpandColumn === 'last'
                             ? 90
                             : -90
                           : isExpanded

@@ -18,10 +18,6 @@ import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_BottomToolbarProps = DivProps;
 
-// Note: base maps MRT's shared getCommonToolbarStyles (min-h-14 = 3.5rem,
-// bg-background = baseBackgroundColor) plus the bottom-toolbar extras (inset
-// boxShadow, left/right pinning); the fullscreen variant maps
-// `position: isFullScreen ? 'fixed' : 'relative'`.
 const bottomToolbarVariants = cva(
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out shadow-[inset_0_1px_2px_-1px_rgba(97,97,97,0.5)] left-0 right-0',
   {
