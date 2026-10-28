@@ -59,6 +59,12 @@ export const DEV_GROUPS: readonly DevGroup[] = [
           'Empty diff plus a Prompt tab where an AI restyles the app, a plain-words visual diff and a readable status line.',
       },
       {
+        href: '/dev/theme/9',
+        name: 'Whole app',
+        description:
+          'Prompt diff where each request restyles the whole app; a fuller mock app repaints with the table.',
+      },
+      {
         href: '/dev/theme/7',
         name: 'No step 3',
         description:
