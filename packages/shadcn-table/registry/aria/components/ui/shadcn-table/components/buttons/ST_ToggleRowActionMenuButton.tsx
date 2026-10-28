@@ -45,10 +45,11 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleOpenRowActionMenu = (event: MouseEvent<HTMLElement>) => {
+  const handleOpenRowActionMenu = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    setAnchorEl(event.currentTarget);
+    if (event.currentTarget instanceof HTMLElement)
+      setAnchorEl(event.currentTarget);
   };
 
   const handleStartEditMode = (event: MouseEvent) => {
