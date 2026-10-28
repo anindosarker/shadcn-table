@@ -29,3 +29,18 @@ Branch `v0.6/examples-per-edition`, worktree 07, from `claude/review` at 03d95c9
 - `tsconfig.json` `exclude` lists `examples/radix`, `examples/base`, `examples/aria` in place of the old `examples/*/...` globs; `next dev` rewrites the file (adds the `NEXT_DIST_DIR` type includes) and was reverted each time, nothing of it is committed.
 - The phase 02 page checks ran after phase 03: the agent prompt reads the edition's registry item, which exists only once `examples.mjs` writes per-edition items.
 - CHANGELOG and coding standards hunks: part 02 adds lines in the same places; the part merging second rebases.
+
+## Gates
+
+Verifier run at 60434a81 from a clean tree (plan 2.2), page checks on a dev server at 5342.
+
+- `pnpm check:bases`: `registry/radix and registry/base: 142 library files in both trees, 23 allowed to differ`, `registry/radix and registry/aria: 142 library files in both trees, 37 allowed to differ`, `examples/radix and examples/base: 216 example files in both trees, 2 allowed to differ`, `examples/radix and examples/aria: 216 example files in both trees, 10 allowed to differ`; a scratch line in `examples/base/basic/TS.tsx` turns it red (`differs between the trees and is not in examples-base-diff.json: basic/TS.tsx`, exit 1), reverted with `git checkout`.
+- `pnpm --filter shadcn-table-docs types:check`: exit 0.
+- `pnpm --filter shadcn-table-docs lint`: `9 problems (0 errors, 9 warnings)`, the pre-existing `advanced` img and `expanding-tree-flat-parse` useMemo warnings once per edition folder.
+- `pnpm --filter shadcn-table-docs build`: exit 0 (`NEXT_DIST_DIR=.next-verify`, removed after; the `tsconfig.json` include noise reverted).
+- `node scripts/check-pages.mjs d --edition <edition>`: `252 passed, 0 failed` on radix, base and aria.
+- `node scripts/check-pages.mjs e --edition <edition>`: `596 passed, 0 failed` on radix, base and aria.
+- `pnpm registry:items`: `345 items (115 examples, 3 editions)`; `pnpm registry:hosted`: `154 items (1 main, 38 locale, 115 example)` per edition; `public/r/base/example-react-query.json` has `render=` once and no `asChild`; `public/r/aria/example-advanced.json` has `isDisabled` three times, the radix copy none; `git status` clean after both.
+- `shadcn registry validate`: `Checked 3 registry files and 462 items`, valid.
+- `shadcn add anindosarker/shadcn-table/example-basic-aria#60434a81b30440885e42be0dc25b14844bfca305 --dry-run` in a fresh React Aria Vite app: `+ src/components/examples/basic/basic.tsx create`.
+- `pr.yml`: PR #49 (draft, `release:minor`, into `claude/review`). GitHub ran nothing for the `opened` event within 8 minutes; this commit's push triggers `synchronize`, the run id is recorded below once it finishes.
