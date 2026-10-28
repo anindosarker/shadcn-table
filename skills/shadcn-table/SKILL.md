@@ -5,21 +5,22 @@ description: Install and use shadcn-table, a data table for shadcn/ui built on T
 
 # shadcn-table
 
-A shadcn registry item: the table source is copied into the project, not installed as an npm package. The project owns the files. One edition per shadcn base, Radix and Base UI, served under `/r/radix/` and `/r/base/` on the docs site.
+A shadcn registry item: the table source is copied into the project, not installed as an npm package. The project owns the files. One edition per shadcn base, Radix UI, Base UI and React Aria, served under `/r/radix/`, `/r/base/` and `/r/aria/` on the docs site.
 
 ## Install
 
-1. Requirements: shadcn/ui on the **Radix** or the **Base UI** base, Tailwind CSS v4, React 18 or newer. React Aria is not supported.
-   No `components.json` yet: run `pnpm dlx shadcn@latest init` first (`--base radix` or `--base base`; the default is Base UI) and ask the user which base they want.
-2. Detect the base: read `style` in `components.json`. `radix-*` is Radix UI, `base-*` is Base UI. Add the table for that base:
+1. Requirements: shadcn/ui on the **Radix**, the **Base UI** or the **React Aria** base, Tailwind CSS v4, React 18 or newer.
+   No `components.json` yet: run `pnpm dlx shadcn@latest init` first (`--base radix`, `--base base` or `--base aria`; the default is Base UI) and ask the user which base they want.
+2. Detect the base: read `style` in `components.json`. `radix-*` is Radix UI, `base-*` is Base UI, `aria-*` (such as `aria-nova`) is React Aria. Add the table for that base:
    - Radix: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table.json`
    - Base UI: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table.json`
-     Fallback when the site is unreachable, GitHub addresses: `anindosarker/shadcn-table/shadcn-table` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-base` (Base UI).
-3. Verify: `components/ui/shadcn-table/index.ts` exists and the project type-checks. The edition for the other base does not type-check; reinstall the right one with `--overwrite`.
+   - React Aria: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json`
+     Fallback when the site is unreachable, GitHub addresses: `anindosarker/shadcn-table/shadcn-table` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base` (Base UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
+3. Verify: `components/ui/shadcn-table/index.ts` exists and the project type-checks. The edition for another base does not type-check; reinstall the right one with `--overwrite`.
 
-What the command adds: `components/ui/shadcn-table/` (the table), the shadcn/ui parts it uses in `components/ui/` when missing, and the npm packages `@tanstack/react-table`, `@tanstack/react-store`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, plus `radix-ui` (Radix UI) or `@base-ui/react` (Base UI). Re-run with `--overwrite` to update; local edits in that directory are replaced.
+What the command adds: `components/ui/shadcn-table/` (the table), the shadcn/ui parts it uses in `components/ui/` when missing, and the npm packages `@tanstack/react-table`, `@tanstack/react-store`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, plus `radix-ui` (Radix UI), `@base-ui/react` (Base UI) or `react-aria-components` (React Aria). Re-run with `--overwrite` to update; local edits in that directory are replaced.
 
-Other languages are separate items, one per locale code, under the same base path: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/shadcn-table-locale-de.json`, imported from `@/components/ui/shadcn-table/shared/locales/de`. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
+Other languages are separate items, one per locale code, under the same base path: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/shadcn-table-locale-de.json`, imported from `@/components/ui/shadcn-table/shared/locales/de`. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI), `anindosarker/shadcn-table/shadcn-table-aria-locale-de` (React Aria).
 
 ## Use
 
@@ -73,6 +74,6 @@ Every docs example installs as its own item next to the table, with its data, un
 pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/example-<slug>.json
 ```
 
-GitHub fallback, the same item on both bases: `anindosarker/shadcn-table/example-<slug>`.
+GitHub fallback, the same item on every base: `anindosarker/shadcn-table/example-<slug>`.
 
 It lands in `components/examples/<slug>/<slug>.tsx` with a default export. Slugs match `/docs/examples/<slug>`; `example-basic`, `example-advanced`, `example-editing-crud`, `example-virtualized`, `example-react-query` cover the common starting points. Prefer copying from an example over writing a feature from scratch.
