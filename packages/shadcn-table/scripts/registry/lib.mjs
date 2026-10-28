@@ -19,13 +19,13 @@ export const ROOT = path.resolve(PKG, '..', '..');
 export const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 // The library below a tree's components/ui directory.
 const LIB_REL = 'components/ui/shadcn-table';
-// One complete library tree per edition, registry/<edition>. Every script
-// that handles more than one edition loops over this list, in this order.
-// Radix is the reference: check-bases.mjs compares every other edition
-// against it, each with its own list of files allowed to differ
-// (scripts/registry/<edition>-diff.json; the reference has none).
-export const EDITIONS = ['radix', 'base', 'aria'];
-export const REFERENCE_EDITION = 'radix';
+// The edition list (editions.mjs), re-exported for the registry scripts.
+export {
+  EDITION_LABELS,
+  EDITIONS,
+  REFERENCE_EDITION,
+  resolveEdition,
+} from './editions.mjs';
 export const GITHUB_REPO = 'anindosarker/shadcn-table';
 export const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
 // `--dev` builds a local registry under .dev/ (gitignored) whose locale items
@@ -188,7 +188,8 @@ export const editionItems = (catalog, edition) => {
   );
   const main = own.find((item) =>
     own.every(
-      (other) => other === item || other.name.startsWith(`${item.name}-locale-`),
+      (other) =>
+        other === item || other.name.startsWith(`${item.name}-locale-`),
     ),
   );
   return {

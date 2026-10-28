@@ -12,13 +12,14 @@
 //     the ones hosted.mjs derives from the committed catalogs (the main item as
 //     shadcn-table, its locales as shadcn-table-locale-<code>, every example
 //     item of the docs app)
-//   Storybook /, /base/ and /aria/: 200 HTML
-//   /SKILL.md: 200, names every edition
+//   Storybook / for the reference edition, /<edition>/ for every other: 200 HTML
+//   /SKILL.md: 200, names every edition (EDITION_LABELS)
 //   /llms.txt: 200
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  EDITION_LABELS,
   EDITIONS,
   editionItems,
   REFERENCE_EDITION,
@@ -28,7 +29,7 @@ const SITE = 'https://www.shadcn-table.com';
 const STORYBOOK = 'https://storybook.shadcn-table.com';
 const HOSTED_NAME = 'shadcn-table';
 const DOCS_PACKAGE_NAME = 'shadcn-table-docs';
-const BASE_LABELS = ['Radix UI', 'Base UI', 'React Aria'];
+const LABELS = EDITIONS.map((edition) => EDITION_LABELS[edition]);
 
 const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -146,9 +147,9 @@ for (const edition of EDITIONS) {
 const skillUrl = `${SITE}/SKILL.md`;
 const skill = await get(skillUrl);
 if (checkStatus(`${skillUrl} 200`, skill)) {
-  const missing = BASE_LABELS.filter((label) => !skill.text.includes(label));
+  const missing = LABELS.filter((label) => !skill.text.includes(label));
   check(
-    `${skillUrl} names ${BASE_LABELS.join(', ')}`,
+    `${skillUrl} names ${LABELS.join(', ')}`,
     missing.length === 0,
     missing.length ? `missing=${missing.join(',')}` : '',
   );

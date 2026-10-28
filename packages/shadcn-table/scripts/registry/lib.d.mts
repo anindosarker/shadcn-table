@@ -19,10 +19,13 @@ export const PKG: string;
 export const ROOT: string;
 /** Absolute path of the docs app. */
 export const DOCS: string;
-/** Every edition, one tree each under registry/<edition>; radix first. */
-export const EDITIONS: string[];
-/** The edition every other one is compared against. */
-export const REFERENCE_EDITION: string;
+export {
+  EDITION_LABELS,
+  EDITIONS,
+  REFERENCE_EDITION,
+  resolveEdition,
+  type Edition,
+} from './editions.mjs';
 export const GITHUB_REPO: string;
 export const HOMEPAGE: string;
 /** True when build.mjs runs with `--dev`. */

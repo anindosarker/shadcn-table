@@ -49,3 +49,22 @@ Docs app and previews, on `v0.5/infra` after phase 01.
 - Docs `types:check`, `lint` (0 errors, 3 existing warnings), `build` with `NEXT_DIST_DIR=.next-verify` (tsconfig include rewrite reverted): pass.
 - `next start -p 5344` on `.next-verify` (stopped after): `/r/aria-nova/shadcn-table.json`, `/r/aria/registry.json`, `/r/radix-nova/...`, `/r/base-nova/...` 200; `check-pages a` 260 passed, `c` 280 passed, `e` 595 passed, 0 failed. No check expectation changed (no check lists editions while `bases` has two).
 - `pnpm preview` not started: its ports (5310, 6006, 6007, 6008, 5330) belong to the shared servers in this run. The child list was checked by importing the module.
+
+## Review round 1
+
+### Commits
+
+- `fix: part 02 review round 1`: the edition list lives once, in `scripts/registry/editions.mjs` (`EDITIONS`, `REFERENCE_EDITION`, `EDITION_LABELS`, `resolveEdition`; no node imports, types in `editions.d.mts`), re-exported by `lib.mjs`. Readers that kept their own copy now import it: `vite.config.ts` and `.storybook/main.ts` (`ST_BASE = resolveEdition(process.env.ST_BASE)`), `.storybook/themes.ts` (re-exports `EDITIONS`, `EDITION_LABELS`, `Edition`; `staticEditionRoot` keys on `REFERENCE_EDITION`), `check-storybook.mjs` (editions, labels and roots derived), `scripts/release/smoke.mjs` (`SKILL.md` labels), the docs `scripts/install.mjs` and `lib/example-variant-dir.mjs` (`VARIANT_DIRS` built from `EDITIONS`). Deviation from the review's fix: the docs `install.mjs` keeps no per-edition map at all; argv is validated against `EDITIONS`, the item name comes from `editionItems` on the committed `registry.json` (as in `hosted.mjs` and the smoke) and the style is `<edition>-nova`. Also found by the sweep: the package `preview.mjs` Storybook children are built from `EDITIONS` (port `6006` plus the index, as `edition-tool.ts` assumes; names, ports, env and colours unchanged). A fourth edition now needs `editions.mjs`, the tuple in `editions.d.mts`, its tree and diff list, its package scripts and the two CI matrices.
+- Minors: `ci.yml` job name `bases (edition guard)` (no ruleset requires the old check name); coding standards layout lists `components/ui-aria` and the Editions section names `editions.mjs`; docs README "on every base"; `lib/install.ts` says the React Aria tab lands with the aria example variants in part 03.
+
+### Left as is
+
+- `apps/shadcn-table-docs/lib/install.ts` `bases` and `baseLabels`: part 03 (the tab, see phase 02).
+- `CONTRIBUTING.md` layout still describes two trees ("the two-tree guard", no `registry/aria`); no part of the v0.5 plan names it.
+
+### Gates
+
+- `check:bases`: `radix and base: 142 ... 23 allowed to differ`, `radix and aria: 142 ... 37 allowed to differ`.
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json`, `vite.config.ts` checked on its own: pass. `lint`: 0 errors, 3 existing warnings.
+- `pnpm registry:build`, then `lib:install aria`: `git status` clean. `lib:install nope` prints `usage: node scripts/install.mjs <radix|base|aria>`. Docs `types:check`: pass.
+- `ST_BASE=aria storybook build` into the scratchpad: manager bundle carries the labels, `__ST_BASE__ = "aria"`. `packageChildren` checked by importing the module. `check-storybook.mjs` not run (needs a static server port).

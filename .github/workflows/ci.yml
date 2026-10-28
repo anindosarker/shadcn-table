@@ -46,7 +46,7 @@ jobs:
   # differ on purpose from registry/radix are listed per edition in
   # scripts/registry/<edition>-diff.json.
   bases:
-    name: bases (two-tree guard)
+    name: bases (edition guard)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
