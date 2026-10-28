@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
+  type ST_ColumnDef,
   type ST_Header,
   type ST_RowData,
+  type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
@@ -30,11 +32,19 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
     options: {
       icons: { MoreVertIcon },
       localization,
-      stColumnActionsButtonProps,
     },
   } = table;
+  // table.options and the column def hold the part props tree-neutral
+  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
+  // ST_ColumnDef) type them for this tree's Button.
+  const {
+    stColumnActionsButtonProps,
+  }: Pick<ST_TableOptions<TData>, 'stColumnActionsButtonProps'> = table.options;
   const { column } = header;
   const { columnDef } = column;
+  const {
+    stColumnActionsButtonProps: columnColumnActionsButtonProps,
+  }: Pick<ST_ColumnDef<TData>, 'stColumnActionsButtonProps'> = columnDef;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -50,7 +60,7 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
       column,
       table,
     }),
-    ...parseFromValuesOrFunc(columnDef.stColumnActionsButtonProps, {
+    ...parseFromValuesOrFunc(columnColumnActionsButtonProps, {
       column,
       table,
     }),

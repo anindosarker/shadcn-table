@@ -7,6 +7,7 @@ import {
   type ButtonProps,
   type ST_Row,
   type ST_RowData,
+  type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
@@ -41,9 +42,13 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
       localization,
       positionExpandColumn,
       renderDetailPanel,
-      stExpandButtonProps,
     },
   } = table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Button.
+  const {
+    stExpandButtonProps,
+  }: Pick<ST_TableOptions<TData>, 'stExpandButtonProps'> = table.options;
 
   const iconButtonProps = parseFromValuesOrFunc(stExpandButtonProps, {
     row,
