@@ -13,14 +13,15 @@ packages/shadcn-table/
 ├── scripts/registry/        ← edition list, registry build, hosted copies, example items, add-part, edition guard
 ├── scripts/                 ← everything else
 └── stories/ .storybook/     ← one story set, `@/` points at registry/<ST_BASE>
-apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix and components/ui-base are installed copies
+apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, components/ui-base and components/ui-aria are installed copies
 ```
 
 ## Editions
 
 - Three trees, one per edition: `registry/radix`, `registry/base`, `registry/aria`. The list
-  is `EDITIONS` in `scripts/registry/lib.mjs`; every script that handles more than one
-  edition reads it.
+  is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION` and
+  `EDITION_LABELS`); every script, config and docs app script that handles more than one
+  edition reads it, none repeats the names.
 - Radix is the reference. A change to a common library file is made in every tree by hand.
 - Each other edition has its own list of files that legitimately differ from radix:
   `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on an

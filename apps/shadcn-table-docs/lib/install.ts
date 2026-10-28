@@ -17,7 +17,8 @@ const runners: Record<PackageManager, string> = {
  * The shadcn bases the table supports, as `shadcn init --base` names them.
  * The docs' base selector (components/base-selector.tsx) picks one; a
  * project's base is the `style` in its `components.json` (`radix-*` or
- * `base-*`). React Aria is not supported.
+ * `base-*`). React Aria (`aria-*`) is installed and hosted but has no tab
+ * yet; the tab lands with the aria example variants (v0.5 part 03).
  */
 export const bases = ['radix', 'base'] as const;
 export type Base = (typeof bases)[number];

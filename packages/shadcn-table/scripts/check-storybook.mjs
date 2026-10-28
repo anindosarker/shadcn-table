@@ -15,6 +15,11 @@ import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  EDITION_LABELS,
+  EDITIONS,
+  REFERENCE_EDITION,
+} from './registry/editions.mjs';
 
 const PKG_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -30,7 +35,7 @@ const base = (i === -1 ? 'http://localhost:5344' : args[i + 1]).replace(
   '',
 );
 
-/** First story id of the Radix UI build; every build shares the story set. */
+/** First story id of the reference build; every build shares the story set. */
 const index = JSON.parse(
   await readFile(path.join(PKG_DIR, 'storybook-static', 'index.json'), 'utf8'),
 );
@@ -42,12 +47,15 @@ if (!storyId) {
   process.exit(1);
 }
 
-/** Each edition: the label its button shows and where its build is served. */
-const editions = [
-  { name: 'radix', label: 'Radix UI', root: `${base}/` },
-  { name: 'base', label: 'Base UI', root: `${base}/base/` },
-  { name: 'aria', label: 'React Aria', root: `${base}/aria/` },
-];
+/**
+ * Each edition: the label its button shows and where its build is served
+ * (the reference at the root, every other edition under <edition>/).
+ */
+const editions = EDITIONS.map((name) => ({
+  name,
+  label: EDITION_LABELS[name],
+  root: name === REFERENCE_EDITION ? `${base}/` : `${base}/${name}/`,
+}));
 
 const results = [];
 const browser = await chromium.launch();

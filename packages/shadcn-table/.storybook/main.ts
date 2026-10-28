@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
+import { resolveEdition } from '../scripts/registry/editions.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -12,9 +13,7 @@ const require = createRequire(import.meta.url);
 // whether this is `storybook dev` (one port per edition) or a static build
 // (one directory per edition), which decides where its edition button goes
 // (edition-tool.ts).
-const EDITIONS = ['radix', 'base', 'aria'] as const;
-const ST_BASE =
-  EDITIONS.find((edition) => edition === process.env.ST_BASE) ?? 'radix';
+const ST_BASE = resolveEdition(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
 const devScript = (dev: boolean) =>
   `<script>window.__ST_DEV__ = ${JSON.stringify(dev)};</script>`;
