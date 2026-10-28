@@ -31,8 +31,13 @@ export const routes: Array<RouteItem> = [
   },
   {
     label: 'Getting Started',
-    href: '/docs/getting-started/install',
+    href: '/docs/getting-started/introduction',
     items: [
+      {
+        href: '/docs/getting-started/introduction',
+        label: 'Introduction',
+        keywords: ['introduction', 'overview', 'why'],
+      },
       {
         href: '/docs/getting-started/install',
         label: 'Install',
@@ -428,10 +433,6 @@ export const routes: Array<RouteItem> = [
           {
             href: '/docs/guides/table-event-listeners',
             label: 'Event Listeners (onClicks)',
-          },
-          {
-            href: '/docs/guides/memoization',
-            label: 'Memoization (Performance)',
           },
           {
             href: '/docs/guides/state-management',

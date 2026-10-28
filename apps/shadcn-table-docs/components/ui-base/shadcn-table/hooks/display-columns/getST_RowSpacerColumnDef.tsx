@@ -1,10 +1,11 @@
 import { ST_DefaultDisplayColumn } from '@/components/ui-base/shadcn-table/hooks/useST_TableOptions';
 import {
   type ST_ColumnDef,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-base/shadcn-table/types';
-import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/utils/displayColumn.utils';
+import { defaultDisplayColumnProps } from '@/components/ui-base/shadcn-table/shared/utils/displayColumn.utils';
 
 const blankColProps = {
   children: null,
@@ -17,7 +18,7 @@ const blankColProps = {
 
 export const getST_RowSpacerColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
-): ST_ColumnDef<TData> => {
+): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
   return {
     ...defaultDisplayColumnProps({
       id: 'st-row-spacer',

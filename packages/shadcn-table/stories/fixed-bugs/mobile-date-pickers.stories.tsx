@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
+import { ShadcnTable } from '@/components/ui/shadcn-table';
 import { type Meta } from '@storybook/react-vite';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Fixed Bugs/mobile date pickers',

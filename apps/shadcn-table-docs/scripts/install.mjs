@@ -13,11 +13,11 @@
  * locale), merged into one item so the CLI never resolves the locale items'
  * GitHub dependency. The item is rewritten on the way in: its
  * `@/components/ui/` imports point at `@/components/ui-<base>/` (the CLI
- * rewrites only `@/registry/...` specifiers) and its `css` block is dropped,
- * since app/global.css holds the keyframes of both copies by hand. On the
- * Base UI base the st-collapsible-* animation names become
- * st-base-collapsible-* so they do not collide with the Radix pair (Tailwind
- * emits `@theme` keyframes last, so a same-named redefinition would lose).
+ * rewrites only `@/registry/...` specifiers). Each copy renders its own
+ * keyframes in a hoisted style element; on the Base UI base the
+ * st-collapsible-* keyframe names and the st-collapsible style href become
+ * st-base-collapsible so they do not collide with the Radix copy's (keyframe
+ * names are global and React keeps one style per href).
  * `shadcn add` then runs with a temporary components.json (the base's style,
  * `ui` alias `@/components/ui-<base>`), so the bare registryDependencies
  * install as that base's parts into the same folder. The real
@@ -81,7 +81,6 @@ if (!fs.existsSync(itemFile)) {
 }
 
 const item = JSON.parse(fs.readFileSync(itemFile, 'utf8'));
-delete item.css;
 const localeItems = fs
   .readdirSync(LIB_R)
   .filter((f) => f.startsWith(`${itemName}-locale-`) && f.endsWith('.json'))
@@ -98,8 +97,8 @@ for (const file of item.files) {
   );
   if (base === 'base') {
     file.content = file.content.replace(
-      /\bst-collapsible-/g,
-      'st-base-collapsible-',
+      /\bst-collapsible\b/g,
+      'st-base-collapsible',
     );
   }
 }

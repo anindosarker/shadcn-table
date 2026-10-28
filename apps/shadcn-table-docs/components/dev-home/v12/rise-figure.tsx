@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
 /**
- * v7's hairline figure (caption note optional) that rises out of the hero field the first time it scrolls
+ * v7's hairline figure (caption and note optional) that rises out of the hero field the first time it scrolls
  * into view. Opacity and transform only; reduced motion shows it in place.
  */
 export function RiseFigure({
@@ -12,7 +12,7 @@ export function RiseFigure({
   note,
   children,
 }: {
-  caption: string;
+  caption?: string;
   note?: string;
   children: ReactNode;
 }) {
@@ -36,10 +36,12 @@ export function RiseFigure({
 
   return (
     <figure ref={ref} className="v7-figure" data-risen={risen || undefined}>
-      <figcaption className="v7-figcap">
-        <strong>{caption}</strong>
-        {note ? <span>{note}</span> : null}
-      </figcaption>
+      {caption ? (
+        <figcaption className="v7-figcap">
+          <strong>{caption}</strong>
+          {note ? <span>{note}</span> : null}
+        </figcaption>
+      ) : null}
       {children}
     </figure>
   );

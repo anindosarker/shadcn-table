@@ -3,9 +3,9 @@ import { constructAggregationFn } from '@tanstack/react-table';
 import {
   ST_AggregationFns,
   type ST_ColumnDef,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Features/Aggregation Examples',
@@ -166,7 +166,7 @@ export const AggregationRemoveModeCustomGroupedCell = () => (
       'st-row-expand': {
         //last item in array of grouping state
         GroupedCell: ({ row, table }) => {
-          const { grouping } = table.state;
+          const { grouping } = table.store.state;
           return row.getValue(grouping[grouping.length - 1]);
         },
       },

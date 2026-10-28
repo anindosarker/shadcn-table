@@ -22,7 +22,7 @@ In previous versions of `shadcn-table`, you only had the option to use the `<Sha
 
 ### \<ShadcnTable /\>
 
-[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/src/components/ui/shadcn-table/ShadcnTable.tsx)
+[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/ShadcnTable.tsx)
 
 For most use cases, you will probably just use the default `<ShadcnTable />` component.
 
@@ -51,9 +51,25 @@ return <ShadcnTable columns={columns} data={data} enableRowPinning />; //passing
 
 Shadcn Table now exports all of its internal components. You can use them for your own use cases.
 
+#### \<ST_TableProvider /\>
+
+[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/stTableHook.tsx)
+
+Sub-components take no `table` prop. Those that render a `row`, `cell`, `header` or `column` read the table from it; the others read it from the context that `<ShadcnTable />` provides. Outside `<ShadcnTable />`, wrap them in `<ST_TableProvider table={table}>`. See [Compose with ST_TableProvider](/docs/guides/toolbar-customization#compose-with-st_tableprovider).
+
+```jsx
+const table = useShadcnTable({ columns, data });
+
+return (
+  <ST_TableProvider table={table}>
+    <ST_TableContainer />
+  </ST_TableProvider>
+);
+```
+
 #### Table Components
 
-[View Table Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/src/components/ui/shadcn-table/table)
+[View Table Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/table)
 
 ##### \<ST_TableLayout /\>
 
@@ -79,7 +95,7 @@ Shows a loading spinner over the table above the `ST_Table` component when the t
 
 #### TableHead Components
 
-[View TableHead Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/src/components/ui/shadcn-table/head)
+[View TableHead Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/head)
 
 ##### \<ST_TableHead /\>
 
@@ -119,7 +135,7 @@ The Filter Container that contains the filter input and filter actions
 
 #### TableBody Components
 
-[View TableBody Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/src/components/ui/shadcn-table/body)
+[View TableBody Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/body)
 
 ##### \<ST_TableBody /\>
 
@@ -151,7 +167,7 @@ A button or buttons for pinning a row.
 
 #### TableFooter Components
 
-[View TableFooter Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/src/components/ui/shadcn-table/footer)
+[View TableFooter Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/footer)
 
 ##### \<ST_TableFooter /\>
 
@@ -167,7 +183,7 @@ The `<ST_TableFooterCell />` is a `<td>` element that surrounds the cell value o
 
 #### Input Components
 
-[View Input Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/src/components/ui/shadcn-table/inputs)
+[View Input Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/inputs)
 
 ##### \<ST_EditCellTextField /\>
 

@@ -8,6 +8,133 @@ publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Breaking
+
+- Sub-components no longer take a `table` prop. They read it from the `row`, `cell`,
+  `header` or `column` they render (`instance.table`), or from the `ST_TableProvider`
+  context; wrap hand-composed pieces in `ST_TableProvider`.
+- Renderers and `st*Props` callbacks of components that render a row, cell, header or
+  column (`Cell`, `GroupedCell`, `Header`, `Footer`, `renderRowActions`,
+  `renderRowActionMenuItems`, `renderColumnActionsMenuItems`, `renderDetailPanel`,
+  `stRowDragHandleProps` and the like) receive `instance.table`, which has no `state`. Read
+  `table.store.state` or `table.atoms.<slice>.get()` there. `table.store.state` is typed over
+  `ST_RowData`; cast the row slices (`draggingRow`, `hoveredRow`) through
+  `ST_TableState<TData>` when the row type matters.
+- The props types of components that render no row, cell, header or column
+  (`ST_TableLayoutProps`, `ST_TableContainerProps`, `ST_TableProps`, `ST_TableBodyProps`,
+  `ST_TableHeadProps`, `ST_TableFooterProps`, the toolbar, toggle button, menu and modal
+  props) no longer take a `TData` parameter. Drop the type argument.
+- `ST_TopToolbarProps` is removed; `ST_TopToolbar` takes no props.
+- `memoMode` is removed, with the memoized row and cell components
+  (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
+- `expandRowsFn` is removed. It was never implemented.
+- The `stFeatures` value is no longer exported. `ST_Features` stays, as a type.
+- `filterFns`, `sortFns` and `aggregationFns` names are resolved by TanStack Table core. A
+  `filterFn`, `globalFilterFn`, `sortFn` or `aggregationFn` string must be a built-in name or
+  one registered through the table option of the same name; an unknown name logs core's
+  development warning and filters, sorts or aggregates nothing. A column's `filterFn` keeps
+  the name: `columnDef.filterFn` holds the current filter mode name instead of the resolved
+  function, and `columnDef._filterFn` is removed.
+- Every ST setter (`table.setDensity`, `setIsFullScreen`, `setShowAlertBanner`,
+  `setShowToolbarDropZone`, `setDraggingColumn`, `setHoveredColumn`, `setDraggingRow`,
+  `setHoveredRow`, `setCreatingRow`, `setEditingCell`, `setEditingRow`,
+  `setColumnFilterFns`, `setGlobalFilterFn`, `setShowColumnFilters`, `setShowGlobalFilter`
+  and `setActionCell`) hands its `on*Change` handler a function updater, as TanStack's own
+  setters do since v9. A handler resolves it with `functionalUpdate` or a React state
+  setter.
+
+### Added
+
+- mk (Macedonian) locale.
+- `ST_TableProvider` puts a table on the context the library's components read.
+  `ShadcnTable` renders it around its layout.
+- `ST_TableProvider` renders the table's `table.AppTable`. Swapping its `table` prop for a
+  different table remounts the subtree.
+- `useShadcnTable` takes an optional selector as its second argument, as `useTable` does,
+  so the owner re-renders only on the state it selects.
+- `@tanstack/react-store` is a dependency.
+- `getColumnFilterFnName` and `selectST_TransformState` are exported from the barrel.
+- Docs: the `localization-i18n-mk` example, and a "Compose with ST_TableProvider" section
+  in the toolbar customization guide, linked from the ST components page.
+
+### Changed
+
+- Components subscribe to the state slices they render. A state change re-renders the
+  components that show it, not the whole table; `ShadcnTable` itself re-renders only on
+  the slices its column and data transforms read.
+- Docs: examples and guides compose sub-components without a `table` prop, under
+  `ST_TableProvider` outside `ShadcnTable`. Locale imports read
+  `@/components/ui/shadcn-table/shared/locales/<code>` in the guides, `/SKILL.md` and the
+  registry README. The prop tables follow the name resolution in core, the function
+  updater on the ST `on*Change` handlers and the unset `show*` loading slices.
+- The table's keyframes ship inside the components as a hoisted `<style>` tag; `shadcn add`
+  no longer writes to your global CSS. Remove the `st-` keyframes and the
+  `.st-progress-indeterminate` rule an earlier install added there. A strict Content Security
+  Policy needs a nonce or `style-src 'unsafe-inline'` for the tag.
+- `row.table`, `cell.table`, `column.table` and `header.table` are typed
+  `ST_CoreTableInstance`, the core table without state; read `table.store.state` or
+  subscribe. The `table` argument of every part prop, renderer and handler that also
+  receives a row, cell, column or header, and of `createRow`, has the same type.
+
+### Removed
+
+- Docs: the memoization guide and the `memoMode` and `expandRowsFn` prop table entries.
+
+### Fixed
+
+- The row action Edit button hands the edit modal the live row; a spread copy lost the v9 row prototype and `row.getAllCells` threw.
+- `isLoading` and `isSaving` default to `false`, and every loading slice (`isLoading`,
+  `isSaving`, `showLoadingOverlay`, `showProgressBars`, `showSkeletons`) is in the table
+  store from the first render. The three `show*` slices start unset, so they still follow
+  `isLoading` and `isSaving` until they are set.
+- The core table at `row.table`, `cell.table` and `header.getContext().table` carries the
+  ST state, refs and setters.
+- A custom `aggregationFn` name typechecks: `ST_AggregationOption` accepts any string, as
+  `ST_FilterOption` and `ST_SortingOption` do.
+- `enablePagination: false` with `manualPagination: false` shows every row instead of the
+  first page.
+- With `enableFilters`, `enableColumnFilters` and `enableGlobalFilter` all `false`, filters
+  in state no longer filter the rows.
+- Row pinning on select (`rowPinningDisplayMode: 'select-*'`) follows the selection state:
+  a Shift range pins every row in it under controlled `rowSelection` or an external
+  `atoms.rowSelection` too, select all pins the rows it selects (it cleared every pin), and
+  programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
+  unpins.
+- Under `rowPinningDisplayMode: 'select-*'`, unselect all (the select-all checkbox, its
+  keyboard toggle and `Clear selection`) clears every pin, rows pinned by hand included, as
+  0.3.3 did.
+- Rows pinned together on select (a Shift range, select all) keep the row model order,
+  whatever order the selection lists them in. Under `select-sticky` the rows pinned on
+  another page show above or below the page rows in row model order; they came first.
+- Under `rowPinningDisplayMode: 'select-*'` the pagination label covers the pinned rows
+  kept from other pages (`keepPinnedRows`): select all with `selectAllMode: 'all'` on 8 rows
+  at page size 5 reads `1-8 of 8`, the rows the body shows, not `1-5 of 8`.
+- Sticky pinned rows (`rowPinningDisplayMode: 'sticky'` or `'select-sticky'`) stay below
+  the table head: with more pinned rows than the container holds they covered the head and
+  its select-all checkbox. A pinned stack taller than the container keeps its rows below the
+  head and sticks them at the top only. Pinned rows kept from another page take their place
+  in the sticky offsets; they were offset by minus one row.
+- Switching a column's filter mode re-filters the current filter value with the new mode.
+  While a column or global filter is set, a controlled `onColumnFiltersChange` receives an
+  identity updater (`(old) => [...old]`) on each `setColumnFilterFns` and `setGlobalFilterFn`
+  call so the row model re-filters; a handler that only stores the value needs no change.
+- Editing a cell from the cell action menu (`editDisplayMode: 'cell'`) keeps the edit input
+  focused when the menu closes.
+- Rendering an ST display column header headless
+  (`flexRender(header.column.columnDef.Header, header.getContext())`) no longer throws.
+- A callback `ref` in `stTableLayoutProps`, `stTableContainerProps`, `stTableHeadProps`,
+  `stTableFooterProps`, `stTopToolbarProps` or `stBottomToolbarProps` receives the node;
+  only ref objects did.
+- Those six refs follow React 19 ref cleanup: a cleanup the callback ref returns runs on
+  unmount, and a callback that returns none, or a ref object, gets `null`. The
+  `stTableContainerProps` and `stBottomToolbarProps` refs never got `null`, and no cleanup
+  ran.
+- Both installed trees type-check in one program: a project holding the Radix UI and the
+  Base UI copy no longer fails with TS2717 on `stConfigFeature`, and each copy types
+  `stFilterCheckboxProps`, `stFilterSliderProps`, `stSelectCheckboxProps`,
+  `stSelectAllCheckboxProps`, `stEditRowDialogProps` and `stCreateRowModalProps` for its
+  own parts. `table.options` and `column.columnDef` hold them as `ST_PartProps` (`object`).
+
 ## 0.3.3 - 2026-10-22
 
 ### Removed

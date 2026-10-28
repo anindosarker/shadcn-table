@@ -264,8 +264,9 @@ export const stateOptions: StateOption[] = [
     type: 'boolean',
   },
   {
-    defaultValue: 'false',
-    description: '',
+    defaultValue: '',
+    description:
+      'Unset by default, so it follows isLoading until it is set. false turns it off.',
     link: '',
     linkText: '',
     source: 'ST',
@@ -282,8 +283,9 @@ export const stateOptions: StateOption[] = [
     type: 'boolean',
   },
   {
-    defaultValue: 'false',
-    description: '',
+    defaultValue: '',
+    description:
+      'Unset by default, so it follows isSaving until it is set. false turns it off.',
     link: '',
     linkText: '',
     source: 'ST',
@@ -291,8 +293,9 @@ export const stateOptions: StateOption[] = [
     type: 'boolean',
   },
   {
-    defaultValue: 'false',
-    description: '',
+    defaultValue: '',
+    description:
+      'Unset by default, so it follows isLoading until it is set. false turns it off.',
     link: '',
     linkText: '',
     source: 'ST',

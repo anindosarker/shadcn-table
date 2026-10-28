@@ -1,5 +1,5 @@
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
+import { ShadcnTable } from '@/components/ui/shadcn-table';
 import { type Meta } from '@storybook/react-vite';
 
 const meta: Meta = {

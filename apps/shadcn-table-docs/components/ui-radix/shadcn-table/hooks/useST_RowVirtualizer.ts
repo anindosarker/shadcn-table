@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { useSelector } from '@tanstack/react-store';
 import { type Range, useVirtualizer } from '@tanstack/react-virtual';
 import {
   type ST_Row,
@@ -6,8 +7,8 @@ import {
   type ST_RowVirtualizer,
   type ST_TableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/utils/utils';
-import { extraIndexRangeExtractor } from '@/components/ui-radix/shadcn-table/utils/virtualization.utils';
+import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
+import { extraIndexRangeExtractor } from '@/components/ui-radix/shadcn-table/shared/utils/virtualization.utils';
 
 export const useST_RowVirtualizer = <
   TData extends ST_RowData,
@@ -27,18 +28,19 @@ export const useST_RowVirtualizer = <
     },
     refs: { tableContainerRef },
   } = table;
-  const { density, draggingRow, expanded } = table.state;
 
   if (!enableRowVirtualization) return undefined;
+
+  // These feed the memo and the virtualizer, so they are hook subscriptions.
+  const density = useSelector(table.atoms.density);
+  const draggingRow = useSelector(table.atoms.draggingRow);
+  const expanded = useSelector(table.atoms.expanded);
 
   const rowVirtualizerProps = parseFromValuesOrFunc(rowVirtualizerOptions, {
     table,
   });
 
   const realRows = rows ?? getRowModel().rows;
-  /**
-   * when filtering, should find the correct index in filtered rows
-   */
   const draggingRowIndex = useMemo(
     () =>
       draggingRow?.id

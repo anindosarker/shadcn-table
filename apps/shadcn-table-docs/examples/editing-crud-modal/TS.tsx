@@ -172,26 +172,26 @@ const Example = () => {
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveUser,
     //optionally customize modal content
-    renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
+    renderCreateRowDialogContent: ({ row, internalEditComponents }) => (
       <>
         <DialogTitle>Create New User</DialogTitle>
         <div className="flex flex-col gap-4">
           {internalEditComponents} {/* or render custom edit components here */}
         </div>
         <DialogFooter>
-          <ST_EditActionButtons variant="text" table={table} row={row} />
+          <ST_EditActionButtons variant="text" row={row} />
         </DialogFooter>
       </>
     ),
     //optionally customize modal content
-    renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
+    renderEditRowDialogContent: ({ row, internalEditComponents }) => (
       <>
         <DialogTitle>Edit User</DialogTitle>
         <div className="flex flex-col gap-6">
           {internalEditComponents} {/* or render custom edit components here */}
         </div>
         <DialogFooter>
-          <ST_EditActionButtons variant="text" table={table} row={row} />
+          <ST_EditActionButtons variant="text" row={row} />
         </DialogFooter>
       </>
     ),

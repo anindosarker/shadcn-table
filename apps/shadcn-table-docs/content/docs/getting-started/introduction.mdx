@@ -1,0 +1,47 @@
+---
+title: 'Introduction'
+description: 'The batteries-included table for shadcn/ui.'
+---
+
+**shadcn-table** is a feature-rich data table for shadcn/ui: a port of Material React Table to TanStack Table v9, with no dependency on it. It covers everything from a simple list to a production data grid.
+
+## Motivation
+
+Table libraries come in two kinds:
+
+- **Headless**, like TanStack Table: all the logic, none of the UI. You build every menu, filter and toolbar.
+- **Component-based**, like AG Grid: all the UI, ready to use. Hard to restyle or change.
+
+shadcn-table combines them: TanStack Table for the logic, shadcn/ui for the UI, all in your codebase.
+
+The goal is ease of use. A full table takes three steps:
+
+1. **Install:** one command adds the table to your project.
+2. **Define columns:** describe your data with TanStack Table column definitions.
+3. **Render:** pass columns and data to `useShadcnTable`.
+
+## Why use it
+
+- **Every feature built in:** sorting, filtering, grouping, editing, pinning, virtualization and more.
+- **One hook:** turn a feature on with one option on `useShadcnTable`.
+- **Follows your theme:** uses your shadcn/ui components, colors, radius and dark mode, on Radix UI or Base UI.
+- **Your code:** the CLI copies the source into `components/ui/shadcn-table/`. Edit any file.
+- **No ceiling:** the full TanStack Table API is on the `table` instance.
+- **39 languages:** add a locale with one command.
+
+## Get started
+
+<Cards>
+  <Card title="Installation" href="/docs/getting-started/install">
+    Add shadcn-table to your project.
+  </Card>
+  <Card title="Usage" href="/docs/getting-started/usage">
+    Build your first table.
+  </Card>
+  <Card title="Examples" href="/docs/examples">
+    Explore live examples with source code.
+  </Card>
+  <Card title="AI Agent Setup" href="/docs/getting-started/agents">
+    Set up tables with your coding agent.
+  </Card>
+</Cards>

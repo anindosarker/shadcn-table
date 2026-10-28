@@ -4,8 +4,8 @@ import {
   type ST_ColumnDef,
   ST_ToggleFullScreenButton,
   ST_Tooltip,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 
@@ -93,10 +93,10 @@ export const CustomToolbarInternalActions = () => (
     data={data}
     enableGrouping
     enableRowSelection
-    renderToolbarInternalActions={({ table }) => {
+    renderToolbarInternalActions={() => {
       return (
         <>
-          <ST_ToggleFullScreenButton table={table} />
+          <ST_ToggleFullScreenButton />
         </>
       );
     }}

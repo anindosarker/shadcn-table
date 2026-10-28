@@ -28,7 +28,7 @@ export default defineConfig([
     // .eslintrc lints them (no-explicit-any / no-unused-vars off, no
     // react-hooks plugin).
     files: [
-      'registry/*/components/ui/shadcn-table/{fns,hooks,utils}/**/*.{ts,tsx}',
+      'registry/*/components/ui/shadcn-table/{fns,hooks,utils,shared/fns,shared/utils}/**/*.{ts,tsx}',
       'registry/*/components/ui/shadcn-table/{icons,types}.ts',
     ],
     rules: {

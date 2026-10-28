@@ -10,6 +10,7 @@
       "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
+        "@tanstack/react-store@0.11.2",
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
@@ -57,179 +58,359 @@
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableBody.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBody.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableBodyCell.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBodyCell.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyCell.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyCell.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableBodyCellValue.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBodyCellValue.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyCellValue.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyCellValue.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableBodyRow.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBodyRow.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyRow.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRow.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableBodyRowGrabHandle.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBodyRowGrabHandle.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyRowGrabHandle.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRowGrabHandle.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableBodyRowPinButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBodyRowPinButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyRowPinButton.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRowPinButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/body/ST_TableDetailPanel.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableDetailPanel.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableDetailPanel.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableDetailPanel.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ColumnPinningButtons.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ColumnPinningButtons.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ColumnPinningButtons.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_CopyButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_CopyButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_CopyButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_CopyButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_EditActionButtons.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_EditActionButtons.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_EditActionButtons.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_EditActionButtons.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ExpandAllButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ExpandAllButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ExpandAllButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ExpandAllButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ExpandButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ExpandButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ExpandButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ExpandButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_GrabHandleButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_GrabHandleButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_GrabHandleButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_RowPinButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_RowPinButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_RowPinButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_RowPinButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ShowHideColumnsButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ShowHideColumnsButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ShowHideColumnsButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ShowHideColumnsButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ToggleDensePaddingButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ToggleDensePaddingButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleDensePaddingButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleDensePaddingButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ToggleFiltersButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ToggleFiltersButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleFiltersButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleFiltersButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ToggleFullScreenButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleFullScreenButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ToggleGlobalFilterButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleGlobalFilterButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/buttons/ST_ToggleRowActionMenuButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleRowActionMenuButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/fns/aggregationFns.ts",
+          "path": "registry/radix/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/aggregationFns.ts"
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/fns/filterFns.ts",
+          "path": "registry/radix/components/ui/shadcn-table/components/footer/ST_TableFooterCell.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/filterFns.ts"
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooterCell.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/fns/sortFns.ts",
+          "path": "registry/radix/components/ui/shadcn-table/components/footer/ST_TableFooterRow.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/sortFns.ts"
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooterRow.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/footer/ST_TableFooter.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHead.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/footer/ST_TableFooter.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHead.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/footer/ST_TableFooterCell.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCell.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/footer/ST_TableFooterCell.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCell.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/footer/ST_TableFooterRow.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/footer/ST_TableFooterRow.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHead.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHead.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCell.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCell.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCellColumnActionsButton.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellColumnActionsButton.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCellFilterContainer.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellFilterContainer.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCellFilterLabel.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellSortLabel.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellFilterLabel.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellSortLabel.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCellGrabHandle.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellGrabHandle.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCellResizeHandle.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellResizeHandle.tsx"
+          "target": "@ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadCellSortLabel.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterCheckbox.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellSortLabel.tsx"
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterCheckbox.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/head/ST_TableHeadRow.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadRow.tsx"
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterTextField.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_GlobalFilterTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_GlobalFilterTextField.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_SelectCheckbox.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_ActionMenuItem.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ActionMenuItem.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_CellActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_CellActionMenu.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ColumnActionMenu.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_RowActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_RowActionMenu.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/modals/ST_EditRowModal.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_Table.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_TableContainer.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableContainer.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_TableLayout.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableLayout.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_TablePagination.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_ToolbarDropZone.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarDropZone.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stCellActionsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stColumnDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stColumnDraggingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stConfigFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stConfigFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stDensityFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stDensityFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stEditingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stEditingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFeatures.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFeatures.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFilterModesFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFullScreenFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFullScreenFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stLoadingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stLoadingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stRefsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRefsFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stRowDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRowDraggingFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stToolbarsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -265,6 +446,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/stTableHook.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
@@ -312,144 +498,69 @@
           "target": "@ui/shadcn-table/index.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_EditCellTextField.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/fns/aggregationFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_EditCellTextField.tsx"
+          "target": "@ui/shadcn-table/shared/fns/aggregationFns.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_FilterCheckbox.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/fns/filterFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterCheckbox.tsx"
+          "target": "@ui/shadcn-table/shared/fns/filterFns.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_FilterRangeFields.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/fns/sortFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterRangeFields.tsx"
+          "target": "@ui/shadcn-table/shared/fns/sortFns.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_FilterRangeSlider.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/en.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterRangeSlider.tsx"
+          "target": "@ui/shadcn-table/shared/locales/en.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_FilterTextField.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/cell.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterTextField.tsx"
+          "target": "@ui/shadcn-table/shared/utils/cell.utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_GlobalFilterTextField.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/column.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_GlobalFilterTextField.tsx"
+          "target": "@ui/shadcn-table/shared/utils/column.utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/inputs/ST_SelectCheckbox.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/displayColumn.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_SelectCheckbox.tsx"
+          "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/en.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/en.ts"
+          "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_ActionMenuItem.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/row.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ActionMenuItem.tsx"
+          "target": "@ui/shadcn-table/shared/utils/row.utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_CellActionMenu.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/style.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_CellActionMenu.tsx"
+          "target": "@ui/shadcn-table/shared/utils/style.utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_ColumnActionMenu.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/tanstack.helpers.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ColumnActionMenu.tsx"
+          "target": "@ui/shadcn-table/shared/utils/tanstack.helpers.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_FilterOptionMenu.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_FilterOptionMenu.tsx"
+          "target": "@ui/shadcn-table/shared/utils/utils.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_RowActionMenu.tsx",
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_RowActionMenu.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenu.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ShowHideColumnsMenu.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/modals/ST_EditRowModal.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/modals/ST_EditRowModal.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/table/ST_Table.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_Table.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/table/ST_TableContainer.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_TableContainer.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/table/ST_TableLayout.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_TableLayout.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/table/ST_TableLoadingOverlay.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_TableLoadingOverlay.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_BottomToolbar.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_BottomToolbar.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_LinearProgressBar.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_LinearProgressBar.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_TablePagination.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_TablePagination.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_ToolbarAlertBanner.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_ToolbarAlertBanner.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_ToolbarDropZone.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_ToolbarDropZone.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_ToolbarInternalButtons.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_ToolbarInternalButtons.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/ST_TopToolbar.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_TopToolbar.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/toolbar/useST_MediaQuery.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/useST_MediaQuery.ts"
+          "target": "@ui/shadcn-table/shared/utils/virtualization.utils.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/types.ts",
@@ -457,106 +568,11 @@
           "target": "@ui/shadcn-table/types.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/utils/cell.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/cell.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/column.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/column.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/displayColumn.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/displayColumn.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/pagination.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/pagination.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/row.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/row.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/style.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/style.utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/tanstack.features.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/tanstack.features.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/tanstack.helpers.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/tanstack.helpers.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/utils.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/utils/virtualization.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/virtualization.utils.ts"
-        },
-        {
           "path": "registry/radix/components/ui/checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/checkbox.tsx"
         }
-      ],
-      "css": {
-        "@keyframes st-linear-progress-indeterminate": {
-          "0%": {
-            "left": "-35%",
-            "right": "100%"
-          },
-          "60%": {
-            "left": "100%",
-            "right": "-90%"
-          },
-          "100%": {
-            "left": "100%",
-            "right": "-90%"
-          }
-        },
-        ".st-progress-indeterminate [data-slot='progress-indicator']": {
-          "position": "absolute",
-          "top": "0",
-          "bottom": "0",
-          "width": "auto",
-          "transform": "none",
-          "transition": "none",
-          "animation": "st-linear-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite"
-        },
-        "@keyframes st-collapsible-right": {
-          "from": {
-            "width": "0",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "var(--radix-collapsible-content-width)",
-            "overflow": "hidden"
-          }
-        },
-        "@keyframes st-collapsible-left": {
-          "from": {
-            "width": "var(--radix-collapsible-content-width)",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "0",
-            "overflow": "hidden"
-          }
-        }
-      }
+      ]
     },
     {
       "name": "shadcn-table-locale-ar",
@@ -568,9 +584,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/ar.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/ar.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ar.ts"
+          "target": "@ui/shadcn-table/shared/locales/ar.ts"
         }
       ]
     },
@@ -584,9 +600,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/az.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/az.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/az.ts"
+          "target": "@ui/shadcn-table/shared/locales/az.ts"
         }
       ]
     },
@@ -600,9 +616,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/bg.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/bg.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/bg.ts"
+          "target": "@ui/shadcn-table/shared/locales/bg.ts"
         }
       ]
     },
@@ -616,9 +632,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/cs.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/cs.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/cs.ts"
+          "target": "@ui/shadcn-table/shared/locales/cs.ts"
         }
       ]
     },
@@ -632,9 +648,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/da.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/da.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/da.ts"
+          "target": "@ui/shadcn-table/shared/locales/da.ts"
         }
       ]
     },
@@ -648,9 +664,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/de.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/de.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/de.ts"
+          "target": "@ui/shadcn-table/shared/locales/de.ts"
         }
       ]
     },
@@ -664,9 +680,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/el.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/el.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/el.ts"
+          "target": "@ui/shadcn-table/shared/locales/el.ts"
         }
       ]
     },
@@ -680,9 +696,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/es.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/es.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/es.ts"
+          "target": "@ui/shadcn-table/shared/locales/es.ts"
         }
       ]
     },
@@ -696,9 +712,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/et.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/et.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/et.ts"
+          "target": "@ui/shadcn-table/shared/locales/et.ts"
         }
       ]
     },
@@ -712,9 +728,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/fa.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/fa.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/fa.ts"
+          "target": "@ui/shadcn-table/shared/locales/fa.ts"
         }
       ]
     },
@@ -728,9 +744,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/fi.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/fi.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/fi.ts"
+          "target": "@ui/shadcn-table/shared/locales/fi.ts"
         }
       ]
     },
@@ -744,9 +760,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/fr.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/fr.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/fr.ts"
+          "target": "@ui/shadcn-table/shared/locales/fr.ts"
         }
       ]
     },
@@ -760,9 +776,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/he.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/he.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/he.ts"
+          "target": "@ui/shadcn-table/shared/locales/he.ts"
         }
       ]
     },
@@ -776,9 +792,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/hr.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/hr.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/hr.ts"
+          "target": "@ui/shadcn-table/shared/locales/hr.ts"
         }
       ]
     },
@@ -792,9 +808,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/hu.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/hu.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/hu.ts"
+          "target": "@ui/shadcn-table/shared/locales/hu.ts"
         }
       ]
     },
@@ -808,9 +824,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/hy.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/hy.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/hy.ts"
+          "target": "@ui/shadcn-table/shared/locales/hy.ts"
         }
       ]
     },
@@ -824,9 +840,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/id.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/id.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/id.ts"
+          "target": "@ui/shadcn-table/shared/locales/id.ts"
         }
       ]
     },
@@ -840,9 +856,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/it.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/it.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/it.ts"
+          "target": "@ui/shadcn-table/shared/locales/it.ts"
         }
       ]
     },
@@ -856,9 +872,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/ja.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/ja.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ja.ts"
+          "target": "@ui/shadcn-table/shared/locales/ja.ts"
         }
       ]
     },
@@ -872,9 +888,25 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/ko.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/ko.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ko.ts"
+          "target": "@ui/shadcn-table/shared/locales/ko.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-locale-mk",
+      "type": "registry:ui",
+      "title": "Shadcn Table locale: mk",
+      "description": "The mk localization for shadcn-table.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/mk.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/mk.ts"
         }
       ]
     },
@@ -888,9 +920,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/nl.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/nl.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/nl.ts"
+          "target": "@ui/shadcn-table/shared/locales/nl.ts"
         }
       ]
     },
@@ -904,9 +936,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/no.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/no.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/no.ts"
+          "target": "@ui/shadcn-table/shared/locales/no.ts"
         }
       ]
     },
@@ -920,9 +952,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/np.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/np.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/np.ts"
+          "target": "@ui/shadcn-table/shared/locales/np.ts"
         }
       ]
     },
@@ -936,9 +968,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/pl.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/pl.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/pl.ts"
+          "target": "@ui/shadcn-table/shared/locales/pl.ts"
         }
       ]
     },
@@ -952,9 +984,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/pt-BR.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/pt-BR.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/pt-BR.ts"
+          "target": "@ui/shadcn-table/shared/locales/pt-BR.ts"
         }
       ]
     },
@@ -968,9 +1000,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/pt.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/pt.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/pt.ts"
+          "target": "@ui/shadcn-table/shared/locales/pt.ts"
         }
       ]
     },
@@ -984,9 +1016,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/ro.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/ro.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ro.ts"
+          "target": "@ui/shadcn-table/shared/locales/ro.ts"
         }
       ]
     },
@@ -1000,9 +1032,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/ru.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/ru.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ru.ts"
+          "target": "@ui/shadcn-table/shared/locales/ru.ts"
         }
       ]
     },
@@ -1016,9 +1048,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/sk.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/sk.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sk.ts"
+          "target": "@ui/shadcn-table/shared/locales/sk.ts"
         }
       ]
     },
@@ -1032,9 +1064,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/sr-Cyrl-RS.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/sr-Cyrl-RS.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sr-Cyrl-RS.ts"
+          "target": "@ui/shadcn-table/shared/locales/sr-Cyrl-RS.ts"
         }
       ]
     },
@@ -1048,9 +1080,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/sr-Latn-RS.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/sr-Latn-RS.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sr-Latn-RS.ts"
+          "target": "@ui/shadcn-table/shared/locales/sr-Latn-RS.ts"
         }
       ]
     },
@@ -1064,9 +1096,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/sv.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/sv.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sv.ts"
+          "target": "@ui/shadcn-table/shared/locales/sv.ts"
         }
       ]
     },
@@ -1080,9 +1112,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/tr.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/tr.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/tr.ts"
+          "target": "@ui/shadcn-table/shared/locales/tr.ts"
         }
       ]
     },
@@ -1096,9 +1128,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/uk.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/uk.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/uk.ts"
+          "target": "@ui/shadcn-table/shared/locales/uk.ts"
         }
       ]
     },
@@ -1112,9 +1144,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/vi.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/vi.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/vi.ts"
+          "target": "@ui/shadcn-table/shared/locales/vi.ts"
         }
       ]
     },
@@ -1128,9 +1160,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/zh-Hans.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/zh-Hans.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/zh-Hans.ts"
+          "target": "@ui/shadcn-table/shared/locales/zh-Hans.ts"
         }
       ]
     },
@@ -1144,9 +1176,9 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/locales/zh-Hant.ts",
+          "path": "registry/radix/components/ui/shadcn-table/shared/locales/zh-Hant.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/zh-Hant.ts"
+          "target": "@ui/shadcn-table/shared/locales/zh-Hant.ts"
         }
       ]
     },
@@ -1157,6 +1189,7 @@
       "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
+        "@tanstack/react-store@0.11.2",
         "@tanstack/react-virtual@3.11.2",
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
@@ -1204,179 +1237,359 @@
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableBody.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBody.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableBodyCell.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBodyCell.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyCell.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyCell.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableBodyCellValue.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBodyCellValue.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyCellValue.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyCellValue.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableBodyRow.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBodyRow.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyRow.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRow.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableBodyRowGrabHandle.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBodyRowGrabHandle.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyRowGrabHandle.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRowGrabHandle.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableBodyRowPinButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBodyRowPinButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableBodyRowPinButton.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRowPinButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/body/ST_TableDetailPanel.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableDetailPanel.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/body/ST_TableDetailPanel.tsx"
+          "target": "@ui/shadcn-table/components/body/ST_TableDetailPanel.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ColumnPinningButtons.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ColumnPinningButtons.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ColumnPinningButtons.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_CopyButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_CopyButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_CopyButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_CopyButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_EditActionButtons.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_EditActionButtons.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_EditActionButtons.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_EditActionButtons.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ExpandAllButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ExpandAllButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ExpandAllButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ExpandAllButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ExpandButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ExpandButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ExpandButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ExpandButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_GrabHandleButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_GrabHandleButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_GrabHandleButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_RowPinButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_RowPinButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_RowPinButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_RowPinButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ShowHideColumnsButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ShowHideColumnsButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ShowHideColumnsButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ShowHideColumnsButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ToggleDensePaddingButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ToggleDensePaddingButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleDensePaddingButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleDensePaddingButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ToggleFiltersButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ToggleFiltersButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleFiltersButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleFiltersButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ToggleFullScreenButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleFullScreenButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ToggleGlobalFilterButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleGlobalFilterButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/buttons/ST_ToggleRowActionMenuButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/buttons/ST_ToggleRowActionMenuButton.tsx"
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/fns/aggregationFns.ts",
+          "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/aggregationFns.ts"
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/fns/filterFns.ts",
+          "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooterCell.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/filterFns.ts"
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooterCell.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/fns/sortFns.ts",
+          "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooterRow.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/fns/sortFns.ts"
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooterRow.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/footer/ST_TableFooter.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHead.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/footer/ST_TableFooter.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHead.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/footer/ST_TableFooterCell.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCell.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/footer/ST_TableFooterCell.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCell.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/footer/ST_TableFooterRow.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/footer/ST_TableFooterRow.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHead.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHead.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCell.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCell.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCellColumnActionsButton.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellColumnActionsButton.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCellFilterContainer.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellFilterContainer.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCellFilterLabel.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellSortLabel.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellFilterLabel.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellSortLabel.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCellGrabHandle.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellGrabHandle.tsx"
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCellResizeHandle.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellResizeHandle.tsx"
+          "target": "@ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadCellSortLabel.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_FilterCheckbox.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadCellSortLabel.tsx"
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterCheckbox.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/head/ST_TableHeadRow.tsx",
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/head/ST_TableHeadRow.tsx"
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterTextField.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_GlobalFilterTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_GlobalFilterTextField.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_SelectCheckbox.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_ActionMenuItem.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ActionMenuItem.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_CellActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_CellActionMenu.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ColumnActionMenu.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_RowActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_RowActionMenu.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/modals/ST_EditRowModal.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_Table.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_TableContainer.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableContainer.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_TableLayout.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableLayout.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_TablePagination.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ToolbarDropZone.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarDropZone.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stColumnDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stColumnDraggingFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stConfigFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stConfigFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stDensityFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stDensityFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stEditingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stEditingFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stFeatures.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFeatures.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stFilterModesFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stFullScreenFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFullScreenFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stLoadingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stLoadingFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stRefsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRefsFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stRowDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRowDraggingFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stToolbarsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -1412,6 +1625,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/stTableHook.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
@@ -1459,144 +1677,69 @@
           "target": "@ui/shadcn-table/index.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_EditCellTextField.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/fns/aggregationFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_EditCellTextField.tsx"
+          "target": "@ui/shadcn-table/shared/fns/aggregationFns.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_FilterCheckbox.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/fns/filterFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterCheckbox.tsx"
+          "target": "@ui/shadcn-table/shared/fns/filterFns.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_FilterRangeFields.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/fns/sortFns.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterRangeFields.tsx"
+          "target": "@ui/shadcn-table/shared/fns/sortFns.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_FilterRangeSlider.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/en.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterRangeSlider.tsx"
+          "target": "@ui/shadcn-table/shared/locales/en.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_FilterTextField.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/cell.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_FilterTextField.tsx"
+          "target": "@ui/shadcn-table/shared/utils/cell.utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_GlobalFilterTextField.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/column.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_GlobalFilterTextField.tsx"
+          "target": "@ui/shadcn-table/shared/utils/column.utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/inputs/ST_SelectCheckbox.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/displayColumn.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/inputs/ST_SelectCheckbox.tsx"
+          "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/en.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/en.ts"
+          "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_ActionMenuItem.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/row.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ActionMenuItem.tsx"
+          "target": "@ui/shadcn-table/shared/utils/row.utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_CellActionMenu.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/style.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_CellActionMenu.tsx"
+          "target": "@ui/shadcn-table/shared/utils/style.utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_ColumnActionMenu.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/tanstack.helpers.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ColumnActionMenu.tsx"
+          "target": "@ui/shadcn-table/shared/utils/tanstack.helpers.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_FilterOptionMenu.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_FilterOptionMenu.tsx"
+          "target": "@ui/shadcn-table/shared/utils/utils.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_RowActionMenu.tsx",
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_RowActionMenu.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenu.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ShowHideColumnsMenu.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/menus/ST_ShowHideColumnsMenuItems.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/modals/ST_EditRowModal.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/modals/ST_EditRowModal.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/table/ST_Table.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_Table.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/table/ST_TableContainer.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_TableContainer.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/table/ST_TableLayout.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_TableLayout.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/table/ST_TableLoadingOverlay.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/table/ST_TableLoadingOverlay.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_BottomToolbar.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_BottomToolbar.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_LinearProgressBar.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_LinearProgressBar.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_TablePagination.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_TablePagination.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_ToolbarAlertBanner.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_ToolbarAlertBanner.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_ToolbarDropZone.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_ToolbarDropZone.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_ToolbarInternalButtons.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_ToolbarInternalButtons.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/ST_TopToolbar.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/ST_TopToolbar.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/toolbar/useST_MediaQuery.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/toolbar/useST_MediaQuery.ts"
+          "target": "@ui/shadcn-table/shared/utils/virtualization.utils.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/types.ts",
@@ -1604,122 +1747,11 @@
           "target": "@ui/shadcn-table/types.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/utils/cell.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/cell.utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/column.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/column.utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/displayColumn.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/displayColumn.utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/pagination.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/pagination.utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/row.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/row.utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/style.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/style.utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/tanstack.features.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/tanstack.features.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/tanstack.helpers.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/tanstack.helpers.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/utils.ts"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/utils/virtualization.utils.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/utils/virtualization.utils.ts"
-        },
-        {
           "path": "registry/base/components/ui/checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/checkbox.tsx"
         }
-      ],
-      "css": {
-        "@keyframes st-linear-progress-indeterminate": {
-          "0%": {
-            "left": "-35%",
-            "right": "100%"
-          },
-          "60%": {
-            "left": "100%",
-            "right": "-90%"
-          },
-          "100%": {
-            "left": "100%",
-            "right": "-90%"
-          }
-        },
-        ".st-progress-indeterminate [data-slot='progress-indicator']": {
-          "position": "absolute",
-          "top": "0",
-          "bottom": "0",
-          "width": "auto",
-          "transform": "none",
-          "transition": "none",
-          "animation": "st-linear-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite"
-        },
-        "@keyframes st-collapsible-down": {
-          "from": {
-            "height": "0"
-          },
-          "to": {
-            "height": "var(--collapsible-panel-height)"
-          }
-        },
-        "@keyframes st-collapsible-up": {
-          "from": {
-            "height": "var(--collapsible-panel-height)"
-          },
-          "to": {
-            "height": "0"
-          }
-        },
-        "@keyframes st-collapsible-right": {
-          "from": {
-            "width": "0",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "var(--collapsible-panel-width)",
-            "overflow": "hidden"
-          }
-        },
-        "@keyframes st-collapsible-left": {
-          "from": {
-            "width": "var(--collapsible-panel-width)",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "0",
-            "overflow": "hidden"
-          }
-        }
-      }
+      ]
     },
     {
       "name": "shadcn-table-base-locale-ar",
@@ -1731,9 +1763,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/ar.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/ar.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ar.ts"
+          "target": "@ui/shadcn-table/shared/locales/ar.ts"
         }
       ]
     },
@@ -1747,9 +1779,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/az.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/az.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/az.ts"
+          "target": "@ui/shadcn-table/shared/locales/az.ts"
         }
       ]
     },
@@ -1763,9 +1795,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/bg.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/bg.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/bg.ts"
+          "target": "@ui/shadcn-table/shared/locales/bg.ts"
         }
       ]
     },
@@ -1779,9 +1811,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/cs.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/cs.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/cs.ts"
+          "target": "@ui/shadcn-table/shared/locales/cs.ts"
         }
       ]
     },
@@ -1795,9 +1827,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/da.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/da.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/da.ts"
+          "target": "@ui/shadcn-table/shared/locales/da.ts"
         }
       ]
     },
@@ -1811,9 +1843,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/de.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/de.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/de.ts"
+          "target": "@ui/shadcn-table/shared/locales/de.ts"
         }
       ]
     },
@@ -1827,9 +1859,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/el.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/el.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/el.ts"
+          "target": "@ui/shadcn-table/shared/locales/el.ts"
         }
       ]
     },
@@ -1843,9 +1875,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/es.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/es.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/es.ts"
+          "target": "@ui/shadcn-table/shared/locales/es.ts"
         }
       ]
     },
@@ -1859,9 +1891,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/et.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/et.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/et.ts"
+          "target": "@ui/shadcn-table/shared/locales/et.ts"
         }
       ]
     },
@@ -1875,9 +1907,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/fa.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/fa.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/fa.ts"
+          "target": "@ui/shadcn-table/shared/locales/fa.ts"
         }
       ]
     },
@@ -1891,9 +1923,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/fi.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/fi.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/fi.ts"
+          "target": "@ui/shadcn-table/shared/locales/fi.ts"
         }
       ]
     },
@@ -1907,9 +1939,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/fr.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/fr.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/fr.ts"
+          "target": "@ui/shadcn-table/shared/locales/fr.ts"
         }
       ]
     },
@@ -1923,9 +1955,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/he.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/he.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/he.ts"
+          "target": "@ui/shadcn-table/shared/locales/he.ts"
         }
       ]
     },
@@ -1939,9 +1971,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/hr.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/hr.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/hr.ts"
+          "target": "@ui/shadcn-table/shared/locales/hr.ts"
         }
       ]
     },
@@ -1955,9 +1987,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/hu.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/hu.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/hu.ts"
+          "target": "@ui/shadcn-table/shared/locales/hu.ts"
         }
       ]
     },
@@ -1971,9 +2003,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/hy.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/hy.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/hy.ts"
+          "target": "@ui/shadcn-table/shared/locales/hy.ts"
         }
       ]
     },
@@ -1987,9 +2019,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/id.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/id.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/id.ts"
+          "target": "@ui/shadcn-table/shared/locales/id.ts"
         }
       ]
     },
@@ -2003,9 +2035,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/it.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/it.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/it.ts"
+          "target": "@ui/shadcn-table/shared/locales/it.ts"
         }
       ]
     },
@@ -2019,9 +2051,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/ja.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/ja.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ja.ts"
+          "target": "@ui/shadcn-table/shared/locales/ja.ts"
         }
       ]
     },
@@ -2035,9 +2067,25 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/ko.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/ko.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ko.ts"
+          "target": "@ui/shadcn-table/shared/locales/ko.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-base-locale-mk",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) locale: mk",
+      "description": "The mk localization for shadcn-table-base.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/mk.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/mk.ts"
         }
       ]
     },
@@ -2051,9 +2099,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/nl.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/nl.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/nl.ts"
+          "target": "@ui/shadcn-table/shared/locales/nl.ts"
         }
       ]
     },
@@ -2067,9 +2115,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/no.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/no.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/no.ts"
+          "target": "@ui/shadcn-table/shared/locales/no.ts"
         }
       ]
     },
@@ -2083,9 +2131,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/np.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/np.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/np.ts"
+          "target": "@ui/shadcn-table/shared/locales/np.ts"
         }
       ]
     },
@@ -2099,9 +2147,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/pl.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/pl.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/pl.ts"
+          "target": "@ui/shadcn-table/shared/locales/pl.ts"
         }
       ]
     },
@@ -2115,9 +2163,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/pt-BR.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/pt-BR.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/pt-BR.ts"
+          "target": "@ui/shadcn-table/shared/locales/pt-BR.ts"
         }
       ]
     },
@@ -2131,9 +2179,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/pt.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/pt.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/pt.ts"
+          "target": "@ui/shadcn-table/shared/locales/pt.ts"
         }
       ]
     },
@@ -2147,9 +2195,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/ro.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/ro.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ro.ts"
+          "target": "@ui/shadcn-table/shared/locales/ro.ts"
         }
       ]
     },
@@ -2163,9 +2211,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/ru.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/ru.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/ru.ts"
+          "target": "@ui/shadcn-table/shared/locales/ru.ts"
         }
       ]
     },
@@ -2179,9 +2227,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/sk.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/sk.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sk.ts"
+          "target": "@ui/shadcn-table/shared/locales/sk.ts"
         }
       ]
     },
@@ -2195,9 +2243,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/sr-Cyrl-RS.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/sr-Cyrl-RS.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sr-Cyrl-RS.ts"
+          "target": "@ui/shadcn-table/shared/locales/sr-Cyrl-RS.ts"
         }
       ]
     },
@@ -2211,9 +2259,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/sr-Latn-RS.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/sr-Latn-RS.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sr-Latn-RS.ts"
+          "target": "@ui/shadcn-table/shared/locales/sr-Latn-RS.ts"
         }
       ]
     },
@@ -2227,9 +2275,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/sv.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/sv.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/sv.ts"
+          "target": "@ui/shadcn-table/shared/locales/sv.ts"
         }
       ]
     },
@@ -2243,9 +2291,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/tr.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/tr.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/tr.ts"
+          "target": "@ui/shadcn-table/shared/locales/tr.ts"
         }
       ]
     },
@@ -2259,9 +2307,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/uk.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/uk.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/uk.ts"
+          "target": "@ui/shadcn-table/shared/locales/uk.ts"
         }
       ]
     },
@@ -2275,9 +2323,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/vi.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/vi.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/vi.ts"
+          "target": "@ui/shadcn-table/shared/locales/vi.ts"
         }
       ]
     },
@@ -2291,9 +2339,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/zh-Hans.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/zh-Hans.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/zh-Hans.ts"
+          "target": "@ui/shadcn-table/shared/locales/zh-Hans.ts"
         }
       ]
     },
@@ -2307,9 +2355,9 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/locales/zh-Hant.ts",
+          "path": "registry/base/components/ui/shadcn-table/shared/locales/zh-Hant.ts",
           "type": "registry:ui",
-          "target": "@ui/shadcn-table/locales/zh-Hant.ts"
+          "target": "@ui/shadcn-table/shared/locales/zh-Hant.ts"
         }
       ]
     }

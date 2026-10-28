@@ -4,9 +4,9 @@ import {
   type ST_Column,
   type ST_ColumnDef,
   type ST_RowData,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Features/Column Grouping Examples',
@@ -126,7 +126,7 @@ export const GroupingColumnModeRemoveCustomGroupedCell = () => (
       'st-row-expand': {
         //last item in array of grouping state
         GroupedCell: ({ row, table }) => {
-          const { grouping } = table.state;
+          const { grouping } = table.store.state;
           return row.getValue(grouping[grouping.length - 1]);
         },
       },

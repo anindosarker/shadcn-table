@@ -168,18 +168,18 @@ const table = useShadcnTable({
   enableGrouping: true,
   displayColumnDefOptions: {
     'st-row-expand': {
-      Cell: ({ row, table }) => {
+      Cell: ({ row }) => {
         return (
           <>
-            <ST_ExpandButton row={row} table={table} />
+            <ST_ExpandButton row={row} />
             {/*custom content*/}
           </>
         );
       },
-      Header: ({ table }) => {
+      Header: () => {
         return (
           <>
-            <ST_ExpandAllButton table={table} />
+            <ST_ExpandAllButton />
             {/*custom content*/}
           </>
         );

@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from 'react';
+import { useSelector } from '@tanstack/react-store';
 import { type Range, useVirtualizer } from '@tanstack/react-virtual';
 import {
   type ST_ColumnVirtualizer,
   type ST_RowData,
   type ST_TableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
-import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/utils/utils';
-import { extraIndexRangeExtractor } from '@/components/ui-radix/shadcn-table/utils/virtualization.utils';
+import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
+import { extraIndexRangeExtractor } from '@/components/ui-radix/shadcn-table/shared/utils/virtualization.utils';
 
 export const useST_ColumnVirtualizer = <
   TData extends ST_RowData,
@@ -24,9 +25,13 @@ export const useST_ColumnVirtualizer = <
     },
     refs: { tableContainerRef },
   } = table;
-  const { columnPinning, columnVisibility, draggingColumn } = table.state;
 
   if (!enableColumnVirtualization) return undefined;
+
+  // These feed the memos and the virtualizer, so they are hook subscriptions.
+  const columnPinning = useSelector(table.atoms.columnPinning);
+  const columnVisibility = useSelector(table.atoms.columnVisibility);
+  const draggingColumn = useSelector(table.atoms.draggingColumn);
 
   const columnVirtualizerProps = parseFromValuesOrFunc(
     columnVirtualizerOptions,
