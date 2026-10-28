@@ -40,6 +40,24 @@ export const DEV_GROUPS: readonly DevGroup[] = [
         description:
           'Three compact tables in three themes at once, no autoplay.',
       },
+      {
+        href: '/dev/theme/5',
+        name: 'Matches',
+        description:
+          'Rotating headline word drives a mock app whose stock parts and table repaint together; ends on pasting your own theme.',
+      },
+      {
+        href: '/dev/theme/6',
+        name: 'Empty diff',
+        description:
+          'globals.css diff animates while the table file stays at 0 changes, beside the live app.',
+      },
+      {
+        href: '/dev/theme/7',
+        name: 'No step 3',
+        description:
+          'Terminal: install, then git diff prints nothing; the table follows the site theme picker.',
+      },
     ],
   },
 ];
