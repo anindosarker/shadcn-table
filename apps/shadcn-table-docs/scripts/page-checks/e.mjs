@@ -64,9 +64,10 @@ const checks = {
     'customize-filter-variants',
     "filterVariant: 'range-slider'",
     async (page, w, check) => {
+      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
       check(
         'range slider filter',
-        (await w.locator('thead [role="slider"]').count()) > 0,
+        (await w.locator('thead [role="slider"], thead input[type="range"]').count()) > 0,
       );
     },
   ),
@@ -234,11 +235,11 @@ const checks = {
     check('agent bar', (await bar.count()) === 1);
     check('agent prompt', txt.includes('Install shadcn-table in my app:'));
     await bar.getByRole('radio', { name: 'Command' }).click();
-    // The hosted registry URL of the selected base (Radix by default); the
-    // origin is the dev server's in dev.
+    // The hosted registry URL of the selected base (Radix by default, the
+    // runner's --edition otherwise); the origin is the dev server's in dev.
     check(
       'install command',
-      /pnpm dlx shadcn@latest add \S+\/r\/radix\/shadcn-table\.json/.test(
+      /pnpm dlx shadcn@latest add \S+\/r\/[a-z]+\/shadcn-table\.json/.test(
         (await bar.textContent()) ?? '',
       ),
     );
