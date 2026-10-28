@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { useMemo } from 'react';
+import { useSelector } from '@tanstack/react-store';
 import { useST_ColumnVirtualizer } from '@/components/ui-base/shadcn-table/hooks/useST_ColumnVirtualizer';
 import { type TableProps } from '@/components/ui-base/shadcn-table/types';
 import { parseCSSVarId } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
@@ -11,10 +12,7 @@ import {
 } from '@/components/ui-base/shadcn-table/components/body/ST_TableBody';
 import { ST_TableFooter } from '@/components/ui-base/shadcn-table/components/footer/ST_TableFooter';
 import { ST_TableHead } from '@/components/ui-base/shadcn-table/components/head/ST_TableHead';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 
 export type ST_TableProps = TableProps;
 
@@ -34,13 +32,6 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
     getFlatHeaders,
     options: {
       columns,
-      /**
-       * MUI `stickyHeader` Table prop dropped (no native `<table>` attr); sticky th
-        styles live in `ST_TableHeadCell` (+ thead-level grid-mode sticky in
-        `ST_TableHead`), derived from `enableStickyHeader || isFullScreen` off
-        `table`, same as ST_TableHead does.
-      enableStickyHeader,
-       */
       enableTableFooter,
       enableTableHead,
       layoutMode,
@@ -48,17 +39,14 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
       renderCaption,
     },
   } = table;
-  /**
-   * Stickyheader dropped, so gotta drop isFullScreen from deps too, since it only affects stickyheader.
-   */
   // These feed the column size memo, so they are hook subscriptions.
-  const columnSizing = useST_Atom(table.atoms.columnSizing);
-  const columnResizing = useST_Atom(table.atoms.columnResizing);
-  const columnVisibility = useST_Atom(table.atoms.columnVisibility);
+  const columnSizing = useSelector(table.atoms.columnSizing);
+  const columnResizing = useSelector(table.atoms.columnResizing);
+  const columnVisibility = useSelector(table.atoms.columnVisibility);
   // Pinning, reordering and grouping split or merge header groups, which changes the parent header ids.
-  const columnOrder = useST_Atom(table.atoms.columnOrder);
-  const columnPinning = useST_Atom(table.atoms.columnPinning);
-  const grouping = useST_Atom(table.atoms.grouping);
+  const columnOrder = useSelector(table.atoms.columnOrder);
+  const columnPinning = useSelector(table.atoms.columnPinning);
+  const grouping = useSelector(table.atoms.grouping);
 
   const tableProps = {
     ...parseFromValuesOrFunc(stTableProps, { table }),
@@ -96,9 +84,6 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
 
   return (
     <table
-      // stickyHeader={enableStickyHeader || isFullScreen}
-      // Note: no native <table> attr; sticky th styles live in ST_TableHeadCell
-      // (+ thead grid-mode sticky in ST_TableHead), derived from table options.
       {...tableProps}
       style={{ ...columnSizeVars, ...tableProps?.style }}
       className={cn(

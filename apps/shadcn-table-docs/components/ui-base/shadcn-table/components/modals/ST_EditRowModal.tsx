@@ -97,9 +97,6 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
             open={open}
           >
             <DialogContent
-              // fullWidth
-              // maxWidth="xs"
-              // Note: MUI sizing props dropped: shadcn default sizing wins.
               showCloseButton={false}
               aria-describedby={undefined}
               {...contentProps}
@@ -120,19 +117,13 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
                 })) ?? (
                 <>
                   <DialogHeader>
-                    {/* <DialogTitle sx={{ textAlign: 'center' }}> */}
-                    {/* Note: text-align = typography: shadcn DialogHeader default wins. */}
                     <DialogTitle>{localization.edit}</DialogTitle>
                   </DialogHeader>
                   <div className="min-h-0 overflow-y-auto">
                     <form onSubmit={(e) => e.preventDefault()}>
-                      {/* <Stack sx={{ gap: '32px', paddingTop: '16px', width: '100%' }}> */}
-                      {/* Note: MUI Stack → ui/FieldGroup; its gap-7/no-top-pad default wins. */}
                       <FieldGroup>{internalEditComponents}</FieldGroup>
                     </form>
                   </div>
-                  {/* <DialogActions sx={{ p: '1.25rem' }}> */}
-                  {/* Note: padding override dropped: shadcn DialogFooter default wins. */}
                   <DialogFooter>
                     <ST_EditActionButtons row={row} variant="text" />
                   </DialogFooter>

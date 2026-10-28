@@ -29,6 +29,7 @@ import {
 } from '@/components/ui-radix/shadcn-table/types';
 import {
   getPaginationItems,
+  getST_ShownRowRange,
   type ST_UsePaginationItem,
 } from '@/components/ui-radix/shadcn-table/shared/utils/pagination.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
@@ -58,8 +59,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   ...rest
 }: ST_TablePaginationProps) => {
   const table = useSTContext<TData>();
-  // const theme = useTheme();
-  // Note: rtl via `rtl:rotate-180` class.
   const isMobile = useST_MediaQuery('(max-width:720px)');
 
   const {
@@ -98,9 +97,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
     SelectProps.native = true;
   }
 
-  // const tooltipProps = getCommonTooltipProps();
-  // Note: ST_Tooltip applies getCommonTooltipProps() itself.
-
   const {
     children: selectPropsChildren,
     native,
@@ -117,7 +113,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   };
 
   // The row and page counts come from the pre-paginated row model, so the
-  // selector lists every slice that feeds it.
+  // selector lists every slice that feeds it, and the row pins the label
+  // range counts.
   return (
     <Subscribe
       selector={(state) => ({
@@ -128,6 +125,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         globalFilterFn: state.globalFilterFn,
         grouping: state.grouping,
         pagination: state.pagination,
+        rowPinning: state.rowPinning,
       })}
       source={table.store}
     >
@@ -137,13 +135,17 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         const showFirstLastPageButtons = numberOfPages > 2;
         const showFirstPageButton = showFirstButton ?? showFirstLastPageButtons;
         const showLastPageButton = showLastButton ?? showFirstLastPageButtons;
-        const firstRowIndex = pageIndex * pageSize;
         const lastRowIndex = Math.min(
           pageIndex * pageSize + pageSize,
           totalRowCount,
         );
         const disableBack = pageIndex <= 0 || disabled;
         const disableNext = lastRowIndex >= totalRowCount || disabled;
+        const shownRowRange = getST_ShownRowRange(table, {
+          pageIndex,
+          pageSize,
+          totalRowCount,
+        });
 
         return (
           <div
@@ -216,8 +218,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
               </div>
             )}
             {paginationDisplayMode === 'pages' ? (
-              // Note: MUI Pagination/PaginationItem → shadcn Pagination. PaginationPrevious/
-              // Next not used: hardcoded English text + lucide icons (locales, icon overrides).
+              // Not PaginationPrevious/Next: they hardcode English text and
+              // lucide icons, which bypasses localization and icon overrides.
               <Pagination
                 {...restPaginationProps}
                 className={cn('mx-0 w-auto', restPaginationProps?.className)}
@@ -244,7 +246,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                     const { page } = item;
                     const nav = navItems[item.type];
                     return (
-                      // Note: PaginationLink (href-less <a>, not keyboard-operable) → Button.
+                      // A Button, not PaginationLink: an href-less <a> is not
+                      // keyboard-operable.
                       <PaginationItem key={index}>
                         <Button
                           aria-current={item.selected ? 'page' : undefined}
@@ -273,10 +276,12 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             ) : paginationDisplayMode === 'default' ? (
               <>
                 <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
-                  lastRowIndex === 0
+                  shownRowRange.lastRowIndex === 0
                     ? 0
-                    : (firstRowIndex + 1).toLocaleString(localization.language)
-                }-${lastRowIndex.toLocaleString(localization.language)} ${
+                    : (shownRowRange.firstRowIndex + 1).toLocaleString(
+                        localization.language,
+                      )
+                }-${shownRowRange.lastRowIndex.toLocaleString(localization.language)} ${
                   localization.of
                 } ${totalRowCount.toLocaleString(localization.language)}`}</span>
                 <div>

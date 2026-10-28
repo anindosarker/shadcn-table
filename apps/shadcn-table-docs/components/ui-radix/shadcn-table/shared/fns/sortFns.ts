@@ -14,7 +14,6 @@ const fuzzy = constructSortFn({
         rowB.columnFiltersMeta[columnId] as RankingInfo,
       );
     }
-    // Provide a fallback for when the item ranks are equal
     return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir;
   },
 });

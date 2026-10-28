@@ -125,10 +125,16 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
             aria-describedby={loading ? 'st-progress' : undefined}
             {...tableContainerProps}
             ref={(node: HTMLDivElement) => {
-              if (node) {
-                tableContainerRef.current = node;
-                assignRef(tableContainerProps?.ref, node);
-              }
+              tableContainerRef.current = node;
+              const cleanup = assignRef(tableContainerProps?.ref, node);
+              return () => {
+                if (typeof cleanup === 'function') {
+                  cleanup();
+                } else {
+                  assignRef(tableContainerProps?.ref, null);
+                }
+                tableContainerRef.current = null;
+              };
             }}
             style={{
               maxHeight: isFullScreen

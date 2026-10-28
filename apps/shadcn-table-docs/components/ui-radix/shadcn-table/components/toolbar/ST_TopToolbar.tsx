@@ -16,7 +16,6 @@ import { ST_GlobalFilterTextField } from '@/components/ui-radix/shadcn-table/com
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 const topToolbarVariants = cva(
-  // Note: maps MRT getCommonToolbarStyles
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
   {
     variants: {
@@ -104,9 +103,17 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
         return (
           <div
             {...toolbarProps}
-            ref={(ref: HTMLDivElement) => {
-              topToolbarRef.current = ref;
-              assignRef(toolbarProps?.ref, ref);
+            ref={(node: HTMLDivElement) => {
+              topToolbarRef.current = node;
+              const cleanup = assignRef(toolbarProps?.ref, node);
+              return () => {
+                if (typeof cleanup === 'function') {
+                  cleanup();
+                } else {
+                  assignRef(toolbarProps?.ref, null);
+                }
+                topToolbarRef.current = null;
+              };
             }}
             className={cn(
               topToolbarVariants({ fullscreen: isFullScreen }),

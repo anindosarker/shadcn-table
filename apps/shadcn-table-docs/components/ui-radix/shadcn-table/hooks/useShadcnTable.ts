@@ -1,12 +1,19 @@
+import { type TableState } from '@tanstack/react-table';
 import {
   type ST_RowData,
   type ST_TableInstance,
   type ST_TableOptions,
+  type ST_TableState,
 } from '@/components/ui-radix/shadcn-table/types';
+import { type ST_Features } from '@/components/ui-radix/shadcn-table/features/stFeatures';
 import { useST_TableInstance } from '@/components/ui-radix/shadcn-table/hooks/useST_TableInstance';
 import { useST_TableOptions } from '@/components/ui-radix/shadcn-table/hooks/useST_TableOptions';
 
-export const useShadcnTable = <TData extends ST_RowData>(
+export const useShadcnTable = <
+  TData extends ST_RowData,
+  TSelected = ST_TableState<TData>,
+>(
   tableOptions: ST_TableOptions<TData>,
-): ST_TableInstance<TData> =>
-  useST_TableInstance(useST_TableOptions(tableOptions));
+  selector?: (state: TableState<ST_Features>) => TSelected,
+): ST_TableInstance<TData, TSelected> =>
+  useST_TableInstance(useST_TableOptions(tableOptions), selector);

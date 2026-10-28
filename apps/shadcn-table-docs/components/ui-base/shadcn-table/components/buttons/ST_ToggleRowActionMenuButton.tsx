@@ -8,15 +8,12 @@ import {
   type ST_Cell,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 import { ST_EditActionButtons } from '@/components/ui-base/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_RowActionMenu';
 
-// height: '2rem', width: '2rem', opacity: 0.5, '&:hover': { opacity: 1 }, transition: 'opacity 150ms'
-// Note: size/opacity overrides dropped per the buttons sweep ruling.
 const commonIconButtonStyles = cva('ml-2.5');
 
 export interface ST_ToggleRowActionMenuButtonProps<TData extends ST_RowData>
@@ -32,9 +29,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   staticRowIndex,
   ...rest
 }: ST_ToggleRowActionMenuButtonProps<TData>) => {
-  // The row carries the core table, which holds the ST options, atoms, refs
-  // and setters; the ST wrapper types do not re-type it.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     options: {
       createDisplayMode,
