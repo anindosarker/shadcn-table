@@ -185,9 +185,11 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                   </NativeSelect>
                 ) : (
                   <Select
-                    disabled={disabled}
-                    onValueChange={(value) => table.setPageSize(+value)}
-                    value={String(pageSize)}
+                    isDisabled={disabled}
+                    onSelectionChange={(key) => {
+                      if (key !== null) table.setPageSize(+key);
+                    }}
+                    selectedKey={String(pageSize)}
                   >
                     <SelectTrigger
                       aria-label={localization.rowsPerPage}
@@ -207,7 +209,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                               ? option.label
                               : `${option}`;
                           return (
-                            <SelectItem key={value} value={String(value)}>
+                            <SelectItem key={value} id={String(value)}>
                               {label}
                             </SelectItem>
                           );
@@ -256,7 +258,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                               ? nav.label
                               : `${item.selected ? '' : 'Go to '}page ${page}`
                           }
-                          disabled={item.disabled}
+                          isDisabled={item.disabled}
                           onClick={() => table.setPageIndex(page - 1)}
                           size="icon-sm"
                           type="button"
@@ -290,7 +292,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                       <span>
                         <Button
                           aria-label={localization.goToFirstPage}
-                          disabled={disableBack}
+                          isDisabled={disableBack}
                           onClick={() => table.firstPage()}
                           size="icon-sm"
                           type="button"
@@ -305,7 +307,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                     <span>
                       <Button
                         aria-label={localization.goToPreviousPage}
-                        disabled={disableBack}
+                        isDisabled={disableBack}
                         onClick={() => table.previousPage()}
                         size="icon-sm"
                         type="button"
@@ -319,7 +321,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                     <span>
                       <Button
                         aria-label={localization.goToNextPage}
-                        disabled={disableNext}
+                        isDisabled={disableNext}
                         onClick={() => table.nextPage()}
                         size="icon-sm"
                         type="button"
@@ -334,7 +336,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                       <span>
                         <Button
                           aria-label={localization.goToLastPage}
-                          disabled={disableNext}
+                          isDisabled={disableNext}
                           onClick={() => table.lastPage()}
                           size="icon-sm"
                           type="button"
