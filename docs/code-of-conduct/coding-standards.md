@@ -8,19 +8,26 @@ Rules a reader cannot derive from the code. Applies to humans and agents.
 packages/shadcn-table/
 ├── registry/radix/          ← complete Radix UI library: parts, components/ui/shadcn-table, lib, css, registry.ts
 ├── registry/base/           ← complete Base UI library, same shape
+├── registry/aria/           ← complete React Aria library, same shape
 ├── registry.json            ← item catalog, stays at the package root
-├── scripts/registry/        ← registry build, hosted copies, example items, add-part, base guard
+├── scripts/registry/        ← edition list, registry build, hosted copies, example items, add-part, edition guard
 ├── scripts/                 ← everything else
 └── stories/ .storybook/     ← one story set, `@/` points at registry/<ST_BASE>
 apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix and components/ui-base are installed copies
 ```
 
-## Two trees
+## Editions
 
-- A change to a common library file is made in both trees by hand.
-- `scripts/registry/base-diff.json` lists the files that legitimately differ. A file not on
-  the list must be byte-identical in both trees; CI (`pnpm check:bases`) fails otherwise.
-- Adding a base-only difference means adding the path to the list in the same commit.
+- Three trees, one per edition: `registry/radix`, `registry/base`, `registry/aria`. The list
+  is `EDITIONS` in `scripts/registry/lib.mjs`; every script that handles more than one
+  edition reads it.
+- Radix is the reference. A change to a common library file is made in every tree by hand.
+- Each other edition has its own list of files that legitimately differ from radix:
+  `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on an
+  edition's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
+  fails otherwise.
+- Adding an edition-only difference means adding the path to that edition's list in the
+  same commit.
 
 ## Naming
 
@@ -58,10 +65,12 @@ Run before every commit that touches the area.
 pnpm format                                   # prettier, once, before the commit
 pnpm --filter shadcn-table tsc:radix          # ignore only the TS5101 baseUrl notice
 pnpm --filter shadcn-table tsc:baseui
+pnpm --filter shadcn-table tsc:aria
 pnpm --filter shadcn-table lint
 pnpm --filter shadcn-table test               # Radix UI stories
 pnpm --filter shadcn-table test:base          # Base UI stories
-pnpm check:bases                              # two-tree guard
+pnpm --filter shadcn-table test:aria          # React Aria stories
+pnpm check:bases                              # edition guard, every edition against radix
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
