@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 /**
  * Static Storybook gate for the edition switch (.storybook/edition-tool.ts):
- * with the three builds served from one directory (`storybook:build`, then
- * `storybook:build:base` and `storybook:build:aria` into storybook-static/base/
- * and storybook-static/aria/), each edition's toolbar marks its own edition
- * and shows one link per other edition, labelled with it, that opens the same
- * story there.
+ * with the three builds served from one directory (`storybook:build`,
+ * `storybook:build:base` and `storybook:build:aria` into
+ * storybook-static/radix/, storybook-static/base/ and storybook-static/aria/),
+ * each edition's toolbar marks its own edition and shows one link per other
+ * edition, labelled with it, that opens the same story there. One more
+ * check, for the production host: the root redirects to the default
+ * edition's build with the query kept (vercel.json). A plain static server
+ * answers the root with 200 or 404 instead; the check is then skipped.
  *
  * Usage (a static server must be running, for example
  * `pnpm serve storybook-static -l 5344`):
@@ -16,9 +19,9 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  DEFAULT_EDITION,
   EDITION_LABELS,
   EDITIONS,
-  REFERENCE_EDITION,
 } from './registry/editions.mjs';
 
 const PKG_DIR = path.resolve(
@@ -35,29 +38,53 @@ const base = (i === -1 ? 'http://localhost:5344' : args[i + 1]).replace(
   '',
 );
 
-/** First story id of the reference build; every build shares the story set. */
-const index = JSON.parse(
-  await readFile(path.join(PKG_DIR, 'storybook-static', 'index.json'), 'utf8'),
+/** First story id of the default edition's build; every build shares the story set. */
+const indexFile = path.join(
+  PKG_DIR,
+  'storybook-static',
+  DEFAULT_EDITION,
+  'index.json',
 );
+const index = JSON.parse(await readFile(indexFile, 'utf8'));
 const storyId = Object.values(index.entries).find(
   (e) => e.type === 'story',
 )?.id;
 if (!storyId) {
-  console.error('no story in storybook-static/index.json');
+  console.error(`no story in ${path.relative(PKG_DIR, indexFile)}`);
   process.exit(1);
 }
 
 /**
  * Each edition: the label its button shows and where its build is served
- * (the reference at the root, every other edition under <edition>/).
+ * (every edition under <edition>/).
  */
 const editions = EDITIONS.map((name) => ({
   name,
   label: EDITION_LABELS[name],
-  root: name === REFERENCE_EDITION ? `${base}/` : `${base}/${name}/`,
+  root: `${base}/${name}/`,
 }));
 
 const results = [];
+
+// The root redirect (vercel.json, storybook host): `/?path=...` answers 3xx
+// with a Location of `/<DEFAULT_EDITION>/?path=...`. A static server has no
+// redirects, so a 200 or 404 at the root skips the check instead of failing.
+{
+  const query = `?path=/story/${storyId}`;
+  const res = await fetch(`${base}/${query}`, { redirect: 'manual' });
+  if (res.status >= 300 && res.status < 400) {
+    const location = new URL(res.headers.get('location') ?? '', base);
+    const ok =
+      location.pathname === `/${DEFAULT_EDITION}/` && location.search === query;
+    results.push(
+      `${ok ? 'PASS' : 'FAIL'} root redirects to /${DEFAULT_EDITION}/ with the query kept ${res.status} ${location.href}`,
+    );
+  } else {
+    results.push(
+      `SKIP root redirect (status ${res.status}, no redirect on this server)`,
+    );
+  }
+}
 const browser = await chromium.launch();
 for (const { name, label, root } of editions) {
   const check = (what, ok, extra = '') =>
