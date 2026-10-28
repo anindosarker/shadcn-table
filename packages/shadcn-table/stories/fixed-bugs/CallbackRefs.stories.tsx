@@ -1,4 +1,4 @@
-import { createRef, type ReactNode, useState } from 'react';
+import { createRef, type ReactNode, useEffect, useState } from 'react';
 import {
   type ST_ColumnDef,
   ST_TableContainer,
@@ -174,5 +174,44 @@ export const RefObjectOnTableContainerProps = {
     await unmount(canvasElement);
 
     await expect(containerRef.current).toBeNull();
+  },
+};
+
+const manyRows: Person[] = Array.from({ length: 500 }, (_, i) => ({
+  firstName: `First ${i}`,
+  lastName: `Last ${i}`,
+}));
+
+const VirtualizedTableLoadedAfterMount = () => {
+  const [rows, setRows] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setRows(manyRows);
+    setIsLoading(false);
+  }, []);
+
+  return (
+    <ShadcnTable
+      columns={columns}
+      data={rows}
+      enablePagination={false}
+      enableRowVirtualization
+      state={{ isLoading }}
+    />
+  );
+};
+
+// The container re-renders when `isLoading` changes in the same batch as the
+// data; its ref must stay attached so the row virtualizer finds its scroll
+// element and renders rows.
+export const VirtualizedDataSetAfterMount = {
+  render: () => <VirtualizedTableLoadedAfterMount />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll('tbody tr').length).toBeGreaterThan(
+        10,
+      ),
+    );
   },
 };
