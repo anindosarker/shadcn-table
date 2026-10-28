@@ -25,6 +25,8 @@ import { createRequire } from 'node:module';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { EDITIONS } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import { TAB_VALUES } from '../lib/base-tabs.mjs';
 
 const APP_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -52,14 +54,13 @@ const opt = (name, fallback) => {
   return v;
 };
 const base = opt('base', 'http://localhost:5320');
-// The stored value of the site-wide base tab group per edition
-// (TAB_VALUES in components/base-selector.tsx).
-const EDITION_TABS = { radix: 'radix', base: 'base-ui', aria: 'react-aria' };
 const edition = opt('edition', '');
-if (edition && !(edition in EDITION_TABS)) {
-  console.error(`--edition must be one of ${Object.keys(EDITION_TABS)}`);
+if (edition && !EDITIONS.includes(edition)) {
+  console.error(`--edition must be one of ${EDITIONS.join(', ')}`);
   process.exit(1);
 }
+/** The stored value of the site-wide base tab group for `--edition`. */
+const editionTab = edition ? TAB_VALUES[edition] : '';
 const widths = opt('widths', '1440,700').split(',').map(Number);
 const shots = opt('shots', '');
 const clusters = args
@@ -151,7 +152,7 @@ for (const route of pages) {
       });
       // The base selector reads the fumadocs tab group `base` from storage.
       if (tab) localStorage.setItem('base', tab);
-    }, EDITION_TABS[edition] ?? '');
+    }, editionTab);
     const page = await ctx.newPage();
     const errors = [];
     page.on('console', (m) => {
