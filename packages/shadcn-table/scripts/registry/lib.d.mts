@@ -20,6 +20,7 @@ export const ROOT: string;
 /** Absolute path of the docs app. */
 export const DOCS: string;
 export {
+  DEFAULT_EDITION,
   EDITION_LABELS,
   EDITIONS,
   editionItemName,

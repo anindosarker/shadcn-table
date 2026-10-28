@@ -84,16 +84,20 @@ for (const edition of EDITIONS) {
 
   const libPrefix = path.relative(ROOT, PKG);
   const hostedMain = prefixPaths({ ...main, name: HOSTED_NAME }, libPrefix);
-  const hostedLocales = locales.map((item) =>
-    prefixPaths(
+  // A locale item's name, description and dependency all name its main
+  // item: the committed name in registry.json (lib.mjs), the hosted name here.
+  const hostedLocales = locales.map((item) => {
+    const code = item.name.slice(localePrefix.length);
+    return prefixPaths(
       {
         ...item,
-        name: `${HOSTED_NAME}-locale-${item.name.slice(localePrefix.length)}`,
+        name: `${HOSTED_NAME}-locale-${code}`,
+        description: `The ${code} localization for ${HOSTED_NAME}.`,
         registryDependencies: [`${HOSTED_URL}/${edition}/${HOSTED_NAME}.json`],
       },
       libPrefix,
-    ),
-  );
+    );
+  });
 
   const registry = {
     $schema: 'https://ui.shadcn.com/schema/registry.json',

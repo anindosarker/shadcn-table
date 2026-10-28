@@ -5,10 +5,10 @@
  * other source file in the folder, subfolders included; EDITIONS in
  * lib.mjs, the reference edition's folder defines the example list). The
  * root registry.json includes this file, so the GitHub namespace serves
- * every example as `anindosarker/shadcn-table/example-<slug>` (Radix UI),
- * `example-<slug>-base` and `example-<slug>-aria` (editionItemName);
- * hosted.mjs serves each edition's items under the plain name in
- * /r/<edition>/.
+ * every example as `anindosarker/shadcn-table/example-<slug>-<edition>`
+ * (`example-basic-radix`, `example-basic-base`, `example-basic-aria`;
+ * editionItemName); hosted.mjs serves each edition's items under the plain
+ * `example-<slug>` in /r/<edition>/.
  *
  * Per item:
  * - name `editionItemName('example-<slug>', edition)`, type `registry:block`

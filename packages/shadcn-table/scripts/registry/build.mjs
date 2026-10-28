@@ -11,8 +11,8 @@ import { DEV, EDITIONS, PKG, REFERENCE_EDITION } from './lib.mjs';
 
 const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 
-// Radix first: its main item keeps the name and the GitHub address v0.1.x
-// published (`shadcn-table`); the other editions are `shadcn-table-<edition>`.
+// Every edition's main item is `shadcn-table-<edition>` (registry.ts in its
+// tree); the catalog's own name and homepage come from the reference edition.
 const editions = await Promise.all(
   EDITIONS.map(
     async (edition) =>
