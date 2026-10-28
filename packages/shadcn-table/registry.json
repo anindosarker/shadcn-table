@@ -572,52 +572,7 @@
           "type": "registry:ui",
           "target": "@ui/checkbox.tsx"
         }
-      ],
-      "css": {
-        "@keyframes st-linear-progress-indeterminate": {
-          "0%": {
-            "left": "-35%",
-            "right": "100%"
-          },
-          "60%": {
-            "left": "100%",
-            "right": "-90%"
-          },
-          "100%": {
-            "left": "100%",
-            "right": "-90%"
-          }
-        },
-        ".st-progress-indeterminate [data-slot='progress-indicator']": {
-          "position": "absolute",
-          "top": "0",
-          "bottom": "0",
-          "width": "auto",
-          "transform": "none",
-          "transition": "none",
-          "animation": "st-linear-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite"
-        },
-        "@keyframes st-collapsible-right": {
-          "from": {
-            "width": "0",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "var(--radix-collapsible-content-width)",
-            "overflow": "hidden"
-          }
-        },
-        "@keyframes st-collapsible-left": {
-          "from": {
-            "width": "var(--radix-collapsible-content-width)",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "0",
-            "overflow": "hidden"
-          }
-        }
-      }
+      ]
     },
     {
       "name": "shadcn-table-locale-ar",
@@ -1796,68 +1751,7 @@
           "type": "registry:ui",
           "target": "@ui/checkbox.tsx"
         }
-      ],
-      "css": {
-        "@keyframes st-linear-progress-indeterminate": {
-          "0%": {
-            "left": "-35%",
-            "right": "100%"
-          },
-          "60%": {
-            "left": "100%",
-            "right": "-90%"
-          },
-          "100%": {
-            "left": "100%",
-            "right": "-90%"
-          }
-        },
-        ".st-progress-indeterminate [data-slot='progress-indicator']": {
-          "position": "absolute",
-          "top": "0",
-          "bottom": "0",
-          "width": "auto",
-          "transform": "none",
-          "transition": "none",
-          "animation": "st-linear-progress-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite"
-        },
-        "@keyframes st-collapsible-down": {
-          "from": {
-            "height": "0"
-          },
-          "to": {
-            "height": "var(--collapsible-panel-height)"
-          }
-        },
-        "@keyframes st-collapsible-up": {
-          "from": {
-            "height": "var(--collapsible-panel-height)"
-          },
-          "to": {
-            "height": "0"
-          }
-        },
-        "@keyframes st-collapsible-right": {
-          "from": {
-            "width": "0",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "var(--collapsible-panel-width)",
-            "overflow": "hidden"
-          }
-        },
-        "@keyframes st-collapsible-left": {
-          "from": {
-            "width": "var(--collapsible-panel-width)",
-            "overflow": "hidden"
-          },
-          "to": {
-            "width": "0",
-            "overflow": "hidden"
-          }
-        }
-      }
+      ]
     },
     {
       "name": "shadcn-table-base-locale-ar",
