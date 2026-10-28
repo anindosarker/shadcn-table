@@ -277,9 +277,9 @@ pnpm --filter shadcn-table tsc:baseui
 pnpm --filter shadcn-table tsc:aria
 pnpm --filter shadcn-table lint
 pnpm check:bases
-pnpm --filter shadcn-table storybook:build
-pnpm --filter shadcn-table storybook:build:base
-pnpm --filter shadcn-table storybook:build:aria
+pnpm --filter shadcn-table storybook:build        # storybook-static/radix
+pnpm --filter shadcn-table storybook:build:base   # storybook-static/base
+pnpm --filter shadcn-table storybook:build:aria   # storybook-static/aria
 pnpm test
 pnpm test:base
 pnpm test:aria

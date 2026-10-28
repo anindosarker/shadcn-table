@@ -7,6 +7,22 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- Base UI is the edition shown first: the docs edition tabs and the command bar open on Base UI
+  until the reader picks one (a stored pick is kept), and the Storybook root
+  (`storybook.shadcn-table.com/`) redirects to the Base UI build. The three Storybook builds
+  live under `/radix/`, `/base/` and `/aria/`; `/base/` and `/aria/` links keep working, old
+  root links land on Base UI. The Storybook edition tool marks the current edition's button.
+- Every committed registry item is named by its edition: the GitHub-namespace addresses of the
+  Radix UI items are `anindosarker/shadcn-table/shadcn-table-radix`,
+  `shadcn-table-radix-locale-<code>` and `example-<slug>-radix` (the plain `shadcn-table` and
+  `example-<slug>` GitHub addresses no longer resolve). The hosted registry is unchanged:
+  `/r/radix/shadcn-table.json`, `/r/radix/shadcn-table-locale-<code>.json` and
+  `/r/radix/example-<slug>.json` as before.
+
 ## 0.6.0 - 2026-10-28
 
 ### Changed

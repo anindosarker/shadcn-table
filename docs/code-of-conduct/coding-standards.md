@@ -20,10 +20,15 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
 ## Editions
 
 - Three trees, one per edition: `registry/radix`, `registry/base`, `registry/aria`. The list
-  is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION` and
-  `EDITION_LABELS`); every script, config and docs app script that handles more than one
-  edition reads it, none repeats the names.
-- Radix is the reference. A change to a common library file is made in every tree by hand.
+  is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION`,
+  `DEFAULT_EDITION` and `EDITION_LABELS`); every script, config and docs app script that
+  handles more than one edition reads it, none repeats the names.
+- Radix is the reference (`REFERENCE_EDITION`, the diff baseline and the example slug source).
+  A change to a common library file is made in every tree by hand. Base UI is the default
+  (`DEFAULT_EDITION`): what a reader sees before picking an edition, in the docs tabs and at
+  the Storybook root. Neither constant is an unnamed fallback in the registry: every committed
+  item is `<name>-<edition>` for every edition (`editionItemName`); only the hosted
+  `/r/<edition>/` copies carry the plain name.
 - Each other edition has its own list of files that legitimately differ from radix:
   `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on an
   edition's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
