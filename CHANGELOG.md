@@ -26,6 +26,12 @@ date; merging it publishes the section as the GitHub release notes.
   `/r/aria/example-<slug>.json` carried the Radix source (`asChild`, `disabled` on `Button`,
   `onValueChange` on `RadioGroup`, the Radix tooltip composition), which those editions' parts
   reject; they now carry that edition's code.
+- React Aria edition: the `label` part is what shadcn ships (`add-part.mjs` output), the hand
+  edit that dropped its unused `import * as React` is reverted, and `shadcn-table-aria` lists
+  `label` as a registryDependency like every other part instead of shipping its own copy.
+  Unused locals and parameters are checked by ESLint (`@typescript-eslint/no-unused-vars`, `_`
+  prefix tolerated, parts ignored), no longer by `noUnusedLocals` and `noUnusedParameters` in
+  the tsconfigs.
 
 ## 0.5.1 - 2026-10-28
 
