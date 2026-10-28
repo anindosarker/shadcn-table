@@ -15,8 +15,9 @@ const ADDON_ID = 'shadcn-table/edition';
 
 /**
  * Another edition's URL for the same story. Static builds sit side by side
- * under <edition>/, so the link is relative; `storybook dev` serves the editions on consecutive ports in EDITIONS order
- * (6006, 6007 and 6008 in package.json), so the link shifts the port.
+ * under <edition>/, so the link is relative; `storybook dev` serves the
+ * editions on consecutive ports in EDITIONS order (6006, 6007 and 6008 in
+ * package.json), so the link shifts the port.
  * `path` is the manager's `?path=` value, which Storybook does not encode.
  */
 export function editionHref(
