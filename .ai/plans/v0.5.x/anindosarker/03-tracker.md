@@ -46,3 +46,17 @@ Docs and Storybook three-way, from `2e91c678`. The edition switch, `lib/install.
 - `next start -p 5345` (stopped after): `check-pages a` 274 passed, `c` 280 passed, `e` 596 passed, 0 failed.
 - Playwright from the scratchpad on 5345: the header switch lists `Radix UI,Base UI,React Aria`; with React Aria selected, `/docs/examples/minimal` (5 rows) and `/docs/guides/toolbar-customization` (3 examples, 60 rows, 103 `[data-rac]` nodes) render, the variant loader's `Loaded` props read `base: 'aria'` for every example panel, no console or page error; the install page's React Aria tab shows `init --base aria` and the `/r/aria/shadcn-table.json` command.
 - `grep -rn "Radix UI | Base UI" apps/shadcn-table-docs/content skills packages/shadcn-table/registry/README.md`: empty.
+
+## Gates
+
+Verifier on `a4b5a14c`, clean tree, worktree `07`. Plan 03 section 2.2 plus the part 02 gates.
+
+- `check:bases`: `radix and base: 142 library files in both trees, 23 allowed to differ`, `radix and aria: 142 library files in both trees, 37 allowed to differ`.
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json`: 0 errors. Package `lint`: pass.
+- `test`, `test:base`, `test:aria`: 63 files, 446 tests pass each.
+- `storybook:build`, `storybook:build:base`, `storybook:build:aria`: pass; `serve storybook-static -l 6038` (stopped after); `check-storybook.mjs --base http://localhost:6038`: 42 passed, 0 failed.
+- `pnpm registry:build`: pass, `git status` clean. `lib:install radix`, `base`, `aria`: 143 table files and 28, 26, 26 parts, `git status` clean. `examples:variants`: 115 examples, 216 files per edition, `git status` clean.
+- Docs `types:check`: tsc 0 errors. `lint`: 0 errors, 3 existing warnings. `NEXT_DIST_DIR=.next-verify pnpm build`: pass, 306 static pages (Next's `tsconfig.json` include rewrite reverted, `.next-verify` removed).
+- `next start -p 5345` on the verify build (stopped after): `check-pages a` 274 passed, `c` 280 passed, `e` 596 passed, 0 failed.
+- `grep -rn "Radix UI | Base UI" apps/shadcn-table-docs/content skills packages/shadcn-table/registry/README.md`: empty.
+- Playwright from the scratchpad on 5345, `localStorage` base `react-aria`: the header switch lists `Radix UI,Base UI,React Aria` with React Aria selected on every page; `/docs/examples/minimal`, `basic`, `custom-filter-ui`, `export-csv`, `editing-crud`, `/docs/guides/toolbar-customization` (3 panels) and `/docs/guides/column-filtering` (5 panels): every panel renders rows, `[data-open]`/`[data-closed]` (Base UI) absent everywhere, `[data-rac]` present on every panel except `example-minimal` (0 on both pages: it renders `ST_Table` alone, no React Aria part; on the React Aria tab it loads one more chunk carrying the `st-aria-collapsible` keyframes than the Radix and Base UI tabs do). Clicking Radix UI, Base UI, React Aria in turn on `/docs/examples/minimal`: 5 rows each. No console or page errors.
