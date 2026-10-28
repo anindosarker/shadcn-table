@@ -1,4 +1,3 @@
-// Owns `table.refs`, the DOM and input refs the components register into.
 // The core table is built once per mounted table, so plain `{ current }`
 // objects set here live as long as the table and no `useRef` is needed.
 import type {

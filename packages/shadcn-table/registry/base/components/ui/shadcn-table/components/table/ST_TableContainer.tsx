@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -45,6 +51,35 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
     }),
     ...rest,
   };
+
+  // The virtualizers in the table read tableContainerRef in their layout
+  // effects, which run before React attaches this ref. Storing the attached
+  // node renders the container and the table again, before paint, so the
+  // virtualizers pick up their scroll element on mount.
+  const [, setContainerNode] = useState<HTMLDivElement | null>(null);
+
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // tableContainerRef null while the children's layout effects run.
+  const userRef = useRef(tableContainerProps.ref);
+  userRef.current = tableContainerProps.ref;
+  const attachRef = useCallback(
+    (node: HTMLDivElement) => {
+      tableContainerRef.current = node;
+      setContainerNode(node);
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        tableContainerRef.current = null;
+      };
+    },
+    [tableContainerRef],
+  );
 
   const toolbarObserverRef = useRef<{
     observer: ResizeObserver;
@@ -124,12 +159,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
             aria-busy={loading}
             aria-describedby={loading ? 'st-progress' : undefined}
             {...tableContainerProps}
-            ref={(node: HTMLDivElement) => {
-              if (node) {
-                tableContainerRef.current = node;
-                assignRef(tableContainerProps?.ref, node);
-              }
-            }}
+            ref={attachRef}
             style={{
               maxHeight: isFullScreen
                 ? 'calc(100vh - var(--st-toolbar-height, 0px))'

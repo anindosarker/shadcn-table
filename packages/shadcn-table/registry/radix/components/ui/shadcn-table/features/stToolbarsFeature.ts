@@ -1,6 +1,3 @@
-// Owns the `showAlertBanner` and `showToolbarDropZone` state slices, their
-// `on*Change` options, and the `table.setShowAlertBanner` and
-// `table.setShowToolbarDropZone` APIs on the core table.
 import {
   assignTableAPIs,
   functionalUpdate,

@@ -17,6 +17,7 @@ const items = baseItems({
   // their version from package.json.
   dependencies: [
     { name: '@tanstack/react-table', pinned: true },
+    { name: '@tanstack/react-store', pinned: true },
     { name: '@tanstack/react-virtual', pinned: true },
     { name: '@tanstack/match-sorter-utils', pinned: true },
     { name: 'highlight-words', pinned: true },

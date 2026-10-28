@@ -1,6 +1,3 @@
-// Owns the `isFullScreen` state slice, the `enableFullScreenToggle` and
-// `onIsFullScreenChange` options, and the `table.setIsFullScreen` API on the
-// core table.
 import {
   assignTableAPIs,
   functionalUpdate,

@@ -1,5 +1,3 @@
-// Owns `actionCell`, the cell whose action menu is open, with its
-// `onActionCellChange` option and the `setActionCell` table API.
 import {
   assignTableAPIs,
   functionalUpdate,

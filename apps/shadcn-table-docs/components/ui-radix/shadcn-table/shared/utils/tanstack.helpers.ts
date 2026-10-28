@@ -65,4 +65,4 @@ export const createRow = <TData extends ST_RowData>(
     depth,
     subRows as any,
     parentId,
-  ) as ST_Row<TData>;
+  ) as unknown as ST_Row<TData>;

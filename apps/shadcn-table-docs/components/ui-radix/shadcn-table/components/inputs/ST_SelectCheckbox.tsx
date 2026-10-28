@@ -108,16 +108,12 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         isLoading ||
         (row && !row.getCanSelect()) ||
         row?.id === 'st-row-create',
-      // inputProps: { 'aria-label': ... },
-      // Note: radix renders no input; `aria-label` above lands on the root button.
-      // onChange: (event) => { event.stopPropagation(); selectAll ? onSelectAllChange(event) : onSelectionChange!(event); },
-      // Note: radix change callbacks carry no DOM event (shiftKey); selection runs in onClick below.
-      // size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
-      // Note: the density variant on className below.
+      // Radix change callbacks carry no DOM event (shiftKey), so selection runs
+      // in onClick.
       ...checkboxProps,
       onClick: (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
-        // Note: MUI Radio fires no change once checked; same guard here.
+        // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
           if (selectAll) onSelectAllChange(e);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,8 +121,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         }
         checkboxProps?.onClick?.(e);
       },
-      // sx: (theme) => ({ height, m, width, zIndex: 0, ...parseFromValuesOrFunc(checkboxProps?.sx, theme) }),
-      // Note: MUI sized the padded hit area; the density variant sizes the visible box.
       className: cn(
         selectCheckboxVariants({ density }),
         checkboxProps?.className,
@@ -176,8 +170,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           >
             <span className="inline-flex">
               {enableMultiRowSelection === false ? (
-                // <Radio {...(commonProps as any)} />
-                // Note: shadcn RadioGroupItem needs its RadioGroup; one group per row stands in for MUI's standalone Radio.
+                // RadioGroupItem needs a RadioGroup: one group per row.
                 <RadioGroup value={isChecked ? 'on' : null}>
                   <RadioGroupItem
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -188,11 +181,9 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               ) : (
                 <Checkbox
                   {...commonProps}
-                  // indeterminate={...}
-                  // Note: radix folds MUI `indeterminate` into `checked`, so it lands after the spread.
-                  // v9: getIsSomeRowsSelected / getIsSomeSelected mean "at least one"
-                  // (the all-selected case included), so the all-selected check gates
-                  // the indeterminate state.
+                  // `checked` carries the indeterminate state, so it goes after
+                  // the spread. getIsSomeRowsSelected and getIsSomeSelected
+                  // include the all-selected case, so that case is gated out.
                   checked={
                     (
                       !isChecked && selectAll

@@ -6,12 +6,10 @@ import {
   type ButtonProps,
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
 
-// Note: text-inheritance cva: user exception to the no-className ruling (copy cells render as cell text).
 const copyButtonVariants = cva(
   'm-[-0.25rem] h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
 );
@@ -25,9 +23,7 @@ export const ST_CopyButton = <TData extends ST_RowData>({
   cell,
   ...rest
 }: ST_CopyButtonProps<TData>) => {
-  // The cell carries the core table, which holds the ST options, atoms, refs
-  // and setters; the ST wrapper types do not re-type it.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
+  const table = cell.table;
   const {
     options: { localization, stCopyButtonProps },
   } = table;

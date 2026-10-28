@@ -4,7 +4,6 @@ import {
   type CollapseProps,
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterInfo } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_FilterCheckbox } from '@/components/ui/shadcn-table/components/inputs/ST_FilterCheckbox';
@@ -21,9 +20,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   header,
   ...rest
 }: ST_TableHeadCellFilterContainerProps<TData>) => {
-  // The core table behind the header; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
-  const table = header.table as unknown as ST_TableInstance<TData>;
+  const table = header.table;
   const {
     options: { columnFilterDisplayMode },
   } = table;
@@ -47,8 +44,6 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showColumnFilters}>
       {(showColumnFilters) => (
-        // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
-        // Note: MUI Collapse replaced by ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
         <Collapsible
           open={showColumnFilters || columnFilterDisplayMode === 'popover'}
           {...rest}

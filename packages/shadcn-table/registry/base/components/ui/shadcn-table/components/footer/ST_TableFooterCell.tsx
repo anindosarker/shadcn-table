@@ -1,13 +1,10 @@
 import { type KeyboardEvent } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-// import { useTheme } from '@mui/material/styles';
-// Note: useTheme dropped. align->text-start (logical, rtl-safe).
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import { cellKeyboardShortcuts } from '@/components/ui/shadcn-table/shared/utils/cell.utils';
@@ -29,10 +26,7 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
   staticColumnIndex,
   ...rest
 }: ST_TableFooterCellProps<TData>) => {
-  // The header carries the core-typed table; the ST wrapper types re-type its
-  // getters, as `useSTContext` does.
-  const table = footer.table as unknown as ST_TableInstance<TData>;
-  // const theme = useTheme();
+  const table = footer.table;
   const {
     options: {
       enableColumnPinning,
@@ -106,14 +100,10 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
 
         return (
           <td
-            // align={columnDefType === 'group' ? 'center' : theme.direction === 'rtl' ? 'right' : 'left'}
-            // Note: MUI align classes mapped in className below; user `align` wins like the MRT spread.
             colSpan={footer.colSpan}
             data-index={staticColumnIndex}
             data-pinned={!!isColumnPinned || undefined}
             tabIndex={enableKeyboardShortcuts ? 0 : undefined}
-            // variant="footer"
-            // Note: no td analogue. MUI footer-variant defaults folded into footerCellVariants.
             {...tableCellProps}
             onKeyDown={handleKeyDown}
             className={cn(

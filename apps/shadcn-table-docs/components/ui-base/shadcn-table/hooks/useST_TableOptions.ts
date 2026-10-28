@@ -81,7 +81,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   manualGrouping,
   manualPagination,
   manualSorting,
-  // mrtTheme,
   paginationDisplayMode = 'default',
   positionActionsColumn = 'first',
   positionCreatingRow = 'top',
@@ -104,8 +103,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     }),
     [localization],
   );
-  // mrtTheme = useMemo(() => getMRTTheme(mrtTheme, theme), [mrtTheme, theme]);
-  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   defaultColumn = useMemo(
     () => ({ ...ST_DefaultColumn, ...defaultColumn }),
     [defaultColumn],
@@ -124,8 +121,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   );
 
   if (!columnResizeDirection) {
-    // columnResizeDirection = theme.direction || 'ltr';
-    // Note: no MUI theme in ST; MUI theme.direction defaults to 'ltr'.
     columnResizeDirection = 'ltr';
   }
 
@@ -199,8 +194,8 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableToolbarInternalActions,
     enableTopToolbar,
     // v9 makes `row.toggleExpanded()` a no-op when `row.getCanExpand()` is
-    // false (v8 toggled regardless) and detail-panel rows have no sub rows, so
-    // a table with `renderDetailPanel` treats every row as expandable.
+    // false, and detail-panel rows have no sub rows, so a table with
+    // `renderDetailPanel` treats every row as expandable.
     getRowCanExpand:
       getRowCanExpand ??
       ((row) =>
@@ -215,7 +210,6 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     manualGrouping,
     manualPagination,
     manualSorting,
-    // mrtTheme,
     paginationDisplayMode,
     positionActionsColumn,
     positionCreatingRow,
