@@ -25,6 +25,7 @@
         "alert",
         "badge",
         "button",
+        "checkbox",
         "collapsible",
         "combobox",
         "dialog",
@@ -571,11 +572,6 @@
           "path": "registry/radix/components/ui/shadcn-table/types.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/types.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/checkbox.tsx"
         }
       ]
     },
@@ -1209,6 +1205,7 @@
         "alert",
         "badge",
         "button",
+        "checkbox",
         "collapsible",
         "combobox",
         "dialog",
@@ -1755,11 +1752,6 @@
           "path": "registry/base/components/ui/shadcn-table/types.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/types.ts"
-        },
-        {
-          "path": "registry/base/components/ui/checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/checkbox.tsx"
         }
       ]
     },
