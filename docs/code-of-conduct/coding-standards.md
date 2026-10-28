@@ -34,9 +34,9 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
   what `pnpm add-part <edition> <part>` writes, and `pnpm add-part <edition> --all` re-adds
   every committed part of an edition: the gate is that it leaves `git status --short` empty.
   A check that fails on a part is fixed in the check (ESLint ignores the parts; the tsconfigs
-  carry no unused-code flags). A part the item ships as its own file is a recorded fork,
-  listed in `forkedUi` in that edition's `registry.ts` with its reason (today: `checkbox` on
-  radix and base); `--all` skips it.
+  carry no unused-code flags). No exception: a look the library needs beyond the part goes in
+  a library wrapper under `components/ui/shadcn-table/` (`ST_Tooltip`, `ST_Checkbox`), and
+  every part reaches users as a `registryDependency`.
 - The docs examples follow the same model: `apps/shadcn-table-docs/examples/<edition>/<slug>/`
   for every edition, radix the reference, a common change made in every folder by hand,
   `scripts/registry/examples-<edition>-diff.json` the list of example files allowed to differ,
