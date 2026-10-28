@@ -691,7 +691,11 @@ function PromptPane({ chat }: { chat: Chat }) {
               <span className="wa-caret ml-px inline-block h-4 w-px translate-y-0.5 bg-(--dh-ink)" />
             </span>
           ) : (
-            <span className="text-(--dh-ink-muted)">Ask for a change</span>
+            // idle: the caret waits where the next prompt starts
+            <span className="text-(--dh-ink-muted)">
+              <span className="wa-caret mr-px inline-block h-4 w-px translate-y-0.5 bg-(--dh-ink)" />
+              Describe a new look for your app
+            </span>
           )}
         </p>
         <span
