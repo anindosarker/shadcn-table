@@ -153,5 +153,8 @@ await browser.close();
 
 console.log(results.join('\n'));
 const failed = results.filter((r) => r.startsWith('FAIL')).length;
-console.log(`\n${results.length - failed} passed, ${failed} failed`);
+const skipped = results.filter((r) => r.startsWith('SKIP')).length;
+console.log(
+  `\n${results.length - failed - skipped} passed, ${failed} failed, ${skipped} skipped`,
+);
 process.exit(failed ? 1 : 0);
