@@ -10,7 +10,7 @@ import {
   type ST_GroupColumnDef,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
+  type ST_CoreTableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
 import { type ST_Features } from '@/components/ui-radix/shadcn-table/features/stFeatures';
 import {
@@ -44,7 +44,7 @@ export function createSRTColumnHelper<
 }
 
 export const createRow = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
+  table: ST_CoreTableInstance<TData>,
   originalRow?: TData,
   rowIndex = -1,
   depth = 0,

@@ -5,7 +5,7 @@ import {
   type ST_Column,
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
+  type ST_CoreTableInstance,
   type TableCellProps,
 } from '@/components/ui-base/shadcn-table/types';
 
@@ -66,7 +66,7 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   column,
 }: {
   column?: ST_Column<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }) => {
   const isPinned = column?.getIsPinned();
 
@@ -90,7 +90,7 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 }: {
   column: ST_Column<TData>;
   header?: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
   tableCellProps: TableCellProps;
 }) => {
   const {

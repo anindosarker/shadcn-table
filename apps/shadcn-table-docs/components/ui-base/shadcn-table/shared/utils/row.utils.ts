@@ -3,6 +3,7 @@ import { rankGlobalFuzzy } from '@/components/ui-base/shadcn-table/shared/fns/so
 import {
   type ST_Row,
   type ST_RowData,
+  type ST_CoreTableInstance,
   type ST_TableInstance,
   type ST_TableState,
 } from '@/components/ui-base/shadcn-table/types';
@@ -139,7 +140,7 @@ export const getIsRowSelected = <TData extends ST_RowData>({
   table,
 }: {
   row: ST_Row<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }) => {
   const {
     options: { enableRowSelection },
@@ -160,7 +161,7 @@ export const getST_RowSelectionHandler =
   }: {
     row: ST_Row<TData>;
     staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) =>
   (
     event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLTableRowElement>,
@@ -184,7 +185,11 @@ export const getST_RowSelectionHandler =
   };
 
 export const getST_SelectAllHandler =
-  <TData extends ST_RowData>({ table }: { table: ST_TableInstance<TData> }) =>
+  <TData extends ST_RowData>({
+    table,
+  }: {
+    table: ST_CoreTableInstance<TData>;
+  }) =>
   (
     event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLButtonElement>,
     value?: boolean,

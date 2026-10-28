@@ -11,7 +11,7 @@ import {
   type ST_Cell,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
+  type ST_CoreTableInstance,
   type ST_Updater,
 } from '@/components/ui-radix/shadcn-table/types';
 import { createRow } from '@/components/ui-radix/shadcn-table/shared/utils/tanstack.helpers';
@@ -81,7 +81,7 @@ export const stEditingFeature: TableFeature = {
       row: ST_Row<ST_RowData> | null | true,
     ): ST_Row<ST_RowData> | null =>
       row === true
-        ? createRow(table as unknown as ST_TableInstance<ST_RowData>)
+        ? createRow(table as unknown as ST_CoreTableInstance<ST_RowData>)
         : row;
     assignTableAPIs('stEditingFeature', table, {
       table_setCreatingRow: {
