@@ -1,10 +1,4 @@
 import {
-  type ContextType,
-  useCallback,
-  useState,
-  useSyncExternalStore,
-} from 'react';
-import {
   constructAggregationFn,
   createTableHook,
   createTableHookContexts,
@@ -66,10 +60,6 @@ export const createSTTableHook = <TData extends ST_RowData>({
   return createTableHook({ features, tableContext });
 };
 
-/**
- * Reads the table from the nearest `ST_TableProvider`, which `ShadcnTable`
- * renders around its layout. Throws outside a provider.
- */
 export function useSTContext<
   TData extends ST_RowData = ST_RowData,
 >(): ST_TableInstance<TData> {
@@ -78,73 +68,14 @@ export function useSTContext<
   return useTableContext() as unknown as ST_TableInstance<TData>;
 }
 
-/**
- * A table state atom, `table.atoms.<slice>`, as `useST_Atom` reads it.
- */
-type ST_AtomSource<TValue> = {
-  get: () => TValue;
-  subscribe: (listener: (value: TValue) => void) => { unsubscribe: () => void };
-};
-
-/**
- * Subscribes the calling component to one table atom, `table.atoms.<slice>`,
- * for a value that feeds a hook (a memo, an effect, a virtualizer) and so
- * cannot be read inside a `Subscribe` render function. The component
- * re-renders when the atom changes; atom values are immutable, so the snapshot
- * is stable between changes.
- */
-export function useST_Atom<TValue>(atom: ST_AtomSource<TValue>): TValue {
-  const subscribe = useCallback(
-    (onChange: () => void) => atom.subscribe(onChange).unsubscribe,
-    [atom],
-  );
-  const getSnapshot = () => atom.get();
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-}
-
-/**
- * Provides a table to hand-composed ST components, such as an
- * `ST_TableContainer` rendered outside `ShadcnTable`, and the tooltip provider
- * their `ST_Tooltip`s need.
- */
 export const ST_TableProvider = <TData extends ST_RowData>({
   children,
   table,
-}: ST_TableProviderProps<TData>) => {
-  // The context carries a stable handle, the first instance: its store,
-  // atoms, refs and setters are live, and keeping it stable spares context
-  // readers a re-render on every table state change. Its options are
-  // refreshed from each render's instance, so option reads stay current; the
-  // library never reads its `state`.
-  const [handle] = useState(() => {
-    // Custom renderers handed the handle (`render*`, `st*Props` of the context
-    // components) may read `table.state`. The first instance holds only the
-    // first render's selected slices, so the handle serves the live store.
-    Object.defineProperty(table, 'state', {
-      configurable: true,
-      enumerable: true,
-      get: () => table.store.state,
-    });
-    return table;
-  });
-  handle.options = table.options;
-
-  // The context is typed for any core table; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
-  // Note: the tooltip provider lives here at the ST root because the latest
-  // shadcn tooltip (registry change 2026-07) no longer self-wraps each Tooltip
-  // in a TooltipProvider, and Radix Tooltip.Root throws without a provider
-  // ancestor. Mounting it once with the table keeps consumer boilerplate at
-  // zero (MRT/MUI ergonomics) and covers every toolbar, menu, modal, and cell,
-  // including portalled content (portals preserve React context) and
-  // components hand-composed under this provider.
-  return (
-    <TooltipProvider skipDelayDuration={0}>
-      <tableContext.Provider
-        value={handle as unknown as ContextType<typeof tableContext>}
-      >
-        {children}
-      </tableContext.Provider>
-    </TooltipProvider>
-  );
-};
+}: ST_TableProviderProps<TData>) => (
+  // Radix Tooltip.Root throws without a TooltipProvider ancestor, and the
+  // shadcn tooltip does not wrap each Tooltip in one. Mounting it with the
+  // table covers every tooltip below, portalled content included.
+  <TooltipProvider skipDelayDuration={0}>
+    <table.AppTable>{children}</table.AppTable>
+  </TooltipProvider>
+);

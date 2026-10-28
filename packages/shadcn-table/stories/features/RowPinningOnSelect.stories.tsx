@@ -3,10 +3,11 @@ import {
   type ST_ColumnDef,
   type ST_RowSelectionState,
   type ST_TableOptions,
+  ST_TableBodyRowPinButton,
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 // Fixtures for the decisions item 8 verify list (row pinning follows the
@@ -57,6 +58,28 @@ const expectPinned = (root: ParentNode, names: string[]) =>
 // pinned tbody.
 const bodyOrder = (root: ParentNode) =>
   Array.from(root.querySelectorAll('tbody tr')).map(rowFirstName);
+
+const expectOrder = (root: ParentNode, names: string[]) =>
+  waitFor(() => expect(bodyOrder(root)).toEqual(names));
+
+// The pagination label, `1-5 of 8`.
+const expectLabel = (root: ParentNode, label: string) =>
+  waitFor(() =>
+    expect(
+      Array.from(root.querySelectorAll('span'))
+        .map((span) => span.textContent)
+        .find((text) => /^\d+-\d+ of \d+$/.test(text ?? '')),
+    ).toBe(label),
+  );
+
+const expectSelectAll = (
+  selectAll: HTMLElement,
+  ariaChecked: 'false' | 'mixed' | 'true',
+) =>
+  waitFor(() => expect(selectAll).toHaveAttribute('aria-checked', ariaChecked));
+
+const firstPage = ['Mason', 'Anderson', 'Lily', 'Tom', 'Brooke'];
+const dataOrder = data.map(({ firstName }) => firstName);
 
 type PinMode = 'select-bottom' | 'select-sticky' | 'select-top';
 
@@ -252,20 +275,42 @@ export const SelectAllPageMode = () => (
   />
 );
 
+// Select all pins the page and keeps the page index; the rows pinned on page
+// 1 stay on page 2 above its rows, and the label covers them; unselect all
+// and `Clear selection` unpin and keep the page.
 SelectAllPageMode.play = async ({ canvas, canvasElement }: StoryContext) => {
   const selectAll = await canvas.findByRole('checkbox', {
     name: 'Toggle select all',
   });
   await userEvent.click(selectAll);
-  await expectPinned(canvasElement, [
-    'Mason',
-    'Anderson',
-    'Lily',
-    'Tom',
-    'Brooke',
-  ]);
+  await expectPinned(canvasElement, firstPage);
+  await expectLabel(canvasElement, '1-5 of 8');
+  await expectSelectAll(selectAll, 'true');
+  await expectOrder(canvasElement, firstPage);
+  await userEvent.click(
+    await canvas.findByRole('button', { name: 'Go to next page' }),
+  );
+  await expectLabel(canvasElement, '1-8 of 8');
+  await expectOrder(canvasElement, dataOrder);
+  await expectSelectAll(selectAll, 'mixed');
+  await userEvent.click(
+    await canvas.findByRole('button', { name: 'Go to previous page' }),
+  );
+  await expectLabel(canvasElement, '1-5 of 8');
+  await expectSelectAll(selectAll, 'true');
   await userEvent.click(selectAll);
   await expectPinned(canvasElement, []);
+  await expectLabel(canvasElement, '1-5 of 8');
+  await expectSelectAll(selectAll, 'false');
+  await userEvent.click(selectAll);
+  await expectPinned(canvasElement, firstPage);
+  await userEvent.click(
+    await canvas.findByRole('button', { name: 'Clear selection' }),
+  );
+  await expectPinned(canvasElement, []);
+  await expectLabel(canvasElement, '1-5 of 8');
+  await expectSelectAll(selectAll, 'false');
+  await expectOrder(canvasElement, firstPage);
 };
 
 export const SelectAllAllMode = () => (
@@ -280,15 +325,66 @@ export const SelectAllAllMode = () => (
   />
 );
 
+// Select all pins every row: the rows keep the data order, and the label
+// covers the rows pinned on page 2.
 SelectAllAllMode.play = async ({ canvas, canvasElement }: StoryContext) => {
   const selectAll = await canvas.findByRole('checkbox', {
     name: 'Toggle select all',
   });
   await userEvent.click(selectAll);
-  await expectPinned(
-    canvasElement,
-    data.map(({ firstName }) => firstName),
+  await expectPinned(canvasElement, dataOrder);
+  await expectOrder(canvasElement, dataOrder);
+  await expectLabel(canvasElement, '1-8 of 8');
+  await expectSelectAll(selectAll, 'true');
+  await userEvent.click(selectAll);
+  await expectPinned(canvasElement, []);
+  await expectOrder(canvasElement, firstPage);
+  await expectLabel(canvasElement, '1-5 of 8');
+  await expectSelectAll(selectAll, 'false');
+};
+
+// Review ruling 9: unselect all clears every pin, a row pinned by hand
+// included. Owen sits on page 2, so select all on page 1 never selects
+// him.
+export const UnselectAllClearsHandPins = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    enableRowActions
+    enableRowPinning
+    enableRowSelection
+    initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    renderRowActions={({ row }) => <ST_TableBodyRowPinButton row={row} />}
+    rowPinningDisplayMode="select-top"
+  />
+);
+
+UnselectAllClearsHandPins.play = async ({
+  canvas,
+  canvasElement,
+}: StoryContext) => {
+  await userEvent.click(
+    await canvas.findByRole('button', { name: 'Go to next page' }),
   );
+  const owen = await waitFor(() => {
+    const row = Array.from(canvasElement.querySelectorAll('tbody tr')).find(
+      (tr) => rowFirstName(tr) === 'Owen',
+    );
+    expect(row).toBeDefined();
+    return row as HTMLElement;
+  });
+  await userEvent.click(within(owen).getByRole('button', { name: 'Pin' }));
+  await expectPinned(canvasElement, ['Owen']);
+  await userEvent.click(
+    await canvas.findByRole('button', { name: 'Go to previous page' }),
+  );
+  const selectAll = await canvas.findByRole('checkbox', {
+    name: 'Toggle select all',
+  });
+  await userEvent.click(selectAll);
+  await expectPinned(canvasElement, [...firstPage, 'Owen']);
+  await userEvent.click(selectAll);
+  await expectPinned(canvasElement, []);
 };
 
 export const ProgrammaticToggleSelected = () => (

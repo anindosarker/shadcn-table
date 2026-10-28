@@ -24,10 +24,6 @@ publishes the section as the GitHub release notes.
   (`ST_TableLayoutProps`, `ST_TableContainerProps`, `ST_TableProps`, `ST_TableBodyProps`,
   `ST_TableHeadProps`, `ST_TableFooterProps`, the toolbar, toggle button, menu and modal
   props) no longer take a `TData` parameter. Drop the type argument.
-- On the table that `render*` and `st*Props` callbacks of those components receive,
-  `table.state` is a live, unsubscribed read of the store. Prefer `table.store.state`.
-- `ST_TableProvider` keeps the first table it is given. Swapping its `table` prop after
-  mount needs a `key`.
 - `ST_TopToolbarProps` is removed; `ST_TopToolbar` takes no props.
 - `memoMode` is removed, with the memoized row and cell components
   (`Memo_ST_TableBodyRow`, `Memo_ST_TableBodyCell`) it switched to.
@@ -44,14 +40,19 @@ publishes the section as the GitHub release notes.
   `setHoveredRow`, `setCreatingRow`, `setEditingCell`, `setEditingRow`,
   `setColumnFilterFns`, `setGlobalFilterFn`, `setShowColumnFilters`, `setShowGlobalFilter`
   and `setActionCell`) hands its `on*Change` handler a function updater, as TanStack's own
-  setters do. A handler that expected the new value needs `functionalUpdate`, or a React
-  state setter.
+  setters do since v9. A handler resolves it with `functionalUpdate` or a React state
+  setter.
 
 ### Added
 
 - mk (Macedonian) locale.
 - `ST_TableProvider` puts a table on the context the library's components read.
   `ShadcnTable` renders it around its layout.
+- `ST_TableProvider` renders the table's `table.AppTable`. Swapping its `table` prop for a
+  different table remounts the subtree.
+- `useShadcnTable` takes an optional selector as its second argument, as `useTable` does,
+  so the owner re-renders only on the state it selects.
+- `@tanstack/react-store` is a dependency.
 - `getColumnFilterFnName` and `selectST_TransformState` are exported from the barrel.
 - Docs: the `localization-i18n-mk` example, and a "Compose with ST_TableProvider" section
   in the toolbar customization guide, linked from the ST components page.
@@ -91,6 +92,20 @@ publishes the section as the GitHub release notes.
   `atoms.rowSelection` too, select all pins the rows it selects (it cleared every pin), and
   programmatic selection (`row.toggleSelected`, `table.toggleAllRowsSelected`) pins and
   unpins.
+- Under `rowPinningDisplayMode: 'select-*'`, unselect all (the select-all checkbox, its
+  keyboard toggle and `Clear selection`) clears every pin, rows pinned by hand included, as
+  0.3.3 did.
+- Rows pinned together on select (a Shift range, select all) keep the row model order,
+  whatever order the selection lists them in. Under `select-sticky` the rows pinned on
+  another page show above or below the page rows in row model order; they came first.
+- Under `rowPinningDisplayMode: 'select-*'` the pagination label covers the pinned rows
+  kept from other pages (`keepPinnedRows`): select all with `selectAllMode: 'all'` on 8 rows
+  at page size 5 reads `1-8 of 8`, the rows the body shows, not `1-5 of 8`.
+- Sticky pinned rows (`rowPinningDisplayMode: 'sticky'` or `'select-sticky'`) stay below
+  the table head: with more pinned rows than the container holds they covered the head and
+  its select-all checkbox. A pinned stack taller than the container keeps its rows below the
+  head and sticks them at the top only. Pinned rows kept from another page take their place
+  in the sticky offsets; they were offset by minus one row.
 - Switching a column's filter mode re-filters the current filter value with the new mode.
   While a column or global filter is set, a controlled `onColumnFiltersChange` receives an
   identity updater (`(old) => [...old]`) on each `setColumnFilterFns` and `setGlobalFilterFn`
@@ -102,6 +117,10 @@ publishes the section as the GitHub release notes.
 - A callback `ref` in `stTableLayoutProps`, `stTableContainerProps`, `stTableHeadProps`,
   `stTableFooterProps`, `stTopToolbarProps` or `stBottomToolbarProps` receives the node;
   only ref objects did.
+- Those six refs follow React 19 ref cleanup: a cleanup the callback ref returns runs on
+  unmount, and a callback that returns none, or a ref object, gets `null`. The
+  `stTableContainerProps` and `stBottomToolbarProps` refs never got `null`, and no cleanup
+  ran.
 - Both installed trees type-check in one program: a project holding the Radix UI and the
   Base UI copy no longer fails with TS2717 on `stConfigFeature`, and each copy types
   `stFilterCheckboxProps`, `stFilterSliderProps`, `stSelectCheckboxProps`,

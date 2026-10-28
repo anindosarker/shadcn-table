@@ -7,7 +7,6 @@ import {
   type ST_Row,
   type ST_RowData,
   type ST_RowVirtualizer,
-  type ST_TableInstance,
   type ST_VirtualItem,
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
@@ -48,14 +47,11 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   virtualRow,
   ...rest
 }: ST_TableDetailPanelProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     getVisibleLeafColumns,
     options: {
       layoutMode,
-      // mrtTheme: { baseBackgroundColor },
-      // Note: mrtTheme registry dropped project-wide; bg-background handles theming
       renderDetailPanel,
       stDetailPanelProps,
       stTableBodyRowProps,
@@ -147,8 +143,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
-                // Note: MUI Collapse → ui/Collapsible; Base UI unmounts the closed panel (= mountOnEnter/unmountOnExit) and sets data-open/data-closed with --collapsible-panel-height for the keyframes in index.css.
+                // Base UI sets --collapsible-panel-height, which the st-collapsible-* keyframes read.
                 <Collapsible open={row.getIsExpanded()}>
                   <CollapsibleContent className="overflow-hidden data-open:animate-[st-collapsible-down_200ms_ease-out] data-closed:animate-[st-collapsible-up_200ms_ease-out]">
                     {DetailPanel}

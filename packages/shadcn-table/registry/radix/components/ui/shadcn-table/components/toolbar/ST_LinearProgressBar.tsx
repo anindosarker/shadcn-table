@@ -37,8 +37,6 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
     ...rest,
   };
 
-  // MUI LinearProgress defaults to variant="indeterminate" (CSS keyframes, no
-  // React state); a slot `value` switches it to determinate like MRT's does.
   const isIndeterminate = progressComponentProps?.value == null;
 
   return (

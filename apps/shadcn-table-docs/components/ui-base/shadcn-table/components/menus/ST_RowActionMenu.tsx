@@ -13,7 +13,6 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui-base/shadcn-table/components/menus/ST_ActionMenuItem';
@@ -36,16 +35,13 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   staticRowIndex,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its options
-  // and getters, so TypeScript cannot relate the two without the cast.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     options: {
       editDisplayMode,
       enableEditing,
       icons: { EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderRowActionMenuItems,
     },
   } = table;
@@ -103,7 +99,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
           />
         }
       />
-      {/* Note: MRT disableScrollLock dropped: Base UI Menu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}

@@ -24,7 +24,6 @@ import {
   type InputProps,
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import {
   getValueAndLabel,
@@ -34,9 +33,8 @@ import {
 export interface ST_EditCellTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   cell: ST_Cell<TData>;
-  /** MUI TextField `error`: marks the input invalid (aria-invalid) and colors the helper text. */
+  /** Marks the input invalid (aria-invalid) and colors the helper text. */
   error?: boolean;
-  /** MUI TextField `helperText`: validation or hint text rendered under the input. */
   helperText?: ReactNode;
 }
 
@@ -44,8 +42,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   cell,
   ...rest
 }: ST_EditCellTextFieldProps<TData>) => {
-  // The cell carries the core table; the ST wrapper types re-type its getters.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
+  const table = cell.table;
   const {
     options: { createDisplayMode, editDisplayMode, stEditTextFieldProps },
     refs: { editInputRefs },
@@ -56,12 +53,11 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   const { column, row } = cell;
   const { columnDef } = column;
   const { editSelectOptions, editVariant } = columnDef;
-  // MUI TextField useId(idOverride): one id links label and input.
   const id = useId();
 
   const [value, setValue] = useState(() => cell.getValue<string>());
   const [completesComposition, setCompletesComposition] = useState(true);
-  // MUI SelectInput openState: its handleBlur fires onBlur only while the menu is closed.
+  // onBlur fires only while the select menu is closed.
   const [open, setOpen] = useState(false);
 
   const {
@@ -84,7 +80,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     ...rest,
   };
 
-  // MUI FormHelperText under the input; red (FieldError) when `error` is set.
   const helper =
     helperText == null || helperText === '' ? null : error ? (
       <FieldError>{helperText}</FieldError>
@@ -99,8 +94,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     table,
   });
 
-  // const isSelectEdit = editVariant === 'select' || textFieldProps?.select;
-  // Note: MUI TextField-only `select` prop has no radix analogue.
   const isSelectEdit = editVariant === 'select';
 
   const saveInputValueToRowCache = (newValue: string) => {
@@ -151,8 +144,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
           (isCreating ? createDisplayMode : editDisplayMode) as string,
         );
 
-        // Label + input in modal/custom mode (MUI TextField label); otherwise only
-        // wrap when there is helper text to place under the input.
         const withField = (control: ReactNode) =>
           isFormMode ? (
             <Field data-invalid={error || undefined}>
@@ -177,7 +168,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
               name={column.id}
               onOpenChange={setOpen}
               onValueChange={(newValue) =>
-                // MUI SelectInput handleItemClick: onChange gets an event whose target is { name, value }.
+                // onChange receives an event whose target is { name, value }.
                 handleChange({
                   target: { name: column.id, value: newValue },
                 } as ChangeEvent<HTMLInputElement>)
@@ -200,7 +191,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                 aria-invalid={error || textFieldProps['aria-invalid']}
                 className={cn('w-full', textFieldProps.className)}
                 onBlur={(event) => {
-                  // MUI SelectInput handleBlur: only while closed, with target { name, value }.
                   if (!open) {
                     Object.defineProperty(event, 'target', {
                       writable: true,
@@ -217,8 +207,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                     e as unknown as MouseEvent<HTMLInputElement>,
                   );
                 }}
-                // onKeyDown={handleEnterKeyDown}
-                // Note: MRT's Enter blur hits MUI Select's hidden input (no-op); radix opens on Enter.
+                // No Enter-to-save here: Radix opens the select on Enter.
                 onKeyDown={(e) =>
                   textFieldProps.onKeyDown?.(
                     e as unknown as KeyboardEvent<HTMLInputElement>,
@@ -237,8 +226,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                   }
                 />
               </SelectTrigger>
-              {/* SelectProps={{ MenuProps: { disableScrollLock: true } }} */}
-              {/* Note: radix Select always locks scroll. */}
               <SelectContent>
                 {textFieldProps.children ??
                   selectOptions?.map((option) => {
@@ -264,12 +251,8 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             ref={(inputRef) => {
               if (inputRef) {
                 editInputRefs.current![column.id] = inputRef;
-                // if (textFieldProps.inputRef) textFieldProps.inputRef = inputRef;
-                // Note: no-op in MRT too; a user ref already wins through the spread below.
               }
             }}
-            // fullWidth, margin="none", select, size="small", variant="standard", InputProps
-            // Note: MUI TextField root props; shadcn Input is w-full with one variant and no underline.
             name={column.id}
             placeholder={
               !['custom', 'modal'].includes(

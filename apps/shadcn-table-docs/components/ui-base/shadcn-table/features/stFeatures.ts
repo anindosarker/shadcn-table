@@ -36,12 +36,8 @@ const sortFns: NonNullable<TableFeatures['sortFns']> = ST_SortFns;
 const aggregationFns: NonNullable<TableFeatures['aggregationFns']> =
   ST_AggregationFns;
 
-/**
- * Every stock feature, the eleven ST features, the client-side row models and
- * the built-in function registries. Row models are gated at runtime by the
- * `manual*` options, so a table that does not use a feature runs its model
- * as an identity pass.
- */
+// Row models are gated at runtime by the `manual*` options, so a table that
+// does not use a feature runs its model as an identity pass.
 export const stFeatures = tableFeatures({
   ...stockFeatures,
   stCellActionsFeature,
