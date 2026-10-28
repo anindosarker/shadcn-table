@@ -1,4 +1,5 @@
 import { type MouseEvent } from 'react';
+import { type FocusableElement } from 'react-aria-components';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -103,21 +104,21 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       'aria-label': selectAll
         ? localization.toggleSelectAll
         : localization.toggleSelectRow,
-      checked: isChecked,
-      disabled:
+      isSelected: isChecked,
+      isDisabled:
         isLoading ||
         (row && !row.getCanSelect()) ||
         row?.id === 'st-row-create',
-      // Radix change callbacks carry no DOM event (shiftKey), so selection runs
-      // in onClick.
+      // React Aria change callbacks carry no DOM event (shiftKey), so selection
+      // runs in onClick.
       ...checkboxProps,
-      onClick: (e: MouseEvent<HTMLButtonElement>) => {
+      onClick: (e: MouseEvent<FocusableElement>) => {
         e.stopPropagation();
         // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
-          if (selectAll) onSelectAllChange(e);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          else onSelectionChange!(e as any);
+          // The handlers read only target, shiftKey and nativeEvent.
+          if (selectAll) onSelectAllChange(e as MouseEvent<HTMLButtonElement>);
+          else onSelectionChange!(e as MouseEvent<HTMLTableRowElement>);
         }
         checkboxProps?.onClick?.(e);
       },
@@ -125,8 +126,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         selectCheckboxVariants({ density }),
         checkboxProps?.className,
       ),
-      title: undefined,
-    }) as CheckboxProps | RadioProps;
+    }) satisfies CheckboxProps | RadioProps;
 
   return (
     <Subscribe
@@ -162,38 +162,33 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         return (
           <ST_Tooltip
             title={
-              checkboxProps?.title ??
-              (selectAll
+              selectAll
                 ? localization.toggleSelectAll
-                : localization.toggleSelectRow)
+                : localization.toggleSelectRow
             }
           >
             <span className="inline-flex">
               {enableMultiRowSelection === false ? (
                 // RadioGroupItem needs a RadioGroup: one group per row.
-                <RadioGroup value={isChecked ? 'on' : null}>
-                  <RadioGroupItem
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    {...(commonProps as any)}
-                    value="on"
-                  />
+                <RadioGroup
+                  aria-label={commonProps['aria-label']}
+                  value={isChecked ? 'on' : null}
+                >
+                  <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
                 </RadioGroup>
               ) : (
                 <Checkbox
                   {...commonProps}
-                  // `checked` carries the indeterminate state, so it goes after
-                  // the spread. getIsSomeRowsSelected and getIsSomeSelected
-                  // include the all-selected case, so that case is gated out.
-                  checked={
-                    (
-                      !isChecked && selectAll
-                        ? table.getIsSomeRowsSelected() && !allRowsSelected
-                        : row?.getIsSomeSelected() &&
-                          !row.getIsAllSubRowsSelected() &&
-                          row.getCanSelectSubRows()
-                    )
-                      ? 'indeterminate'
-                      : commonProps.checked
+                  // React Aria keeps `isIndeterminate` as its own flag beside
+                  // `isSelected`, so it goes after the spread.
+                  // getIsSomeRowsSelected and getIsSomeSelected include the
+                  // all-selected case, so that case is gated out.
+                  isIndeterminate={
+                    !isChecked && selectAll
+                      ? table.getIsSomeRowsSelected() && !allRowsSelected
+                      : row?.getIsSomeSelected() &&
+                        !row.getIsAllSubRowsSelected() &&
+                        row.getCanSelectSubRows()
                   }
                 />
               )}

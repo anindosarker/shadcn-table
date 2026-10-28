@@ -16,9 +16,9 @@ import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 const filterCheckboxVariants = cva('', {
   variants: {
     color: {
-      // Radix marks the mixed state as data-state, Base UI as data-indeterminate.
+      // React Aria marks the mixed state with data-indeterminate.
       default:
-        'data-[state=indeterminate]:border-muted-foreground data-[state=indeterminate]:bg-muted-foreground dark:data-[state=indeterminate]:bg-muted-foreground data-indeterminate:border-muted-foreground data-indeterminate:bg-muted-foreground dark:data-indeterminate:bg-muted-foreground',
+        'data-indeterminate:border-muted-foreground data-indeterminate:bg-muted-foreground dark:data-indeterminate:bg-muted-foreground',
       primary: '',
     },
     density: {
@@ -83,19 +83,18 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
       source={table.store}
     >
       {({ density }) => (
-        <ST_Tooltip title={checkboxProps?.title ?? filterLabel}>
+        <ST_Tooltip title={filterLabel}>
           <Label
             className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
             title={undefined}
           >
             <Checkbox
-              checked={
-                column.getFilterValue() === undefined
-                  ? 'indeterminate'
-                  : column.getFilterValue() === 'true'
-              }
+              // React Aria keeps the mixed state in its own `isIndeterminate`
+              // flag; `isSelected` is always a boolean.
+              isSelected={column.getFilterValue() === 'true'}
+              isIndeterminate={column.getFilterValue() === undefined}
               {...checkboxProps}
-              onCheckedChange={(checked) => {
+              onChange={(isSelected) => {
                 column.setFilterValue(
                   column.getFilterValue() === undefined
                     ? 'true'
@@ -103,7 +102,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
                       ? 'false'
                       : undefined,
                 );
-                checkboxProps?.onCheckedChange?.(checked);
+                checkboxProps?.onChange?.(isSelected);
               }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -120,7 +119,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
                 checkboxProps?.className,
               )}
             />
-            {checkboxProps.title ?? filterLabel}
+            {filterLabel}
           </Label>
         </ST_Tooltip>
       )}

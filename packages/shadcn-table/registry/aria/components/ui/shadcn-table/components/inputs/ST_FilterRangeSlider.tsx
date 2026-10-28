@@ -69,8 +69,8 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   };
 
   let [min, max] =
-    sliderProps.min !== undefined && sliderProps.max !== undefined
-      ? [sliderProps.min, sliderProps.max]
+    sliderProps.minValue !== undefined && sliderProps.maxValue !== undefined
+      ? [sliderProps.minValue, sliderProps.maxValue]
       : ((enableFacetedValues
           ? column.getFacetedMinMaxValues()
           : undefined) ?? [0, 1]);
@@ -93,6 +93,11 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
     }
   };
 
+  // React Aria reports a bare number for a single-thumb slider; the range
+  // filter always works on one value per thumb.
+  const toArray = (value: number | readonly number[]) =>
+    typeof value === 'number' ? [value] : [...value];
+
   useEffect(() => {
     if (isMounted.current) {
       if (columnFilterValue === undefined) {
@@ -107,15 +112,30 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.columnSizing}>
       {() => (
-        <div className="flex flex-col">
+        // The aria Slider takes no ref and no onKeyDown: both sit on the wrapper.
+        <div
+          className="flex flex-col"
+          onKeyDown={handleKeyDown}
+          ref={(node) => {
+            if (node) {
+              // React Aria SliderThumb renders a div with a nested
+              // <input type="range">; the input is the focus target.
+              filterInputRefs.current![`${column.id}-0`] =
+                node.querySelector<HTMLInputElement>(
+                  '[data-slot="slider-thumb"] input',
+                )!;
+            }
+          }}
+        >
           <Slider
-            max={max}
-            min={min}
-            onValueChange={(values) => {
-              setFilterValues(values);
+            maxValue={max}
+            minValue={min}
+            onChange={(values) => {
+              setFilterValues(toArray(values));
             }}
-            onValueCommit={(value) => {
-              if (Array.isArray(value)) {
+            onChangeEnd={(committed) => {
+              const value = toArray(committed);
+              if (value.length === 2) {
                 if (value[0] <= min && value[1] >= max) {
                   column.setFilterValue(undefined);
                 } else {
@@ -123,21 +143,8 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
                 }
               }
             }}
-            onKeyDown={handleKeyDown}
             value={filterValues}
             {...sliderProps}
-            ref={(node) => {
-              if (node) {
-                filterInputRefs.current![`${column.id}-0`] =
-                  node.querySelector<HTMLInputElement>(
-                    '[data-slot="slider-thumb"]',
-                  )!;
-                if (sliderProps?.ref) {
-                  // @ts-expect-error the slider root node goes onto the ref prop
-                  sliderProps.ref = node;
-                }
-              }
-            }}
             className={cn(
               filterRangeSliderVariants({ showChangeModeButton }),
               sliderProps?.className,
