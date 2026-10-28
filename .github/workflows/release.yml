@@ -35,7 +35,6 @@ permissions:
 
 env:
   SITE: https://www.shadcn-table.com
-  LIB_PACKAGE: packages/shadcn-table/package.json
 
 jobs:
   decide:
@@ -57,43 +56,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # scripts/release/decide.mjs reads EVENT, INPUT_VERSION and GITHUB_SHA,
+      # runs next-version.mjs, asks gh for the merged PR's label and git for
+      # the tag, and writes mode, version and level to $GITHUB_OUTPUT.
       - name: Read the changelog, the merged PR's label, the package version and its tag
         id: decide
-        run: |
-          version=$(node -p "require('./$LIB_PACKAGE').version")
-          level=
-          if [ "$EVENT" = workflow_dispatch ]; then
-            mode=release
-            version=${INPUT_VERSION:-$version}
-          else
-            status=0
-            node scripts/release/next-version.mjs --from-changelog >/dev/null || status=$?
-            if [ "$status" -eq 0 ]; then
-              mode=version
-              label=$(gh pr list --search "$GITHUB_SHA" --state merged --json labels \
-                --jq '[.[0].labels[]?.name | select(startswith("release:"))][0] // ""')
-              case "$label" in
-                release:patch | release:minor | release:major) level=${label#release:} ;;
-              esac
-              echo "merged PR label: ${label:-none}"
-            elif [ "$status" -eq 2 ]; then
-              if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null; then
-                mode=none
-                echo "no Unreleased lines and v$version is already tagged; nothing to do"
-              else
-                mode=release
-              fi
-            else
-              exit "$status"
-            fi
-          fi
-          echo "mode=$mode version=$version level=${level:-from headings}"
-          echo "Mode \`$mode\`, package version $version." >> "$GITHUB_STEP_SUMMARY"
-          {
-            echo "mode=$mode"
-            echo "version=$version"
-            echo "level=$level"
-          } >> "$GITHUB_OUTPUT"
+        run: node scripts/release/decide.mjs
 
   version:
     name: version PR (release/next)

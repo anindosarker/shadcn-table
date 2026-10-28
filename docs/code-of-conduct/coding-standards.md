@@ -84,7 +84,7 @@ it opens or rewrites the version PR `chore: version <v>` from `release/next`, or
 merged, tags, verifies production and creates the GitHub release.
 
 ```sh
-node --test scripts/release/next-version.test.mjs   # release scripts
+node --test scripts/release/*.test.mjs   # release scripts
 ```
 
 Preview (Ctrl-C stops every server; the first two remove `.dev`, the root one also restores the production hosted registry):
