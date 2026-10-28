@@ -659,7 +659,7 @@ function Turn({
 /** The composer's cursor: a terminal block in the editor ink, one line
  * tall. */
 const CARET = (
-  <span className="wa-caret ml-px inline-block h-[1lh] w-[0.6em] bg-(--dh-ink) align-top" />
+  <span className="wa-caret ml-px inline-block h-[1lh] w-[0.6em] shrink-0 bg-(--dh-ink) align-top" />
 );
 
 /** The prompt pane: a short chat with a generic coding assistant, newest at
@@ -700,10 +700,12 @@ function PromptPane({ chat }: { chat: Chat }) {
             </span>
           ) : (
             // idle: the caret waits where the next prompt starts
-            <span>
+            <span className="flex min-w-0">
               {CARET}
-              <span className="ml-1 text-(--dh-ink-muted)">
-                Describe a new look for your app
+              {/* one line, cut with an ellipsis where it does not fit */}
+              <span className="ml-1 min-w-0 truncate text-(--dh-ink-muted)">
+                Ask your agent to change your app theme. The table follows, no
+                extra changes needed.
               </span>
             </span>
           )}
