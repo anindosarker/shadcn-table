@@ -1,8 +1,10 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import FullyVirtualizedExample from '@/examples/virtualized';
-import RowVirtualization from '@/examples/enable-row-virtualization';
-import ColumnVirtualization from '@/examples/enable-column-virtualization';
-import InfiniteScrolling from '@/examples/infinite-scrolling';
+import {
+  VirtualizedExample,
+  EnableRowVirtualizationExample,
+  EnableColumnVirtualizationExample,
+  InfiniteScrollingExample,
+} from '@/examples/map';
 
 const VirtualizedExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -14,10 +16,10 @@ const VirtualizedExamples = ({ isPage = false }) => (
       { label: 'Infinite Scrolling', value: 'infinite-scrolling' },
     ]}
     panels={{
-      virtualized: <FullyVirtualizedExample />,
-      'row-virtualization': <RowVirtualization />,
-      'column-virtualization': <ColumnVirtualization />,
-      'infinite-scrolling': <InfiniteScrolling />,
+      virtualized: <VirtualizedExample />,
+      'row-virtualization': <EnableRowVirtualizationExample />,
+      'column-virtualization': <EnableColumnVirtualizationExample />,
+      'infinite-scrolling': <InfiniteScrollingExample />,
     }}
   />
 );

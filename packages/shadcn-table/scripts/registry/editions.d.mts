@@ -12,3 +12,5 @@ export const REFERENCE_EDITION: 'radix';
 export const EDITION_LABELS: Readonly<Record<Edition, string>>;
 /** The edition `value` names, or REFERENCE_EDITION when it names none. */
 export function resolveEdition(value: unknown): Edition;
+/** Committed item name of an edition's copy: `name` for the reference, `<name>-<edition>` otherwise. */
+export function editionItemName(name: string, edition: Edition): string;

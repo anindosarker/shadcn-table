@@ -1,23 +1,28 @@
 #!/usr/bin/env node
 /**
  * Writes the docs app's registry.json with one shadcn registry item per
- * docs example (examples/<slug>/TS.tsx plus every other source file in the
- * folder, subfolders included, except the index.tsx wrapper). The root
- * registry.json includes this file, so the GitHub namespace serves every
- * example as `anindosarker/shadcn-table/example-<slug>`.
+ * docs example and edition (examples/<edition>/<slug>/TS.tsx plus every
+ * other source file in the folder, subfolders included; EDITIONS in
+ * lib.mjs, the reference edition's folder defines the example list). The
+ * root registry.json includes this file, so the GitHub namespace serves
+ * every example as `anindosarker/shadcn-table/example-<slug>` (Radix UI),
+ * `example-<slug>-base` and `example-<slug>-aria` (editionItemName);
+ * hosted.mjs serves each edition's items under the plain name in
+ * /r/<edition>/.
  *
  * Per item:
- * - name `example-<slug>`, type `registry:block`
+ * - name `editionItemName('example-<slug>', edition)`, type `registry:block`
  * - title and description from the example's docs page frontmatter
  *   (content/docs/examples/<slug>.mdx, or the page that renders the
  *   example's component), else the slug in Title Case
- * - registryDependencies: the shadcn parts the example imports from
- *   `@/components/ui/<part>` (library paths excluded). No dependency on the
- *   library item: the example works on every edition's item alike, so the
- *   docs say to install the table first.
+ * - registryDependencies: the shadcn parts that edition's sources import
+ *   from `@/components/ui/<part>` (library paths excluded). No dependency on
+ *   the library item: the example works on every edition's item alike, so
+ *   the docs say to install the table first.
  * - dependencies: third-party packages imported by the example files, other
  *   than react, react-dom and lucide-react (already library dependencies)
- * - files: targets under `@components/examples/<slug>/`, keeping the folder
+ * - files: `examples/<edition>/<slug>/<file>`, targets under
+ *   `@components/examples/<slug>/` in every edition, keeping the folder
  *   layout, so the files land side by side in the project's components
  *   directory and relative imports (`./makeData`, `../hooks/...`) keep
  *   resolving. The entry file alone is renamed to `<slug>.tsx`, so no other
@@ -34,13 +39,13 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { DOCS } from './lib.mjs';
+import { DOCS, EDITIONS, editionItemName, REFERENCE_EDITION } from './lib.mjs';
 
 // The example helpers are the docs app's own (its playground imports them
 // too), so they are loaded from there.
 const docsLib = (file) => import(pathToFileURL(path.join(DOCS, 'lib', file)));
 const { ENTRY_FILE, listExampleFiles } = await docsLib('example-files.mjs');
-const { findExamplePage, loadExamplePages, readExampleExportName } =
+const { findExamplePage, loadExamplePages } =
   await docsLib('example-pages.mjs');
 
 const APP_DIR = DOCS;
@@ -94,8 +99,9 @@ const packageName = (specifier) => {
   return specifier.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
 };
 
-async function buildItem(slug, pages) {
-  const dir = path.join(EXAMPLES_DIR, slug);
+async function buildItem({ edition, slug, pages }) {
+  const dir = path.join(EXAMPLES_DIR, edition, slug);
+  const itemPath = (name) => `examples/${edition}/${slug}/${name}`;
   const files = [];
   const registryDependencies = new Set();
   const dependencies = new Set();
@@ -104,7 +110,7 @@ async function buildItem(slug, pages) {
   const itemFiles = await listExampleFiles(dir);
   for (const name of itemFiles) {
     const source = await fs.readFile(path.join(dir, name), 'utf8');
-    sources[`examples/${slug}/${name}`] = source;
+    sources[itemPath(name)] = source;
     for (const specifier of importSpecifiers(source)) {
       if (specifier.startsWith('.')) {
         const local = path.posix.join(path.posix.dirname(name), specifier);
@@ -143,20 +149,19 @@ async function buildItem(slug, pages) {
       }
     }
     files.push({
-      path: `examples/${slug}/${name}`,
+      path: itemPath(name),
       type: 'registry:component',
       target: `@components/examples/${slug}/${name === ENTRY_FILE ? `${slug}.tsx` : name}`,
     });
   }
 
-  const exportName = await readExampleExportName(dir);
-  const page = findExamplePage({ slug, exportName }, pages);
+  const page = findExamplePage(slug, pages);
   const title = page?.title || titleCase(slug);
   const description =
     page?.description || `${title} example from shadcn-table.`;
 
   const item = {
-    name: `example-${slug}`,
+    name: editionItemName(`example-${slug}`, edition),
     type: 'registry:block',
     title,
     description,
@@ -171,29 +176,33 @@ async function buildItem(slug, pages) {
 
 async function main() {
   const pages = await loadExamplePages(PAGES_DIR);
-  const slugs = (await fs.readdir(EXAMPLES_DIR, { withFileTypes: true }))
-    // Skip generated dot-directories (examples/.<edition> hold the per-edition variants).
-    .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
-    .map((entry) => entry.name)
-    .sort();
+  const referenceDir = path.join(EXAMPLES_DIR, REFERENCE_EDITION);
+  const slugs = [];
+  for (const entry of await fs.readdir(referenceDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    if (!(await exists(path.join(referenceDir, entry.name, ENTRY_FILE)))) {
+      console.warn(`${REFERENCE_EDITION}/${entry.name}: no TS.tsx, skipped`);
+      continue;
+    }
+    slugs.push(entry.name);
+  }
+  slugs.sort();
 
   const items = [];
   const resolved = [];
-  for (const slug of slugs) {
-    if (!(await exists(path.join(EXAMPLES_DIR, slug, ENTRY_FILE)))) {
-      console.warn(`${slug}: no TS.tsx, skipped`);
-      continue;
+  for (const edition of EDITIONS) {
+    for (const slug of slugs) {
+      const { item, sources } = await buildItem({ edition, slug, pages });
+      items.push(item);
+      resolved.push({
+        $schema: 'https://ui.shadcn.com/schema/registry-item.json',
+        ...item,
+        files: item.files.map((file) => ({
+          ...file,
+          content: sources[file.path],
+        })),
+      });
     }
-    const { item, sources } = await buildItem(slug, pages);
-    items.push(item);
-    resolved.push({
-      $schema: 'https://ui.shadcn.com/schema/registry-item.json',
-      ...item,
-      files: item.files.map((file) => ({
-        ...file,
-        content: sources[file.path],
-      })),
-    });
   }
 
   const registry = {
@@ -204,7 +213,7 @@ async function main() {
   };
   await fs.writeFile(OUT_FILE, `${JSON.stringify(registry, null, 2)}\n`);
   console.log(
-    `${path.relative(process.cwd(), OUT_FILE)}: ${items.length} items`,
+    `${path.relative(process.cwd(), OUT_FILE)}: ${items.length} items (${slugs.length} examples, ${EDITIONS.length} editions)`,
   );
 
   if (resolveDir) {

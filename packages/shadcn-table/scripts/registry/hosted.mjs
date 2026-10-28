@@ -9,13 +9,13 @@
 //   apps/shadcn-table-docs/public/r/base/    from the Base UI items
 //   apps/shadcn-table-docs/public/r/aria/    from the React Aria items
 // Each directory gets its own registry.json catalog (the edition's main item,
-// its locale items and every example item) and the resolved item files
-// `shadcn build` produces from it. The item names are the same in every
+// its locale items and the edition's example items) and the resolved item
+// files `shadcn build` produces from it. The item names are the same in every
 // directory (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`),
 // so the namespace form `@st=https://www.shadcn-table.com/r/{style}/{name}.json`
-// resolves `@st/shadcn-table` to the consumer's own edition. Example items
-// carry no main-item dependency, so their JSON is identical in every
-// directory.
+// resolves `@st/shadcn-table` to the consumer's own edition; the example
+// items come from that edition's examples/<edition> sources
+// (editionExampleItems).
 //
 // Reads the committed registry.json files, which keep the GitHub addresses;
 // only the hosted copies get hosted addresses: the locale items depend on
@@ -27,7 +27,14 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { DOCS, EDITIONS, editionItems, PKG, ROOT } from './lib.mjs';
+import {
+  DOCS,
+  EDITIONS,
+  editionExampleItems,
+  editionItems,
+  PKG,
+  ROOT,
+} from './lib.mjs';
 
 const OUT_ROOT = path.join(DOCS, 'public/r');
 // REGISTRY_HOSTED_URL wins; otherwise the docs origin (NEXT_PUBLIC_SITE_URL,
@@ -55,16 +62,21 @@ const prefixPaths = (item, prefix) => ({
   })),
 });
 
-const exampleItems = examples.items.map((item) =>
-  prefixPaths(item, path.relative(ROOT, DOCS)),
-);
-
 for (const edition of EDITIONS) {
   const outDir = path.join(OUT_ROOT, edition);
   const { main, locales } = editionItems(library, edition);
   if (!main || locales.length === 0) {
     console.error(
       `hosted.mjs: the ${edition} main item or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
+    );
+    process.exit(1);
+  }
+  const exampleItems = editionExampleItems(examples, edition).map((item) =>
+    prefixPaths(item, path.relative(ROOT, DOCS)),
+  );
+  if (exampleItems.length === 0) {
+    console.error(
+      `hosted.mjs: no ${edition} example items in apps/shadcn-table-docs/registry.json; run pnpm registry:items first`,
     );
     process.exit(1);
   }
