@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="apps/shadcn-table-docs/app/icon.svg" alt="shadcn-table logo" width="72" height="72" />
+
 # shadcn-table
 
 A full-featured React data table built on TanStack Table v9, installed into your codebase through the shadcn CLI.
@@ -13,7 +15,7 @@ A full-featured React data table built on TanStack Table v9, installed into your
 
 </div>
 
-https://github.com/user-attachments/assets/e5096c54-74a6-4dbf-92b8-f8f5ae830fe3
+https://github.com/user-attachments/assets/029680c9-40a8-430a-86b4-36bc7363ad22
 
 Three editions, one per shadcn base: Radix UI, Base UI and React Aria.
 
