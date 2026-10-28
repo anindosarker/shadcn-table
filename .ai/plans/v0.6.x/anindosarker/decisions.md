@@ -67,3 +67,24 @@ force; nothing here re-decides them.
    workaround line part 02 added is removed. Why: the owner ruled the defect is shadcn's and
    the registry should carry no corrected copy; a red CI scenario or a hidden type error would
    both misreport what users see.
+
+## add-part determinism
+
+5. `scripts/registry/add-part.mjs` is made deterministic, then every part in every edition is
+   re-added once, one commit per edition. A follow-up part, not a 0.6.x patch; nothing in it is
+   user-facing. Why: the decision 2 gate (`pnpm add-part <edition> <part> && git status --short`
+   prints nothing) only holds today by invocation order. The 2026-10-28 probe (`shadcn`
+   4.22.0, `@shadcn/registry` 0.2.0) rewrote 10 radix, 9 base and 7 aria parts nobody had
+   edited, see `02-tracker.md` "Part drift". Users never run the script and never receive
+   these copies: non-forked parts reach them as `registryDependencies` from ui.shadcn.com,
+   only `forkedUi` files ship from our tree.
+   - `'use client'`: `@shadcn/registry` `transform-rsc` tests the directive with a `/g` regex,
+     so `lastIndex` carries across files and the directive is stripped from every other file
+     in a run. `add-part.mjs` stops trusting that transform: after the CLI runs, the script
+     sets the directive on each copied file from the upstream item JSON content (`rsc: false`
+     applied by us, per file).
+   - `font-heading`: the CLI drops the class because the scratch `index.css` declares no
+     `--font-heading`. The scratch stylesheet declares it.
+   - The regex is reported to `@shadcn/registry` as an upstream bug.
+   - Rejected: a check-side normaliser that ignores the directive and the class (keeps the
+     churn, hides it); documenting the gate as "no diff beyond those two" (manual judgment).
