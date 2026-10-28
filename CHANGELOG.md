@@ -18,8 +18,10 @@ date; merging it publishes the section as the GitHub release notes.
   root links land on Base UI. The Storybook edition tool marks the current edition's button.
 - Every committed registry item is named by its edition: the GitHub-namespace addresses of the
   Radix UI items are `anindosarker/shadcn-table/shadcn-table-radix`,
-  `shadcn-table-radix-locale-<code>` and `example-<slug>-radix` (the plain `shadcn-table` and
-  `example-<slug>` GitHub addresses no longer resolve). The hosted item names are unchanged:
+  `shadcn-table-radix-locale-<code>` and `example-<slug>-radix`. The plain GitHub addresses
+  (`anindosarker/shadcn-table/shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`)
+  now install the Base UI edition, as aliases of the `-base` items; before, they installed
+  the Radix UI items. The hosted item names are unchanged:
   `/r/radix/shadcn-table.json`, `/r/radix/shadcn-table-locale-<code>.json` and
   `/r/radix/example-<slug>.json` as before.
 
