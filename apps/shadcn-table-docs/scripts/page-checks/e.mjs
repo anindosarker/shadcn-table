@@ -67,7 +67,9 @@ const checks = {
       // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
       check(
         'range slider filter',
-        (await w.locator('thead [role="slider"], thead input[type="range"]').count()) > 0,
+        (await w
+          .locator('thead [role="slider"], thead input[type="range"]')
+          .count()) > 0,
       );
     },
   ),
