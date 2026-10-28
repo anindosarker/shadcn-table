@@ -33,6 +33,8 @@ Branch `v0.6/st-checkbox`, worktree `09`, from `claude/review` at `c872dfc4`.
 - Docs app `tsc --noEmit`: errors only in the ignored, stale generated `examples/.radix/`.
 - `pr.yml`: run by the verifier on the PR.
 
+- Review round: fixed all three minor findings, none declined. `add-part --all` lists every `*.tsx` under components/ui (dead fork filter and registry.ts import gone); `lib.mjs` comments no longer mention forked parts; the `ST_Checkbox` dash always renders and shows through `peer-data-[state=indeterminate]:block` (radix) or `peer-data-indeterminate:block` (base, aria), so Radix's uncontrolled `defaultChecked="indeterminate"` gets its dash. tsc and lint green, story tests 446 per edition green, `registry:build` no diff.
+
 ## Owner attention
 
 - React Aria checkbox filter (`filterVariant: 'checkbox'`) unset state now shows the dash on
