@@ -4,7 +4,7 @@
   "homepage": "https://github.com/anindosarker/shadcn-table",
   "items": [
     {
-      "name": "example-advanced",
+      "name": "example-advanced-radix",
       "type": "registry:block",
       "title": "Advanced Example",
       "description": "Advanced Shadcn Table Example with pagination, filtering, sorting, selection, detail panels, column ordering, pinning, custom toolbars, and more",
@@ -26,7 +26,7 @@
       ]
     },
     {
-      "name": "example-aggregation-and-grouping",
+      "name": "example-aggregation-and-grouping-radix",
       "type": "registry:block",
       "title": "Aggregation and Grouping Example",
       "description": "A Shadcn Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.",
@@ -44,7 +44,7 @@
       ]
     },
     {
-      "name": "example-aggregation-multi",
+      "name": "example-aggregation-multi-radix",
       "type": "registry:block",
       "title": "Aggregation Multi",
       "description": "Aggregation Multi example from shadcn-table.",
@@ -62,7 +62,7 @@
       ]
     },
     {
-      "name": "example-alternate-column-filtering",
+      "name": "example-alternate-column-filtering-radix",
       "type": "registry:block",
       "title": "Popover Filters Example",
       "description": "An example of Shadcn Table which shows an excel-like column filters.",
@@ -80,7 +80,7 @@
       ]
     },
     {
-      "name": "example-alternate-detail-panel",
+      "name": "example-alternate-detail-panel-radix",
       "type": "registry:block",
       "title": "Alternate Detail Panel",
       "description": "Alternate Detail Panel example from shadcn-table.",
@@ -98,7 +98,7 @@
       ]
     },
     {
-      "name": "example-alternate-pagination",
+      "name": "example-alternate-pagination-radix",
       "type": "registry:block",
       "title": "Alternate Pagination",
       "description": "Alternate Pagination example from shadcn-table.",
@@ -116,7 +116,7 @@
       ]
     },
     {
-      "name": "example-basic",
+      "name": "example-basic-radix",
       "type": "registry:block",
       "title": "Basic Example",
       "description": "A basic example of Shadcn Table which includes sorting, filtering, search, and pagination features by default",
@@ -129,7 +129,7 @@
       ]
     },
     {
-      "name": "example-chart-detail-panel",
+      "name": "example-chart-detail-panel-radix",
       "type": "registry:block",
       "title": "Chart Detail Panel Example",
       "description": "A Shadcn Table example demonstrating how to use Recharts with the Detail Panel feature.",
@@ -150,7 +150,7 @@
       ]
     },
     {
-      "name": "example-column-actions-space",
+      "name": "example-column-actions-space-radix",
       "type": "registry:block",
       "title": "Column Actions Space",
       "description": "Column Actions Space example from shadcn-table.",
@@ -168,7 +168,7 @@
       ]
     },
     {
-      "name": "example-column-alignment",
+      "name": "example-column-alignment-radix",
       "type": "registry:block",
       "title": "Column Alignment",
       "description": "Column Alignment example from shadcn-table.",
@@ -186,7 +186,7 @@
       ]
     },
     {
-      "name": "example-custom-column-actions",
+      "name": "example-custom-column-actions-radix",
       "type": "registry:block",
       "title": "Custom Column Actions",
       "description": "Custom Column Actions example from shadcn-table.",
@@ -207,7 +207,7 @@
       ]
     },
     {
-      "name": "example-custom-column-filtering-ui",
+      "name": "example-custom-column-filtering-ui-radix",
       "type": "registry:block",
       "title": "Custom Filter UI Example",
       "description": "An example of Shadcn Table which shows custom filter ui in a sidebar.",
@@ -225,7 +225,7 @@
       ]
     },
     {
-      "name": "example-custom-headless",
+      "name": "example-custom-headless-radix",
       "type": "registry:block",
       "title": "Custom Headless Example",
       "description": "A custom headless example of Shadcn Table which shows how you can use the useShadcnTable hook to build with your own UI components",
@@ -246,7 +246,7 @@
       ]
     },
     {
-      "name": "example-custom-top-toolbar",
+      "name": "example-custom-top-toolbar-radix",
       "type": "registry:block",
       "title": "Custom Top Toolbar",
       "description": "Custom Top Toolbar example from shadcn-table.",
@@ -267,7 +267,7 @@
       ]
     },
     {
-      "name": "example-customize-display-columns",
+      "name": "example-customize-display-columns-radix",
       "type": "registry:block",
       "title": "Customize Display Columns",
       "description": "Customize Display Columns example from shadcn-table.",
@@ -288,7 +288,7 @@
       ]
     },
     {
-      "name": "example-customize-filter-components",
+      "name": "example-customize-filter-components-radix",
       "type": "registry:block",
       "title": "Customize Filter Components",
       "description": "Customize Filter Components example from shadcn-table.",
@@ -301,7 +301,7 @@
       ]
     },
     {
-      "name": "example-customize-filter-modes",
+      "name": "example-customize-filter-modes-radix",
       "type": "registry:block",
       "title": "Filter Switching Example",
       "description": "An example of Shadcn Table which shows how to let the user switch between multiple filtering modes.",
@@ -322,7 +322,7 @@
       ]
     },
     {
-      "name": "example-customize-filter-variants",
+      "name": "example-customize-filter-variants-radix",
       "type": "registry:block",
       "title": "Filter Variants Example",
       "description": "An example of Shadcn Table which shows all of the powerful built-in filter variants.",
@@ -340,7 +340,7 @@
       ]
     },
     {
-      "name": "example-customize-global-filter-component",
+      "name": "example-customize-global-filter-component-radix",
       "type": "registry:block",
       "title": "Customize Global Filter Component",
       "description": "Customize Global Filter Component example from shadcn-table.",
@@ -358,7 +358,7 @@
       ]
     },
     {
-      "name": "example-customize-remove-column-grouping",
+      "name": "example-customize-remove-column-grouping-radix",
       "type": "registry:block",
       "title": "Customized Grouping Example",
       "description": "A Shadcn Table example demonstrating various ways to customize the grouping UI.",
@@ -376,7 +376,7 @@
       ]
     },
     {
-      "name": "example-customize-row-selection",
+      "name": "example-customize-row-selection-radix",
       "type": "registry:block",
       "title": "Customize Row Selection",
       "description": "Customize Row Selection example from shadcn-table.",
@@ -394,7 +394,7 @@
       ]
     },
     {
-      "name": "example-customize-table-styles",
+      "name": "example-customize-table-styles-radix",
       "type": "registry:block",
       "title": "Customize Table Styles",
       "description": "Customize Table Styles example from shadcn-table.",
@@ -412,7 +412,7 @@
       ]
     },
     {
-      "name": "example-disable-column-actions",
+      "name": "example-disable-column-actions-radix",
       "type": "registry:block",
       "title": "Disable Column Actions",
       "description": "Disable Column Actions example from shadcn-table.",
@@ -430,7 +430,7 @@
       ]
     },
     {
-      "name": "example-disable-column-hiding",
+      "name": "example-disable-column-hiding-radix",
       "type": "registry:block",
       "title": "Disable Column Hiding",
       "description": "Disable Column Hiding example from shadcn-table.",
@@ -443,7 +443,7 @@
       ]
     },
     {
-      "name": "example-disable-density-toggle",
+      "name": "example-disable-density-toggle-radix",
       "type": "registry:block",
       "title": "Disable Density Toggle",
       "description": "Disable Density Toggle example from shadcn-table.",
@@ -461,7 +461,7 @@
       ]
     },
     {
-      "name": "example-dynamic-columns",
+      "name": "example-dynamic-columns-radix",
       "type": "registry:block",
       "title": "Dynamic Columns Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and generate columns dynamically",
@@ -480,7 +480,7 @@
       ]
     },
     {
-      "name": "example-editing-crud-cell",
+      "name": "example-editing-crud-cell-radix",
       "type": "registry:block",
       "title": "Editing CRUD Inline Cell Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline cell features",
@@ -505,7 +505,7 @@
       ]
     },
     {
-      "name": "example-editing-crud-modal",
+      "name": "example-editing-crud-modal-radix",
       "type": "registry:block",
       "title": "Editing CRUD Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD features",
@@ -530,7 +530,7 @@
       ]
     },
     {
-      "name": "example-editing-crud-row",
+      "name": "example-editing-crud-row-radix",
       "type": "registry:block",
       "title": "Editing CRUD Inline Row Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline Row features",
@@ -554,7 +554,7 @@
       ]
     },
     {
-      "name": "example-editing-crud-table",
+      "name": "example-editing-crud-table-radix",
       "type": "registry:block",
       "title": "Editing CRUD Inline Table Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD Inline table features",
@@ -579,7 +579,7 @@
       ]
     },
     {
-      "name": "example-editing-crud-tree",
+      "name": "example-editing-crud-tree-radix",
       "type": "registry:block",
       "title": "Editing CRUD Tree Example",
       "description": "An example of Shadcn Table which shows how to use editing CRUD features with expanding sub rows",
@@ -603,7 +603,7 @@
       ]
     },
     {
-      "name": "example-enable-cell-actions",
+      "name": "example-enable-cell-actions-radix",
       "type": "registry:block",
       "title": "Enable Cell Actions",
       "description": "Enable Cell Actions example from shadcn-table.",
@@ -624,7 +624,7 @@
       ]
     },
     {
-      "name": "example-enable-click-to-copy",
+      "name": "example-enable-click-to-copy-radix",
       "type": "registry:block",
       "title": "Enable Click To Copy",
       "description": "Enable Click To Copy example from shadcn-table.",
@@ -642,7 +642,7 @@
       ]
     },
     {
-      "name": "example-enable-column-grouping",
+      "name": "example-enable-column-grouping-radix",
       "type": "registry:block",
       "title": "Column Grouping Example",
       "description": "A Shadcn Table example demonstrating different grouping UI modes.",
@@ -664,7 +664,7 @@
       ]
     },
     {
-      "name": "example-enable-column-ordering",
+      "name": "example-enable-column-ordering-radix",
       "type": "registry:block",
       "title": "Column DnD Ordering Example",
       "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
@@ -682,7 +682,7 @@
       ]
     },
     {
-      "name": "example-enable-column-pinning",
+      "name": "example-enable-column-pinning-radix",
       "type": "registry:block",
       "title": "Column Pinning Example",
       "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
@@ -703,7 +703,7 @@
       ]
     },
     {
-      "name": "example-enable-column-resizing",
+      "name": "example-enable-column-resizing-radix",
       "type": "registry:block",
       "title": "Enable Column Resizing",
       "description": "Enable Column Resizing example from shadcn-table.",
@@ -721,7 +721,7 @@
       ]
     },
     {
-      "name": "example-enable-column-virtualization",
+      "name": "example-enable-column-virtualization-radix",
       "type": "registry:block",
       "title": "Column Virtualization Example",
       "description": "An example of a Shadcn Table with column virtualization enabled to achieve higher performance when rendering large data sets",
@@ -739,7 +739,7 @@
       ]
     },
     {
-      "name": "example-enable-detail-panel-conditionally",
+      "name": "example-enable-detail-panel-conditionally-radix",
       "type": "registry:block",
       "title": "Detail Panel Example",
       "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row.",
@@ -757,7 +757,7 @@
       ]
     },
     {
-      "name": "example-enable-detail-panel-virtualized",
+      "name": "example-enable-detail-panel-virtualized-radix",
       "type": "registry:block",
       "title": "Enable Detail Panel Virtualized",
       "description": "Enable Detail Panel Virtualized example from shadcn-table.",
@@ -775,7 +775,7 @@
       ]
     },
     {
-      "name": "example-enable-expanding-tree",
+      "name": "example-enable-expanding-tree-radix",
       "type": "registry:block",
       "title": "Enable Expanding Tree",
       "description": "Enable Expanding Tree example from shadcn-table.",
@@ -788,7 +788,7 @@
       ]
     },
     {
-      "name": "example-enable-filter-facet-values",
+      "name": "example-enable-filter-facet-values-radix",
       "type": "registry:block",
       "title": "Faceted Values Example",
       "description": "An example of Shadcn Table which shows how to use faceted values to automatically populate filter suggestions.",
@@ -806,7 +806,7 @@
       ]
     },
     {
-      "name": "example-enable-row-dragging",
+      "name": "example-enable-row-dragging-radix",
       "type": "registry:block",
       "title": "Row Dragging Example",
       "description": "An example of Shadcn Table which shows how to drag and drop rows for various use cases.",
@@ -824,7 +824,7 @@
       ]
     },
     {
-      "name": "example-enable-row-numbers-original",
+      "name": "example-enable-row-numbers-original-radix",
       "type": "registry:block",
       "title": "Enable Row Numbers Original",
       "description": "Enable Row Numbers Original example from shadcn-table.",
@@ -842,7 +842,7 @@
       ]
     },
     {
-      "name": "example-enable-row-numbers-static",
+      "name": "example-enable-row-numbers-static-radix",
       "type": "registry:block",
       "title": "Enable Row Numbers Static",
       "description": "Enable Row Numbers Static example from shadcn-table.",
@@ -860,7 +860,7 @@
       ]
     },
     {
-      "name": "example-enable-row-ordering",
+      "name": "example-enable-row-ordering-radix",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
       "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
@@ -878,7 +878,7 @@
       ]
     },
     {
-      "name": "example-enable-row-pinning-select",
+      "name": "example-enable-row-pinning-select-radix",
       "type": "registry:block",
       "title": "Sticky Row Selection Example",
       "description": "An example of Shadcn Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.",
@@ -896,7 +896,7 @@
       ]
     },
     {
-      "name": "example-enable-row-pinning-static",
+      "name": "example-enable-row-pinning-static-radix",
       "type": "registry:block",
       "title": "Static Row Pinning Example",
       "description": "An example of Shadcn Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.",
@@ -914,7 +914,7 @@
       ]
     },
     {
-      "name": "example-enable-row-pinning-sticky",
+      "name": "example-enable-row-pinning-sticky-radix",
       "type": "registry:block",
       "title": "Sticky Row Pinning Example",
       "description": "An example of Shadcn Table which shows how to pin individual rows and have them be sticky and stay in view while scrolling.",
@@ -932,7 +932,7 @@
       ]
     },
     {
-      "name": "example-enable-row-selection",
+      "name": "example-enable-row-selection-radix",
       "type": "registry:block",
       "title": "Enable Row Selection",
       "description": "Enable Row Selection example from shadcn-table.",
@@ -945,7 +945,7 @@
       ]
     },
     {
-      "name": "example-enable-row-virtualization",
+      "name": "example-enable-row-virtualization-radix",
       "type": "registry:block",
       "title": "Row Virtualization Example",
       "description": "An example of a Shadcn Table with row virtualization enabled to achieve higher performance when rendering large data sets",
@@ -963,7 +963,7 @@
       ]
     },
     {
-      "name": "example-enable-sticky-header",
+      "name": "example-enable-sticky-header-radix",
       "type": "registry:block",
       "title": "Sticky Header Example",
       "description": "An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.",
@@ -981,7 +981,7 @@
       ]
     },
     {
-      "name": "example-expanding-tree-expanded",
+      "name": "example-expanding-tree-expanded-radix",
       "type": "registry:block",
       "title": "Expanding Tree Example",
       "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure",
@@ -994,7 +994,7 @@
       ]
     },
     {
-      "name": "example-expanding-tree-flat-parse",
+      "name": "example-expanding-tree-flat-parse-radix",
       "type": "registry:block",
       "title": "Expanding Parsed Tree Example",
       "description": "A Shadcn Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data",
@@ -1007,7 +1007,7 @@
       ]
     },
     {
-      "name": "example-expanding-tree-root-expanded",
+      "name": "example-expanding-tree-root-expanded-radix",
       "type": "registry:block",
       "title": "Expanding Tree Root Expanded",
       "description": "Expanding Tree Root Expanded example from shadcn-table.",
@@ -1023,7 +1023,7 @@
       ]
     },
     {
-      "name": "example-export-to-csv",
+      "name": "example-export-to-csv-radix",
       "type": "registry:block",
       "title": "CSV Export Example",
       "description": "An example of how to export data to CSV using Shadcn Table.",
@@ -1047,7 +1047,7 @@
       ]
     },
     {
-      "name": "example-export-to-pdf",
+      "name": "example-export-to-pdf-radix",
       "type": "registry:block",
       "title": "PDF Export Example",
       "description": "An example of how to export data to PDF using Shadcn Table.",
@@ -1072,7 +1072,7 @@
       ]
     },
     {
-      "name": "example-external-toolbar",
+      "name": "example-external-toolbar-radix",
       "type": "registry:block",
       "title": "External Toolbar",
       "description": "External Toolbar example from shadcn-table.",
@@ -1093,7 +1093,7 @@
       ]
     },
     {
-      "name": "example-font-awesome-icons",
+      "name": "example-font-awesome-icons-radix",
       "type": "registry:block",
       "title": "Font Awesome Icons",
       "description": "Font Awesome Icons example from shadcn-table.",
@@ -1116,7 +1116,7 @@
       ]
     },
     {
-      "name": "example-infinite-scrolling",
+      "name": "example-infinite-scrolling-radix",
       "type": "registry:block",
       "title": "Infinite Scrolling Example",
       "description": "An example of Shadcn Table which shows how to implement an infinite scrolling table that fetches data from a remote server as the user scrolls down the table with the useInfiniteQuery hook from react-query",
@@ -1132,7 +1132,7 @@
       ]
     },
     {
-      "name": "example-lazy-detail-panel",
+      "name": "example-lazy-detail-panel-radix",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
       "description": "A Shadcn Table example show how use use expandable rows to show additional information about a row and load the data for the detail panel only after the user expands the row.",
@@ -1152,7 +1152,7 @@
       ]
     },
     {
-      "name": "example-lazy-sub-rows",
+      "name": "example-lazy-sub-rows-radix",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
       "description": "A Shadcn Table example show how use use expandable rows to fetch additional sub-rows data only after the user expands the row.",
@@ -1168,7 +1168,7 @@
       ]
     },
     {
-      "name": "example-linear-progress",
+      "name": "example-linear-progress-radix",
       "type": "registry:block",
       "title": "Linear Progress",
       "description": "Linear Progress example from shadcn-table.",
@@ -1189,7 +1189,7 @@
       ]
     },
     {
-      "name": "example-loading",
+      "name": "example-loading-radix",
       "type": "registry:block",
       "title": "Loading",
       "description": "Loading example from shadcn-table.",
@@ -1207,7 +1207,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-ar",
+      "name": "example-localization-i18n-ar-radix",
       "type": "registry:block",
       "title": "Localization I18n Ar",
       "description": "Localization I18n Ar example from shadcn-table.",
@@ -1225,7 +1225,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-az",
+      "name": "example-localization-i18n-az-radix",
       "type": "registry:block",
       "title": "Localization I18n Az",
       "description": "Localization I18n Az example from shadcn-table.",
@@ -1243,7 +1243,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-bg",
+      "name": "example-localization-i18n-bg-radix",
       "type": "registry:block",
       "title": "Localization I18n Bg",
       "description": "Localization I18n Bg example from shadcn-table.",
@@ -1261,7 +1261,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-cs",
+      "name": "example-localization-i18n-cs-radix",
       "type": "registry:block",
       "title": "Localization I18n Cs",
       "description": "Localization I18n Cs example from shadcn-table.",
@@ -1279,7 +1279,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-da",
+      "name": "example-localization-i18n-da-radix",
       "type": "registry:block",
       "title": "Localization I18n Da",
       "description": "Localization I18n Da example from shadcn-table.",
@@ -1297,7 +1297,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-de",
+      "name": "example-localization-i18n-de-radix",
       "type": "registry:block",
       "title": "Localization I18n De",
       "description": "Localization I18n De example from shadcn-table.",
@@ -1315,7 +1315,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-el",
+      "name": "example-localization-i18n-el-radix",
       "type": "registry:block",
       "title": "Localization I18n El",
       "description": "Localization I18n El example from shadcn-table.",
@@ -1333,7 +1333,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-en",
+      "name": "example-localization-i18n-en-radix",
       "type": "registry:block",
       "title": "Localization I18n En",
       "description": "Localization I18n En example from shadcn-table.",
@@ -1351,7 +1351,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-es",
+      "name": "example-localization-i18n-es-radix",
       "type": "registry:block",
       "title": "Localization I18n Es",
       "description": "Localization I18n Es example from shadcn-table.",
@@ -1369,7 +1369,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-et",
+      "name": "example-localization-i18n-et-radix",
       "type": "registry:block",
       "title": "Localization I18n Et",
       "description": "Localization I18n Et example from shadcn-table.",
@@ -1387,7 +1387,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-fa",
+      "name": "example-localization-i18n-fa-radix",
       "type": "registry:block",
       "title": "Localization I18n Fa",
       "description": "Localization I18n Fa example from shadcn-table.",
@@ -1405,7 +1405,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-fi",
+      "name": "example-localization-i18n-fi-radix",
       "type": "registry:block",
       "title": "Localization I18n Fi",
       "description": "Localization I18n Fi example from shadcn-table.",
@@ -1423,7 +1423,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-fr",
+      "name": "example-localization-i18n-fr-radix",
       "type": "registry:block",
       "title": "Localization I18n Fr",
       "description": "Localization I18n Fr example from shadcn-table.",
@@ -1441,7 +1441,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-he",
+      "name": "example-localization-i18n-he-radix",
       "type": "registry:block",
       "title": "Localization I18n He",
       "description": "Localization I18n He example from shadcn-table.",
@@ -1459,7 +1459,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-hr",
+      "name": "example-localization-i18n-hr-radix",
       "type": "registry:block",
       "title": "Localization I18n Hr",
       "description": "Localization I18n Hr example from shadcn-table.",
@@ -1477,7 +1477,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-hu",
+      "name": "example-localization-i18n-hu-radix",
       "type": "registry:block",
       "title": "Localization I18n Hu",
       "description": "Localization I18n Hu example from shadcn-table.",
@@ -1495,7 +1495,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-hy",
+      "name": "example-localization-i18n-hy-radix",
       "type": "registry:block",
       "title": "Localization I18n Hy",
       "description": "Localization I18n Hy example from shadcn-table.",
@@ -1513,7 +1513,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-id",
+      "name": "example-localization-i18n-id-radix",
       "type": "registry:block",
       "title": "Localization I18n Id",
       "description": "Localization I18n Id example from shadcn-table.",
@@ -1531,7 +1531,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-it",
+      "name": "example-localization-i18n-it-radix",
       "type": "registry:block",
       "title": "Localization I18n It",
       "description": "Localization I18n It example from shadcn-table.",
@@ -1549,7 +1549,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-ja",
+      "name": "example-localization-i18n-ja-radix",
       "type": "registry:block",
       "title": "Localization I18n Ja",
       "description": "Localization I18n Ja example from shadcn-table.",
@@ -1567,7 +1567,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-ko",
+      "name": "example-localization-i18n-ko-radix",
       "type": "registry:block",
       "title": "Localization I18n Ko",
       "description": "Localization I18n Ko example from shadcn-table.",
@@ -1585,7 +1585,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-mk",
+      "name": "example-localization-i18n-mk-radix",
       "type": "registry:block",
       "title": "Localization I18n Mk",
       "description": "Localization I18n Mk example from shadcn-table.",
@@ -1603,7 +1603,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-nl",
+      "name": "example-localization-i18n-nl-radix",
       "type": "registry:block",
       "title": "Localization I18n Nl",
       "description": "Localization I18n Nl example from shadcn-table.",
@@ -1621,7 +1621,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-no",
+      "name": "example-localization-i18n-no-radix",
       "type": "registry:block",
       "title": "Localization I18n No",
       "description": "Localization I18n No example from shadcn-table.",
@@ -1639,7 +1639,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-np",
+      "name": "example-localization-i18n-np-radix",
       "type": "registry:block",
       "title": "Localization I18n Np",
       "description": "Localization I18n Np example from shadcn-table.",
@@ -1657,7 +1657,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-pl",
+      "name": "example-localization-i18n-pl-radix",
       "type": "registry:block",
       "title": "Localization I18n Pl",
       "description": "Localization I18n Pl example from shadcn-table.",
@@ -1675,7 +1675,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-pt",
+      "name": "example-localization-i18n-pt-radix",
       "type": "registry:block",
       "title": "Localization I18n Pt",
       "description": "Localization I18n Pt example from shadcn-table.",
@@ -1693,7 +1693,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-pt-BR",
+      "name": "example-localization-i18n-pt-BR-radix",
       "type": "registry:block",
       "title": "Localization I18n Pt BR",
       "description": "Localization I18n Pt BR example from shadcn-table.",
@@ -1711,7 +1711,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-ro",
+      "name": "example-localization-i18n-ro-radix",
       "type": "registry:block",
       "title": "Localization I18n Ro",
       "description": "Localization I18n Ro example from shadcn-table.",
@@ -1729,7 +1729,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-ru",
+      "name": "example-localization-i18n-ru-radix",
       "type": "registry:block",
       "title": "Localization I18n Ru",
       "description": "Localization I18n Ru example from shadcn-table.",
@@ -1747,7 +1747,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-sk",
+      "name": "example-localization-i18n-sk-radix",
       "type": "registry:block",
       "title": "Localization I18n Sk",
       "description": "Localization I18n Sk example from shadcn-table.",
@@ -1765,7 +1765,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-sr-Cyrl-RS",
+      "name": "example-localization-i18n-sr-Cyrl-RS-radix",
       "type": "registry:block",
       "title": "Localization I18n Sr Cyrl RS",
       "description": "Localization I18n Sr Cyrl RS example from shadcn-table.",
@@ -1783,7 +1783,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-sr-Latn-RS",
+      "name": "example-localization-i18n-sr-Latn-RS-radix",
       "type": "registry:block",
       "title": "Localization I18n Sr Latn RS",
       "description": "Localization I18n Sr Latn RS example from shadcn-table.",
@@ -1801,7 +1801,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-sv",
+      "name": "example-localization-i18n-sv-radix",
       "type": "registry:block",
       "title": "Localization I18n Sv",
       "description": "Localization I18n Sv example from shadcn-table.",
@@ -1819,7 +1819,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-tr",
+      "name": "example-localization-i18n-tr-radix",
       "type": "registry:block",
       "title": "Localization I18n Tr",
       "description": "Localization I18n Tr example from shadcn-table.",
@@ -1837,7 +1837,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-uk",
+      "name": "example-localization-i18n-uk-radix",
       "type": "registry:block",
       "title": "Localization I18n Uk",
       "description": "Localization I18n Uk example from shadcn-table.",
@@ -1855,7 +1855,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-vi",
+      "name": "example-localization-i18n-vi-radix",
       "type": "registry:block",
       "title": "Localization I18n Vi",
       "description": "Localization I18n Vi example from shadcn-table.",
@@ -1873,7 +1873,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-zh-hans",
+      "name": "example-localization-i18n-zh-hans-radix",
       "type": "registry:block",
       "title": "Localization I18n Zh Hans",
       "description": "Localization I18n Zh Hans example from shadcn-table.",
@@ -1891,7 +1891,7 @@
       ]
     },
     {
-      "name": "example-localization-i18n-zh-hant",
+      "name": "example-localization-i18n-zh-hant-radix",
       "type": "registry:block",
       "title": "Localization I18n Zh Hant",
       "description": "Localization I18n Zh Hant example from shadcn-table.",
@@ -1909,7 +1909,7 @@
       ]
     },
     {
-      "name": "example-manual-selection",
+      "name": "example-manual-selection-radix",
       "type": "registry:block",
       "title": "Manual Selection",
       "description": "Manual Selection example from shadcn-table.",
@@ -1922,7 +1922,7 @@
       ]
     },
     {
-      "name": "example-minimal",
+      "name": "example-minimal-radix",
       "type": "registry:block",
       "title": "Minimal Example",
       "description": "A minimal example of Shadcn Table which turns off most of the advanced features",
@@ -1940,7 +1940,7 @@
       ]
     },
     {
-      "name": "example-mui-theme",
+      "name": "example-mui-theme-radix",
       "type": "registry:block",
       "title": "Mui Theme",
       "description": "Mui Theme example from shadcn-table.",
@@ -1953,7 +1953,7 @@
       ]
     },
     {
-      "name": "example-multi-sorting",
+      "name": "example-multi-sorting-radix",
       "type": "registry:block",
       "title": "Multi Sorting",
       "description": "Multi Sorting example from shadcn-table.",
@@ -1974,7 +1974,7 @@
       ]
     },
     {
-      "name": "example-persistent-state",
+      "name": "example-persistent-state-radix",
       "type": "registry:block",
       "title": "Persistent State",
       "description": "Persistent State example from shadcn-table.",
@@ -1995,7 +1995,7 @@
       ]
     },
     {
-      "name": "example-react-query",
+      "name": "example-react-query-radix",
       "type": "registry:block",
       "title": "React Query Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server with react-query",
@@ -2015,7 +2015,7 @@
       ]
     },
     {
-      "name": "example-remote",
+      "name": "example-remote-radix",
       "type": "registry:block",
       "title": "Remote Data Fetching Example",
       "description": "An example of Shadcn Table which shows how to fetch remote data and filter and paginate on a remote server",
@@ -2028,7 +2028,7 @@
       ]
     },
     {
-      "name": "example-row-actions-buttons",
+      "name": "example-row-actions-buttons-radix",
       "type": "registry:block",
       "title": "Row Actions Buttons",
       "description": "Row Actions Buttons example from shadcn-table.",
@@ -2049,7 +2049,7 @@
       ]
     },
     {
-      "name": "example-row-actions-menu-items",
+      "name": "example-row-actions-menu-items-radix",
       "type": "registry:block",
       "title": "Row Actions Menu Items",
       "description": "Row Actions Menu Items example from shadcn-table.",
@@ -2067,7 +2067,7 @@
       ]
     },
     {
-      "name": "example-server-side-data",
+      "name": "example-server-side-data-radix",
       "type": "registry:block",
       "title": "Server Side Data",
       "description": "Server Side Data example from shadcn-table.",
@@ -2107,7 +2107,7 @@
       ]
     },
     {
-      "name": "example-single-row-selection",
+      "name": "example-single-row-selection-radix",
       "type": "registry:block",
       "title": "Single Row Selection",
       "description": "Single Row Selection example from shadcn-table.",
@@ -2120,7 +2120,7 @@
       ]
     },
     {
-      "name": "example-virtualized",
+      "name": "example-virtualized-radix",
       "type": "registry:block",
       "title": "Virtualized Example",
       "description": "An example of a Shadcn Table with virtualization enabled to achieve higher performance when rendering large data sets",

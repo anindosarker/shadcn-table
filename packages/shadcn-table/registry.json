@@ -4,7 +4,7 @@
   "homepage": "https://github.com/anindosarker/shadcn-table",
   "items": [
     {
-      "name": "shadcn-table",
+      "name": "shadcn-table-radix",
       "type": "registry:ui",
       "title": "Shadcn Table",
       "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.",
@@ -575,12 +575,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-ar",
+      "name": "shadcn-table-radix-locale-ar",
       "type": "registry:ui",
       "title": "Shadcn Table locale: ar",
-      "description": "The ar localization for shadcn-table.",
+      "description": "The ar localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -591,12 +591,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-az",
+      "name": "shadcn-table-radix-locale-az",
       "type": "registry:ui",
       "title": "Shadcn Table locale: az",
-      "description": "The az localization for shadcn-table.",
+      "description": "The az localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -607,12 +607,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-bg",
+      "name": "shadcn-table-radix-locale-bg",
       "type": "registry:ui",
       "title": "Shadcn Table locale: bg",
-      "description": "The bg localization for shadcn-table.",
+      "description": "The bg localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -623,12 +623,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-cs",
+      "name": "shadcn-table-radix-locale-cs",
       "type": "registry:ui",
       "title": "Shadcn Table locale: cs",
-      "description": "The cs localization for shadcn-table.",
+      "description": "The cs localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -639,12 +639,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-da",
+      "name": "shadcn-table-radix-locale-da",
       "type": "registry:ui",
       "title": "Shadcn Table locale: da",
-      "description": "The da localization for shadcn-table.",
+      "description": "The da localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -655,12 +655,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-de",
+      "name": "shadcn-table-radix-locale-de",
       "type": "registry:ui",
       "title": "Shadcn Table locale: de",
-      "description": "The de localization for shadcn-table.",
+      "description": "The de localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -671,12 +671,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-el",
+      "name": "shadcn-table-radix-locale-el",
       "type": "registry:ui",
       "title": "Shadcn Table locale: el",
-      "description": "The el localization for shadcn-table.",
+      "description": "The el localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -687,12 +687,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-es",
+      "name": "shadcn-table-radix-locale-es",
       "type": "registry:ui",
       "title": "Shadcn Table locale: es",
-      "description": "The es localization for shadcn-table.",
+      "description": "The es localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -703,12 +703,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-et",
+      "name": "shadcn-table-radix-locale-et",
       "type": "registry:ui",
       "title": "Shadcn Table locale: et",
-      "description": "The et localization for shadcn-table.",
+      "description": "The et localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -719,12 +719,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-fa",
+      "name": "shadcn-table-radix-locale-fa",
       "type": "registry:ui",
       "title": "Shadcn Table locale: fa",
-      "description": "The fa localization for shadcn-table.",
+      "description": "The fa localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -735,12 +735,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-fi",
+      "name": "shadcn-table-radix-locale-fi",
       "type": "registry:ui",
       "title": "Shadcn Table locale: fi",
-      "description": "The fi localization for shadcn-table.",
+      "description": "The fi localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -751,12 +751,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-fr",
+      "name": "shadcn-table-radix-locale-fr",
       "type": "registry:ui",
       "title": "Shadcn Table locale: fr",
-      "description": "The fr localization for shadcn-table.",
+      "description": "The fr localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -767,12 +767,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-he",
+      "name": "shadcn-table-radix-locale-he",
       "type": "registry:ui",
       "title": "Shadcn Table locale: he",
-      "description": "The he localization for shadcn-table.",
+      "description": "The he localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -783,12 +783,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-hr",
+      "name": "shadcn-table-radix-locale-hr",
       "type": "registry:ui",
       "title": "Shadcn Table locale: hr",
-      "description": "The hr localization for shadcn-table.",
+      "description": "The hr localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -799,12 +799,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-hu",
+      "name": "shadcn-table-radix-locale-hu",
       "type": "registry:ui",
       "title": "Shadcn Table locale: hu",
-      "description": "The hu localization for shadcn-table.",
+      "description": "The hu localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -815,12 +815,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-hy",
+      "name": "shadcn-table-radix-locale-hy",
       "type": "registry:ui",
       "title": "Shadcn Table locale: hy",
-      "description": "The hy localization for shadcn-table.",
+      "description": "The hy localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -831,12 +831,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-id",
+      "name": "shadcn-table-radix-locale-id",
       "type": "registry:ui",
       "title": "Shadcn Table locale: id",
-      "description": "The id localization for shadcn-table.",
+      "description": "The id localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -847,12 +847,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-it",
+      "name": "shadcn-table-radix-locale-it",
       "type": "registry:ui",
       "title": "Shadcn Table locale: it",
-      "description": "The it localization for shadcn-table.",
+      "description": "The it localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -863,12 +863,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-ja",
+      "name": "shadcn-table-radix-locale-ja",
       "type": "registry:ui",
       "title": "Shadcn Table locale: ja",
-      "description": "The ja localization for shadcn-table.",
+      "description": "The ja localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -879,12 +879,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-ko",
+      "name": "shadcn-table-radix-locale-ko",
       "type": "registry:ui",
       "title": "Shadcn Table locale: ko",
-      "description": "The ko localization for shadcn-table.",
+      "description": "The ko localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -895,12 +895,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-mk",
+      "name": "shadcn-table-radix-locale-mk",
       "type": "registry:ui",
       "title": "Shadcn Table locale: mk",
-      "description": "The mk localization for shadcn-table.",
+      "description": "The mk localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -911,12 +911,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-nl",
+      "name": "shadcn-table-radix-locale-nl",
       "type": "registry:ui",
       "title": "Shadcn Table locale: nl",
-      "description": "The nl localization for shadcn-table.",
+      "description": "The nl localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -927,12 +927,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-no",
+      "name": "shadcn-table-radix-locale-no",
       "type": "registry:ui",
       "title": "Shadcn Table locale: no",
-      "description": "The no localization for shadcn-table.",
+      "description": "The no localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -943,12 +943,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-np",
+      "name": "shadcn-table-radix-locale-np",
       "type": "registry:ui",
       "title": "Shadcn Table locale: np",
-      "description": "The np localization for shadcn-table.",
+      "description": "The np localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -959,12 +959,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-pl",
+      "name": "shadcn-table-radix-locale-pl",
       "type": "registry:ui",
       "title": "Shadcn Table locale: pl",
-      "description": "The pl localization for shadcn-table.",
+      "description": "The pl localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -975,12 +975,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-pt-BR",
+      "name": "shadcn-table-radix-locale-pt-BR",
       "type": "registry:ui",
       "title": "Shadcn Table locale: pt-BR",
-      "description": "The pt-BR localization for shadcn-table.",
+      "description": "The pt-BR localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -991,12 +991,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-pt",
+      "name": "shadcn-table-radix-locale-pt",
       "type": "registry:ui",
       "title": "Shadcn Table locale: pt",
-      "description": "The pt localization for shadcn-table.",
+      "description": "The pt localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1007,12 +1007,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-ro",
+      "name": "shadcn-table-radix-locale-ro",
       "type": "registry:ui",
       "title": "Shadcn Table locale: ro",
-      "description": "The ro localization for shadcn-table.",
+      "description": "The ro localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1023,12 +1023,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-ru",
+      "name": "shadcn-table-radix-locale-ru",
       "type": "registry:ui",
       "title": "Shadcn Table locale: ru",
-      "description": "The ru localization for shadcn-table.",
+      "description": "The ru localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1039,12 +1039,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-sk",
+      "name": "shadcn-table-radix-locale-sk",
       "type": "registry:ui",
       "title": "Shadcn Table locale: sk",
-      "description": "The sk localization for shadcn-table.",
+      "description": "The sk localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1055,12 +1055,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-sr-Cyrl-RS",
+      "name": "shadcn-table-radix-locale-sr-Cyrl-RS",
       "type": "registry:ui",
       "title": "Shadcn Table locale: sr-Cyrl-RS",
-      "description": "The sr-Cyrl-RS localization for shadcn-table.",
+      "description": "The sr-Cyrl-RS localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1071,12 +1071,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-sr-Latn-RS",
+      "name": "shadcn-table-radix-locale-sr-Latn-RS",
       "type": "registry:ui",
       "title": "Shadcn Table locale: sr-Latn-RS",
-      "description": "The sr-Latn-RS localization for shadcn-table.",
+      "description": "The sr-Latn-RS localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1087,12 +1087,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-sv",
+      "name": "shadcn-table-radix-locale-sv",
       "type": "registry:ui",
       "title": "Shadcn Table locale: sv",
-      "description": "The sv localization for shadcn-table.",
+      "description": "The sv localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1103,12 +1103,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-tr",
+      "name": "shadcn-table-radix-locale-tr",
       "type": "registry:ui",
       "title": "Shadcn Table locale: tr",
-      "description": "The tr localization for shadcn-table.",
+      "description": "The tr localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1119,12 +1119,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-uk",
+      "name": "shadcn-table-radix-locale-uk",
       "type": "registry:ui",
       "title": "Shadcn Table locale: uk",
-      "description": "The uk localization for shadcn-table.",
+      "description": "The uk localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1135,12 +1135,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-vi",
+      "name": "shadcn-table-radix-locale-vi",
       "type": "registry:ui",
       "title": "Shadcn Table locale: vi",
-      "description": "The vi localization for shadcn-table.",
+      "description": "The vi localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1151,12 +1151,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-zh-Hans",
+      "name": "shadcn-table-radix-locale-zh-Hans",
       "type": "registry:ui",
       "title": "Shadcn Table locale: zh-Hans",
-      "description": "The zh-Hans localization for shadcn-table.",
+      "description": "The zh-Hans localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {
@@ -1167,12 +1167,12 @@
       ]
     },
     {
-      "name": "shadcn-table-locale-zh-Hant",
+      "name": "shadcn-table-radix-locale-zh-Hant",
       "type": "registry:ui",
       "title": "Shadcn Table locale: zh-Hant",
-      "description": "The zh-Hant localization for shadcn-table.",
+      "description": "The zh-Hant localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table"
+        "anindosarker/shadcn-table/shadcn-table-radix"
       ],
       "files": [
         {

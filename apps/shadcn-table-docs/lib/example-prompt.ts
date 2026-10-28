@@ -23,7 +23,7 @@ interface RegistryItem {
 /** Where `shadcn add` puts the example files (registry.json `target`). */
 const INSTALL_DIR = 'components/examples';
 
-/** The base's committed item for examples/<base>/<name> (`example-<name>`, `-base`, `-aria`). */
+/** The base's committed item for examples/<base>/<name> (`example-<name>-<base>`); the prompt emits the hosted `example-<name>`. */
 async function readRegistryItem(
   name: string,
   base: Base,
