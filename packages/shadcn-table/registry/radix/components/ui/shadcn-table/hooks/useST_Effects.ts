@@ -35,17 +35,15 @@ export const useST_Effects = <TData extends ST_RowData>(
     }
   }, []);
 
-  //hide scrollbars when table is in full screen mode, preserve body scroll position after full screen exit
   useEffect(() => {
     const applyFullScreen = (isFullScreen: boolean) => {
       if (typeof window !== 'undefined') {
         if (isFullScreen) {
-          previousTop.current = document.body.getBoundingClientRect().top; //save scroll position
-          document.body.style.height = '100dvh'; //hide page scrollbars when table is in full screen mode
+          previousTop.current = document.body.getBoundingClientRect().top;
+          document.body.style.height = '100dvh';
         } else {
           document.body.style.height = initialBodyHeight.current as string;
           if (!previousTop.current) return;
-          //restore scroll position
           window.scrollTo({
             behavior: 'instant',
             top: -1 * (previousTop.current as number),
@@ -68,7 +66,6 @@ export const useST_Effects = <TData extends ST_RowData>(
     };
   }, []);
 
-  //recalculate column order when columns change or features are toggled on/off
   useEffect(() => {
     if (totalColumnCount !== table.atoms.columnOrder.get().length) {
       table.setColumnOrder(
@@ -80,9 +77,6 @@ export const useST_Effects = <TData extends ST_RowData>(
     }
   }, [totalColumnCount]);
 
-  //if page index is out of bounds, set it to the last page; checked when the
-  //row count, enablePagination, isLoading or showSkeletons changed since the
-  //last check
   const lastPageCheck = useRef<unknown[]>(null);
   const checkPageIndex = (totalRowCount: number) => {
     const { enablePagination } = latestTable.current.options;
@@ -132,7 +126,6 @@ export const useST_Effects = <TData extends ST_RowData>(
     };
   }, []);
 
-  //turn off sort when global filter is looking for ranked results
   useEffect(() => {
     let appliedSort: ST_SortingState = table.atoms.sorting.get();
     const sortingSubscription = table.atoms.sorting.subscribe((sorting) => {

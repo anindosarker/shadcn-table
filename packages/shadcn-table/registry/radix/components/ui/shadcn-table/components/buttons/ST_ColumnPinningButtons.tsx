@@ -22,8 +22,6 @@ export const ST_ColumnPinningButtons = <TData extends ST_RowData>({
   column,
   ...rest
 }: ST_ColumnPinningButtonsProps<TData>) => {
-  // The column carries the core table, which holds the ST options, atoms,
-  // refs and setters; the ST wrapper types do not re-type it.
   const table = column.table;
   const {
     options: {

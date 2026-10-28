@@ -71,7 +71,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   rangeFilterIndex,
   ...rest
 }: ST_FilterTextFieldProps<TData>) => {
-  // The header carries the core table; the ST wrapper types re-type its getters.
   const table = header.table;
   const {
     options: {
@@ -192,7 +191,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             : ''
           : ((column.getFilterValue() as string) ?? ''),
   );
-  // The option chosen from the autocomplete list (MUI Autocomplete `value`);
+  // The option chosen from the autocomplete list;
   // the typed text lives in filterValue.
   const [autocompleteValue, setAutocompleteValue] = useState<string | null>(
     () =>
@@ -271,9 +270,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     } else if (isAutocompleteFilter) {
       setAutocompleteValue(null);
       setFilterValue('');
-      // when using 'autocomplete' this function is called only inside effect and only if the filterValue === undefined
-      // so the following call is excessive; should be uncommented if the handleClear becomes part of the Autocomplete component callbacks
-      // column.setFilterValue(undefined)
     } else {
       setFilterValue('');
       column.setFilterValue(undefined);
@@ -331,8 +327,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       <InputGroupAddon
         align="inline-end"
         className={cn(
-          // mr: isSelectFilter || isMultiSelectFilter ? '20px' : undefined,
-          // Note: clears MUI Select's absolute arrow; shadcn's chevron sits in flow inside the trigger.
           // The select addon overlays the trigger so the trigger spans the whole
           // group and the popper (sized from the trigger) matches the field.
           isSelectFilter && 'absolute inset-y-0 right-0',
@@ -379,8 +373,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   ) : null;
 
   const commonTextFieldProps: InputProps = {
-    // fullWidth: true, helperText, margin: 'none', variant: 'standard',
-    // Note: TextField root props; w-full sits in filterTextFieldVariants and the helper text renders under the InputGroup.
     'aria-label': filterPlaceholder,
     autoComplete: 'off',
     disabled: !!filterChipLabel,
@@ -391,8 +383,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     ref: (inputRef) => {
       filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
         inputRef as HTMLInputElement;
-      // if (textFieldProps.inputRef) { textFieldProps.inputRef = inputRef; }
-      // Note: no-op in MRT too; a user ref already wins through the spread below.
     },
     title: filterPlaceholder,
     ...textFieldProps,
@@ -417,7 +407,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   };
 
   // Option values offered by the autocomplete list, already narrowed by the
-  // typed text (MUI createFilterOptions), so the combobox filters nothing.
+  // typed text (createFilterOptions), so the combobox filters nothing.
   const autocompleteItems = isAutocompleteFilter
     ? createFilterOptions<DropdownOption>()(
         dropdownOptions?.map((option) => getValueAndLabel(option)) ?? [],
@@ -443,7 +433,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       <div
         className={cn(
           filterTextFieldVariants(),
-          // Note: Chromium's date input needs 126px of content for its placeholder.
+          // Chromium's date input needs 126px of content for its placeholder.
           isDateFilter
             ? 'min-w-[140px]'
             : isMultiSelectFilter
@@ -453,8 +443,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 : !filterChipLabel
                   ? 'min-w-[96px]'
                   : 'min-w-auto',
-          // mx: '-2px', p: 0, width: 'calc(100% + 4px)',
-          // Note: bleeds MUI's standard-variant underline past the cell padding; no underline here.
         )}
       >
         <InputGroup
@@ -467,8 +455,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         >
           {startAdornment}
           {filterVariant?.startsWith('time') ? (
-            // slotProps.field: { clearable: true, onClear: () => handleClear() }
-            // Note: native time/date inputs clear themselves.
             <InputGroupInput
               {...commonTextFieldProps}
               {...commonDatePickerProps}
@@ -528,8 +514,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               </ComboboxContent>
             </Combobox>
           ) : isSelectFilter ? (
-            // onChange={handleTextFieldChange}
-            // Note: radix Select raises no ChangeEvent, so the user onChange cannot fire.
+            // Radix Select raises no ChangeEvent, so a user onChange cannot fire.
             <Select onValueChange={handleChange} value={filterValue as string}>
               <SelectTrigger
                 aria-label={filterPlaceholder}
@@ -551,11 +536,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               >
                 <SelectValue placeholder={filterPlaceholder} />
               </SelectTrigger>
-              {/* slotProps.select: { MenuProps: { disableScrollLock: true }, displayEmpty: true } */}
-              {/* Note: radix Select always locks scroll; SelectValue shows the placeholder. */}
               <SelectContent position="popper">
-                {/* <MenuItem disabled divider hidden key="p" value="">{filterPlaceholder}</MenuItem> */}
-                {/* Note: radix items cannot carry value ""; the placeholder lives on SelectValue. */}
+                {/* Radix items cannot carry value "": the placeholder lives on SelectValue. */}
                 {textFieldProps.children ??
                   dropdownOptions?.map((option, index) => {
                     const { label, value } = getValueAndLabel(option);
@@ -570,8 +552,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               </SelectContent>
             </Select>
           ) : isMultiSelectFilter ? (
-            // onChange={handleTextFieldChange}
-            // Note: combobox items raise no ChangeEvent, so the user onChange cannot fire.
+            // Combobox items raise no ChangeEvent, so a user onChange cannot fire.
             <Combobox
               disabled={!!filterChipLabel || textFieldProps.disabled}
               items={multiSelectItems}

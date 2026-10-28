@@ -42,7 +42,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
       enableEditing,
       icons: { EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderRowActionMenuItems,
     },
   } = table;
@@ -93,7 +92,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      {/* Note: MRT disableScrollLock dropped: Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}

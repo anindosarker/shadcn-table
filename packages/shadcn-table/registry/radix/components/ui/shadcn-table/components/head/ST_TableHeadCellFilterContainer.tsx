@@ -44,8 +44,6 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showColumnFilters}>
       {(showColumnFilters) => (
-        // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
-        // Note: MUI Collapse replaced by ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
         <Collapsible
           open={showColumnFilters || columnFilterDisplayMode === 'popover'}
           {...rest}

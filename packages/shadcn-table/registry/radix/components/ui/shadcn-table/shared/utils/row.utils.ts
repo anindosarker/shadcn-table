@@ -40,18 +40,15 @@ export const getST_Rows = <TData extends ST_RowData>(
           : getRowModel().rows
         : getCenterRows();
   } else {
-    // fuzzy ranking adjustments
     rows = getPrePaginatedRowModel().rows.sort((a, b) => rankGlobalFuzzy(a, b));
     if (enablePagination && !manualPagination && !all) {
       const start = pagination.pageIndex * pagination.pageSize;
       rows = rows.slice(start, start + pagination.pageSize);
     }
     if (enableRowPinning && !rowPinningDisplayMode?.includes('sticky')) {
-      // "re-center-ize" the rows (no top or bottom pinned rows unless sticky)
       rows = rows.filter((row) => !row.getIsPinned());
     }
   }
-  // row pinning adjustments
   if (enableRowPinning && rowPinningDisplayMode?.includes('sticky')) {
     const centerPinnedRowIds = rows
       .filter((row) => row.getIsPinned())
@@ -79,7 +76,6 @@ export const getST_Rows = <TData extends ST_RowData>(
       rows = [...keptPinnedRows, ...rows];
     }
   }
-  // blank inserted creating row adjustments
   if (
     positionCreatingRow !== undefined &&
     creatingRow &&
@@ -182,7 +178,6 @@ export const getST_RowSelectionHandler =
       target: { checked },
     });
 
-    // if all sub rows were selected, unselect them
     if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
       row.subRows?.forEach((r) => r.toggleSelected(false));
     }

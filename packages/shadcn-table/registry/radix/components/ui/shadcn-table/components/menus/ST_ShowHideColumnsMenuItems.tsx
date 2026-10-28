@@ -21,7 +21,6 @@ import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 
-// Note: MRT MenuItem sx py:'6px' dropped — shadcn DropdownMenuItem padding wins.
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
 );
@@ -52,8 +51,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
-      // Note: mrtTheme.draggingBorderColor dropped project-wide — the hovered
-      // outline maps to `outline-primary`.
     },
     setColumnOrder,
     setColumnPinning,
@@ -114,7 +111,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
 
   return (
     <>
-      {/* Note: disableRipple dropped — no MUI ripple in shadcn. */}
       <DropdownMenuItem
         onDragEnter={handleDragEnter}
         onSelect={(event) => event.preventDefault()}

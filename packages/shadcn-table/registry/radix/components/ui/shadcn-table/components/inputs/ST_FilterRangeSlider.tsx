@@ -35,7 +35,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   header,
   ...rest
 }: ST_FilterRangeSliderProps<TData>) => {
-  // The header carries the core table; the ST wrapper types re-type its getters.
   const table = header.table;
   const {
     options: { enableColumnFilterModes, enableFacetedValues, localization },
@@ -110,8 +109,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
       {() => (
         <div className="flex flex-col">
           <Slider
-            // disableSwap
-            // Note: radix Slider has no disableSwap; thumbs sort on cross.
             max={max}
             min={min}
             onValueChange={(values) => {
@@ -120,7 +117,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
             onValueCommit={(value) => {
               if (Array.isArray(value)) {
                 if (value[0] <= min && value[1] >= max) {
-                  //if the user has selected the entire range, remove the filter
                   column.setFilterValue(undefined);
                 } else {
                   column.setFilterValue(value as [number, number]);
@@ -129,8 +125,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
             }}
             onKeyDown={handleKeyDown}
             value={filterValues}
-            // valueLabelDisplay="auto"
-            // Note: radix Slider has no value label.
             {...sliderProps}
             ref={(node) => {
               if (node) {
@@ -139,7 +133,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
                     '[data-slot="slider-thumb"]',
                   )!;
                 if (sliderProps?.ref) {
-                  // @ts-expect-error MRT no-op: node onto the ref prop (radix has no input slot; root ref)
+                  // @ts-expect-error the slider root node goes onto the ref prop
                   sliderProps.ref = node;
                 }
               }

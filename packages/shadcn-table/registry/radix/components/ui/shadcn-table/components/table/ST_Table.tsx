@@ -32,13 +32,6 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
     getFlatHeaders,
     options: {
       columns,
-      /**
-       * MUI `stickyHeader` Table prop dropped (no native `<table>` attr); sticky th
-        styles live in `ST_TableHeadCell` (+ thead-level grid-mode sticky in
-        `ST_TableHead`), derived from `enableStickyHeader || isFullScreen` off
-        `table`, same as ST_TableHead does.
-      enableStickyHeader,
-       */
       enableTableFooter,
       enableTableHead,
       layoutMode,
@@ -46,9 +39,6 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
       renderCaption,
     },
   } = table;
-  /**
-   * Stickyheader dropped, so gotta drop isFullScreen from deps too, since it only affects stickyheader.
-   */
   // These feed the column size memo, so they are hook subscriptions.
   const columnSizing = useSelector(table.atoms.columnSizing);
   const columnResizing = useSelector(table.atoms.columnResizing);
@@ -94,9 +84,6 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
 
   return (
     <table
-      // stickyHeader={enableStickyHeader || isFullScreen}
-      // Note: no native <table> attr; sticky th styles live in ST_TableHeadCell
-      // (+ thead grid-mode sticky in ST_TableHead), derived from table options.
       {...tableProps}
       style={{ ...columnSizeVars, ...tableProps?.style }}
       className={cn(

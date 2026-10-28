@@ -87,7 +87,6 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
             <span className="relative inline-flex shrink-0 align-middle">
               <button
                 type="button"
-                /* active dropped. Note: MUI TableSortLabel `active` is always true here; its styles are baked into the cva. */
                 aria-label={sortTooltip}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -112,7 +111,6 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
                   <ArrowDownwardIcon />
                 )}
               </button>
-              {/* badgeContent={sorting.length > 1 ? column.getSortIndex() + 1 : 0} dropped. Note: MUI Badge showZero=false hides 0 (column outside the multi-sort). */}
               {sorting.length > 1 && column.getSortIndex() >= 0 && (
                 <span className="absolute top-[14%] right-[14%] z-[1] flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
                   {column.getSortIndex() + 1}

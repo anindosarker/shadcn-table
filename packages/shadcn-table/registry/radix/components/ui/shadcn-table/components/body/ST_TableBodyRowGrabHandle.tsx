@@ -18,7 +18,6 @@ export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   rowRef,
   ...rest
 }: ST_TableBodyRowGrabHandleProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
   const table = row.table;
   const {
     options: { stRowDragHandleProps },
