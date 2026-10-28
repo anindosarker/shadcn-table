@@ -108,7 +108,7 @@ export function SiteNav(props: ComponentProps<'header'>) {
 }
 
 /** Active anywhere in the link's docs section (/docs/<section>/...), so
- * "Docs" (/docs/getting-started/install) lights up on every getting-started page. */
+ * "Docs" (/docs/getting-started/introduction) lights up on every getting-started page. */
 function isActive(url: string, pathname: string) {
   const section = url.split('/').slice(0, 3).join('/');
   return pathname === section || pathname.startsWith(`${section}/`);
