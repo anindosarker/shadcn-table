@@ -207,24 +207,24 @@ const Example = () => {
                 size="sm"
                 variant="outline"
                 className="text-destructive"
-                disabled={!table.getIsSomeRowsSelected()}
-                onClick={handleDeactivate}
+                isDisabled={!table.getIsSomeRowsSelected()}
+                onPress={handleDeactivate}
               >
                 Deactivate
               </Button>
               <Button
                 size="sm"
                 variant="default"
-                disabled={!table.getIsSomeRowsSelected()}
-                onClick={handleActivate}
+                isDisabled={!table.getIsSomeRowsSelected()}
+                onPress={handleActivate}
               >
                 Activate
               </Button>
               <Button
                 size="sm"
                 variant="outline"
-                disabled={!table.getIsSomeRowsSelected()}
-                onClick={handleContact}
+                isDisabled={!table.getIsSomeRowsSelected()}
+                onPress={handleContact}
               >
                 Contact
               </Button>
