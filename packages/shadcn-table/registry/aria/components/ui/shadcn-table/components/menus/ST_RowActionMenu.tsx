@@ -2,11 +2,10 @@ import {
   type ComponentPropsWithRef,
   type MouseEvent,
   type ReactNode,
-  useRef,
 } from 'react';
+import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -18,7 +17,7 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
-  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
+  extends ComponentPropsWithRef<typeof DropdownMenu> {
   anchorEl: HTMLElement | null;
   handleEdit: (event: MouseEvent) => void;
   row: ST_Row<TData>;
@@ -46,9 +45,6 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     },
   } = table;
 
-  const anchorRef = useRef<HTMLElement | null>(null);
-  if (anchorEl) anchorRef.current = anchorEl;
-
   const menuItems: ReactNode[] = [];
   const editItem = parseFromValuesOrFunc(enableEditing, row) &&
     ['modal', 'row'].includes(editDisplayMode!) && (
@@ -73,15 +69,18 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
+    <DropdownMenuTrigger
+      isOpen={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
+      {/* MenuTrigger positions the menu against its pressable child. */}
+      <Pressable>
         <span
           aria-hidden
+          role="button"
+          tabIndex={-1}
           style={{
             position: 'fixed',
             left: rect?.left ?? 0,
@@ -91,19 +90,15 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="start"
+      </Pressable>
+      <DropdownMenu
+        placement="bottom start"
         onClick={(event) => event.stopPropagation()}
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          anchorRef.current?.focus();
-        }}
         className={cn('w-max', className)}
         {...rest}
       >
         {menuItems}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </DropdownMenu>
+    </DropdownMenuTrigger>
   );
 };
