@@ -1,12 +1,9 @@
 import { type MouseEvent, useState } from 'react';
+import { type FocusableElement } from 'react-aria-components';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-} from '@/components/ui/popover';
+import { Popover } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
@@ -62,7 +59,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   const filterValue = column.getFilterValue() as [string, string] | string;
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<FocusableElement | null>(null);
 
   const {
     currentFilterOption,
@@ -131,7 +128,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
         <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
           <ST_Tooltip side="top" title={filterTooltip}>
             <Button
-              onClick={(event: MouseEvent<HTMLButtonElement>) => {
+              onClick={(event: MouseEvent<FocusableElement>) => {
                 if (columnFilterDisplayMode === 'popover') {
                   setAnchorEl(event.currentTarget);
                 } else {
@@ -159,21 +156,22 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       )}
       {columnFilterDisplayMode === 'popover' && (
         <Popover
+          className="w-auto"
+          isOpen={!!anchorEl}
           onOpenChange={(open) => {
             if (!open) setAnchorEl(null);
           }}
-          open={!!anchorEl}
+          onClick={(event) => event.stopPropagation()}
+          placement="top"
+          triggerRef={{ current: anchorEl }}
         >
-          {anchorEl && <PopoverAnchor virtualRef={{ current: anchorEl }} />}
-          <PopoverContent
-            align="center"
-            className="w-auto"
-            onClick={(event) => event.stopPropagation()}
+          {/* The aria Popover takes no onKeyDown. */}
+          <div
+            className="contents"
             onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
-            side="top"
           >
             <ST_TableHeadCellFilterContainer header={header} />
-          </PopoverContent>
+          </div>
         </Popover>
       )}
     </>
