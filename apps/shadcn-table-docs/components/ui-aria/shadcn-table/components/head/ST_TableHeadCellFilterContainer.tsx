@@ -12,13 +12,27 @@ import { ST_FilterRangeSlider } from '@/components/ui-aria/shadcn-table/componen
 import { ST_FilterTextField } from '@/components/ui-aria/shadcn-table/components/inputs/ST_FilterTextField';
 import { stCollapsibleKeyframes } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 
+/**
+ * The Collapsible part's props under the names every edition exposes: `open`,
+ * `defaultOpen` and `onOpenChange` map to the React Aria Disclosure's
+ * `isExpanded`, `defaultExpanded` and `onExpandedChange`.
+ */
 export interface ST_TableHeadCellFilterContainerProps<TData extends ST_RowData>
-  extends CollapseProps {
+  extends Omit<
+    CollapseProps,
+    'defaultExpanded' | 'isExpanded' | 'onExpandedChange'
+  > {
+  defaultOpen?: boolean;
   header: ST_Header<TData>;
+  onOpenChange?: (open: boolean) => void;
+  open?: boolean;
 }
 
 export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
+  defaultOpen,
   header,
+  onOpenChange,
+  open,
   ...rest
 }: ST_TableHeadCellFilterContainerProps<TData>) => {
   const table = header.table;
@@ -48,9 +62,11 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
         // React Aria sets --disclosure-panel-height, which the st-aria-collapsible-* keyframes read;
         // the panel marks its state only through aria-hidden.
         <Collapsible
+          defaultExpanded={defaultOpen}
           isExpanded={
-            showColumnFilters || columnFilterDisplayMode === 'popover'
+            open ?? (showColumnFilters || columnFilterDisplayMode === 'popover')
           }
+          onExpandedChange={onOpenChange}
           {...rest}
         >
           <style href="st-aria-collapsible" precedence="low">
