@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.radix.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.aria.tsbuildinfo",
+    "paths": {
+      "@/*": ["./registry/aria/*"]
+    }
+  },
+  "include": ["registry/aria"],
+  // Node-only item definition, read by scripts/registry/build.mjs.
+  "exclude": ["registry/aria/registry.ts"]
+}

@@ -6,6 +6,7 @@
 // registry.json, then `shadcn build` turns it into public/r/<name>.json.
 import fs from 'node:fs';
 import path from 'node:path';
+import { registry as aria } from '../../registry/aria/registry.ts';
 import { registry as base } from '../../registry/base/registry.ts';
 import { registry as radix } from '../../registry/radix/registry.ts';
 import { DEV, PKG } from './lib.mjs';
@@ -13,8 +14,9 @@ import { DEV, PKG } from './lib.mjs';
 const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 
 // Radix first: its main item keeps the name and the GitHub address v0.1.x
-// published (`shadcn-table`); the Base UI edition is `shadcn-table-base`.
-const bases = [radix, base];
+// published (`shadcn-table`); the Base UI edition is `shadcn-table-base`, the
+// React Aria edition `shadcn-table-aria`.
+const bases = [radix, base, aria];
 
 const registry = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',

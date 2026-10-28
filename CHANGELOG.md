@@ -6,6 +6,14 @@ written while the work happens, under `Unreleased`; `pnpm release <version>`
 renames that heading to the version and the date, and the release workflow
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Added
+
+- React Aria edition: a third edition of the table on shadcn's React Aria parts (`aria-nova`
+  style, `react-aria-components`), same API. Registry item `shadcn-table-aria` plus its 38
+  locale items (`shadcn-table-aria-locale-<code>`).
+
 ## 0.4.0 - 2026-10-28
 
 ### Breaking

@@ -561,9 +561,7 @@ export const ProfiledThousandRows = {
         canvasElement.querySelectorAll('tbody tr[data-selected]').length,
       ).toBe(1),
     );
-    expect(
-      canvas.getByLabelText('Toggle select all').getAttribute('aria-checked'),
-    ).toBe('mixed');
+    expect(canvas.getByLabelText('Toggle select all')).toBePartiallyChecked();
     await settle(canvasElement);
     const afterSelect = readCounts(canvasElement);
     expect(sum(afterSelect.probeCell), 'select: probe cells').toBe(0);
@@ -778,8 +776,6 @@ export const ExternalAtomsDensityAndSelection = {
         canvasElement.querySelectorAll('tbody tr[data-selected]').length,
       ).toBe(2),
     );
-    expect(
-      canvas.getByLabelText('Toggle select all').getAttribute('aria-checked'),
-    ).toBe('mixed');
+    expect(canvas.getByLabelText('Toggle select all')).toBePartiallyChecked();
   },
 };
