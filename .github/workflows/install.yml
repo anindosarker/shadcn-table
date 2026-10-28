@@ -9,8 +9,8 @@ on:
       source:
         description: >-
           Template of the main item's address. `<item>` is replaced by the
-          scenario's committed item name (shadcn-table or shadcn-table-base),
-          `<base>` by its base (radix or base). CI passes
+          scenario's committed item name (shadcn-table, shadcn-table-base or
+          shadcn-table-aria), `<base>` by its edition (radix, base or aria). CI passes
           `anindosarker/shadcn-table/<item>#<sha>`, release.yml passes
           `https://www.shadcn-table.com/r/<base>/shadcn-table.json`.
         type: string
@@ -32,13 +32,14 @@ jobs:
       REF: ${{ github.sha }}
       # fresh, existing and nextjs run on the Radix base and install the
       # shadcn-table item; base scaffolds on Base UI and installs the
-      # shadcn-table-base item (its locale item is shadcn-table-base-locale-de).
-      BASE: ${{ matrix.scenario == 'base' && 'base' || 'radix' }}
-      ITEM: ${{ matrix.scenario == 'base' && 'shadcn-table-base' || 'shadcn-table' }}
+      # shadcn-table-base item (its locale item is shadcn-table-base-locale-de),
+      # aria scaffolds on React Aria and installs shadcn-table-aria.
+      BASE: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && matrix.scenario || 'radix' }}
+      ITEM: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && format('shadcn-table-{0}', matrix.scenario) || 'shadcn-table' }}
     strategy:
       fail-fast: false
       matrix:
-        scenario: [fresh, existing, base, nextjs]
+        scenario: [fresh, existing, base, aria, nextjs]
     steps:
       # The repo is checked out into repo/ only for the dev registry (locale
       # step below); the consumer app lives in ${{ runner.temp }}/app so no
@@ -193,6 +194,11 @@ jobs:
         if: matrix.scenario == 'base'
         run: |
           node -e 'const p=require("./package.json");const all={...p.dependencies,...p.devDependencies};if("radix-ui" in all){console.error("radix-ui installed:",all["radix-ui"]);process.exit(1)};console.log("@base-ui/react", all["@base-ui/react"])'
+        working-directory: ${{ runner.temp }}/app
+      - name: No radix-ui or @base-ui/react on the React Aria base
+        if: matrix.scenario == 'aria'
+        run: |
+          node -e 'const p=require("./package.json");const all={...p.dependencies,...p.devDependencies};const other=["radix-ui","@base-ui/react"].filter(n=>n in all);if(other.length){console.error("installed:",other.join(", "));process.exit(1)};if(!("react-aria-components" in all)){console.error("react-aria-components missing");process.exit(1)};console.log("react-aria-components", all["react-aria-components"])'
         working-directory: ${{ runner.temp }}/app
       - name: Show package.json and shadcn output
         if: failure()
