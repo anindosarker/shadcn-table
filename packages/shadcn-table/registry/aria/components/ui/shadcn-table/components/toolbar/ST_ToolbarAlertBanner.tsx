@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { Fragment } from 'react';
+import { Fragment, type MouseEvent } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { type ST_RowData } from '@/components/ui/shadcn-table/types';
 import { getST_SelectAllHandler } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {
@@ -102,7 +103,13 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
                 variant="ghost"
                 size="sm"
                 onClick={(event) =>
-                  getST_SelectAllHandler({ table })(event, false, true)
+                  getST_SelectAllHandler({ table })(
+                    // React Aria types the event on FocusableElement; the
+                    // Button renders a <button>.
+                    event as MouseEvent<HTMLButtonElement>,
+                    false,
+                    true,
+                  )
                 }
               >
                 {localization.clearSelection}
@@ -117,90 +124,104 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
               {grouping.map((columnId, index) => (
                 <Fragment key={`${index}-${columnId}`}>
                   {index > 0 ? localization.thenBy : ''}
-                  <Badge variant="secondary" asChild {...chipProps}>
-                    <button
-                      type="button"
-                      onClick={() => table.getColumn(columnId).toggleGrouping()}
-                    >
-                      {table.getColumn(columnId).columnDef.header}
-                      <CancelIcon data-icon="inline-end" />
-                    </button>
-                  </Badge>
+                  <Badge
+                    variant="secondary"
+                    {...chipProps}
+                    render={(badgeProps) => (
+                      <button
+                        {...badgeProps}
+                        type="button"
+                        onClick={(event) => {
+                          table.getColumn(columnId).toggleGrouping();
+                          badgeProps.onClick?.(event);
+                        }}
+                      >
+                        {table.getColumn(columnId).columnDef.header}
+                        <CancelIcon data-icon="inline-end" />
+                      </button>
+                    )}
+                  />
                 </Fragment>
               ))}
             </span>
           ) : null;
 
+        const isExpanded = showAlertBanner || !!selectedAlert || !!groupedAlert;
+
         return (
-          <Collapsible
-            open={showAlertBanner || !!selectedAlert || !!groupedAlert}
-          >
+          <Collapsible isExpanded={isExpanded}>
+            <style href="st-collapsible" precedence="low">
+              {stCollapsibleKeyframes}
+            </style>
+            {/* React Aria keeps a collapsed panel's children mounted. */}
             <CollapsibleContent
               className={
                 stackAlertBanner
-                  ? 'data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up'
+                  ? 'aria-[hidden=false]:animate-[st-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-collapsible-up_200ms_ease-out]'
                   : undefined
               }
             >
-              <Alert
-                {...alertProps}
-                className={cn(
-                  toolbarAlertBannerVariants({
-                    bottomOffset:
-                      !stackAlertBanner &&
-                      positionToolbarAlertBanner === 'bottom',
-                  }),
-                  alertProps?.className,
-                )}
-              >
-                <div
-                  className="col-start-2"
-                  style={{
-                    maxWidth: `calc(${
-                      tableLayoutRef.current?.clientWidth ?? 360
-                    }px - 1rem)`,
-                    width: '100%',
-                  }}
-                >
-                  {renderToolbarAlertBannerContent?.({
-                    groupedAlert,
-                    selectedAlert,
-                    table,
-                  }) ?? (
-                    <>
-                      {alertProps?.title && (
-                        <AlertTitle>{alertProps.title}</AlertTitle>
-                      )}
-                      <div
-                        className={cn(
-                          'flex flex-col',
-                          positionToolbarAlertBanner !== 'head-overlay'
-                            ? 'px-4 py-2'
-                            : density === 'spacious'
-                              ? 'px-5 py-3'
-                              : density === 'comfortable'
-                                ? 'px-3 py-2'
-                                : 'px-2 py-1',
-                        )}
-                      >
-                        {alertProps?.children}
-                        {alertProps?.children &&
-                          (selectedAlert || groupedAlert) && <br />}
-                        <div className="flex">
-                          {enableRowSelection &&
-                            enableSelectAll &&
-                            positionToolbarAlertBanner === 'head-overlay' && (
-                              <ST_SelectCheckbox />
-                            )}{' '}
-                          {selectedAlert}
-                        </div>
-                        {selectedAlert && groupedAlert && <br />}
-                        {groupedAlert}
-                      </div>
-                    </>
+              {isExpanded && (
+                <Alert
+                  {...alertProps}
+                  className={cn(
+                    toolbarAlertBannerVariants({
+                      bottomOffset:
+                        !stackAlertBanner &&
+                        positionToolbarAlertBanner === 'bottom',
+                    }),
+                    alertProps?.className,
                   )}
-                </div>
-              </Alert>
+                >
+                  <div
+                    className="col-start-2"
+                    style={{
+                      maxWidth: `calc(${
+                        tableLayoutRef.current?.clientWidth ?? 360
+                      }px - 1rem)`,
+                      width: '100%',
+                    }}
+                  >
+                    {renderToolbarAlertBannerContent?.({
+                      groupedAlert,
+                      selectedAlert,
+                      table,
+                    }) ?? (
+                      <>
+                        {alertProps?.title && (
+                          <AlertTitle>{alertProps.title}</AlertTitle>
+                        )}
+                        <div
+                          className={cn(
+                            'flex flex-col',
+                            positionToolbarAlertBanner !== 'head-overlay'
+                              ? 'px-4 py-2'
+                              : density === 'spacious'
+                                ? 'px-5 py-3'
+                                : density === 'comfortable'
+                                  ? 'px-3 py-2'
+                                  : 'px-2 py-1',
+                          )}
+                        >
+                          {alertProps?.children}
+                          {alertProps?.children &&
+                            (selectedAlert || groupedAlert) && <br />}
+                          <div className="flex">
+                            {enableRowSelection &&
+                              enableSelectAll &&
+                              positionToolbarAlertBanner === 'head-overlay' && (
+                                <ST_SelectCheckbox />
+                              )}{' '}
+                            {selectedAlert}
+                          </div>
+                          {selectedAlert && groupedAlert && <br />}
+                          {groupedAlert}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </Alert>
+              )}
             </CollapsibleContent>
           </Collapsible>
         );

@@ -119,7 +119,7 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
                   <ST_Tooltip title={localization.save}>
                     <Button
                       aria-label={localization.save}
-                      disabled={isSaving}
+                      isDisabled={isSaving}
                       onClick={handleSubmitRow}
                       size="icon"
                       type="button"
@@ -136,7 +136,7 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
                   {localization.cancel}
                 </Button>
                 <Button
-                  disabled={isSaving}
+                  isDisabled={isSaving}
                   onClick={handleSubmitRow}
                   type="button"
                 >

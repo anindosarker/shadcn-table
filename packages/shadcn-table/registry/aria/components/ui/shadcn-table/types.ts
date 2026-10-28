@@ -1,4 +1,9 @@
-import { type ComponentPropsWithRef, type ReactNode } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type FocusEventHandler,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react';
 import {
   type AccessorFn,
   type AggregationFnDef,
@@ -39,7 +44,7 @@ import {
 import { type LucideProps } from 'lucide-react';
 import { type Checkbox } from '@/components/ui/checkbox';
 import { type Collapsible } from '@/components/ui/collapsible';
-import { type Dialog, type DialogContent } from '@/components/ui/dialog';
+import { type Dialog } from '@/components/ui/dialog';
 import { type RadioGroupItem } from '@/components/ui/radio-group';
 import { type Slider } from '@/components/ui/slider';
 import { type ST_AggregationFns } from '@/components/ui/shadcn-table/shared/fns/aggregationFns';
@@ -79,7 +84,22 @@ export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 export type TableCellProps = ComponentPropsWithRef<'th'> &
   ComponentPropsWithRef<'td'>;
 
-export type ButtonProps = ComponentPropsWithRef<'button'>;
+/**
+ * Native button props in the shape of the aria `Button` part: `isDisabled`
+ * instead of `disabled`, a string `value`, handlers typed on `Element` as
+ * React Aria calls them. They also fit the plain `<button>` the sort label
+ * renders.
+ */
+export type ButtonProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  'disabled' | 'onBlur' | 'onClick' | 'onFocus' | 'value'
+> & {
+  isDisabled?: boolean;
+  onBlur?: FocusEventHandler<Element>;
+  onClick?: MouseEventHandler<Element>;
+  onFocus?: FocusEventHandler<Element>;
+  value?: string;
+};
 
 export type InputProps = ComponentPropsWithRef<'input'>;
 
@@ -94,11 +114,7 @@ export type CollapseProps = ComponentPropsWithRef<typeof Collapsible>;
 
 export type RadioProps = ComponentPropsWithRef<typeof RadioGroupItem>;
 
-export type DialogProps = Pick<
-  ComponentPropsWithRef<typeof Dialog>,
-  'onOpenChange'
-> &
-  ComponentPropsWithRef<typeof DialogContent>;
+export type DialogProps = Partial<ComponentPropsWithRef<typeof Dialog>>;
 
 export interface ST_PartPropTypes {
   checkbox: CheckboxProps;

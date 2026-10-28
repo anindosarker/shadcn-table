@@ -38,7 +38,6 @@ export const ST_ToggleDensePaddingButton = ({
         type="button"
         variant="ghost"
         {...rest}
-        title={undefined}
       >
         <Subscribe source={table.atoms.density}>
           {(density) =>

@@ -31,7 +31,6 @@ export const ST_ToggleFiltersButton = ({
         type="button"
         variant="ghost"
         {...rest}
-        title={undefined}
       >
         <Subscribe source={table.atoms.showColumnFilters}>
           {(showColumnFilters) =>

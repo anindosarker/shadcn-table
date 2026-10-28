@@ -9,27 +9,48 @@ import {
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 
-// MUI Collapse orientation="horizontal": tw-animate-css ships only the height
-// pair (collapsible-down/up), so the width pair lives here, driven by the
-// radix-measured --radix-collapsible-content-width like the height pair.
-// overflow: hidden sits inside the keyframes so it applies only while the
-// animation runs, as MUI Collapse clips while transitioning and sets
-// overflow: visible once entered. Rendered as a hoisted
-// <style href="st-collapsible"> by the components that animate with it.
-export const stCollapsibleKeyframes = `@keyframes st-collapsible-right {
+// MUI Collapse: tw-animate-css ships only the height pair (collapsible-down/up)
+// and reads the Radix variable, which React Aria never sets. React Aria's
+// DisclosurePanel measures itself into --disclosure-panel-height and
+// --disclosure-panel-width and marks its state only with aria-hidden, so both
+// pairs live here, driven by those variables. The horizontal pair is MUI
+// Collapse orientation="horizontal". overflow: hidden sits inside the width
+// keyframes so it applies only while the animation runs, as MUI Collapse clips
+// while transitioning and sets overflow: visible once entered. Rendered as a
+// hoisted <style href="st-collapsible"> by the components that animate with
+// it.
+export const stCollapsibleKeyframes = `@keyframes st-collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--disclosure-panel-height);
+  }
+}
+
+@keyframes st-collapsible-up {
+  from {
+    height: var(--disclosure-panel-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes st-collapsible-right {
   from {
     width: 0;
     overflow: hidden;
   }
   to {
-    width: var(--radix-collapsible-content-width);
+    width: var(--disclosure-panel-width);
     overflow: hidden;
   }
 }
 
 @keyframes st-collapsible-left {
   from {
-    width: var(--radix-collapsible-content-width);
+    width: var(--disclosure-panel-width);
     overflow: hidden;
   }
   to {

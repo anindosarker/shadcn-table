@@ -134,3 +134,38 @@ Owner attention:
 - Shared stories read the checkbox role element as Radix's button: `RowPinningOnSelect.stories.tsx:79` and `RenderCounts.stories.tsx:565`, `:782` read `aria-checked` (the RAC checkbox role element is a native `<input type="checkbox">`: state in `checked`/`indeterminate`, no attribute); `RowPinning.stories.tsx:135` hit-tests the role element's center (the RAC input is visually hidden). Fix in the stories (`toBeChecked`/`toBePartiallyChecked`, hit-test the `data-slot="checkbox"` label), not in the library.
 - `components/ui/tooltip.tsx` wraps the trigger in RAC `Focusable`, which warns `<Focusable> child must have an interactive ARIA role.` for every non-button child (the `span` wrappers kept for disabled buttons, the filter checkbox `Label`): about 1,200 dev warnings per story run.
 - `st-collapsible-down`/`-up` keyframes reading `--disclosure-panel-height` are expected from the `style.utils.ts` port (rest cluster), as in the base tree.
+
+## Phase 01, modals-toolbar-rest
+
+Branch `v0.5/rest`. `tsc:aria` clean in every file below (left: the `ST_TooltipProps` cascade until `v0.5/09` merges, and `label.tsx`). With `v0.5/08` and `v0.5/09` merged locally: `tsc:aria` only `label.tsx`; `ST_BASE=aria vitest run` 439 of 446, the 7 failures in files outside this cluster (below).
+
+- `types.ts`: `ButtonProps` is native button props with `isDisabled` for `disabled`, a string `value`, and `onClick`/`onFocus`/`onBlur` typed on `Element`, so it spreads onto the aria `Button` and still onto the plain `<button>` of the shared `ST_TableHeadCellSortLabel`; `SelectProps` builds on it unchanged. `DialogProps` is `Partial<ComponentProps<typeof Dialog>>` (aria `Dialog` is overlay, modal and dialog in one, `children` required); `DialogContent` import dropped.
+- `components/buttons/ST_CopyButton.tsx`: `title={undefined}` dropped (RAC `Button` has no `title`, and drops it).
+- `components/buttons/ST_EditActionButtons.tsx`: `disabled` to `isDisabled` on both save buttons.
+- `components/buttons/ST_ExpandAllButton.tsx`: `isDisabled`; `title={undefined}` dropped.
+- `components/buttons/ST_ExpandButton.tsx`: `isDisabled`; handler event `MouseEvent`; `title={undefined}` dropped.
+- `components/buttons/ST_GrabHandleButton.tsx`: RAC `Button` drops `draggable`, `onDragStart`, `onDragEnd`; they go on the `<button>` through the `Button` `render` prop (RAC's own mechanism; `usePress` skips `preventDefault` on a draggable target). `title={undefined}` dropped.
+- `components/buttons/ST_RowPinButton.tsx`: handler event `MouseEvent`.
+- `components/buttons/ST_ShowHideColumnsButton.tsx`, `ST_ToggleRowActionMenuButton.tsx`, `components/head/ST_TableHeadCellColumnActionsButton.tsx`: handler event `MouseEvent`; `currentTarget` (typed `Element`) narrowed with `instanceof HTMLElement` before `setAnchorEl`; `title={undefined}` dropped. Menu props (`anchorEl`, `setAnchorEl`, `handleEdit`) match `v0.5/08`.
+- `components/buttons/ST_ToggleDensePaddingButton.tsx`, `ST_ToggleFiltersButton.tsx`, `ST_ToggleFullScreenButton.tsx`: `title={undefined}` dropped.
+- `components/buttons/ST_ToggleGlobalFilterButton.tsx`: `isDisabled`; `title={undefined}` dropped.
+- `components/modals/ST_EditRowModal.tsx`: one aria `Dialog` (no `DialogContent`), `isOpen`, the content props and class on it; `aria-describedby={undefined}` dropped.
+- `components/toolbar/ST_LinearProgressBar.tsx`: `Collapsible` `isExpanded`; `Progress` `isIndeterminate` plus `value`; the bar renders only while expanded (RAC keeps a collapsed panel's children mounted, Radix unmounts them); `st-collapsible-*` keyframes as in base.
+- `components/toolbar/ST_TablePagination.tsx`: RAC `Select` `isDisabled`, `selectedKey`, `onSelectionChange` (null skipped), `SelectItem` `id`; page buttons `isDisabled`.
+- `components/toolbar/ST_ToolbarAlertBanner.tsx`: `isExpanded`; Alert renders only while expanded; grouping chip through the aria `Badge` `render` function (chip `onClick` composed after the toggle, as Slot did); the clear-selection event cast to `MouseEvent<HTMLButtonElement>` for `getST_SelectAllHandler` (RAC types it on `FocusableElement`); keyframes as in base.
+- `components/body/ST_TableDetailPanel.tsx`: `isExpanded`; the detail panel renders only while expanded (the DetailPanel plays count it); keyframes as in base.
+- `hooks/stTableHook.tsx`: no `TooltipProvider` (RAC has none).
+- `shared/utils/style.utils.ts`: `stCollapsibleKeyframes` gains the height pair (as in base) and both pairs read `--disclosure-panel-height`/`--disclosure-panel-width`; `v0.5/09`'s `ST_TableHeadCellFilterContainer` uses the height pair. `getCommonTooltipProps` unchanged: `v0.5/09` keeps `delayDuration`/`disableHoverableContent` on `ST_TooltipProps`.
+
+Selector: the panel marks state only through `aria-hidden`, so the classes are `aria-[hidden=false]:animate-[st-collapsible-down…] aria-hidden:animate-[st-collapsible-up…]` (same as `v0.5/09`). Close is not animated: the content unmounts with the collapse, and RAC drives the variable to `0px` before the up keyframe could run.
+
+Check-bases by hand (script copy with the aria pair): `142 library files in both trees, 37 allowed to differ`; every file above is listed in `aria-diff.json`. `pnpm check:bases`: pass. `pnpm lint`: pass.
+
+Extra checks (throwaway story, not committed, both editions pass): grab handles are `<button draggable="true">` and `dragstart` marks the dragged header; grouping chip removes the grouping and the banner closes; clear-selection; rows-per-page select changes the page size and next page disables at the end; density, full screen, expand all (detail panels mount and unmount), row pin, search, filters, show/hide columns menu.
+
+Failures outside this cluster on the merged tree (owner attention for the lead):
+- `Filtering > Filter Fn And Filter Variants Faceted`: RAC collection `Duplicate key "Dejon"` (faceted options, `ST_FilterTextField`).
+- `RowPinningOnSelect > Select All Page Mode`, `Select All All Mode`, `RenderCounts > Profiled Thousand Rows`, `External Atoms Density And Selection`: no `aria-checked` on the checkbox (RAC checkbox state is on the hidden input).
+- `RowPinning > Row Pinning Select Sticky Mode`: hit test on the select-all checkbox (RAC's input is visually hidden).
+- `TableProvider > Portals Read Context`: the play presses Escape, then hovers "Toggle density"; RAC `TooltipTrigger` opens on hover only when the interaction modality is pointer, so no tooltip.
+- Dev warning `<Focusable> child must have an interactive ARIA role.`: the `<span>` wrappers around disabled-capable buttons inside `ST_Tooltip` (expand, expand all, pagination; kept so the tooltip still shows over a disabled button, as in radix).

@@ -3,7 +3,6 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
-  DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -78,6 +77,12 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
 
         return (
           <Dialog
+            showCloseButton={false}
+            {...contentProps}
+            className={cn(
+              editRowModalVariants({ className: contentProps.className }),
+            )}
+            isOpen={open}
             onOpenChange={(nextOpen) => {
               if (nextOpen) return;
               const liveCreatingRow = table.atoms.creatingRow.get();
@@ -93,42 +98,32 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
               liveRow._valuesCache = {} as ST_Row<TData>['_valuesCache'];
               onOpenChange?.(nextOpen);
             }}
-            open={open}
           >
-            <DialogContent
-              showCloseButton={false}
-              aria-describedby={undefined}
-              {...contentProps}
-              className={cn(
-                editRowModalVariants({ className: contentProps.className }),
-              )}
-            >
-              {((creatingRow &&
-                renderCreateRowDialogContent?.({
-                  internalEditComponents,
-                  row,
-                  table,
-                })) ||
-                renderEditRowDialogContent?.({
-                  internalEditComponents,
-                  row,
-                  table,
-                })) ?? (
-                <>
-                  <DialogHeader>
-                    <DialogTitle>{localization.edit}</DialogTitle>
-                  </DialogHeader>
-                  <div className="min-h-0 overflow-y-auto">
-                    <form onSubmit={(e) => e.preventDefault()}>
-                      <FieldGroup>{internalEditComponents}</FieldGroup>
-                    </form>
-                  </div>
-                  <DialogFooter>
-                    <ST_EditActionButtons row={row} variant="text" />
-                  </DialogFooter>
-                </>
-              )}
-            </DialogContent>
+            {((creatingRow &&
+              renderCreateRowDialogContent?.({
+                internalEditComponents,
+                row,
+                table,
+              })) ||
+              renderEditRowDialogContent?.({
+                internalEditComponents,
+                row,
+                table,
+              })) ?? (
+              <>
+                <DialogHeader>
+                  <DialogTitle>{localization.edit}</DialogTitle>
+                </DialogHeader>
+                <div className="min-h-0 overflow-y-auto">
+                  <form onSubmit={(e) => e.preventDefault()}>
+                    <FieldGroup>{internalEditComponents}</FieldGroup>
+                  </form>
+                </div>
+                <DialogFooter>
+                  <ST_EditActionButtons row={row} variant="text" />
+                </DialogFooter>
+              </>
+            )}
           </Dialog>
         );
       }}

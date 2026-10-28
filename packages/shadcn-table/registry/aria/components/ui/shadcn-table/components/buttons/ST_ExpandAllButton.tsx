@@ -77,7 +77,7 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
             <span>
               <Button
                 aria-label={localization.expandAll}
-                disabled={
+                isDisabled={
                   isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
                 }
                 onClick={() => toggleAllRowsExpanded(!getIsAllRowsExpanded())}
@@ -85,7 +85,6 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
                 type="button"
                 variant="ghost"
                 {...iconButtonProps}
-                title={undefined}
                 className={cn(
                   expandAllButtonVariants({ density }),
                   iconButtonProps?.className,
