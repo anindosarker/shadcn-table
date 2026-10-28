@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { archivo } from '@/components/dev-home/v4/font';
 import { Nav } from '@/components/dev-home/v12/nav';
+import { RiseFigure } from '@/components/dev-home/v12/rise-figure';
 import { WholeApp } from '@/components/theme-demo/variants/whole-app';
 import '@/components/dev-home/v4/v4.css';
+import '@/components/dev-home/v7/v7.css';
 import '@/components/dev-home/v12/v12.css';
 
 export const metadata: Metadata = { title: 'Theme demo: whole app' };
@@ -27,8 +29,10 @@ export default function Page() {
           </p>
         </header>
         {/* wider than the shell: the whole app fits beside the editor */}
-        <div className="mx-auto w-full max-w-[90rem] px-(--v4-gutter)">
-          <WholeApp />
+        <div className="v12-wide">
+          <RiseFigure caption="Live demo">
+            <WholeApp />
+          </RiseFigure>
         </div>
       </main>
     </div>

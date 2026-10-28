@@ -108,6 +108,15 @@
   margin-inline: calc(-1 * var(--v12-pad));
 }
 
+/* the theming demo needs 54.5rem for the mock app plus room for the editor
+ * beside it, so it runs from gutter to gutter, up to 90rem */
+.v12-wide {
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding-inline: var(--v4-gutter);
+}
+
 .v12 .v4-nav-actions > div {
   border-style: dashed;
   border-color: var(--v12-dash);
