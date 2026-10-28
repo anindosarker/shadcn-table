@@ -42,7 +42,6 @@ export const ST_ToggleFullScreenButton = ({
         type="button"
         variant="ghost"
         {...rest}
-        title={undefined}
       >
         <Subscribe source={table.atoms.isFullScreen}>
           {(isFullScreen) =>

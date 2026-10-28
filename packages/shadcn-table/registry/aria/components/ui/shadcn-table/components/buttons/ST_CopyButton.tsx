@@ -70,7 +70,6 @@ export const ST_CopyButton = <TData extends ST_RowData>({
         variant="ghost"
         {...buttonProps}
         className={cn(copyButtonVariants(), buttonProps?.className)}
-        title={undefined}
       />
     </ST_Tooltip>
   );

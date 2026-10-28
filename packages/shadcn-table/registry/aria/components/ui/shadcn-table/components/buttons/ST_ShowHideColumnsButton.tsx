@@ -20,8 +20,9 @@ export const ST_ShowHideColumnsButton = ({
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (event: MouseEvent) => {
+    if (event.currentTarget instanceof HTMLElement)
+      setAnchorEl(event.currentTarget);
   };
 
   return (
@@ -34,7 +35,6 @@ export const ST_ShowHideColumnsButton = ({
           type="button"
           variant="ghost"
           {...rest}
-          title={undefined}
         >
           <ViewColumnIcon />
         </Button>

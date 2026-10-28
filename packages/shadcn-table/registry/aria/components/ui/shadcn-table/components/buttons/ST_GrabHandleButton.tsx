@@ -29,7 +29,10 @@ export interface ST_GrabHandleButtonProps extends ButtonProps {
 }
 
 export const ST_GrabHandleButton = ({
+  draggable = 'true',
   location,
+  onDragEnd,
+  onDragStart,
   ...rest
 }: ST_GrabHandleButtonProps) => {
   const table = useSTContext();
@@ -44,7 +47,6 @@ export const ST_GrabHandleButton = ({
     <ST_Tooltip side="top" title={rest?.title ?? localization.move}>
       <Button
         aria-label={rest.title ?? localization.move}
-        draggable="true"
         size="icon-sm"
         type="button"
         variant="ghost"
@@ -54,7 +56,16 @@ export const ST_GrabHandleButton = ({
           rest?.onClick?.(e);
         }}
         className={cn(grabHandleButtonVariants({ location }), rest?.className)}
-        title={undefined}
+        // React Aria's Button drops drag attributes; its render prop puts
+        // them on the <button>.
+        render={(props) => (
+          <button
+            {...props}
+            draggable={draggable}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+          />
+        )}
       >
         <DragHandleIcon />
       </Button>

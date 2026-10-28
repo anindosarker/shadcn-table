@@ -53,7 +53,7 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
 
   const canExpand = row.getCanExpand();
 
-  const handleToggleExpand = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleToggleExpand = (event: MouseEvent) => {
     event.stopPropagation();
     row.toggleExpanded();
     iconButtonProps?.onClick?.(event);
@@ -83,7 +83,7 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
             <span>
               <Button
                 aria-label={localization.expand}
-                disabled={!canExpand && !detailPanel}
+                isDisabled={!canExpand && !detailPanel}
                 size="icon"
                 type="button"
                 variant="ghost"
@@ -99,7 +99,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
                     : { marginLeft: `${row.depth * 16}px` }),
                   ...iconButtonProps?.style,
                 }}
-                title={undefined}
               >
                 {iconButtonProps?.children ?? (
                   <ExpandMoreIcon
