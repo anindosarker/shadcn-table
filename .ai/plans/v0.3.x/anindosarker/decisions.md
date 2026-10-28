@@ -310,6 +310,8 @@ shadcn-react-table/
 
 ## Release
 
+Superseded 2026-10-28 by v0.5.x decision 7
+
 1. Releases are automated from a merged pull request (decided 2026-10-22; `master` only
    takes pull requests, so the script cannot push to it).
    - `pnpm release <version>` sets both `package.json` versions, closes the `Unreleased`
