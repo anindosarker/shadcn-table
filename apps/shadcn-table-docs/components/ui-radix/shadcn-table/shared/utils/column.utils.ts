@@ -11,7 +11,7 @@ import {
   type ST_Header,
   type ST_NeutralPartPropTypes,
   type ST_RowData,
-  type ST_TableInstance,
+  type ST_CoreTableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
 
 export const getColumnId = <TData extends ST_RowData>(
@@ -143,7 +143,7 @@ export const getColumnFilterInfo = <TData extends ST_RowData>({
   table,
 }: {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }) => {
   const {
     options: { columnFilterModeOptions, enableFacetedValues },
@@ -195,7 +195,7 @@ export const useDropdownOptions = <TData extends ST_RowData>({
   table,
 }: {
   header: ST_Header<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }): DropdownOption[] | undefined => {
   const { column } = header;
   const { columnDef } = column;

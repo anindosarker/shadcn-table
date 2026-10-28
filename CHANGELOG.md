@@ -71,6 +71,10 @@ publishes the section as the GitHub release notes.
   no longer writes to your global CSS. Remove the `st-` keyframes and the
   `.st-progress-indeterminate` rule an earlier install added there. A strict Content Security
   Policy needs a nonce or `style-src 'unsafe-inline'` for the tag.
+- `row.table`, `cell.table`, `column.table` and `header.table` are typed
+  `ST_CoreTableInstance`, the core table without state; read `table.store.state` or
+  subscribe. The `table` argument of every part prop, renderer and handler that also
+  receives a row, cell, column or header, and of `createRow`, has the same type.
 
 ### Removed
 
