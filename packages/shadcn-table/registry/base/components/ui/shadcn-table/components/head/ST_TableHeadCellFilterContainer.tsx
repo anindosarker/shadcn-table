@@ -44,8 +44,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showColumnFilters}>
       {(showColumnFilters) => (
-        // <Collapse in={showColumnFilters || columnFilterDisplayMode === 'popover'} mountOnEnter unmountOnExit {...rest}>
-        // Note: MUI Collapse replaced by ui/Collapsible; Base UI unmounts the closed panel (= mountOnEnter/unmountOnExit) and sets data-open/data-closed with --collapsible-panel-height for the keyframes in index.css.
+        // Base UI sets --collapsible-panel-height, which the st-collapsible-* keyframes read.
         <Collapsible
           open={showColumnFilters || columnFilterDisplayMode === 'popover'}
           {...rest}

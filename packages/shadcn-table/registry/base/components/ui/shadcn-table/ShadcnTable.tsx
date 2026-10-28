@@ -47,7 +47,6 @@ export const ShadcnTable = <TData extends ST_RowData>(
     /* eslint-enable react-hooks/rules-of-hooks */
   }
 
-  // `ST_TableProvider` also mounts the tooltip provider.
   return (
     <ST_TableProvider table={table}>
       <ST_TableLayout />

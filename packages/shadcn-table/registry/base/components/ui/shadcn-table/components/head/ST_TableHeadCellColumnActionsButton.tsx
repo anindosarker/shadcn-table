@@ -11,7 +11,6 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_ColumnActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu';
 
-// Note: base maps MRT's sx (m -8px -4px, opacity .3, hover opacity 1, transition all 150ms); 2rem box is icon-sm.
 const columnActionsButtonVariants = cva(
   '-mx-1 -my-2 align-middle opacity-30 transition-all duration-150 hover:opacity-100',
 );

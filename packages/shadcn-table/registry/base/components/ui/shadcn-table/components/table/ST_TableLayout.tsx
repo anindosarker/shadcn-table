@@ -34,8 +34,6 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
     options: {
       enableBottomToolbar,
       enableTopToolbar,
-      // Note: we removed mrtTheme since shadcn already handles the themeing through tailwind classes, so we don't need to handle it here
-      // mrtTheme: { baseBackgroundColor },
       stTableLayoutProps,
       renderBottomToolbar,
       renderTopToolbar,
@@ -47,9 +45,6 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
     ...parseFromValuesOrFunc(stTableLayoutProps, { table }),
     ...rest,
   };
-
-  // NOTE: theme isn't needed for shadcn
-  // const theme = useTheme();
 
   // Created outside the full screen subscription, so toggling full screen
   // re-renders only this element.

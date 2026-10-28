@@ -38,13 +38,12 @@ export const getValueAndLabel = (
   return { label, value };
 };
 
-// Note: @mui/utils debounce, verbatim; MRT imports it from '@mui/material/utils'.
+// debounce from @mui/utils.
 export interface Cancelable {
   clear(): void;
 }
 
 // Corresponds to 10 frames at 60 Hz.
-// A few bytes payload overhead when lodash/debounce is ~3 kB and debounce ~300 B.
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait = 166,
@@ -52,7 +51,7 @@ export function debounce<T extends (...args: any[]) => any>(
   let timeout: ReturnType<typeof setTimeout>;
   function debounced(...args: Parameters<T>) {
     const later = () => {
-      // @ts-expect-error -- MUI keeps `this` untyped here (its source has @ts-ignore)
+      // @ts-expect-error -- `this` is untyped here
       func.apply(this, args);
     };
     clearTimeout(timeout);
@@ -64,7 +63,7 @@ export function debounce<T extends (...args: any[]) => any>(
   return debounced as T & Cancelable;
 }
 
-// Note: @mui/material useAutocomplete createFilterOptions, verbatim; MUI Autocomplete's default filterOptions.
+// createFilterOptions from @mui/material useAutocomplete.
 export interface CreateFilterOptionsConfig<Value> {
   ignoreAccents?: boolean;
   ignoreCase?: boolean;
@@ -79,7 +78,6 @@ export interface FilterOptionsState<Value> {
   getOptionLabel: (option: Value) => string;
 }
 
-// https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 function stripDiacritics(string: string) {
   return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }

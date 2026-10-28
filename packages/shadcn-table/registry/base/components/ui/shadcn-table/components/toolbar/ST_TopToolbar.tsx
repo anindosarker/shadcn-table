@@ -16,7 +16,6 @@ import { ST_GlobalFilterTextField } from '@/components/ui/shadcn-table/component
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const topToolbarVariants = cva(
-  // Note: maps MRT getCommonToolbarStyles
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
   {
     variants: {

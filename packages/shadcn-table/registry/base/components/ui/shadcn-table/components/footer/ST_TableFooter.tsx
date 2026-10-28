@@ -61,7 +61,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
 
         const footerGroups = table.getFooterGroups();
 
-        //if no footer cells at all, skip footer
         if (
           !footerGroups.some((footerGroup) =>
             footerGroup.headers?.some(

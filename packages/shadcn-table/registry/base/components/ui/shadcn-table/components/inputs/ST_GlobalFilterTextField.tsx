@@ -99,12 +99,9 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showGlobalFilter}>
       {(showGlobalFilter) => (
-        // <Collapse in={showGlobalFilter} mountOnEnter orientation="horizontal" unmountOnExit>
-        // Note: MUI Collapse → ui/Collapsible; Base UI unmounts the closed panel (= mountOnEnter/unmountOnExit) and sets data-open/data-closed with --collapsible-panel-width; the horizontal width keyframes (MUI duration.standard, easeInOut) live in the app stylesheet.
+        // Base UI sets --collapsible-panel-width, which the st-collapsible-* keyframes read.
         <Collapsible open={showGlobalFilter}>
           <CollapsibleContent className="data-closed:animate-[st-collapsible-left_300ms_var(--ease-in-out)] data-open:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
-            {/* <TextField size="small" variant="outlined" InputProps={{ ...textFieldProps.InputProps, sx: { mb: 0 } }} /> */}
-            {/* Note: InputGroup is MUI's Input root in shadcn's default variant; the slot type is input props, so InputProps and its sx have no target. */}
             <InputGroup>
               {enableGlobalFilterModes ? (
                 <InputGroupAddon align="inline-start">
@@ -120,8 +117,6 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
                   </ST_Tooltip>
                 </InputGroupAddon>
               ) : (
-                // <SearchIcon style={{ marginRight: '4px' }} />
-                // Note: InputGroupAddon supplies the spacing.
                 <InputGroupAddon align="inline-start">
                   <SearchIcon />
                 </InputGroupAddon>
@@ -134,8 +129,6 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
                 {...textFieldProps}
                 ref={(inputRef) => {
                   searchInputRef.current = inputRef;
-                  // if (textFieldProps?.inputRef) { textFieldProps.inputRef = inputRef; }
-                  // Note: no-op in MRT too; a user ref is overridden by this one, as MRT's inputRef after the spread.
                 }}
               />
               <InputGroupAddon align="inline-end">
