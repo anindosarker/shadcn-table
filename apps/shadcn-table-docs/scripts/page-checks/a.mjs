@@ -151,8 +151,8 @@ const checks = {
   },
   '/docs': async ({ page, check }) => {
     check(
-      'redirects to install',
-      page.url().endsWith('/docs/getting-started/install'),
+      'redirects to introduction',
+      page.url().endsWith('/docs/getting-started/introduction'),
       page.url(),
     );
   },
@@ -181,13 +181,10 @@ const checks = {
     );
     check('install command', addCommand('radix', 'shadcn-table').test(txt));
     check(
-      'namespace form',
-      txt.includes('registry add @st=') && txt.includes('add @st/shadcn-table'),
-    );
-    check(
       'compatibility sentence',
-      txt.includes('Radix UI or Base UI base') &&
-        txt.includes('React Aria is not supported'),
+      txt.includes('on the Radix UI or Base UI base') &&
+        txt.includes('React Aria is not supported in 0.4.0') &&
+        txt.includes('a React Aria edition is planned for 0.5'),
     );
     // The Base UI tab (the site-wide base group) switches both commands and
     // the header switch with them.
@@ -227,6 +224,12 @@ const checks = {
   '/docs/getting-started/agents': async ({ page, check }) => {
     await agentBar(page, check);
     const txt = (await page.locator('article').textContent()) ?? '';
+    // The @st namespace form lives here only; the localization guide links
+    // to this page's Registry addresses section.
+    check(
+      'namespace form',
+      txt.includes('registry add @st=') && txt.includes('add @st/shadcn-table'),
+    );
     check(
       'skill install command',
       txt.includes('npx skills add anindosarker/shadcn-table'),
@@ -238,8 +241,8 @@ const checks = {
   },
   '/docs/getting-started': async ({ page, check }) => {
     check(
-      'redirects to install',
-      page.url().endsWith('/docs/getting-started/install'),
+      'redirects to introduction',
+      page.url().endsWith('/docs/getting-started/introduction'),
       page.url(),
     );
   },
@@ -249,7 +252,7 @@ const checks = {
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
-    await propTable(page, '#props-table', 201, check);
+    await propTable(page, '#props-table', 199, check);
     await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {

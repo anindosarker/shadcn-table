@@ -50,13 +50,13 @@ const config = {
   redirects: async () => [
     {
       source: '/docs',
-      destination: '/docs/getting-started/install',
+      destination: '/docs/getting-started/introduction',
       permanent: false,
     },
     // The getting-started overview was two links; the sidebar lists them.
     {
       source: '/docs/getting-started',
-      destination: '/docs/getting-started/install',
+      destination: '/docs/getting-started/introduction',
       permanent: false,
     },
     // The production tables guide was first published at these URLs.

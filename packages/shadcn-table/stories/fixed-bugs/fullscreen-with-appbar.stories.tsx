@@ -2,8 +2,8 @@ import { type Meta } from '@storybook/react-vite';
 import {
   type ST_ColumnDef,
   useShadcnTable,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Fixed Bugs/AppBar overlaps with Fullscreen Modal',

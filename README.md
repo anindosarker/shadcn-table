@@ -4,7 +4,7 @@ A full-featured React data table built on TanStack Table v9, installed into your
 
 ## Status
 
-v0.2.0. Radix and Base UI bases, one edition each; React Aria is not supported.
+v0.4.0 on TanStack Table v9. Radix UI and Base UI bases, one edition each; a React Aria edition is planned for 0.5.
 
 ## Install
 

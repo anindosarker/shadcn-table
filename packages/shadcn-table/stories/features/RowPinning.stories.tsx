@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, userEvent, waitFor } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Row Pinning Examples',
@@ -114,6 +114,29 @@ export const RowPinningSelectStickyMode = () => (
     rowPinningDisplayMode="select-sticky"
   />
 );
+
+// Select all pins all 50 rows, more than the 600px container holds; the
+// pinned rows stay below the head, so the select-all box is still the
+// topmost element at its center and unselects them all.
+RowPinningSelectStickyMode.play = async ({
+  canvas,
+  canvasElement,
+}: StoryContext) => {
+  const pinnedRows = () =>
+    canvasElement.querySelectorAll('tbody tr[data-pinned]');
+  const selectAll = await canvas.findByRole('checkbox', {
+    name: 'Toggle select all',
+  });
+  await userEvent.click(selectAll);
+  await waitFor(() => expect(pinnedRows()).toHaveLength(data.length));
+  await waitFor(() => {
+    const { height, left, top, width } = selectAll.getBoundingClientRect();
+    const hit = document.elementFromPoint(left + width / 2, top + height / 2);
+    expect(selectAll.contains(hit)).toBe(true);
+  });
+  await userEvent.click(selectAll);
+  await waitFor(() => expect(pinnedRows()).toHaveLength(0));
+};
 
 export const RowPinningTopAndBottomMode = () => (
   <ShadcnTable

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import {
   type ST_ColumnDef,
   useShadcnTable,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Fixed Bugs/dragging virtual when filtered',

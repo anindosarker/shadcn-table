@@ -47,7 +47,7 @@ export const Example = () => {
     enableClickToCopy: 'context-menu',
     enableEditing: true,
     editDisplayMode: 'cell',
-    renderCellActionMenuItems: ({ closeMenu, table, internalMenuItems }) => [
+    renderCellActionMenuItems: ({ closeMenu, internalMenuItems }) => [
       ...internalMenuItems,
       <DropdownMenuSeparator key="divider" />,
       <ST_ActionMenuItem
@@ -57,7 +57,6 @@ export const Example = () => {
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
       <ST_ActionMenuItem
         icon={<UserX />}
@@ -66,7 +65,6 @@ export const Example = () => {
         onClick={() => {
           closeMenu();
         }}
-        table={table}
       />,
     ],
   });

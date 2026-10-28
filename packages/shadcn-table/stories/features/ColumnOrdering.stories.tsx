@@ -3,9 +3,9 @@ import { type Meta } from '@storybook/react-vite';
 import {
   type ST_ColumnDef,
   type ST_ColumnOrderState,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Features/Column Ordering Examples',

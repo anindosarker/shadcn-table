@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { type Meta } from '@storybook/react-vite';
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 
 const meta: Meta = {
   title: 'Fixed Bugs/Loading Data',

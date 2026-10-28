@@ -5,9 +5,9 @@ import {
   type ST_ColumnFiltersState,
   type ST_PaginationState,
   type ST_Updater,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 

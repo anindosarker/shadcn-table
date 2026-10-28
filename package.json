@@ -10,6 +10,7 @@
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
+    "preview": "node scripts/preview.mjs",
     "release": "node scripts/release.mjs",
     "lint": "turbo run lint",
     "registry:build": "pnpm --filter shadcn-table registry:build",
@@ -25,6 +26,7 @@
     "test:base": "turbo run test:base --filter=shadcn-table"
   },
   "devDependencies": {
+    "concurrently": "^9.2.5",
     "prettier": "^3.6.2",
     "serve": "^14.2.6",
     "turbo": "2.5.6"

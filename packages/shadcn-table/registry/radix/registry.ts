@@ -1,8 +1,7 @@
 // Item definition of the Radix edition: `shadcn-table` plus one locale item
 // per language, both read by scripts/registry/build.mjs (Node strips the
 // types). Every file of this tree's components/ui/shadcn-table is an item
-// file; every `@/components/ui/<part>` import is a registryDependency and the
-// ST-only CSS rules in index.css ship through the item's `css` field; see
+// file and every `@/components/ui/<part>` import is a registryDependency; see
 // scripts/registry/lib.mjs.
 import { registryItemSchema, type Registry } from 'shadcn/schema';
 import { baseItems, HOMEPAGE } from '../../scripts/registry/lib.mjs';
@@ -17,6 +16,7 @@ const items = baseItems({
   // their version from package.json.
   dependencies: [
     { name: '@tanstack/react-table', pinned: true },
+    { name: '@tanstack/react-store', pinned: true },
     { name: '@tanstack/react-virtual', pinned: true },
     { name: '@tanstack/match-sorter-utils', pinned: true },
     { name: 'highlight-words', pinned: true },

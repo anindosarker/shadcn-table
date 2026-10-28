@@ -1,17 +1,18 @@
 import { type ReactNode } from 'react';
-import { ST_ExpandAllButton } from '@/components/ui-radix/shadcn-table/buttons/ST_ExpandAllButton';
-import { ST_ExpandButton } from '@/components/ui-radix/shadcn-table/buttons/ST_ExpandButton';
+import { ST_ExpandAllButton } from '@/components/ui-radix/shadcn-table/components/buttons/ST_ExpandAllButton';
+import { ST_ExpandButton } from '@/components/ui-radix/shadcn-table/components/buttons/ST_ExpandButton';
 import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
 import {
   type ST_ColumnDef,
+  type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
-import { defaultDisplayColumnProps } from '@/components/ui-radix/shadcn-table/utils/displayColumn.utils';
+import { defaultDisplayColumnProps } from '@/components/ui-radix/shadcn-table/shared/utils/displayColumn.utils';
 
 export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
-): ST_ColumnDef<TData> => {
+): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
   const {
     defaultColumn,
     enableExpandAll,
@@ -30,7 +31,7 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
 
   return {
     Cell: ({ cell, column, row, staticRowIndex, table }) => {
-      const expandButtonProps = { row, staticRowIndex, table };
+      const expandButtonProps = { row, staticRowIndex };
       const subRowsLength = row.subRows?.length;
       if (groupedColumnMode === 'remove' && row.groupingColumnId) {
         return (
@@ -58,7 +59,7 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
       ? ({ table }) => {
           return (
             <>
-              <ST_ExpandAllButton table={table} />
+              <ST_ExpandAllButton />
               {groupedColumnMode === 'remove' &&
                 grouping
                   ?.map(

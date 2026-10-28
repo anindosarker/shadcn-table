@@ -1,7 +1,7 @@
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
+import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Pagination Examples',
@@ -151,6 +151,24 @@ export const CustomPaginationPagesDisplayModeMoreData = () => (
 export const PaginationDisabledOrOverriden = () => (
   <ShadcnTable columns={columns} data={data} enablePagination={false} />
 );
+
+// With pagination off, `manualPagination={false}` still shows every row.
+export const PaginationDisabledManualPaginationFalse = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    enablePagination={false}
+    manualPagination={false}
+  />
+);
+
+PaginationDisabledManualPaginationFalse.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await waitFor(() =>
+    expect(canvasElement.querySelectorAll('tbody tr').length).toBe(data.length),
+  );
+};
 
 export const PaginationPositionBottom = () => (
   <ShadcnTable columns={columns} data={data} positionPagination="bottom" />

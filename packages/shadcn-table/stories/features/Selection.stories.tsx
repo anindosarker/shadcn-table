@@ -7,8 +7,8 @@ import {
   ST_SelectCheckbox,
   getST_RowSelectionHandler,
   useShadcnTable,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 
@@ -257,10 +257,10 @@ export const CustomAlertBannerHeadOverlay = () => (
       className: 'bg-sky-100 text-sky-900 dark:bg-sky-950 dark:text-sky-100',
     }}
     positionToolbarAlertBanner="head-overlay"
-    renderToolbarAlertBannerContent={({ selectedAlert, table }) => (
+    renderToolbarAlertBannerContent={({ selectedAlert }) => (
       <div className="flex w-full justify-between">
         <div className="flex w-full items-center gap-1.5 px-3 py-1">
-          <ST_SelectCheckbox table={table} /> {selectedAlert}{' '}
+          <ST_SelectCheckbox /> {selectedAlert}{' '}
         </div>
         <div className="flex gap-1.5">
           <Button className="bg-green-600 text-white hover:bg-green-700">
@@ -360,10 +360,14 @@ export const MultiSelectRowWithHoldShift = () => {
     [],
   );
 
-  // TODO: Reset prevSelectedStaticRowIndex when sorting changes
+  // Reset prevSelectedStaticRowIndex when sorting changes. The handle's state
+  // is a first-render snapshot, so subscribe to the sorting atom instead.
   useEffect(() => {
-    setPrevSelectedStaticRowIndex(undefined);
-  }, [table.state.sorting]);
+    const subscription = table.atoms.sorting.subscribe(() =>
+      setPrevSelectedStaticRowIndex(undefined),
+    );
+    return () => subscription.unsubscribe();
+  }, [table]);
 
   return <ShadcnTable table={table} />;
 };

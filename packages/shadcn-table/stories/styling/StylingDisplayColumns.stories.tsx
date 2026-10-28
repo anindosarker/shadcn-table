@@ -1,8 +1,7 @@
 import { type Meta } from '@storybook/react-vite';
-import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 
 const meta: Meta = {
   title: 'Styling/Styling Display Columns',

@@ -198,8 +198,8 @@ const Example = () => {
         <div className="flex justify-between gap-2 p-2">
           <div className="flex items-center gap-2">
             {/* import ST sub-components */}
-            <ST_GlobalFilterTextField table={table} />
-            <ST_ToggleFiltersButton table={table} />
+            <ST_GlobalFilterTextField />
+            <ST_ToggleFiltersButton />
           </div>
           <div>
             <div className="flex gap-2">

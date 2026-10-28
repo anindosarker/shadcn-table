@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_Cell,
   type ST_TableOptions,
+  ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { ShadcnTable } from '@/components/ui/shadcn-table/ShadcnTable';
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, screen, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Editing Examples',
@@ -134,6 +135,27 @@ export const EditingEnabledEditModeModalDefault = () => {
       )}
     />
   );
+};
+
+// The row action Edit button hands the modal the live row: the dialog opens
+// with one labelled input per data column, seeded from that row.
+EditingEnabledEditModeModalDefault.play = async ({
+  canvas,
+  userEvent,
+}: StoryContext) => {
+  const [firstRowEdit] = await canvas.findAllByRole('button', {
+    name: 'Edit',
+  });
+  await userEvent.click(firstRowEdit);
+  const dialog = await screen.findByRole('dialog');
+  await expect(within(dialog).getAllByRole('textbox').length).toBeGreaterThan(
+    0,
+  );
+  await expect(within(dialog).getByLabelText('First Name')).toHaveValue(
+    data[0].firstName,
+  );
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
 };
 
 export const EditingFeatureEnabledConditionally = () => {
@@ -334,18 +356,24 @@ export const EditingEnabledEditModeRowCustomSave = () => {
       editDisplayMode="row"
       enableEditing
       onEditingRowSave={handleSaveRow}
-      renderTopToolbarCustomActions={({ table }) =>
-        table.state.creatingRow ? (
-          <Button
-            className="bg-green-600 text-white hover:bg-green-700"
-            onClick={() => {}}
-          >
-            Save
-          </Button>
-        ) : (
-          <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
-        )
-      }
+      renderTopToolbarCustomActions={({ table }) => (
+        // The renderer runs once per toolbar render; Subscribe re-renders the
+        // buttons when creatingRow changes.
+        <Subscribe source={table.atoms.creatingRow}>
+          {(creatingRow) =>
+            creatingRow ? (
+              <Button
+                className="bg-green-600 text-white hover:bg-green-700"
+                onClick={() => {}}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
+            )
+          }
+        </Subscribe>
+      )}
     />
   );
 };

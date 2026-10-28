@@ -65,6 +65,13 @@ pnpm check:bases                              # two-tree guard
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
+Preview (Ctrl-C stops every server; the first two remove `.dev`, the root one also restores the production hosted registry):
+
+- `pnpm --filter shadcn-table preview`: registry on 5310 (`/r`), Storybook on 6006 (Radix UI) and 6007 (Base UI).
+- `pnpm preview` (root): the same plus the docs production build on 5330, its `/r` and install commands pointing at localhost:5330.
+- `pnpm --filter shadcn-table-docs preview`: docs production build served on 5330 (`.next-preview`).
+- `pnpm --filter shadcn-table-docs dev`: docs dev server on 5320.
+
 ## Style
 
 - No em dashes anywhere, code comments included.
