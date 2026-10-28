@@ -1,13 +1,9 @@
 import { type MouseEvent } from 'react';
-import {
-  composeRenderProps,
-  type FocusableElement,
-} from 'react-aria-components';
+import { type FocusableElement } from 'react-aria-components';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
-import { MinusIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui-aria/checkbox';
+import { ST_Checkbox } from '@/components/ui-aria/shadcn-table/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui-aria/radio-group';
 import {
   type CheckboxProps,
@@ -181,7 +177,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                   <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
                 </RadioGroup>
               ) : (
-                <Checkbox
+                <ST_Checkbox
                   {...commonProps}
                   // React Aria keeps `isIndeterminate` as its own flag beside
                   // `isSelected`, so it goes after the spread.
@@ -194,23 +190,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                         !row.getIsAllSubRowsSelected() &&
                         row.getCanSelectSubRows()
                   }
-                  // The part paints a check and no fill for the indeterminate
-                  // state; MRT paints a dash on the checked fill.
-                  className={cn(
-                    commonProps.className,
-                    'data-indeterminate:border-primary data-indeterminate:bg-primary data-indeterminate:text-primary-foreground dark:data-indeterminate:bg-primary data-indeterminate:[&>[data-slot=checkbox-indicator]]:hidden',
-                  )}
-                >
-                  {composeRenderProps(
-                    commonProps.children,
-                    (children, { isIndeterminate }) => (
-                      <>
-                        {isIndeterminate && <MinusIcon className="size-3.5" />}
-                        {children}
-                      </>
-                    ),
-                  )}
-                </Checkbox>
+                />
               )}
             </span>
           </ST_Tooltip>
