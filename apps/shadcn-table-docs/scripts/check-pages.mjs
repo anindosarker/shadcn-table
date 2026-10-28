@@ -10,10 +10,14 @@
  *
  * Usage (dev server must be running, default http://localhost:5320):
  *   node scripts/check-pages.mjs [a|b|c|d|e] [--base http://localhost:5321]
- *     [--widths 1440,700] [--shots <dir>] [/docs/path ...]
+ *     [--edition radix|base|aria] [--widths 1440,700] [--shots <dir>]
+ *     [/docs/path ...]
  *
  * A single-letter argument limits the run to that cluster's page checks;
  * explicit /docs paths run only those pages (with their checks, if any).
+ * `--edition` opens every page with that shadcn base selected (the stored
+ * pick of components/base-selector.tsx), so the live examples and code
+ * views are that edition's; without it the pages open on the default base.
  * Playwright is resolved from packages/shadcn-table/node_modules
  * (a devDependency of the library package).
  */
@@ -48,6 +52,14 @@ const opt = (name, fallback) => {
   return v;
 };
 const base = opt('base', 'http://localhost:5320');
+// The stored value of the site-wide base tab group per edition
+// (TAB_VALUES in components/base-selector.tsx).
+const EDITION_TABS = { radix: 'radix', base: 'base-ui', aria: 'react-aria' };
+const edition = opt('edition', '');
+if (edition && !(edition in EDITION_TABS)) {
+  console.error(`--edition must be one of ${Object.keys(EDITION_TABS)}`);
+  process.exit(1);
+}
 const widths = opt('widths', '1440,700').split(',').map(Number);
 const shots = opt('shots', '');
 const clusters = args
@@ -127,7 +139,7 @@ for (const route of pages) {
     // Headless clipboard is not readable; the playground's copy items write
     // through navigator.clipboard.writeText, stubbed to keep the last text
     // on window.__stClipboard for the page checks.
-    await ctx.addInitScript(() => {
+    await ctx.addInitScript((tab) => {
       window.__stClipboard = '';
       Object.defineProperty(navigator, 'clipboard', {
         configurable: true,
@@ -137,7 +149,9 @@ for (const route of pages) {
           },
         },
       });
-    });
+      // The base selector reads the fumadocs tab group `base` from storage.
+      if (tab) localStorage.setItem('base', tab);
+    }, EDITION_TABS[edition] ?? '');
     const page = await ctx.newPage();
     const errors = [];
     page.on('console', (m) => {
