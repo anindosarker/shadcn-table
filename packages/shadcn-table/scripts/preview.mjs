@@ -2,9 +2,9 @@
 // Usage (inside packages/shadcn-table): pnpm preview
 //
 // Package preview: builds the local registry (`pnpm registry:dev`, .dev/r),
-// then serves it on http://localhost:5310/r and starts Storybook for both
-// bases (Radix UI on 6006, Base UI on 6007). Ctrl-C stops everything and
-// removes .dev.
+// then serves it on http://localhost:5310/r and starts Storybook for every
+// edition (Radix UI on 6006, Base UI on 6007, React Aria on 6008). Ctrl-C
+// stops everything and removes .dev.
 //
 // Also exports the helpers the root `pnpm preview` (scripts/preview.mjs)
 // uses. Commands are concurrently command objects
@@ -98,7 +98,7 @@ export const registryDev = async () => {
 export const removeDev = () =>
   fs.rmSync(path.join(PKG, '.dev'), { recursive: true, force: true });
 
-/** Registry server on 5310 and Storybook for both bases. */
+/** Registry server on 5310 and Storybook for every edition. */
 export const packageChildren = [
   {
     name: 'registry',
@@ -118,6 +118,13 @@ export const packageChildren = [
     cwd: PKG,
     env: { ST_BASE: 'base' },
     prefixColor: 'cyan',
+  },
+  {
+    name: 'storybook:aria',
+    command: `${BIN}/storybook dev -p 6008 --no-open`,
+    cwd: PKG,
+    env: { ST_BASE: 'aria' },
+    prefixColor: 'yellow',
   },
 ];
 

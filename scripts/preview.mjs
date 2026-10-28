@@ -5,11 +5,12 @@
 //   http://localhost:5310/r   package registry (`pnpm registry:dev`, .dev/r)
 //   http://localhost:6006     Storybook, Radix UI
 //   http://localhost:6007     Storybook, Base UI
+//   http://localhost:6008     Storybook, React Aria
 //   http://localhost:5330     docs production build (the docs `pnpm preview`,
 //                             .next-preview), whose /r and install commands
 //                             point at localhost:5330
-// The package registry is built first; then the registry server and both
-// Storybooks start while the docs build. The docs `build` script runs the
+// The package registry is built first; then the registry server and the
+// three Storybooks start while the docs build. The docs `build` script runs the
 // registry chain (registry:build, registry:items, registry:hosted with
 // REGISTRY_HOSTED_URL=http://localhost:5330/r) before `next build`, then
 // `next start` serves the result. The servers run through concurrently with
