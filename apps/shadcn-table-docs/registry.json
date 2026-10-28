@@ -4510,6 +4510,7 @@
         }
       ],
       "registryDependencies": [
+        "checkbox",
         "table"
       ]
     },

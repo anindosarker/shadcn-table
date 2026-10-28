@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import type { Key } from 'react-aria-components';
 import {
   ST_GlobalFilterTextField,
   ST_TableBodyCellValue,
@@ -85,14 +84,6 @@ const Example = () => {
   const selectedKeys = new Set(
     Object.keys(rowSelection).filter((id) => rowSelection[id]),
   );
-  const onSelectionChange = (keys: Set<Key> | 'all') => {
-    const next = { ...rowSelection };
-    for (const row of table.getRowModel().rows) {
-      if (keys === 'all' || keys.has(row.id)) next[row.id] = true;
-      else delete next[row.id];
-    }
-    setRowSelection(next);
-  };
 
   return (
     <ST_TableProvider table={table}>
@@ -111,7 +102,14 @@ const Example = () => {
           aria-label="My Custom Headless Table"
           selectionMode="multiple"
           selectedKeys={selectedKeys}
-          onSelectionChange={onSelectionChange}
+          onSelectionChange={(keys) => {
+            const next = { ...rowSelection };
+            for (const row of table.getRowModel().rows) {
+              if (keys === 'all' || keys.has(row.id)) next[row.id] = true;
+              else delete next[row.id];
+            }
+            setRowSelection(next);
+          }}
         >
           {/* A React Aria table has one header row: the flat headers of this column set */}
           <TableHeader>
