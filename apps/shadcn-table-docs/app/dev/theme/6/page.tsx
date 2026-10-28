@@ -19,10 +19,11 @@ export default function Page() {
             <span>{'//'}</span> theming
           </p>
           <h1 className="text-3xl font-semibold tracking-tight text-balance text-(--dh-ink) sm:text-4xl">
-            Your theme. Zero changes.
+            Change the theme. Not the table.
           </h1>
           <p className="max-w-2xl text-base text-pretty text-(--dh-ink-muted)">
-            Any shadcn/ui theme. The table follows.
+            Your table automatically adapts to your shadcn/ui theme. No extra
+            configuration or code changes needed.
           </p>
         </header>
         {/* wider than the shell: the full table fits beside the editor */}
