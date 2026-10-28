@@ -1,18 +1,45 @@
 import { themes, type ThemeVars } from 'storybook/theming';
 
 /**
- * The base this Storybook was built for, set on the window by main.ts
+ * Every edition, in the order of scripts/registry/lib.mjs `EDITIONS` and of
+ * the `storybook dev` ports in package.json (6006, 6007, 6008). Static
+ * builds sit side by side: radix at the root, every other edition under
+ * <edition>/ (`storybook:build:<edition>`).
+ */
+export const EDITIONS = ['radix', 'base', 'aria'] as const;
+export type Edition = (typeof EDITIONS)[number];
+
+export const EDITION_LABELS: Record<Edition, string> = {
+  radix: 'Radix UI',
+  base: 'Base UI',
+  aria: 'React Aria',
+};
+
+/**
+ * The edition this Storybook was built for, set on the window by main.ts
  * (`managerHead` / `previewHead`) from ST_BASE. Radix when unset.
  */
-export const ST_BASE: 'radix' | 'base' =
-  (globalThis as { __ST_BASE__?: string }).__ST_BASE__ === 'base'
-    ? 'base'
-    : 'radix';
+export const ST_BASE: Edition =
+  EDITIONS.find(
+    (edition) =>
+      edition === (globalThis as { __ST_BASE__?: string }).__ST_BASE__,
+  ) ?? 'radix';
 
-export const ST_BASE_LABEL = ST_BASE === 'base' ? 'Base UI' : 'Radix UI';
+export const ST_BASE_LABEL = EDITION_LABELS[ST_BASE];
 
-/** The other edition, the one the manager's edition button opens. */
-export const ST_OTHER_BASE_LABEL = ST_BASE === 'base' ? 'Radix UI' : 'Base UI';
+/** The other editions, the ones the manager's edition buttons open. */
+export const ST_OTHER_EDITIONS = EDITIONS.filter(
+  (edition) => edition !== ST_BASE,
+);
+
+/**
+ * Relative URL of another edition's static build from this one: the root
+ * holds radix, <edition>/ every other edition.
+ */
+export function staticEditionRoot(target: Edition) {
+  const root = ST_BASE === 'radix' ? './' : '../';
+  return target === 'radix' ? root : `${root}${target}/`;
+}
 
 /**
  * Whether this manager runs under `storybook dev` (set by main.ts on the
@@ -21,7 +48,7 @@ export const ST_OTHER_BASE_LABEL = ST_BASE === 'base' ? 'Radix UI' : 'Base UI';
 export const ST_DEV: boolean =
   (globalThis as { __ST_DEV__?: boolean }).__ST_DEV__ === true;
 
-/** Manager title: "shadcn-table (Radix UI)" or "shadcn-table (Base UI)". */
+/** Manager title: "shadcn-table (Radix UI)", "(Base UI)" or "(React Aria)". */
 const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
 
 /**
