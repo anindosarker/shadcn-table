@@ -46,8 +46,6 @@ export interface BaseItemsOptions {
   description: string;
   dependencies: BaseDependency[];
   devDependencies: BaseDependency[];
-  /** shadcn parts shipped as item files instead of registryDependencies. */
-  forkedUi: string[];
 }
 
 /**

@@ -25,9 +25,6 @@ const items = baseItems({
     { name: '@base-ui/react' },
   ],
   devDependencies: [{ name: 'tw-animate-css' }],
-  // shadcn parts the item ships as its own files (checkbox: minus icon for
-  // the indeterminate state) instead of as registryDependencies.
-  forkedUi: ['checkbox'],
 });
 
 registryItemSchema.array().parse(items);

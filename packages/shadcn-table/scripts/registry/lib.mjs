@@ -100,7 +100,6 @@ const uiImports = (files) => {
  *   description: string,
  *   dependencies: Array<{ name: string, pinned?: boolean }>,
  *   devDependencies: Array<{ name: string, pinned?: boolean }>,
- *   forkedUi: string[],
  * }} base
  */
 export const baseItems = ({
@@ -110,7 +109,6 @@ export const baseItems = ({
   description,
   dependencies,
   devDependencies,
-  forkedUi,
 }) => {
   const uiDir = path.join(dir, 'components/ui');
   const libDir = path.join(dir, LIB_REL);
@@ -139,14 +137,9 @@ export const baseItems = ({
   const localeFiles = libEntries.filter(
     ([key]) => isLocale(key) && localeCode(key) !== 'en',
   );
-  // Forked ui parts ship inside the item instead of being registryDependencies.
-  const forkedFiles = forkedUi.map((part) =>
-    fileEntry(uiDir, path.join(uiDir, `${part}.tsx`)),
-  );
-
   const registryDependencies = uiImports(
-    [...coreFiles, ...forkedFiles].map((entry) => path.join(PKG, entry.path)),
-  ).filter((part) => !forkedUi.includes(part));
+    coreFiles.map((entry) => path.join(PKG, entry.path)),
+  );
 
   const main = {
     name,
@@ -158,7 +151,7 @@ export const baseItems = ({
       withVersion(n, 'devDependencies'),
     ),
     registryDependencies,
-    files: [...coreFiles, ...forkedFiles],
+    files: coreFiles,
   };
 
   const locales = localeFiles.map(([key, entry]) => {
