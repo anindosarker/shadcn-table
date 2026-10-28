@@ -85,10 +85,21 @@ Plan: [03-add-part-deterministic.md](03-add-part-deterministic.md). Rulings:
 
 ## Gates
 
-- `pnpm add-part <edition> --all && git status --short` prints nothing for radix, base and
-  aria (run twice per edition after the sweep commits).
-- `tsc:radix`, `tsc:baseui`, `tsc:aria` 0 errors; `lint` clean; `check:bases` green (142
-  library files, 23 and 37 allowed to differ; 216 example files, 2 and 10); `registry:build`
-  green, `registry.json` unchanged; `storybook:build`, `storybook:build:base`,
-  `storybook:build:aria` green.
-- `pr.yml` runs on the verifier's CI-only PR.
+Run by the verifier on `753ed7e9`, clean tree, 2026-10-29.
+
+- `pnpm add-part radix --all && git status --short`: exit 0, 26 parts, status empty. Pass.
+- `pnpm add-part base --all && git status --short`: exit 0, 26 parts, status empty. Pass.
+- `pnpm add-part aria --all && git status --short`: exit 0, 27 parts, status empty. Pass.
+- `tsc:radix`: exit 0, 0 errors. Pass.
+- `tsc:baseui`: exit 0, 0 errors. Pass.
+- `tsc:aria`: exit 0, 0 errors. Pass.
+- `lint` (`eslint .`): exit 0, clean. Pass.
+- `check:bases`: exit 0; 142 library files, 23 and 37 allowed to differ; 216 example files, 2
+  and 10. Pass.
+- `registry:build`: exit 0, `registry.json` unchanged. Pass.
+- `storybook:build`, `storybook:build:base`, `storybook:build:aria`: exit 0 each, output in
+  `storybook-static/`, `storybook-static/base`, `storybook-static/aria`. Pass.
+- `pr.yml` on PR #52 (`v0.6/add-part-deterministic` into `claude/review`, draft,
+  `release:patch`): run `40750260288` success, 15 of 15 jobs green (release impact, library
+  x3, bases, test x3, docs, registry, install x5). The `labeled` event run `40750261837` runs
+  the label check alone, the other jobs skip by design.
