@@ -161,8 +161,9 @@ rows, 53 ownership entries. D1 to D5 in its section 1.1 are ruled (decisions 3 t
 - `stConfigFeature.ts` declares every ST-only option that has no state (the list in
   `types.ts` today, minus `expandRowsFn`), plus the three registry options `filterFns`,
   `sortFns`, `aggregationFns` and `memoMode` removed
-- `stLoadingFeature.ts` defaults `isLoading`, `isSaving`, `showLoadingOverlay`,
-  `showProgressBars`, `showSkeletons` to `false` (findings)
+- `stLoadingFeature.ts` defaults `isLoading` and `isSaving` to `false`; `showLoadingOverlay`,
+  `showProgressBars` and `showSkeletons` stay unset, because unset follows `isLoading` and
+  `isSaving` while an explicit `false` turns them off (findings, review ruling 1)
 - `stRefsFeature.ts` puts `table.refs` on the core table as plain `{ current }` objects
 - `stFeatures.ts` registers `...stockFeatures`, the eleven, every row model factory and the
   three built-in registries from `shared/fns`

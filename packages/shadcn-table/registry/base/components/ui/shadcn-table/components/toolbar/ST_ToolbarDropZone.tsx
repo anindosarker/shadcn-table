@@ -1,14 +1,12 @@
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { type DragEvent, useEffect } from 'react';
 import {
   type DivProps,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_ToolbarDropZoneProps = DivProps;
 
@@ -35,8 +33,8 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   } = table;
 
   // These feed the drop zone effect, so they are hook subscriptions.
-  const draggingColumn = useST_Atom(table.atoms.draggingColumn);
-  const grouping = useST_Atom(table.atoms.grouping);
+  const draggingColumn = useSelector(table.atoms.draggingColumn);
+  const grouping = useSelector(table.atoms.grouping);
 
   const handleDragEnter = () => {
     setHoveredColumn({ id: 'drop-zone' });

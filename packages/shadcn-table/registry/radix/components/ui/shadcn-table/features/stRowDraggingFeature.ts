@@ -1,7 +1,3 @@
-// Row dragging feature: owns the `draggingRow` and `hoveredRow` state slices,
-// their `onDraggingRowChange` / `onHoveredRowChange` options and the
-// `table.setDraggingRow` / `table.setHoveredRow` APIs used while a row is
-// dragged to reorder it or drop it on another table.
 import {
   assignTableAPIs,
   functionalUpdate,
@@ -20,9 +16,8 @@ import type {
 } from '@/components/ui/shadcn-table/types';
 
 // TableState_FeatureMap is not generic over TData, so the state slice and its
-// on*Change options hold the row with its data type erased to ST_RowData
-// (the MRT twin uses `Row<any, any>`); the APIs keep today's per-TData
-// types and ST_TableOptions<TData> types the options for TData.
+// on*Change options hold the row with its data type erased to ST_RowData;
+// ST_TableOptions<TData> types the options for TData.
 type ST_ErasedRow = ST_Row<ST_RowData>;
 
 export interface ST_TableState_RowDragging {

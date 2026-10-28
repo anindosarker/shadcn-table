@@ -3,7 +3,6 @@ import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
 import highlightWords from 'highlight-words';
@@ -23,14 +22,9 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   staticColumnIndex,
   staticRowIndex,
 }: ST_TableBodyCellValueProps<TData>) => {
-  // The cell carries the core table; the ST wrapper types re-type its getters.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
+  const table = cell.table;
   const {
-    options: {
-      enableFilterMatchHighlighting,
-      // mrtTheme: { matchHighlightColor },
-      // Note: mrtTheme dropped project-wide; matchHighlightColor → destructive/20 (dark /30), override via [data-slot="st-match-highlight"].
-    },
+    options: { enableFilterMatchHighlighting },
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;

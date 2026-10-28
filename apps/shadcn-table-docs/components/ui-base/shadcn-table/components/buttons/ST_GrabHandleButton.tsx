@@ -44,7 +44,6 @@ export const ST_GrabHandleButton = ({
     <ST_Tooltip side="top" title={rest?.title ?? localization.move}>
       <Button
         aria-label={rest.title ?? localization.move}
-        // disableRipple  // Note: shadcn Button has no ripple effect
         draggable="true"
         size="icon-sm"
         type="button"

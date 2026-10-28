@@ -1,9 +1,3 @@
-// Owns the `isLoading`, `isSaving`, `showLoadingOverlay`, `showProgressBars`
-// and `showSkeletons` state slices. They have no setters: the controlled
-// `state` option drives them. `isLoading` and `isSaving` default to `false`;
-// the three `show*` slices start unset, so the overlay and skeletons follow
-// `isLoading` and the progress bars follow `isSaving` until a slice is set,
-// and an explicit `false` turns its UI off.
 import type { TableFeature } from '@tanstack/react-table';
 
 export interface ST_TableState_Loading {

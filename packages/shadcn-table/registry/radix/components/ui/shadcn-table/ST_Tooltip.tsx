@@ -25,7 +25,7 @@ const LABEL_TARGET_SELECTOR =
   'button, a[href], input, select, textarea, [role="button"], [role="switch"], [role="checkbox"]';
 
 /**
- * MUI Tooltip set `aria-label` on an unnamed child; Radix does not. Give the
+ * Radix Tooltip does not set `aria-label` on an unnamed child. Give the
  * trigger (or the control it wraps) the title string as its accessible name
  * when it has no text content and no label of its own.
  */

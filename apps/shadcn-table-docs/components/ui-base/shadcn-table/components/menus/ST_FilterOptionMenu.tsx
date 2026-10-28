@@ -138,7 +138,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       columnFilterModeOptions,
       globalFilterModeOptions,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide: DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnFilterModeMenuItems,
       renderGlobalFilterModeMenuItems,
     },
@@ -168,17 +167,15 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
               globalFilterModeOptions.includes(filterOption.option)) &&
             ['contains', 'fuzzy', 'startsWith'].includes(filterOption.option),
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- options are read once per mount, as in MRT
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- options are read once per mount
     [],
   );
 
   const handleSelectFilterMode = (option: ST_FilterOption) => {
     const prevFilterMode = columnDef ? getColumnFilterFnName(columnDef) : '';
     if (!header || !column) {
-      // global filter mode
       setGlobalFilterFn(option);
     } else if (option !== prevFilterMode) {
-      // column filter mode
       const currentFilterValue = column.getFilterValue();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setColumnFilterFns((prev: { [key: string]: any }) => ({
@@ -186,9 +183,8 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         [header.id]: option,
       }));
 
-      // reset filter value and/or perform new filter render
       if (emptyModes.includes(option)) {
-        // will now be empty/notEmpty filter mode
+        // Core drops an empty filter value, so the empty modes hold a space.
         if (
           currentFilterValue !== ' ' &&
           !emptyModes.includes(prevFilterMode)
@@ -199,7 +195,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         columnDef?.filterVariant === 'multi-select' ||
         arrModes.includes(option as string)
       ) {
-        // will now be array filter mode
         if (
           currentFilterValue instanceof String ||
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -212,7 +207,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         columnDef?.filterVariant?.includes('range') ||
         rangeModes.includes(option as ST_FilterOption)
       ) {
-        // will now be range filter mode
         if (
           !Array.isArray(currentFilterValue) ||
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -223,7 +217,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           setFilterValue?.('');
         }
       } else {
-        // will now be single value filter mode
         if (Array.isArray(currentFilterValue)) {
           column.setFilterValue('');
           setFilterValue?.('');
@@ -275,8 +268,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         align="start"
         alignOffset={(rect?.height ?? 0) / 2}
         side="right"
-        // disableScrollLock
-        // Note: Base UI Menu owns scroll-lock behavior
         // Focus goes back to the real anchor; returning false keeps Base UI
         // off the invisible trigger.
         finalFocus={() => {
@@ -324,7 +315,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
                   internalFilterOptions.map(
                     ({ divider, label, option, symbol }, index) => (
                       <ST_ActionMenuItem
-                        // Note: MUI MenuItem `selected` → state-driven bg-accent (2026-07-14 ruling)
                         className={
                           option === filterOption ? 'bg-accent' : undefined
                         }
@@ -335,8 +325,6 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
                         onClick={() =>
                           handleSelectFilterMode(option as ST_FilterOption)
                         }
-                        // value={option}
-                        // Note: MUI MenuItem value dropped: form semantics only, no visual role
                       />
                     ),
                   )}
