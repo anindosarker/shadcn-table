@@ -80,6 +80,24 @@ decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` 
   `check-storybook.mjs` prints passed, failed and skipped apart (`5a7fec34`); `editionHref`
   doc comment rewrapped at 80 columns (`670563df`). Declined: none.
 
+- Review round 2: aliases (decision 7 addendum). `fa022c12` feat(registry): plain GitHub names
+  alias the Base UI items; `c7aca49a` ci: dry-run add the plain shadcn-table alias; `6f312275`
+  docs: plain GitHub addresses install the Base UI edition. `aliasItems` in `lib.mjs` maps the
+  `DEFAULT_EDITION` items to their plain names (same type, files, dependencies,
+  registryDependencies; description `Alias of <source>: the GitHub shorthand
+  anindosarker/shadcn-table/<alias> installs the Base UI edition.`); `build.mjs` appends 39
+  (main plus 38 locales, 156 items), `examples.mjs` 115 (460 items). `editionItems` and
+  `editionExampleItems` now keep only names carrying the edition (`-<edition>` or
+  `-<edition>-locale-`), so `hosted.mjs`, `smoke.mjs` and the docs `install.mjs` see no alias:
+  per edition 1 main, 38 locales, 115 examples, no duplicates. Gates: `registry:build`,
+  `registry:items`, `registry:hosted` exit 0, `diff -r` of `public/r` against the build at
+  `10fa4df7` empty; `shadcn registry validate ./registry.json` from the repo root: 3 files,
+  616 items, valid (the `../../registry.json` form refuses a path outside `--cwd`); at
+  `fa022c12`, `shadcn registry validate anindosarker/shadcn-table#<sha>` valid and `shadcn add
+  anindosarker/shadcn-table/{shadcn-table,shadcn-table-locale-de,example-basic}#<sha>
+  --dry-run` exit 0; `check:bases`, docs `types:check` green; `node --check` on every edited
+  `.mjs`.
+
 ## Owner attention
 
 - Hosted locale descriptions: `lib.mjs` writes `The <code> localization for <committed
@@ -93,7 +111,16 @@ decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` 
 - GitHub fallback addresses: the committed rename changes the user-facing GitHub addresses of
   the Radix items (`anindosarker/shadcn-table/shadcn-table` to `shadcn-table-radix`, the
   locales and `example-<slug>` likewise). README, SKILL.md, `agents.mdx`, `localization.mdx`
-  and CONTRIBUTING say the new names; the CHANGELOG bullet says the old ones stop resolving.
+  and CONTRIBUTING say the new names. Since review round 2 the plain addresses resolve again,
+  as generated aliases of the Base UI items; the CHANGELOG bullet says they now install Base
+  UI where they installed Radix UI before. User docs (README, SKILL.md, `agents.mdx`,
+  `localization.mdx`) keep listing only the per-edition names, the addendum calls the plain
+  path undocumented; CONTRIBUTING and the standards mention the aliases for maintainers.
+- Alias locale items keep the source item's `registryDependencies`
+  (`anindosarker/shadcn-table/shadcn-table-base`), not the alias main item: same files either
+  way, the dry-run resolves, and "same registryDependencies" holds literally. Alias
+  descriptions replace the source description (the example page description is not kept).
+  `examples.mjs --resolve` still writes per-edition items only.
   `best-practices.mdx` had a hard-coded `pnpm dlx shadcn@latest add
   anindosarker/shadcn-table/shadcn-table` update command; it now renders `<InstallCommand
   overwrite />` (the hosted, per-base command the install page uses).
@@ -113,6 +140,7 @@ decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` 
   Base UI items, `hosted.mjs` ignores them). This branch does not implement it: committed
   `packages/shadcn-table/registry.json` has no `shadcn-table` item, and the CHANGELOG says the
   plain GitHub addresses no longer resolve. Not a section 2.2 gate; left for a coder round.
+  Done in review round 2.
 
 ## Gates, verifier run
 
