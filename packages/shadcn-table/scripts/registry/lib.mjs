@@ -1,8 +1,7 @@
 // Shared by the per-base item definitions (registry/<base>/registry.ts):
 // lists an item's files (the tree's library files plus the forked parts),
-// derives the registryDependencies from the `@/components/ui/<part>` imports,
-// picks the ST-only CSS rules out of the tree's index.css and pins npm
-// versions from package.json. The file list is never hand-maintained.
+// derives the registryDependencies from the `@/components/ui/<part>` imports
+// and pins npm versions from package.json. The file list is never hand-maintained.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -77,74 +76,6 @@ const uiImports = (files) => {
   return [...names].sort();
 };
 
-// Minimal CSS block parser: returns the top-level rules of a stylesheet as
-// [selectorOrAtRule, body] pairs, where body is either a declaration object
-// or a nested map of the same shape. Comments are dropped. Good enough for
-// the plain keyframes/rules in index.css; not a general CSS parser.
-const parseBlocks = (css) => {
-  const out = {};
-  let i = 0;
-  const skipWs = () => {
-    while (i < css.length && /\s/.test(css[i])) i++;
-  };
-  const readUntil = (chars) => {
-    let s = '';
-    while (i < css.length && !chars.includes(css[i])) s += css[i++];
-    return s;
-  };
-  while (i < css.length) {
-    skipWs();
-    if (i >= css.length) break;
-    const head = readUntil('{;}').trim();
-    if (css[i] === '{') {
-      i++;
-      const bodyStart = i;
-      let depth = 1;
-      while (i < css.length && depth > 0) {
-        if (css[i] === '{') depth++;
-        else if (css[i] === '}') depth--;
-        i++;
-      }
-      const body = css.slice(bodyStart, i - 1);
-      out[head] = /\{/.test(body) ? parseBlocks(body) : parseDecls(body);
-    } else {
-      // Bare at-rule such as @import, or a stray `;`/`}`.
-      if (css[i] === ';' || css[i] === '}') i++;
-      if (head) out[head] = {};
-    }
-  }
-  return out;
-};
-
-const parseDecls = (body) => {
-  const out = {};
-  for (const decl of body.split(';')) {
-    const idx = decl.indexOf(':');
-    if (idx === -1) continue;
-    const prop = decl.slice(0, idx).trim();
-    const value = decl
-      .slice(idx + 1)
-      .replace(/\s+/g, ' ')
-      .trim();
-    if (prop) out[prop] = value;
-  }
-  return out;
-};
-
-const stCss = (cssFile) => {
-  const raw = fs.readFileSync(cssFile, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-  const blocks = parseBlocks(raw);
-  const picked = {};
-  for (const [key, value] of Object.entries(blocks)) {
-    if (/\bst-/.test(key)) picked[key] = value;
-  }
-  if (Object.keys(picked).length === 0) {
-    console.error(`lib.mjs: no st-* rules found in ${rel(cssFile)}`);
-    process.exit(1);
-  }
-  return picked;
-};
-
 /**
  * The items of one base: the main item (every library file of the tree
  * except the non-English locales, plus the forked ui parts) and one item per
@@ -217,7 +148,6 @@ export const baseItems = ({
     ),
     registryDependencies,
     files: [...coreFiles, ...forkedFiles],
-    css: stCss(path.join(dir, 'index.css')),
   };
 
   const locales = localeFiles.map(([key, entry]) => {

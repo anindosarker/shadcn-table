@@ -1,9 +1,8 @@
 // Item definition of the Base UI edition: `shadcn-table-base` plus one locale
 // item per language, both read by scripts/registry/build.mjs (Node strips the
 // types). Every file of this tree's components/ui/shadcn-table is an item
-// file; every `@/components/ui/<part>` import is a registryDependency (the
-// consumer's CLI installs its own base's parts) and the ST-only CSS rules in
-// index.css ship through the item's `css` field; see scripts/registry/lib.mjs.
+// file and every `@/components/ui/<part>` import is a registryDependency (the
+// consumer's CLI installs its own base's parts); see scripts/registry/lib.mjs.
 import { registryItemSchema, type Registry } from 'shadcn/schema';
 import { baseItems, HOMEPAGE } from '../../scripts/registry/lib.mjs';
 
