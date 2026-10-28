@@ -186,3 +186,11 @@ Branch `v0.5/aria-tree`: `v0.5/08` (fast-forward), `v0.5/09`, `v0.5/rest` merged
 - `storybook:build:aria`: pass (`storybook-static/aria`). `check-storybook.mjs` not run: the edition tool is still two-way (part 02 or 03).
 - `registry:build`: `scripts/registry/build.mjs` now collects `registry/aria/registry.ts`; `shadcn-table-aria` (104 files, 24 registryDependencies: the checkbox is not forked) and its 38 locale items emitted; `registry.json` committed.
 - `CHANGELOG.md` `## Unreleased`: Added, React Aria edition (item name; the `/r/aria` install command once part 02 wires the hosted copy).
+
+## Phase 01, fixups
+
+- `registry/aria/components/ui/label.tsx`: unused `import * as React` dropped; the only edit to a shadcn part in this edition (`ATTENTION-2026-10-28.md`). `tsc:aria`: pass.
+- Indeterminate checkbox: the aria part renders the check icon and no fill for `isIndeterminate`. Not forked: `ST_SelectCheckbox.tsx` (already in `aria-diff.json`) adds `data-indeterminate:` fill classes, hides the part's `checkbox-indicator` while indeterminate and renders a `MinusIcon` through the part's `children` render prop (`composeRenderProps`, so user children still render). Checked in the browser (throwaway story, not committed): with one row selected the select-all box is partially checked, computed background and border are the primary color and the only visible icon is the minus, same as radix.
+- Stories, edition-agnostic: `RowPinningOnSelect` `expectSelectAll` and the two `RenderCounts` mixed checks use `toBeChecked` / `toBePartiallyChecked` (aria-checked on a role=checkbox element, checked/indeterminate on RAC's native input); `RowPinning > Row Pinning Select Sticky Mode` hit-tests the visible `[data-slot="checkbox"]` box around the checkbox role; `TableProvider > Portals Read Context` hovers a body cell before "Toggle density" so RAC's interaction modality is pointer again after the Escape.
+- `pnpm test`, `test:base`, `test:aria`: 446 of 446 each. Faceted `Duplicate key` failure confirmed fixed (`v0.5/09`).
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `pnpm check:bases` (`142 library files in both trees, 23 allowed to differ`): pass. Hand run with the aria pair: `142 library files in both trees, 37 allowed to differ`, 0 problems (`ST_SelectCheckbox.tsx` stays listed). `registry:build`: clean, `registry.json` unchanged.
