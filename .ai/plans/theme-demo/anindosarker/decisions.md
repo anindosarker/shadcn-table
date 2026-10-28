@@ -30,3 +30,8 @@ Taken 2026-10-28. Plan: [theme-demo-plan.md](theme-demo-plan.md).
    homepage and the theming docs page. Agents build them; the main session plans and reviews.
 5. Demo themes are a dedicated set that differ in colour, font and radius, not the six site
    presets (which only change hue). No real brand names in theme labels.
+
+## Homepage
+
+6. Owner picked variant 9 (whole app), with the sidebar removed, for the homepage on
+   2026-10-28.

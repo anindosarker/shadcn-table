@@ -776,15 +776,17 @@ const Localization = () => {
           City
         </text>
       </Fade>
-      {/* right-to-left: headers and values hug the right edge */}
+      {/* right-to-left: headers and values hug the right edge. No
+       * direction="rtl" here: it flips text-anchor, so "end" would start
+       * the label at the column edge and run it past the border. */}
       <Fade d={120}>
-        <text x={50} y={17.5} textAnchor="end" direction="rtl">
+        <text x={50} y={17.5} textAnchor="end">
           المدينة
         </text>
-        <text x={98} y={17.5} textAnchor="end" direction="rtl">
+        <text x={98} y={17.5} textAnchor="end">
           العمر
         </text>
-        <text x={146} y={17.5} textAnchor="end" direction="rtl">
+        <text x={146} y={17.5} textAnchor="end">
           الاسم
         </text>
       </Fade>
