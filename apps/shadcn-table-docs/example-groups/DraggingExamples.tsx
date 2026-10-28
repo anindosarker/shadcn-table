@@ -1,7 +1,9 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import ColumnOrdering from '@/examples/enable-column-ordering';
-import RowOrdering from '@/examples/enable-row-ordering';
-import RowDragging from '@/examples/enable-row-dragging';
+import {
+  EnableColumnOrderingExample,
+  EnableRowOrderingExample,
+  EnableRowDraggingExample,
+} from '@/examples/map';
 
 const DraggingExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -12,9 +14,9 @@ const DraggingExamples = ({ isPage = false }) => (
       { label: 'Row Dragging', value: 'row-dragging' },
     ]}
     panels={{
-      'column-ordering': <ColumnOrdering />,
-      'row-ordering': <RowOrdering />,
-      'row-dragging': <RowDragging />,
+      'column-ordering': <EnableColumnOrderingExample />,
+      'row-ordering': <EnableRowOrderingExample />,
+      'row-dragging': <EnableRowDraggingExample />,
     }}
   />
 );

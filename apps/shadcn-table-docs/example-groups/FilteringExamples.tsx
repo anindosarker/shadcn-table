@@ -1,9 +1,11 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import FilterVariantsExample from '@/examples/customize-filter-variants';
-import FacetedValuesExample from '@/examples/enable-filter-facet-values';
-import FilterModesExample from '@/examples/customize-filter-modes';
-import PopoverFiltersExample from '@/examples/alternate-column-filtering';
-import CustomFilterUIExample from '@/examples/custom-column-filtering-ui';
+import {
+  CustomizeFilterVariantsExample,
+  EnableFilterFacetValuesExample,
+  CustomizeFilterModesExample,
+  AlternateColumnFilteringExample,
+  CustomColumnFilteringUiExample,
+} from '@/examples/map';
 
 const FilteringExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -16,11 +18,11 @@ const FilteringExamples = ({ isPage = false }) => (
       { label: 'Custom Filter UI', value: 'custom-filter-ui' },
     ]}
     panels={{
-      'filter-variants': <FilterVariantsExample />,
-      'faceted-values': <FacetedValuesExample />,
-      'filter-switching': <FilterModesExample />,
-      'popover-filters': <PopoverFiltersExample />,
-      'custom-filter-ui': <CustomFilterUIExample />,
+      'filter-variants': <CustomizeFilterVariantsExample />,
+      'faceted-values': <EnableFilterFacetValuesExample />,
+      'filter-switching': <CustomizeFilterModesExample />,
+      'popover-filters': <AlternateColumnFilteringExample />,
+      'custom-filter-ui': <CustomColumnFilteringUiExample />,
     }}
   />
 );

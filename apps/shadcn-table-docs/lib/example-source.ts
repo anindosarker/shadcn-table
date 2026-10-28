@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { listExampleFiles } from './example-files.mjs';
+import type { Base } from './install';
 
 export interface ExampleFile {
   /** Path relative to the example folder, for example `hooks/useUsersQuery.ts`. */
@@ -15,20 +16,22 @@ export interface ExampleFile {
 const stripDirective = (src: string) =>
   src.replace(/^'use client';\r?\n(\r?\n)?/, '');
 
-/** examples/<name>: the base-neutral source the code view shows. */
-export const exampleDir = (name: string) =>
-  path.join(process.cwd(), 'examples', name);
+/** examples/<base>/<name>: the base's hand-written source the code view shows. */
+export const exampleDir = (name: string, base: Base) =>
+  path.join(process.cwd(), 'examples', base, name);
 
 /**
- * Every source file of examples/<name> the playground shows, in tree order
- * (see listExampleFiles): `TS.tsx` first, then folders before files. One
- * set for every base: the source imports `@/components/ui/...`, the path a
- * user has after install; the per-base variants under examples/.radix,
- * examples/.base and examples/.aria (lib/example-variants.mjs) only feed the
- * live example.
+ * Every source file of examples/<base>/<name> the playground shows, in tree
+ * order (see listExampleFiles): `TS.tsx` first, then folders before files.
+ * The source imports `@/components/ui/...`, the path a user has after
+ * install; the base's variant under examples/.<base>
+ * (lib/example-variants.mjs) only feeds the live example.
  */
-export async function readExampleFiles(name: string): Promise<ExampleFile[]> {
-  const dir = exampleDir(name);
+export async function readExampleFiles(
+  name: string,
+  base: Base,
+): Promise<ExampleFile[]> {
+  const dir = exampleDir(name, base);
   const paths = await listExampleFiles(dir);
   return Promise.all(
     paths.map(async (rel) => ({
