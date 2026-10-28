@@ -163,7 +163,7 @@ jobs:
           cat > src/App.tsx <<'TSX'
           import Example from '@/components/examples/basic/basic';
           import { ShadcnTable } from '@/components/ui/shadcn-table';
-          import { ST_Localization_DE } from '@/components/ui/shadcn-table/locales/de';
+          import { ST_Localization_DE } from '@/components/ui/shadcn-table/shared/locales/de';
 
           const columns = [{ accessorKey: 'name', header: 'Name' }];
           const data = [{ name: 'Ada' }];
