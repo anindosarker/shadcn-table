@@ -48,6 +48,11 @@
       ],
       "files": [
         {
+          "path": "registry/radix/components/ui/shadcn-table/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/ST_Tooltip.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ST_Tooltip.tsx"
@@ -1226,6 +1231,11 @@
         "tooltip"
       ],
       "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
+        },
         {
           "path": "registry/base/components/ui/shadcn-table/ST_Tooltip.tsx",
           "type": "registry:ui",
@@ -2406,6 +2416,11 @@
         "tooltip"
       ],
       "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
+        },
         {
           "path": "registry/aria/components/ui/shadcn-table/ST_Tooltip.tsx",
           "type": "registry:ui",
