@@ -84,10 +84,12 @@ export const UsersTable = () => {
       : undefined,
     renderTopToolbarCustomActions: () => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Button size="icon" variant="ghost" onClick={() => refetch()}>
-            <RefreshCw />
-          </Button>
+        <TooltipTrigger
+          render={
+            <Button size="icon" variant="ghost" onClick={() => refetch()} />
+          }
+        >
+          <RefreshCw />
         </TooltipTrigger>
         <TooltipContent>Refresh Data</TooltipContent>
       </Tooltip>
