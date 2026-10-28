@@ -1,20 +1,82 @@
-name: ci
+name: pr
 
+# Every check of a pull request, on pull_request only (pushes to master run
+# release.yml). release-impact checks the `release:` label and prints the
+# version the PR ships as; it runs on label changes too, and the other jobs
+# skip those events, so a label change reruns the label check alone.
 on:
-  push:
-    branches: [master, claude/review]
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: pr-${{ github.workflow }}-${{ github.ref }}-${{ contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && 'labels' || 'checks' }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
+  # Exactly one `release:` label (release:patch, release:minor, release:major,
+  # release:skip) is required when the PR changes a shipped file: the library
+  # trees, the docs app's installed copies or the skill. With a level label,
+  # the PR must add `## Unreleased` lines to CHANGELOG.md and the job summary
+  # shows the version the next release ships as.
+  release-impact:
+    name: release impact (label, next version)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check the release label and print the next version
+        run: |
+          files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')
+          shipped=$(printf '%s\n' "$files" | grep -E '^(packages/shadcn-table/registry/|apps/shadcn-table-docs/components/ui-(radix|base|aria)/|skills/)' || true)
+          labels=$(jq -r '.[] | select(startswith("release:"))' <<<"$LABELS")
+          count=$(printf '%s' "$labels" | grep -c . || true)
+          if [ "$count" -gt 1 ]; then
+            echo "::error::more than one release: label: ${labels//$'\n'/ }"
+            exit 1
+          fi
+          if [ "$count" -eq 0 ] && [ -n "$shipped" ]; then
+            echo "::error::this PR changes shipped files and has no release: label; add one of release:patch, release:minor, release:major, release:skip"
+            printf '%s\n' "$shipped" | head -20
+            exit 1
+          fi
+          if [ "$count" -eq 0 ] || [ "$labels" = release:skip ]; then
+            echo "no release"
+            echo "No release (${labels:-no release: label})." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          level=${labels#release:}
+          if ! printf '%s\n' "$files" | grep -qx CHANGELOG.md; then
+            echo "::error::$labels needs a line under \"## Unreleased\" in CHANGELOG.md; this PR does not change CHANGELOG.md"
+            exit 1
+          fi
+          status=0
+          next=$(node scripts/release/next-version.mjs --level "$level" --from-changelog) || status=$?
+          if [ "$status" -eq 2 ]; then
+            echo "::error::$labels needs lines under \"## Unreleased\" in CHANGELOG.md"
+            exit 1
+          fi
+          [ "$status" -eq 0 ] || exit "$status"
+          echo "Ships as $next"
+          echo "Ships as $next ($labels)." >> "$GITHUB_STEP_SUMMARY"
+
   # The library exists once per edition, three complete trees:
   # registry/radix (the default scripts), registry/base (the `:base` scripts,
   # ST_BASE=base) and registry/aria (the `:aria` scripts, ST_BASE=aria).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -47,6 +109,7 @@ jobs:
   # scripts/registry/<edition>-diff.json.
   bases:
     name: bases (edition guard)
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,6 +120,7 @@ jobs:
 
   test:
     name: 'test (${{ matrix.base }}: vitest browser mode)'
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -80,6 +144,7 @@ jobs:
 
   docs:
     name: docs (types, next build)
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -95,7 +160,7 @@ jobs:
 
   registry:
     name: registry (validate, dry-run add)
-    if: github.event_name == 'push'
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
@@ -112,7 +177,7 @@ jobs:
       - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic#${{ github.sha }}" --dry-run
 
   install:
-    if: github.event_name == 'push'
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     needs: registry
     uses: ./.github/workflows/install.yml
     with:
