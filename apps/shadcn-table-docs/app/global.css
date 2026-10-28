@@ -778,11 +778,6 @@ html:has(#nd-notebook-layout) ::selection {
   line-height: 1.55;
 }
 
-/* body measure ~70ch, Inter headings with the landing's tight tracking */
-#nd-page .prose :is(p, ul, ol, h2, h3, h4) {
-  max-width: 70ch;
-}
-
 /* h2: the same display cut one step down (sections read as landing card
    titles); h3 stays Inter 600 with the landing's tight tracking, for dense
    guides */

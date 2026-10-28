@@ -86,11 +86,20 @@ export const InitCommand = () => (
 
 /**
  * `shadcn add` of a registry item from the hosted registry of the selected
- * base, the library by default.
+ * base, the library by default. `overwrite` appends `--overwrite`, the update
+ * form.
  */
-export const InstallCommand = ({ item = libraryItem }: { item?: string }) => (
+export const InstallCommand = ({
+  item = libraryItem,
+  overwrite = false,
+}: {
+  item?: string;
+  overwrite?: boolean;
+}) => (
   <BaseCommandTabs
-    command={(base, pm) => addCommand(item, base, pm)}
+    command={(base, pm) =>
+      `${addCommand(item, base, pm)}${overwrite ? ' --overwrite' : ''}`
+    }
     onCopied={(base, pm) =>
       trackInstallCommandCopied({
         item,

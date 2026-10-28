@@ -9,7 +9,7 @@ import { DISCORD_URL } from '@/lib/layout.shared';
 import { trackOutboundClicked } from '@/lib/analytics';
 
 const LINKS = [
-  { label: 'Docs', href: '/docs/getting-started/install' },
+  { label: 'Docs', href: '/docs/getting-started/introduction' },
   { label: 'API', href: '/docs/api' },
   { label: 'Examples', href: '/docs/examples' },
   { label: 'Guides', href: '/docs/guides' },
