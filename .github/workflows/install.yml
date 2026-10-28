@@ -36,6 +36,20 @@ jobs:
       # aria scaffolds on React Aria and installs shadcn-table-aria.
       BASE: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && matrix.scenario || 'radix' }}
       ITEM: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && format('shadcn-table-{0}', matrix.scenario) || 'shadcn-table' }}
+      # Run twice in the aria scenario (steps below): deletes the one line
+      # `import * as React from "react"` from the installed label part, exits 1
+      # when it is not there.
+      DROP_LABEL_IMPORT: |
+        const fs = require('fs');
+        const file = 'src/components/ui/label.tsx';
+        const source = fs.readFileSync(file, 'utf8');
+        const line = /^import \* as React from ["']react["'];?\r?\n/m;
+        if (!line.test(source)) {
+          console.error(`${file}: no \`import * as React from "react"\` line; upstream may have dropped it, remove this step`);
+          process.exit(1);
+        }
+        fs.writeFileSync(file, source.replace(line, ''));
+        console.log(`${file}: unused React import deleted`);
     strategy:
       fail-fast: false
       matrix:
@@ -76,6 +90,15 @@ jobs:
           address="${address//'<item>'/$ITEM}"
           echo "installing $address"
           pnpm dlx shadcn@latest add "$address" --yes 2>&1 | tee shadcn-add.log
+        working-directory: ${{ runner.temp }}/app
+      # Mirrors the documented user step for shadcn's `aria-nova` `label` part:
+      # its unused `import * as React` fails Vite's `noUnusedLocals` (TS6133),
+      # decision 4 in .ai/plans/v0.6.x/anindosarker/decisions.md. The part is
+      # installed as shipped; the user deletes the line. Fails when the line is
+      # missing so an upstream fix shows up here; remove the step then.
+      - name: Delete the aria label part's unused React import
+        if: matrix.scenario == 'aria'
+        run: node -e "$DROP_LABEL_IMPORT"
         working-directory: ${{ runner.temp }}/app
       - name: Mount a table, type-check and build (Vite)
         if: matrix.scenario != 'nextjs'
@@ -146,7 +169,7 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm --filter shadcn-table registry:dev
           (pnpm exec serve packages/shadcn-table/.dev -l 5310 > serve.log 2>&1 &)
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             curl -sf "http://localhost:5310/r/$ITEM-locale-de.json" > /dev/null && break
             sleep 1
           done
@@ -155,12 +178,24 @@ jobs:
       # Example items pin the library to gitConfig.branch, so this add re-fetches
       # the library from that branch; --overwrite lets it replace the files
       # without a prompt. The library at this SHA was proven by the steps above.
-      - name: Add a locale and example-basic, mount them, type-check and build
+      - name: Add a locale and example-basic
         if: matrix.scenario != 'nextjs'
         run: |
           set -o pipefail
           pnpm dlx shadcn@latest add "http://localhost:5310/r/$ITEM-locale-de.json" --yes --overwrite 2>&1 | tee -a shadcn-add.log
           pnpm dlx shadcn@latest add "anindosarker/shadcn-table/example-basic#$REF" --yes --overwrite 2>&1 | tee -a shadcn-add.log
+        working-directory: ${{ runner.temp }}/app
+      # The locale item depends on the library item, which lists `label` as a
+      # registryDependency; --overwrite rewrites every resolved file whose
+      # content differs, so the part comes back with its import. Same step as
+      # above.
+      - name: Delete the aria label part's unused React import, again
+        if: matrix.scenario == 'aria'
+        run: node -e "$DROP_LABEL_IMPORT"
+        working-directory: ${{ runner.temp }}/app
+      - name: Mount the locale and example-basic, type-check and build
+        if: matrix.scenario != 'nextjs'
+        run: |
           cat > src/App.tsx <<'TSX'
           import Example from '@/components/examples/basic/basic';
           import { ShadcnTable } from '@/components/ui/shadcn-table';

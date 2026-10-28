@@ -29,6 +29,11 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
   fails otherwise.
 - Adding an edition-only difference means adding the path to that edition's list in the
   same commit.
+- shadcn parts (`registry/<edition>/components/ui/<part>.tsx`) are never edited; they are
+  what `pnpm add-part <edition> <part>` writes. A check that fails on a part is fixed in the
+  check (ESLint ignores the parts; the tsconfigs carry no unused-code flags). A part the
+  item ships as its own file is a recorded fork, listed in `forkedUi` in that edition's
+  `registry.ts` with its reason (today: `checkbox` on radix and base).
 
 ## Naming
 

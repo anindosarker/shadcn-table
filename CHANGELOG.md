@@ -7,6 +7,17 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+- React Aria edition: the `label` part is what shadcn ships (`add-part.mjs` output), the hand
+  edit that dropped its unused `import * as React` is reverted, and `shadcn-table-aria` lists
+  `label` as a registryDependency like every other part instead of shipping its own copy.
+  Unused locals and parameters are checked by ESLint (`@typescript-eslint/no-unused-vars`, `_`
+  prefix tolerated, parts ignored), no longer by `noUnusedLocals` and `noUnusedParameters` in
+  the tsconfigs.
+
 ## 0.5.1 - 2026-10-28
 
 ### Changed
