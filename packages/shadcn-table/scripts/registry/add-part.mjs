@@ -150,7 +150,15 @@ try {
     try {
       execFileSync(
         path.join(PKG, 'node_modules/.bin/shadcn'),
-        ['add', item.name, '--cwd', scratch, '--yes', '--overwrite', '--silent'],
+        [
+          'add',
+          item.name,
+          '--cwd',
+          scratch,
+          '--yes',
+          '--overwrite',
+          '--silent',
+        ],
         { stdio: ['ignore', 'ignore', 'pipe'] },
       );
     } catch (error) {
