@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
@@ -46,6 +47,28 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
     ...rest,
   };
 
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // tableLayoutRef null while the children's layout effects run.
+  const userRef = useRef(layoutDivProps.ref);
+  userRef.current = layoutDivProps.ref;
+  const attachRef = useCallback(
+    (node: HTMLDivElement) => {
+      tableLayoutRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        tableLayoutRef.current = null;
+      };
+    },
+    [tableLayoutRef],
+  );
+
   // Created outside the full screen subscription, so toggling full screen
   // re-renders only this element.
   const topToolbar =
@@ -64,18 +87,7 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
         <div
           onKeyDown={(e) => e.key === 'Escape' && table.setIsFullScreen(false)}
           {...layoutDivProps}
-          ref={(node: HTMLDivElement) => {
-            tableLayoutRef.current = node;
-            const cleanup = assignRef(layoutDivProps?.ref, node);
-            return () => {
-              if (typeof cleanup === 'function') {
-                cleanup();
-              } else {
-                assignRef(layoutDivProps?.ref, null);
-              }
-              tableLayoutRef.current = null;
-            };
-          }}
+          ref={attachRef}
           className={cn(
             tableLayoutVariants({
               fullscreen: isFullScreen,

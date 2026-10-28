@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -46,6 +47,28 @@ export const ST_TableHead = <TData extends ST_RowData>({
     ...rest,
   };
 
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // tableHeadRef null while the children's layout effects run.
+  const userRef = useRef(tableHeadProps.ref);
+  userRef.current = tableHeadProps.ref;
+  const attachRef = useCallback(
+    (node: HTMLTableSectionElement) => {
+      tableHeadRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        tableHeadRef.current = null;
+      };
+    },
+    [tableHeadRef],
+  );
+
   const isHeadOverlay = positionToolbarAlertBanner === 'head-overlay';
 
   // The header groups follow column order, pinning, visibility and grouping;
@@ -69,18 +92,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
         return (
           <thead
             {...tableHeadProps}
-            ref={(node: HTMLTableSectionElement) => {
-              tableHeadRef.current = node;
-              const cleanup = assignRef(tableHeadProps?.ref, node);
-              return () => {
-                if (typeof cleanup === 'function') {
-                  cleanup();
-                } else {
-                  assignRef(tableHeadProps?.ref, null);
-                }
-                tableHeadRef.current = null;
-              };
-            }}
+            ref={attachRef}
             className={cn(
               tableHeadVariants({
                 layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
