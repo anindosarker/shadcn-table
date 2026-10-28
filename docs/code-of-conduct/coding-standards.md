@@ -14,6 +14,7 @@ packages/shadcn-table/
 ├── scripts/                 ← everything else
 └── stories/ .storybook/     ← one story set, `@/` points at registry/<ST_BASE>
 apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, components/ui-base and components/ui-aria are installed copies
+├── examples/radix/ base/ aria/  ← the docs examples, one hand-written set per edition, radix the reference
 ```
 
 ## Editions
@@ -29,6 +30,10 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
   fails otherwise.
 - Adding an edition-only difference means adding the path to that edition's list in the
   same commit.
+- The docs examples follow the same model: `apps/shadcn-table-docs/examples/<edition>/<slug>/`
+  for every edition, radix the reference, a common change made in every folder by hand,
+  `scripts/registry/examples-<edition>-diff.json` the list of example files allowed to differ,
+  checked by the same `pnpm check:bases`.
 
 ## Naming
 
@@ -43,8 +48,9 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
   `@/components/ui/shadcn-table/...` and `@/components/ui/<part>`, never relatively. The
   shadcn CLI rewrites `@/` on install, so source and installed output stay identical.
 - The docs app imports its own UI from `@/components/ui-radix/...`. Example sources under
-  `examples/<slug>/` import `@/components/ui/...` because that is what a user has after
-  install.
+  `examples/<edition>/<slug>/` import `@/components/ui/...` because that is what a user has
+  after install; `lib/example-variants.mjs` points the generated copies at the installed
+  edition.
 
 ## Code
 
@@ -71,7 +77,7 @@ pnpm --filter shadcn-table lint
 pnpm --filter shadcn-table test               # Radix UI stories
 pnpm --filter shadcn-table test:base          # Base UI stories
 pnpm --filter shadcn-table test:aria          # React Aria stories
-pnpm check:bases                              # edition guard, every edition against radix
+pnpm check:bases                              # edition guard, library and examples, every edition against radix
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
