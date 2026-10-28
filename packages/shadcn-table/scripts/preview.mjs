@@ -2,9 +2,9 @@
 // Usage (inside packages/shadcn-table): pnpm preview
 //
 // Package preview: builds the local registry (`pnpm registry:dev`, .dev/r),
-// then serves it on http://localhost:5310/r and starts Storybook for both
-// bases (Radix UI on 6006, Base UI on 6007). Ctrl-C stops everything and
-// removes .dev.
+// then serves it on http://localhost:5310/r and starts Storybook for every
+// edition (Radix UI on 6006, Base UI on 6007, React Aria on 6008). Ctrl-C
+// stops everything and removes .dev.
 //
 // Also exports the helpers the root `pnpm preview` (scripts/preview.mjs)
 // uses. Commands are concurrently command objects
@@ -16,6 +16,7 @@ import { concurrently } from 'concurrently';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { EDITIONS, REFERENCE_EDITION } from './registry/editions.mjs';
 
 const PKG = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Commands run in PKG, so the binaries resolve relative to it. concurrently
@@ -98,7 +99,15 @@ export const registryDev = async () => {
 export const removeDev = () =>
   fs.rmSync(path.join(PKG, '.dev'), { recursive: true, force: true });
 
-/** Registry server on 5310 and Storybook for both bases. */
+/** Prefix colours of the Storybook children, in EDITIONS order. */
+const STORYBOOK_COLORS = ['magenta', 'cyan', 'yellow'];
+
+/**
+ * Registry server on 5310 and Storybook for every edition, on consecutive
+ * ports from 6006 in EDITIONS order (the package.json `storybook`,
+ * `storybook:<edition>` scripts and the dev links in
+ * .storybook/edition-tool.ts).
+ */
 export const packageChildren = [
   {
     name: 'registry',
@@ -106,19 +115,13 @@ export const packageChildren = [
     cwd: PKG,
     prefixColor: 'blue',
   },
-  {
-    name: 'storybook',
-    command: `${BIN}/storybook dev -p 6006 --no-open`,
+  ...EDITIONS.map((edition, i) => ({
+    name: edition === REFERENCE_EDITION ? 'storybook' : `storybook:${edition}`,
+    command: `${BIN}/storybook dev -p ${6006 + i} --no-open`,
     cwd: PKG,
-    prefixColor: 'magenta',
-  },
-  {
-    name: 'storybook:base',
-    command: `${BIN}/storybook dev -p 6007 --no-open`,
-    cwd: PKG,
-    env: { ST_BASE: 'base' },
-    prefixColor: 'cyan',
-  },
+    ...(edition === REFERENCE_EDITION ? {} : { env: { ST_BASE: edition } }),
+    prefixColor: STORYBOOK_COLORS[i % STORYBOOK_COLORS.length],
+  })),
 ];
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

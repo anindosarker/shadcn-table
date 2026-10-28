@@ -5,28 +5,31 @@
 // check runs; the script prints one PASS or FAIL line per check and exits
 // non-zero when any failed. Checks, against www.shadcn-table.com and
 // storybook.shadcn-table.com:
-//   /r/<base>/shadcn-table.json for both bases: 200, `dependencies` carries
-//     the @tanstack/react-table pin of packages/shadcn-table/package.json
-//   /r/<base>/registry.json for both bases: the item names are exactly the
-//     ones hosted.mjs derives from the committed catalogs (the main item as
+//   /r/<edition>/shadcn-table.json for every edition (EDITIONS in
+//     packages/shadcn-table/scripts/registry/lib.mjs): 200, `dependencies`
+//     carries the @tanstack/react-table pin of packages/shadcn-table/package.json
+//   /r/<edition>/registry.json for every edition: the item names are exactly
+//     the ones hosted.mjs derives from the committed catalogs (the main item as
 //     shadcn-table, its locales as shadcn-table-locale-<code>, every example
 //     item of the docs app)
-//   Storybook / and /base/: 200 HTML
-//   /SKILL.md: 200, names both bases
+//   Storybook / for the reference edition, /<edition>/ for every other: 200 HTML
+//   /SKILL.md: 200, names every edition (EDITION_LABELS)
 //   /llms.txt: 200
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  EDITION_LABELS,
+  EDITIONS,
+  editionItems,
+  REFERENCE_EDITION,
+} from '../../packages/shadcn-table/scripts/registry/lib.mjs';
 
 const SITE = 'https://www.shadcn-table.com';
 const STORYBOOK = 'https://storybook.shadcn-table.com';
-const BASES = [
-  { base: 'radix', committedName: 'shadcn-table' },
-  { base: 'base', committedName: 'shadcn-table-base' },
-];
 const HOSTED_NAME = 'shadcn-table';
 const DOCS_PACKAGE_NAME = 'shadcn-table-docs';
-const BASE_LABELS = ['Radix UI', 'Base UI'];
+const LABELS = EDITIONS.map((edition) => EDITION_LABELS[edition]);
 
 const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -52,14 +55,13 @@ const library = readJson('packages/shadcn-table/registry.json');
 const examples = readJson(path.join(docsDir(), 'registry.json'));
 const tanstackPin = `@tanstack/react-table@${libraryPackage.dependencies['@tanstack/react-table']}`;
 
-/** The item names hosted.mjs writes into /r/<base>/registry.json. */
-const expectedItems = (committedName) => {
-  const localePrefix = `${committedName}-locale-`;
-  const locales = library.items
-    .filter((item) => item.name.startsWith(localePrefix))
-    .map(
-      (item) => `${HOSTED_NAME}-locale-${item.name.slice(localePrefix.length)}`,
-    );
+/** The item names hosted.mjs writes into /r/<edition>/registry.json. */
+const expectedItems = (edition) => {
+  const { main, locales: committed } = editionItems(library, edition);
+  const localePrefix = `${main?.name}-locale-`;
+  const locales = committed.map(
+    (item) => `${HOSTED_NAME}-locale-${item.name.slice(localePrefix.length)}`,
+  );
   return [HOSTED_NAME, ...locales, ...examples.items.map((item) => item.name)];
 };
 
@@ -106,8 +108,8 @@ const diff = (expected, actual) => {
     .join(' ');
 };
 
-for (const { base, committedName } of BASES) {
-  const itemUrl = `${SITE}/r/${base}/${HOSTED_NAME}.json`;
+for (const edition of EDITIONS) {
+  const itemUrl = `${SITE}/r/${edition}/${HOSTED_NAME}.json`;
   const item = await get(itemUrl);
   if (checkStatus(`${itemUrl} 200 JSON`, item, 'json')) {
     const deps = parseJson(item.text)?.dependencies ?? [];
@@ -118,10 +120,10 @@ for (const { base, committedName } of BASES) {
     );
   }
 
-  const catalogUrl = `${SITE}/r/${base}/registry.json`;
+  const catalogUrl = `${SITE}/r/${edition}/registry.json`;
   const catalog = await get(catalogUrl);
   if (checkStatus(`${catalogUrl} 200 JSON`, catalog, 'json')) {
-    const expected = expectedItems(committedName).sort();
+    const expected = expectedItems(edition).sort();
     const actual = (parseJson(catalog.text)?.items ?? [])
       .map((i) => i.name)
       .sort();
@@ -136,16 +138,18 @@ for (const { base, committedName } of BASES) {
   }
 }
 
-for (const url of [`${STORYBOOK}/`, `${STORYBOOK}/base/`]) {
+// Radix at the Storybook root, every other edition under /<edition>/.
+for (const edition of EDITIONS) {
+  const url = `${STORYBOOK}/${edition === REFERENCE_EDITION ? '' : `${edition}/`}`;
   checkStatus(`${url} 200 HTML`, await get(url), 'text/html');
 }
 
 const skillUrl = `${SITE}/SKILL.md`;
 const skill = await get(skillUrl);
 if (checkStatus(`${skillUrl} 200`, skill)) {
-  const missing = BASE_LABELS.filter((label) => !skill.text.includes(label));
+  const missing = LABELS.filter((label) => !skill.text.includes(label));
   check(
-    `${skillUrl} names ${BASE_LABELS.join(' and ')}`,
+    `${skillUrl} names ${LABELS.join(', ')}`,
     missing.length === 0,
     missing.length ? `missing=${missing.join(',')}` : '',
   );

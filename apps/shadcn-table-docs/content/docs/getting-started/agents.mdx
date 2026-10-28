@@ -9,25 +9,26 @@ description: 'Set up shadcn-table with a coding agent'
 
 The prompt points the agent at [`/SKILL.md`](/SKILL.md): install, the usage rules, where the option references are, and how to pull any docs example into the project. Every example page also has a "Copy prompt" in its menu for that example.
 
-The skill knows both editions of the table: it reads the `style` in `components.json` (`radix-*` or `base-*`) and installs from the matching path of the hosted registry, `/r/radix/` or `/r/base/`. Without a `components.json` it runs `shadcn init` first and asks you for the base.
+The skill knows the three editions of the table: it reads the `style` in `components.json` (`radix-*`, `base-*` or `aria-*`) and installs from the matching path of the hosted registry, `/r/radix/`, `/r/base/` or `/r/aria/`. Without a `components.json` it runs `shadcn init` first and asks you for the base.
 
 ### Registry addresses
 
-One path per shadcn base, item names the same on both:
+One path per shadcn base, item names the same on all three:
 
 ```bash
 pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table.json   # Radix UI
 pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table.json    # Base UI
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json    # React Aria
 ```
 
-Namespace form, registered once per project: `{style}` resolves to the project's own style, so the same `@st/<item>` address works on either base.
+Namespace form, registered once per project: `{style}` resolves to the project's own style, so the same `@st/<item>` address works on every base (`radix-*`, `base-*` and `aria-*` styles).
 
 ```bash
 pnpm dlx shadcn@latest registry add @st=https://www.shadcn-table.com/r/{style}/{name}.json
 pnpm dlx shadcn@latest add @st/shadcn-table
 ```
 
-GitHub fallback when the site is unreachable: `anindosarker/shadcn-table/shadcn-table` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-base` (Base UI).
+GitHub fallback when the site is unreachable: `anindosarker/shadcn-table/shadcn-table` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base` (Base UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
 
 ### Skill
 
@@ -56,7 +57,7 @@ For `CLAUDE.md` or `AGENTS.md` when the skill is not installed:
 - `data` and `columns` given to useShadcnTable must be stable
   (useMemo, useState or module scope).
 - Reinstall: pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/shadcn-table.json --overwrite
-  (<base> is radix or base, from the style in components.json; replaces local edits in that directory).
+  (<base> is radix, base or aria, from the style in components.json; replaces local edits in that directory).
 ```
 
 ### MCP
@@ -67,4 +68,4 @@ The shadcn MCP server browses the registries listed in `components.json`, so reg
 pnpm dlx shadcn@latest mcp init --client claude   # or cursor, vscode, codex, opencode
 ```
 
-**Registry URL to use:** `https://www.shadcn-table.com/r/<base>/registry.json`, with `<base>` `radix` or `base`. The namespace template reaches it through the project's style (`/r/{style}/registry.json`). Available once the hosted registry is deployed.
+**Registry URL to use:** `https://www.shadcn-table.com/r/<base>/registry.json`, with `<base>` `radix`, `base` or `aria`. The namespace template reaches it through the project's style (`/r/{style}/registry.json`). Available once the hosted registry is deployed.

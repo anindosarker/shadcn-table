@@ -16,9 +16,10 @@ const config = {
   // packages/shadcn-table/scripts/registry/hosted.mjs, `pnpm registry:hosted`):
   // the namespace form
   // `@st=https://www.shadcn-table.com/r/{style}/{name}.json` sends the
-  // project's shadcn style (`radix-nova`, `base-sera`, ...), which maps onto
-  // the base directory. `/r/radix/*` and `/r/base/*` are served as they are,
-  // the catalogs `/r/<base>/registry.json` included.
+  // project's shadcn style (`radix-nova`, `base-sera`, `aria-nova`, ...),
+  // which maps onto the base directory. `/r/radix/*`, `/r/base/*` and
+  // `/r/aria/*` are served as they are, the catalogs
+  // `/r/<base>/registry.json` included.
   rewrites: async () => ({
     afterFiles: [
       {
@@ -28,6 +29,10 @@ const config = {
       {
         source: '/r/:style(base-.*)/:name.json',
         destination: '/r/base/:name.json',
+      },
+      {
+        source: '/r/:style(aria-.*)/:name.json',
+        destination: '/r/aria/:name.json',
       },
       // PostHog ingest reverse proxy (components/posthog-provider.tsx sets
       // api_host '/ingest'): the events leave from this origin, so ad

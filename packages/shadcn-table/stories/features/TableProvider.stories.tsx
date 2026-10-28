@@ -264,6 +264,9 @@ export const PortalsReadContext = {
     expect(body.getByRole('dialog').querySelector('input')).not.toBeNull();
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(body.queryByRole('dialog')).toBeNull());
+    // React Aria opens a tooltip on hover only in pointer modality, which the
+    // Escape left as keyboard; a pointer move onto another element resets it.
+    await userEvent.hover(canvas.getByText('Mason'));
     await userEvent.hover(canvas.getByLabelText('Toggle density'));
     await waitFor(() =>
       expect(body.getAllByText('Toggle density').length).toBeGreaterThan(0),

@@ -12,7 +12,7 @@ import { cn } from '@/lib/cn';
 import { trackBaseSwitched, type Surface } from '@/lib/analytics';
 
 /**
- * The site-wide base (Radix UI | Base UI) is one fumadocs tab group, `base`,
+ * The site-wide base (Radix UI | Base UI | React Aria) is one fumadocs tab group, `base`,
  * persisted the way fumadocs persists a `groupId` (sessionStorage, then
  * localStorage): every control here is a fumadocs Tabs in that group, so a
  * click on any of them switches the rest through fumadocs' own listeners.
@@ -23,7 +23,11 @@ import { trackBaseSwitched, type Surface } from '@/lib/analytics';
 export const BASE_GROUP_ID = 'base';
 
 /** Tab values, as fumadocs' simple-mode Tabs escape the labels. */
-const TAB_VALUES: Record<Base, string> = { radix: 'radix', base: 'base-ui' };
+const TAB_VALUES: Record<Base, string> = {
+  radix: 'radix',
+  base: 'base-ui',
+  aria: 'react-aria',
+};
 
 const fromTab = (value: string | null): Base | null =>
   bases.find((base) => TAB_VALUES[base] === value) ?? null;
@@ -150,16 +154,17 @@ export const BaseSwitch = ({ className }: { className?: string }) => {
 };
 
 /**
- * Radix UI | Base UI tabs around content that differs per base (the install
+ * Radix UI | Base UI | React Aria tabs around content that differs per base (the install
  * commands). Same group as the header switch, so either changes both.
  */
 export const BaseTabs = ({
   radix,
   base,
+  aria,
   className,
 }: Record<Base, ReactNode> & { className?: string }) => {
   const tabs = useBaseTabs('tabs');
-  const content: Record<Base, ReactNode> = { radix, base };
+  const content: Record<Base, ReactNode> = { radix, base, aria };
   return (
     <Tabs
       groupId={BASE_GROUP_ID}
