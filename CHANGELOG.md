@@ -6,7 +6,7 @@ written while the work happens, under `Unreleased`; `pnpm release <version>`
 renames that heading to the version and the date, and the release workflow
 publishes the section as the GitHub release notes.
 
-## Unreleased
+## 0.4.0 - 2026-10-28
 
 ### Breaking
 
