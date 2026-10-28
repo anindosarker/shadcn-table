@@ -1,19 +1,16 @@
 import * as React from 'react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { getCommonTooltipProps } from '@/components/ui/shadcn-table/shared/utils/style.utils';
+import { assignRef } from '@/components/ui/shadcn-table/shared/utils/utils';
 
-export interface ST_TooltipProps
-  extends Pick<
-    React.ComponentProps<typeof Tooltip>,
-    'delayDuration' | 'disableHoverableContent'
-  > {
+export interface ST_TooltipProps {
   title?: React.ReactNode;
   children: React.ReactElement;
-  side?: React.ComponentProps<typeof TooltipContent>['side'];
+  side?: React.ComponentProps<typeof Tooltip>['placement'];
+  /** Open delay in ms. Maps to React Aria TooltipTrigger `delay`. */
+  delayDuration?: number;
+  /** React Aria tooltips are never hoverable; `true` closes on pointer leave without the close delay. */
+  disableHoverableContent?: boolean;
   disableHoverListener?: boolean;
   open?: boolean;
 }
@@ -25,7 +22,7 @@ const LABEL_TARGET_SELECTOR =
   'button, a[href], input, select, textarea, [role="button"], [role="switch"], [role="checkbox"]';
 
 /**
- * Radix Tooltip does not set `aria-label` on an unnamed child. Give the
+ * React Aria Tooltip does not set `aria-label` on an unnamed child. Give the
  * trigger (or the control it wraps) the title string as its accessible name
  * when it has no text content and no label of its own.
  */
@@ -60,23 +57,42 @@ export const ST_Tooltip = ({
     disableHoverableContent,
     side: commonSide,
   } = { ...getCommonTooltipProps(side), ...rest };
-  const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const triggerRef = React.useRef<HTMLElement | null>(null);
   React.useEffect(() => applyTooltipLabel(triggerRef.current, title));
+
+  // TooltipTrigger takes no ref: the child's own ref is merged with the
+  // trigger ref, read through a ref so the callback keeps one identity.
+  const trigger = children as React.ReactElement<{
+    ref?: React.Ref<HTMLElement>;
+  }>;
+  const childRef = React.useRef(trigger.props.ref);
+  childRef.current = trigger.props.ref;
+  const attachRef = React.useCallback((node: HTMLElement) => {
+    triggerRef.current = node;
+    const ref = childRef.current;
+    const cleanup = assignRef(ref, node);
+    return () => {
+      if (typeof cleanup === 'function') {
+        cleanup();
+      } else {
+        assignRef(ref, null);
+      }
+      triggerRef.current = null;
+    };
+  }, []);
 
   if (disableHoverListener || (!title && title !== 0)) {
     return <>{children}</>;
   }
 
   return (
-    <Tooltip
-      open={open}
-      delayDuration={delayDuration}
-      disableHoverableContent={disableHoverableContent}
+    <TooltipTrigger
+      isOpen={open}
+      delay={delayDuration}
+      closeDelay={disableHoverableContent ? 0 : undefined}
     >
-      <TooltipTrigger asChild ref={triggerRef}>
-        {children}
-      </TooltipTrigger>
-      <TooltipContent side={commonSide}>{title}</TooltipContent>
-    </Tooltip>
+      {React.cloneElement(trigger, { ref: attachRef })}
+      <Tooltip placement={commonSide}>{title}</Tooltip>
+    </TooltipTrigger>
   );
 };
