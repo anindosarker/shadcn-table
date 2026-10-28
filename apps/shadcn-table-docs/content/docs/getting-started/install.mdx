@@ -52,6 +52,15 @@ components/ui/
 
 Your global stylesheet is unchanged. The table's animations ship inside its components as a `<style>` tag that React 19 hoists into `<head>` (React 18 renders it in place). Under a strict Content Security Policy, allow it with a nonce or `style-src 'unsafe-inline'`.
 
+<Callout type="warn" title="Known issue on React Aria">
+  shadcn's `aria-nova` `label` part starts with an unused `import * as React from "react"`.
+  Vite's React template type-checks with `noUnusedLocals`, so a fresh
+  `shadcn init --template vite --base aria` project reports `TS6133` in
+  `components/ui/label.tsx`. The file is your project's own after `shadcn add`: delete that
+  import line, or set `"noUnusedLocals": false` in `tsconfig.app.json`. Not a shadcn-table
+  defect.
+</Callout>
+
 </Step>
 
 <Step>
