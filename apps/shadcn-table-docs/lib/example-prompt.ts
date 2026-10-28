@@ -2,11 +2,8 @@
 // from server components (ExampleSnippet), never from client code.
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import {
-  findExamplePage,
-  loadExamplePages,
-  readExampleExportName,
-} from './example-pages.mjs';
+import { editionItemName } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import { findExamplePage, loadExamplePages } from './example-pages.mjs';
 import { readExampleFiles } from './example-source';
 import {
   baseLabels,
@@ -26,15 +23,20 @@ interface RegistryItem {
 /** Where `shadcn add` puts the example files (registry.json `target`). */
 const INSTALL_DIR = 'components/examples';
 
-async function readRegistryItem(name: string): Promise<RegistryItem> {
+/** The base's committed item for examples/<base>/<name> (`example-<name>`, `-base`, `-aria`). */
+async function readRegistryItem(
+  name: string,
+  base: Base,
+): Promise<RegistryItem> {
   const file = path.join(process.cwd(), 'registry.json');
   const registry = JSON.parse(await fs.readFile(file, 'utf8')) as {
     items: RegistryItem[];
   };
-  const item = registry.items.find((i) => i.name === `example-${name}`);
+  const itemName = editionItemName(`example-${name}`, base);
+  const item = registry.items.find((i) => i.name === itemName);
   if (!item) {
     throw new Error(
-      `registry.json has no item "example-${name}"; run pnpm registry:items`,
+      `registry.json has no item "${itemName}"; run pnpm registry:items`,
     );
   }
   return item;
@@ -176,10 +178,10 @@ function skipString(source: string, start: number) {
 }
 
 /**
- * Prompt a reader pastes into their coding agent to add examples/<name> to
- * their project: install command (from the hosted registry of the given
- * base), import path, docs to read before changing table options, and how
- * to verify.
+ * Prompt a reader pastes into their coding agent to add
+ * examples/<base>/<name> to their project: install command (from the hosted
+ * registry of the given base), import path, docs to read before changing
+ * table options, and how to verify.
  */
 export async function buildExamplePrompt({
   name,
@@ -188,13 +190,12 @@ export async function buildExamplePrompt({
   name: string;
   base?: Base;
 }): Promise<string> {
-  const [item, files, pages, exportName] = await Promise.all([
-    readRegistryItem(name),
-    readExampleFiles(name),
+  const [item, files, pages] = await Promise.all([
+    readRegistryItem(name, base),
+    readExampleFiles(name, base),
     loadExamplePages(path.join(process.cwd(), 'content', 'docs', 'examples')),
-    readExampleExportName(path.join(process.cwd(), 'examples', name)),
   ]);
-  const page = findExamplePage({ slug: name, exportName }, pages);
+  const page = findExamplePage(name, pages);
   const deps = item.dependencies ?? [];
   // The table can live in any file of a multi-file example: the first file
   // with a useShadcnTable call wins.
