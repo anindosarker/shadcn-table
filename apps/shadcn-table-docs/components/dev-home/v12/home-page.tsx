@@ -11,6 +11,7 @@ import { Footer } from './footer';
 import { Nav } from './nav';
 import { RiseFigure } from './rise-figure';
 import { SignalDemo } from './signal-demo';
+import { ThemeDemo } from './theme-demo';
 import '@/components/dev-home/v4/v4.css';
 import '@/components/dev-home/v5/v5.css';
 import '@/components/dev-home/v7/v7.css';
@@ -18,7 +19,7 @@ import './v12.css';
 
 /**
  * The homepage: v7's dune hero recoloured by the site theme, the replaying
- * demo, the feature tiles and the install strip. Rendered at "/" and at
+ * demo, the theming demo, the feature tiles and the install strip. Rendered at "/" and at
  * /dev/12.
  */
 export function HomePage({
@@ -75,6 +76,36 @@ export function HomePage({
                 <SignalDemo />
               </RiseFigure>
             </div>
+          </div>
+        </section>
+
+        <section
+          className="v12-section v12-theming"
+          aria-labelledby="v12-theming-title"
+        >
+          <div className="v4-shell">
+            <div className="v12-head">
+              <div>
+                <p className="v12-label">{'//'} theming</p>
+                <h2 id="v12-theming-title" className="v5-h2">
+                  Change the theme.{' '}
+                  <span className="v12-accent">Not the table.</span>
+                </h2>
+              </div>
+              <div>
+                <p className="v5-section-lede">
+                  Your table automatically adapts to your shadcn/ui theme. No
+                  extra configuration or code changes needed.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="v12-wide">
+            {/* no caption: the heading above names it, and the section fits
+             * one screen */}
+            <RiseFigure>
+              <ThemeDemo />
+            </RiseFigure>
           </div>
         </section>
 

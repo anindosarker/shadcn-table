@@ -14,6 +14,14 @@ import { Button } from '@/components/ui-radix/button';
 export interface ThemeTableProps {
   /** Compact mode for the grid variant: fewer rows and columns, no toolbar. */
   compact?: boolean;
+  /** Rows per page; defaults to 4 in compact mode, else 5. */
+  pageSize?: number;
+  /** Columns hidden at first, by accessor key; the visibility menu can
+   * show them again. Remount (key) to apply a new set. */
+  hiddenColumns?: readonly (keyof Member)[];
+  /** The top toolbar (Invite, Export, search, filters); off in compact
+   * mode by default. */
+  toolbar?: boolean;
 }
 
 type Status = 'Active' | 'Invited' | 'Paused' | 'Removed';
@@ -101,7 +109,12 @@ const MEMBERS: Member[] = [
  * checkboxes, the row actions menu, filter selects, pagination). It holds
  * no theme state; the ThemeScope around it does.
  */
-export default function ThemeTable({ compact = false }: ThemeTableProps) {
+export default function ThemeTable({
+  compact = false,
+  pageSize = compact ? 4 : 5,
+  hiddenColumns = [],
+  toolbar = !compact,
+}: ThemeTableProps) {
   const columns = useMemo<ST_ColumnDef<Member>[]>(
     () => [
       { header: 'Name', accessorKey: 'name', size: compact ? 100 : 160 },
@@ -141,7 +154,7 @@ export default function ThemeTable({ compact = false }: ThemeTableProps) {
     enableRowSelection: true,
     enableRowActions: true,
     positionActionsColumn: 'last',
-    enableTopToolbar: !compact,
+    enableTopToolbar: toolbar,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     // compact fits a ~300px card: columns fill the width, slim display
@@ -155,9 +168,17 @@ export default function ThemeTable({ compact = false }: ThemeTableProps) {
       },
       stPaginationProps: { showRowsPerPage: false },
     }),
+    // the size select needs the custom size among its options
+    ...(!compact &&
+      pageSize !== 5 && {
+        stPaginationProps: { rowsPerPageOptions: [pageSize, MEMBERS.length] },
+      }),
     initialState: {
       density: 'compact',
-      pagination: { pageIndex: 0, pageSize: compact ? 4 : 5 },
+      pagination: { pageIndex: 0, pageSize },
+      columnVisibility: Object.fromEntries(
+        hiddenColumns.map((key) => [key, false]),
+      ),
     },
     renderRowActionMenuItems: () => [
       <ST_ActionMenuItem key="edit" icon={<PencilIcon />} label="Edit" />,
