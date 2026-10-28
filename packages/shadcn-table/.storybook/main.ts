@@ -1,19 +1,19 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
+import { resolveEdition } from '../scripts/registry/editions.mjs';
 
 const require = createRequire(import.meta.url);
 
 // Which tree this Storybook shows (vite.config.ts aliases `@/` by the same
 // variable). Handed to the manager and the preview as a global so themes.ts
-// can label the chrome: the Base UI build is served under /base/ next to the
-// Radix one, and the title is what tells them apart. The manager also gets
+// can label the chrome: the Base UI and React Aria builds are served under
+// /base/ and /aria/ next to the Radix one, and the title is what tells them
+// apart. The manager also gets
 // whether this is `storybook dev` (one port per edition) or a static build
 // (one directory per edition), which decides where its edition button goes
 // (edition-tool.ts).
-const EDITIONS = ['radix', 'base', 'aria'] as const;
-const ST_BASE =
-  EDITIONS.find((edition) => edition === process.env.ST_BASE) ?? 'radix';
+const ST_BASE = resolveEdition(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
 const devScript = (dev: boolean) =>
   `<script>window.__ST_DEV__ = ${JSON.stringify(dev)};</script>`;
@@ -43,8 +43,8 @@ const config: StorybookConfig = {
   managerHead: (head, { configType }) =>
     `${head}${baseScript}${devScript(configType !== 'PRODUCTION')}`,
   previewHead: (head) => `${head}${baseScript}`,
-  // Storybook keys its Vite dep cache by the config dir alone, so the Radix
-  // and Base UI servers (storybook:all) would share one optimized-deps dir
+  // Storybook keys its Vite dep cache by the config dir alone, so the
+  // edition servers (storybook:all) would share one optimized-deps dir
   // and invalidate each other ("Failed to fetch dynamically imported
   // module"). One cache per edition.
   viteFinal: (config) =>

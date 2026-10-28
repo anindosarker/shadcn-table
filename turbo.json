@@ -29,6 +29,9 @@
     },
     "test:base": {
       "cache": false
+    },
+    "test:aria": {
+      "cache": false
     }
   }
 }

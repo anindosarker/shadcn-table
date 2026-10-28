@@ -3,20 +3,23 @@
 // `pnpm registry:items` (the docs `build` script runs all three before
 // `next build`).
 //
-// Emits the hosted registries the docs site serves, one directory per base:
+// Emits the hosted registries the docs site serves, one directory per
+// edition (EDITIONS in lib.mjs):
 //   apps/shadcn-table-docs/public/r/radix/   from the Radix items
 //   apps/shadcn-table-docs/public/r/base/    from the Base UI items
-// Each directory gets its own registry.json catalog (the base's main item, its
-// locale items and every example item) and the resolved item files `shadcn
-// build` produces from it. The item names are the same in both directories
-// (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`), so the
-// namespace form `@st=https://www.shadcn-table.com/r/{style}/{name}.json`
-// resolves `@st/shadcn-table` to the consumer's own base. Example items carry
-// no main-item dependency, so their JSON is identical in both directories.
+//   apps/shadcn-table-docs/public/r/aria/    from the React Aria items
+// Each directory gets its own registry.json catalog (the edition's main item,
+// its locale items and every example item) and the resolved item files
+// `shadcn build` produces from it. The item names are the same in every
+// directory (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`),
+// so the namespace form `@st=https://www.shadcn-table.com/r/{style}/{name}.json`
+// resolves `@st/shadcn-table` to the consumer's own edition. Example items
+// carry no main-item dependency, so their JSON is identical in every
+// directory.
 //
 // Reads the committed registry.json files, which keep the GitHub addresses;
 // only the hosted copies get hosted addresses: the locale items depend on
-// `<HOSTED_URL>/<base>/shadcn-table.json`, and every file path is made
+// `<HOSTED_URL>/<edition>/shadcn-table.json`, and every file path is made
 // relative to the repo root so one `shadcn build` run resolves both the
 // library and the example sources. REGISTRY_HOSTED_URL (or NEXT_PUBLIC_SITE_URL
 // plus /r) overrides the default https://www.shadcn-table.com/r (a preview
@@ -24,7 +27,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { DOCS, PKG, ROOT } from './lib.mjs';
+import { DOCS, EDITIONS, editionItems, PKG, ROOT } from './lib.mjs';
 
 const OUT_ROOT = path.join(DOCS, 'public/r');
 // REGISTRY_HOSTED_URL wins; otherwise the docs origin (NEXT_PUBLIC_SITE_URL,
@@ -41,11 +44,7 @@ const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 const library = readJson(path.join(PKG, 'registry.json'));
 const examples = readJson(path.join(DOCS, 'registry.json'));
 
-// Committed item name per base; the hosted name is `shadcn-table` for both.
-const BASES = [
-  { base: 'radix', committedName: 'shadcn-table' },
-  { base: 'base', committedName: 'shadcn-table-base' },
-];
+// The hosted name of every edition's main item, whatever its committed name.
 const HOSTED_NAME = 'shadcn-table';
 
 const prefixPaths = (item, prefix) => ({
@@ -60,19 +59,16 @@ const exampleItems = examples.items.map((item) =>
   prefixPaths(item, path.relative(ROOT, DOCS)),
 );
 
-for (const { base, committedName } of BASES) {
-  const outDir = path.join(OUT_ROOT, base);
-  const localePrefix = `${committedName}-locale-`;
-  const main = library.items.find((item) => item.name === committedName);
-  const locales = library.items.filter((item) =>
-    item.name.startsWith(localePrefix),
-  );
+for (const edition of EDITIONS) {
+  const outDir = path.join(OUT_ROOT, edition);
+  const { main, locales } = editionItems(library, edition);
   if (!main || locales.length === 0) {
     console.error(
-      `hosted.mjs: ${committedName} or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
+      `hosted.mjs: the ${edition} main item or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
     );
     process.exit(1);
   }
+  const localePrefix = `${main.name}-locale-`;
 
   const libPrefix = path.relative(ROOT, PKG);
   const hostedMain = prefixPaths({ ...main, name: HOSTED_NAME }, libPrefix);
@@ -81,7 +77,7 @@ for (const { base, committedName } of BASES) {
       {
         ...item,
         name: `${HOSTED_NAME}-locale-${item.name.slice(localePrefix.length)}`,
-        registryDependencies: [`${HOSTED_URL}/${base}/${HOSTED_NAME}.json`],
+        registryDependencies: [`${HOSTED_URL}/${edition}/${HOSTED_NAME}.json`],
       },
       libPrefix,
     ),
@@ -89,7 +85,7 @@ for (const { base, committedName } of BASES) {
 
   const registry = {
     $schema: 'https://ui.shadcn.com/schema/registry.json',
-    name: `${library.name}-${base}`,
+    name: `${library.name}-${edition}`,
     homepage: library.homepage,
     items: [hostedMain, ...hostedLocales, ...exampleItems],
   };

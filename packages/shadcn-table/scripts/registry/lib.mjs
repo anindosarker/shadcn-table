@@ -1,7 +1,9 @@
-// Shared by the per-base item definitions (registry/<base>/registry.ts):
-// lists an item's files (the tree's library files plus the forked parts),
-// derives the registryDependencies from the `@/components/ui/<part>` imports
-// and pins npm versions from package.json. The file list is never hand-maintained.
+// Shared by the registry scripts and the per-edition item definitions
+// (registry/<edition>/registry.ts): the edition list, then the item builder,
+// which lists an item's files (the tree's library files plus the forked
+// parts), derives the registryDependencies from the `@/components/ui/<part>`
+// imports and pins npm versions from package.json. The file list is never
+// hand-maintained.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,6 +19,13 @@ export const ROOT = path.resolve(PKG, '..', '..');
 export const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 // The library below a tree's components/ui directory.
 const LIB_REL = 'components/ui/shadcn-table';
+// The edition list (editions.mjs), re-exported for the registry scripts.
+export {
+  EDITION_LABELS,
+  EDITIONS,
+  REFERENCE_EDITION,
+  resolveEdition,
+} from './editions.mjs';
 export const GITHUB_REPO = 'anindosarker/shadcn-table';
 export const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
 // `--dev` builds a local registry under .dev/ (gitignored) whose locale items
@@ -163,4 +172,28 @@ export const baseItems = ({
   });
 
   return [main, ...locales];
+};
+
+/**
+ * One edition's items in a catalog built from the committed registry.json:
+ * the items whose files live in registry/<edition>, split into the main item
+ * and its locale items (named `<main>-locale-<code>`).
+ *
+ * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
+ * @param {string} edition
+ */
+export const editionItems = (catalog, edition) => {
+  const own = catalog.items.filter((item) =>
+    item.files.every((file) => file.path.startsWith(`registry/${edition}/`)),
+  );
+  const main = own.find((item) =>
+    own.every(
+      (other) =>
+        other === item || other.name.startsWith(`${item.name}-locale-`),
+    ),
+  );
+  return {
+    main,
+    locales: own.filter((item) => item !== main),
+  };
 };

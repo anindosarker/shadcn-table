@@ -2,7 +2,9 @@ import { type DragEvent, type RefObject } from 'react';
 import {
   type ButtonProps,
   type ST_Column,
+  type ST_ColumnDef,
   type ST_RowData,
+  type ST_TableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
 import { reorderColumn } from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
@@ -21,17 +23,26 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
   const table = column.table;
   const {
-    options: { enableColumnOrdering, stColumnDragHandleProps },
+    options: { enableColumnOrdering },
     setColumnOrder,
     setColumnPinning,
     setDraggingColumn,
     setHoveredColumn,
   } = table;
+  // table.options and the column def hold the part props tree-neutral
+  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
+  // ST_ColumnDef) type them for this tree's Button.
+  const {
+    stColumnDragHandleProps,
+  }: Pick<ST_TableOptions<TData>, 'stColumnDragHandleProps'> = table.options;
   const { columnDef } = column;
+  const {
+    stColumnDragHandleProps: columnColumnDragHandleProps,
+  }: Pick<ST_ColumnDef<TData>, 'stColumnDragHandleProps'> = columnDef;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stColumnDragHandleProps, { column, table }),
-    ...parseFromValuesOrFunc(columnDef.stColumnDragHandleProps, {
+    ...parseFromValuesOrFunc(columnColumnDragHandleProps, {
       column,
       table,
     }),

@@ -1,41 +1,75 @@
-import { createElement } from 'react';
+import { createElement, Fragment } from 'react';
 import { IconButton } from 'storybook/internal/components';
 import { addons, types, useStorybookState } from 'storybook/manager-api';
-import { ST_BASE, ST_DEV, ST_OTHER_BASE_LABEL } from './themes';
+import {
+  EDITION_LABELS,
+  EDITIONS,
+  ST_BASE,
+  ST_DEV,
+  staticEditionRoot,
+  type Edition,
+} from './themes';
 
 const ADDON_ID = 'shadcn-table/edition';
 
 /**
- * The other edition's URL for the same story. Static builds sit side by
- * side, the Base UI one under base/ (`storybook:build:base`), so the link is
- * relative; `storybook dev` serves the Radix UI edition one port below the
- * Base UI one (6006 and 6007 in package.json), so the link swaps the port.
+ * Another edition's URL for the same story. Static builds sit side by side
+ * (radix at the root, the others under <edition>/), so the link is relative;
+ * `storybook dev` serves the editions on consecutive ports in EDITIONS order
+ * (6006, 6007 and 6008 in package.json), so the link shifts the port.
  * `path` is the manager's `?path=` value, which Storybook does not encode.
  */
 export function editionHref(
+  target: Edition,
   path: string,
   location: Location = window.location,
 ) {
   const query = `?path=${path}`;
-  if (!ST_DEV) return `${ST_BASE === 'base' ? '../' : './base/'}${query}`;
-  const port = Number(location.port) + (ST_BASE === 'base' ? -1 : 1);
+  if (!ST_DEV) return `${staticEditionRoot(target)}${query}`;
+  const port =
+    Number(location.port) +
+    EDITIONS.indexOf(target) -
+    EDITIONS.indexOf(ST_BASE);
   return `${location.protocol}//${location.hostname}:${port}/${query}`;
 }
 
+/**
+ * Three-way edition switch: the current edition marked active, the other two
+ * linking to the same story in their own Storybook.
+ */
 function EditionTool() {
   const { path } = useStorybookState();
   return createElement(
-    IconButton,
-    { asChild: true, ariaLabel: false },
-    createElement(
-      'a',
-      {
-        href: editionHref(path),
-        target: '_top',
-        title: `Open this story in the ${ST_OTHER_BASE_LABEL} edition`,
-        'data-edition-link': '',
-      },
-      ST_OTHER_BASE_LABEL,
+    Fragment,
+    null,
+    ...EDITIONS.map((edition) =>
+      edition === ST_BASE
+        ? createElement(
+            IconButton,
+            {
+              key: edition,
+              active: true,
+              ariaLabel: false,
+              title: `This story in the ${EDITION_LABELS[edition]} edition`,
+              'aria-current': 'page',
+              'data-edition-current': '',
+            },
+            EDITION_LABELS[edition],
+          )
+        : createElement(
+            IconButton,
+            { key: edition, asChild: true, ariaLabel: false },
+            createElement(
+              'a',
+              {
+                href: editionHref(edition, path),
+                target: '_top',
+                title: `Open this story in the ${EDITION_LABELS[edition]} edition`,
+                'data-edition-link': edition,
+              },
+              EDITION_LABELS[edition],
+            ),
+          ),
     ),
   );
 }

@@ -15,9 +15,12 @@ const eslintConfig = defineConfig([
     'components/ui-radix/**',
     //installed Base UI copy of the table and its parts (lib:install base), same source
     'components/ui-base/**',
+    //installed React Aria copy of the table and its parts (lib:install aria), same source
+    'components/ui-aria/**',
     //generated per-base variants of the examples (lib/example-variants.mjs)
     'examples/.radix/**',
     'examples/.base/**',
+    'examples/.aria/**',
   ]),
   {
     //examples mirror MRT's; loading data and reading storage after mount is intentional there

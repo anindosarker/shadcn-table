@@ -101,9 +101,11 @@ export type DialogProps = Pick<
   ComponentPropsWithRef<typeof DialogContent>;
 
 export interface ST_PartPropTypes {
+  button: ButtonProps;
   checkbox: CheckboxProps;
   dialog: DialogProps;
   radio: RadioProps;
+  select: SelectProps;
   slider: SliderProps;
 }
 
@@ -413,7 +415,12 @@ export type ST_TableState<TData extends ST_RowData> = Omit<
   hoveredRow: Partial<ST_Row<TData>> | null;
 };
 
-type ST_ColumnDef_PartKeys = 'stFilterCheckboxProps' | 'stFilterSliderProps';
+type ST_ColumnDef_PartKeys =
+  | 'stColumnActionsButtonProps'
+  | 'stColumnDragHandleProps'
+  | 'stCopyButtonProps'
+  | 'stFilterCheckboxProps'
+  | 'stFilterSliderProps';
 
 export interface ST_ColumnDef<
   TData extends ST_RowData,
@@ -567,12 +574,20 @@ export type ST_DisplayColumnIds =
 type ST_TableOptions_PartKeys =
   | 'defaultDisplayColumn'
   | 'displayColumnDefOptions'
+  | 'stColumnActionsButtonProps'
+  | 'stColumnDragHandleProps'
+  | 'stCopyButtonProps'
   | 'stCreateRowModalProps'
   | 'stEditRowDialogProps'
+  | 'stExpandAllButtonProps'
+  | 'stExpandButtonProps'
   | 'stFilterCheckboxProps'
   | 'stFilterSliderProps'
+  | 'stPaginationProps'
+  | 'stRowDragHandleProps'
   | 'stSelectAllCheckboxProps'
-  | 'stSelectCheckboxProps';
+  | 'stSelectCheckboxProps'
+  | 'stToolbarAlertBannerChipProps';
 
 export interface ST_TableOptions<
   TData extends ST_RowData,

@@ -3,8 +3,10 @@
  * `pnpm lib:install <base>`: installs one base's copy of the library for the
  * rendered examples, under components/ui-<base>/ (the table in
  * components/ui-<base>/shadcn-table/ plus the shadcn parts it imports,
- * installed from the base's style). The generated example variants
- * (lib/example-variants.mjs) import from there, so a reader on either base
+ * installed from the base's style, `<base>-nova`). <base> is any edition
+ * (packages/shadcn-table/scripts/registry/editions.mjs); its item is the
+ * one registry/<base>/ holds in the committed registry.json. The generated example variants
+ * (lib/example-variants.mjs) import from there, so a reader on any base
  * tab sees that base's edition render.
  *
  * Source: the built item packages/shadcn-table/public/r/<item>.json
@@ -14,10 +16,11 @@
  * GitHub dependency. The item is rewritten on the way in: its
  * `@/components/ui/` imports point at `@/components/ui-<base>/` (the CLI
  * rewrites only `@/registry/...` specifiers). Each copy renders its own
- * keyframes in a hoisted style element; on the Base UI base the
- * st-collapsible-* keyframe names and the st-collapsible style href become
- * st-base-collapsible so they do not collide with the Radix copy's (keyframe
- * names are global and React keeps one style per href).
+ * keyframes in a hoisted style element; on every base but the reference
+ * (radix) the st-collapsible-* keyframe names and the st-collapsible style href
+ * become st-<base>-collapsible (st-base-collapsible, st-aria-collapsible) so
+ * they do not collide with the Radix copy's (keyframe names are global and
+ * React keeps one style per href).
  * `shadcn add` then runs with a temporary components.json (the base's style,
  * `ui` alias `@/components/ui-<base>`), so the bare registryDependencies
  * install as that base's parts into the same folder. The real
@@ -34,22 +37,17 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  EDITIONS,
+  editionItems,
+  REFERENCE_EDITION,
+} from '../../../packages/shadcn-table/scripts/registry/lib.mjs';
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const LIB_R = path.join(
-  APP,
-  '..',
-  '..',
-  'packages',
-  'shadcn-table',
-  'public',
-  'r',
-);
-/** Committed item name and shadcn style per base. */
-const BASES = {
-  radix: { item: 'shadcn-table', style: 'radix-nova' },
-  base: { item: 'shadcn-table-base', style: 'base-nova' },
-};
+const LIB = path.join(APP, '..', '..', 'packages', 'shadcn-table');
+const LIB_R = path.join(LIB, 'public', 'r');
+/** The shadcn style each base installs with: `<base>-<STYLE>`. */
+const STYLE = 'nova';
 /** Parts the examples import that the item itself does not depend on. */
 const EXTRA_PARTS = ['table'];
 const COMPONENTS_JSON = path.join(APP, 'components.json');
@@ -62,13 +60,22 @@ const KEEP = [
 ].map((rel) => path.join(APP, rel));
 
 const base = process.argv[2];
-if (!BASES[base]) {
+if (!EDITIONS.includes(base)) {
+  console.error(`usage: node scripts/install.mjs <${EDITIONS.join('|')}>`);
+  process.exit(1);
+}
+/** The base's committed item name, from the library's registry.json. */
+const itemName = editionItems(
+  JSON.parse(fs.readFileSync(path.join(LIB, 'registry.json'), 'utf8')),
+  base,
+).main?.name;
+if (!itemName) {
   console.error(
-    `usage: node scripts/install.mjs <${Object.keys(BASES).join('|')}>`,
+    `install: no ${base} item in packages/shadcn-table/registry.json`,
   );
   process.exit(1);
 }
-const { item: itemName, style } = BASES[base];
+const style = `${base}-${STYLE}`;
 const uiAlias = `@/components/ui-${base}`;
 const uiDir = path.join(APP, 'components', `ui-${base}`);
 const itemFile = path.join(LIB_R, `${itemName}.json`);
@@ -95,10 +102,10 @@ for (const file of item.files) {
     /(['"])@\/components\/ui\//g,
     `$1${uiAlias}/`,
   );
-  if (base === 'base') {
+  if (base !== REFERENCE_EDITION) {
     file.content = file.content.replace(
       /\bst-collapsible\b/g,
-      'st-base-collapsible',
+      `st-${base}-collapsible`,
     );
   }
 }
