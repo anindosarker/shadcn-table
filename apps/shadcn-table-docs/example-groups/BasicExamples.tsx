@@ -1,8 +1,10 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import BasicExample from '@/examples/basic';
-import MinimalExample from '@/examples/minimal';
-import AdvancedExample from '@/examples/advanced';
-import CustomHeadlessExample from '@/examples/custom-headless';
+import {
+  BasicExample,
+  MinimalExample,
+  AdvancedExample,
+  CustomHeadlessExample,
+} from '@/examples/map';
 
 const BasicExamples = ({ isPage = false }) => (
   <ExampleTabs

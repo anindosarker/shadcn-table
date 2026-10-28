@@ -1,31 +1,18 @@
 #!/usr/bin/env node
 /**
- * Per-base variants of the docs examples. examples/<slug>/ is base-neutral
- * source that imports `@/components/ui/...` (the path a user has after
- * `shadcn add`; the code view shows it as is). For each base, every source
- * file of examples/<slug>/ (TS.tsx, helpers, data; not the index.tsx docs
- * wrapper) is rewritten into examples/<variant dir>/<slug>/* (gitignored,
- * folder names in lib/example-variant-dir.mjs) for that base's installed copy
- * of the table and its shadcn parts (`pnpm lib:install <base>`, under
- * components/ui-<base>): `@/components/ui/` imports point at
- * `@/components/ui-<base>/`, and on the Base UI base Radix's `asChild` on a
- * part becomes Base UI's `render` prop (the one Radix-only prop the examples
- * use). On the React Aria base the part props the examples use are renamed to
- * the aria parts' names (rewriteAriaParts):
- * - `<Button disabled>` to `<Button isDisabled>`
- * - `<RadioGroup onValueChange>` to `<RadioGroup onChange>` (both call it
- *   with the selected value as a string)
- * - `<Tooltip><TooltipTrigger asChild>{trigger}</TooltipTrigger>
- *   <TooltipContent>{content}</TooltipContent></Tooltip>` to
- *   `<TooltipTrigger>{trigger}<Tooltip>{content}</Tooltip></TooltipTrigger>`
- *   (the aria TooltipTrigger takes the trigger and the Tooltip as its two
- *   children), and `TooltipContent` dropped from the tooltip import
- * They are exact-match string and regex transforms, no AST: a tag's opening
- * tag is found by scanning to its closing `>` outside `{...}` and quotes, and
- * only attribute names at that level are renamed. Anything they do not match
- * keeps the Radix shape and fails the type check, on purpose.
- * components/example-variant.tsx lazy-loads the variant for the
- * selected base; the output is formatted with the repo's prettier config.
+ * Per-base variants of the docs examples. examples/<edition>/<slug>/ is that
+ * edition's hand-written source (packages/shadcn-table/scripts/registry/editions.mjs
+ * lists the editions, pnpm check:bases keeps the three sets in step). It
+ * imports `@/components/ui/...`, the path a user has after `shadcn add`; the
+ * code view shows it as is. The docs app installs the three library copies
+ * side by side (`pnpm lib:install <base>`, under components/ui-<base>), so
+ * for each base every source file of examples/<base>/<slug>/ is copied to
+ * examples/<variant dir>/<slug>/* (gitignored, folder names in
+ * lib/example-variant-dir.mjs) with its `@/components/ui/` imports pointed
+ * at `@/components/ui-<base>/`. Nothing else changes: an example that needs
+ * other code on a base has it written in that base's folder.
+ * components/example-variant.tsx lazy-loads the variant for the selected
+ * base; the output is formatted with the repo's prettier config.
  *
  * Runs before `next build` and `next dev` (package.json `build`, `predev`)
  * and from `pnpm examples:variants`. Stale variant folders are removed.
@@ -34,7 +21,6 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
-import ts from 'typescript';
 import { listExampleFiles } from './example-files.mjs';
 import { VARIANT_DIRS } from './example-variant-dir.mjs';
 
@@ -54,194 +40,41 @@ export const rewriteImports = (source, base) =>
   );
 
 /**
- * `<Trigger asChild><Child {...props}>{content}</Child></Trigger>` to
- * `<Trigger render={<Child {...props} />}>{content}</Trigger>`, the Base UI
- * shape (its `render` prop takes the element, the trigger's children land
- * inside it). Only an element whose single child is an element qualifies;
- * anything else keeps `asChild` and fails the type check, on purpose.
- * @param {string} source
- * @param {string} fileName
- */
-export const rewriteAsChild = (source, fileName) => {
-  let text = source;
-  // Outer edits first; a rewritten subtree is scanned again on the next pass.
-  for (let pass = 0; pass < 5 && /\basChild\b/.test(text); pass++) {
-    const sf = ts.createSourceFile(
-      fileName,
-      text,
-      ts.ScriptTarget.Latest,
-      true,
-      ts.ScriptKind.TSX,
-    );
-    /** @type {[number, number, string][]} */
-    const edits = [];
-    /** @param {ts.Node} node */
-    const visit = (node) => {
-      if (ts.isJsxElement(node)) {
-        const open = node.openingElement;
-        const asChild = open.attributes.properties.find(
-          (p) => ts.isJsxAttribute(p) && p.name.getText(sf) === 'asChild',
-        );
-        const kids = node.children.filter(
-          (c) => !(ts.isJsxText(c) && c.containsOnlyTriviaWhiteSpaces),
-        );
-        const child = kids[0];
-        if (
-          asChild &&
-          kids.length === 1 &&
-          (ts.isJsxElement(child) || ts.isJsxSelfClosingElement(child))
-        ) {
-          const childOpen = ts.isJsxElement(child)
-            ? child.openingElement
-            : child;
-          const childTag = childOpen.tagName.getText(sf);
-          const childAttrs = childOpen.attributes.getText(sf).trim();
-          const inner = ts.isJsxElement(child)
-            ? text.slice(child.openingElement.end, child.closingElement.pos)
-            : '';
-          const attrs = [
-            ...open.attributes.properties
-              .filter((p) => p !== asChild)
-              .map((p) => p.getText(sf)),
-            `render={<${childTag}${childAttrs ? ` ${childAttrs}` : ''} />}`,
-          ].join(' ');
-          const tag = open.tagName.getText(sf);
-          edits.push([
-            node.getStart(sf),
-            node.end,
-            inner.trim()
-              ? `<${tag} ${attrs}>${inner}</${tag}>`
-              : `<${tag} ${attrs} />`,
-          ]);
-          return;
-        }
-      }
-      ts.forEachChild(node, visit);
-    };
-    visit(sf);
-    if (!edits.length) break;
-    for (const [start, end, replacement] of edits.reverse()) {
-      text = text.slice(0, start) + replacement + text.slice(end);
-    }
-  }
-  return text;
-};
-
-/**
- * Renames the attribute `from` to `to` on every `<tag ...>` opening tag.
- * The opening tag runs to the first `>` outside `{...}` and string quotes;
- * only text at that level (attribute names, not values) is rewritten.
- * @param {string} source
- * @param {string} tag
- * @param {string} from
- * @param {string} to
- */
-export const renameAttribute = (source, tag, from, to) => {
-  const open = new RegExp(`<${tag}(?=[\\s/>])`, 'g');
-  const name = new RegExp(`(\\s)${from}(?=[\\s=/>]|$)`, 'g');
-  let out = '';
-  let last = 0;
-  for (const match of source.matchAll(open)) {
-    const start = match.index + match[0].length;
-    if (start < last) continue;
-    let depth = 0;
-    let quote = '';
-    let segment = start;
-    let i = start;
-    out += source.slice(last, start);
-    for (; i < source.length; i++) {
-      const ch = source[i];
-      if (quote) {
-        if (ch === quote) quote = '';
-      } else if (ch === '{') {
-        if (depth === 0) {
-          out += source.slice(segment, i).replace(name, `$1${to}`);
-          segment = i;
-        }
-        depth += 1;
-      } else if (ch === '}') {
-        depth -= 1;
-        if (depth === 0) {
-          out += source.slice(segment, i + 1);
-          segment = i + 1;
-        }
-      } else if (depth === 0 && (ch === '"' || ch === "'")) {
-        quote = ch;
-      } else if (depth === 0 && ch === '>') {
-        break;
-      }
-    }
-    out += source.slice(segment, i).replace(name, `$1${to}`);
-    last = i;
-  }
-  return out + source.slice(last);
-};
-
-/**
- * The React Aria part props the examples use, from the Radix names (see the
- * file header).
- * @param {string} source
- */
-export const rewriteAriaParts = (source) => {
-  let text = renameAttribute(source, 'Button', 'disabled', 'isDisabled');
-  text = renameAttribute(text, 'RadioGroup', 'onValueChange', 'onChange');
-  text = text.replace(
-    /<Tooltip>\s*<TooltipTrigger asChild>([\s\S]*?)<\/TooltipTrigger>\s*<TooltipContent>([\s\S]*?)<\/TooltipContent>\s*<\/Tooltip>/g,
-    '<TooltipTrigger>$1<Tooltip>$2</Tooltip></TooltipTrigger>',
-  );
-  if (!/<TooltipContent\b/.test(text)) {
-    text = text.replace(
-      /import \{([^}]*)\} from (['"])@\/components\/ui-aria\/tooltip\2/g,
-      (line, names) =>
-        line.replace(names, names.replace(/\s*\bTooltipContent\b,?/, '')),
-    );
-  }
-  return text;
-};
-
-/**
- * One base's variant of one example source file, formatted. The Radix
- * variant only changes the imports; the Base UI one also turns `asChild` into
- * `render`, the React Aria one renames the part props (rewriteAriaParts).
+ * One base's variant of one example source file, formatted.
  * @param {{ source: string, fileName: string, base: keyof typeof VARIANT_DIRS }} file
  *   fileName is absolute, for prettier's parser choice
  */
 export const toVariant = async ({ source, fileName, base }) => {
-  let text = rewriteImports(source, base);
-  if (base === 'base' && /\.tsx$/.test(fileName)) {
-    text = rewriteAsChild(text, fileName);
-  }
-  if (base === 'aria' && /\.tsx$/.test(fileName)) {
-    text = rewriteAriaParts(text);
-  }
+  const text = rewriteImports(source, base);
   if (text === source) return source;
   const config = await prettier.resolveConfig(fileName);
   return prettier.format(text, { ...config, filepath: fileName });
 };
 
-async function main() {
-  const slugs = (await fs.readdir(EXAMPLES, { withFileTypes: true }))
-    .filter((e) => e.isDirectory() && !e.name.startsWith('.'))
-    .map((e) => e.name)
-    .sort();
-  const kept = new Set();
-  const sources = new Map();
-  for (const slug of slugs) {
-    const dir = path.join(EXAMPLES, slug);
+/** The example slugs of one edition folder: every directory with a TS.tsx. */
+const listSlugs = async (dir) => {
+  const slugs = [];
+  for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
     try {
-      await fs.access(path.join(dir, 'TS.tsx'));
+      await fs.access(path.join(dir, entry.name, 'TS.tsx'));
     } catch {
       continue;
     }
-    kept.add(slug);
-    sources.set(slug, await listExampleFiles(dir));
+    slugs.push(entry.name);
   }
+  return slugs.sort();
+};
+
+async function main() {
   for (const [base, variantDir] of Object.entries(VARIANT_DIRS)) {
+    const sourceRoot = path.join(EXAMPLES, base);
     const out = path.join(EXAMPLES, variantDir);
+    const slugs = await listSlugs(sourceRoot);
     let files = 0;
-    for (const [slug, rels] of sources) {
-      const dir = path.join(EXAMPLES, slug);
-      for (const rel of rels) {
+    for (const slug of slugs) {
+      const dir = path.join(sourceRoot, slug);
+      for (const rel of await listExampleFiles(dir)) {
         const source = await fs.readFile(path.join(dir, rel), 'utf8');
         const target = path.join(out, slug, rel);
         await fs.mkdir(path.dirname(target), { recursive: true });
@@ -253,13 +86,16 @@ async function main() {
       }
     }
     // Variant folders whose example is gone.
+    const kept = new Set(slugs);
     await fs.mkdir(out, { recursive: true });
     for (const entry of await fs.readdir(out, { withFileTypes: true })) {
       if (entry.isDirectory() && !kept.has(entry.name)) {
         await fs.rm(path.join(out, entry.name), { recursive: true });
       }
     }
-    console.log(`examples/${variantDir}: ${kept.size} examples, ${files} files`);
+    console.log(
+      `examples/${variantDir}: ${slugs.length} examples, ${files} files`,
+    );
   }
 }
 

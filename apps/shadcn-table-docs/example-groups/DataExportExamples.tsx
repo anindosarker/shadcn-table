@@ -1,6 +1,5 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import CSVExport from '@/examples/export-to-csv';
-import PDFExport from '@/examples/export-to-pdf';
+import { ExportToCsvExample, ExportToPdfExample } from '@/examples/map';
 
 const DataExportExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -10,8 +9,8 @@ const DataExportExamples = ({ isPage = false }) => (
       { label: 'Export to PDF', value: 'export-pdf' },
     ]}
     panels={{
-      'export-csv': <CSVExport />,
-      'export-pdf': <PDFExport />,
+      'export-csv': <ExportToCsvExample />,
+      'export-pdf': <ExportToPdfExample />,
     }}
   />
 );

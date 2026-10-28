@@ -1,9 +1,11 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import ReactQueryExample from '@/examples/react-query';
-import RemoteExample from '@/examples/remote';
-import DynamicColumns from '@/examples/dynamic-columns';
-import LazyDetailPanelExample from '@/examples/lazy-detail-panel';
-import LazySubRowsExample from '@/examples/lazy-sub-rows';
+import {
+  ReactQueryExample,
+  RemoteExample,
+  DynamicColumnsExample,
+  LazyDetailPanelExample,
+  LazySubRowsExample,
+} from '@/examples/map';
 
 const RemoteFetchingExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -18,7 +20,7 @@ const RemoteFetchingExamples = ({ isPage = false }) => (
     panels={{
       'react-query': <ReactQueryExample />,
       remote: <RemoteExample />,
-      'dynamic-columns': <DynamicColumns />,
+      'dynamic-columns': <DynamicColumnsExample />,
       'lazy-detail-panel': <LazyDetailPanelExample />,
       'lazy-sub-rows': <LazySubRowsExample />,
     }}

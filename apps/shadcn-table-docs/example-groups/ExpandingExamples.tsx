@@ -1,11 +1,13 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import ExpandingTreeExample from '@/examples/expanding-tree-expanded';
-import ExpandingParsedTreeExample from '@/examples/expanding-tree-flat-parse';
-import EnableColumnGroupingExample from '@/examples/enable-column-grouping';
-import CustomizeRemoveColumnGroupingExample from '@/examples/customize-remove-column-grouping';
-import AggregationAndGroupingExample from '@/examples/aggregation-and-grouping';
-import DetailExample from '@/examples/enable-detail-panel-conditionally';
-import ChartDetailPanelExample from '@/examples/chart-detail-panel';
+import {
+  ExpandingTreeExpandedExample,
+  ExpandingTreeFlatParseExample,
+  EnableColumnGroupingExample,
+  CustomizeRemoveColumnGroupingExample,
+  AggregationAndGroupingExample,
+  EnableDetailPanelConditionallyExample,
+  ChartDetailPanelExample,
+} from '@/examples/map';
 
 const ExpandingExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -20,12 +22,12 @@ const ExpandingExamples = ({ isPage = false }) => (
       { label: 'Chart Detail Panel', value: 'chart-detail-panel' },
     ]}
     panels={{
-      'expanding-tree': <ExpandingTreeExample />,
-      'expanding-tree-flat-parse': <ExpandingParsedTreeExample />,
+      'expanding-tree': <ExpandingTreeExpandedExample />,
+      'expanding-tree-flat-parse': <ExpandingTreeFlatParseExample />,
       'column-grouping': <EnableColumnGroupingExample />,
       'customized-grouping': <CustomizeRemoveColumnGroupingExample />,
       'aggregation-and-grouping': <AggregationAndGroupingExample />,
-      'detail-panel': <DetailExample />,
+      'detail-panel': <EnableDetailPanelConditionallyExample />,
       'chart-detail-panel': <ChartDetailPanelExample />,
     }}
   />
