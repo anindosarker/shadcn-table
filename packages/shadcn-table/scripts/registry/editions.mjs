@@ -26,3 +26,12 @@ export const EDITION_LABELS = Object.freeze({
 // it names none.
 export const resolveEdition = (value) =>
   EDITIONS.find((edition) => edition === value) ?? REFERENCE_EDITION;
+
+// The committed registry name of an edition's copy of an item: the plain
+// name for the reference edition, `<name>-<edition>` for every other
+// (`shadcn-table`, `shadcn-table-base`, `shadcn-table-aria`; the docs
+// examples `example-basic`, `example-basic-base`, `example-basic-aria`).
+// The hosted registries (hosted.mjs) serve every edition under the plain
+// name, one directory per edition.
+export const editionItemName = (name, edition) =>
+  edition === REFERENCE_EDITION ? name : `${name}-${edition}`;

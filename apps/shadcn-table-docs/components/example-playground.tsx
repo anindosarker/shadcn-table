@@ -42,10 +42,12 @@ import {
   trackInstallCommandCopied,
 } from '@/lib/analytics';
 
-/** What differs per base: the sources (import paths) and the commands. */
+/** What differs per base: the base's sources, their GitHub folder and the commands. */
 export interface ExampleVariantData {
   /** Source files for the code explorer, in tree order. */
   files: ExplorerFile[];
+  /** Link to the base's example folder on GitHub. */
+  githubUrl: string;
   /** `shadcn add` command that installs the example into a project. */
   installCommand: string;
   /** Prompt for a coding agent: install, import, docs to read, verify. */
@@ -55,8 +57,6 @@ export interface ExampleVariantData {
 interface Props {
   /** The live example (components/example-variant.tsx picks the base). */
   children: ReactNode;
-  /** Link to the example folder on GitHub. */
-  githubUrl: string;
   /** Example folder name, used as the panel's anchor id. */
   name: string;
   /** Sources and commands per base; the site-wide selector picks one. */
@@ -136,14 +136,9 @@ const COPIED_MS = 1500;
  * example in GitHub. Code, prompt and command are those of the selected
  * base (the header switch), as is the live example.
  */
-export const ExamplePlayground = ({
-  children,
-  githubUrl,
-  name,
-  variants,
-}: Props) => {
+export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const base = useBase();
-  const { files, installCommand, prompt } = variants[base];
+  const { files, githubUrl, installCommand, prompt } = variants[base];
   const mode = useSyncExternalStore(
     subscribeMode,
     getModeSnapshot,

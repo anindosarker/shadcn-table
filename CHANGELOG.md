@@ -7,6 +7,32 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- Docs examples per edition: `apps/shadcn-table-docs/examples/<edition>/<slug>/` holds one
+  hand-written set per edition (Radix UI, Base UI, React Aria) in place of one Radix source
+  rewritten per base; the code view, the GitHub link and the agent prompt show the selected
+  edition's source, and `pnpm check:bases` guards the three sets the way it guards the
+  library trees (`scripts/registry/examples-<edition>-diff.json`). GitHub-namespace example
+  items are `example-<slug>`, `example-<slug>-base` and `example-<slug>-aria`; the hosted
+  `/r/<edition>/example-<slug>.json` names are unchanged. `custom-headless` renders the shadcn
+  `Table` parts on Radix UI and Base UI and the React Aria `Table` collection on React Aria.
+
+### Fixed
+
+- Registry example items for Base UI and React Aria: `/r/base/example-<slug>.json` and
+  `/r/aria/example-<slug>.json` carried the Radix source (`asChild`, `disabled` on `Button`,
+  `onValueChange` on `RadioGroup`, the Radix tooltip composition), which those editions' parts
+  reject; they now carry that edition's code.
+- React Aria edition: the `label` part is what shadcn ships (`add-part.mjs` output), the hand
+  edit that dropped its unused `import * as React` is reverted, and `shadcn-table-aria` lists
+  `label` as a registryDependency like every other part instead of shipping its own copy.
+  Unused locals and parameters are checked by ESLint (`@typescript-eslint/no-unused-vars`, `_`
+  prefix tolerated, parts ignored), no longer by `noUnusedLocals` and `noUnusedParameters` in
+  the tsconfigs.
+
 ## 0.5.1 - 2026-10-28
 
 ### Changed

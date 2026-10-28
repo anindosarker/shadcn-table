@@ -53,3 +53,17 @@ force; nothing here re-decides them.
 ## Release
 
 3. Decisions 1 and 2 ship together as 0.6.0 (`release:minor`), the next PR into `master`.
+
+## Upstream part defects
+
+4. A defect in a shadcn part is upstream's, not ours: the part stays as shipped (decision 2),
+   no fork, no upstream report unless the owner asks. The docs name it as a known issue with the
+   user's own fix, and a CI install scenario applies exactly that documented step, nothing
+   more. First case: the `aria-nova` `label` part's unused `import * as React` fails Vite's
+   `noUnusedLocals` (TS6133) in a fresh `shadcn init --template vite --base aria` app. The
+   install page's React Aria tab says so and tells the user to delete that import line in
+   `components/ui/label.tsx` or set `noUnusedLocals: false`; `install.yml`'s aria scenario
+   deletes the line after `shadcn add`, with a comment naming the defect. The `CHANGELOG.md`
+   workaround line part 02 added is removed. Why: the owner ruled the defect is shadcn's and
+   the registry should carry no corrected copy; a red CI scenario or a hidden type error would
+   both misreport what users see.

@@ -40,10 +40,8 @@
   ],
   "exclude": [
     "node_modules",
-    "examples/*/TS.tsx",
-    "examples/*/*.ts",
-    "examples/*/components",
-    "examples/*/hooks",
-    "examples/*/lib"
+    "examples/radix",
+    "examples/base",
+    "examples/aria"
   ]
 }

@@ -22,6 +22,7 @@ export const DOCS: string;
 export {
   EDITION_LABELS,
   EDITIONS,
+  editionItemName,
   REFERENCE_EDITION,
   resolveEdition,
   type Edition,
@@ -63,3 +64,12 @@ export function editionItems(
   catalog: { items: RegistryItem[] },
   edition: string,
 ): { main: RegistryItem | undefined; locales: RegistryItem[] };
+
+/**
+ * One edition's example items in the docs catalog (examples.mjs), each under
+ * its hosted name, the plain `example-<slug>`.
+ */
+export function editionExampleItems(
+  catalog: { items: RegistryItem[] },
+  edition: string,
+): RegistryItem[];

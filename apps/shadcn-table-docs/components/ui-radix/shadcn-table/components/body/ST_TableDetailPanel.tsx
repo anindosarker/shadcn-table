@@ -59,7 +59,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   } = table;
 
   // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { hover: _hover, ...tableRowProps } =
     parseFromValuesOrFunc(stTableBodyRowProps, {
       isDetailPanel: true,
