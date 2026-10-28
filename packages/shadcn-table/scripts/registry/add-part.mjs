@@ -62,7 +62,8 @@ const committedParts = async () => {
     pathToFileURL(path.join(baseDir, 'registry.ts')).href
   );
   const forked = new Set(
-    registry.items[0].files
+    registry.items
+      .flatMap((item) => item.files)
       .map((file) => file.path)
       .filter((p) => /^registry\/[^/]+\/components\/ui\/[^/]+\.tsx$/.test(p))
       .map((p) => path.basename(p, '.tsx')),
