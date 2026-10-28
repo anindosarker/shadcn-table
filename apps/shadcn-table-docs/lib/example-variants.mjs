@@ -114,9 +114,9 @@ export const rewriteAsChild = (source, fileName) => {
 };
 
 /**
- * One base's variant of one example source file, formatted. The Radix
- * variant only changes the imports; the Base UI one also turns `asChild`
- * into `render`.
+ * One base's variant of one example source file, formatted. The Radix and
+ * React Aria variants only change the imports; the Base UI one also turns
+ * `asChild` into `render`.
  * @param {{ source: string, fileName: string, base: keyof typeof VARIANT_DIRS }} file
  *   fileName is absolute, for prettier's parser choice
  */

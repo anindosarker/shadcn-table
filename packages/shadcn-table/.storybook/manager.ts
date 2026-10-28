@@ -1,6 +1,6 @@
 import { addons } from 'storybook/manager-api';
 import { darkTheme, lightTheme, readStoredMode } from './themes';
-// Toolbar button to the other edition (Radix UI <-> Base UI).
+// Toolbar switch between the editions (Radix UI, Base UI, React Aria).
 import './edition-tool';
 
 // First paint of the manager chrome. storybook-dark-mode's preset falls back

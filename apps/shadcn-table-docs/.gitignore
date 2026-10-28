@@ -36,3 +36,4 @@ CLAUDE.md
 # generated example variants per base (lib/example-variants.mjs)
 /examples/.radix/
 /examples/.base/
+/examples/.aria/

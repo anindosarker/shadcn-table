@@ -3,6 +3,7 @@ import {
   type ButtonProps,
   type ST_Row,
   type ST_RowData,
+  type ST_TableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui-radix/shadcn-table/components/buttons/ST_GrabHandleButton';
@@ -19,9 +20,11 @@ export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   ...rest
 }: ST_TableBodyRowGrabHandleProps<TData>) => {
   const table = row.table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Button.
   const {
-    options: { stRowDragHandleProps },
-  } = table;
+    stRowDragHandleProps,
+  }: Pick<ST_TableOptions<TData>, 'stRowDragHandleProps'> = table.options;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stRowDragHandleProps, {

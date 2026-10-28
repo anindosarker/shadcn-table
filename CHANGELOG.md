@@ -14,6 +14,14 @@ publishes the section as the GitHub release notes.
   style, `react-aria-components`), same API. Registry item `shadcn-table-aria` plus its 38
   locale items (`shadcn-table-aria-locale-<code>`).
 
+### Changed
+
+- `ST_PartPropTypes` gains `button` and `select`. `table.options` and `column.columnDef`
+  hold the button and select `st*Props` (`stCopyButtonProps`, `stExpandButtonProps`,
+  `stPaginationProps` and the like) tree-neutral, like the checkbox, slider and dialog
+  ones, so one program can hold several editions; the options as written
+  (`ST_TableOptions`, `ST_ColumnDef`) keep the edition's types.
+
 ## 0.4.0 - 2026-10-28
 
 ### Breaking

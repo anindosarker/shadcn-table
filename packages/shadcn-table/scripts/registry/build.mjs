@@ -2,33 +2,36 @@
 // Usage (inside packages/shadcn-table): pnpm registry:build, or
 // pnpm registry:dev for a local copy under .dev/ (pnpm preview builds it and
 // serves it on port 5310).
-// Collects the items of every base (registry/<base>/registry.ts) into
-// registry.json, then `shadcn build` turns it into public/r/<name>.json.
+// Collects the items of every edition (registry/<edition>/registry.ts, in
+// EDITIONS order) into registry.json, then `shadcn build` turns it into
+// public/r/<name>.json.
 import fs from 'node:fs';
 import path from 'node:path';
-import { registry as aria } from '../../registry/aria/registry.ts';
-import { registry as base } from '../../registry/base/registry.ts';
-import { registry as radix } from '../../registry/radix/registry.ts';
-import { DEV, PKG } from './lib.mjs';
+import { DEV, EDITIONS, PKG, REFERENCE_EDITION } from './lib.mjs';
 
 const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 
 // Radix first: its main item keeps the name and the GitHub address v0.1.x
-// published (`shadcn-table`); the Base UI edition is `shadcn-table-base`, the
-// React Aria edition `shadcn-table-aria`.
-const bases = [radix, base, aria];
+// published (`shadcn-table`); the other editions are `shadcn-table-<edition>`.
+const editions = await Promise.all(
+  EDITIONS.map(
+    async (edition) =>
+      (await import(`../../registry/${edition}/registry.ts`)).registry,
+  ),
+);
+const reference = editions[EDITIONS.indexOf(REFERENCE_EDITION)];
 
 const registry = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
-  name: radix.name,
-  homepage: radix.homepage,
-  items: bases.flatMap((base) => base.items),
+  name: reference.name,
+  homepage: reference.homepage,
+  items: editions.flatMap((edition) => edition.items),
 };
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(registry, null, 2) + '\n');
-for (const base of bases) {
-  const [main, ...locales] = base.items;
+for (const { items } of editions) {
+  const [main, ...locales] = items;
   console.log(
     `${path.relative(PKG, OUT)}: ${main.files.length} files in ${main.name}, ${locales.length} locale items, ${main.registryDependencies.length} registryDependencies`,
   );
