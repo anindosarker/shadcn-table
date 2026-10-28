@@ -67,6 +67,12 @@ nothing here re-decides those, items here extend them.
    through the same `Omit` plus overlay technique `types.ts` uses for the re-typed getters.
    The `as unknown as ST_TableInstance<TData>` casts at every `instance.table` read in
    `components/` go. Public names unchanged; only the `table` member narrows.
+   - 7a (2026-10-28, after review): the member is `ST_CoreTableInstance<TData>`, defined as
+     `Omit<ST_TableInstance<TData>, 'state' | 'AppTable'>` (`AppTable` omitted only if it
+     is not on the core table), because `row.table`, `cell.table`, `column.table` and
+     `header.table` are the core table at runtime and have no `state`; typing it as the
+     wrapper let `cell.table.state.x` typecheck and crash. Handler reads use
+     `table.store.state` or the atoms. Type-only, both trees, changelog line.
 
 ## Row pinning on select
 
