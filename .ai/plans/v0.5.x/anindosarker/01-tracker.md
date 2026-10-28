@@ -89,3 +89,26 @@ Hand run of `check-bases.mjs` with the aria pair (radix against aria, `aria-diff
 - `tsconfig.aria.json` (copy of `tsconfig.baseui.json` on `registry/aria`), scripts `tsc:aria`, `test:aria`, `storybook:aria` (6008), `storybook:build:aria`; `vite.config.ts` and `.storybook/main.ts` take `ST_BASE` from the list `radix`, `base`, `aria` (radix otherwise).
 - Not touched in this part: `tsconfig.json` references (adding `tsconfig.aria.json` would turn `tsc -b` red until the port), `.storybook/themes.ts` and `edition-tool.ts` (still two-way, label aria as Radix UI; part 02 or 03), `check-bases.mjs`, `add-part.mjs`, `build.mjs` (part 02).
 - `pnpm tsc:radix`, `pnpm tsc:baseui`, stories tsc, `pnpm check:bases`: pass.
+
+## Phase 01, menus
+
+Paths under `registry/aria/components/ui/shadcn-table/components/menus/`.
+
+- `ST_ActionMenuItem.tsx`: props from the aria `DropdownMenuItem` (RAC `MenuItem`: `isDisabled`, `onClick` typed `MouseEvent<FocusableElement>`, which RAC still calls on click, Enter and Space); `textValue={label}` for typeahead; no `tabIndex` (RAC roves focus); `onOpenSubMenu` typed from the aria `Button` `onClick`; children are a render function so an item inside a `DropdownMenuSub` shows the arrow as a marker from `hasSubmenu` (a `Button` there would swallow the press that opens the submenu).
+- `ST_CellActionMenu.tsx`: `DropdownMenuTrigger` (`MenuTrigger`, `isOpen`/`onOpenChange`) wraps the invisible anchor span, through RAC `Pressable` (a `MenuTrigger` child must take the press responder ref the popover is positioned against; the span gets `role="button"` and `tabIndex={-1}`, still `aria-hidden` and `pointer-events: none`), and `DropdownMenu` (`Popover` plus `Menu`); `align`/`alignOffset`/`sideOffset` are `placement="bottom start"`/`crossOffset`/`offset`; `onCloseAutoFocus` dropped: the popover's focus scope restores focus to the cell, and does not when the edit input took focus (CellActionMenuEdit play); the right-button `onPointerUpCapture` swallow dropped: RAC presses only on button 0 (CellActionsEnabledCustom play).
+- `ST_ColumnActionMenu.tsx`: same menu shape; `disabled` is `isDisabled`; the filter mode menu is a submenu: "Filter by {column}" and `ST_FilterOptionMenu isSubMenu` in a `DropdownMenuSub` (`SubmenuTrigger`), so `filterMenuAnchorEl` and `handleOpenFilterModeMenu` are gone; the item keeps `onClick={handleFilterByColumn}` while filters are hidden.
+- `ST_FilterOptionMenu.tsx`: same menu shape for the standalone menu (`side="right"` plus `alignOffset` is `placement="right top"` plus `crossOffset`); new optional `isSubMenu` renders the items in `DropdownMenuSubContent` for the column action menu; `anchorRef` and `onCloseAutoFocus` dropped (focus restore as above).
+- `ST_RowActionMenu.tsx`: same menu shape; props typed from `DropdownMenu`; `anchorRef` and `onCloseAutoFocus` dropped.
+- `ST_ShowHideColumnsMenu.tsx`: same menu shape; a RAC `Menu` renders only collection nodes, so the hide all, reset order, unpin all and show all row is a RAC `Header` (same classes); `disabled` is `isDisabled` on the aria `Button`s.
+- `ST_ShowHideColumnsMenuItems.tsx`: keep-open is `shouldCloseOnSelect={false}` instead of `onSelect` plus `preventDefault`; `Switch` takes `isSelected`/`isDisabled`/`onChange`; `style` merged through `composeRenderProps`; RAC `MenuItem` passes no drag handlers and the part takes no `ref`, so `onDragEnter` goes on the element through the `render` prop and the drag image is the handle's `closest('[role="menuitem"]')`.
+
+Checks (branch `v0.5/08`, run on a local merge with `v0.5/09` and `v0.5/rest`, not pushed):
+
+- `tsc:aria`: no error in the menus (only `components/ui/label.tsx`, the phase 00 halt item); `lint` clean; hand run of `check-bases.mjs` with the aria pair: `142 library files in both trees, 37 allowed to differ`.
+- `ST_BASE=aria vitest run` on CellActions, CellActionMenuEdit, CustomFilterFns, RowActions, ColumnActions, ColumnHiding, ColumnOrdering, Filtering, useEffects, click-propogation, TableProvider: every play touching a menu passes. Full suite 445 of 452; the 7 failures are outside the menus (tooltip text, checkbox `aria-checked="mixed"`, select duplicate keys).
+- Scratch plays (not committed) for paths no story covers: show/hide (switch and label text toggle and keep the menu open, header buttons, Escape restores focus to the button, drag reorder), column actions (sort by click and keyboard, focus back to the button), filter mode submenu, filter item showing hidden filters, row action item `onClick` by click and keyboard: all pass on aria.
+
+Deviations (React Aria shape, not decided elsewhere):
+
+- Filter mode submenu: radix opens `ST_FilterOptionMenu` as a separate menu from the item's arrow button (click or hover) and a click on the item itself while filters are shown closes both menus; aria opens it as a real submenu on hover, ArrowRight or press of the item, and the arrow is a marker, not a button.
+- Escape while focus has left the menu (a header button that just became disabled drops focus to the body) does not close the aria menu; Radix listens on the document.
