@@ -72,11 +72,18 @@ const expectLabel = (root: ParentNode, label: string) =>
     ).toBe(label),
   );
 
+// The matchers read aria-checked on a role=checkbox element and
+// checked/indeterminate on a native input (the React Aria edition).
 const expectSelectAll = (
   selectAll: HTMLElement,
-  ariaChecked: 'false' | 'mixed' | 'true',
+  state: 'false' | 'mixed' | 'true',
 ) =>
-  waitFor(() => expect(selectAll).toHaveAttribute('aria-checked', ariaChecked));
+  waitFor(() => {
+    if (state === 'true') expect(selectAll).toBeChecked();
+    else expect(selectAll).not.toBeChecked();
+    if (state === 'mixed') expect(selectAll).toBePartiallyChecked();
+    else expect(selectAll).not.toBePartiallyChecked();
+  });
 
 const firstPage = ['Mason', 'Anderson', 'Lily', 'Tom', 'Brooke'];
 const dataOrder = data.map(({ firstName }) => firstName);
