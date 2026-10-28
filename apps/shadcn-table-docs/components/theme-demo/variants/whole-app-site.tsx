@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import type { ReactNode } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 import { SearchIcon } from 'lucide-react';
 import { Badge } from '@/components/ui-radix/badge';
 import { Button } from '@/components/ui-radix/button';
@@ -33,6 +33,14 @@ const ThemeTable = dynamic(
     ),
   },
 );
+
+const PHONE = '(max-width: 639px)';
+
+function subscribePhone(onChange: () => void) {
+  const query = window.matchMedia(PHONE);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
 
 // weekly active members, drawn as the sparkline
 const ACTIVE = [18, 21, 19, 24, 22, 26, 28];
@@ -100,44 +108,109 @@ function Sparkline({ values }: { values: readonly number[] }) {
   );
 }
 
+/** The site's top bar: logo, search and account. */
+function TopBar({ name }: { name: string }) {
+  return (
+    <div className="flex h-12 items-center gap-2 border-b px-3 @lg:px-4">
+      <span className="flex items-center gap-2 @lg:mr-2">
+        <Logo name={name} />
+        <span className="font-semibold">{name}</span>
+      </span>
+      <div className="relative hidden @lg:block">
+        <SearchIcon
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
+        />
+        <Input
+          type="search"
+          aria-label="Search"
+          placeholder="Search"
+          className="h-8 w-52 pl-8"
+        />
+      </div>
+      <div className="ml-auto flex items-center gap-2">
+        <Button size="sm">Upgrade</Button>
+        <span
+          aria-label="Ada Brooks"
+          role="img"
+          className="grid size-8 place-items-center rounded-full bg-secondary text-xs font-medium text-secondary-foreground"
+        >
+          AB
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /**
  * Inside the frame: a whole members page built from stock shadcn/ui parts
  * (top bar, Tabs, KPI cards, a settings form) with the table among them. It
  * holds no theme; the ThemeScope around it repaints all of it at once. Its
  * layout follows the frame's width (container queries), so the card row
- * gives way before the table does.
+ * gives way before the table does. `home` keeps it to one screen: the top
+ * bar, one-line KPI cards and a 4-row table without its toolbar or Email
+ * (the compact table on phones), no page header, no settings form.
  */
-export function WholeAppSite({ name }: { name: string }) {
-  return (
-    <div className="@container flex min-w-0 flex-1 flex-col">
-      <div className="flex h-12 items-center gap-2 border-b px-3 @lg:px-4">
-        <span className="flex items-center gap-2 @lg:mr-2">
-          <Logo name={name} />
-          <span className="font-semibold">{name}</span>
-        </span>
-        <div className="relative hidden @lg:block">
-          <SearchIcon
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
-          />
-          <Input
-            type="search"
-            aria-label="Search"
-            placeholder="Search"
-            className="h-8 w-52 pl-8"
-          />
-        </div>
-        <div className="ml-auto flex items-center gap-2">
-          <Button size="sm">Upgrade</Button>
-          <span
-            aria-label="Ada Brooks"
-            role="img"
-            className="grid size-8 place-items-center rounded-full bg-secondary text-xs font-medium text-secondary-foreground"
-          >
-            AB
-          </span>
+export function WholeAppSite({
+  name,
+  home = false,
+}: {
+  name: string;
+  home?: boolean;
+}) {
+  const phone = useSyncExternalStore(
+    subscribePhone,
+    () => window.matchMedia(PHONE).matches,
+    () => false,
+  );
+
+  if (home)
+    return (
+      <div className="@container flex min-w-0 flex-1 flex-col">
+        <TopBar name={name} />
+        <div className="flex min-w-0 flex-col gap-3 p-3 @lg:p-4">
+          <div className="grid grid-cols-2 gap-3 @xl:grid-cols-3">
+            <Card className="flex-row flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 px-3 py-2">
+              <p className="text-xs text-muted-foreground">Seats used</p>
+              <p className="text-lg leading-7 font-semibold tabular-nums">
+                35 <span className="text-sm text-muted-foreground">/ 40</span>
+              </p>
+            </Card>
+            <Card className="flex-row flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 px-3 py-2">
+              <p className="text-xs text-muted-foreground">Active this week</p>
+              <p className="flex items-center gap-2 text-lg leading-7 font-semibold tabular-nums">
+                28
+                <Badge variant="secondary">+12%</Badge>
+              </p>
+            </Card>
+            <Card className="hidden flex-row flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 px-3 py-2 @xl:flex">
+              <p className="text-xs text-muted-foreground">Storage</p>
+              <p className="text-lg leading-7 font-semibold tabular-nums">
+                62%{' '}
+                <span className="text-sm text-muted-foreground">of 50 GB</span>
+              </p>
+            </Card>
+          </div>
+          <div className="min-w-0">
+            {/* phones get the card-sized table: Name and Status fill the
+             * width, so nothing scrolls sideways */}
+            {phone ? (
+              <ThemeTable compact />
+            ) : (
+              <ThemeTable
+                pageSize={4}
+                toolbar={false}
+                hiddenColumns={['email']}
+              />
+            )}
+          </div>
         </div>
       </div>
+    );
+
+  return (
+    <div className="@container flex min-w-0 flex-1 flex-col">
+      <TopBar name={name} />
 
       <div className="flex min-w-0 flex-col gap-4 p-3 @lg:p-4">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">

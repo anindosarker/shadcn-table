@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 const placeholder = (
   <div
     role="status"
-    className="flex h-[121rem] items-center justify-center text-sm text-(--dh-ink-muted) sm:h-[115rem] lg:h-[93.5rem] min-[90rem]:h-[54.5rem]"
+    className="flex h-[53.5rem] items-center justify-center text-sm text-(--dh-ink-muted) sm:h-[60.5rem] md:h-[57rem] xl:h-[31rem]"
   >
     Loading demo
   </div>
@@ -45,5 +45,5 @@ export function ThemeDemo() {
     return () => io.disconnect();
   }, []);
 
-  return <div ref={ref}>{near ? <WholeApp /> : placeholder}</div>;
+  return <div ref={ref}>{near ? <WholeApp home /> : placeholder}</div>;
 }

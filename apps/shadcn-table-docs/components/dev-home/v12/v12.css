@@ -358,6 +358,11 @@
   max-width: 44ch;
 }
 
+/* the theming demo fits one screen with its heading */
+.v12-theming .v12-head {
+  margin-bottom: 20px;
+}
+
 .v12-label {
   font-family: var(--dh-font-mono);
   font-size: 12px;
