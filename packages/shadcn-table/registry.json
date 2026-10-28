@@ -2360,6 +2360,1181 @@
           "target": "@ui/shadcn-table/shared/locales/zh-Hant.ts"
         }
       ]
+    },
+    {
+      "name": "shadcn-table-aria",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria)",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table.",
+      "dependencies": [
+        "@tanstack/react-table@9.3.1",
+        "@tanstack/react-store@0.11.2",
+        "@tanstack/react-virtual@3.11.2",
+        "@tanstack/match-sorter-utils@8.19.4",
+        "highlight-words@2.0.0",
+        "class-variance-authority",
+        "lucide-react",
+        "react-aria-components"
+      ],
+      "devDependencies": [
+        "tw-animate-css"
+      ],
+      "registryDependencies": [
+        "alert",
+        "badge",
+        "button",
+        "checkbox",
+        "collapsible",
+        "combobox",
+        "dialog",
+        "dropdown-menu",
+        "field",
+        "input",
+        "input-group",
+        "label",
+        "native-select",
+        "pagination",
+        "popover",
+        "progress",
+        "radio-group",
+        "select",
+        "separator",
+        "skeleton",
+        "slider",
+        "spinner",
+        "switch",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/ST_Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Tooltip.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/ShadcnTable.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ShadcnTable.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBodyCell.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyCell.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBodyCellValue.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyCellValue.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBodyRow.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRow.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBodyRowGrabHandle.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRowGrabHandle.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBodyRowPinButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableBodyRowPinButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableDetailPanel.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_TableDetailPanel.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ColumnPinningButtons.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_CopyButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_CopyButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_EditActionButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_EditActionButtons.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ExpandAllButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ExpandAllButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ExpandButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ExpandButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_GrabHandleButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_RowPinButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_RowPinButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ShowHideColumnsButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ShowHideColumnsButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ToggleDensePaddingButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleDensePaddingButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ToggleFiltersButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleFiltersButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleFullScreenButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleGlobalFilterButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/footer/ST_TableFooterCell.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooterCell.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/footer/ST_TableFooterRow.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/footer/ST_TableFooterRow.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHead.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHead.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCell.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCell.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellSortLabel.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellSortLabel.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterCheckbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterCheckbox.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterRangeFields.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterRangeSlider.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_FilterTextField.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_GlobalFilterTextField.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_GlobalFilterTextField.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_SelectCheckbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_SelectCheckbox.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_ActionMenuItem.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ActionMenuItem.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_CellActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_CellActionMenu.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ColumnActionMenu.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_FilterOptionMenu.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_RowActionMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_RowActionMenu.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ShowHideColumnsMenu.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/modals/ST_EditRowModal.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_Table.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_TableContainer.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableContainer.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_TableLayout.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableLayout.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_TablePagination.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_ToolbarDropZone.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarDropZone.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stCellActionsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stColumnDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stColumnDraggingFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stConfigFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stConfigFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stDensityFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stDensityFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stEditingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stEditingFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stFeatures.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFeatures.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stFilterModesFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stFullScreenFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFullScreenFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stLoadingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stLoadingFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stRefsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRefsFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stRowDraggingFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stRowDraggingFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stToolbarsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowDragColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowDragColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowExpandColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowExpandColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowNumbersColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowNumbersColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowPinningColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowPinningColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowSelectColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSelectColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/stTableHook.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Effects.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowVirtualizer.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Rows.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_Rows.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_TableInstance.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_TableInstance.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useShadcnTable.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useShadcnTable.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/icons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/index.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/index.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/fns/aggregationFns.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/fns/aggregationFns.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/fns/filterFns.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/fns/filterFns.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/fns/sortFns.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/fns/sortFns.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/en.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/en.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/cell.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/cell.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/column.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/column.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/displayColumn.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/row.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/row.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/style.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/style.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/tanstack.helpers.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/tanstack.helpers.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/virtualization.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/types.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/types.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-ar",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: ar",
+      "description": "The ar localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/ar.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/ar.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-az",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: az",
+      "description": "The az localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/az.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/az.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-bg",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: bg",
+      "description": "The bg localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/bg.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/bg.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-cs",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: cs",
+      "description": "The cs localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/cs.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/cs.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-da",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: da",
+      "description": "The da localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/da.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/da.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-de",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: de",
+      "description": "The de localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/de.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/de.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-el",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: el",
+      "description": "The el localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/el.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/el.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-es",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: es",
+      "description": "The es localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/es.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/es.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-et",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: et",
+      "description": "The et localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/et.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/et.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-fa",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: fa",
+      "description": "The fa localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/fa.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/fa.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-fi",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: fi",
+      "description": "The fi localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/fi.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/fi.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-fr",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: fr",
+      "description": "The fr localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/fr.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/fr.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-he",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: he",
+      "description": "The he localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/he.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/he.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-hr",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: hr",
+      "description": "The hr localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/hr.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/hr.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-hu",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: hu",
+      "description": "The hu localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/hu.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/hu.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-hy",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: hy",
+      "description": "The hy localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/hy.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/hy.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-id",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: id",
+      "description": "The id localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/id.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/id.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-it",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: it",
+      "description": "The it localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/it.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/it.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-ja",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: ja",
+      "description": "The ja localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/ja.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/ja.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-ko",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: ko",
+      "description": "The ko localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/ko.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/ko.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-mk",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: mk",
+      "description": "The mk localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/mk.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/mk.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-nl",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: nl",
+      "description": "The nl localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/nl.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/nl.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-no",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: no",
+      "description": "The no localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/no.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/no.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-np",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: np",
+      "description": "The np localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/np.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/np.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-pl",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: pl",
+      "description": "The pl localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/pl.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/pl.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-pt-BR",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: pt-BR",
+      "description": "The pt-BR localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/pt-BR.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/pt-BR.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-pt",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: pt",
+      "description": "The pt localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/pt.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/pt.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-ro",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: ro",
+      "description": "The ro localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/ro.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/ro.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-ru",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: ru",
+      "description": "The ru localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/ru.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/ru.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-sk",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: sk",
+      "description": "The sk localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/sk.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/sk.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-sr-Cyrl-RS",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: sr-Cyrl-RS",
+      "description": "The sr-Cyrl-RS localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/sr-Cyrl-RS.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/sr-Cyrl-RS.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-sr-Latn-RS",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: sr-Latn-RS",
+      "description": "The sr-Latn-RS localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/sr-Latn-RS.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/sr-Latn-RS.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-sv",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: sv",
+      "description": "The sv localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/sv.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/sv.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-tr",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: tr",
+      "description": "The tr localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/tr.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/tr.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-uk",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: uk",
+      "description": "The uk localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/uk.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/uk.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-vi",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: vi",
+      "description": "The vi localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/vi.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/vi.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-zh-Hans",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: zh-Hans",
+      "description": "The zh-Hans localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/zh-Hans.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/zh-Hans.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-locale-zh-Hant",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) locale: zh-Hant",
+      "description": "The zh-Hant localization for shadcn-table-aria.",
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/locales/zh-Hant.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/locales/zh-Hant.ts"
+        }
+      ]
     }
   ]
 }
