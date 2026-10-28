@@ -85,7 +85,7 @@ pnpm --filter shadcn-table test               # Radix UI stories
 pnpm --filter shadcn-table test:base          # Base UI stories
 pnpm --filter shadcn-table test:aria          # React Aria stories
 pnpm check:bases                              # edition guard, library and examples, every edition against radix
-pnpm add-part <edition> --all                 # shadcn parts, then git status --short must print nothing
+pnpm add-part <edition> --all                 # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
