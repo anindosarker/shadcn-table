@@ -34,3 +34,18 @@ force; nothing here re-decides them.
    - No edition rename: shadcn's own slugs are `base`, `radix`, `aria`
      (ui.shadcn.com/docs/components/<slug>/*, styles `base-nova`, `radix-nova`, `aria-nova`),
      already ours.
+
+## shadcn parts
+
+2. shadcn parts (`registry/<edition>/components/ui/<part>.tsx`) are never edited; they are
+   what `shadcn add <part>` installs, formatted by `scripts/registry/add-part.mjs`. A check
+   that fails on a part is fixed in the check. Why: the aria `label.tsx` part was edited
+   (unused `import * as React`, TS6133) to satisfy `noUnusedLocals` in `tsconfig.radix.json`,
+   which every edition inherits; the config was the problem, the part was not.
+   - `label.tsx` is restored through `add-part.mjs`.
+   - `noUnusedLocals` and `noUnusedParameters` leave the tsconfigs (TypeScript cannot exempt a
+     path); unused code is ESLint's job: `@typescript-eslint/no-unused-vars` for the library,
+     parts (`registry/*/components/ui/*.tsx`) in `globalIgnores`, the folded MRT core gets
+     the rule with `args: 'none'` instead of `off` so no check is lost.
+   - Standards gain one line under Editions.
+   - The unused import is reported upstream to shadcn.
