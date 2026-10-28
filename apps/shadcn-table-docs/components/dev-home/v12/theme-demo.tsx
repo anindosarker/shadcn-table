@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 const placeholder = (
   <div
     role="status"
-    className="flex h-[53.5rem] items-center justify-center text-sm text-(--dh-ink-muted) sm:h-[60.5rem] md:h-[57rem] xl:h-[clamp(36rem,calc(100svh-var(--v4-nav-h)-2rem),60rem)]"
+    className="flex h-[56rem] items-center justify-center text-sm text-(--dh-ink-muted) sm:h-[79rem] md:h-[75.5rem] xl:h-[clamp(36rem,calc(100svh-var(--v4-nav-h)-2rem),60rem)]"
   >
     Loading demo
   </div>

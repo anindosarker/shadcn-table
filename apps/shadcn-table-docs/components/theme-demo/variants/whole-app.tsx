@@ -691,19 +691,20 @@ function PromptPane({ chat }: { chat: Chat }) {
         aria-hidden="true"
         className="flex items-end gap-2 rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper-2) py-2 pr-2 pl-3.5"
       >
-        <p className="flex min-h-5 min-w-0 flex-1 gap-2 py-1">
+        {/* two lines reserved (three on phones), so idle and typing keep
+         * one height and the chat above never jumps */}
+        <p className="flex min-h-[calc(2lh+0.5rem)] min-w-0 flex-1 gap-2 py-1 max-sm:min-h-[calc(3lh+0.5rem)]">
           <span className="shrink-0 text-(--dh-ink-muted) select-none">›</span>
           {chat.phase === 'typing' ? (
-            <span className="text-(--dh-ink)">
+            <span className="min-w-0 text-(--dh-ink)">
               <Typing key={chat.run} text={PROMPTS[chat.target]} />
               {CARET}
             </span>
           ) : (
             // idle: the caret waits where the next prompt starts
-            <span className="flex min-w-0">
+            <span className="line-clamp-2 min-w-0 max-sm:line-clamp-3">
               {CARET}
-              {/* one line, cut with an ellipsis where it does not fit */}
-              <span className="ml-1 min-w-0 truncate text-(--dh-ink-muted)">
+              <span className="ml-1 text-(--dh-ink-muted)">
                 Ask your agent to change your app theme. The table follows, no
                 extra changes needed.
               </span>
@@ -847,7 +848,7 @@ function Editor({
         className={cn(
           'grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)]',
           home
-            ? 'max-xl:h-[15rem] max-xl:flex-none'
+            ? 'max-xl:h-[17.5rem] max-xl:flex-none'
             : 'max-[90rem]:h-[28rem] max-[90rem]:flex-none',
         )}
       >
