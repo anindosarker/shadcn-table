@@ -1,5 +1,5 @@
 /**
- * Source files of one docs example folder (examples/<slug>/). Shared by
+ * Source files of one docs example folder (examples/<edition>/<slug>/). Shared by
  * packages/shadcn-table/scripts/registry/examples.mjs (the registry item's files)
  * and lib/example-source.ts (the playground's code explorer), so both see
  * the same files in the same order.
@@ -13,16 +13,12 @@ import path from 'node:path';
 /** The example's entry file, always listed first. */
 export const ENTRY_FILE = 'TS.tsx';
 
-/** The docs wrapper at the example root: renders the playground, not part of the example. */
-const WRAPPER_FILE = 'index.tsx';
-
 const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx', '.css', '.json']);
 
 /**
  * Paths of every source file under `dir`, relative to it with `/`
  * separators (`hooks/useUsersQuery.ts`), in tree order: `TS.tsx` first,
  * then in each folder its subfolders before its files, both alphabetical.
- * The root `index.tsx` wrapper is left out.
  * @param {string} dir
  * @returns {Promise<string[]>}
  */
@@ -44,7 +40,7 @@ export async function listExampleFiles(dir) {
     for (const entry of entries.filter((e) => e.isFile()).sort(byName)) {
       const file = rel ? `${rel}/${entry.name}` : entry.name;
       if (!SOURCE_EXTENSIONS.has(path.extname(entry.name))) continue;
-      if (file === WRAPPER_FILE || file === ENTRY_FILE) continue;
+      if (file === ENTRY_FILE) continue;
       out.push(file);
     }
     return out;

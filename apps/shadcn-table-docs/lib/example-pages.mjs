@@ -65,28 +65,33 @@ export async function loadExamplePages(pagesDir) {
 }
 
 /**
- * Default export name of examples/<slug>/index.tsx, the component a docs page
- * renders; undefined when the example has no index file.
- * @param {string} exampleDir
- * @returns {Promise<string | undefined>}
+ * `aggregation-and-grouping` to `AggregationAndGrouping`: the slug's words
+ * in PascalCase, the way scripts/example-map.mjs names the components.
+ * @param {string} slug
  */
-export async function readExampleExportName(exampleDir) {
-  const indexSource = await fs
-    .readFile(path.join(exampleDir, 'index.tsx'), 'utf8')
-    .catch(() => '');
-  return indexSource.match(/export\s+default\s+(\w+)/)?.[1];
-}
+export const pascal = (slug) =>
+  slug
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join('');
+
+/**
+ * Name of the component a docs page renders for examples/<edition>/<slug>,
+ * `<PascalCase(slug)>Example`, as scripts/example-map.mjs generates it.
+ * @param {string} slug
+ */
+export const exampleExportName = (slug) => `${pascal(slug)}Example`;
 
 /**
  * The docs page for an example: the page named after the slug, else the
- * first page rendering the example's index component.
- * @param {{ slug: string; exportName?: string }} example
+ * first page rendering the example's component.
+ * @param {string} slug
  * @param {Awaited<ReturnType<typeof loadExamplePages>>} pages
  * @returns {ExamplePage | undefined}
  */
-export function findExamplePage({ slug, exportName }, pages) {
+export function findExamplePage(slug, pages) {
   return (
-    pages.bySlug.get(slug) ??
-    (exportName ? pages.byComponent.get(exportName) : undefined)
+    pages.bySlug.get(slug) ?? pages.byComponent.get(exampleExportName(slug))
   );
 }
