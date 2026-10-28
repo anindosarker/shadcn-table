@@ -33,7 +33,7 @@ decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` 
   `/radix/`, `/base/`, `/aria/` 200 and `/?path=/story/x` 3xx to `/base/?path=/story/x`.
   Local gate: three builds into `storybook-static/{radix,base,aria}`, `pnpm exec serve
   storybook-static -l 5344`, `node scripts/check-storybook.mjs --base http://localhost:5344`:
-  `43 passed, 0 failed`, first line `SKIP root redirect (status 200, no redirect on this
+  `42 passed, 0 failed, 1 skipped`, first line `SKIP root redirect (status 200, no redirect on this
   server)`. The Vercel redirect cannot be tested locally; `smoke.mjs` checks it after the
   deploy. Toolbar selected state: the current button keeps its 1px outline
   (`theme.appBorderColor`) and gets a 2px bottom bar in `theme.barSelectedColor`
@@ -67,13 +67,18 @@ decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` 
   apps/shadcn-table-docs/public/r` empty (gitignored; `diff -r` against the baseline above).
 - `check:bases` green; docs `types:check`, `lint` green; docs `build` green (runs `registry:build`, `registry:items`,
   `registry:hosted` first; `git status --short` afterwards shows no tracked change).
-- `check-storybook.mjs` 43 passed against the local three-folder build.
+- `check-storybook.mjs` 42 passed, 1 skipped (root redirect) against the local three-folder build.
 - `check-pages.mjs` against the dev server on 5347, all clusters: `--edition radix`, `--edition
   base`, `--edition aria` and no `--edition` (fresh context, Base UI) each `1652 passed, 0
   failed`. The `warn: e.mjs redefines /` line predates this part.
 - `pr.yml` on the verifier's CI-only PR (touches `packages/shadcn-table/registry` and
   `skills/`, so it needs a `release:` label, `release:patch` per decision 7). After release:
   `smoke.mjs` (the redirect check is new).
+- Review round: fixed all four findings. CHANGELOG `### Fixed` bullet for the Base UI and React
+  Aria hosted locale descriptions, `### Changed` now says the hosted item names are unchanged
+  (`643b1d16`); `demoLoop` and `commandBarBase` take `{ page, check, edition }` (`fd06c1b9`);
+  `check-storybook.mjs` prints passed, failed and skipped apart (`5a7fec34`); `editionHref`
+  doc comment rewrapped at 80 columns (`670563df`). Declined: none.
 
 ## Owner attention
 
