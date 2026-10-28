@@ -9,9 +9,8 @@ import {
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 
-// MUI Collapse orientation="horizontal": tw-animate-css ships only the height
-// pair (collapsible-down/up), so the width pair lives here, driven by the
-// radix-measured --radix-collapsible-content-width like the height pair.
+// MUI Collapse orientation="horizontal", driven by the
+// --disclosure-panel-width React Aria's DisclosurePanel measures itself into.
 // overflow: hidden sits inside the keyframes so it applies only while the
 // animation runs, as MUI Collapse clips while transitioning and sets
 // overflow: visible once entered. Rendered as a hoisted
@@ -22,14 +21,14 @@ export const stCollapsibleKeyframes = `@keyframes st-collapsible-right {
     overflow: hidden;
   }
   to {
-    width: var(--radix-collapsible-content-width);
+    width: var(--disclosure-panel-width);
     overflow: hidden;
   }
 }
 
 @keyframes st-collapsible-left {
   from {
-    width: var(--radix-collapsible-content-width);
+    width: var(--disclosure-panel-width);
     overflow: hidden;
   }
   to {

@@ -78,31 +78,40 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
       })}
       source={table.store}
     >
-      {({ isSaving, showProgressBars }) => (
-        <Collapsible
-          {...collapsibleProps}
-          open={showProgressBars !== false && (showProgressBars || isSaving)}
-          className={cn(
-            linearProgressWrapperVariants({ isTopToolbar }),
-            collapsibleProps?.className,
-          )}
-        >
-          <style href="st-linear-progress" precedence="low">
-            {linearProgressKeyframes}
-          </style>
-          <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-            <Progress
-              aria-busy="true"
-              {...progressComponentProps}
-              className={cn(
-                isIndeterminate && 'st-progress-indeterminate',
-                progressComponentProps?.className,
+      {({ isSaving, showProgressBars }) => {
+        const isExpanded =
+          showProgressBars !== false && (showProgressBars || isSaving);
+
+        return (
+          <Collapsible
+            {...collapsibleProps}
+            isExpanded={isExpanded}
+            className={cn(
+              linearProgressWrapperVariants({ isTopToolbar }),
+              collapsibleProps?.className,
+            )}
+          >
+            <style href="st-linear-progress" precedence="low">
+              {linearProgressKeyframes}
+            </style>
+            {/* React Aria keeps a collapsed panel's children mounted. */}
+            <CollapsibleContent className="h-(--disclosure-panel-height) transition-[height] duration-200 ease-out">
+              {isExpanded && (
+                <Progress
+                  aria-busy="true"
+                  {...progressComponentProps}
+                  className={cn(
+                    isIndeterminate && 'st-progress-indeterminate',
+                    progressComponentProps?.className,
+                  )}
+                  isIndeterminate={isIndeterminate}
+                  value={progressComponentProps?.value ?? undefined}
+                />
               )}
-              value={progressComponentProps?.value ?? undefined}
-            />
-          </CollapsibleContent>
-        </Collapsible>
-      )}
+            </CollapsibleContent>
+          </Collapsible>
+        );
+      }}
     </Subscribe>
   );
 };

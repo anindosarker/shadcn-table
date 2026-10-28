@@ -143,9 +143,11 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                <Collapsible open={row.getIsExpanded()}>
-                  <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-                    {DetailPanel}
+                // React Aria keeps a collapsed panel's children mounted; the
+                // panel renders them only while expanded, as Radix does.
+                <Collapsible isExpanded={row.getIsExpanded()}>
+                  <CollapsibleContent className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out">
+                    {row.getIsExpanded() && DetailPanel}
                   </CollapsibleContent>
                 </Collapsible>
               )}
