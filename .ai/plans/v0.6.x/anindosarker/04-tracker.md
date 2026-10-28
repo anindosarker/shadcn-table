@@ -46,3 +46,16 @@ Branch `v0.6/st-checkbox`, worktree `09`, from `claude/review` at `c872dfc4`.
   the faded fill instead of the whole box at 50%); every other state matches.
 - `ST_Checkbox` wraps the part in a `relative inline-flex` span (needed for the overlay), one
   extra element around every library checkbox.
+
+## Gates
+
+Run on 214977e4 from a clean tree; PR https://github.com/anindosarker/shadcn-table/pull/53, `pr.yml` run 40758797288.
+
+- `pnpm add-part radix checkbox && pnpm add-part base checkbox && git status --short`: pass, prints nothing
+- `grep -rn forkedUi packages/shadcn-table`: pass, prints nothing
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`: pass, 0 errors each
+- `lint`: pass, 0 errors (9 pre-existing warnings in docs examples not touched here)
+- `check:bases`: pass
+- `registry:build`: pass
+- `test`, `test:base`, `test:aria`: pass, 63 files and 446 tests each
+- `pr.yml`: pass, run 40758797288, all 15 jobs green (bases, docs, five install scenarios, library and test per edition, registry); release impact run 40758799340 green
