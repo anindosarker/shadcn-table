@@ -36,13 +36,12 @@ export const ST_ToggleGlobalFilterButton = ({
         <ST_Tooltip title={rest?.title ?? localization.showHideSearch}>
           <Button
             aria-label={rest?.title ?? localization.showHideSearch}
-            disabled={!!globalFilter && showGlobalFilter}
+            isDisabled={!!globalFilter && showGlobalFilter}
             onClick={handleToggleSearch}
             size="icon"
             type="button"
             variant="ghost"
             {...rest}
-            title={undefined}
           >
             {showGlobalFilter ? <SearchOffIcon /> : <SearchIcon />}
           </Button>

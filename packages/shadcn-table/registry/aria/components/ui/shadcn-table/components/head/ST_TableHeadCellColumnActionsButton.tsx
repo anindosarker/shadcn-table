@@ -38,10 +38,11 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleClick = (event: MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    setAnchorEl(event.currentTarget);
+    if (event.currentTarget instanceof HTMLElement)
+      setAnchorEl(event.currentTarget);
   };
 
   const iconButtonProps = {
@@ -73,7 +74,6 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
             columnActionsButtonVariants(),
             iconButtonProps?.className,
           )}
-          title={undefined}
         >
           {iconButtonProps?.children ?? <MoreVertIcon className="scale-90" />}
         </Button>

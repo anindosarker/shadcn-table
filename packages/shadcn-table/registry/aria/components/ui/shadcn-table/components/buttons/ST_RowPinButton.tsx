@@ -30,7 +30,7 @@ export const ST_RowPinButton = <TData extends ST_RowData>({
 
   const [tooltipOpened, setTooltipOpened] = useState(false);
 
-  const handleTogglePin = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleTogglePin = (event: MouseEvent) => {
     setTooltipOpened(false);
     event.stopPropagation();
     row.pin(row.getIsPinned() ? false : pinningPosition);
