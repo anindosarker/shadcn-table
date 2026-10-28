@@ -53,6 +53,12 @@ export const DEV_GROUPS: readonly DevGroup[] = [
           'globals.css diff animates while the table file stays at 0 changes, beside the live app.',
       },
       {
+        href: '/dev/theme/8',
+        name: 'Prompt diff',
+        description:
+          'Empty diff plus a Prompt tab where an AI restyles the app, a plain-words visual diff and a readable status line.',
+      },
+      {
         href: '/dev/theme/7',
         name: 'No step 3',
         description:
