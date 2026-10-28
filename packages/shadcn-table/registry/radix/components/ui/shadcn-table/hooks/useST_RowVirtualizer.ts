@@ -41,9 +41,6 @@ export const useST_RowVirtualizer = <
   });
 
   const realRows = rows ?? getRowModel().rows;
-  /**
-   * when filtering, should find the correct index in filtered rows
-   */
   const draggingRowIndex = useMemo(
     () =>
       draggingRow?.id

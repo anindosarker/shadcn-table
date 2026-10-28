@@ -1,7 +1,3 @@
-// Owns the filter modes state core does not have: the per-column filter fn map
-// `columnFilterFns`, the chosen `globalFilterFn` and the `showColumnFilters` and
-// `showGlobalFilter` flags, with their `on*Change` options and `set*` table APIs.
-// The column defs seed `columnFilterFns` through `initialState`.
 import {
   assignTableAPIs,
   functionalUpdate,

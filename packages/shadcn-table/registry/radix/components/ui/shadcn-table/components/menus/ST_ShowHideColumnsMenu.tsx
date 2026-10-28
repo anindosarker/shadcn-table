@@ -47,7 +47,6 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
   // These feed the column list memos, so they are hook subscriptions.
@@ -125,7 +124,6 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onCloseAutoFocus={(event) => {

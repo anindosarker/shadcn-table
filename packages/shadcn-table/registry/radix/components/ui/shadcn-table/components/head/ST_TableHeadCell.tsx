@@ -1,8 +1,5 @@
 import { type DragEvent, type KeyboardEvent } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-// import { useTheme } from '@mui/material/styles';
-// import { type Theme } from '@mui/material/styles';
-// Note: useTheme dropped: align->text-start, grey[500]->muted-foreground.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -39,7 +36,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   ...rest
 }: ST_TableHeadCellProps<TData>) => {
   const table = header.table;
-  // const theme = useTheme();
   const {
     options: {
       columnFilterDisplayMode,
@@ -54,8 +50,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       enableMultiSort,
       enableStickyHeader,
       layoutMode,
-      // mrtTheme: { draggingBorderColor },
-      // Note: mrtTheme registry dropped: draggingBorderColor → var(--color-primary).
       stTableHeadCellProps,
     },
     refs: { tableHeadCellRefs },
@@ -189,7 +183,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
           columnResizeMode === 'onChange' &&
           !header.subHeaders.length;
 
-        // Note: MRT's `!important` dropped: inline style objects can't express it; draggingBorders spreads last anyway.
         const borderStyle = showResizeBorder
           ? `2px solid var(--color-primary)`
           : draggingColumn?.id === column.id

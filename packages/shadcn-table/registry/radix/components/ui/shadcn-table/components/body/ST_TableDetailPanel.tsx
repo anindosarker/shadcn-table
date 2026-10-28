@@ -47,14 +47,11 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   virtualRow,
   ...rest
 }: ST_TableDetailPanelProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
   const table = row.table;
   const {
     getVisibleLeafColumns,
     options: {
       layoutMode,
-      // mrtTheme: { baseBackgroundColor },
-      // Note: mrtTheme registry dropped project-wide; bg-background handles theming
       renderDetailPanel,
       stDetailPanelProps,
       stTableBodyRowProps,
@@ -146,8 +143,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                // <Collapse in={row.getIsExpanded()} mountOnEnter unmountOnExit>{DetailPanel}</Collapse>
-                // Note: MUI Collapse → ui/Collapsible; radix unmounts closed content (= mountOnEnter/unmountOnExit).
                 <Collapsible open={row.getIsExpanded()}>
                   <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
                     {DetailPanel}

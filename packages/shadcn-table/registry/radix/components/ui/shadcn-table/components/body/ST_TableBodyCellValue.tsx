@@ -22,14 +22,9 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   staticColumnIndex,
   staticRowIndex,
 }: ST_TableBodyCellValueProps<TData>) => {
-  // The cell carries the core table; the ST wrapper types re-type its getters.
   const table = cell.table;
   const {
-    options: {
-      enableFilterMatchHighlighting,
-      // mrtTheme: { matchHighlightColor },
-      // Note: mrtTheme dropped project-wide; matchHighlightColor → destructive/20 (dark /30), override via [data-slot="st-match-highlight"].
-    },
+    options: { enableFilterMatchHighlighting },
   } = table;
   const { column, row } = cell;
   const { columnDef } = column;

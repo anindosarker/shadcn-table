@@ -26,7 +26,6 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   row,
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
   const table = row.table;
   const {
     options: { enableRowPinning, rowPinningDisplayMode },

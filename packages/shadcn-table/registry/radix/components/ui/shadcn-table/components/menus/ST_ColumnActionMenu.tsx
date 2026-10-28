@@ -55,7 +55,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         VisibilityOffIcon,
       },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderColumnActionsMenuItems,
     },
     refs: { filterInputRefs },
@@ -151,7 +150,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    // Note: disableScrollLock dropped — Radix DropdownMenu keeps its modal default (scroll-locks), owner ruling.
     <DropdownMenu
       open={!!anchorEl}
       onOpenChange={(open) => {

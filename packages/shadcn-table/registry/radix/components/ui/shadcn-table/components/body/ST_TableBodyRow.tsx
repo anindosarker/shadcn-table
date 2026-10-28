@@ -19,7 +19,7 @@ import { ST_TableDetailPanel } from '@/components/ui/shadcn-table/components/bod
 export interface ST_TableBodyRowProps<TData extends ST_RowData>
   extends TableRowProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
-  /** MUI TableRow `hover`: false drops the hover background. Default true. */
+  /** false drops the hover background. Default true. */
   hover?: boolean;
   numRows?: number;
   pinnedRowIds?: string[];
@@ -59,10 +59,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   virtualRow,
   ...rest
 }: ST_TableBodyRowProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
   const table = row.table;
-  // const theme = useTheme();
-  // Note: MUI useTheme dropped project-wide — shadcn CSS vars handle theming.
 
   const {
     options: {
@@ -71,12 +68,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
       enableStickyFooter,
       enableStickyHeader,
       layoutMode,
-      // mrtTheme: {
-      //   baseBackgroundColor,
-      //   pinnedRowBackgroundColor,
-      //   selectedRowBackgroundColor,
-      // },
-      // Note: mrtTheme registry dropped project-wide — bg-background / primary tokens.
       stTableBodyRowProps,
       renderDetailPanel,
       rowPinningDisplayMode,
@@ -96,9 +87,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     }),
     ...rest,
   };
-
-  // const sx = parseFromValuesOrFunc(tableRowProps?.sx, theme as any);
-  // Note: no MUI sx in ST; customRowHeight drops MRT's `?? sx?.height` fallback.
 
   const customRowHeight =
     // @ts-expect-error style.height is string | number; parseInt expects a string
@@ -246,8 +234,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                   rowVirtualizer?.measureElement(node);
                 }
               }}
-              // selected={isRowSelected}
-              // Note: MUI TableRow prop; data-selected + the td:after overlay carry selection.
               {...tableRowProps}
               style={{
                 transform: virtualRow

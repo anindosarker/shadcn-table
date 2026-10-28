@@ -8,8 +8,6 @@ import {
 } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
-// import { useTheme } from '@mui/material/styles';
-// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -50,9 +48,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   staticRowIndex,
   ...rest
 }: ST_TableBodyCellProps<TData>) => {
-  // The cell carries the core table; the ST wrapper types re-type its getters.
   const table = cell.table;
-  // const theme = useTheme();
   const {
     options: {
       columnResizeDirection,
@@ -66,8 +62,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
       enableGrouping,
       enableKeyboardShortcuts,
       layoutMode,
-      // mrtTheme: { draggingBorderColor },
-      // Note: mrtTheme registry dropped — draggingBorderColor → var(--color-primary).
       stSkeletonProps,
       stTableBodyCellProps,
     },
@@ -215,7 +209,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
         const showResizeBorder =
           isResizingColumn && columnResizeMode === 'onChange';
 
-        // Note: MRT's `!important` dropped; React style objects can't express it; draggingBorders spread last anyway.
         const borderStyle = showResizeBorder
           ? `2px solid var(--color-primary)`
           : isDraggingColumn || isDraggingRow
@@ -334,7 +327,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                   (columnDef.PlaceholderCell?.({ cell, column, row, table }) ??
                   null)
                 ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
-                  // Note: MUI Skeleton animation="wave" dropped; ui/skeleton's animate-pulse is the stand-in.
                   <Skeleton
                     {...skeletonProps}
                     style={{

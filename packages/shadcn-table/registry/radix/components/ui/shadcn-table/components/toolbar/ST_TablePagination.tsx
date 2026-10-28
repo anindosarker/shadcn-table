@@ -59,8 +59,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   ...rest
 }: ST_TablePaginationProps) => {
   const table = useSTContext<TData>();
-  // const theme = useTheme();
-  // Note: rtl via `rtl:rotate-180` class.
   const isMobile = useST_MediaQuery('(max-width:720px)');
 
   const {
@@ -98,9 +96,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   if (isMobile && SelectProps?.native !== false) {
     SelectProps.native = true;
   }
-
-  // const tooltipProps = getCommonTooltipProps();
-  // Note: ST_Tooltip applies getCommonTooltipProps() itself.
 
   const {
     children: selectPropsChildren,
@@ -223,8 +218,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
               </div>
             )}
             {paginationDisplayMode === 'pages' ? (
-              // Note: MUI Pagination/PaginationItem → shadcn Pagination. PaginationPrevious/
-              // Next not used: hardcoded English text + lucide icons (locales, icon overrides).
+              // Not PaginationPrevious/Next: they hardcode English text and
+              // lucide icons, which bypasses localization and icon overrides.
               <Pagination
                 {...restPaginationProps}
                 className={cn('mx-0 w-auto', restPaginationProps?.className)}
@@ -251,7 +246,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                     const { page } = item;
                     const nav = navItems[item.type];
                     return (
-                      // Note: PaginationLink (href-less <a>, not keyboard-operable) → Button.
+                      // A Button, not PaginationLink: an href-less <a> is not
+                      // keyboard-operable.
                       <PaginationItem key={index}>
                         <Button
                           aria-current={item.selected ? 'page' : undefined}
