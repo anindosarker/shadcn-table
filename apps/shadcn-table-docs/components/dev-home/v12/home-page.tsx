@@ -79,7 +79,10 @@ export function HomePage({
           </div>
         </section>
 
-        <section className="v12-section" aria-labelledby="v12-theming-title">
+        <section
+          className="v12-section v12-theming"
+          aria-labelledby="v12-theming-title"
+        >
           <div className="v4-shell">
             <div className="v12-head">
               <div>
@@ -98,7 +101,9 @@ export function HomePage({
             </div>
           </div>
           <div className="v12-wide">
-            <RiseFigure caption="Live demo">
+            {/* no caption: the heading above names it, and the section fits
+             * one screen */}
+            <RiseFigure>
               <ThemeDemo />
             </RiseFigure>
           </div>

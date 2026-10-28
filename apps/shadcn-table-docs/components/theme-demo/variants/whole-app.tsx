@@ -713,15 +713,18 @@ type Tab = (typeof TABS)[number];
 
 /** The editor pane: the prompt that asks for the theme, globals.css as a
  * diff from the last site's theme in plain words and in code, data-table.tsx
- * locked, and the stat that sums them up. */
+ * locked, and the stat that sums them up. `home`: as tall as the frame
+ * beside it, or a short strip under it, without the stat on phones. */
 function Editor({
   chat,
   light,
   dark,
+  home,
 }: {
   chat: Chat;
   light: Diff;
   dark: Diff;
+  home: boolean;
 }) {
   const [tab, setTab] = useState<Tab>('prompt');
   const id = useId();
@@ -768,13 +771,21 @@ function Editor({
   return (
     <figure
       aria-label="Editor: a prompt asks for a new look for the app, the globals.css diff it makes, and data-table.tsx, unchanged"
-      className="flex min-w-0 flex-col overflow-hidden bg-(--dh-paper) font-mono text-[0.75rem] leading-5 text-(--dh-ink)"
+      className={cn(
+        'flex min-w-0 flex-col overflow-hidden bg-(--dh-paper) font-mono text-[0.75rem] leading-5 text-(--dh-ink)',
+        // h-0 plus min-h-full: the frame alone sets the row's height
+        home &&
+          'order-last border-dashed border-(--v12-dash) max-xl:border-t xl:order-none xl:h-0 xl:min-h-full',
+      )}
     >
       <div
         role="tablist"
         aria-label="Files"
         onKeyDown={onKeyDown}
-        className="flex overflow-x-auto border-b border-dashed border-(--v12-dash) bg-(--dh-paper-2)"
+        className={cn(
+          'flex overflow-x-auto border-b border-dashed border-(--v12-dash) bg-(--dh-paper-2)',
+          home && '[scrollbar-width:none]',
+        )}
       >
         <button {...tabProps('prompt')}>
           <MessageSquareIcon aria-hidden="true" className="size-3.5" />
@@ -801,7 +812,12 @@ function Editor({
             />
             <LockIcon aria-hidden="true" className="size-3" />
             {/* beside the frame, the lock alone keeps the tabs in one row */}
-            <span className="hidden sm:inline min-[90rem]:hidden">
+            <span
+              className={cn(
+                'hidden sm:inline',
+                home ? 'xl:hidden' : 'min-[90rem]:hidden',
+              )}
+            >
               unchanged
             </span>
           </span>
@@ -811,7 +827,14 @@ function Editor({
       {/* the panels share one cell, so a tab switch never changes the
        * pane's height; stacked above the frame, the cell gets a fixed
        * height and the panels scroll */}
-      <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] max-[90rem]:h-[28rem] max-[90rem]:flex-none">
+      <div
+        className={cn(
+          'grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)]',
+          home
+            ? 'max-xl:h-[15rem] max-xl:flex-none'
+            : 'max-[90rem]:h-[28rem] max-[90rem]:flex-none',
+        )}
+      >
         <div
           {...panelProps('prompt')}
           className={cn(
@@ -854,7 +877,12 @@ function Editor({
         </div>
       </div>
 
-      <div className="border-t border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-4 py-3">
+      <div
+        className={cn(
+          'border-t border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-4 py-3',
+          home && 'max-sm:hidden',
+        )}
+      >
         <p className="text-(--dh-ink-muted)">
           <span aria-hidden="true" className="text-(--dh-accent)">
             ${' '}
@@ -894,7 +922,7 @@ function Editor({
 
 // the homepage's Replay pill: dashed hairline, solid once picked
 const CHIP =
-  'inline-flex h-7 items-center gap-1.5 rounded-full border border-dashed border-(--v12-dash) px-2.5 font-mono text-xs text-(--dh-ink-muted) transition-colors hover:border-(--dh-rule-strong) hover:bg-(--dh-paper-2) hover:text-(--dh-ink) aria-pressed:border-solid aria-pressed:border-(--dh-ink) aria-pressed:text-(--dh-ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--dh-focus)';
+  'inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full whitespace-nowrap border border-dashed border-(--v12-dash) px-2.5 font-mono text-xs text-(--dh-ink-muted) transition-colors hover:border-(--dh-rule-strong) hover:bg-(--dh-paper-2) hover:text-(--dh-ink) aria-pressed:border-solid aria-pressed:border-(--dh-ink) aria-pressed:text-(--dh-ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--dh-focus)';
 
 /**
  * Theme demo variant 9 (whole app): variant 8 (prompt diff) where each
@@ -907,7 +935,13 @@ const CHIP =
  * once, without typing or motion. Borderless panes in the homepage's
  * tokens and dashed hairlines: the caller wraps it in a RiseFigure.
  */
-export function WholeApp() {
+export function WholeApp({
+  home = false,
+}: {
+  /** The homepage cut: one screen tall on desktop, the frame first on
+   * narrow screens, and a phone-sized footer. */
+  home?: boolean;
+} = {}) {
   const { theme, paused, select, resume, ref } = useThemeCycle({
     intervalMs: CYCLE_MS,
   });
@@ -967,12 +1001,22 @@ export function WholeApp() {
 
   return (
     <div className="flex flex-col">
-      <div className="grid items-stretch min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]">
-        <Editor chat={chat} light={light} dark={dark} />
+      <div
+        className={cn(
+          'grid items-stretch',
+          home
+            ? 'xl:grid-cols-[minmax(0,5fr)_minmax(0,8fr)]'
+            : 'min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]',
+        )}
+      >
+        <Editor chat={chat} light={light} dark={dark} home={home} />
 
         <div
           ref={ref}
-          className="flex min-w-0 flex-col overflow-hidden border-dashed border-(--v12-dash) bg-(--dh-paper-2) max-[90rem]:border-t min-[90rem]:border-l"
+          className={cn(
+            'flex min-w-0 flex-col overflow-hidden border-dashed border-(--v12-dash) bg-(--dh-paper-2)',
+            home ? 'xl:border-l' : 'max-[90rem]:border-t min-[90rem]:border-l',
+          )}
         >
           <div className="flex items-center gap-3 border-b border-dashed border-(--v12-dash) px-3 py-2">
             <span aria-hidden="true" className="flex gap-1.5">
@@ -996,13 +1040,22 @@ export function WholeApp() {
             </p>
           </div>
           <ThemeScope theme={shown.id} className="flex flex-1 flex-col">
-            <WholeAppSite name={site.name} />
+            <WholeAppSite name={site.name} home={home} />
           </ThemeScope>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-dashed border-(--v12-dash) px-(--v12-pad) py-3 text-sm text-(--dh-ink-muted)">
-        <div role="group" aria-label="Site" className="flex flex-wrap gap-1.5">
+        <div
+          role="group"
+          aria-label="Site"
+          className={cn(
+            'flex flex-wrap gap-1.5',
+            // phones: one row that scrolls
+            home &&
+              'max-sm:w-full max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:[scrollbar-width:none]',
+          )}
+        >
           {DEMO_THEMES.map((t) => (
             <button
               key={t.id}
@@ -1027,7 +1080,12 @@ export function WholeApp() {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div
+          className={cn(
+            'flex flex-wrap items-center gap-x-4 gap-y-2',
+            home && 'max-sm:w-full max-sm:flex-nowrap max-sm:justify-between',
+          )}
+        >
           <p
             className={cn(
               'flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 transition-opacity',
@@ -1041,7 +1099,13 @@ export function WholeApp() {
                 paused ? 'bg-(--dh-rule-strong)' : 'bg-(--dh-accent)',
               )}
             />
-            <span className="flex items-center gap-1.5 text-(--dh-ink)">
+            <span
+              className={cn(
+                'flex items-center gap-1.5 text-(--dh-ink)',
+                // the reply says it; keeps the footer to one row
+                home && 'max-[90rem]:hidden',
+              )}
+            >
               <CheckIcon
                 aria-hidden="true"
                 className="size-4 text-(--dh-accent)"
@@ -1073,7 +1137,9 @@ export function WholeApp() {
               ) : (
                 <PauseIcon aria-hidden="true" className="size-3" />
               )}
-              {paused ? 'Play' : 'Pause'}
+              <span className={cn(home && 'max-sm:sr-only')}>
+                {paused ? 'Play' : 'Pause'}
+              </span>
             </button>
             <button
               type="button"
@@ -1081,7 +1147,7 @@ export function WholeApp() {
               className={cn(CHIP, 'font-sans')}
             >
               <RotateCcwIcon aria-hidden="true" className="size-3" />
-              Replay
+              <span className={cn(home && 'max-sm:sr-only')}>Replay</span>
             </button>
           </div>
         </div>
