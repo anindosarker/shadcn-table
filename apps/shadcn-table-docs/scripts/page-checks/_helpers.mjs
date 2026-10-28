@@ -3,6 +3,10 @@
  * the Playwright `page` and the `check(name, ok, extra?)` reporter the runner
  * passes to each page check.
  */
+import {
+  DEFAULT_EDITION,
+  EDITION_LABELS,
+} from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
 
 /** Prop-table option names (3rd cell; detail-panel rows have no cells). */
 export async function names(page, tableId) {
@@ -290,10 +294,11 @@ export async function exampleGroup(page, tabs, check) {
  * set data-rac on what they render, Radix and Base UI never do), while the
  * Code view keeps showing the base-neutral source, with
  * `@/components/ui/shadcn-table` imports and no `ui-radix`, `ui-base` or
- * `ui-aria`; then Radix again, same source. No console errors is asserted
- * by the runner. The explorer highlights the active file in the browser, so
- * the code view's text is read only once a `code` element is in the
- * explorer.
+ * `ui-aria`; then Radix again, same source. The page opens on the default
+ * base (Base UI) or the runner's --edition, so the loop starts by picking
+ * Radix UI. No console errors is asserted by the runner. The explorer
+ * highlights the active file in the browser, so the code view's text is
+ * read only once a `code` element is in the explorer.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
@@ -346,6 +351,7 @@ export async function baseSwitch(page, id, check) {
     !text.includes('ui-radix') &&
     !text.includes('ui-base') &&
     !text.includes('ui-aria');
+  await pick('Radix UI');
   check(`${id}: radix markup`, (await baseMarkup()) === 0);
   check(
     `${id}: radix markup, no react aria`,
@@ -420,16 +426,17 @@ const DEMO_TIMEOUT_MS = 30000;
  * demo (components/dev-home/v12/signal-demo.tsx) plays only while it is on
  * screen, so it is scrolled into view; each hold waits until its aria-live
  * status reads the last step and lasts at least DEMO_MIN_HOLD_MS. The first
- * hold runs on the default base (Radix UI); the second picks Base UI through
- * the agent bar's base menu and reloads, the third does the same for React
- * Aria. A render loop or crash that needs
+ * hold runs on the base the page opened on (the default, Base UI, or the
+ * runner's --edition); the next two pick the other bases through the agent
+ * bar's base menu and reload. A render loop or crash that needs
  * time or the demo's step changes to surface fails here (v0.3.0 died with
  * React error #185 about 9.6 s after load, when the demo's replay edit effect
  * re-ran on every render): the runner's pageerror and console listeners stay
  * attached across the reload, and a renderer crash fails
  * `demo: no renderer crash`.
  */
-export async function demoLoop(page, check) {
+export async function demoLoop(page, check, edition) {
+  const opened = EDITION_LABELS[edition] ?? EDITION_LABELS[DEFAULT_EDITION];
   let crashed = false;
   page.once('crash', () => {
     crashed = true;
@@ -474,8 +481,10 @@ export async function demoLoop(page, check) {
     if (!tab.toLowerCase().includes(label.toLowerCase()))
       throw new Error(`base not kept after reload: ${tab.trim()}`);
   };
-  await run('demo: radix ui reaches Grouping');
-  for (const label of ['Base UI', 'React Aria']) {
+  await run(`demo: ${opened.toLowerCase()} reaches Grouping`);
+  for (const label of Object.values(EDITION_LABELS).filter(
+    (l) => l !== opened,
+  )) {
     const name = `demo: ${label.toLowerCase()} reaches Grouping`;
     if (crashed) check(name, false, 'skipped after crash');
     else await run(name, choose(label));

@@ -225,7 +225,7 @@ const checks = {
       );
     },
   ),
-  '/': async ({ page, check }) => {
+  '/': async ({ page, check, edition }) => {
     const h1 = page.locator('h1').first();
     check(
       'hero title',
@@ -237,8 +237,8 @@ const checks = {
     check('agent bar', (await bar.count()) === 1);
     check('agent prompt', txt.includes('Install shadcn-table in my app:'));
     await bar.getByRole('radio', { name: 'Command' }).click();
-    // The hosted registry URL of the selected base (Radix by default, the
-    // runner's --edition otherwise); the origin is the dev server's in dev.
+    // The hosted registry URL of the selected base (the default, Base UI, or
+    // the runner's --edition); the origin is the dev server's in dev.
     check(
       'install command',
       /pnpm dlx shadcn@latest add \S+\/r\/[a-z]+\/shadcn-table\.json/.test(
@@ -280,7 +280,7 @@ const checks = {
       'no contributors section',
       !txt.includes('Maintainers and Contributors'),
     );
-    await demoLoop(page, check);
+    await demoLoop(page, check, edition);
   },
 };
 
