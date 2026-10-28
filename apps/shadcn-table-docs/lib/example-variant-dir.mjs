@@ -4,4 +4,4 @@
  * components/dev-home import from them). Kept apart from the generator so
  * client code can import the names without its node:fs imports.
  */
-export const VARIANT_DIRS = { radix: '.radix', base: '.base' };
+export const VARIANT_DIRS = { radix: '.radix', base: '.base', aria: '.aria' };

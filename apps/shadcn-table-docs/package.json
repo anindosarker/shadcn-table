@@ -44,6 +44,7 @@
     "posthog-js": "^1.438.13",
     "radix-ui": "^1.8.1",
     "react": "^19.3.0",
+    "react-aria-components": "^1.22.1",
     "react-dom": "^19.3.0",
     "recharts": "^2.15.4"
   },

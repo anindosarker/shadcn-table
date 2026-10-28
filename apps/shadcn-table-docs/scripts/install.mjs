@@ -4,7 +4,7 @@
  * rendered examples, under components/ui-<base>/ (the table in
  * components/ui-<base>/shadcn-table/ plus the shadcn parts it imports,
  * installed from the base's style). The generated example variants
- * (lib/example-variants.mjs) import from there, so a reader on either base
+ * (lib/example-variants.mjs) import from there, so a reader on any base
  * tab sees that base's edition render.
  *
  * Source: the built item packages/shadcn-table/public/r/<item>.json
@@ -14,10 +14,11 @@
  * GitHub dependency. The item is rewritten on the way in: its
  * `@/components/ui/` imports point at `@/components/ui-<base>/` (the CLI
  * rewrites only `@/registry/...` specifiers). Each copy renders its own
- * keyframes in a hoisted style element; on the Base UI base the
- * st-collapsible-* keyframe names and the st-collapsible style href become
- * st-base-collapsible so they do not collide with the Radix copy's (keyframe
- * names are global and React keeps one style per href).
+ * keyframes in a hoisted style element; on the Base UI and React Aria bases
+ * the st-collapsible-* keyframe names and the st-collapsible style href
+ * become st-<base>-collapsible (st-base-collapsible, st-aria-collapsible) so
+ * they do not collide with the Radix copy's (keyframe names are global and
+ * React keeps one style per href).
  * `shadcn add` then runs with a temporary components.json (the base's style,
  * `ui` alias `@/components/ui-<base>`), so the bare registryDependencies
  * install as that base's parts into the same folder. The real
@@ -49,6 +50,7 @@ const LIB_R = path.join(
 const BASES = {
   radix: { item: 'shadcn-table', style: 'radix-nova' },
   base: { item: 'shadcn-table-base', style: 'base-nova' },
+  aria: { item: 'shadcn-table-aria', style: 'aria-nova' },
 };
 /** Parts the examples import that the item itself does not depend on. */
 const EXTRA_PARTS = ['table'];
@@ -95,10 +97,10 @@ for (const file of item.files) {
     /(['"])@\/components\/ui\//g,
     `$1${uiAlias}/`,
   );
-  if (base === 'base') {
+  if (base !== 'radix') {
     file.content = file.content.replace(
       /\bst-collapsible\b/g,
-      'st-base-collapsible',
+      `st-${base}-collapsible`,
     );
   }
 }
