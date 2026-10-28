@@ -114,9 +114,16 @@ force; nothing here re-decides them.
 ## Edition selector
 
 7. Base UI is the preselected edition wherever the reader picks one: the docs edition tabs
-   (`lib/base-tabs.mjs`) open on Base UI, and the Storybook root
-   (`storybook.shadcn-table.com/`) serves the Base UI build, Radix UI under `/radix/`. Why:
-   shadcn's own docs default to Base UI since nova. Decided 2026-10-29, ships in 0.6.1.
+   (`lib/base-tabs.mjs`, `defaultBase` in `lib/install.ts`) open on Base UI, and the Storybook
+   root (`storybook.shadcn-table.com/`) redirects to the Base UI build. Why: shadcn's own docs
+   default to Base UI since nova. Decided 2026-10-29, ships in 0.6.1.
+   - No edition lives at the Storybook root. The three builds sit under `/radix/`, `/base/`
+     and `/aria/` (`storybook:build` writes `storybook-static/radix`), and `/` redirects to
+     `/base/` with the query string kept, a Vercel redirect on the `storybook.` host in
+     `vercel.json`. Existing `/base/` and `/aria/` links keep working; old root links land on
+     Base UI, one toolbar click away from Radix UI. `staticEditionRoot`, `check-storybook.mjs`,
+     `smoke.mjs` and the docs `storybook-link.tsx` follow. Moving Base UI to the root instead
+     would have broken every `/base/` link and silently flipped every root link.
    - The Storybook edition tool marks the current edition with a visible selected state on its
      button, nothing else; today all three buttons look the same.
    - `REFERENCE_EDITION` stays `radix` for `check-bases.mjs`: it is the diff baseline, not a
