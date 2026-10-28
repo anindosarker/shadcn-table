@@ -1,7 +1,7 @@
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui-base/checkbox';
+import { ST_Checkbox } from '@/components/ui-base/shadcn-table/ST_Checkbox';
 import { Label } from '@/components/ui-base/label';
 import {
   type CheckboxProps,
@@ -88,7 +88,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
             className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
             title={undefined}
           >
-            <Checkbox
+            <ST_Checkbox
               // Base UI keeps the mixed state in its own `indeterminate` flag;
               // `checked` is always a boolean.
               checked={column.getFilterValue() === 'true'}

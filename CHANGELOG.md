@@ -27,6 +27,16 @@ date; merging it publishes the section as the GitHub release notes.
 
 - The Base UI and React Aria hosted locale items' descriptions name the hosted item
   `shadcn-table` (`/r/base/` and `/r/aria/` said `shadcn-table-base` and `shadcn-table-aria`).
+- shadcn parts re-added by a deterministic `add-part`: `pnpm add-part <edition> <part>` now
+  writes the same bytes whatever the invocation order (the `'use client'` directive is set per
+  file from the upstream item, `font-heading` survives the CLI's class resolution), and every
+  part of every edition was re-added once with it. Repo-internal; nothing changes for users.
+- Radix UI and Base UI: installing shadcn-table no longer replaces the project's
+  `components/ui/checkbox.tsx` with a fork. The indeterminate dash on the select-all and
+  partially selected row checkboxes is drawn by the library's own `ST_Checkbox` wrapper on
+  every edition, and `checkbox` arrives as a plain registry dependency. The checkbox filter's
+  unset state on React Aria now shows the same dash as on Radix UI and Base UI instead of a
+  check.
 
 ## 0.6.0 - 2026-10-28
 

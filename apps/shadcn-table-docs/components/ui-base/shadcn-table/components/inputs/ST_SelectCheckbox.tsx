@@ -1,7 +1,7 @@
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui-base/checkbox';
+import { ST_Checkbox } from '@/components/ui-base/shadcn-table/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui-base/radio-group';
 import {
   type CheckboxProps,
@@ -186,7 +186,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                   />
                 </RadioGroup>
               ) : (
-                <Checkbox
+                <ST_Checkbox
                   {...commonProps}
                   // Base UI keeps `indeterminate` as its own flag beside `checked`,
                   // so it goes after the spread. getIsSomeRowsSelected and

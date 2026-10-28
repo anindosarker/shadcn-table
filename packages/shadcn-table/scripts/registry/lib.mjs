@@ -1,7 +1,6 @@
 // Shared by the registry scripts and the per-edition item definitions
 // (registry/<edition>/registry.ts): the edition list, then the item builder,
-// which lists an item's files (the tree's library files plus the forked
-// parts), derives the registryDependencies from the `@/components/ui/<part>`
+// which lists an item's files (the tree's library files), derives the registryDependencies from the `@/components/ui/<part>`
 // imports and pins npm versions from package.json. The file list is never
 // hand-maintained.
 import fs from 'node:fs';
@@ -89,8 +88,7 @@ const uiImports = (files) => {
 
 /**
  * The items of one base: the main item (every library file of the tree
- * except the non-English locales, plus the forked ui parts) and one item per
- * locale. `path` values are relative to the package, `target` values are the
+ * except the non-English locales) and one item per locale. `path` values are relative to the package, `target` values are the
  * alias paths the CLI installs to.
  *
  * @param {{
@@ -100,7 +98,6 @@ const uiImports = (files) => {
  *   description: string,
  *   dependencies: Array<{ name: string, pinned?: boolean }>,
  *   devDependencies: Array<{ name: string, pinned?: boolean }>,
- *   forkedUi: string[],
  * }} base
  */
 export const baseItems = ({
@@ -110,7 +107,6 @@ export const baseItems = ({
   description,
   dependencies,
   devDependencies,
-  forkedUi,
 }) => {
   const uiDir = path.join(dir, 'components/ui');
   const libDir = path.join(dir, LIB_REL);
@@ -139,14 +135,9 @@ export const baseItems = ({
   const localeFiles = libEntries.filter(
     ([key]) => isLocale(key) && localeCode(key) !== 'en',
   );
-  // Forked ui parts ship inside the item instead of being registryDependencies.
-  const forkedFiles = forkedUi.map((part) =>
-    fileEntry(uiDir, path.join(uiDir, `${part}.tsx`)),
-  );
-
   const registryDependencies = uiImports(
-    [...coreFiles, ...forkedFiles].map((entry) => path.join(PKG, entry.path)),
-  ).filter((part) => !forkedUi.includes(part));
+    coreFiles.map((entry) => path.join(PKG, entry.path)),
+  );
 
   const main = {
     name,
@@ -158,7 +149,7 @@ export const baseItems = ({
       withVersion(n, 'devDependencies'),
     ),
     registryDependencies,
-    files: [...coreFiles, ...forkedFiles],
+    files: coreFiles,
   };
 
   const locales = localeFiles.map(([key, entry]) => {
