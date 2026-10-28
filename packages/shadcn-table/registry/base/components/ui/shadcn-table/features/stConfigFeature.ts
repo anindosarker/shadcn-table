@@ -18,6 +18,7 @@ import {
   type ST_Cell,
   type ST_CircularProgressProps,
   type ST_Column,
+  type ST_CoreTableInstance,
   type ST_ColumnVirtualizer,
   type ST_DisplayColumnDef,
   type ST_DisplayColumnIds,
@@ -141,13 +142,13 @@ export interface ST_TableOptions_Config<
   stColumnActionsButtonProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stColumnDragHandleProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stCopyButtonProps?:
@@ -155,25 +156,25 @@ export interface ST_TableOptions_Config<
         cell: ST_Cell<TData>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stCreateRowModalProps?:
     | ((props: {
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['dialog'])
     | TParts['dialog'];
   stDetailPanelProps?:
     | ((props: {
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   stEditRowDialogProps?:
     | ((props: {
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['dialog'])
     | TParts['dialog'];
   stEditTextFieldProps?:
@@ -181,7 +182,7 @@ export interface ST_TableOptions_Config<
         cell: ST_Cell<TData>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps & { error?: boolean; helperText?: ReactNode })
     | (InputProps & { error?: boolean; helperText?: ReactNode });
   stExpandAllButtonProps?:
@@ -191,53 +192,53 @@ export interface ST_TableOptions_Config<
     | ((props: {
         row: ST_Row<TData>;
         staticRowIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stFilterAutocompleteProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterCheckboxProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['checkbox'])
     | TParts['checkbox'];
   stFilterDatePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterDateTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterSliderProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['slider'])
     | TParts['slider'];
   stFilterTextFieldProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stLinearProgressProps?:
@@ -266,7 +267,7 @@ export interface ST_TableOptions_Config<
   stRowDragHandleProps?:
     | ((props: {
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stSearchTextFieldProps?:
@@ -279,7 +280,7 @@ export interface ST_TableOptions_Config<
     | ((props: {
         row: ST_Row<TData>;
         staticRowIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['checkbox'] | TParts['radio'])
     | (TParts['checkbox'] | TParts['radio']);
   stSkeletonProps?:
@@ -287,7 +288,7 @@ export interface ST_TableOptions_Config<
         cell: ST_Cell<TData>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => DivProps)
     | DivProps;
   stTableBodyCellProps?:
@@ -295,7 +296,7 @@ export interface ST_TableOptions_Config<
         cell: ST_Cell<TData>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   stTableBodyProps?:
@@ -306,7 +307,7 @@ export interface ST_TableOptions_Config<
         isDetailPanel?: boolean;
         row: ST_Row<TData>;
         staticRowIndex: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableRowProps & { hover?: boolean })
     | (TableRowProps & { hover?: boolean });
   stTableContainerProps?:
@@ -315,7 +316,7 @@ export interface ST_TableOptions_Config<
   stTableFooterCellProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   stTableFooterProps?:
@@ -330,7 +331,7 @@ export interface ST_TableOptions_Config<
   stTableHeadCellProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   stTableHeadProps?:
@@ -359,23 +360,23 @@ export interface ST_TableOptions_Config<
     | DivProps;
   onCreatingRowCancel?: (props: {
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => void;
   onCreatingRowSave?: (props: {
     exitCreatingMode: () => void;
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- edited values are user data of any shape, as in ST_TableOptions
     values: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   }) => Promise<void> | void;
   onEditingRowCancel?: (props: {
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => void;
   onEditingRowSave?: (props: {
     exitEditingMode: () => void;
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- edited values are user data of any shape, as in ST_TableOptions
     values: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   }) => Promise<void> | void;
@@ -404,33 +405,33 @@ export interface ST_TableOptions_Config<
     row: ST_Row<TData>;
     staticColumnIndex?: number;
     staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[];
   renderColumnActionsMenuItems?: (props: {
     closeMenu: () => void;
     column: ST_Column<TData>;
     internalColumnMenuItems: ReactNode[];
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[];
   renderColumnFilterModeMenuItems?: (props: {
     column: ST_Column<TData>;
     internalFilterOptions: ST_InternalFilterOption[];
     onSelectFilterMode: (filterMode: ST_FilterOption) => void;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[];
   renderCreateRowDialogContent?: (props: {
     internalEditComponents: ReactNode[];
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   renderDetailPanel?: (props: {
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   renderEditRowDialogContent?: (props: {
     internalEditComponents: ReactNode[];
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   renderEmptyRowsFallback?: (props: {
     table: ST_TableInstance<TData>;
@@ -444,13 +445,13 @@ export interface ST_TableOptions_Config<
     closeMenu: () => void;
     row: ST_Row<TData>;
     staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[] | undefined;
   renderRowActions?: (props: {
     cell: ST_Cell<TData>;
     row: ST_Row<TData>;
     staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   renderToolbarAlertBannerContent?: (props: {
     groupedAlert: ReactNode | null;
@@ -494,7 +495,7 @@ export interface ST_ColumnDef_Config<
     cell: ST_Cell<TData, TValue>;
     column: ST_Column<TData, TValue>;
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
     staticColumnIndex?: number;
     staticRowIndex?: number;
   }) => ReactNode;
@@ -506,7 +507,7 @@ export interface ST_ColumnDef_Config<
     rowRef?: RefObject<HTMLTableRowElement | null>;
     staticColumnIndex?: number;
     staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   /**
    * The lowercase `cell` template of core is not rendered; use the capital `Cell` slot instead.
@@ -521,14 +522,14 @@ export interface ST_ColumnDef_Config<
     cell: ST_Cell<TData, TValue>;
     column: ST_Column<TData, TValue>;
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   editSelectOptions?:
     | ((props: {
         cell: ST_Cell<TData, TValue>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => DropdownOption[])
     | DropdownOption[];
   editVariant?: 'select' | 'text';
@@ -546,7 +547,7 @@ export interface ST_ColumnDef_Config<
     column: ST_Column<TData, TValue>;
     header: ST_Header<TData>;
     rangeFilterIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   filterSelectOptions?: DropdownOption[];
   filterVariant?:
@@ -568,14 +569,14 @@ export interface ST_ColumnDef_Config<
     | ((props: {
         column: ST_Column<TData, TValue>;
         footer: ST_Header<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ReactNode)
     | ReactNode;
   GroupedCell?: (props: {
     cell: ST_Cell<TData, TValue>;
     column: ST_Column<TData, TValue>;
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
     staticColumnIndex?: number;
     staticRowIndex?: number;
   }) => ReactNode;
@@ -585,19 +586,19 @@ export interface ST_ColumnDef_Config<
     | ((props: {
         column: ST_Column<TData, TValue>;
         header: ST_Header<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ReactNode)
     | ReactNode;
   stColumnActionsButtonProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stColumnDragHandleProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stCopyButtonProps?:
@@ -605,7 +606,7 @@ export interface ST_ColumnDef_Config<
         cell: ST_Cell<TData, TValue>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => ButtonProps)
     | ButtonProps;
   stEditTextFieldProps?:
@@ -613,53 +614,53 @@ export interface ST_ColumnDef_Config<
         cell: ST_Cell<TData, TValue>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps & { error?: boolean; helperText?: ReactNode })
     | (InputProps & { error?: boolean; helperText?: ReactNode });
   stFilterAutocompleteProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterCheckboxProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['checkbox'])
     | TParts['checkbox'];
   stFilterDatePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterDateTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterSliderProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TParts['slider'])
     | TParts['slider'];
   stFilterTextFieldProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stFilterTimePickerProps?:
     | ((props: {
         column: ST_Column<TData>;
         rangeFilterIndex?: number;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => InputProps)
     | InputProps;
   stTableBodyCellProps?:
@@ -667,26 +668,26 @@ export interface ST_ColumnDef_Config<
         cell: ST_Cell<TData, TValue>;
         column: ST_Column<TData>;
         row: ST_Row<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   stTableFooterCellProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   stTableHeadCellProps?:
     | ((props: {
         column: ST_Column<TData>;
-        table: ST_TableInstance<TData>;
+        table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
   PlaceholderCell?: (props: {
     cell: ST_Cell<TData, TValue>;
     column: ST_Column<TData, TValue>;
     row: ST_Row<TData>;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode;
   renderCellActionMenuItems?: (props: {
     cell: ST_Cell<TData>;
@@ -696,19 +697,19 @@ export interface ST_ColumnDef_Config<
     row: ST_Row<TData>;
     staticColumnIndex?: number;
     staticRowIndex?: number;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[];
   renderColumnActionsMenuItems?: (props: {
     closeMenu: () => void;
     column: ST_Column<TData>;
     internalColumnMenuItems: ReactNode[];
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[];
   renderColumnFilterModeMenuItems?: (props: {
     column: ST_Column<TData>;
     internalFilterOptions: ST_InternalFilterOption[];
     onSelectFilterMode: (filterMode: ST_FilterOption) => void;
-    table: ST_TableInstance<TData>;
+    table: ST_CoreTableInstance<TData>;
   }) => ReactNode[];
   visibleInShowHideMenu?: boolean;
 }
