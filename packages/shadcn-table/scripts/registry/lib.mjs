@@ -1,7 +1,6 @@
 // Shared by the registry scripts and the per-edition item definitions
 // (registry/<edition>/registry.ts): the edition list, then the item builder,
-// which lists an item's files (the tree's library files plus the forked
-// parts), derives the registryDependencies from the `@/components/ui/<part>`
+// which lists an item's files (the tree's library files), derives the registryDependencies from the `@/components/ui/<part>`
 // imports and pins npm versions from package.json. The file list is never
 // hand-maintained.
 import fs from 'node:fs';
@@ -89,8 +88,7 @@ const uiImports = (files) => {
 
 /**
  * The items of one base: the main item (every library file of the tree
- * except the non-English locales, plus the forked ui parts) and one item per
- * locale. `path` values are relative to the package, `target` values are the
+ * except the non-English locales) and one item per locale. `path` values are relative to the package, `target` values are the
  * alias paths the CLI installs to.
  *
  * @param {{
