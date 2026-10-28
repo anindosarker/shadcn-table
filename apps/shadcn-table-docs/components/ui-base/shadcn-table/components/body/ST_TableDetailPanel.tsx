@@ -11,6 +11,7 @@ import {
   type TableCellProps,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
+import { stCollapsibleKeyframes } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 
 export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -145,6 +146,9 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               ) : (
                 // Base UI sets --collapsible-panel-height, which the st-base-collapsible-* keyframes read.
                 <Collapsible open={row.getIsExpanded()}>
+                  <style href="st-base-collapsible" precedence="low">
+                    {stCollapsibleKeyframes}
+                  </style>
                   <CollapsibleContent className="overflow-hidden data-open:animate-[st-base-collapsible-down_200ms_ease-out] data-closed:animate-[st-base-collapsible-up_200ms_ease-out]">
                     {DetailPanel}
                   </CollapsibleContent>
