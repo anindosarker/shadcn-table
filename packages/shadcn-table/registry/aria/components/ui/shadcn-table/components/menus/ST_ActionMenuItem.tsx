@@ -1,6 +1,6 @@
 import {
+  type ComponentProps,
   type ComponentPropsWithRef,
-  type MouseEventHandler,
   type ReactNode,
 } from 'react';
 import { cva } from 'class-variance-authority';
@@ -17,7 +17,7 @@ export interface ST_ActionMenuItemProps
   divider?: boolean;
   icon: ReactNode;
   label: string;
-  onOpenSubMenu?: MouseEventHandler<HTMLElement>;
+  onOpenSubMenu?: ComponentProps<typeof Button>['onClick'];
 }
 
 export const ST_ActionMenuItem = <TData extends ST_RowData>({
@@ -37,7 +37,7 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
 
   return (
     <DropdownMenuItem
-      tabIndex={0}
+      textValue={label}
       {...rest}
       className={cn(
         actionMenuItemVariants(),
@@ -45,20 +45,32 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
         className,
       )}
     >
-      <div className="flex items-center whitespace-nowrap">
-        <span className="inline-flex min-w-9 shrink-0">{icon}</span>
-        {label}
-      </div>
-      {onOpenSubMenu && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-xs"
-          onClick={onOpenSubMenu}
-          onMouseEnter={onOpenSubMenu}
-        >
-          <ArrowRightIcon />
-        </Button>
+      {({ hasSubmenu }) => (
+        <>
+          <div className="flex items-center whitespace-nowrap">
+            <span className="inline-flex min-w-9 shrink-0">{icon}</span>
+            {label}
+          </div>
+          {onOpenSubMenu ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              onClick={onOpenSubMenu}
+              onMouseEnter={onOpenSubMenu}
+            >
+              <ArrowRightIcon />
+            </Button>
+          ) : (
+            // Inside a DropdownMenuSub the whole item opens the submenu, so
+            // the arrow is a marker, not a button that would swallow the press.
+            hasSubmenu && (
+              <span className="inline-flex size-6 items-center justify-center">
+                <ArrowRightIcon className="size-3" />
+              </span>
+            )
+          )}
+        </>
       )}
     </DropdownMenuItem>
   );
