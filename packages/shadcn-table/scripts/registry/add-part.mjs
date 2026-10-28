@@ -8,8 +8,9 @@
 // registry/<edition>/components/ui/. Parts are per edition and are never
 // shared, so a part the library needs on every edition is added once per
 // edition. `--all` re-adds every part the edition already has (every
-// `*.tsx` below components/ui/ outside the library tree and the edition's
-// forkedUi list), the gate that the committed copies are the script's output.
+// `*.tsx` directly below components/ui/, minus the components/ui/*.tsx files
+// the edition's registry items ship as their own files), the gate that the
+// committed copies are the script's output.
 //
 // The item JSON (https://ui.shadcn.com/r/styles/<style>/<part>.json) is
 // fetched for its file list and dependencies, then the shadcn CLI installs
