@@ -93,16 +93,21 @@ const DemoRadioGroup = ({
       }
     >
       <Label>Grouped Column Mode</Label>
-      <div className="flex gap-2">
-        <RadioGroupItem value="reorder" className="w-auto gap-2">
-          &quot;reorder&quot; (default)
-        </RadioGroupItem>
-        <RadioGroupItem value="remove" className="w-auto gap-2">
-          &quot;remove&quot;
-        </RadioGroupItem>
-        <RadioGroupItem value="false" className="w-auto gap-2">
-          false
-        </RadioGroupItem>
+      <div className="flex gap-3">
+        <div className="flex items-center gap-2">
+          <RadioGroupItem value="reorder" id="grouped-column-mode-reorder" />
+          <Label htmlFor="grouped-column-mode-reorder">
+            &quot;reorder&quot; (default)
+          </Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <RadioGroupItem value="remove" id="grouped-column-mode-remove" />
+          <Label htmlFor="grouped-column-mode-remove">&quot;remove&quot;</Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <RadioGroupItem value="false" id="grouped-column-mode-false" />
+          <Label htmlFor="grouped-column-mode-false">false</Label>
+        </div>
       </div>
     </RadioGroup>
   );
