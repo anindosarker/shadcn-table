@@ -35,7 +35,6 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { EDITIONS, PKG, ROOT } from './lib.mjs';
 
 const [base, ...args] = process.argv.slice(2);
@@ -55,29 +54,16 @@ const components = JSON.parse(
 const utilsAlias = components.aliases.utils;
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
 
-// Every part the edition has: the `*.tsx` files directly below components/ui
-// (the library lives in its own directory) minus the recorded forks, which
-// are not the script's output.
-const committedParts = async () => {
-  const { registry } = await import(
-    pathToFileURL(path.join(baseDir, 'registry.ts')).href
-  );
-  const forked = new Set(
-    registry.items
-      .flatMap((item) => item.files)
-      .map((file) => file.path)
-      .filter((p) => /^registry\/[^/]+\/components\/ui\/[^/]+\.tsx$/.test(p))
-      .map((p) => path.basename(p, '.tsx')),
-  );
-  return fs
+// Every part the edition has: the *.tsx files directly below components/ui
+// (the library lives in its own directory).
+const committedParts = () =>
+  fs
     .readdirSync(uiDir, { withFileTypes: true })
     .filter((e) => e.isFile() && e.name.endsWith('.tsx'))
     .map((e) => e.name.slice(0, -'.tsx'.length))
-    .filter((part) => !forked.has(part))
     .sort();
-};
 
-const parts = all ? await committedParts() : args;
+const parts = all ? committedParts() : args;
 
 const fetchItem = async (part) => {
   const url = `https://ui.shadcn.com/r/styles/${components.style}/${part}.json`;
