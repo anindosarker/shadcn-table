@@ -4,7 +4,6 @@ import {
   createTableHookContexts,
   tableFeatures,
 } from '@tanstack/react-table';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   type ST_Features,
   stFeatures,
@@ -71,11 +70,4 @@ export function useSTContext<
 export const ST_TableProvider = <TData extends ST_RowData>({
   children,
   table,
-}: ST_TableProviderProps<TData>) => (
-  // Radix Tooltip.Root throws without a TooltipProvider ancestor, and the
-  // shadcn tooltip does not wrap each Tooltip in one. Mounting it with the
-  // table covers every tooltip below, portalled content included.
-  <TooltipProvider skipDelayDuration={0}>
-    <table.AppTable>{children}</table.AppTable>
-  </TooltipProvider>
-);
+}: ST_TableProviderProps<TData>) => <table.AppTable>{children}</table.AppTable>;
