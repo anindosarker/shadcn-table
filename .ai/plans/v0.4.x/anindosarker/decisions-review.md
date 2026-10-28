@@ -113,6 +113,31 @@ nothing here re-decides those, items here extend them.
     to `ShadcnTable` or give the hook a selector for narrow re-renders; with the default the
     owner re-renders on every state change, as TanStack documents.
 
+## Styles
+
+16. The registry items ship no `css`: nothing is written to the consumer's global stylesheet,
+    because that is the one install step `shadcn` cannot undo and nothing tracks it as a
+    dependency. The keyframes the library needs (`st-linear-progress-indeterminate` and the
+    `.st-progress-indeterminate` rule in `ST_LinearProgressBar`; `st-collapsible-right`,
+    `st-collapsible-left`, and in the Base UI tree `st-collapsible-down`, `st-collapsible-up`
+    in `ST_GlobalFilterTextField`) move into a React 19 hoisted `<style href="st-..." precedence="low">`
+    rendered by the component that uses them; React dedupes it across instances and streams
+    it with SSR. `registry/<base>/index.css` loses the ST rules and `scripts/registry/lib.mjs`
+    its CSS block parser. A strict CSP needs a nonce or `style-src 'unsafe-inline'`; one line
+    in the install guide. Not the Web Animations API: imperative, no SSR, more code.
+
+## Select all with kept pinned rows
+
+17. Under `selectAllMode: 'page'` with a `select-*` `rowPinningDisplayMode` and
+    `keepPinnedRows`, the header checkbox acts on the rows displayed on the page: the page
+    rows plus the kept top and bottom pinned rows, deduped, `getCanSelect` only. Checked
+    state and indeterminate state are computed over that set, the click writes one
+    `setRowSelection` updater (`getST_SelectAllHandler`, `ST_SelectCheckbox` through one
+    shared helper in `row.utils.ts`); unselect then also clears every pin (ruling 9). Without
+    row pinning in a select mode, page mode keeps core's `toggleAllPageRowsSelected`;
+    `selectAllMode: 'all'` is unchanged. Findings a and c in `findings-review.md` were the
+    page navigation, not a bug; recorded there.
+
 ## Unchanged after review
 
 14. The part prop options in the `stConfigFeature` augmentation stay tree-neutral
@@ -121,7 +146,7 @@ nothing here re-decides those, items here extend them.
     reads of `st*Props` need a `Pick<ST_TableOptions<TData>, ...>` annotation, as the four
     library components do.
 
-15. The props-style root (`ShadcnTable` built from options) selects only the slices its
+18. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
