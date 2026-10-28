@@ -240,7 +240,7 @@ pnpm exec vite build
 ```
 
 - **Existing app.** Repeat in an app that already has `@tanstack/react-table` installed (`pnpm add @tanstack/react-table@8.20.5 @tanstack/react-query` first). The CLI merges the dependency; `package.json` must end with one `@tanstack/react-table` entry.
-- **From a pushed branch.** Example items resolve only through GitHub, and the library items can too: `pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table#<branch>` (or `shadcn-table-base#<branch>`, `shadcn-table-aria#<branch>`), then `anindosarker/shadcn-table/example-basic#<branch> --overwrite` (`example-basic-base#<branch>`, `example-basic-aria#<branch>` on the other bases). Set `GH_TOKEN` to avoid the API rate limit. Locale items depend on the unpinned library address, which the CLI resolves on the default branch, so from a branch install them through `registry:dev` (that is what the CI `install` job does).
+- **From a pushed branch.** Example items resolve only through GitHub, and the library items can too: `pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table-radix#<branch>` (or `shadcn-table-base#<branch>`, `shadcn-table-aria#<branch>`), then `anindosarker/shadcn-table/example-basic-radix#<branch> --overwrite` (`example-basic-base#<branch>`, `example-basic-aria#<branch>` on the other bases). Set `GH_TOKEN` to avoid the API rate limit. Locale items depend on the unpinned library address, which the CLI resolves on the default branch, so from a branch install them through `registry:dev` (that is what the CI `install` job does).
 - **Rerun after changes.** `registry:dev` rebuilds `.dev/`; `add` again with `--overwrite` to update the installed files.
 
 ## 5. Update the Docs and the Registry
@@ -255,16 +255,16 @@ pnpm registry:hosted                    # hosted copies -> apps/shadcn-table-doc
 
 The registry has three library items, one per base, each with its own locale items; each lists every file of its tree:
 
-| Tree             | Item                | Locales                           | npm dependency   |
-| ---------------- | ------------------- | --------------------------------- | ---------------- |
-| `registry/radix` | `shadcn-table`      | `shadcn-table-locale-<code>`      | `radix-ui`       |
-| `registry/base`  | `shadcn-table-base` | `shadcn-table-base-locale-<code>` | `@base-ui/react` |
-| `registry/aria`  | `shadcn-table-aria` | `shadcn-table-aria-locale-<code>` | `react-aria-components` |
+| Tree             | Item                 | Locales                            | npm dependency   |
+| ---------------- | -------------------- | ---------------------------------- | ---------------- |
+| `registry/radix` | `shadcn-table-radix` | `shadcn-table-radix-locale-<code>` | `radix-ui`       |
+| `registry/base`  | `shadcn-table-base`  | `shadcn-table-base-locale-<code>`  | `@base-ui/react` |
+| `registry/aria`  | `shadcn-table-aria`  | `shadcn-table-aria-locale-<code>`  | `react-aria-components` |
 
-Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI installs its own base's parts (the React Aria item ships its own `label` and lists `checkbox` instead). Users install from the hosted registry on the docs site, one path per base with the same item names on all three: `https://www.shadcn-table.com/r/radix/shadcn-table.json`, `https://www.shadcn-table.com/r/base/shadcn-table.json` and `https://www.shadcn-table.com/r/aria/shadcn-table.json` (locales `/r/<base>/shadcn-table-locale-<code>.json`, examples `/r/<base>/example-<slug>.json`), or through the namespace `@st=https://www.shadcn-table.com/r/{style}/{name}.json`. The GitHub addresses (`anindosarker/shadcn-table/<item>`) stay as the fallback.
+Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI installs its own base's parts (the React Aria item ships its own `label` and lists `checkbox` instead). Users install from the hosted registry on the docs site, one path per base with the same item names on all three: `https://www.shadcn-table.com/r/radix/shadcn-table.json`, `https://www.shadcn-table.com/r/base/shadcn-table.json` and `https://www.shadcn-table.com/r/aria/shadcn-table.json` (locales `/r/<base>/shadcn-table-locale-<code>.json`, examples `/r/<base>/example-<slug>.json`), or through the namespace `@st=https://www.shadcn-table.com/r/{style}/{name}.json`. The GitHub addresses (`anindosarker/shadcn-table/<item>`, the committed per-edition names above) stay as the fallback.
 
 - **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `packages/shadcn-table/scripts/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
-- **Example items per edition.** `example-<slug>` (Radix UI), `example-<slug>-base` and `example-<slug>-aria` are built from `examples/<edition>/<slug>/`; the hosted registry serves each edition's items under the plain `example-<slug>` in `/r/<edition>/`. They use the public API only and pin no library item; the docs say to install the table first.
+- **Example items per edition.** `example-<slug>-radix`, `example-<slug>-base` and `example-<slug>-aria` are built from `examples/<edition>/<slug>/`; the hosted registry serves each edition's items under the plain `example-<slug>` in `/r/<edition>/`. They use the public API only and pin no library item; the docs say to install the table first.
 - **Page checks.** A new page that renders live examples or prop tables needs an entry in `scripts/page-checks/<cluster>.mjs`.
 
 ## 6. Open a PR
@@ -288,7 +288,7 @@ pnpm --filter shadcn-table-docs lint
 pnpm --filter shadcn-table-docs build
 ```
 
-It also validates the registry at the pull request's merge SHA, installs the library, a locale and `example-basic` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app (the `registry` and `install` jobs).
+It also validates the registry at the pull request's merge SHA, installs the library (`shadcn-table-radix`), a locale and `example-basic-radix` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app (the `registry` and `install` jobs).
 
 - **Release impact.** Set one `release:` label: `release:patch`, `release:minor`, `release:major`, or `release:skip` for a change that ships nothing. A PR that changes `packages/shadcn-table/registry`, `apps/shadcn-table-docs/components/ui-*` or `skills/` fails the `release impact` job without one. With a level label, add the change's line to `CHANGELOG.md` under `## Unreleased`, below `### Breaking`, `### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`; the job summary shows the version it ships as.
 - **Large changes.** Ask on [Discord](https://discord.gg/hsF37t6EKe) first if unsure, then open a GitHub issue, so the direction is agreed before the diff exists.
