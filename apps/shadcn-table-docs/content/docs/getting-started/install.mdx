@@ -50,6 +50,8 @@ components/ui/
 └── ...
 ```
 
+Your global stylesheet is unchanged. The table's animations ship inside its components as a `<style>` tag that React 19 hoists into `<head>` (React 18 renders it in place). Under a strict Content Security Policy, allow it with a nonce or `style-src 'unsafe-inline'`.
+
 </Step>
 
 <Step>
@@ -102,6 +104,7 @@ Run the install command again with `--overwrite`. It replaces every file in `com
 
 1. Delete `components/ui/shadcn-table/`.
 2. Remove the npm packages if nothing else uses them: `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`.
-3. Remove the `st-` keyframes and classes the install added to your global CSS.
+
+Nothing else to undo: the install never touches your global CSS.
 
 The shadcn/ui components stay. Other parts of your app may use them.
