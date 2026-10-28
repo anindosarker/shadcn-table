@@ -7,16 +7,13 @@ import {
   useState,
 } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
-// import { useTheme } from '@mui/material/styles';
-// Note: useTheme dropped — align->text-start, grey[500]->muted-foreground, draggingBorderColor->primary.
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import {
@@ -51,9 +48,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   staticRowIndex,
   ...rest
 }: ST_TableBodyCellProps<TData>) => {
-  // The cell carries the core table; the ST wrapper types re-type its getters.
-  const table = cell.table as unknown as ST_TableInstance<TData>;
-  // const theme = useTheme();
+  const table = cell.table;
   const {
     options: {
       columnResizeDirection,
@@ -67,16 +62,14 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
       enableGrouping,
       enableKeyboardShortcuts,
       layoutMode,
-      // mrtTheme: { draggingBorderColor },
-      // Note: mrtTheme registry dropped — draggingBorderColor → var(--color-primary).
       stSkeletonProps,
       stTableBodyCellProps,
     },
     setHoveredColumn,
   } = table;
   // These feed the skeleton width effect, so they are hook subscriptions.
-  const isLoading = useST_Atom(table.atoms.isLoading);
-  const showSkeletons = useST_Atom(table.atoms.showSkeletons);
+  const isLoading = useSelector(table.atoms.isLoading);
+  const showSkeletons = useSelector(table.atoms.showSkeletons);
   const { column, row } = cell;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -216,7 +209,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
         const showResizeBorder =
           isResizingColumn && columnResizeMode === 'onChange';
 
-        // Note: MRT's `!important` dropped; React style objects can't express it; draggingBorders spread last anyway.
         const borderStyle = showResizeBorder
           ? `2px solid var(--color-primary)`
           : isDraggingColumn || isDraggingRow
@@ -335,7 +327,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                   (columnDef.PlaceholderCell?.({ cell, column, row, table }) ??
                   null)
                 ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
-                  // Note: MUI Skeleton animation="wave" dropped; ui/skeleton's animate-pulse is the stand-in.
                   <Skeleton
                     {...skeletonProps}
                     style={{

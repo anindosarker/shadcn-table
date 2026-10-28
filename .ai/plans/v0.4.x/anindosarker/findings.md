@@ -43,8 +43,10 @@
 
 - Reads `isSaving` and `showProgressBars` from `table.state`, but nothing seeds them: no
   `useState`, no default. They exist only when the user passes them in `state`. Part 06
-  removes the `options.state` merge, so stLoadingFeature must default both to `false`
-  (`mrtLoadingFeature.ts:5-7, 29-31`).
+  removes the `options.state` merge, so stLoadingFeature must default `isSaving` (and
+  `isLoading`) to `false` and leave `showProgressBars` unset, because unset follows
+  `isSaving` while an explicit `false` turns the bar off (review ruling 1;
+  `mrtLoadingFeature.ts:5-7, 29-31` seeds `false`, the bug MRT's v9 port carries).
 
 ### menus/ST_CellActionMenu.tsx
 

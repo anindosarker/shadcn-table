@@ -52,20 +52,16 @@ export const prepareColumns = <TData extends ST_RowData>({
   const { defaultDisplayColumn, state: { columnFilterFns = {} } = {} } =
     tableOptions;
   return columnDefs.map((columnDef) => {
-    //assign columnId
     if (!columnDef.id) columnDef.id = getColumnId(columnDef);
-    //assign columnDefType
     if (!columnDef.columnDefType) columnDef.columnDefType = 'data';
     if (columnDef.columns?.length) {
       columnDef.columnDefType = 'group';
-      //recursively prepare columns if this is a group column
       columnDef.columns = prepareColumns({
         columnDefs: columnDef.columns,
         tableOptions,
       });
     } else if (columnDef.columnDefType === 'data') {
-      //assign aggregationFns if multiple aggregationFns are provided; each
-      //name resolves against the table's registry when it aggregates
+      //each name resolves against the table's registry when it aggregates
       if (Array.isArray(columnDef.aggregationFn)) {
         const aggFns = columnDef.aggregationFn as string[];
         columnDef.aggregationFn = constructAggregationFn({
@@ -78,8 +74,7 @@ export const prepareColumns = <TData extends ST_RowData>({
         });
       }
 
-      //assign the current filter mode by name, which core resolves; a
-      //filterFn function keeps running until another mode is picked
+      //a filterFn function keeps running until another mode is picked
       const filterFn = columnFilterFns[columnDef.id];
       if (
         filterFn &&
@@ -177,7 +172,7 @@ export const getColumnFilterInfo = <TData extends ST_RowData>({
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
 
   // v9 computes facets as soon as the row model is registered; the option
-  // keeps v8's "empty until enabled" behaviour
+  // keeps them empty until enabled
   const facetedUniqueValues = enableFacetedValues
     ? column.getFacetedUniqueValues()
     : emptyFacetedUniqueValues;

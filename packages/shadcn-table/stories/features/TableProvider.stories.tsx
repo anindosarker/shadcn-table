@@ -16,7 +16,8 @@ import { type Meta, type StoryContext } from '@storybook/react-vite';
 // `ST_TableProvider` and the table context (decisions items 3 and 4): hand
 // composition of library pieces, a reader beside and inside each of two
 // tables, portals that read the context, the error outside every provider,
-// no table hook rebuild across owner renders, option changes after mount.
+// no table hook rebuild across owner renders, option changes after mount, a
+// table swap without a `key`.
 // Fixed data so every assertion is deterministic.
 
 const meta: Meta = {
@@ -189,6 +190,46 @@ ProviderWithTwoTables.play = async ({ canvas }: StoryContext) => {
   await expect(canvas.getByTestId('second-inner')).toHaveTextContent(
     '1-4 of 4',
   );
+};
+
+// Counts mounts, so a remount shows as a new id.
+let nextMountId = 0;
+const MountId = () => {
+  const [id] = useState(() => ++nextMountId);
+  return <span data-testid="mount-id">{id}</span>;
+};
+
+// One provider handed a different table on a later render, with no `key`.
+// The reader follows the new table, and the subtree under the provider
+// remounts, so no state of the first table's components carries over.
+const SwappedTable = () => {
+  const first = useShadcnTable({ columns, data: data.slice(0, 2), id: 'a' });
+  const second = useShadcnTable({ columns, data: data.slice(2), id: 'b' });
+  const [swapped, setSwapped] = useState(false);
+  return (
+    <>
+      <button onClick={() => setSwapped(true)} type="button">
+        Swap table
+      </button>
+      <ST_TableProvider table={swapped ? second : first}>
+        <MountId />
+        <ContextReader label="swapped" />
+      </ST_TableProvider>
+    </>
+  );
+};
+
+export const TableSwapWithoutKey = {
+  render: () => <SwappedTable />,
+  play: async ({ canvas }: StoryContext) => {
+    await expect(canvas.getByTestId('swapped')).toHaveTextContent('1-2 of 2');
+    const mountId = canvas.getByTestId('mount-id').textContent;
+    await userEvent.click(canvas.getByText('Swap table'));
+    await waitFor(() =>
+      expect(canvas.getByTestId('swapped')).toHaveTextContent('1-4 of 4'),
+    );
+    expect(canvas.getByTestId('mount-id').textContent).not.toBe(mountId);
+  },
 };
 
 // Menus, dialogs and tooltips render through portals outside the table

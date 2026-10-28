@@ -15,14 +15,12 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 import { reorderColumn } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui-base/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui-base/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 
-// Note: MRT MenuItem sx py:'6px' dropped — shadcn DropdownMenuItem padding wins.
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
 );
@@ -46,17 +44,13 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   style,
   ...rest
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
-  // The column carries the core table; the ST wrapper types re-type its
-  // options and getters, so TypeScript cannot relate the two without the cast.
-  const table = column.table as unknown as ST_TableInstance<TData>;
+  const table = column.table;
   const {
     options: {
       enableColumnOrdering,
       enableColumnPinning,
       enableHiding,
       localization,
-      // Note: mrtTheme.draggingBorderColor dropped project-wide — the hovered
-      // outline maps to `outline-primary`.
     },
     setColumnOrder,
     setColumnPinning,
@@ -117,7 +111,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
 
   return (
     <>
-      {/* Note: disableRipple dropped — no MUI ripple in shadcn. */}
       <DropdownMenuItem
         onDragEnter={handleDragEnter}
         // Toggling a column keeps the menu open: Base UI closes on an item

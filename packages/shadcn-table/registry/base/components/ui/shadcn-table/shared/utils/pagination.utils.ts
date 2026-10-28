@@ -1,4 +1,8 @@
-// Note: MUI usePagination minus useControlled/onChange/onClick/aria-current (page is table state; ST_TablePagination wires clicks and aria-current).
+import {
+  type ST_RowData,
+  type ST_TableInstance,
+} from '@/components/ui/shadcn-table/types';
+
 export type ST_UsePaginationItem = {
   disabled: boolean;
   page: number | null;
@@ -14,7 +18,6 @@ export type ST_UsePaginationItem = {
 };
 
 export const getPaginationItems = ({
-  // keep default values in sync with @default tags in Pagination.propTypes
   boundaryCount = 1,
   count = 1,
   disabled = false,
@@ -35,22 +38,6 @@ export const getPaginationItems = ({
   showLastButton?: boolean;
   siblingCount?: number;
 } = {}): ST_UsePaginationItem[] => {
-  // const [page, setPageState] = useControlled({
-  //   controlled: pageProp,
-  //   default: defaultPage,
-  //   name: componentName,
-  //   state: 'page',
-  // });
-  // const handleClick = (event, value) => {
-  //   if (!pageProp) {
-  //     setPageState(value);
-  //   }
-  //   if (handleChange) {
-  //     handleChange(event, value);
-  //   }
-  // };
-
-  // https://dev.to/namirsab/comment/2050
   const range = (start: number, end: number) => {
     const length = end - start + 1;
     return Array.from({ length }, (_, i) => start + i);
@@ -84,8 +71,6 @@ export const getPaginationItems = ({
     count - boundaryCount - 1,
   );
 
-  // Basic list of items to render
-  // for example itemList = ['first', 'previous', 1, 'ellipsis', 4, 5, 6, 'ellipsis', 10, 'next', 'last']
   const itemList: Array<
     Exclude<ST_UsePaginationItem['type'], 'page'> | number
   > = [
@@ -93,17 +78,14 @@ export const getPaginationItems = ({
     ...(hidePrevButton ? [] : (['previous'] as const)),
     ...startPages,
 
-    // Start ellipsis
     ...(siblingsStart > boundaryCount + 2
       ? (['start-ellipsis'] as const)
       : boundaryCount + 1 < count - boundaryCount
         ? [boundaryCount + 1]
         : []),
 
-    // Sibling pages
     ...range(siblingsStart, siblingsEnd),
 
-    // End ellipsis
     ...(siblingsEnd < count - boundaryCount - 1
       ? (['end-ellipsis'] as const)
       : count - boundaryCount > boundaryCount
@@ -115,7 +97,6 @@ export const getPaginationItems = ({
     ...(showLastButton ? (['last'] as const) : []),
   ];
 
-  // Map the button type to its page number
   const buttonPage = (type: Exclude<ST_UsePaginationItem['type'], 'page'>) => {
     switch (type) {
       case 'first':
@@ -131,23 +112,15 @@ export const getPaginationItems = ({
     }
   };
 
-  // Convert the basic item list to PaginationItem props objects
   const items = itemList.map((item): ST_UsePaginationItem => {
     return typeof item === 'number'
       ? {
-          // onClick: (event) => {
-          //   handleClick(event, item);
-          // },
           type: 'page',
           page: item,
           selected: item === page,
           disabled,
-          // 'aria-current': item === page ? 'page' : undefined,
         }
       : {
-          // onClick: (event) => {
-          //   handleClick(event, buttonPage(item));
-          // },
           type: item,
           page: buttonPage(item),
           selected: false,
@@ -159,4 +132,52 @@ export const getPaginationItems = ({
   });
 
   return items;
+};
+
+// The rows the body shows for the page, as zero-based first and exclusive last
+// positions in the pre-paginated rows, for the `1-5 of 8` label. Under
+// `rowPinningDisplayMode: 'select-*'` the rows pinned on other pages show
+// beside the page (`keepPinnedRows`), so the range covers them too.
+export const getST_ShownRowRange = <TData extends ST_RowData>(
+  table: ST_TableInstance<TData>,
+  {
+    pageIndex,
+    pageSize,
+    totalRowCount,
+  }: { pageIndex: number; pageSize: number; totalRowCount: number },
+) => {
+  const {
+    options: {
+      enableRowPinning,
+      keepPinnedRows,
+      manualPagination,
+      rowPinningDisplayMode,
+    },
+  } = table;
+  // The live store: the caller's subscription lists this slice.
+  const { rowPinning } = table.store.state;
+
+  let firstRowIndex = pageIndex * pageSize;
+  let lastRowIndex = Math.min(firstRowIndex + pageSize, totalRowCount);
+
+  if (
+    enableRowPinning &&
+    rowPinningDisplayMode?.startsWith('select') &&
+    keepPinnedRows !== false &&
+    !manualPagination
+  ) {
+    // `select-sticky` shows the top pins only.
+    const shownPinnedRowIds = new Set([
+      ...rowPinning.top,
+      ...(rowPinningDisplayMode.includes('sticky') ? [] : rowPinning.bottom),
+    ]);
+    table.getPrePaginatedRowModel().rows.forEach((row, index) => {
+      if (shownPinnedRowIds.has(row.id)) {
+        firstRowIndex = Math.min(firstRowIndex, index);
+        lastRowIndex = Math.max(lastRowIndex, index + 1);
+      }
+    });
+  }
+
+  return { firstRowIndex, lastRowIndex };
 };

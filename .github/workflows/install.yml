@@ -64,7 +64,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - name: Pre-install TanStack packages (existing app only)
         if: matrix.scenario == 'existing'
-        run: pnpm add @tanstack/react-table@9.3.1 @tanstack/react-query
+        run: pnpm add @tanstack/react-table@9.3.1 @tanstack/react-store@0.11.2 @tanstack/react-query
         working-directory: ${{ runner.temp }}/app
       # The item address comes from the `source` template: in CI the GitHub
       # address at this SHA, in a release the item's public URL on the site.

@@ -113,6 +113,28 @@ nothing here re-decides those, items here extend them.
     to `ShadcnTable` or give the hook a selector for narrow re-renders; with the default the
     owner re-renders on every state change, as TanStack documents.
 
+## Styles
+
+16. The registry items ship no `css`: nothing is written to the consumer's global stylesheet,
+    because that is the one install step `shadcn` cannot undo and nothing tracks it as a
+    dependency. The keyframes the library needs (`st-linear-progress-indeterminate` and the
+    `.st-progress-indeterminate` rule in `ST_LinearProgressBar`; `st-collapsible-right`,
+    `st-collapsible-left`, and in the Base UI tree `st-collapsible-down`, `st-collapsible-up`
+    in `ST_GlobalFilterTextField`) move into a React 19 hoisted `<style href="st-..." precedence="low">`
+    rendered by the component that uses them; React dedupes it across instances and streams
+    it with SSR. `registry/<base>/index.css` loses the ST rules and `scripts/registry/lib.mjs`
+    its CSS block parser. A strict CSP needs a nonce or `style-src 'unsafe-inline'`; one line
+    in the install guide. Not the Web Animations API: imperative, no SSR, more code.
+
+## Select all with kept pinned rows
+
+17. The header checkbox keeps core's page-only semantics (`toggleAllPageRowsSelected`,
+    `getIsAllPageRowsSelected`) under `select-*` pinning as well: on a page that also shows
+    pinned rows kept from another page, the box counts and toggles the page's own rows; the
+    ruling 9 clear on unselect still unpins everything. Owner tested it against MRT's
+    `Row Pinning Select Sticky Mode` and kept the current behaviour. The second bullet of
+    `findings-review.md` is closed as intended.
+
 ## Unchanged after review
 
 14. The part prop options in the `stConfigFeature` augmentation stay tree-neutral
@@ -121,7 +143,7 @@ nothing here re-decides those, items here extend them.
     reads of `st*Props` need a `Pick<ST_TableOptions<TData>, ...>` annotation, as the four
     library components do.
 
-15. The props-style root (`ShadcnTable` built from options) selects only the slices its
+18. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'Features/Virtualization',
@@ -72,6 +73,23 @@ const longColumns: ST_ColumnDef<(typeof longData)[0]>[] = [
   },
 ];
 
+// The virtualizers read the container ref, which attaches after the body's
+// and the table's layout effects; rows and cells must show on first mount,
+// with no interaction.
+const expectRowsAndCellsOnMount = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() => {
+    expect(canvasElement.querySelectorAll('thead th').length).toBeGreaterThan(
+      0,
+    );
+    expect(canvasElement.querySelectorAll('tbody tr').length).toBeGreaterThan(
+      0,
+    );
+    expect(canvasElement.querySelectorAll('tbody td').length).toBeGreaterThan(
+      0,
+    );
+  });
+};
+
 const longData = [...Array(5000)].map(() => ({
   address: faker.location.streetAddress(),
   city: faker.location.city(),
@@ -109,6 +127,8 @@ export const EnableRowVirtualizationComfortable = () => (
     enableRowVirtualization
   />
 );
+
+EnableRowVirtualizationComfortable.play = expectRowsAndCellsOnMount;
 
 export const EnableRowVirtualizationSpacious = () => (
   <ShadcnTable
@@ -218,6 +238,8 @@ export const EnableColumnVirtualization = () => (
   />
 );
 
+EnableColumnVirtualization.play = expectRowsAndCellsOnMount;
+
 export const EnableColumnVirtualizationWithPinning = () => (
   <ShadcnTable
     columns={longColumns}
@@ -300,6 +322,8 @@ export const RowAndColumnVirtualization = () => (
   />
 );
 
+RowAndColumnVirtualization.play = expectRowsAndCellsOnMount;
+
 export const RowAndColumnVirtualizationWithFeatures = () => (
   <ShadcnTable
     columns={longColumns}
@@ -344,6 +368,8 @@ export const MaxVirtualization = () => (
     stTableLayoutProps={{ className: 'mx-auto max-w-[1000px]' }}
   />
 );
+
+MaxVirtualization.play = expectRowsAndCellsOnMount;
 
 export const EmptyDataVirtualization = () => (
   <ShadcnTable

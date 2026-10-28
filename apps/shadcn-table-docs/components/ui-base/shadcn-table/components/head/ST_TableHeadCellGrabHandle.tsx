@@ -3,7 +3,6 @@ import {
   type ButtonProps,
   type ST_Column,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 import { reorderColumn } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
@@ -20,9 +19,7 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   tableHeadCellRef,
   ...rest
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
-  // The core table behind the column; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
-  const table = column.table as unknown as ST_TableInstance<TData>;
+  const table = column.table;
   const {
     options: { enableColumnOrdering, stColumnDragHandleProps },
     setColumnOrder,

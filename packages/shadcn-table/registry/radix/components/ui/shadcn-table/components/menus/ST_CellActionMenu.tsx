@@ -31,7 +31,6 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
       enableEditing,
       icons: { ContentCopy, EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderCellActionMenuItems,
     },
     refs: { actionCellRef },
@@ -119,8 +118,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
                   }}
                 />
               </DropdownMenuTrigger>
-              {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
-              {/* Note: MRT transformOrigin={{horizontal:-100,vertical:8}} on MUI's top/left anchorOrigin puts the menu at top = anchorTop - 8, left = anchorLeft + 100; align="start" alignOffset={100} and sideOffset={-(height + 8)} from the anchor's bottom edge land on the same point */}
+              {/* align, alignOffset and sideOffset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
               <DropdownMenuContent
                 align="start"
                 alignOffset={100}
@@ -132,7 +130,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
                 // without a prior pointerdown on it, closing the menu (and running
                 // the item) before the user lets go. Swallow right-button pointerups
                 // in the capture phase; Escape, outside click and left click still
-                // work as before.
+                // work.
                 onPointerUpCapture={(event) => {
                   if (event.button === 2) event.stopPropagation();
                 }}
