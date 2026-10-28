@@ -169,3 +169,20 @@ Failures outside this cluster on the merged tree (owner attention for the lead):
 - `RowPinning > Row Pinning Select Sticky Mode`: hit test on the select-all checkbox (RAC's input is visually hidden).
 - `TableProvider > Portals Read Context`: the play presses Escape, then hovers "Toggle density"; RAC `TooltipTrigger` opens on hover only when the interaction modality is pointer, so no tooltip.
 - Dev warning `<Focusable> child must have an interactive ARIA role.`: the `<span>` wrappers around disabled-capable buttons inside `ST_Tooltip` (expand, expand all, pagination; kept so the tooltip still shows over a disabled button, as in radix).
+
+## Phase 01, merge and gates
+
+Branch `v0.5/aria-tree`: `v0.5/08` (fast-forward), `v0.5/09`, `v0.5/rest` merged; tracker conflicts kept every section. No code conflict, no merge fallout to fix.
+
+- `tsc:aria`: one error, `registry/aria/components/ui/label.tsx(3,1): error TS6133: 'React' is declared but its value is never read.` (the phase 00 part halt item, not edited). Every ported file compiles.
+- `tsc:radix`, `tsc:baseui`, `lint`, `pnpm check:bases` (radix against base, `142 library files in both trees, 23 allowed to differ`): pass.
+- Hand run of `check-bases.mjs` with the aria pair (copy outside the repo, `registry/aria` and `aria-diff.json`): `check-bases: 142 library files in both trees, 37 allowed to differ`, 0 problems; no listed file is identical to radix, so `aria-diff.json` is unchanged.
+- `grep table\.state` under `registry/aria/.../components`: empty. No `as any` or `@ts-expect-error` beyond the shared files radix has.
+- `test:aria` (full suite): 440 of 446 pass. The faceted `Duplicate key` failure is gone (`v0.5/09` dedupes options). The 6 failures are shared-story assumptions, none in an aria file:
+  - `RowPinningOnSelect > Select All Page Mode`, `Select All All Mode`: `toHaveAttribute("aria-checked", "true")` on the checkbox role element (RAC checkbox role is the native input, no `aria-checked`).
+  - `RenderCounts > Profiled Thousand Rows`, `External Atoms Density And Selection`: expected `aria-checked` `"mixed"`, received `null` (same cause).
+  - `RowPinning > Row Pinning Select Sticky Mode`: `RowPinning.stories.tsx:132` hit test on the select-all checkbox returns false (RAC input visually hidden).
+  - `TableProvider > Portals Read Context`: `Unable to find an element with the text: Toggle density` after Escape plus hover (RAC `TooltipTrigger` opens on hover only with pointer modality).
+- `storybook:build:aria`: pass (`storybook-static/aria`). `check-storybook.mjs` not run: the edition tool is still two-way (part 02 or 03).
+- `registry:build`: `scripts/registry/build.mjs` now collects `registry/aria/registry.ts`; `shadcn-table-aria` (104 files, 24 registryDependencies: the checkbox is not forked) and its 38 locale items emitted; `registry.json` committed.
+- `CHANGELOG.md` `## Unreleased`: Added, React Aria edition (item name; the `/r/aria` install command once part 02 wires the hosted copy).
