@@ -11,7 +11,9 @@ const require = createRequire(import.meta.url);
 // whether this is `storybook dev` (one port per edition) or a static build
 // (one directory per edition), which decides where its edition button goes
 // (edition-tool.ts).
-const ST_BASE = process.env.ST_BASE === 'base' ? 'base' : 'radix';
+const EDITIONS = ['radix', 'base', 'aria'] as const;
+const ST_BASE =
+  EDITIONS.find((edition) => edition === process.env.ST_BASE) ?? 'radix';
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
 const devScript = (dev: boolean) =>
   `<script>window.__ST_DEV__ = ${JSON.stringify(dev)};</script>`;
