@@ -59,6 +59,6 @@ here re-decides them. Plan index: [v0.5.x-plan.md](v0.5.x-plan.md).
      minor while 0.x; `Fixed`, `Docs` patch); the version is computed, never typed; the
      version PR can be edited before merging as the last override.
    - Owner decides when to release by merging the version PR; several merges accumulate in it.
-   - Work branches and `claude/review` go to `master` by PR; `dev` retired;
-     `scripts/release.mjs` retired. Supersedes the v0.3.x "Release" ruling and the
+   - Work branches, `claude/review` and `dev` go to `master` by PR (`dev` stays the
+     owner's staging branch, fast-forwarded by hand); `scripts/release.mjs` retired. Supersedes the v0.3.x "Release" ruling and the
      2026-10-28 `claude/review` to `dev` to `master` flow.

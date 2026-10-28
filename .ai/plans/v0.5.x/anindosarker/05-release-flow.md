@@ -20,7 +20,7 @@ in [decisions.md](decisions.md).
 - A merge to `master` with pending lines opens or rewrites PR `chore: version <v>` from
   `release/next`; a merge of that PR tags, waits for production, smokes, installs, creates
   the GitHub release and comments "Released in v<v>" on every PR it shipped
-- `dev` and `scripts/release.mjs` retired; `scripts/release/next-version.mjs` added
+- `scripts/release.mjs` retired; `scripts/release/next-version.mjs` added; `dev` stays as the owner's staging branch, fast-forwarded by hand
 - Branch flow: work branches into `master` by PR; `claude/review` stays the agent branch
   and goes to `master` by PR as well
 
@@ -129,8 +129,7 @@ change needed beyond the labels, a step that needs an app token.
 
 #### 2.1.2 Phase 02: Workflows
 
-- 1.6.2, 1.6.3; `ci.yml` removed; `scripts/release.mjs` removed; `dev` deleted after a
-  final fast-forward check
+- 1.6.2, 1.6.3; `ci.yml` removed; `scripts/release.mjs` removed
 
 #### 2.1.3 Final phase: Docs and gates
 
