@@ -1,0 +1,44 @@
+# 05: release flow, tracker
+
+Deviations and gate results. Plan: [05-release-flow.md](05-release-flow.md). Rulings: [decisions.md](decisions.md) item 7.
+
+## Phases 01 to final
+
+Branch `v0.5/release-flow` from `claude/review` at `bf0e29a5`, worktree `07`.
+
+### Commits
+
+- `feat(release): next-version script`: `scripts/release/next-version.mjs [--level patch|minor|major] [--from-changelog]`. Without `--level`, or with `--from-changelog`, `## Unreleased` must have lines (exit 2 and no output otherwise); `--level` wins over the headings. `### Removed` (used by older sections) counts as `Breaking`; an unknown heading or a line outside a `### ` heading exits 1. Prerelease bumps follow `npm version`. Tests in `scripts/release/next-version.test.mjs` (pure `run()` with injected version and changelog, one CLI case).
+- `feat(release): version PR script`: `scripts/release/version-pr.mjs <next>`, guards a clean tree and a `## Unreleased` section, `git checkout -B release/next`, commits as `github-actions[bot]` under `GITHUB_ACTIONS`, force-pushes, `gh pr edit` the open PR from `release/next` or `gh pr create`, returns to the starting branch.
+- `feat(release): comment on released PRs`: `scripts/release/comment.mjs <tag> [--dry-run]`. The merge subjects on `master` are custom (`merge: release 0.5.0`) and carry no `#N`, so besides the two subject patterns it asks GitHub for the PRs of each first-parent commit in the range (`repos/{owner}/{repo}/commits/<sha>/pulls`), plus the version PR by title.
+- `ci: pr.yml replaces ci.yml`: `release-impact` (runs on `labeled`/`unlabeled` too; every other job skips label events, and the concurrency group splits label runs from check runs so a label change does not cancel the matrix). `registry` and `install` lost their `push` condition and run on every PR at `github.sha` (the PR merge commit), as `install.yml` already pins `REF` to it. `install.yml` header comment names `pr.yml`.
+- `ci: release.yml opens the version PR or releases`: jobs `decide`, `version`, `wait-for-production`, `smoke`, `install`, `release`. The `v*` tag trigger is gone; a dispatch never tags. The version job keeps an open version PR's version when a later merge asks for a lower one (`sort -V`). `gh release create` is skipped when the release exists, so a re-run after a failed comment step works.
+- `docs: release flow per decision 7`: `.github/pull_request_template.md`, `scripts/release.mjs` and the root `release` script removed, coding standards gates paragraph, `CONTRIBUTING.md` step 6 bullets and new step 7, `CHANGELOG.md` intro (headings incl. `### Docs`; `notes.mjs` copies the section whatever its headings), v0.3.x "Release" pointer. Labels `release:patch`, `release:minor`, `release:major`, `release:skip` created (`gh label create --force`).
+
+### Gates
+
+- `node --test scripts/release/next-version.test.mjs`: 8 tests pass (0.5.0 patch 0.5.1, minor 0.6.0, major 1.0.0, each heading, 1.2.3 Breaking 2.0.0, empty heading ignored, no section exit 2, label precedence, bad input exit 1).
+- `actionlint` 1.7.12 (brew) with shellcheck: `pr.yml`, `release.yml` clean; one existing `install.yml` SC2034 warning (`i` unused in the dev registry wait loop, unchanged).
+- `act -l`: `pr.yml` 7 jobs, `release.yml` 6 jobs, `install.yml` 1.
+- js-yaml parse of both files; the `release-impact`, `decide` and `version` run blocks extracted and run under `bash -eo pipefail` with a fake `gh`: no label on shipped files fails, two labels fail, a level label without a `CHANGELOG.md` change or without `## Unreleased` lines fails, `release:patch` prints `Ships as 0.5.1`, `release:minor` `Ships as 0.6.0`, `release:skip` and no label without shipped files print `no release`; decide gives `version` (label level or headings), `none` (lines gone, tagged), `release` (lines gone, untagged; dispatch). The real `gh pr list --search <sha>` and `--head release/next` queries return the expected shapes.
+- `version-pr.mjs` run twice in a scratch clone against a bare remote with a fake `gh`: first opens, second edits; one bot commit on `release/next`, three files changed, the PR body is the closed section plus the merge line.
+- `comment.mjs v0.5.0 --dry-run` lists #39, #41, #42; `v0.4.0` lists #34 to #38.
+- `node --check` on every `scripts/release/*.mjs` (no ESLint config covers root scripts); `pnpm lint` passes.
+- Plan 2.2, `pr.yml` on a real `pull_request` event: PR #43 (`v0.5/release-flow` into `claude/review`, CI only, label `release:patch`) at `6eec192d`. Run `40679804670` (`opened`, checks group): every job green, `release impact`, `bases`, `library` x3, `test` x3, `docs`, `registry` and the five `install` apps (fresh, existing, base, aria, nextjs). Run `40679804581` (`labeled`, labels group): `release impact` alone, prints `Ships as 0.5.1`, the matrix skipped. The `opened` event carries no labels when `gh pr create --label` adds them, so that run's `release impact` printed `no release` (no shipped files here); the `labeled` run is the one that reads the label.
+
+### Owner attention
+
+- The repo setting "Allow GitHub Actions to create and approve pull requests" is off (`can_approve_pull_request_reviews: false`), so the `version` job's `gh pr create` fails until it is turned on (Settings, Actions, General; or `gh api -X PUT repos/anindosarker/shadcn-table/actions/permissions/workflow -f default_workflow_permissions=read -F can_approve_pull_request_reviews=true`). The script then fails with that hint after pushing `release/next`.
+- For 0.5.1: `CHANGELOG.md` `## Unreleased` holds one `### Changed` line (release flow), which alone computes 0.6.0 while 0.x. The pull request that merges into `master` (`dev` into `master`) must carry `release:patch` so the version job computes 0.5.1.
+- A PR opened with `GITHUB_TOKEN` triggers no workflow, so the version PR shows no `pr.yml` checks. No ruleset requires checks today, so it merges.
+
+## Gates
+
+Verifier run on `4057e808` (after `2b8d6fec`), worktree `07`; `master` untouched, no tag, no release.
+
+1. `pr.yml` on PR #43 (draft, `v0.5/release-flow` into `claude/review`, retitled `v0.5 part 05: release flow (CI only)`, label `release:patch`): pass. Run `40680366590` (`synchronize` at `2b8d6fec`) every job green (15 checks: `release impact`, `bases`, `library` x3, `test` x3, `docs`, `registry`, `install` x5); the `release impact` log and summary print `Ships as 0.5.1`. Label swapped to `release:skip`: the `labeled` run `40681014983` prints `no release` (the `unlabeled` run `40681014787` was cancelled by it, same `labels` concurrency group, expected); empty commit `29604cd4` run `40681026969` green, `release impact` prints `no release`; run `40682063184` at `4057e808` (decide script) green, 15 checks. The PR is closed, nothing deleted.
+2. Scripts in a scratch clone (origin repointed to a local bare clone so nothing reaches GitHub): pass.
+   - `next-version.mjs`: `--level patch` 0.5.1, `minor` 0.6.0, `major` 1.0.0, `--from-changelog` and no flags 0.6.0 (one `### Changed` line), `--level patch --from-changelog` 0.5.1, empty section with `--from-changelog` exit 2 and no output, empty section with `--level patch` 0.5.1, `--level bogus` exit 1, a stray line and an unknown heading exit 1 with the file and line named, `### Breaking` while 0.x 0.6.0.
+   - `version-pr.mjs 0.5.1` with `GH_TOKEN` unset and a `gh` shim that exits 1: prints `committed chore: version 0.5.1 on release/next, force-pushed`, then fails with the "Allow GitHub Actions to create and approve pull requests" hint, exit 1, back on the starting branch with a clean tree. `release/next` is one commit ahead, 3 files, both `package.json` at `0.5.1`, `## 0.5.1 - 2026-10-28` replaces `## Unreleased`; the branch exists on the local bare remote only, `git ls-remote` of GitHub shows no `release/next`. Scratch clone deleted.
+   - `comment.mjs v0.5.0 --dry-run` (flag already present, no commit needed): `v0.4.0..v0.5.0: 3 pull request(s)`, would comment on #39, #41, #42.
+3. `release.yml` decide logic: the inline step is now `scripts/release/decide.mjs` (`refactor(release): decide script`), `decide()` with injected inputs plus the CLI; `release.yml` calls it and `LIB_PACKAGE` left the workflow env. `node --test scripts/release/decide.test.mjs` 6 pass; `node --test scripts/release/*.test.mjs` 14 pass. CLI in the scratch clone with a `gh` shim and `GITHUB_OUTPUT` set: push with lines and label `release:patch` prints `mode=version version=0.5.0 level=patch`; push with lines, no label or `release:skip`, `level=from headings` and `level=` in the output; no lines and `v0.5.0` tagged `mode=none`; no lines and package `0.5.1` untagged `mode=release version=0.5.1`; dispatch with input `0.9.9` `mode=release version=0.9.9`, without input `version=0.5.0`; a stray line exits 1 and writes no output. `actionlint` clean on `release.yml`.
