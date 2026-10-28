@@ -10,6 +10,7 @@ import {
   ST_ToggleFiltersButton,
   ST_ToggleFullScreenButton,
   ST_ToggleGlobalFilterButton,
+  selectST_TransformState,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
@@ -18,9 +19,10 @@ import { type Meta, type StoryContext } from '@storybook/react-vite';
 // Render counts and the subscriptions behind them (decisions item 5): a
 // 1,000-row table under a React Profiler with counters on rows, cells, head
 // cells and toolbar buttons, measured after one hover, one density toggle
-// and one row select; the root opts out of state renders; the body follows
-// every row model slice, new `data`, controlled `state` and external
-// `atoms`. Fixed data so every assertion is deterministic.
+// and one row select; the root opts out of state renders, and so does a hook
+// owner given a selector; the body follows every row model slice, new
+// `data`, controlled `state` and external `atoms`. Fixed data so every
+// assertion is deterministic.
 
 const meta: Meta = {
   title: 'Styling/Render Counts',
@@ -132,6 +134,120 @@ export const RootSkipsStateRenders = {
       expect(canvasElement.querySelector('div.fixed.inset-0')).toBeNull(),
     );
     expect(rootRenders.count).toBe(rendersAtStart);
+  },
+};
+
+// The hook style with a selector: `useShadcnTable(options, selector)`
+// re-renders its owner on the selected state only. The selector keeps the
+// transform state `ShadcnTable` selects in the props style and adds the page
+// index the owner shows; density and selection add no owner render, paging
+// adds one.
+const hookRenders = { count: 0 };
+const countingHookDisplayColumnDefOptions = new Proxy(
+  {},
+  {
+    get: (_target, key) => {
+      if (key === 'st-row-numbers') hookRenders.count++;
+      return undefined;
+    },
+  },
+);
+
+const HookSelectorTable = () => {
+  const table = useShadcnTable(
+    {
+      columns: numberedColumns,
+      data: numbered,
+      displayColumnDefOptions: countingHookDisplayColumnDefOptions,
+      enableRowNumbers: true,
+      enableRowSelection: true,
+      initialState: { pagination: { pageIndex: 0, pageSize: 5 } },
+      rowNumberDisplayMode: 'static',
+    },
+    (state) => ({
+      ...selectST_TransformState(state),
+      pageIndex: state.pagination.pageIndex,
+    }),
+  );
+  return (
+    <>
+      <span data-testid="owner-page-index">{table.state.pageIndex}</span>
+      <ShadcnTable table={table} />
+    </>
+  );
+};
+
+export const HookSelectorSkipsStateRenders = {
+  render: () => <HookSelectorTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+    const rendersAtStart = hookRenders.count;
+    expect(rendersAtStart).toBeGreaterThan(0);
+    const cellClassName = canvasElement.querySelector('tbody td')?.className;
+    await userEvent.click(canvas.getByLabelText('Toggle density'));
+    await waitFor(() =>
+      expect(canvasElement.querySelector('tbody td')?.className).not.toBe(
+        cellClassName,
+      ),
+    );
+    await userEvent.click(canvas.getAllByRole('checkbox')[1]);
+    await waitFor(() =>
+      expect(canvas.getAllByRole('checkbox')[1]).toBeChecked(),
+    );
+    expect(hookRenders.count).toBe(rendersAtStart);
+    expect(canvas.getByTestId('owner-page-index').textContent).toBe('0');
+    await userEvent.click(canvas.getByLabelText('Go to next page'));
+    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P06'));
+    await waitFor(() =>
+      expect(canvas.getByTestId('owner-page-index').textContent).toBe('1'),
+    );
+    expect(hookRenders.count).toBeGreaterThan(rendersAtStart);
+  },
+};
+
+// A hook selector that leaves out the transform slices: the owner still
+// re-renders on them, so grouping set from outside adds the expand column.
+const HookPaginationSelectorTable = () => {
+  const table = useShadcnTable(
+    {
+      columns: numberedColumns,
+      data: numbered,
+      enableGrouping: true,
+      initialState: { pagination: { pageIndex: 0, pageSize: 5 } },
+    },
+    (state) => state.pagination,
+  );
+  return (
+    <>
+      <button onClick={() => table.setGrouping(['age'])} type="button">
+        Group by age
+      </button>
+      <span data-testid="owner-page-size">{table.state.pageSize}</span>
+      <ShadcnTable table={table} />
+    </>
+  );
+};
+
+export const HookSelectorFollowsTransformState = {
+  render: () => <HookPaginationSelectorTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+    expect(canvas.getByTestId('owner-page-size').textContent).toBe('5');
+    const headCells = canvasElement.querySelectorAll('thead th').length;
+    expect(
+      canvas.queryByRole('button', { name: 'Expand all' }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByText('Group by age'));
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('button', { name: 'Expand all' }),
+      ).toBeInTheDocument(),
+    );
+    expect(canvasElement.querySelectorAll('thead th').length).toBe(
+      headCells + 1,
+    );
   },
 };
 

@@ -31,7 +31,6 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
       enableEditing,
       icons: { ContentCopy, EditIcon },
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
       renderCellActionMenuItems,
     },
     refs: { actionCellRef },
@@ -129,8 +128,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
                   />
                 }
               />
-              {/* Note: MRT disableScrollLock dropped — Base UI Menu owns scroll-lock behavior */}
-              {/* Note: MRT transformOrigin={{horizontal:-100,vertical:8}} on MUI's top/left anchorOrigin puts the menu at top = anchorTop - 8, left = anchorLeft + 100; align="start" alignOffset={100} and sideOffset={-(height + 8)} from the anchor's bottom edge land on the same point */}
+              {/* align, alignOffset and sideOffset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
               <DropdownMenuContent
                 align="start"
                 alignOffset={100}
@@ -144,7 +142,7 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
                 // activates on click, which a right-button release does not fire.
                 // Swallow right-button mouseups in the capture phase anyway so the
                 // item's onMouseUp never sees the release; Escape, outside click and
-                // left click still work as before.
+                // left click still work.
                 onMouseUpCapture={(event) => {
                   if (event.button === 2) event.stopPropagation();
                 }}

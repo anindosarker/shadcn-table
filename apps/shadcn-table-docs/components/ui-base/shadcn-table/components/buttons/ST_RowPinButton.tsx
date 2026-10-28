@@ -5,7 +5,6 @@ import {
   type ButtonProps,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-base/shadcn-table/types';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 
@@ -20,9 +19,7 @@ export const ST_RowPinButton = <TData extends ST_RowData>({
   row,
   ...rest
 }: ST_RowPinButtonProps<TData>) => {
-  // The row carries the core table, which holds the ST options, atoms, refs
-  // and setters; the ST wrapper types do not re-type it.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     options: {
       icons: { CloseIcon, PushPinIcon },
@@ -60,8 +57,6 @@ export const ST_RowPinButton = <TData extends ST_RowData>({
               type="button"
               variant="ghost"
               {...rest}
-              // sx={{ height: '24px', width: '24px' }}
-              // Note: 24px box dropped; size="icon-sm" per the MUI-small icon-button ruling.
             >
               {isPinned ? (
                 <CloseIcon />

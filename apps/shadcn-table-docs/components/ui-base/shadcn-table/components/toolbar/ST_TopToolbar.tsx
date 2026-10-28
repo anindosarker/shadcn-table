@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -16,7 +17,6 @@ import { ST_GlobalFilterTextField } from '@/components/ui-base/shadcn-table/comp
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 
 const topToolbarVariants = cva(
-  // Note: maps MRT getCommonToolbarStyles
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
   {
     variants: {
@@ -49,6 +49,28 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const isTablet = useST_MediaQuery('(max-width:1024px)');
 
   const toolbarProps = parseFromValuesOrFunc(stTopToolbarProps, { table });
+
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // topToolbarRef null while the children's layout effects run.
+  const userRef = useRef(toolbarProps?.ref);
+  userRef.current = toolbarProps?.ref;
+  const attachRef = useCallback(
+    (node: HTMLDivElement) => {
+      topToolbarRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        topToolbarRef.current = null;
+      };
+    },
+    [topToolbarRef],
+  );
 
   const globalFilterProps = {
     className: !isTablet ? 'z-[2]' : undefined,
@@ -104,10 +126,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
         return (
           <div
             {...toolbarProps}
-            ref={(ref: HTMLDivElement) => {
-              topToolbarRef.current = ref;
-              assignRef(toolbarProps?.ref, ref);
-            }}
+            ref={attachRef}
             className={cn(
               topToolbarVariants({ fullscreen: isFullScreen }),
               toolbarProps?.className,

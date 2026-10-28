@@ -46,6 +46,9 @@ import {
 
 export const stConfigFeature: TableFeature = {};
 
+// The augmentation takes the tree-neutral part props types: when one program
+// holds both trees, the Radix UI and Base UI declarations of a merged member
+// must match.
 declare module '@tanstack/react-table' {
   interface Plugins {
     stConfigFeature: TableFeature;
@@ -71,9 +74,6 @@ export interface ST_TableOptions_Config<
   TData extends ST_RowData,
   TParts extends ST_NeutralPartPropTypes = ST_NeutralPartPropTypes,
 > {
-  /**
-   * Custom aggregation functions, by name, on top of the built-in ones. A column's `aggregationFn` string resolves against this map.
-   */
   aggregationFns?: Record<string, Exclude<ST_AggregationFn<TData>, string>>;
   columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
@@ -86,9 +86,6 @@ export interface ST_TableOptions_Config<
       }) => Partial<VirtualizerOptions<HTMLDivElement, HTMLTableCellElement>>)
     | Partial<VirtualizerOptions<HTMLDivElement, HTMLTableCellElement>>;
   createDisplayMode?: 'custom' | 'modal' | 'row';
-  /**
-   * Change the default options for display columns.
-   */
   defaultDisplayColumn?: Partial<ST_DisplayColumnDef<TData, unknown, TParts>>;
   displayColumnDefOptions?: Partial<{
     [key in ST_DisplayColumnIds]: Partial<
@@ -127,25 +124,12 @@ export interface ST_TableOptions_Config<
   enableTableHead?: boolean;
   enableToolbarInternalActions?: boolean;
   enableTopToolbar?: boolean;
-  /**
-   * Custom filter functions, by name, on top of the built-in ones. A column's `filterFn` string and `globalFilterFn` resolve against this map.
-   */
   filterFns?: Record<string, Exclude<ST_FilterFn<TData>, string>>;
   globalFilterModeOptions?: ST_FilterOption[] | null;
   icons?: Partial<ST_Icons>;
   id?: string;
-  /**
-   * Changes which kind of CSS layout is used to render the table. `semantic` uses default semantic HTML elements, while `grid` adds CSS grid and flexbox styles
-   */
   layoutMode?: 'grid' | 'grid-no-grow' | 'semantic';
-  /**
-   * Pass in either a locale imported from `@/components/ui/shadcn-table/shared/locales/*` or a custom locale object.
-   *
-   * See the localization (i18n) guide for more info:
-   * @link https://shadcn-table.com/docs/guides/localization
-   */
   localization?: Partial<ST_Localization>;
-  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
   stBottomToolbarProps?:
     | ((props: { table: ST_TableInstance<TData> }) => DivProps)
     | DivProps;
@@ -498,9 +482,6 @@ export interface ST_TableOptions_Config<
       }) => Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>)
     | Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>;
   selectAllMode?: 'all' | 'page';
-  /**
-   * Custom sorting functions, by name, on top of the built-in ones. A column's `sortFn` string resolves against this map.
-   */
   sortFns?: Record<string, Exclude<ST_SortFn<TData>, string>>;
 }
 
@@ -532,14 +513,6 @@ export interface ST_ColumnDef_Config<
    * Narrowed to `never` so passing it is a type error.
    */
   cell?: never;
-  /**
-   * Specify what type of column this is. Either `data`, `display`, or `group`. Defaults to `data`.
-   * Leave this blank if you are just creating a normal data column.
-   *
-   * @default 'data'
-   *
-   * @example columnDefType: 'display'
-   */
   columnDefType?: 'data' | 'display' | 'group';
   columnFilterModeOptions?: Array<
     LiteralUnion<string & ST_FilterOption>
@@ -590,9 +563,6 @@ export interface ST_ColumnDef_Config<
     | 'text'
     | 'time'
     | 'time-range';
-  /**
-   * footer must be a string. If you want custom JSX to render the footer, you can also specify a `Footer` option. (Capital F)
-   */
   footer?: string;
   Footer?:
     | ((props: {
@@ -609,13 +579,7 @@ export interface ST_ColumnDef_Config<
     staticColumnIndex?: number;
     staticRowIndex?: number;
   }) => ReactNode;
-  /**
-   * If `layoutMode` is `'grid'` or `'grid-no-grow'`, you can specify the flex grow value for individual columns to still grow and take up remaining space, or set to `false`/0 to not grow.
-   */
   grow?: boolean | number;
-  /**
-   * header must be a string. If you want custom JSX to render the header, you can also specify a `Header` option. (Capital H)
-   */
   header: string;
   Header?:
     | ((props: {

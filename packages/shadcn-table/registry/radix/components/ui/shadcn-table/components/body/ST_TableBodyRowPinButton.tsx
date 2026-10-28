@@ -4,7 +4,6 @@ import {
   type ButtonProps,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_RowPinButton } from '@/components/ui/shadcn-table/components/buttons/ST_RowPinButton';
@@ -27,8 +26,7 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   row,
   ...rest
 }: ST_TableBodyRowPinButtonProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     options: { enableRowPinning, rowPinningDisplayMode },
   } = table;

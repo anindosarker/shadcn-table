@@ -31,18 +31,12 @@ export const ST_TableFooterRow = <TData extends ST_RowData>({
 }: ST_TableFooterRowProps<TData>) => {
   const table = useSTContext<TData>();
   const {
-    options: {
-      layoutMode,
-      // mrtTheme: { baseBackgroundColor },
-      // Note: mrtTheme registry dropped project-wide: bg-background handles theming
-      stTableFooterRowProps,
-    },
+    options: { layoutMode, stTableFooterRowProps },
   } = table;
 
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =
     columnVirtualizer ?? {};
 
-  // if no content in row, skip row
   if (
     !footerGroup.headers?.some(
       (header) =>

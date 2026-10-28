@@ -1,5 +1,3 @@
-// Owns the ST-only `density` state slice, the `enableDensityToggle` and
-// `onDensityChange` options, and the `table.setDensity` API on the core table.
 import {
   assignTableAPIs,
   functionalUpdate,

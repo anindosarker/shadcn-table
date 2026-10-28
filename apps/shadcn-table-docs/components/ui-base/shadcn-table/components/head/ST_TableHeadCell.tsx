@@ -1,15 +1,11 @@
 import { type DragEvent, type KeyboardEvent } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-// import { useTheme } from '@mui/material/styles';
-// import { type Theme } from '@mui/material/styles';
-// Note: useTheme dropped: align->text-start, grey[500]->muted-foreground.
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ST_ColumnVirtualizer,
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
   type TableCellProps,
 } from '@/components/ui-base/shadcn-table/types';
 import { cellKeyboardShortcuts } from '@/components/ui-base/shadcn-table/shared/utils/cell.utils';
@@ -39,10 +35,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   staticColumnIndex,
   ...rest
 }: ST_TableHeadCellProps<TData>) => {
-  // The core table behind the header; the ST wrapper types re-type its
-  // getters, so TypeScript cannot relate the two without the cast.
-  const table = header.table as unknown as ST_TableInstance<TData>;
-  // const theme = useTheme();
+  const table = header.table;
   const {
     options: {
       columnFilterDisplayMode,
@@ -57,8 +50,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       enableMultiSort,
       enableStickyHeader,
       layoutMode,
-      // mrtTheme: { draggingBorderColor },
-      // Note: mrtTheme registry dropped: draggingBorderColor → var(--color-primary).
       stTableHeadCellProps,
     },
     refs: { tableHeadCellRefs },
@@ -192,7 +183,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
           columnResizeMode === 'onChange' &&
           !header.subHeaders.length;
 
-        // Note: MRT's `!important` dropped: inline style objects can't express it; draggingBorders spreads last anyway.
         const borderStyle = showResizeBorder
           ? `2px solid var(--color-primary)`
           : draggingColumn?.id === column.id

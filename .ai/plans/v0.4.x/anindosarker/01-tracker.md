@@ -168,6 +168,7 @@ TanStack reference: `React-table/tanstack-table` at `c14e0221b` (not pulled, sam
 - Props types: `ST_TopToolbarProps` is no longer exported (it only held `table`; MRT keeps an empty one). Context-only props types are non-generic as in the twins; an empty one is a type alias (`= ButtonProps`, `= InputProps`) because lint rejects an empty interface, where MRT keeps `interface ... extends IconButtonProps {}`.
 - Stories, as far as the gates need: `Selection` and `Toolbar` drop `table={table}` (both render inside the table's provider), `CellActions` drops it on `ST_ActionMenuItem`, `FnRegistries` reads through `ST_TablePagination` under `ST_TableProvider` instead of importing `useSTContext` from `hooks/stTableHook`.
 - No Fixed line for the select-all indeterminate state: `getIsSomeRowsSelected() && !allRowsSelected` shipped in 0.3.3 on 9.3.1 (`v0.3.3` `inputs/ST_SelectCheckbox.tsx:155`), unchanged here.
+- Superseded by part 04.1 (review rulings 3 and 5): the provider handle, its live `state` getter and the `key` note are gone; `ST_TableProvider` renders `table.AppTable`, and `useST_Atom` gave way to `useSelector` from `@tanstack/react-store`.
 
 ### Phase 02 leftovers
 

@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -18,10 +19,6 @@ import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_BottomToolbarProps = DivProps;
 
-// Note: base maps MRT's shared getCommonToolbarStyles (min-h-14 = 3.5rem,
-// bg-background = baseBackgroundColor) plus the bottom-toolbar extras (inset
-// boxShadow, left/right pinning); the fullscreen variant maps
-// `position: isFullScreen ? 'fixed' : 'relative'`.
 const bottomToolbarVariants = cva(
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out shadow-[inset_0_1px_2px_-1px_rgba(97,97,97,0.5)] left-0 right-0',
   {
@@ -56,6 +53,28 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
     ...parseFromValuesOrFunc(stBottomToolbarProps, { table }),
     ...rest,
   };
+
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // bottomToolbarRef null while the children's layout effects run.
+  const userRef = useRef(toolbarProps.ref);
+  userRef.current = toolbarProps.ref;
+  const attachRef = useCallback(
+    (node: HTMLDivElement) => {
+      bottomToolbarRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        bottomToolbarRef.current = null;
+      };
+    },
+    [bottomToolbarRef],
+  );
 
   const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
@@ -96,12 +115,7 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
       {(isFullScreen) => (
         <div
           {...toolbarProps}
-          ref={(node: HTMLDivElement) => {
-            if (node) {
-              bottomToolbarRef.current = node;
-              assignRef(toolbarProps?.ref, node);
-            }
-          }}
+          ref={attachRef}
           className={cn(
             bottomToolbarVariants({
               fullscreen: isFullScreen,

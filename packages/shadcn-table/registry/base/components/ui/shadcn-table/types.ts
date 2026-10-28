@@ -2,6 +2,7 @@ import { type ComponentPropsWithRef, type ReactNode } from 'react';
 import {
   type AccessorFn,
   type AggregationFnDef,
+  type AppTableComponent,
   type Cell,
   type Column,
   type ColumnDef,
@@ -99,11 +100,6 @@ export type DialogProps = Pick<
 > &
   ComponentPropsWithRef<typeof DialogContent>;
 
-/**
- * The props types of the shadcn parts that the part-prop options
- * (`stFilterCheckboxProps`, `stEditRowDialogProps`, ...) pass on, by part.
- * They resolve to this tree's parts, Radix UI or Base UI.
- */
 export interface ST_PartPropTypes {
   checkbox: CheckboxProps;
   dialog: DialogProps;
@@ -214,7 +210,7 @@ export type ST_ColumnHelper<TData extends ST_RowData> = {
 };
 
 export interface ST_Localization {
-  // language of the localization as BCP 47 language tag for number formatting
+  // BCP 47 language tag, used for number formatting
   language: string;
   actions: string;
   and: string;
@@ -309,17 +305,17 @@ export interface ST_Localization {
   unpinAll: string;
 }
 
-// Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
-// export interface ST_Theme { ... }
-
 export interface ST_RowModel<TData extends ST_RowData> {
   flatRows: ST_Row<TData>[];
   rows: ST_Row<TData>[];
   rowsById: { [key: string]: ST_Row<TData> };
 }
 
-export type ST_TableInstance<TData extends ST_RowData> = Omit<
-  ReactTable<ST_Features, TData, ST_TableState<TData>>,
+export type ST_TableInstance<
+  TData extends ST_RowData,
+  TSelected = ST_TableState<TData>,
+> = Omit<
+  ReactTable<ST_Features, TData, TSelected>,
   | 'getAllColumns'
   | 'getAllFlatColumns'
   | 'getAllLeafColumns'
@@ -342,6 +338,7 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
   | 'getTopRows'
   | 'options'
 > & {
+  AppTable: AppTableComponent<ST_Features>;
   getAllColumns: () => ST_Column<TData>[];
   getAllFlatColumns: () => ST_Column<TData>[];
   getAllLeafColumns: () => ST_Column<TData>[];
@@ -367,12 +364,10 @@ export type ST_TableInstance<TData extends ST_RowData> = Omit<
 
 export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
   ST_TableOptions<TData, ST_NeutralPartPropTypes>,
-  // Note: mrtTheme dropped project-wide (Conventions); theme tokens instead.
-  'icons' | 'localization' // | 'mrtTheme'
+  'icons' | 'localization'
 > & {
   icons: ST_Icons;
   localization: ST_Localization;
-  // mrtTheme: Required<ST_Theme>;
 };
 
 export type ST_StatefulTableOptions<TData extends ST_RowData> =
@@ -406,16 +401,8 @@ export type ST_TableState<TData extends ST_RowData> = Omit<
   hoveredRow: Partial<ST_Row<TData>> | null;
 };
 
-/**
- * The column members that pass props to a shadcn part, typed for `TParts`.
- */
 type ST_ColumnDef_PartKeys = 'stFilterCheckboxProps' | 'stFilterSliderProps';
 
-/**
- * A column definition. The ST-only members come from `stConfigFeature`; this
- * interface narrows the core members whose ST shape differs, and types the
- * part-prop members for `TParts` (this tree's parts by default).
- */
 export interface ST_ColumnDef<
   TData extends ST_RowData,
   TValue = unknown,
@@ -435,42 +422,13 @@ export interface ST_ColumnDef<
       | ST_ColumnDef_PartKeys
     >,
     Pick<ST_ColumnDef_Config<TData, TValue, TParts>, ST_ColumnDef_PartKeys> {
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   * Specify a function here to point to the correct property in the data object.
-   *
-   * @example accessorFn: (row) => row.username
-   */
   accessorFn?: (originalRow: TData) => TValue;
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   * Specify which key in the row this column should use to access the correct data.
-   * Also supports Deep Key Dot Notation.
-   *
-   * @example accessorKey: 'username' //simple
-   * @example accessorKey: 'name.firstName' //deep key dot notation
-   */
   accessorKey?: DeepKeys<TData> | (string & {});
   aggregationFn?: Array<ST_AggregationFn<TData>> | ST_AggregationFn<TData>;
   columns?: ST_ColumnDef<TData, TValue, TParts>[];
   filterFn?: ST_FilterFn<TData>;
-  /**
-   * footer must be a string. If you want custom JSX to render the footer, you can also specify a `Footer` option. (Capital F)
-   */
   footer?: string;
-  /**
-   * header must be a string. If you want custom JSX to render the header, you can also specify a `Header` option. (Capital H)
-   */
   header: string;
-  /**
-   * Either an `accessorKey` or a combination of an `accessorFn` and `id` are required for a data column definition.
-   *
-   * If you have also specified an `accessorFn`, MRT still needs to have a valid `id` to be able to identify the column uniquely.
-   *
-   * `id` defaults to the `accessorKey` or `header` if not specified.
-   *
-   * @default gets set to the same value as `accessorKey` by default
-   */
   id?: LiteralUnion<string & keyof TData>;
   sortFn?: ST_SortFn<TData>;
 }
@@ -503,20 +461,22 @@ export type ST_DefinedColumnDef<
 
 export type ST_Column<TData extends ST_RowData, TValue = unknown> = Omit<
   Column<ST_Features, TData, TValue>,
-  'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
+  'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header' | 'table'
 > & {
   columnDef: ST_DefinedColumnDef<TData, TValue>;
   columns?: ST_Column<TData, TValue>[];
   filterFn?: ST_FilterFn<TData>;
   footer: string;
   header: string;
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_Header<TData extends ST_RowData> = Omit<
   Header<ST_Features, TData, unknown>,
-  'column'
+  'column' | 'table'
 > & {
   column: ST_Column<TData>;
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_HeaderGroup<TData extends ST_RowData> = Omit<
@@ -535,6 +495,7 @@ export type ST_Row<TData extends ST_RowData> = Omit<
   | 'getRow'
   | 'getVisibleCells'
   | 'subRows'
+  | 'table'
 > & {
   _valuesCache: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   getAllCells: () => ST_Cell<TData>[];
@@ -543,14 +504,16 @@ export type ST_Row<TData extends ST_RowData> = Omit<
   getRow: () => ST_Row<TData>;
   getVisibleCells: () => ST_Cell<TData>[];
   subRows?: ST_Row<TData>[];
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
   Cell<ST_Features, TData, TValue>,
-  'column' | 'row'
+  'column' | 'row' | 'table'
 > & {
   column: ST_Column<TData, TValue>;
   row: ST_Row<TData>;
+  table: ST_TableInstance<TData>;
 };
 
 export type ST_AggregationOption = LiteralUnion<
@@ -589,10 +552,6 @@ export type ST_DisplayColumnIds =
   | 'st-row-select'
   | 'st-row-spacer';
 
-/**
- * The table options that pass props to a shadcn part or hold column defs that
- * do, typed for `TParts`.
- */
 type ST_TableOptions_PartKeys =
   | 'defaultDisplayColumn'
   | 'displayColumnDefOptions'
@@ -603,17 +562,6 @@ type ST_TableOptions_PartKeys =
   | 'stSelectAllCheckboxProps'
   | 'stSelectCheckboxProps';
 
-/**
- * `columns` and `data` props are the only required props, but there are over 170 other optional props.
- *
- * See more info on creating columns and data on the official docs site:
- * @link https://shadcn-table.com/docs/getting-started/usage
- *
- * See the full props list on the official docs site:
- * @link https://shadcn-table.com/docs/api/table-options
- *
- * The part-prop members are typed for `TParts` (this tree's parts by default).
- */
 export interface ST_TableOptions<
   TData extends ST_RowData,
   TParts extends ST_NeutralPartPropTypes = ST_PartPropTypes,
@@ -639,27 +587,8 @@ export interface ST_TableOptions<
       | ST_TableOptions_PartKeys
     >,
     Pick<ST_TableOptions_Config<TData, TParts>, ST_TableOptions_PartKeys> {
-  /**
-   * The columns to display in the table. `accessorKey`s or `accessorFn`s must match keys in the `data` table option.
-   *
-   * See more info on creating columns on the official docs site:
-   * @link https://shadcn-table.com/docs/guides/data-columns
-   * @link https://shadcn-table.com/docs/guides/display-columns
-   *
-   * See all Columns Options on the official docs site:
-   * @link https://shadcn-table.com/docs/api/column-options
-   */
   columns: ST_ColumnDef<TData, any, TParts>[];
-  /**
-   * Pass your data as an array of objects. Objects can theoretically be any shape, but it's best to keep them consistent.
-   *
-   * See the usage guide for more info on creating columns and data:
-   * @link https://shadcn-table.com/docs/getting-started/usage
-   */
   data: TData[];
-  /**
-   * Instead of specifying a bunch of the same options for each column, you can just change an option in the `defaultColumn` table option to change a default option for all columns.
-   */
   defaultColumn?: Partial<ST_ColumnDef<TData, unknown, TParts>>;
   enableRowSelection?: ((row: ST_Row<TData>) => boolean) | boolean;
   getRowId?: (
@@ -677,13 +606,10 @@ export interface ST_TableOptions<
   onEditingRowChange?: OnChangeFn<ST_Row<TData> | null>;
   onHoveredColumnChange?: OnChangeFn<Partial<ST_Column<TData>> | null>;
   onHoveredRowChange?: OnChangeFn<Partial<ST_Row<TData>> | null>;
-  /**
-   * Manage state externally any way you want, then pass it back into MRT.
-   */
   state?: Partial<ST_TableState<TData>>;
 }
 
 export type ST_TableProviderProps<TData extends ST_RowData> = {
   children: ReactNode;
-  table: ST_TableInstance<TData>;
+  table: ST_TableInstance<TData, unknown>;
 };

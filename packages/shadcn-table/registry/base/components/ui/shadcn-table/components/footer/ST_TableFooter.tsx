@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -42,6 +43,28 @@ export const ST_TableFooter = <TData extends ST_RowData>({
     ...rest,
   };
 
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // tableFooterRef null while the children's layout effects run.
+  const userRef = useRef(tableFooterProps.ref);
+  userRef.current = tableFooterProps.ref;
+  const attachRef = useCallback(
+    (node: HTMLTableSectionElement) => {
+      tableFooterRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        tableFooterRef.current = null;
+      };
+    },
+    [tableFooterRef],
+  );
+
   return (
     // The footer groups follow the column order, pinning, visibility and
     // grouping.
@@ -61,7 +84,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
 
         const footerGroups = table.getFooterGroups();
 
-        //if no footer cells at all, skip footer
         if (
           !footerGroups.some((footerGroup) =>
             footerGroup.headers?.some(
@@ -78,10 +100,7 @@ export const ST_TableFooter = <TData extends ST_RowData>({
         return (
           <tfoot
             {...tableFooterProps}
-            ref={(ref: HTMLTableSectionElement) => {
-              tableFooterRef.current = ref;
-              assignRef(tableFooterProps?.ref, ref);
-            }}
+            ref={attachRef}
             className={cn(
               tableFooterVariants({
                 layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',

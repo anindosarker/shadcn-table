@@ -35,13 +35,7 @@ export const ST_TableHeadRow = <TData extends ST_RowData>({
 }: ST_TableHeadRowProps<TData>) => {
   const table = useSTContext<TData>();
   const {
-    options: {
-      enableStickyHeader,
-      layoutMode,
-      // mrtTheme: { baseBackgroundColor },
-      // Note: mrtTheme registry dropped project-wide: bg-background handles theming
-      stTableHeadRowProps,
-    },
+    options: { enableStickyHeader, layoutMode, stTableHeadRowProps },
   } = table;
 
   const { virtualColumns, virtualPaddingLeft, virtualPaddingRight } =

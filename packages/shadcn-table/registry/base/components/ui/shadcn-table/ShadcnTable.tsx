@@ -13,7 +13,7 @@ import {
 import { ST_TableLayout } from '@/components/ui/shadcn-table/components/table/ST_TableLayout';
 
 type TableInstanceProp<TData extends ST_RowData> = {
-  table: ST_TableInstance<TData>;
+  table: ST_TableInstance<TData, unknown>;
 };
 
 export type ShadcnTableProps<TData extends ST_RowData> = Xor<
@@ -29,11 +29,12 @@ const isTableInstanceProp = <TData extends ST_RowData>(
 export const ShadcnTable = <TData extends ST_RowData>(
   props: ShadcnTableProps<TData>,
 ) => {
-  let table: ST_TableInstance<TData>;
+  let table: ST_TableInstance<TData, unknown>;
 
   if (isTableInstanceProp(props)) {
     // A table built by the caller re-renders with its owner, and the tree
-    // follows; the owner picks its selector (`useShadcnTable` selects all).
+    // follows; the owner picks its selector (`useShadcnTable` selects all by
+    // default).
     table = props.table;
   } else {
     // A table built here re-renders this component only on the state its
@@ -46,7 +47,6 @@ export const ShadcnTable = <TData extends ST_RowData>(
     /* eslint-enable react-hooks/rules-of-hooks */
   }
 
-  // `ST_TableProvider` also mounts the tooltip provider.
   return (
     <ST_TableProvider table={table}>
       <ST_TableLayout />
