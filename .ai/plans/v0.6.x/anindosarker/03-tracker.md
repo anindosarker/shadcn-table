@@ -71,6 +71,16 @@ Plan: [03-add-part-deterministic.md](03-add-part-deterministic.md). Rulings:
   part (`apps/shadcn-table-docs/lib/example-variants.mjs`, `scripts/release/decide.mjs`,
   `scripts/release/decide.test.mjs`), so it is left for an owner commit on `claude/review`.
 
+- The upstream report decision 5 asks for is not filed by this part: an issue on
+  `shadcn-ui/ui` speaks for the owner, so it is left to the owner. Text to file: "@shadcn/registry
+  0.2.0, transform-rsc: the `'use client'` test is a regex with the `/g` flag shared across the
+  files of one `shadcn add` run, so its `lastIndex` carries over from one file to the next and
+  the directive is kept or stripped depending on the order of the parts. Repro in a project
+  with the `aria-nova` style: `shadcn add separator textarea` and `shadcn add textarea separator`
+  write different `'use client'` lines for the same two files (here `pnpm add-part aria
+  separator textarea` against `pnpm add-part aria textarea separator` before `233bd8d4`). Fix:
+  drop `/g` or reset `lastIndex` before each test."
+
 ## Review round
 
 - Fixed: `d7aee89b` style(add-part): prettier (the 82-column argv line); `647aa4eb` `--all`
@@ -82,6 +92,13 @@ Plan: [03-add-part-deterministic.md](03-add-part-deterministic.md). Rulings:
 - Declined: the `format` glob extension (owner commit, bullet above); a `pr.yml` add-part
   step (owner call, bullet above); the Phase 2 halt finding needs no code change, the Owner
   attention bullet stands with the lesson added.
+
+- Round 2. Fixed: `934de79d` the `add-part.mjs` header describes the `--all` skip set as the
+  registry items' own `components/ui/*.tsx` files, not `forkedUi`; `a7ce2fb8` `--all` and its
+  empty `git status --short` gate in `registry/README.md` and `CONTRIBUTING.md`, whose "change
+  them only when the table needs it" clause becomes "never edited by hand"; the upstream report
+  bullet under Owner attention (this commit). Declined: filing the upstream issue (owner, bullet
+  above); the Phase 2 halt finding needs no code change, the Owner attention bullet stands.
 
 ## Gates
 
