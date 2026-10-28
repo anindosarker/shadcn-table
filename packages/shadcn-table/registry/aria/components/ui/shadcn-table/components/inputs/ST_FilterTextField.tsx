@@ -138,6 +138,15 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   } = getColumnFilterInfo({ header, table });
 
   const dropdownOptions = useDropdownOptions({ header, table });
+  // React Aria collections throw on a repeated id, so a repeated option value
+  // is offered once.
+  const uniqueDropdownOptions = dropdownOptions?.filter(
+    (option, index, options) =>
+      options.findIndex(
+        (other) =>
+          getValueAndLabel(other).value === getValueAndLabel(option).value,
+      ) === index,
+  );
 
   const optionLabel = (value: string) => {
     const option = dropdownOptions?.find(
@@ -426,7 +435,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // React Aria collections take objects with an id.
   const autocompleteItems = isAutocompleteFilter
     ? createFilterOptions<DropdownOption>()(
-        dropdownOptions?.map((option) => getValueAndLabel(option)) ?? [],
+        uniqueDropdownOptions?.map((option) => getValueAndLabel(option)) ?? [],
         {
           getOptionLabel: (option: DropdownOption) =>
             getValueAndLabel(option).label,
@@ -436,7 +445,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     : [];
 
   const multiSelectItems = isMultiSelectFilter
-    ? (dropdownOptions?.map((option) => ({
+    ? (uniqueDropdownOptions?.map((option) => ({
         id: getValueAndLabel(option).value,
       })) ?? [])
     : [];
@@ -544,6 +553,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           ) : isSelectFilter ? (
             // React Aria Select raises no ChangeEvent, so a user onChange cannot fire.
             <Select
+              aria-label={filterPlaceholder}
               isDisabled={!!filterChipLabel || textFieldProps.disabled}
               onSelectionChange={(key) => handleChange(key ?? '')}
               placeholder={filterPlaceholder}
@@ -571,7 +581,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               <SelectContent>
                 {/* The empty selection is the placeholder, on Select. */}
                 {textFieldProps.children ??
-                  dropdownOptions?.map((option, index) => {
+                  uniqueDropdownOptions?.map((option, index) => {
                     const { label, value } = getValueAndLabel(option);
                     return (
                       <SelectItem
