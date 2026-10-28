@@ -362,6 +362,18 @@ export type ST_TableInstance<
   options: ST_DefinedTableOptions<TData>;
 };
 
+/**
+ * The core table that `row.table`, `cell.table`, `column.table` and
+ * `header.table` point to. It is the instance `constructTable` builds, not the
+ * per-render wrapper `useShadcnTable` returns, so it has no `state` (read
+ * `table.store.state` or the atoms) and no `AppTable` (`useAppTable` attaches
+ * it to the wrapper).
+ */
+export type ST_CoreTableInstance<TData extends ST_RowData = ST_RowData> = Omit<
+  ST_TableInstance<TData>,
+  'AppTable' | 'state'
+>;
+
 export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
   ST_TableOptions<TData, ST_NeutralPartPropTypes>,
   'icons' | 'localization'
@@ -468,7 +480,7 @@ export type ST_Column<TData extends ST_RowData, TValue = unknown> = Omit<
   filterFn?: ST_FilterFn<TData>;
   footer: string;
   header: string;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 };
 
 export type ST_Header<TData extends ST_RowData> = Omit<
@@ -476,7 +488,7 @@ export type ST_Header<TData extends ST_RowData> = Omit<
   'column' | 'table'
 > & {
   column: ST_Column<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 };
 
 export type ST_HeaderGroup<TData extends ST_RowData> = Omit<
@@ -504,7 +516,7 @@ export type ST_Row<TData extends ST_RowData> = Omit<
   getRow: () => ST_Row<TData>;
   getVisibleCells: () => ST_Cell<TData>[];
   subRows?: ST_Row<TData>[];
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 };
 
 export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
@@ -513,7 +525,7 @@ export type ST_Cell<TData extends ST_RowData, TValue = unknown> = Omit<
 > & {
   column: ST_Column<TData, TValue>;
   row: ST_Row<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 };
 
 export type ST_AggregationOption = LiteralUnion<

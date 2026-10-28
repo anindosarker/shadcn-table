@@ -17,7 +17,7 @@ A shadcn registry item: the table source is copied into the project, not install
      Fallback when the site is unreachable, GitHub addresses: `anindosarker/shadcn-table/shadcn-table` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-base` (Base UI).
 3. Verify: `components/ui/shadcn-table/index.ts` exists and the project type-checks. The edition for the other base does not type-check; reinstall the right one with `--overwrite`.
 
-What the command adds: `components/ui/shadcn-table/` (the table), the shadcn/ui parts it uses in `components/ui/` when missing, and the npm packages `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, plus `radix-ui` (Radix UI) or `@base-ui/react` (Base UI). Re-run with `--overwrite` to update; local edits in that directory are replaced.
+What the command adds: `components/ui/shadcn-table/` (the table), the shadcn/ui parts it uses in `components/ui/` when missing, and the npm packages `@tanstack/react-table`, `@tanstack/react-store`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, plus `radix-ui` (Radix UI) or `@base-ui/react` (Base UI). Re-run with `--overwrite` to update; local edits in that directory are replaced.
 
 Other languages are separate items, one per locale code, under the same base path: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/<base>/shadcn-table-locale-de.json`, imported from `@/components/ui/shadcn-table/shared/locales/de`. GitHub fallback: `anindosarker/shadcn-table/shadcn-table-locale-de` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base-locale-de` (Base UI).
 
