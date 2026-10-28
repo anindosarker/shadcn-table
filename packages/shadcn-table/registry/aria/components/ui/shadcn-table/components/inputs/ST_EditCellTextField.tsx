@@ -87,12 +87,20 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
       <FieldDescription>{helperText}</FieldDescription>
     );
 
+  // React Aria collections throw on a repeated id, so a repeated option value
+  // is offered once.
   const selectOptions = parseFromValuesOrFunc(editSelectOptions, {
     cell,
     column,
     row,
     table,
-  });
+  })?.filter(
+    (option, index, options) =>
+      options.findIndex(
+        (other) =>
+          getValueAndLabel(other).value === getValueAndLabel(option).value,
+      ) === index,
+  );
 
   const isSelectEdit = editVariant === 'select';
 
@@ -165,6 +173,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         if (isSelectEdit) {
           const select = (
             <Select
+              aria-label={columnDef.header}
               isDisabled={
                 parseFromValuesOrFunc(columnDef.enableEditing, row) === false
               }
