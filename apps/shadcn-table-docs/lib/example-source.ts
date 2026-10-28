@@ -22,9 +22,10 @@ export const exampleDir = (name: string) =>
 /**
  * Every source file of examples/<name> the playground shows, in tree order
  * (see listExampleFiles): `TS.tsx` first, then folders before files. One
- * set for both bases: the source imports `@/components/ui/...`, the path a
- * user has after install; the per-base variants under examples/.radix and
- * examples/.base (lib/example-variants.mjs) only feed the live example.
+ * set for every base: the source imports `@/components/ui/...`, the path a
+ * user has after install; the per-base variants under examples/.radix,
+ * examples/.base and examples/.aria (lib/example-variants.mjs) only feed the
+ * live example.
  */
 export async function readExampleFiles(name: string): Promise<ExampleFile[]> {
   const dir = exampleDir(name);
