@@ -208,7 +208,8 @@ const TOKEN =
 
 /* del: fades in from the left; add: sweeps in after it; ping: the
  * "unchanged" ring, at rest invisible; fade: the URL, the counts and the
- * plain rows; pop: a chat message; caret and dots: typing and thinking.
+ * plain rows; pop: a chat message; caret: the composer's block cursor,
+ * hard on and off; dots: thinking.
  * Under reduced motion everything sits at its final state. */
 const CSS = `
 @keyframes wa-del{from{opacity:0;transform:translateX(-6px)}}
@@ -655,6 +656,12 @@ function Turn({
   );
 }
 
+/** The composer's cursor: a terminal block in the editor ink, one line
+ * tall. */
+const CARET = (
+  <span className="wa-caret ml-px inline-block h-[1lh] w-[0.6em] bg-(--dh-ink) align-top" />
+);
+
 /** The prompt pane: a short chat with a generic coding assistant, newest at
  * the bottom, and the composer the next request types into. */
 function PromptPane({ chat }: { chat: Chat }) {
@@ -684,17 +691,20 @@ function PromptPane({ chat }: { chat: Chat }) {
         aria-hidden="true"
         className="flex items-end gap-2 rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper-2) py-2 pr-2 pl-3.5"
       >
-        <p className="min-h-5 min-w-0 flex-1 py-1">
+        <p className="flex min-h-5 min-w-0 flex-1 gap-2 py-1">
+          <span className="shrink-0 text-(--dh-ink-muted) select-none">›</span>
           {chat.phase === 'typing' ? (
             <span className="text-(--dh-ink)">
               <Typing key={chat.run} text={PROMPTS[chat.target]} />
-              <span className="wa-caret ml-px inline-block h-4 w-px translate-y-0.5 bg-(--dh-ink)" />
+              {CARET}
             </span>
           ) : (
             // idle: the caret waits where the next prompt starts
-            <span className="text-(--dh-ink-muted)">
-              <span className="wa-caret mr-px inline-block h-4 w-px translate-y-0.5 bg-(--dh-ink)" />
-              Describe a new look for your app
+            <span>
+              {CARET}
+              <span className="ml-1 text-(--dh-ink-muted)">
+                Describe a new look for your app
+              </span>
             </span>
           )}
         </p>
