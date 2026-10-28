@@ -27,6 +27,19 @@ Branch `v0.6/parts-untouched`, worktree `08`, from `claude/review` at `03d95c95`
   output of that exact command is stable across repeated runs.
 - Phase 01, follow-up: `6c8550e5` fix(registry): aria item takes label as a
   registryDependency. See Owner attention.
+- Decision 4: `999ea291` docs(changelog): drop the label workaround line (the `### Changed`
+  bullet and its heading under `## Unreleased`, the `### Fixed` bullet stays); `81b69881`
+  docs(install): known issue, aria label and noUnusedLocals (a `Callout` in the Verify step of
+  `install.mdx`: the `aria-nova` `label` part's unused `import * as React` fails Vite's
+  `noUnusedLocals`, TS6133, the user deletes the line or sets `"noUnusedLocals": false` in
+  `tsconfig.app.json`; the page has no aria-only tab in MDX, the callout title names React
+  Aria); `e60f2794` ci(install): aria scenario applies the documented label step (an
+  `aria`-only step after `shadcn add` deletes that line from `src/components/ui/label.tsx`
+  and fails when it is missing; it runs again after the locale and example adds, because
+  `--overwrite` rewrites every resolved file whose content differs and the locale item
+  resolves the library's `label` registryDependency, so the old combined step is split
+  around it; `actionlint` clean, the file's one pre-existing shellcheck warning, unused `i`
+  in the dev registry wait loop, fixed in the same commit).
 - Final phase: docs commit below. Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` 0 errors;
   `lint` clean; `pnpm add-part aria label && git status --short` nothing;
   `check:bases` green (142 files, 23 and 37 allowed to differ); `registry:build` green
@@ -83,10 +96,11 @@ copies.
   `../../v0.5.x/anindosarker/02-tracker.md`, Gates). With the part as shipped the fork would
   ship identical content, so it is gone: the aria item lists `label` in `registryDependencies`
   and no longer carries `registry/aria/components/ui/label.tsx` in `files`; `registry.json`
-  rebuilt. The trade-off decision 2 accepted ("No upstream report to shadcn"): that install
-  scenario fails TS6133 again until aria-nova drops the import or the user relaxes
-  `noUnusedLocals` for `components/ui/label.tsx`; reverting `6c8550e5` would not restore it.
-  CHANGELOG `### Changed` says so.
+  rebuilt. The trade-off decision 2 accepted ("No upstream report to shadcn"): a fresh Vite
+  aria app fails TS6133 until aria-nova drops the import or the user deletes the line or
+  relaxes `noUnusedLocals`; reverting `6c8550e5` would not restore it. Settled by decision 4:
+  the install page names it as a known issue with the user's own fix, and the `aria` install
+  scenario applies exactly that documented step (`e60f2794`); the CHANGELOG line is gone.
 - `checkbox` on radix and base is a recorded fork (`forkedUi`, minus icon for the
   indeterminate state): `pnpm add-part radix checkbox` shows a diff there, which contradicts
   the literal "never edited" of decision 2. The standards bullet names it as the recorded-fork
