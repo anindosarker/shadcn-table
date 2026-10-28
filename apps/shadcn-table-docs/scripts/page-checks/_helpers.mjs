@@ -435,7 +435,7 @@ const DEMO_TIMEOUT_MS = 30000;
  * attached across the reload, and a renderer crash fails
  * `demo: no renderer crash`.
  */
-export async function demoLoop(page, check, edition) {
+export async function demoLoop({ page, check, edition }) {
   const opened = EDITION_LABELS[edition] ?? EDITION_LABELS[DEFAULT_EDITION];
   let crashed = false;
   page.once('crash', () => {

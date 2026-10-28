@@ -280,7 +280,7 @@ const checks = {
       'no contributors section',
       !txt.includes('Maintainers and Contributors'),
     );
-    await demoLoop(page, check, edition);
+    await demoLoop({ page, check, edition });
   },
 };
 
