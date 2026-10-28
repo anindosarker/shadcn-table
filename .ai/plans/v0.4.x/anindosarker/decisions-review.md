@@ -126,6 +126,15 @@ nothing here re-decides those, items here extend them.
     its CSS block parser. A strict CSP needs a nonce or `style-src 'unsafe-inline'`; one line
     in the install guide. Not the Web Animations API: imperative, no SSR, more code.
 
+## Select all with kept pinned rows
+
+17. The header checkbox keeps core's page-only semantics (`toggleAllPageRowsSelected`,
+    `getIsAllPageRowsSelected`) under `select-*` pinning as well: on a page that also shows
+    pinned rows kept from another page, the box counts and toggles the page's own rows; the
+    ruling 9 clear on unselect still unpins everything. Owner tested it against MRT's
+    `Row Pinning Select Sticky Mode` and kept the current behaviour. The second bullet of
+    `findings-review.md` is closed as intended.
+
 ## Unchanged after review
 
 14. The part prop options in the `stConfigFeature` augmentation stay tree-neutral
@@ -134,7 +143,7 @@ nothing here re-decides those, items here extend them.
     reads of `st*Props` need a `Pick<ST_TableOptions<TData>, ...>` annotation, as the four
     library components do.
 
-17. The props-style root (`ShadcnTable` built from options) selects only the slices its
+18. The props-style root (`ShadcnTable` built from options) selects only the slices its
    option-time transforms read, through the `useAppTable(options, selector)` argument; one
    module-level `tableContext` is passed into every per-mount hook so `useSTContext` is
    static; nested tables read the nearest provider. All three match the guides and stay.
