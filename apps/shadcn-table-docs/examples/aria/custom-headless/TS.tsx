@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import type { Key } from 'react-aria-components';
 import {
   ST_GlobalFilterTextField,
   ST_TableBodyCellValue,
@@ -8,8 +10,10 @@ import {
   ST_ToolbarAlertBanner,
   flexRender,
   type ST_ColumnDef,
+  type ST_RowSelectionState,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Table,
   TableBody,
@@ -44,11 +48,23 @@ const columns: ST_ColumnDef<Person>[] = [
 ];
 
 const Example = () => {
+  //the React Aria Table drives the selection; the ST table reads it as its row selection state
+  const [rowSelection, setRowSelection] = useState<ST_RowSelectionState>({});
+
   const table = useShadcnTable({
     columns,
     data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
     //ST display columns can still work, optionally override cell renders with `displayColumnDefOptions`
     enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    state: { rowSelection },
+    //the React Aria Table owns the selection checkboxes (slot "selection")
+    displayColumnDefOptions: {
+      'st-row-select': {
+        Cell: () => <Checkbox slot="selection" />,
+        Header: () => <Checkbox slot="selection" />,
+      },
+    },
     initialState: {
       pagination: { pageSize: 5, pageIndex: 0 },
       showGlobalFilter: true,
@@ -65,6 +81,19 @@ const Example = () => {
     .getVisibleLeafColumns()
     .find((column) => column.columnDef.columnDefType === 'data')?.id;
 
+  //React Aria selection in, ST row selection state out: `all` means every row of the page
+  const selectedKeys = new Set(
+    Object.keys(rowSelection).filter((id) => rowSelection[id]),
+  );
+  const onSelectionChange = (keys: Set<Key> | 'all') => {
+    const next = { ...rowSelection };
+    for (const row of table.getRowModel().rows) {
+      if (keys === 'all' || keys.has(row.id)) next[row.id] = true;
+      else delete next[row.id];
+    }
+    setRowSelection(next);
+  };
+
   return (
     <ST_TableProvider table={table}>
       <div className="my-8 flex flex-col">
@@ -78,7 +107,12 @@ const Example = () => {
           <ST_TablePagination />
         </div>
         {/* Your own markup with the React Aria Table collection parts, driven by the power of TanStack Table */}
-        <Table aria-label="My Custom Headless Table">
+        <Table
+          aria-label="My Custom Headless Table"
+          selectionMode="multiple"
+          selectedKeys={selectedKeys}
+          onSelectionChange={onSelectionChange}
+        >
           {/* A React Aria table has one header row: the flat headers of this column set */}
           <TableHeader>
             {table.getFlatHeaders().map((header) => (
@@ -101,11 +135,7 @@ const Example = () => {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.map((row, rowIndex) => (
-              <TableRow
-                className={row.getIsSelected() ? 'bg-muted' : undefined}
-                id={row.id}
-                key={row.id}
-              >
+              <TableRow id={row.id} key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell className="text-center" key={cell.id}>
                     {/* Use ST's cell renderer that provides better logic than flexRender */}
