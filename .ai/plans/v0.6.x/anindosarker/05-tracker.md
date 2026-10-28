@@ -105,3 +105,31 @@ decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` 
   folder would do, the three builds share the story set.
 - `05-shots/` holds six PNGs (44K) committed next to this tracker; no precedent in earlier
   trackers.
+- Verifier: PR #54 opened as `CONFLICTING` (parts 03 and 04 landed on `claude/review`), so
+  `pr.yml` did not start. Merged `origin/claude/review` in (`14724545`), CHANGELOG
+  `## Unreleased` keeps both sides; every gate below ran again on the merged head.
+- Verifier: decision 7 gained an addendum on 2026-10-29 (GitHub shorthand aliases: `build.mjs`
+  emits plain `shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>` as aliases of the
+  Base UI items, `hosted.mjs` ignores them). This branch does not implement it: committed
+  `packages/shadcn-table/registry.json` has no `shadcn-table` item, and the CHANGELOG says the
+  plain GitHub addresses no longer resolve. Not a section 2.2 gate; left for a coder round.
+
+## Gates, verifier run
+
+Head `14724545` (merge of `origin/claude/review` into `ae51de7e`), clean tree, dev server on 5341,
+static Storybook on 5344.
+
+- `pnpm registry:build`, `registry:items`, `registry:hosted`: exit 0;
+  `git status --short apps/shadcn-table-docs/public/r` empty. Pass.
+- `pnpm check:bases`: exit 0 (library 143 files, 24 and 38 allowed; examples 216, 2 and 10). Pass.
+- docs `types:check`: exit 0. Pass.
+- docs `lint`: exit 0, 0 errors, 9 warnings (pre-existing). Pass.
+- docs `build`: exit 0, no tracked change after. Pass.
+- `check-pages.mjs --edition radix`: 1652 passed, 0 failed. Pass.
+- `check-pages.mjs --edition base`: 1652 passed, 0 failed. Pass.
+- `check-pages.mjs --edition aria`: 1652 passed, 0 failed. Pass.
+- `check-storybook.mjs` against the local three-folder build: 42 passed, 0 failed, 1 skipped
+  (root redirect, static server). Pass.
+- `pr.yml` on PR #54, run 40766188960: all 15 checks pass (release impact, bases, library x3,
+  test x3, registry, docs, install x5). Pass.
+- `smoke.mjs`: after release only, not run.
