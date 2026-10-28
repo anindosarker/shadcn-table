@@ -2391,7 +2391,6 @@
         "field",
         "input",
         "input-group",
-        "label",
         "native-select",
         "pagination",
         "popover",
@@ -2925,6 +2924,11 @@
           "path": "registry/aria/components/ui/shadcn-table/types.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/types.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "@ui/label.tsx"
         }
       ]
     },

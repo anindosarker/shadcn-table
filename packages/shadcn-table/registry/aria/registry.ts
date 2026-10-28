@@ -27,8 +27,11 @@ const items = baseItems({
   ],
   devDependencies: [{ name: 'tw-animate-css' }],
   // shadcn parts the item ships as its own files instead of as
-  // registryDependencies.
-  forkedUi: [],
+  // registryDependencies. label: the aria-nova part as shipped keeps an
+  // unused `import * as React`, which fails `tsc` in a fresh
+  // `shadcn init --base aria` Vite app (noUnusedLocals, TS6133); this tree's
+  // copy drops it.
+  forkedUi: ['label'],
 });
 
 registryItemSchema.array().parse(items);
