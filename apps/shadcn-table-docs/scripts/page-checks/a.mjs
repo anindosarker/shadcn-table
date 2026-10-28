@@ -1,7 +1,10 @@
 /**
  * Cluster A page checks: home, docs/index, getting-started, api/*.
- * Each entry: async ({ page, check }) => void, run after load at the first width.
+ * Each entry: async ({ page, check, edition }) => void, run after load at
+ * the first width; `edition` is the base the page opened on (the runner's
+ * --edition, else the default).
  */
+import { EDITION_LABELS } from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
 import {
   baseSwitch,
   codeToggle,
@@ -33,9 +36,12 @@ async function agentBar(page, check) {
 /**
  * The hero's command bar (components/agent-bar.tsx): the Command tab names
  * the site-wide base and its chevron menu sets it, so the command follows.
- * The tab text is uppercased by CSS; compare case-insensitively.
+ * Opens on `edition`, visits the other two, returns to it. The tab text is
+ * uppercased by CSS; compare case-insensitively.
  */
-async function commandBarBase(page, check) {
+async function commandBarBase(page, check, edition) {
+  const label0 = EDITION_LABELS[edition];
+  const others = Object.keys(EDITION_LABELS).filter((e) => e !== edition);
   const bar = page.locator('[data-slot="agent-bar"]');
   check('agent bar', (await bar.count()) === 1, String(await bar.count()));
   if (!(await bar.count())) return;
@@ -50,15 +56,28 @@ async function commandBarBase(page, check) {
     await item.click();
     await page.waitForTimeout(200);
   };
+  const expectEdition = async (what, e) => {
+    const l = EDITION_LABELS[e];
+    check(
+      `${what}: command`,
+      (await command()).includes(`/r/${e}/`),
+      await command(),
+    );
+    check(
+      `${what}: tab label`,
+      (await label()).toLowerCase().includes(l.toLowerCase()),
+      await label(),
+    );
+  };
   check(
-    'command tab names radix ui',
-    /radix ui/i.test(await label()),
+    `command tab names ${label0}`,
+    (await label()).toLowerCase().includes(label0.toLowerCase()),
     await label(),
   );
   await tab.click();
   check(
-    'radix command',
-    (await command()).includes('/r/radix/'),
+    `${edition} command`,
+    (await command()).includes(`/r/${edition}/`),
     await command(),
   );
   await bar.getByRole('button', { name: 'Choose base' }).click();
@@ -69,44 +88,24 @@ async function commandBarBase(page, check) {
     (await items.allTextContents()).join(','),
   );
   check(
-    'base menu: radix ui checked',
-    (await items.first().getAttribute('aria-checked')) === 'true',
+    `base menu: ${label0} checked`,
+    (await items
+      .filter({ hasText: label0 })
+      .first()
+      .getAttribute('aria-checked')) === 'true',
   );
   await page.keyboard.press('Escape');
-  await pick('Base UI');
-  check(
-    'base ui: command',
-    (await command()).includes('/r/base/'),
-    await command(),
-  );
-  check('base ui: tab label', /base ui/i.test(await label()), await label());
-  await pick('React Aria');
-  check(
-    'react aria: command',
-    (await command()).includes('/r/aria/'),
-    await command(),
-  );
-  check(
-    'react aria: tab label',
-    /react aria/i.test(await label()),
-    await label(),
-  );
-  await pick('Radix UI');
-  check(
-    'radix ui again: command',
-    (await command()).includes('/r/radix/'),
-    await command(),
-  );
-  check(
-    'radix ui again: tab label',
-    /radix ui/i.test(await label()),
-    await label(),
-  );
+  for (const other of others) {
+    await pick(EDITION_LABELS[other]);
+    await expectEdition(other, other);
+  }
+  await pick(label0);
+  await expectEdition(`${edition} again`, edition);
 }
 
 const checks = {
-  '/': async ({ page, check }) => {
-    await commandBarBase(page, check);
+  '/': async ({ page, check, edition }) => {
+    await commandBarBase(page, check, edition);
   },
   '/docs/getting-started/usage': async ({ page, check }) => {
     const steps = page.locator('article .fd-step');
@@ -167,7 +166,7 @@ const checks = {
       page.url(),
     );
   },
-  '/docs/getting-started/install': async ({ page, check }) => {
+  '/docs/getting-started/install': async ({ page, check, edition }) => {
     const steps = page.locator('article .fd-step');
     const tabs = page.locator('article [role="tab"]');
     check(
@@ -186,11 +185,21 @@ const checks = {
     const addCommand = (base, item) =>
       new RegExp(`shadcn@latest add \\S+/r/${base}/${item}\\.json`);
     let txt = await article();
+    // The page opens on `edition`: the default (Base UI) in a fresh browser
+    // context, the runner's --edition otherwise; the header switch agrees.
     check(
-      'init on the radix base',
-      txt.includes('shadcn@latest init --base radix'),
+      `opens on ${EDITION_LABELS[edition]}`,
+      (await page
+        .locator(
+          '#nd-subnav [aria-label="shadcn base"] [role="tab"][data-active]',
+        )
+        .textContent()) === EDITION_LABELS[edition],
     );
-    check('install command', addCommand('radix', 'shadcn-table').test(txt));
+    check(
+      `init on the ${edition} base`,
+      txt.includes(`shadcn@latest init --base ${edition}`),
+    );
+    check('install command', addCommand(edition, 'shadcn-table').test(txt));
     check(
       'compatibility sentence',
       txt.includes('on the Radix UI, Base UI or React Aria base') &&
