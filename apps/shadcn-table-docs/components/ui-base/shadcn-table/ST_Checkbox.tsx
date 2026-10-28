@@ -13,17 +13,15 @@ const indeterminateClassName =
 /**
  * shadcn's Checkbox with MRT's indeterminate look: a dash on the checked fill.
  * The part draws a check for every state, so the dash sits over the box,
- * centred, and lets clicks through. Base UI signals the state with
- * `indeterminate`.
+ * centred, shows only while the part is indeterminate and lets clicks
+ * through. Base UI marks the state with `data-indeterminate`.
  */
 export const ST_Checkbox = ({ className, ...props }: ST_CheckboxProps) => (
   <span className="relative inline-flex">
     <Checkbox className={cn(indeterminateClassName, className)} {...props} />
-    {props.indeterminate && (
-      <MinusIcon
-        aria-hidden
-        className="pointer-events-none absolute inset-0 m-auto size-3.5 text-primary-foreground peer-data-disabled:opacity-50"
-      />
-    )}
+    <MinusIcon
+      aria-hidden
+      className="pointer-events-none absolute inset-0 m-auto hidden size-3.5 text-primary-foreground peer-data-disabled:opacity-50 peer-data-indeterminate:block"
+    />
   </span>
 );
