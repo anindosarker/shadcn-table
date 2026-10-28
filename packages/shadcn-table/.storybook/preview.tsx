@@ -1,12 +1,15 @@
 import type { Preview } from '@storybook/react-vite';
+import { Fragment } from 'react';
 import { addons, useEffect, useState } from 'storybook/preview-api';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import {
   darkTheme,
+  EDITION_LABELS,
   lightTheme,
   readStoredMode,
-  ST_BASE,
   ST_BASE_LABEL,
+  ST_OTHER_EDITIONS,
+  staticEditionRoot,
 } from './themes';
 // Resolved inside the tree ST_BASE selects (vite.config.ts).
 import '@/index.css';
@@ -103,14 +106,20 @@ const preview: Preview = {
           </p>
           <p className="pb-2 text-sm text-muted-foreground dark:text-foreground">
             These stories render the {ST_BASE_LABEL} edition of shadcn-table.
-            The {ST_BASE === 'base' ? 'Radix UI' : 'Base UI'} edition is{' '}
-            <a
-              href={ST_BASE === 'base' ? '../' : './base/'}
-              target="_top"
-              className="underline"
-            >
-              here.
-            </a>
+            The other editions:{' '}
+            {ST_OTHER_EDITIONS.map((edition, i) => (
+              <Fragment key={edition}>
+                {i > 0 && ', '}
+                <a
+                  href={staticEditionRoot(edition)}
+                  target="_top"
+                  className="underline"
+                >
+                  {EDITION_LABELS[edition]}
+                </a>
+              </Fragment>
+            ))}
+            .
           </p>
           <p className="pb-4 text-sm text-muted-foreground dark:text-foreground">
             View Source code for these examples in the code tab below or{' '}

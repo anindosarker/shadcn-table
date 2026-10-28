@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Static Storybook gate for the edition button (.storybook/edition-tool.ts):
- * with both builds served from one directory (`storybook:build`, then
- * `storybook:build:base` into storybook-static/base/), each edition's toolbar
- * shows a link labelled with the other edition that opens the same story
- * there.
+ * Static Storybook gate for the edition switch (.storybook/edition-tool.ts):
+ * with the three builds served from one directory (`storybook:build`, then
+ * `storybook:build:base` and `storybook:build:aria` into storybook-static/base/
+ * and storybook-static/aria/), each edition's toolbar marks its own edition
+ * and shows one link per other edition, labelled with it, that opens the same
+ * story there.
  *
  * Usage (a static server must be running, for example
  * `pnpm serve storybook-static -l 5344`):
@@ -29,7 +30,7 @@ const base = (i === -1 ? 'http://localhost:5344' : args[i + 1]).replace(
   '',
 );
 
-/** First story id of the Radix UI build; both builds share the story set. */
+/** First story id of the Radix UI build; every build shares the story set. */
 const index = JSON.parse(
   await readFile(path.join(PKG_DIR, 'storybook-static', 'index.json'), 'utf8'),
 );
@@ -41,25 +42,16 @@ if (!storyId) {
   process.exit(1);
 }
 
-/** Each edition: its root, the label the button shows, where it must go. */
+/** Each edition: the label its button shows and where its build is served. */
 const editions = [
-  {
-    name: 'radix',
-    root: `${base}/`,
-    label: 'Base UI',
-    target: `${base}/base/`,
-  },
-  {
-    name: 'base',
-    root: `${base}/base/`,
-    label: 'Radix UI',
-    target: `${base}/`,
-  },
+  { name: 'radix', label: 'Radix UI', root: `${base}/` },
+  { name: 'base', label: 'Base UI', root: `${base}/base/` },
+  { name: 'aria', label: 'React Aria', root: `${base}/aria/` },
 ];
 
 const results = [];
 const browser = await chromium.launch();
-for (const { name, root, label, target } of editions) {
+for (const { name, label, root } of editions) {
   const check = (what, ok, extra = '') =>
     results.push(
       `${ok ? 'PASS' : 'FAIL'} ${name} ${what}${extra ? ' ' + extra : ''}`,
@@ -70,36 +62,55 @@ for (const { name, root, label, target } of editions) {
   await page.goto(`${root}?path=/story/${storyId}`, {
     waitUntil: 'networkidle',
   });
-  const link = page.locator('[data-edition-link]');
-  await link.waitFor({ timeout: 30000 }).catch(() => {});
+  const current = page.locator('[data-edition-current]');
+  await current.waitFor({ timeout: 30000 }).catch(() => {});
   check(
-    'edition button',
-    (await link.count()) === 1,
-    String(await link.count()),
+    'current edition marked',
+    (await current.count()) === 1 &&
+      (await current.textContent())?.trim() === label &&
+      (await current.getAttribute('aria-current')) === 'page',
+    (await current.count()) ? await current.textContent() : '0',
   );
-  if (await link.count()) {
+  const others = editions.filter((edition) => edition.name !== name);
+  check(
+    'one link per other edition',
+    (await page.locator('[data-edition-link]').count()) === others.length,
+    String(await page.locator('[data-edition-link]').count()),
+  );
+  for (const other of others) {
+    const link = page.locator(`[data-edition-link="${other.name}"]`);
+    const what = (text) => `${other.name} link ${text}`;
+    if ((await link.count()) !== 1) {
+      check(what('present'), false, String(await link.count()));
+      continue;
+    }
     check(
-      'label',
-      (await link.textContent())?.trim() === label,
+      what('label'),
+      (await link.textContent())?.trim() === other.label,
       await link.textContent(),
     );
-    check('target _top', (await link.getAttribute('target')) === '_top');
+    check(what('target _top'), (await link.getAttribute('target')) === '_top');
     const href = new URL(await link.evaluate((a) => a.href));
     check(
-      'other edition',
-      `${href.origin}${href.pathname}` === target,
+      what('opens the edition'),
+      `${href.origin}${href.pathname}` === other.root,
       href.href,
     );
     check(
-      'story id preserved',
+      what('story id preserved'),
       href.searchParams.get('path') === `/story/${storyId}`,
       href.search,
     );
     check(
-      'title mentions the edition',
-      ((await link.getAttribute('title')) ?? '').includes(label),
+      what('title mentions the edition'),
+      ((await link.getAttribute('title')) ?? '').includes(other.label),
     );
   }
+  check(
+    'manager title mentions the edition',
+    (await page.title()).includes(label) ||
+      (await page.locator(`text=shadcn-table (${label})`).count()) > 0,
+  );
   check('no page errors', errors.length === 0, errors[0] ?? '');
   await page.close();
 }
