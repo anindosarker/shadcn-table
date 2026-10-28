@@ -39,7 +39,7 @@ async function agentBar(page, check) {
  * Opens on `edition`, visits the other two, returns to it. The tab text is
  * uppercased by CSS; compare case-insensitively.
  */
-async function commandBarBase(page, check, edition) {
+async function commandBarBase({ page, check, edition }) {
   const label0 = EDITION_LABELS[edition];
   const others = Object.keys(EDITION_LABELS).filter((e) => e !== edition);
   const bar = page.locator('[data-slot="agent-bar"]');
@@ -105,7 +105,7 @@ async function commandBarBase(page, check, edition) {
 
 const checks = {
   '/': async ({ page, check, edition }) => {
-    await commandBarBase(page, check, edition);
+    await commandBarBase({ page, check, edition });
   },
   '/docs/getting-started/usage': async ({ page, check }) => {
     const steps = page.locator('article .fd-step');
