@@ -1,3 +1,5 @@
+'use client';
+
 import {
   DisclosurePanel as CollapsibleContentPrimitive,
   Disclosure as CollapsiblePrimitive,
