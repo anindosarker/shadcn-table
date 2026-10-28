@@ -75,3 +75,19 @@ Docs app and previews, on `v0.5/infra` after phase 01.
 - PR #40 (`v0.5/infra` into `claude/review`, draft, CI only): on `ce8177d5` every job green: `library` and `test` for radix, base, aria, `bases (edition guard)`, `docs`. `registry` and `install` are `if: github.event_name == 'push'`, so they skip on a pull request and first run on the push to `claude/review` after the merge.
 - The aria scenario run by hand on `ce8177d5`, step for step from `install.yml` in a scratch directory: `shadcn init --template vite --base aria --preset nova`, `shadcn add anindosarker/shadcn-table/shadcn-table-aria#<sha>`, mount, `tsc` and `vite build`: pass (before the label fork: `tsc` TS6133, the only failure). Locale step through `registry:dev` built with `REGISTRY_BASE_URL` set to the local `.dev/r` folder instead of a server on 5310 (port reserved in this run), `shadcn-table-aria-locale-de` plus `example-basic#<sha>`, mount, `tsc`, `vite build`: pass. One `@tanstack/react-table` entry, installed 9.3.1; no `radix-ui` or `@base-ui/react`, `react-aria-components` `^1.22.1`: pass.
 
+
+## Verifier
+
+Every gate from 2.2 on `69aaa5a7`, clean tree before and after.
+
+### Gates
+
+- `check:bases`: `radix and base: 142 library files in both trees, 23 allowed to differ`, `radix and aria: 142 library files in both trees, 37 allowed to differ`, exit 0.
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json`: pass. Package `lint`: 0 problems.
+- `test`, `test:base`, `test:aria`: 63 files, 446 tests each, pass.
+- `storybook:build`, `storybook:build:base`, `storybook:build:aria`: pass. `storybook-static` served on 6028 (stopped after): `check-storybook.mjs` 42 passed, 0 failed.
+- `pnpm registry:build`: `git status` clean. `lib:install radix`, `base`, `aria`: 143 table files, 38 locales each (28, 26, 26 parts), `git status` clean.
+- Docs `types:check`: pass (`examples/.aria`: 115 examples, 216 files). Docs `lint`: 0 errors, 3 existing warnings. `NEXT_DIST_DIR=.next-verify pnpm build`: 306 static pages, pass; the `tsconfig.json` include rewrite Next makes for the extra dist dir reverted, `.next-verify` removed.
+- `next start -p 5344` on `.next-verify` (stopped after): `/r/aria-nova/shadcn-table.json`, `/r/aria/registry.json`, `/r/radix-nova/shadcn-table.json`, `/r/base-nova/shadcn-table.json`, `/r/aria-nova/shadcn-table-locale-de.json` 200. `check-pages a` 260 passed, `c` 280 passed, `e` 595 passed, 0 failed.
+- CI: no new pull request; PR #40 (draft) already carries the branch. `gh run list --branch v0.5/infra`: run 40658311648 on `69aaa5a7` (the HEAD), `pull_request`, success: `library` and `test` for radix, base, aria, `bases (edition guard)`, `docs` green; `registry` and `install` skipped (push only, run on the merge push). `act -l` lists every job of `ci.yml` (6), `release.yml` (4) and `install.yml` (1).
+- `pnpm preview` from the root (ports 5310, 6006, 6007, 6008, 5330 were free): registry on 5310, the three Storybooks and the docs on 5330 all 200 after 22 s. SIGINT: the process exited in 4 s, the five ports freed, `hosted.mjs` rewrote `public/r` for the three editions with the production URL, `.dev` removed, `git status` clean.
