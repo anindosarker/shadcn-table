@@ -8,7 +8,7 @@ not yet located; the first step of the part is the diagnosis per bullet.
 
 Re-run on `e26804d6` (Playwright, Radix, 1440 px): the first and third bullets were the
 "next page" arrow in the owner's sequence, the label is right for page 2; the second bullet is
-a real bug with a different shape, ruling 17 in `decisions-review.md`.
+a real bug with a different shape: on page 2 the header box toggles only the page's own rows, the kept pinned rows stay selected and lose their pins. Ruling pending.
 
 - `select-all-page-mode` (8 rows, page size 5): after select all on page 1 the five pinned
   rows render on top and the page shows the three remaining rows, but the pagination label
