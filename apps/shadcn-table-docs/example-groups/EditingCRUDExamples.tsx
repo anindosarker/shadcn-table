@@ -1,9 +1,11 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import ModalExample from '@/examples/editing-crud-modal';
-import InlineRowExample from '@/examples/editing-crud-row';
-import InlineCellExample from '@/examples/editing-crud-cell';
-import InlineTableExample from '@/examples/editing-crud-table';
-import TreeEditingExample from '@/examples/editing-crud-tree';
+import {
+  EditingCrudModalExample,
+  EditingCrudRowExample,
+  EditingCrudCellExample,
+  EditingCrudTableExample,
+  EditingCrudTreeExample,
+} from '@/examples/map';
 
 const EditingCRUDExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -16,11 +18,11 @@ const EditingCRUDExamples = ({ isPage = false }) => (
       { label: 'Tree Editing', value: 'editing-crud-tree' },
     ]}
     panels={{
-      'editing-crud': <ModalExample />,
-      'editing-crud-inline-row': <InlineRowExample />,
-      'editing-crud-inline-cell': <InlineCellExample />,
-      'editing-crud-inline-table': <InlineTableExample />,
-      'editing-crud-tree': <TreeEditingExample />,
+      'editing-crud': <EditingCrudModalExample />,
+      'editing-crud-inline-row': <EditingCrudRowExample />,
+      'editing-crud-inline-cell': <EditingCrudCellExample />,
+      'editing-crud-inline-table': <EditingCrudTableExample />,
+      'editing-crud-tree': <EditingCrudTreeExample />,
     }}
   />
 );

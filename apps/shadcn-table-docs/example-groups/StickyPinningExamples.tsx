@@ -1,9 +1,11 @@
 import { ExampleTabs } from '@/components/example-tabs';
-import StickyHeaderExample from '@/examples/enable-sticky-header';
-import ColumnPinningExample from '@/examples/enable-column-pinning';
-import RowPinningStickyExample from '@/examples/enable-row-pinning-sticky';
-import RowPinningStaticExample from '@/examples/enable-row-pinning-static';
-import StickySelectExample from '@/examples/enable-row-pinning-select';
+import {
+  EnableStickyHeaderExample,
+  EnableColumnPinningExample,
+  EnableRowPinningStickyExample,
+  EnableRowPinningStaticExample,
+  EnableRowPinningSelectExample,
+} from '@/examples/map';
 
 const StickyPinningExamples = ({ isPage = false }) => (
   <ExampleTabs
@@ -16,11 +18,11 @@ const StickyPinningExamples = ({ isPage = false }) => (
       { label: 'Sticky Row Selection', value: 'sticky-row-selection' },
     ]}
     panels={{
-      'sticky-header': <StickyHeaderExample />,
-      'column-pinning': <ColumnPinningExample />,
-      'sticky-row-pinning': <RowPinningStickyExample />,
-      'static-row-pinning': <RowPinningStaticExample />,
-      'sticky-row-selection': <StickySelectExample />,
+      'sticky-header': <EnableStickyHeaderExample />,
+      'column-pinning': <EnableColumnPinningExample />,
+      'sticky-row-pinning': <EnableRowPinningStickyExample />,
+      'static-row-pinning': <EnableRowPinningStaticExample />,
+      'sticky-row-selection': <EnableRowPinningSelectExample />,
     }}
   />
 );

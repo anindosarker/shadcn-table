@@ -10,6 +10,7 @@ import { Tabs } from 'fumadocs-ui/components/ui/tabs';
 import { baseLabels, bases, defaultBase, type Base } from '@/lib/install';
 import { cn } from '@/lib/cn';
 import { trackBaseSwitched, type Surface } from '@/lib/analytics';
+import { TAB_VALUES } from '../lib/base-tabs.mjs';
 
 /**
  * The site-wide base (Radix UI | Base UI | React Aria) is one fumadocs tab group, `base`,
@@ -21,13 +22,6 @@ import { trackBaseSwitched, type Surface } from '@/lib/analytics';
  * are controlled by it and write it from their `onValueChange`.
  */
 export const BASE_GROUP_ID = 'base';
-
-/** Tab values, as fumadocs' simple-mode Tabs escape the labels. */
-const TAB_VALUES: Record<Base, string> = {
-  radix: 'radix',
-  base: 'base-ui',
-  aria: 'react-aria',
-};
 
 const fromTab = (value: string | null): Base | null =>
   bases.find((base) => TAB_VALUES[base] === value) ?? null;
