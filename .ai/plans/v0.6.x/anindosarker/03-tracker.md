@@ -120,3 +120,16 @@ Run by the verifier on `753ed7e9`, clean tree, 2026-10-29.
   `release:patch`): run `40750260288` success, 15 of 15 jobs green (release impact, library
   x3, bases, test x3, docs, registry, install x5). The `labeled` event run `40750261837` runs
   the label check alone, the other jobs skip by design.
+
+Re-run by the verifier on `1c7d0447` (after review round 2), clean tree, 2026-10-29.
+
+- `pnpm add-part radix --all && git status --short`: exit 0, 26 parts, status empty. Pass.
+- `pnpm add-part base --all && git status --short`: exit 0, 26 parts, status empty. Pass.
+- `pnpm add-part aria --all && git status --short`: exit 0, 27 parts, status empty. Pass.
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`: exit 0 each, 0 errors. Pass.
+- `lint` (`eslint .`): exit 0, clean. Pass.
+- `check:bases`: exit 0; 142 library files, 23 and 37 allowed to differ; 216 example files, 2
+  and 10. Pass.
+- `registry:build`: exit 0, `git status --short` empty after. Pass.
+- `storybook:build`, `storybook:build:base`, `storybook:build:aria`: exit 0 each. Pass.
+- `pr.yml` on PR #52: run `40752714982` on `1c7d0447` success, 15 of 15 jobs green.
