@@ -19,9 +19,14 @@ date; merging it publishes the section as the GitHub release notes.
 - Every committed registry item is named by its edition: the GitHub-namespace addresses of the
   Radix UI items are `anindosarker/shadcn-table/shadcn-table-radix`,
   `shadcn-table-radix-locale-<code>` and `example-<slug>-radix` (the plain `shadcn-table` and
-  `example-<slug>` GitHub addresses no longer resolve). The hosted registry is unchanged:
+  `example-<slug>` GitHub addresses no longer resolve). The hosted item names are unchanged:
   `/r/radix/shadcn-table.json`, `/r/radix/shadcn-table-locale-<code>.json` and
   `/r/radix/example-<slug>.json` as before.
+
+### Fixed
+
+- The Base UI and React Aria hosted locale items' descriptions name the hosted item
+  `shadcn-table` (`/r/base/` and `/r/aria/` said `shadcn-table-base` and `shadcn-table-aria`).
 
 ## 0.6.0 - 2026-10-28
 
