@@ -1,5 +1,6 @@
 import { type ComponentPropsWithRef, useMemo, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui-radix/button';
 import {
   DropdownMenu,
@@ -15,10 +16,7 @@ import {
 } from '@/components/ui-radix/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui-radix/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui-radix/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
-import {
-  useST_Atom,
-  useSTContext,
-} from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -49,12 +47,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       enableColumnPinning,
       enableHiding,
       localization,
-      // Note: mrtTheme.menuBackgroundColor dropped project-wide — DropdownMenuContent's bg-popover themes via shadcn CSS vars
     },
   } = table;
   // These feed the column list memos, so they are hook subscriptions.
-  const columnOrder = useST_Atom(table.atoms.columnOrder);
-  const columnPinning = useST_Atom(table.atoms.columnPinning);
+  const columnOrder = useSelector(table.atoms.columnOrder);
+  const columnPinning = useSelector(table.atoms.columnPinning);
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -127,7 +124,6 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
           }}
         />
       </DropdownMenuTrigger>
-      {/* Note: MRT disableScrollLock dropped — Radix DropdownMenu owns scroll-lock behavior */}
       <DropdownMenuContent
         align="start"
         onCloseAutoFocus={(event) => {

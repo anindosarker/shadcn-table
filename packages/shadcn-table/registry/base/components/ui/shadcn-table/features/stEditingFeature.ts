@@ -1,6 +1,3 @@
-// Owns the editing state: `creatingRow`, `editingCell` and `editingRow`, their
-// `on*Change` options and the `setCreatingRow`, `setEditingCell` and
-// `setEditingRow` table APIs. `setCreatingRow(true)` creates a blank row.
 import {
   assignTableAPIs,
   functionalUpdate,

@@ -7,42 +7,101 @@ description: 'Add shadcn-table to a shadcn/ui project'
 
 <OrDivider />
 
+## Prerequisites
+
+A shadcn/ui project on Radix UI or Base UI, with Tailwind CSS v4 and React 18 or newer.
+
+No project yet? Create one. Pick your base with the Radix UI | Base UI tabs.
+
+<InitCommand />
+
+## Installation
+
 <Steps>
 
 <Step>
 
-### Initialize shadcn/ui
+### Install
 
-Skip this if the project already uses shadcn/ui. The table needs shadcn/ui on the Radix UI or Base UI base, Tailwind CSS v4 and React 18 or newer; React Aria is not supported. Pick your base with the Radix UI | Base UI tabs: the switch in the header does the same for the whole site, the examples included.
-
-<InitCommand />
-
-</Step>
-
-<Step>
-
-### Add shadcn-table
-
-Copies the table source into `components/ui/shadcn-table/` and installs the shadcn/ui parts and npm packages it needs, in the edition for the selected base. Run it again with `--overwrite` to update.
+One command adds the table, the shadcn/ui components it uses and its npm packages.
 
 <InstallCommand />
 
-Or register the registry once and add items by name. `{style}` stands for the `style` in your `components.json` (`radix-nova`, `base-sera`, ...), so this form picks the base on its own.
+</Step>
 
-<NamespaceCommand />
+<Step>
+
+### Verify
+
+You should now see these files in your project:
+
+```txt
+components/ui/
+├── shadcn-table/      ← new: the whole table library, yours to edit
+│   ├── ShadcnTable.tsx
+│   ├── index.ts
+│   ├── types.ts
+│   ├── components/
+│   ├── features/
+│   ├── hooks/
+│   └── shared/
+├── button.tsx         ← shadcn/ui components the table needs, added automatically
+├── dialog.tsx
+└── ...
+```
 
 </Step>
 
 <Step>
 
-### Import
+### Use it
+
+Define columns, then pass them with your data to `useShadcnTable`.
 
 ```tsx
-import { ShadcnTable, useShadcnTable } from '@/components/ui/shadcn-table';
-```
+import { useMemo } from 'react';
+import {
+  ShadcnTable,
+  useShadcnTable,
+  type ST_ColumnDef,
+} from '@/components/ui/shadcn-table';
 
-Columns, data and the hook: [Usage](/docs/getting-started/usage). Letting an agent do all of this: [AI Agent Setup](/docs/getting-started/agents). Every [example](/docs/examples) renders, shows its source and installs for the selected base.
+type Person = { name: string; age: number };
+
+const data: Person[] = [
+  { name: 'John', age: 30 },
+  { name: 'Sara', age: 25 },
+];
+
+export function PeopleTable() {
+  const columns = useMemo<ST_ColumnDef<Person>[]>(
+    () => [
+      { accessorKey: 'name', header: 'Name' },
+      { accessorKey: 'age', header: 'Age' },
+    ],
+    [],
+  );
+
+  const table = useShadcnTable({ columns, data });
+
+  return <ShadcnTable table={table} />;
+}
+```
 
 </Step>
 
 </Steps>
+
+## Updating
+
+Run the install command again with `--overwrite`. It replaces every file in `components/ui/shadcn-table/`, so commit or back up your local edits first.
+
+<InstallCommand overwrite />
+
+## Uninstall
+
+1. Delete `components/ui/shadcn-table/`.
+2. Remove the npm packages if nothing else uses them: `@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`.
+3. Remove the `st-` keyframes and classes the install added to your global CSS.
+
+The shadcn/ui components stay. Other parts of your app may use them.

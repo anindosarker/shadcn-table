@@ -3,7 +3,6 @@ import {
   type ButtonProps,
   type ST_Row,
   type ST_RowData,
-  type ST_TableInstance,
 } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui-radix/shadcn-table/components/buttons/ST_GrabHandleButton';
@@ -19,8 +18,7 @@ export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   rowRef,
   ...rest
 }: ST_TableBodyRowGrabHandleProps<TData>) => {
-  // The row carries the core table; the ST wrapper types re-type its getters.
-  const table = row.table as unknown as ST_TableInstance<TData>;
+  const table = row.table;
   const {
     options: { stRowDragHandleProps },
   } = table;

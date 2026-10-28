@@ -1,5 +1,6 @@
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -8,12 +9,10 @@ import {
   type ST_ColumnDef,
   type ST_Header,
   type ST_RowData,
-  type ST_TableInstance,
   type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { useST_Atom } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
@@ -36,8 +35,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   header,
   ...rest
 }: ST_FilterRangeSliderProps<TData>) => {
-  // The header carries the core table; the ST wrapper types re-type its getters.
-  const table = header.table as unknown as ST_TableInstance<TData>;
+  const table = header.table;
   const {
     options: { enableColumnFilterModes, enableFacetedValues, localization },
     refs: { filterInputRefs },
@@ -56,8 +54,8 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   // The filter value and the faceted range feed the sync effect, so they are
   // hook subscriptions: the facets follow the other columns' filters and the
   // global filter.
-  useST_Atom(table.atoms.columnFilters);
-  useST_Atom(table.atoms.globalFilter);
+  useSelector(table.atoms.columnFilters);
+  useSelector(table.atoms.globalFilter);
 
   const currentFilterOption = getColumnFilterFnName(columnDef);
 
@@ -116,8 +114,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
       {() => (
         <div className="flex flex-col">
           <Slider
-            // disableSwap
-            // Note: Base UI Slider defaults thumbCollisionBehavior="push", so thumbs never cross (= MUI disableSwap).
             max={max}
             min={min}
             onValueChange={(values) => {
@@ -129,7 +125,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
               const value = toArray(committed);
               if (value.length === 2) {
                 if (value[0] <= min && value[1] >= max) {
-                  //if the user has selected the entire range, remove the filter
                   column.setFilterValue(undefined);
                 } else {
                   column.setFilterValue(value as [number, number]);
@@ -138,8 +133,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
             }}
             onKeyDown={handleKeyDown}
             value={filterValues}
-            // valueLabelDisplay="auto"
-            // Note: Base UI has a Slider.Value part, but the shadcn slider does not render it.
             {...sliderProps}
             ref={(node) => {
               if (node) {
@@ -150,7 +143,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
                     '[data-slot="slider-thumb"] input',
                   )!;
                 if (sliderProps?.ref) {
-                  // @ts-expect-error MRT no-op: node onto the ref prop (Base UI exposes no input slot; root div ref)
+                  // @ts-expect-error the slider root node goes onto the ref prop
                   sliderProps.ref = node;
                 }
               }

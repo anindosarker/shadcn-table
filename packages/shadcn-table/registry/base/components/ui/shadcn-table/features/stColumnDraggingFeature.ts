@@ -1,7 +1,3 @@
-// Column dragging feature: owns the `draggingColumn` and `hoveredColumn` state
-// slices, their `onDraggingColumnChange` / `onHoveredColumnChange` options and
-// the `table.setDraggingColumn` / `table.setHoveredColumn` APIs used while a
-// column is dragged to reorder or group.
 import {
   assignTableAPIs,
   functionalUpdate,
@@ -20,9 +16,8 @@ import type {
 } from '@/components/ui/shadcn-table/types';
 
 // TableState_FeatureMap is not generic over TData, so the state slice and its
-// on*Change options hold the column with its data type erased to ST_RowData
-// (the MRT twin uses `Column<any, any, any>`); the APIs keep today's per-TData
-// types and ST_TableOptions<TData> types the options for TData.
+// on*Change options hold the column with its data type erased to ST_RowData;
+// ST_TableOptions<TData> types the options for TData.
 type ST_ErasedColumn = ST_Column<ST_RowData>;
 
 export interface ST_TableState_ColumnDragging {
