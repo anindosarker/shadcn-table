@@ -75,6 +75,18 @@ pnpm check:bases                              # edition guard, every edition aga
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
+CI runs the same gates: `.github/workflows/pr.yml` on every pull request, plus `release impact`,
+which needs exactly one `release:` label (`release:patch`, `release:minor`, `release:major`,
+`release:skip`) when the PR changes `packages/shadcn-table/registry`,
+`apps/shadcn-table-docs/components/ui-*` or `skills/`, and `## Unreleased` lines in
+`CHANGELOG.md` for a level label. `.github/workflows/release.yml` runs on every push to `master`:
+it opens or rewrites the version PR `chore: version <v>` from `release/next`, or, once that PR is
+merged, tags, verifies production and creates the GitHub release.
+
+```sh
+node --test scripts/release/next-version.test.mjs   # release scripts
+```
+
 Preview (Ctrl-C stops every server; the first two remove `.dev`, the root one also restores the production hosted registry):
 
 - `pnpm --filter shadcn-table preview`: registry on 5310 (`/r`), Storybook on 6006 (Radix UI), 6007 (Base UI) and 6008 (React Aria).
