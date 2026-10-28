@@ -46,7 +46,8 @@ Plan: [03-add-part-deterministic.md](03-add-part-deterministic.md). Rulings:
   the plan fixes ("the directive restored where a run had stripped it", 1.6.1); no part shows
   any other change and `font-heading` moved nowhere. The judgment: a halt would only ask the
   owner to re-confirm decision 5. To revert, drop the three `chore(registry)` commits; the
-  script change stands on its own.
+  script change stands on its own. Lesson for the next plan of this kind: derive the
+  expected-diff list from the upstream content, not from a probe against a buggy baseline.
 - An explicit multi-part call (`pnpm add-part aria separator textarea`) now runs one CLI
   invocation per part instead of one for the list. The plan asks that for `--all` only; the
   same loop serves both so the order dependency has no second code path. About 3 s per part.
@@ -57,6 +58,30 @@ Plan: [03-add-part-deterministic.md](03-add-part-deterministic.md). Rulings:
 - `CHANGELOG.md` gains the `## Unreleased` section (none existed after 0.6.0) with the one
   `### Fixed` line the plan asks for. The PR touches `packages/shadcn-table/registry`, so
   `release impact` needs a `release:` label; `release:patch` per the 0.6.1 round.
+
+- The `pnpm add-part <edition> --all` line in the standards' Gates block is marked local only:
+  `pr.yml` has no add-part step (the `bases` job runs `check-bases.mjs` without `pnpm install`),
+  so the sentence "CI runs the same gates" would overstate it. The alternative is a step in
+  `bases` (`pnpm install`, then `pnpm add-part <edition> --all` for the three editions and
+  `git diff --exit-code packages/shadcn-table/registry`; network to ui.shadcn.com, about
+  90 s). Not added here: `pr.yml` is outside the plan's target structure.
+- The root `format` script globs `**/*.{js,ts,tsx,md}` and never touches `.mjs`, so
+  `pnpm format` is blind to every registry and release script (the review caught an 82-column
+  line that way). Extending it to `**/*.{js,mjs,ts,tsx,md}` reformats three files outside this
+  part (`apps/shadcn-table-docs/lib/example-variants.mjs`, `scripts/release/decide.mjs`,
+  `scripts/release/decide.test.mjs`), so it is left for an owner commit on `claude/review`.
+
+## Review round
+
+- Fixed: `d7aee89b` style(add-part): prettier (the 82-column argv line); `647aa4eb` `--all`
+  with any other argument prints the usage line instead of fetching `--all.json`; `6dcab930`
+  fork list from `registry.items.flatMap((item) => item.files)`, no `items[0]`; the Gates
+  block line marked local only (this commit). After the script commits:
+  `pnpm add-part aria --all bogus` exits 1 with the usage line; `pnpm add-part radix --all`
+  and `pnpm add-part base --all` leave `git status --short` empty (checkbox still skipped).
+- Declined: the `format` glob extension (owner commit, bullet above); a `pr.yml` add-part
+  step (owner call, bullet above); the Phase 2 halt finding needs no code change, the Owner
+  attention bullet stands with the lesson added.
 
 ## Gates
 
