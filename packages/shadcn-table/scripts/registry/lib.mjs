@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { REFERENCE_EDITION } from './editions.mjs';
 
 export const PKG = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -23,6 +24,7 @@ const LIB_REL = 'components/ui/shadcn-table';
 export {
   EDITION_LABELS,
   EDITIONS,
+  editionItemName,
   REFERENCE_EDITION,
   resolveEdition,
 } from './editions.mjs';
@@ -196,4 +198,29 @@ export const editionItems = (catalog, edition) => {
     main,
     locales: own.filter((item) => item !== main),
   };
+};
+
+/**
+ * One edition's example items in the docs catalog (examples.mjs writes one
+ * item per example and edition, found by the `examples/<edition>/` file
+ * paths), each renamed to its hosted name: the plain `example-<slug>`,
+ * which editionItemName suffixes with `-<edition>` outside the reference.
+ * hosted.mjs serves them in /r/<edition>/, smoke.mjs expects them there.
+ *
+ * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
+ * @param {string} edition
+ */
+export const editionExampleItems = (catalog, edition) => {
+  const suffix = `-${edition}`;
+  return catalog.items
+    .filter((item) =>
+      item.files.every((file) => file.path.startsWith(`examples/${edition}/`)),
+    )
+    .map((item) => ({
+      ...item,
+      name:
+        edition === REFERENCE_EDITION
+          ? item.name
+          : item.name.slice(0, -suffix.length),
+    }));
 };
