@@ -11,6 +11,7 @@ import { getST_SelectAllHandler } from '@/components/ui-base/shadcn-table/shared
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { stCollapsibleKeyframes } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 
 export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {
@@ -141,6 +142,9 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
           <Collapsible
             open={showAlertBanner || !!selectedAlert || !!groupedAlert}
           >
+            <style href="st-base-collapsible" precedence="low">
+              {stCollapsibleKeyframes}
+            </style>
             <CollapsibleContent
               className={
                 stackAlertBanner
