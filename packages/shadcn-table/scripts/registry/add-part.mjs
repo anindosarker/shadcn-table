@@ -1,33 +1,36 @@
 #!/usr/bin/env node
-// Usage (repo root): pnpm add-part <radix|base> <part> [<part> ...]
+// Usage (repo root): pnpm add-part <radix|base|aria> <part> [<part> ...]
 //
-// Fetches a shadcn part for one base, in that base's style
-// (registry/<base>/components.json: `radix-nova` or `base-nova`), and writes
-// its files into registry/<base>/components/ui/. Parts are per base and are
-// never shared, so a part the library needs on both bases is added twice.
+// Fetches a shadcn part for one edition (EDITIONS in lib.mjs), in that
+// edition's style (registry/<edition>/components.json: `radix-nova`,
+// `base-nova` or `aria-nova`), and writes its files into
+// registry/<edition>/components/ui/. Parts are per edition and are never
+// shared, so a part the library needs on every edition is added once per
+// edition.
 //
 // The item JSON (https://ui.shadcn.com/r/styles/<style>/<part>.json) is
 // fetched for its file list and dependencies, then the shadcn CLI installs
-// the part into a scratch project carrying the base's components.json, so
+// the part into a scratch project carrying the edition's components.json, so
 // the file goes through the CLI's own transforms (alias rewrites, icon
 // placeholders, `"use client"` for rsc: false) instead of a copy of them
 // here. Only the requested part's files are copied out of the scratch; the
 // parts it depends on are printed for the caller to add on purpose.
 //
 // The upstream registry imports `cn` from the `cn` npm package; this repo
-// keeps the `@/lib/utils` helper every base ships, so that import is
-// rewritten to the base's utils alias and `cn` is left out of the printed
+// keeps the `@/lib/utils` helper every edition ships, so that import is
+// rewritten to the edition's utils alias and `cn` is left out of the printed
 // dependencies. The written files are formatted with the repo's prettier.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { PKG, ROOT } from './lib.mjs';
+import { EDITIONS, PKG, ROOT } from './lib.mjs';
 
-const BASES = ['radix', 'base'];
 const [base, ...parts] = process.argv.slice(2);
-if (!BASES.includes(base) || parts.length === 0) {
-  console.error('usage: pnpm add-part <radix|base> <part> [<part> ...]');
+if (!EDITIONS.includes(base) || parts.length === 0) {
+  console.error(
+    `usage: pnpm add-part <${EDITIONS.join('|')}> <part> [<part> ...]`,
+  );
   process.exit(1);
 }
 
@@ -49,7 +52,7 @@ const fetchItem = async (part) => {
   return res.json();
 };
 
-// A throwaway project the CLI can install into: the base's components.json
+// A throwaway project the CLI can install into: the edition's components.json
 // and lib/utils.ts, an empty stylesheet, a package.json so dependency
 // installs have somewhere to go and a tsconfig that maps `@/` onto it.
 const makeScratch = () => {
