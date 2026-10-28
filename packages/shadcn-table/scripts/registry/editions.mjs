@@ -36,10 +36,13 @@ export const resolveEdition = (value) =>
   EDITIONS.find((edition) => edition === value) ?? REFERENCE_EDITION;
 
 // The committed registry name of an edition's copy of an item:
-// `<name>-<edition>` for every edition, no unnamed default (the docs
-// examples `example-basic-radix`, `example-basic-base`, `example-basic-aria`;
-// the library items in registry/<edition>/registry.ts follow the same
-// pattern by hand: `shadcn-table-radix`, `shadcn-table-base`,
-// `shadcn-table-aria`). The hosted registries (hosted.mjs) serve every
-// edition under the plain name, one directory per edition.
+// `<name>-<edition>` for every edition (the docs examples
+// `example-basic-radix`, `example-basic-base`, `example-basic-aria`; the
+// library items in registry/<edition>/registry.ts follow the same pattern by
+// hand: `shadcn-table-radix`, `shadcn-table-base`, `shadcn-table-aria`). The
+// plain name in the committed catalogs is a generated alias of the
+// DEFAULT_EDITION item, for the GitHub shorthand
+// `anindosarker/shadcn-table/<name>`, which cannot pick an edition
+// (aliasItems in lib.mjs). The hosted registries (hosted.mjs) serve every
+// edition under the plain name, one directory per edition, aliases skipped.
 export const editionItemName = (name, edition) => `${name}-${edition}`;

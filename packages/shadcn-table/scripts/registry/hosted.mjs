@@ -17,6 +17,10 @@
 // items come from that edition's examples/<edition> sources
 // (editionExampleItems).
 //
+// The GitHub shorthand aliases in the committed catalogs (aliasItems in
+// lib.mjs: the plain names of the default edition's items) are skipped:
+// editionItems and editionExampleItems return the per-edition items only.
+//
 // Reads the committed registry.json files, which keep the GitHub addresses;
 // only the hosted copies get hosted addresses: the locale items depend on
 // `<HOSTED_URL>/<edition>/shadcn-table.json`, and every file path is made
