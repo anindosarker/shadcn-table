@@ -799,10 +799,9 @@ function Editor({
         role="tablist"
         aria-label="Files"
         onKeyDown={onKeyDown}
-        className={cn(
-          'flex overflow-x-auto border-b border-dashed border-(--v12-dash) bg-(--dh-paper-2)',
-          home && '[scrollbar-width:none]',
-        )}
+        // 40px plus its rule, as the address bar beside it, so the two rules
+        // meet; no scrollbar, which would push the rule down
+        className="flex h-10 box-content overflow-x-auto border-b border-dashed border-(--v12-dash) bg-(--dh-paper-2) [scrollbar-width:none]"
       >
         <button {...tabProps('prompt')}>
           <MessageSquareIcon aria-hidden="true" className="size-3.5" />
@@ -1041,7 +1040,8 @@ export function WholeApp({
             home ? 'xl:border-l' : 'max-[90rem]:border-t min-[90rem]:border-l',
           )}
         >
-          <div className="flex items-center gap-3 border-b border-dashed border-(--v12-dash) px-3 py-2">
+          {/* the same height as the editor's tab bar */}
+          <div className="flex h-10 box-content items-center gap-3 border-b border-dashed border-(--v12-dash) px-3">
             <span aria-hidden="true" className="flex gap-1.5">
               <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
               <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
