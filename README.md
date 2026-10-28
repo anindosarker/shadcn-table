@@ -13,7 +13,7 @@ A full-featured React data table built on TanStack Table v9, installed into your
 
 </div>
 
-https://github.com/user-attachments/assets/ba6a036b-c894-4d13-a9e4-25a4922669dd
+https://github.com/user-attachments/assets/e5096c54-74a6-4dbf-92b8-f8f5ae830fe3
 
 Three editions, one per shadcn base: Radix UI, Base UI and React Aria.
 
