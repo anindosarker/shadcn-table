@@ -9,13 +9,6 @@ date; merging it publishes the section as the GitHub release notes.
 
 ## Unreleased
 
-### Changed
-
-- React Aria edition: `shadcn-table-aria` no longer ships its own `label` copy, so a project
-  whose tsconfig sets `noUnusedLocals` (Vite's default) reports TS6133 on
-  `components/ui/label.tsx` as the aria-nova part ships it; disable the flag for that file or
-  wait for upstream.
-
 ### Fixed
 
 - React Aria edition: the `label` part is what shadcn ships (`add-part.mjs` output), the hand
