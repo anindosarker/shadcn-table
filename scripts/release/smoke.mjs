@@ -10,8 +10,8 @@
 //     carries the @tanstack/react-table pin of packages/shadcn-table/package.json
 //   /r/<edition>/registry.json for every edition: the item names are exactly
 //     the ones hosted.mjs derives from the committed catalogs (the main item as
-//     shadcn-table, its locales as shadcn-table-locale-<code>, every example
-//     item of the docs app)
+//     shadcn-table, its locales as shadcn-table-locale-<code>, the edition's
+//     example items of the docs app as example-<slug>)
 //   Storybook / for the reference edition, /<edition>/ for every other: 200 HTML
 //   /SKILL.md: 200, names every edition (EDITION_LABELS)
 //   /llms.txt: 200
@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import {
   EDITION_LABELS,
   EDITIONS,
+  editionExampleItems,
   editionItems,
   REFERENCE_EDITION,
 } from '../../packages/shadcn-table/scripts/registry/lib.mjs';
@@ -62,7 +63,11 @@ const expectedItems = (edition) => {
   const locales = committed.map(
     (item) => `${HOSTED_NAME}-locale-${item.name.slice(localePrefix.length)}`,
   );
-  return [HOSTED_NAME, ...locales, ...examples.items.map((item) => item.name)];
+  return [
+    HOSTED_NAME,
+    ...locales,
+    ...editionExampleItems(examples, edition).map((item) => item.name),
+  ];
 };
 
 const results = [];
