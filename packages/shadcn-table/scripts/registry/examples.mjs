@@ -45,7 +45,8 @@ import { DOCS, EDITIONS, editionItemName, REFERENCE_EDITION } from './lib.mjs';
 // too), so they are loaded from there.
 const docsLib = (file) => import(pathToFileURL(path.join(DOCS, 'lib', file)));
 const { ENTRY_FILE, listExampleFiles } = await docsLib('example-files.mjs');
-const { findExamplePage, loadExamplePages } = await docsLib('example-pages.mjs');
+const { findExamplePage, loadExamplePages } =
+  await docsLib('example-pages.mjs');
 
 const APP_DIR = DOCS;
 const EXAMPLES_DIR = path.join(APP_DIR, 'examples');
