@@ -9,6 +9,57 @@ import {
   type TableCellProps,
 } from '@/components/ui-base/shadcn-table/types';
 
+// MUI Collapse: tw-animate-css ships only the height pair (collapsible-down/up)
+// and reads the Radix variable, which Base UI never sets. Base UI's
+// Collapsible.Panel measures itself into --collapsible-panel-height and
+// --collapsible-panel-width and marks its state with data-open / data-closed,
+// so both pairs live here, driven by those variables. The horizontal pair is
+// MUI Collapse orientation="horizontal". overflow: hidden sits inside the
+// width keyframes so it applies only while the animation runs, as MUI
+// Collapse clips while transitioning and sets overflow: visible once entered.
+// Rendered as a hoisted <style href="st-base-collapsible"> by the components that
+// animate with it.
+export const stCollapsibleKeyframes = `@keyframes st-base-collapsible-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--collapsible-panel-height);
+  }
+}
+
+@keyframes st-base-collapsible-up {
+  from {
+    height: var(--collapsible-panel-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes st-base-collapsible-right {
+  from {
+    width: 0;
+    overflow: hidden;
+  }
+  to {
+    width: var(--collapsible-panel-width);
+    overflow: hidden;
+  }
+}
+
+@keyframes st-base-collapsible-left {
+  from {
+    width: var(--collapsible-panel-width);
+    overflow: hidden;
+  }
+  to {
+    width: 0;
+    overflow: hidden;
+  }
+}
+`;
+
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({

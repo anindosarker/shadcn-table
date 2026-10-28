@@ -67,6 +67,10 @@ publishes the section as the GitHub release notes.
   `@/components/ui/shadcn-table/shared/locales/<code>` in the guides, `/SKILL.md` and the
   registry README. The prop tables follow the name resolution in core, the function
   updater on the ST `on*Change` handlers and the unset `show*` loading slices.
+- The table's keyframes ship inside the components as a hoisted `<style>` tag; `shadcn add`
+  no longer writes to your global CSS. Remove the `st-` keyframes and the
+  `.st-progress-indeterminate` rule an earlier install added there. A strict Content Security
+  Policy needs a nonce or `style-src 'unsafe-inline'` for the tag.
 
 ### Removed
 

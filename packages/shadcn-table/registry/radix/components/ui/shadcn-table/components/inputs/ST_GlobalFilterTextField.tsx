@@ -26,6 +26,7 @@ import {
 import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export type ST_GlobalFilterTextFieldProps = InputProps;
 
@@ -99,8 +100,11 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showGlobalFilter}>
       {(showGlobalFilter) => (
-        // The st-collapsible-* keyframes ship in the registry stylesheet.
+        // The st-collapsible-* keyframes ship in the hoisted style below.
         <Collapsible open={showGlobalFilter}>
+          <style href="st-collapsible" precedence="low">
+            {stCollapsibleKeyframes}
+          </style>
           <CollapsibleContent className="data-[state=closed]:animate-[st-collapsible-left_300ms_var(--ease-in-out)] data-[state=open]:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
             <InputGroup>
               {enableGlobalFilterModes ? (
