@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -48,6 +49,28 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const isTablet = useST_MediaQuery('(max-width:1024px)');
 
   const toolbarProps = parseFromValuesOrFunc(stTopToolbarProps, { table });
+
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // topToolbarRef null while the children's layout effects run.
+  const userRef = useRef(toolbarProps?.ref);
+  userRef.current = toolbarProps?.ref;
+  const attachRef = useCallback(
+    (node: HTMLDivElement) => {
+      topToolbarRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        topToolbarRef.current = null;
+      };
+    },
+    [topToolbarRef],
+  );
 
   const globalFilterProps = {
     className: !isTablet ? 'z-[2]' : undefined,
@@ -103,18 +126,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
         return (
           <div
             {...toolbarProps}
-            ref={(node: HTMLDivElement) => {
-              topToolbarRef.current = node;
-              const cleanup = assignRef(toolbarProps?.ref, node);
-              return () => {
-                if (typeof cleanup === 'function') {
-                  cleanup();
-                } else {
-                  assignRef(toolbarProps?.ref, null);
-                }
-                topToolbarRef.current = null;
-              };
-            }}
+            ref={attachRef}
             className={cn(
               topToolbarVariants({ fullscreen: isFullScreen }),
               toolbarProps?.className,

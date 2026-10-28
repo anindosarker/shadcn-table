@@ -1,3 +1,4 @@
+import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -53,6 +54,28 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
     ...rest,
   };
 
+  // The user's ref is read through a ref so the callback keeps one identity:
+  // a new callback each render would detach and reattach the node, leaving
+  // bottomToolbarRef null while the children's layout effects run.
+  const userRef = useRef(toolbarProps.ref);
+  userRef.current = toolbarProps.ref;
+  const attachRef = useCallback(
+    (node: HTMLDivElement) => {
+      bottomToolbarRef.current = node;
+      const ref = userRef.current;
+      const cleanup = assignRef(ref, node);
+      return () => {
+        if (typeof cleanup === 'function') {
+          cleanup();
+        } else {
+          assignRef(ref, null);
+        }
+        bottomToolbarRef.current = null;
+      };
+    },
+    [bottomToolbarRef],
+  );
+
   const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
   // Created outside the full screen subscription, so toggling full screen
@@ -92,18 +115,7 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
       {(isFullScreen) => (
         <div
           {...toolbarProps}
-          ref={(node: HTMLDivElement) => {
-            bottomToolbarRef.current = node;
-            const cleanup = assignRef(toolbarProps?.ref, node);
-            return () => {
-              if (typeof cleanup === 'function') {
-                cleanup();
-              } else {
-                assignRef(toolbarProps?.ref, null);
-              }
-              bottomToolbarRef.current = null;
-            };
-          }}
+          ref={attachRef}
           className={cn(
             bottomToolbarVariants({
               fullscreen: isFullScreen,
