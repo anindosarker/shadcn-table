@@ -26,16 +26,19 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE: ${{ inputs.source }}
-      # The locale and example-basic steps below pin the checkout's commit
+      # The locale and example steps below pin the checkout's commit
       # whatever the source is: the locale comes from the dev registry built
-      # here and example-basic from the GitHub address at this SHA.
+      # here and the scenario's edition of example-basic from the GitHub
+      # address at this SHA.
       REF: ${{ github.sha }}
       # fresh, existing and nextjs run on the Radix base and install the
       # shadcn-table item; base scaffolds on Base UI and installs the
-      # shadcn-table-base item (its locale item is shadcn-table-base-locale-de),
-      # aria scaffolds on React Aria and installs shadcn-table-aria.
+      # shadcn-table-base item (its locale item is shadcn-table-base-locale-de,
+      # its example item example-basic-base), aria scaffolds on React Aria
+      # and installs shadcn-table-aria (example-basic-aria).
       BASE: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && matrix.scenario || 'radix' }}
       ITEM: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && format('shadcn-table-{0}', matrix.scenario) || 'shadcn-table' }}
+      EXAMPLE_ITEM: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && format('example-basic-{0}', matrix.scenario) || 'example-basic' }}
     strategy:
       fail-fast: false
       matrix:
@@ -155,12 +158,12 @@ jobs:
       # Example items pin the library to gitConfig.branch, so this add re-fetches
       # the library from that branch; --overwrite lets it replace the files
       # without a prompt. The library at this SHA was proven by the steps above.
-      - name: Add a locale and example-basic, mount them, type-check and build
+      - name: Add a locale and the edition's example-basic, mount them, type-check and build
         if: matrix.scenario != 'nextjs'
         run: |
           set -o pipefail
           pnpm dlx shadcn@latest add "http://localhost:5310/r/$ITEM-locale-de.json" --yes --overwrite 2>&1 | tee -a shadcn-add.log
-          pnpm dlx shadcn@latest add "anindosarker/shadcn-table/example-basic#$REF" --yes --overwrite 2>&1 | tee -a shadcn-add.log
+          pnpm dlx shadcn@latest add "anindosarker/shadcn-table/$EXAMPLE_ITEM#$REF" --yes --overwrite 2>&1 | tee -a shadcn-add.log
           cat > src/App.tsx <<'TSX'
           import Example from '@/components/examples/basic/basic';
           import { ShadcnTable } from '@/components/ui/shadcn-table';
