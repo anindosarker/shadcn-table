@@ -15,7 +15,7 @@ packages/shadcn-table/registry/radix | registry/base | registry/aria
 apps/shadcn-table-docs              (docs, examples, page gate)
 ```
 
-The goal of this guide: make a change, prove it, open a PR. Release steps live in `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`; Vercel and table internals are out of scope here.
+The goal of this guide: make a change, prove it, open a PR; step 7 says how a merged PR gets released. Vercel and table internals are out of scope here.
 
 ## Three Trees
 
@@ -71,7 +71,10 @@ apps/shadcn-table-docs/
 registry.json                       # root item, points at the package registry
 skills/                             # the skill file source
 vercel.json                         # docs + Storybook deployment
-.github/workflows/ci.yml            # the jobs listed in step 6
+.github/workflows/pr.yml            # the jobs listed in step 6, on every pull request
+.github/workflows/release.yml       # version PR and release on every push to master (step 7)
+.github/pull_request_template.md    # changes, checklist, release impact
+scripts/release/                    # next-version, version-pr, notes, smoke, comment
 ```
 
 ## Prerequisites
@@ -261,7 +264,7 @@ Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI ins
 
 ## 6. Open a PR
 
-CI runs these, in this order; run them first.
+`.github/workflows/pr.yml` runs these on every pull request; run them first.
 
 ```bash
 pnpm --filter shadcn-table tsc:radix
@@ -280,12 +283,27 @@ pnpm --filter shadcn-table-docs lint
 pnpm --filter shadcn-table-docs build
 ```
 
-On a push, CI also validates the registry at the pushed SHA, installs the library, a locale and `example-basic` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app (the `registry` and `install` jobs).
+It also validates the registry at the pull request's merge SHA, installs the library, a locale and `example-basic` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app (the `registry` and `install` jobs).
 
+- **Release impact.** Set one `release:` label: `release:patch`, `release:minor`, `release:major`, or `release:skip` for a change that ships nothing. A PR that changes `packages/shadcn-table/registry`, `apps/shadcn-table-docs/components/ui-*` or `skills/` fails the `release impact` job without one. With a level label, add the change's line to `CHANGELOG.md` under `## Unreleased`, below `### Breaking`, `### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`; the job summary shows the version it ships as.
 - **Large changes.** Ask on [Discord](https://discord.gg/hsF37t6EKe) first if unsure, then open a GitHub issue, so the direction is agreed before the diff exists.
 - **Format.** `pnpm prettier --write <changed files>` for `ts`, `tsx`, `mjs` and `mdx`; `md` and `json` files are prettier-ignored.
 - **Commit messages.** `type: short summary` in the imperative (`fix: keep pinned rows visible in grid mode`), one concern per commit.
 - **Stage explicit paths.** No `git add -A`: generated files, `.next-*` dirs and `tsconfig.json` noise slip in otherwise.
+
+## 7. Release
+
+Releases come from `master` and need no command; `master` only takes pull requests (work branches, `claude/review`, and `dev` when the owner stages on it).
+
+1. **A merge with changelog lines.** `.github/workflows/release.yml` computes the next version (`scripts/release/next-version.mjs`): the level of the merged PR's `release:` label, else the `## Unreleased` headings (`Breaking`, `Removed`, `Added`, `Changed` minor while the version is 0.x, `Breaking` and `Removed` major from 1.0; `Fixed`, `Docs` patch). `scripts/release/version-pr.mjs` then writes the version into both `package.json` files, renames `## Unreleased` to `## <v> - <date>`, force-pushes one commit `chore: version <v>` to `release/next` and opens the pull request `chore: version <v>` into `master`, or rewrites the open one. Further merges accumulate in that PR; it never lowers the version it already shows.
+2. **The owner merges the version PR when it is time to release.** Edit it before merging to override the version. GitHub does not run `pr.yml` on a pull request the workflow opened.
+3. **The merge of the version PR** tags `v<v>`, waits for production to serve the version, smokes the site, installs the table per base from the public URL, creates the GitHub release from the `## <v>` section and comments "Released in v<v>" on every PR it shipped (`scripts/release/comment.mjs`). Any failure: no release.
+4. **A failed late step.** Run `release.yml` by hand (`workflow_dispatch`) with `version`; `dry_run` (the default) runs the checks only, without it the release and the comments follow. A merge without changelog lines whose version is tagged does nothing.
+
+```bash
+node scripts/release/next-version.mjs --level minor   # the version a minor release would ship as
+node scripts/release/next-version.mjs                 # from the Unreleased headings; exit 2 means no release
+```
 
 ## Analytics
 
@@ -321,11 +339,11 @@ Session replay, surveys, feature flags and error tracking are not enabled. There
 
 ## Related
 
-- `.ai/plans/release-v0.1/anindosarker/release-v0.1-plan.md`, the release checklist
+- `.ai/plans/v0.5.x/anindosarker/decisions.md` item 7, the release flow
 - `.ai/plans/v0.2-base-ui/anindosarker/v0.2-base-ui-plan.md`, the Base UI edition and why
 - `.ai/plans/v0.4.0/anindosarker/decisions.md`, the two-tree layout and why
 - `.ai/plans/v0.5.x/anindosarker/decisions.md`, the React Aria edition and the n-tree guard
 - `packages/shadcn-table/registry/README.md`, what lives where
-- `.github/workflows/ci.yml`, the jobs behind step 6
+- `.github/workflows/pr.yml`, the jobs behind step 6; `.github/workflows/release.yml`, step 7
 - `apps/shadcn-table-docs/content/docs/getting-started/install.mdx`, the user-facing install page
 - `LICENSE`

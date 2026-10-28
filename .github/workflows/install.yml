@@ -1,8 +1,8 @@
 name: install
 
-# The install matrix, reusable: ci.yml runs it against the GitHub address at
-# the pushed SHA, release.yml against the public URL of the tagged production
-# deployment. One definition, so the two cannot drift.
+# The install matrix, reusable: pr.yml runs it against the GitHub address at
+# the pull request's merge SHA, release.yml against the public URL of the
+# tagged production deployment. One definition, so the two cannot drift.
 on:
   workflow_call:
     inputs:
@@ -10,7 +10,7 @@ on:
         description: >-
           Template of the main item's address. `<item>` is replaced by the
           scenario's committed item name (shadcn-table, shadcn-table-base or
-          shadcn-table-aria), `<base>` by its edition (radix, base or aria). CI passes
+          shadcn-table-aria), `<base>` by its edition (radix, base or aria). pr.yml passes
           `anindosarker/shadcn-table/<item>#<sha>`, release.yml passes
           `https://www.shadcn-table.com/r/<base>/shadcn-table.json`.
         type: string

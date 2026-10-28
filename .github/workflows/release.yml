@@ -1,24 +1,29 @@
 name: release
 
-# A push to master whose packages/shadcn-table/package.json version has no
-# v<version> tag yet (the merged pull request from `pnpm release <version>`)
-# creates that tag, verifies production and creates the GitHub release; any
-# failed job means no release. A push to master whose version is already
-# tagged skips every job. A v* tag pushed by hand runs the same checks and
-# release for that tag. On workflow_dispatch, dry_run (the default) skips the
-# release job: that run proves the workflow without a tag.
+# Runs on every push to master and does one of three things, chosen by the
+# decide job:
+#   version  CHANGELOG.md has `## Unreleased` lines: computes the next version
+#            (the merged PR's `release:` label, else the headings) and opens or
+#            rewrites the version PR `chore: version <v>` from release/next.
+#   release  `## Unreleased` is gone and v<package version> is untagged (the
+#            version PR was merged): tags this commit, waits for production,
+#            smokes the site, installs the table per base, creates the GitHub
+#            release and comments "Released in v<v>" on the PRs it shipped.
+#   none     neither (a merge that adds no changelog lines): every job skips.
+# workflow_dispatch runs the release path for `version` (default: the package
+# version) without tagging, to re-run after a failed late step; dry_run (the
+# default) also skips the GitHub release and the comments.
 on:
   push:
     branches: [master]
-    tags: ['v*']
   workflow_dispatch:
     inputs:
       version:
-        description: The version production must serve (the content of /version.txt, no v prefix)
+        description: The version production must serve (the content of /version.txt, no v prefix); empty means the package version
         type: string
-        required: true
+        required: false
       dry_run:
-        description: Run every check and skip `gh release create`
+        description: Run every check and skip `gh release create` and the PR comments
         type: boolean
         default: true
 
@@ -30,56 +35,96 @@ permissions:
 
 env:
   SITE: https://www.shadcn-table.com
-  LIB_PACKAGE: packages/shadcn-table/package.json
 
 jobs:
+  decide:
+    name: decide (version PR, release or nothing)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      mode: ${{ steps.decide.outputs.mode }}
+      version: ${{ steps.decide.outputs.version }}
+      level: ${{ steps.decide.outputs.level }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      INPUT_VERSION: ${{ inputs.version }}
+      EVENT: ${{ github.event_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # scripts/release/decide.mjs reads EVENT, INPUT_VERSION and GITHUB_SHA,
+      # runs next-version.mjs, asks gh for the merged PR's label and git for
+      # the tag, and writes mode, version and level to $GITHUB_OUTPUT.
+      - name: Read the changelog, the merged PR's label, the package version and its tag
+        id: decide
+        run: node scripts/release/decide.mjs
+
+  version:
+    name: version PR (release/next)
+    needs: decide
+    if: needs.decide.outputs.mode == 'version'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      LEVEL: ${{ needs.decide.outputs.level }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # A version PR already open from earlier merges keeps its version when
+      # this merge asks for a lower one: several merges accumulate in one PR.
+      - name: Compute the next version and open or rewrite the version PR
+        run: |
+          if [ -n "$LEVEL" ]; then
+            next=$(node scripts/release/next-version.mjs --level "$LEVEL" --from-changelog)
+          else
+            next=$(node scripts/release/next-version.mjs --from-changelog)
+          fi
+          open=$(gh pr list --head release/next --base master --state open --json title \
+            --jq '.[0].title // "" | ltrimstr("chore: version ")')
+          if [ -n "$open" ]; then
+            next=$(printf '%s\n%s\n' "$next" "$open" | sort -V | tail -n 1)
+          fi
+          echo "next version $next (open version PR: ${open:-none})"
+          node scripts/release/version-pr.mjs "$next"
+          echo "Version PR \`chore: version $next\` from release/next." >> "$GITHUB_STEP_SUMMARY"
+
   wait-for-production:
     name: wait for production
+    needs: decide
+    if: needs.decide.outputs.mode == 'release'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
       contents: write
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-      skip: ${{ steps.version.outputs.skip }}
+    env:
+      VERSION: ${{ needs.decide.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-      - name: Resolve the version (dispatch input, tag name without the v, or the package version on master) and tag it
-        id: version
-        env:
-          INPUT_VERSION: ${{ inputs.version }}
-          EVENT: ${{ github.event_name }}
-          REF_TYPE: ${{ github.ref_type }}
+      # Only a push tags: a dispatch re-runs the checks for a version that is
+      # tagged already, or proves the workflow without a tag (dry_run).
+      - name: Tag this commit as v${{ needs.decide.outputs.version }}
+        if: github.event_name == 'push'
         run: |
-          skip=false
-          if [ -n "$INPUT_VERSION" ]; then
-            version="$INPUT_VERSION"
-          elif [ "$REF_TYPE" = tag ]; then
-            case "$GITHUB_REF_NAME" in
-              v*) version="${GITHUB_REF_NAME#v}" ;;
-              *) echo "::error::$GITHUB_REF_NAME is not a v* tag"; exit 1 ;;
-            esac
+          if git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; then
+            echo "v$VERSION is already tagged"
           else
-            version=$(node -p "require('./$LIB_PACKAGE').version")
-            if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null; then
-              echo "v$version is already tagged; nothing to release"
-              skip=true
-            else
-              git tag "v$version" "$GITHUB_SHA"
-              git push origin "refs/tags/v$version"
-              echo "tagged v$version at $GITHUB_SHA"
-            fi
+            git tag "v$VERSION" "$GITHUB_SHA"
+            git push origin "refs/tags/v$VERSION"
+            echo "tagged v$VERSION at $GITHUB_SHA"
           fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "skip=$skip" >> "$GITHUB_OUTPUT"
-          [ "$skip" = true ] || echo "verifying $version"
       # Vercel builds master on the version commit, so the deployment that
       # serves the version is the tagged commit. 20 minutes covers a docs
       # build plus propagation.
       - name: Poll ${{ env.SITE }}/version.txt every 30 s, 20 min timeout
-        if: steps.version.outputs.skip != 'true'
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
         run: |
           deadline=$((SECONDS + 1200))
           while :; do
@@ -99,8 +144,6 @@ jobs:
   smoke:
     name: smoke (registry, Storybook, SKILL.md, docs pages)
     needs: wait-for-production
-    # A skipped smoke skips install and release with it.
-    if: needs.wait-for-production.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -122,29 +165,40 @@ jobs:
       source: https://www.shadcn-table.com/r/<base>/shadcn-table.json
 
   release:
-    name: gh release create
-    needs: [wait-for-production, install]
+    name: gh release create, PR comments
+    needs: [decide, install]
     # A dispatch with dry_run proves the checks without releasing; on a push
     # inputs.dry_run is empty, so the release runs.
     if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     env:
       GH_TOKEN: ${{ github.token }}
-      VERSION: ${{ needs.wait-for-production.outputs.version }}
+      VERSION: ${{ needs.decide.outputs.version }}
     steps:
+      # Full history and tags: comment.mjs finds the previous tag.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: node scripts/release/notes.mjs "$VERSION" > notes.md
       # --verify-tag refuses to create the tag itself: the release is for the
-      # tag this workflow or a hand push created. A prerelease version (one
-      # with a hyphen) is marked as such instead of becoming the latest release.
+      # tag the wait-for-production job or a hand push created. A prerelease
+      # version (one with a hyphen) is marked as such instead of becoming the
+      # latest release. A release that exists already (a re-run after the
+      # comments failed) is kept.
       - run: |
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "release v$VERSION exists"
+            exit 0
+          fi
           case "$VERSION" in
             *-*) flag=--prerelease ;;
             *) flag=--latest ;;
           esac
           gh release create "v$VERSION" --verify-tag --title "v$VERSION" --notes-file notes.md "$flag"
+      - run: node scripts/release/comment.mjs "v$VERSION"
