@@ -45,3 +45,20 @@ here re-decides them. Plan index: [v0.5.x-plan.md](v0.5.x-plan.md).
    three-way with the label "React Aria"; the install page, `SKILL.md` and the registry
    README list the three editions; `check-pages` runs per edition where it already runs
    per base.
+
+## Release flow
+
+7. Releases follow the TanStack shape without external apps (ruled 2026-10-28 after the
+   0.5.0 release cost six workflow runs): `pr.yml` on `pull_request` runs every check;
+   `release.yml` on `push` to `master` either opens or rewrites the version PR
+   (`chore: version <v>` from `release/next`, when `## Unreleased` has lines) or, when the
+   version PR was merged, tags, waits for production, smokes, installs, creates the GitHub
+   release and comments "Released in v<v>" on the PRs it shipped.
+   - Level per PR by label (`release:patch`, `release:minor`, `release:major`,
+     `release:skip`), the changelog headings as the default (`Breaking`, `Added`, `Changed`
+     minor while 0.x; `Fixed`, `Docs` patch); the version is computed, never typed; the
+     version PR can be edited before merging as the last override.
+   - Owner decides when to release by merging the version PR; several merges accumulate in it.
+   - Work branches, `claude/review` and `dev` go to `master` by PR (`dev` stays the
+     owner's staging branch, fast-forwarded by hand); `scripts/release.mjs` retired. Supersedes the v0.3.x "Release" ruling and the
+     2026-10-28 `claude/review` to `dev` to `master` flow.
