@@ -955,7 +955,7 @@ export function WholeApp() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid items-stretch gap-4 min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,58rem)]">
+      <div className="grid items-stretch gap-4 min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]">
         <Editor chat={chat} light={light} dark={dark} />
 
         <div className="flex min-w-0 flex-col gap-3">
