@@ -1,8 +1,9 @@
-import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import { type ComponentPropsWithRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
+import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
-  DropdownMenuContent,
+  DropdownMenuSub,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -16,7 +17,7 @@ import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
-  extends ComponentPropsWithRef<typeof DropdownMenuContent> {
+  extends ComponentPropsWithRef<typeof DropdownMenu> {
   anchorEl: HTMLElement | null;
   header: ST_Header<TData>;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
@@ -65,9 +66,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-
-  const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
 
   const handleClearSort = () => {
     column.clearSorting();
@@ -130,11 +128,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     setAnchorEl(null);
   };
 
-  const handleOpenFilterModeMenu = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setFilterMenuAnchorEl(event.currentTarget);
-  };
-
   const isSelectFilter = !!columnDef.filterSelectOptions;
 
   const allowedColumnFilterOptions =
@@ -150,15 +143,18 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   const rect = anchorEl?.getBoundingClientRect();
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
+    <DropdownMenuTrigger
+      isOpen={!!anchorEl}
       onOpenChange={(open) => {
         if (!open) setAnchorEl(null);
       }}
     >
-      <DropdownMenuTrigger asChild>
+      {/* MenuTrigger positions the menu against its pressable child. */}
+      <Pressable>
         <span
           aria-hidden
+          role="button"
+          tabIndex={-1}
           style={{
             position: 'fixed',
             left: rect?.left ?? 0,
@@ -168,13 +164,9 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
             pointerEvents: 'none',
           }}
         />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="start"
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          anchorEl?.focus();
-        }}
+      </Pressable>
+      <DropdownMenu
+        placement="bottom start"
         className={cn('w-max', className)}
         {...rest}
       >
@@ -193,12 +185,26 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
           {({ columnSizing, columnVisibility, showColumnFilters }) => {
             const columnFilterValue = column.getFilterValue();
 
+            const filterByColumnItem = (
+              <ST_ActionMenuItem
+                isDisabled={showColumnFilters && !enableColumnFilterModes}
+                divider={enableGrouping || enableHiding}
+                icon={<FilterListIcon />}
+                key={4}
+                label={localization.filterByColumn?.replace(
+                  '{column}',
+                  String(columnDef.header),
+                )}
+                onClick={showColumnFilters ? undefined : handleFilterByColumn}
+              />
+            );
+
             const internalColumnMenuItems = [
               ...(enableSorting && column.getCanSort()
                 ? [
                     enableSortingRemoval !== false && (
                       <ST_ActionMenuItem
-                        disabled={column.getIsSorted() === false}
+                        isDisabled={column.getIsSorted() === false}
                         icon={<ClearAllIcon />}
                         key={0}
                         label={localization.clearSort}
@@ -206,7 +212,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       />
                     ),
                     <ST_ActionMenuItem
-                      disabled={column.getIsSorted() === 'asc'}
+                      isDisabled={column.getIsSorted() === 'asc'}
                       icon={
                         <SortIcon
                           style={{ transform: 'rotate(180deg) scaleX(-1)' }}
@@ -220,7 +226,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       onClick={handleSortAsc}
                     />,
                     <ST_ActionMenuItem
-                      disabled={column.getIsSorted() === 'desc'}
+                      isDisabled={column.getIsSorted() === 'desc'}
                       divider={
                         enableColumnFilters || enableGrouping || enableHiding
                       }
@@ -237,7 +243,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
               ...(enableColumnFilters && column.getCanFilter()
                 ? [
                     <ST_ActionMenuItem
-                      disabled={
+                      isDisabled={
                         !columnFilterValue ||
                         (Array.isArray(columnFilterValue) &&
                           !columnFilterValue.filter((value) => value).length)
@@ -247,37 +253,22 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       label={localization.clearFilter}
                       onClick={handleClearFilter}
                     />,
-                    columnFilterDisplayMode === 'subheader' && (
-                      <ST_ActionMenuItem
-                        disabled={showColumnFilters && !enableColumnFilterModes}
-                        divider={enableGrouping || enableHiding}
-                        icon={<FilterListIcon />}
-                        key={4}
-                        label={localization.filterByColumn?.replace(
-                          '{column}',
-                          String(columnDef.header),
-                        )}
-                        onClick={
-                          showColumnFilters
-                            ? handleOpenFilterModeMenu
-                            : handleFilterByColumn
-                        }
-                        onOpenSubMenu={
-                          showFilterModeSubMenu
-                            ? handleOpenFilterModeMenu
-                            : undefined
-                        }
-                      />
-                    ),
-                    showFilterModeSubMenu && (
-                      <ST_FilterOptionMenu
-                        anchorEl={filterMenuAnchorEl}
-                        header={header}
-                        key={5}
-                        onSelect={handleFilterByColumn}
-                        setAnchorEl={setFilterMenuAnchorEl}
-                      />
-                    ),
+                    columnFilterDisplayMode === 'subheader' &&
+                      (showFilterModeSubMenu ? (
+                        // The filter mode menu opens as a submenu of this item.
+                        <DropdownMenuSub key={4}>
+                          {filterByColumnItem}
+                          <ST_FilterOptionMenu
+                            anchorEl={anchorEl}
+                            header={header}
+                            isSubMenu
+                            onSelect={handleFilterByColumn}
+                            setAnchorEl={setAnchorEl}
+                          />
+                        </DropdownMenuSub>
+                      ) : (
+                        filterByColumnItem
+                      )),
                   ].filter(Boolean)
                 : []),
               ...(enableGrouping && column.getCanGroup()
@@ -298,7 +289,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
               ...(enableColumnPinning && column.getCanPin()
                 ? [
                     <ST_ActionMenuItem
-                      disabled={
+                      isDisabled={
                         column.getIsPinned() === 'start' || !column.getCanPin()
                       }
                       icon={
@@ -309,7 +300,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       onClick={() => handlePinColumn('start')}
                     />,
                     <ST_ActionMenuItem
-                      disabled={
+                      isDisabled={
                         column.getIsPinned() === 'end' || !column.getCanPin()
                       }
                       icon={
@@ -320,7 +311,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       onClick={() => handlePinColumn('end')}
                     />,
                     <ST_ActionMenuItem
-                      disabled={!column.getIsPinned()}
+                      isDisabled={!column.getIsPinned()}
                       divider={enableHiding}
                       icon={<PushPinIcon />}
                       key={9}
@@ -332,7 +323,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
               ...(enableColumnResizing && column.getCanResize()
                 ? [
                     <ST_ActionMenuItem
-                      disabled={columnSizing[column.id] === undefined}
+                      isDisabled={columnSizing[column.id] === undefined}
                       icon={<RestartAltIcon />}
                       key={10}
                       label={localization.resetColumnSize}
@@ -343,7 +334,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
               ...(enableHiding
                 ? [
                     <ST_ActionMenuItem
-                      disabled={!column.getCanHide()}
+                      isDisabled={!column.getCanHide()}
                       icon={<VisibilityOffIcon />}
                       key={11}
                       label={localization.hideColumn?.replace(
@@ -353,7 +344,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       onClick={handleHideColumn}
                     />,
                     <ST_ActionMenuItem
-                      disabled={
+                      isDisabled={
                         !Object.values(columnVisibility).filter(
                           (visible) => !visible,
                         ).length
@@ -389,7 +380,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
             );
           }}
         </Subscribe>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </DropdownMenu>
+    </DropdownMenuTrigger>
   );
 };
