@@ -64,25 +64,25 @@ const Example = () => {
     renderTopToolbarCustomActions: ({ table }) => (
       <div className="flex flex-wrap gap-4 p-2">
         <Button
-          disabled={table.getPrePaginatedRowModel().rows.length === 0}
+          isDisabled={table.getPrePaginatedRowModel().rows.length === 0}
           //export all rows, including from the next page, (still respects filtering and sorting)
-          onClick={() => handleExportRows(table.getPrePaginatedRowModel().rows)}
+          onPress={() => handleExportRows(table.getPrePaginatedRowModel().rows)}
         >
           <DownloadIcon />
           Export All Rows
         </Button>
         <Button
-          disabled={table.getRowModel().rows.length === 0}
+          isDisabled={table.getRowModel().rows.length === 0}
           //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-          onClick={() => handleExportRows(table.getRowModel().rows)}
+          onPress={() => handleExportRows(table.getRowModel().rows)}
         >
           <DownloadIcon />
           Export Page Rows
         </Button>
         <Button
-          disabled={!table.getIsSomeRowsSelected()}
+          isDisabled={!table.getIsSomeRowsSelected()}
           //only export selected rows
-          onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+          onPress={() => handleExportRows(table.getSelectedRowModel().rows)}
         >
           <DownloadIcon />
           Export Selected Rows

@@ -10,11 +10,7 @@ import {
   type ST_SortingState,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { RefreshCw } from 'lucide-react';
 import {
   QueryClient,
@@ -143,14 +139,12 @@ const Example = () => {
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     renderTopToolbarCustomActions: () => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button size="icon" variant="ghost" onClick={() => refetch()}>
-            <RefreshCw />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Refresh Data</TooltipContent>
-      </Tooltip>
+      <TooltipTrigger>
+        <Button size="icon" variant="ghost" onPress={() => refetch()}>
+          <RefreshCw />
+        </Button>
+        <Tooltip>Refresh Data</Tooltip>
+      </TooltipTrigger>
     ),
     rowCount: meta?.totalRowCount ?? 0,
     state: {

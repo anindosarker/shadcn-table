@@ -47,7 +47,7 @@ const Example = () => {
       <div className="flex gap-4 p-1">
         <Button
           variant="secondary"
-          onClick={() => {
+          onPress={() => {
             alert('Create New Account');
           }}
         >
@@ -55,8 +55,8 @@ const Example = () => {
         </Button>
         <Button
           variant="destructive"
-          disabled={!table.getIsSomeRowsSelected()}
-          onClick={() => {
+          isDisabled={!table.getIsSomeRowsSelected()}
+          onPress={() => {
             alert('Delete Selected Accounts');
           }}
         >
@@ -71,7 +71,7 @@ const Example = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => {
+          onPress={() => {
             window.print();
           }}
         >

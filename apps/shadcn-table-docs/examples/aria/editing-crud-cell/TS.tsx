@@ -194,7 +194,7 @@ const Example = () => {
             variant="ghost"
             size="icon"
             className="text-destructive"
-            onClick={() => openDeleteConfirmModal(row)}
+            onPress={() => openDeleteConfirmModal(row)}
           >
             <Trash2 />
           </Button>
@@ -204,8 +204,8 @@ const Example = () => {
     renderBottomToolbarCustomActions: () => (
       <div className="flex items-center gap-4">
         <Button
-          onClick={handleSaveUsers}
-          disabled={
+          onPress={handleSaveUsers}
+          isDisabled={
             Object.keys(editedUsers).length === 0 ||
             Object.values(validationErrors).some((error) => !!error)
           }
@@ -219,7 +219,7 @@ const Example = () => {
     ),
     renderTopToolbarCustomActions: ({ table }) => (
       <Button
-        onClick={() => {
+        onPress={() => {
           table.setCreatingRow(true); //simplest way to open the create row modal with no default values
           //or you can pass in a row object to set default values with the `createRow` helper function
           // table.setCreatingRow(

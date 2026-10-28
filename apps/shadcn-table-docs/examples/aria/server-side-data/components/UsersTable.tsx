@@ -5,11 +5,7 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { RefreshCw } from 'lucide-react';
 import { useTableQueryParams } from '../hooks/useTableQueryParams';
 import { useUsersQuery } from '../hooks/useUsersQuery';
@@ -83,14 +79,12 @@ export const UsersTable = () => {
         }
       : undefined,
     renderTopToolbarCustomActions: () => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button size="icon" variant="ghost" onClick={() => refetch()}>
-            <RefreshCw />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Refresh Data</TooltipContent>
-      </Tooltip>
+      <TooltipTrigger>
+        <Button size="icon" variant="ghost" onPress={() => refetch()}>
+          <RefreshCw />
+        </Button>
+        <Tooltip>Refresh Data</Tooltip>
+      </TooltipTrigger>
     ),
     state: {
       ...state,
