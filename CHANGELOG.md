@@ -12,7 +12,12 @@ publishes the section as the GitHub release notes.
 
 - React Aria edition: a third edition of the table on shadcn's React Aria parts (`aria-nova`
   style, `react-aria-components`), same API. Registry item `shadcn-table-aria` plus its 38
-  locale items (`shadcn-table-aria-locale-<code>`).
+  locale items (`shadcn-table-aria-locale-<code>`). Install on an `aria-*` style with
+  `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json`, or
+  `pnpm dlx shadcn@latest add @st/shadcn-table` with the `@st` namespace registered.
+- Docs: the edition switch offers Radix UI, Base UI and React Aria; every example renders
+  on the selected edition, and the install page, the agent skill and the registry addresses
+  list the React Aria commands.
 
 ### Changed
 

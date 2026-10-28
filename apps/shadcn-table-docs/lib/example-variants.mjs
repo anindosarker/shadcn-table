@@ -10,7 +10,21 @@
  * components/ui-<base>): `@/components/ui/` imports point at
  * `@/components/ui-<base>/`, and on the Base UI base Radix's `asChild` on a
  * part becomes Base UI's `render` prop (the one Radix-only prop the examples
- * use). components/example-variant.tsx lazy-loads the variant for the
+ * use). On the React Aria base the part props the examples use are renamed to
+ * the aria parts' names (rewriteAriaParts):
+ * - `<Button disabled>` to `<Button isDisabled>`
+ * - `<RadioGroup onValueChange>` to `<RadioGroup onChange>` (both call it
+ *   with the selected value as a string)
+ * - `<Tooltip><TooltipTrigger asChild>{trigger}</TooltipTrigger>
+ *   <TooltipContent>{content}</TooltipContent></Tooltip>` to
+ *   `<TooltipTrigger>{trigger}<Tooltip>{content}</Tooltip></TooltipTrigger>`
+ *   (the aria TooltipTrigger takes the trigger and the Tooltip as its two
+ *   children), and `TooltipContent` dropped from the tooltip import
+ * They are exact-match string and regex transforms, no AST: a tag's opening
+ * tag is found by scanning to its closing `>` outside `{...}` and quotes, and
+ * only attribute names at that level are renamed. Anything they do not match
+ * keeps the Radix shape and fails the type check, on purpose.
+ * components/example-variant.tsx lazy-loads the variant for the
  * selected base; the output is formatted with the repo's prettier config.
  *
  * Runs before `next build` and `next dev` (package.json `build`, `predev`)
@@ -114,9 +128,81 @@ export const rewriteAsChild = (source, fileName) => {
 };
 
 /**
- * One base's variant of one example source file, formatted. The Radix and
- * React Aria variants only change the imports; the Base UI one also turns
- * `asChild` into `render`.
+ * Renames the attribute `from` to `to` on every `<tag ...>` opening tag.
+ * The opening tag runs to the first `>` outside `{...}` and string quotes;
+ * only text at that level (attribute names, not values) is rewritten.
+ * @param {string} source
+ * @param {string} tag
+ * @param {string} from
+ * @param {string} to
+ */
+export const renameAttribute = (source, tag, from, to) => {
+  const open = new RegExp(`<${tag}(?=[\\s/>])`, 'g');
+  const name = new RegExp(`(\\s)${from}(?=[\\s=/>]|$)`, 'g');
+  let out = '';
+  let last = 0;
+  for (const match of source.matchAll(open)) {
+    const start = match.index + match[0].length;
+    if (start < last) continue;
+    let depth = 0;
+    let quote = '';
+    let segment = start;
+    let i = start;
+    out += source.slice(last, start);
+    for (; i < source.length; i++) {
+      const ch = source[i];
+      if (quote) {
+        if (ch === quote) quote = '';
+      } else if (ch === '{') {
+        if (depth === 0) {
+          out += source.slice(segment, i).replace(name, `$1${to}`);
+          segment = i;
+        }
+        depth += 1;
+      } else if (ch === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          out += source.slice(segment, i + 1);
+          segment = i + 1;
+        }
+      } else if (depth === 0 && (ch === '"' || ch === "'")) {
+        quote = ch;
+      } else if (depth === 0 && ch === '>') {
+        break;
+      }
+    }
+    out += source.slice(segment, i).replace(name, `$1${to}`);
+    last = i;
+  }
+  return out + source.slice(last);
+};
+
+/**
+ * The React Aria part props the examples use, from the Radix names (see the
+ * file header).
+ * @param {string} source
+ */
+export const rewriteAriaParts = (source) => {
+  let text = renameAttribute(source, 'Button', 'disabled', 'isDisabled');
+  text = renameAttribute(text, 'RadioGroup', 'onValueChange', 'onChange');
+  text = text.replace(
+    /<Tooltip>\s*<TooltipTrigger asChild>([\s\S]*?)<\/TooltipTrigger>\s*<TooltipContent>([\s\S]*?)<\/TooltipContent>\s*<\/Tooltip>/g,
+    '<TooltipTrigger>$1<Tooltip>$2</Tooltip></TooltipTrigger>',
+  );
+  if (!/<TooltipContent\b/.test(text)) {
+    text = text.replace(
+      /import \{([^}]*)\} from (['"])@\/components\/ui-aria\/tooltip\2/g,
+      (line, names) =>
+        line.replace(names, names.replace(/\s*\bTooltipContent\b,?/, '')),
+    );
+  }
+  return text;
+};
+
+/**
+ * One base's variant of one example source file, formatted. The Radix
+ * variant only changes the imports; the Base UI one also turns `asChild` into
+ * `render`, the React Aria one renames the part props (rewriteAriaParts).
  * @param {{ source: string, fileName: string, base: keyof typeof VARIANT_DIRS }} file
  *   fileName is absolute, for prettier's parser choice
  */
@@ -124,6 +210,9 @@ export const toVariant = async ({ source, fileName, base }) => {
   let text = rewriteImports(source, base);
   if (base === 'base' && /\.tsx$/.test(fileName)) {
     text = rewriteAsChild(text, fileName);
+  }
+  if (base === 'aria' && /\.tsx$/.test(fileName)) {
+    text = rewriteAriaParts(text);
   }
   if (text === source) return source;
   const config = await prettier.resolveConfig(fileName);
