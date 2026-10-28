@@ -9,8 +9,8 @@ on:
       source:
         description: >-
           Template of the main item's address. `<item>` is replaced by the
-          scenario's committed item name (shadcn-table, shadcn-table-base or
-          shadcn-table-aria), `<base>` by its edition (radix, base or aria). pr.yml passes
+          scenario's committed item name (shadcn-table-radix, shadcn-table-base
+          or shadcn-table-aria), `<base>` by its edition (radix, base or aria). pr.yml passes
           `anindosarker/shadcn-table/<item>#<sha>`, release.yml passes
           `https://www.shadcn-table.com/r/<base>/shadcn-table.json`.
         type: string
@@ -32,13 +32,14 @@ jobs:
       # address at this SHA.
       REF: ${{ github.sha }}
       # fresh, existing and nextjs run on the Radix base and install the
-      # shadcn-table item; base scaffolds on Base UI and installs the
-      # shadcn-table-base item (its locale item is shadcn-table-base-locale-de,
-      # its example item example-basic-base), aria scaffolds on React Aria
-      # and installs shadcn-table-aria (example-basic-aria).
+      # shadcn-table-radix item; base scaffolds on Base UI and installs the
+      # shadcn-table-base item, aria scaffolds on React Aria and installs
+      # shadcn-table-aria. Every committed item is named by its edition
+      # (editions.mjs editionItemName): the locale item is
+      # shadcn-table-<edition>-locale-de, the example item example-basic-<edition>.
       BASE: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && matrix.scenario || 'radix' }}
-      ITEM: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && format('shadcn-table-{0}', matrix.scenario) || 'shadcn-table' }}
-      EXAMPLE_ITEM: ${{ (matrix.scenario == 'base' || matrix.scenario == 'aria') && format('example-basic-{0}', matrix.scenario) || 'example-basic' }}
+      ITEM: ${{ format('shadcn-table-{0}', (matrix.scenario == 'base' || matrix.scenario == 'aria') && matrix.scenario || 'radix') }}
+      EXAMPLE_ITEM: ${{ format('example-basic-{0}', (matrix.scenario == 'base' || matrix.scenario == 'aria') && matrix.scenario || 'radix') }}
       # Run twice in the aria scenario (steps below): deletes the one line
       # `import * as React from "react"` from the installed label part, exits 1
       # when it is not there.
