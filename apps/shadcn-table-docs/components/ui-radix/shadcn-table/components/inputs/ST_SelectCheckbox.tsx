@@ -2,7 +2,7 @@ import { type MouseEvent } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui-radix/checkbox';
+import { ST_Checkbox } from '@/components/ui-radix/shadcn-table/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui-radix/radio-group';
 import {
   type CheckboxProps,
@@ -179,7 +179,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                   />
                 </RadioGroup>
               ) : (
-                <Checkbox
+                <ST_Checkbox
                   {...commonProps}
                   // `checked` carries the indeterminate state, so it goes after
                   // the spread. getIsSomeRowsSelected and getIsSomeSelected

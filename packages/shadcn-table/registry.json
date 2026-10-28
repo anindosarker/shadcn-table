@@ -25,6 +25,7 @@
         "alert",
         "badge",
         "button",
+        "checkbox",
         "collapsible",
         "combobox",
         "dialog",
@@ -47,6 +48,11 @@
         "tooltip"
       ],
       "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
+        },
         {
           "path": "registry/radix/components/ui/shadcn-table/ST_Tooltip.tsx",
           "type": "registry:ui",
@@ -566,11 +572,6 @@
           "path": "registry/radix/components/ui/shadcn-table/types.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/types.ts"
-        },
-        {
-          "path": "registry/radix/components/ui/checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/checkbox.tsx"
         }
       ]
     },
@@ -1204,6 +1205,7 @@
         "alert",
         "badge",
         "button",
+        "checkbox",
         "collapsible",
         "combobox",
         "dialog",
@@ -1226,6 +1228,11 @@
         "tooltip"
       ],
       "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
+        },
         {
           "path": "registry/base/components/ui/shadcn-table/ST_Tooltip.tsx",
           "type": "registry:ui",
@@ -1745,11 +1752,6 @@
           "path": "registry/base/components/ui/shadcn-table/types.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/types.ts"
-        },
-        {
-          "path": "registry/base/components/ui/checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/checkbox.tsx"
         }
       ]
     },
@@ -2406,6 +2408,11 @@
         "tooltip"
       ],
       "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
+        },
         {
           "path": "registry/aria/components/ui/shadcn-table/ST_Tooltip.tsx",
           "type": "registry:ui",
