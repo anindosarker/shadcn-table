@@ -144,11 +144,14 @@ pnpm --filter shadcn-table tsc:aria
 ```
 
 - **Stories are tests.** `pnpm test` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it, and the story must pass on every base: the stories are shared, one set for all three editions, with no per-edition story files.
-- **shadcn/ui parts.** `registry/<base>/components/ui/*.tsx` are plain shadcn components; change them only when the table needs it, since users get their own copies. Add or refresh one with `pnpm add-part`, which fetches it in the base's style (`registry/<base>/components.json`) and prints the dependencies to add:
+- **shadcn/ui parts.** `registry/<base>/components/ui/*.tsx` are plain shadcn components, never edited by hand, since users get their own copies. Add or refresh one with `pnpm add-part`, which fetches it in the base's style (`registry/<base>/components.json`) and prints the dependencies to add:
 
   ```bash
   pnpm add-part base tooltip               # or: pnpm add-part radix tooltip, pnpm add-part aria tooltip
+  pnpm add-part base --all                 # re-adds every part the base has, forks skipped
   ```
+
+  After `pnpm add-part <base> --all`, `git status --short` must print nothing.
 
 - **Props differ per base.** Menu, select, tooltip, checkbox, slider and popover take different props on Base UI (`render` instead of `asChild`, `closeOnClick`, `alignItemWithTrigger`, the `indeterminate` prop, `onValueCommitted`, ...). React Aria parts differ again (`isDisabled`, `isSelected`, `onPress`, `DialogTrigger` plus `Modal`, the trigger wrapping the menu or tooltip). The files in `base-diff.json` and `aria-diff.json` are plain code against those parts; do not port a Radix prop over and expect it to type-check.
 
