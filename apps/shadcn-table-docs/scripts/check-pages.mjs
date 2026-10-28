@@ -4,8 +4,9 @@
  * mobile widths and fails on any console.error or uncaught page error, in
  * particular React hydration mismatches (which only print in `next dev`).
  * Per-page assertions live in scripts/page-checks/<cluster>.mjs (default
- * export: { '/docs/path': async ({ page, check }) => void }); files starting
- * with `_` are helpers and not loaded. Add an entry for every new page that
+ * export: { '/docs/path': async ({ page, check, edition }) => void }, where
+ * `edition` is the one the page opened on); files starting with `_` are
+ * helpers and not loaded. Add an entry for every new page that
  * renders live examples or prop tables.
  *
  * Usage (dev server must be running, default http://localhost:5320):
@@ -17,7 +18,8 @@
  * explicit /docs paths run only those pages (with their checks, if any).
  * `--edition` opens every page with that shadcn base selected (the stored
  * pick of components/base-selector.tsx), so the live examples and code
- * views are that edition's; without it the pages open on the default base.
+ * views are that edition's; without it the pages open on the default base
+ * (DEFAULT_EDITION in editions.mjs, Base UI).
  * Playwright is resolved from packages/shadcn-table/node_modules
  * (a devDependency of the library package).
  */
@@ -25,7 +27,10 @@ import { createRequire } from 'node:module';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { EDITIONS } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import {
+  DEFAULT_EDITION,
+  EDITIONS,
+} from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
 import { TAB_VALUES } from '../lib/base-tabs.mjs';
 
 const APP_DIR = path.resolve(
@@ -169,7 +174,11 @@ for (const route of pages) {
     await page.waitForTimeout(1500);
     if (i === 0 && PAGE_CHECKS[route]) {
       try {
-        await PAGE_CHECKS[route]({ page, check });
+        await PAGE_CHECKS[route]({
+          page,
+          check,
+          edition: edition || DEFAULT_EDITION,
+        });
       } catch (e) {
         check('page check threw', false, String(e.message).slice(0, 160));
       }

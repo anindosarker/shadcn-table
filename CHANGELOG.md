@@ -7,6 +7,39 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- Base UI is the edition shown first: the docs edition tabs and the command bar open on Base UI
+  until the reader picks one (a stored pick is kept), and the Storybook root
+  (`storybook.shadcn-table.com/`) redirects to the Base UI build. The three Storybook builds
+  live under `/radix/`, `/base/` and `/aria/`; `/base/` and `/aria/` links keep working, old
+  root links land on Base UI. The Storybook edition tool marks the current edition's button.
+- Every committed registry item is named by its edition: the GitHub-namespace addresses of the
+  Radix UI items are `anindosarker/shadcn-table/shadcn-table-radix`,
+  `shadcn-table-radix-locale-<code>` and `example-<slug>-radix`. The plain GitHub addresses
+  (`anindosarker/shadcn-table/shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`)
+  now install the Base UI edition, as aliases of the `-base` items; before, they installed
+  the Radix UI items. The hosted item names are unchanged:
+  `/r/radix/shadcn-table.json`, `/r/radix/shadcn-table-locale-<code>.json` and
+  `/r/radix/example-<slug>.json` as before.
+
+### Fixed
+
+- The Base UI and React Aria hosted locale items' descriptions name the hosted item
+  `shadcn-table` (`/r/base/` and `/r/aria/` said `shadcn-table-base` and `shadcn-table-aria`).
+- shadcn parts re-added by a deterministic `add-part`: `pnpm add-part <edition> <part>` now
+  writes the same bytes whatever the invocation order (the `'use client'` directive is set per
+  file from the upstream item, `font-heading` survives the CLI's class resolution), and every
+  part of every edition was re-added once with it. Repo-internal; nothing changes for users.
+- Radix UI and Base UI: installing shadcn-table no longer replaces the project's
+  `components/ui/checkbox.tsx` with a fork. The indeterminate dash on the select-all and
+  partially selected row checkboxes is drawn by the library's own `ST_Checkbox` wrapper on
+  every edition, and `checkbox` arrives as a plain registry dependency. The checkbox filter's
+  unset state on React Aria now shows the same dash as on Radix UI and Base UI instead of a
+  check.
+
 ## 0.6.0 - 2026-10-28
 
 ### Changed

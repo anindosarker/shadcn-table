@@ -1,6 +1,7 @@
 // Install commands and the agent prompt for the library item. Pure: safe to
 // import from server components, client components and the page checks'
 // expectations.
+import { DEFAULT_EDITION } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
 import { gitConfig, libraryItem, siteUrl } from './shared';
 
 export const packageManagers = ['pnpm', 'npm', 'yarn', 'bun'] as const;
@@ -21,7 +22,8 @@ const runners: Record<PackageManager, string> = {
  */
 export const bases = ['radix', 'base', 'aria'] as const;
 export type Base = (typeof bases)[number];
-export const defaultBase: Base = 'radix';
+/** The base shown before the reader picks one (DEFAULT_EDITION, Base UI). */
+export const defaultBase: Base = DEFAULT_EDITION;
 
 export const baseLabels: Record<Base, string> = {
   radix: 'Radix UI',

@@ -26,9 +26,6 @@ const items = baseItems({
     { name: 'react-aria-components' },
   ],
   devDependencies: [{ name: 'tw-animate-css' }],
-  // shadcn parts the item ships as its own files instead of as
-  // registryDependencies: none, every aria part is used as shipped.
-  forkedUi: [],
 });
 
 registryItemSchema.array().parse(items);

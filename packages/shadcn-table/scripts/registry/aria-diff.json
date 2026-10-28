@@ -1,4 +1,5 @@
 [
+  "ST_Checkbox.tsx",
   "ST_Tooltip.tsx",
   "components/body/ST_TableDetailPanel.tsx",
   "components/buttons/ST_CopyButton.tsx",

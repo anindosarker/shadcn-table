@@ -67,3 +67,78 @@ force; nothing here re-decides them.
    workaround line part 02 added is removed. Why: the owner ruled the defect is shadcn's and
    the registry should carry no corrected copy; a red CI scenario or a hidden type error would
    both misreport what users see.
+
+## add-part determinism
+
+5. `scripts/registry/add-part.mjs` is made deterministic, then every part in every edition is
+   re-added once, one commit per edition. A follow-up part, not a 0.6.x patch; nothing in it is
+   user-facing. Why: the decision 2 gate (`pnpm add-part <edition> <part> && git status --short`
+   prints nothing) only holds today by invocation order. The 2026-10-28 probe (`shadcn`
+   4.22.0, `@shadcn/registry` 0.2.0) rewrote 10 radix, 9 base and 7 aria parts nobody had
+   edited, see `02-tracker.md` "Part drift". Users never run the script and never receive
+   these copies: non-forked parts reach them as `registryDependencies` from ui.shadcn.com,
+   only `forkedUi` files ship from our tree.
+   - `'use client'`: `@shadcn/registry` `transform-rsc` tests the directive with a `/g` regex,
+     so `lastIndex` carries across files and the directive is stripped from every other file
+     in a run. `add-part.mjs` stops trusting that transform: after the CLI runs, the script
+     sets the directive on each copied file from the upstream item JSON content (`rsc: false`
+     applied by us, per file).
+   - `font-heading`: the CLI drops the class because the scratch `index.css` declares no
+     `--font-heading`. The scratch stylesheet declares it.
+   - The regex is reported to `@shadcn/registry` as an upstream bug.
+   - Rejected: a check-side normaliser that ignores the directive and the class (keeps the
+     churn, hides it); documenting the gate as "no diff beyond those two" (manual judgment).
+
+## Checkbox fork
+
+6. The `checkbox` forks go. The library gets its own `ST_Checkbox` at
+   `components/ui/shadcn-table/ST_Checkbox.tsx` per edition, a wrapper over shadcn's
+   `Checkbox` like `ST_Tooltip.tsx` over `tooltip`: it adds the indeterminate styling and
+   draws a dash (`MinusIcon`) for the indeterminate state, the part stays untouched.
+   `ST_SelectCheckbox`, `ST_FilterCheckbox` and `types.ts` (`CheckboxProps`) import it.
+   `registry/{radix,base}/components/ui/checkbox.tsx` are restored through `add-part.mjs`,
+   `checkbox` becomes a `registryDependency` on every edition and `forkedUi` leaves
+   `registry.ts` and `lib.mjs`; decision 2 holds with no exception and the standards bullet
+   loses the `checkbox` clause. Why: the fork is a deliberate design change, not a defect fix,
+   so decision 4 does not cover it, and shipping it under shadcn's own file name replaces the
+   user's `components/ui/checkbox.tsx` across their app. The aria tree already does the
+   wrapper inline in `ST_SelectCheckbox.tsx` (the aria part renders children), so `ST_Checkbox`
+   is an extraction there; the radix and base parts render no children, so those two wrappers
+   either overlay their own icon on the part or compose the primitive with shadcn's class
+   string. The gate is the decision 2 one: `pnpm add-part <edition> checkbox` leaves no diff.
+   - Upstream: shadcn-ui/ui#8042 (radix, auto-closed stale 2026-08-29) and #9373 (base, open,
+     issue #9357) already propose this; no new PR, a comment with our diff on #9373 at most.
+   - Ships as 0.6.1, `release:patch`: no visible change on any edition, the dash already
+     renders on all three.
+
+## Edition selector
+
+7. Base UI is the preselected edition wherever the reader picks one: the docs edition tabs
+   (`lib/base-tabs.mjs`, `defaultBase` in `lib/install.ts`) open on Base UI, and the Storybook
+   root (`storybook.shadcn-table.com/`) redirects to the Base UI build. Why: shadcn's own docs
+   default to Base UI since nova. Decided 2026-10-29, ships in 0.6.1.
+   - No edition lives at the Storybook root. The three builds sit under `/radix/`, `/base/`
+     and `/aria/` (`storybook:build` writes `storybook-static/radix`), and `/` redirects to
+     `/base/` with the query string kept, a Vercel redirect on the `storybook.` host in
+     `vercel.json`. Existing `/base/` and `/aria/` links keep working; old root links land on
+     Base UI, one toolbar click away from Radix UI. `staticEditionRoot`, `check-storybook.mjs`,
+     `smoke.mjs` and the docs `storybook-link.tsx` follow. Moving Base UI to the root instead
+     would have broken every `/base/` link and silently flipped every root link.
+   - The Storybook edition tool marks the current edition with a visible selected state on its
+     button, nothing else; today all three buttons look the same.
+   - `REFERENCE_EDITION` stays `radix` for `check-bases.mjs`: it is the diff baseline, not a
+     default. Dev ports stay 6006 radix, 6007 base, 6008 aria; `editionHref` maps by a port
+     table instead of `EDITIONS` order if the order changes.
+   - No default registry anywhere. The committed `registry.json` names every item with its
+     edition: `editionItemName` returns `${name}-${edition}` for all three editions, so the
+     radix items become `shadcn-table-radix`, `shadcn-table-radix-locale-*`,
+     `example-<slug>-radix`. Repo-internal: `hosted.mjs` already serves the plain name under
+     `/r/<edition>/`, so the hosted output is byte-identical and nothing changes for users.
+   - GitHub shorthand aliases (added 2026-10-29). `npx shadcn add anindosarker/shadcn-table/<item>`
+     reads the committed catalog and cannot pick an edition: no `{style}` substitution, static
+     item content (the hosted `@st` namespace does pick it, through `{style}`). So `build.mjs`
+     emits the plain names (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`) as
+     generated aliases of the Base UI items, same `files`, description naming the alias, in
+     line with Base UI as the default a reader sees. Before 0.6.1 the plain names were the
+     Radix UI items; that path was never documented and the changelog names the change.
+     `hosted.mjs` ignores the aliases.

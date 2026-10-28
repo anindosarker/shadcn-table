@@ -60,7 +60,11 @@ Parts are per base. From the repo root:
 pnpm add-part radix tooltip        # registry/radix/components/ui/tooltip.tsx, style radix-nova
 pnpm add-part base tooltip         # registry/base/components/ui/tooltip.tsx, style base-nova
 pnpm add-part aria tooltip         # registry/aria/components/ui/tooltip.tsx, style aria-nova
+pnpm add-part radix --all          # re-adds every part the base has, forks skipped
 ```
+
+After `pnpm add-part <base> --all`, `git status --short` must print nothing: the committed
+parts are the script's output.
 
 `scripts/registry/add-part.mjs` fetches the part in the base's style
 (`registry/<base>/components.json`), lets the shadcn CLI install it into a scratch project so

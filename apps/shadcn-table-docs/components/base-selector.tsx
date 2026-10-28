@@ -56,7 +56,7 @@ const readStored = (): Base => {
 const getSnapshot = () => sessionBase ?? readStored();
 const getServerSnapshot = () => defaultBase;
 
-/** The selected base; Radix UI on the server and until the stored pick is read. */
+/** The selected base; defaultBase (Base UI) on the server and until the stored pick is read. */
 export const useBase = () =>
   useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
@@ -148,8 +148,9 @@ export const BaseSwitch = ({ className }: { className?: string }) => {
 };
 
 /**
- * Radix UI | Base UI | React Aria tabs around content that differs per base (the install
- * commands). Same group as the header switch, so either changes both.
+ * Radix UI | Base UI | React Aria tabs around content that differs per base
+ * (the install commands), Base UI first shown. Same group as the header
+ * switch, so either changes both.
  */
 export const BaseTabs = ({
   radix,

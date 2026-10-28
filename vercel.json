@@ -12,6 +12,14 @@
       "outputDirectory": "storybook-static"
     }
   },
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": { "pre": "storybook." } }],
+      "destination": "/base/",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

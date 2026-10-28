@@ -1,5 +1,5 @@
-// Item definition of the Radix edition: `shadcn-table` plus one locale item
-// per language, both read by scripts/registry/build.mjs (Node strips the
+// Item definition of the Radix edition: `shadcn-table-radix` plus one locale
+// item per language, both read by scripts/registry/build.mjs (Node strips the
 // types). Every file of this tree's components/ui/shadcn-table is an item
 // file and every `@/components/ui/<part>` import is a registryDependency; see
 // scripts/registry/lib.mjs.
@@ -8,7 +8,7 @@ import { baseItems, HOMEPAGE } from '../../scripts/registry/lib.mjs';
 
 const items = baseItems({
   dir: import.meta.dirname,
-  name: 'shadcn-table',
+  name: 'shadcn-table-radix',
   title: 'Shadcn Table',
   description:
     'A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.',
@@ -25,9 +25,6 @@ const items = baseItems({
     { name: 'radix-ui' },
   ],
   devDependencies: [{ name: 'tw-animate-css' }],
-  // shadcn parts the item ships as its own files (checkbox: minus icon for
-  // the indeterminate state) instead of as registryDependencies.
-  forkedUi: ['checkbox'],
 });
 
 registryItemSchema.array().parse(items);

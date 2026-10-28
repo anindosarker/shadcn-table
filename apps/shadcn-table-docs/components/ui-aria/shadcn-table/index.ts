@@ -22,6 +22,7 @@ export * from '@/components/ui-aria/shadcn-table/hooks/useST_TableInstance';
 export * from '@/components/ui-aria/shadcn-table/hooks/useST_TableOptions';
 
 export * from '@/components/ui-aria/shadcn-table/ShadcnTable';
+export * from '@/components/ui-aria/shadcn-table/ST_Checkbox';
 export * from '@/components/ui-aria/shadcn-table/ST_Tooltip';
 export * from '@/components/ui-aria/shadcn-table/components/body/ST_TableBody';
 export * from '@/components/ui-aria/shadcn-table/components/body/ST_TableBodyCell';
