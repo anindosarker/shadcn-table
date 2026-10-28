@@ -9,8 +9,26 @@ date; merging it publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Changed
+
+- Base UI is the edition shown first: the docs edition tabs and the command bar open on Base UI
+  until the reader picks one (a stored pick is kept), and the Storybook root
+  (`storybook.shadcn-table.com/`) redirects to the Base UI build. The three Storybook builds
+  live under `/radix/`, `/base/` and `/aria/`; `/base/` and `/aria/` links keep working, old
+  root links land on Base UI. The Storybook edition tool marks the current edition's button.
+- Every committed registry item is named by its edition: the GitHub-namespace addresses of the
+  Radix UI items are `anindosarker/shadcn-table/shadcn-table-radix`,
+  `shadcn-table-radix-locale-<code>` and `example-<slug>-radix`. The plain GitHub addresses
+  (`anindosarker/shadcn-table/shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`)
+  now install the Base UI edition, as aliases of the `-base` items; before, they installed
+  the Radix UI items. The hosted item names are unchanged:
+  `/r/radix/shadcn-table.json`, `/r/radix/shadcn-table-locale-<code>.json` and
+  `/r/radix/example-<slug>.json` as before.
+
 ### Fixed
 
+- The Base UI and React Aria hosted locale items' descriptions name the hosted item
+  `shadcn-table` (`/r/base/` and `/r/aria/` said `shadcn-table-base` and `shadcn-table-aria`).
 - shadcn parts re-added by a deterministic `add-part`: `pnpm add-part <edition> <part>` now
   writes the same bytes whatever the invocation order (the `'use client'` directive is set per
   file from the upstream item, `font-heading` survives the CLI's class resolution), and every

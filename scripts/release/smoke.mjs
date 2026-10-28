@@ -12,18 +12,19 @@
 //     the ones hosted.mjs derives from the committed catalogs (the main item as
 //     shadcn-table, its locales as shadcn-table-locale-<code>, the edition's
 //     example items of the docs app as example-<slug>)
-//   Storybook / for the reference edition, /<edition>/ for every other: 200 HTML
+//   Storybook /<edition>/ for every edition: 200 HTML; / redirects to
+//     /<DEFAULT_EDITION>/ with the query kept (the vercel.json redirect)
 //   /SKILL.md: 200, names every edition (EDITION_LABELS)
 //   /llms.txt: 200
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  DEFAULT_EDITION,
   EDITION_LABELS,
   EDITIONS,
   editionExampleItems,
   editionItems,
-  REFERENCE_EDITION,
 } from '../../packages/shadcn-table/scripts/registry/lib.mjs';
 
 const SITE = 'https://www.shadcn-table.com';
@@ -143,10 +144,33 @@ for (const edition of EDITIONS) {
   }
 }
 
-// Radix at the Storybook root, every other edition under /<edition>/.
+// Every edition under /<edition>/; the root redirects to the default edition
+// (vercel.json), query string included.
 for (const edition of EDITIONS) {
-  const url = `${STORYBOOK}/${edition === REFERENCE_EDITION ? '' : `${edition}/`}`;
+  const url = `${STORYBOOK}/${edition}/`;
   checkStatus(`${url} 200 HTML`, await get(url), 'text/html');
+}
+{
+  const query = '?path=/story/x';
+  const url = `${STORYBOOK}/${query}`;
+  try {
+    const res = await fetch(url, { redirect: 'manual' });
+    const location = new URL(res.headers.get('location') ?? '', STORYBOOK);
+    check(
+      `${url} redirects to /${DEFAULT_EDITION}/${query}`,
+      res.status >= 300 &&
+        res.status < 400 &&
+        location.pathname === `/${DEFAULT_EDITION}/` &&
+        location.search === query,
+      `status=${res.status} location=${location.href}`,
+    );
+  } catch (error) {
+    check(
+      `${url} redirects to /${DEFAULT_EDITION}/${query}`,
+      false,
+      `error=${String(error?.cause ?? error)}`,
+    );
+  }
 }
 
 const skillUrl = `${SITE}/SKILL.md`;

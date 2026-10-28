@@ -6,12 +6,13 @@ import type { Base } from '@/lib/install';
 import { trackStorybookOpened } from '@/lib/analytics';
 
 /**
- * One Storybook host serves every tree: the Radix UI build at the root, the
- * Base UI build under /base/ and the React Aria build under /aria/
- * (packages/shadcn-table `storybook:build:base`, `storybook:build:aria`).
+ * One Storybook host serves every tree, each build under its edition:
+ * /radix/, /base/ and /aria/ (packages/shadcn-table `storybook:build`,
+ * `storybook:build:base`, `storybook:build:aria`); the root redirects to
+ * /base/.
  */
 export const storybookUrl: Record<Base, string> = {
-  radix: 'https://storybook.shadcn-table.com',
+  radix: 'https://storybook.shadcn-table.com/radix/',
   base: 'https://storybook.shadcn-table.com/base/',
   aria: 'https://storybook.shadcn-table.com/aria/',
 };

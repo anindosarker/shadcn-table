@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { REFERENCE_EDITION } from './editions.mjs';
+import { DEFAULT_EDITION, EDITION_LABELS } from './editions.mjs';
 
 export const PKG = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -21,6 +21,7 @@ export const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 const LIB_REL = 'components/ui/shadcn-table';
 // The edition list (editions.mjs), re-exported for the registry scripts.
 export {
+  DEFAULT_EDITION,
   EDITION_LABELS,
   EDITIONS,
   editionItemName,
@@ -167,17 +168,58 @@ export const baseItems = ({
   return [main, ...locales];
 };
 
+// Whether a committed item name carries the edition: `<name>-<edition>`
+// (editionItemName) or a locale item of one, `<name>-<edition>-locale-<code>`.
+// The GitHub shorthand aliases (aliasItems) carry none.
+const hasEditionName = (name, edition) =>
+  name.endsWith(`-${edition}`) || name.includes(`-${edition}-locale-`);
+
+/**
+ * The GitHub shorthand aliases (decisions.md, decision 7): one copy of every
+ * DEFAULT_EDITION item under its plain name (`shadcn-table`,
+ * `shadcn-table-locale-<code>`, `example-<slug>`), because
+ * `shadcn add anindosarker/shadcn-table/<name>` reads the committed catalog
+ * and cannot pick an edition. Same type, files and dependencies as the
+ * source item; only the name and the description change. build.mjs and
+ * examples.mjs append them to the catalogs they write; editionItems and
+ * editionExampleItems skip them, so hosted.mjs never serves them.
+ *
+ * @template {{ name: string, description?: string }} T
+ * @param {T[]} items the DEFAULT_EDITION items, named by editionItemName
+ * @returns {T[]}
+ */
+export const aliasItems = (items) =>
+  items.map((item) => {
+    const suffix = `-${DEFAULT_EDITION}`;
+    const name = item.name.endsWith(suffix)
+      ? item.name.slice(0, -suffix.length)
+      : item.name.replace(`${suffix}-locale-`, '-locale-');
+    if (name === item.name) {
+      throw new Error(
+        `aliasItems: ${item.name} is not a ${DEFAULT_EDITION} item name`,
+      );
+    }
+    return {
+      ...item,
+      name,
+      description: `Alias of ${item.name}: the GitHub shorthand ${GITHUB_REPO}/${name} installs the ${EDITION_LABELS[DEFAULT_EDITION]} edition.`,
+    };
+  });
+
 /**
  * One edition's items in a catalog built from the committed registry.json:
  * the items whose files live in registry/<edition>, split into the main item
- * and its locale items (named `<main>-locale-<code>`).
+ * and its locale items (named `<main>-locale-<code>`). The GitHub shorthand
+ * aliases (aliasItems) share the default edition's files and are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
  * @param {string} edition
  */
 export const editionItems = (catalog, edition) => {
-  const own = catalog.items.filter((item) =>
-    item.files.every((file) => file.path.startsWith(`registry/${edition}/`)),
+  const own = catalog.items.filter(
+    (item) =>
+      hasEditionName(item.name, edition) &&
+      item.files.every((file) => file.path.startsWith(`registry/${edition}/`)),
   );
   const main = own.find((item) =>
     own.every(
@@ -195,8 +237,9 @@ export const editionItems = (catalog, edition) => {
  * One edition's example items in the docs catalog (examples.mjs writes one
  * item per example and edition, found by the `examples/<edition>/` file
  * paths), each renamed to its hosted name: the plain `example-<slug>`,
- * which editionItemName suffixes with `-<edition>` outside the reference.
+ * which editionItemName suffixes with `-<edition>` in the committed catalog.
  * hosted.mjs serves them in /r/<edition>/, smoke.mjs expects them there.
+ * The GitHub shorthand aliases (aliasItems), already plain, are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
  * @param {string} edition
@@ -204,14 +247,15 @@ export const editionItems = (catalog, edition) => {
 export const editionExampleItems = (catalog, edition) => {
   const suffix = `-${edition}`;
   return catalog.items
-    .filter((item) =>
-      item.files.every((file) => file.path.startsWith(`examples/${edition}/`)),
+    .filter(
+      (item) =>
+        item.name.endsWith(suffix) &&
+        item.files.every((file) =>
+          file.path.startsWith(`examples/${edition}/`),
+        ),
     )
     .map((item) => ({
       ...item,
-      name:
-        edition === REFERENCE_EDITION
-          ? item.name
-          : item.name.slice(0, -suffix.length),
+      name: item.name.slice(0, -suffix.length),
     }));
 };
