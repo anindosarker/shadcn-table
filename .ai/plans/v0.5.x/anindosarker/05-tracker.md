@@ -24,8 +24,10 @@ Branch `v0.5/release-flow` from `claude/review` at `bf0e29a5`, worktree `07`.
 - `version-pr.mjs` run twice in a scratch clone against a bare remote with a fake `gh`: first opens, second edits; one bot commit on `release/next`, three files changed, the PR body is the closed section plus the merge line.
 - `comment.mjs v0.5.0 --dry-run` lists #39, #41, #42; `v0.4.0` lists #34 to #38.
 - `node --check` on every `scripts/release/*.mjs` (no ESLint config covers root scripts); `pnpm lint` passes.
+- Plan 2.2, `pr.yml` on a real `pull_request` event: PR #43 (`v0.5/release-flow` into `claude/review`, CI only, label `release:patch`) at `6eec192d`. Run `40679804670` (`opened`, checks group): every job green, `release impact`, `bases`, `library` x3, `test` x3, `docs`, `registry` and the five `install` apps (fresh, existing, base, aria, nextjs). Run `40679804581` (`labeled`, labels group): `release impact` alone, prints `Ships as 0.5.1`, the matrix skipped. The `opened` event carries no labels when `gh pr create --label` adds them, so that run's `release impact` printed `no release` (no shipped files here); the `labeled` run is the one that reads the label.
 
 ### Owner attention
 
 - The repo setting "Allow GitHub Actions to create and approve pull requests" is off (`can_approve_pull_request_reviews: false`), so the `version` job's `gh pr create` fails until it is turned on (Settings, Actions, General; or `gh api -X PUT repos/anindosarker/shadcn-table/actions/permissions/workflow -f default_workflow_permissions=read -F can_approve_pull_request_reviews=true`). The script then fails with that hint after pushing `release/next`.
+- For 0.5.1: `CHANGELOG.md` `## Unreleased` holds one `### Changed` line (release flow), which alone computes 0.6.0 while 0.x. The pull request that merges into `master` (`dev` into `master`) must carry `release:patch` so the version job computes 0.5.1.
 - A PR opened with `GITHUB_TOKEN` triggers no workflow, so the version PR shows no `pr.yml` checks. No ruleset requires checks today, so it merges.
