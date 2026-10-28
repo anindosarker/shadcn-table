@@ -69,9 +69,17 @@ export const ST_TableHead = <TData extends ST_RowData>({
         return (
           <thead
             {...tableHeadProps}
-            ref={(ref: HTMLTableSectionElement) => {
-              tableHeadRef.current = ref;
-              assignRef(tableHeadProps?.ref, ref);
+            ref={(node: HTMLTableSectionElement) => {
+              tableHeadRef.current = node;
+              const cleanup = assignRef(tableHeadProps?.ref, node);
+              return () => {
+                if (typeof cleanup === 'function') {
+                  cleanup();
+                } else {
+                  assignRef(tableHeadProps?.ref, null);
+                }
+                tableHeadRef.current = null;
+              };
             }}
             className={cn(
               tableHeadVariants({

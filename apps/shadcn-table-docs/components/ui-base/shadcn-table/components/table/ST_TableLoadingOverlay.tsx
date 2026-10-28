@@ -16,13 +16,7 @@ export const ST_TableLoadingOverlay = ({
 }: ST_TableLoadingOverlayProps) => {
   const table = useSTContext();
   const {
-    options: {
-      id,
-      localization,
-      // Note: mrtTheme dropped project-wide: bg-background/50 in the cva maps alpha(baseBackgroundColor, 0.5)
-      // mrtTheme: { baseBackgroundColor },
-      stCircularProgressProps,
-    },
+    options: { id, localization, stCircularProgressProps },
   } = table;
 
   const circularProgressProps = {
@@ -33,8 +27,6 @@ export const ST_TableLoadingOverlay = ({
   return (
     <div className={cn(tableLoadingOverlayVariants())}>
       {circularProgressProps?.Component ?? (
-        // Note: LoaderCircleIcon animate-spin → ui/Spinner (own animate-spin).
-        // MUI CircularProgress's 40px default drops; Spinner's size-4 wins.
         <Spinner
           aria-label={localization.noRecordsToDisplay}
           id={`st-progress-${id}`}

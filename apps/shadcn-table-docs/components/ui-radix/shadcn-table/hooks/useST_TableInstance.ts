@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { shallow, useSelector } from '@tanstack/react-store';
 import { type TableOptions, type TableState } from '@tanstack/react-table';
 import {
   type ST_ColumnDef,
@@ -53,12 +54,9 @@ const transformStateDefaults = {
 };
 
 /**
- * Selects the state the option-time transforms below read on a render: the
- * filter modes written onto the columns and passed as `globalFilterFn`, the
- * grouping and creating row that add display columns, and the loading flags
- * and page size behind the skeleton rows. Passed as the table selector, it
- * re-renders the owner on these slices only; every other state change
- * reaches the components through their own subscriptions.
+ * Passed as the table selector, it re-renders the owner on these slices only;
+ * every other state change reaches the components through their own
+ * subscriptions.
  */
 export const selectST_TransformState = (state: TableState<ST_Features>) => ({
   columnFilterFns: state.columnFilterFns,
@@ -70,25 +68,20 @@ export const selectST_TransformState = (state: TableState<ST_Features>) => ({
   showSkeletons: state.showSkeletons,
 });
 
-/**
- * The MRT hook that wraps the TanStack useTable hook and adds additional functionality
- * @param definedTableOptions - table options with proper defaults set
- * @param selector - the state that re-renders the owner, all of it by default;
- * with a narrower selector `table.state` holds only the selection
- * @returns the MRT table instance
- */
-export const useST_TableInstance = <TData extends ST_RowData>(
+export const useST_TableInstance = <
+  TData extends ST_RowData,
+  TSelected = ST_TableState<TData>,
+>(
   definedTableOptions: ST_DefinedTableOptions<TData>,
-  selector?: (state: TableState<ST_Features>) => unknown,
-): ST_TableInstance<TData> => {
+  selector?: (state: TableState<ST_Features>) => TSelected,
+): ST_TableInstance<TData, TSelected> => {
   // One table hook per mounted table: the call's `filterFns`, `sortFns` and
   // `aggregationFns` are registered on its features, read on the first render
   const [{ useAppTable }] = useState(() =>
     createSTTableHook(definedTableOptions),
   );
-  const tableRef = useRef<ST_TableInstance<TData> | null>(null);
+  const tableRef = useRef<ST_TableInstance<TData, TSelected> | null>(null);
 
-  //transform initial state with proper column order and filter modes
   const initialState: Partial<ST_TableState<TData>> = useMemo(() => {
     const initState = definedTableOptions.initialState ?? {};
     initState.columnFilterFns = Object.assign(
@@ -141,7 +134,6 @@ export const useST_TableInstance = <TData extends ST_RowData>(
     } as ST_TableState<TData>,
   };
 
-  //don't recompute columnDefs while resizing column or dragging column/row
   const columnDefsRef = useRef<
     ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>[]
   >([]);
@@ -184,7 +176,6 @@ export const useST_TableInstance = <TData extends ST_RowData>(
         });
   columnDefsRef.current = columns;
 
-  //if loading, generate blank rows to show skeleton loaders
   const data = useMemo(
     () =>
       (statefulTableOptions.state.isLoading ||
@@ -225,9 +216,13 @@ export const useST_TableInstance = <TData extends ST_RowData>(
       initialState,
     } as Omit<TableOptions<ST_Features, TData>, 'features'>,
     selector,
-  ) as unknown as ST_TableInstance<TData>;
+  ) as unknown as ST_TableInstance<TData, TSelected>;
 
   tableRef.current = table;
+
+  // The transforms above run on owner renders, so the owner follows their
+  // slices whatever `selector` picks for `table.state`.
+  useSelector(table.store, selectST_TransformState, { compare: shallow });
 
   useST_Effects(table);
 

@@ -61,7 +61,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
 
         const footerGroups = table.getFooterGroups();
 
-        //if no footer cells at all, skip footer
         if (
           !footerGroups.some((footerGroup) =>
             footerGroup.headers?.some(
@@ -78,9 +77,17 @@ export const ST_TableFooter = <TData extends ST_RowData>({
         return (
           <tfoot
             {...tableFooterProps}
-            ref={(ref: HTMLTableSectionElement) => {
-              tableFooterRef.current = ref;
-              assignRef(tableFooterProps?.ref, ref);
+            ref={(node: HTMLTableSectionElement) => {
+              tableFooterRef.current = node;
+              const cleanup = assignRef(tableFooterProps?.ref, node);
+              return () => {
+                if (typeof cleanup === 'function') {
+                  cleanup();
+                } else {
+                  assignRef(tableFooterProps?.ref, null);
+                }
+                tableFooterRef.current = null;
+              };
             }}
             className={cn(
               tableFooterVariants({

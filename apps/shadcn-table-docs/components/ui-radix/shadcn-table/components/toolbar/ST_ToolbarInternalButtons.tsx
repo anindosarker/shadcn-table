@@ -13,7 +13,6 @@ import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHo
 
 export type ST_ToolbarInternalButtonsProps = DivProps;
 
-// Note: base maps MRT's sx (alignItems: 'center', display: 'flex', zIndex: 3).
 const toolbarInternalButtonsVariants = cva('z-[3] flex items-center');
 
 export const ST_ToolbarInternalButtons = <TData extends ST_RowData>({

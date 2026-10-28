@@ -18,10 +18,6 @@ import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHoo
 
 export type ST_BottomToolbarProps = DivProps;
 
-// Note: base maps MRT's shared getCommonToolbarStyles (min-h-14 = 3.5rem,
-// bg-background = baseBackgroundColor) plus the bottom-toolbar extras (inset
-// boxShadow, left/right pinning); the fullscreen variant maps
-// `position: isFullScreen ? 'fixed' : 'relative'`.
 const bottomToolbarVariants = cva(
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out shadow-[inset_0_1px_2px_-1px_rgba(97,97,97,0.5)] left-0 right-0',
   {
@@ -97,10 +93,16 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
         <div
           {...toolbarProps}
           ref={(node: HTMLDivElement) => {
-            if (node) {
-              bottomToolbarRef.current = node;
-              assignRef(toolbarProps?.ref, node);
-            }
+            bottomToolbarRef.current = node;
+            const cleanup = assignRef(toolbarProps?.ref, node);
+            return () => {
+              if (typeof cleanup === 'function') {
+                cleanup();
+              } else {
+                assignRef(toolbarProps?.ref, null);
+              }
+              bottomToolbarRef.current = null;
+            };
           }}
           className={cn(
             bottomToolbarVariants({

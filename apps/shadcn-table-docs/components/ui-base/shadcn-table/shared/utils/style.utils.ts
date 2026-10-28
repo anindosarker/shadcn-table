@@ -11,12 +11,6 @@ import {
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
-// export const getSRTTheme = (...) => { ... };
-// Note: mrtTheme dropped project-wide; shadcn theme tokens replace it.
-
-// export const commonCellBeforeAfterStyles = { ... };
-// Note: Tailwind prefixes each class with its pseudo variant, so the fill is written literally at each use.
-
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   column,
 }: {
@@ -103,8 +97,6 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   return {
     className: cn(
       'bg-inherit',
-      // backgroundImage: 'inherit',
-      // Note: no ancestor sets a background-image without MUI Paper.
       layoutMode?.startsWith('grid') && 'flex',
       draggingColumn?.id === column.id || hoveredColumn?.id === column.id
         ? 'opacity-50'
@@ -144,9 +136,7 @@ export const getCommonTooltipProps = (
 ): Partial<ST_TooltipProps> => ({
   delayDuration: 1000,
   disableHoverableContent: true,
-  // enterNextDelay: 1000,
-  // Note: Base UI keeps the skip window on TooltipProvider (`timeout`); the
-  // delay applies through the TooltipProvider that ST_Tooltip wraps around
-  // each tooltip.
+  // Base UI applies the delay through the TooltipProvider that ST_Tooltip
+  // wraps around each tooltip.
   side,
 });
