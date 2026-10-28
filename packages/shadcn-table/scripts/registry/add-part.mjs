@@ -38,7 +38,8 @@ import { pathToFileURL } from 'node:url';
 import { EDITIONS, PKG, ROOT } from './lib.mjs';
 
 const [base, ...args] = process.argv.slice(2);
-if (!EDITIONS.includes(base) || args.length === 0) {
+const all = args.includes('--all');
+if (!EDITIONS.includes(base) || args.length === 0 || (all && args.length > 1)) {
   console.error(
     `usage: pnpm add-part <${EDITIONS.join('|')}> <part> [<part> ...] | --all`,
   );
@@ -74,8 +75,7 @@ const committedParts = async () => {
     .sort();
 };
 
-const parts =
-  args.length === 1 && args[0] === '--all' ? await committedParts() : args;
+const parts = all ? await committedParts() : args;
 
 const fetchItem = async (part) => {
   const url = `https://ui.shadcn.com/r/styles/${components.style}/${part}.json`;
