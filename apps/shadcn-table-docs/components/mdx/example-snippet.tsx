@@ -24,7 +24,7 @@ const LANGS: Record<string, string> = {
 /**
  * Server side: reads every source file of the example once (TS.tsx first,
  * subfolders included, the index.tsx wrapper left out; the base-neutral
- * source with its `@/components/ui/` imports, shown on both bases) and hands
+ * source with its `@/components/ui/` imports, shown on every base) and hands
  * the raw sources with their shiki language plus, per base, the install
  * command and the copy prompt to the client playground panel, which shows
  * them next to the lazily loaded live table of the selected base. Nothing is

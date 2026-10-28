@@ -1,6 +1,7 @@
-// Types of scripts/registry/lib.mjs for the per-base item definitions
-// (registry/<base>/registry.ts), which import the .mjs from TypeScript. Node
-// strips the types at run time; the editor checks against these signatures.
+// Types of scripts/registry/lib.mjs for the per-edition item definitions
+// (registry/<edition>/registry.ts), which import the .mjs from TypeScript.
+// Node strips the types at run time; the editor checks against these
+// signatures.
 import type { RegistryItem } from 'shadcn/schema';
 
 declare global {
@@ -18,6 +19,13 @@ export const PKG: string;
 export const ROOT: string;
 /** Absolute path of the docs app. */
 export const DOCS: string;
+export {
+  EDITION_LABELS,
+  EDITIONS,
+  REFERENCE_EDITION,
+  resolveEdition,
+  type Edition,
+} from './editions.mjs';
 export const GITHUB_REPO: string;
 export const HOMEPAGE: string;
 /** True when build.mjs runs with `--dev`. */
@@ -46,3 +54,12 @@ export interface BaseItemsOptions {
  * non-English locale.
  */
 export function baseItems(base: BaseItemsOptions): RegistryItem[];
+
+/**
+ * One edition's main item and locale items in a catalog built from the
+ * committed registry.json.
+ */
+export function editionItems(
+  catalog: { items: RegistryItem[] },
+  edition: string,
+): { main: RegistryItem | undefined; locales: RegistryItem[] };

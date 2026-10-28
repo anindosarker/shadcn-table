@@ -6,6 +6,27 @@ written while the work happens, under `Unreleased`; `pnpm release <version>`
 renames that heading to the version and the date, and the release workflow
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Added
+
+- React Aria edition: a third edition of the table on shadcn's React Aria parts (`aria-nova`
+  style, `react-aria-components`), same API. Registry item `shadcn-table-aria` plus its 38
+  locale items (`shadcn-table-aria-locale-<code>`). Install on an `aria-*` style with
+  `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json`, or
+  `pnpm dlx shadcn@latest add @st/shadcn-table` with the `@st` namespace registered.
+- Docs: the edition switch offers Radix UI, Base UI and React Aria; every example renders
+  on the selected edition, and the install page, the agent skill and the registry addresses
+  list the React Aria commands.
+
+### Changed
+
+- `ST_PartPropTypes` gains `button` and `select`. `table.options` and `column.columnDef`
+  hold the button and select `st*Props` (`stCopyButtonProps`, `stExpandButtonProps`,
+  `stPaginationProps` and the like) tree-neutral, like the checkbox, slider and dialog
+  ones, so one program can hold several editions; the options as written
+  (`ST_TableOptions`, `ST_ColumnDef`) keep the edition's types.
+
 ## 0.4.0 - 2026-10-28
 
 ### Breaking

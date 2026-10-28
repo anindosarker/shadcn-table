@@ -2,7 +2,11 @@ import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui-base/button';
 import { cn } from '@/lib/utils';
-import { type ButtonProps } from '@/components/ui-base/shadcn-table/types';
+import {
+  type ButtonProps,
+  type ST_RowData,
+  type ST_TableOptions,
+} from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
@@ -31,11 +35,18 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
     options: {
       icons: { KeyboardDoubleArrowDownIcon },
       localization,
-      stExpandAllButtonProps,
       renderDetailPanel,
     },
     toggleAllRowsExpanded,
   } = table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Button.
+  const {
+    stExpandAllButtonProps,
+  }: Pick<
+    ST_TableOptions<ST_RowData>,
+    'stExpandAllButtonProps'
+  > = table.options;
 
   const iconButtonProps = {
     ...parseFromValuesOrFunc(stExpandAllButtonProps, {

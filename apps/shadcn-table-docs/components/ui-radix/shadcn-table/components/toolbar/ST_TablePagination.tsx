@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import {
   type ST_PaginationProps,
   type ST_RowData,
+  type ST_TableOptions,
   type SelectProps,
 } from '@/components/ui-radix/shadcn-table/types';
 import {
@@ -67,10 +68,14 @@ export const ST_TablePagination = <TData extends ST_RowData>({
       icons: { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon },
       id,
       localization,
-      stPaginationProps,
       paginationDisplayMode,
     },
   } = table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Select.
+  const {
+    stPaginationProps,
+  }: Pick<ST_TableOptions<TData>, 'stPaginationProps'> = table.options;
 
   const paginationProps = {
     ...parseFromValuesOrFunc(stPaginationProps, {

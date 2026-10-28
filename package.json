@@ -20,10 +20,11 @@
     "check:bases": "node packages/shadcn-table/scripts/registry/check-bases.mjs",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook": "turbo run storybook --filter=shadcn-table",
-    "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook(:base)?$/\"",
+    "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook(:base|:aria)?$/\"",
     "storybook:build": "turbo run storybook:build --filter=shadcn-table",
     "test": "turbo run test --filter=shadcn-table",
-    "test:base": "turbo run test:base --filter=shadcn-table"
+    "test:base": "turbo run test:base --filter=shadcn-table",
+    "test:aria": "turbo run test:aria --filter=shadcn-table"
   },
   "devDependencies": {
     "concurrently": "^9.2.5",

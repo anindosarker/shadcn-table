@@ -65,7 +65,7 @@ async function commandBarBase(page, check) {
   const items = page.getByRole('menuitemradio');
   check(
     'base menu items',
-    (await items.allTextContents()).join(',') === 'Radix UI,Base UI',
+    (await items.allTextContents()).join(',') === 'Radix UI,Base UI,React Aria',
     (await items.allTextContents()).join(','),
   );
   check(
@@ -80,6 +80,17 @@ async function commandBarBase(page, check) {
     await command(),
   );
   check('base ui: tab label', /base ui/i.test(await label()), await label());
+  await pick('React Aria');
+  check(
+    'react aria: command',
+    (await command()).includes('/r/aria/'),
+    await command(),
+  );
+  check(
+    'react aria: tab label',
+    /react aria/i.test(await label()),
+    await label(),
+  );
   await pick('Radix UI');
   check(
     'radix ui again: command',
@@ -182,9 +193,12 @@ const checks = {
     check('install command', addCommand('radix', 'shadcn-table').test(txt));
     check(
       'compatibility sentence',
-      txt.includes('on the Radix UI or Base UI base') &&
-        txt.includes('React Aria is not supported in 0.4.0') &&
-        txt.includes('a React Aria edition is planned for 0.5'),
+      txt.includes('on the Radix UI, Base UI or React Aria base') &&
+        txt.includes('React Aria is supported since 0.5.0'),
+    );
+    check(
+      'aria style note',
+      txt.includes('aria-* style') && txt.includes('aria-nova'),
     );
     // The Base UI tab (the site-wide base group) switches both commands and
     // the header switch with them.
@@ -210,6 +224,33 @@ const checks = {
         )
         .textContent()) === 'Base UI',
     );
+    // The React Aria tab: same group, the aria commands.
+    await page
+      .locator('article [role="tab"]', { hasText: 'React Aria' })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+    txt = await article();
+    check(
+      'react aria tab: init on the react aria base',
+      txt.includes('shadcn@latest init --base aria'),
+    );
+    check(
+      'react aria tab: install command',
+      addCommand('aria', 'shadcn-table').test(txt),
+    );
+    check(
+      'react aria tab: header switch follows',
+      (await page
+        .locator(
+          '#nd-subnav [aria-label="shadcn base"] [role="tab"][data-active]',
+        )
+        .textContent()) === 'React Aria',
+    );
+    check(
+      'uninstall lists react-aria-components',
+      txt.includes('react-aria-components'),
+    );
     await page
       .locator('article [role="tab"]', { hasText: 'Radix UI' })
       .first()
@@ -229,6 +270,12 @@ const checks = {
     check(
       'namespace form',
       txt.includes('registry add @st=') && txt.includes('add @st/shadcn-table'),
+    );
+    check(
+      'one address per edition',
+      ['radix', 'base', 'aria'].every((base) =>
+        txt.includes(`/r/${base}/shadcn-table.json`),
+      ),
     );
     check(
       'skill install command',
@@ -314,7 +361,7 @@ const checks = {
 
 /**
  * OptionsSwitcher: `count` tabs, the one for this page active. The header's
- * base switch (components/base-selector.tsx) has two tabs of its own.
+ * base switch (components/base-selector.tsx) has three tabs of its own.
  */
 async function switcher(page, active, count, check) {
   const tabs = page.locator('[role="tab"]:not(#nd-subnav *)');

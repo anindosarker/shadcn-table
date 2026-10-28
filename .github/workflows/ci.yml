@@ -10,16 +10,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # The library exists once per shadcn base, two complete trees:
-  # registry/radix (the default scripts) and registry/base (the `:base`
-  # scripts, ST_BASE=base).
+  # The library exists once per edition, three complete trees:
+  # registry/radix (the default scripts), registry/base (the `:base` scripts,
+  # ST_BASE=base) and registry/aria (the `:aria` scripts, ST_BASE=aria).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        base: [radix, base]
+        base: [radix, base, aria]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -32,16 +32,21 @@ jobs:
         if: matrix.base == 'radix'
       - run: pnpm --filter shadcn-table tsc:baseui
         if: matrix.base == 'base'
+      - run: pnpm --filter shadcn-table tsc:aria
+        if: matrix.base == 'aria'
       - run: pnpm --filter shadcn-table lint
       - run: pnpm --filter shadcn-table storybook:build
         if: matrix.base == 'radix'
       - run: pnpm --filter shadcn-table storybook:build:base
         if: matrix.base == 'base'
+      - run: pnpm --filter shadcn-table storybook:build:aria
+        if: matrix.base == 'aria'
 
-  # A common library file must be byte-identical in both trees; the files that
-  # differ on purpose are listed in scripts/registry/base-diff.json.
+  # A common library file must be byte-identical in every tree; the files that
+  # differ on purpose from registry/radix are listed per edition in
+  # scripts/registry/<edition>-diff.json.
   bases:
-    name: bases (two-tree guard)
+    name: bases (edition guard)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base: [radix, base]
+        base: [radix, base, aria]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -70,6 +75,8 @@ jobs:
         if: matrix.base == 'radix'
       - run: pnpm test:base
         if: matrix.base == 'base'
+      - run: pnpm test:aria
+        if: matrix.base == 'aria'
 
   docs:
     name: docs (types, next build)

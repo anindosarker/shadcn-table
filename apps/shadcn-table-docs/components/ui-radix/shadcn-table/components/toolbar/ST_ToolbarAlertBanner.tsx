@@ -6,7 +6,10 @@ import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment } from 'react';
 import { Subscribe } from '@tanstack/react-table';
-import { type ST_RowData } from '@/components/ui-radix/shadcn-table/types';
+import {
+  type ST_RowData,
+  type ST_TableOptions,
+} from '@/components/ui-radix/shadcn-table/types';
 import { getST_SelectAllHandler } from '@/components/ui-radix/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-radix/shadcn-table/components/inputs/ST_SelectCheckbox';
@@ -43,7 +46,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
       icons: { CancelIcon },
       localization,
       manualPagination,
-      stToolbarAlertBannerChipProps,
       stToolbarAlertBannerProps,
       positionToolbarAlertBanner,
       renderToolbarAlertBannerContent,
@@ -51,6 +53,14 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
     },
     refs: { tableLayoutRef },
   } = table;
+  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
+  // the options as written (ST_TableOptions) type them for this tree's Button.
+  const {
+    stToolbarAlertBannerChipProps,
+  }: Pick<
+    ST_TableOptions<TData>,
+    'stToolbarAlertBannerChipProps'
+  > = table.options;
 
   const alertProps = {
     ...parseFromValuesOrFunc(stToolbarAlertBannerProps, {

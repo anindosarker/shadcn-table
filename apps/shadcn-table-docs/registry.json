@@ -240,9 +240,6 @@
           "type": "registry:component",
           "target": "@components/examples/custom-headless/makeData.ts"
         }
-      ],
-      "registryDependencies": [
-        "table"
       ]
     },
     {
