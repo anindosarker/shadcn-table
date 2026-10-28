@@ -8,12 +8,14 @@ import {
   useState,
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
+import { type FocusableElement, type Key } from 'react-aria-components';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import {
   Combobox,
   ComboboxChip,
+  ComboboxChipList,
   ComboboxChips,
   ComboboxChipsInput,
   ComboboxContent,
@@ -21,7 +23,6 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-  ComboboxValue,
   useComboboxAnchor,
 } from '@/components/ui/combobox';
 import {
@@ -239,19 +240,29 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     textFieldProps?.onChange?.(event);
   };
 
-  const handleAutocompleteInputChange = (newValue: string, reason: string) => {
-    // Choosing an item fills the input with its label; handleAutocompleteChange
-    // owns that case so the filter gets the option value.
-    if (reason === 'item-press') return;
+  // React Aria refills the input with the chosen item's label after
+  // onSelectionChange; handleAutocompleteChange owns that case so the filter
+  // gets the option value.
+  const itemPressLabel = useRef<string | null>(null);
+
+  const handleAutocompleteInputChange = (newValue: string) => {
+    const isItemPress = itemPressLabel.current === newValue;
+    itemPressLabel.current = null;
+    if (isItemPress) return;
+    // Typing departs from the chosen option, so blur keeps the typed text
+    // instead of committing the option again.
+    setAutocompleteValue(null);
     handleChange(newValue);
   };
 
-  const handleAutocompleteChange = (newValue: string | null) => {
+  const handleAutocompleteChange = (key: Key | null) => {
+    const newValue = key === null ? null : String(key);
     setAutocompleteValue(newValue);
     if (newValue === null) {
       handleChange('');
       return;
     }
+    itemPressLabel.current = optionLabel(newValue);
     setFilterValue(optionLabel(newValue));
     handleChangeDebounced(newValue);
   };
@@ -270,6 +281,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     } else if (isAutocompleteFilter) {
       setAutocompleteValue(null);
       setFilterValue('');
+      column.setFilterValue(undefined);
     } else {
       setFilterValue('');
       column.setFilterValue(undefined);
@@ -285,8 +297,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     }));
   };
 
-  const handleFilterMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleFilterMenuOpen = (event: MouseEvent<FocusableElement>) => {
+    if (event.currentTarget instanceof HTMLElement) {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const isMounted = useRef(false);
@@ -316,8 +330,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const hasFilterValue = (filterValue?.length ?? 0) > 0;
 
+  // The aria ComboboxInput clear button only clears a chosen option, not typed
+  // text, so the autocomplete field takes this clear button too.
   const endAdornment =
-    !isAutocompleteFilter &&
     !isDateFilter &&
     !filterChipLabel &&
     // Range fields are narrow, so the clear button takes no room until there
@@ -337,7 +352,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           <span>
             <InputGroupButton
               aria-label={localization.clearFilter}
-              disabled={!filterValue?.toString()?.length}
+              isDisabled={!filterValue?.toString()?.length}
               onClick={handleClear}
               size="icon-xs"
             >
@@ -408,6 +423,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   // Option values offered by the autocomplete list, already narrowed by the
   // typed text (createFilterOptions), so the combobox filters nothing.
+  // React Aria collections take objects with an id.
   const autocompleteItems = isAutocompleteFilter
     ? createFilterOptions<DropdownOption>()(
         dropdownOptions?.map((option) => getValueAndLabel(option)) ?? [],
@@ -416,11 +432,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             getValueAndLabel(option).label,
           inputValue: filterValue as string,
         },
-      ).map((option) => getValueAndLabel(option).value)
+      ).map((option) => ({ id: getValueAndLabel(option).value }))
     : [];
 
   const multiSelectItems = isMultiSelectFilter
-    ? (dropdownOptions?.map((option) => getValueAndLabel(option).value) ?? [])
+    ? (dropdownOptions?.map((option) => ({
+        id: getValueAndLabel(option).value,
+      })) ?? [])
     : [];
 
   // Shared by both comboboxes: the inner shadcn part brings its own border and
@@ -430,6 +448,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   return (
     <>
+      {/* The aria InputGroup (a React Aria Group) and ComboboxChipsInput take
+          no ref; the combobox anchor and the chips input are read off the wrapper. */}
       <div
         className={cn(
           filterTextFieldVariants(),
@@ -444,6 +464,18 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                   ? 'min-w-[96px]'
                   : 'min-w-auto',
         )}
+        ref={(node) => {
+          comboboxAnchor.current =
+            node?.querySelector<HTMLDivElement>(
+              ':scope > [data-slot="input-group"]',
+            ) ?? null;
+          if (node && isMultiSelectFilter) {
+            filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+              node.querySelector<HTMLInputElement>(
+                '[data-slot="combobox-chip-input"]',
+              )!;
+          }
+        }}
       >
         <InputGroup
           className={cn(
@@ -451,7 +483,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             // Chips wrap onto new lines, so the group may grow past its fixed height.
             isMultiSelectFilter && 'h-auto min-h-8',
           )}
-          ref={comboboxAnchor}
         >
           {startAdornment}
           {filterVariant?.startsWith('time') ? (
@@ -479,15 +510,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             // The input is the filter text field: typing filters right away,
             // choosing an option sets the filter to that option's value.
             <Combobox
-              filter={null}
+              aria-label={filterPlaceholder}
+              allowsCustomValue
               inputValue={(filterValue as string) ?? ''}
               items={autocompleteItems}
-              itemToStringLabel={optionLabel}
-              onInputValueChange={(value, { reason }) =>
-                handleAutocompleteInputChange(value, reason)
-              }
-              onValueChange={handleAutocompleteChange}
-              value={autocompleteValue}
+              onInputChange={handleAutocompleteInputChange}
+              onSelectionChange={handleAutocompleteChange}
+              selectedKey={autocompleteValue}
             >
               <ComboboxInput
                 type="text"
@@ -499,23 +528,28 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                   autocompleteProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}
-                showClear
               />
               <ComboboxContent anchor={comboboxAnchor}>
                 <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
                 <ComboboxList>
-                  {(value: string) => (
-                    <ComboboxItem key={value} value={value}>
-                      {optionLabel(value)}
-                      {optionCount(value)}
+                  {({ id }: { id: string }) => (
+                    <ComboboxItem id={id} key={id} textValue={optionLabel(id)}>
+                      {optionLabel(id)}
+                      {optionCount(id)}
                     </ComboboxItem>
                   )}
                 </ComboboxList>
               </ComboboxContent>
             </Combobox>
           ) : isSelectFilter ? (
-            // Radix Select raises no ChangeEvent, so a user onChange cannot fire.
-            <Select onValueChange={handleChange} value={filterValue as string}>
+            // React Aria Select raises no ChangeEvent, so a user onChange cannot fire.
+            <Select
+              isDisabled={!!filterChipLabel || textFieldProps.disabled}
+              onSelectionChange={(key) => handleChange(key ?? '')}
+              placeholder={filterPlaceholder}
+              // React Aria shows the placeholder for null, never for "".
+              selectedKey={(filterValue as string) || null}
+            >
               <SelectTrigger
                 aria-label={filterPlaceholder}
                 className={cn(
@@ -524,7 +558,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                   hasFilterValue && 'pr-9',
                   textFieldProps.className,
                 )}
-                disabled={!!filterChipLabel || textFieldProps.disabled}
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => {
                   e.stopPropagation();
@@ -532,17 +565,20 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                     e as unknown as KeyboardEvent<HTMLInputElement>,
                   );
                 }}
-                title={filterPlaceholder}
               >
-                <SelectValue placeholder={filterPlaceholder} />
+                <SelectValue />
               </SelectTrigger>
-              <SelectContent position="popper">
-                {/* Radix items cannot carry value "": the placeholder lives on SelectValue. */}
+              <SelectContent>
+                {/* The empty selection is the placeholder, on Select. */}
                 {textFieldProps.children ??
                   dropdownOptions?.map((option, index) => {
                     const { label, value } = getValueAndLabel(option);
                     return (
-                      <SelectItem key={`${index}-${value}`} value={value}>
+                      <SelectItem
+                        id={value}
+                        key={`${index}-${value}`}
+                        textValue={`${label}${optionCount(value)}`}
+                      >
                         {label}{' '}
                         {!columnDef.filterSelectOptions &&
                           `(${facetedUniqueValues.get(value)})`}
@@ -554,11 +590,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           ) : isMultiSelectFilter ? (
             // Combobox items raise no ChangeEvent, so a user onChange cannot fire.
             <Combobox
-              disabled={!!filterChipLabel || textFieldProps.disabled}
+              aria-label={filterPlaceholder}
+              isDisabled={!!filterChipLabel || textFieldProps.disabled}
               items={multiSelectItems}
-              itemToStringLabel={optionLabel}
-              multiple
-              onValueChange={(values) => handleChange(values)}
+              onChange={(values) => handleChange(values.map(String))}
+              selectionMode="multiple"
               value={Array.isArray(filterValue) ? filterValue : []}
             >
               <ComboboxChips
@@ -569,37 +605,41 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
-                <ComboboxValue>
-                  {(values: string[]) => (
-                    <>
-                      {values.map((value) => (
-                        <ComboboxChip className="h-5 text-xs" key={value}>
-                          {optionLabel(value)}
-                        </ComboboxChip>
-                      ))}
-                      <ComboboxChipsInput
-                        aria-label={filterPlaceholder}
-                        className="min-w-4"
-                        ref={commonTextFieldProps.ref}
-                        onKeyDown={(e) => {
-                          e.stopPropagation();
-                          textFieldProps.onKeyDown?.(e);
-                        }}
-                        placeholder={values.length ? '' : filterPlaceholder}
-                        title={filterPlaceholder}
-                      />
-                    </>
+                <ComboboxChipList>
+                  {({ id }: { id: string }) => (
+                    <ComboboxChip
+                      className="h-5 text-xs"
+                      id={id}
+                      key={id}
+                      textValue={optionLabel(id)}
+                    >
+                      {optionLabel(id)}
+                    </ComboboxChip>
                   )}
-                </ComboboxValue>
+                </ComboboxChipList>
+                <ComboboxChipsInput
+                  aria-label={filterPlaceholder}
+                  className="min-w-4"
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    textFieldProps.onKeyDown?.(e);
+                  }}
+                  placeholder={filterValue.length ? '' : filterPlaceholder}
+                  title={filterPlaceholder}
+                />
               </ComboboxChips>
               <ComboboxContent anchor={comboboxAnchor}>
                 <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
                 <ComboboxList>
                   {textFieldProps.children ??
-                    ((value: string) => (
-                      <ComboboxItem key={value} value={value}>
-                        {optionLabel(value)}
-                        {optionCount(value)}
+                    (({ id }: { id: string }) => (
+                      <ComboboxItem
+                        id={id}
+                        key={id}
+                        textValue={optionLabel(id)}
+                      >
+                        {optionLabel(id)}
+                        {optionCount(id)}
                       </ComboboxItem>
                     ))}
                 </ComboboxList>

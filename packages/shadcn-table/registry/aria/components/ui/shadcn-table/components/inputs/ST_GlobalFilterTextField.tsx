@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
+import { type FocusableElement } from 'react-aria-components';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   InputGroup,
@@ -76,8 +77,10 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     handleChangeDebounced(event);
   };
 
-  const handleGlobalFilterMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleGlobalFilterMenuOpen = (event: MouseEvent<FocusableElement>) => {
+    if (event.currentTarget instanceof HTMLElement) {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const handleClear = () => {
@@ -100,12 +103,13 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showGlobalFilter}>
       {(showGlobalFilter) => (
-        // The st-collapsible-* keyframes ship in the hoisted style below.
-        <Collapsible open={showGlobalFilter}>
+        // React Aria sets --disclosure-panel-width, which the st-collapsible-* keyframes read;
+        // the panel marks its state only through aria-hidden.
+        <Collapsible isExpanded={showGlobalFilter}>
           <style href="st-collapsible" precedence="low">
             {stCollapsibleKeyframes}
           </style>
-          <CollapsibleContent className="data-[state=closed]:animate-[st-collapsible-left_300ms_var(--ease-in-out)] data-[state=open]:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
+          <CollapsibleContent className="aria-hidden:animate-[st-collapsible-left_300ms_var(--ease-in-out)] aria-[hidden=false]:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
             <InputGroup>
               {enableGlobalFilterModes ? (
                 <InputGroupAddon align="inline-start">
@@ -140,7 +144,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
                   <span>
                     <InputGroupButton
                       aria-label={localization.clearSearch}
-                      disabled={!searchValue?.length}
+                      isDisabled={!searchValue?.length}
                       onClick={handleClear}
                       size="icon-sm"
                     >

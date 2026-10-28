@@ -165,20 +165,30 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         if (isSelectEdit) {
           const select = (
             <Select
+              isDisabled={
+                parseFromValuesOrFunc(columnDef.enableEditing, row) === false
+              }
               name={column.id}
               onOpenChange={setOpen}
-              onValueChange={(newValue) =>
+              onSelectionChange={(newValue) =>
                 // onChange receives an event whose target is { name, value }.
                 handleChange({
-                  target: { name: column.id, value: newValue },
+                  target: { name: column.id, value: String(newValue ?? '') },
                 } as ChangeEvent<HTMLInputElement>)
               }
-              value={value ?? ''}
+              // React Aria shows its own placeholder text unless one is given.
+              placeholder={
+                !['custom', 'modal'].includes(
+                  (isCreating ? createDisplayMode : editDisplayMode) as string,
+                )
+                  ? columnDef.header
+                  : ''
+              }
+              // Stays controlled for an undefined cell value; React Aria shows
+              // the placeholder for null.
+              selectedKey={value || null}
             >
               <SelectTrigger
-                disabled={
-                  parseFromValuesOrFunc(columnDef.enableEditing, row) === false
-                }
                 id={id}
                 ref={(inputRef) => {
                   if (inputRef) {
@@ -207,31 +217,21 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                     e as unknown as MouseEvent<HTMLInputElement>,
                   );
                 }}
-                // No Enter-to-save here: Radix opens the select on Enter.
+                // No Enter-to-save here: React Aria opens the select on Enter.
                 onKeyDown={(e) =>
                   textFieldProps.onKeyDown?.(
                     e as unknown as KeyboardEvent<HTMLInputElement>,
                   )
                 }
               >
-                <SelectValue
-                  placeholder={
-                    !['custom', 'modal'].includes(
-                      (isCreating
-                        ? createDisplayMode
-                        : editDisplayMode) as string,
-                    )
-                      ? columnDef.header
-                      : undefined
-                  }
-                />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {textFieldProps.children ??
                   selectOptions?.map((option) => {
                     const { label, value } = getValueAndLabel(option);
                     return (
-                      <SelectItem key={value} value={value}>
+                      <SelectItem id={value} key={value}>
                         {label}
                       </SelectItem>
                     );
