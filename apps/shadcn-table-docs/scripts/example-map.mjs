@@ -24,6 +24,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import { REFERENCE_EDITION } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import { ENTRY_FILE } from '../lib/example-files.mjs';
 import { pascal } from '../lib/example-pages.mjs';
 
 const APP_DIR = path.resolve(
@@ -52,7 +53,7 @@ async function main() {
     await fs.readdir(EXAMPLES, { withFileTypes: true })
   ).sort((a, b) => a.name.localeCompare(b.name))) {
     if (!entry.isDirectory()) continue;
-    const entryFile = path.join(EXAMPLES, entry.name, "TS.tsx");
+    const entryFile = path.join(EXAMPLES, entry.name, ENTRY_FILE);
     const hasEntry = await fs
       .access(entryFile)
       .then(() => true)
