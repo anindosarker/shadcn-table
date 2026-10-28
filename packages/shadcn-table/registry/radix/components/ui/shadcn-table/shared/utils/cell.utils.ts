@@ -2,7 +2,7 @@ import {
   type ST_Header,
   type ST_Cell,
   type ST_RowData,
-  type ST_TableInstance,
+  type ST_CoreTableInstance,
 } from '@/components/ui/shadcn-table/types';
 import {
   getST_RowSelectionHandler,
@@ -22,7 +22,7 @@ export const isCellEditable = <TData extends ST_RowData>({
   table,
 }: {
   cell: ST_Cell<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }) => {
   const { enableEditing } = table.options;
   const {
@@ -41,7 +41,7 @@ export const openEditingCell = <TData extends ST_RowData>({
   table,
 }: {
   cell: ST_Cell<TData>;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }) => {
   const {
     options: { editDisplayMode },
@@ -78,7 +78,7 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
   containerElement?: HTMLTableElement;
   event: React.KeyboardEvent<HTMLTableCellElement>;
   parentElement?: HTMLTableRowElement;
-  table: ST_TableInstance<TData>;
+  table: ST_CoreTableInstance<TData>;
 }) => {
   if (!table.options.enableKeyboardShortcuts) return;
   if (event.isPropagationStopped()) return;
