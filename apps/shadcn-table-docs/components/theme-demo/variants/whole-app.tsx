@@ -623,22 +623,9 @@ function Thinking() {
 }
 
 /** A request bubble and the assistant's line under it. */
-function Turn({
-  to,
-  faded,
-  children,
-}: {
-  to: DemoThemeId;
-  faded: boolean;
-  children: ReactNode;
-}) {
+function Turn({ to, children }: { to: DemoThemeId; children: ReactNode }) {
   return (
-    <li
-      className={cn(
-        'flex flex-col gap-3 text-(--dh-ink-muted) transition-opacity duration-300',
-        faded && 'opacity-40',
-      )}
-    >
+    <li className="flex flex-col gap-3 text-(--dh-ink-muted)">
       <p className="wa-pop ml-auto max-w-[85%] rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-3.5 py-2 text-(--dh-ink)">
         <span className="sr-only">You: </span>
         {PROMPTS[to]}
@@ -666,22 +653,21 @@ const CARET = (
  * the bottom, and the composer the next request types into. */
 function PromptPane({ chat }: { chat: Chat }) {
   const thinking = chat.phase === 'thinking';
-  const last = chat.log.length - 1;
 
   return (
     <div className="absolute inset-0 flex flex-col gap-4 p-4 font-sans text-[0.8125rem] leading-5">
       <ol
         aria-label="Chat"
         // older turns fade out under the top edge instead of cutting a line
-        className="flex min-h-0 flex-1 flex-col justify-end gap-5 overflow-hidden mask-[linear-gradient(to_bottom,transparent,black_4rem)]"
+        className="flex min-h-0 flex-1 flex-col justify-end gap-5 overflow-hidden mask-[linear-gradient(to_bottom,transparent,black_3rem)]"
       >
-        {chat.log.map((e, i) => (
-          <Turn key={e.key} to={e.to} faded={thinking || i < last}>
+        {chat.log.map((e) => (
+          <Turn key={e.key} to={e.to}>
             <Reply exchange={e} />
           </Turn>
         ))}
         {thinking ? (
-          <Turn key={`x${chat.run}`} to={chat.target} faded={false}>
+          <Turn key={`x${chat.run}`} to={chat.target}>
             <Thinking />
           </Turn>
         ) : null}
@@ -791,18 +777,22 @@ function Editor({
       aria-label="Editor: a prompt asks for a new look for the app, the globals.css diff it makes, and data-table.tsx, unchanged"
       className={cn(
         'flex min-w-0 flex-col overflow-hidden bg-(--dh-paper) font-mono text-[0.75rem] leading-5 text-(--dh-ink)',
-        // h-0 plus min-h-full: the frame alone sets the row's height
-        home &&
-          'order-last border-dashed border-(--v12-dash) max-xl:border-t xl:order-none xl:h-0 xl:min-h-full',
+        // side by side: the header row and the body row are WholeApp's
+        home
+          ? 'order-last border-dashed border-(--v12-dash) max-xl:border-t xl:order-none xl:col-start-1 xl:row-span-2 xl:row-start-1 xl:grid xl:grid-rows-subgrid'
+          : 'min-[90rem]:col-start-1 min-[90rem]:row-span-2 min-[90rem]:row-start-1 min-[90rem]:grid min-[90rem]:grid-rows-subgrid',
       )}
     >
       <div
         role="tablist"
         aria-label="Files"
         onKeyDown={onKeyDown}
-        // 40px plus its rule, as the address bar beside it, so the two rules
-        // meet; no scrollbar, which would push the rule down
-        className="flex h-10 box-content overflow-x-auto border-b border-dashed border-(--v12-dash) bg-(--dh-paper-2) [scrollbar-width:none]"
+        // its own rule only when stacked; side by side, WholeApp draws one
+        // rule under the whole header row
+        className={cn(
+          'flex h-10 box-content overflow-x-auto border-dashed border-(--v12-dash) bg-(--dh-paper-2) [scrollbar-width:none]',
+          home ? 'max-xl:border-b' : 'max-[90rem]:border-b',
+        )}
       >
         <button {...tabProps('prompt')}>
           <MessageSquareIcon aria-hidden="true" className="size-3.5" />
@@ -841,97 +831,108 @@ function Editor({
         </button>
       </div>
 
-      {/* the panels share one cell, so a tab switch never changes the
-       * pane's height; stacked above the frame, the cell gets a fixed
-       * height and the panels scroll */}
+      {/* the body: h-0 plus min-h-full, so the frame alone sets the
+       * row's height */}
       <div
         className={cn(
-          'grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)]',
+          'flex min-h-0 min-w-0 flex-1 flex-col',
           home
-            ? 'max-xl:h-[17.5rem] max-xl:flex-none'
-            : 'max-[90rem]:h-[28rem] max-[90rem]:flex-none',
+            ? 'xl:h-0 xl:min-h-full'
+            : 'min-[90rem]:h-0 min-[90rem]:min-h-full',
         )}
       >
+        {/* the panels share one cell, so a tab switch never changes the
+         * pane's height; stacked above the frame, the cell gets a fixed
+         * height and the panels scroll */}
         <div
-          {...panelProps('prompt')}
           className={cn(
-            'relative [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
-            tab !== 'prompt' && 'invisible',
+            'grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)]',
+            home
+              ? 'max-xl:h-[17.5rem] max-xl:flex-none'
+              : 'max-[90rem]:h-[28rem] max-[90rem]:flex-none',
           )}
         >
-          {/* out of flow, so a long chat never grows the pane */}
-          <PromptPane chat={chat} />
-        </div>
-        <div
-          {...panelProps('css')}
-          className={cn(
-            'overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
-            tab !== 'css' && 'invisible',
-          )}
-        >
-          <div key={paint}>
-            <PlainDiff from={byId(chat.prev)} to={byId(chat.id)} />
-            <div className="dark:hidden">
-              <DiffBody diff={light} />
-            </div>
-            <div className="hidden dark:block">
-              <DiffBody diff={dark} />
+          <div
+            {...panelProps('prompt')}
+            className={cn(
+              'relative [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
+              tab !== 'prompt' && 'invisible',
+            )}
+          >
+            {/* out of flow, so a long chat never grows the pane */}
+            <PromptPane chat={chat} />
+          </div>
+          <div
+            {...panelProps('css')}
+            className={cn(
+              'overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
+              tab !== 'css' && 'invisible',
+            )}
+          >
+            <div key={paint}>
+              <PlainDiff from={byId(chat.prev)} to={byId(chat.id)} />
+              <div className="dark:hidden">
+                <DiffBody diff={light} />
+              </div>
+              <div className="hidden dark:block">
+                <DiffBody diff={dark} />
+              </div>
             </div>
           </div>
+          <div
+            {...panelProps('tsx')}
+            className={cn(
+              'flex flex-col overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
+              tab !== 'tsx' && 'invisible',
+            )}
+          >
+            <p className="mx-4 mb-3 flex items-center gap-2 rounded-[2px] border border-dashed border-(--dh-accent) bg-(--dh-accent-faint) px-3 py-1.5 text-(--dh-accent)">
+              <LockIcon aria-hidden="true" className="size-3.5 shrink-0" />
+              No changes. The same file on every site.
+            </p>
+            <Code code={DATA_TABLE_TSX} />
+          </div>
         </div>
+
         <div
-          {...panelProps('tsx')}
           className={cn(
-            'flex flex-col overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
-            tab !== 'tsx' && 'invisible',
+            'border-t border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-4 py-3',
+            home && 'max-sm:hidden',
           )}
         >
-          <p className="mx-4 mb-3 flex items-center gap-2 rounded-[2px] border border-dashed border-(--dh-accent) bg-(--dh-accent-faint) px-3 py-1.5 text-(--dh-accent)">
-            <LockIcon aria-hidden="true" className="size-3.5 shrink-0" />
-            No changes. The same file on every site.
+          <p className="text-(--dh-ink-muted)">
+            <span aria-hidden="true" className="text-(--dh-accent)">
+              ${' '}
+            </span>
+            git diff --stat
           </p>
-          <Code code={DATA_TABLE_TSX} />
+          <dl
+            key={paint}
+            className="wa-fade mt-1.5 grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5"
+          >
+            <dt className="truncate">app/globals.css</dt>
+            <dd className="flex items-center gap-2 tabular-nums">
+              <span className="text-emerald-600 dark:text-emerald-400">
+                +<PerMode light={light.changed} dark={dark.changed} />
+              </span>
+              <span className="text-red-600 dark:text-red-400">
+                -<PerMode light={light.changed} dark={dark.changed} />
+              </span>
+              <span className="hidden sm:inline">
+                <PerMode
+                  light={<StatBar n={light.changed} />}
+                  dark={<StatBar n={dark.changed} />}
+                />
+              </span>
+            </dd>
+            <dt className="truncate">components/data-table.tsx</dt>
+            <dd className="flex items-center gap-2 text-(--dh-accent) tabular-nums">
+              0
+              <LockIcon aria-hidden="true" className="size-3" />
+              <span className="hidden sm:inline">unchanged</span>
+            </dd>
+          </dl>
         </div>
-      </div>
-
-      <div
-        className={cn(
-          'border-t border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-4 py-3',
-          home && 'max-sm:hidden',
-        )}
-      >
-        <p className="text-(--dh-ink-muted)">
-          <span aria-hidden="true" className="text-(--dh-accent)">
-            ${' '}
-          </span>
-          git diff --stat
-        </p>
-        <dl
-          key={paint}
-          className="wa-fade mt-1.5 grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5"
-        >
-          <dt className="truncate">app/globals.css</dt>
-          <dd className="flex items-center gap-2 tabular-nums">
-            <span className="text-emerald-600 dark:text-emerald-400">
-              +<PerMode light={light.changed} dark={dark.changed} />
-            </span>
-            <span className="text-red-600 dark:text-red-400">
-              -<PerMode light={light.changed} dark={dark.changed} />
-            </span>
-            <span className="hidden sm:inline">
-              <PerMode
-                light={<StatBar n={light.changed} />}
-                dark={<StatBar n={dark.changed} />}
-              />
-            </span>
-          </dd>
-          <dt className="truncate">components/data-table.tsx</dt>
-          <dd className="flex items-center gap-2 text-(--dh-accent) tabular-nums">
-            0
-            <LockIcon aria-hidden="true" className="size-3" />
-            <span className="hidden sm:inline">unchanged</span>
-          </dd>
-        </dl>
       </div>
     </figure>
   );
@@ -1027,9 +1028,12 @@ export function WholeApp({
       <div
         className={cn(
           'grid items-stretch',
+          // side by side: a header row (tabs | address bar) over a body
+          // row, both panes on subgrids, so one rule and one divider serve
+          // both
           home
-            ? 'xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,5fr)_minmax(0,8fr)] xl:grid-rows-[minmax(0,1fr)]'
-            : 'min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]',
+            ? 'xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,5fr)_minmax(0,8fr)] xl:grid-rows-[auto_minmax(0,1fr)]'
+            : 'min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)] min-[90rem]:grid-rows-[auto_minmax(0,1fr)]',
         )}
       >
         <Editor chat={chat} light={light} dark={dark} home={home} />
@@ -1038,11 +1042,17 @@ export function WholeApp({
           ref={ref}
           className={cn(
             'flex min-w-0 flex-col overflow-hidden border-dashed border-(--v12-dash) bg-(--dh-paper-2)',
-            home ? 'xl:border-l' : 'max-[90rem]:border-t min-[90rem]:border-l',
+            home
+              ? 'xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:grid xl:grid-rows-subgrid'
+              : 'max-[90rem]:border-t min-[90rem]:col-start-2 min-[90rem]:row-span-2 min-[90rem]:row-start-1 min-[90rem]:grid min-[90rem]:grid-rows-subgrid',
           )}
         >
-          {/* the same height as the editor's tab bar */}
-          <div className="flex h-10 box-content items-center gap-3 border-b border-dashed border-(--v12-dash) px-3">
+          <div
+            className={cn(
+              'flex h-10 box-content items-center gap-3 border-dashed border-(--v12-dash) px-3',
+              home ? 'max-xl:border-b' : 'max-[90rem]:border-b',
+            )}
+          >
             <span aria-hidden="true" className="flex gap-1.5">
               <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
               <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
@@ -1067,6 +1077,27 @@ export function WholeApp({
             <WholeAppSite name={site.name} home={home} />
           </ThemeScope>
         </div>
+
+        {/* side by side: the header row's rule and the column divider,
+         * each one element across both panes */}
+        <div
+          aria-hidden="true"
+          className={cn(
+            'pointer-events-none relative z-10 hidden border-b border-dashed border-(--v12-dash)',
+            home
+              ? 'xl:col-span-2 xl:col-start-1 xl:row-start-1 xl:block'
+              : 'min-[90rem]:col-span-2 min-[90rem]:col-start-1 min-[90rem]:row-start-1 min-[90rem]:block',
+          )}
+        />
+        <div
+          aria-hidden="true"
+          className={cn(
+            'pointer-events-none relative z-10 hidden border-l border-dashed border-(--v12-dash)',
+            home
+              ? 'xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:block'
+              : 'min-[90rem]:col-start-2 min-[90rem]:row-span-2 min-[90rem]:row-start-1 min-[90rem]:block',
+          )}
+        />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-dashed border-(--v12-dash) px-(--v12-pad) py-3 text-sm text-(--dh-ink-muted)">
