@@ -65,7 +65,7 @@ async function commandBarBase(page, check) {
   const items = page.getByRole('menuitemradio');
   check(
     'base menu items',
-    (await items.allTextContents()).join(',') === 'Radix UI,Base UI',
+    (await items.allTextContents()).join(',') === 'Radix UI,Base UI,React Aria',
     (await items.allTextContents()).join(','),
   );
   check(

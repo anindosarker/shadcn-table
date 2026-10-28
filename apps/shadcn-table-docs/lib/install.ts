@@ -16,17 +16,17 @@ const runners: Record<PackageManager, string> = {
 /**
  * The shadcn bases the table supports, as `shadcn init --base` names them.
  * The docs' base selector (components/base-selector.tsx) picks one; a
- * project's base is the `style` in its `components.json` (`radix-*` or
- * `base-*`). React Aria (`aria-*`) is installed and hosted but has no tab
- * yet; the tab lands with the aria example variants (v0.5 part 03).
+ * project's base is the `style` in its `components.json` (`radix-*`,
+ * `base-*` or `aria-*`, the React Aria edition's style being `aria-nova`).
  */
-export const bases = ['radix', 'base'] as const;
+export const bases = ['radix', 'base', 'aria'] as const;
 export type Base = (typeof bases)[number];
 export const defaultBase: Base = 'radix';
 
 export const baseLabels: Record<Base, string> = {
   radix: 'Radix UI',
   base: 'Base UI',
+  aria: 'React Aria',
 };
 
 export const isBase = (value: unknown): value is Base =>
@@ -39,8 +39,8 @@ export const perBase = <T>(fn: (base: Base) => T): Record<Base, T> =>
 /**
  * Hosted registry item for a base: `pnpm registry:hosted`
  * (packages/shadcn-table/scripts/registry/hosted.mjs) serves
- * both editions under the same item names, `/r/radix/<item>.json` and
- * `/r/base/<item>.json`.
+ * every edition under the same item names, `/r/radix/<item>.json`,
+ * `/r/base/<item>.json` and `/r/aria/<item>.json`.
  */
 export const itemUrl = (item: string, base: Base = defaultBase) =>
   `${siteUrl}/r/${base}/${item}.json`;
@@ -81,7 +81,8 @@ export const initCommand = (
 /**
  * Namespace form, the alternative to the direct URL: register the registry
  * once, then add items by name. `{style}` is the project's shadcn style
- * (`radix-nova`, `base-sera`, ...), which the site maps onto the base.
+ * (`radix-nova`, `base-sera`, `aria-nova`, ...), which the site maps onto
+ * the base.
  */
 export const registryNamespace = 'st';
 

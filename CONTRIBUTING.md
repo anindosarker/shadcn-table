@@ -140,7 +140,7 @@ pnpm --filter shadcn-table-docs dev                        # http://localhost:53
 pnpm --filter shadcn-table-docs types:check
 ```
 
-The example sources under `examples/<slug>/` import `@/components/ui/...`, the path a reader has after `shadcn add`, and that is what the code view shows on both bases. The live examples run on generated variants, `examples/.radix/` and `examples/.base/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies.
+The example sources under `examples/<slug>/` import `@/components/ui/...`, the path a reader has after `shadcn add`, and that is what the code view shows on every base. The live examples run on generated variants, `examples/.radix/`, `examples/.base/` and `examples/.aria/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies and whose part props are rewritten for the base (Base UI `render` for `asChild`, the React Aria prop names); an example that no rewrite can carry is written in an edition-neutral form.
 
 Page gate, with the dev server running, from `apps/shadcn-table-docs`:
 

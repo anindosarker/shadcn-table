@@ -59,7 +59,7 @@ const CommandTabs = ({
 );
 
 /**
- * Radix UI | Base UI tabs (the site-wide base group) around the package-manager
+ * Radix UI | Base UI | React Aria tabs (the site-wide base group) around the package-manager
  * tabs of a command that differs per base.
  */
 const BaseCommandTabs = ({
