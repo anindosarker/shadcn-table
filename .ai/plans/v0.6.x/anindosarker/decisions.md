@@ -48,4 +48,8 @@ force; nothing here re-decides them.
      parts (`registry/*/components/ui/*.tsx`) in `globalIgnores`, the folded MRT core gets
      the rule with `args: 'none'` instead of `off` so no check is lost.
    - Standards gain one line under Editions.
-   - The unused import is reported upstream to shadcn.
+   - No upstream report to shadcn; the part is used as shipped.
+
+## Release
+
+3. Decisions 1 and 2 ship together as 0.6.0 (`release:minor`), the next PR into `master`.
