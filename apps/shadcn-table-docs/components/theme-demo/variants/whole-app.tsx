@@ -250,7 +250,7 @@ function PerMode({ light, dark }: { light: ReactNode; dark: ReactNode }) {
 function DiffRow({ row }: { row: Row }) {
   if (row.kind === 'hunk')
     return (
-      <div className="w-max min-w-full bg-sky-500/5 py-0.5 pr-4 pl-13 text-sky-300/70 sm:pl-18">
+      <div className="w-max min-w-full bg-sky-500/5 py-0.5 pr-4 pl-13 text-sky-700/80 sm:pl-18 dark:text-sky-300/70">
         {row.text}
       </div>
     );
@@ -259,14 +259,16 @@ function DiffRow({ row }: { row: Row }) {
     <div
       className={cn(
         'flex w-max min-w-full items-center pr-4',
-        row.kind === 'del' && 'wa-del bg-red-500/15 text-red-200',
-        row.kind === 'add' && 'wa-add bg-emerald-500/15 text-emerald-100',
+        row.kind === 'del' &&
+          'wa-del bg-red-500/10 text-red-800 dark:bg-red-500/15 dark:text-red-200',
+        row.kind === 'add' &&
+          'wa-add bg-emerald-500/10 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-100',
       )}
       style={{ '--wa-d': `${row.step * STEP_MS}ms` } as CSSProperties}
     >
       <span
         aria-hidden="true"
-        className="w-9 shrink-0 pr-2 text-right sm:w-12 sm:pr-3 text-zinc-600 select-none"
+        className="w-9 shrink-0 pr-2 text-right text-(--dh-ink-muted) opacity-60 select-none sm:w-12 sm:pr-3"
       >
         {row.line}
       </span>
@@ -274,8 +276,8 @@ function DiffRow({ row }: { row: Row }) {
         aria-hidden="true"
         className={cn(
           'w-4 shrink-0 text-center select-none sm:w-6',
-          row.kind === 'del' && 'text-red-400',
-          row.kind === 'add' && 'text-emerald-400',
+          row.kind === 'del' && 'text-red-600 dark:text-red-400',
+          row.kind === 'add' && 'text-emerald-600 dark:text-emerald-400',
         )}
       >
         {sign}
@@ -283,19 +285,25 @@ function DiffRow({ row }: { row: Row }) {
       {row.prop ? (
         <span className="whitespace-pre">
           {'  '}
-          <span className={row.kind === 'ctx' ? 'text-sky-300' : undefined}>
+          <span
+            className={
+              row.kind === 'ctx' ? 'text-sky-700 dark:text-sky-300' : undefined
+            }
+          >
             --{row.prop}
           </span>
           : {row.value}
-          <span className="text-zinc-500">;</span>
+          <span className="text-(--dh-ink-muted)">;</span>
         </span>
       ) : (
-        <span className="whitespace-pre text-fuchsia-300">{row.value}</span>
+        <span className="whitespace-pre text-fuchsia-700 dark:text-fuchsia-300">
+          {row.value}
+        </span>
       )}
       {row.swatch ? (
         <span
           aria-hidden="true"
-          className="ml-2 size-2.5 shrink-0 rounded-[3px] ring-1 ring-white/20"
+          className="ml-2 size-2.5 shrink-0 rounded-[2px] ring-1 ring-(--dh-rule-strong)"
           style={{ backgroundColor: row.swatch }}
         />
       ) : null}
@@ -312,7 +320,7 @@ function Swatch({ theme, name }: { theme: DemoTheme; name: DemoTokenName }) {
   return (
     <span
       aria-hidden="true"
-      className="size-4 shrink-0 rounded-[4px] bg-(--sw-l) ring-1 ring-white/20 dark:bg-(--sw-d)"
+      className="size-4 shrink-0 rounded-[2px] bg-(--sw-l) ring-1 ring-(--dh-rule-strong) dark:bg-(--sw-d)"
       style={
         {
           '--sw-l': theme.light[name],
@@ -396,9 +404,9 @@ function PlainDiff({ from, to }: { from: DemoTheme; to: DemoTheme }) {
   return (
     <section
       aria-label="What changed, in plain words"
-      className="mx-4 mb-3 rounded-lg border border-zinc-800 bg-zinc-900/60 px-3 py-2.5 font-sans text-[0.8125rem]"
+      className="mx-4 mb-3 rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-3 py-2.5 font-sans text-[0.8125rem]"
     >
-      <h3 className="mb-1.5 text-[0.6875rem] font-medium tracking-wide text-zinc-500 uppercase">
+      <h3 className="mb-1.5 font-mono text-[0.6875rem] tracking-[0.14em] text-(--dh-ink-muted) uppercase">
         In plain words
       </h3>
       <dl className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-1.5">
@@ -408,26 +416,26 @@ function PlainDiff({ from, to }: { from: DemoTheme; to: DemoTheme }) {
             className="wa-fade col-span-2 grid grid-cols-subgrid items-center"
             style={{ '--wa-d': `${i * 80}ms` } as CSSProperties}
           >
-            <dt className="text-zinc-400">{r.label}</dt>
+            <dt className="text-(--dh-ink-muted)">{r.label}</dt>
             <dd
               aria-label={r.same ? `${r.label} unchanged` : r.words}
               className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1"
             >
               {r.same ? (
-                <span className="flex items-center gap-1.5 text-zinc-400">
+                <span className="flex items-center gap-1.5 text-(--dh-ink-muted)">
                   {r.now}
-                  <span className="text-zinc-500">no change</span>
+                  <span>no change</span>
                 </span>
               ) : (
                 <>
-                  <span className="flex items-center gap-1.5 text-zinc-500">
+                  <span className="flex items-center gap-1.5 text-(--dh-ink-muted)">
                     {r.old}
                   </span>
                   <ArrowRightIcon
                     aria-hidden="true"
-                    className="size-3.5 shrink-0 text-zinc-500"
+                    className="size-3.5 shrink-0 text-(--dh-ink-muted)"
                   />
-                  <span className="flex items-center gap-1.5 text-zinc-100">
+                  <span className="flex items-center gap-1.5 text-(--dh-ink)">
                     {r.now}
                   </span>
                 </>
@@ -445,7 +453,7 @@ function Code({ code }: { code: string }) {
     <div key={i} className="flex w-max min-w-full pr-4">
       <span
         aria-hidden="true"
-        className="w-9 shrink-0 pr-2 text-right sm:w-12 sm:pr-3 text-zinc-600 select-none"
+        className="w-9 shrink-0 pr-2 text-right text-(--dh-ink-muted) opacity-60 select-none sm:w-12 sm:pr-3"
       >
         {i + 1}
       </span>
@@ -459,10 +467,10 @@ function Code({ code }: { code: string }) {
               key={j}
               className={
                 part.startsWith("'")
-                  ? 'text-amber-200'
+                  ? 'text-amber-700 dark:text-amber-200'
                   : /^<|\/>/.test(part)
-                    ? 'text-sky-300'
-                    : 'text-fuchsia-300'
+                    ? 'text-sky-700 dark:text-sky-300'
+                    : 'text-fuchsia-700 dark:text-fuchsia-300'
               }
             >
               {part}
@@ -478,8 +486,10 @@ function Code({ code }: { code: string }) {
 function StatBar({ n }: { n: number }) {
   return (
     <span aria-hidden="true">
-      <span className="text-emerald-400">{'+'.repeat(n)}</span>
-      <span className="text-red-400">{'-'.repeat(n)}</span>
+      <span className="text-emerald-600 dark:text-emerald-400">
+        {'+'.repeat(n)}
+      </span>
+      <span className="text-red-600 dark:text-red-400">{'-'.repeat(n)}</span>
     </span>
   );
 }
@@ -565,11 +575,11 @@ function Reply({ exchange }: { exchange: Exchange }) {
       <p className="flex items-start gap-2">
         <CheckIcon
           aria-hidden="true"
-          className="mt-0.5 size-3.5 shrink-0 text-emerald-400"
+          className="mt-0.5 size-3.5 shrink-0 text-(--dh-accent)"
         />
         <span>
           Updated{' '}
-          <span className="font-mono text-zinc-100">app/globals.css</span> (
+          <span className="font-mono text-(--dh-ink)">app/globals.css</span> (
           <PerMode
             light={tokens(diffCss(from, to, 'light').changed)}
             dark={tokens(diffCss(from, to, 'dark').changed)}
@@ -580,10 +590,10 @@ function Reply({ exchange }: { exchange: Exchange }) {
       <p className="flex items-start gap-2">
         <LockIcon
           aria-hidden="true"
-          className="mt-0.5 size-3.5 shrink-0 text-emerald-400"
+          className="mt-0.5 size-3.5 shrink-0 text-(--dh-accent)"
         />
         <span>
-          <span className="font-mono text-zinc-100">
+          <span className="font-mono text-(--dh-ink)">
             components/data-table.tsx
           </span>
           : no changes needed. It already reads the same tokens.
@@ -595,9 +605,9 @@ function Reply({ exchange }: { exchange: Exchange }) {
 
 function Thinking() {
   return (
-    <p className="wa-pop flex items-center gap-1 pt-0.5 text-zinc-400">
+    <p className="wa-pop flex items-center gap-1 pt-0.5 text-(--dh-ink-muted)">
       <span className="sr-only">Assistant: </span>
-      Editing <span className="font-mono text-zinc-300">app/globals.css</span>
+      Editing <span className="font-mono text-(--dh-ink)">app/globals.css</span>
       <span aria-hidden="true" className="flex gap-0.5 pl-0.5">
         {[0, 150, 300].map((ms) => (
           <span
@@ -624,18 +634,18 @@ function Turn({
   return (
     <li
       className={cn(
-        'flex flex-col gap-3 text-zinc-300 transition-opacity duration-300',
+        'flex flex-col gap-3 text-(--dh-ink-muted) transition-opacity duration-300',
         faded && 'opacity-40',
       )}
     >
-      <p className="wa-pop ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-zinc-800 px-3.5 py-2 text-zinc-100">
+      <p className="wa-pop ml-auto max-w-[85%] rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-3.5 py-2 text-(--dh-ink)">
         <span className="sr-only">You: </span>
         {PROMPTS[to]}
       </p>
       <div className="flex gap-2.5">
         <span
           aria-hidden="true"
-          className="grid size-6 shrink-0 place-items-center rounded-full border border-zinc-700 bg-zinc-900 text-zinc-300"
+          className="grid size-6 shrink-0 place-items-center rounded-full border border-dashed border-(--v12-dash) bg-(--dh-paper-2) text-(--dh-accent)"
         >
           <SparklesIcon className="size-3.5" />
         </span>
@@ -671,24 +681,24 @@ function PromptPane({ chat }: { chat: Chat }) {
 
       <div
         aria-hidden="true"
-        className="flex items-end gap-2 rounded-xl border border-zinc-800 bg-zinc-900/60 py-2 pr-2 pl-3.5"
+        className="flex items-end gap-2 rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper-2) py-2 pr-2 pl-3.5"
       >
         <p className="min-h-5 min-w-0 flex-1 py-1">
           {chat.phase === 'typing' ? (
-            <span className="text-zinc-100">
+            <span className="text-(--dh-ink)">
               <Typing key={chat.run} text={PROMPTS[chat.target]} />
-              <span className="wa-caret ml-px inline-block h-4 w-px translate-y-0.5 bg-zinc-300" />
+              <span className="wa-caret ml-px inline-block h-4 w-px translate-y-0.5 bg-(--dh-ink)" />
             </span>
           ) : (
-            <span className="text-zinc-500">Ask for a change</span>
+            <span className="text-(--dh-ink-muted)">Ask for a change</span>
           )}
         </p>
         <span
           className={cn(
-            'grid size-7 shrink-0 place-items-center rounded-lg transition-colors',
+            'grid size-7 shrink-0 place-items-center rounded-[2px] transition-colors',
             chat.phase === 'typing'
-              ? 'bg-zinc-100 text-zinc-900'
-              : 'bg-zinc-800 text-zinc-500',
+              ? 'bg-(--dh-ink) text-(--dh-paper)'
+              : 'bg-(--dh-paper-3) text-(--dh-ink-muted)',
           )}
         >
           <ArrowUpIcon className="size-3.5" />
@@ -736,7 +746,7 @@ function Editor({
   };
 
   const tabClass =
-    'relative flex h-10 shrink-0 items-center gap-2 border-r whitespace-nowrap border-zinc-800 px-3 text-zinc-500 transition-colors hover:text-zinc-200 aria-selected:bg-zinc-950 aria-selected:text-zinc-100 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400';
+    'relative flex h-10 shrink-0 items-center gap-2 border-r border-dashed border-(--v12-dash) px-3 whitespace-nowrap text-(--dh-ink-muted) transition-colors hover:text-(--dh-ink) aria-selected:bg-(--dh-paper) aria-selected:text-(--dh-ink) focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)';
   const tabProps = (t: Tab) => ({
     type: 'button' as const,
     role: 'tab',
@@ -758,13 +768,13 @@ function Editor({
   return (
     <figure
       aria-label="Editor: a prompt asks for a new look for the app, the globals.css diff it makes, and data-table.tsx, unchanged"
-      className="flex min-w-0 flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 font-mono text-[0.75rem] leading-5 text-zinc-300 shadow-lg shadow-black/10"
+      className="flex min-w-0 flex-col overflow-hidden bg-(--dh-paper) font-mono text-[0.75rem] leading-5 text-(--dh-ink)"
     >
       <div
         role="tablist"
         aria-label="Files"
         onKeyDown={onKeyDown}
-        className="flex overflow-x-auto border-b border-zinc-800 bg-zinc-900/60"
+        className="flex overflow-x-auto border-b border-dashed border-(--v12-dash) bg-(--dh-paper-2)"
       >
         <button {...tabProps('prompt')}>
           <MessageSquareIcon aria-hidden="true" className="size-3.5" />
@@ -773,21 +783,21 @@ function Editor({
         <button {...tabProps('css')}>
           globals.css
           <span key={paint} className="wa-fade flex gap-1 text-[0.6875rem]">
-            <span className="text-emerald-400">
+            <span className="text-emerald-600 dark:text-emerald-400">
               +<PerMode light={light.changed} dark={dark.changed} />
             </span>
-            <span className="text-red-400">
+            <span className="text-red-600 dark:text-red-400">
               -<PerMode light={light.changed} dark={dark.changed} />
             </span>
           </span>
         </button>
         <button {...tabProps('tsx')}>
           data-table.tsx
-          <span className="relative flex items-center gap-1 rounded-full border border-emerald-500/30 px-1.5 text-[0.6875rem] text-emerald-300">
+          <span className="relative flex items-center gap-1 rounded-full border border-dashed border-(--dh-accent) px-1.5 text-[0.6875rem] text-(--dh-accent)">
             <span
               key={paint}
               aria-hidden="true"
-              className="wa-ping absolute inset-0 rounded-full border border-emerald-400"
+              className="wa-ping absolute inset-0 rounded-full border border-(--dh-accent)"
             />
             <LockIcon aria-hidden="true" className="size-3" />
             {/* beside the frame, the lock alone keeps the tabs in one row */}
@@ -805,7 +815,7 @@ function Editor({
         <div
           {...panelProps('prompt')}
           className={cn(
-            'relative [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400',
+            'relative [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
             tab !== 'prompt' && 'invisible',
           )}
         >
@@ -815,7 +825,7 @@ function Editor({
         <div
           {...panelProps('css')}
           className={cn(
-            'overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400',
+            'overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
             tab !== 'css' && 'invisible',
           )}
         >
@@ -832,11 +842,11 @@ function Editor({
         <div
           {...panelProps('tsx')}
           className={cn(
-            'flex flex-col overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400',
+            'flex flex-col overflow-auto py-3 [grid-area:1/1] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--dh-focus)',
             tab !== 'tsx' && 'invisible',
           )}
         >
-          <p className="mx-4 mb-3 flex items-center gap-2 rounded-md border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-emerald-200">
+          <p className="mx-4 mb-3 flex items-center gap-2 rounded-[2px] border border-dashed border-(--dh-accent) bg-(--dh-accent-faint) px-3 py-1.5 text-(--dh-accent)">
             <LockIcon aria-hidden="true" className="size-3.5 shrink-0" />
             No changes. The same file on every site.
           </p>
@@ -844,9 +854,9 @@ function Editor({
         </div>
       </div>
 
-      <div className="border-t border-zinc-800 bg-zinc-900/40 px-4 py-3">
-        <p className="text-zinc-500">
-          <span aria-hidden="true" className="text-emerald-400">
+      <div className="border-t border-dashed border-(--v12-dash) bg-(--dh-paper-2) px-4 py-3">
+        <p className="text-(--dh-ink-muted)">
+          <span aria-hidden="true" className="text-(--dh-accent)">
             ${' '}
           </span>
           git diff --stat
@@ -855,12 +865,12 @@ function Editor({
           key={paint}
           className="wa-fade mt-1.5 grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5"
         >
-          <dt className="truncate text-zinc-200">app/globals.css</dt>
+          <dt className="truncate">app/globals.css</dt>
           <dd className="flex items-center gap-2 tabular-nums">
-            <span className="text-emerald-400">
+            <span className="text-emerald-600 dark:text-emerald-400">
               +<PerMode light={light.changed} dark={dark.changed} />
             </span>
-            <span className="text-red-400">
+            <span className="text-red-600 dark:text-red-400">
               -<PerMode light={light.changed} dark={dark.changed} />
             </span>
             <span className="hidden sm:inline">
@@ -870,8 +880,8 @@ function Editor({
               />
             </span>
           </dd>
-          <dt className="truncate text-zinc-200">components/data-table.tsx</dt>
-          <dd className="flex items-center gap-2 text-emerald-300 tabular-nums">
+          <dt className="truncate">components/data-table.tsx</dt>
+          <dd className="flex items-center gap-2 text-(--dh-accent) tabular-nums">
             0
             <LockIcon aria-hidden="true" className="size-3" />
             <span className="hidden sm:inline">unchanged</span>
@@ -882,8 +892,9 @@ function Editor({
   );
 }
 
+// the homepage's Replay pill: dashed hairline, solid once picked
 const CHIP =
-  'inline-flex h-7 items-center gap-1.5 rounded-full border px-2.5 font-mono text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground aria-pressed:border-foreground aria-pressed:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+  'inline-flex h-7 items-center gap-1.5 rounded-full border border-dashed border-(--v12-dash) px-2.5 font-mono text-xs text-(--dh-ink-muted) transition-colors hover:border-(--dh-rule-strong) hover:bg-(--dh-paper-2) hover:text-(--dh-ink) aria-pressed:border-solid aria-pressed:border-(--dh-ink) aria-pressed:text-(--dh-ink) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--dh-focus)';
 
 /**
  * Theme demo variant 9 (whole app): variant 8 (prompt diff) where each
@@ -893,7 +904,8 @@ const CHIP =
  * 0 changes. Autoplay
  * via useThemeCycle; a site pick or any interaction with the frame pauses
  * it. Under reduced motion it starts paused and every request applies at
- * once, without typing or motion.
+ * once, without typing or motion. Borderless panes in the homepage's
+ * tokens and dashed hairlines: the caller wraps it in a RiseFigure.
  */
 export function WholeApp() {
   const { theme, paused, select, resume, ref } = useThemeCycle({
@@ -954,122 +966,124 @@ export function WholeApp() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid items-stretch gap-4 min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]">
+    <div className="flex flex-col">
+      <div className="grid items-stretch min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]">
         <Editor chat={chat} light={light} dark={dark} />
 
-        <div className="flex min-w-0 flex-col gap-3">
-          <div
-            ref={ref}
-            className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border bg-(--dh-paper-2) shadow-lg shadow-black/5"
-          >
-            <div className="flex items-center gap-3 border-b px-3 py-2">
-              <span aria-hidden="true" className="flex gap-1.5">
-                <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
-                <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
-                <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
+        <div
+          ref={ref}
+          className="flex min-w-0 flex-col overflow-hidden border-dashed border-(--v12-dash) bg-(--dh-paper-2) max-[90rem]:border-t min-[90rem]:border-l"
+        >
+          <div className="flex items-center gap-3 border-b border-dashed border-(--v12-dash) px-3 py-2">
+            <span aria-hidden="true" className="flex gap-1.5">
+              <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
+              <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
+              <span className="size-2.5 rounded-full bg-(--dh-rule-strong)" />
+            </span>
+            <p
+              aria-label="Address"
+              className="flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-[2px] border border-dashed border-(--v12-dash) bg-(--dh-paper) px-2.5 font-mono text-xs"
+            >
+              <LockIcon
+                aria-hidden="true"
+                className="size-3 shrink-0 text-(--dh-ink-muted)"
+              />
+              <span key={site.domain} className="wa-fade truncate">
+                <span className="text-(--dh-ink-muted)">https://</span>
+                <span className="text-(--dh-ink)">{site.domain}</span>
+                <span className="text-(--dh-ink-muted)">/members</span>
               </span>
-              <p
-                aria-label="Address"
-                className="flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md border bg-(--dh-paper) px-2.5 font-mono text-xs"
-              >
-                <LockIcon
-                  aria-hidden="true"
-                  className="size-3 shrink-0 text-(--dh-ink-muted)"
-                />
-                <span key={site.domain} className="wa-fade truncate">
-                  <span className="text-(--dh-ink-muted)">https://</span>
-                  <span className="text-(--dh-ink)">{site.domain}</span>
-                  <span className="text-(--dh-ink-muted)">/members</span>
-                </span>
-              </p>
-            </div>
-            <ThemeScope theme={shown.id} className="flex flex-1 flex-col">
-              <WholeAppSite name={site.name} />
-            </ThemeScope>
+            </p>
           </div>
-
-          <div
-            role="group"
-            aria-label="Site"
-            className="flex flex-wrap gap-1.5"
-          >
-            {DEMO_THEMES.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                aria-pressed={t.id === theme.id}
-                onClick={() => select(t.id)}
-                className={CHIP}
-              >
-                <span
-                  aria-hidden="true"
-                  className="size-3 border border-foreground/15 bg-(--swatch-light) dark:bg-(--swatch-dark)"
-                  style={
-                    {
-                      '--swatch-light': t.light.primary,
-                      '--swatch-dark': t.dark.primary,
-                      borderRadius: `min(${t.radius}, 6px)`,
-                    } as CSSProperties
-                  }
-                />
-                {SITES[t.id].domain}
-              </button>
-            ))}
-          </div>
+          <ThemeScope theme={shown.id} className="flex flex-1 flex-col">
+            <WholeAppSite name={site.name} />
+          </ThemeScope>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-lg border border-dashed border-(--v12-dash) px-3 py-2 text-sm text-(--dh-ink-muted)">
-        <p
-          className={cn(
-            'flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 transition-opacity',
-            !done && 'opacity-50',
-          )}
-        >
-          <span
-            aria-hidden="true"
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-dashed border-(--v12-dash) px-(--v12-pad) py-3 text-sm text-(--dh-ink-muted)">
+        <div role="group" aria-label="Site" className="flex flex-wrap gap-1.5">
+          {DEMO_THEMES.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              aria-pressed={t.id === theme.id}
+              onClick={() => select(t.id)}
+              className={CHIP}
+            >
+              <span
+                aria-hidden="true"
+                className="size-3 border border-(--dh-rule-strong) bg-(--swatch-light) dark:bg-(--swatch-dark)"
+                style={
+                  {
+                    '--swatch-light': t.light.primary,
+                    '--swatch-dark': t.dark.primary,
+                    borderRadius: `min(${t.radius}, 6px)`,
+                  } as CSSProperties
+                }
+              />
+              {SITES[t.id].domain}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p
             className={cn(
-              'size-1.5 shrink-0 rounded-full',
-              paused ? 'bg-(--dh-rule-strong)' : 'bg-emerald-500',
+              'flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 transition-opacity',
+              !done && 'opacity-50',
             )}
-          />
-          <span className="flex items-center gap-1.5 text-(--dh-ink)">
-            <CheckIcon aria-hidden="true" className="size-4 text-emerald-500" />
-            App restyled
-          </span>
-          <span className="flex items-center gap-1.5 text-(--dh-ink)">
-            <CheckIcon aria-hidden="true" className="size-4 text-emerald-500" />
-            Table followed
-          </span>
-          <span>
-            <span className="font-semibold text-(--dh-ink) tabular-nums">
-              0
-            </span>{' '}
-            lines of table code
-          </span>
-        </p>
-        <div className="flex gap-1.5">
-          <button
-            type="button"
-            onClick={paused ? resume : () => select(theme.id)}
-            className={cn(CHIP, 'font-sans')}
           >
-            {paused ? (
-              <PlayIcon aria-hidden="true" className="size-3" />
-            ) : (
-              <PauseIcon aria-hidden="true" className="size-3" />
-            )}
-            {paused ? 'Play' : 'Pause'}
-          </button>
-          <button
-            type="button"
-            onClick={replay}
-            className={cn(CHIP, 'font-sans')}
-          >
-            <RotateCcwIcon aria-hidden="true" className="size-3" />
-            Replay
-          </button>
+            <span
+              aria-hidden="true"
+              className={cn(
+                'size-1.5 shrink-0 rounded-full',
+                paused ? 'bg-(--dh-rule-strong)' : 'bg-(--dh-accent)',
+              )}
+            />
+            <span className="flex items-center gap-1.5 text-(--dh-ink)">
+              <CheckIcon
+                aria-hidden="true"
+                className="size-4 text-(--dh-accent)"
+              />
+              App restyled
+            </span>
+            <span className="flex items-center gap-1.5 text-(--dh-ink)">
+              <CheckIcon
+                aria-hidden="true"
+                className="size-4 text-(--dh-accent)"
+              />
+              Table followed
+            </span>
+            <span>
+              <span className="font-semibold text-(--dh-ink) tabular-nums">
+                0
+              </span>{' '}
+              lines of table code
+            </span>
+          </p>
+          <div className="flex gap-1.5">
+            <button
+              type="button"
+              onClick={paused ? resume : () => select(theme.id)}
+              className={cn(CHIP, 'font-sans')}
+            >
+              {paused ? (
+                <PlayIcon aria-hidden="true" className="size-3" />
+              ) : (
+                <PauseIcon aria-hidden="true" className="size-3" />
+              )}
+              {paused ? 'Play' : 'Pause'}
+            </button>
+            <button
+              type="button"
+              onClick={replay}
+              className={cn(CHIP, 'font-sans')}
+            >
+              <RotateCcwIcon aria-hidden="true" className="size-3" />
+              Replay
+            </button>
+          </div>
         </div>
       </div>
 
