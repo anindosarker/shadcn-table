@@ -46,6 +46,9 @@ export default mergeConfig(
               instances: [{ browser: 'chromium' }],
             },
             setupFiles: ['./.storybook/vitest.setup.ts'],
+            // The 1,000-row profiler story (styling/RenderCounts) takes about
+            // 15 s on a loaded machine and on the CI runner.
+            testTimeout: 45_000,
           },
         },
       ],
