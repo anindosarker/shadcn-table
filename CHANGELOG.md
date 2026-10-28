@@ -7,6 +7,15 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+- shadcn parts re-added by a deterministic `add-part`: `pnpm add-part <edition> <part>` now
+  writes the same bytes whatever the invocation order (the `'use client'` directive is set per
+  file from the upstream item, `font-heading` survives the CLI's class resolution), and every
+  part of every edition was re-added once with it. Repo-internal; nothing changes for users.
+
 ## 0.6.0 - 2026-10-28
 
 ### Changed
