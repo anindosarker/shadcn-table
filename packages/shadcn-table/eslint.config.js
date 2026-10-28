@@ -28,13 +28,14 @@ export default defineConfig([
     rules: {
       // Unused code is checked here, not by tsc (the tsconfigs carry no
       // noUnusedLocals / noUnusedParameters, see the parts above); `_`
-      // prefixed names are tolerated as tsc tolerated them.
+      // prefixed names are tolerated as tsc tolerated them, and so is an
+      // unused catch binding, which noUnusedLocals never reported.
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
+          caughtErrors: 'none',
         },
       ],
     },
