@@ -42,7 +42,7 @@ import {
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
-import { type Checkbox } from '@/components/ui-aria/checkbox';
+import { type ST_Checkbox } from '@/components/ui-aria/shadcn-table/ST_Checkbox';
 import { type Collapsible } from '@/components/ui-aria/collapsible';
 import { type Dialog } from '@/components/ui-aria/dialog';
 import { type RadioGroupItem } from '@/components/ui-aria/radio-group';
@@ -106,7 +106,7 @@ export type InputProps = ComponentPropsWithRef<'input'>;
 export type SelectProps = ButtonProps &
   Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
 
-export type CheckboxProps = ComponentPropsWithRef<typeof Checkbox>;
+export type CheckboxProps = ComponentPropsWithRef<typeof ST_Checkbox>;
 
 export type SliderProps = ComponentPropsWithRef<typeof Slider>;
 

@@ -20,10 +20,18 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
 ## Editions
 
 - Three trees, one per edition: `registry/radix`, `registry/base`, `registry/aria`. The list
-  is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION` and
-  `EDITION_LABELS`); every script, config and docs app script that handles more than one
-  edition reads it, none repeats the names.
-- Radix is the reference. A change to a common library file is made in every tree by hand.
+  is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION`,
+  `DEFAULT_EDITION` and `EDITION_LABELS`); every script, config and docs app script that
+  handles more than one edition reads it, none repeats the names.
+- Radix is the reference (`REFERENCE_EDITION`, the diff baseline and the example slug source).
+  A change to a common library file is made in every tree by hand. Base UI is the default
+  (`DEFAULT_EDITION`): what a reader sees before picking an edition, in the docs tabs and at
+  the Storybook root. Every committed item is `<name>-<edition>` for every edition
+  (`editionItemName`); the hosted `/r/<edition>/` copies carry the plain name. The plain names
+  in the committed catalogs are generated aliases of the `DEFAULT_EDITION` items (`aliasItems`
+  in `lib.mjs`, same files), so the GitHub shorthand `anindosarker/shadcn-table/<name>`, which
+  cannot pick an edition, installs the default; never hand-write one, and `hosted.mjs` skips
+  them.
 - Each other edition has its own list of files that legitimately differ from radix:
   `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on an
   edition's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
@@ -31,10 +39,12 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, componen
 - Adding an edition-only difference means adding the path to that edition's list in the
   same commit.
 - shadcn parts (`registry/<edition>/components/ui/<part>.tsx`) are never edited; they are
-  what `pnpm add-part <edition> <part>` writes. A check that fails on a part is fixed in the
-  check (ESLint ignores the parts; the tsconfigs carry no unused-code flags). A part the
-  item ships as its own file is a recorded fork, listed in `forkedUi` in that edition's
-  `registry.ts` with its reason (today: `checkbox` on radix and base).
+  what `pnpm add-part <edition> <part>` writes, and `pnpm add-part <edition> --all` re-adds
+  every committed part of an edition: the gate is that it leaves `git status --short` empty.
+  A check that fails on a part is fixed in the check (ESLint ignores the parts; the tsconfigs
+  carry no unused-code flags). No exception: a look the library needs beyond the part goes in
+  a library wrapper under `components/ui/shadcn-table/` (`ST_Tooltip`, `ST_Checkbox`), and
+  every part reaches users as a `registryDependency`.
 - The docs examples follow the same model: `apps/shadcn-table-docs/examples/<edition>/<slug>/`
   for every edition, radix the reference, a common change made in every folder by hand,
   `scripts/registry/examples-<edition>-diff.json` the list of example files allowed to differ,
@@ -83,6 +93,7 @@ pnpm --filter shadcn-table test               # Radix UI stories
 pnpm --filter shadcn-table test:base          # Base UI stories
 pnpm --filter shadcn-table test:aria          # React Aria stories
 pnpm check:bases                              # edition guard, library and examples, every edition against radix
+pnpm add-part <edition> --all                 # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 

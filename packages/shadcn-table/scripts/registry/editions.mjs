@@ -6,13 +6,21 @@
 // and lib/example-variant-dir.mjs. No node imports, so Vite bundles it into
 // the Storybook manager and preview. The types live in editions.d.mts.
 //
-// Radix is the reference: check-bases.mjs compares every other edition
-// against it, each with its own list of files allowed to differ
-// (scripts/registry/<edition>-diff.json; the reference has none). It is also
-// the default build of the tools (ST_BASE unset) and the root of the static
-// Storybook, every other edition under <edition>/.
+// Two constants name one edition each, for two different jobs:
+// - REFERENCE_EDITION is the diff baseline: check-bases.mjs compares every
+//   other edition against it, each with its own list of files allowed to
+//   differ (scripts/registry/<edition>-diff.json; the reference has none),
+//   example-map.mjs and examples.mjs discover the example slugs in its
+//   folder, and the tools build it when ST_BASE is unset.
+// - DEFAULT_EDITION is what a reader sees before choosing: the docs edition
+//   tabs open on it (apps/shadcn-table-docs/lib/install.ts, defaultBase) and
+//   the Storybook root redirects to its build (vercel.json, written by hand
+//   to match; smoke.mjs checks it after a deploy).
+// No edition lives at the Storybook root: the static builds sit side by side
+// under storybook-static/<edition>/ (`storybook:build`, `:base`, `:aria`).
 export const EDITIONS = Object.freeze(['radix', 'base', 'aria']);
 export const REFERENCE_EDITION = 'radix';
+export const DEFAULT_EDITION = 'base';
 
 // How each edition is named to readers: the Storybook chrome and edition
 // switch, the release smoke's SKILL.md check.
@@ -27,11 +35,14 @@ export const EDITION_LABELS = Object.freeze({
 export const resolveEdition = (value) =>
   EDITIONS.find((edition) => edition === value) ?? REFERENCE_EDITION;
 
-// The committed registry name of an edition's copy of an item: the plain
-// name for the reference edition, `<name>-<edition>` for every other
-// (`shadcn-table`, `shadcn-table-base`, `shadcn-table-aria`; the docs
-// examples `example-basic`, `example-basic-base`, `example-basic-aria`).
-// The hosted registries (hosted.mjs) serve every edition under the plain
-// name, one directory per edition.
-export const editionItemName = (name, edition) =>
-  edition === REFERENCE_EDITION ? name : `${name}-${edition}`;
+// The committed registry name of an edition's copy of an item:
+// `<name>-<edition>` for every edition (the docs examples
+// `example-basic-radix`, `example-basic-base`, `example-basic-aria`; the
+// library items in registry/<edition>/registry.ts follow the same pattern by
+// hand: `shadcn-table-radix`, `shadcn-table-base`, `shadcn-table-aria`). The
+// plain name in the committed catalogs is a generated alias of the
+// DEFAULT_EDITION item, for the GitHub shorthand
+// `anindosarker/shadcn-table/<name>`, which cannot pick an edition
+// (aliasItems in lib.mjs). The hosted registries (hosted.mjs) serve every
+// edition under the plain name, one directory per edition, aliases skipped.
+export const editionItemName = (name, edition) => `${name}-${edition}`;

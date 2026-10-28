@@ -8,6 +8,9 @@
       "path": "./tsconfig.baseui.json"
     },
     {
+      "path": "./tsconfig.aria.json"
+    },
+    {
       "path": "./tsconfig.stories.json"
     }
   ]

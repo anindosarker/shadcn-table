@@ -2,7 +2,6 @@ import { themes, type ThemeVars } from 'storybook/theming';
 import {
   EDITION_LABELS,
   EDITIONS,
-  REFERENCE_EDITION,
   resolveEdition,
   type Edition,
 } from '../scripts/registry/editions.mjs';
@@ -10,8 +9,10 @@ import {
 /**
  * Every edition and its label (scripts/registry/editions.mjs), in the order
  * of the `storybook dev` ports in package.json (6006, 6007, 6008). Static
- * builds sit side by side: the reference edition (radix) at the root, every
- * other edition under <edition>/ (`storybook:build:<edition>`).
+ * builds sit side by side under storybook-static/<edition>/
+ * (`storybook:build`, `storybook:build:base`, `storybook:build:aria`); no
+ * edition lives at the root, which redirects to DEFAULT_EDITION in
+ * production (vercel.json).
  */
 export { EDITION_LABELS, EDITIONS, type Edition };
 
@@ -31,12 +32,11 @@ export const ST_OTHER_EDITIONS = EDITIONS.filter(
 );
 
 /**
- * Relative URL of another edition's static build from this one: the root
- * holds the reference edition, <edition>/ every other edition.
+ * Relative URL of another edition's static build from this one: every
+ * edition is a sibling folder, so the link climbs one level.
  */
 export function staticEditionRoot(target: Edition) {
-  const root = ST_BASE === REFERENCE_EDITION ? './' : '../';
-  return target === REFERENCE_EDITION ? root : `${root}${target}/`;
+  return `../${target}/`;
 }
 
 /**

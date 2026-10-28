@@ -5,10 +5,12 @@
  * other source file in the folder, subfolders included; EDITIONS in
  * lib.mjs, the reference edition's folder defines the example list). The
  * root registry.json includes this file, so the GitHub namespace serves
- * every example as `anindosarker/shadcn-table/example-<slug>` (Radix UI),
- * `example-<slug>-base` and `example-<slug>-aria` (editionItemName);
- * hosted.mjs serves each edition's items under the plain name in
- * /r/<edition>/.
+ * every example as `anindosarker/shadcn-table/example-<slug>-<edition>`
+ * (`example-basic-radix`, `example-basic-base`, `example-basic-aria`;
+ * editionItemName); hosted.mjs serves each edition's items under the plain
+ * `example-<slug>` in /r/<edition>/. The DEFAULT_EDITION items follow once
+ * more under that plain name, the GitHub shorthand aliases (aliasItems in
+ * lib.mjs), which hosted.mjs skips.
  *
  * Per item:
  * - name `editionItemName('example-<slug>', edition)`, type `registry:block`
@@ -39,7 +41,14 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { DOCS, EDITIONS, editionItemName, REFERENCE_EDITION } from './lib.mjs';
+import {
+  aliasItems,
+  DEFAULT_EDITION,
+  DOCS,
+  EDITIONS,
+  editionItemName,
+  REFERENCE_EDITION,
+} from './lib.mjs';
 
 // The example helpers are the docs app's own (its playground imports them
 // too), so they are loaded from there.
@@ -189,11 +198,13 @@ async function main() {
   slugs.sort();
 
   const items = [];
+  const defaultItems = [];
   const resolved = [];
   for (const edition of EDITIONS) {
     for (const slug of slugs) {
       const { item, sources } = await buildItem({ edition, slug, pages });
       items.push(item);
+      if (edition === DEFAULT_EDITION) defaultItems.push(item);
       resolved.push({
         $schema: 'https://ui.shadcn.com/schema/registry-item.json',
         ...item,
@@ -205,15 +216,16 @@ async function main() {
     }
   }
 
+  const aliases = aliasItems(defaultItems);
   const registry = {
     $schema: 'https://ui.shadcn.com/schema/registry.json',
     name: 'st-examples',
     homepage: 'https://github.com/anindosarker/shadcn-table',
-    items,
+    items: [...items, ...aliases],
   };
   await fs.writeFile(OUT_FILE, `${JSON.stringify(registry, null, 2)}\n`);
   console.log(
-    `${path.relative(process.cwd(), OUT_FILE)}: ${items.length} items (${slugs.length} examples, ${EDITIONS.length} editions)`,
+    `${path.relative(process.cwd(), OUT_FILE)}: ${items.length} items (${slugs.length} examples, ${EDITIONS.length} editions), ${aliases.length} ${DEFAULT_EDITION} aliases`,
   );
 
   if (resolveDir) {

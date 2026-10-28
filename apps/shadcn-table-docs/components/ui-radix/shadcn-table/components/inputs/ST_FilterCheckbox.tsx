@@ -1,7 +1,7 @@
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui-radix/checkbox';
+import { ST_Checkbox } from '@/components/ui-radix/shadcn-table/ST_Checkbox';
 import { Label } from '@/components/ui-radix/label';
 import {
   type CheckboxProps,
@@ -88,7 +88,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
             className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
             title={undefined}
           >
-            <Checkbox
+            <ST_Checkbox
               checked={
                 column.getFilterValue() === undefined
                   ? 'indeterminate'

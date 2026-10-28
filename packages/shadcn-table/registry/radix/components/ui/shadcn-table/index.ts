@@ -22,6 +22,7 @@ export * from '@/components/ui/shadcn-table/hooks/useST_TableInstance';
 export * from '@/components/ui/shadcn-table/hooks/useST_TableOptions';
 
 export * from '@/components/ui/shadcn-table/ShadcnTable';
+export * from '@/components/ui/shadcn-table/ST_Checkbox';
 export * from '@/components/ui/shadcn-table/ST_Tooltip';
 export * from '@/components/ui/shadcn-table/components/body/ST_TableBody';
 export * from '@/components/ui/shadcn-table/components/body/ST_TableBodyCell';
