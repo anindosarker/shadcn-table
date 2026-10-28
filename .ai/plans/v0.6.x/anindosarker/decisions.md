@@ -134,3 +134,11 @@ force; nothing here re-decides them.
      radix items become `shadcn-table-radix`, `shadcn-table-radix-locale-*`,
      `example-<slug>-radix`. Repo-internal: `hosted.mjs` already serves the plain name under
      `/r/<edition>/`, so the hosted output is byte-identical and nothing changes for users.
+   - GitHub shorthand aliases (added 2026-10-29). `npx shadcn add anindosarker/shadcn-table/<item>`
+     reads the committed catalog and cannot pick an edition: no `{style}` substitution, static
+     item content (the hosted `@st` namespace does pick it, through `{style}`). So `build.mjs`
+     emits the plain names (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`) as
+     generated aliases of the Base UI items, same `files`, description naming the alias, in
+     line with Base UI as the default a reader sees. Before 0.6.1 the plain names were the
+     Radix UI items; that path was never documented and the changelog names the change.
+     `hosted.mjs` ignores the aliases.
