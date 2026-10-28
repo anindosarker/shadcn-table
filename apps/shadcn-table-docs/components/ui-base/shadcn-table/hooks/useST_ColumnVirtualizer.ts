@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { type Range, useVirtualizer } from '@tanstack/react-virtual';
 import {
@@ -93,6 +93,15 @@ export const useST_ColumnVirtualizer = <
     ),
     ...columnVirtualizerProps,
   }) as unknown as ST_ColumnVirtualizer<TScrollElement, TItemElement>;
+
+  // React attaches the container ref after the layout effects of the
+  // components inside it, so the virtualizer's first update finds no scroll
+  // element and renders nothing. Storing the element once the ref is attached
+  // renders this component again, and that update picks the element up.
+  const [, setScrollElement] = useState<HTMLDivElement | null>(null);
+  useEffect(() => {
+    setScrollElement(tableContainerRef.current);
+  });
 
   const virtualColumns = columnVirtualizer.getVirtualItems();
   columnVirtualizer.virtualColumns = virtualColumns as any;

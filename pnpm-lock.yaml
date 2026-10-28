@@ -45,6 +45,9 @@ importers:
       '@tanstack/react-query':
         specifier: 5.62.8
         version: 5.62.8(react@19.3.1)
+      '@tanstack/react-store':
+        specifier: 0.11.2
+        version: 0.11.2(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@tanstack/react-table':
         specifier: 9.3.1
         version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
