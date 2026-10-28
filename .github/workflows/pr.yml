@@ -173,8 +173,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter shadcn-table exec shadcn registry validate "anindosarker/shadcn-table#${{ github.sha }}"
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/shadcn-table#${{ github.sha }}" --dry-run
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic#${{ github.sha }}" --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/shadcn-table-radix#${{ github.sha }}" --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic-radix#${{ github.sha }}" --dry-run
       - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic-base#${{ github.sha }}" --dry-run
       - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic-aria#${{ github.sha }}" --dry-run
 
