@@ -161,7 +161,9 @@ for (const edition of EDITIONS) {
       res.status >= 300 &&
         res.status < 400 &&
         location.pathname === `/${DEFAULT_EDITION}/` &&
-        location.search === query,
+        // Vercel percent-encodes the forwarded query value
+        // (`?path=%2Fstory%2Fx`), so compare the decoded parameter.
+        location.searchParams.get('path') === '/story/x',
       `status=${res.status} location=${location.href}`,
     );
   } catch (error) {
