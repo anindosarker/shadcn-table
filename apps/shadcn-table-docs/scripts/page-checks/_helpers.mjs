@@ -285,12 +285,15 @@ export async function exampleGroup(page, tabs, check) {
 /**
  * Site-wide base switch (components/base-selector.tsx, in the docs header):
  * Base UI re-renders example `#example-<id>` (rows again, Base UI markup:
- * Base UI collapsibles set data-open/data-closed, Radix's set data-state)
- * while the Code view keeps showing the base-neutral source, with
- * `@/components/ui/shadcn-table` imports and no `ui-radix` or `ui-base`;
- * then Radix again, same source. No console errors is asserted by the
- * runner. The explorer highlights the active file in the browser, so the
- * code view's text is read only once a `code` element is in the explorer.
+ * Base UI collapsibles set data-open/data-closed, Radix's set data-state),
+ * then React Aria does (rows again, React Aria markup: React Aria Components
+ * set data-rac on what they render, Radix and Base UI never do), while the
+ * Code view keeps showing the base-neutral source, with
+ * `@/components/ui/shadcn-table` imports and no `ui-radix`, `ui-base` or
+ * `ui-aria`; then Radix again, same source. No console errors is asserted
+ * by the runner. The explorer highlights the active file in the browser, so
+ * the code view's text is read only once a `code` element is in the
+ * explorer.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
@@ -312,13 +315,44 @@ export async function baseSwitch(page, id, check) {
         .catch(() => '')) ?? ''
     );
   };
+  const showCode = async () => {
+    await panel
+      .locator('button', { hasText: /^Code$/ })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+  };
+  const showPreview = async () => {
+    await panel
+      .locator('button', { hasText: /^Preview$/ })
+      .first()
+      .click();
+    await rows
+      .first()
+      .waitFor({ timeout: 60000 })
+      .catch(() => {});
+  };
+  const pick = async (label) => {
+    await header.getByRole('tab', { name: label }).click();
+    await rows
+      .first()
+      .waitFor({ timeout: 60000 })
+      .catch(() => {});
+  };
   const baseMarkup = () => panel.locator('[data-open], [data-closed]').count();
+  const ariaMarkup = () => panel.locator('[data-rac]').count();
+  const neutral = (text) =>
+    text.includes("'@/components/ui/shadcn-table'") &&
+    !text.includes('ui-radix') &&
+    !text.includes('ui-base') &&
+    !text.includes('ui-aria');
   check(`${id}: radix markup`, (await baseMarkup()) === 0);
-  await header.getByRole('tab', { name: 'Base UI' }).click();
-  await rows
-    .first()
-    .waitFor({ timeout: 60000 })
-    .catch(() => {});
+  check(
+    `${id}: radix markup, no react aria`,
+    (await ariaMarkup()) === 0,
+    `rac=${await ariaMarkup()}`,
+  );
+  await pick('Base UI');
   check(
     `${id}: base ui rows`,
     (await rows.count()) > 0,
@@ -329,20 +363,36 @@ export async function baseSwitch(page, id, check) {
     (await baseMarkup()) > 0,
     `base=${await baseMarkup()}`,
   );
-  await panel
-    .locator('button', { hasText: /^Code$/ })
-    .first()
-    .click();
-  await page.waitForTimeout(200);
-  const neutral = (text) =>
-    text.includes("'@/components/ui/shadcn-table'") &&
-    !text.includes('ui-radix') &&
-    !text.includes('ui-base');
+  check(
+    `${id}: base ui markup, no react aria`,
+    (await ariaMarkup()) === 0,
+    `rac=${await ariaMarkup()}`,
+  );
+  await showCode();
   const baseSource = await source();
   check(
     `${id}: base ui source`,
     neutral(baseSource),
     `len=${baseSource.length}`,
+  );
+  await showPreview();
+  await pick('React Aria');
+  check(
+    `${id}: react aria rows`,
+    (await rows.count()) > 0,
+    `rows=${await rows.count()}`,
+  );
+  check(
+    `${id}: react aria markup`,
+    (await ariaMarkup()) > 0,
+    `rac=${await ariaMarkup()}`,
+  );
+  await showCode();
+  const ariaSource = await source();
+  check(
+    `${id}: react aria source`,
+    neutral(ariaSource),
+    `len=${ariaSource.length}`,
   );
   await header.getByRole('tab', { name: 'Radix UI' }).click();
   await page.waitForTimeout(200);
@@ -352,15 +402,13 @@ export async function baseSwitch(page, id, check) {
     neutral(radixSource),
     `len=${radixSource.length}`,
   );
-  await panel
-    .locator('button', { hasText: /^Preview$/ })
-    .first()
-    .click();
-  await rows
-    .first()
-    .waitFor({ timeout: 60000 })
-    .catch(() => {});
+  await showPreview();
   check(`${id}: radix rows again`, (await rows.count()) > 0);
+  check(
+    `${id}: radix markup again`,
+    (await baseMarkup()) === 0 && (await ariaMarkup()) === 0,
+    `base=${await baseMarkup()} rac=${await ariaMarkup()}`,
+  );
 }
 
 const DEMO_LAST = 'Now showing: Grouping';
@@ -368,12 +416,13 @@ const DEMO_MIN_HOLD_MS = 15000;
 const DEMO_TIMEOUT_MS = 30000;
 
 /**
- * Holds the home page through the full live demo loop on both bases. The
+ * Holds the home page through the full live demo loop on every base. The
  * demo (components/dev-home/v12/signal-demo.tsx) plays only while it is on
  * screen, so it is scrolled into view; each hold waits until its aria-live
  * status reads the last step and lasts at least DEMO_MIN_HOLD_MS. The first
  * hold runs on the default base (Radix UI); the second picks Base UI through
- * the agent bar's base menu and reloads. A render loop or crash that needs
+ * the agent bar's base menu and reloads, the third does the same for React
+ * Aria. A render loop or crash that needs
  * time or the demo's step changes to surface fails here (v0.3.0 died with
  * React error #185 about 9.6 s after load, when the demo's replay edit effect
  * re-ran on every render): the runner's pageerror and console listeners stay
@@ -406,28 +455,30 @@ export async function demoLoop(page, check) {
       check(name, false, String(e.message).split('\n')[0].slice(0, 160));
     }
   };
-  await run('demo: radix ui reaches Grouping');
-  if (!crashed) {
-    await run('demo: base ui reaches Grouping', async () => {
-      const bar = page.locator('[data-slot="agent-bar"]');
-      await bar.getByRole('button', { name: 'Choose base' }).click();
-      const item = page.getByRole('menuitemradio', {
-        name: 'Base UI',
-        exact: true,
-      });
-      await item.waitFor({ timeout: 5000 });
-      await item.click();
-      await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
-      const label =
-        (await bar
-          .getByRole('radio', { name: /^command/i })
-          .textContent()
-          .catch(() => '')) ?? '';
-      if (!/base ui/i.test(label))
-        throw new Error(`base not kept after reload: ${label.trim()}`);
+  /** Picks a base through the agent bar's menu, reloads, and asserts it kept. */
+  const choose = (label) => async () => {
+    const bar = page.locator('[data-slot="agent-bar"]');
+    await bar.getByRole('button', { name: 'Choose base' }).click();
+    const item = page.getByRole('menuitemradio', {
+      name: label,
+      exact: true,
     });
-  } else {
-    check('demo: base ui reaches Grouping', false, 'skipped after crash');
+    await item.waitFor({ timeout: 5000 });
+    await item.click();
+    await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+    const tab =
+      (await bar
+        .getByRole('radio', { name: /^command/i })
+        .textContent()
+        .catch(() => '')) ?? '';
+    if (!tab.toLowerCase().includes(label.toLowerCase()))
+      throw new Error(`base not kept after reload: ${tab.trim()}`);
+  };
+  await run('demo: radix ui reaches Grouping');
+  for (const label of ['Base UI', 'React Aria']) {
+    const name = `demo: ${label.toLowerCase()} reaches Grouping`;
+    if (crashed) check(name, false, 'skipped after crash');
+    else await run(name, choose(label));
   }
   check('demo: no renderer crash', !crashed);
 }
