@@ -665,7 +665,8 @@ function PromptPane({ chat }: { chat: Chat }) {
     <div className="absolute inset-0 flex flex-col gap-4 p-4 font-sans text-[0.8125rem] leading-5">
       <ol
         aria-label="Chat"
-        className="flex min-h-0 flex-1 flex-col justify-end gap-5 overflow-hidden"
+        // older turns fade out under the top edge instead of cutting a line
+        className="flex min-h-0 flex-1 flex-col justify-end gap-5 overflow-hidden mask-[linear-gradient(to_bottom,transparent,black_4rem)]"
       >
         {chat.log.map((e, i) => (
           <Turn key={e.key} to={e.to} faded={thinking || i < last}>
@@ -1000,12 +1001,18 @@ export function WholeApp({
   };
 
   return (
-    <div className="flex flex-col">
+    <div
+      className={cn(
+        'flex flex-col',
+        // home: fills the screen under the sticky nav, within bounds
+        home && 'xl:h-[clamp(36rem,calc(100svh-var(--v4-nav-h)-2rem),60rem)]',
+      )}
+    >
       <div
         className={cn(
           'grid items-stretch',
           home
-            ? 'xl:grid-cols-[minmax(0,5fr)_minmax(0,8fr)]'
+            ? 'xl:min-h-0 xl:flex-1 xl:grid-cols-[minmax(0,5fr)_minmax(0,8fr)] xl:grid-rows-[minmax(0,1fr)]'
             : 'min-[90rem]:grid-cols-[minmax(0,1fr)_minmax(0,54.5rem)]',
         )}
       >

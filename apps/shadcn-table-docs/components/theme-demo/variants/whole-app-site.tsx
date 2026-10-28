@@ -34,13 +34,25 @@ const ThemeTable = dynamic(
   },
 );
 
-const PHONE = '(max-width: 639px)';
-
-function subscribePhone(onChange: () => void) {
-  const query = window.matchMedia(PHONE);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
+/** A media query's match, false on the server. */
+function useMedia(query: string) {
+  return useSyncExternalStore(
+    (onChange) => {
+      const list = window.matchMedia(query);
+      list.addEventListener('change', onChange);
+      return () => list.removeEventListener('change', onChange);
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
 }
+
+/* home: what the frame shows grows with the screen's height; below these
+ * heights the settings form, then the page header, then the card charts
+ * and the table toolbar give way, and the table drops from 6 rows to 4 */
+const FORM = '[@media(max-height:919px)]:hidden';
+const HEADER = '[@media(max-height:819px)]:hidden';
+const CHART = '[@media(max-height:699px)]:hidden';
 
 // weekly active members, drawn as the sparkline
 const ACTIVE = [18, 21, 19, 24, 22, 26, 28];
@@ -147,9 +159,9 @@ function TopBar({ name }: { name: string }) {
  * (top bar, Tabs, KPI cards, a settings form) with the table among them. It
  * holds no theme; the ThemeScope around it repaints all of it at once. Its
  * layout follows the frame's width (container queries), so the card row
- * gives way before the table does. `home` keeps it to one screen: the top
- * bar, one-line KPI cards and a 4-row table without its toolbar or Email
- * (the compact table on phones), no page header, no settings form.
+ * gives way before the table does. `home` fits it to one screen: parts give
+ * way by screen height (FORM, HEADER, CHART), the table drops Email, and
+ * phones get the top bar, two one-line KPI cards and the compact table.
  */
 export function WholeAppSite({
   name,
@@ -158,18 +170,16 @@ export function WholeAppSite({
   name: string;
   home?: boolean;
 }) {
-  const phone = useSyncExternalStore(
-    subscribePhone,
-    () => window.matchMedia(PHONE).matches,
-    () => false,
-  );
+  const phone = useMedia('(max-width: 639px)');
+  const tall = useMedia('(min-height: 780px)');
+  const short = useMedia('(max-height: 699px)');
 
-  if (home)
+  if (home && phone)
     return (
       <div className="@container flex min-w-0 flex-1 flex-col">
         <TopBar name={name} />
         <div className="flex min-w-0 flex-col gap-3 p-3 @lg:p-4">
-          <div className="grid grid-cols-2 gap-3 @xl:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3">
             <Card className="flex-row flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 px-3 py-2">
               <p className="text-xs text-muted-foreground">Seats used</p>
               <p className="text-lg leading-7 font-semibold tabular-nums">
@@ -183,26 +193,11 @@ export function WholeAppSite({
                 <Badge variant="secondary">+12%</Badge>
               </p>
             </Card>
-            <Card className="hidden flex-row flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 px-3 py-2 @xl:flex">
-              <p className="text-xs text-muted-foreground">Storage</p>
-              <p className="text-lg leading-7 font-semibold tabular-nums">
-                62%{' '}
-                <span className="text-sm text-muted-foreground">of 50 GB</span>
-              </p>
-            </Card>
           </div>
           <div className="min-w-0">
-            {/* phones get the card-sized table: Name and Status fill the
-             * width, so nothing scrolls sideways */}
-            {phone ? (
-              <ThemeTable compact />
-            ) : (
-              <ThemeTable
-                pageSize={4}
-                toolbar={false}
-                hiddenColumns={['email']}
-              />
-            )}
+            {/* the card-sized table: Name and Status fill the width, so
+             * nothing scrolls sideways */}
+            <ThemeTable compact />
           </div>
         </div>
       </div>
@@ -213,7 +208,12 @@ export function WholeAppSite({
       <TopBar name={name} />
 
       <div className="flex min-w-0 flex-col gap-4 p-3 @lg:p-4">
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <div
+          className={cn(
+            'flex flex-wrap items-center justify-between gap-x-4 gap-y-2',
+            home && HEADER,
+          )}
+        >
           <div className="leading-tight">
             <h2 className="text-lg font-semibold">Members</h2>
             <p className="text-xs text-muted-foreground">
@@ -235,7 +235,11 @@ export function WholeAppSite({
             <p className="text-xl font-semibold tabular-nums">
               35 <span className="text-sm text-muted-foreground">/ 40</span>
             </p>
-            <Progress value={87} aria-label="Seats used" />
+            <Progress
+              value={87}
+              aria-label="Seats used"
+              className={cn(home && CHART)}
+            />
           </Card>
           <Card>
             <p className="text-xs text-muted-foreground">Active this week</p>
@@ -243,7 +247,9 @@ export function WholeAppSite({
               28
               <Badge variant="secondary">+12%</Badge>
             </p>
-            <Sparkline values={ACTIVE} />
+            <div className={cn(home && CHART)}>
+              <Sparkline values={ACTIVE} />
+            </div>
           </Card>
           <Card className="hidden @xl:flex">
             <p className="text-xs text-muted-foreground">Storage</p>
@@ -251,15 +257,29 @@ export function WholeAppSite({
               62%{' '}
               <span className="text-sm text-muted-foreground">of 50 GB</span>
             </p>
-            <Progress value={62} aria-label="Storage" />
+            <Progress
+              value={62}
+              aria-label="Storage"
+              className={cn(home && CHART)}
+            />
           </Card>
         </div>
 
         <div className="min-w-0">
-          <ThemeTable />
+          {home ? (
+            // remounts when the row count changes, to apply it
+            <ThemeTable
+              key={`${tall}-${short}`}
+              pageSize={tall ? 6 : 4}
+              toolbar={!short}
+              hiddenColumns={['email']}
+            />
+          ) : (
+            <ThemeTable />
+          )}
         </div>
 
-        <Card className="gap-3">
+        <Card className={cn('gap-3', home && FORM)}>
           <div className="leading-tight">
             <h3 className="text-sm font-semibold">Invite settings</h3>
             <p className="text-xs text-muted-foreground">
