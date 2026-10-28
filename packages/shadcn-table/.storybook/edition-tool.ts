@@ -1,6 +1,7 @@
 import { createElement, Fragment } from 'react';
 import { IconButton } from 'storybook/internal/components';
 import { addons, types, useStorybookState } from 'storybook/manager-api';
+import { useTheme } from 'storybook/theming';
 import {
   EDITION_LABELS,
   EDITIONS,
@@ -14,8 +15,7 @@ const ADDON_ID = 'shadcn-table/edition';
 
 /**
  * Another edition's URL for the same story. Static builds sit side by side
- * (radix at the root, the others under <edition>/), so the link is relative;
- * `storybook dev` serves the editions on consecutive ports in EDITIONS order
+ * under <edition>/, so the link is relative; `storybook dev` serves the editions on consecutive ports in EDITIONS order
  * (6006, 6007 and 6008 in package.json), so the link shifts the port.
  * `path` is the manager's `?path=` value, which Storybook does not encode.
  */
@@ -34,11 +34,16 @@ export function editionHref(
 }
 
 /**
- * Three-way edition switch: the current edition marked active, the other two
- * linking to the same story in their own Storybook.
+ * Three-way edition switch: the current edition marked selected, the other
+ * two linking to the same story in their own Storybook. `active` changes
+ * nothing on the outlined IconButton, so the current edition also gets the
+ * manager's selected-tab mark: a 2px bottom bar in `barSelectedColor` inside
+ * the same 1px outline as its siblings, both read from the active manager
+ * theme so they follow the storybook-dark-mode toggle.
  */
 function EditionTool() {
   const { path } = useStorybookState();
+  const theme = useTheme();
   return createElement(
     Fragment,
     null,
@@ -53,6 +58,9 @@ function EditionTool() {
               title: `This story in the ${EDITION_LABELS[edition]} edition`,
               'aria-current': 'page',
               'data-edition-current': '',
+              style: {
+                boxShadow: `inset 0 0 0 1px ${theme.appBorderColor}, inset 0 -2px 0 0 ${theme.barSelectedColor}`,
+              },
             },
             EDITION_LABELS[edition],
           )
