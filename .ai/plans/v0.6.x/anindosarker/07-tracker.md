@@ -19,8 +19,9 @@ chevron commit `8db770ea` feat(storybook): chevron on the edition picker.
   app; `111abbfc` docs: name the shadcn base `base` in the prose and standards. Docs
   `types:check` exit 0, `lint` exit 0 (9 warnings, none new), `build` exit 0. `next start` on
   5345: `check-pages.mjs a --url http://localhost:5345 --base <base>` 277 passed, 0 failed for
-  base, radix and aria; `check-pages.mjs e` 596 passed, 0 failed for each base.
-- Final: changelog line, `06-shots/` deleted, tracker. `grep -rni edition` gate (plan 2.2
+  base, radix and aria; `check-pages.mjs e` 596 passed, 0 failed for each base; full run
+  without `--base` 1654 passed, 0 failed; `--base nope` exits 1 with the usage error.
+- Final: `8801049c` docs(changelog): base naming, tracker for part 07. Changelog lines, `06-shots/` deleted, tracker. `grep -rni edition` gate (plan 2.2
   excludes plus `.git`) prints nothing with `public/r`, `storybook-static` and `.next` built.
 
 ## Owner attention
