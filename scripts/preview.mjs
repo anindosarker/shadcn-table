@@ -3,8 +3,8 @@
 //
 // Everything at once, against local registries:
 //   http://localhost:5310/r   package registry (`pnpm registry:dev`, .dev/r)
-//   http://localhost:6006     Storybook, Radix UI
 //   http://localhost:6007     Storybook, Base UI
+//   http://localhost:6006     Storybook, Radix UI
 //   http://localhost:6008     Storybook, React Aria
 //   http://localhost:5330     docs production build (the docs `pnpm preview`,
 //                             .next-preview), whose /r and install commands
