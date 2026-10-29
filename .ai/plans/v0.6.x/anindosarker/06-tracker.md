@@ -37,7 +37,7 @@ decision 8. Branch `v0.6/edition-order-dropdown`, worktree `07`, from `claude/re
   on 5346: `check-pages.mjs --edition radix`, `--edition aria`, `--edition base`: `1654 passed, 0 failed` each, after the fix. A fresh context (`--edition` unset) opens
   `/docs/getting-started/install` with the header button reading `Base UI` and the menu listing
   Base UI, Radix UI, React Aria, Base UI checked (cluster a, `277 passed`).
-- Final: FINALSHA chore: changelog, tracker, 05-shots removed. `05-shots/` deleted, `CHANGELOG.md` `## Unreleased` `### Changed` (order, the two selects, script names and the `ST_BASE` fallback). Hosted output: `public/r` is gitignored, so `git status` is empty by construction; the real check rebuilt `registry:build`, `registry:items`, `registry:hosted` with the `91614e84` `editions.mjs` and with the new one: `diff -r` of the two `public/r` trees is empty.
+- Final: `92c4b6df` docs(changelog): Base UI first, edition selects, edition scripts; `c88fe68f` chore(plans): part 06 tracker, Storybook shots, drop 05-shots. `05-shots/` deleted, `CHANGELOG.md` `## Unreleased` `### Changed` (order, the two selects, script names and the `ST_BASE` fallback). Hosted output: `public/r` is gitignored, so `git status` is empty by construction; the real check rebuilt `registry:build`, `registry:items`, `registry:hosted` with the `91614e84` `editions.mjs` and with the new one: `diff -r` of the two `public/r` trees is empty.
 
 ## Gates
 
