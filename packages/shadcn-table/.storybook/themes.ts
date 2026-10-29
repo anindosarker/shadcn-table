@@ -1,6 +1,7 @@
 import { themes, type ThemeVars } from 'storybook/theming';
 import {
   EDITION_LABELS,
+  EDITION_PORTS,
   EDITIONS,
   resolveEdition,
   type Edition,
@@ -14,7 +15,7 @@ import {
  * edition lives at the root, which redirects to DEFAULT_EDITION in
  * production (vercel.json).
  */
-export { EDITION_LABELS, EDITIONS, type Edition };
+export { EDITION_LABELS, EDITION_PORTS, EDITIONS, type Edition };
 
 /**
  * The edition this Storybook was built for, set on the window by main.ts

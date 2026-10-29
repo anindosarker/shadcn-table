@@ -1,9 +1,9 @@
 import { createElement } from 'react';
 import { Select } from 'storybook/internal/components';
 import { addons, types, useStorybookState } from 'storybook/manager-api';
-import { EDITION_PORTS } from '../scripts/registry/editions.mjs';
 import {
   EDITION_LABELS,
+  EDITION_PORTS,
   EDITIONS,
   ST_BASE,
   ST_DEV,
