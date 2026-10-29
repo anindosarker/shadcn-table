@@ -1,7 +1,7 @@
-import { createElement, Fragment } from 'react';
-import { IconButton } from 'storybook/internal/components';
+import { createElement } from 'react';
+import { Select } from 'storybook/internal/components';
 import { addons, types, useStorybookState } from 'storybook/manager-api';
-import { useTheme } from 'storybook/theming';
+import { EDITION_PORTS } from '../scripts/registry/editions.mjs';
 import {
   EDITION_LABELS,
   EDITIONS,
@@ -15,9 +15,9 @@ const ADDON_ID = 'shadcn-table/edition';
 
 /**
  * Another edition's URL for the same story. Static builds sit side by side
- * under <edition>/, so the link is relative; `storybook dev` serves the
- * editions on consecutive ports in EDITIONS order (6006, 6007 and 6008 in
- * package.json), so the link shifts the port.
+ * under <edition>/, so the link is relative; `storybook dev` serves each
+ * edition on its own port (EDITION_PORTS, the package.json
+ * `storybook:<edition>` scripts), so the link swaps the port.
  * `path` is the manager's `?path=` value, which Storybook does not encode.
  */
 export function editionHref(
@@ -27,60 +27,33 @@ export function editionHref(
 ) {
   const query = `?path=${path}`;
   if (!ST_DEV) return `${staticEditionRoot(target)}${query}`;
-  const port =
-    Number(location.port) +
-    EDITIONS.indexOf(target) -
-    EDITIONS.indexOf(ST_BASE);
-  return `${location.protocol}//${location.hostname}:${port}/${query}`;
+  return `${location.protocol}//${location.hostname}:${EDITION_PORTS[target]}/${query}`;
 }
 
+const OPTIONS = EDITIONS.map((edition) => ({
+  value: edition,
+  title: EDITION_LABELS[edition],
+}));
+
 /**
- * Three-way edition switch: the current edition marked selected, the other
- * two linking to the same story in their own Storybook. `active` changes
- * nothing on the outlined IconButton, so the current edition also gets the
- * manager's selected-tab mark: a 2px bottom bar in `barSelectedColor` inside
- * the same 1px outline as its siblings, both read from the active manager
- * theme so they follow the storybook-dark-mode toggle.
+ * Edition switch: Storybook's own toolbar Select (the one behind the
+ * viewport and background pickers), the current edition preselected.
+ * Choosing another edition opens the same story in that edition's
+ * Storybook, in the top frame.
  */
 function EditionTool() {
   const { path } = useStorybookState();
-  const theme = useTheme();
-  return createElement(
-    Fragment,
-    null,
-    ...EDITIONS.map((edition) =>
-      edition === ST_BASE
-        ? createElement(
-            IconButton,
-            {
-              key: edition,
-              active: true,
-              ariaLabel: false,
-              title: `This story in the ${EDITION_LABELS[edition]} edition`,
-              'aria-current': 'page',
-              'data-edition-current': '',
-              style: {
-                boxShadow: `inset 0 0 0 1px ${theme.appBorderColor}, inset 0 -2px 0 0 ${theme.barSelectedColor}`,
-              },
-            },
-            EDITION_LABELS[edition],
-          )
-        : createElement(
-            IconButton,
-            { key: edition, asChild: true, ariaLabel: false },
-            createElement(
-              'a',
-              {
-                href: editionHref(edition, path),
-                target: '_top',
-                title: `Open this story in the ${EDITION_LABELS[edition]} edition`,
-                'data-edition-link': edition,
-              },
-              EDITION_LABELS[edition],
-            ),
-          ),
-    ),
-  );
+  return createElement(Select, {
+    ariaLabel: 'Edition',
+    size: 'small',
+    options: OPTIONS,
+    defaultOptions: ST_BASE,
+    onSelect: (value) => {
+      const target = EDITIONS.find((edition) => edition === value);
+      if (!target || target === ST_BASE) return;
+      (window.top ?? window).location.assign(editionHref(target, path));
+    },
+  });
 }
 
 addons.register(ADDON_ID, () => {
