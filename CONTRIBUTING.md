@@ -1,6 +1,6 @@
 # Contributing
 
-This repo holds shadcn-table, a React data table on TanStack Table v9 that ships as a shadcn registry: the source is copied into the user's app by the shadcn CLI, there is no npm package, and the Base UI, Radix UI and React Aria bases are supported through one edition each. The library source lives once per base, as three complete trees under `packages/shadcn-table/registry/`: `base`, `radix` and `aria`, each with its shadcn parts and every library file. The edition list is `EDITIONS` in `packages/shadcn-table/scripts/registry/editions.mjs`, Base UI first, the one source of the order readers see; every script and config that handles more than one edition reads it. A change goes through four pieces:
+This repo holds shadcn-table, a React data table on TanStack Table v9 that ships as a shadcn registry: the source is copied into the user's app by the shadcn CLI, there is no npm package, and the Base UI, Radix UI and React Aria bases are supported, one copy of the table per shadcn base. The library source lives once per base, as three complete trees under `packages/shadcn-table/registry/`: `base`, `radix` and `aria`, each with its shadcn parts and every library file. The base list is `BASES` in `packages/shadcn-table/scripts/registry/bases.mjs`, Base UI first, the one source of the order readers see; every script and config that handles more than one base reads it. A change goes through four pieces:
 
 1. **Library:** `packages/shadcn-table`, the three trees and the shared Storybook stories.
 2. **Tests:** Vitest runs every story in headless Chromium, once per base.
@@ -19,10 +19,10 @@ The goal of this guide: make a change, prove it, open a PR; step 7 says how a me
 
 ## Three Trees
 
-`registry/<base>/components/ui/shadcn-table/` is the library, once per base. Each tree builds on its own shadcn parts (Base UI in `@base-ui/react`, Radix UI in `radix-ui`, React Aria in `react-aria-components`); `@/` is a plain alias to the tree, so no adapter layer, no codemod, nothing generated. Radix is the reference: `pnpm check:bases` (the CI job `bases`) compares every other edition against it, each with its own list of library files that differ on purpose, `scripts/registry/base-diff.json` and `scripts/registry/aria-diff.json`. Every other library file must be byte-identical in all three trees, and the guard fails otherwise. The rule for a library change:
+`registry/<base>/components/ui/shadcn-table/` is the library, once per base. Each tree builds on its own shadcn parts (Base UI in `@base-ui/react`, Radix UI in `radix-ui`, React Aria in `react-aria-components`); `@/` is a plain alias to the tree, so no adapter layer, no codemod, nothing generated. Radix is the reference: `pnpm check:bases` (the CI job `bases`) compares every other base against it, each with its own list of library files that differ on purpose, `scripts/registry/base-diff.json` and `scripts/registry/aria-diff.json`. Every other library file must be byte-identical in all three trees, and the guard fails otherwise. The rule for a library change:
 
-- **Edit the radix tree and copy the file to the others** when every edition takes the change (the guard reports a missed twin), or
-- **edit the edition's own copy and add the path to its `<edition>-diff.json`** in the same commit when only that base differs, and say so in the PR.
+- **Edit the radix tree and copy the file to the others** when every base takes the change (the guard reports a missed twin), or
+- **edit the base's own copy and add the path to its `<base>-diff.json`** in the same commit when only that base differs, and say so in the PR.
 
 `packages/shadcn-table/registry/README.md` has what lives where, how to add a part and the gates.
 
@@ -33,27 +33,27 @@ packages/shadcn-table/
   registry/radix/
     components.json                 # style radix-nova
     components/ui/                  # shadcn/ui parts the library uses (Radix UI)
-    components/ui/shadcn-table/     # the library, Radix UI edition; locales under locales/
+    components/ui/shadcn-table/     # the library, Radix UI copy; locales under locales/
     registry.ts                     # item definition: shadcn-table + locale items
   registry/base/
     components.json                 # style base-nova
     components/ui/                  # shadcn/ui parts the library uses (Base UI)
-    components/ui/shadcn-table/     # the library, Base UI edition (23 files differ)
+    components/ui/shadcn-table/     # the library, Base UI copy (23 files differ)
     registry.ts                     # item definition: shadcn-table-base + locale items
   registry/aria/
     components.json                 # style aria-nova
     components/ui/                  # shadcn/ui parts the library uses (React Aria)
-    components/ui/shadcn-table/     # the library, React Aria edition (37 files differ)
+    components/ui/shadcn-table/     # the library, React Aria copy (37 files differ)
     registry.ts                     # item definition: shadcn-table-aria + locale items
   registry/README.md                # what lives where, how to change a file, how to add a part
   stories/                          # Storybook stories, also the test suite, run once per base
-  scripts/registry/editions.mjs     # the edition list (EDITIONS), radix the reference
+  scripts/registry/bases.mjs        # the base list (BASES), radix the reference
   scripts/registry/lib.mjs          # item helpers: tree files + forked parts + css
   scripts/registry/build.mjs        # collects every registry.ts into registry.json
-  scripts/registry/examples.mjs     # example items per edition -> apps/shadcn-table-docs/registry.json
+  scripts/registry/examples.mjs     # example items per base -> apps/shadcn-table-docs/registry.json
   scripts/registry/hosted.mjs       # hosted copies per base -> apps/shadcn-table-docs/public/r/<base>/ (gitignored)
   scripts/registry/add-part.mjs     # pnpm add-part <base> <part>: fetch a shadcn part into registry/<base>/components/ui/
-  scripts/registry/check-bases.mjs  # pnpm check:bases: the n-tree guard, each edition against radix, library and examples
+  scripts/registry/check-bases.mjs  # pnpm check:bases: the n-tree guard, each base against radix, library and examples
   scripts/registry/base-diff.json   # library files allowed to differ between radix and base
   scripts/registry/aria-diff.json   # library files allowed to differ between radix and aria
   scripts/registry/examples-base-diff.json  # example files allowed to differ between examples/radix and examples/base
@@ -63,7 +63,7 @@ apps/shadcn-table-docs/
   components/ui-radix/              # installed Radix UI copy of the library and its parts (never edit)
   components/ui-base/               # installed Base UI copy, same shape (never edit)
   components/ui-aria/               # installed React Aria copy, same shape (never edit)
-  examples/radix/<slug>/            # one folder per docs example and edition, imports @/components/ui/ like a user's project
+  examples/radix/<slug>/            # one folder per docs example and base, imports @/components/ui/ like a user's project
   examples/base/<slug>/ aria/<slug>/  # the same examples written for Base UI and React Aria (pnpm check:bases guards the drift)
   examples/map.tsx                  # generated: one component per example (scripts/example-map.mjs)
   examples/.radix/ .base/ .aria/    # generated per-base copies of the examples, imports rewritten (gitignored)
@@ -88,9 +88,9 @@ Node 22, pnpm 10.13.1 (pinned by `packageManager`, Corepack picks it up), and Ch
 | Port | Server                                                             |
 | ---- | ------------------------------------------------------------------ |
 | 5320 | docs app (`pnpm --filter shadcn-table-docs dev`)                   |
-| 6007 | Storybook, Base UI edition (`pnpm storybook:base`)                 |
-| 6006 | Storybook, Radix UI edition (`pnpm storybook:radix`)               |
-| 6008 | Storybook, React Aria edition (`pnpm storybook:aria`)              |
+| 6007 | Storybook, Base UI (`pnpm storybook:base`)                 |
+| 6006 | Storybook, Radix UI (`pnpm storybook:radix`)               |
+| 6008 | Storybook, React Aria (`pnpm storybook:aria`)              |
 | 5310 | dev registry (`pnpm registry:dev`)                                 |
 
 Optional environment variables:
@@ -101,7 +101,7 @@ Optional environment variables:
 | `NEXT_DIST_DIR`        | docs build dir, so two `next dev` or `next build` runs do not share `.next`               |
 | `NEXT_PUBLIC_SITE_URL` | absolute site URL in deployments (install snippets, agent prompt); the dev port otherwise |
 | `REGISTRY_BASE_URL`    | base URL written into the dev registry instead of `http://localhost:5310/r`              |
-| `ST_BASE`              | `base`, `radix` or `aria` aliases `@/` to `registry/<edition>` in Vitest and Storybook (every `:base`, `:radix` and `:aria` script sets it); unset or unknown means `registry/base` (`DEFAULT_EDITION`) |
+| `ST_BASE`              | `base`, `radix` or `aria` aliases `@/` to `registry/<base>` in Vitest and Storybook (every `:base`, `:radix` and `:aria` script sets it); unset or unknown means `registry/base` (`DEFAULT_BASE`) |
 | `NEXT_PUBLIC_POSTHOG_KEY` | PostHog project key for the docs app; unset means analytics load nothing (see Analytics)   |
 
 ## 1. Set Up
@@ -117,7 +117,7 @@ pnpm --filter shadcn-table exec playwright install chromium
 
 ## 2. Change the Library
 
-Edit `packages/shadcn-table/registry/radix/components/ui/shadcn-table` and copy the file to its twins under `registry/base/` and `registry/aria/` (or one edition's copy plus its `scripts/registry/<edition>-diff.json` for an edition-only change), then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested. The Base UI loop:
+Edit `packages/shadcn-table/registry/radix/components/ui/shadcn-table` and copy the file to its twins under `registry/base/` and `registry/aria/` (or one base's copy plus its `scripts/registry/<base>-diff.json` for a base-only change), then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested. The Base UI loop:
 
 ```bash
 pnpm storybook:base                     # http://localhost:6007
@@ -143,7 +143,7 @@ pnpm test:aria
 pnpm --filter shadcn-table tsc:aria
 ```
 
-- **Stories are tests.** `pnpm test:<edition>` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it, and the story must pass on every base: the stories are shared, one set for all three editions, with no per-edition story files.
+- **Stories are tests.** `pnpm test:<base>` renders each story and fails on a thrown error or a failed `play` function. A behavior change needs a story that exercises it, and the story must pass on every base: the stories are shared, one set for all three bases, with no per-base story files.
 - **shadcn/ui parts.** `registry/<base>/components/ui/*.tsx` are plain shadcn components, never edited by hand, since users get their own copies. Add or refresh one with `pnpm add-part`, which fetches it in the base's style (`registry/<base>/components.json`) and prints the dependencies to add:
 
   ```bash
@@ -168,15 +168,15 @@ pnpm --filter shadcn-table-docs dev                        # http://localhost:53
 pnpm --filter shadcn-table-docs types:check
 ```
 
-The examples exist once per edition, `examples/radix/<slug>/`, `examples/base/<slug>/` and `examples/aria/<slug>/`, hand-written in that edition's idiom (Base UI `render` for `asChild`, React Aria `isDisabled`, `onPress`, `onChange`, the `TooltipTrigger` composition). They import `@/components/ui/...`, the path a reader has after `shadcn add`, and the code view shows the selected base's folder as is. A change to an example that is the same on every edition is made in every folder by hand; `pnpm check:bases` fails when a file differs from `examples/radix` without being listed in `scripts/registry/examples-<edition>-diff.json`, so an edition-only difference adds its path to that list in the same commit. The live examples run on generated copies, `examples/.radix/`, `examples/.base/` and `examples/.aria/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies; nothing else is rewritten. `examples/map.tsx` and `example-groups/map.tsx` are generated by `node scripts/example-map.mjs` from the `examples/radix` folders and the groups; run it after adding or removing an example.
+The examples exist once per base, `examples/radix/<slug>/`, `examples/base/<slug>/` and `examples/aria/<slug>/`, hand-written in that base's idiom (Base UI `render` for `asChild`, React Aria `isDisabled`, `onPress`, `onChange`, the `TooltipTrigger` composition). They import `@/components/ui/...`, the path a reader has after `shadcn add`, and the code view shows the selected base's folder as is. A change to an example that is the same on every base is made in every folder by hand; `pnpm check:bases` fails when a file differs from `examples/radix` without being listed in `scripts/registry/examples-<base>-diff.json`, so a base-only difference adds its path to that list in the same commit. The live examples run on generated copies, `examples/.radix/`, `examples/.base/` and `examples/.aria/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies; nothing else is rewritten. `examples/map.tsx` and `example-groups/map.tsx` are generated by `node scripts/example-map.mjs` from the `examples/radix` folders and the groups; run it after adding or removing an example.
 
 Page gate, with the dev server running, from `apps/shadcn-table-docs`:
 
 ```bash
-node scripts/check-pages.mjs a --base http://localhost:5320          # one cluster
-node scripts/check-pages.mjs d --base http://localhost:5320 --edition aria   # one cluster with the React Aria base selected
-node scripts/check-pages.mjs /docs/guides/sorting --base http://localhost:5320   # one page
-node scripts/check-pages.mjs --base http://localhost:5320            # everything
+node scripts/check-pages.mjs a --url http://localhost:5320          # one cluster
+node scripts/check-pages.mjs d --url http://localhost:5320 --base aria   # one cluster with the React Aria base selected
+node scripts/check-pages.mjs /docs/guides/sorting --url http://localhost:5320   # one page
+node scripts/check-pages.mjs --url http://localhost:5320            # everything
 ```
 
 - **Clusters.** `a` is getting-started and the API pages, `b` and `c` the guides, `d` and `e` the examples; `e` also covers the home page. The gate loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
@@ -248,11 +248,11 @@ pnpm exec vite build
 
 ## 5. Update the Docs and the Registry
 
-Docs pages live in `content/docs`; every example is a folder under `examples/<edition>/` for every edition with a `TS.tsx` and, when it has data, a `makeData.ts`.
+Docs pages live in `content/docs`; every example is a folder under `examples/<base>/` for every base with a `TS.tsx` and, when it has data, a `makeData.ts`.
 
 ```bash
 pnpm registry:build                     # library items -> packages/shadcn-table/registry.json
-pnpm registry:items                     # example items per edition -> apps/shadcn-table-docs/registry.json
+pnpm registry:items                     # example items per base -> apps/shadcn-table-docs/registry.json
 pnpm registry:hosted                    # hosted copies -> apps/shadcn-table-docs/public/r/{base,radix,aria}/ (docs build runs it)
 ```
 
@@ -264,10 +264,10 @@ The registry has three library items, one per base, each with its own locale ite
 | `registry/radix` | `shadcn-table-radix` | `shadcn-table-radix-locale-<code>` | `radix-ui`       |
 | `registry/aria`  | `shadcn-table-aria`  | `shadcn-table-aria-locale-<code>`  | `react-aria-components` |
 
-Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI installs its own base's parts (the React Aria item ships its own `label` and lists `checkbox` instead). Users install from the hosted registry on the docs site, one path per base with the same item names on all three: `https://www.shadcn-table.com/r/base/shadcn-table.json`, `https://www.shadcn-table.com/r/radix/shadcn-table.json` and `https://www.shadcn-table.com/r/aria/shadcn-table.json` (locales `/r/<base>/shadcn-table-locale-<code>.json`, examples `/r/<base>/example-<slug>.json`), or through the namespace `@st=https://www.shadcn-table.com/r/{style}/{name}.json`. The GitHub addresses (`anindosarker/shadcn-table/<item>`, the committed per-edition names above) stay as the fallback. The committed catalogs also carry the plain names (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`) as generated aliases of the Base UI items (`DEFAULT_EDITION`), because the GitHub shorthand cannot pick an edition; `hosted.mjs` skips them.
+Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI installs its own base's parts (the React Aria item ships its own `label` and lists `checkbox` instead). Users install from the hosted registry on the docs site, one path per base with the same item names on all three: `https://www.shadcn-table.com/r/base/shadcn-table.json`, `https://www.shadcn-table.com/r/radix/shadcn-table.json` and `https://www.shadcn-table.com/r/aria/shadcn-table.json` (locales `/r/<base>/shadcn-table-locale-<code>.json`, examples `/r/<base>/example-<slug>.json`), or through the namespace `@st=https://www.shadcn-table.com/r/{style}/{name}.json`. The GitHub addresses (`anindosarker/shadcn-table/<item>`, the committed per-base names above) stay as the fallback. The committed catalogs also carry the plain names (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`) as generated aliases of the Base UI items (`DEFAULT_BASE`), because the GitHub shorthand cannot pick a base; `hosted.mjs` skips them.
 
 - **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `packages/shadcn-table/scripts/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
-- **Example items per edition.** `example-<slug>-base`, `example-<slug>-radix` and `example-<slug>-aria` are built from `examples/<edition>/<slug>/`; the hosted registry serves each edition's items under the plain `example-<slug>` in `/r/<edition>/`. They use the public API only and pin no library item; the docs say to install the table first.
+- **Example items per base.** `example-<slug>-base`, `example-<slug>-radix` and `example-<slug>-aria` are built from `examples/<base>/<slug>/`; the hosted registry serves each base's items under the plain `example-<slug>` in `/r/<base>/`. They use the public API only and pin no library item; the docs say to install the table first.
 - **Page checks.** A new page that renders live examples or prop tables needs an entry in `scripts/page-checks/<cluster>.mjs`.
 
 ## 6. Open a PR
@@ -338,19 +338,19 @@ Session replay, surveys, feature flags and error tracking are not enabled. There
 ## Common Mistakes
 
 - **Editing the docs copy.** `apps/shadcn-table-docs/components/ui-radix`, `components/ui-base` and `components/ui-aria` are overwritten by `lib:install <base>`. Change `packages/shadcn-table/registry/<base>` and sync.
-- **Editing one tree only.** The other editions keep the old code; `pnpm check:bases` red is the sign, as is `pnpm test:radix` green and `pnpm test:base` or `pnpm test:aria` red (or the reverse). Make the change in the other trees too, or add the path to that edition's `<edition>-diff.json` when the difference is meant.
+- **Editing one tree only.** The other bases keep the old code; `pnpm check:bases` red is the sign, as is `pnpm test:radix` green and `pnpm test:base` or `pnpm test:aria` red (or the reverse). Make the change in the other trees too, or add the path to that base's `<base>-diff.json` when the difference is meant.
 - **Forgetting `lib:install <base>`.** The docs app, the page gate and the examples keep running on the old library on that base.
 - **Committing `tsconfig.json` include noise.** Only the two `.next/...` lines belong there.
 - **`registry.json` rewritten with localhost.** Use `pnpm registry:dev`, which writes to the gitignored `.dev/`.
 - **A port already in use.** Pick another with `PORT=` (docs), `storybook dev -p` (Storybook) or `REGISTRY_BASE_URL` plus your own `serve` (registry).
-- **The item and the base do not match.** `shadcn init` defaults to Base UI; that project needs the `/r/base/` path (`shadcn-table-base` on GitHub), a `--base radix` project the `/r/radix/` path (`shadcn-table-radix`), a `--base aria` project (an `aria-*` style) the `/r/aria/` path (`shadcn-table-aria`). The wrong edition does not type-check.
+- **The item and the base do not match.** `shadcn init` defaults to Base UI; that project needs the `/r/base/` path (`shadcn-table-base` on GitHub), a `--base radix` project the `/r/radix/` path (`shadcn-table-radix`), a `--base aria` project (an `aria-*` style) the `/r/aria/` path (`shadcn-table-aria`). The wrong base does not type-check.
 
 ## Related
 
 - `.ai/plans/v0.5.x/anindosarker/decisions.md` item 7, the release flow
-- `.ai/plans/v0.2-base-ui/anindosarker/v0.2-base-ui-plan.md`, the Base UI edition and why
+- `.ai/plans/v0.2-base-ui/anindosarker/v0.2-base-ui-plan.md`, the Base UI copy and why
 - `.ai/plans/v0.4.0/anindosarker/decisions.md`, the two-tree layout and why
-- `.ai/plans/v0.5.x/anindosarker/decisions.md`, the React Aria edition and the n-tree guard
+- `.ai/plans/v0.5.x/anindosarker/decisions.md`, the React Aria copy and the n-tree guard
 - `packages/shadcn-table/registry/README.md`, what lives where
 - `.github/workflows/pr.yml`, the jobs behind step 6; `.github/workflows/release.yml`, step 7
 - `apps/shadcn-table-docs/content/docs/getting-started/install.mdx`, the user-facing install page

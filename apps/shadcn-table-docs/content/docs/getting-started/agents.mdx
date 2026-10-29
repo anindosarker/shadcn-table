@@ -9,7 +9,7 @@ description: 'Set up shadcn-table with a coding agent'
 
 The prompt points the agent at [`/SKILL.md`](/SKILL.md): install, the usage rules, where the option references are, and how to pull any docs example into the project. Every example page also has a "Copy prompt" in its menu for that example.
 
-The skill knows the three editions of the table: it reads the `style` in `components.json` (`base-*`, `radix-*` or `aria-*`) and installs from the matching path of the hosted registry, `/r/base/`, `/r/radix/` or `/r/aria/`. Without a `components.json` it runs `shadcn init` first and asks you for the base.
+The skill knows the three bases of the table: it reads the `style` in `components.json` (`base-*`, `radix-*` or `aria-*`) and installs from the matching path of the hosted registry, `/r/base/`, `/r/radix/` or `/r/aria/`. Without a `components.json` it runs `shadcn init` first and asks you for the base.
 
 ### Registry addresses
 
