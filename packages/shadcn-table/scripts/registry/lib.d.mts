@@ -1,7 +1,6 @@
 // Types of scripts/registry/lib.mjs for the per-base item definitions
-// (registry/<base>/registry.ts), which import the .mjs from TypeScript.
-// Node strips the types at run time; the editor checks against these
-// signatures.
+// (registry/<base>/registry.ts), which import the .mjs from TypeScript. Node
+// strips the types at run time; the editor checks against these signatures.
 import type { RegistryItem } from 'shadcn/schema';
 
 declare global {
@@ -56,16 +55,16 @@ export interface BaseItemsOptions {
 export function buildBaseItems(base: BaseItemsOptions): RegistryItem[];
 
 /**
- * The GitHub shorthand aliases: every DEFAULT_BASE item under its plain
- * name, same files and dependencies, a description naming the alias.
+ * The GitHub shorthand aliases: every DEFAULT_BASE item under its plain name,
+ * same files and dependencies, a description naming the alias.
  */
 export function aliasItems<T extends { name: string; description?: string }>(
   items: T[],
 ): T[];
 
 /**
- * One base's main item and locale items in a catalog built from the
- * committed registry.json, aliases skipped.
+ * One base's main item and locale items in a catalog built from the committed
+ * registry.json, aliases skipped.
  */
 export function baseItems(
   catalog: { items: RegistryItem[] },
@@ -73,8 +72,8 @@ export function baseItems(
 ): { main: RegistryItem | undefined; locales: RegistryItem[] };
 
 /**
- * One base's example items in the docs catalog (examples.mjs), each under
- * its hosted name, the plain `example-<slug>`; aliases skipped.
+ * One base's example items in the docs catalog (examples.mjs), each under its
+ * hosted name, the plain `example-<slug>`; aliases skipped.
  */
 export function baseExampleItems(
   catalog: { items: RegistryItem[] },

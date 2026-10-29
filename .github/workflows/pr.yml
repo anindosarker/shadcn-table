@@ -71,10 +71,9 @@ jobs:
           echo "Ships as $next"
           echo "Ships as $next ($labels)." >> "$GITHUB_STEP_SUMMARY"
 
-  # The library exists once per base, three complete trees:
-  # registry/base, registry/radix and registry/aria, each built and tested by
-  # the package scripts named after it (`:base`, `:radix`, `:aria`, which set
-  # ST_BASE).
+  # The library exists once per base, three complete trees: registry/base,
+  # registry/radix and registry/aria, each built and tested by the package
+  # scripts named after it (`:base`, `:radix`, `:aria`, which set ST_BASE).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}

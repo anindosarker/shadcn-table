@@ -4,10 +4,10 @@
  * mobile widths and fails on any console.error or uncaught page error, in
  * particular React hydration mismatches (which only print in `next dev`).
  * Per-page assertions live in scripts/page-checks/<cluster>.mjs (default
- * export: { '/docs/path': async ({ page, check, base }) => void }, where
- * `base` is the one the page opened on); files starting with `_` are
- * helpers and not loaded. Add an entry for every new page that
- * renders live examples or prop tables.
+ * export: { '/docs/path': async ({ page, check, base }) => void }, where `base`
+ * is the one the page opened on); files starting with `_` are helpers and not
+ * loaded. Add an entry for every new page that renders live examples or prop
+ * tables.
  *
  * Usage (dev server must be running, default http://localhost:5320):
  *   node scripts/check-pages.mjs [a|b|c|d|e] [--url http://localhost:5321]
@@ -16,12 +16,11 @@
  *
  * A single-letter argument limits the run to that cluster's page checks;
  * explicit /docs paths run only those pages (with their checks, if any).
- * `--base` opens every page with that shadcn base selected (the stored
- * pick of components/base-selector.tsx), so the live examples and code
- * views are that base's; without it the pages open on the default base
- * (DEFAULT_BASE in bases.mjs, Base UI).
- * Playwright is resolved from packages/shadcn-table/node_modules
- * (a devDependency of the library package).
+ * `--base` opens every page with that shadcn base selected (the stored pick of
+ * components/base-selector.tsx), so the live examples and code views are that
+ * base's; without it the pages open on the default base (DEFAULT_BASE in
+ * bases.mjs, Base UI). Playwright is resolved from
+ * packages/shadcn-table/node_modules (a devDependency of the library package).
  */
 import { createRequire } from 'node:module';
 import { promises as fs } from 'node:fs';

@@ -2,8 +2,8 @@
 // Usage (inside packages/shadcn-table): pnpm preview
 //
 // Package preview: builds the local registry (`pnpm registry:dev`, .dev/r),
-// then serves it on http://localhost:5310/r and starts Storybook for every
-// base (Base UI on 6007, Radix UI on 6006, React Aria on 6008, BASE_PORTS). Ctrl-C
+// then serves it on http://localhost:5310/r and starts Storybook for every base
+// (Base UI on 6007, Radix UI on 6006, React Aria on 6008, BASE_PORTS). Ctrl-C
 // stops everything and removes .dev.
 //
 // Also exports the helpers the root `pnpm preview` (scripts/preview.mjs)
@@ -103,9 +103,9 @@ export const removeDev = () =>
 const STORYBOOK_COLORS = { base: 'cyan', radix: 'magenta', aria: 'yellow' };
 
 /**
- * Registry server on 5310 and Storybook for every base, each on its
- * BASE_PORTS port (the package.json `storybook:<base>` scripts and the
- * dev links in .storybook/base-tool.ts).
+ * Registry server on 5310 and Storybook for every base, each on its BASE_PORTS
+ * port (the package.json `storybook:<base>` scripts and the dev links in
+ * .storybook/base-tool.ts).
  */
 export const packageChildren = [
   {

@@ -20,11 +20,11 @@ const runners: Record<PackageManager, string> = {
 };
 
 /**
- * The shadcn bases the table supports, as `shadcn init --base` names them,
- * in reader order: the library's BASES (Base UI, Radix UI, React Aria).
- * The docs' base selector (components/base-selector.tsx) picks one; a
- * project's base is the `style` in its `components.json` (`base-*`,
- * `radix-*` or `aria-*`, the React Aria base's style being `aria-nova`).
+ * The shadcn bases the table supports, as `shadcn init --base` names them, in
+ * reader order: the library's BASES (Base UI, Radix UI, React Aria). The docs'
+ * base selector (components/base-selector.tsx) picks one; a project's base is
+ * the `style` in its `components.json` (`base-*`, `radix-*` or `aria-*`, the
+ * React Aria base's style being `aria-nova`).
  */
 export const bases = BASES;
 export type { Base };
@@ -43,9 +43,9 @@ export const perBase = <T>(fn: (base: Base) => T): Record<Base, T> =>
 
 /**
  * Hosted registry item for a base: `pnpm registry:hosted`
- * (packages/shadcn-table/scripts/registry/hosted.mjs) serves
- * every base under the same item names, `/r/radix/<item>.json`,
- * `/r/base/<item>.json` and `/r/aria/<item>.json`.
+ * (packages/shadcn-table/scripts/registry/hosted.mjs) serves every base under
+ * the same item names, `/r/radix/<item>.json`, `/r/base/<item>.json` and
+ * `/r/aria/<item>.json`.
  */
 export const itemUrl = (item: string, base: Base = defaultBase) =>
   `${siteUrl}/r/${base}/${item}.json`;

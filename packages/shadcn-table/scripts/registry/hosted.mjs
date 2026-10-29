@@ -3,31 +3,31 @@
 // `pnpm registry:items` (the docs `build` script runs all three before
 // `next build`).
 //
-// Emits the hosted registries the docs site serves, one directory per
-// base (BASES in lib.mjs):
+// Emits the hosted registries the docs site serves, one directory per base
+// (BASES in lib.mjs):
 //   apps/shadcn-table-docs/public/r/radix/   from the Radix items
 //   apps/shadcn-table-docs/public/r/base/    from the Base UI items
 //   apps/shadcn-table-docs/public/r/aria/    from the React Aria items
-// Each directory gets its own registry.json catalog (the base's main item,
-// its locale items and the base's example items) and the resolved item
-// files `shadcn build` produces from it. The item names are the same in every
+// Each directory gets its own registry.json catalog (the base's main item, its
+// locale items and the base's example items) and the resolved item files
+// `shadcn build` produces from it. The item names are the same in every
 // directory (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`),
-// so the namespace form `@st=https://www.shadcn-table.com/r/{style}/{name}.json`
-// resolves `@st/shadcn-table` to the consumer's own base; the example
-// items come from that base's examples/<base> sources
-// (baseExampleItems).
+// so the namespace form
+// `@st=https://www.shadcn-table.com/r/{style}/{name}.json` resolves
+// `@st/shadcn-table` to the consumer's own base; the example items come from
+// that base's examples/<base> sources (baseExampleItems).
 //
 // The GitHub shorthand aliases in the committed catalogs (aliasItems in
-// lib.mjs: the plain names of the default base's items) are skipped:
-// baseItems and baseExampleItems return the per-base items only.
+// lib.mjs: the plain names of the default base's items) are skipped: baseItems
+// and baseExampleItems return the per-base items only.
 //
 // Reads the committed registry.json files, which keep the GitHub addresses;
 // only the hosted copies get hosted addresses: the locale items depend on
-// `<HOSTED_URL>/<base>/shadcn-table.json`, and every file path is made
-// relative to the repo root so one `shadcn build` run resolves both the
-// library and the example sources. REGISTRY_HOSTED_URL (or NEXT_PUBLIC_SITE_URL
-// plus /r) overrides the default https://www.shadcn-table.com/r (a preview
-// deployment, for example).
+// `<HOSTED_URL>/<base>/shadcn-table.json`, and every file path is made relative
+// to the repo root so one `shadcn build` run resolves both the library and the
+// example sources. REGISTRY_HOSTED_URL (or NEXT_PUBLIC_SITE_URL plus /r)
+// overrides the default https://www.shadcn-table.com/r (a preview deployment,
+// for example).
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';

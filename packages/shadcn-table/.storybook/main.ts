@@ -6,13 +6,12 @@ import { resolveBase } from '../scripts/registry/bases.mjs';
 const require = createRequire(import.meta.url);
 
 // Which tree this Storybook shows (vite.config.ts aliases `@/` by the same
-// variable). Handed to the manager and the preview as a global so themes.ts
-// can label the chrome: the three builds are served side by side under
-// /base/, /radix/ and /aria/, and the title is what tells them apart. Unset
-// ST_BASE means the default base (resolveBase). The manager also gets
-// whether this is `storybook dev` (one port per base) or a static build
-// (one directory per base), which decides where its base switch goes
-// (base-tool.ts).
+// variable). Handed to the manager and the preview as a global so themes.ts can
+// label the chrome: the three builds are served side by side under /base/,
+// /radix/ and /aria/, and the title is what tells them apart. Unset ST_BASE
+// means the default base (resolveBase). The manager also gets whether this is
+// `storybook dev` (one port per base) or a static build (one directory per
+// base), which decides where its base switch goes (base-tool.ts).
 const ST_BASE = resolveBase(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
 const devScript = (dev: boolean) =>
@@ -43,10 +42,10 @@ const config: StorybookConfig = {
   managerHead: (head, { configType }) =>
     `${head}${baseScript}${devScript(configType !== 'PRODUCTION')}`,
   previewHead: (head) => `${head}${baseScript}`,
-  // Storybook keys its Vite dep cache by the config dir alone, so the
-  // base servers (storybook:all) would share one optimized-deps dir
-  // and invalidate each other ("Failed to fetch dynamically imported
-  // module"). One cache per base.
+  // Storybook keys its Vite dep cache by the config dir alone, so the base
+  // servers (storybook:all) would share one optimized-deps dir and invalidate
+  // each other ("Failed to fetch dynamically imported module"). One cache per
+  // base.
   viteFinal: (config) =>
     config.cacheDir
       ? { ...config, cacheDir: `${config.cacheDir}-${ST_BASE}` }

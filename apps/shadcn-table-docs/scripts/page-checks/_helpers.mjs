@@ -288,9 +288,9 @@ export async function exampleGroup(page, tabs, check) {
 }
 
 /**
- * The docs header's base select (BaseSwitch, components/base-selector.tsx):
- * a button labelled "Base" that shows the current base and opens a
- * radio menu over the bases.
+ * The docs header's base select (BaseSwitch, components/base-selector.tsx): a
+ * button labelled "Base" that shows the current base and opens a radio menu
+ * over the bases.
  */
 export const headerBase = (page) =>
   page.locator('#nd-subnav button[aria-label="Base"]');
@@ -311,9 +311,8 @@ export const openHeaderBaseMenu = async (page) => {
 };
 
 /**
- * Picks a base by label through the header select, then waits for the
- * menu to close. The current base is left alone: the menu has nothing to
- * change then.
+ * Picks a base by label through the header select, then waits for the menu to
+ * close. The current base is left alone: the menu has nothing to change then.
  */
 export const pickHeaderBase = async (page, label) => {
   if ((await headerBaseLabel(page)) === label) return;
@@ -326,8 +325,8 @@ export const pickHeaderBase = async (page, label) => {
 };
 
 /**
- * The header select lists every base in BASES order (Base UI, Radix
- * UI, React Aria), the current one checked; the menu is closed again after.
+ * The header select lists every base in BASES order (Base UI, Radix UI, React
+ * Aria), the current one checked; the menu is closed again after.
  */
 export async function headerBaseMenu(page, check, current) {
   const items = await openHeaderBaseMenu(page);
@@ -348,18 +347,17 @@ export async function headerBaseMenu(page, check, current) {
 }
 
 /**
- * Site-wide base switch (the header select above):
- * Base UI re-renders example `#example-<id>` (rows again, Base UI markup:
- * Base UI collapsibles set data-open/data-closed, Radix's set data-state),
- * then React Aria does (rows again, React Aria markup: React Aria Components
- * set data-rac on what they render, Radix and Base UI never do), while the
- * Code view keeps showing the base-neutral source, with
- * `@/components/ui/shadcn-table` imports and no `ui-radix`, `ui-base` or
- * `ui-aria`; then Radix again, same source. The page opens on the default
- * base (Base UI) or the runner's --base, so the loop starts by picking
- * Radix UI. No console errors is asserted by the runner. The explorer
- * highlights the active file in the browser, so the code view's text is
- * read only once a `code` element is in the explorer.
+ * Site-wide base switch (the header select above): Base UI re-renders example
+ * `#example-<id>` (rows again, Base UI markup: Base UI collapsibles set
+ * data-open/data-closed, Radix's set data-state), then React Aria does (rows
+ * again, React Aria markup: React Aria Components set data-rac on what they
+ * render, Radix and Base UI never do), while the Code view keeps showing the
+ * base-neutral source, with `@/components/ui/shadcn-table` imports and no
+ * `ui-radix`, `ui-base` or `ui-aria`; then Radix again, same source. The page
+ * opens on the default base (Base UI) or the runner's --base, so the loop
+ * starts by picking Radix UI. No console errors is asserted by the runner. The
+ * explorer highlights the active file in the browser, so the code view's text
+ * is read only once a `code` element is in the explorer.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
@@ -483,18 +481,17 @@ const DEMO_MIN_HOLD_MS = 15000;
 const DEMO_TIMEOUT_MS = 30000;
 
 /**
- * Holds the home page through the full live demo loop on every base. The
- * demo (components/dev-home/v12/signal-demo.tsx) plays only while it is on
- * screen, so it is scrolled into view; each hold waits until its aria-live
- * status reads the last step and lasts at least DEMO_MIN_HOLD_MS. The first
- * hold runs on the base the page opened on (the default, Base UI, or the
- * runner's --base); the next two pick the other bases through the agent
- * bar's base menu and reload. A render loop or crash that needs
- * time or the demo's step changes to surface fails here (v0.3.0 died with
- * React error #185 about 9.6 s after load, when the demo's replay edit effect
- * re-ran on every render): the runner's pageerror and console listeners stay
- * attached across the reload, and a renderer crash fails
- * `demo: no renderer crash`.
+ * Holds the home page through the full live demo loop on every base. The demo
+ * (components/dev-home/v12/signal-demo.tsx) plays only while it is on screen,
+ * so it is scrolled into view; each hold waits until its aria-live status reads
+ * the last step and lasts at least DEMO_MIN_HOLD_MS. The first hold runs on the
+ * base the page opened on (the default, Base UI, or the runner's --base); the
+ * next two pick the other bases through the agent bar's base menu and reload. A
+ * render loop or crash that needs time or the demo's step changes to surface
+ * fails here (v0.3.0 died with React error #185 about 9.6 s after load, when
+ * the demo's replay edit effect re-ran on every render): the runner's pageerror
+ * and console listeners stay attached across the reload, and a renderer crash
+ * fails `demo: no renderer crash`.
  */
 export async function demoLoop({ page, check, base }) {
   const opened = BASE_LABELS[base] ?? BASE_LABELS[DEFAULT_BASE];

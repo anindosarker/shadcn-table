@@ -133,11 +133,11 @@ const useBaseTabs = (surface: Surface) => {
 };
 
 /**
- * Select button for the docs header (next to the theme pill): the current
- * base and a chevron, styled like the example page's `Copy prompt`
- * control, opening a radio menu over the bases, like the command bar's
- * "Choose base" menu (components/agent-bar.tsx). Writes the group through
- * `setBase`, so the content-page tabs follow.
+ * Select button for the docs header (next to the theme pill): the current base
+ * and a chevron, styled like the example page's `Copy prompt` control, opening
+ * a radio menu over the bases, like the command bar's "Choose base" menu
+ * (components/agent-bar.tsx). Writes the group through `setBase`, so the
+ * content-page tabs follow.
  */
 export const BaseSwitch = ({ className }: { className?: string }) => {
   const base = useBase();
