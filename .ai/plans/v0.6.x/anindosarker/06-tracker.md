@@ -63,8 +63,9 @@ decision 8. Branch `v0.6/edition-order-dropdown`, worktree `07`, from `claude/re
   rather than the exact `Edition` the plan wrote.
 - The package `tsc` alias (`pnpm tsc:radix`) is removed: nothing called it, and it was an
   unnamed edition script.
-- Root `storybook:build` runs the three package builds through `pnpm --filter` in sequence,
-  Base UI first, instead of turbo: turbo gives no order guarantee across tasks. The root
+- Root `storybook:build` runs three `turbo run storybook:build:<edition>` calls in sequence,
+  Base UI first: one turbo call per edition, because turbo gives no order guarantee across
+  tasks in one call. The turbo tasks keep their `outputs` caching. The root
   `storybook` and `test` scripts are gone; `storybook:base`, `:radix`, `:aria` and `test:base`,
   `:radix`, `:aria` run through turbo like before.
 - `pr.yml` `test` job runs `pnpm --filter shadcn-table test:<edition>` (the plan's form)

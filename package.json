@@ -22,7 +22,7 @@
     "storybook:radix": "turbo run storybook:radix --filter=shadcn-table",
     "storybook:aria": "turbo run storybook:aria --filter=shadcn-table",
     "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook:(base|radix|aria)$/\"",
-    "storybook:build": "pnpm --filter shadcn-table storybook:build:base && pnpm --filter shadcn-table storybook:build:radix && pnpm --filter shadcn-table storybook:build:aria",
+    "storybook:build": "turbo run storybook:build:base --filter=shadcn-table && turbo run storybook:build:radix --filter=shadcn-table && turbo run storybook:build:aria --filter=shadcn-table",
     "test:base": "turbo run test:base --filter=shadcn-table",
     "test:radix": "turbo run test:radix --filter=shadcn-table",
     "test:aria": "turbo run test:aria --filter=shadcn-table"
