@@ -8,7 +8,7 @@ This repo holds shadcn-table, a React data table on TanStack Table v9 that ships
 4. **Registry:** what users install, one item per base built from that base's tree.
 
 ```text
-packages/shadcn-table/registry/radix | registry/base | registry/aria
+packages/shadcn-table/registry/base | registry/radix | registry/aria
   ▼ stories + vitest (every base)   (prove the change)
   ▼ registry:build                  (what users install)
   ▼ lib:install <base>              (docs app copies, one per base)
