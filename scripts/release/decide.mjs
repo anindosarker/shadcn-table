@@ -38,7 +38,10 @@ const LEVELS = ['patch', 'minor', 'major'];
  * sha, or ''; `tagged(tag)` says whether origin has the tag. Returns the exit
  * code, the outputs and the lines to print.
  */
-export const decide = (env, { version, changelogStatus, mergedLabel, tagged }) => {
+export const decide = (
+  env,
+  { version, changelogStatus, mergedLabel, tagged },
+) => {
   const lines = [];
   let mode;
   let level = '';
@@ -66,13 +69,18 @@ export const decide = (env, { version, changelogStatus, mergedLabel, tagged }) =
       return { code: status, lines };
     }
   }
-  lines.push(`mode=${mode} version=${version} level=${level || 'from headings'}`);
+  lines.push(
+    `mode=${mode} version=${version} level=${level || 'from headings'}`,
+  );
   return { code: 0, mode, version, level, lines };
 };
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const run = (cmd, args) =>
-    execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
+    execFileSync(cmd, args, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'inherit'],
+    }).trim();
   const result = decide(process.env, {
     version: JSON.parse(fs.readFileSync(path.join(ROOT, LIB_PACKAGE), 'utf8'))
       .version,

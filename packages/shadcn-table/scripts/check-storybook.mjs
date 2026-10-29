@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
  * Static Storybook gate for the edition switch (.storybook/edition-tool.ts):
- * with the three builds served from one directory (`storybook:build`,
- * `storybook:build:base` and `storybook:build:aria` into
- * storybook-static/radix/, storybook-static/base/ and storybook-static/aria/),
- * each edition's toolbar marks its own edition and shows one link per other
- * edition, labelled with it, that opens the same story there. One more
+ * with the three builds served from one directory (`storybook:build:base`,
+ * `storybook:build:radix` and `storybook:build:aria` into
+ * storybook-static/base/, storybook-static/radix/ and storybook-static/aria/),
+ * each edition's toolbar shows one Edition select labelled with its own
+ * edition; opened, it lists every edition in EDITIONS order, its own one
+ * selected, and choosing another opens the same story there. One more
  * check, for the production host: the root redirects to the default
  * edition's build with the query kept (vercel.json). A plain static server
  * answers the root with 200 or 404 instead; the check is then skipped.
@@ -55,7 +56,7 @@ if (!storyId) {
 }
 
 /**
- * Each edition: the label its button shows and where its build is served
+ * Each edition: the label its select shows and where its build is served
  * (every edition under <edition>/).
  */
 const editions = EDITIONS.map((name) => ({
@@ -97,50 +98,68 @@ for (const { name, label, root } of editions) {
   await page.goto(`${root}?path=/story/${storyId}`, {
     waitUntil: 'networkidle',
   });
-  const current = page.locator('[data-edition-current]');
-  await current.waitFor({ timeout: 30000 }).catch(() => {});
-  check(
-    'current edition marked',
-    (await current.count()) === 1 &&
-      (await current.textContent())?.trim() === label &&
-      (await current.getAttribute('aria-current')) === 'page',
-    (await current.count()) ? await current.textContent() : '0',
+  // Storybook's Select names its trigger `<ariaLabel> <selected title>`.
+  const trigger = page.locator(
+    'button[aria-haspopup="listbox"][aria-label^="Edition"]',
   );
-  const others = editions.filter((edition) => edition.name !== name);
+  await trigger.waitFor({ timeout: 30000 }).catch(() => {});
   check(
-    'one link per other edition',
-    (await page.locator('[data-edition-link]').count()) === others.length,
-    String(await page.locator('[data-edition-link]').count()),
+    'one edition select showing the current edition',
+    (await trigger.count()) === 1 &&
+      (await trigger.textContent())?.trim() === label,
+    (await trigger.count()) ? await trigger.textContent() : '0',
   );
-  for (const other of others) {
-    const link = page.locator(`[data-edition-link="${other.name}"]`);
-    const what = (text) => `${other.name} link ${text}`;
-    if ((await link.count()) !== 1) {
-      check(what('present'), false, String(await link.count()));
-      continue;
-    }
-    check(
-      what('label'),
-      (await link.textContent())?.trim() === other.label,
-      await link.textContent(),
-    );
-    check(what('target _top'), (await link.getAttribute('target')) === '_top');
-    const href = new URL(await link.evaluate((a) => a.href));
-    check(
-      what('opens the edition'),
-      `${href.origin}${href.pathname}` === other.root,
-      href.href,
-    );
-    check(
-      what('story id preserved'),
-      href.searchParams.get('path') === `/story/${storyId}`,
-      href.search,
-    );
-    check(
-      what('title mentions the edition'),
-      ((await link.getAttribute('title')) ?? '').includes(other.label),
-    );
+  if ((await trigger.count()) !== 1) {
+    await page.close();
+    continue;
   }
+  await trigger.click();
+  const options = page.locator(
+    '[role="listbox"][aria-label="Edition"] [role="option"]',
+  );
+  await options
+    .first()
+    .waitFor({ timeout: 5000 })
+    .catch(() => {});
+  const titles = (await options.allTextContents()).map((t) => t.trim());
+  check(
+    'menu lists the editions in order',
+    titles.join(',') === editions.map((edition) => edition.label).join(','),
+    titles.join(', '),
+  );
+  const selected = page.locator(
+    '[role="listbox"][aria-label="Edition"] [role="option"][aria-selected="true"]',
+  );
+  check(
+    'current edition selected',
+    (await selected.count()) === 1 &&
+      (await selected.textContent())?.trim() === label,
+  );
+  // Choosing the next edition opens the same story in its build.
+  const other =
+    editions[
+      (editions.findIndex((e) => e.name === name) + 1) % editions.length
+    ];
+  await Promise.all([
+    page
+      .waitForURL((url) => url.href.startsWith(other.root), { timeout: 30000 })
+      .catch(() => {}),
+    options.filter({ hasText: other.label }).click(),
+  ]);
+  const href = new URL(page.url());
+  check(
+    `choosing ${other.name} opens the edition`,
+    `${href.origin}${href.pathname}` === other.root,
+    href.href,
+  );
+  check(
+    `choosing ${other.name} keeps the story`,
+    href.searchParams.get('path') === `/story/${storyId}`,
+    href.search,
+  );
+  await page.goto(`${root}?path=/story/${storyId}`, {
+    waitUntil: 'networkidle',
+  });
   check(
     'manager title mentions the edition',
     (await page.title()).includes(label) ||

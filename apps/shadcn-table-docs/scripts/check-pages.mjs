@@ -11,7 +11,7 @@
  *
  * Usage (dev server must be running, default http://localhost:5320):
  *   node scripts/check-pages.mjs [a|b|c|d|e] [--base http://localhost:5321]
- *     [--edition radix|base|aria] [--widths 1440,700] [--shots <dir>]
+ *     [--edition base|radix|aria] [--widths 1440,700] [--shots <dir>]
  *     [/docs/path ...]
  *
  * A single-letter argument limits the run to that cluster's page checks;

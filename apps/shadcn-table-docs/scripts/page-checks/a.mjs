@@ -4,11 +4,16 @@
  * the first width; `edition` is the base the page opened on (the runner's
  * --edition, else the default).
  */
-import { EDITION_LABELS } from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import {
+  EDITION_LABELS,
+  EDITIONS,
+} from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
 import {
   baseSwitch,
   codeToggle,
   example,
+  headerEditionLabel,
+  headerEditionMenu,
   names,
   paginationControls,
 } from './_helpers.mjs';
@@ -84,7 +89,8 @@ async function commandBarBase({ page, check, edition }) {
   const items = page.getByRole('menuitemradio');
   check(
     'base menu items',
-    (await items.allTextContents()).join(',') === 'Radix UI,Base UI,React Aria',
+    (await items.allTextContents()).join(',') ===
+      EDITIONS.map((e) => EDITION_LABELS[e]).join(','),
     (await items.allTextContents()).join(','),
   );
   check(
@@ -186,15 +192,13 @@ const checks = {
       new RegExp(`shadcn@latest add \\S+/r/${base}/${item}\\.json`);
     let txt = await article();
     // The page opens on `edition`: the default (Base UI) in a fresh browser
-    // context, the runner's --edition otherwise; the header switch agrees.
+    // context, the runner's --edition otherwise; the header select agrees
+    // and its menu lists the editions in order.
     check(
       `opens on ${EDITION_LABELS[edition]}`,
-      (await page
-        .locator(
-          '#nd-subnav [aria-label="shadcn base"] [role="tab"][data-active]',
-        )
-        .textContent()) === EDITION_LABELS[edition],
+      (await headerEditionLabel(page)) === EDITION_LABELS[edition],
     );
+    await headerEditionMenu(page, check, EDITION_LABELS[edition]);
     check(
       `init on the ${edition} base`,
       txt.includes(`shadcn@latest init --base ${edition}`),
@@ -202,7 +206,7 @@ const checks = {
     check('install command', addCommand(edition, 'shadcn-table').test(txt));
     check(
       'compatibility sentence',
-      txt.includes('on the Radix UI, Base UI or React Aria base') &&
+      txt.includes('on the Base UI, Radix UI or React Aria base') &&
         txt.includes('React Aria is supported since 0.5.0'),
     );
     check(
@@ -210,7 +214,7 @@ const checks = {
       txt.includes('aria-* style') && txt.includes('aria-nova'),
     );
     // The Base UI tab (the site-wide base group) switches both commands and
-    // the header switch with them.
+    // the header select with them.
     await page
       .locator('article [role="tab"]', { hasText: 'Base UI' })
       .first()
@@ -226,12 +230,8 @@ const checks = {
       addCommand('base', 'shadcn-table').test(txt),
     );
     check(
-      'base ui tab: header switch follows',
-      (await page
-        .locator(
-          '#nd-subnav [aria-label="shadcn base"] [role="tab"][data-active]',
-        )
-        .textContent()) === 'Base UI',
+      'base ui tab: header select follows',
+      (await headerEditionLabel(page)) === 'Base UI',
     );
     // The React Aria tab: same group, the aria commands.
     await page
@@ -249,12 +249,8 @@ const checks = {
       addCommand('aria', 'shadcn-table').test(txt),
     );
     check(
-      'react aria tab: header switch follows',
-      (await page
-        .locator(
-          '#nd-subnav [aria-label="shadcn base"] [role="tab"][data-active]',
-        )
-        .textContent()) === 'React Aria',
+      'react aria tab: header select follows',
+      (await headerEditionLabel(page)) === 'React Aria',
     );
     check(
       'uninstall lists react-aria-components',
@@ -282,9 +278,7 @@ const checks = {
     );
     check(
       'one address per edition',
-      ['radix', 'base', 'aria'].every((base) =>
-        txt.includes(`/r/${base}/shadcn-table.json`),
-      ),
+      EDITIONS.every((base) => txt.includes(`/r/${base}/shadcn-table.json`)),
     );
     check(
       'skill install command',
@@ -369,8 +363,7 @@ const checks = {
 };
 
 /**
- * OptionsSwitcher: `count` tabs, the one for this page active. The header's
- * base switch (components/base-selector.tsx) has three tabs of its own.
+ * OptionsSwitcher: `count` tabs, the one for this page active.
  */
 async function switcher(page, active, count, check) {
   const tabs = page.locator('[role="tab"]:not(#nd-subnav *)');

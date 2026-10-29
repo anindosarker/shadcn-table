@@ -17,27 +17,27 @@ A full-featured React data table built on TanStack Table v9, installed into your
 
 https://github.com/user-attachments/assets/029680c9-40a8-430a-86b4-36bc7363ad22
 
-Three editions, one per shadcn base: Radix UI, Base UI and React Aria.
+Three editions, one per shadcn base: Base UI, Radix UI and React Aria.
 
 ## Quick start
-
-Radix:
-
-```bash
-pnpm dlx shadcn@latest init --base radix
-pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table.json
-```
-
-<details>
-<summary>Base UI, React Aria and other install forms</summary>
-
-The registry is served under one path per shadcn base. The project's base is the `style` in `components.json` (`radix-*`, `base-*` or `aria-*`).
 
 Base UI:
 
 ```bash
 pnpm dlx shadcn@latest init --base base
 pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table.json
+```
+
+<details>
+<summary>Radix UI, React Aria and other install forms</summary>
+
+The registry is served under one path per shadcn base. The project's base is the `style` in `components.json` (`base-*`, `radix-*` or `aria-*`).
+
+Radix UI:
+
+```bash
+pnpm dlx shadcn@latest init --base radix
+pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table.json
 ```
 
 React Aria (an `aria-*` style such as `aria-nova`):
@@ -54,7 +54,7 @@ pnpm dlx shadcn@latest registry add @st=https://www.shadcn-table.com/r/{style}/{
 pnpm dlx shadcn@latest add @st/shadcn-table
 ```
 
-GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table-radix` (Radix UI), `anindosarker/shadcn-table/shadcn-table-base` (Base UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
+GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table-base` (Base UI), `anindosarker/shadcn-table/shadcn-table-radix` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
 
 </details>
 

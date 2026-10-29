@@ -6,23 +6,28 @@ Rules a reader cannot derive from the code. Applies to humans and agents.
 
 ```
 packages/shadcn-table/
-├── registry/radix/          ← complete Radix UI library: parts, components/ui/shadcn-table, lib, css, registry.ts
-├── registry/base/           ← complete Base UI library, same shape
+├── registry/base/           ← complete Base UI library: parts, components/ui/shadcn-table, lib, css, registry.ts
+├── registry/radix/          ← complete Radix UI library, same shape
 ├── registry/aria/           ← complete React Aria library, same shape
 ├── registry.json            ← item catalog, stays at the package root
 ├── scripts/registry/        ← edition list, registry build, hosted copies, example items, add-part, edition guard
 ├── scripts/                 ← everything else
 └── stories/ .storybook/     ← one story set, `@/` points at registry/<ST_BASE>
-apps/shadcn-table-docs/      ← Next.js docs app; components/ui-radix, components/ui-base and components/ui-aria are installed copies
-├── examples/radix/ base/ aria/  ← the docs examples, one hand-written set per edition, radix the reference
+apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, components/ui-radix and components/ui-aria are installed copies
+├── examples/base/ radix/ aria/  ← the docs examples, one hand-written set per edition, radix the reference
 ```
 
 ## Editions
 
-- Three trees, one per edition: `registry/radix`, `registry/base`, `registry/aria`. The list
+- Three trees, one per edition: `registry/base`, `registry/radix`, `registry/aria`. The list
   is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION`,
-  `DEFAULT_EDITION` and `EDITION_LABELS`); every script, config and docs app script that
-  handles more than one edition reads it, none repeats the names.
+  `DEFAULT_EDITION`, `EDITION_LABELS` and `EDITION_PORTS`), Base UI first: the one source of
+  the order readers see the editions in. Every script, config and docs app file that handles
+  more than one edition reads it, none repeats the names or the order.
+- Every edition script names its edition: `storybook:<edition>`,
+  `storybook:build:<edition>`, `test:<edition>` (`ST_BASE=<edition>`, dev ports from
+  `EDITION_PORTS`: base 6007, radix 6006, aria 6008). `ST_BASE` unset or unknown means
+  `DEFAULT_EDITION`, never the reference.
 - Radix is the reference (`REFERENCE_EDITION`, the diff baseline and the example slug source).
   A change to a common library file is made in every tree by hand. Base UI is the default
   (`DEFAULT_EDITION`): what a reader sees before picking an edition, in the docs tabs and at
@@ -89,8 +94,8 @@ pnpm --filter shadcn-table tsc:radix          # ignore only the TS5101 baseUrl n
 pnpm --filter shadcn-table tsc:baseui
 pnpm --filter shadcn-table tsc:aria
 pnpm --filter shadcn-table lint
-pnpm --filter shadcn-table test               # Radix UI stories
 pnpm --filter shadcn-table test:base          # Base UI stories
+pnpm --filter shadcn-table test:radix         # Radix UI stories
 pnpm --filter shadcn-table test:aria          # React Aria stories
 pnpm check:bases                              # edition guard, library and examples, every edition against radix
 pnpm add-part <edition> --all                 # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
@@ -111,7 +116,7 @@ node --test scripts/release/*.test.mjs   # release scripts
 
 Preview (Ctrl-C stops every server; the first two remove `.dev`, the root one also restores the production hosted registry):
 
-- `pnpm --filter shadcn-table preview`: registry on 5310 (`/r`), Storybook on 6006 (Radix UI), 6007 (Base UI) and 6008 (React Aria).
+- `pnpm --filter shadcn-table preview`: registry on 5310 (`/r`), Storybook on 6007 (Base UI), 6006 (Radix UI) and 6008 (React Aria).
 - `pnpm preview` (root): the same plus the docs production build on 5330, its `/r` and install commands pointing at localhost:5330.
 - `pnpm --filter shadcn-table-docs preview`: docs production build served on 5330 (`.next-preview`).
 - `pnpm --filter shadcn-table-docs dev`: docs dev server on 5320.
