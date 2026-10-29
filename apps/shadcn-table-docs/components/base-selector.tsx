@@ -134,8 +134,8 @@ const useBaseTabs = (surface: Surface) => {
 
 /**
  * Select button for the docs header (next to the theme pill): the current
- * edition and a chevron, styled like the example page's `Copy prompt`
- * control, opening a radio menu over the editions, like the command bar's
+ * base and a chevron, styled like the example page's `Copy prompt`
+ * control, opening a radio menu over the bases, like the command bar's
  * "Choose base" menu (components/agent-bar.tsx). Writes the group through
  * `setBase`, so the content-page tabs follow.
  */
@@ -148,7 +148,7 @@ export const BaseSwitch = ({ className }: { className?: string }) => {
           type="button"
           variant="outline"
           size="sm"
-          aria-label="Edition"
+          aria-label="Base"
           aria-haspopup="menu"
           className={cn('h-8 rounded-md border bg-fd-secondary', className)}
         >

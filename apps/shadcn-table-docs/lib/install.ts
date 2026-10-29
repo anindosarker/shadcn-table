@@ -2,11 +2,11 @@
 // import from server components, client components and the page checks'
 // expectations.
 import {
-  DEFAULT_EDITION,
-  EDITION_LABELS,
-  EDITIONS,
-  type Edition,
-} from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+  DEFAULT_BASE,
+  BASE_LABELS,
+  BASES,
+  type Base,
+} from '../../../packages/shadcn-table/scripts/registry/bases.mjs';
 import { gitConfig, libraryItem, siteUrl } from './shared';
 
 export const packageManagers = ['pnpm', 'npm', 'yarn', 'bun'] as const;
@@ -21,18 +21,18 @@ const runners: Record<PackageManager, string> = {
 
 /**
  * The shadcn bases the table supports, as `shadcn init --base` names them,
- * in reader order: the library's EDITIONS (Base UI, Radix UI, React Aria).
+ * in reader order: the library's BASES (Base UI, Radix UI, React Aria).
  * The docs' base selector (components/base-selector.tsx) picks one; a
  * project's base is the `style` in its `components.json` (`base-*`,
- * `radix-*` or `aria-*`, the React Aria edition's style being `aria-nova`).
+ * `radix-*` or `aria-*`, the React Aria base's style being `aria-nova`).
  */
-export const bases = EDITIONS;
-export type Base = Edition;
-/** The base shown before the reader picks one (DEFAULT_EDITION, Base UI). */
-export const defaultBase: Base = DEFAULT_EDITION;
+export const bases = BASES;
+export type { Base };
+/** The base shown before the reader picks one (DEFAULT_BASE, Base UI). */
+export const defaultBase: Base = DEFAULT_BASE;
 
-/** Reader-facing name per base, the library's EDITION_LABELS. */
-export const baseLabels: Readonly<Record<Base, string>> = EDITION_LABELS;
+/** Reader-facing name per base, the library's BASE_LABELS. */
+export const baseLabels: Readonly<Record<Base, string>> = BASE_LABELS;
 
 export const isBase = (value: unknown): value is Base =>
   bases.includes(value as Base);
@@ -44,7 +44,7 @@ export const perBase = <T>(fn: (base: Base) => T): Record<Base, T> =>
 /**
  * Hosted registry item for a base: `pnpm registry:hosted`
  * (packages/shadcn-table/scripts/registry/hosted.mjs) serves
- * every edition under the same item names, `/r/radix/<item>.json`,
+ * every base under the same item names, `/r/radix/<item>.json`,
  * `/r/base/<item>.json` and `/r/aria/<item>.json`.
  */
 export const itemUrl = (item: string, base: Base = defaultBase) =>

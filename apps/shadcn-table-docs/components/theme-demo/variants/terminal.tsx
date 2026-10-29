@@ -38,8 +38,8 @@ type Line =
   // the globals.css block, live for the current theme
   | { kind: 'css' };
 
-// The commands run on the edition a reader sees first (defaultBase, the
-// library's DEFAULT_EDITION).
+// The commands run on the base a reader sees first (defaultBase, the
+// library's DEFAULT_BASE).
 const SCRIPT: readonly Line[] = [
   { kind: 'cmd', text: initCommand(defaultBase, 'npm') },
   { kind: 'out', text: 'Created components.json' },
