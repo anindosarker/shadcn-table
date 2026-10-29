@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
-    "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{js,mjs,ts,tsx,md}\"",
     "preview": "node scripts/preview.mjs",
     "lint": "turbo run lint",
     "registry:build": "pnpm --filter shadcn-table registry:build",
