@@ -91,10 +91,10 @@ const KNOWN_LIBRARY_ERRORS = [];
  */
 const MONITORED_EXTERNAL_HOSTS = ['api.dicebear.com'];
 
-function isExternalResourceError(text, url) {
+function isExternalResourceError(text, resourceUrl) {
   if (!/^Failed to load resource/.test(text)) return false;
   try {
-    const host = new URL(url).host;
+    const host = new URL(resourceUrl).host;
     if (MONITORED_EXTERNAL_HOSTS.includes(host)) return false;
     return host !== new URL(url).host;
   } catch {
