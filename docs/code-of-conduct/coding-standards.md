@@ -38,7 +38,7 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
   cannot pick a base, installs the default; never hand-write one, and `hosted.mjs` skips
   them.
 - Each other base has its own list of files that legitimately differ from radix:
-  `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on an
+  `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on a
   base's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
   fails otherwise.
 - Adding a base-only difference means adding the path to that base's list in the
