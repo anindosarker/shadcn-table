@@ -1,37 +1,37 @@
 #!/usr/bin/env node
 // Usage (repo root): pnpm check:bases, also the CI job `bases`.
 //
-// Two file sets exist once per edition (EDITIONS in lib.mjs): the library,
-// registry/<edition>/components/ui/shadcn-table, and the docs examples,
-// apps/shadcn-table-docs/examples/<edition>. A common change is made in
+// Two file sets exist once per base (BASES in lib.mjs): the library,
+// registry/<base>/components/ui/shadcn-table, and the docs examples,
+// apps/shadcn-table-docs/examples/<base>. A common change is made in
 // every tree by hand, and this guard is how a missed twin is found: every
-// edition other than the reference (radix) is compared against it with its
-// own list of files allowed to differ, scripts/registry/<edition>-diff.json
-// for the library and scripts/registry/examples-<edition>-diff.json for the
+// base other than the reference (radix) is compared against it with its
+// own list of files allowed to differ, scripts/registry/<base>-diff.json
+// for the library and scripts/registry/examples-<base>-diff.json for the
 // examples. A file not on the list must be byte-identical in that tree and
 // the reference, every listed file must exist in both, and no file may exist
-// in one of the two only. It prints one line per edition and set, then every
+// in one of the two only. It prints one line per base and set, then every
 // offending path, and exits non-zero on any problem; it never copies or
 // edits a file.
 import fs from 'node:fs';
 import path from 'node:path';
-import { DOCS, EDITIONS, PKG, REFERENCE_EDITION } from './lib.mjs';
+import { DOCS, BASES, PKG, REFERENCE_BASE } from './lib.mjs';
 
 const LIB_REL = 'components/ui/shadcn-table';
 
-// The guarded sets: a tree per edition and the allow list of every other
-// edition, named for the messages.
+// The guarded sets: a tree per base and the allow list of every other
+// base, named for the messages.
 const SETS = [
   {
-    label: (edition) => `registry/${edition}`,
-    tree: (edition) => path.join(PKG, 'registry', edition, LIB_REL),
-    diffList: (edition) => `${edition}-diff.json`,
+    label: (base) => `registry/${base}`,
+    tree: (base) => path.join(PKG, 'registry', base, LIB_REL),
+    diffList: (base) => `${base}-diff.json`,
     unit: 'library files',
   },
   {
-    label: (edition) => `examples/${edition}`,
-    tree: (edition) => path.join(DOCS, 'examples', edition),
-    diffList: (edition) => `examples-${edition}-diff.json`,
+    label: (base) => `examples/${base}`,
+    tree: (base) => path.join(DOCS, 'examples', base),
+    diffList: (base) => `examples-${base}-diff.json`,
     unit: 'example files',
   },
 ];
@@ -50,28 +50,28 @@ const walk = (dir, root = dir) => {
 let failed = false;
 
 for (const set of SETS) {
-  const referenceDir = set.tree(REFERENCE_EDITION);
+  const referenceDir = set.tree(REFERENCE_BASE);
   const reference = new Set(walk(referenceDir));
-  for (const edition of EDITIONS) {
-    if (edition === REFERENCE_EDITION) continue;
-    const diffList = set.diffList(edition);
+  for (const base of BASES) {
+    if (base === REFERENCE_BASE) continue;
+    const diffList = set.diffList(base);
     const allowed = new Set(
       JSON.parse(
         fs.readFileSync(path.join(PKG, 'scripts/registry', diffList), 'utf8'),
       ),
     );
-    const treeDir = set.tree(edition);
+    const treeDir = set.tree(base);
     const tree = new Set(walk(treeDir));
     const problems = [];
 
     for (const rel of reference) {
       if (!tree.has(rel)) {
-        problems.push(`only in ${set.label(REFERENCE_EDITION)}: ${rel}`);
+        problems.push(`only in ${set.label(REFERENCE_BASE)}: ${rel}`);
       }
     }
     for (const rel of tree) {
       if (!reference.has(rel)) {
-        problems.push(`only in ${set.label(edition)}: ${rel}`);
+        problems.push(`only in ${set.label(base)}: ${rel}`);
       }
     }
     for (const rel of allowed) {
@@ -91,7 +91,7 @@ for (const set of SETS) {
       }
     }
 
-    const pair = `${set.label(REFERENCE_EDITION)} and ${set.label(edition)}`;
+    const pair = `${set.label(REFERENCE_BASE)} and ${set.label(base)}`;
     if (problems.length) {
       failed = true;
       console.error(
