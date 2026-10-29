@@ -61,3 +61,25 @@ chevron commit `8db770ea` feat(storybook): chevron on the edition picker.
   no required status checks, so the rename touches no repo setting.
 - The Unreleased chevron line now says "base picker" and "base name" (it was written this round
   as "edition picker").
+
+## Gates
+
+Verifier run on a clean tree at `40821640`, plan 2.2, PR #61, CI run `40829404197`
+(`pr.yml`) and `40829404030` (release impact).
+
+- `grep -rni edition` with the plan's excludes: empty, also with `public/r`, `storybook-static`
+  and `.next` built.
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, library `lint`: exit 0. `check:bases`: 4 sets green.
+- `registry:build`, `registry:items`, `registry:hosted`: exit 0, `git status` clean. Against
+  `e6f347b7`: catalogs differ only in the alias descriptions (39 lines package, 115 lines docs),
+  hosted `diff -r` only in `aria/shadcn-table.json` (one comment line). See Owner attention.
+- `test:base`, `test:radix`, `test:aria`: 446 passed each, turbo cache off (0 cached).
+- `storybook:build:base`, `:radix`, `:aria`: exit 0. `check-storybook.mjs --url
+  http://localhost:5346` on `serve storybook-static`: 21 passed, 0 failed, 1 skipped (root
+  redirect, Vercel only).
+- Docs `types:check` exit 0, `lint` exit 0 (9 warnings), `build` exit 0.
+- `check-pages.mjs --url http://localhost:5347 --base base`, `radix`, `aria` on `next start`:
+  1654 passed, 0 failed each.
+- `pr.yml` run `40829404197`: every job passed (bases, docs, library x3, test x3, registry,
+  install x5); release impact passed.
+- `smoke.mjs`: after release, not run here.
