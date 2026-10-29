@@ -72,8 +72,9 @@ jobs:
           echo "Ships as $next ($labels)." >> "$GITHUB_STEP_SUMMARY"
 
   # The library exists once per edition, three complete trees:
-  # registry/radix (the default scripts), registry/base (the `:base` scripts,
-  # ST_BASE=base) and registry/aria (the `:aria` scripts, ST_BASE=aria).
+  # registry/base, registry/radix and registry/aria, each built and tested by
+  # the package scripts named after it (`:base`, `:radix`, `:aria`, which set
+  # ST_BASE).
   library:
     name: 'library (${{ matrix.base }}: tsc, lint, storybook build)'
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
@@ -81,7 +82,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base: [radix, base, aria]
+        base: [base, radix, aria]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -97,12 +98,7 @@ jobs:
       - run: pnpm --filter shadcn-table tsc:aria
         if: matrix.base == 'aria'
       - run: pnpm --filter shadcn-table lint
-      - run: pnpm --filter shadcn-table storybook:build
-        if: matrix.base == 'radix'
-      - run: pnpm --filter shadcn-table storybook:build:base
-        if: matrix.base == 'base'
-      - run: pnpm --filter shadcn-table storybook:build:aria
-        if: matrix.base == 'aria'
+      - run: pnpm --filter shadcn-table storybook:build:${{ matrix.base }}
 
   # A common library file must be byte-identical in every tree; the files that
   # differ on purpose from registry/radix are listed per edition in
@@ -125,7 +121,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base: [radix, base, aria]
+        base: [base, radix, aria]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -135,12 +131,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
-      - run: pnpm test
-        if: matrix.base == 'radix'
-      - run: pnpm test:base
-        if: matrix.base == 'base'
-      - run: pnpm test:aria
-        if: matrix.base == 'aria'
+      - run: pnpm --filter shadcn-table test:${{ matrix.base }}
 
   docs:
     name: docs (types, next build)

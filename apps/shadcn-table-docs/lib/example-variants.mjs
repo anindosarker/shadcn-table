@@ -34,10 +34,7 @@ const EXAMPLES = path.join(APP, 'examples');
  * @param {keyof typeof VARIANT_DIRS} base
  */
 export const rewriteImports = (source, base) =>
-  source.replace(
-    /(['"])@\/components\/ui\//g,
-    `$1@/components/ui-${base}/`,
-  );
+  source.replace(/(['"])@\/components\/ui\//g, `$1@/components/ui-${base}/`);
 
 /**
  * One base's variant of one example source file, formatted.

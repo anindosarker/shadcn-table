@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build --parallel",
     "dev": "turbo run dev --parallel",
-    "format": "prettier --write \"**/*.{js,ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{js,mjs,ts,tsx,md}\"",
     "preview": "node scripts/preview.mjs",
     "lint": "turbo run lint",
     "registry:build": "pnpm --filter shadcn-table registry:build",
@@ -18,11 +18,13 @@
     "add-part": "node packages/shadcn-table/scripts/registry/add-part.mjs",
     "check:bases": "node packages/shadcn-table/scripts/registry/check-bases.mjs",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
-    "storybook": "turbo run storybook --filter=shadcn-table",
-    "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook(:base|:aria)?$/\"",
-    "storybook:build": "turbo run storybook:build --filter=shadcn-table",
-    "test": "turbo run test --filter=shadcn-table",
+    "storybook:base": "turbo run storybook:base --filter=shadcn-table",
+    "storybook:radix": "turbo run storybook:radix --filter=shadcn-table",
+    "storybook:aria": "turbo run storybook:aria --filter=shadcn-table",
+    "storybook:all": "pnpm --filter shadcn-table run --parallel \"/^storybook:(base|radix|aria)$/\"",
+    "storybook:build": "turbo run storybook:build:base --filter=shadcn-table && turbo run storybook:build:radix --filter=shadcn-table && turbo run storybook:build:aria --filter=shadcn-table",
     "test:base": "turbo run test:base --filter=shadcn-table",
+    "test:radix": "turbo run test:radix --filter=shadcn-table",
     "test:aria": "turbo run test:aria --filter=shadcn-table"
   },
   "devDependencies": {

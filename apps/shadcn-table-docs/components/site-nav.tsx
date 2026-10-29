@@ -14,7 +14,7 @@ import { trackOutboundClicked } from '@/lib/analytics';
 
 /**
  * `slots.header` for the docs layout: the landing page's bar (mono
- * "// shadcn-table" wordmark, mono caps links, GitHub, the base switch and
+ * "// shadcn-table" wordmark, mono caps links, GitHub, the base select and
  * the theme pill), plus the search and sidebar triggers the docs need. Keeps fumadocs'
  * `#nd-subnav` id and grid area so the layout and the sticky offsets still
  * apply. Below lg the links wrap to a second row, as on the landing page.
@@ -84,7 +84,7 @@ export function SiteNav(props: ComponentProps<'header'>) {
           >
             <DiscordIcon />
           </a>
-          {/* the site-wide base (Radix UI | Base UI | React Aria) next to the theme pill */}
+          {/* the site-wide base (Base UI | Radix UI | React Aria) next to the theme pill */}
           <div className="site-nav-desktop">
             <BaseSwitch />
           </div>

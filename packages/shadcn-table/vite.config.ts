@@ -4,12 +4,13 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { resolveEdition } from './scripts/registry/editions.mjs';
 
-// `ST_BASE=base` or `ST_BASE=aria` builds the library and the shared stories
-// against the Base UI tree in registry/base or the React Aria tree in
-// registry/aria; the default is the Radix tree in registry/radix. `@/` is a
-// plain alias to that tree (test config only: no library file knows about the
-// other trees). Any other value, or none, is the reference edition
-// (scripts/registry/editions.mjs).
+// `ST_BASE=base`, `ST_BASE=radix` or `ST_BASE=aria` builds the library and
+// the shared stories against that edition's tree in registry/<edition>. `@/`
+// is a plain alias to that tree (test config only: no library file knows
+// about the other trees). Any other value, or none, is the default edition,
+// Base UI (DEFAULT_EDITION in scripts/registry/editions.mjs), so a bare
+// `vitest` or `storybook` (editor test runners, the addon-vitest panel) runs
+// the tree a reader sees first.
 export const ST_BASE = resolveEdition(process.env.ST_BASE);
 
 // https://vite.dev/config/
