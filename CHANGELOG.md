@@ -11,7 +11,12 @@ date; merging it publishes the section as the GitHub release notes.
 
 ### Changed
 
-- The Storybook edition picker shows a chevron before the edition name.
+- The Storybook base picker shows a chevron before the base name.
+- The shadcn base is called base everywhere, in the Storybook picker, the docs and the
+  maintainer scripts; edition is gone.
+- Maintainer renames: `scripts/registry/bases.mjs` (`BASES`, `REFERENCE_BASE`, `DEFAULT_BASE`,
+  `BASE_LABELS`, `BASE_PORTS`, `resolveBase`, `baseItemName`), `.storybook/base-tool.ts`, and
+  `check-pages.mjs --url <url> --base <base>` (was `--base <url> --edition <base>`).
 
 ## 0.6.2 - 2026-10-29
 
