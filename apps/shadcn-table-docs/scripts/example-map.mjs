@@ -2,7 +2,7 @@
 /**
  * Generates two maps from the file system:
  *   - examples/map.tsx: one component per example folder of the reference
- *     edition, examples/<reference edition>/<slug>/ (every edition folder
+ *     base, examples/<reference base>/<slug>/ (every base folder
  *     carries the same slugs, pnpm check:bases guards it), named
  *     `<PascalCase(slug)>Example` and rendering `<ExampleSnippet name={slug} />`,
  *     exported individually and together as `exampleComponents`. The example
@@ -23,7 +23,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
-import { REFERENCE_EDITION } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import { REFERENCE_BASE } from '../../../packages/shadcn-table/scripts/registry/bases.mjs';
 import { ENTRY_FILE } from '../lib/example-files.mjs';
 import { pascal } from '../lib/example-pages.mjs';
 
@@ -31,7 +31,7 @@ const APP_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
 );
-const EXAMPLES = path.join(APP_DIR, 'examples', REFERENCE_EDITION);
+const EXAMPLES = path.join(APP_DIR, 'examples', REFERENCE_BASE);
 const GROUPS = path.join(APP_DIR, 'example-groups');
 const EXAMPLES_OUT = path.join(APP_DIR, 'examples', 'map.tsx');
 const GROUPS_OUT = path.join(GROUPS, 'map.tsx');

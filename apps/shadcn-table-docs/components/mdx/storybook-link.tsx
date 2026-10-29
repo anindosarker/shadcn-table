@@ -6,7 +6,7 @@ import type { Base } from '@/lib/install';
 import { trackStorybookOpened } from '@/lib/analytics';
 
 /**
- * One Storybook host serves every tree, each build under its edition:
+ * One Storybook host serves every tree, each build under its base:
  * /base/, /radix/ and /aria/ (packages/shadcn-table `storybook:build:base`,
  * `storybook:build:radix`, `storybook:build:aria`); the root redirects to
  * /base/.
