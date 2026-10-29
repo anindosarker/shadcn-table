@@ -16,7 +16,7 @@ export interface ThemeScopeProps {
   children: ReactNode;
 }
 
-/* What Radix renders straight under <body> for the radix edition of the
+/* What Radix renders straight under <body> for the radix base of the
  * table, read from the live DOM: popper wrappers (dropdown menus, popovers,
  * tooltips, popper selects), the fixed wrapper of an item-aligned select
  * (rows per page) which carries no attribute of its own, and dialog overlay

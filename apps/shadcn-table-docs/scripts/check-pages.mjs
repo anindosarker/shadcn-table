@@ -4,33 +4,32 @@
  * mobile widths and fails on any console.error or uncaught page error, in
  * particular React hydration mismatches (which only print in `next dev`).
  * Per-page assertions live in scripts/page-checks/<cluster>.mjs (default
- * export: { '/docs/path': async ({ page, check, edition }) => void }, where
- * `edition` is the one the page opened on); files starting with `_` are
- * helpers and not loaded. Add an entry for every new page that
- * renders live examples or prop tables.
+ * export: { '/docs/path': async ({ page, check, base }) => void }, where `base`
+ * is the one the page opened on); files starting with `_` are helpers and not
+ * loaded. Add an entry for every new page that renders live examples or prop
+ * tables.
  *
  * Usage (dev server must be running, default http://localhost:5320):
- *   node scripts/check-pages.mjs [a|b|c|d|e] [--base http://localhost:5321]
- *     [--edition base|radix|aria] [--widths 1440,700] [--shots <dir>]
+ *   node scripts/check-pages.mjs [a|b|c|d|e] [--url http://localhost:5321]
+ *     [--base base|radix|aria] [--widths 1440,700] [--shots <dir>]
  *     [/docs/path ...]
  *
  * A single-letter argument limits the run to that cluster's page checks;
  * explicit /docs paths run only those pages (with their checks, if any).
- * `--edition` opens every page with that shadcn base selected (the stored
- * pick of components/base-selector.tsx), so the live examples and code
- * views are that edition's; without it the pages open on the default base
- * (DEFAULT_EDITION in editions.mjs, Base UI).
- * Playwright is resolved from packages/shadcn-table/node_modules
- * (a devDependency of the library package).
+ * `--base` opens every page with that shadcn base selected (the stored pick of
+ * components/base-selector.tsx), so the live examples and code views are that
+ * base's; without it the pages open on the default base (DEFAULT_BASE in
+ * bases.mjs, Base UI). Playwright is resolved from
+ * packages/shadcn-table/node_modules (a devDependency of the library package).
  */
 import { createRequire } from 'node:module';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  DEFAULT_EDITION,
-  EDITIONS,
-} from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+  DEFAULT_BASE,
+  BASES,
+} from '../../../packages/shadcn-table/scripts/registry/bases.mjs';
 import { TAB_VALUES } from '../lib/base-tabs.mjs';
 
 const APP_DIR = path.resolve(
@@ -58,14 +57,14 @@ const opt = (name, fallback) => {
   const [v] = args.splice(i, 2).slice(1);
   return v;
 };
-const base = opt('base', 'http://localhost:5320');
-const edition = opt('edition', '');
-if (edition && !EDITIONS.includes(edition)) {
-  console.error(`--edition must be one of ${EDITIONS.join(', ')}`);
+const url = opt('url', 'http://localhost:5320');
+const base = opt('base', '');
+if (base && !BASES.includes(base)) {
+  console.error(`--base must be one of ${BASES.join(', ')}`);
   process.exit(1);
 }
-/** The stored value of the site-wide base tab group for `--edition`. */
-const editionTab = edition ? TAB_VALUES[edition] : '';
+/** The stored value of the site-wide base tab group for `--base`. */
+const baseTab = base ? TAB_VALUES[base] : '';
 const widths = opt('widths', '1440,700').split(',').map(Number);
 const shots = opt('shots', '');
 const clusters = args
@@ -91,12 +90,12 @@ const KNOWN_LIBRARY_ERRORS = [];
  */
 const MONITORED_EXTERNAL_HOSTS = ['api.dicebear.com'];
 
-function isExternalResourceError(text, url) {
+function isExternalResourceError(text, resourceUrl) {
   if (!/^Failed to load resource/.test(text)) return false;
   try {
-    const host = new URL(url).host;
+    const host = new URL(resourceUrl).host;
     if (MONITORED_EXTERNAL_HOSTS.includes(host)) return false;
-    return host !== new URL(base).host;
+    return host !== new URL(url).host;
   } catch {
     return false;
   }
@@ -157,7 +156,7 @@ for (const route of pages) {
       });
       // The base selector reads the fumadocs tab group `base` from storage.
       if (tab) localStorage.setItem('base', tab);
-    }, editionTab);
+    }, baseTab);
     const page = await ctx.newPage();
     const errors = [];
     page.on('console', (m) => {
@@ -166,7 +165,7 @@ for (const route of pages) {
       errors.push(m.text());
     });
     page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
-    const res = await page.goto(base + route, {
+    const res = await page.goto(url + route, {
       waitUntil: 'networkidle',
       timeout: 90000,
     });
@@ -177,7 +176,7 @@ for (const route of pages) {
         await PAGE_CHECKS[route]({
           page,
           check,
-          edition: edition || DEFAULT_EDITION,
+          base: base || DEFAULT_BASE,
         });
       } catch (e) {
         check('page check threw', false, String(e.message).slice(0, 160));

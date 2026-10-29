@@ -3547,7 +3547,7 @@
       "name": "shadcn-table",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI)",
-      "description": "Alias of shadcn-table-base: the GitHub shorthand anindosarker/shadcn-table/shadcn-table installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base: the GitHub shorthand anindosarker/shadcn-table/shadcn-table installs the Base UI copy.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
         "@tanstack/react-store@0.11.2",
@@ -4119,7 +4119,7 @@
       "name": "shadcn-table-locale-ar",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ar",
-      "description": "Alias of shadcn-table-base-locale-ar: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ar installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-ar: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ar installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4135,7 +4135,7 @@
       "name": "shadcn-table-locale-az",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: az",
-      "description": "Alias of shadcn-table-base-locale-az: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-az installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-az: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-az installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4151,7 +4151,7 @@
       "name": "shadcn-table-locale-bg",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: bg",
-      "description": "Alias of shadcn-table-base-locale-bg: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-bg installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-bg: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-bg installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4167,7 +4167,7 @@
       "name": "shadcn-table-locale-cs",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: cs",
-      "description": "Alias of shadcn-table-base-locale-cs: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-cs installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-cs: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-cs installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4183,7 +4183,7 @@
       "name": "shadcn-table-locale-da",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: da",
-      "description": "Alias of shadcn-table-base-locale-da: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-da installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-da: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-da installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4199,7 +4199,7 @@
       "name": "shadcn-table-locale-de",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: de",
-      "description": "Alias of shadcn-table-base-locale-de: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-de installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-de: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-de installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4215,7 +4215,7 @@
       "name": "shadcn-table-locale-el",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: el",
-      "description": "Alias of shadcn-table-base-locale-el: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-el installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-el: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-el installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4231,7 +4231,7 @@
       "name": "shadcn-table-locale-es",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: es",
-      "description": "Alias of shadcn-table-base-locale-es: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-es installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-es: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-es installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4247,7 +4247,7 @@
       "name": "shadcn-table-locale-et",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: et",
-      "description": "Alias of shadcn-table-base-locale-et: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-et installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-et: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-et installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4263,7 +4263,7 @@
       "name": "shadcn-table-locale-fa",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: fa",
-      "description": "Alias of shadcn-table-base-locale-fa: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fa installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-fa: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fa installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4279,7 +4279,7 @@
       "name": "shadcn-table-locale-fi",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: fi",
-      "description": "Alias of shadcn-table-base-locale-fi: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fi installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-fi: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fi installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4295,7 +4295,7 @@
       "name": "shadcn-table-locale-fr",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: fr",
-      "description": "Alias of shadcn-table-base-locale-fr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fr installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-fr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fr installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4311,7 +4311,7 @@
       "name": "shadcn-table-locale-he",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: he",
-      "description": "Alias of shadcn-table-base-locale-he: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-he installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-he: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-he installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4327,7 +4327,7 @@
       "name": "shadcn-table-locale-hr",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: hr",
-      "description": "Alias of shadcn-table-base-locale-hr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hr installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-hr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hr installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4343,7 +4343,7 @@
       "name": "shadcn-table-locale-hu",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: hu",
-      "description": "Alias of shadcn-table-base-locale-hu: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hu installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-hu: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hu installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4359,7 +4359,7 @@
       "name": "shadcn-table-locale-hy",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: hy",
-      "description": "Alias of shadcn-table-base-locale-hy: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hy installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-hy: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hy installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4375,7 +4375,7 @@
       "name": "shadcn-table-locale-id",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: id",
-      "description": "Alias of shadcn-table-base-locale-id: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-id installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-id: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-id installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4391,7 +4391,7 @@
       "name": "shadcn-table-locale-it",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: it",
-      "description": "Alias of shadcn-table-base-locale-it: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-it installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-it: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-it installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4407,7 +4407,7 @@
       "name": "shadcn-table-locale-ja",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ja",
-      "description": "Alias of shadcn-table-base-locale-ja: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ja installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-ja: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ja installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4423,7 +4423,7 @@
       "name": "shadcn-table-locale-ko",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ko",
-      "description": "Alias of shadcn-table-base-locale-ko: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ko installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-ko: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ko installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4439,7 +4439,7 @@
       "name": "shadcn-table-locale-mk",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: mk",
-      "description": "Alias of shadcn-table-base-locale-mk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-mk installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-mk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-mk installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4455,7 +4455,7 @@
       "name": "shadcn-table-locale-nl",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: nl",
-      "description": "Alias of shadcn-table-base-locale-nl: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-nl installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-nl: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-nl installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4471,7 +4471,7 @@
       "name": "shadcn-table-locale-no",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: no",
-      "description": "Alias of shadcn-table-base-locale-no: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-no installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-no: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-no installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4487,7 +4487,7 @@
       "name": "shadcn-table-locale-np",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: np",
-      "description": "Alias of shadcn-table-base-locale-np: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-np installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-np: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-np installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4503,7 +4503,7 @@
       "name": "shadcn-table-locale-pl",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: pl",
-      "description": "Alias of shadcn-table-base-locale-pl: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pl installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-pl: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pl installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4519,7 +4519,7 @@
       "name": "shadcn-table-locale-pt-BR",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: pt-BR",
-      "description": "Alias of shadcn-table-base-locale-pt-BR: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pt-BR installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-pt-BR: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pt-BR installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4535,7 +4535,7 @@
       "name": "shadcn-table-locale-pt",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: pt",
-      "description": "Alias of shadcn-table-base-locale-pt: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pt installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-pt: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pt installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4551,7 +4551,7 @@
       "name": "shadcn-table-locale-ro",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ro",
-      "description": "Alias of shadcn-table-base-locale-ro: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ro installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-ro: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ro installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4567,7 +4567,7 @@
       "name": "shadcn-table-locale-ru",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ru",
-      "description": "Alias of shadcn-table-base-locale-ru: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ru installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-ru: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ru installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4583,7 +4583,7 @@
       "name": "shadcn-table-locale-sk",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: sk",
-      "description": "Alias of shadcn-table-base-locale-sk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sk installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-sk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sk installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4599,7 +4599,7 @@
       "name": "shadcn-table-locale-sr-Cyrl-RS",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: sr-Cyrl-RS",
-      "description": "Alias of shadcn-table-base-locale-sr-Cyrl-RS: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sr-Cyrl-RS installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-sr-Cyrl-RS: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sr-Cyrl-RS installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4615,7 +4615,7 @@
       "name": "shadcn-table-locale-sr-Latn-RS",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: sr-Latn-RS",
-      "description": "Alias of shadcn-table-base-locale-sr-Latn-RS: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sr-Latn-RS installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-sr-Latn-RS: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sr-Latn-RS installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4631,7 +4631,7 @@
       "name": "shadcn-table-locale-sv",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: sv",
-      "description": "Alias of shadcn-table-base-locale-sv: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sv installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-sv: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sv installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4647,7 +4647,7 @@
       "name": "shadcn-table-locale-tr",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: tr",
-      "description": "Alias of shadcn-table-base-locale-tr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-tr installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-tr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-tr installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4663,7 +4663,7 @@
       "name": "shadcn-table-locale-uk",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: uk",
-      "description": "Alias of shadcn-table-base-locale-uk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-uk installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-uk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-uk installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4679,7 +4679,7 @@
       "name": "shadcn-table-locale-vi",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: vi",
-      "description": "Alias of shadcn-table-base-locale-vi: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-vi installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-vi: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-vi installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4695,7 +4695,7 @@
       "name": "shadcn-table-locale-zh-Hans",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: zh-Hans",
-      "description": "Alias of shadcn-table-base-locale-zh-Hans: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-zh-Hans installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-zh-Hans: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-zh-Hans installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],
@@ -4711,7 +4711,7 @@
       "name": "shadcn-table-locale-zh-Hant",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: zh-Hant",
-      "description": "Alias of shadcn-table-base-locale-zh-Hant: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-zh-Hant installs the Base UI edition.",
+      "description": "Alias of shadcn-table-base-locale-zh-Hant: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-zh-Hant installs the Base UI copy.",
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base"
       ],

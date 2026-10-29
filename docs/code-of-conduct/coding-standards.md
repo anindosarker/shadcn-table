@@ -10,49 +10,49 @@ packages/shadcn-table/
 ├── registry/radix/          ← complete Radix UI library, same shape
 ├── registry/aria/           ← complete React Aria library, same shape
 ├── registry.json            ← item catalog, stays at the package root
-├── scripts/registry/        ← edition list, registry build, hosted copies, example items, add-part, edition guard
+├── scripts/registry/        ← base list, registry build, hosted copies, example items, add-part, base guard
 ├── scripts/                 ← everything else
 └── stories/ .storybook/     ← one story set, `@/` points at registry/<ST_BASE>
 apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, components/ui-radix and components/ui-aria are installed copies
-├── examples/base/ radix/ aria/  ← the docs examples, one hand-written set per edition, radix the reference
+├── examples/base/ radix/ aria/  ← the docs examples, one hand-written set per base, radix the reference
 ```
 
-## Editions
+## Bases
 
-- Three trees, one per edition: `registry/base`, `registry/radix`, `registry/aria`. The list
-  is `EDITIONS` in `scripts/registry/editions.mjs` (with `REFERENCE_EDITION`,
-  `DEFAULT_EDITION`, `EDITION_LABELS` and `EDITION_PORTS`), Base UI first: the one source of
-  the order readers see the editions in. Every script, config and docs app file that handles
-  more than one edition reads it, none repeats the names or the order.
-- Every edition script names its edition: `storybook:<edition>`,
-  `storybook:build:<edition>`, `test:<edition>` (`ST_BASE=<edition>`, dev ports from
-  `EDITION_PORTS`: base 6007, radix 6006, aria 6008). `ST_BASE` unset or unknown means
-  `DEFAULT_EDITION`, never the reference.
-- Radix is the reference (`REFERENCE_EDITION`, the diff baseline and the example slug source).
+- Three trees, one per base: `registry/base`, `registry/radix`, `registry/aria`. The list
+  is `BASES` in `scripts/registry/bases.mjs` (with `REFERENCE_BASE`,
+  `DEFAULT_BASE`, `BASE_LABELS` and `BASE_PORTS`), Base UI first: the one source of
+  the order readers see the bases in. Every script, config and docs app file that handles
+  more than one base reads it, none repeats the names or the order.
+- Every base script names its base: `storybook:<base>`,
+  `storybook:build:<base>`, `test:<base>` (`ST_BASE=<base>`, dev ports from
+  `BASE_PORTS`: base 6007, radix 6006, aria 6008). `ST_BASE` unset or unknown means
+  `DEFAULT_BASE`, never the reference.
+- Radix is the reference (`REFERENCE_BASE`, the diff baseline and the example slug source).
   A change to a common library file is made in every tree by hand. Base UI is the default
-  (`DEFAULT_EDITION`): what a reader sees before picking an edition, in the docs tabs and at
-  the Storybook root. Every committed item is `<name>-<edition>` for every edition
-  (`editionItemName`); the hosted `/r/<edition>/` copies carry the plain name. The plain names
-  in the committed catalogs are generated aliases of the `DEFAULT_EDITION` items (`aliasItems`
+  (`DEFAULT_BASE`): what a reader sees before picking a base, in the docs tabs and at
+  the Storybook root. Every committed item is `<name>-<base>` for every base
+  (`baseItemName`); the hosted `/r/<base>/` copies carry the plain name. The plain names
+  in the committed catalogs are generated aliases of the `DEFAULT_BASE` items (`aliasItems`
   in `lib.mjs`, same files), so the GitHub shorthand `anindosarker/shadcn-table/<name>`, which
-  cannot pick an edition, installs the default; never hand-write one, and `hosted.mjs` skips
+  cannot pick a base, installs the default; never hand-write one, and `hosted.mjs` skips
   them.
-- Each other edition has its own list of files that legitimately differ from radix:
-  `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on an
-  edition's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
+- Each other base has its own list of files that legitimately differ from radix:
+  `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on a
+  base's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
   fails otherwise.
-- Adding an edition-only difference means adding the path to that edition's list in the
+- Adding a base-only difference means adding the path to that base's list in the
   same commit.
-- shadcn parts (`registry/<edition>/components/ui/<part>.tsx`) are never edited; they are
-  what `pnpm add-part <edition> <part>` writes, and `pnpm add-part <edition> --all` re-adds
-  every committed part of an edition: the gate is that it leaves `git status --short` empty.
+- shadcn parts (`registry/<base>/components/ui/<part>.tsx`) are never edited; they are
+  what `pnpm add-part <base> <part>` writes, and `pnpm add-part <base> --all` re-adds
+  every committed part of a base: the gate is that it leaves `git status --short` empty.
   A check that fails on a part is fixed in the check (ESLint ignores the parts; the tsconfigs
   carry no unused-code flags). No exception: a look the library needs beyond the part goes in
   a library wrapper under `components/ui/shadcn-table/` (`ST_Tooltip`, `ST_Checkbox`), and
   every part reaches users as a `registryDependency`.
-- The docs examples follow the same model: `apps/shadcn-table-docs/examples/<edition>/<slug>/`
-  for every edition, radix the reference, a common change made in every folder by hand,
-  `scripts/registry/examples-<edition>-diff.json` the list of example files allowed to differ,
+- The docs examples follow the same model: `apps/shadcn-table-docs/examples/<base>/<slug>/`
+  for every base, radix the reference, a common change made in every folder by hand,
+  `scripts/registry/examples-<base>-diff.json` the list of example files allowed to differ,
   checked by the same `pnpm check:bases`.
 
 ## Naming
@@ -68,9 +68,9 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
   `@/components/ui/shadcn-table/...` and `@/components/ui/<part>`, never relatively. The
   shadcn CLI rewrites `@/` on install, so source and installed output stay identical.
 - The docs app imports its own UI from `@/components/ui-radix/...`. Example sources under
-  `examples/<edition>/<slug>/` import `@/components/ui/...` because that is what a user has
+  `examples/<base>/<slug>/` import `@/components/ui/...` because that is what a user has
   after install; `lib/example-variants.mjs` points the generated copies at the installed
-  edition.
+  base.
 
 ## Code
 
@@ -97,8 +97,8 @@ pnpm --filter shadcn-table lint
 pnpm --filter shadcn-table test:base          # Base UI stories
 pnpm --filter shadcn-table test:radix         # Radix UI stories
 pnpm --filter shadcn-table test:aria          # React Aria stories
-pnpm check:bases                              # edition guard, library and examples, every edition against radix
-pnpm add-part <edition> --all                 # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
+pnpm check:bases                              # base guard, library and examples, every base against radix
+pnpm add-part <base> --all                 # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
