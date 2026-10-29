@@ -1,8 +1,8 @@
 // Shared by the registry scripts and the per-base item definitions
-// (registry/<base>/registry.ts): the base list, then the item builder,
-// which lists an item's files (the tree's library files), derives the registryDependencies from the `@/components/ui/<part>`
-// imports and pins npm versions from package.json. The file list is never
-// hand-maintained.
+// (registry/<base>/registry.ts): the base list, then the item builder, which
+// lists an item's files (the tree's library files), derives the
+// registryDependencies from the `@/components/ui/<part>` imports and pins npm
+// versions from package.json. The file list is never hand-maintained.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -169,20 +169,20 @@ export const buildBaseItems = ({
 };
 
 // Whether a committed item name carries the base: `<name>-<base>`
-// (baseItemName) or a locale item of one, `<name>-<base>-locale-<code>`.
-// The GitHub shorthand aliases (aliasItems) carry none.
+// (baseItemName) or a locale item of one, `<name>-<base>-locale-<code>`. The
+// GitHub shorthand aliases (aliasItems) carry none.
 const hasBaseName = (name, base) =>
   name.endsWith(`-${base}`) || name.includes(`-${base}-locale-`);
 
 /**
  * The GitHub shorthand aliases (decisions.md, decision 7): one copy of every
  * DEFAULT_BASE item under its plain name (`shadcn-table`,
- * `shadcn-table-locale-<code>`, `example-<slug>`), because
- * `shadcn add anindosarker/shadcn-table/<name>` reads the committed catalog
- * and cannot pick a base. Same type, files and dependencies as the
- * source item; only the name and the description change. build.mjs and
- * examples.mjs append them to the catalogs they write; baseItems and
- * baseExampleItems skip them, so hosted.mjs never serves them.
+ * `shadcn-table-locale-<code>`, `example-<slug>`), because `shadcn add
+ * anindosarker/shadcn-table/<name>` reads the committed catalog and cannot pick
+ * a base. Same type, files and dependencies as the source item; only the name
+ * and the description change. build.mjs and examples.mjs append them to the
+ * catalogs they write; baseItems and baseExampleItems skip them, so hosted.mjs
+ * never serves them.
  *
  * @template {{ name: string, description?: string }} T
  * @param {T[]} items the DEFAULT_BASE items, named by baseItemName
@@ -207,10 +207,10 @@ export const aliasItems = (items) =>
   });
 
 /**
- * One base's items in a catalog built from the committed registry.json:
- * the items whose files live in registry/<base>, split into the main item
- * and its locale items (named `<main>-locale-<code>`). The GitHub shorthand
- * aliases (aliasItems) share the default base's files and are skipped.
+ * One base's items in a catalog built from the committed registry.json: the
+ * items whose files live in registry/<base>, split into the main item and its
+ * locale items (named `<main>-locale-<code>`). The GitHub shorthand aliases
+ * (aliasItems) share the default base's files and are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
  * @param {string} base
@@ -234,12 +234,12 @@ export const baseItems = (catalog, base) => {
 };
 
 /**
- * One base's example items in the docs catalog (examples.mjs writes one
- * item per example and base, found by the `examples/<base>/` file
- * paths), each renamed to its hosted name: the plain `example-<slug>`,
- * which baseItemName suffixes with `-<base>` in the committed catalog.
- * hosted.mjs serves them in /r/<base>/, smoke.mjs expects them there.
- * The GitHub shorthand aliases (aliasItems), already plain, are skipped.
+ * One base's example items in the docs catalog (examples.mjs writes one item
+ * per example and base, found by the `examples/<base>/` file paths), each
+ * renamed to its hosted name: the plain `example-<slug>`, which baseItemName
+ * suffixes with `-<base>` in the committed catalog. hosted.mjs serves them in
+ * /r/<base>/, smoke.mjs expects them there. The GitHub shorthand aliases
+ * (aliasItems), already plain, are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
  * @param {string} base

@@ -2,17 +2,17 @@
 /**
  * Per-base variants of the docs examples. examples/<base>/<slug>/ is that
  * base's hand-written source (packages/shadcn-table/scripts/registry/bases.mjs
- * lists the bases, pnpm check:bases keeps the three sets in step). It
- * imports `@/components/ui/...`, the path a user has after `shadcn add`; the
- * code view shows it as is. The docs app installs the three library copies
- * side by side (`pnpm lib:install <base>`, under components/ui-<base>), so
- * for each base every source file of examples/<base>/<slug>/ is copied to
+ * lists the bases, pnpm check:bases keeps the three sets in step). It imports
+ * `@/components/ui/...`, the path a user has after `shadcn add`; the code view
+ * shows it as is. The docs app installs the three library copies side by side
+ * (`pnpm lib:install <base>`, under components/ui-<base>), so for each base
+ * every source file of examples/<base>/<slug>/ is copied to
  * examples/<variant dir>/<slug>/* (gitignored, folder names in
- * lib/example-variant-dir.mjs) with its `@/components/ui/` imports pointed
- * at `@/components/ui-<base>/`. Nothing else changes: an example that needs
- * other code on a base has it written in that base's folder.
- * components/example-variant.tsx lazy-loads the variant for the selected
- * base; the output is formatted with the repo's prettier config.
+ * lib/example-variant-dir.mjs) with its `@/components/ui/` imports pointed at
+ * `@/components/ui-<base>/`. Nothing else changes: an example that needs other
+ * code on a base has it written in that base's folder.
+ * components/example-variant.tsx lazy-loads the variant for the selected base;
+ * the output is formatted with the repo's prettier config.
  *
  * Runs before `next build` and `next dev` (package.json `build`, `predev`)
  * and from `pnpm examples:variants`. Stale variant folders are removed.

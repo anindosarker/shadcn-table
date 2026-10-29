@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
- * Writes the docs app's registry.json with one shadcn registry item per
- * docs example and base (examples/<base>/<slug>/TS.tsx plus every
- * other source file in the folder, subfolders included; BASES in
- * lib.mjs, the reference base's folder defines the example list). The
- * root registry.json includes this file, so the GitHub namespace serves
- * every example as `anindosarker/shadcn-table/example-<slug>-<base>`
- * (`example-basic-radix`, `example-basic-base`, `example-basic-aria`;
- * baseItemName); hosted.mjs serves each base's items under the plain
- * `example-<slug>` in /r/<base>/. The DEFAULT_BASE items follow once
- * more under that plain name, the GitHub shorthand aliases (aliasItems in
- * lib.mjs), which hosted.mjs skips.
+ * Writes the docs app's registry.json with one shadcn registry item per docs
+ * example and base (examples/<base>/<slug>/TS.tsx plus every other source file
+ * in the folder, subfolders included; BASES in lib.mjs, the reference base's
+ * folder defines the example list). The root registry.json includes this file,
+ * so the GitHub namespace serves every example as
+ * `anindosarker/shadcn-table/example-<slug>-<base>` (`example-basic-radix`,
+ * `example-basic-base`, `example-basic-aria`; baseItemName); hosted.mjs serves
+ * each base's items under the plain `example-<slug>` in /r/<base>/. The
+ * DEFAULT_BASE items follow once more under that plain name, the GitHub
+ * shorthand aliases (aliasItems in lib.mjs), which hosted.mjs skips.
  *
  * Per item:
  * - name `baseItemName('example-<slug>', base)`, type `registry:block`

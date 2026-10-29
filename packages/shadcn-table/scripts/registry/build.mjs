@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Usage (inside packages/shadcn-table): pnpm registry:build, or
-// pnpm registry:dev for a local copy under .dev/ (pnpm preview builds it and
-// serves it on port 5310).
-// Collects the items of every base (registry/<base>/registry.ts, in
-// BASES order) into registry.json, then `shadcn build` turns it into
-// public/r/<name>.json. The DEFAULT_BASE items follow once more under
-// their plain names (`shadcn-table`, `shadcn-table-locale-<code>`), the
-// GitHub shorthand aliases (aliasItems in lib.mjs).
+// Usage (inside packages/shadcn-table): pnpm registry:build, or pnpm
+// registry:dev for a local copy under .dev/ (pnpm preview builds it and serves
+// it on port 5310). Collects the items of every base
+// (registry/<base>/registry.ts, in BASES order) into registry.json, then
+// `shadcn build` turns it into public/r/<name>.json. The DEFAULT_BASE items
+// follow once more under their plain names (`shadcn-table`,
+// `shadcn-table-locale-<code>`), the GitHub shorthand aliases (aliasItems in
+// lib.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -20,8 +20,8 @@ import {
 
 const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 
-// Every base's main item is `shadcn-table-<base>` (registry.ts in its
-// tree); the catalog's own name and homepage come from the reference base.
+// Every base's main item is `shadcn-table-<base>` (registry.ts in its tree);
+// the catalog's own name and homepage come from the reference base.
 const bases = await Promise.all(
   BASES.map(
     async (base) =>

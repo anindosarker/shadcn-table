@@ -3,24 +3,23 @@
 //
 // Two file sets exist once per base (BASES in lib.mjs): the library,
 // registry/<base>/components/ui/shadcn-table, and the docs examples,
-// apps/shadcn-table-docs/examples/<base>. A common change is made in
-// every tree by hand, and this guard is how a missed twin is found: every
-// base other than the reference (radix) is compared against it with its
-// own list of files allowed to differ, scripts/registry/<base>-diff.json
-// for the library and scripts/registry/examples-<base>-diff.json for the
-// examples. A file not on the list must be byte-identical in that tree and
-// the reference, every listed file must exist in both, and no file may exist
-// in one of the two only. It prints one line per base and set, then every
-// offending path, and exits non-zero on any problem; it never copies or
-// edits a file.
+// apps/shadcn-table-docs/examples/<base>. A common change is made in every tree
+// by hand, and this guard is how a missed twin is found: every base other than
+// the reference (radix) is compared against it with its own list of files
+// allowed to differ, scripts/registry/<base>-diff.json for the library and
+// scripts/registry/examples-<base>-diff.json for the examples. A file not on
+// the list must be byte-identical in that tree and the reference, every listed
+// file must exist in both, and no file may exist in one of the two only. It
+// prints one line per base and set, then every offending path, and exits
+// non-zero on any problem; it never copies or edits a file.
 import fs from 'node:fs';
 import path from 'node:path';
 import { DOCS, BASES, PKG, REFERENCE_BASE } from './lib.mjs';
 
 const LIB_REL = 'components/ui/shadcn-table';
 
-// The guarded sets: a tree per base and the allow list of every other
-// base, named for the messages.
+// The guarded sets: a tree per base and the allow list of every other base,
+// named for the messages.
 const SETS = [
   {
     label: (base) => `registry/${base}`,

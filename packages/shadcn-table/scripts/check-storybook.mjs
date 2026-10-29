@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * Static Storybook gate for the base switch (.storybook/base-tool.ts):
- * with the three builds served from one directory (`storybook:build:base`,
+ * Static Storybook gate for the base switch (.storybook/base-tool.ts): with the
+ * three builds served from one directory (`storybook:build:base`,
  * `storybook:build:radix` and `storybook:build:aria` into
  * storybook-static/base/, storybook-static/radix/ and storybook-static/aria/),
- * each base's toolbar shows one Base select labelled with its own
- * base; opened, it lists every base in BASES order, its own one
- * selected, and choosing another opens the same story there. One more
- * check, for the production host: the root redirects to the default
- * base's build with the query kept (vercel.json). A plain static server
- * answers the root with 200 or 404 instead; the check is then skipped.
+ * each base's toolbar shows one Base select labelled with its own base; opened,
+ * it lists every base in BASES order, its own one selected, and choosing
+ * another opens the same story there. One more check, for the production host:
+ * the root redirects to the default base's build with the query kept
+ * (vercel.json). A plain static server answers the root with 200 or 404
+ * instead; the check is then skipped.
  *
  * Usage (a static server must be running, for example
  * `pnpm serve storybook-static -l 5344`):
@@ -35,7 +35,10 @@ const origin = (i === -1 ? 'http://localhost:5344' : args[i + 1]).replace(
   '',
 );
 
-/** First story id of the default base's build; every build shares the story set. */
+/**
+ * First story id of the default base's build; every build shares the story
+ * set.
+ */
 const indexFile = path.join(
   PKG_DIR,
   'storybook-static',
@@ -52,8 +55,8 @@ if (!storyId) {
 }
 
 /**
- * Each base: the label its select shows and where its build is served
- * (every base under <base>/).
+ * Each base: the label its select shows and where its build is served (every
+ * base under <base>/).
  */
 const bases = BASES.map((name) => ({
   name,

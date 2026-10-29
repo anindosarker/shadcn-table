@@ -1,8 +1,8 @@
 /**
- * Cluster A page checks: home, docs/index, getting-started, api/*.
- * Each entry: async ({ page, check, base }) => void, run after load at
- * the first width; `base` is the base the page opened on (the runner's
- * --base, else the default).
+ * Cluster A page checks: home, docs/index, getting-started, api/*. Each entry:
+ * async ({ page, check, base }) => void, run after load at the first width;
+ * `base` is the base the page opened on (the runner's --base, else the
+ * default).
  */
 import {
   BASE_LABELS,
@@ -39,10 +39,10 @@ async function agentBar(page, check) {
 }
 
 /**
- * The hero's command bar (components/agent-bar.tsx): the Command tab names
- * the site-wide base and its chevron menu sets it, so the command follows.
- * Opens on `base`, visits the other two, returns to it. The tab text is
- * uppercased by CSS; compare case-insensitively.
+ * The hero's command bar (components/agent-bar.tsx): the Command tab names the
+ * site-wide base and its chevron menu sets it, so the command follows. Opens on
+ * `base`, visits the other two, returns to it. The tab text is uppercased by
+ * CSS; compare case-insensitively.
  */
 async function commandBarBase({ page, check, base }) {
   const label0 = BASE_LABELS[base];
@@ -192,8 +192,8 @@ const checks = {
       new RegExp(`shadcn@latest add \\S+/r/${target}/${item}\\.json`);
     let txt = await article();
     // The page opens on `base`: the default (Base UI) in a fresh browser
-    // context, the runner's --base otherwise; the header select agrees
-    // and its menu lists the bases in order.
+    // context, the runner's --base otherwise; the header select agrees and its
+    // menu lists the bases in order.
     check(
       `opens on ${BASE_LABELS[base]}`,
       (await headerBaseLabel(page)) === BASE_LABELS[base],

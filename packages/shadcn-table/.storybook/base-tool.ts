@@ -15,11 +15,11 @@ import {
 const ADDON_ID = 'shadcn-table/base';
 
 /**
- * Another base's URL for the same story. Static builds sit side by side
- * under <base>/, so the link is relative; `storybook dev` serves each
- * base on its own port (BASE_PORTS, the package.json
- * `storybook:<base>` scripts), so the link swaps the port.
- * `path` is the manager's `?path=` value, which Storybook does not encode.
+ * Another base's URL for the same story. Static builds sit side by side under
+ * <base>/, so the link is relative; `storybook dev` serves each base on its own
+ * port (BASE_PORTS, the package.json `storybook:<base>` scripts), so the link
+ * swaps the port. `path` is the manager's `?path=` value, which Storybook does
+ * not encode.
  */
 export function baseHref(
   target: Base,
@@ -37,11 +37,10 @@ const OPTIONS = BASES.map((base) => ({
 }));
 
 /**
- * Base switch: Storybook's own toolbar Select (the one behind the
- * viewport and background pickers), the current base preselected;
- * a chevron leads the label, since Storybook's Select draws none.
- * Choosing another base opens the same story in that base's
- * Storybook, in the top frame.
+ * Base switch: Storybook's own toolbar Select (the one behind the viewport and
+ * background pickers), the current base preselected; a chevron leads the label,
+ * since Storybook's Select draws none. Choosing another base opens the same
+ * story in that base's Storybook, in the top frame.
  */
 function BaseTool() {
   const { path } = useStorybookState();

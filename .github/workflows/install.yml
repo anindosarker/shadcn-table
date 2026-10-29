@@ -26,18 +26,17 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE: ${{ inputs.source }}
-      # The locale and example steps below pin the checkout's commit
-      # whatever the source is: the locale comes from the dev registry built
-      # here and the scenario's base of example-basic from the GitHub
-      # address at this SHA.
+      # The locale and example steps below pin the checkout's commit whatever
+      # the source is: the locale comes from the dev registry built here and the
+      # scenario's base of example-basic from the GitHub address at this SHA.
       REF: ${{ github.sha }}
       # Each scenario names its base in the matrix (matrix.base): fresh,
       # existing and nextjs run on the Radix base and install the
       # shadcn-table-radix item; base scaffolds on Base UI and installs the
       # shadcn-table-base item, aria scaffolds on React Aria and installs
-      # shadcn-table-aria. Every committed item is named by its base
-      # (bases.mjs baseItemName): the locale item is
-      # shadcn-table-<base>-locale-de, the example item example-basic-<base>.
+      # shadcn-table-aria. Every committed item is named by its base (bases.mjs
+      # baseItemName): the locale item is shadcn-table-<base>-locale-de, the
+      # example item example-basic-<base>.
       BASE: ${{ matrix.base }}
       ITEM: shadcn-table-${{ matrix.base }}
       EXAMPLE_ITEM: example-basic-${{ matrix.base }}

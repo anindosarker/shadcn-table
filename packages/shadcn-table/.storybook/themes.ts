@@ -8,12 +8,11 @@ import {
 } from '../scripts/registry/bases.mjs';
 
 /**
- * Every base and its label (scripts/registry/bases.mjs), in reader
- * order (Base UI, Radix UI, React Aria). Static builds sit side by side
- * under storybook-static/<base>/ (`storybook:build:base`,
- * `storybook:build:radix`, `storybook:build:aria`); no
- * base lives at the root, which redirects to DEFAULT_BASE in
- * production (vercel.json).
+ * Every base and its label (scripts/registry/bases.mjs), in reader order (Base
+ * UI, Radix UI, React Aria). Static builds sit side by side under
+ * storybook-static/<base>/ (`storybook:build:base`, `storybook:build:radix`,
+ * `storybook:build:aria`); no base lives at the root, which redirects to
+ * DEFAULT_BASE in production (vercel.json).
  */
 export { BASE_LABELS, BASE_PORTS, BASES, type Base };
 
@@ -31,8 +30,8 @@ export const ST_BASE_LABEL = BASE_LABELS[ST_BASE];
 export const ST_OTHER_BASES = BASES.filter((base) => base !== ST_BASE);
 
 /**
- * Relative URL of another base's static build from this one: every
- * base is a sibling folder, so the link climbs one level.
+ * Relative URL of another base's static build from this one: every base is a
+ * sibling folder, so the link climbs one level.
  */
 export function staticBaseRoot(target: Base) {
   return `../${target}/`;

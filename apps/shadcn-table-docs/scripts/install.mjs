@@ -4,10 +4,10 @@
  * rendered examples, under components/ui-<base>/ (the table in
  * components/ui-<base>/shadcn-table/ plus the shadcn parts it imports,
  * installed from the base's style, `<base>-nova`). <base> is any base
- * (packages/shadcn-table/scripts/registry/bases.mjs); its item is the
- * one registry/<base>/ holds in the committed registry.json. The generated example variants
- * (lib/example-variants.mjs) import from there, so a reader on any base
- * tab sees that base's copy render.
+ * (packages/shadcn-table/scripts/registry/bases.mjs); its item is the one
+ * registry/<base>/ holds in the committed registry.json. The generated example
+ * variants (lib/example-variants.mjs) import from there, so a reader on any
+ * base tab sees that base's copy render.
  *
  * Source: the built item packages/shadcn-table/public/r/<item>.json
  * (`pnpm -w registry:build`) plus the files of its locale items
