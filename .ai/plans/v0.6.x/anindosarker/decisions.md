@@ -184,3 +184,37 @@ force; nothing here re-decides them.
      (`Profiled Thousand Rows` took 48 s once on the runner, PR #53); the root `format`
      script's glob gains `mjs`, so the registry and release scripts are formatted like the
      rest (three files reformat once). The six `05-shots/*.png` are deleted.
+
+## Base naming
+
+9. One word for the shadcn base concept: `base`, as shadcn names it; `edition` goes. Decided
+   2026-10-29, ships in 0.6.3.
+   - shadcn's own code calls the concept `base` and the Base UI value `base`
+     (`PRESET_BASES = ['radix', 'base', 'aria']`, `BASES` with `{ name: 'base', title: 'Base UI' }`,
+     `--base <base>`, "the component library to use"), and disambiguates only through the
+     label `Base UI` wherever a human reads it. This repo had both words: the docs app said
+     `base` (`BaseSwitch`, `defaultBase`, `--base`, `check-bases`), the library scripts and
+     Storybook said `edition` for a library tree per base. Full rename, not reader-facing
+     strings only, so the repo matches shadcn one to one and the standards keep "one term per
+     thing".
+   - Identifiers: `EDITIONS` to `BASES`, `REFERENCE_EDITION` to `REFERENCE_BASE`,
+     `DEFAULT_EDITION` to `DEFAULT_BASE`, `EDITION_LABELS` to `BASE_LABELS`, `EDITION_PORTS` to
+     `BASE_PORTS`, `resolveEdition` to `resolveBase`, `editionItemName` to `baseItemName`, type
+     `Edition` to `Base`; files `editions.mjs` and `editions.d.mts` to `bases.mjs` and
+     `bases.d.mts`, `.storybook/edition-tool.ts` to `base-tool.ts`; every derived name follows
+     (`editionItems`, `editionHref`, `staticEditionRoot`, `ST_OTHER_EDITIONS`, the docs app's
+     `example-variant-dir.mjs` helpers). The committed registry item names
+     (`shadcn-table-base`, `example-basic-radix`) and the hosted paths `/r/<base>/` already use
+     the base names and do not change.
+   - Reader-facing strings: Storybook toolbar picker `Base`, preview banner "the Base UI base
+     of shadcn-table" reads badly, so the banner says "These stories render shadcn-table on
+     Base UI. The other bases: Radix UI, React Aria."; README, SKILL.md and the docs mdx say
+     "one copy of the table per shadcn base".
+   - `check-pages.mjs`: `--base <url>` becomes `--url <url>` so `--base base|radix|aria` can
+     take the old `--edition`. CONTRIBUTING follows.
+   - Standards section "Editions" becomes "Bases". Past `CHANGELOG.md` entries, `.ai/plans/`
+     history and decisions 1 to 8 keep their wording.
+   - The chevron on the Storybook picker (leading icon, `@storybook/icons`
+     `ChevronSmallDownIcon`, commit `5f420c01`) ships in the same part. Why leading:
+     Storybook's `Select` draws no caret and renders `icon` before the selected title; the
+     owner chose that over the legacy `showSelectedOptionTitle` route.
