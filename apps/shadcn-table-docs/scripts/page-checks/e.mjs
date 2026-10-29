@@ -5,7 +5,7 @@
  * the Code toggle and the page's feature marker. The home page asserts the new
  * landing: hero, install command, live demo rows, feature and install
  * headings, guide links, then holds the page through the full live demo loop
- * on Radix UI, Base UI and React Aria (demoLoop in _helpers.mjs).
+ * on Base UI, Radix UI and React Aria (demoLoop in _helpers.mjs).
  */
 import { codeToggle, demoLoop, example } from './_helpers.mjs';
 

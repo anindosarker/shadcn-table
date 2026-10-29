@@ -7,19 +7,35 @@ import {
   TabsTrigger,
 } from 'fumadocs-ui/components/tabs';
 import { Tabs } from 'fumadocs-ui/components/ui/tabs';
-import { baseLabels, bases, defaultBase, type Base } from '@/lib/install';
+import { ChevronDownIcon } from 'lucide-react';
+import { Button } from '@/components/ui-radix/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui-radix/dropdown-menu';
+import {
+  baseLabels,
+  bases,
+  defaultBase,
+  isBase,
+  type Base,
+} from '@/lib/install';
 import { cn } from '@/lib/cn';
 import { trackBaseSwitched, type Surface } from '@/lib/analytics';
 import { TAB_VALUES } from '../lib/base-tabs.mjs';
 
 /**
- * The site-wide base (Radix UI | Base UI | React Aria) is one fumadocs tab group, `base`,
- * persisted the way fumadocs persists a `groupId` (sessionStorage, then
- * localStorage): every control here is a fumadocs Tabs in that group, so a
- * click on any of them switches the rest through fumadocs' own listeners.
- * The store below mirrors the group's value for everything that is not a
- * tab strip (the commands, the example loader, the code view): the controls
- * are controlled by it and write it from their `onValueChange`.
+ * The site-wide base (Base UI | Radix UI | React Aria) is one fumadocs tab
+ * group, `base`, persisted the way fumadocs persists a `groupId`
+ * (sessionStorage, then localStorage): the content-page tabs here are
+ * fumadocs Tabs in that group, so a click on any of them switches the rest
+ * through fumadocs' own listeners. The store below mirrors the group's value
+ * for everything that is not a tab strip (the header select, the commands,
+ * the example loader, the code view): the tabs are controlled by it and
+ * write it from their `onValueChange`, the menus through `setBase`.
  */
 export const BASE_GROUP_ID = 'base';
 
@@ -117,40 +133,53 @@ const useBaseTabs = (surface: Surface) => {
 };
 
 /**
- * Compact segmented control for the docs header (next to the theme pill)
- * and anywhere else a page needs the switch without content panels.
+ * Select button for the docs header (next to the theme pill): the current
+ * edition and a chevron, styled like the example page's `Copy prompt`
+ * control, opening a radio menu over the editions, like the command bar's
+ * "Choose base" menu (components/agent-bar.tsx). Writes the group through
+ * `setBase`, so the content-page tabs follow.
  */
 export const BaseSwitch = ({ className }: { className?: string }) => {
-  const tabs = useBaseTabs('header');
+  const base = useBase();
   return (
-    <Tabs
-      groupId={BASE_GROUP_ID}
-      persist
-      {...tabs}
-      className={cn('inline-flex', className)}
-    >
-      <TabsList
-        aria-label="shadcn base"
-        className="inline-flex items-center gap-0.5 rounded-full border p-1 px-1"
-      >
-        {bases.map((b) => (
-          <TabsTrigger
-            key={b}
-            value={TAB_VALUES[b]}
-            className="h-6.5 rounded-full border-0 px-2 py-0 text-xs font-medium text-fd-muted-foreground transition-colors hover:text-fd-foreground data-active:bg-fd-accent data-active:text-fd-accent-foreground"
-          >
-            {baseLabels[b]}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-    </Tabs>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          aria-label="Edition"
+          aria-haspopup="menu"
+          className={cn('h-8 rounded-md border bg-fd-secondary', className)}
+        >
+          {baseLabels[base]}
+          <ChevronDownIcon data-icon="inline-end" aria-hidden="true" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="docs-menu w-40">
+        <DropdownMenuRadioGroup
+          value={base}
+          onValueChange={(value) => {
+            if (!isBase(value) || value === base) return;
+            trackBaseSwitched({ from: base, to: value, surface: 'header' });
+            setBase(value);
+          }}
+        >
+          {bases.map((b) => (
+            <DropdownMenuRadioItem key={b} value={b}>
+              {baseLabels[b]}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
 /**
- * Radix UI | Base UI | React Aria tabs around content that differs per base
- * (the install commands), Base UI first shown. Same group as the header
- * switch, so either changes both.
+ * Base UI | Radix UI | React Aria tabs around content that differs per base
+ * (the install commands), Base UI first shown. The header select writes the
+ * same store, so either changes both.
  */
 export const BaseTabs = ({
   radix,
@@ -159,7 +188,7 @@ export const BaseTabs = ({
   className,
 }: Record<Base, ReactNode> & { className?: string }) => {
   const tabs = useBaseTabs('tabs');
-  const content: Record<Base, ReactNode> = { radix, base, aria };
+  const content: Record<Base, ReactNode> = { base, radix, aria };
   return (
     <Tabs
       groupId={BASE_GROUP_ID}

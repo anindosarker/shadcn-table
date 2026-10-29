@@ -26,7 +26,7 @@ export default mergeConfig(
             }),
             {
               // The addon sets one sb-vitest dep cache for the config dir;
-              // test and test:base must not share it (stale deps after a
+              // test:radix and test:base must not share it (stale deps after a
               // base switch show up as "Failed to fetch dynamically imported
               // module"). One cache per edition, like main.ts does for dev.
               name: 'st-base-cache-dir',
@@ -46,9 +46,10 @@ export default mergeConfig(
               instances: [{ browser: 'chromium' }],
             },
             setupFiles: ['./.storybook/vitest.setup.ts'],
-            // The 1,000-row profiler story (styling/RenderCounts) takes about
-            // 15 s on a loaded machine and on the CI runner.
-            testTimeout: 45_000,
+            // The 1,000-row profiler stories (styling/RenderCounts, Profiled
+            // Thousand Rows) take about 15 s on a loaded machine and once
+            // took 48 s on the CI runner (PR #53).
+            testTimeout: 90_000,
           },
         },
       ],

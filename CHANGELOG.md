@@ -7,6 +7,24 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- Base UI is listed first wherever the editions appear: the docs edition tabs and menus, the
+  Storybook edition switch, the README, the install pages and the agent skill read Base UI,
+  Radix UI, React Aria. The README's quick start installs the Base UI edition; Radix UI and
+  React Aria sit in the fold.
+- The docs header's edition switch is a select button showing the current edition, opening a
+  menu with the three editions; the edition tabs on the install, init and best-practices pages
+  stay tabs. The Storybook edition switch is the toolbar's own select, like the viewport and
+  background pickers, in place of three buttons.
+- Maintainers: every edition script names its edition. `storybook`, `storybook:build` and
+  `test` become `storybook:radix`, `storybook:build:radix` and `test:radix` (the `:base` and
+  `:aria` scripts are unchanged); the root `storybook:build` builds all three, Base UI first.
+  `ST_BASE` unset or unknown now means the Base UI tree, not Radix UI, for `vite`, `vitest`
+  and `storybook`.
+
 ## 0.6.1 - 2026-10-28
 
 ### Changed

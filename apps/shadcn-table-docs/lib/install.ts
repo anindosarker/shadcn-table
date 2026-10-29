@@ -1,7 +1,12 @@
 // Install commands and the agent prompt for the library item. Pure: safe to
 // import from server components, client components and the page checks'
 // expectations.
-import { DEFAULT_EDITION } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import {
+  DEFAULT_EDITION,
+  EDITION_LABELS,
+  EDITIONS,
+  type Edition,
+} from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
 import { gitConfig, libraryItem, siteUrl } from './shared';
 
 export const packageManagers = ['pnpm', 'npm', 'yarn', 'bun'] as const;
@@ -15,21 +20,19 @@ const runners: Record<PackageManager, string> = {
 };
 
 /**
- * The shadcn bases the table supports, as `shadcn init --base` names them.
+ * The shadcn bases the table supports, as `shadcn init --base` names them,
+ * in reader order: the library's EDITIONS (Base UI, Radix UI, React Aria).
  * The docs' base selector (components/base-selector.tsx) picks one; a
- * project's base is the `style` in its `components.json` (`radix-*`,
- * `base-*` or `aria-*`, the React Aria edition's style being `aria-nova`).
+ * project's base is the `style` in its `components.json` (`base-*`,
+ * `radix-*` or `aria-*`, the React Aria edition's style being `aria-nova`).
  */
-export const bases = ['radix', 'base', 'aria'] as const;
-export type Base = (typeof bases)[number];
+export const bases = EDITIONS;
+export type Base = Edition;
 /** The base shown before the reader picks one (DEFAULT_EDITION, Base UI). */
 export const defaultBase: Base = DEFAULT_EDITION;
 
-export const baseLabels: Record<Base, string> = {
-  radix: 'Radix UI',
-  base: 'Base UI',
-  aria: 'React Aria',
-};
+/** Reader-facing name per base, the library's EDITION_LABELS. */
+export const baseLabels: Readonly<Record<Base, string>> = EDITION_LABELS;
 
 export const isBase = (value: unknown): value is Base =>
   bases.includes(value as Base);

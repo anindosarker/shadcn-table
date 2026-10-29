@@ -39,7 +39,10 @@ test('version: no label, or release:skip, leaves the level to the headings', () 
     const result = decide(push, deps({ mergedLabel: () => label }));
     assert.equal(result.mode, 'version', label);
     assert.equal(result.level, '', label);
-    assert.equal(result.lines.at(-1), 'mode=version version=0.5.0 level=from headings');
+    assert.equal(
+      result.lines.at(-1),
+      'mode=version version=0.5.0 level=from headings',
+    );
   }
 });
 
@@ -68,7 +71,9 @@ test('release: no Unreleased lines and the version is untagged', () => {
   assert.equal(result.code, 0);
   assert.equal(result.mode, 'release');
   assert.equal(result.version, '0.5.0');
-  assert.deepEqual(result.lines, ['mode=release version=0.5.0 level=from headings']);
+  assert.deepEqual(result.lines, [
+    'mode=release version=0.5.0 level=from headings',
+  ]);
 });
 
 test('release: a dispatch, with or without an input version', () => {

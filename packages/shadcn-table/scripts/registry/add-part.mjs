@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Usage (repo root): pnpm add-part <radix|base|aria> <part> [<part> ...]
-//                    pnpm add-part <radix|base|aria> --all
+// Usage (repo root): pnpm add-part <base|radix|aria> <part> [<part> ...]
+//                    pnpm add-part <base|radix|aria> --all
 //
 // Fetches a shadcn part for one edition (EDITIONS in lib.mjs), in that
 // edition's style (registry/<edition>/components.json: `radix-nova`,
