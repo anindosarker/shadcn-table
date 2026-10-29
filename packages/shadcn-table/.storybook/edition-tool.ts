@@ -1,3 +1,4 @@
+import { ChevronSmallDownIcon } from '@storybook/icons';
 import { createElement } from 'react';
 import { Select } from 'storybook/internal/components';
 import { addons, types, useStorybookState } from 'storybook/manager-api';
@@ -37,13 +38,15 @@ const OPTIONS = EDITIONS.map((edition) => ({
 
 /**
  * Edition switch: Storybook's own toolbar Select (the one behind the
- * viewport and background pickers), the current edition preselected.
+ * viewport and background pickers), the current edition preselected;
+ * a chevron leads the label, since Storybook's Select draws none.
  * Choosing another edition opens the same story in that edition's
  * Storybook, in the top frame.
  */
 function EditionTool() {
   const { path } = useStorybookState();
   return createElement(Select, {
+    icon: createElement(ChevronSmallDownIcon),
     ariaLabel: 'Edition',
     size: 'small',
     options: OPTIONS,

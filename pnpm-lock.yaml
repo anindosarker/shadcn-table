@@ -224,6 +224,9 @@ importers:
       '@storybook/addon-vitest':
         specifier: 10.6.2
         version: 10.6.2(@vitest/browser-playwright@4.1.12)(@vitest/browser@4.1.12(rolldown-vite@7.1.12(@emnapi/core@1.11.0)(@emnapi/runtime@1.11.0)(@types/node@22.10.2)(jiti@2.7.0)(terser@5.37.0)(yaml@2.9.1))(vitest@4.1.12))(@vitest/runner@4.1.12)(react@19.1.1)(storybook@10.6.2(@types/react@19.1.13)(prettier@3.6.2)(react@19.1.1))(vitest@4.1.12)
+      '@storybook/icons':
+        specifier: ^2.2.0
+        version: 2.2.0(react@19.1.1)
       '@storybook/react-vite':
         specifier: ^10.6.2
         version: 10.6.2(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(rolldown-vite@7.1.12(@emnapi/core@1.11.0)(@emnapi/runtime@1.11.0)(@types/node@22.10.2)(jiti@2.7.0)(terser@5.37.0)(yaml@2.9.1))(rollup@4.50.2)(storybook@10.6.2(@types/react@19.1.13)(prettier@3.6.2)(react@19.1.1))(typescript@5.8.3)
