@@ -6410,7 +6410,7 @@
       "name": "example-advanced",
       "type": "registry:block",
       "title": "Advanced Example",
-      "description": "Alias of example-advanced-base: the GitHub shorthand anindosarker/shadcn-table/example-advanced installs the Base UI edition.",
+      "description": "Alias of example-advanced-base: the GitHub shorthand anindosarker/shadcn-table/example-advanced installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/advanced/TS.tsx",
@@ -6432,7 +6432,7 @@
       "name": "example-aggregation-and-grouping",
       "type": "registry:block",
       "title": "Aggregation and Grouping Example",
-      "description": "Alias of example-aggregation-and-grouping-base: the GitHub shorthand anindosarker/shadcn-table/example-aggregation-and-grouping installs the Base UI edition.",
+      "description": "Alias of example-aggregation-and-grouping-base: the GitHub shorthand anindosarker/shadcn-table/example-aggregation-and-grouping installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/aggregation-and-grouping/TS.tsx",
@@ -6450,7 +6450,7 @@
       "name": "example-aggregation-multi",
       "type": "registry:block",
       "title": "Aggregation Multi",
-      "description": "Alias of example-aggregation-multi-base: the GitHub shorthand anindosarker/shadcn-table/example-aggregation-multi installs the Base UI edition.",
+      "description": "Alias of example-aggregation-multi-base: the GitHub shorthand anindosarker/shadcn-table/example-aggregation-multi installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/aggregation-multi/TS.tsx",
@@ -6468,7 +6468,7 @@
       "name": "example-alternate-column-filtering",
       "type": "registry:block",
       "title": "Popover Filters Example",
-      "description": "Alias of example-alternate-column-filtering-base: the GitHub shorthand anindosarker/shadcn-table/example-alternate-column-filtering installs the Base UI edition.",
+      "description": "Alias of example-alternate-column-filtering-base: the GitHub shorthand anindosarker/shadcn-table/example-alternate-column-filtering installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/alternate-column-filtering/TS.tsx",
@@ -6486,7 +6486,7 @@
       "name": "example-alternate-detail-panel",
       "type": "registry:block",
       "title": "Alternate Detail Panel",
-      "description": "Alias of example-alternate-detail-panel-base: the GitHub shorthand anindosarker/shadcn-table/example-alternate-detail-panel installs the Base UI edition.",
+      "description": "Alias of example-alternate-detail-panel-base: the GitHub shorthand anindosarker/shadcn-table/example-alternate-detail-panel installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/alternate-detail-panel/TS.tsx",
@@ -6504,7 +6504,7 @@
       "name": "example-alternate-pagination",
       "type": "registry:block",
       "title": "Alternate Pagination",
-      "description": "Alias of example-alternate-pagination-base: the GitHub shorthand anindosarker/shadcn-table/example-alternate-pagination installs the Base UI edition.",
+      "description": "Alias of example-alternate-pagination-base: the GitHub shorthand anindosarker/shadcn-table/example-alternate-pagination installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/alternate-pagination/TS.tsx",
@@ -6522,7 +6522,7 @@
       "name": "example-basic",
       "type": "registry:block",
       "title": "Basic Example",
-      "description": "Alias of example-basic-base: the GitHub shorthand anindosarker/shadcn-table/example-basic installs the Base UI edition.",
+      "description": "Alias of example-basic-base: the GitHub shorthand anindosarker/shadcn-table/example-basic installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/basic/TS.tsx",
@@ -6535,7 +6535,7 @@
       "name": "example-chart-detail-panel",
       "type": "registry:block",
       "title": "Chart Detail Panel Example",
-      "description": "Alias of example-chart-detail-panel-base: the GitHub shorthand anindosarker/shadcn-table/example-chart-detail-panel installs the Base UI edition.",
+      "description": "Alias of example-chart-detail-panel-base: the GitHub shorthand anindosarker/shadcn-table/example-chart-detail-panel installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/chart-detail-panel/TS.tsx",
@@ -6556,7 +6556,7 @@
       "name": "example-column-actions-space",
       "type": "registry:block",
       "title": "Column Actions Space",
-      "description": "Alias of example-column-actions-space-base: the GitHub shorthand anindosarker/shadcn-table/example-column-actions-space installs the Base UI edition.",
+      "description": "Alias of example-column-actions-space-base: the GitHub shorthand anindosarker/shadcn-table/example-column-actions-space installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/column-actions-space/TS.tsx",
@@ -6574,7 +6574,7 @@
       "name": "example-column-alignment",
       "type": "registry:block",
       "title": "Column Alignment",
-      "description": "Alias of example-column-alignment-base: the GitHub shorthand anindosarker/shadcn-table/example-column-alignment installs the Base UI edition.",
+      "description": "Alias of example-column-alignment-base: the GitHub shorthand anindosarker/shadcn-table/example-column-alignment installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/column-alignment/TS.tsx",
@@ -6592,7 +6592,7 @@
       "name": "example-custom-column-actions",
       "type": "registry:block",
       "title": "Custom Column Actions",
-      "description": "Alias of example-custom-column-actions-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-column-actions installs the Base UI edition.",
+      "description": "Alias of example-custom-column-actions-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-column-actions installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/custom-column-actions/TS.tsx",
@@ -6613,7 +6613,7 @@
       "name": "example-custom-column-filtering-ui",
       "type": "registry:block",
       "title": "Custom Filter UI Example",
-      "description": "Alias of example-custom-column-filtering-ui-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-column-filtering-ui installs the Base UI edition.",
+      "description": "Alias of example-custom-column-filtering-ui-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-column-filtering-ui installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/custom-column-filtering-ui/TS.tsx",
@@ -6631,7 +6631,7 @@
       "name": "example-custom-headless",
       "type": "registry:block",
       "title": "Custom Headless Example",
-      "description": "Alias of example-custom-headless-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-headless installs the Base UI edition.",
+      "description": "Alias of example-custom-headless-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-headless installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/custom-headless/TS.tsx",
@@ -6652,7 +6652,7 @@
       "name": "example-custom-top-toolbar",
       "type": "registry:block",
       "title": "Custom Top Toolbar",
-      "description": "Alias of example-custom-top-toolbar-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-top-toolbar installs the Base UI edition.",
+      "description": "Alias of example-custom-top-toolbar-base: the GitHub shorthand anindosarker/shadcn-table/example-custom-top-toolbar installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/custom-top-toolbar/TS.tsx",
@@ -6673,7 +6673,7 @@
       "name": "example-customize-display-columns",
       "type": "registry:block",
       "title": "Customize Display Columns",
-      "description": "Alias of example-customize-display-columns-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-display-columns installs the Base UI edition.",
+      "description": "Alias of example-customize-display-columns-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-display-columns installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-display-columns/TS.tsx",
@@ -6694,7 +6694,7 @@
       "name": "example-customize-filter-components",
       "type": "registry:block",
       "title": "Customize Filter Components",
-      "description": "Alias of example-customize-filter-components-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-filter-components installs the Base UI edition.",
+      "description": "Alias of example-customize-filter-components-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-filter-components installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-filter-components/TS.tsx",
@@ -6707,7 +6707,7 @@
       "name": "example-customize-filter-modes",
       "type": "registry:block",
       "title": "Filter Switching Example",
-      "description": "Alias of example-customize-filter-modes-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-filter-modes installs the Base UI edition.",
+      "description": "Alias of example-customize-filter-modes-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-filter-modes installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-filter-modes/TS.tsx",
@@ -6728,7 +6728,7 @@
       "name": "example-customize-filter-variants",
       "type": "registry:block",
       "title": "Filter Variants Example",
-      "description": "Alias of example-customize-filter-variants-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-filter-variants installs the Base UI edition.",
+      "description": "Alias of example-customize-filter-variants-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-filter-variants installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-filter-variants/TS.tsx",
@@ -6746,7 +6746,7 @@
       "name": "example-customize-global-filter-component",
       "type": "registry:block",
       "title": "Customize Global Filter Component",
-      "description": "Alias of example-customize-global-filter-component-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-global-filter-component installs the Base UI edition.",
+      "description": "Alias of example-customize-global-filter-component-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-global-filter-component installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-global-filter-component/TS.tsx",
@@ -6764,7 +6764,7 @@
       "name": "example-customize-remove-column-grouping",
       "type": "registry:block",
       "title": "Customized Grouping Example",
-      "description": "Alias of example-customize-remove-column-grouping-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-remove-column-grouping installs the Base UI edition.",
+      "description": "Alias of example-customize-remove-column-grouping-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-remove-column-grouping installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-remove-column-grouping/TS.tsx",
@@ -6782,7 +6782,7 @@
       "name": "example-customize-row-selection",
       "type": "registry:block",
       "title": "Customize Row Selection",
-      "description": "Alias of example-customize-row-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-row-selection installs the Base UI edition.",
+      "description": "Alias of example-customize-row-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-row-selection installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-row-selection/TS.tsx",
@@ -6800,7 +6800,7 @@
       "name": "example-customize-table-styles",
       "type": "registry:block",
       "title": "Customize Table Styles",
-      "description": "Alias of example-customize-table-styles-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-table-styles installs the Base UI edition.",
+      "description": "Alias of example-customize-table-styles-base: the GitHub shorthand anindosarker/shadcn-table/example-customize-table-styles installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/customize-table-styles/TS.tsx",
@@ -6818,7 +6818,7 @@
       "name": "example-disable-column-actions",
       "type": "registry:block",
       "title": "Disable Column Actions",
-      "description": "Alias of example-disable-column-actions-base: the GitHub shorthand anindosarker/shadcn-table/example-disable-column-actions installs the Base UI edition.",
+      "description": "Alias of example-disable-column-actions-base: the GitHub shorthand anindosarker/shadcn-table/example-disable-column-actions installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/disable-column-actions/TS.tsx",
@@ -6836,7 +6836,7 @@
       "name": "example-disable-column-hiding",
       "type": "registry:block",
       "title": "Disable Column Hiding",
-      "description": "Alias of example-disable-column-hiding-base: the GitHub shorthand anindosarker/shadcn-table/example-disable-column-hiding installs the Base UI edition.",
+      "description": "Alias of example-disable-column-hiding-base: the GitHub shorthand anindosarker/shadcn-table/example-disable-column-hiding installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/disable-column-hiding/TS.tsx",
@@ -6849,7 +6849,7 @@
       "name": "example-disable-density-toggle",
       "type": "registry:block",
       "title": "Disable Density Toggle",
-      "description": "Alias of example-disable-density-toggle-base: the GitHub shorthand anindosarker/shadcn-table/example-disable-density-toggle installs the Base UI edition.",
+      "description": "Alias of example-disable-density-toggle-base: the GitHub shorthand anindosarker/shadcn-table/example-disable-density-toggle installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/disable-density-toggle/TS.tsx",
@@ -6867,7 +6867,7 @@
       "name": "example-dynamic-columns",
       "type": "registry:block",
       "title": "Dynamic Columns Example",
-      "description": "Alias of example-dynamic-columns-base: the GitHub shorthand anindosarker/shadcn-table/example-dynamic-columns installs the Base UI edition.",
+      "description": "Alias of example-dynamic-columns-base: the GitHub shorthand anindosarker/shadcn-table/example-dynamic-columns installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/dynamic-columns/TS.tsx",
@@ -6886,7 +6886,7 @@
       "name": "example-editing-crud-cell",
       "type": "registry:block",
       "title": "Editing CRUD Inline Cell Example",
-      "description": "Alias of example-editing-crud-cell-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-cell installs the Base UI edition.",
+      "description": "Alias of example-editing-crud-cell-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-cell installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/editing-crud-cell/TS.tsx",
@@ -6911,7 +6911,7 @@
       "name": "example-editing-crud-modal",
       "type": "registry:block",
       "title": "Editing CRUD Example",
-      "description": "Alias of example-editing-crud-modal-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-modal installs the Base UI edition.",
+      "description": "Alias of example-editing-crud-modal-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-modal installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/editing-crud-modal/TS.tsx",
@@ -6936,7 +6936,7 @@
       "name": "example-editing-crud-row",
       "type": "registry:block",
       "title": "Editing CRUD Inline Row Example",
-      "description": "Alias of example-editing-crud-row-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-row installs the Base UI edition.",
+      "description": "Alias of example-editing-crud-row-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-row installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/editing-crud-row/TS.tsx",
@@ -6960,7 +6960,7 @@
       "name": "example-editing-crud-table",
       "type": "registry:block",
       "title": "Editing CRUD Inline Table Example",
-      "description": "Alias of example-editing-crud-table-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-table installs the Base UI edition.",
+      "description": "Alias of example-editing-crud-table-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-table installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/editing-crud-table/TS.tsx",
@@ -6985,7 +6985,7 @@
       "name": "example-editing-crud-tree",
       "type": "registry:block",
       "title": "Editing CRUD Tree Example",
-      "description": "Alias of example-editing-crud-tree-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-tree installs the Base UI edition.",
+      "description": "Alias of example-editing-crud-tree-base: the GitHub shorthand anindosarker/shadcn-table/example-editing-crud-tree installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/editing-crud-tree/TS.tsx",
@@ -7009,7 +7009,7 @@
       "name": "example-enable-cell-actions",
       "type": "registry:block",
       "title": "Enable Cell Actions",
-      "description": "Alias of example-enable-cell-actions-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-cell-actions installs the Base UI edition.",
+      "description": "Alias of example-enable-cell-actions-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-cell-actions installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-cell-actions/TS.tsx",
@@ -7030,7 +7030,7 @@
       "name": "example-enable-click-to-copy",
       "type": "registry:block",
       "title": "Enable Click To Copy",
-      "description": "Alias of example-enable-click-to-copy-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-click-to-copy installs the Base UI edition.",
+      "description": "Alias of example-enable-click-to-copy-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-click-to-copy installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-click-to-copy/TS.tsx",
@@ -7048,7 +7048,7 @@
       "name": "example-enable-column-grouping",
       "type": "registry:block",
       "title": "Column Grouping Example",
-      "description": "Alias of example-enable-column-grouping-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-grouping installs the Base UI edition.",
+      "description": "Alias of example-enable-column-grouping-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-grouping installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-column-grouping/TS.tsx",
@@ -7070,7 +7070,7 @@
       "name": "example-enable-column-ordering",
       "type": "registry:block",
       "title": "Column DnD Ordering Example",
-      "description": "Alias of example-enable-column-ordering-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-ordering installs the Base UI edition.",
+      "description": "Alias of example-enable-column-ordering-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-ordering installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-column-ordering/TS.tsx",
@@ -7088,7 +7088,7 @@
       "name": "example-enable-column-pinning",
       "type": "registry:block",
       "title": "Column Pinning Example",
-      "description": "Alias of example-enable-column-pinning-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-pinning installs the Base UI edition.",
+      "description": "Alias of example-enable-column-pinning-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-pinning installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-column-pinning/TS.tsx",
@@ -7109,7 +7109,7 @@
       "name": "example-enable-column-resizing",
       "type": "registry:block",
       "title": "Enable Column Resizing",
-      "description": "Alias of example-enable-column-resizing-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-resizing installs the Base UI edition.",
+      "description": "Alias of example-enable-column-resizing-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-resizing installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-column-resizing/TS.tsx",
@@ -7127,7 +7127,7 @@
       "name": "example-enable-column-virtualization",
       "type": "registry:block",
       "title": "Column Virtualization Example",
-      "description": "Alias of example-enable-column-virtualization-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-virtualization installs the Base UI edition.",
+      "description": "Alias of example-enable-column-virtualization-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-column-virtualization installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-column-virtualization/TS.tsx",
@@ -7145,7 +7145,7 @@
       "name": "example-enable-detail-panel-conditionally",
       "type": "registry:block",
       "title": "Detail Panel Example",
-      "description": "Alias of example-enable-detail-panel-conditionally-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-detail-panel-conditionally installs the Base UI edition.",
+      "description": "Alias of example-enable-detail-panel-conditionally-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-detail-panel-conditionally installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-detail-panel-conditionally/TS.tsx",
@@ -7163,7 +7163,7 @@
       "name": "example-enable-detail-panel-virtualized",
       "type": "registry:block",
       "title": "Enable Detail Panel Virtualized",
-      "description": "Alias of example-enable-detail-panel-virtualized-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-detail-panel-virtualized installs the Base UI edition.",
+      "description": "Alias of example-enable-detail-panel-virtualized-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-detail-panel-virtualized installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-detail-panel-virtualized/TS.tsx",
@@ -7181,7 +7181,7 @@
       "name": "example-enable-expanding-tree",
       "type": "registry:block",
       "title": "Enable Expanding Tree",
-      "description": "Alias of example-enable-expanding-tree-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-expanding-tree installs the Base UI edition.",
+      "description": "Alias of example-enable-expanding-tree-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-expanding-tree installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-expanding-tree/TS.tsx",
@@ -7194,7 +7194,7 @@
       "name": "example-enable-filter-facet-values",
       "type": "registry:block",
       "title": "Faceted Values Example",
-      "description": "Alias of example-enable-filter-facet-values-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-filter-facet-values installs the Base UI edition.",
+      "description": "Alias of example-enable-filter-facet-values-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-filter-facet-values installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-filter-facet-values/TS.tsx",
@@ -7212,7 +7212,7 @@
       "name": "example-enable-row-dragging",
       "type": "registry:block",
       "title": "Row Dragging Example",
-      "description": "Alias of example-enable-row-dragging-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-dragging installs the Base UI edition.",
+      "description": "Alias of example-enable-row-dragging-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-dragging installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-dragging/TS.tsx",
@@ -7230,7 +7230,7 @@
       "name": "example-enable-row-numbers-original",
       "type": "registry:block",
       "title": "Enable Row Numbers Original",
-      "description": "Alias of example-enable-row-numbers-original-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-numbers-original installs the Base UI edition.",
+      "description": "Alias of example-enable-row-numbers-original-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-numbers-original installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-numbers-original/TS.tsx",
@@ -7248,7 +7248,7 @@
       "name": "example-enable-row-numbers-static",
       "type": "registry:block",
       "title": "Enable Row Numbers Static",
-      "description": "Alias of example-enable-row-numbers-static-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-numbers-static installs the Base UI edition.",
+      "description": "Alias of example-enable-row-numbers-static-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-numbers-static installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-numbers-static/TS.tsx",
@@ -7266,7 +7266,7 @@
       "name": "example-enable-row-ordering",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "Alias of example-enable-row-ordering-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-ordering installs the Base UI edition.",
+      "description": "Alias of example-enable-row-ordering-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-ordering installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-ordering/TS.tsx",
@@ -7284,7 +7284,7 @@
       "name": "example-enable-row-pinning-select",
       "type": "registry:block",
       "title": "Sticky Row Selection Example",
-      "description": "Alias of example-enable-row-pinning-select-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-pinning-select installs the Base UI edition.",
+      "description": "Alias of example-enable-row-pinning-select-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-pinning-select installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-pinning-select/TS.tsx",
@@ -7302,7 +7302,7 @@
       "name": "example-enable-row-pinning-static",
       "type": "registry:block",
       "title": "Static Row Pinning Example",
-      "description": "Alias of example-enable-row-pinning-static-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-pinning-static installs the Base UI edition.",
+      "description": "Alias of example-enable-row-pinning-static-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-pinning-static installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-pinning-static/TS.tsx",
@@ -7320,7 +7320,7 @@
       "name": "example-enable-row-pinning-sticky",
       "type": "registry:block",
       "title": "Sticky Row Pinning Example",
-      "description": "Alias of example-enable-row-pinning-sticky-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-pinning-sticky installs the Base UI edition.",
+      "description": "Alias of example-enable-row-pinning-sticky-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-pinning-sticky installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-pinning-sticky/TS.tsx",
@@ -7338,7 +7338,7 @@
       "name": "example-enable-row-selection",
       "type": "registry:block",
       "title": "Enable Row Selection",
-      "description": "Alias of example-enable-row-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-selection installs the Base UI edition.",
+      "description": "Alias of example-enable-row-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-selection installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-selection/TS.tsx",
@@ -7351,7 +7351,7 @@
       "name": "example-enable-row-virtualization",
       "type": "registry:block",
       "title": "Row Virtualization Example",
-      "description": "Alias of example-enable-row-virtualization-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-virtualization installs the Base UI edition.",
+      "description": "Alias of example-enable-row-virtualization-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-row-virtualization installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-row-virtualization/TS.tsx",
@@ -7369,7 +7369,7 @@
       "name": "example-enable-sticky-header",
       "type": "registry:block",
       "title": "Sticky Header Example",
-      "description": "Alias of example-enable-sticky-header-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-sticky-header installs the Base UI edition.",
+      "description": "Alias of example-enable-sticky-header-base: the GitHub shorthand anindosarker/shadcn-table/example-enable-sticky-header installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/enable-sticky-header/TS.tsx",
@@ -7387,7 +7387,7 @@
       "name": "example-expanding-tree-expanded",
       "type": "registry:block",
       "title": "Expanding Tree Example",
-      "description": "Alias of example-expanding-tree-expanded-base: the GitHub shorthand anindosarker/shadcn-table/example-expanding-tree-expanded installs the Base UI edition.",
+      "description": "Alias of example-expanding-tree-expanded-base: the GitHub shorthand anindosarker/shadcn-table/example-expanding-tree-expanded installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/expanding-tree-expanded/TS.tsx",
@@ -7400,7 +7400,7 @@
       "name": "example-expanding-tree-flat-parse",
       "type": "registry:block",
       "title": "Expanding Parsed Tree Example",
-      "description": "Alias of example-expanding-tree-flat-parse-base: the GitHub shorthand anindosarker/shadcn-table/example-expanding-tree-flat-parse installs the Base UI edition.",
+      "description": "Alias of example-expanding-tree-flat-parse-base: the GitHub shorthand anindosarker/shadcn-table/example-expanding-tree-flat-parse installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/expanding-tree-flat-parse/TS.tsx",
@@ -7413,7 +7413,7 @@
       "name": "example-expanding-tree-root-expanded",
       "type": "registry:block",
       "title": "Expanding Tree Root Expanded",
-      "description": "Alias of example-expanding-tree-root-expanded-base: the GitHub shorthand anindosarker/shadcn-table/example-expanding-tree-root-expanded installs the Base UI edition.",
+      "description": "Alias of example-expanding-tree-root-expanded-base: the GitHub shorthand anindosarker/shadcn-table/example-expanding-tree-root-expanded installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/expanding-tree-root-expanded/TS.tsx",
@@ -7429,7 +7429,7 @@
       "name": "example-export-to-csv",
       "type": "registry:block",
       "title": "CSV Export Example",
-      "description": "Alias of example-export-to-csv-base: the GitHub shorthand anindosarker/shadcn-table/example-export-to-csv installs the Base UI edition.",
+      "description": "Alias of example-export-to-csv-base: the GitHub shorthand anindosarker/shadcn-table/example-export-to-csv installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/export-to-csv/TS.tsx",
@@ -7453,7 +7453,7 @@
       "name": "example-export-to-pdf",
       "type": "registry:block",
       "title": "PDF Export Example",
-      "description": "Alias of example-export-to-pdf-base: the GitHub shorthand anindosarker/shadcn-table/example-export-to-pdf installs the Base UI edition.",
+      "description": "Alias of example-export-to-pdf-base: the GitHub shorthand anindosarker/shadcn-table/example-export-to-pdf installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/export-to-pdf/TS.tsx",
@@ -7478,7 +7478,7 @@
       "name": "example-external-toolbar",
       "type": "registry:block",
       "title": "External Toolbar",
-      "description": "Alias of example-external-toolbar-base: the GitHub shorthand anindosarker/shadcn-table/example-external-toolbar installs the Base UI edition.",
+      "description": "Alias of example-external-toolbar-base: the GitHub shorthand anindosarker/shadcn-table/example-external-toolbar installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/external-toolbar/TS.tsx",
@@ -7499,7 +7499,7 @@
       "name": "example-font-awesome-icons",
       "type": "registry:block",
       "title": "Font Awesome Icons",
-      "description": "Alias of example-font-awesome-icons-base: the GitHub shorthand anindosarker/shadcn-table/example-font-awesome-icons installs the Base UI edition.",
+      "description": "Alias of example-font-awesome-icons-base: the GitHub shorthand anindosarker/shadcn-table/example-font-awesome-icons installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/font-awesome-icons/TS.tsx",
@@ -7522,7 +7522,7 @@
       "name": "example-infinite-scrolling",
       "type": "registry:block",
       "title": "Infinite Scrolling Example",
-      "description": "Alias of example-infinite-scrolling-base: the GitHub shorthand anindosarker/shadcn-table/example-infinite-scrolling installs the Base UI edition.",
+      "description": "Alias of example-infinite-scrolling-base: the GitHub shorthand anindosarker/shadcn-table/example-infinite-scrolling installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/infinite-scrolling/TS.tsx",
@@ -7538,7 +7538,7 @@
       "name": "example-lazy-detail-panel",
       "type": "registry:block",
       "title": "Lazy Detail Panel Example",
-      "description": "Alias of example-lazy-detail-panel-base: the GitHub shorthand anindosarker/shadcn-table/example-lazy-detail-panel installs the Base UI edition.",
+      "description": "Alias of example-lazy-detail-panel-base: the GitHub shorthand anindosarker/shadcn-table/example-lazy-detail-panel installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/lazy-detail-panel/TS.tsx",
@@ -7558,7 +7558,7 @@
       "name": "example-lazy-sub-rows",
       "type": "registry:block",
       "title": "Lazy Sub-Rows Example",
-      "description": "Alias of example-lazy-sub-rows-base: the GitHub shorthand anindosarker/shadcn-table/example-lazy-sub-rows installs the Base UI edition.",
+      "description": "Alias of example-lazy-sub-rows-base: the GitHub shorthand anindosarker/shadcn-table/example-lazy-sub-rows installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/lazy-sub-rows/TS.tsx",
@@ -7574,7 +7574,7 @@
       "name": "example-linear-progress",
       "type": "registry:block",
       "title": "Linear Progress",
-      "description": "Alias of example-linear-progress-base: the GitHub shorthand anindosarker/shadcn-table/example-linear-progress installs the Base UI edition.",
+      "description": "Alias of example-linear-progress-base: the GitHub shorthand anindosarker/shadcn-table/example-linear-progress installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/linear-progress/TS.tsx",
@@ -7595,7 +7595,7 @@
       "name": "example-loading",
       "type": "registry:block",
       "title": "Loading",
-      "description": "Alias of example-loading-base: the GitHub shorthand anindosarker/shadcn-table/example-loading installs the Base UI edition.",
+      "description": "Alias of example-loading-base: the GitHub shorthand anindosarker/shadcn-table/example-loading installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/loading/TS.tsx",
@@ -7613,7 +7613,7 @@
       "name": "example-localization-i18n-ar",
       "type": "registry:block",
       "title": "Localization I18n Ar",
-      "description": "Alias of example-localization-i18n-ar-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ar installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-ar-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ar installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-ar/TS.tsx",
@@ -7631,7 +7631,7 @@
       "name": "example-localization-i18n-az",
       "type": "registry:block",
       "title": "Localization I18n Az",
-      "description": "Alias of example-localization-i18n-az-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-az installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-az-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-az installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-az/TS.tsx",
@@ -7649,7 +7649,7 @@
       "name": "example-localization-i18n-bg",
       "type": "registry:block",
       "title": "Localization I18n Bg",
-      "description": "Alias of example-localization-i18n-bg-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-bg installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-bg-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-bg installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-bg/TS.tsx",
@@ -7667,7 +7667,7 @@
       "name": "example-localization-i18n-cs",
       "type": "registry:block",
       "title": "Localization I18n Cs",
-      "description": "Alias of example-localization-i18n-cs-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-cs installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-cs-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-cs installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-cs/TS.tsx",
@@ -7685,7 +7685,7 @@
       "name": "example-localization-i18n-da",
       "type": "registry:block",
       "title": "Localization I18n Da",
-      "description": "Alias of example-localization-i18n-da-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-da installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-da-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-da installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-da/TS.tsx",
@@ -7703,7 +7703,7 @@
       "name": "example-localization-i18n-de",
       "type": "registry:block",
       "title": "Localization I18n De",
-      "description": "Alias of example-localization-i18n-de-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-de installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-de-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-de installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-de/TS.tsx",
@@ -7721,7 +7721,7 @@
       "name": "example-localization-i18n-el",
       "type": "registry:block",
       "title": "Localization I18n El",
-      "description": "Alias of example-localization-i18n-el-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-el installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-el-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-el installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-el/TS.tsx",
@@ -7739,7 +7739,7 @@
       "name": "example-localization-i18n-en",
       "type": "registry:block",
       "title": "Localization I18n En",
-      "description": "Alias of example-localization-i18n-en-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-en installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-en-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-en installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-en/TS.tsx",
@@ -7757,7 +7757,7 @@
       "name": "example-localization-i18n-es",
       "type": "registry:block",
       "title": "Localization I18n Es",
-      "description": "Alias of example-localization-i18n-es-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-es installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-es-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-es installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-es/TS.tsx",
@@ -7775,7 +7775,7 @@
       "name": "example-localization-i18n-et",
       "type": "registry:block",
       "title": "Localization I18n Et",
-      "description": "Alias of example-localization-i18n-et-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-et installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-et-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-et installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-et/TS.tsx",
@@ -7793,7 +7793,7 @@
       "name": "example-localization-i18n-fa",
       "type": "registry:block",
       "title": "Localization I18n Fa",
-      "description": "Alias of example-localization-i18n-fa-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-fa installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-fa-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-fa installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-fa/TS.tsx",
@@ -7811,7 +7811,7 @@
       "name": "example-localization-i18n-fi",
       "type": "registry:block",
       "title": "Localization I18n Fi",
-      "description": "Alias of example-localization-i18n-fi-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-fi installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-fi-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-fi installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-fi/TS.tsx",
@@ -7829,7 +7829,7 @@
       "name": "example-localization-i18n-fr",
       "type": "registry:block",
       "title": "Localization I18n Fr",
-      "description": "Alias of example-localization-i18n-fr-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-fr installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-fr-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-fr installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-fr/TS.tsx",
@@ -7847,7 +7847,7 @@
       "name": "example-localization-i18n-he",
       "type": "registry:block",
       "title": "Localization I18n He",
-      "description": "Alias of example-localization-i18n-he-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-he installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-he-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-he installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-he/TS.tsx",
@@ -7865,7 +7865,7 @@
       "name": "example-localization-i18n-hr",
       "type": "registry:block",
       "title": "Localization I18n Hr",
-      "description": "Alias of example-localization-i18n-hr-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-hr installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-hr-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-hr installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-hr/TS.tsx",
@@ -7883,7 +7883,7 @@
       "name": "example-localization-i18n-hu",
       "type": "registry:block",
       "title": "Localization I18n Hu",
-      "description": "Alias of example-localization-i18n-hu-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-hu installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-hu-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-hu installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-hu/TS.tsx",
@@ -7901,7 +7901,7 @@
       "name": "example-localization-i18n-hy",
       "type": "registry:block",
       "title": "Localization I18n Hy",
-      "description": "Alias of example-localization-i18n-hy-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-hy installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-hy-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-hy installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-hy/TS.tsx",
@@ -7919,7 +7919,7 @@
       "name": "example-localization-i18n-id",
       "type": "registry:block",
       "title": "Localization I18n Id",
-      "description": "Alias of example-localization-i18n-id-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-id installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-id-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-id installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-id/TS.tsx",
@@ -7937,7 +7937,7 @@
       "name": "example-localization-i18n-it",
       "type": "registry:block",
       "title": "Localization I18n It",
-      "description": "Alias of example-localization-i18n-it-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-it installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-it-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-it installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-it/TS.tsx",
@@ -7955,7 +7955,7 @@
       "name": "example-localization-i18n-ja",
       "type": "registry:block",
       "title": "Localization I18n Ja",
-      "description": "Alias of example-localization-i18n-ja-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ja installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-ja-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ja installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-ja/TS.tsx",
@@ -7973,7 +7973,7 @@
       "name": "example-localization-i18n-ko",
       "type": "registry:block",
       "title": "Localization I18n Ko",
-      "description": "Alias of example-localization-i18n-ko-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ko installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-ko-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ko installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-ko/TS.tsx",
@@ -7991,7 +7991,7 @@
       "name": "example-localization-i18n-mk",
       "type": "registry:block",
       "title": "Localization I18n Mk",
-      "description": "Alias of example-localization-i18n-mk-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-mk installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-mk-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-mk installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-mk/TS.tsx",
@@ -8009,7 +8009,7 @@
       "name": "example-localization-i18n-nl",
       "type": "registry:block",
       "title": "Localization I18n Nl",
-      "description": "Alias of example-localization-i18n-nl-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-nl installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-nl-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-nl installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-nl/TS.tsx",
@@ -8027,7 +8027,7 @@
       "name": "example-localization-i18n-no",
       "type": "registry:block",
       "title": "Localization I18n No",
-      "description": "Alias of example-localization-i18n-no-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-no installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-no-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-no installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-no/TS.tsx",
@@ -8045,7 +8045,7 @@
       "name": "example-localization-i18n-np",
       "type": "registry:block",
       "title": "Localization I18n Np",
-      "description": "Alias of example-localization-i18n-np-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-np installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-np-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-np installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-np/TS.tsx",
@@ -8063,7 +8063,7 @@
       "name": "example-localization-i18n-pl",
       "type": "registry:block",
       "title": "Localization I18n Pl",
-      "description": "Alias of example-localization-i18n-pl-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-pl installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-pl-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-pl installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-pl/TS.tsx",
@@ -8081,7 +8081,7 @@
       "name": "example-localization-i18n-pt",
       "type": "registry:block",
       "title": "Localization I18n Pt",
-      "description": "Alias of example-localization-i18n-pt-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-pt installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-pt-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-pt installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-pt/TS.tsx",
@@ -8099,7 +8099,7 @@
       "name": "example-localization-i18n-pt-BR",
       "type": "registry:block",
       "title": "Localization I18n Pt BR",
-      "description": "Alias of example-localization-i18n-pt-BR-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-pt-BR installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-pt-BR-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-pt-BR installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-pt-BR/TS.tsx",
@@ -8117,7 +8117,7 @@
       "name": "example-localization-i18n-ro",
       "type": "registry:block",
       "title": "Localization I18n Ro",
-      "description": "Alias of example-localization-i18n-ro-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ro installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-ro-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ro installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-ro/TS.tsx",
@@ -8135,7 +8135,7 @@
       "name": "example-localization-i18n-ru",
       "type": "registry:block",
       "title": "Localization I18n Ru",
-      "description": "Alias of example-localization-i18n-ru-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ru installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-ru-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-ru installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-ru/TS.tsx",
@@ -8153,7 +8153,7 @@
       "name": "example-localization-i18n-sk",
       "type": "registry:block",
       "title": "Localization I18n Sk",
-      "description": "Alias of example-localization-i18n-sk-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sk installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-sk-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sk installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-sk/TS.tsx",
@@ -8171,7 +8171,7 @@
       "name": "example-localization-i18n-sr-Cyrl-RS",
       "type": "registry:block",
       "title": "Localization I18n Sr Cyrl RS",
-      "description": "Alias of example-localization-i18n-sr-Cyrl-RS-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sr-Cyrl-RS installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-sr-Cyrl-RS-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sr-Cyrl-RS installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-sr-Cyrl-RS/TS.tsx",
@@ -8189,7 +8189,7 @@
       "name": "example-localization-i18n-sr-Latn-RS",
       "type": "registry:block",
       "title": "Localization I18n Sr Latn RS",
-      "description": "Alias of example-localization-i18n-sr-Latn-RS-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sr-Latn-RS installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-sr-Latn-RS-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sr-Latn-RS installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-sr-Latn-RS/TS.tsx",
@@ -8207,7 +8207,7 @@
       "name": "example-localization-i18n-sv",
       "type": "registry:block",
       "title": "Localization I18n Sv",
-      "description": "Alias of example-localization-i18n-sv-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sv installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-sv-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-sv installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-sv/TS.tsx",
@@ -8225,7 +8225,7 @@
       "name": "example-localization-i18n-tr",
       "type": "registry:block",
       "title": "Localization I18n Tr",
-      "description": "Alias of example-localization-i18n-tr-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-tr installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-tr-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-tr installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-tr/TS.tsx",
@@ -8243,7 +8243,7 @@
       "name": "example-localization-i18n-uk",
       "type": "registry:block",
       "title": "Localization I18n Uk",
-      "description": "Alias of example-localization-i18n-uk-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-uk installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-uk-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-uk installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-uk/TS.tsx",
@@ -8261,7 +8261,7 @@
       "name": "example-localization-i18n-vi",
       "type": "registry:block",
       "title": "Localization I18n Vi",
-      "description": "Alias of example-localization-i18n-vi-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-vi installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-vi-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-vi installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-vi/TS.tsx",
@@ -8279,7 +8279,7 @@
       "name": "example-localization-i18n-zh-hans",
       "type": "registry:block",
       "title": "Localization I18n Zh Hans",
-      "description": "Alias of example-localization-i18n-zh-hans-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-zh-hans installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-zh-hans-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-zh-hans installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-zh-hans/TS.tsx",
@@ -8297,7 +8297,7 @@
       "name": "example-localization-i18n-zh-hant",
       "type": "registry:block",
       "title": "Localization I18n Zh Hant",
-      "description": "Alias of example-localization-i18n-zh-hant-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-zh-hant installs the Base UI edition.",
+      "description": "Alias of example-localization-i18n-zh-hant-base: the GitHub shorthand anindosarker/shadcn-table/example-localization-i18n-zh-hant installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/localization-i18n-zh-hant/TS.tsx",
@@ -8315,7 +8315,7 @@
       "name": "example-manual-selection",
       "type": "registry:block",
       "title": "Manual Selection",
-      "description": "Alias of example-manual-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-manual-selection installs the Base UI edition.",
+      "description": "Alias of example-manual-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-manual-selection installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/manual-selection/TS.tsx",
@@ -8328,7 +8328,7 @@
       "name": "example-minimal",
       "type": "registry:block",
       "title": "Minimal Example",
-      "description": "Alias of example-minimal-base: the GitHub shorthand anindosarker/shadcn-table/example-minimal installs the Base UI edition.",
+      "description": "Alias of example-minimal-base: the GitHub shorthand anindosarker/shadcn-table/example-minimal installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/minimal/TS.tsx",
@@ -8346,7 +8346,7 @@
       "name": "example-mui-theme",
       "type": "registry:block",
       "title": "Mui Theme",
-      "description": "Alias of example-mui-theme-base: the GitHub shorthand anindosarker/shadcn-table/example-mui-theme installs the Base UI edition.",
+      "description": "Alias of example-mui-theme-base: the GitHub shorthand anindosarker/shadcn-table/example-mui-theme installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/mui-theme/TS.tsx",
@@ -8359,7 +8359,7 @@
       "name": "example-multi-sorting",
       "type": "registry:block",
       "title": "Multi Sorting",
-      "description": "Alias of example-multi-sorting-base: the GitHub shorthand anindosarker/shadcn-table/example-multi-sorting installs the Base UI edition.",
+      "description": "Alias of example-multi-sorting-base: the GitHub shorthand anindosarker/shadcn-table/example-multi-sorting installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/multi-sorting/TS.tsx",
@@ -8380,7 +8380,7 @@
       "name": "example-persistent-state",
       "type": "registry:block",
       "title": "Persistent State",
-      "description": "Alias of example-persistent-state-base: the GitHub shorthand anindosarker/shadcn-table/example-persistent-state installs the Base UI edition.",
+      "description": "Alias of example-persistent-state-base: the GitHub shorthand anindosarker/shadcn-table/example-persistent-state installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/persistent-state/TS.tsx",
@@ -8401,7 +8401,7 @@
       "name": "example-react-query",
       "type": "registry:block",
       "title": "React Query Example",
-      "description": "Alias of example-react-query-base: the GitHub shorthand anindosarker/shadcn-table/example-react-query installs the Base UI edition.",
+      "description": "Alias of example-react-query-base: the GitHub shorthand anindosarker/shadcn-table/example-react-query installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/react-query/TS.tsx",
@@ -8421,7 +8421,7 @@
       "name": "example-remote",
       "type": "registry:block",
       "title": "Remote Data Fetching Example",
-      "description": "Alias of example-remote-base: the GitHub shorthand anindosarker/shadcn-table/example-remote installs the Base UI edition.",
+      "description": "Alias of example-remote-base: the GitHub shorthand anindosarker/shadcn-table/example-remote installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/remote/TS.tsx",
@@ -8434,7 +8434,7 @@
       "name": "example-row-actions-buttons",
       "type": "registry:block",
       "title": "Row Actions Buttons",
-      "description": "Alias of example-row-actions-buttons-base: the GitHub shorthand anindosarker/shadcn-table/example-row-actions-buttons installs the Base UI edition.",
+      "description": "Alias of example-row-actions-buttons-base: the GitHub shorthand anindosarker/shadcn-table/example-row-actions-buttons installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/row-actions-buttons/TS.tsx",
@@ -8455,7 +8455,7 @@
       "name": "example-row-actions-menu-items",
       "type": "registry:block",
       "title": "Row Actions Menu Items",
-      "description": "Alias of example-row-actions-menu-items-base: the GitHub shorthand anindosarker/shadcn-table/example-row-actions-menu-items installs the Base UI edition.",
+      "description": "Alias of example-row-actions-menu-items-base: the GitHub shorthand anindosarker/shadcn-table/example-row-actions-menu-items installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/row-actions-menu-items/TS.tsx",
@@ -8473,7 +8473,7 @@
       "name": "example-server-side-data",
       "type": "registry:block",
       "title": "Server Side Data",
-      "description": "Alias of example-server-side-data-base: the GitHub shorthand anindosarker/shadcn-table/example-server-side-data installs the Base UI edition.",
+      "description": "Alias of example-server-side-data-base: the GitHub shorthand anindosarker/shadcn-table/example-server-side-data installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/server-side-data/TS.tsx",
@@ -8513,7 +8513,7 @@
       "name": "example-single-row-selection",
       "type": "registry:block",
       "title": "Single Row Selection",
-      "description": "Alias of example-single-row-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-single-row-selection installs the Base UI edition.",
+      "description": "Alias of example-single-row-selection-base: the GitHub shorthand anindosarker/shadcn-table/example-single-row-selection installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/single-row-selection/TS.tsx",
@@ -8526,7 +8526,7 @@
       "name": "example-virtualized",
       "type": "registry:block",
       "title": "Virtualized Example",
-      "description": "Alias of example-virtualized-base: the GitHub shorthand anindosarker/shadcn-table/example-virtualized installs the Base UI edition.",
+      "description": "Alias of example-virtualized-base: the GitHub shorthand anindosarker/shadcn-table/example-virtualized installs the Base UI copy.",
       "files": [
         {
           "path": "examples/base/virtualized/TS.tsx",

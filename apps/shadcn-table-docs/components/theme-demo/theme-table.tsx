@@ -104,10 +104,10 @@ const MEMBERS: Member[] = [
 ];
 
 /**
- * The theme demo's table: a real radix-edition ShadcnTable that shows every
- * themed part at once (toolbar buttons, status badges, selection
- * checkboxes, the row actions menu, filter selects, pagination). It holds
- * no theme state; the ThemeScope around it does.
+ * The theme demo's table: a real radix-base ShadcnTable that shows every themed
+ * part at once (toolbar buttons, status badges, selection checkboxes, the row
+ * actions menu, filter selects, pagination). It holds no theme state; the
+ * ThemeScope around it does.
  */
 export default function ThemeTable({
   compact = false,

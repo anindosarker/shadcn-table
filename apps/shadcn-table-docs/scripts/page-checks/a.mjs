@@ -1,19 +1,19 @@
 /**
- * Cluster A page checks: home, docs/index, getting-started, api/*.
- * Each entry: async ({ page, check, edition }) => void, run after load at
- * the first width; `edition` is the base the page opened on (the runner's
- * --edition, else the default).
+ * Cluster A page checks: home, docs/index, getting-started, api/*. Each entry:
+ * async ({ page, check, base }) => void, run after load at the first width;
+ * `base` is the base the page opened on (the runner's --base, else the
+ * default).
  */
 import {
-  EDITION_LABELS,
-  EDITIONS,
-} from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
+  BASE_LABELS,
+  BASES,
+} from '../../../../packages/shadcn-table/scripts/registry/bases.mjs';
 import {
   baseSwitch,
   codeToggle,
   example,
-  headerEditionLabel,
-  headerEditionMenu,
+  headerBaseLabel,
+  headerBaseMenu,
   names,
   paginationControls,
 } from './_helpers.mjs';
@@ -39,14 +39,14 @@ async function agentBar(page, check) {
 }
 
 /**
- * The hero's command bar (components/agent-bar.tsx): the Command tab names
- * the site-wide base and its chevron menu sets it, so the command follows.
- * Opens on `edition`, visits the other two, returns to it. The tab text is
- * uppercased by CSS; compare case-insensitively.
+ * The hero's command bar (components/agent-bar.tsx): the Command tab names the
+ * site-wide base and its chevron menu sets it, so the command follows. Opens on
+ * `base`, visits the other two, returns to it. The tab text is uppercased by
+ * CSS; compare case-insensitively.
  */
-async function commandBarBase({ page, check, edition }) {
-  const label0 = EDITION_LABELS[edition];
-  const others = Object.keys(EDITION_LABELS).filter((e) => e !== edition);
+async function commandBarBase({ page, check, base }) {
+  const label0 = BASE_LABELS[base];
+  const others = Object.keys(BASE_LABELS).filter((e) => e !== base);
   const bar = page.locator('[data-slot="agent-bar"]');
   check('agent bar', (await bar.count()) === 1, String(await bar.count()));
   if (!(await bar.count())) return;
@@ -54,15 +54,15 @@ async function commandBarBase({ page, check, edition }) {
   const label = async () => ((await tab.textContent()) ?? '').trim();
   const command = async () =>
     (await bar.locator('span.font-mono').textContent()) ?? '';
-  const pick = async (base) => {
+  const pick = async (name) => {
     await bar.getByRole('button', { name: 'Choose base' }).click();
-    const item = page.getByRole('menuitemradio', { name: base, exact: true });
+    const item = page.getByRole('menuitemradio', { name, exact: true });
     await item.waitFor({ timeout: 5000 });
     await item.click();
     await page.waitForTimeout(200);
   };
-  const expectEdition = async (what, e) => {
-    const l = EDITION_LABELS[e];
+  const expectBase = async (what, e) => {
+    const l = BASE_LABELS[e];
     check(
       `${what}: command`,
       (await command()).includes(`/r/${e}/`),
@@ -81,8 +81,8 @@ async function commandBarBase({ page, check, edition }) {
   );
   await tab.click();
   check(
-    `${edition} command`,
-    (await command()).includes(`/r/${edition}/`),
+    `${base} command`,
+    (await command()).includes(`/r/${base}/`),
     await command(),
   );
   await bar.getByRole('button', { name: 'Choose base' }).click();
@@ -90,7 +90,7 @@ async function commandBarBase({ page, check, edition }) {
   check(
     'base menu items',
     (await items.allTextContents()).join(',') ===
-      EDITIONS.map((e) => EDITION_LABELS[e]).join(','),
+      BASES.map((e) => BASE_LABELS[e]).join(','),
     (await items.allTextContents()).join(','),
   );
   check(
@@ -102,16 +102,16 @@ async function commandBarBase({ page, check, edition }) {
   );
   await page.keyboard.press('Escape');
   for (const other of others) {
-    await pick(EDITION_LABELS[other]);
-    await expectEdition(other, other);
+    await pick(BASE_LABELS[other]);
+    await expectBase(other, other);
   }
   await pick(label0);
-  await expectEdition(`${edition} again`, edition);
+  await expectBase(`${base} again`, base);
 }
 
 const checks = {
-  '/': async ({ page, check, edition }) => {
-    await commandBarBase({ page, check, edition });
+  '/': async ({ page, check, base }) => {
+    await commandBarBase({ page, check, base });
   },
   '/docs/getting-started/usage': async ({ page, check }) => {
     const steps = page.locator('article .fd-step');
@@ -172,7 +172,7 @@ const checks = {
       page.url(),
     );
   },
-  '/docs/getting-started/install': async ({ page, check, edition }) => {
+  '/docs/getting-started/install': async ({ page, check, base }) => {
     const steps = page.locator('article .fd-step');
     const tabs = page.locator('article [role="tab"]');
     check(
@@ -188,22 +188,22 @@ const checks = {
     const article = async () =>
       (await page.locator('article').textContent()) ?? '';
     // The hosted registry URL: the origin is the dev server's in dev.
-    const addCommand = (base, item) =>
-      new RegExp(`shadcn@latest add \\S+/r/${base}/${item}\\.json`);
+    const addCommand = (target, item) =>
+      new RegExp(`shadcn@latest add \\S+/r/${target}/${item}\\.json`);
     let txt = await article();
-    // The page opens on `edition`: the default (Base UI) in a fresh browser
-    // context, the runner's --edition otherwise; the header select agrees
-    // and its menu lists the editions in order.
+    // The page opens on `base`: the default (Base UI) in a fresh browser
+    // context, the runner's --base otherwise; the header select agrees and its
+    // menu lists the bases in order.
     check(
-      `opens on ${EDITION_LABELS[edition]}`,
-      (await headerEditionLabel(page)) === EDITION_LABELS[edition],
+      `opens on ${BASE_LABELS[base]}`,
+      (await headerBaseLabel(page)) === BASE_LABELS[base],
     );
-    await headerEditionMenu(page, check, EDITION_LABELS[edition]);
+    await headerBaseMenu(page, check, BASE_LABELS[base]);
     check(
-      `init on the ${edition} base`,
-      txt.includes(`shadcn@latest init --base ${edition}`),
+      `init on the ${base} base`,
+      txt.includes(`shadcn@latest init --base ${base}`),
     );
-    check('install command', addCommand(edition, 'shadcn-table').test(txt));
+    check('install command', addCommand(base, 'shadcn-table').test(txt));
     check(
       'compatibility sentence',
       txt.includes('on the Base UI, Radix UI or React Aria base') &&
@@ -231,7 +231,7 @@ const checks = {
     );
     check(
       'base ui tab: header select follows',
-      (await headerEditionLabel(page)) === 'Base UI',
+      (await headerBaseLabel(page)) === 'Base UI',
     );
     // The React Aria tab: same group, the aria commands.
     await page
@@ -250,7 +250,7 @@ const checks = {
     );
     check(
       'react aria tab: header select follows',
-      (await headerEditionLabel(page)) === 'React Aria',
+      (await headerBaseLabel(page)) === 'React Aria',
     );
     check(
       'uninstall lists react-aria-components',
@@ -277,8 +277,8 @@ const checks = {
       txt.includes('registry add @st=') && txt.includes('add @st/shadcn-table'),
     );
     check(
-      'one address per edition',
-      EDITIONS.every((base) => txt.includes(`/r/${base}/shadcn-table.json`)),
+      'one address per base',
+      BASES.every((base) => txt.includes(`/r/${base}/shadcn-table.json`)),
     );
     check(
       'skill install command',

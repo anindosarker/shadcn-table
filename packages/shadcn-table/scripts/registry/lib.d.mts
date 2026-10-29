@@ -1,7 +1,6 @@
-// Types of scripts/registry/lib.mjs for the per-edition item definitions
-// (registry/<edition>/registry.ts), which import the .mjs from TypeScript.
-// Node strips the types at run time; the editor checks against these
-// signatures.
+// Types of scripts/registry/lib.mjs for the per-base item definitions
+// (registry/<base>/registry.ts), which import the .mjs from TypeScript. Node
+// strips the types at run time; the editor checks against these signatures.
 import type { RegistryItem } from 'shadcn/schema';
 
 declare global {
@@ -20,14 +19,14 @@ export const ROOT: string;
 /** Absolute path of the docs app. */
 export const DOCS: string;
 export {
-  DEFAULT_EDITION,
-  EDITION_LABELS,
-  EDITIONS,
-  editionItemName,
-  REFERENCE_EDITION,
-  resolveEdition,
-  type Edition,
-} from './editions.mjs';
+  DEFAULT_BASE,
+  BASE_LABELS,
+  BASES,
+  baseItemName,
+  REFERENCE_BASE,
+  resolveBase,
+  type Base,
+} from './bases.mjs';
 export const GITHUB_REPO: string;
 export const HOMEPAGE: string;
 /** True when build.mjs runs with `--dev`. */
@@ -53,30 +52,30 @@ export interface BaseItemsOptions {
  * The items of one base: the main item first, then one item per
  * non-English locale.
  */
-export function baseItems(base: BaseItemsOptions): RegistryItem[];
+export function buildBaseItems(base: BaseItemsOptions): RegistryItem[];
 
 /**
- * The GitHub shorthand aliases: every DEFAULT_EDITION item under its plain
- * name, same files and dependencies, a description naming the alias.
+ * The GitHub shorthand aliases: every DEFAULT_BASE item under its plain name,
+ * same files and dependencies, a description naming the alias.
  */
 export function aliasItems<T extends { name: string; description?: string }>(
   items: T[],
 ): T[];
 
 /**
- * One edition's main item and locale items in a catalog built from the
- * committed registry.json, aliases skipped.
+ * One base's main item and locale items in a catalog built from the committed
+ * registry.json, aliases skipped.
  */
-export function editionItems(
+export function baseItems(
   catalog: { items: RegistryItem[] },
-  edition: string,
+  base: string,
 ): { main: RegistryItem | undefined; locales: RegistryItem[] };
 
 /**
- * One edition's example items in the docs catalog (examples.mjs), each under
- * its hosted name, the plain `example-<slug>`; aliases skipped.
+ * One base's example items in the docs catalog (examples.mjs), each under its
+ * hosted name, the plain `example-<slug>`; aliases skipped.
  */
-export function editionExampleItems(
+export function baseExampleItems(
   catalog: { items: RegistryItem[] },
-  edition: string,
+  base: string,
 ): RegistryItem[];

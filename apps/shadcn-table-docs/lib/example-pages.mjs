@@ -77,7 +77,7 @@ export const pascal = (slug) =>
     .join('');
 
 /**
- * Name of the component a docs page renders for examples/<edition>/<slug>,
+ * Name of the component a docs page renders for examples/<base>/<slug>,
  * `<PascalCase(slug)>Example`, as scripts/example-map.mjs generates it.
  * @param {string} slug
  */
