@@ -4,10 +4,10 @@
  * passes to each page check.
  */
 import {
-  DEFAULT_EDITION,
-  EDITION_LABELS,
-  EDITIONS,
-} from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
+  DEFAULT_BASE,
+  BASE_LABELS,
+  BASES,
+} from '../../../../packages/shadcn-table/scripts/registry/bases.mjs';
 
 /** Prop-table option names (3rd cell; detail-panel rows have no cells). */
 export async function names(page, tableId) {
@@ -288,20 +288,20 @@ export async function exampleGroup(page, tabs, check) {
 }
 
 /**
- * The docs header's edition select (BaseSwitch, components/base-selector.tsx):
- * a button labelled "Edition" that shows the current edition and opens a
- * radio menu over the editions.
+ * The docs header's base select (BaseSwitch, components/base-selector.tsx): a
+ * button labelled "Base" that shows the current base and opens a radio menu
+ * over the bases.
  */
-export const headerEdition = (page) =>
-  page.locator('#nd-subnav button[aria-label="Edition"]');
+export const headerBase = (page) =>
+  page.locator('#nd-subnav button[aria-label="Base"]');
 
-/** The edition the header select shows. */
-export const headerEditionLabel = async (page) =>
-  ((await headerEdition(page).textContent()) ?? '').trim();
+/** The base the header select shows. */
+export const headerBaseLabel = async (page) =>
+  ((await headerBase(page).textContent()) ?? '').trim();
 
 /** Opens the header select's menu; returns its radio items. */
-export const openHeaderEditionMenu = async (page) => {
-  await headerEdition(page).click();
+export const openHeaderBaseMenu = async (page) => {
+  await headerBase(page).click();
   const items = page.getByRole('menuitemradio');
   await items
     .first()
@@ -311,13 +311,12 @@ export const openHeaderEditionMenu = async (page) => {
 };
 
 /**
- * Picks an edition by label through the header select, then waits for the
- * menu to close. The current edition is left alone: the menu has nothing to
- * change then.
+ * Picks a base by label through the header select, then waits for the menu to
+ * close. The current base is left alone: the menu has nothing to change then.
  */
-export const pickHeaderEdition = async (page, label) => {
-  if ((await headerEditionLabel(page)) === label) return;
-  const items = await openHeaderEditionMenu(page);
+export const pickHeaderBase = async (page, label) => {
+  if ((await headerBaseLabel(page)) === label) return;
+  const items = await openHeaderBaseMenu(page);
   await items.filter({ hasText: label }).click();
   await items
     .first()
@@ -326,20 +325,20 @@ export const pickHeaderEdition = async (page, label) => {
 };
 
 /**
- * The header select lists every edition in EDITIONS order (Base UI, Radix
- * UI, React Aria), the current one checked; the menu is closed again after.
+ * The header select lists every base in BASES order (Base UI, Radix UI, React
+ * Aria), the current one checked; the menu is closed again after.
  */
-export async function headerEditionMenu(page, check, current) {
-  const items = await openHeaderEditionMenu(page);
+export async function headerBaseMenu(page, check, current) {
+  const items = await openHeaderBaseMenu(page);
   const labels = (await items.allTextContents()).map((t) => t.trim());
   check(
-    'header edition menu lists the editions in order',
-    labels.join(',') === EDITIONS.map((e) => EDITION_LABELS[e]).join(','),
+    'header base menu lists the bases in order',
+    labels.join(',') === BASES.map((e) => BASE_LABELS[e]).join(','),
     labels.join(', '),
   );
   const checked = page.locator('[role="menuitemradio"][aria-checked="true"]');
   check(
-    'header edition menu checks the current edition',
+    'header base menu checks the current base',
     (await checked.count()) === 1 &&
       ((await checked.textContent()) ?? '').trim() === current,
   );
@@ -348,22 +347,21 @@ export async function headerEditionMenu(page, check, current) {
 }
 
 /**
- * Site-wide base switch (the header select above):
- * Base UI re-renders example `#example-<id>` (rows again, Base UI markup:
- * Base UI collapsibles set data-open/data-closed, Radix's set data-state),
- * then React Aria does (rows again, React Aria markup: React Aria Components
- * set data-rac on what they render, Radix and Base UI never do), while the
- * Code view keeps showing the base-neutral source, with
- * `@/components/ui/shadcn-table` imports and no `ui-radix`, `ui-base` or
- * `ui-aria`; then Radix again, same source. The page opens on the default
- * base (Base UI) or the runner's --edition, so the loop starts by picking
- * Radix UI. No console errors is asserted by the runner. The explorer
- * highlights the active file in the browser, so the code view's text is
- * read only once a `code` element is in the explorer.
+ * Site-wide base switch (the header select above): Base UI re-renders example
+ * `#example-<id>` (rows again, Base UI markup: Base UI collapsibles set
+ * data-open/data-closed, Radix's set data-state), then React Aria does (rows
+ * again, React Aria markup: React Aria Components set data-rac on what they
+ * render, Radix and Base UI never do), while the Code view keeps showing the
+ * base-neutral source, with `@/components/ui/shadcn-table` imports and no
+ * `ui-radix`, `ui-base` or `ui-aria`; then Radix again, same source. The page
+ * opens on the default base (Base UI) or the runner's --base, so the loop
+ * starts by picking Radix UI. No console errors is asserted by the runner. The
+ * explorer highlights the active file in the browser, so the code view's text
+ * is read only once a `code` element is in the explorer.
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
-  const header = headerEdition(page);
+  const header = headerBase(page);
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
   const rows = panel.locator('table tbody tr');
@@ -399,7 +397,7 @@ export async function baseSwitch(page, id, check) {
       .catch(() => {});
   };
   const pick = async (label) => {
-    await pickHeaderEdition(page, label);
+    await pickHeaderBase(page, label);
     await rows
       .first()
       .waitFor({ timeout: 60000 })
@@ -461,7 +459,7 @@ export async function baseSwitch(page, id, check) {
     neutral(ariaSource),
     `len=${ariaSource.length}`,
   );
-  await pickHeaderEdition(page, 'Radix UI');
+  await pickHeaderBase(page, 'Radix UI');
   await page.waitForTimeout(200);
   const radixSource = await source();
   check(
@@ -483,21 +481,20 @@ const DEMO_MIN_HOLD_MS = 15000;
 const DEMO_TIMEOUT_MS = 30000;
 
 /**
- * Holds the home page through the full live demo loop on every base. The
- * demo (components/dev-home/v12/signal-demo.tsx) plays only while it is on
- * screen, so it is scrolled into view; each hold waits until its aria-live
- * status reads the last step and lasts at least DEMO_MIN_HOLD_MS. The first
- * hold runs on the base the page opened on (the default, Base UI, or the
- * runner's --edition); the next two pick the other bases through the agent
- * bar's base menu and reload. A render loop or crash that needs
- * time or the demo's step changes to surface fails here (v0.3.0 died with
- * React error #185 about 9.6 s after load, when the demo's replay edit effect
- * re-ran on every render): the runner's pageerror and console listeners stay
- * attached across the reload, and a renderer crash fails
- * `demo: no renderer crash`.
+ * Holds the home page through the full live demo loop on every base. The demo
+ * (components/dev-home/v12/signal-demo.tsx) plays only while it is on screen,
+ * so it is scrolled into view; each hold waits until its aria-live status reads
+ * the last step and lasts at least DEMO_MIN_HOLD_MS. The first hold runs on the
+ * base the page opened on (the default, Base UI, or the runner's --base); the
+ * next two pick the other bases through the agent bar's base menu and reload. A
+ * render loop or crash that needs time or the demo's step changes to surface
+ * fails here (v0.3.0 died with React error #185 about 9.6 s after load, when
+ * the demo's replay edit effect re-ran on every render): the runner's pageerror
+ * and console listeners stay attached across the reload, and a renderer crash
+ * fails `demo: no renderer crash`.
  */
-export async function demoLoop({ page, check, edition }) {
-  const opened = EDITION_LABELS[edition] ?? EDITION_LABELS[DEFAULT_EDITION];
+export async function demoLoop({ page, check, base }) {
+  const opened = BASE_LABELS[base] ?? BASE_LABELS[DEFAULT_BASE];
   let crashed = false;
   page.once('crash', () => {
     crashed = true;
@@ -543,9 +540,7 @@ export async function demoLoop({ page, check, edition }) {
       throw new Error(`base not kept after reload: ${tab.trim()}`);
   };
   await run(`demo: ${opened.toLowerCase()} reaches Grouping`);
-  for (const label of Object.values(EDITION_LABELS).filter(
-    (l) => l !== opened,
-  )) {
+  for (const label of Object.values(BASE_LABELS).filter((l) => l !== opened)) {
     const name = `demo: ${label.toLowerCase()} reaches Grouping`;
     if (crashed) check(name, false, 'skipped after crash');
     else await run(name, choose(label));

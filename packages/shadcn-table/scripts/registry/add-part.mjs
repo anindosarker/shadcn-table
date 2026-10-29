@@ -2,23 +2,22 @@
 // Usage (repo root): pnpm add-part <base|radix|aria> <part> [<part> ...]
 //                    pnpm add-part <base|radix|aria> --all
 //
-// Fetches a shadcn part for one edition (EDITIONS in lib.mjs), in that
-// edition's style (registry/<edition>/components.json: `radix-nova`,
-// `base-nova` or `aria-nova`), and writes its files into
-// registry/<edition>/components/ui/. Parts are per edition and are never
-// shared, so a part the library needs on every edition is added once per
-// edition. `--all` re-adds every part the edition already has (every
-// `*.tsx` directly below components/ui/, minus the components/ui/*.tsx files
-// the edition's registry items ship as their own files), the gate that the
-// committed copies are the script's output.
+// Fetches a shadcn part for one base (BASES in lib.mjs), in that base's style
+// (registry/<base>/components.json: `radix-nova`, `base-nova` or `aria-nova`),
+// and writes its files into registry/<base>/components/ui/. Parts are per base
+// and are never shared, so a part the library needs on every base is added once
+// per base. `--all` re-adds every part the base already has (every `*.tsx`
+// directly below components/ui/, minus the components/ui/*.tsx files the base's
+// registry items ship as their own files), the gate that the committed copies
+// are the script's output.
 //
-// The item JSON (https://ui.shadcn.com/r/styles/<style>/<part>.json) is
-// fetched for its file list and dependencies, then the shadcn CLI installs
-// the part into a scratch project carrying the edition's components.json, so
-// the file goes through the CLI's own transforms (alias rewrites, icon
-// placeholders, Tailwind class resolution) instead of a copy of them here.
-// Only the requested part's files are copied out of the scratch; the parts it
-// depends on are printed for the caller to add on purpose.
+// The item JSON (https://ui.shadcn.com/r/styles/<style>/<part>.json) is fetched
+// for its file list and dependencies, then the shadcn CLI installs the part
+// into a scratch project carrying the base's components.json, so the file goes
+// through the CLI's own transforms (alias rewrites, icon placeholders, Tailwind
+// class resolution) instead of a copy of them here. Only the requested part's
+// files are copied out of the scratch; the parts it depends on are printed for
+// the caller to add on purpose.
 //
 // The output is deterministic per part: one CLI invocation per part, the
 // `'use client'` directive set per file from the item JSON (the CLI's own
@@ -27,21 +26,21 @@
 // stylesheet declaring `--font-heading` so the class survives the CLI's
 // class resolution the way it does in a real project.
 //
-// The upstream registry imports `cn` from the `cn` npm package; this repo
-// keeps the `@/lib/utils` helper every edition ships, so that import is
-// rewritten to the edition's utils alias and `cn` is left out of the printed
-// dependencies. The written files are formatted with the repo's prettier.
+// The upstream registry imports `cn` from the `cn` npm package; this repo keeps
+// the `@/lib/utils` helper every base ships, so that import is rewritten to the
+// base's utils alias and `cn` is left out of the printed dependencies. The
+// written files are formatted with the repo's prettier.
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { EDITIONS, PKG, ROOT } from './lib.mjs';
+import { BASES, PKG, ROOT } from './lib.mjs';
 
 const [base, ...args] = process.argv.slice(2);
 const all = args.includes('--all');
-if (!EDITIONS.includes(base) || args.length === 0 || (all && args.length > 1)) {
+if (!BASES.includes(base) || args.length === 0 || (all && args.length > 1)) {
   console.error(
-    `usage: pnpm add-part <${EDITIONS.join('|')}> <part> [<part> ...] | --all`,
+    `usage: pnpm add-part <${BASES.join('|')}> <part> [<part> ...] | --all`,
   );
   process.exit(1);
 }
@@ -54,8 +53,8 @@ const components = JSON.parse(
 const utilsAlias = components.aliases.utils;
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
 
-// Every part the edition has: the *.tsx files directly below components/ui
-// (the library lives in its own directory).
+// Every part the base has: the *.tsx files directly below components/ui (the
+// library lives in its own directory).
 const committedParts = () =>
   fs
     .readdirSync(uiDir, { withFileTypes: true })
@@ -75,12 +74,12 @@ const fetchItem = async (part) => {
   return res.json();
 };
 
-// A throwaway project the CLI can install into: the edition's components.json
-// and lib/utils.ts, a stylesheet declaring the one theme token the parts use
+// A throwaway project the CLI can install into: the base's components.json and
+// lib/utils.ts, a stylesheet declaring the one theme token the parts use
 // (`font-heading` on DialogTitle; the CLI drops a class whose token the
 // project's stylesheet lacks, the value is irrelevant), a package.json so
-// dependency installs have somewhere to go and a tsconfig that maps `@/`
-// onto it.
+// dependency installs have somewhere to go and a tsconfig that maps `@/` onto
+// it.
 const makeScratch = () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'st-add-part-'));
   fs.writeFileSync(

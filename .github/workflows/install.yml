@@ -10,7 +10,7 @@ on:
         description: >-
           Template of the main item's address. `<item>` is replaced by the
           scenario's committed item name (shadcn-table-base, shadcn-table-radix
-          or shadcn-table-aria), `<base>` by its edition (base, radix or aria). pr.yml passes
+          or shadcn-table-aria), `<base>` by its base name (base, radix or aria). pr.yml passes
           `anindosarker/shadcn-table/<item>#<sha>`, release.yml passes
           `https://www.shadcn-table.com/r/<base>/shadcn-table.json`.
         type: string
@@ -26,18 +26,17 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE: ${{ inputs.source }}
-      # The locale and example steps below pin the checkout's commit
-      # whatever the source is: the locale comes from the dev registry built
-      # here and the scenario's edition of example-basic from the GitHub
-      # address at this SHA.
+      # The locale and example steps below pin the checkout's commit whatever
+      # the source is: the locale comes from the dev registry built here and the
+      # scenario's base of example-basic from the GitHub address at this SHA.
       REF: ${{ github.sha }}
-      # Each scenario names its edition in the matrix (matrix.base): fresh,
+      # Each scenario names its base in the matrix (matrix.base): fresh,
       # existing and nextjs run on the Radix base and install the
       # shadcn-table-radix item; base scaffolds on Base UI and installs the
       # shadcn-table-base item, aria scaffolds on React Aria and installs
-      # shadcn-table-aria. Every committed item is named by its edition
-      # (editions.mjs editionItemName): the locale item is
-      # shadcn-table-<edition>-locale-de, the example item example-basic-<edition>.
+      # shadcn-table-aria. Every committed item is named by its base (bases.mjs
+      # baseItemName): the locale item is shadcn-table-<base>-locale-de, the
+      # example item example-basic-<base>.
       BASE: ${{ matrix.base }}
       ITEM: shadcn-table-${{ matrix.base }}
       EXAMPLE_ITEM: example-basic-${{ matrix.base }}
@@ -188,7 +187,7 @@ jobs:
       # Example items pin the library to gitConfig.branch, so this add re-fetches
       # the library from that branch; --overwrite lets it replace the files
       # without a prompt. The library at this SHA was proven by the steps above.
-      - name: Add a locale and the edition's example-basic
+      - name: Add a locale and the base's example-basic
         if: matrix.scenario != 'nextjs'
         run: |
           set -o pipefail

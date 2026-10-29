@@ -13,7 +13,7 @@ import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inpu
 import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 /**
- * The Collapsible part's props under the names every edition exposes: `open`,
+ * The Collapsible part's props under the names every base exposes: `open`,
  * `defaultOpen` and `onOpenChange` map to the React Aria Disclosure's
  * `isExpanded`, `defaultExpanded` and `onExpandedChange`.
  */

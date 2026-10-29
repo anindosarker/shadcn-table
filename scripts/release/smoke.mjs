@@ -5,33 +5,33 @@
 // check runs; the script prints one PASS or FAIL line per check and exits
 // non-zero when any failed. Checks, against www.shadcn-table.com and
 // storybook.shadcn-table.com:
-//   /r/<edition>/shadcn-table.json for every edition (EDITIONS in
+//   /r/<base>/shadcn-table.json for every base (BASES in
 //     packages/shadcn-table/scripts/registry/lib.mjs): 200, `dependencies`
 //     carries the @tanstack/react-table pin of packages/shadcn-table/package.json
-//   /r/<edition>/registry.json for every edition: the item names are exactly
+//   /r/<base>/registry.json for every base: the item names are exactly
 //     the ones hosted.mjs derives from the committed catalogs (the main item as
-//     shadcn-table, its locales as shadcn-table-locale-<code>, the edition's
+//     shadcn-table, its locales as shadcn-table-locale-<code>, the base's
 //     example items of the docs app as example-<slug>)
-//   Storybook /<edition>/ for every edition: 200 HTML; / redirects to
-//     /<DEFAULT_EDITION>/ with the query kept (the vercel.json redirect)
-//   /SKILL.md: 200, names every edition (EDITION_LABELS)
+//   Storybook /<base>/ for every base: 200 HTML; / redirects to
+//     /<DEFAULT_BASE>/ with the query kept (the vercel.json redirect)
+//   /SKILL.md: 200, names every base (BASE_LABELS)
 //   /llms.txt: 200
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  DEFAULT_EDITION,
-  EDITION_LABELS,
-  EDITIONS,
-  editionExampleItems,
-  editionItems,
+  DEFAULT_BASE,
+  BASE_LABELS,
+  BASES,
+  baseExampleItems,
+  baseItems,
 } from '../../packages/shadcn-table/scripts/registry/lib.mjs';
 
 const SITE = 'https://www.shadcn-table.com';
 const STORYBOOK = 'https://storybook.shadcn-table.com';
 const HOSTED_NAME = 'shadcn-table';
 const DOCS_PACKAGE_NAME = 'shadcn-table-docs';
-const LABELS = EDITIONS.map((edition) => EDITION_LABELS[edition]);
+const LABELS = BASES.map((base) => BASE_LABELS[base]);
 
 const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -57,9 +57,9 @@ const library = readJson('packages/shadcn-table/registry.json');
 const examples = readJson(path.join(docsDir(), 'registry.json'));
 const tanstackPin = `@tanstack/react-table@${libraryPackage.dependencies['@tanstack/react-table']}`;
 
-/** The item names hosted.mjs writes into /r/<edition>/registry.json. */
-const expectedItems = (edition) => {
-  const { main, locales: committed } = editionItems(library, edition);
+/** The item names hosted.mjs writes into /r/<base>/registry.json. */
+const expectedItems = (base) => {
+  const { main, locales: committed } = baseItems(library, base);
   const localePrefix = `${main?.name}-locale-`;
   const locales = committed.map(
     (item) => `${HOSTED_NAME}-locale-${item.name.slice(localePrefix.length)}`,
@@ -67,7 +67,7 @@ const expectedItems = (edition) => {
   return [
     HOSTED_NAME,
     ...locales,
-    ...editionExampleItems(examples, edition).map((item) => item.name),
+    ...baseExampleItems(examples, base).map((item) => item.name),
   ];
 };
 
@@ -114,8 +114,8 @@ const diff = (expected, actual) => {
     .join(' ');
 };
 
-for (const edition of EDITIONS) {
-  const itemUrl = `${SITE}/r/${edition}/${HOSTED_NAME}.json`;
+for (const base of BASES) {
+  const itemUrl = `${SITE}/r/${base}/${HOSTED_NAME}.json`;
   const item = await get(itemUrl);
   if (checkStatus(`${itemUrl} 200 JSON`, item, 'json')) {
     const deps = parseJson(item.text)?.dependencies ?? [];
@@ -126,10 +126,10 @@ for (const edition of EDITIONS) {
     );
   }
 
-  const catalogUrl = `${SITE}/r/${edition}/registry.json`;
+  const catalogUrl = `${SITE}/r/${base}/registry.json`;
   const catalog = await get(catalogUrl);
   if (checkStatus(`${catalogUrl} 200 JSON`, catalog, 'json')) {
-    const expected = expectedItems(edition).sort();
+    const expected = expectedItems(base).sort();
     const actual = (parseJson(catalog.text)?.items ?? [])
       .map((i) => i.name)
       .sort();
@@ -144,10 +144,10 @@ for (const edition of EDITIONS) {
   }
 }
 
-// Every edition under /<edition>/; the root redirects to the default edition
+// Every base under /<base>/; the root redirects to the default base
 // (vercel.json), query string included.
-for (const edition of EDITIONS) {
-  const url = `${STORYBOOK}/${edition}/`;
+for (const base of BASES) {
+  const url = `${STORYBOOK}/${base}/`;
   checkStatus(`${url} 200 HTML`, await get(url), 'text/html');
 }
 {
@@ -157,10 +157,10 @@ for (const edition of EDITIONS) {
     const res = await fetch(url, { redirect: 'manual' });
     const location = new URL(res.headers.get('location') ?? '', STORYBOOK);
     check(
-      `${url} redirects to /${DEFAULT_EDITION}/${query}`,
+      `${url} redirects to /${DEFAULT_BASE}/${query}`,
       res.status >= 300 &&
         res.status < 400 &&
-        location.pathname === `/${DEFAULT_EDITION}/` &&
+        location.pathname === `/${DEFAULT_BASE}/` &&
         // Vercel percent-encodes the forwarded query value
         // (`?path=%2Fstory%2Fx`), so compare the decoded parameter.
         location.searchParams.get('path') === '/story/x',
@@ -168,7 +168,7 @@ for (const edition of EDITIONS) {
     );
   } catch (error) {
     check(
-      `${url} redirects to /${DEFAULT_EDITION}/${query}`,
+      `${url} redirects to /${DEFAULT_BASE}/${query}`,
       false,
       `error=${String(error?.cause ?? error)}`,
     );

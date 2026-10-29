@@ -156,7 +156,7 @@ jobs:
       # The page checks need Playwright from packages/shadcn-table.
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
-      - run: pnpm --filter shadcn-table-docs exec node scripts/check-pages.mjs --base "$SITE"
+      - run: pnpm --filter shadcn-table-docs exec node scripts/check-pages.mjs --url "$SITE"
 
   install:
     needs: smoke
