@@ -31,9 +31,10 @@
 ### D5 Refs are no longer read or written during render
 
 - Composed refs: the six `userRef.current = <props>.ref` sites (`ST_TableFooter`, `ST_TableHead`, `ST_TableContainer`, `ST_TableLayout`, `ST_BottomToolbar`, `ST_TopToolbar`) and the aria `ST_Tooltip` `childRef` use one shared `hooks/useST_ComposedRef.ts`: a callback memoized on the internal ref and the user's ref, attaching both and cleaning both up (F2).
-- Menu anchors: `ST_ColumnActionMenu`, `ST_FilterOptionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu` keep the last non-null anchor in `useState`, updated in an effect, instead of `anchorRef.current = anchorEl` in render (F2).
+- Menu anchors: `ST_CellActionMenu` (base only: the render-time write inside the Subscribe render prop, fed by a render read of `actionCellRef.current`), `ST_ColumnActionMenu`, `ST_FilterOptionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu` keep the last non-null anchor in `useState`, updated with the render-phase "reset state when a prop changes" pattern of D8 (not in an effect, which D8 forbids), instead of `anchorRef.current = anchorEl` in render (F2).
 - Latest-value refs in `hooks/useST_Effects.ts` (`latestTable`, `latestCheckPageIndex`) become `useEffectEvent` handlers; the `react` and `react-dom` peer ranges move from `^19.1.1` to `^19.2.0` (F2).
 - `hooks/useST_TableInstance.ts` (the 39 hits from the `tableRef.current?.store.state` read) is out of scope here; a design note comes first, then its own decision.
+- Consumer minimum: React 19.2 or later, stated on the install page, the Versioning section of the API reference and the changelog; the registry ships source and cannot enforce it.
 - All three bases. No option, type or visible behavior change.
 
 ### D6 The table instance hook owns its transform state slices as TanStack atoms
@@ -78,7 +79,7 @@
 
 ### D12 Effect and memo dependency lists are complete
 
-- The 15 `exhaustive-deps` sites (F9: `hooks/useST_Effects.ts` 6, `hooks/useST_ColumnVirtualizer.ts` 3, `hooks/useST_Rows.ts` 2, `hooks/useST_TableInstance.ts` 2, `hooks/useST_TableOptions.ts` 1, `shared/utils/column.utils.ts` 1) list every value they read; `table` is stable, so adding it changes nothing at runtime.
+- The 15 `exhaustive-deps` sites (F9: `hooks/useST_Effects.ts` 6, `hooks/useST_ColumnVirtualizer.ts` 3, `hooks/useST_Rows.ts` 2, `hooks/useST_TableInstance.ts` 2, `hooks/useST_TableOptions.ts` 1, `shared/utils/column.utils.ts` 1) list every value they read. `table` is a new object on every render in TanStack v9 (`useTable` returns a fresh instance, `@tanstack/react-table` 9.3.1 `dist/useTable.js:70`), so effects list the stable members they use (`table.atoms.<slice>`, destructured methods) rather than `table` itself; `table` may appear in memo dependency lists where a per-render recompute is already the case.
 - Mount-only effects by design keep `[]` with one `// eslint-disable-next-line react-hooks/exhaustive-deps` and a reason.
 - Complex expressions in dependency arrays are extracted to locals first (with D9).
 - All three bases. No behavior change.
@@ -89,7 +90,8 @@
 - The 11 `table.store.state.<slice>` snapshot reads (handlers, effects, utils under a subscription) become `table.atoms.<slice>.get()`; `getDefaultColumnOrderIds` takes the slices it reads instead of the whole state (F8).
 - `hooks/useST_Effects.ts:114`: the debounced page index check subscribes to the atoms that change the pre-paginated row count (`columnFilters`, `globalFilter`, `columnFilterFns`, `globalFilterFn`, `grouping`, `expanded`, `pagination`, `isLoading`, `showSkeletons`) instead of `table.store.subscribe` on every state change; accepted narrowing, closer to MRT (F8).
 - `hooks/useST_TableInstance.ts:225` `useSelector(table.store, ...)` goes with D6.
-- All three bases. Gate: zero `table.store` in the library, Storybook pagination and filter checks green.
+- Scope includes the 23 story and docs example files under `packages/shadcn-table/stories` and `apps/shadcn-table-docs/examples` that use `table.store`: same migration rule, so the library lint with `no-deprecated` passes and users copy no deprecated API.
+- All three bases. Gate: zero `table.store` in the library, stories and docs examples, Storybook pagination and filter checks green.
 
 ### D14 The virtualizer hooks opt out of the React Compiler
 
@@ -104,6 +106,7 @@
 ### D16 Canonical Tailwind classes, with a gate
 
 - The 22 distinct non-canonical classes (37 sites, F13) take their canonical form in all three bases: `z-[n]` to `z-n`, spacing-scale pixel and rem values to scale steps (`min-h-[100px]` to `min-h-25`, `min-w-[70px]` to `min-w-17.5`, `mt-[3px]` to `mt-0.75`, `size-[18px]` to `size-4.5`, `m-[-0.25rem]` to `-m-1`, and the rest listed in F13), `rotate-[135deg]` to `rotate-135`, `-mx-[0.1rem]` to `mx-[-0.1rem]`, `outline-offset-[-2px]` to `-outline-offset-2`, `[&>[data-align=...]]:py-0` to `*:data-[align=...]:py-0`, the scrollbar `supports-[...]` form to `scrollbar-thin`. Same CSS output.
+- The library package moves `tailwindcss` and `@tailwindcss/vite` to `^4.3.3` and adds `@tailwindcss/node` and `@tailwindcss/oxide` as devDependencies (`canonicalizeCandidates` and `scrollbar-thin` need 4.3). Consumer minimum: Tailwind 4.3 or later, stated on the install page, the Versioning section and the changelog.
 - New gate `check:tailwind` in `packages/shadcn-table`: loads the design system with `@tailwindcss/node` `__unstable__loadDesignSystem`, runs `canonicalizeCandidates` over every class candidate in the library, fails on any class whose canonical form differs. Runs in CI with the other per-base checks.
 
 ### D17 The library lints as a Next 16 consumer does
