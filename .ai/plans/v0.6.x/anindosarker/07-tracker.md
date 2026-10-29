@@ -21,8 +21,15 @@ chevron commit `8db770ea` feat(storybook): chevron on the edition picker.
   5345: `check-pages.mjs a --url http://localhost:5345 --base <base>` 277 passed, 0 failed for
   base, radix and aria; `check-pages.mjs e` 596 passed, 0 failed for each base; full run
   without `--base` 1654 passed, 0 failed; `--base nope` exits 1 with the usage error.
-- Final: `8801049c` docs(changelog): base naming, tracker for part 07. Changelog lines, `06-shots/` deleted, tracker. `grep -rni edition` gate (plan 2.2
-  excludes plus `.git`) prints nothing with `public/r`, `storybook-static` and `.next` built.
+- Final: `8801049c` docs(changelog): base naming, tracker for part 07. Changelog lines,
+  `06-shots/` deleted, tracker. `grep -rni edition` gate (plan 2.2 excludes plus `.git`) prints
+  nothing with `public/r`, `storybook-static` and `.next` built.
+- Review round: fixed the page gate's external-host check (`06bfc1ba`: the `url` rename shadowed
+  the server origin in `isExternalResourceError`, so third-party resource errors failed; parameter
+  now `resourceUrl`, `check-pages.mjs a` 277 passed, 0 failed); reflowed every renamed comment
+  paragraph at 80 columns and split the single-line JSDoc over 80 (`6253b7f5`, comment lines
+  only, `check:bases` and library `lint` green); "an base's" to "a base's" in coding-standards
+  (`e6da46b4`); wrapped this file's Final bullet. Declined: nothing.
 
 ## Owner attention
 
@@ -44,8 +51,10 @@ chevron commit `8db770ea` feat(storybook): chevron on the edition picker.
   CONTRIBUTING tree, `registry/<base>/registry.ts` headers), "one copy of the table per shadcn
   base" (README, SKILL.md, introduction.mdx, CONTRIBUTING). The CONTRIBUTING port table reads
   "Storybook, Base UI".
-- Comments were renamed in place, not reflowed: every line got shorter and stays within 80
-  columns, and a full reflow would have rewrapped many untouched lines.
+- Comments were first renamed in place; the review round reflowed every touched paragraph at
+  80 columns as plan 1.6.2 says (`6253b7f5`), which rewraps lines the rename did not change. One
+  touched line stays over 80: the `@type` import in `apps/shadcn-table-docs/lib/base-tabs.mjs`,
+  a single unbreakable path.
 - The `pr.yml` job name is `bases (base guard)` (was `bases (edition guard)`); the ruleset has
   no required status checks, so the rename touches no repo setting.
 - The Unreleased chevron line now says "base picker" and "base name" (it was written this round
