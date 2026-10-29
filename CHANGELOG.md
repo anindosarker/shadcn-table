@@ -7,6 +7,12 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- The Storybook edition picker shows a chevron before the edition name.
+
 ## 0.6.2 - 2026-10-29
 
 ### Changed
