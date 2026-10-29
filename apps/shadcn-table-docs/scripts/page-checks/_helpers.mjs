@@ -6,6 +6,7 @@
 import {
   DEFAULT_EDITION,
   EDITION_LABELS,
+  EDITIONS,
 } from '../../../../packages/shadcn-table/scripts/registry/editions.mjs';
 
 /** Prop-table option names (3rd cell; detail-panel rows have no cells). */
@@ -287,7 +288,58 @@ export async function exampleGroup(page, tabs, check) {
 }
 
 /**
- * Site-wide base switch (components/base-selector.tsx, in the docs header):
+ * The docs header's edition select (BaseSwitch, components/base-selector.tsx):
+ * a button labelled "Edition" that shows the current edition and opens a
+ * radio menu over the editions.
+ */
+export const headerEdition = (page) =>
+  page.locator('#nd-subnav button[aria-label="Edition"]');
+
+/** The edition the header select shows. */
+export const headerEditionLabel = async (page) =>
+  ((await headerEdition(page).textContent()) ?? '').trim();
+
+/** Opens the header select's menu; returns its radio items. */
+export const openHeaderEditionMenu = async (page) => {
+  await headerEdition(page).click();
+  const items = page.getByRole('menuitemradio');
+  await items
+    .first()
+    .waitFor({ timeout: 5000 })
+    .catch(() => {});
+  return items;
+};
+
+/** Picks an edition by label through the header select. */
+export const pickHeaderEdition = async (page, label) => {
+  const items = await openHeaderEditionMenu(page);
+  await items.filter({ hasText: label }).click();
+};
+
+/**
+ * The header select lists every edition in EDITIONS order (Base UI, Radix
+ * UI, React Aria), the current one checked; the menu is closed again after.
+ */
+export async function headerEditionMenu(page, check, current) {
+  const items = await openHeaderEditionMenu(page);
+  const labels = (await items.allTextContents()).map((t) => t.trim());
+  check(
+    'header edition menu lists the editions in order',
+    labels.join(',') === EDITIONS.map((e) => EDITION_LABELS[e]).join(','),
+    labels.join(', '),
+  );
+  const checked = page.locator('[role="menuitemradio"][aria-checked="true"]');
+  check(
+    'header edition menu checks the current edition',
+    (await checked.count()) === 1 &&
+      ((await checked.textContent()) ?? '').trim() === current,
+  );
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(200);
+}
+
+/**
+ * Site-wide base switch (the header select above):
  * Base UI re-renders example `#example-<id>` (rows again, Base UI markup:
  * Base UI collapsibles set data-open/data-closed, Radix's set data-state),
  * then React Aria does (rows again, React Aria markup: React Aria Components
@@ -302,7 +354,7 @@ export async function exampleGroup(page, tabs, check) {
  */
 export async function baseSwitch(page, id, check) {
   const panel = page.locator(`[id="example-${id}"]`);
-  const header = page.locator('#nd-subnav [aria-label="shadcn base"]');
+  const header = headerEdition(page);
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
   const rows = panel.locator('table tbody tr');
@@ -338,7 +390,7 @@ export async function baseSwitch(page, id, check) {
       .catch(() => {});
   };
   const pick = async (label) => {
-    await header.getByRole('tab', { name: label }).click();
+    await pickHeaderEdition(page, label);
     await rows
       .first()
       .waitFor({ timeout: 60000 })
@@ -400,7 +452,7 @@ export async function baseSwitch(page, id, check) {
     neutral(ariaSource),
     `len=${ariaSource.length}`,
   );
-  await header.getByRole('tab', { name: 'Radix UI' }).click();
+  await pickHeaderEdition(page, 'Radix UI');
   await page.waitForTimeout(200);
   const radixSource = await source();
   check(
