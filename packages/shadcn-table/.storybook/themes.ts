@@ -1,42 +1,40 @@
 import { themes, type ThemeVars } from 'storybook/theming';
 import {
-  EDITION_LABELS,
-  EDITION_PORTS,
-  EDITIONS,
-  resolveEdition,
-  type Edition,
-} from '../scripts/registry/editions.mjs';
+  BASE_LABELS,
+  BASE_PORTS,
+  BASES,
+  resolveBase,
+  type Base,
+} from '../scripts/registry/bases.mjs';
 
 /**
- * Every edition and its label (scripts/registry/editions.mjs), in reader
+ * Every base and its label (scripts/registry/bases.mjs), in reader
  * order (Base UI, Radix UI, React Aria). Static builds sit side by side
- * under storybook-static/<edition>/ (`storybook:build:base`,
+ * under storybook-static/<base>/ (`storybook:build:base`,
  * `storybook:build:radix`, `storybook:build:aria`); no
- * edition lives at the root, which redirects to DEFAULT_EDITION in
+ * base lives at the root, which redirects to DEFAULT_BASE in
  * production (vercel.json).
  */
-export { EDITION_LABELS, EDITION_PORTS, EDITIONS, type Edition };
+export { BASE_LABELS, BASE_PORTS, BASES, type Base };
 
 /**
- * The edition this Storybook was built for, set on the window by main.ts
- * (`managerHead` / `previewHead`) from ST_BASE. The default edition when unset.
+ * The base this Storybook was built for, set on the window by main.ts
+ * (`managerHead` / `previewHead`) from ST_BASE. The default base when unset.
  */
-export const ST_BASE: Edition = resolveEdition(
+export const ST_BASE: Base = resolveBase(
   (globalThis as { __ST_BASE__?: string }).__ST_BASE__,
 );
 
-export const ST_BASE_LABEL = EDITION_LABELS[ST_BASE];
+export const ST_BASE_LABEL = BASE_LABELS[ST_BASE];
 
-/** The other editions, the ones the preview banner links to. */
-export const ST_OTHER_EDITIONS = EDITIONS.filter(
-  (edition) => edition !== ST_BASE,
-);
+/** The other bases, the ones the preview banner links to. */
+export const ST_OTHER_BASES = BASES.filter((base) => base !== ST_BASE);
 
 /**
- * Relative URL of another edition's static build from this one: every
- * edition is a sibling folder, so the link climbs one level.
+ * Relative URL of another base's static build from this one: every
+ * base is a sibling folder, so the link climbs one level.
  */
-export function staticEditionRoot(target: Edition) {
+export function staticBaseRoot(target: Base) {
   return `../${target}/`;
 }
 

@@ -28,7 +28,7 @@ export default mergeConfig(
               // The addon sets one sb-vitest dep cache for the config dir;
               // test:radix and test:base must not share it (stale deps after a
               // base switch show up as "Failed to fetch dynamically imported
-              // module"). One cache per edition, like main.ts does for dev.
+              // module"). One cache per base, like main.ts does for dev.
               name: 'st-base-cache-dir',
               enforce: 'post',
               config: (config) =>
