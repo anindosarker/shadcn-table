@@ -7,10 +7,10 @@ import {
 } from '../scripts/registry/editions.mjs';
 
 /**
- * Every edition and its label (scripts/registry/editions.mjs), in the order
- * of the `storybook dev` ports in package.json (6006, 6007, 6008). Static
- * builds sit side by side under storybook-static/<edition>/
- * (`storybook:build`, `storybook:build:base`, `storybook:build:aria`); no
+ * Every edition and its label (scripts/registry/editions.mjs), in reader
+ * order (Base UI, Radix UI, React Aria). Static builds sit side by side
+ * under storybook-static/<edition>/ (`storybook:build:base`,
+ * `storybook:build:radix`, `storybook:build:aria`); no
  * edition lives at the root, which redirects to DEFAULT_EDITION in
  * production (vercel.json).
  */
@@ -18,7 +18,7 @@ export { EDITION_LABELS, EDITIONS, type Edition };
 
 /**
  * The edition this Storybook was built for, set on the window by main.ts
- * (`managerHead` / `previewHead`) from ST_BASE. The reference when unset.
+ * (`managerHead` / `previewHead`) from ST_BASE. The default edition when unset.
  */
 export const ST_BASE: Edition = resolveEdition(
   (globalThis as { __ST_BASE__?: string }).__ST_BASE__,
@@ -26,7 +26,7 @@ export const ST_BASE: Edition = resolveEdition(
 
 export const ST_BASE_LABEL = EDITION_LABELS[ST_BASE];
 
-/** The other editions, the ones the manager's edition buttons open. */
+/** The other editions, the ones the preview banner links to. */
 export const ST_OTHER_EDITIONS = EDITIONS.filter(
   (edition) => edition !== ST_BASE,
 );
