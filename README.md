@@ -18,6 +18,7 @@ A full-featured React data table built on TanStack Table v9, installed into your
 https://github.com/user-attachments/assets/029680c9-40a8-430a-86b4-36bc7363ad22
 
 One copy of the table per shadcn base: Base UI, Radix UI and React Aria.
+Everything exported is public API; upgrade with `shadcn add --overwrite` and the [changelog](CHANGELOG.md).
 
 ## Quick start
 
