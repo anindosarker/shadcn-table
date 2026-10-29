@@ -71,7 +71,7 @@ jobs:
           echo "Ships as $next"
           echo "Ships as $next ($labels)." >> "$GITHUB_STEP_SUMMARY"
 
-  # The library exists once per edition, three complete trees:
+  # The library exists once per base, three complete trees:
   # registry/base, registry/radix and registry/aria, each built and tested by
   # the package scripts named after it (`:base`, `:radix`, `:aria`, which set
   # ST_BASE).
@@ -101,10 +101,10 @@ jobs:
       - run: pnpm --filter shadcn-table storybook:build:${{ matrix.base }}
 
   # A common library file must be byte-identical in every tree; the files that
-  # differ on purpose from registry/radix are listed per edition in
-  # scripts/registry/<edition>-diff.json.
+  # differ on purpose from registry/radix are listed per base in
+  # scripts/registry/<base>-diff.json.
   bases:
-    name: bases (edition guard)
+    name: bases (base guard)
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     steps:

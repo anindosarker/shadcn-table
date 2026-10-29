@@ -5,7 +5,7 @@ description: Install and use shadcn-table, a data table for shadcn/ui built on T
 
 # shadcn-table
 
-A shadcn registry item: the table source is copied into the project, not installed as an npm package. The project owns the files. One edition per shadcn base, Base UI, Radix UI and React Aria, served under `/r/base/`, `/r/radix/` and `/r/aria/` on the docs site.
+A shadcn registry item: the table source is copied into the project, not installed as an npm package. The project owns the files. One copy of the table per shadcn base, Base UI, Radix UI and React Aria, served under `/r/base/`, `/r/radix/` and `/r/aria/` on the docs site.
 
 ## Install
 
@@ -16,7 +16,7 @@ A shadcn registry item: the table source is copied into the project, not install
    - Radix UI: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/radix/shadcn-table.json`
    - React Aria: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json`
      Fallback when the site is unreachable, GitHub addresses: `anindosarker/shadcn-table/shadcn-table-base` (Base UI), `anindosarker/shadcn-table/shadcn-table-radix` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
-3. Verify: `components/ui/shadcn-table/index.ts` exists and the project type-checks. The edition for another base does not type-check; reinstall the right one with `--overwrite`.
+3. Verify: `components/ui/shadcn-table/index.ts` exists and the project type-checks. The copy for another base does not type-check; reinstall the right one with `--overwrite`.
 
 What the command adds: `components/ui/shadcn-table/` (the table), the shadcn/ui parts it uses in `components/ui/` when missing, and the npm packages `@tanstack/react-table`, `@tanstack/react-store`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`, `highlight-words`, `class-variance-authority`, `lucide-react`, plus `@base-ui/react` (Base UI), `radix-ui` (Radix UI) or `react-aria-components` (React Aria). Re-run with `--overwrite` to update; local edits in that directory are replaced.
 
