@@ -1,5 +1,7 @@
 # 02: parts untouched, tracker
 
+Status: done (e0a8f849)
+
 Plan: [02-parts-untouched.md](02-parts-untouched.md). Rulings: [decisions.md](decisions.md).
 Branch `v0.6/parts-untouched`, worktree `08`, from `claude/review` at `03d95c95`.
 

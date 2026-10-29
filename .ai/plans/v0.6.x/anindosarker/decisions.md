@@ -218,3 +218,29 @@ force; nothing here re-decides them.
      `ChevronSmallDownIcon`, commit `5f420c01`) ships in the same part. Why leading:
      Storybook's `Select` draws no caret and renders `icon` before the selected title; the
      owner chose that over the legacy `showSelectedOptionTitle` route.
+   - Review of the 0.6.3 result (2026-10-29), both kept: the grep gate won over byte-identical
+     catalogs, so the alias descriptions say "installs the Base UI copy" and one shipped aria
+     comment says "every base exposes" (hosted `aria/shadcn-table.json` differs by that line);
+     and "copy" is the word where "base" would double up ("one copy of the table per shadcn
+     base", "the Base UI copy").
+
+## Versioning
+
+10. One "Versioning" section on the API reference index (`docs/api/index.mdx`) and a line in
+    `README.md`, nothing more. Decided 2026-10-29, ships in 0.6.4 as a patch.
+    - Public surface: everything `index.ts` re-exports, the MRT model (decided in chat earlier;
+      components, hooks, `shared/` helpers, types, features). No narrower list.
+    - No stability list and no "what a major may change" section. The code is copied in, as
+      with shadcn/ui, and the upgrade path is the same: `shadcn add --overwrite` plus the
+      changelog. Writing a breaking-change contract is work for when something changes.
+    - Registry addresses: hosted `/r/<base>/shadcn-table.json`, `shadcn-table-locale-<code>`,
+      `example-<slug>` and the `@st` namespace are stable; the GitHub shorthands stay a
+      maintainer fallback (decision 7).
+    - The three bases are at feature parity, and `check-bases.mjs` enforces it; the page says
+      so.
+    - TanStack Table pinned to `^9`; a TanStack v9 breaking change flows through as a major of
+      this library.
+    - A renamed option keeps an alias for one minor with a console warning, listed under
+      `### Deprecated` in the changelog, removed in the next major.
+    - Unit tests for `lib/` are not part of 1.0 (owner, 2026-10-29); external use happens on
+      0.6.x.

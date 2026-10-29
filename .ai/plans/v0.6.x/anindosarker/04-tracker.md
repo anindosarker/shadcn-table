@@ -1,5 +1,7 @@
 # 04: ST_Checkbox, tracker
 
+Status: done (471db9a3)
+
 Plan: [04-st-checkbox.md](04-st-checkbox.md). Rulings: [decisions.md](decisions.md), decision 6.
 Branch `v0.6/st-checkbox`, worktree `09`, from `claude/review` at `c872dfc4`.
 
