@@ -83,9 +83,9 @@ jobs:
         if: matrix.scenario != 'nextjs'
         run: pnpm dlx shadcn@latest init --template vite --base "$BASE" --preset nova --name app --yes
         working-directory: ${{ runner.temp }}
-      - name: Scaffold a Next.js app on the Radix base
+      - name: Scaffold a Next.js app on the scenario's base
         if: matrix.scenario == 'nextjs'
-        run: pnpm dlx shadcn@latest init --template next --base radix --preset nova --name app --yes
+        run: pnpm dlx shadcn@latest init --template next --base "$BASE" --preset nova --name app --yes
         working-directory: ${{ runner.temp }}
       - name: Pre-install TanStack packages (existing app only)
         if: matrix.scenario == 'existing'
