@@ -10,7 +10,12 @@ import { ThemeChips } from '@/components/theme-demo/theme-chips';
 import { ThemeScope } from '@/components/theme-demo/theme-scope';
 import { useThemeCycle } from '@/components/theme-demo/use-theme-cycle';
 import { cn } from '@/lib/cn';
-import { initCommand, installDir, libraryAddCommand } from '@/lib/install';
+import {
+  defaultBase,
+  initCommand,
+  installDir,
+  libraryAddCommand,
+} from '@/lib/install';
 
 const ThemeTable = dynamic(
   () => import('@/components/theme-demo/theme-table'),
@@ -33,11 +38,13 @@ type Line =
   // the globals.css block, live for the current theme
   | { kind: 'css' };
 
+// The commands run on the edition a reader sees first (defaultBase, the
+// library's DEFAULT_EDITION).
 const SCRIPT: readonly Line[] = [
-  { kind: 'cmd', text: initCommand('radix', 'npm') },
+  { kind: 'cmd', text: initCommand(defaultBase, 'npm') },
   { kind: 'out', text: 'Created components.json' },
   { kind: 'out', text: 'Updated app/globals.css' },
-  { kind: 'cmd', text: libraryAddCommand('radix', 'npm') },
+  { kind: 'cmd', text: libraryAddCommand(defaultBase, 'npm') },
   { kind: 'out', text: `Installed ${installDir}` },
   { kind: 'cmd', text: 'cat app/globals.css' },
   { kind: 'css' },

@@ -142,3 +142,45 @@ force; nothing here re-decides them.
      line with Base UI as the default a reader sees. Before 0.6.1 the plain names were the
      Radix UI items; that path was never documented and the changelog names the change.
      `hosted.mjs` ignores the aliases.
+
+## Edition order and selectors
+
+8. Base UI is listed first, and both edition selectors are dropdowns. Decided 2026-10-29 on
+   review of the 0.6.1 result (`ATTENTION-2026-10-29.md`, item 8), ships in 0.6.2.
+   - Order Base UI, Radix UI, React Aria everywhere a reader sees the editions: `EDITIONS`
+     becomes `['base', 'radix', 'aria']` and is the only order source; the docs app's own
+     `bases` copy (`lib/install.ts`) goes, the docs derive from `EDITIONS`. Prose lists in
+     the docs, `README.md`, `SKILL.md` and `CONTRIBUTING.md` follow. The `README.md` primary
+     install block is Base UI; Radix UI and React Aria sit in the fold. Why: Base UI is the
+     default a reader sees (decision 7), so it comes first; today Radix UI is first and the
+     order is set in two places.
+   - The docs header selector is a dropdown: a select button showing the current edition
+     with a chevron, styled like the example page's `Copy prompt` split control, opening a
+     `DropdownMenuRadioGroup` with the three editions (the agent bar's "Choose base" menu).
+     The fumadocs pill tabs go from the header; `BaseTabs` on the install, init and
+     best-practices pages stay tabs.
+   - The Storybook edition tool is a dropdown too: Storybook's own `Select` from
+     `storybook/internal/components`, the component behind the built-in viewport and
+     background pickers, three options, the current edition preselected, choosing another
+     navigates the top frame to the same story in that edition. The 2px bottom bar from
+     0.6.1 goes. Why: the owner found three same-looking buttons with a bottom bar hard to
+     read; the native picker is what the rest of the toolbar already uses.
+   - No unsuffixed edition script. `storybook`, `storybook:build`, `test` in
+     `packages/shadcn-table/package.json` become `storybook:radix`, `storybook:build:radix`,
+     `test:radix`; the root `storybook`, `storybook:all`, `storybook:build` and `turbo.json`,
+     `vercel.json`, `pr.yml`, `preview.mjs`, `CONTRIBUTING.md` follow. `resolveEdition` with
+     `ST_BASE` unset or unknown falls back to `DEFAULT_EDITION` (Base UI), no longer to
+     Radix UI, so a bare `vitest` (editor test runners, Storybook's `addon-vitest` panel)
+     keeps working on the tree a reader sees first. An exit on unset `ST_BASE` was
+     considered and dropped: it would need per-editor env config for no gain.
+   - Dev ports keyed by edition name, not by `EDITIONS` index: Radix UI 6006, Base UI 6007,
+     React Aria 6008 unchanged, in one `EDITION_PORTS` table in `editions.mjs` read by
+     `package.json` scripts, `preview.mjs` and `edition-tool.ts`.
+   - `REFERENCE_EDITION` stays `radix`: `check-bases.mjs` diffs against it and hand edits
+     land in `registry/radix` first. Display order and diff baseline are separate concerns.
+   - The home page terminal demo (`theme-demo/variants/terminal.tsx`) runs its commands on
+     `DEFAULT_EDITION`, not a hardcoded `radix`.
+   - Ride-alongs in the same part: the vitest browser `testTimeout` goes from 45 s to 90 s
+     (`Profiled Thousand Rows` took 48 s once on the runner, PR #53); the root `format`
+     script's glob gains `mjs`, so the registry and release scripts are formatted like the
+     rest (three files reformat once). The six `05-shots/*.png` are deleted.

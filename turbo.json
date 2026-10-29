@@ -15,19 +15,37 @@
     "lint": {
       "outputs": []
     },
-    "storybook": {
+    "storybook:base": {
       "cache": false,
       "persistent": true
     },
-    "storybook:build": {
+    "storybook:radix": {
+      "cache": false,
+      "persistent": true
+    },
+    "storybook:aria": {
+      "cache": false,
+      "persistent": true
+    },
+    "storybook:build:base": {
       "outputs": [
-        "storybook-static/**"
+        "storybook-static/base/**"
       ]
     },
-    "test": {
-      "cache": false
+    "storybook:build:radix": {
+      "outputs": [
+        "storybook-static/radix/**"
+      ]
+    },
+    "storybook:build:aria": {
+      "outputs": [
+        "storybook-static/aria/**"
+      ]
     },
     "test:base": {
+      "cache": false
+    },
+    "test:radix": {
       "cache": false
     },
     "test:aria": {

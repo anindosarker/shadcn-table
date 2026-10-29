@@ -4,7 +4,7 @@
 
 ## Checklist
 
-- [ ] I followed [CONTRIBUTING.md](../CONTRIBUTING.md) and ran the gates of the area I changed locally (`docs/code-of-conduct/coding-standards.md`, Gates): `pnpm format`, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `test`, `test:base`, `test:aria`, `pnpm check:bases`, and the docs `types:check`, `lint`, `build`.
+- [ ] I followed [CONTRIBUTING.md](../CONTRIBUTING.md) and ran the gates of the area I changed locally (`docs/code-of-conduct/coding-standards.md`, Gates): `pnpm format`, `tsc:baseui`, `tsc:radix`, `tsc:aria`, `lint`, `test:base`, `test:radix`, `test:aria`, `pnpm check:bases`, and the docs `types:check`, `lint`, `build`.
 - [ ] A library change is made in every tree, or listed in that edition's `<edition>-diff.json`.
 - [ ] I understand every line of this pull request, including code written with AI assistance.
 

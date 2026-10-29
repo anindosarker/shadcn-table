@@ -8,10 +8,10 @@ const require = createRequire(import.meta.url);
 // Which tree this Storybook shows (vite.config.ts aliases `@/` by the same
 // variable). Handed to the manager and the preview as a global so themes.ts
 // can label the chrome: the three builds are served side by side under
-// /radix/, /base/ and /aria/, and the title is what tells them apart. The
-// manager also gets
+// /base/, /radix/ and /aria/, and the title is what tells them apart. Unset
+// ST_BASE means the default edition (resolveEdition). The manager also gets
 // whether this is `storybook dev` (one port per edition) or a static build
-// (one directory per edition), which decides where its edition button goes
+// (one directory per edition), which decides where its edition switch goes
 // (edition-tool.ts).
 const ST_BASE = resolveEdition(process.env.ST_BASE);
 const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;

@@ -7,8 +7,8 @@ import { trackStorybookOpened } from '@/lib/analytics';
 
 /**
  * One Storybook host serves every tree, each build under its edition:
- * /radix/, /base/ and /aria/ (packages/shadcn-table `storybook:build`,
- * `storybook:build:base`, `storybook:build:aria`); the root redirects to
+ * /base/, /radix/ and /aria/ (packages/shadcn-table `storybook:build:base`,
+ * `storybook:build:radix`, `storybook:build:aria`); the root redirects to
  * /base/.
  */
 export const storybookUrl: Record<Base, string> = {

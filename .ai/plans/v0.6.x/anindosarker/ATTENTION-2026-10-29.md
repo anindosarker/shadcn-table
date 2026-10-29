@@ -27,3 +27,12 @@ want to revert. Details and revert paths in the part trackers.
 - CI: `Profiled Thousand Rows` (aria, vitest browser mode) timed out once at 45 s on PR #53
   run `40759628176` and passed on re-run and on every other run. Flaky on the runner, not
   changed.
+
+## Reviewed 2026-10-29
+
+- Items 1, 4, 5, 6, 7: kept as shipped. Item 7: the plain GitHub names stay a maintainer-only
+  fallback.
+- Item 2: not filed, already upstream as shadcn-ui/ui issue #12381 with fix PRs #12383 and
+  #11918 (both open, unreviewed); our one-invocation-per-part `add-part` stands until a fix
+  ships.
+- Items 3, 8, 9: decision 8, part 06 (0.6.2).
