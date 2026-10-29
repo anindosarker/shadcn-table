@@ -310,10 +310,19 @@ export const openHeaderEditionMenu = async (page) => {
   return items;
 };
 
-/** Picks an edition by label through the header select. */
+/**
+ * Picks an edition by label through the header select, then waits for the
+ * menu to close. The current edition is left alone: the menu has nothing to
+ * change then.
+ */
 export const pickHeaderEdition = async (page, label) => {
+  if ((await headerEditionLabel(page)) === label) return;
   const items = await openHeaderEditionMenu(page);
   await items.filter({ hasText: label }).click();
+  await items
+    .first()
+    .waitFor({ state: 'detached', timeout: 5000 })
+    .catch(() => {});
 };
 
 /**
