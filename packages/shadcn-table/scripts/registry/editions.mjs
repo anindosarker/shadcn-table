@@ -2,11 +2,12 @@
 // and the one source of the order readers see them in (Base UI, Radix UI,
 // React Aria): the docs edition selector and tabs, the Storybook edition
 // switch and every script that loops over editions. Every script and config
-// that handles more than one edition reads it: the registry scripts (through lib.mjs), vite.config.ts and
-// .storybook (ST_BASE, the edition switch), check-storybook.mjs, the release
-// smoke (scripts/release/smoke.mjs) and the docs app's scripts/install.mjs
-// and lib/example-variant-dir.mjs. No node imports, so Vite bundles it into
-// the Storybook manager and preview. The types live in editions.d.mts.
+// that handles more than one edition reads it: the registry scripts (through
+// lib.mjs), vite.config.ts and .storybook (ST_BASE, the edition switch),
+// check-storybook.mjs, the release smoke (scripts/release/smoke.mjs) and the
+// docs app's scripts/install.mjs and lib/example-variant-dir.mjs. No node
+// imports, so Vite bundles it into the Storybook manager and preview. The
+// types live in editions.d.mts.
 //
 // Two constants name one edition each, for two different jobs:
 // - REFERENCE_EDITION is the diff baseline: check-bases.mjs compares every
