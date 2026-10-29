@@ -7,6 +7,12 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Docs
+
+- The API reference index explains versioning: everything exported is public, the three bases stay at parity, TanStack Table is pinned to `^9`, renamed options keep an alias for one minor, upgrade is `shadcn add --overwrite` plus this changelog.
+
 ## 0.6.3 - 2026-10-29
 
 ### Changed
