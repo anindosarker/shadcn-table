@@ -1,8 +1,8 @@
 # Library source: one complete tree per base
 
-The library ships in three editions, Base UI (`registry/base`, shadcn style `base-nova`),
+The library ships once per shadcn base, Base UI (`registry/base`, shadcn style `base-nova`),
 Radix UI (`registry/radix`, style `radix-nova`) and React Aria (`registry/aria`, style
-`aria-nova`). The edition list is `EDITIONS` in `scripts/registry/editions.mjs`, in that
+`aria-nova`). The base list is `BASES` in `scripts/registry/bases.mjs`, in that
 order; Radix is the reference (the diff baseline). Each tree is the whole library for that base; nothing is shared, resolved or
 generated between them. All three install to `components/ui/shadcn-table/` with the same
 relative paths.
@@ -11,7 +11,7 @@ relative paths.
 
 ```
 registry/<base>/
-  components/ui/*.tsx                  the shadcn parts this edition builds on
+  components/ui/*.tsx                  the shadcn parts this base builds on
   components/ui/shadcn-table/          the library, every file
     features/                          stFeatures.ts and one st*Feature.ts per state group
     hooks/                             stTableHook, useShadcnTable, useST_*, display-columns/
@@ -22,7 +22,7 @@ registry/<base>/
     ShadcnTable.tsx  ST_Tooltip.tsx  types.ts  icons.ts  index.ts
   lib/utils.ts  index.css  components.json  registry.ts
 registry/README.md                     this file
-scripts/registry/editions.mjs          the edition list (EDITIONS) and the reference (radix)
+scripts/registry/bases.mjs             the base list (BASES) and the reference (radix)
 scripts/registry/base-diff.json        the library files that differ between radix and base
 scripts/registry/aria-diff.json        the library files that differ between radix and aria
 scripts/registry/check-bases.mjs       the guard: pnpm check:bases
@@ -31,22 +31,22 @@ scripts/registry/check-bases.mjs       the guard: pnpm check:bases
 `@/` is a plain alias to one tree: `tsconfig.radix.json`, `tsconfig.baseui.json` and
 `tsconfig.aria.json` map it through `paths`, `vite.config.ts` (and so Vitest and Storybook)
 through `resolve.alias`, switched by `ST_BASE=base`, `ST_BASE=radix` or `ST_BASE=aria` (unset
-means Base UI, `DEFAULT_EDITION`). Every file of a tree
+means Base UI, `DEFAULT_BASE`). Every file of a tree
 is a root file of its TypeScript project, so the editor resolves every import in every
 tree.
 
 ## How to change a library file
 
 A common change is made in every tree by hand, in the same commit. There is no sync script;
-`pnpm check:bases` (also the CI job `bases`) reports a missed twin. It compares every edition
-against the reference, radix, each with its own list, `scripts/registry/<edition>-diff.json`
+`pnpm check:bases` (also the CI job `bases`) reports a missed twin. It compares every base
+against the reference, radix, each with its own list, `scripts/registry/<base>-diff.json`
 (`base-diff.json`, `aria-diff.json`): every file under `components/ui/shadcn-table/` that is
-not on an edition's list must be byte-identical in that tree and radix, every listed file
+not on a base's list must be byte-identical in that tree and radix, every listed file
 must exist in both, and no library file may exist in one tree only. The guard prints one line
-per edition, then the offending paths, and never edits a file.
+per base, then the offending paths, and never edits a file.
 
-An edition-only change is made in that tree, and the file's path (relative to
-`components/ui/shadcn-table/`) is added to that edition's diff list in the same commit. When
+A base-only change is made in that tree, and the file's path (relative to
+`components/ui/shadcn-table/`) is added to that base's diff list in the same commit. When
 the copy becomes identical to radix again, remove the path from the list in the commit that
 makes it so.
 
@@ -84,6 +84,6 @@ as `@/components/ui/<part>`; the registry build turns that import into a
 `scripts/registry/lib.mjs`. The main item lists every file of the tree's
 `components/ui/shadcn-table/` except the non-English locales, plus the forked parts. Each
 locale item (`<item>-locale-<code>`, `mk` included) ships its one
-`shared/locales/<code>.ts`. `pnpm registry:build` collects every edition's items into
+`shared/locales/<code>.ts`. `pnpm registry:build` collects every base's items into
 `registry.json` at the package root, which stays there because the CLI resolves
 `files[].path` relative to it.

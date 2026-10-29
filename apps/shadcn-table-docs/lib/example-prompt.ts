@@ -2,7 +2,7 @@
 // from server components (ExampleSnippet), never from client code.
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { editionItemName } from '../../../packages/shadcn-table/scripts/registry/editions.mjs';
+import { baseItemName } from '../../../packages/shadcn-table/scripts/registry/bases.mjs';
 import { findExamplePage, loadExamplePages } from './example-pages.mjs';
 import { readExampleFiles } from './example-source';
 import {
@@ -32,7 +32,7 @@ async function readRegistryItem(
   const registry = JSON.parse(await fs.readFile(file, 'utf8')) as {
     items: RegistryItem[];
   };
-  const itemName = editionItemName(`example-${name}`, base);
+  const itemName = baseItemName(`example-${name}`, base);
   const item = registry.items.find((i) => i.name === itemName);
   if (!item) {
     throw new Error(

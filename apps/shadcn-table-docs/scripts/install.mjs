@@ -3,11 +3,11 @@
  * `pnpm lib:install <base>`: installs one base's copy of the library for the
  * rendered examples, under components/ui-<base>/ (the table in
  * components/ui-<base>/shadcn-table/ plus the shadcn parts it imports,
- * installed from the base's style, `<base>-nova`). <base> is any edition
- * (packages/shadcn-table/scripts/registry/editions.mjs); its item is the
- * one registry/<base>/ holds in the committed registry.json. The generated example variants
- * (lib/example-variants.mjs) import from there, so a reader on any base
- * tab sees that base's edition render.
+ * installed from the base's style, `<base>-nova`). <base> is any base
+ * (packages/shadcn-table/scripts/registry/bases.mjs); its item is the one
+ * registry/<base>/ holds in the committed registry.json. The generated example
+ * variants (lib/example-variants.mjs) import from there, so a reader on any
+ * base tab sees that base's copy render.
  *
  * Source: the built item packages/shadcn-table/public/r/<item>.json
  * (`pnpm -w registry:build`) plus the files of its locale items
@@ -38,9 +38,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  EDITIONS,
-  editionItems,
-  REFERENCE_EDITION,
+  BASES,
+  baseItems,
+  REFERENCE_BASE,
 } from '../../../packages/shadcn-table/scripts/registry/lib.mjs';
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -60,12 +60,12 @@ const KEEP = [
 ].map((rel) => path.join(APP, rel));
 
 const base = process.argv[2];
-if (!EDITIONS.includes(base)) {
-  console.error(`usage: node scripts/install.mjs <${EDITIONS.join('|')}>`);
+if (!BASES.includes(base)) {
+  console.error(`usage: node scripts/install.mjs <${BASES.join('|')}>`);
   process.exit(1);
 }
 /** The base's committed item name, from the library's registry.json. */
-const itemName = editionItems(
+const itemName = baseItems(
   JSON.parse(fs.readFileSync(path.join(LIB, 'registry.json'), 'utf8')),
   base,
 ).main?.name;
@@ -102,7 +102,7 @@ for (const file of item.files) {
     /(['"])@\/components\/ui\//g,
     `$1${uiAlias}/`,
   );
-  if (base !== REFERENCE_EDITION) {
+  if (base !== REFERENCE_BASE) {
     file.content = file.content.replace(
       /\bst-collapsible\b/g,
       `st-${base}-collapsible`,

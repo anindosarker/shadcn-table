@@ -7,6 +7,18 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- The Storybook base picker shows a chevron before the base name.
+- The shadcn base is called base everywhere, in the Storybook picker, the docs and the
+  maintainer scripts; edition is gone.
+- Maintainer renames: `scripts/registry/bases.mjs` (`BASES`, `REFERENCE_BASE`, `DEFAULT_BASE`,
+  `BASE_LABELS`, `BASE_PORTS`, `resolveBase`, `baseItemName`), `.storybook/base-tool.ts`,
+  `check-pages.mjs --url <url> --base <base>` (was `--base <url> --edition <base>`), and
+  `check-storybook.mjs --url <url>` (was `--base <url>`).
+
 ## 0.6.2 - 2026-10-29
 
 ### Changed

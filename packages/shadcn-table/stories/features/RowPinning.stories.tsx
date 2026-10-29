@@ -129,8 +129,8 @@ RowPinningSelectStickyMode.play = async ({
   });
   await userEvent.click(selectAll);
   await waitFor(() => expect(pinnedRows()).toHaveLength(data.length));
-  // The visible box: the React Aria edition's checkbox role is a visually
-  // hidden input inside it.
+  // The visible box: the React Aria base's checkbox role is a visually hidden
+  // input inside it.
   const selectAllBox = selectAll.closest<HTMLElement>(
     '[data-slot="checkbox"]',
   )!;

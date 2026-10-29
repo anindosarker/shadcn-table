@@ -1,12 +1,12 @@
-// Shared by the registry scripts and the per-edition item definitions
-// (registry/<edition>/registry.ts): the edition list, then the item builder,
-// which lists an item's files (the tree's library files), derives the registryDependencies from the `@/components/ui/<part>`
-// imports and pins npm versions from package.json. The file list is never
-// hand-maintained.
+// Shared by the registry scripts and the per-base item definitions
+// (registry/<base>/registry.ts): the base list, then the item builder, which
+// lists an item's files (the tree's library files), derives the
+// registryDependencies from the `@/components/ui/<part>` imports and pins npm
+// versions from package.json. The file list is never hand-maintained.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_EDITION, EDITION_LABELS } from './editions.mjs';
+import { DEFAULT_BASE, BASE_LABELS } from './bases.mjs';
 
 export const PKG = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -19,15 +19,15 @@ export const ROOT = path.resolve(PKG, '..', '..');
 export const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
 // The library below a tree's components/ui directory.
 const LIB_REL = 'components/ui/shadcn-table';
-// The edition list (editions.mjs), re-exported for the registry scripts.
+// The base list (bases.mjs), re-exported for the registry scripts.
 export {
-  DEFAULT_EDITION,
-  EDITION_LABELS,
-  EDITIONS,
-  editionItemName,
-  REFERENCE_EDITION,
-  resolveEdition,
-} from './editions.mjs';
+  DEFAULT_BASE,
+  BASE_LABELS,
+  BASES,
+  baseItemName,
+  REFERENCE_BASE,
+  resolveBase,
+} from './bases.mjs';
 export const GITHUB_REPO = 'anindosarker/shadcn-table';
 export const HOMEPAGE = `https://github.com/${GITHUB_REPO}`;
 // `--dev` builds a local registry under .dev/ (gitignored) whose locale items
@@ -101,7 +101,7 @@ const uiImports = (files) => {
  *   devDependencies: Array<{ name: string, pinned?: boolean }>,
  * }} base
  */
-export const baseItems = ({
+export const buildBaseItems = ({
   dir,
   name,
   title,
@@ -168,58 +168,58 @@ export const baseItems = ({
   return [main, ...locales];
 };
 
-// Whether a committed item name carries the edition: `<name>-<edition>`
-// (editionItemName) or a locale item of one, `<name>-<edition>-locale-<code>`.
-// The GitHub shorthand aliases (aliasItems) carry none.
-const hasEditionName = (name, edition) =>
-  name.endsWith(`-${edition}`) || name.includes(`-${edition}-locale-`);
+// Whether a committed item name carries the base: `<name>-<base>`
+// (baseItemName) or a locale item of one, `<name>-<base>-locale-<code>`. The
+// GitHub shorthand aliases (aliasItems) carry none.
+const hasBaseName = (name, base) =>
+  name.endsWith(`-${base}`) || name.includes(`-${base}-locale-`);
 
 /**
  * The GitHub shorthand aliases (decisions.md, decision 7): one copy of every
- * DEFAULT_EDITION item under its plain name (`shadcn-table`,
- * `shadcn-table-locale-<code>`, `example-<slug>`), because
- * `shadcn add anindosarker/shadcn-table/<name>` reads the committed catalog
- * and cannot pick an edition. Same type, files and dependencies as the
- * source item; only the name and the description change. build.mjs and
- * examples.mjs append them to the catalogs they write; editionItems and
- * editionExampleItems skip them, so hosted.mjs never serves them.
+ * DEFAULT_BASE item under its plain name (`shadcn-table`,
+ * `shadcn-table-locale-<code>`, `example-<slug>`), because `shadcn add
+ * anindosarker/shadcn-table/<name>` reads the committed catalog and cannot pick
+ * a base. Same type, files and dependencies as the source item; only the name
+ * and the description change. build.mjs and examples.mjs append them to the
+ * catalogs they write; baseItems and baseExampleItems skip them, so hosted.mjs
+ * never serves them.
  *
  * @template {{ name: string, description?: string }} T
- * @param {T[]} items the DEFAULT_EDITION items, named by editionItemName
+ * @param {T[]} items the DEFAULT_BASE items, named by baseItemName
  * @returns {T[]}
  */
 export const aliasItems = (items) =>
   items.map((item) => {
-    const suffix = `-${DEFAULT_EDITION}`;
+    const suffix = `-${DEFAULT_BASE}`;
     const name = item.name.endsWith(suffix)
       ? item.name.slice(0, -suffix.length)
       : item.name.replace(`${suffix}-locale-`, '-locale-');
     if (name === item.name) {
       throw new Error(
-        `aliasItems: ${item.name} is not a ${DEFAULT_EDITION} item name`,
+        `aliasItems: ${item.name} is not a ${DEFAULT_BASE} item name`,
       );
     }
     return {
       ...item,
       name,
-      description: `Alias of ${item.name}: the GitHub shorthand ${GITHUB_REPO}/${name} installs the ${EDITION_LABELS[DEFAULT_EDITION]} edition.`,
+      description: `Alias of ${item.name}: the GitHub shorthand ${GITHUB_REPO}/${name} installs the ${BASE_LABELS[DEFAULT_BASE]} copy.`,
     };
   });
 
 /**
- * One edition's items in a catalog built from the committed registry.json:
- * the items whose files live in registry/<edition>, split into the main item
- * and its locale items (named `<main>-locale-<code>`). The GitHub shorthand
- * aliases (aliasItems) share the default edition's files and are skipped.
+ * One base's items in a catalog built from the committed registry.json: the
+ * items whose files live in registry/<base>, split into the main item and its
+ * locale items (named `<main>-locale-<code>`). The GitHub shorthand aliases
+ * (aliasItems) share the default base's files and are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
- * @param {string} edition
+ * @param {string} base
  */
-export const editionItems = (catalog, edition) => {
+export const baseItems = (catalog, base) => {
   const own = catalog.items.filter(
     (item) =>
-      hasEditionName(item.name, edition) &&
-      item.files.every((file) => file.path.startsWith(`registry/${edition}/`)),
+      hasBaseName(item.name, base) &&
+      item.files.every((file) => file.path.startsWith(`registry/${base}/`)),
   );
   const main = own.find((item) =>
     own.every(
@@ -234,25 +234,23 @@ export const editionItems = (catalog, edition) => {
 };
 
 /**
- * One edition's example items in the docs catalog (examples.mjs writes one
- * item per example and edition, found by the `examples/<edition>/` file
- * paths), each renamed to its hosted name: the plain `example-<slug>`,
- * which editionItemName suffixes with `-<edition>` in the committed catalog.
- * hosted.mjs serves them in /r/<edition>/, smoke.mjs expects them there.
- * The GitHub shorthand aliases (aliasItems), already plain, are skipped.
+ * One base's example items in the docs catalog (examples.mjs writes one item
+ * per example and base, found by the `examples/<base>/` file paths), each
+ * renamed to its hosted name: the plain `example-<slug>`, which baseItemName
+ * suffixes with `-<base>` in the committed catalog. hosted.mjs serves them in
+ * /r/<base>/, smoke.mjs expects them there. The GitHub shorthand aliases
+ * (aliasItems), already plain, are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
- * @param {string} edition
+ * @param {string} base
  */
-export const editionExampleItems = (catalog, edition) => {
-  const suffix = `-${edition}`;
+export const baseExampleItems = (catalog, base) => {
+  const suffix = `-${base}`;
   return catalog.items
     .filter(
       (item) =>
         item.name.endsWith(suffix) &&
-        item.files.every((file) =>
-          file.path.startsWith(`examples/${edition}/`),
-        ),
+        item.files.every((file) => file.path.startsWith(`examples/${base}/`)),
     )
     .map((item) => ({
       ...item,

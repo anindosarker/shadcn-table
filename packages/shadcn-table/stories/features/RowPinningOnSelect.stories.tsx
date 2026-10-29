@@ -73,7 +73,7 @@ const expectLabel = (root: ParentNode, label: string) =>
   );
 
 // The matchers read aria-checked on a role=checkbox element and
-// checked/indeterminate on a native input (the React Aria edition).
+// checked/indeterminate on a native input (the React Aria base).
 const expectSelectAll = (
   selectAll: HTMLElement,
   state: 'false' | 'mixed' | 'true',

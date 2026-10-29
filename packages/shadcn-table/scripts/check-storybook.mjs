@@ -1,29 +1,25 @@
 #!/usr/bin/env node
 /**
- * Static Storybook gate for the edition switch (.storybook/edition-tool.ts):
- * with the three builds served from one directory (`storybook:build:base`,
+ * Static Storybook gate for the base switch (.storybook/base-tool.ts): with the
+ * three builds served from one directory (`storybook:build:base`,
  * `storybook:build:radix` and `storybook:build:aria` into
  * storybook-static/base/, storybook-static/radix/ and storybook-static/aria/),
- * each edition's toolbar shows one Edition select labelled with its own
- * edition; opened, it lists every edition in EDITIONS order, its own one
- * selected, and choosing another opens the same story there. One more
- * check, for the production host: the root redirects to the default
- * edition's build with the query kept (vercel.json). A plain static server
- * answers the root with 200 or 404 instead; the check is then skipped.
+ * each base's toolbar shows one Base select labelled with its own base; opened,
+ * it lists every base in BASES order, its own one selected, and choosing
+ * another opens the same story there. One more check, for the production host:
+ * the root redirects to the default base's build with the query kept
+ * (vercel.json). A plain static server answers the root with 200 or 404
+ * instead; the check is then skipped.
  *
  * Usage (a static server must be running, for example
  * `pnpm serve storybook-static -l 5344`):
- *   node scripts/check-storybook.mjs [--base http://localhost:5344]
+ *   node scripts/check-storybook.mjs [--url http://localhost:5344]
  */
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {
-  DEFAULT_EDITION,
-  EDITION_LABELS,
-  EDITIONS,
-} from './registry/editions.mjs';
+import { DEFAULT_BASE, BASE_LABELS, BASES } from './registry/bases.mjs';
 
 const PKG_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -33,17 +29,20 @@ const require = createRequire(path.join(PKG_DIR, 'node_modules', '/'));
 const { chromium } = require('playwright');
 
 const args = process.argv.slice(2);
-const i = args.indexOf('--base');
-const base = (i === -1 ? 'http://localhost:5344' : args[i + 1]).replace(
+const i = args.indexOf('--url');
+const origin = (i === -1 ? 'http://localhost:5344' : args[i + 1]).replace(
   /\/$/,
   '',
 );
 
-/** First story id of the default edition's build; every build shares the story set. */
+/**
+ * First story id of the default base's build; every build shares the story
+ * set.
+ */
 const indexFile = path.join(
   PKG_DIR,
   'storybook-static',
-  DEFAULT_EDITION,
+  DEFAULT_BASE,
   'index.json',
 );
 const index = JSON.parse(await readFile(indexFile, 'utf8'));
@@ -56,29 +55,29 @@ if (!storyId) {
 }
 
 /**
- * Each edition: the label its select shows and where its build is served
- * (every edition under <edition>/).
+ * Each base: the label its select shows and where its build is served (every
+ * base under <base>/).
  */
-const editions = EDITIONS.map((name) => ({
+const bases = BASES.map((name) => ({
   name,
-  label: EDITION_LABELS[name],
-  root: `${base}/${name}/`,
+  label: BASE_LABELS[name],
+  root: `${origin}/${name}/`,
 }));
 
 const results = [];
 
 // The root redirect (vercel.json, storybook host): `/?path=...` answers 3xx
-// with a Location of `/<DEFAULT_EDITION>/?path=...`. A static server has no
+// with a Location of `/<DEFAULT_BASE>/?path=...`. A static server has no
 // redirects, so a 200 or 404 at the root skips the check instead of failing.
 {
   const query = `?path=/story/${storyId}`;
-  const res = await fetch(`${base}/${query}`, { redirect: 'manual' });
+  const res = await fetch(`${origin}/${query}`, { redirect: 'manual' });
   if (res.status >= 300 && res.status < 400) {
-    const location = new URL(res.headers.get('location') ?? '', base);
+    const location = new URL(res.headers.get('location') ?? '', origin);
     const ok =
-      location.pathname === `/${DEFAULT_EDITION}/` && location.search === query;
+      location.pathname === `/${DEFAULT_BASE}/` && location.search === query;
     results.push(
-      `${ok ? 'PASS' : 'FAIL'} root redirects to /${DEFAULT_EDITION}/ with the query kept ${res.status} ${location.href}`,
+      `${ok ? 'PASS' : 'FAIL'} root redirects to /${DEFAULT_BASE}/ with the query kept ${res.status} ${location.href}`,
     );
   } else {
     results.push(
@@ -87,7 +86,7 @@ const results = [];
   }
 }
 const browser = await chromium.launch();
-for (const { name, label, root } of editions) {
+for (const { name, label, root } of bases) {
   const check = (what, ok, extra = '') =>
     results.push(
       `${ok ? 'PASS' : 'FAIL'} ${name} ${what}${extra ? ' ' + extra : ''}`,
@@ -100,11 +99,11 @@ for (const { name, label, root } of editions) {
   });
   // Storybook's Select names its trigger `<ariaLabel> <selected title>`.
   const trigger = page.locator(
-    'button[aria-haspopup="listbox"][aria-label^="Edition"]',
+    'button[aria-haspopup="listbox"][aria-label^="Base"]',
   );
   await trigger.waitFor({ timeout: 30000 }).catch(() => {});
   check(
-    'one edition select showing the current edition',
+    'one base select showing the current base',
     (await trigger.count()) === 1 &&
       (await trigger.textContent())?.trim() === label,
     (await trigger.count()) ? await trigger.textContent() : '0',
@@ -115,7 +114,7 @@ for (const { name, label, root } of editions) {
   }
   await trigger.click();
   const options = page.locator(
-    '[role="listbox"][aria-label="Edition"] [role="option"]',
+    '[role="listbox"][aria-label="Base"] [role="option"]',
   );
   await options
     .first()
@@ -123,23 +122,21 @@ for (const { name, label, root } of editions) {
     .catch(() => {});
   const titles = (await options.allTextContents()).map((t) => t.trim());
   check(
-    'menu lists the editions in order',
-    titles.join(',') === editions.map((edition) => edition.label).join(','),
+    'menu lists the bases in order',
+    titles.join(',') === bases.map((base) => base.label).join(','),
     titles.join(', '),
   );
   const selected = page.locator(
-    '[role="listbox"][aria-label="Edition"] [role="option"][aria-selected="true"]',
+    '[role="listbox"][aria-label="Base"] [role="option"][aria-selected="true"]',
   );
   check(
-    'current edition selected',
+    'current base selected',
     (await selected.count()) === 1 &&
       (await selected.textContent())?.trim() === label,
   );
-  // Choosing the next edition opens the same story in its build.
+  // Choosing the next base opens the same story in its build.
   const other =
-    editions[
-      (editions.findIndex((e) => e.name === name) + 1) % editions.length
-    ];
+    bases[(bases.findIndex((e) => e.name === name) + 1) % bases.length];
   await Promise.all([
     page
       .waitForURL((url) => url.href.startsWith(other.root), { timeout: 30000 })
@@ -148,7 +145,7 @@ for (const { name, label, root } of editions) {
   ]);
   const href = new URL(page.url());
   check(
-    `choosing ${other.name} opens the edition`,
+    `choosing ${other.name} opens the base`,
     `${href.origin}${href.pathname}` === other.root,
     href.href,
   );
@@ -161,7 +158,7 @@ for (const { name, label, root } of editions) {
     waitUntil: 'networkidle',
   });
   check(
-    'manager title mentions the edition',
+    'manager title mentions the base',
     (await page.title()).includes(label) ||
       (await page.locator(`text=shadcn-table (${label})`).count()) > 0,
   );

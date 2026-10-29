@@ -3,42 +3,35 @@
 // `pnpm registry:items` (the docs `build` script runs all three before
 // `next build`).
 //
-// Emits the hosted registries the docs site serves, one directory per
-// edition (EDITIONS in lib.mjs):
+// Emits the hosted registries the docs site serves, one directory per base
+// (BASES in lib.mjs):
 //   apps/shadcn-table-docs/public/r/radix/   from the Radix items
 //   apps/shadcn-table-docs/public/r/base/    from the Base UI items
 //   apps/shadcn-table-docs/public/r/aria/    from the React Aria items
-// Each directory gets its own registry.json catalog (the edition's main item,
-// its locale items and the edition's example items) and the resolved item
-// files `shadcn build` produces from it. The item names are the same in every
+// Each directory gets its own registry.json catalog (the base's main item, its
+// locale items and the base's example items) and the resolved item files
+// `shadcn build` produces from it. The item names are the same in every
 // directory (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`),
-// so the namespace form `@st=https://www.shadcn-table.com/r/{style}/{name}.json`
-// resolves `@st/shadcn-table` to the consumer's own edition; the example
-// items come from that edition's examples/<edition> sources
-// (editionExampleItems).
+// so the namespace form
+// `@st=https://www.shadcn-table.com/r/{style}/{name}.json` resolves
+// `@st/shadcn-table` to the consumer's own base; the example items come from
+// that base's examples/<base> sources (baseExampleItems).
 //
 // The GitHub shorthand aliases in the committed catalogs (aliasItems in
-// lib.mjs: the plain names of the default edition's items) are skipped:
-// editionItems and editionExampleItems return the per-edition items only.
+// lib.mjs: the plain names of the default base's items) are skipped: baseItems
+// and baseExampleItems return the per-base items only.
 //
 // Reads the committed registry.json files, which keep the GitHub addresses;
 // only the hosted copies get hosted addresses: the locale items depend on
-// `<HOSTED_URL>/<edition>/shadcn-table.json`, and every file path is made
-// relative to the repo root so one `shadcn build` run resolves both the
-// library and the example sources. REGISTRY_HOSTED_URL (or NEXT_PUBLIC_SITE_URL
-// plus /r) overrides the default https://www.shadcn-table.com/r (a preview
-// deployment, for example).
+// `<HOSTED_URL>/<base>/shadcn-table.json`, and every file path is made relative
+// to the repo root so one `shadcn build` run resolves both the library and the
+// example sources. REGISTRY_HOSTED_URL (or NEXT_PUBLIC_SITE_URL plus /r)
+// overrides the default https://www.shadcn-table.com/r (a preview deployment,
+// for example).
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-  DOCS,
-  EDITIONS,
-  editionExampleItems,
-  editionItems,
-  PKG,
-  ROOT,
-} from './lib.mjs';
+import { DOCS, BASES, baseExampleItems, baseItems, PKG, ROOT } from './lib.mjs';
 
 const OUT_ROOT = path.join(DOCS, 'public/r');
 // REGISTRY_HOSTED_URL wins; otherwise the docs origin (NEXT_PUBLIC_SITE_URL,
@@ -55,7 +48,7 @@ const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 const library = readJson(path.join(PKG, 'registry.json'));
 const examples = readJson(path.join(DOCS, 'registry.json'));
 
-// The hosted name of every edition's main item, whatever its committed name.
+// The hosted name of every base's main item, whatever its committed name.
 const HOSTED_NAME = 'shadcn-table';
 
 const prefixPaths = (item, prefix) => ({
@@ -66,21 +59,21 @@ const prefixPaths = (item, prefix) => ({
   })),
 });
 
-for (const edition of EDITIONS) {
-  const outDir = path.join(OUT_ROOT, edition);
-  const { main, locales } = editionItems(library, edition);
+for (const base of BASES) {
+  const outDir = path.join(OUT_ROOT, base);
+  const { main, locales } = baseItems(library, base);
   if (!main || locales.length === 0) {
     console.error(
-      `hosted.mjs: the ${edition} main item or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
+      `hosted.mjs: the ${base} main item or its locale items missing from packages/shadcn-table/registry.json; run pnpm registry:build first`,
     );
     process.exit(1);
   }
-  const exampleItems = editionExampleItems(examples, edition).map((item) =>
+  const exampleItems = baseExampleItems(examples, base).map((item) =>
     prefixPaths(item, path.relative(ROOT, DOCS)),
   );
   if (exampleItems.length === 0) {
     console.error(
-      `hosted.mjs: no ${edition} example items in apps/shadcn-table-docs/registry.json; run pnpm registry:items first`,
+      `hosted.mjs: no ${base} example items in apps/shadcn-table-docs/registry.json; run pnpm registry:items first`,
     );
     process.exit(1);
   }
@@ -97,7 +90,7 @@ for (const edition of EDITIONS) {
         ...item,
         name: `${HOSTED_NAME}-locale-${code}`,
         description: `The ${code} localization for ${HOSTED_NAME}.`,
-        registryDependencies: [`${HOSTED_URL}/${edition}/${HOSTED_NAME}.json`],
+        registryDependencies: [`${HOSTED_URL}/${base}/${HOSTED_NAME}.json`],
       },
       libPrefix,
     );
@@ -105,7 +98,7 @@ for (const edition of EDITIONS) {
 
   const registry = {
     $schema: 'https://ui.shadcn.com/schema/registry.json',
-    name: `${library.name}-${edition}`,
+    name: `${library.name}-${base}`,
     homepage: library.homepage,
     items: [hostedMain, ...hostedLocales, ...exampleItems],
   };

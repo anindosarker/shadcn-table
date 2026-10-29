@@ -2,8 +2,8 @@
 // Usage (inside packages/shadcn-table): pnpm preview
 //
 // Package preview: builds the local registry (`pnpm registry:dev`, .dev/r),
-// then serves it on http://localhost:5310/r and starts Storybook for every
-// edition (Base UI on 6007, Radix UI on 6006, React Aria on 6008, EDITION_PORTS). Ctrl-C
+// then serves it on http://localhost:5310/r and starts Storybook for every base
+// (Base UI on 6007, Radix UI on 6006, React Aria on 6008, BASE_PORTS). Ctrl-C
 // stops everything and removes .dev.
 //
 // Also exports the helpers the root `pnpm preview` (scripts/preview.mjs)
@@ -16,7 +16,7 @@ import { concurrently } from 'concurrently';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { EDITION_PORTS, EDITIONS } from './registry/editions.mjs';
+import { BASE_PORTS, BASES } from './registry/bases.mjs';
 
 const PKG = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Commands run in PKG, so the binaries resolve relative to it. concurrently
@@ -99,13 +99,13 @@ export const registryDev = async () => {
 export const removeDev = () =>
   fs.rmSync(path.join(PKG, '.dev'), { recursive: true, force: true });
 
-/** Prefix colour of each edition's Storybook child. */
+/** Prefix colour of each base's Storybook child. */
 const STORYBOOK_COLORS = { base: 'cyan', radix: 'magenta', aria: 'yellow' };
 
 /**
- * Registry server on 5310 and Storybook for every edition, each on its
- * EDITION_PORTS port (the package.json `storybook:<edition>` scripts and the
- * dev links in .storybook/edition-tool.ts).
+ * Registry server on 5310 and Storybook for every base, each on its BASE_PORTS
+ * port (the package.json `storybook:<base>` scripts and the dev links in
+ * .storybook/base-tool.ts).
  */
 export const packageChildren = [
   {
@@ -114,12 +114,12 @@ export const packageChildren = [
     cwd: PKG,
     prefixColor: 'blue',
   },
-  ...EDITIONS.map((edition) => ({
-    name: `storybook:${edition}`,
-    command: `${BIN}/storybook dev -p ${EDITION_PORTS[edition]} --no-open`,
+  ...BASES.map((base) => ({
+    name: `storybook:${base}`,
+    command: `${BIN}/storybook dev -p ${BASE_PORTS[base]} --no-open`,
     cwd: PKG,
-    env: { ST_BASE: edition },
-    prefixColor: STORYBOOK_COLORS[edition],
+    env: { ST_BASE: base },
+    prefixColor: STORYBOOK_COLORS[base],
   })),
 ];
 

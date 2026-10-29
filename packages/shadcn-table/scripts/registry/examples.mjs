@@ -1,30 +1,29 @@
 #!/usr/bin/env node
 /**
- * Writes the docs app's registry.json with one shadcn registry item per
- * docs example and edition (examples/<edition>/<slug>/TS.tsx plus every
- * other source file in the folder, subfolders included; EDITIONS in
- * lib.mjs, the reference edition's folder defines the example list). The
- * root registry.json includes this file, so the GitHub namespace serves
- * every example as `anindosarker/shadcn-table/example-<slug>-<edition>`
- * (`example-basic-radix`, `example-basic-base`, `example-basic-aria`;
- * editionItemName); hosted.mjs serves each edition's items under the plain
- * `example-<slug>` in /r/<edition>/. The DEFAULT_EDITION items follow once
- * more under that plain name, the GitHub shorthand aliases (aliasItems in
- * lib.mjs), which hosted.mjs skips.
+ * Writes the docs app's registry.json with one shadcn registry item per docs
+ * example and base (examples/<base>/<slug>/TS.tsx plus every other source file
+ * in the folder, subfolders included; BASES in lib.mjs, the reference base's
+ * folder defines the example list). The root registry.json includes this file,
+ * so the GitHub namespace serves every example as
+ * `anindosarker/shadcn-table/example-<slug>-<base>` (`example-basic-radix`,
+ * `example-basic-base`, `example-basic-aria`; baseItemName); hosted.mjs serves
+ * each base's items under the plain `example-<slug>` in /r/<base>/. The
+ * DEFAULT_BASE items follow once more under that plain name, the GitHub
+ * shorthand aliases (aliasItems in lib.mjs), which hosted.mjs skips.
  *
  * Per item:
- * - name `editionItemName('example-<slug>', edition)`, type `registry:block`
+ * - name `baseItemName('example-<slug>', base)`, type `registry:block`
  * - title and description from the example's docs page frontmatter
  *   (content/docs/examples/<slug>.mdx, or the page that renders the
  *   example's component), else the slug in Title Case
- * - registryDependencies: the shadcn parts that edition's sources import
+ * - registryDependencies: the shadcn parts that base's sources import
  *   from `@/components/ui/<part>` (library paths excluded). No dependency on
- *   the library item: the example works on every edition's item alike, so
+ *   the library item: the example works on every base's item alike, so
  *   the docs say to install the table first.
  * - dependencies: third-party packages imported by the example files, other
  *   than react, react-dom and lucide-react (already library dependencies)
- * - files: `examples/<edition>/<slug>/<file>`, targets under
- *   `@components/examples/<slug>/` in every edition, keeping the folder
+ * - files: `examples/<base>/<slug>/<file>`, targets under
+ *   `@components/examples/<slug>/` in every base, keeping the folder
  *   layout, so the files land side by side in the project's components
  *   directory and relative imports (`./makeData`, `../hooks/...`) keep
  *   resolving. The entry file alone is renamed to `<slug>.tsx`, so no other
@@ -43,11 +42,11 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   aliasItems,
-  DEFAULT_EDITION,
+  DEFAULT_BASE,
   DOCS,
-  EDITIONS,
-  editionItemName,
-  REFERENCE_EDITION,
+  BASES,
+  baseItemName,
+  REFERENCE_BASE,
 } from './lib.mjs';
 
 // The example helpers are the docs app's own (its playground imports them
@@ -108,9 +107,9 @@ const packageName = (specifier) => {
   return specifier.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
 };
 
-async function buildItem({ edition, slug, pages }) {
-  const dir = path.join(EXAMPLES_DIR, edition, slug);
-  const itemPath = (name) => `examples/${edition}/${slug}/${name}`;
+async function buildItem({ base, slug, pages }) {
+  const dir = path.join(EXAMPLES_DIR, base, slug);
+  const itemPath = (name) => `examples/${base}/${slug}/${name}`;
   const files = [];
   const registryDependencies = new Set();
   const dependencies = new Set();
@@ -170,7 +169,7 @@ async function buildItem({ edition, slug, pages }) {
     page?.description || `${title} example from shadcn-table.`;
 
   const item = {
-    name: editionItemName(`example-${slug}`, edition),
+    name: baseItemName(`example-${slug}`, base),
     type: 'registry:block',
     title,
     description,
@@ -185,12 +184,12 @@ async function buildItem({ edition, slug, pages }) {
 
 async function main() {
   const pages = await loadExamplePages(PAGES_DIR);
-  const referenceDir = path.join(EXAMPLES_DIR, REFERENCE_EDITION);
+  const referenceDir = path.join(EXAMPLES_DIR, REFERENCE_BASE);
   const slugs = [];
   for (const entry of await fs.readdir(referenceDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     if (!(await exists(path.join(referenceDir, entry.name, ENTRY_FILE)))) {
-      console.warn(`${REFERENCE_EDITION}/${entry.name}: no TS.tsx, skipped`);
+      console.warn(`${REFERENCE_BASE}/${entry.name}: no TS.tsx, skipped`);
       continue;
     }
     slugs.push(entry.name);
@@ -200,11 +199,11 @@ async function main() {
   const items = [];
   const defaultItems = [];
   const resolved = [];
-  for (const edition of EDITIONS) {
+  for (const base of BASES) {
     for (const slug of slugs) {
-      const { item, sources } = await buildItem({ edition, slug, pages });
+      const { item, sources } = await buildItem({ base, slug, pages });
       items.push(item);
-      if (edition === DEFAULT_EDITION) defaultItems.push(item);
+      if (base === DEFAULT_BASE) defaultItems.push(item);
       resolved.push({
         $schema: 'https://ui.shadcn.com/schema/registry-item.json',
         ...item,
@@ -225,7 +224,7 @@ async function main() {
   };
   await fs.writeFile(OUT_FILE, `${JSON.stringify(registry, null, 2)}\n`);
   console.log(
-    `${path.relative(process.cwd(), OUT_FILE)}: ${items.length} items (${slugs.length} examples, ${EDITIONS.length} editions), ${aliases.length} ${DEFAULT_EDITION} aliases`,
+    `${path.relative(process.cwd(), OUT_FILE)}: ${items.length} items (${slugs.length} examples, ${BASES.length} bases), ${aliases.length} ${DEFAULT_BASE} aliases`,
   );
 
   if (resolveDir) {
