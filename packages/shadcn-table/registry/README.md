@@ -1,9 +1,9 @@
 # Library source: one complete tree per base
 
-The library ships in three editions, Radix UI (`registry/radix`, shadcn style `radix-nova`),
-Base UI (`registry/base`, style `base-nova`) and React Aria (`registry/aria`, style
-`aria-nova`). The edition list is `EDITIONS` in `scripts/registry/editions.mjs`; Radix is the
-reference. Each tree is the whole library for that base; nothing is shared, resolved or
+The library ships in three editions, Base UI (`registry/base`, shadcn style `base-nova`),
+Radix UI (`registry/radix`, style `radix-nova`) and React Aria (`registry/aria`, style
+`aria-nova`). The edition list is `EDITIONS` in `scripts/registry/editions.mjs`, in that
+order; Radix is the reference (the diff baseline). Each tree is the whole library for that base; nothing is shared, resolved or
 generated between them. All three install to `components/ui/shadcn-table/` with the same
 relative paths.
 
@@ -30,7 +30,8 @@ scripts/registry/check-bases.mjs       the guard: pnpm check:bases
 
 `@/` is a plain alias to one tree: `tsconfig.radix.json`, `tsconfig.baseui.json` and
 `tsconfig.aria.json` map it through `paths`, `vite.config.ts` (and so Vitest and Storybook)
-through `resolve.alias`, switched by `ST_BASE=base` or `ST_BASE=aria`. Every file of a tree
+through `resolve.alias`, switched by `ST_BASE=base`, `ST_BASE=radix` or `ST_BASE=aria` (unset
+means Base UI, `DEFAULT_EDITION`). Every file of a tree
 is a root file of its TypeScript project, so the editor resolves every import in every
 tree.
 
@@ -49,16 +50,16 @@ An edition-only change is made in that tree, and the file's path (relative to
 the copy becomes identical to radix again, remove the path from the list in the commit that
 makes it so.
 
-Gates: `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `test`,
-`test:base`, `test:aria`, `pnpm check:bases`.
+Gates: `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `test:base`,
+`test:radix`, `test:aria`, `pnpm check:bases`.
 
 ## How to add a shadcn part
 
 Parts are per base. From the repo root:
 
 ```bash
-pnpm add-part radix tooltip        # registry/radix/components/ui/tooltip.tsx, style radix-nova
 pnpm add-part base tooltip         # registry/base/components/ui/tooltip.tsx, style base-nova
+pnpm add-part radix tooltip        # registry/radix/components/ui/tooltip.tsx, style radix-nova
 pnpm add-part aria tooltip         # registry/aria/components/ui/tooltip.tsx, style aria-nova
 pnpm add-part radix --all          # re-adds every part the base has, forks skipped
 ```

@@ -17,9 +17,9 @@ Open http://localhost:3000 with your browser to see the result.
 
 ## Layout
 
-- `components/ui-radix/`, `components/ui-base/` and `components/ui-aria/`: the installed copies of the library and the shadcn parts it uses, one per base. Never edit them; `pnpm lib:install radix`, `pnpm lib:install base` or `pnpm lib:install aria` (`scripts/install.mjs`) reinstalls one copy from the built registry in `packages/shadcn-table/public/r/`.
-- `examples/radix/<slug>/`, `examples/base/<slug>/` and `examples/aria/<slug>/`: one folder per docs example and edition, importing `@/components/ui/...` like a reader's project. The code view shows the selected base's files; `pnpm check:bases` keeps the three sets in step.
-- `examples/.radix/`, `examples/.base/` and `examples/.aria/`: generated copies of each edition's examples for its installed library copy, imports rewritten (`lib/example-variants.mjs`, run on `predev`, `build` and `pnpm examples:variants`), gitignored. The live examples load from here.
+- `components/ui-base/`, `components/ui-radix/` and `components/ui-aria/`: the installed copies of the library and the shadcn parts it uses, one per base. Never edit them; `pnpm lib:install base`, `pnpm lib:install radix` or `pnpm lib:install aria` (`scripts/install.mjs`) reinstalls one copy from the built registry in `packages/shadcn-table/public/r/`.
+- `examples/base/<slug>/`, `examples/radix/<slug>/` and `examples/aria/<slug>/`: one folder per docs example and edition, importing `@/components/ui/...` like a reader's project. The code view shows the selected base's files; `pnpm check:bases` keeps the three sets in step.
+- `examples/.base/`, `examples/.radix/` and `examples/.aria/`: generated copies of each edition's examples for its installed library copy, imports rewritten (`lib/example-variants.mjs`, run on `predev`, `build` and `pnpm examples:variants`), gitignored. The live examples load from here.
 - The docs chrome imports its own parts from `@/components/ui-radix/...`.
 
 ## Explore

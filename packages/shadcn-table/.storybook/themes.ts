@@ -46,7 +46,7 @@ export function staticEditionRoot(target: Edition) {
 export const ST_DEV: boolean =
   (globalThis as { __ST_DEV__?: boolean }).__ST_DEV__ === true;
 
-/** Manager title: "shadcn-table (Radix UI)", "(Base UI)" or "(React Aria)". */
+/** Manager title: "shadcn-table (Base UI)", "(Radix UI)" or "(React Aria)". */
 const brandTitle = `shadcn-table (${ST_BASE_LABEL})`;
 
 /**
