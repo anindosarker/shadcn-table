@@ -30,6 +30,8 @@ chevron commit `8db770ea` feat(storybook): chevron on the edition picker.
   paragraph at 80 columns and split the single-line JSDoc over 80 (`6253b7f5`, comment lines
   only, `check:bases` and library `lint` green); "an base's" to "a base's" in coding-standards
   (`e6da46b4`); wrapped this file's Final bullet. Declined: nothing.
+- Review round 2: CHANGELOG maintainer renames line now lists `check-storybook.mjs --url <url>`
+  (was `--base <url>`) (`78ea6683`). Declined: nothing.
 
 ## Owner attention
 
