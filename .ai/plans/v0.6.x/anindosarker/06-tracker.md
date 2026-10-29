@@ -46,14 +46,18 @@ decision 8. Branch `v0.6/edition-order-dropdown`, worktree `07`, from `claude/re
 
 ## Gates
 
-- `tsc:radix`, `tsc:baseui`, `tsc:aria`, library `lint`: exit 0. `check:bases`: 143 library
-  files (24 and 38 allowed to differ), 216 example files (2 and 10).
-- `test:base`, `test:radix`, `test:aria`: 63 files, 446 tests passed each.
-- `check-storybook.mjs`: 21 passed, 0 failed, 1 skipped (root redirect, Vercel only).
-- Docs `types:check`, `lint` (0 errors), `build` green; `check-pages.mjs` 1654 passed per edition.
-- `grep -rn "'radix', 'base', 'aria'\|radix, base, aria\|Radix UI, Base UI"` over md, mdx, ts,
-  tsx, mjs, json, yml: only `.ai/` history and `CHANGELOG.md`.
-- `pr.yml` and the release smoke run on the pull request and after the release.
+Verifier run on `7670f44a`, clean tree, plan 2.2 as written.
+
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, library `lint`: exit 0.
+- `check:bases`: exit 0, 143 library files (24 and 38 allowed to differ), 216 example files (2 and 10).
+- `registry:build`, `registry:items`, `registry:hosted`: exit 0, 154 items per edition, `git status` clean; hosted output unchanged: `diff -r` of `public/r` built with the `91614e84` `editions.mjs` and with the new one is empty.
+- `test:base`, `test:radix`, `test:aria` (`testTimeout: 90_000`): 63 files, 446 tests passed each.
+- `check-storybook.mjs` against the three `storybook:build:<edition>` folders served on 5344: 21 passed, 0 failed, 1 skipped (root redirect, Vercel only).
+- Docs `types:check` exit 0, `lint` 0 errors (9 pre-existing warnings), `build` exit 0.
+- `check-pages.mjs --edition base`, `radix`, `aria` on a dev server at 5346: 1654 passed, 0 failed each.
+- Order grep: only `.ai/plans/` history (v0.5.x, v0.6.x 01, 03, 06) and `CHANGELOG.md`.
+- `pr.yml` on PR #58: run `40816247226`, all 15 jobs pass (bases, docs, five install, three library, registry, release impact, three test).
+- Release `smoke.mjs`: after the release, not run here.
 
 ## Owner attention
 
