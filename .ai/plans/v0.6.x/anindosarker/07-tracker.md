@@ -1,5 +1,7 @@
 # 07: base naming, tracker
 
+Status: done (3d6ce403)
+
 Plan: [07-base-naming.md](07-base-naming.md). Rulings: [decisions.md](decisions.md), decision 9.
 Branch `v0.6/base-naming`, worktree `07`, from `claude/review` at `e6f347b7`, carrying the
 chevron commit `8db770ea` feat(storybook): chevron on the edition picker.

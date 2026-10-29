@@ -1,5 +1,7 @@
 # 05: edition selector, tracker
 
+Status: done (4dac6b19)
+
 Plan: [05-edition-selector.md](05-edition-selector.md). Rulings: [decisions.md](decisions.md),
 decision 7. Branch `v0.6/edition-selector`, worktree `08`, from `claude/review` at `5f75c32e`.
 

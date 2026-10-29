@@ -1,5 +1,7 @@
 # 01: examples per edition, tracker
 
+Status: done (d4b8bcd5)
+
 Branch `v0.6/examples-per-edition`, worktree 07, from `claude/review` at 03d95c95.
 
 ## Phases

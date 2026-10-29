@@ -1,5 +1,7 @@
 # 03: add-part deterministic, tracker
 
+Status: done (c872dfc4)
+
 Plan: [03-add-part-deterministic.md](03-add-part-deterministic.md). Rulings:
 [decisions.md](decisions.md), decision 5. Branch `v0.6/add-part-deterministic`, worktree
 `07`, from `claude/review` at `5f75c32e`.

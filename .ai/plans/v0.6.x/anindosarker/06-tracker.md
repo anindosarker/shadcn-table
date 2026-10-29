@@ -1,5 +1,7 @@
 # 06: edition order and dropdown selectors, tracker
 
+Status: done (bdaed5df)
+
 Plan: [06-edition-order-dropdown.md](06-edition-order-dropdown.md). Rulings: [decisions.md](decisions.md),
 decision 8. Branch `v0.6/edition-order-dropdown`, worktree `07`, from `claude/review` at `91614e84`.
 
