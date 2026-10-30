@@ -308,6 +308,7 @@ Source for F27 to F32: test-projects/next-app/shadcn-table-bugs.md (header demo 
 - `shadcn create` and `init` write `iconLibrary` into `components.json` (lucide, hugeicons, tabler, phosphor, remixicon), and the CLI `transformIcons` rewrites only `<IconPlaceholder lucide=... tabler=... />` elements.
 - Effect: a consumer who chose another icon library still gets Lucide icons and the `lucide-react` package.
 - 16 of the 33 names have no upstream equivalent in the other libraries.
+- Corrected 2026-10-31 after checking every name against the packages: direct matches are Tabler 33 of 33, Hugeicons 31, Phosphor 29, Remix 27; the rest take a substitute (density rows, search-off, first and last page). Table in part 11.
 - Bases: radix and aria same (4 files import `lucide-react` in each).
 
 ### F34 RTL handled at runtime, not by transformRtl

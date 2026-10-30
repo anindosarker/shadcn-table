@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The next-app header demo and a shadcn part usage audit found functional bugs (range filter never applies, sort clear snaps back, Base UI and React Aria Collapsible width reveals break, radix menus drop focus) and places where the library works against its primitives (hidden menu triggers without opener state, nested controls inside menu items, hand-rolled focus, props restated or misused) (F27) (F28) (F31) (F37) (F38) (F39). Decisions D21 to D29 fix them inside the current architecture: the anchor-span pattern stays (D26), Collapsible stays (D25), no public prop, type, registry item or layout changes except the additions D29 names. Depends on part 07 merged: `hooks/useST_ComposedRef.ts` (D5, part 02) and `hooks/useST_MenuAnchor.ts` (D20, part 07) exist and the five menus already call the hook. Branch `v0.7/bug-fixes` from `claude/review` after 07 merges, worktree `shadcn-react-table.worktrees/bug-fixes`; one PR into `claude/review` for CI, merged by merge commit once green; push right after each commit.
+The next-app header demo and a shadcn part usage audit found functional bugs (range filter never applies, sort clear snaps back, Base UI and React Aria Collapsible width reveals break, radix menus drop focus) and places where the library works against its primitives (hidden menu triggers without opener state, nested controls inside menu items, hand-rolled focus, props restated or misused) (F27) (F28) (F31) (F37) (F38) (F39). Decisions D21 to D29 fix them inside the current architecture: the anchor-span pattern stays (D26), Collapsible stays (D25), no public prop, type, registry item or layout changes except the additions D29 names. Depends on parts 07 and 06 merged: `hooks/useST_ComposedRef.ts` (D5, part 02) and `hooks/useST_MenuAnchor.ts` (D20, part 07) exist and the five menus already call the hook; `check:tailwind` (D16, part 06) exists for the phase 2 gate. Branch `v0.7/bug-fixes` from `claude/review` after 07 and 06 merge, worktree `shadcn-react-table.worktrees/bug-fixes`; one PR into `claude/review` for CI, merged by merge commit once green; push right after each commit.
 
 ### 1.2 Goals
 
@@ -78,7 +78,7 @@ packages/shadcn-table/stories/
 
 - Both range updaters build `const next = Array.isArray(old) ? [...old] : ['', '']`, set `next[rangeFilterIndex]`, return `next`
 - The mount effect drops the `isMounted` ref pattern; no seeding write on strict-mode re-run (D8)
-- Range inputs on number columns (`columnDef.filterVariant === 'range'` with a number `accessorFn` result or `filterFn` of the range family, as the existing `isNumberColumn` helper decides) render `type="number"` `inputMode="decimal"`; text columns keep the text input
+- Range inputs on number columns render `type="number"` `inputMode="decimal"`; text columns keep the text input. Number column: a new helper `isNumberColumn(column, table)` in `shared/utils/column.utils.ts` returns true when `filterVariant === 'range'` and the first defined value of `row.getValue(column.id)` over `table.getPreFilteredRowModel().rows` is `typeof 'number'`. No such helper exists today (`ST_FilterTextField.tsx` reads only `filterVariant` at 92)
 - `useST_Effects.ts` ranked results effect keeps `previousGlobalFilter` in a ref, returns early when `Object.is(previous, next)`; everything else in the effect unchanged
 - Does NOT change `appliedSort` handling, the range chip rendering, or the `filterFn` registry
 
@@ -90,6 +90,7 @@ packages/shadcn-table/stories/
 | `handleClear` updater (base 265-269, aria 286-288) | refactor | copy before write |
 | mount effect (base 292-308, aria 317-331) | refactor | no `isMounted` ref, no seed |
 | fallback range input (base 625, radix 609, aria 659) | refactor | `type="number"` `inputMode="decimal"` for number columns |
+| `isNumberColumn` in `shared/utils/column.utils.ts` | new | range variant plus a number first value |
 | ranked results effect (`useST_Effects.ts:129-151`) | refactor | previous-value guard |
 | TanStack store issue for `atom.js:134` `undefined` comparison | new | link recorded in `10-tracker.md`; no code waits on it |
 
@@ -244,9 +245,9 @@ Halt rules of the index apply: no edit to a part file under `components/ui/`, no
 
 #### 2.1.1 Phase 1: Range filter, ranked results, pagination, headless hook
 
-Lane: agent
+Lane: workflow
 
-- 1.6.2 and 1.6.3 in every base; `index.ts` export of the hook; file the TanStack store issue and record the link in `10-tracker.md`
+- 1.6.2 and 1.6.3 in every base: one coder per base on `opus` (six to eight files each), one reviewer on the session model checking D21 (copy before write, no seed, number rule), D22 (previous-value guard only), D23 and D29 (type and hook, no other public change), one fix bounce; `index.ts` export of the hook; file the TanStack store issue and record the link in `10-tracker.md`
 - Stories: range, clear sort, headless full screen (1.6.8)
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `test:base`, `test:radix`, `test:aria`
 
@@ -268,9 +269,9 @@ Lane: workflow
 
 #### 2.1.4 Phase 4: Parts as designed, remainder
 
-Lane: agent
+Lane: workflow
 
-- 1.6.7 rows in every base; filter popover and modal exit stories (1.6.8)
+- 1.6.7 rows in every base: one coder per base on `opus` (up to 13 files each), one reviewer on the session model checking every D28 row against its primitive (trigger, focus option, spread order, selector) and that no part file under `components/ui/` changed, one fix bounce; filter popover and modal exit stories (1.6.8)
 - Gates: `tsc:*`, `lint`, `test:*`
 
 #### 2.1.5 Final phase: Cleanup

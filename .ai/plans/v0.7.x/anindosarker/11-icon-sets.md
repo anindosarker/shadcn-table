@@ -39,17 +39,18 @@ packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
 ├── icons/
 │   ├── tabler.ts                     ← same 34 keys from @tabler/icons-react
 │   ├── phosphor.ts                   ← @phosphor-icons/react
-│   ├── hugeicons.tsx                 ← @hugeicons/react + @hugeicons/core-free-icons, one wrapper per icon
+│   ├── hugeicons.ts                  ← @hugeicons/react + @hugeicons/core-free-icons, one createElement wrapper per icon (D30)
 │   └── remixicon.ts                  ← @remixicon/react
-├── types.ts                          ← ST_IconProps, ST_Icons typed; no lucide import
+├── types.ts                          ← ST_IconProps, ST_Icons typed; no lucide import (owned here, not by part 04)
 ├── components/inputs/ST_Checkbox.tsx ← icon from '../../icons'
 └── components/toolbar/ST_TablePagination.tsx ← icon type from '../../types'
 packages/shadcn-table/scripts/
-├── registry/lib.mjs                  ← buildBaseItems emits core, editions, locales on core
+├── registry/lib.mjs                  ← buildBaseItems emits core, editions, locales on core; coreItemAddress; baseItems returns core, main, editions, locales
 ├── registry/hosted.mjs               ← hosted names shadcn-table-core, shadcn-table, shadcn-table-<library>
-├── registry/examples.mjs             ← library dependency points at core
+├── registry/examples.mjs             ← every example item gains a dependency on core
 └── check-icons.mjs                   ← new gate: equal key sets across the five maps per base
-apps/shadcn-table-docs/scripts/install.mjs ← installs `shadcn-table` (Lucide edition) per base
+apps/shadcn-table-docs/scripts/install.mjs ← merges core, the Lucide edition and the locales per base
+.github/workflows/pr.yml, install.yml  ← dry-run and install resolve through `registry:dev`, not the GitHub default branch
 ```
 
 ### 1.5 Flow: none
@@ -61,8 +62,9 @@ apps/shadcn-table-docs/scripts/install.mjs ← installs `shadcn-table` (Lucide e
 - `registry.json` per base (committed names keep the `-<base>` suffix as today, hosted names drop it):
   - `shadcn-table-<base>-core`: every library file except `icons.ts`; `dependencies` without `lucide-react`; `registryDependencies` the shadcn parts
   - `shadcn-table-<base>`: file `icons.ts`; `dependencies` `lucide-react`; `registryDependencies` core. Same name and hosted path `/r/<base>/shadcn-table.json` as today
-  - `shadcn-table-<base>-tabler`, `-phosphor`, `-hugeicons`, `-remixicon`: file `icons/<library>.ts` (or `.tsx`) with `target` `@ui/shadcn-table/icons.ts`; `dependencies` the icon package (`@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react` plus `@hugeicons/core-free-icons`, `@remixicon/react`), pinned like the other dependencies; `registryDependencies` core
+  - `shadcn-table-<base>-tabler`, `-phosphor`, `-hugeicons`, `-remixicon`: file `icons/<library>.ts` with `target` `@ui/shadcn-table/icons.ts`; `dependencies` the icon package (`@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react` plus `@hugeicons/core-free-icons`, `@remixicon/react`), pinned like the other dependencies; `registryDependencies` core
   - locale items `shadcn-table-<base>-locale-<code>` and the example items: `registryDependencies` name core instead of the main item (F26)
+  - Address form of core in committed items: `coreItemAddress(base)` follows `mainItemAddress` (`lib.mjs:45-48`): `anindosarker/shadcn-table/shadcn-table-<base>-core` in the committed catalog, `http://localhost:5310/r/shadcn-table-<base>-core.json` (or `REGISTRY_BASE_URL`) under `--dev`. The GitHub form resolves from the default branch, where core exists only once 0.7.0 is on `master`, so every CI resolution of an edition, locale or example runs against `registry:dev` (1.6.5); the GitHub form is for consumers after the release, as the locale items already work today
   - aliases of the default base for the new items, as `aliasItems` does today
 - Hosted output `apps/shadcn-table-docs/public/r/<base>/`: `shadcn-table-core.json`, `shadcn-table.json`, `shadcn-table-<library>.json`, locales and examples re-pointed at `<HOSTED_URL>/<base>/shadcn-table-core.json`
 - `CHANGELOG.md` `## Unreleased` `### Added`: "Icon editions: `shadcn-table-tabler`, `shadcn-table-phosphor`, `shadcn-table-hugeicons` and `shadcn-table-remixicon` install the table with that icon library instead of Lucide; `shadcn-table` stays the Lucide edition. Switch later with the edition item and `--overwrite`."
@@ -73,8 +75,45 @@ apps/shadcn-table-docs/scripts/install.mjs ← installs `shadcn-table` (Lucide e
 
 - `icons.ts` keeps the Lucide map; its `ST_Icons` type moves to `types.ts`
 - `icons/tabler.ts`, `icons/phosphor.ts`, `icons/remixicon.ts`: imports renamed to the Lucide-side names where needed, same `ST_Default_Icons` object with the same 34 keys, `satisfies ST_Icons`
-- `icons/hugeicons.tsx`: icons are data, so each entry is `icon(ArrowDown01Icon)` where `icon` returns a component rendering `<HugeiconsIcon icon={data} {...props} />`
-- Substitutes, picked once per map and named in a comment on the entry: density rows (`Rows2`, `Rows3`, `Rows4`) in Phosphor and Remix, `SearchX` in Phosphor and Remix, `ChevronFirst` and `ChevronLast` in Hugeicons and Remix; Tabler has a direct icon for all 34 (D30)
+- `icons/hugeicons.ts`: icons are data, so each entry is `icon(ArrowDown01Icon)` where `icon = (data: IconSvgElement) => (props: ST_IconProps) => createElement(HugeiconsIcon, { icon: data, ...props })`. No JSX: the file installs at the `icons.ts` target and JSX in a `.ts` file fails the consumer's `tsc` and `next build` (D30)
+- Icon per library, verified against each package's type exports (every name below exists; spike `check.cjs` of 2026-10-31). Direct matches: Tabler 33 of 33, Hugeicons 31, Phosphor 29, Remix 27; the rest are substitutes, marked `*`, each named in a comment on its entry. The "16 names without equivalent" count in F33 was an estimate; the verified counts stand (F33)
+
+| Lucide | Tabler | Phosphor | Hugeicons | Remix |
+| --- | --- | --- | --- | --- |
+| `ArrowDown` | `IconArrowDown` | `ArrowDownIcon` | `ArrowDown01Icon` | `RiArrowDownLine` |
+| `ArrowDownWideNarrow` | `IconSortDescending` | `SortDescendingIcon` | `SortByDown01Icon` | `RiSortDesc` |
+| `ArrowLeftRight` | `IconArrowsLeftRight` | `ArrowsLeftRightIcon` | `ArrowDataTransferHorizontalIcon` | `RiArrowLeftRightLine` |
+| `ChevronDown` | `IconChevronDown` | `CaretDownIcon` | `ArrowDown01Icon` | `RiArrowDownSLine` |
+| `ChevronFirst` | `IconChevronLeftPipe` | `CaretLineLeftIcon` | `ArrowLeftDoubleIcon` * | `RiSkipLeftLine` * |
+| `ChevronLast` | `IconChevronRightPipe` | `CaretLineRightIcon` | `ArrowRightDoubleIcon` * | `RiSkipRightLine` * |
+| `ChevronLeft` | `IconChevronLeft` | `CaretLeftIcon` | `ArrowLeft01Icon` | `RiArrowLeftSLine` |
+| `ChevronRight` | `IconChevronRight` | `CaretRightIcon` | `ArrowRight01Icon` | `RiArrowRightSLine` |
+| `ChevronsDown` | `IconChevronsDown` | `CaretDoubleDownIcon` | `ArrowDownDoubleIcon` | `RiArrowDownDoubleLine` |
+| `Columns3` | `IconColumns3` | `ColumnsIcon` | `LayoutThreeColumnIcon` | `RiLayoutColumnLine` |
+| `Copy` | `IconCopy` | `CopyIcon` | `Copy01Icon` | `RiFileCopyLine` |
+| `Eraser` | `IconEraser` | `EraserIcon` | `EraserIcon` | `RiEraserLine` |
+| `EyeOff` | `IconEyeOff` | `EyeSlashIcon` | `ViewOffIcon` | `RiEyeOffLine` |
+| `Filter` | `IconFilter` | `FunnelIcon` | `FilterIcon` | `RiFilterLine` |
+| `FilterX` | `IconFilterOff` | `FunnelXIcon` | `FilterRemoveIcon` | `RiFilterOffLine` |
+| `GripVertical` | `IconGripVertical` | `DotsSixVerticalIcon` | `DragDropVerticalIcon` | `RiDraggable` |
+| `Layers` | `IconStack2` | `StackIcon` | `Layers01Icon` | `RiStackLine` |
+| `ListFilter` | `IconFilter2` | `FunnelSimpleIcon` | `FilterHorizontalIcon` | `RiFilter2Line` |
+| `Maximize` | `IconMaximize` | `ArrowsOutIcon` | `ArrowExpand01Icon` | `RiFullscreenLine` |
+| `Minimize` | `IconMinimize` | `ArrowsInIcon` | `ArrowShrink01Icon` | `RiFullscreenExitLine` |
+| `MoreHorizontal` | `IconDots` | `DotsThreeIcon` | `MoreHorizontalIcon` | `RiMoreLine` |
+| `MoreVertical` | `IconDotsVertical` | `DotsThreeVerticalIcon` | `MoreVerticalIcon` | `RiMore2Line` |
+| `Pencil` | `IconPencil` | `PencilSimpleIcon` | `PencilEdit01Icon` | `RiPencilLine` |
+| `Pin` | `IconPin` | `PushPinIcon` | `PinIcon` | `RiPushpinLine` |
+| `RotateCcw` | `IconRotate` | `ArrowCounterClockwiseIcon` | `RotateLeft01Icon` | `RiRestartLine` |
+| `Rows2` | `IconBaselineDensityLarge` | `RowsIcon` * | `Rows2Icon` | `RiLayoutRowLine` * |
+| `Rows3` | `IconBaselineDensityMedium` | `ListIcon` * | `Rows3Icon` | `RiMenuLine` * |
+| `Rows4` | `IconBaselineDensitySmall` | `ListDashesIcon` * | `Rows4Icon` | `RiMenu2Line` * |
+| `Save` | `IconDeviceFloppy` | `FloppyDiskIcon` | `FloppyDiskIcon` | `RiSave3Line` |
+| `Search` | `IconSearch` | `MagnifyingGlassIcon` | `Search01Icon` | `RiSearchLine` |
+| `SearchX` | `IconSearchOff` | `MagnifyingGlassMinusIcon` * | `SearchRemoveIcon` | `RiSearchLine` * |
+| `X` | `IconX` | `XIcon` | `Cancel01Icon` | `RiCloseLine` |
+| `XCircle` | `IconCircleX` | `XCircleIcon` | `CancelCircleIcon` | `RiCloseCircleLine` |
+
 - Does NOT change the key names, `useST_TableOptions.ts` merge `{ ...ST_Default_Icons, ...icons }`, or the `icons` table option
 
 **Interfaces:**
@@ -92,7 +131,7 @@ export type ST_IconKey =
   | 'SyncAltIcon' | 'ViewColumnIcon' | 'VisibilityOffIcon';
 export type ST_Icons = Record<ST_IconKey, ComponentType<ST_IconProps>>;
 
-// icons.ts and every icons/<library>.ts(x)
+// icons.ts and every icons/<library>.ts
 export const ST_Default_Icons: ST_Icons;
 ```
 
@@ -101,8 +140,8 @@ export const ST_Default_Icons: ST_Icons;
 | Operation | Status | Notes |
 | --- | --- | --- |
 | `icons.ts` | refactor | type import from `types.ts`, `satisfies ST_Icons` |
-| `icons/tabler.ts`, `icons/phosphor.ts`, `icons/hugeicons.tsx`, `icons/remixicon.ts` | new | byte-identical across bases |
-| `types.ts` `ST_IconProps`, `ST_IconKey`, `ST_Icons` | new | replaces `LucideProps` (39) and the `any` record (D10) |
+| `icons/tabler.ts`, `icons/phosphor.ts`, `icons/hugeicons.ts`, `icons/remixicon.ts` | new | byte-identical across bases; `hugeicons.ts` uses `createElement` |
+| `types.ts` `ST_IconProps`, `ST_IconKey`, `ST_Icons` | new | replaces `LucideProps` (39) and the `any` record at `icons.ts:74`; this part owns the site, part 04 does not touch it (D10) |
 | `ST_Checkbox.tsx:2`, `ST_TablePagination.tsx:3` | refactor | import through `icons.ts` and `types.ts` |
 
 **Stays unchanged:** every call site of `icons.<Key>`, the `icons` option, `index.ts` exports.
@@ -110,9 +149,10 @@ export const ST_Default_Icons: ST_Icons;
 #### 1.6.3 Registry build
 
 - `lib.mjs` `buildBaseItems` returns `[core, lucideEdition, ...editions, ...locales]`: core from every library file except `icons.ts` and `icons/`, the Lucide edition from `icons.ts`, each edition from its `icons/<library>` file with `target` at the `icons.ts` path, locales as today but depending on core
-- `mainItemAddress` keeps naming the edition `shadcn-table-<base>`; a new `coreItemAddress` names core; locales and `examples.mjs` use it
-- `baseItems` recognizes core and editions as items of a base (name suffix `-<base>-core`, `-<base>-<library>`) so `hosted.mjs` and the docs `lib/locales.ts` generator (part 08) keep working; `aliasItems` strips the base suffix for the new names too
-- `hosted.mjs` emits `shadcn-table-core.json`, `shadcn-table.json`, `shadcn-table-<library>.json` per base and re-points locale and example dependencies at the hosted core
+- `mainItemAddress` keeps naming the edition `shadcn-table-<base>`; a new `coreItemAddress(base)` names core in the same two forms (1.6.1); locales and `examples.mjs` use it
+- `baseItems(catalog, base)` returns `{ core, main, editions, locales }`: `core` the `-<base>-core` item, `main` the Lucide edition `shadcn-table-<base>` (the name `scripts/install.mjs` and the docs `lib/locales.ts` generator read today), `editions` the four `-<base>-<library>` items, `locales` as today; `hasBaseName` accepts the new suffixes; `aliasItems` strips the base suffix for the new names too
+- `hosted.mjs` emits `shadcn-table-core.json`, `shadcn-table.json`, `shadcn-table-<library>.json` per base and re-points locale, edition and example dependencies at the hosted core
+- `examples.mjs`: every example item gains `coreItemAddress(base)` in `registryDependencies`. Today the library import is skipped as "covered by the library item" (`examples.mjs:143-146`) and example items carry no library dependency, so this row is new, not a re-point (D30)
 - `scripts/check-icons.mjs`: reads the five maps per base through a TypeScript import or a regex over the export, exits non-zero when any key set differs; root and package script `check:icons`; `pr.yml` `library` job step after `lint`
 - Does NOT rename `shadcn-table`, any locale item, any example item or any hosted path
 
@@ -121,10 +161,10 @@ export const ST_Default_Icons: ST_Icons;
 | Operation | Status | Notes |
 | --- | --- | --- |
 | `buildBaseItems` | refactor | core, editions, locales on core |
-| `coreItemAddress` | new | `lib.mjs` |
-| `baseItems`, `aliasItems` | refactor | new name shapes |
+| `coreItemAddress` | new | `lib.mjs`, same two forms as `mainItemAddress` |
+| `baseItems` return shape, `hasBaseName`, `aliasItems` | refactor | `{ core, main, editions, locales }`, new name shapes |
 | `hosted.mjs` | refactor | new hosted names, dependencies at core |
-| `examples.mjs` library dependency | refactor | core |
+| `examples.mjs` core dependency on every example item | new | `coreItemAddress(base)`; the two address forms of 1.6.1 |
 | `scripts/check-icons.mjs`, scripts `check:icons`, `pr.yml` step | new | gate |
 | `scripts/registry/check-bases.mjs` | keep | the maps are identical across bases |
 
@@ -132,9 +172,24 @@ export const ST_Default_Icons: ST_Icons;
 
 #### 1.6.4 Installs in this repo
 
-- `apps/shadcn-table-docs/scripts/install.mjs` installs `shadcn-table` (the Lucide edition) per base, which resolves core; no other change
+- `apps/shadcn-table-docs/scripts/install.mjs`: today it reads `baseItems(...).main`, appends the locale items' files and rewrites `@/components/ui/` to `@/components/ui-<base>/` before `shadcn add` (`install.mjs:67-100`). After this part it merges `core.files`, `main.files` (the Lucide `icons.ts`) and the locale files into one item before the rewrite, so the docs copies hold every file with the `ui-<base>` alias; it never lets the CLI resolve core through a GitHub address. `en.ts` sits in core (part 08 reads it there)
 - next-app and the part 09 gate apps install an edition from the local registry: `shadcn-table` for base, one non-Lucide edition for radix and aria (part 09)
 - Storybook and the tests run on the source tree, which keeps `icons.ts` on Lucide
+
+#### 1.6.5 CI resolution through `registry:dev`
+
+- `pr.yml` `registry` job: the four `shadcn add ... --dry-run` lines at 176-180 resolve `anindosarker/shadcn-table/<item>#<sha>`; the CLI then resolves that item's `registryDependencies` (core) from the GitHub default branch, where core does not exist until 0.7.0 is on `master`. The job starts `pnpm --filter shadcn-table registry:dev` the way `install.yml:179-185` does, waits for `http://localhost:5310/r/shadcn-table-base-core.json`, and dry-runs `http://localhost:5310/r/shadcn-table-radix.json`, `/r/shadcn-table.json` (alias), `/r/shadcn-table-base-tabler.json` and the three `example-basic-<base>` URLs. `registry validate "anindosarker/shadcn-table#<sha>"` stays, it validates the catalog only
+- `install.yml`: the "Add the library from the source" step (`install.yml:95`) keeps the `source` template for releases (public URLs, whose dependencies hosted.mjs already re-points) and, when `source` names the GitHub form, swaps it for the `registry:dev` URL the same workflow already serves for the locale step (`install.yml:194`). `pr.yml:197` then passes `http://localhost:5310/r/<item>.json` as `source`
+- Workflow-file edits only; no ruleset or repository setting changes
+- Proof in phase 2: the dry-run block runs locally against `registry:dev` before the PR, and the PR's `registry` and `install` jobs are green
+
+**Operations:**
+
+| Operation | Status | Notes |
+| --- | --- | --- |
+| `pr.yml` `registry` job dry-runs | refactor | `registry:dev` URLs |
+| `pr.yml` `install` `source` | refactor | `registry:dev` URL template |
+| `install.yml` library step | refactor | honours a local `source` |
 
 ### 1.7 Dependencies and env
 
@@ -158,10 +213,11 @@ Lane: agent
 
 Lane: agent
 
-- 1.6.3; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`; 1.6.4 docs `lib:install` per base
-- CLI smoke in a scratch Next or Vite project under the scratchpad, per base, against `pnpm registry:dev` on 5310: `add` the Tabler edition into an empty project (files land once, `icons.ts` is the Tabler map, only `@tabler/icons-react` installed), then `add` the Lucide edition with `--overwrite` (`icons.ts` replaced, no prompt), then `add` a locale item (core not re-installed, no icon package added)
+- 1.6.3; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`; 1.6.4 `install.mjs` merge and docs `lib:install` per base; 1.6.5 workflow edits
+- CLI smoke in a scratch Next project under the scratchpad (`pnpm dlx shadcn@latest init --template next --base <base> --preset nova --yes`, as `install.yml:87` does), per base, against `pnpm registry:dev` on 5310: `add` the Tabler edition into the empty project (files land once, `icons.ts` is the Tabler map, only `@tabler/icons-react` installed), then `add` the Lucide edition with `--overwrite` (`icons.ts` replaced, no prompt), then `add` a locale item (core not re-installed, no icon package added), then `add example-basic` (core resolved from the dev server)
+- The `pr.yml` dry-run block of 1.6.5 run locally against the same server: six green dry-runs
 - Record each smoke result in `11-tracker.md`
-- Gates: `check:bases`, docs `types:check`, `lint`, `build`; registry.json diff shows only additions and the dependency re-point
+- Gates: `check:bases`, docs `types:check`, `lint`, `build`; registry.json diff shows only additions and the dependency re-point; the PR's `registry` and `install` jobs green
 
 #### 2.1.3 Final phase: Cleanup
 
@@ -176,4 +232,4 @@ Lane: agent
 - `pnpm check:bases` green; `pnpm registry:build` and `registry:hosted` produce the item set of 1.6.1 with `shadcn-table` unchanged in name and path
 - CLI smoke of 2.1.2 green per base
 - `pnpm --filter shadcn-table-docs types:check`, `lint`, `build` green after `lib:install`
-- `pr.yml` green, including the `check:icons` step
+- `pr.yml` green, including the `check:icons` step and the `registry` and `install` jobs resolving core through `registry:dev` (1.6.5)

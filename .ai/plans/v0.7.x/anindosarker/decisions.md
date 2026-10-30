@@ -240,6 +240,7 @@
 - Verified on shadcn 4.23.0: dependencies resolve core first and files dedupe by target, a later edition replaces `icons.ts` under `--overwrite` without a prompt, and a module importing an uninstalled package fails the build, so no runtime choice exists.
 - Docs: install page command gets an icon library selector that changes the item name; an Icons guide covers switching and notes the previous icon package stays in `package.json`. The docs app `lib:install`, the next-app and the part 09 gate install editions.
 - New part `11-icon-sets` after part 01; docs in part 08. All three bases.
+- Amended 2026-10-31: `icons/hugeicons.ts`, not `.tsx`; the per-icon wrapper uses `createElement`, since the file installs at the `icons.ts` target and JSX in a `.ts` file fails the consumer build.
 
 ### D31 Logical direction classes, JS only where CSS cannot express it
 

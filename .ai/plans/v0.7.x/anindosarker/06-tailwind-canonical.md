@@ -22,7 +22,7 @@ A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 
 
 ```
 packages/shadcn-table/
-├── package.json                 ← check:tailwind script, devDependencies
+├── package.json                 ← check:tailwind script, new devDependencies, `tailwindcss` and `@tailwindcss/vite` bumps in `dependencies`
 └── scripts/
     ├── check-tailwind.mjs       ← new gate
     └── registry/lib.mjs         ← BASES, PKG reused
@@ -142,7 +142,7 @@ pnpm --filter shadcn-table check:tailwind aria
 ### 1.7 Dependencies and env
 
 - `@tailwindcss/node` `^4.3.3` and `@tailwindcss/oxide` `^4.3.3`: new devDependencies of `packages/shadcn-table` (already in the store at 4.3.3 through the docs app)
-- `tailwindcss` and `@tailwindcss/vite` in `packages/shadcn-table` from `^4.1.11` to `^4.3.3`: Storybook and the tests build with the package's Tailwind, and `scrollbar-thin` exists in 4.3.3 and not in 4.1.11; the docs app is on `^4.3.3` already
+- `tailwindcss` and `@tailwindcss/vite` in `packages/shadcn-table` `dependencies` (`package.json:29,44`) from `^4.1.11` to `^4.3.3`: Storybook and the tests build with the package's Tailwind, and `scrollbar-thin` exists in 4.3.3 and not in 4.1.11; the docs app is on `^4.3.3` already
 - No env vars
 
 ## 2. Instructions for AI
@@ -159,17 +159,17 @@ Lane: agent
 
 #### 2.1.2 Phase 2: Canonical classes
 
-Lane: agent
+Lane: workflow
 
-- 1.6.2 in `registry/radix`, then the same lines in `registry/base` and `registry/aria`
+- 1.6.2 in every base: one coder per base on `opus` (37 sites across about 20 files each), one verifier on the session model diffing the three trees' changed lines against the 1.6.2 table and `check:tailwind` output, one fix bounce
 - `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`
 - Gates: `check:tailwind` zero failures, `check:bases`, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `test:base`, `test:radix`, `test:aria`
 
 #### 2.1.3 Phase 3: Logical direction and shadows
 
-Lane: agent
+Lane: workflow
 
-- 1.6.4 and 1.6.5 in every base; the physical-class rule in `check-tailwind.mjs` (1.6.3) reports the 20 static sites plus the handle before the change and zero after; Column Resizing guide sentence
+- 1.6.4 and 1.6.5 in every base: one coder per base on `opus`, one reviewer on the session model checking D31 (JS kept only for the drag sign and the pin pixels, `columnResizeDirection` untouched) and D32 (color only, blur and offset unchanged), one fix bounce; the physical-class rule in `check-tailwind.mjs` (1.6.3) reports the 20 static sites plus the handle before the change and zero after; Column Resizing guide sentence
 - `pnpm registry:build`; `lib:install` per base
 - Gates: `check:tailwind` zero failures under both rules, `tsc:*`, `test:*`; Storybook spot check per base in LTR: resize handle on the trailing edge, pinned column offsets unchanged, toolbar and header shadows visible in light and dark
 
