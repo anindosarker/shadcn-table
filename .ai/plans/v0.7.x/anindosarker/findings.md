@@ -331,3 +331,177 @@ Source for F27 to F32: test-projects/next-app/shadcn-table-bugs.md (header demo 
 - `apps/shadcn-table-docs/content/docs/getting-started/install.mdx:16`: project creation renders `<InitCommand />` and the add step `<InstallCommand />` at 28; line 14 names only the base and `aria-nova`.
 - No page under `apps/shadcn-table-docs/content` mentions `shadcn create`, ui.shadcn.com/create, `--preset`, `iconLibrary` or `menuColor`.
 - Effect: a consumer starting from create gets no guidance on which knobs the library respects (base, theme, base color, radius, menu accent, body font) and which it ignores (icon library, heading font, menu color on own surfaces, style geometry per F35).
+
+## Round 3: shadcn part usage audit, 2026-10-31
+
+Audit of how the library uses the shadcn parts and their primitives (@base-ui/react 1.9.0, react-aria 3.53.1, react-aria-components 1.22.1). Paths are relative to `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/`; `ui/` paths are relative to `packages/shadcn-table/registry/<base>/components/ui/`; primitive paths are relative to the package `dist` or root in `node_modules`.
+
+### F37 Radix menus lose focus on close
+
+- `components/menus/ST_ColumnActionMenu.tsx:174-177` and `components/menus/ST_ShowHideColumnsMenu.tsx:129-132` (radix): `onCloseAutoFocus` calls `preventDefault()`, then `anchorEl?.focus()`.
+- `anchorEl` is already null when the handler runs, because the close cleared it first, so nothing is focused and focus falls to `body`.
+- `components/menus/ST_RowActionMenu.tsx:49-50` (radix) keeps the element in `anchorRef` and avoids this; `ST_FilterOptionMenu` does the same.
+- Effect: keyboard users lose their place after closing the column actions or show-hide menu.
+- Bases: radix only.
+
+### F38 Show-hide column items unusable by keyboard
+
+- `components/menus/ST_ShowHideColumnsMenuItems.tsx` base:114,159, radix:114,157, aria:117,166: the `DropdownMenuItem` has no select or action handler (radix sets `onSelect` to `preventDefault` only), so Enter and Space toggle nothing.
+- The `Switch`, pin buttons and grab handle sit inside the menuitem as nested interactive controls, which the menu's roving focus cannot reach.
+- `DropdownMenuCheckboxItem` is not used.
+- Effect: column visibility cannot be changed from the keyboard in this menu.
+- Bases: all three.
+
+### F39 Menus open from a hidden placeholder span
+
+- Five menus (`ST_RowActionMenu`, `ST_ColumnActionMenu`, `ST_ShowHideColumnsMenu`, `ST_FilterOptionMenu`, `ST_CellActionMenu`) render an `aria-hidden` fixed span as the trigger, positioned from `getBoundingClientRect()` at render: base `components/menus/ST_RowActionMenu.tsx:76-100`, `ST_ColumnActionMenu.tsx:160-184`, `ST_CellActionMenu.tsx:108-129`.
+- The real opener buttons only set the anchor (`components/buttons/ST_ShowHideColumnsButton.tsx:24`, `components/head/ST_TableHeadCellColumnActionsButton.tsx:54`) and never get `aria-haspopup` or `aria-expanded`.
+- The rect is read once per render, so the menu stays at the old position when the page scrolls.
+- Primitive proof: a real trigger gets `aria-haspopup` at `@base-ui/react menu/trigger/MenuTrigger.js:193` and `aria-expanded` at `menu/root/MenuRoot.js:501`.
+- Bases: all three.
+- Relation: D5 and D20 build on this pattern.
+
+### F40 Base finalFocus bypasses the primitive guard
+
+- `components/menus/ST_ColumnActionMenu.tsx:190-193` (base): `finalFocus` calls `.focus()` itself and returns false; same at `ST_RowActionMenu.tsx:107`, `ST_ShowHideColumnsMenu.tsx:141`, `ST_FilterOptionMenu.tsx:273`, `ST_CellActionMenu.tsx:151`.
+- This skips Base UI's guard that leaves focus alone when it moved elsewhere after open (`@base-ui/react floating-ui-react/components/FloatingFocusManager.js:487-488,533-537`).
+- Example: "filter by column" focuses the filter input in a microtask (`ST_ColumnActionMenu.tsx:127`), then `finalFocus` pulls focus back to the column actions button.
+- Bases: base only.
+- Unverified in a browser.
+
+### F41 Aria tooltip wrappers add tab stops
+
+- `ui/tooltip.tsx:25` (aria): the trigger child is wrapped in `Focusable`, which clones it with `tabIndex=0` (`react-aria private/interactions/useFocusable.mjs:64-65,104-107`).
+- Every span or `Label` wrapped around a button becomes an extra tab stop with no role: `components/toolbar/ST_TablePagination.tsx:297,312,326,341`, `components/inputs/ST_SelectCheckbox.tsx:170`, `components/inputs/ST_FilterTextField.tsx:361,378`, `components/head/ST_TableHeadCellSortLabel.tsx:87`, `components/menus/ST_ShowHideColumnsMenuItems.tsx:163`, `components/inputs/ST_FilterCheckbox.tsx:87`.
+- `ST_SelectCheckbox` renders in every row-select cell, so each row adds a stop.
+- Effect: Tab visits an unnamed wrapper before each real control.
+- Bases: aria only.
+
+### F42 Filter popover opened by hand
+
+- `components/head/ST_TableHeadCellFilterLabel.tsx` base:131-133,158-189, radix:161-176, aria:158-175: the filter `Button` opens the popover through manual `anchorEl` state instead of `PopoverTrigger`.
+- The button gets no `aria-expanded`, `aria-haspopup` or `aria-controls`; proof at `@base-ui/react popover/trigger/PopoverTrigger.js:121-122`.
+- Base rebuilds `Portal`, `Positioner` and `Popup` with classes copied from the shadcn part; radix uses `PopoverAnchor` with a `virtualRef`; aria passes a fresh `triggerRef` object every render.
+- Bases: all three.
+
+### F43 Manual focus competes with primitive focus
+
+- `components/head/ST_TableHeadCellFilterLabel.tsx:137-140` (base) and `components/menus/ST_ColumnActionMenu.tsx` base:127, radix:122, aria:120: focus moves in a `queueMicrotask`.
+- The primitive runs its own open and close focus at the same time: Base `initialFocus`, Radix `onOpenAutoFocus`, React Aria `autoFocus`.
+- Effect: which element ends up focused depends on timing.
+- Bases: all three.
+- Unverified in a browser.
+
+### F44 ST_ActionMenuItem forces tabIndex
+
+- `components/menus/ST_ActionMenuItem.tsx:40` (base and radix): `tabIndex={0}` overrides the primitive's roving tabindex.
+- Effect: every menu item becomes a Tab stop instead of one stop per menu.
+- Aria sets none.
+- Bases: base and radix.
+
+### F45 One RadioGroup per row for single select
+
+- `components/inputs/ST_SelectCheckbox.tsx` base:181, radix:174, aria:173: single row selection renders one `RadioGroup` per row with one item.
+- Arrow keys cannot move between rows, and screen readers announce "1 of 1".
+- Base and radix leave the group unnamed; aria passes `aria-label` at 174.
+- Bases: all three.
+
+### F46 Field description and error not linked to the control
+
+- `components/inputs/ST_EditCellTextField.tsx:83-88,149-160` (base): helper text renders as `FieldDescription` or `FieldError` inside `Field`.
+- `ui/field.tsx:131,176`: the parts are plain elements with no context, so neither reaches the control through `aria-describedby`.
+- Effect: screen readers do not read the helper or error text with the edit input.
+- Bases: all three.
+
+### F47 Filter chip clear button has no name
+
+- `components/inputs/ST_FilterTextField.tsx` base:365-369, radix:365-369, aria:389-393: the icon-only `button` inside the `Badge` has no accessible name.
+- Effect: screen readers announce an unnamed button.
+- Bases: all three.
+
+### F48 Nested labels in aria checkbox and switch
+
+- `components/inputs/ST_FilterCheckbox.tsx:87` and `components/menus/ST_ShowHideColumnsMenuItems.tsx:161` (aria): `Label` wraps a React Aria `Checkbox` or `Switch`.
+- Both already render a `<label>` root (`react-aria-components private/Checkbox.mjs:249`, `Switch.mjs:185`), so the DOM holds a label inside a label.
+- Bases: aria only.
+
+### F49 Aria menu trigger span focusable while hidden
+
+- `components/menus/ST_RowActionMenu.tsx:80-83` and `ST_CellActionMenu.tsx:107-110` (aria): the trigger span carries `aria-hidden`, `role="button"` and `tabIndex={-1}` together.
+- Effect: a hidden element still claims a role and is programmatically focusable.
+- Bases: aria only.
+
+### F50 Aria height Collapsible collapse snaps
+
+- `shared/utils/style.utils.ts:31-37` (aria): the collapse keyframe starts from `var(--disclosure-panel-height)`.
+- React Aria sets that variable to `0px` before the panel closes, because it expects a transition (`react-aria private/disclosure/useDisclosure.mjs:74-82`).
+- The collapse runs from 0 to 0 and snaps shut.
+- Sites: `components/toolbar/ST_LinearProgressBar.tsx:102`, `components/toolbar/ST_ToolbarAlertBanner.tsx:167-171`, `components/body/ST_TableDetailPanel.tsx:153`, `components/head/ST_TableHeadCellFilterContainer.tsx:75`.
+- Bases: aria only.
+- Covered by D25.
+
+### F51 Height panels lack overflow-hidden
+
+- `ST_LinearProgressBar`, `ST_ToolbarAlertBanner` and `ST_TableHeadCellFilterContainer` have no `overflow-hidden` on the `CollapsibleContent` panel in any base.
+- Only `ST_TableDetailPanel` clips (base:151, radix:146, aria:153).
+- Effect: content spills outside the panel while the height animates; the radix tw-animate keyframes carry no clip either.
+- Bases: all three.
+- Covered by D25.
+
+### F52 Aria resize handle orientation selector never matches
+
+- `components/head/ST_TableHeadCellResizeHandle.tsx:105-108` (aria): `data-[orientation=vertical]:h-6` and `data-[orientation=vertical]:w-1` never apply.
+- React Aria `Separator` emits only `aria-orientation`, no `data-orientation` (`react-aria private/separator/useSeparator.mjs:21-27`).
+- Effect: the handle renders 1px wide and full height.
+- Bases: aria only.
+
+### F53 Edit modal and cell menu never play exit animations
+
+- `components/table/ST_TableContainer.tsx:179-180`: `ST_EditRowModal` and `ST_CellActionMenu` mount only while open, the modal with `open` always true.
+- Closing unmounts them at once, so the parts' exit animations never play.
+- Bases: all three, same lines.
+
+### F54 Slider ref written onto props
+
+- `components/inputs/ST_FilterRangeSlider.tsx` base:145-147, radix:135-137: `sliderProps.ref = node` writes to the props object.
+- The consumer's ref is never called or set, so it never receives the node.
+- Bases: base and radix.
+
+### F55 Radix-only workaround in base dialog
+
+- `components/modals/ST_EditRowModal.tsx:101` (base): `aria-describedby={undefined}` is the Radix missing-description warning workaround.
+- It has no effect in Base UI.
+- Bases: base only.
+
+### F56 closeOnClick restates the default
+
+- `components/menus/ST_ActionMenuItem.tsx:44` (base): `closeOnClick` restates the Base UI default of true (`@base-ui/react menu/item/MenuItem.js:25`).
+- The comment at 41-43 presents it as needed so every item closes, but `DropdownMenuItem` is a plain item where that default already applies.
+- Bases: base only.
+
+### F57 Filter-mode submenu built by hand in base and radix
+
+- `components/menus/ST_ColumnActionMenu.tsx` base:138,281,289, radix:133,265,273: the filter-mode menu is a second root `DropdownMenu` on a fake span.
+- It opens from a nested `Button` with `onMouseEnter` inside the item (`components/menus/ST_ActionMenuItem.tsx` base:57-62, radix:53-58), though both primitives ship `Sub`.
+- Aria uses `DropdownMenuSub` at 259.
+- Bases: base and radix.
+
+### F58 Menu focus return differs per base
+
+- Base calls `.focus()` inside `finalFocus` (F40).
+- Radix uses `anchorRef` in `ST_RowActionMenu` and `ST_FilterOptionMenu`, and a stale `anchorEl` in `ST_ColumnActionMenu` and `ST_ShowHideColumnsMenu` (F37).
+- Aria relies on the primitive's restore focus.
+- The divergence is not forced by the primitives.
+
+### F59 Grouped-by chip spread order differs
+
+- `components/toolbar/ST_ToolbarAlertBanner.tsx:131-141` (base): `{...chipProps}` comes after `render`, so a `chipProps.render` replaces the button and its grouping toggle.
+- Aria at 137-152 spreads first, then renders the button and chains the consumer `onClick`.
+- Radix at 130 spreads `chipProps` on a `Badge` with `asChild`; the child button stays and Slot composes the consumer `onClick`, so it matches aria.
+- Bases: base differs from radix and aria.
+
+### F60 Aria select checkbox ignores title
+
+- `components/inputs/ST_SelectCheckbox.tsx:163-168` (aria): the tooltip title uses only the localization strings and ignores `checkboxProps.title`.
+- Base (171-172) and radix (164-165) honour it.
+- Bases: aria only.

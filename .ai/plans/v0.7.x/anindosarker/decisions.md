@@ -135,3 +135,46 @@
 - `shared/utils/style.utils.ts:182` `getCommonToolbarStyles` is deleted (F19). Exported types used only inside their own file or unreferenced in the tree stay exported; they are public type surface.
 - The anchor scaffolding copied into `ST_CellActionMenu`, `ST_ColumnActionMenu`, `ST_FilterOptionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu` (anchor state, `finalFocus`, invisible span trigger, `onOpenChange` reset) becomes one `hooks/useST_MenuAnchor.ts`, which holds the one copy of the menu rationale (F20, D5, D18). The six-file user-ref block is covered by D5. `handlePinColumn` stays defined in both places.
 - All three bases. No behavior change.
+
+## Round 2: next-app header demo and shadcn create, 2026-10-30
+
+### D21 Range filter updaters copy state, number columns get numeric inputs
+
+- `ST_FilterTextField` range updaters copy the previous array before writing (`const next = Array.isArray(old) ? [...old] : ['', '']`), set the index on the copy and return it. Both the debounced change and `handleClear` (F27).
+- The `isMounted` ref pattern in the mount effect goes, so the strict-mode re-run no longer seeds `[undefined, '']`. The effect itself follows D8.
+- Range inputs on number columns render `type="number"` with `inputMode="decimal"`. Text columns keep a text input.
+- One Storybook play test in `Filtering.stories.tsx` types a Min value and asserts the filtered row count.
+- Ships in a new part `10-bug-fixes`, branched after part 02. All three bases.
+
+### D22 Ranked results react only to a real global filter change
+
+- The ranked-results effect in `hooks/useST_Effects.ts` keeps the previous global filter value and returns early when `Object.is(prev, next)` holds. `undefined` to `undefined` is no change (F28).
+- `appliedSort` handling is otherwise unchanged. Clearing sort with no global filter stays cleared.
+- One Storybook play test with the default `enableGlobalFilterRankedResults`: sort a column, clear sort, assert no sort indicator.
+- An upstream issue on TanStack store for `atom.js:134` treating an `undefined` old value as always changed. The link goes in the part tracker; no code waits on it.
+- Part `10-bug-fixes`, all three bases. The next-app header demo drops its `enableGlobalFilterRankedResults: false` workaround after the fix.
+
+### D23 Pagination `className` lands on the outer element
+
+- `components/toolbar/ST_TablePagination.tsx` merges `className` onto the outer div that carries `py-3`, not the inner `Pagination` nav (F29). A consumer `py-2` wins through `cn`.
+- The nav keeps its fixed classes. No new prop.
+- Matches `ST_BottomToolbar`, where `toolbarProps.className` lands on the outer element.
+- Part `10-bug-fixes`, all three bases. Changelog entry under `### Fixed`.
+
+### D24 Headless example documents the row spacer column
+
+- No library change. The spacer is a real display column in `grid-no-grow` and stays in `getHeaderGroups()` (F30).
+- The `custom-headless` example gets one comment at the header map: with resizing on, the default layout is `grid-no-grow` and includes `st-row-spacer`; render it for correct widths, or set `layoutMode: 'grid'`. The aria example gets the same comment at its `getFlatHeaders()` map.
+- The headless section of the docs gets the same note in one sentence, linking the column-size guide line that documents the spacer.
+- Part 08, docs only, all three bases' examples.
+
+### D25 Collapsible panels use each primitive's designed animation path, one mechanism
+
+- `ST_GlobalFilterTextField` keeps Collapsible. The panel stays mounted (`keepMounted` in base, `forceMount` in radix, default in aria) and is `inert` while closed (F31).
+- Width comes from one token on the root, `--st-search-width`, default `14rem`, overridable through the field `className`. No measured primitive variable in any base.
+- Same panel classes in all bases: `overflow-hidden w-(--st-search-width) transition-[width,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none`, closed state `w-12 opacity-0`. Only the closed selector differs: base `data-closed:`, radix `data-[state=closed]:`, aria `aria-hidden:`.
+- The field owns its behavior: an effect on `showGlobalFilter` focuses the input, Escape inside the field closes it and returns focus to the toggle button. The `queueMicrotask` focus in `ST_ToggleGlobalFilterButton` goes. Toggle button and field stay separate components.
+- The aria panel gets `role="none"`, since no trigger is rendered inside the Collapsible.
+- The four height users (`ST_LinearProgressBar`, `ST_ToolbarAlertBanner`, `ST_TableDetailPanel`, `ST_TableHeadCellFilterContainer`) follow the same rule: transitions on the primitive's height variable in base and aria, keyframes in radix, `overflow-hidden` on every panel. The aria collapse that snaps today is fixed by this.
+- Width keyframes leave `style.utils.ts` in all bases. Height keyframes stay only where radix needs them.
+- Stale animation comments go (D18). Part `10-bug-fixes`. Storybook play test per base: open, input focused, panel wider than `3rem`; close, panel `inert`; Escape returns focus to the toggle.
