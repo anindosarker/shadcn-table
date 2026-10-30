@@ -178,3 +178,81 @@
 - The four height users (`ST_LinearProgressBar`, `ST_ToolbarAlertBanner`, `ST_TableDetailPanel`, `ST_TableHeadCellFilterContainer`) follow the same rule: transitions on the primitive's height variable in base and aria, keyframes in radix, `overflow-hidden` on every panel. The aria collapse that snaps today is fixed by this.
 - Width keyframes leave `style.utils.ts` in all bases. Height keyframes stay only where radix needs them.
 - Stale animation comments go (D18). Part `10-bug-fixes`. Storybook play test per base: open, input focused, panel wider than `3rem`; close, panel `inert`; Escape returns focus to the toggle.
+
+### D26 Menu anchor pattern stays; its defects are fixed inside the shared hook
+
+- The anchor-span pattern stays in all three bases. Radix `DropdownMenu` has no public anchor API, the stock `dropdown-menu.tsx` parts forward no anchor prop in base or aria, and moving menus onto primitive triggers would break `anchorEl` and `setAnchorEl` on the four exported menus, `actionCell` with `onActionCellChange`, the shared cell menu and the sibling filter-mode menu. D5 and D20 stand (F39).
+- Fixes live in `hooks/useST_MenuAnchor.ts` (D20) and apply to all five menus:
+  - Openers get `aria-haspopup="menu"` and `aria-expanded` from the anchor state; the hook returns the opener props. The cell `td` gets neither (F39).
+  - The span is `aria-hidden`, `tabIndex={-1}` and `inert`. Base sets `tabIndex={-1}` explicitly because `nativeButton={false}` adds a Tab stop; aria drops `role="button"` (F39, F49).
+  - While open, the hook re-measures the span rect from the anchor element on `resize` and capture-phase `scroll` (F39).
+  - The anchor element is read through a ref at close, never from cleared state (F37, F58). `finalFocus` returns the element and lets the primitive decide (F40).
+- The base and radix filter-mode menu inside the column menu becomes `DropdownMenuSub` from the stock part, as aria already does. `ST_FilterOptionMenu` keeps its `anchorEl` mode for the text fields (F57).
+- Part `10-bug-fixes`, all three bases. Play test per base: opener announces its expanded state, Tab never lands on the span, the menu follows a resize.
+
+### D27 Show-hide column rows are checkbox menu items with controls beside them
+
+- Each column row in `ST_ShowHideColumnsMenuItems` becomes a `DropdownMenuCheckboxItem` from the stock part: checked means visible, select toggles visibility, so Enter and Space work (F38).
+- Pin buttons and the drag handle leave the menuitem and sit in a sibling group in the same row, reachable by Tab. No control is nested inside a menuitem.
+- The aria switch no longer sits inside a `Label`; the checkbox item carries the column label (F48).
+- Column visibility, pinning and reordering behavior is unchanged. All three bases, part `10-bug-fixes`. Play test per base: arrow to a row, press Space, column hides; Tab reaches the pin buttons.
+
+### D28 Parts used as designed, mechanical remainder
+
+- Aria `ST_Tooltip` triggers are the controls themselves; wrapper spans and labels go. Disabled controls show no tooltip in aria (F41).
+- `ST_TableHeadCellFilterLabel` opens its popover with `PopoverTrigger` on the filter button and the stock `PopoverContent`; base drops the hand-built Portal, Positioner and Popup; aria passes a stable ref (F42).
+- No `queueMicrotask` focus. The popover uses `initialFocus` in base, `onOpenAutoFocus` in radix, `autoFocus` in aria; "filter by column" hands focus over through the primitive's close-focus hook (F43).
+- `tabIndex={0}` removed from `ST_ActionMenuItem` in base and radix (F44).
+- `ST_EditCellTextField` wires `FieldDescription` and `FieldError` ids into `aria-describedby` on the input (F46).
+- The filter clear chip button gets an `aria-label` from the locale (F47).
+- Aria resize handle selects on `aria-[orientation=vertical]` (F52).
+- `ST_EditRowModal` and `ST_CellActionMenu` stay mounted in `ST_TableContainer` with `open` toggled (F53).
+- `ST_FilterRangeSlider` composes the consumer ref with `useST_ComposedRef` (F54) (D5).
+- Base dialog `aria-describedby={undefined}` and base `closeOnClick` with its comment go (F55) (F56).
+- Base grouped-by chip spreads `chipProps` before `render` and chains the consumer `onClick`, matching radix and aria (F59).
+- Aria `ST_SelectCheckbox` honours `checkboxProps.title` (F60).
+- F45 stays open: the per-row radio group works for mouse and keyboard; only the screen reader count and arrow navigation differ.
+- No public prop, type, registry item or layout changes. All three bases, part `10-bug-fixes`. One play test per user-reachable behavior: filter popover opens with the input focused, clear chip has a name, modal close animates.
+
+### D29 Headless toolbars get the Button props type and a full-screen container hook
+
+- `ButtonProps` in `types.ts` becomes `React.ComponentProps<typeof Button>` in all bases, so `ST_ToggleGlobalFilterButton`, `ST_ToggleDensePaddingButton`, `ST_ShowHideColumnsButton` and `ST_ToggleFullScreenButton` accept `size` and `variant` by type as they already do at runtime (F32). Type only.
+- New exported hook `hooks/useST_FullScreenContainer.ts` taking `table` and returning `{ isFullScreen, containerProps }`; `containerProps` holds the Esc `onKeyDown`, `tabIndex` and the full-screen classes. `ST_TableLayout` uses the same hook, so one copy exists (F32).
+- The `custom-headless` example spreads `containerProps` on its wrapper, and the headless docs section gets one line on it.
+- Part `10-bug-fixes` for hook and type; part 08 for example and docs. All three bases. Play test: headless story presses Esc in full screen and exits.
+
+### D32 Shadow literals follow the theme
+
+- The four fixed shadow colors (`shared/utils/style.utils.ts` two sites, `components/toolbar/ST_BottomToolbar.tsx:23`, `components/head/ST_TableHeadRow.tsx:22`) take their color from theme variables, for example `color-mix(in oklab, var(--foreground) 15%, transparent)`, so they follow theme and dark mode (F35).
+- Nothing else in F35 changes: shadcn styles set literal classes per part and no tokens, so no class of ours could follow a style; `rounded-*` steps and `font-bold` are intent and MRT parity; the base filter popover is fixed by D28 (F42). F35 gets a note recording the refuted premise.
+- Part 06, all three bases.
+
+### D30 Icon sets as registry editions, one `icons.ts` per consumer
+
+- Repo source per base: `icons.ts` stays the Lucide map and is the dev default; `icons/tabler.ts`, `icons/phosphor.ts`, `icons/hugeicons.tsx`, `icons/remixicon.ts` export the same 34 keys from their packages, with substitutes picked once per map where a library lacks an icon (density rows, search-off, first and last page) (F33).
+- `ST_Icons` becomes `Record<keyof typeof ST_Default_Icons, ComponentType<ST_IconProps>>` with `ST_IconProps` (SVG props plus `size`) in `types.ts` (D10). `ST_Checkbox.tsx` and `components/toolbar/ST_TablePagination.tsx` import from `./icons` instead of `lucide-react`. The `icons` option merge in `useST_TableOptions.ts` is unchanged.
+- Registry items per base, generated by `registry:build`:
+  - `shadcn-table-core`: every library file except `icons.ts`, no icon dependency.
+  - `shadcn-table`: file `icons.ts`, dependency `lucide-react`, registry dependency `core`. Name and hosted path unchanged.
+  - `shadcn-table-tabler`, `shadcn-table-phosphor`, `shadcn-table-hugeicons`, `shadcn-table-remixicon`: file `icons/<library>.ts` with `target` at the `icons.ts` path, that icon package as dependency, registry dependency `core`.
+  - Locale items and docs example items depend on `shadcn-table-core`.
+- A consumer ends with one `icons.ts` holding their library's map and only that icon package installed. Switching later is the edition item with `--overwrite`; core files are identical and skipped.
+- Verified on shadcn 4.23.0: dependencies resolve core first and files dedupe by target, a later edition replaces `icons.ts` under `--overwrite` without a prompt, and a module importing an uninstalled package fails the build, so no runtime choice exists.
+- Docs: install page command gets an icon library selector that changes the item name; an Icons guide covers switching and notes the previous icon package stays in `package.json`. The docs app `lib:install`, the next-app and the part 09 gate install editions.
+- New part `11-icon-sets` after part 01; docs in part 08. All three bases.
+
+### D31 Logical direction classes, JS only where CSS cannot express it
+
+- The 20 static physical sites per base and the resize handle's cva `compoundVariants` become logical classes: `ms-*`, `me-*`, `pe-*`, `start-*`, `end-*`, `text-start`, `text-end`. The handle keeps one direction-neutral `end-*` position and no direction variant (F34).
+- Pinned sticky offsets in `shared/utils/style.utils.ts` use `insetInlineStart` and `insetInlineEnd`; the pixel values stay computed. The resize border on cells becomes `borderInlineEnd`.
+- JS keeps only the drag `translateX` sign and the pinning pixel values. `columnResizeDirection` stays as the TanStack option for drag math; the docs say to set it to `'rtl'` on RTL pages.
+- Verified: today the CLI's `transformRtl` skips `compoundVariants` and inline styles, so no double flip exists; after this change it finds no physical class to rewrite either.
+- Gate: `check:tailwind` fails on any physical direction class (D16). Part 06, all three bases. Part 09 adds one story check with `dir="rtl"` (unverified rendering today).
+
+### D33 Install docs cover shadcn create and offer a registry namespace
+
+- The install page gets a short "Created with shadcn create" section: the table follows base, theme, base color, radius, menu accent and fonts through the installed parts; the icon library is chosen by the edition item (D30); RTL pages set `columnResizeDirection: 'rtl'` (D31) (F36).
+- An optional "Short form" toggle on the install command component reveals the `components.json` entry `"registries": { "@shadcn-table": "https://www.shadcn-table.com/r/{style}/{name}.json" }` and the short form `shadcn add @shadcn-table/<item>`. Verified: the CLI fills `{style}` with the project's literal `style` value such as `base-nova`.
+- Hosting adds three rewrite rules, `/r/base-*/`, `/r/radix-*/` and `/r/aria-*/` to the matching base folder. Existing hosted paths are unchanged.
+- The full-URL single command is the default everywhere, with base, package manager and icon library selectors; registering the namespace is never required. Item names carry the icon choice in both forms.
+- Part 08, docs and hosting config only. No library change.

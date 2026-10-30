@@ -325,6 +325,7 @@ Source for F27 to F32: test-projects/next-app/shadcn-table-bugs.md (header demo 
 - `rgba(...)` shadows (4): `shared/utils/style.utils.ts:77,79`, `components/toolbar/ST_BottomToolbar.tsx:23`, `components/head/ST_TableHeadRow.tsx:22`.
 - `menuColor` from `components.json` reaches the shadcn parts but not the library's own menu surfaces; font weights are fixed classes.
 - Bases: radix and aria 8 radius sites, 4 shadows.
+- Premise refuted 2026-10-31: shadcn styles are literal classes per part and set no radius, shadow or font tokens, so no class of ours can follow a style switch. Counts stand. ST menus already follow `menuColor` and `menuAccent` through the installed `dropdown-menu` part. Only the base filter popover (F42) is a nova copy. Decided in D32.
 
 ### F36 Install docs do not cover shadcn create
 
