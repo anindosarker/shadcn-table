@@ -243,3 +243,91 @@ Shared root cause for all `react-hooks/*` compiler rules (F1 to F6, F10): the li
 - Verified: the same `de` item with `registryDependencies` removed installs `shared/locales/de.ts` alone, no dependency step, no skipped list, no prompt.
 - The locale file needs nothing at install time; `de.ts` only type-imports `ST_Localization` from the already installed `types.ts`. The hosted locale items carry no `dependencies` or `devDependencies`.
 - Likely direction: drop the main-item `registryDependencies` from the locale items in `scripts/registry/lib.mjs`; the guide says the table is installed first (D2).
+
+## Round 2: next-app header demo and shadcn create, 2026-10-30
+
+Source for F27 to F32: test-projects/next-app/shadcn-table-bugs.md (header demo build). F33 to F36 come from a `shadcn create` comparison. Paths are relative to `packages/shadcn-table/registry/base/components/ui/shadcn-table/` unless named otherwise.
+
+### F27 Range filter value never applies
+
+- `components/inputs/ST_FilterTextField.tsx:211-214`: the debounced range change writes into the previous filter array in place and returns the same reference, so TanStack sees no change and rows do not filter. Same in `handleClear` at 265-269.
+- Mount effect 292-308: the `isMounted` ref survives the strict-mode effect re-run, so the second run calls `handleClear` and seeds `[undefined, '']`; every later Min or Max edit mutates that array.
+- Range inputs render the fallback `InputGroupInput` at 625 with no `type` and no numeric check, so number columns accept letters (owner saw an "Estimate: q to 1" chip).
+- Bases: radix same lines, fallback input at 609; aria 222-224, 286-288, mount effect 317-331, fallback input at 659.
+- No test or story asserts range filtering: `stories/features/Filtering.stories.tsx` declares range variants at 39, 156, 170-184 with no row assertions.
+- Direction: copy the array before writing, numeric input for number columns, a test that types Min and asserts filtered rows.
+
+### F28 Clearing sort snaps back to the previous sort
+
+- `hooks/useST_Effects.ts:129-151`: the ranked results effect re-applies the last sort when the user clears sorting.
+- `table.atoms.globalFilter` is a computed atom that also reads a commit-version atom, so it recomputes after every table commit, including a sort change.
+- `@tanstack/store` 0.11.2 `dist/atom.js:134` treats an undefined old value as always changed (`oldValue === void 0 || !compare(...)`); the global filter starts undefined because the library sets no initial value.
+- Each sort change fires the subscription at 146-147 with undefined, `applyRanking` restores `appliedSort` at 141, and `appliedSort` still holds the last non-empty sort because 132-134 skip empty sorts.
+- Stops once the global filter has had any value, even `''`.
+- Repro: `enableGlobalFilterRankedResults` default true, no global filter, sort a column, then `table.setSorting([])` or "Clear sort" in a column menu; the sort returns.
+- Bases: identical in all three.
+- Direction: run ranking only on a real change of the global filter value; report the undefined comparison to TanStack store.
+
+### F29 ST_TablePagination outer padding cannot be overridden
+
+- `components/toolbar/ST_TablePagination.tsx:43-52`: the props extend `ST_PaginationProps` (`NavProps`, `types.ts:59`), so `className` is accepted, but it is merged onto the inner `Pagination` nav at 244-246.
+- The outer div at 156-160 carries `py-3` from the variants at 53-55 and takes no caller class, so a headless footer cannot change the vertical padding.
+- Compare: `ST_BottomToolbar` takes `DivProps` (`components/toolbar/ST_BottomToolbar.tsx:20`) and merges `toolbarProps.className`; `ST_TopToolbar` takes no props (`components/toolbar/ST_TopToolbar.tsx:31`) and merges it from options.
+- Bases: identical in all three.
+
+### F30 Headless example does not explain the row spacer column
+
+- `hooks/useST_TableOptions.ts:127-128`: with `enableColumnResizing` the default `layoutMode` becomes `grid-no-grow`, and only that mode adds the `st-row-spacer` display column (`shared/utils/displayColumn.utils.ts:90-92`, `hooks/display-columns/getST_RowSpacerColumnDef.tsx:24`). Semantic layout adds none.
+- The spacer is documented in `apps/shadcn-table-docs/content/docs/guides/column-size.mdx:37` and `display-columns.mdx:26`.
+- `apps/shadcn-table-docs/examples/base/custom-headless/TS.tsx:78` maps `getHeaderGroups()` (radix same line, aria maps `getFlatHeaders()` at 116) with no mention of the spacer.
+- Effect: a headless user who turns on resizing sees an empty extra header and has no pointer to why.
+- Bases: identical in all three.
+
+### F31 Global filter field animation in custom toolbars, unverified
+
+- `components/inputs/ST_GlobalFilterTextField.tsx:104-108`: the field stays mounted inside `Collapsible` and `CollapsibleContent`, and the panel animates width from 0 to `--collapsible-panel-width` over 300ms (`shared/utils/style.utils.ts:40-60`).
+- `InputGroup` is `w-full min-w-0` (`registry/base/components/ui/input-group.tsx:17`), so its width comes from the parent, and the `Collapsible` root has no class or width.
+- Rendered inline in a custom flex toolbar the measured width can be wrong or near zero, and sibling buttons shift every frame.
+- Inside `ST_TopToolbar` (`components/toolbar/ST_TopToolbar.tsx:86-101`, first item or the `flex-wrap-reverse justify-end` group) this is hidden.
+- Owner saw it in the next-app header demo and called it broken.
+- Bases: radix uses `data-[state=...]` selectors (108); aria uses `isExpanded` and `aria-hidden` selectors (108, 112).
+- Not browser-verified. Needs a compare against the built-in toolbar before it counts as a library bug.
+
+### F32 Headless toolbar gaps: button props and full screen
+
+- `types.ts:82`: `ButtonProps = ComponentPropsWithRef<'button'>` (aria `types.ts:93` also omits `onClick` and `disabled`), so a custom toolbar cannot pass the shadcn Button `size` or `variant` through the type.
+- At runtime both are overridable: `size="icon"` and `variant="ghost"` sit before `{...rest}` (`components/buttons/ST_ToggleGlobalFilterButton.tsx:41-44`).
+- Affects `ST_ToggleGlobalFilterButton`, `ST_ToggleDensePaddingButton`, `ST_ShowHideColumnsButton`, `ST_ToggleFullScreenButton`.
+- `components/table/ST_TableLayout.tsx:88`: Esc to exit full screen lives only here, and the full-screen classes (defined at 22, applied at 92-95) are applied only here.
+- `ST_TableLayout` is exported (`index.ts:76`) but always renders its own toolbars and container, so headless setups must copy both the handler and the styling.
+
+### F33 Icon library is hard-coded to Lucide
+
+- `icons.ts:1-35`: 33 icons imported from `lucide-react`; direct imports also at `ST_Checkbox.tsx:2`, `types.ts:39` (`LucideProps`), `components/toolbar/ST_TablePagination.tsx:3` (`LucideIcon`).
+- `packages/shadcn-table/registry.json:18`: `lucide-react` is a dependency of every main item (also 1198, 2378, 3558); no `IconPlaceholder` anywhere in the registry.
+- `shadcn create` and `init` write `iconLibrary` into `components.json` (lucide, hugeicons, tabler, phosphor, remixicon), and the CLI `transformIcons` rewrites only `<IconPlaceholder lucide=... tabler=... />` elements.
+- Effect: a consumer who chose another icon library still gets Lucide icons and the `lucide-react` package.
+- 16 of the 33 names have no upstream equivalent in the other libraries.
+- Bases: radix and aria same (4 files import `lucide-react` in each).
+
+### F34 RTL handled at runtime, not by transformRtl
+
+- `components/head/ST_TableHeadCellResizeHandle.tsx:24-43`: a `direction` variant swaps `-mr-*` and `-ml-*`, `right-*` and `left-*` from `columnResizeDirection`; `components/body/ST_TableBodyCell.tsx:221` does the same.
+- 30 physical direction classes per base (`ml-`, `mr-`, `pl-`, `pr-`, `left-`, `right-`, `text-left`, `text-right`), for example `components/toolbar/ST_BottomToolbar.tsx:23`, `components/toolbar/ST_ToolbarAlertBanner.tsx:25`, `components/inputs/ST_FilterTextField.tsx:540`, `components/head/ST_TableHeadCell.tsx:253-255`.
+- `components.json` has an `rtl` flag, and the CLI `transformRtl` rewrites physical direction classes to logical ones at add time.
+- In an rtl project both mechanisms act on the same classes. Untested whether this double-flips the resize handle and pinned offsets.
+- Bases: 30 in each.
+
+### F35 Own classes are tuned to the nova style
+
+- The library's own surfaces hard-code radius and shadow values that match style nova, so vega, maia, lyra, mira, luma, sera and rhea get nova geometry on the table while their shadcn parts follow the chosen style.
+- Radius (9 in base): `components/body/ST_TableBodyCellValue.tsx:102`, `components/head/ST_TableHeadCellResizeHandle.tsx:108`, `components/head/ST_TableHeadCellFilterLabel.tsx:178`, `components/head/ST_TableHeadCellSortLabel.tsx:115`, `components/table/ST_TableLayout.tsx:18,22`, `components/table/ST_TableContainer.tsx:32`, `components/inputs/ST_FilterTextField.tsx:429,538`.
+- `rgba(...)` shadows (4): `shared/utils/style.utils.ts:77,79`, `components/toolbar/ST_BottomToolbar.tsx:23`, `components/head/ST_TableHeadRow.tsx:22`.
+- `menuColor` from `components.json` reaches the shadcn parts but not the library's own menu surfaces; font weights are fixed classes.
+- Bases: radix and aria 8 radius sites, 4 shadows.
+
+### F36 Install docs do not cover shadcn create
+
+- `apps/shadcn-table-docs/content/docs/getting-started/install.mdx:16`: project creation renders `<InitCommand />` and the add step `<InstallCommand />` at 28; line 14 names only the base and `aria-nova`.
+- No page under `apps/shadcn-table-docs/content` mentions `shadcn create`, ui.shadcn.com/create, `--preset`, `iconLibrary` or `menuColor`.
+- Effect: a consumer starting from create gets no guidance on which knobs the library respects (base, theme, base color, radius, menu accent, body font) and which it ignores (icon library, heading font, menu color on own surfaces, style geometry per F35).
