@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The Localization guide hard-codes three German commands instead of using the base-aware `InstallCommand`, lists the locale codes by hand twice and never names the export constants (F25). Decision D2: one `InstallCommand` with a locale selector, fed by `localeAddCommand`, with codes and export names generated from the registry. Decision D3: a base selector on every example toolbar, bound to the stored base. The install command also gains an icon library selector that picks the edition item (D30), a "Short form" toggle for the registry namespace and a section on projects created with shadcn create (D33); the Customize Icons guide covers switching editions (D30); the headless example and page explain the row spacer column (D24) and spread `containerProps` from `useST_FullScreenContainer` (D29). Docs app plus three hosting rewrites; branches after parts 06, 10 and 11 merge: it publishes the React and Tailwind minimums (D5) (D16), the edition items (D30) and spreads `containerProps` from the hook part 10 creates (D29).
+The Localization guide hard-codes three German commands instead of using the base-aware `InstallCommand`, lists the locale codes by hand twice and never names the export constants (F25). Decision D2: one `InstallCommand` with a locale selector, fed by `localeAddCommand`, with codes and export names generated from the registry. Decision D3: a base selector on every example toolbar, bound to the stored base. The install command also gains an icon library selector that picks the edition item (D30), a "Short form" toggle for the registry namespace and a section on projects created with shadcn create (D33); the Customize Icons guide covers switching editions (D30); the headless example and page explain the row spacer column (D24) and spread `containerProps` from `useST_FullScreenContainer` (D29). Docs app only; the three style rewrites already exist in `next.config.mjs` and are verified, not added. Branches after parts 06, 10 and 11 merge: it publishes the React and Tailwind minimums (D5) (D16), the edition items (D30) and spreads `containerProps` from the hook part 10 creates (D29).
 
 ### 1.2 Goals
 
@@ -37,7 +37,7 @@ apps/shadcn-table-docs/
 ├── content/docs/guides/customize-icons.mdx ← the `icons` option only
 ├── content/docs/examples/custom-headless.mdx, examples/<base>/custom-headless/TS.tsx ← no spacer note, hand-written Esc handling
 └── lib/install.ts                       ← libraryAddCommand, localeAddCommand, exampleAddCommand; NamespaceCommand in install-command.tsx (119)
-apps/shadcn-table-docs/next.config.*     ← `rewrites` (23): docs routes only
+apps/shadcn-table-docs/next.config.mjs   ← `rewrites` `afterFiles` (23-36): `/r/:style(base-.*)/:name.json` to `/r/base/:name.json`, same for `radix-` and `aria-`; already in place
 vercel.json                              ← rewrites: storybook host and docs service, destinations are `{ service }` objects; unchanged by this part
 ```
 
@@ -58,7 +58,7 @@ apps/shadcn-table-docs/
 ├── content/docs/guides/customize-icons.mdx ← editions section
 ├── content/docs/examples/custom-headless.mdx, examples/<base>/custom-headless/TS.tsx ← spacer comment, containerProps
 ├── scripts/page-checks/{a,c}.mjs, _helpers.mjs ← toolbar, locale, icon and short form checks
-└── next.config.*                        ← three `/r/<base>-:style/:path*` rewrites to `/r/<base>/:path*`
+└── next.config.mjs                      ← keep: the three style rewrites exist; this part verifies them
 ```
 
 ### 1.5 Flow: none
@@ -72,7 +72,7 @@ apps/shadcn-table-docs/
 - `### Breaking`: "shadcn-table needs React 19.2 or later and Tailwind CSS 4.3 or later." Raising a minimum breaks users below it (D5) (D16)
 - `CONTRIBUTING.md:68` line for `example-map.mjs` names the third output.
 - `### Docs`: "The install command picks the icon library edition and offers a short registry-namespace form, served for any `style` of a base; the install page covers projects created with shadcn create; the headless example documents the spacer column and the full-screen container hook." (D24) (D29) (D30) (D33)
-- `apps/shadcn-table-docs/next.config.*` `rewrites` (the existing block at 23) gains `{ source: '/r/base-:style/:path*', destination: '/r/base/:path*' }` and the same for `radix-` and `aria-`, so the namespace template `/r/{style}/{name}.json` resolves for any `style` of a base (D33). `/r/` is served from the docs app's `public/` directory, so a Next rewrite to a public path answers it and is testable locally with `next build && next start`. `vercel.json` stays as it is: its `rewrites` carry `{ "service": ... }` destinations under the multi-service `services` form (`vercel.json:24-30`), and whether a string destination is accepted there is not stated in its schema, so the rule does not go there. Existing paths unchanged.
+- `apps/shadcn-table-docs/next.config.mjs` `rewrites` `afterFiles` (23-36) already maps `/r/:style(base-.*)/:name.json` to `/r/base/:name.json`, and the same for `radix-` and `aria-`, so the namespace template `/r/{style}/{name}.json` resolves for any `style` of a base (D33). Status keep: this part adds no rewrite and verifies the three with a local `next build && next start` curl. `vercel.json` unchanged.
 
 **Interfaces (lib/install.ts additions):**
 
@@ -227,10 +227,9 @@ Lane: agent
 
 Lane: agent
 
-- `lib/install.ts` additions (1.6.1), 1.6.5, 1.6.6; `next.config` rewrites (1.6.1)
+- `lib/install.ts` additions (1.6.1), 1.6.5, 1.6.6
 - `c.mjs` on `/docs/getting-started/install`: default command contains `/r/<base>/shadcn-table.json`; Tabler selected contains `-tabler.json`; Short form on shows `@shadcn-table/shadcn-table-tabler` and the `registries` entry; `/docs/guides/customize-icons` renders the edition command
-- Local rewrite check against `next build && next start` of the docs app: `curl -s localhost:<port>/r/base-nova/shadcn-table.json | diff - apps/shadcn-table-docs/public/r/base/shadcn-table.json` empty, same for `radix-nova` and `aria-nova`
-- Preview check after the PR is open: the preview URL comes from `gh api repos/anindosarker/shadcn-table/deployments --jq '.[0].id'` on the PR head sha followed by `gh api repos/anindosarker/shadcn-table/deployments/<id>/statuses --jq '.[0].environment_url'`; then `curl -sI <url>/r/base-nova/shadcn-table.json` returns 200 with the body of `/r/base/shadcn-table.json`. A non-200 goes to `ATTENTION-<date>.md` as "docs rewrite not served on Vercel" with the status line and the local result; the part continues with the other phases
+- Local rewrite check against `next build && next start` of the docs app: `curl -s localhost:<port>/r/base-nova/shadcn-table.json | diff - apps/shadcn-table-docs/public/r/base/shadcn-table.json` empty, same for `radix-nova` and `aria-nova` (existing rewrites, 1.6.1)
 - Gates: docs `types:check`, `lint`, `build`; `check-pages.mjs` for the touched clusters per base; the local rewrite check
 
 #### 2.1.4 Phase 4: headless example and page
@@ -259,5 +258,5 @@ Lane: agent
 - `pnpm --filter shadcn-table-docs types:check`, `lint`, `build`: green
 - `node scripts/check-pages.mjs --base base`, `--base radix`, `--base aria` (all clusters, against `next start` of the build): green
 - `grep -rn "supportedLocales\|shadcn-table-locale-de.json   #\|NamespaceCommand" apps/shadcn-table-docs --exclude-dir=node_modules --exclude-dir=.next`: empty
-- `next start` of the build serves `/r/base-nova/shadcn-table.json`, `/r/radix-nova/shadcn-table.json` and `/r/aria-nova/shadcn-table.json` with the bodies of the base folders; the preview deployment does the same or an ATTENTION item records the status (D33)
+- `next start` of the build serves `/r/base-nova/shadcn-table.json`, `/r/radix-nova/shadcn-table.json` and `/r/aria-nova/shadcn-table.json` with the bodies of the base folders (D33)
 - The agent-browser steps in 2.1.5 pass; `pr.yml` green

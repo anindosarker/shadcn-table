@@ -178,18 +178,22 @@ export const ST_Default_Icons: ST_Icons;
 
 #### 1.6.5 CI resolution through `registry:dev`
 
-- `pr.yml` `registry` job: the four `shadcn add ... --dry-run` lines at 176-180 resolve `anindosarker/shadcn-table/<item>#<sha>`; the CLI then resolves that item's `registryDependencies` (core) from the GitHub default branch, where core does not exist until 0.7.0 is on `master`. The job starts `pnpm --filter shadcn-table registry:dev` the way `install.yml:179-185` does, waits for `http://localhost:5310/r/shadcn-table-base-core.json`, and dry-runs `http://localhost:5310/r/shadcn-table-radix.json`, `/r/shadcn-table.json` (alias), `/r/shadcn-table-base-tabler.json` and the three `example-basic-<base>` URLs. `registry validate "anindosarker/shadcn-table#<sha>"` stays, it validates the catalog only
-- `install.yml`: the "Add the library from the source" step (`install.yml:95`) keeps the `source` template for releases (public URLs, whose dependencies hosted.mjs already re-points) and, when `source` names the GitHub form, swaps it for the `registry:dev` URL the same workflow already serves for the locale step (`install.yml:194`). `pr.yml:197` then passes `http://localhost:5310/r/<item>.json` as `source`
+- `registry:dev` today writes the base items plus aliases only (`build.mjs:32-38`); the example items live in `apps/shadcn-table-docs/registry.json` through `examples.mjs`. The dev build merges the `examples.mjs` output into `.dev/registry.json` and `.dev/r/`, with every example's core dependency in the `--dev` URL form, so `http://localhost:5310/r/example-basic-<base>.json` resolves
+- `pr.yml` `registry` job: the five `shadcn add ... --dry-run` lines at 166-171 resolve `anindosarker/shadcn-table/<item>#<sha>`; the CLI then resolves that item's `registryDependencies` (core) from the GitHub default branch, where core does not exist until 0.7.0 is on `master`. The job starts `pnpm --filter shadcn-table registry:dev` and `serve` the way `install.yml:175-186` does, waits for `http://localhost:5310/r/shadcn-table-base-core.json`, and dry-runs `http://localhost:5310/r/shadcn-table-radix.json`, `/r/shadcn-table.json` (alias), `/r/shadcn-table-base-tabler.json` and the three `/r/example-basic-<base>.json` URLs. `registry validate "anindosarker/shadcn-table#<sha>"` stays, it validates the catalog only
+- `install.yml`: the "Build and serve the dev registry" step (`install.yml:175-186`) moves before the "Add the library from the source" step (`install.yml:95`) and runs for every scenario, the `nextjs` one included (its `if: matrix.scenario != 'nextjs'` goes). The library step keeps the `source` template for releases (public URLs, whose dependencies hosted.mjs already re-points) and, when `source` names the GitHub form, swaps it for the dev URL `http://localhost:5310/r/$ITEM.json`. The example add at `install.yml:195` changes from `anindosarker/shadcn-table/$EXAMPLE_ITEM#$REF` to `http://localhost:5310/r/$EXAMPLE_ITEM.json`. `pr.yml:178` then passes `http://localhost:5310/r/<item>.json` as `source`
 - Workflow-file edits only; no ruleset or repository setting changes
-- Proof in phase 2: the dry-run block runs locally against `registry:dev` before the PR, and the PR's `registry` and `install` jobs are green
+- Proof: the dry-run block runs locally against `registry:dev` in phase 2, and the PR's `registry` and `install` jobs are green in phase 3
 
 **Operations:**
 
 | Operation | Status | Notes |
 | --- | --- | --- |
-| `pr.yml` `registry` job dry-runs | refactor | `registry:dev` URLs |
-| `pr.yml` `install` `source` | refactor | `registry:dev` URL template |
-| `install.yml` library step | refactor | honours a local `source` |
+| `build.mjs --dev` example items | new | `examples.mjs` output merged into `.dev/` |
+| `pr.yml` `registry` job dry-runs (166-171) | refactor | `registry:dev` URLs after a serve step |
+| `pr.yml` `install` `source` (178) | refactor | `registry:dev` URL template |
+| `install.yml` dev registry step (175-186) | refactor | before the library add, every scenario |
+| `install.yml` library step (95) | refactor | honours a local `source` |
+| `install.yml` example add (195) | refactor | dev URL |
 
 ### 1.7 Dependencies and env
 
@@ -209,17 +213,24 @@ Lane: agent
 - 1.7 devDependencies; 1.6.2 in every base (maps copied byte-identical); `check-icons.mjs` and its scripts
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:icons`, `check:bases`; `grep -rn "lucide-react" registry/*/components/ui/shadcn-table` matches the three `icons.ts` only
 
-#### 2.1.2 Phase 2: Registry items
+#### 2.1.2 Phase 2: Registry build
+
+Lane: workflow
+
+- 1.6.3 (`lib.mjs`, `hosted.mjs`, `examples.mjs`), 1.6.4 `install.mjs` merge, the `build.mjs --dev` example merge of 1.6.5; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`, `pnpm registry:dev`: one coder on `opus`, one verifier on the session model checking the item set of 1.6.1 (names, files, `target`, dependencies, the two address forms) against `registry.json` and `.dev/registry.json`, one fix bounce
+- The `pr.yml` dry-run block of 1.6.5 run locally against `serve packages/shadcn-table/.dev -l 5310`: six green dry-runs, recorded in `11-tracker.md`
+- Gates: `check:bases`; registry.json diff shows only additions and the dependency re-point; the six dry-runs green
+
+#### 2.1.3 Phase 3: Workflows, installs, CLI smoke
 
 Lane: agent
 
-- 1.6.3; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`; 1.6.4 `install.mjs` merge and docs `lib:install` per base; 1.6.5 workflow edits
-- CLI smoke in a scratch Next project under the scratchpad (`pnpm dlx shadcn@latest init --template next --base <base> --preset nova --yes`, as `install.yml:87` does), per base, against `pnpm registry:dev` on 5310: `add` the Tabler edition into the empty project (files land once, `icons.ts` is the Tabler map, only `@tabler/icons-react` installed), then `add` the Lucide edition with `--overwrite` (`icons.ts` replaced, no prompt), then `add` a locale item (core not re-installed, no icon package added), then `add example-basic` (core resolved from the dev server)
-- The `pr.yml` dry-run block of 1.6.5 run locally against the same server: six green dry-runs
+- 1.6.5 `pr.yml` and `install.yml` edits; docs `lib:install` for base, radix and aria
+- CLI smoke in a scratch Next project under the scratchpad (`pnpm dlx shadcn@latest init --template next --base <base> --preset nova --yes`, as `install.yml:87` does), per base, against the dev server on 5310: `add` the Tabler edition into the empty project (files land once, `icons.ts` is the Tabler map, only `@tabler/icons-react` installed), then `add` the Lucide edition with `--overwrite` (`icons.ts` replaced, no prompt), then `add` a locale item (core not re-installed, no icon package added), then `add` `example-basic` (core resolved from the dev server)
 - Record each smoke result in `11-tracker.md`
-- Gates: `check:bases`, docs `types:check`, `lint`, `build`; registry.json diff shows only additions and the dependency re-point; the PR's `registry` and `install` jobs green
+- Gates: docs `types:check`, `lint`, `build`; the PR's `registry` and `install` jobs green
 
-#### 2.1.3 Final phase: Cleanup
+#### 2.1.4 Final phase: Cleanup
 
 Lane: agent
 
@@ -230,6 +241,6 @@ Lane: agent
 
 - `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:icons` green
 - `pnpm check:bases` green; `pnpm registry:build` and `registry:hosted` produce the item set of 1.6.1 with `shadcn-table` unchanged in name and path
-- CLI smoke of 2.1.2 green per base
+- CLI smoke of 2.1.3 green per base; the six local dry-runs of 2.1.2 green
 - `pnpm --filter shadcn-table-docs types:check`, `lint`, `build` green after `lib:install`
 - `pr.yml` green, including the `check:icons` step and the `registry` and `install` jobs resolving core through `registry:dev` (1.6.5)

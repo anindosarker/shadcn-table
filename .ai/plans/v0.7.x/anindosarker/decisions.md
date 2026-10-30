@@ -257,3 +257,4 @@
 - Hosting adds three rewrite rules, `/r/base-*/`, `/r/radix-*/` and `/r/aria-*/` to the matching base folder. Existing hosted paths are unchanged.
 - The full-URL single command is the default everywhere, with base, package manager and icon library selectors; registering the namespace is never required. Item names carry the icon choice in both forms.
 - Part 08, docs and hosting config only. No library change.
+- Note 2026-10-31: the three rewrites already exist in the docs `next.config.mjs`; part 08 verifies them, adds none.
