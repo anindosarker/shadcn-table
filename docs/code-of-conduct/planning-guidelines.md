@@ -6,7 +6,7 @@ How to write an implementation plan for this repository. Applies to humans and a
 
 ```
 .ai/plans/<plan>/<git_username>/
-├── <plan>-plan.md       ← the plan (template below); for a multi-part plan the index: goals, parts, dependency graph, integration
+├── <plan>-plan.md       ← the plan (template below); for a multi-part plan the index: goals, parts, dependency graph with file ownership per part, integration
 ├── decisions.md         ← every decision the owner made, grouped, with the why
 ├── 01-<part>.md         ← optional: one file per part when the plan is too large for one file
 ├── 02-<part>.md
@@ -39,6 +39,12 @@ the index then holds what is shared. `<git_username>` is the GitHub login.
 11. **Gates per phase.** Each phase names the commands that must pass, per base where the
     repository has bases.
 12. **No em dashes.** Use a comma, a colon or a new sentence.
+13. **Dependency edges need a file reason.** The index names, per edge, the files or symbols
+    one part must see from the other. Parts without such a reason run at the same time.
+    Sequential parts that touch the same files are planned so the run can collapse them into
+    one file-partitioned fan-out: the index lists each part's file set.
+14. **Integration never waits on CI.** Merge on green local gates, merge commit per part, CI
+    on the push as the second run. A PR only where a ruleset requires one.
 
 ## Template
 
