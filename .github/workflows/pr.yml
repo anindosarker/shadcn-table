@@ -97,6 +97,7 @@ jobs:
       - run: pnpm --filter shadcn-table tsc:aria
         if: matrix.base == 'aria'
       - run: pnpm --filter shadcn-table lint
+      - run: pnpm --filter shadcn-table check:tailwind ${{ matrix.base }}
       - run: pnpm --filter shadcn-table storybook:build:${{ matrix.base }}
 
   # A common library file must be byte-identical in every tree; the files that

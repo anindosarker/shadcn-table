@@ -23,11 +23,12 @@
     "lint": "eslint .",
     "tsc:radix": "tsc -p tsconfig.radix.json --noEmit",
     "tsc:baseui": "tsc -p tsconfig.baseui.json --noEmit",
-    "tsc:aria": "tsc -p tsconfig.aria.json --noEmit"
+    "tsc:aria": "tsc -p tsconfig.aria.json --noEmit",
+    "check:tailwind": "node scripts/check-tailwind.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
-    "@tailwindcss/vite": "^4.1.11",
+    "@tailwindcss/vite": "^4.3.3",
     "@tanstack/match-sorter-utils": "8.19.4",
     "@tanstack/react-store": "0.11.2",
     "@tanstack/react-table": "9.3.1",
@@ -42,7 +43,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -54,6 +55,8 @@
     "@storybook/addon-vitest": "10.6.2",
     "@storybook/icons": "^2.2.0",
     "@storybook/react-vite": "^10.6.2",
+    "@tailwindcss/node": "^4.3.3",
+    "@tailwindcss/oxide": "^4.3.3",
     "@types/node": "^22.10.2",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
