@@ -37,7 +37,6 @@ export interface ST_Table_FilterModes {
   setShowGlobalFilter: (updater: ST_Updater<boolean>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stFilterModesFeature: TableFeature;
@@ -46,19 +45,22 @@ declare module '@tanstack/react-table' {
     stFilterModesFeature: ST_TableState_FilterModes;
   }
   interface TableOptions_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stFilterModesFeature: ST_TableOptions_FilterModes;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stFilterModesFeature: ST_Table_FilterModes;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stFilterModesFeature: TableFeature = {
   getInitialState: (initialState) => ({
@@ -81,12 +83,8 @@ export const stFilterModesFeature: TableFeature = {
           TableOptions_ColumnFiltering<TableFeatures, RowData>,
           'onColumnFiltersChange'
         >;
-    // Core memoizes the filtered row model on the `columnFilters` and
-    // `globalFilter` atoms, so a mode change alone leaves the rows on the
-    // previous mode's function. Emitting the same filters as a new array
-    // re-runs filtering once the columns pick up the new mode; the raw handler,
-    // because `setColumnFilters` would drop filters by the old mode's rules.
-    // With no filter set there is nothing to re-run, so no handler call.
+    // The filtered row model is memoized on the filter atoms, so a mode change
+    // re-emits the set filters through the raw handler to re-run filtering.
     const rerunFilters = () => {
       const { atoms } = table as unknown as ST_TableInstance<ST_RowData>;
       if (!atoms.columnFilters.get().length && !atoms.globalFilter.get())

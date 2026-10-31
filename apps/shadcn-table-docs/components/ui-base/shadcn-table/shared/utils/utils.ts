@@ -21,6 +21,18 @@ export const assignRef = <T>(ref: Ref<T> | undefined, node: T | null) => {
   }
 };
 
+type NavigatorWithUAData = Navigator & {
+  userAgentData?: { platform: string };
+};
+
+/** Lower-cased OS name; `navigator.userAgentData.platform` first. */
+export const getPlatform = (): string =>
+  (
+    (navigator as NavigatorWithUAData).userAgentData?.platform ??
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- userAgentData is Chromium only; Firefox and Safari need the fallback
+    navigator.platform
+  ).toLowerCase();
+
 export const getValueAndLabel = (
   option?: DropdownOption | null,
 ): { label: string; value: string } => {
@@ -38,13 +50,11 @@ export const getValueAndLabel = (
   return { label, value };
 };
 
-// debounce from @mui/utils.
 export interface Cancelable {
   clear(): void;
 }
 
-// Corresponds to 10 frames at 60 Hz.
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
   wait = 166,
 ): T & Cancelable {
@@ -63,7 +73,6 @@ export function debounce<T extends (...args: any[]) => any>(
   return debounced as T & Cancelable;
 }
 
-// createFilterOptions from @mui/material useAutocomplete.
 export interface CreateFilterOptionsConfig<Value> {
   ignoreAccents?: boolean;
   ignoreCase?: boolean;

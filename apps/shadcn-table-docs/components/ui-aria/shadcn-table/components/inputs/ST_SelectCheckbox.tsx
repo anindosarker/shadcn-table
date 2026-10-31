@@ -1,6 +1,5 @@
 import { type MouseEvent } from 'react';
 import { type FocusableElement } from 'react-aria-components';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Checkbox } from '@/components/ui-aria/shadcn-table/components/inputs/ST_Checkbox';
@@ -52,8 +51,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   const {
     options: { enableMultiRowSelection, localization, selectAllMode },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Checkbox and RadioGroupItem.
   const {
     stSelectAllCheckboxProps,
     stSelectCheckboxProps,
@@ -129,7 +126,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     }) satisfies CheckboxProps | RadioProps;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         isLoading: state.isLoading,
@@ -153,7 +150,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               isSomeSelected: row.getIsSomeSelected(),
             }),
       })}
-      source={table.store}
     >
       {({ density, isLoading }) => {
         const allRowsSelected = selectAll ? getAllRowsSelected() : undefined;
@@ -196,6 +192,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

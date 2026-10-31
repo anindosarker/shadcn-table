@@ -8,7 +8,6 @@ import {
   useId,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { Field, FieldDescription, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -106,8 +105,10 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
 
   const saveInputValueToRowCache = (newValue: string) => {
     //@ts-expect-error _valuesCache is TanStack-internal
+    // eslint-disable-next-line react-hooks/immutability -- runs in saveInputValueToRowCache, not render; _valuesCache is the row's mutable row values cache
     row._valuesCache[column.id] = newValue;
-    const { creatingRow, editingRow } = table.store.state;
+    const creatingRow = table.atoms.creatingRow.get();
+    const editingRow = table.atoms.editingRow.get();
     if (creatingRow?.id === row.id) {
       setCreatingRow(row);
     } else if (editingRow?.id === row.id) {
@@ -141,11 +142,10 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   }
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isCreating: state.creatingRow?.id === row.id,
       })}
-      source={table.store}
     >
       {({ isCreating }) => {
         const isFormMode = ['custom', 'modal'].includes(
@@ -179,7 +179,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
               }
               name={column.id}
               onOpenChange={setOpen}
-              onSelectionChange={(newValue) =>
+              onChange={(newValue) =>
                 // onChange receives an event whose target is { name, value }.
                 handleChange({
                   target: { name: column.id, value: String(newValue ?? '') },
@@ -195,13 +195,13 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
               }
               // Stays controlled for an undefined cell value; React Aria shows
               // the placeholder for null.
-              selectedKey={value || null}
+              value={value || null}
             >
               <SelectTrigger
                 id={id}
                 ref={(inputRef) => {
                   if (inputRef) {
-                    editInputRefs.current![column.id] =
+                    editInputRefs.current[column.id] =
                       inputRef as unknown as HTMLInputElement;
                   }
                 }}
@@ -259,7 +259,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             id={id}
             ref={(inputRef) => {
               if (inputRef) {
-                editInputRefs.current![column.id] = inputRef;
+                editInputRefs.current[column.id] = inputRef;
               }
             }}
             name={column.id}
@@ -287,6 +287,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         );
         return withField(input);
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

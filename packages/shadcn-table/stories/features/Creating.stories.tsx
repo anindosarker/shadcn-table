@@ -72,8 +72,7 @@ export const CreateRowIndexTop = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -124,8 +123,7 @@ export const CreateRowIndexBottom = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -176,8 +174,7 @@ export const CreateRowIndexIndex = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -228,8 +225,7 @@ export const CreateRowIndexIndexVirtualized = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -355,8 +351,7 @@ export const CreateWithCustomEditCell = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 

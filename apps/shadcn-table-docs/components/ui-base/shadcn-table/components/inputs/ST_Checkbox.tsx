@@ -11,7 +11,7 @@ const indeterminateClassName =
   'data-indeterminate:border-primary data-indeterminate:bg-primary data-indeterminate:text-primary-foreground dark:data-indeterminate:bg-primary data-indeterminate:[&_[data-slot=checkbox-indicator]_svg]:hidden';
 
 /**
- * shadcn's Checkbox with MRT's indeterminate look: a dash on the checked fill.
+ * shadcn's Checkbox with an indeterminate dash on the checked fill.
  * The part draws a check for every state, so the dash sits over the box,
  * centred, shows only while the part is indeterminate and lets clicks
  * through. Base UI marks the state with `data-indeterminate`.

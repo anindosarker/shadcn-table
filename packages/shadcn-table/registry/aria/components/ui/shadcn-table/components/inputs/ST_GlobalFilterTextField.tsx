@@ -1,11 +1,4 @@
-import {
-  type ChangeEvent,
-  type MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type ChangeEvent, type MouseEvent, useMemo, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { type FocusableElement } from 'react-aria-components';
@@ -46,8 +39,6 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     refs: { searchInputRef },
     setGlobalFilter,
   } = table;
-  // Feeds the search value state and its sync effect, so it is a hook
-  // subscription.
   const globalFilter = useSelector(table.atoms.globalFilter);
 
   const textFieldProps = {
@@ -57,18 +48,18 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const isMounted = useRef(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searchValue, setSearchValue] = useState(globalFilter ?? '');
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleChangeDebounced = useCallback(
-    debounce(
-      (event: ChangeEvent<HTMLInputElement>) => {
-        setGlobalFilter(event.target.value ?? undefined);
-      },
-      manualFiltering ? 500 : 250,
-    ),
+  const handleChangeDebounced = useMemo(
+    () =>
+      debounce(
+        (event: ChangeEvent<HTMLInputElement>) => {
+          setGlobalFilter(event.target.value ?? undefined);
+        },
+        manualFiltering ? 500 : 250,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one debounced function per mount; a new one drops the pending call
     [],
   );
 
@@ -88,17 +79,13 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     setGlobalFilter(undefined);
   };
 
-  useEffect(() => {
-    if (isMounted.current) {
-      if (globalFilter === undefined) {
-        handleClear();
-      } else {
-        setSearchValue(globalFilter);
-      }
-    }
-    isMounted.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalFilter]);
+  // An outside change to the global filter resets the search value; the store
+  // is not written here.
+  const [prevGlobalFilter, setPrevGlobalFilter] = useState(globalFilter);
+  if (globalFilter !== prevGlobalFilter) {
+    setPrevGlobalFilter(globalFilter);
+    setSearchValue(globalFilter ?? '');
+  }
 
   return (
     <Subscribe source={table.atoms.showGlobalFilter}>

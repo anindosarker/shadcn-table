@@ -8,12 +8,16 @@ import {
   getST_RowSelectionHandler,
   getST_SelectAllHandler,
 } from '@/components/ui-base/shadcn-table/shared/utils/row.utils';
-import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
+import {
+  getPlatform,
+  parseFromValuesOrFunc,
+} from '@/components/ui-base/shadcn-table/shared/utils/utils';
 
 const isWinCtrlMacMeta = (event: React.KeyboardEvent<HTMLTableCellElement>) => {
+  const platform = getPlatform();
   return (
-    (event.ctrlKey && navigator.platform.toLowerCase().includes('win')) ||
-    (event.metaKey && navigator.platform.toLowerCase().includes('mac'))
+    (event.ctrlKey && platform.includes('win')) ||
+    (event.metaKey && platform.includes('mac'))
   );
 };
 
@@ -94,7 +98,7 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
         table,
         // @ts-expect-error event.target is typed EventTarget, not Element
         staticRowIndex: +event.target.getAttribute('data-index'),
-      })(event as any);
+      })(event);
     } else if (
       header?.column?.id === 'st-row-select' &&
       table.options.enableSelectAll
@@ -102,7 +106,7 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
       event.preventDefault();
       getST_SelectAllHandler({
         table,
-      })(event as any);
+      })(event);
     } else if (
       cell?.column?.id === 'st-row-expand' &&
       (cell.row.getCanExpand() ||
@@ -118,13 +122,15 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
       table.toggleAllRowsExpanded();
     } else if (cell?.column.id === 'st-row-pin') {
       event.preventDefault();
-      cell.row.getIsPinned()
-        ? cell.row.pin(false)
-        : cell.row.pin(
-            table.options.rowPinningDisplayMode?.includes('bottom')
-              ? 'bottom'
-              : 'top',
-          );
+      if (cell.row.getIsPinned()) {
+        cell.row.pin(false);
+      } else {
+        cell.row.pin(
+          table.options.rowPinningDisplayMode?.includes('bottom')
+            ? 'bottom'
+            : 'top',
+        );
+      }
     } else if (header && isWinCtrlMacMeta(event)) {
       const actionsButton = currentCell.querySelector(
         `button[aria-label="${table.options.localization.columnActions}"]`,
@@ -162,7 +168,6 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
     );
     let nextCell: HTMLElement | undefined = undefined;
 
-    //home/end first or last cell in row
     const findEdgeCell = (rowIndex: 'c' | 'f' | 'l', edge: 'f' | 'l') => {
       const row =
         rowIndex === 'c'
@@ -176,7 +181,6 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
       return targetCell as HTMLElement;
     };
 
-    //page up/down first or last cell in column
     const findBottomTopCell = (columnIndex: number, edge: 'b' | 't') => {
       const row =
         edge === 't'

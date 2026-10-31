@@ -1,5 +1,4 @@
 import { type KeyboardEvent } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -18,7 +17,7 @@ export interface ST_TableFooterCellProps<TData extends ST_RowData>
 }
 
 const footerCellVariants = cva(
-  'border-b text-xs leading-[1.3125rem] text-muted-foreground font-bold align-top',
+  'border-b text-xs leading-5.25 text-muted-foreground font-bold align-top',
 );
 
 export const ST_TableFooterCell = <TData extends ST_RowData>({
@@ -58,7 +57,7 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
     // The pinned offsets and edge shadows follow the column sizing, order,
     // pinning and visibility; a custom `Footer` often totals the filtered,
     // grouped, paginated or selected rows.
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilters: state.columnFilters,
         columnOrder: state.columnOrder,
@@ -83,7 +82,6 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
         rowSelection: state.rowSelection,
         sorting: state.sorting,
       })}
-      source={table.store}
     >
       {({ density }) => {
         const isColumnPinned =
@@ -111,9 +109,9 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
               tableCellProps.align === 'center'
                 ? 'text-center'
                 : tableCellProps.align === 'right'
-                  ? 'text-right flex-row-reverse'
+                  ? 'text-end flex-row-reverse'
                   : tableCellProps.align === 'left'
-                    ? 'text-left'
+                    ? 'text-start'
                     : tableCellProps.align === 'justify'
                       ? 'text-justify'
                       : columnDefType === 'group'
@@ -141,6 +139,6 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
           </td>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

@@ -16,20 +16,32 @@ date; merging it publishes the section as the GitHub release notes.
 #### Spec 02
 
 - Changed: `react` and `react-dom` move to `^19.2.0` (consumer minimum React 19.2, for `useEffectEvent`); the library lint adds `eslint-plugin-react-hooks` 7.1.1 and `@eslint-community/eslint-plugin-eslint-comments` 4.8.1.
+- Fixed: The installed table lints clean under `eslint-config-next` 16 with the React Compiler rules: hooks run unconditionally, no ref is touched during render, no state is set inside an effect.
 
 #### Spec 03
 
+- Fixed: Column definitions are rebuilt when a column resize or a drag ends, also when the owner's table selector leaves those slices out.
+
 #### Spec 04
 
+- Changed: Public types no longer use `any`: `DropdownOption.value` is `string`, `enableRowPinning` callbacks receive `ST_Row`, the `ST_TableRefs` ref maps are non-null, `row.columnFiltersMeta` is `RankingInfo`, the row selection handlers accept `ST_SelectionEvent`, `flexRender` takes `Renderable<never>` and `object` props.
+
 #### Spec 05
+
+- Changed: No deprecated TanStack or DOM API is used: the function registries come from the individual `*Fn_*` exports, state reads go through `table.Subscribe` and `table.atoms`, in the library, the stories and the docs examples; `getDefaultColumnOrderIds` and the display column helpers take only the `columnOrder`, `creatingRow` and `grouping` state they read; `table.atoms` is typed per row type.
 
 #### Spec 06
 
 - Changed: `tailwindcss` and `@tailwindcss/vite` move to `^4.3.3` (consumer minimum Tailwind 4.3, for `scrollbar-thin` and canonical classes).
+- Changed: Tailwind classes use their canonical forms (`z-1` for `z-[1]`, `min-h-25` for `min-h-[100px]` and 20 more), so Tailwind 4.3 IntelliSense reports no hints in the installed files; same CSS.
+- Changed: Direction classes are logical (`ms-`, `me-`, `inset-s-`, `inset-e-`, `text-start`, `text-end`) and pinned offsets use the inline axis, so the table follows `dir` on any ancestor; set `columnResizeDirection: 'rtl'` on RTL pages for the drag math.
+- Changed: Toolbar and header shadows take their color from the theme instead of fixed `rgba` values.
 
 #### Spec 07
 
 - Changed: Two shared hooks, `useST_ComposedRef` (one callback ref for the internal and the user's ref) and `useST_MenuAnchor` (the anchor of the five menus).
+- Changed: Library comments state contracts only: porting history, restated code and repeated rationale are gone, and the five menus share one anchor hook.
+- Changed: `getCommonToolbarStyles` is gone from `shared/utils/style.utils.ts`; nothing in the library used it.
 
 #### Spec 08
 
