@@ -2,6 +2,7 @@ import {
   type DragEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type RefObject,
   useState,
 } from 'react';
@@ -338,8 +339,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                   columnDef.Cell?.({
                     cell,
                     column,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    renderedCellValue: cell.renderValue() as any,
+                    renderedCellValue: cell.renderValue() as ReactNode,
                     row,
                     rowRef,
                     staticColumnIndex,

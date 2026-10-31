@@ -30,8 +30,7 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
     options: { enableRowPinning, rowPinningDisplayMode },
   } = table;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const canPin = parseFromValuesOrFunc(enableRowPinning, row as any);
+  const canPin = parseFromValuesOrFunc(enableRowPinning, row);
 
   if (!canPin) return null;
 
