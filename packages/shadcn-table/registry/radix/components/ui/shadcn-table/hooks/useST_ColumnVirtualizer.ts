@@ -27,10 +27,17 @@ export const useST_ColumnVirtualizer = <
     refs: { tableContainerRef },
   } = table;
 
-  // Pinning and visibility change the pinned indexes below.
-  useSelector(table.atoms.columnPinning);
-  useSelector(table.atoms.columnVisibility);
-  const draggingColumn = useSelector(table.atoms.draggingColumn);
+  // Pinning and visibility change the pinned indexes below. Off, the hook
+  // selects a constant, so these slices never re-render the caller.
+  useSelector(table.atoms.columnPinning, (value) =>
+    enableColumnVirtualization ? value : undefined,
+  );
+  useSelector(table.atoms.columnVisibility, (value) =>
+    enableColumnVirtualization ? value : undefined,
+  );
+  const draggingColumn = useSelector(table.atoms.draggingColumn, (value) =>
+    enableColumnVirtualization ? value : undefined,
+  );
 
   const columnVirtualizerProps = parseFromValuesOrFunc(
     columnVirtualizerOptions,

@@ -30,9 +30,17 @@ export const useST_RowVirtualizer = <
     refs: { tableContainerRef },
   } = table;
 
-  const density = useSelector(table.atoms.density);
-  const draggingRow = useSelector(table.atoms.draggingRow);
-  const expanded = useSelector(table.atoms.expanded);
+  // Off, the hook selects a constant, so these slices never re-render the
+  // caller.
+  const density = useSelector(table.atoms.density, (value) =>
+    enableRowVirtualization ? value : undefined,
+  );
+  const draggingRow = useSelector(table.atoms.draggingRow, (value) =>
+    enableRowVirtualization ? value : undefined,
+  );
+  const expanded = useSelector(table.atoms.expanded, (value) =>
+    enableRowVirtualization ? value : undefined,
+  );
 
   const rowVirtualizerProps = parseFromValuesOrFunc(rowVirtualizerOptions, {
     table,
