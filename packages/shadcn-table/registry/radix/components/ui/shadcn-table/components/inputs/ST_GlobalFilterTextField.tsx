@@ -1,5 +1,12 @@
-import { type ChangeEvent, type MouseEvent, useMemo, useState } from 'react';
-import { Subscribe } from '@tanstack/react-table';
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
@@ -19,7 +26,6 @@ import {
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export type ST_GlobalFilterTextFieldProps = InputProps;
 
@@ -37,8 +43,10 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     },
     refs: { searchInputRef },
     setGlobalFilter,
+    setShowGlobalFilter,
   } = table;
   const globalFilter = useSelector(table.atoms.globalFilter);
+  const showGlobalFilter = useSelector(table.atoms.showGlobalFilter);
 
   const textFieldProps = {
     ...parseFromValuesOrFunc(stSearchTextFieldProps, {
@@ -76,6 +84,31 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     setGlobalFilter(undefined);
   };
 
+  // The field focuses its input when it opens and hands focus back to the
+  // element that opened it when Escape closes it.
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const wasShownRef = useRef(showGlobalFilter);
+  useEffect(() => {
+    if (showGlobalFilter && !wasShownRef.current) {
+      returnFocusRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      searchInputRef.current?.focus({ preventScroll: true });
+    }
+    wasShownRef.current = showGlobalFilter;
+  }, [searchInputRef, showGlobalFilter]);
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    textFieldProps.onKeyDown?.(event);
+    if (event.key !== 'Escape' || event.defaultPrevented || searchValue) {
+      return;
+    }
+    event.preventDefault();
+    setShowGlobalFilter(false);
+    returnFocusRef.current?.focus();
+  };
+
   // An outside change to the global filter resets the search value; the store
   // is not written here.
   const [prevGlobalFilter, setPrevGlobalFilter] = useState(globalFilter);
@@ -85,66 +118,65 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   }
 
   return (
-    <Subscribe source={table.atoms.showGlobalFilter}>
-      {(showGlobalFilter) => (
-        // The st-collapsible-* keyframes ship in the hoisted style below.
-        <Collapsible open={showGlobalFilter}>
-          <style href="st-collapsible" precedence="low">
-            {stCollapsibleKeyframes}
-          </style>
-          <CollapsibleContent className="data-[state=closed]:animate-[st-collapsible-left_300ms_var(--ease-in-out)] data-[state=open]:animate-[st-collapsible-right_300ms_var(--ease-in-out)]">
-            <InputGroup>
-              {enableGlobalFilterModes ? (
-                <InputGroupAddon align="inline-start">
-                  <ST_Tooltip title={localization.changeSearchMode}>
-                    <InputGroupButton
-                      aria-label={localization.changeSearchMode}
-                      onClick={handleGlobalFilterMenuOpen}
-                      size="icon-sm"
-                      className="size-7"
-                    >
-                      <SearchIcon />
-                    </InputGroupButton>
-                  </ST_Tooltip>
-                </InputGroupAddon>
-              ) : (
-                <InputGroupAddon align="inline-start">
+    <Collapsible className="[--st-search-width:14rem]" open={showGlobalFilter}>
+      {/* Radix zeroes the inline transition duration while it measures the
+          panel, so the class duration is important. */}
+      <CollapsibleContent
+        className="overflow-hidden w-(--st-search-width) transition-[width,opacity] duration-200! ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none data-[state=closed]:w-12 data-[state=closed]:opacity-0"
+        forceMount
+        inert={!showGlobalFilter}
+      >
+        <InputGroup>
+          {enableGlobalFilterModes ? (
+            <InputGroupAddon align="inline-start">
+              <ST_Tooltip title={localization.changeSearchMode}>
+                <InputGroupButton
+                  aria-label={localization.changeSearchMode}
+                  onClick={handleGlobalFilterMenuOpen}
+                  size="icon-sm"
+                  className="size-7"
+                >
                   <SearchIcon />
-                </InputGroupAddon>
-              )}
-              <InputGroupInput
-                autoComplete="off"
-                onChange={handleChange}
-                placeholder={localization.search}
-                value={searchValue ?? ''}
-                {...textFieldProps}
-                ref={(inputRef) => {
-                  searchInputRef.current = inputRef;
-                }}
-              />
-              <InputGroupAddon align="inline-end">
-                <ST_Tooltip title={localization.clearSearch ?? ''}>
-                  <span>
-                    <InputGroupButton
-                      aria-label={localization.clearSearch}
-                      disabled={!searchValue?.length}
-                      onClick={handleClear}
-                      size="icon-sm"
-                    >
-                      <CloseIcon />
-                    </InputGroupButton>
-                  </span>
-                </ST_Tooltip>
-              </InputGroupAddon>
-            </InputGroup>
-            <ST_FilterOptionMenu
-              anchorEl={anchorEl}
-              onSelect={handleClear}
-              setAnchorEl={setAnchorEl}
-            />
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-    </Subscribe>
+                </InputGroupButton>
+              </ST_Tooltip>
+            </InputGroupAddon>
+          ) : (
+            <InputGroupAddon align="inline-start">
+              <SearchIcon />
+            </InputGroupAddon>
+          )}
+          <InputGroupInput
+            autoComplete="off"
+            onChange={handleChange}
+            placeholder={localization.search}
+            value={searchValue ?? ''}
+            {...textFieldProps}
+            onKeyDown={handleKeyDown}
+            ref={(inputRef) => {
+              searchInputRef.current = inputRef;
+            }}
+          />
+          <InputGroupAddon align="inline-end">
+            <ST_Tooltip title={localization.clearSearch ?? ''}>
+              <span>
+                <InputGroupButton
+                  aria-label={localization.clearSearch}
+                  disabled={!searchValue?.length}
+                  onClick={handleClear}
+                  size="icon-sm"
+                >
+                  <CloseIcon />
+                </InputGroupButton>
+              </span>
+            </ST_Tooltip>
+          </InputGroupAddon>
+        </InputGroup>
+        <ST_FilterOptionMenu
+          anchorEl={anchorEl}
+          onSelect={handleClear}
+          setAnchorEl={setAnchorEl}
+        />
+      </CollapsibleContent>
+    </Collapsible>
   );
 };

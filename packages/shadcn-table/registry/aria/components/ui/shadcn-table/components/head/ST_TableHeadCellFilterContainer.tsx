@@ -10,7 +10,6 @@ import { ST_FilterCheckbox } from '@/components/ui/shadcn-table/components/input
 import { ST_FilterRangeFields } from '@/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields';
 import { ST_FilterRangeSlider } from '@/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider';
 import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_FilterTextField';
-import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 /**
  * The Collapsible part's props under the names every base exposes: `open`,
@@ -59,8 +58,6 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showColumnFilters}>
       {(showColumnFilters) => (
-        // React Aria sets --disclosure-panel-height, which the st-collapsible-* keyframes read;
-        // the panel marks its state only through aria-hidden.
         <Collapsible
           defaultExpanded={defaultOpen}
           isExpanded={
@@ -69,10 +66,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
           onExpandedChange={onOpenChange}
           {...rest}
         >
-          <style href="st-collapsible" precedence="low">
-            {stCollapsibleKeyframes}
-          </style>
-          <CollapsibleContent className="aria-[hidden=false]:animate-[st-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-collapsible-up_200ms_ease-out]">
+          <CollapsibleContent className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none">
             {filterInput}
           </CollapsibleContent>
         </Collapsible>

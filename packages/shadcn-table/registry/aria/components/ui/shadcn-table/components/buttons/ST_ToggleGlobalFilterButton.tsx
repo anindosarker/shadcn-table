@@ -14,13 +14,11 @@ export const ST_ToggleGlobalFilterButton = ({
       icons: { SearchIcon, SearchOffIcon },
       localization,
     },
-    refs: { searchInputRef },
     setShowGlobalFilter,
   } = table;
 
   const handleToggleSearch = () => {
     setShowGlobalFilter(!table.atoms.showGlobalFilter.get());
-    queueMicrotask(() => searchInputRef.current?.focus());
   };
 
   return (

@@ -1,4 +1,4 @@
-import { type RefObject } from 'react';
+import { type ReactNode, type RefObject, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
@@ -10,7 +10,6 @@ import {
   type TableCellProps,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -38,6 +37,36 @@ const detailPanelCellVariants = cva('w-full border-b text-sm px-4', {
     },
   },
 });
+
+// React Aria keeps a collapsed panel's children mounted, so the panel renders
+// them while expanded and until its collapse transition ends.
+const DetailPanelCollapsible = ({
+  children,
+  isExpanded,
+}: {
+  children: ReactNode;
+  isExpanded: boolean;
+}) => {
+  const [isCollapsing, setIsCollapsing] = useState(false);
+  const [prevIsExpanded, setPrevIsExpanded] = useState(isExpanded);
+  if (prevIsExpanded !== isExpanded) {
+    setPrevIsExpanded(isExpanded);
+    setIsCollapsing(!isExpanded);
+  }
+
+  return (
+    <Collapsible isExpanded={isExpanded}>
+      <CollapsibleContent
+        className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none"
+        onTransitionEnd={(event) => {
+          if (event.target === event.currentTarget) setIsCollapsing(false);
+        }}
+      >
+        {(isExpanded || isCollapsing) && children}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
 
 export const ST_TableDetailPanel = <TData extends ST_RowData>({
   parentRowRef,
@@ -143,17 +172,9 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                // React Aria sets --disclosure-panel-height, which the
-                // st-collapsible-* keyframes read, and keeps a collapsed
-                // panel's children mounted.
-                <Collapsible isExpanded={row.getIsExpanded()}>
-                  <style href="st-collapsible" precedence="low">
-                    {stCollapsibleKeyframes}
-                  </style>
-                  <CollapsibleContent className="overflow-hidden aria-[hidden=false]:animate-[st-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-collapsible-up_200ms_ease-out]">
-                    {row.getIsExpanded() && DetailPanel}
-                  </CollapsibleContent>
-                </Collapsible>
+                <DetailPanelCollapsible isExpanded={row.getIsExpanded()}>
+                  {DetailPanel}
+                </DetailPanelCollapsible>
               )}
             </td>
           </tr>
