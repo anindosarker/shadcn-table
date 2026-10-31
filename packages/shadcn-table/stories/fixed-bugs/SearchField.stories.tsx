@@ -3,7 +3,8 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 // The search field stays mounted: it opens with its input focused, is inert
-// while closed, and Escape inside it hands focus back to the toggle.
+// while closed, and Escape inside it clears a value first, then closes the
+// empty field and hands focus back to the toggle.
 
 const meta: Meta = {
   title: 'Fixed Bugs/Search Field',
@@ -56,6 +57,11 @@ export const OpenCloseAndEscape = {
     await waitFor(() =>
       expect(document.activeElement).toBe(panelOf(canvasElement).input),
     );
+    await userEvent.keyboard('Ma');
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(panelOf(canvasElement).input).toHaveValue(''));
+    expect(panelOf(canvasElement).panel.inert).toBe(false);
+    expect(document.activeElement).toBe(panelOf(canvasElement).input);
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
     await waitFor(() => expect(document.activeElement).toBe(toggle));
