@@ -363,16 +363,14 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         )}
       >
         <ST_Tooltip side="right" title={localization.clearFilter ?? ''}>
-          <span>
-            <InputGroupButton
-              aria-label={localization.clearFilter}
-              isDisabled={!filterValue?.toString()?.length}
-              onClick={handleClear}
-              size="icon-xs"
-            >
-              <CloseIcon />
-            </InputGroupButton>
-          </span>
+          <InputGroupButton
+            aria-label={localization.clearFilter}
+            isDisabled={!filterValue?.toString()?.length}
+            onClick={handleClear}
+            size="icon-xs"
+          >
+            <CloseIcon />
+          </InputGroupButton>
         </ST_Tooltip>
       </InputGroupAddon>
     ) : null;
@@ -380,16 +378,14 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const startAdornment = showChangeModeButton ? (
     <InputGroupAddon align="inline-start">
       <ST_Tooltip title={localization.changeFilterMode}>
-        <span>
-          <InputGroupButton
-            aria-label={localization.changeFilterMode}
-            {...openerProps}
-            onClick={handleFilterMenuOpen}
-            size="icon-xs"
-          >
-            <FilterListIcon />
-          </InputGroupButton>
-        </span>
+        <InputGroupButton
+          aria-label={localization.changeFilterMode}
+          {...openerProps}
+          onClick={handleFilterMenuOpen}
+          size="icon-xs"
+        >
+          <FilterListIcon />
+        </InputGroupButton>
       </ST_Tooltip>
       {filterChipLabel && (
         <Badge variant="secondary">
