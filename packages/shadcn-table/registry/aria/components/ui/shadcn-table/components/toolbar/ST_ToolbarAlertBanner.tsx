@@ -21,7 +21,7 @@ export interface ST_ToolbarAlertBannerProps
 }
 
 const toolbarAlertBannerVariants = cva(
-  'relative left-0 right-0 top-0 z-[2] w-full',
+  'relative inset-s-0 inset-e-0 top-0 z-2 w-full',
   {
     variants: {
       bottomOffset: {

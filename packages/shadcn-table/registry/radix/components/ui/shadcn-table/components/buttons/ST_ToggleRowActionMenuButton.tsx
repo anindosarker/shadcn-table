@@ -13,7 +13,7 @@ import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_T
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_RowActionMenu';
 
-const commonIconButtonStyles = cva('ml-2.5');
+const commonIconButtonStyles = cva('ms-2.5');
 
 export interface ST_ToggleRowActionMenuButtonProps<TData extends ST_RowData>
   extends ButtonProps {

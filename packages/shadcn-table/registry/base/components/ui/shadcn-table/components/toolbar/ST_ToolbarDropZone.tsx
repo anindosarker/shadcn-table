@@ -10,7 +10,7 @@ import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 export type ST_ToolbarDropZoneProps = DivProps;
 
 const toolbarDropZoneVariants = cva(
-  'absolute z-[4] box-border flex h-full w-full items-center justify-center border-2 border-dashed border-primary backdrop-blur-sm',
+  'absolute z-4 box-border flex h-full w-full items-center justify-center border-2 border-dashed border-primary backdrop-blur-sm',
   {
     variants: {
       hovered: {
