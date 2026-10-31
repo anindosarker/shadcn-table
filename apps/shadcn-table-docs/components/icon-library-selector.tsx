@@ -41,13 +41,15 @@ export const IconLibraryProvider = ({ children }: { children: ReactNode }) => {
 };
 
 /**
- * The shared icon library pick. Outside an `IconLibraryProvider` it falls
- * back to local state, so a command still switches on its own.
+ * The shared icon library pick. Every docs page renders under the
+ * `IconLibraryProvider` in `app/docs/layout.tsx`.
  */
 export const useIconLibrary = (): IconLibraryState => {
   const shared = use(IconLibraryContext);
-  const [library, setLibrary] = useState<IconLibrary>(defaultIconLibrary);
-  return shared ?? { library, setLibrary };
+  if (!shared) {
+    throw new Error('useIconLibrary must be used inside IconLibraryProvider');
+  }
+  return shared;
 };
 
 /**
