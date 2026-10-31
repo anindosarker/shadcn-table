@@ -37,7 +37,11 @@ config.autoAddCss = false;
  */
 const fontAwesomeIcons: Partial<ST_Icons> = {
   ArrowDownwardIcon: ({ className, style }: ST_IconProps) => (
-    <FontAwesomeIcon icon={faSortDown} className={className} style={style} />
+    <FontAwesomeIcon
+      icon={faSortDown}
+      className={className}
+      style={{ ...style }}
+    />
   ),
   ClearAllIcon: () => <FontAwesomeIcon icon={faBarsStaggered} />,
   DensityLargeIcon: () => <FontAwesomeIcon icon={faGripLines} />,
@@ -45,13 +49,21 @@ const fontAwesomeIcons: Partial<ST_Icons> = {
   DensitySmallIcon: () => <FontAwesomeIcon icon={faBars} />,
   DragHandleIcon: () => <FontAwesomeIcon icon={faGripLines} />,
   FilterListIcon: ({ className, style }: ST_IconProps) => (
-    <FontAwesomeIcon icon={faFilter} className={className} style={style} />
+    <FontAwesomeIcon
+      icon={faFilter}
+      className={className}
+      style={{ ...style }}
+    />
   ),
   FilterListOffIcon: () => <FontAwesomeIcon icon={faFilterCircleXmark} />,
   FullscreenExitIcon: () => <FontAwesomeIcon icon={faCompress} />,
   FullscreenIcon: () => <FontAwesomeIcon icon={faExpand} />,
   SearchIcon: ({ className, style }: ST_IconProps) => (
-    <FontAwesomeIcon icon={faSearch} className={className} style={style} />
+    <FontAwesomeIcon
+      icon={faSearch}
+      className={className}
+      style={{ ...style }}
+    />
   ),
   SearchOffIcon: () => <FontAwesomeIcon icon={faSearchMinus} />,
   ViewColumnIcon: () => <FontAwesomeIcon icon={faColumns} />,
@@ -61,11 +73,15 @@ const fontAwesomeIcons: Partial<ST_Icons> = {
     <FontAwesomeIcon
       icon={faArrowDownWideShort}
       className={className}
-      style={style}
-    /> // style carries the rotation transform
+      style={{ ...style }}
+    /> // className and style carry the rotation
   ),
   PushPinIcon: ({ className, style }: ST_IconProps) => (
-    <FontAwesomeIcon icon={faThumbTack} className={className} style={style} /> // style carries the rotation transform
+    <FontAwesomeIcon
+      icon={faThumbTack}
+      className={className}
+      style={{ ...style }}
+    /> // className and style carry the rotation
   ),
   VisibilityOffIcon: () => <FontAwesomeIcon icon={faEyeSlash} />,
 };
