@@ -6,7 +6,7 @@ import {
   type ST_Row,
   type ST_RowData,
 } from '@/components/ui-base/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 
 export interface ST_RowPinButtonProps<TData extends ST_RowData>
   extends ButtonProps {

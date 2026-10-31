@@ -49,16 +49,6 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/ST_Checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/ST_Tooltip.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Tooltip.tsx"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
@@ -164,6 +154,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -222,6 +217,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
@@ -354,11 +354,6 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -467,6 +462,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -1229,16 +1229,6 @@
       ],
       "files": [
         {
-          "path": "registry/radix/components/ui/shadcn-table/ST_Checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/ST_Tooltip.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Tooltip.tsx"
-        },
-        {
           "path": "registry/radix/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
@@ -1344,6 +1334,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -1402,6 +1397,11 @@
           "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
@@ -1534,11 +1534,6 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
-        },
-        {
           "path": "registry/radix/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -1647,6 +1642,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -2409,16 +2409,6 @@
       ],
       "files": [
         {
-          "path": "registry/aria/components/ui/shadcn-table/ST_Checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
-        },
-        {
-          "path": "registry/aria/components/ui/shadcn-table/ST_Tooltip.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Tooltip.tsx"
-        },
-        {
           "path": "registry/aria/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
@@ -2524,6 +2514,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -2582,6 +2577,11 @@
           "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
@@ -2714,11 +2714,6 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
         },
         {
-          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
-        },
-        {
           "path": "registry/aria/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -2827,6 +2822,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -3589,16 +3589,6 @@
       ],
       "files": [
         {
-          "path": "registry/base/components/ui/shadcn-table/ST_Checkbox.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Checkbox.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/ST_Tooltip.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/ST_Tooltip.tsx"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
@@ -3704,6 +3694,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_ToggleRowActionMenuButton.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -3762,6 +3757,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_EditCellTextField.tsx",
@@ -3894,11 +3894,6 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/components/toolbar/useST_MediaQuery.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/toolbar/useST_MediaQuery.ts"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stCellActionsFeature.ts"
@@ -4007,6 +4002,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",

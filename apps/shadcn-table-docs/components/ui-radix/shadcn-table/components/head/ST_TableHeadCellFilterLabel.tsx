@@ -8,7 +8,7 @@ import {
   PopoverContent,
 } from '@/components/ui-radix/popover';
 import { cn } from '@/lib/utils';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui-radix/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import {
   type ButtonProps,

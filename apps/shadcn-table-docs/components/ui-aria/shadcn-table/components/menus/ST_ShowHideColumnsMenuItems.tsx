@@ -19,7 +19,7 @@ import {
 import { reorderColumn } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui-aria/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui-aria/shadcn-table/components/buttons/ST_GrabHandleButton';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',

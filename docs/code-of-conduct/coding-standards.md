@@ -48,8 +48,8 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
   every committed part of a base: the gate is that it leaves `git status --short` empty.
   A check that fails on a part is fixed in the check (ESLint ignores the parts; the tsconfigs
   carry no unused-code flags). No exception: a look the library needs beyond the part goes in
-  a library wrapper under `components/ui/shadcn-table/` (`ST_Tooltip`, `ST_Checkbox`), and
-  every part reaches users as a `registryDependency`.
+  a library wrapper in the folder of its kind (`components/buttons/ST_Tooltip.tsx`,
+  `components/inputs/ST_Checkbox.tsx`), and every part reaches users as a `registryDependency`.
 - The docs examples follow the same model: `apps/shadcn-table-docs/examples/<base>/<slug>/`
   for every base, radix the reference, a common change made in every folder by hand,
   `scripts/registry/examples-<base>-diff.json` the list of example files allowed to differ,

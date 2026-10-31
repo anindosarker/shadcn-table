@@ -23,7 +23,7 @@ import {
   debounce,
   parseFromValuesOrFunc,
 } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui-radix/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 import { stCollapsibleKeyframes } from '@/components/ui-radix/shadcn-table/shared/utils/style.utils';
