@@ -1,6 +1,5 @@
 // The Hugeicons icon set: the keys of the Lucide map in icons.ts, drawn with
-// @hugeicons/react and @hugeicons/core-free-icons. Where Hugeicons has no
-// match, the closest icon stands in and its entry names the Lucide original.
+// @hugeicons/react and @hugeicons/core-free-icons.
 import { createElement } from 'react';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
 import {

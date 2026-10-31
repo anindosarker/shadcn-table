@@ -1,6 +1,5 @@
 // The Tabler icon set: the keys of the Lucide map in icons.ts, drawn with
-// @tabler/icons-react. Where Tabler has no match, the closest icon stands in
-// and its entry names the Lucide original.
+// @tabler/icons-react.
 import {
   IconArrowDown,
   IconArrowsLeftRight,

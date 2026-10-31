@@ -1,6 +1,5 @@
 // The Phosphor icon set: the keys of the Lucide map in icons.ts, drawn with
-// @phosphor-icons/react. Where Phosphor has no match, the closest icon stands
-// in and its entry names the Lucide original.
+// @phosphor-icons/react.
 import {
   ArrowCounterClockwiseIcon,
   ArrowDownIcon,
