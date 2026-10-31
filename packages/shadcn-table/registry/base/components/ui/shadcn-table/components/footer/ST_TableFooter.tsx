@@ -18,7 +18,7 @@ const tableFooterVariants = cva('', {
   variants: {
     layout: { grid: 'grid', semantic: '' },
     sticky: {
-      true: 'bottom-0 sticky z-[1] opacity-[0.97] outline outline-1 outline-border',
+      true: 'bottom-0 sticky z-1 opacity-[0.97] outline outline-1 outline-border',
       false: 'relative',
     },
   },

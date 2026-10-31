@@ -22,7 +22,7 @@ import {
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
 
 const tableHeadCellFilterLabelVariants = cva(
-  'ml-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
+  'ms-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
   {
     variants: {
       active: {

@@ -131,9 +131,9 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
                 tableCellProps.align === 'center'
                   ? 'text-center'
                   : tableCellProps.align === 'right'
-                    ? 'text-right flex-row-reverse'
+                    ? 'text-end flex-row-reverse'
                     : tableCellProps.align === 'left'
-                      ? 'text-left'
+                      ? 'text-start'
                       : tableCellProps.align === 'justify'
                         ? 'text-justify'
                         : 'text-start',
