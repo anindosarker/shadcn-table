@@ -39,6 +39,11 @@ Gates:
   - `MenuOpeners` `ColumnActions` now asserts the focused `Filter by First Name` textbox after "Filter by column": fails at a86309a8 in base and aria (focus on the opener), passes in radix; passes at 1e9c8327 in all three
   - Aria `DetailPanel` `Single Expand` failed at a86309a8 and 25202af6 under load (6 of 6 local runs, and CI run 41200347057 at 25202af6): row 1's collapse ran no transition, so `transitionend` never fired and its detail stayed mounted in the hidden panel; fixed in 4de7e42f
   - CI run 41201459254 (PR #74) at b2b1647a: green, all 15 checks
+- Verifier at 0583adec (diff from b2b1647a touches only `.ai/`):
+  - 2.2 gates reused, not rerun: `lint`, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `check:tailwind`, `test:base`, `test:radix`, `test:aria`, `check:bases`, `registry:build`, docs `types:check`, `lint`, `build` (builder, b2b1647a); `pr.yml` (CI run 41201459254 at b2b1647a); no 2.2 gate missing, so none rerun
+  - 02 Acceptance `eslint-disable` count (verifier) at 0583adec: base 53, radix 53, aria 55, equal to the expected count in `trackers/02-tracker.md` (53, 53, 55 once S3's `icons.ts` line went)
+  - 1.2 Acceptance play tests (verifier) at 0583adec, `test:base` (port 5341), `test:radix` (5344), `test:aria` (5347) concurrently on the 1.6.8 files (`Filtering`, `Sorting`, `ColumnHiding`, `SearchField`, `MenuOpeners`, `FilterPopover`, `ModalExit`, `HeadlessFullScreen`, `RTL`, `PanelCollapse`): green, 10 files, 51 tests each
+  - Judged search reveal: not recaptured; the three judges run on the builder's 382a33a4 captures (main session)
 
 - Ride-alongs: done (174fac3c icons lint, 4bcae752 Remix type fix, bc3ffa65 checkbox `indeterminateIcon`, 5bea26a0 registry and docs copies)
 - Milestone 01 reproduce and 1.6.2 to 1.6.8: done (43af46f6 library, 382a33a4 stories)
