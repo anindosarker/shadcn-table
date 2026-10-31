@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
@@ -84,8 +84,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   const [filterValues, setFilterValues] = useState([min, max]);
   const columnFilterValue = column.getFilterValue();
 
-  const isMounted = useRef(false);
-
   // prevent moving the focus to the next/prev cell when using the arrow keys
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -93,16 +91,20 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
     }
   };
 
-  useEffect(() => {
-    if (isMounted.current) {
-      if (columnFilterValue === undefined) {
-        setFilterValues([min, max]);
-      } else if (Array.isArray(columnFilterValue)) {
-        setFilterValues(columnFilterValue);
-      }
+  // An outside filter change or a new facet range resets the thumbs.
+  const [prevSync, setPrevSync] = useState({ columnFilterValue, max, min });
+  if (
+    prevSync.columnFilterValue !== columnFilterValue ||
+    prevSync.max !== max ||
+    prevSync.min !== min
+  ) {
+    setPrevSync({ columnFilterValue, max, min });
+    if (columnFilterValue === undefined) {
+      setFilterValues([min, max]);
+    } else if (Array.isArray(columnFilterValue)) {
+      setFilterValues(columnFilterValue);
     }
-    isMounted.current = true;
-  }, [columnFilterValue, min, max]);
+  }
 
   return (
     <Subscribe source={table.atoms.columnSizing}>
@@ -128,7 +130,7 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
             {...sliderProps}
             ref={(node) => {
               if (node) {
-                filterInputRefs.current![`${column.id}-0`] =
+                filterInputRefs.current[`${column.id}-0`] =
                   node.querySelector<HTMLInputElement>(
                     '[data-slot="slider-thumb"]',
                   )!;

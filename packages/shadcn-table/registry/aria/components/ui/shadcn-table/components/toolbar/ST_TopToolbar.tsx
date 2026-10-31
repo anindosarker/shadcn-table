@@ -1,11 +1,7 @@
-import { useCallback, useRef } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_LinearProgressBar } from '@/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar';
 import { ST_TablePagination } from '@/components/ui/shadcn-table/components/toolbar/ST_TablePagination';
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
@@ -14,6 +10,7 @@ import { ST_ToolbarInternalButtons } from '@/components/ui/shadcn-table/componen
 import { useST_MediaQuery } from '@/components/ui/shadcn-table/hooks/useST_MediaQuery';
 import { ST_GlobalFilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_GlobalFilterTextField';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 const topToolbarVariants = cva(
   'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
@@ -49,27 +46,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
 
   const toolbarProps = parseFromValuesOrFunc(stTopToolbarProps, { table });
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // topToolbarRef null while the children's layout effects run.
-  const userRef = useRef(toolbarProps?.ref);
-  userRef.current = toolbarProps?.ref;
-  const attachRef = useCallback(
-    (node: HTMLDivElement) => {
-      topToolbarRef.current = node;
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        topToolbarRef.current = null;
-      };
-    },
-    [topToolbarRef],
-  );
+  const attachRef = useST_ComposedRef(topToolbarRef, toolbarProps?.ref);
 
   const globalFilterProps = {
     className: !isTablet ? 'z-[2]' : undefined,

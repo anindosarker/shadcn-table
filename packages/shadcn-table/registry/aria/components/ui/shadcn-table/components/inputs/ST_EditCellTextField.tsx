@@ -105,6 +105,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
 
   const saveInputValueToRowCache = (newValue: string) => {
     //@ts-expect-error _valuesCache is TanStack-internal
+    // eslint-disable-next-line react-hooks/immutability -- runs in saveInputValueToRowCache, not render; _valuesCache is the row's mutable row values cache
     row._valuesCache[column.id] = newValue;
     const creatingRow = table.atoms.creatingRow.get();
     const editingRow = table.atoms.editingRow.get();
@@ -200,7 +201,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                 id={id}
                 ref={(inputRef) => {
                   if (inputRef) {
-                    editInputRefs.current![column.id] =
+                    editInputRefs.current[column.id] =
                       inputRef as unknown as HTMLInputElement;
                   }
                 }}
@@ -258,7 +259,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             id={id}
             ref={(inputRef) => {
               if (inputRef) {
-                editInputRefs.current![column.id] = inputRef;
+                editInputRefs.current[column.id] = inputRef;
               }
             }}
             name={column.id}

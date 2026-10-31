@@ -49,9 +49,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       localization,
     },
   } = table;
-  // These feed the column list memos, so they are hook subscriptions.
   const columnOrder = useSelector(table.atoms.columnOrder);
-  const columnPinning = useSelector(table.atoms.columnPinning);
+  // A pin change reorders the leaf column getters below.
+  useSelector(table.atoms.columnPinning);
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -59,31 +59,31 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       .forEach((col) => col.toggleVisibility(value));
   };
 
-  /* eslint-disable react-hooks/exhaustive-deps */
+  const columns = getAllColumns();
+  const centerLeafColumns = getCenterLeafColumns();
+  const startLeafColumns = getStartLeafColumns();
+  const endLeafColumns = getEndLeafColumns();
   const allColumns = useMemo(() => {
-    const columns = getAllColumns();
     if (
       columnOrder.length > 0 &&
       !columns.some((col) => col.columnDef.columnDefType === 'group')
     ) {
       return [
-        ...getStartLeafColumns(),
+        ...startLeafColumns,
         ...Array.from(new Set(columnOrder)).map((colId) =>
-          getCenterLeafColumns().find((col) => col?.id === colId),
+          centerLeafColumns.find((col) => col?.id === colId),
         ),
-        ...getEndLeafColumns(),
+        ...endLeafColumns,
       ].filter(Boolean);
     }
     return columns;
   }, [
     columnOrder,
-    columnPinning,
-    getAllColumns(),
-    getCenterLeafColumns(),
-    getStartLeafColumns(),
-    getEndLeafColumns(),
+    columns,
+    centerLeafColumns,
+    startLeafColumns,
+    endLeafColumns,
   ]) as ST_Column<TData>[];
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   const isNestedColumns = allColumns.some(
     (col) => col.columnDef.columnDefType === 'group',

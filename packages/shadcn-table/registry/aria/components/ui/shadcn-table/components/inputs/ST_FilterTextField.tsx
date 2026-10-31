@@ -2,8 +2,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
-  useCallback,
-  useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -61,6 +60,8 @@ const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
 );
 
+/** Every value the filter inputs hand to the column filter. */
+type FilterInputValue = Date | number | string | string[] | null;
 export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
@@ -212,29 +213,31 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // The popup anchors to the whole input group so it spans the filter cell.
   const comboboxAnchor = useComboboxAnchor();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleChangeDebounced = useCallback(
-    debounce(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (newValue: any) => {
-        if (isRangeFilter) {
-          column.setFilterValue((old: Array<Date | null | number | string>) => {
-            const newFilterValues = old ?? ['', ''];
-            newFilterValues[rangeFilterIndex as number] = newValue ?? undefined;
-            return newFilterValues;
-          });
-        } else {
-          column.setFilterValue(newValue ?? undefined);
-        }
-      },
-      isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
-    ),
+  const handleChangeDebounced = useMemo(
+    () =>
+      debounce(
+        (newValue: FilterInputValue) => {
+          if (isRangeFilter) {
+            column.setFilterValue(
+              (old: Array<FilterInputValue | undefined>) => {
+                const newFilterValues = old ?? ['', ''];
+                newFilterValues[rangeFilterIndex as number] =
+                  newValue ?? undefined;
+                return newFilterValues;
+              },
+            );
+          } else {
+            column.setFilterValue(newValue ?? undefined);
+          }
+        },
+        isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one debounced function per mount; a new one drops the pending call
     [],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (newValue: any) => {
-    setFilterValue(newValue ?? '');
+  const handleChange = (newValue: FilterInputValue) => {
+    setFilterValue((newValue ?? '') as string | string[]);
     handleChangeDebounced(newValue);
   };
 
@@ -312,24 +315,24 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     }
   };
 
-  const isMounted = useRef(false);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      const filterValue = column.getFilterValue();
-      if (filterValue === undefined) {
-        handleClear();
-      } else if (isRangeFilter && rangeFilterIndex !== undefined) {
-        setFilterValue(
-          (filterValue as [string, string])[rangeFilterIndex] ?? '',
-        );
-      } else {
-        setFilterValue(filterValue as string);
-      }
+  // An outside change to the column filter resets the local value; the
+  // store is not written here.
+  const columnFilterValue = column.getFilterValue();
+  const [prevColumnFilterValue, setPrevColumnFilterValue] =
+    useState(columnFilterValue);
+  if (columnFilterValue !== prevColumnFilterValue) {
+    setPrevColumnFilterValue(columnFilterValue);
+    if (columnFilterValue === undefined) {
+      if (isAutocompleteFilter) setAutocompleteValue(null);
+      setFilterValue(isMultiSelectFilter ? [] : '');
+    } else if (isRangeFilter && rangeFilterIndex !== undefined) {
+      setFilterValue(
+        (columnFilterValue as [string, string])[rangeFilterIndex] ?? '',
+      );
+    } else {
+      setFilterValue(columnFilterValue as string);
     }
-    isMounted.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [column.getFilterValue()]);
+  }
 
   if (columnDef.Filter) {
     return (
@@ -405,7 +408,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         ? undefined
         : filterPlaceholder,
     ref: (inputRef) => {
-      filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+      // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+      filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
         inputRef as HTMLInputElement;
     },
     title: filterPlaceholder,
@@ -474,12 +478,14 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                   : 'min-w-auto',
         )}
         ref={(node) => {
+          // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; comboboxAnchor is the combobox's mutable anchor ref
           comboboxAnchor.current =
             node?.querySelector<HTMLDivElement>(
               ':scope > [data-slot="input-group"]',
             ) ?? null;
           if (node && isMultiSelectFilter) {
-            filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+            // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+            filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
               node.querySelector<HTMLInputElement>(
                 '[data-slot="combobox-chip-input"]',
               )!;
