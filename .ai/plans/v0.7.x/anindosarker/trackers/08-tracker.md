@@ -15,9 +15,17 @@ Gates:
 - `pnpm check:bases`, `pnpm test:base` at 0ed09813: green
 - agent-browser on dev server 5342 at 0ed09813: step 1 (de command, French gives `-locale-fr.json` and `ST_Localization_FR`, npm gives `npx shadcn@latest`), step 2 (es toolbar to React Aria: header React Aria, install tab React Aria with `/r/aria/`, 53 `[data-rac]`), step 3 (basic toolbar to Radix UI: header Radix UI, code view, prompt `/r/radix/example-basic.json`, full screen menu on top): pass; step 4 console: zero on Base UI and Radix UI, React Aria dev warnings (see Attention)
 - Review fix: `apps/shadcn-table-docs/tsconfig.json` reverted to c9b32366; `pnpm --filter shadcn-table-docs types:check` at 7421a1e5: green, file unchanged after the run
+- S4 verifier (at 92a558a3; reused types:check at 7421a1e5 and test:base, check:bases at 0ed09813 since the diff is `tsconfig.json` back to c9b32366 plus the tracker; rerun the rest because 0ed09813..HEAD touches `tsconfig.json`):
+- `pnpm --filter shadcn-table-docs lint` at 92a558a3, verifier: green (0 errors, 9 existing example warnings)
+- `pnpm --filter shadcn-table-docs build` at 92a558a3, verifier: green, `git status` clean after
+- `check-pages.mjs a` and `c`, `--base base|radix|aria`, six runs concurrent against one `next start` (port 5341, `NEXT_DIST_DIR=.next`) at 92a558a3, verifier: green (a 295, c 285 each)
+- 2.2 S4 greps (`supportedLocales|shadcn-table-locale-de.json   #`, `@st/|@st\b`) at 92a558a3, verifier: empty
+- Acceptance (1.2) at 92a558a3, verifier: build exit 0, `check-pages.mjs` exit 0 for all three bases, every example page (40 of 41 under `content/docs/examples`, the index lists examples only) renders the header and toolbar Base select; install page has 0 of `shadcn-table-tabler.json`, `@shadcn-table/`, "Created with shadcn create" (S5 scope, 1.6.5 and 1.6.6): S4 part pass, full Acceptance pending S5
 
 ## Attention
 
+- Spec 08 Acceptance is only reachable after S5 (install page strings `shadcn-table-tabler.json`, `@shadcn-table/`, "Created with shadcn create" are 1.6.5 and 1.6.6). The S4 verifier records the S4 part green and the full Acceptance as pending S5; PR #71 is marked ready on the S4 gates.
+- No harness `Claude-Session:` reminder reached the S4 verifier either; its commit and the PR #71 body keep `https://claude.ai/code/session_015VBrypUJXYCcQD6zrN4yeT`.
 - A dev server on a port other than 5320 (here 5342, distDir `.next-5342`) rewrites `apps/shadcn-table-docs/tsconfig.json` (expanded arrays, `.next-<port>` includes); 0ed09813 committed that rewrite, reverted in 7421a1e5. `.prettierignore` lists `*.json`, so `pnpm format` cannot catch it. Owner: pin `typescript.tsconfigPath` in `next.config.mjs` or make a gate diff the file.
 - Commits 970cf469, 8d8ef490, 0ed09813 and 37e0cbd4 lack the `Claude-Session:` trailer (pushed, no force-push per P1). No harness reminder reached the fixer subagent, so later commits and the PR #71 body carry `https://claude.ai/code/session_015VBrypUJXYCcQD6zrN4yeT`, the line on c9b32366 and 5c5964f6; replace if the run's session differs.
 - PR #71 Release impact CHANGELOG box left unticked (it applies to `release:patch|minor|major` only); the Changes section now states the Spec 08 lines are present under `release:skip`.
