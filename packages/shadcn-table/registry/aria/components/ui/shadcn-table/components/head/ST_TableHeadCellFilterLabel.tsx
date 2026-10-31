@@ -52,8 +52,6 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  // The filter value and the faceted values behind the dropdown options memo
-  // follow the column and global filters, so both are hook subscriptions.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 

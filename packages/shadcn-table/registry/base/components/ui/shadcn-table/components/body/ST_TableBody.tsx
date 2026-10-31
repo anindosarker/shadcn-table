@@ -52,7 +52,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
     ...rest,
   };
 
-  // Feeds the pinned row memo, so it is a hook subscription.
   const rowPinning = useSelector(table.atoms.rowPinning);
 
   // useST_Rows subscribes this body to every slice that feeds the row model
