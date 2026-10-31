@@ -68,7 +68,7 @@ Rules the expedition skill reads for this cycle. Cite as `(P<n>)`. A new cycle c
 
 - Parts with disjoint file sets may share one run and one worktree: a lead agent does the shared prework, then one builder per file set, one review bounce, one verify, one PR. Their trackers cite the shared commits and the one run id.
 
-## P23 The loop tick reports which stage runs and the commits so far, from `<transcriptDir>/journal.jsonl` through a sandboxed read, never from a raw transcript; the loop is `ScheduleWakeup` dynamic mode with the skill's prompt
+## P23 The loop tick reports which stage runs and the commits so far, from `<transcriptDir>/journal.jsonl` through a sandboxed read, never from a raw transcript; the loop is the one the autopilot skill schedules, with the expedition loop prompt
 
 ## P24 Known flake: `Profiled Thousand Rows` (vitest browser mode); `gh run rerun --failed <id>` once before red
 
