@@ -1,9 +1,7 @@
 # 04: types without any, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name], PR #[n]
-Gates:
-- `[command]` at [commit]: [green | red]
-- CI run [id]: [green | red]
+Status: running
+Branch `v0.7/library-sweep`, worktree `library-sweep`, PR #72 (workstream S1)
+Gates: see 02-tracker.md
 
 - Milestone 01 [name]: [planned | running | done (<commit>, <workflow run id>)]
