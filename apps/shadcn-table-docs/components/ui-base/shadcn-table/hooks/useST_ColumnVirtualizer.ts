@@ -99,6 +99,7 @@ export const useST_ColumnVirtualizer = <
     ],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- useVirtualizer returns mutable functions; the hook opts out with 'use no memo'
   const columnVirtualizer = useVirtualizer({
     count: numVisibleColumns,
     enabled: !!enableColumnVirtualization,
