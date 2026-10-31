@@ -156,6 +156,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             className={cn(
               tablePaginationVariants(),
               position === 'top' && enableToolbarInternalActions && 'mt-12',
+              restPaginationProps?.className,
             )}
           >
             {showRowsPerPage && (
@@ -226,10 +227,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             {paginationDisplayMode === 'pages' ? (
               // Not PaginationPrevious/Next: they hardcode English text and
               // lucide icons, which bypasses localization and icon overrides.
-              <Pagination
-                {...restPaginationProps}
-                className={cn('mx-0 w-auto', restPaginationProps?.className)}
-              >
+              <Pagination {...restPaginationProps} className="mx-0 w-auto">
                 <PaginationContent>
                   {getPaginationItems({
                     boundaryCount,
@@ -293,62 +291,54 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                 <div>
                   {showFirstPageButton && (
                     <ST_Tooltip title={localization.goToFirstPage}>
-                      <span>
-                        <Button
-                          aria-label={localization.goToFirstPage}
-                          isDisabled={disableBack}
-                          onClick={() => table.firstPage()}
-                          size="icon-sm"
-                          type="button"
-                          variant="ghost"
-                        >
-                          <FirstPageIcon className="rtl:rotate-180" />
-                        </Button>
-                      </span>
+                      <Button
+                        aria-label={localization.goToFirstPage}
+                        isDisabled={disableBack}
+                        onClick={() => table.firstPage()}
+                        size="icon-sm"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <FirstPageIcon className="rtl:rotate-180" />
+                      </Button>
                     </ST_Tooltip>
                   )}
                   <ST_Tooltip title={localization.goToPreviousPage}>
-                    <span>
-                      <Button
-                        aria-label={localization.goToPreviousPage}
-                        isDisabled={disableBack}
-                        onClick={() => table.previousPage()}
-                        size="icon-sm"
-                        type="button"
-                        variant="ghost"
-                      >
-                        <ChevronLeftIcon className="rtl:rotate-180" />
-                      </Button>
-                    </span>
+                    <Button
+                      aria-label={localization.goToPreviousPage}
+                      isDisabled={disableBack}
+                      onClick={() => table.previousPage()}
+                      size="icon-sm"
+                      type="button"
+                      variant="ghost"
+                    >
+                      <ChevronLeftIcon className="rtl:rotate-180" />
+                    </Button>
                   </ST_Tooltip>
                   <ST_Tooltip title={localization.goToNextPage}>
-                    <span>
-                      <Button
-                        aria-label={localization.goToNextPage}
-                        isDisabled={disableNext}
-                        onClick={() => table.nextPage()}
-                        size="icon-sm"
-                        type="button"
-                        variant="ghost"
-                      >
-                        <ChevronRightIcon className="rtl:rotate-180" />
-                      </Button>
-                    </span>
+                    <Button
+                      aria-label={localization.goToNextPage}
+                      isDisabled={disableNext}
+                      onClick={() => table.nextPage()}
+                      size="icon-sm"
+                      type="button"
+                      variant="ghost"
+                    >
+                      <ChevronRightIcon className="rtl:rotate-180" />
+                    </Button>
                   </ST_Tooltip>
                   {showLastPageButton && (
                     <ST_Tooltip title={localization.goToLastPage}>
-                      <span>
-                        <Button
-                          aria-label={localization.goToLastPage}
-                          isDisabled={disableNext}
-                          onClick={() => table.lastPage()}
-                          size="icon-sm"
-                          type="button"
-                          variant="ghost"
-                        >
-                          <LastPageIcon className="rtl:rotate-180" />
-                        </Button>
-                      </span>
+                      <Button
+                        aria-label={localization.goToLastPage}
+                        isDisabled={disableNext}
+                        onClick={() => table.lastPage()}
+                        size="icon-sm"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <LastPageIcon className="rtl:rotate-180" />
+                      </Button>
                     </ST_Tooltip>
                   )}
                 </div>

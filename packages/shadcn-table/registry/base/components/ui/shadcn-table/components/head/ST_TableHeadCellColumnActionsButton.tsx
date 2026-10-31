@@ -12,6 +12,7 @@ import {
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_ColumnActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_ColumnActionMenu';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 const columnActionsButtonVariants = cva(
   '-mx-1 -my-2 align-middle opacity-30 transition-all duration-150 hover:opacity-100',
@@ -44,11 +45,15 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
   }: Pick<ST_ColumnDef<TData>, 'stColumnActionsButtonProps'> = columnDef;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     event.preventDefault();
-    setAnchorEl(event.currentTarget);
+    toggle(event.currentTarget);
   };
 
   const iconButtonProps = {
@@ -71,6 +76,7 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
       >
         <Button
           aria-label={localization.columnActions}
+          {...openerProps}
           onClick={handleClick}
           size="icon-sm"
           type="button"

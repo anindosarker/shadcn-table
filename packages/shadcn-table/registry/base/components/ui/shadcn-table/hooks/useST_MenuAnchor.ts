@@ -1,6 +1,7 @@
 import {
   type CSSProperties,
   type MouseEvent,
+  type RefObject,
   useEffect,
   useRef,
   useState,
@@ -35,18 +36,24 @@ export interface ST_MenuAnchor {
   };
   /** Focuses the last anchor the menu opened from, read through a ref. */
   readonly focusAnchor: () => void;
+  /** The last anchor the menu opened from; kept after close for focus return. */
+  readonly anchorRef: RefObject<HTMLElement | null>;
 }
 
 /**
  * Menus open from an invisible span placed over the anchor, not from a button.
  * The menu restores focus after the anchor is cleared, so the last anchor is
- * kept in a ref and focused instead of the invisible trigger.
+ * kept in a ref and focused instead of the invisible trigger. A press on the
+ * open menu's opener closes it as an outside press before the opener's click
+ * arrives, so that click must not open the menu again.
  */
 export const useST_MenuAnchor = ({
   anchorEl,
   setAnchorEl,
 }: ST_MenuAnchorOptions): ST_MenuAnchor => {
   const lastAnchorRef = useRef<HTMLElement | null>(null);
+  // The anchor a press landed on while its menu was open, until the next press.
+  const pressedAnchorRef = useRef<HTMLElement | null>(null);
   const [measured, setMeasured] = useState<{
     anchor: HTMLElement | null;
     rect: DOMRect | undefined;
@@ -61,21 +68,40 @@ export const useST_MenuAnchor = ({
     lastAnchorRef.current = anchorEl;
     const measure = () =>
       setMeasured({ anchor: anchorEl, rect: anchorEl.getBoundingClientRect() });
+    const notePress = (event: PointerEvent) => {
+      pressedAnchorRef.current =
+        event.target instanceof Node && anchorEl.contains(event.target)
+          ? anchorEl
+          : null;
+    };
+    const forgetPress = () => {
+      pressedAnchorRef.current = null;
+    };
     window.addEventListener('resize', measure);
     window.addEventListener('scroll', measure, true);
+    document.addEventListener('pointerdown', notePress, true);
     return () => {
       window.removeEventListener('resize', measure);
       window.removeEventListener('scroll', measure, true);
+      document.removeEventListener('pointerdown', notePress, true);
+      // Added during the closing press, so only the next press runs it.
+      document.addEventListener('pointerdown', forgetPress, {
+        capture: true,
+        once: true,
+      });
     };
   }, [anchorEl]);
 
   const rect = measured.anchor === anchorEl ? measured.rect : undefined;
 
   const toggle = (anchor: HTMLElement) => {
+    const pressedWhileOpen = pressedAnchorRef.current === anchor;
+    pressedAnchorRef.current = null;
     if (anchorEl === anchor) {
       setAnchorEl(null);
       return;
     }
+    if (pressedWhileOpen) return;
     lastAnchorRef.current = anchor;
     setAnchorEl(anchor);
   };
@@ -105,5 +131,6 @@ export const useST_MenuAnchor = ({
       inert: true,
     },
     focusAnchor: () => lastAnchorRef.current?.focus(),
+    anchorRef: lastAnchorRef,
   };
 };

@@ -2,6 +2,7 @@ import { type ComponentPropsWithRef, useMemo } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuSubContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -115,6 +116,8 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   anchorEl: HTMLElement | null;
   header?: ST_Header<TData>;
+  /** Rendered as the submenu of a `DropdownMenuSub` instead of its own menu. */
+  isSubMenu?: boolean;
   onSelect?: () => void;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
   setFilterValue?: (filterValue: string | string[]) => void;
@@ -124,6 +127,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   className,
   anchorEl,
   header,
+  isSubMenu,
   onSelect,
   setAnchorEl,
   setFilterValue,
@@ -233,6 +237,76 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     setAnchorEl,
   });
 
+  // The column mode name is written onto the column def from
+  // `columnFilterFns` in the root render, so that slice is selected.
+  const menuItems = (
+    <table.Subscribe
+      selector={(state) => ({
+        columnFilterFns: state.columnFilterFns,
+        globalFilterFn: state.globalFilterFn,
+      })}
+    >
+      {({ globalFilterFn }) => {
+        const filterOption =
+          !!header && columnDef
+            ? getColumnFilterFnName(columnDef)
+            : globalFilterFn;
+
+        return (
+          <>
+            {(header && column && columnDef
+              ? (columnDef.renderColumnFilterModeMenuItems?.({
+                  column,
+                  internalFilterOptions,
+                  onSelectFilterMode: handleSelectFilterMode,
+                  table,
+                }) ??
+                renderColumnFilterModeMenuItems?.({
+                  column,
+                  internalFilterOptions,
+                  onSelectFilterMode: handleSelectFilterMode,
+                  table,
+                }))
+              : renderGlobalFilterModeMenuItems?.({
+                  internalFilterOptions,
+                  onSelectFilterMode: handleSelectFilterMode,
+                  table,
+                })) ??
+              internalFilterOptions.map(
+                ({ divider, label, option, symbol }, index) => (
+                  <ST_ActionMenuItem
+                    className={
+                      option === filterOption ? 'bg-accent' : undefined
+                    }
+                    divider={divider}
+                    icon={symbol}
+                    key={index}
+                    label={label}
+                    onClick={() =>
+                      handleSelectFilterMode(option as ST_FilterOption)
+                    }
+                  />
+                ),
+              )}
+          </>
+        );
+      }}
+    </table.Subscribe>
+  );
+
+  if (isSubMenu) {
+    return (
+      <DropdownMenuSubContent
+        className={cn('w-max', className)}
+        {...rest}
+        // A submenu aligns to its trigger's edge only.
+        align={undefined}
+      >
+        {menuItems}
+      </DropdownMenuSubContent>
+    );
+  }
+
   return (
     <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
@@ -249,60 +323,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         className={cn('w-max', className)}
         {...rest}
       >
-        {/* The column mode name is written onto the column def from
-            `columnFilterFns` in the root render, so that slice is selected. */}
-        <table.Subscribe
-          selector={(state) => ({
-            columnFilterFns: state.columnFilterFns,
-            globalFilterFn: state.globalFilterFn,
-          })}
-        >
-          {({ globalFilterFn }) => {
-            const filterOption =
-              !!header && columnDef
-                ? getColumnFilterFnName(columnDef)
-                : globalFilterFn;
-
-            return (
-              <>
-                {(header && column && columnDef
-                  ? (columnDef.renderColumnFilterModeMenuItems?.({
-                      column,
-                      internalFilterOptions,
-                      onSelectFilterMode: handleSelectFilterMode,
-                      table,
-                    }) ??
-                    renderColumnFilterModeMenuItems?.({
-                      column,
-                      internalFilterOptions,
-                      onSelectFilterMode: handleSelectFilterMode,
-                      table,
-                    }))
-                  : renderGlobalFilterModeMenuItems?.({
-                      internalFilterOptions,
-                      onSelectFilterMode: handleSelectFilterMode,
-                      table,
-                    })) ??
-                  internalFilterOptions.map(
-                    ({ divider, label, option, symbol }, index) => (
-                      <ST_ActionMenuItem
-                        className={
-                          option === filterOption ? 'bg-accent' : undefined
-                        }
-                        divider={divider}
-                        icon={symbol}
-                        key={index}
-                        label={label}
-                        onClick={() =>
-                          handleSelectFilterMode(option as ST_FilterOption)
-                        }
-                      />
-                    ),
-                  )}
-              </>
-            );
-          }}
-        </table.Subscribe>
+        {menuItems}
       </DropdownMenuContent>
     </DropdownMenu>
   );

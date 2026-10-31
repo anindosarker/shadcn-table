@@ -45,6 +45,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import {
   getColumnFilterInfo,
+  isNumberColumn,
   useDropdownOptions,
 } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import {
@@ -55,6 +56,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -186,6 +188,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   );
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
   const [filterValue, setFilterValue] = useState<string | string[]>(() =>
     isMultiSelectFilter
       ? (column.getFilterValue() as string[]) || []
@@ -217,10 +223,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           if (isRangeFilter) {
             column.setFilterValue(
               (old: Array<FilterInputValue | undefined>) => {
-                const newFilterValues = old ?? ['', ''];
-                newFilterValues[rangeFilterIndex as number] =
-                  newValue ?? undefined;
-                return newFilterValues;
+                const next = Array.isArray(old) ? [...old] : ['', ''];
+                next[rangeFilterIndex as number] = newValue ?? undefined;
+                return next;
               },
             );
           } else {
@@ -283,9 +288,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     } else if (isRangeFilter) {
       setFilterValue('');
       column.setFilterValue((old: [string | undefined, string | undefined]) => {
-        const newFilterValues = (Array.isArray(old) && old) || ['', ''];
-        newFilterValues[rangeFilterIndex as number] = undefined;
-        return newFilterValues;
+        const next = Array.isArray(old) ? [...old] : ['', ''];
+        next[rangeFilterIndex as number] = undefined;
+        return next;
       });
     } else if (isAutocompleteFilter) {
       setAutocompleteValue(null);
@@ -308,7 +313,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleFilterMenuOpen = (event: MouseEvent<FocusableElement>) => {
     if (event.currentTarget instanceof HTMLElement) {
-      setAnchorEl(event.currentTarget);
+      toggle(event.currentTarget);
     }
   };
 
@@ -358,16 +363,14 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         )}
       >
         <ST_Tooltip side="right" title={localization.clearFilter ?? ''}>
-          <span>
-            <InputGroupButton
-              aria-label={localization.clearFilter}
-              isDisabled={!filterValue?.toString()?.length}
-              onClick={handleClear}
-              size="icon-xs"
-            >
-              <CloseIcon />
-            </InputGroupButton>
-          </span>
+          <InputGroupButton
+            aria-label={localization.clearFilter}
+            isDisabled={!filterValue?.toString()?.length}
+            onClick={handleClear}
+            size="icon-xs"
+          >
+            <CloseIcon />
+          </InputGroupButton>
         </ST_Tooltip>
       </InputGroupAddon>
     ) : null;
@@ -375,20 +378,23 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const startAdornment = showChangeModeButton ? (
     <InputGroupAddon align="inline-start">
       <ST_Tooltip title={localization.changeFilterMode}>
-        <span>
-          <InputGroupButton
-            aria-label={localization.changeFilterMode}
-            onClick={handleFilterMenuOpen}
-            size="icon-xs"
-          >
-            <FilterListIcon />
-          </InputGroupButton>
-        </span>
+        <InputGroupButton
+          aria-label={localization.changeFilterMode}
+          {...openerProps}
+          onClick={handleFilterMenuOpen}
+          size="icon-xs"
+        >
+          <FilterListIcon />
+        </InputGroupButton>
       </ST_Tooltip>
       {filterChipLabel && (
         <Badge variant="secondary">
           {filterChipLabel}
-          <button type="button" onClick={handleClearEmptyFilterChip}>
+          <button
+            aria-label={localization.clearFilter}
+            onClick={handleClearEmptyFilterChip}
+            type="button"
+          >
             <CancelIcon className="size-3" />
           </button>
         </Badge>
@@ -660,6 +666,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : (
             <InputGroupInput
+              {...(isNumberColumn(column, table)
+                ? { inputMode: 'decimal', type: 'number' }
+                : undefined)}
               {...commonTextFieldProps}
               onChange={handleTextFieldChange}
               onClick={(e) => e.stopPropagation()}

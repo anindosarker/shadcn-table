@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useState } from 'react';
+import { type KeyboardEvent, useRef, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
@@ -61,6 +62,9 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
     ...parseFromValuesOrFunc(columnFilterSliderProps, { column, table }),
     ...rest,
   };
+
+  const sliderRootRef = useRef<HTMLDivElement>(null);
+  const attachSliderRef = useST_ComposedRef(sliderRootRef, sliderProps.ref);
 
   let [min, max] =
     sliderProps.min !== undefined && sliderProps.max !== undefined
@@ -127,11 +131,8 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
                   node.querySelector<HTMLInputElement>(
                     '[data-slot="slider-thumb"]',
                   )!;
-                if (sliderProps?.ref) {
-                  // @ts-expect-error the slider root node goes onto the ref prop
-                  sliderProps.ref = node;
-                }
               }
+              return attachSliderRef(node);
             }}
             className={cn(
               filterRangeSliderVariants({ showChangeModeButton }),

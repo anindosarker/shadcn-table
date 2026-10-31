@@ -9,34 +9,6 @@ import {
   type TableCellProps,
 } from '@/components/ui-radix/shadcn-table/types';
 
-// Horizontal collapse keyframes. tw-animate-css ships only the height pair, so
-// the width pair lives here, driven by --radix-collapsible-content-width.
-// overflow: hidden sits inside the keyframes so the panel clips only while it
-// animates. Rendered as a hoisted <style href="st-collapsible"> by the
-// components that animate with it.
-export const stCollapsibleKeyframes = `@keyframes st-collapsible-right {
-  from {
-    width: 0;
-    overflow: hidden;
-  }
-  to {
-    width: var(--radix-collapsible-content-width);
-    overflow: hidden;
-  }
-}
-
-@keyframes st-collapsible-left {
-  from {
-    width: var(--radix-collapsible-content-width);
-    overflow: hidden;
-  }
-  to {
-    width: 0;
-    overflow: hidden;
-  }
-}
-`;
-
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({

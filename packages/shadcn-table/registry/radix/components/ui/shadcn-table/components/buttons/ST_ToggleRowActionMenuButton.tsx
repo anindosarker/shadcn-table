@@ -12,6 +12,7 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_RowActionMenu';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 const commonIconButtonStyles = cva('ms-2.5');
 
@@ -43,11 +44,15 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   } = table;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   const handleOpenRowActionMenu = (event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     event.preventDefault();
-    setAnchorEl(event.currentTarget);
+    toggle(event.currentTarget);
   };
 
   const handleStartEditMode = (event: MouseEvent) => {
@@ -103,6 +108,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
                 <ST_Tooltip title={localization.rowActions}>
                   <Button
                     aria-label={localization.rowActions}
+                    {...openerProps}
                     onClick={handleOpenRowActionMenu}
                     size="icon-sm"
                     type="button"

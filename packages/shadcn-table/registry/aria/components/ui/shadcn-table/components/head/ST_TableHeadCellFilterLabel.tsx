@@ -1,9 +1,10 @@
 import { type MouseEvent, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { type FocusableElement } from 'react-aria-components';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
-import { Popover } from '@/components/ui/popover';
+import { Popover, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
@@ -57,7 +58,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   const filterValue = column.getFilterValue() as [string, string] | string;
 
-  const [anchorEl, setAnchorEl] = useState<FocusableElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   const {
     currentFilterOption,
@@ -118,59 +119,74 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
           )
           .replace('" "', '');
 
+  const filterInput = () => filterInputRefs.current?.[`${column.id}-0`];
+
+  // The aria Popover has no initial-focus option: its content focuses the
+  // column's filter input when it mounts.
+  const focusFilterInput = (node: HTMLDivElement | null) => {
+    if (node) filterInput()?.focus();
+  };
+
+  // Shows the column filters and focuses the column's input once it renders.
+  const handleShowColumnFilters = (event: MouseEvent<FocusableElement>) => {
+    event.stopPropagation();
+    flushSync(() => setShowColumnFilters(true));
+    filterInput()?.focus();
+    filterInput()?.select();
+  };
+
+  const buttonProps = {
+    size: 'icon-sm',
+    type: 'button',
+    variant: 'ghost',
+    ...rest,
+    className: cn(
+      tableHeadCellFilterLabelVariants({ active: isFilterActive }),
+      rest.className,
+    ),
+  } as const;
+
   return (
     <>
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
-          <ST_Tooltip side="top" title={filterTooltip}>
-            <Button
-              onClick={(event: MouseEvent<FocusableElement>) => {
-                if (columnFilterDisplayMode === 'popover') {
-                  setAnchorEl(event.currentTarget);
-                } else {
-                  setShowColumnFilters(true);
-                }
-                queueMicrotask(() => {
-                  filterInputRefs.current?.[`${column.id}-0`]?.focus?.();
-                  filterInputRefs.current?.[`${column.id}-0`]?.select?.();
-                });
-                event.stopPropagation();
-              }}
-              size="icon-sm"
-              type="button"
-              variant="ghost"
-              {...rest}
-              className={cn(
-                tableHeadCellFilterLabelVariants({ active: isFilterActive }),
-                rest.className,
-              )}
-            >
-              <FilterAltIcon className="size-6" />
-            </Button>
-          </ST_Tooltip>
+          {columnFilterDisplayMode === 'popover' ? (
+            <PopoverTrigger isOpen={open} onOpenChange={setOpen}>
+              <ST_Tooltip side="top" title={filterTooltip}>
+                <Button
+                  onClick={(event: MouseEvent<FocusableElement>) =>
+                    event.stopPropagation()
+                  }
+                  {...buttonProps}
+                >
+                  <FilterAltIcon className="size-6" />
+                </Button>
+              </ST_Tooltip>
+              <Popover
+                className="w-auto"
+                onClick={(event) => event.stopPropagation()}
+                placement="top"
+              >
+                {/* The aria Popover takes no onKeyDown. */}
+                <div
+                  className="contents"
+                  ref={focusFilterInput}
+                  onKeyDown={(event) => event.key === 'Enter' && setOpen(false)}
+                >
+                  <ST_TableHeadCellFilterContainer header={header} />
+                </div>
+              </Popover>
+            </PopoverTrigger>
+          ) : (
+            <ST_Tooltip side="top" title={filterTooltip}>
+              <Button onClick={handleShowColumnFilters} {...buttonProps}>
+                <FilterAltIcon className="size-6" />
+              </Button>
+            </ST_Tooltip>
+          )}
         </span>
-      )}
-      {columnFilterDisplayMode === 'popover' && (
-        <Popover
-          className="w-auto"
-          isOpen={!!anchorEl}
-          onOpenChange={(open) => {
-            if (!open) setAnchorEl(null);
-          }}
-          onClick={(event) => event.stopPropagation()}
-          placement="top"
-          triggerRef={{ current: anchorEl }}
-        >
-          {/* The aria Popover takes no onKeyDown. */}
-          <div
-            className="contents"
-            onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
-          >
-            <ST_TableHeadCellFilterContainer header={header} />
-          </div>
-        </Popover>
       )}
     </>
   );

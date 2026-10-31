@@ -84,6 +84,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
             title={undefined}
           >
             <ST_Checkbox
+              indeterminateIcon={table.options.icons.IndeterminateIcon}
               checked={
                 column.getFilterValue() === undefined
                   ? 'indeterminate'

@@ -1,7 +1,10 @@
-import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import { type ComponentPropsWithRef, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui-base/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -66,9 +69,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
-
   const handleClearSort = () => {
     column.clearSorting();
     setAnchorEl(null);
@@ -117,9 +117,14 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     }
   };
 
+  // "Filter by column" hands focus to the column's filter input when the
+  // menu closes, instead of back to the opener. The filter row commits before
+  // the menu unmounts, so `finalFocus` finds the input.
+  const focusFilterOnCloseRef = useRef(false);
+
   const handleFilterByColumn = () => {
-    setShowColumnFilters(true);
-    queueMicrotask(() => filterInputRefs.current?.[`${column.id}-0`]?.focus());
+    flushSync(() => setShowColumnFilters(true));
+    focusFilterOnCloseRef.current = true;
     setAnchorEl(null);
   };
 
@@ -130,10 +135,10 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     setAnchorEl(null);
   };
 
-  const handleOpenFilterModeMenu = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setFilterMenuAnchorEl(event.currentTarget);
-  };
+  const filterByColumnLabel = localization.filterByColumn?.replace(
+    '{column}',
+    String(columnDef.header),
+  );
 
   const isSelectFilter = !!columnDef.filterSelectOptions;
 
@@ -147,7 +152,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     (allowedColumnFilterOptions === undefined ||
       !!allowedColumnFilterOptions?.length);
 
-  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+  const { anchorRef, onOpenChange, spanProps } = useST_MenuAnchor({
     anchorEl,
     setAnchorEl,
   });
@@ -160,10 +165,11 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
       />
       <DropdownMenuContent
         align="start"
-        finalFocus={() => {
-          focusAnchor();
-          return false;
-        }}
+        finalFocus={() =>
+          focusFilterOnCloseRef.current
+            ? (filterInputRefs.current?.[`${column.id}-0`] ?? anchorRef.current)
+            : anchorRef.current
+        }
         className={cn('w-max', className)}
         {...rest}
       >
@@ -235,37 +241,41 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       label={localization.clearFilter}
                       onClick={handleClearFilter}
                     />,
-                    columnFilterDisplayMode === 'subheader' && (
-                      <ST_ActionMenuItem
-                        disabled={showColumnFilters && !enableColumnFilterModes}
-                        divider={enableGrouping || enableHiding}
-                        icon={<FilterListIcon />}
-                        key={4}
-                        label={localization.filterByColumn?.replace(
-                          '{column}',
-                          String(columnDef.header),
-                        )}
-                        onClick={
-                          showColumnFilters
-                            ? handleOpenFilterModeMenu
-                            : handleFilterByColumn
-                        }
-                        onOpenSubMenu={
-                          showFilterModeSubMenu
-                            ? handleOpenFilterModeMenu
-                            : undefined
-                        }
-                      />
-                    ),
-                    showFilterModeSubMenu && (
-                      <ST_FilterOptionMenu
-                        anchorEl={filterMenuAnchorEl}
-                        header={header}
-                        key={5}
-                        onSelect={handleFilterByColumn}
-                        setAnchorEl={setFilterMenuAnchorEl}
-                      />
-                    ),
+                    columnFilterDisplayMode === 'subheader' &&
+                      (showFilterModeSubMenu ? (
+                        // The filter modes open as a submenu of this item.
+                        <DropdownMenuSub key={4}>
+                          <DropdownMenuSubTrigger
+                            className={cn(
+                              'my-0',
+                              (enableGrouping || enableHiding) &&
+                                'border-b bg-clip-padding',
+                            )}
+                          >
+                            <span className="inline-flex min-w-9 shrink-0">
+                              <FilterListIcon />
+                            </span>
+                            {filterByColumnLabel}
+                          </DropdownMenuSubTrigger>
+                          <ST_FilterOptionMenu
+                            // The submenu owns its open state.
+                            anchorEl={null}
+                            header={header}
+                            isSubMenu
+                            onSelect={handleFilterByColumn}
+                            setAnchorEl={() => {}}
+                          />
+                        </DropdownMenuSub>
+                      ) : (
+                        <ST_ActionMenuItem
+                          disabled={showColumnFilters}
+                          divider={enableGrouping || enableHiding}
+                          icon={<FilterListIcon />}
+                          key={4}
+                          label={filterByColumnLabel}
+                          onClick={handleFilterByColumn}
+                        />
+                      )),
                   ].filter(Boolean)
                 : []),
               ...(enableGrouping && column.getCanGroup()

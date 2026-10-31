@@ -10,7 +10,7 @@ import {
   NativeSelectOption,
 } from '@/components/ui/native-select';
 import { faker } from '@faker-js/faker';
-import { expect } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -728,3 +728,52 @@ export const InitialFilters = () => (
     }}
   />
 );
+
+type Score = { name: string; score: number };
+
+const scoreData: Score[] = [
+  { name: 'Ada', score: 12 },
+  { name: 'Ben', score: 25 },
+  { name: 'Cleo', score: 31 },
+  { name: 'Dev', score: 47 },
+];
+
+const scoreColumns: ST_ColumnDef<Score>[] = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'score', filterVariant: 'range', header: 'Score' },
+];
+
+/** A Min value filters the rows; the number range input rejects letters. */
+export const RangeFilterMinValue = {
+  render: () => (
+    <ShadcnTable
+      columns={scoreColumns}
+      data={scoreData}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+    const min = canvas.getByPlaceholderText('Min');
+    expect(min).toHaveAttribute('type', 'number');
+    expect(min).toHaveAttribute('inputmode', 'decimal');
+
+    await userEvent.type(min, 'abc');
+    expect(min).toHaveValue(null);
+
+    await userEvent.type(min, '30');
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(2),
+    );
+    expect(canvas.queryByText('Ada')).toBeNull();
+    expect(canvas.getByText('Dev')).toBeInTheDocument();
+
+    // A second bound updates the same filter value.
+    await userEvent.type(canvas.getByPlaceholderText('Max'), '40');
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(1),
+    );
+    expect(canvas.getByText('Cleo')).toBeInTheDocument();
+  },
+};

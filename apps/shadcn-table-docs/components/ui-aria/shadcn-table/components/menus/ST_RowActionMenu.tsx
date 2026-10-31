@@ -75,7 +75,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
   return (
     <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
       <Pressable>
-        <span {...spanProps} role="button" />
+        <span {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="bottom start"

@@ -74,7 +74,7 @@ const ST_CellActionMenuContent = <TData extends ST_RowData>({
     [actionCellRef],
   );
 
-  const { focusAnchor, onOpenChange, rect, spanProps } = useST_MenuAnchor({
+  const { anchorRef, onOpenChange, rect, spanProps } = useST_MenuAnchor({
     anchorEl,
     setAnchorEl: (anchor) => {
       if (!anchor) handleClose();
@@ -144,10 +144,9 @@ const ST_CellActionMenuContent = <TData extends ST_RowData>({
           onMouseUpCapture={(event) => {
             if (event.button === 2) event.stopPropagation();
           }}
-          finalFocus={() => {
-            if (!table.atoms.editingCell.get()) focusAnchor();
-            return false;
-          }}
+          finalFocus={() =>
+            table.atoms.editingCell.get() ? false : anchorRef.current
+          }
           className={cn('w-max', className)}
           {...rest}
         >

@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  type ComponentProps,
   type ComponentPropsWithoutRef,
   type ComponentPropsWithRef,
   type ComponentType,
@@ -48,6 +49,7 @@ import {
 } from '@tanstack/react-virtual';
 import { type ReadonlyAtom } from '@tanstack/react-store';
 import { type ST_Checkbox } from '@/components/ui-aria/shadcn-table/components/inputs/ST_Checkbox';
+import { type Button } from '@/components/ui-aria/button';
 import { type Collapsible } from '@/components/ui-aria/collapsible';
 import { type Dialog } from '@/components/ui-aria/dialog';
 import { type RadioGroupItem } from '@/components/ui-aria/radio-group';
@@ -91,8 +93,8 @@ export type TableCellProps = ComponentPropsWithRef<'th'> &
 /**
  * Native button props in the shape of the aria `Button` part: `isDisabled`
  * instead of `disabled`, a string `value`, handlers typed on `Element` as
- * React Aria calls them. They also fit the plain `<button>` the sort label
- * renders.
+ * React Aria calls them, and the part's `size` and `variant`. They also fit
+ * the plain `<button>` the sort label renders.
  */
 export type ButtonProps = Omit<
   ComponentPropsWithRef<'button'>,
@@ -103,11 +105,11 @@ export type ButtonProps = Omit<
   onClick?: MouseEventHandler<Element>;
   onFocus?: FocusEventHandler<Element>;
   value?: string;
-};
+} & Pick<ComponentProps<typeof Button>, 'size' | 'variant'>;
 
 export type InputProps = ComponentPropsWithRef<'input'>;
 
-export type SelectProps = ButtonProps &
+export type SelectProps = Omit<ButtonProps, 'size' | 'variant'> &
   Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
 
 export type CheckboxProps = ComponentPropsWithRef<typeof ST_Checkbox>;
