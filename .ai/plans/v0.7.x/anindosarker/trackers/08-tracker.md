@@ -1,8 +1,9 @@
 # 08: docs install UI, tracker
 
-Status: running
+Status: done (bb89e856)
 Branch `v0.7/docs-install`, worktree docs-install, PR #71
 S5: branch `v0.7/docs-install-2`, worktree docs-install-2, PR #75
+S5 milestone 5: branch `v0.7/docs-install-3`, worktree docs-install-3, PR #76
 Gates:
 - S4:
 - `pnpm --filter shadcn-table-docs types:check` and `eslint --max-warnings 0` on the milestone files at 970cf469: green
@@ -44,6 +45,16 @@ Gates:
 - agent-browser on `next start` 5345 at 38c6b5f7 (covers the 0a54ba13 review fix in `icon-library-selector.tsx`), verifier: Icon library to Tabler gives `/r/base/shadcn-table-tabler.json` in the add and the `--overwrite` update commands; Short form on shows the `registries` entry with `@shadcn-table` and `add @shadcn-table/shadcn-table-tabler`; "Created with shadcn create" renders; console and page errors zero: pass. Capture `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table-shadcn-react-table/e001baee-c356-4fbd-b566-06e1457b6659/scratchpad/v08/install-aria.png`
 - Acceptance (1.2) at 38c6b5f7, verifier: build exit 0 (0a54ba13, builder), `check-pages.mjs` exit 0 for all three bases (all clusters, above); install page server HTML holds `shadcn-table-tabler.json` (2), `@shadcn-table/` (2), "Created with shadcn create" (4); all 40 example pages under `content/docs/examples` (index excluded) serve the header and toolbar Base select (2 or more `aria-label="Base"` each): pass. The headless example clause (1.6.7, milestone 5) is not applicable in this run, pending S2
 
+- S5 milestone 5:
+- `pnpm --filter shadcn-table-docs types:check`, `eslint --max-warnings 0` on the three `custom-headless/TS.tsx` at 458d7996: green
+- `pnpm --filter shadcn-table-docs build` at 458d7996: red (`custom-headless/TS.tsx: project import "@/lib/utils" has no registry mapping`), fixed in bb89e856
+- `pnpm --filter shadcn-table-docs types:check`, `lint` (0 errors, 9 existing example warnings), `build`, `pnpm check:bases`, concurrent, at bb89e856: green, `git status` clean after
+- `node lib/example-variants.mjs` at bb89e856: 115 examples, 216 files per base; `example-groups/map.tsx` unchanged
+- `check-pages.mjs d --base base|radix|aria`, three `next start` concurrent (ports 5346, 5347, 5348, `NEXT_DIST_DIR=.next`) at bb89e856: green (252 passed, 0 failed each)
+- `pnpm test:base` at bb89e856: green (71 files, 469 tests) on the second run; the first failed 20 story files on `Failed to import .storybook/vitest.setup.ts: SyntaxError` (vite import flake, no package change)
+- agent-browser on `next start` 5346 to 5348 at bb89e856, `/docs/examples/custom-headless`, real mouse click on the example's Toggle full screen, then Esc: base and radix enter full screen (`fixed inset-0`, `tabindex=-1`) and Esc leaves it: pass; aria enters full screen, Esc with focus in the search field or on the wrapper leaves it, Esc with focus on the toggle button does not (same on `/docs/examples/basic` with `ST_TableLayout`, see Attention). Captures `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table-shadcn-react-table/e001baee-c356-4fbd-b566-06e1457b6659/scratchpad/v08m5/` (`h<base>-full.png`, `h<base>-esc.png`, `baria-*.png`)
+- Acceptance (1.2) at bb89e856: build exit 0, `check-pages.mjs` exit 0 for all three bases (cluster d here; a to e at 38c6b5f7 by the S5 verifier, `38c6b5f7..bb89e856` touches only `custom-headless` sources, its page and `st-hooks.mdx`, cluster d and c); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+
 ## Attention
 
 - Review nit on `install-command.tsx:187` (the `edition` branch duplicates the fallthrough) declined: spec 08 line 180 has the default `InstallCommand` render `editionAddCommand`, and dropping the branch leaves that exported helper with no caller. Owner: accept, or amend the spec and drop one path.
@@ -54,16 +65,19 @@ Gates:
 - PR #71 Release impact CHANGELOG box left unticked (it applies to `release:patch|minor|major` only); the Changes section now states the Spec 08 lines are present under `release:skip`.
 - Dev console on React Aria shows `<Focusable> child must have an interactive ARIA role.` and a missing aria-label warning from the rendered library, with the header select alone too (existing, not from S4); prod `check-pages` reports no console errors. Owner: library side (S1 or S2) or accept.
 - No harness `Claude-Session:` reminder reached the S5 verifier; its commit has no `Claude-Session:` trailer and the PR #75 body no session line (the S5 builder commits carry none either). Owner: add the run's session line if one applies.
-- Milestone 5 pending S2: useST_FullScreenContainer not on claude/review yet. The `### Spec 08` Docs line for S5 omits "the headless example documents the spacer column and the full-screen container hook"; the main session adds that clause with milestone 5.
+- Milestone 5 pending S2: useST_FullScreenContainer not on claude/review yet. The `### Spec 08` Docs line for S5 omits "the headless example documents the spacer column and the full-screen container hook"; the main session adds that clause with milestone 5. Resolved: milestone 5 on `v0.7/docs-install-3` (PR #76) adds the clause.
 - S5 page checks for the install page and the Customize Icons guide went into `a.mjs` and `b.mjs`, where those routes already live, not `c.mjs` as 2.1.4 says (c.mjs holds guides from editing onward).
 - The `IconLibraryProvider` sits in `app/docs/layout.tsx`, so the pick also carries across client navigation between docs pages (no storage; a reload resets to Lucide). `<InstallCommand overwrite />` in `guides/best-practices.mdx` gets the icon select and Short form too.
 - The Short form switch is per command (not shared like the icon pick) and applies to every non-locale `InstallCommand`; `registryAddCommand` (the `shadcn registry add` form) is removed from `lib/install.ts` with `NamespaceCommand`, its last user; `agents.mdx` keeps its static `registry add` block.
 - `DocsLocale` gained a fourth field, `example` (the example slug), because the example folders are not `localization-i18n-${code.toLowerCase()}` for `pt-BR`, `sr-Cyrl-RS`, `sr-Latn-RS`; renaming them would rename registry items.
 - CHANGELOG Spec 08 has an extra `Docs` line for the `@st` to `@shadcn-table` rename (not a Breaking line: the namespace name is local to a consumer's `components.json`, `@st` keeps working). `packages/shadcn-table/scripts/registry/hosted.mjs:16-17` still names `@st` in a comment (packages/ is out of S4 scope).
+- React Aria: Esc does not leave full screen while focus stays on `ST_ToggleFullScreenButton` after a mouse click, in the headless example and in `ST_TableLayout` (`/docs/examples/basic`); Esc with focus elsewhere in the container works, and base and radix work with focus on the button. The React Aria button or its tooltip trigger stops the Escape keydown before the container's `onKeyDown`. Library side (packages/, out of spec 08 scope); the `HeadlessFullScreen` story focuses the wrapper before Esc, so it does not cover this. Owner: follow-up in the aria tree.
+- The headless example had no Esc handling or full-screen classes to drop (the spec's "drops its own" did not apply); it now gains `ST_ToggleFullScreenButton` next to the search field so full screen is reachable, and keeps its own wrapper classes in a template string (`flex flex-col bg-background`, `my-8` inline, `overflow-auto` in full screen) because example sources are registry items and `@/lib/utils` (`cn`) has no registry mapping. The `st-hooks.mdx` snippet uses `cn` (consumer code). The milestone 5 MDX link to the hook is `/docs/api/st-hooks#usest_fullscreencontainer`.
+- No harness `Claude-Session:` or attribution reminder reached this run; commits and the PR #76 body carry none (A5).
 
 - Milestone 01 locale list and selector: done (970cf469)
 - Milestone 02 toolbar base select: done (8d8ef490)
 - Milestone 03 guide, README, minimums, namespace: done (0ed09813)
 - Milestone 04 edition select, Short form, create section, icons guide: done (2ec2c084)
-- Milestone 05 headless example: pending S2
-- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7, headless clause pending S2
+- Milestone 05 headless example: done (bb89e856)
+- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at bb89e856
