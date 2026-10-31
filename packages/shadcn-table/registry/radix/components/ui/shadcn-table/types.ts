@@ -1,4 +1,12 @@
-import { type ComponentPropsWithRef, type ReactNode } from 'react';
+import {
+  type ChangeEvent,
+  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
+  type ComponentType,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from 'react';
 import {
   type AccessorFn,
   type AggregationFnDef,
@@ -36,7 +44,7 @@ import {
   type Virtualizer,
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
-import { type LucideProps } from 'lucide-react';
+import { type ReadonlyAtom } from '@tanstack/react-store';
 import { type ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
 import { type Collapsible } from '@/components/ui/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui/dialog';
@@ -45,7 +53,6 @@ import { type Slider } from '@/components/ui/slider';
 import { type ST_AggregationFns } from '@/components/ui/shadcn-table/shared/fns/aggregationFns';
 import { type ST_FilterFns } from '@/components/ui/shadcn-table/shared/fns/filterFns';
 import { type ST_SortFns } from '@/components/ui/shadcn-table/shared/fns/sortFns';
-import { type ST_Icons } from '@/components/ui/shadcn-table/icons';
 import {
   type ST_ColumnDef_Config,
   type ST_TableOptions_Config,
@@ -133,9 +140,58 @@ export type ST_LinearProgressProps = {
   progressComponentProps?: DivProps & { value?: number | null };
 };
 
-export type ST_CircularProgressProps = LucideProps;
+export type ST_CircularProgressProps = ST_IconProps;
 
-export type { ST_Icons };
+/** Props every icon in `ST_Icons` accepts: SVG props plus a `size`. */
+export type ST_IconProps = ComponentPropsWithoutRef<'svg'> & {
+  size?: number | string;
+};
+
+export type ST_IconKey =
+  | 'ArrowDownwardIcon'
+  | 'ArrowRightIcon'
+  | 'CancelIcon'
+  | 'ChevronLeftIcon'
+  | 'ChevronRightIcon'
+  | 'ClearAllIcon'
+  | 'CloseIcon'
+  | 'ContentCopy'
+  | 'DensityLargeIcon'
+  | 'DensityMediumIcon'
+  | 'DensitySmallIcon'
+  | 'DragHandleIcon'
+  | 'DynamicFeedIcon'
+  | 'EditIcon'
+  | 'ExpandMoreIcon'
+  | 'FilterAltIcon'
+  | 'FilterListIcon'
+  | 'FilterListOffIcon'
+  | 'FirstPageIcon'
+  | 'FullscreenExitIcon'
+  | 'FullscreenIcon'
+  | 'IndeterminateIcon'
+  | 'KeyboardDoubleArrowDownIcon'
+  | 'LastPageIcon'
+  | 'MoreHorizIcon'
+  | 'MoreVertIcon'
+  | 'PushPinIcon'
+  | 'RestartAltIcon'
+  | 'SaveIcon'
+  | 'SearchIcon'
+  | 'SearchOffIcon'
+  | 'SortIcon'
+  | 'SyncAltIcon'
+  | 'ViewColumnIcon'
+  | 'VisibilityOffIcon';
+
+export type ST_Icons = Record<ST_IconKey, ComponentType<ST_IconProps>>;
+
+/** The events the row selection and select-all handlers accept. */
+export type ST_SelectionEvent =
+  | ChangeEvent<HTMLInputElement>
+  | KeyboardEvent<HTMLElement>
+  | MouseEvent<HTMLElement>;
+
 export type LiteralUnion<T extends U, U = string> =
   | T
   | (U & Record<never, never>);
@@ -149,7 +205,7 @@ export type Xor<A, B> =
 export type DropdownOption =
   | {
       label?: string;
-      value: any;
+      value: string;
     }
   | string;
 
@@ -157,6 +213,7 @@ export type ST_DensityState = 'comfortable' | 'compact' | 'spacious';
 
 export type ST_ColumnFilterFnsState = Record<string, ST_FilterOption>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- interfaces have no index signature, so only an any value admits them; mirrors table-core RowData
 export type ST_RowData = Record<string, any>;
 
 export type ST_ColumnFiltersState = ColumnFiltersState;
@@ -338,8 +395,10 @@ export type ST_TableInstance<
   | 'getSelectedRowModel'
   | 'getStartLeafColumns'
   | 'getTopRows'
+  | 'atoms'
   | 'options'
 > & {
+  readonly atoms: ST_TableAtoms<TData>;
   AppTable: AppTableComponent<ST_Features>;
   getAllColumns: () => ST_Column<TData>[];
   getAllFlatColumns: () => ST_Column<TData>[];
@@ -383,6 +442,20 @@ export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
   icons: ST_Icons;
   localization: ST_Localization;
 };
+
+/** One read-only atom per table state slice, typed for `TData`. */
+export type ST_TableAtoms<TData extends ST_RowData> = {
+  [K in keyof ST_TableState<TData>]-?: ReadonlyAtom<ST_TableState<TData>[K]>;
+};
+
+/** The options the display column helpers read: the defined options plus three state slices. */
+export type ST_DisplayColumnOptions<TData extends ST_RowData> =
+  ST_DefinedTableOptions<TData> & {
+    state: Pick<
+      ST_TableState<TData>,
+      'columnOrder' | 'creatingRow' | 'grouping'
+    >;
+  };
 
 export type ST_StatefulTableOptions<TData extends ST_RowData> =
   ST_DefinedTableOptions<TData> & {
@@ -460,6 +533,7 @@ export type ST_DisplayColumnDef<
 
 export type ST_GroupColumnDef<TData extends ST_RowData> = ST_DisplayColumnDef<
   TData,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ST_ColumnDef is invariant in TValue and group children mix value types
   any
 > & {
   columns: ST_ColumnDef<TData>[];
@@ -516,6 +590,7 @@ export type ST_Row<TData extends ST_RowData> = Omit<
   | 'subRows'
   | 'table'
 > & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- the library writes by column id under a generic TData; stories read typed fields
   _valuesCache: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   getAllCells: () => ST_Cell<TData>[];
   getParentRow: () => ST_Row<TData> | null;
@@ -540,8 +615,8 @@ export type ST_AggregationOption = LiteralUnion<
 >;
 
 export type ST_AggregationFn<TData extends ST_RowData> =
-  | AggregationFnDef<ST_Features, TData, any, any>
-  | ST_AggregationOption;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TValue and TResult are invariant, aggregationFn_sum fails unknown; mirrors CustomAggregationFns
+  AggregationFnDef<ST_Features, TData, any, any> | ST_AggregationOption;
 
 export type ST_SortingOption = LiteralUnion<string & keyof typeof ST_SortFns>;
 
@@ -597,6 +672,7 @@ export interface ST_TableOptions<
       | 'columns'
       | 'data'
       | 'defaultColumn'
+      | 'enableRowPinning'
       | 'enableRowSelection'
       | 'features'
       | 'getRowId'
@@ -614,9 +690,11 @@ export interface ST_TableOptions<
       | ST_TableOptions_PartKeys
     >,
     Pick<ST_TableOptions_Config<TData, TParts>, ST_TableOptions_PartKeys> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- a mixed TValue array; mirrors table-core columnHelper.columns
   columns: ST_ColumnDef<TData, any, TParts>[];
   data: TData[];
   defaultColumn?: Partial<ST_ColumnDef<TData, unknown, TParts>>;
+  enableRowPinning?: ((row: ST_Row<TData>) => boolean) | boolean;
   enableRowSelection?: ((row: ST_Row<TData>) => boolean) | boolean;
   getRowId?: (
     originalRow: TData,
