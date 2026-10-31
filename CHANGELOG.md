@@ -12,6 +12,16 @@ date; merging it publishes the section as the GitHub release notes.
 ### Changed
 
 - `ST_Checkbox` moved to `components/inputs/`, `ST_Tooltip` to `components/buttons/`, `useST_MediaQuery` to `hooks/`; barrel imports are unchanged, deep imports follow the new paths.
+- React 19.2 or later is required: the effects use `useEffectEvent`.
+- Public types no longer use `any`: `DropdownOption.value` is `string`, `enableRowPinning` callbacks receive `ST_Row`, the `ST_TableRefs` ref maps are non-null, `row.columnFiltersMeta` is `RankingInfo`, the row selection handlers accept `ST_SelectionEvent`, `flexRender` takes `Renderable<never>` and `object` props.
+- No deprecated TanStack or DOM API is used: the function registries come from the individual `*Fn_*` exports, state reads go through `table.Subscribe` and `table.atoms`, in the library, the stories and the docs examples; `getDefaultColumnOrderIds` and the display column helpers take only the `columnOrder`, `creatingRow` and `grouping` state they read; `table.atoms` is typed per row type.
+- Library comments state contracts only: porting history, restated code and repeated rationale are gone, and the five menus share one anchor hook.
+- `getCommonToolbarStyles` is gone from `shared/utils/style.utils.ts`; nothing in the library used it.
+
+### Fixed
+
+- The installed table lints clean under `eslint-config-next` 16 with the React Compiler rules: hooks run unconditionally, no ref is touched during render, no state is set inside an effect.
+- Column definitions are rebuilt when a column resize or a drag ends, also when the owner's table selector leaves those slices out.
 
 ## 0.6.4 - 2026-10-29
 
