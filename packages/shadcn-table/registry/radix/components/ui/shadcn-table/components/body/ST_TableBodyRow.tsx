@@ -43,7 +43,7 @@ const tableBodyRowVariants = cva(
         animated: 'transition-all duration-150 ease-in-out',
         none: '',
       },
-      zIndex: { base: 'z-0', high: 'z-[2]' },
+      zIndex: { base: 'z-0', high: 'z-2' },
     },
   },
 );

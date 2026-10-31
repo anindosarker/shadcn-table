@@ -160,7 +160,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                       ? 'grid'
                       : 'semantic',
                   }),
-                  'sticky z-[1]',
+                  'sticky z-1',
                   tableBodyProps?.className,
                 )}
                 style={{ top: tableHeadHeight - 1, ...tableBodyProps?.style }}
@@ -175,7 +175,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                   layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
                 }),
                 'relative',
-                !rows.length && 'min-h-[100px]',
+                !rows.length && 'min-h-25',
                 tableBodyProps?.className,
               )}
               style={{
@@ -231,7 +231,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                       ? 'grid'
                       : 'semantic',
                   }),
-                  'sticky z-[1]',
+                  'sticky z-1',
                   tableBodyProps?.className,
                 )}
                 style={{

@@ -38,7 +38,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   const {
     options: {
       columnFilterDisplayMode,
-      columnResizeDirection,
       columnResizeMode,
       enableKeyboardShortcuts,
       enableColumnActions,
@@ -190,9 +189,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
               : undefined;
 
         const draggingBorders = showResizeBorder
-          ? columnResizeDirection === 'ltr'
-            ? { borderRight: borderStyle }
-            : { borderLeft: borderStyle }
+          ? { borderInlineEnd: borderStyle }
           : borderStyle
             ? {
                 borderLeft: borderStyle,
@@ -248,9 +245,9 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
               tableCellProps.align === 'center'
                 ? 'text-center'
                 : tableCellProps.align === 'right'
-                  ? 'text-right flex-row-reverse'
+                  ? 'text-end flex-row-reverse'
                   : tableCellProps.align === 'left'
-                    ? 'text-left'
+                    ? 'text-start'
                     : tableCellProps.align === 'justify'
                       ? 'text-justify'
                       : columnDefType === 'group'
@@ -277,7 +274,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
                   ? 'pt-3'
                   : 'pt-5',
               enableMultiSort && column.getCanSort() && 'select-none',
-              stickyHeader && 'sticky top-0 z-[2] bg-background',
+              stickyHeader && 'sticky top-0 z-2 bg-background',
               commonCellStyles.className,
             )}
             style={{

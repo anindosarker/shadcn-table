@@ -50,7 +50,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   const table = cell.table;
   const {
     options: {
-      columnResizeDirection,
       columnResizeMode,
       createDisplayMode,
       editDisplayMode,
@@ -212,9 +211,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
               : undefined;
 
         const draggingBorders = showResizeBorder
-          ? columnResizeDirection === 'ltr'
-            ? { borderRight: borderStyle }
-            : { borderLeft: borderStyle }
+          ? { borderInlineEnd: borderStyle }
           : borderStyle
             ? {
                 borderBottom:
@@ -280,9 +277,9 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
               tableCellProps.align === 'center'
                 ? 'text-center'
                 : tableCellProps.align === 'right'
-                  ? 'text-right flex-row-reverse'
+                  ? 'text-end flex-row-reverse'
                   : tableCellProps.align === 'left'
-                    ? 'text-left'
+                    ? 'text-start'
                     : tableCellProps.align === 'justify'
                       ? 'text-justify'
                       : 'text-start',

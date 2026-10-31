@@ -18,7 +18,7 @@ export interface ST_TableHeadProps extends TableHeadProps {
 const tableHeadVariants = cva('opacity-[0.97]', {
   variants: {
     layout: { grid: 'grid', semantic: '' },
-    sticky: { true: 'sticky z-[2]', false: 'relative' },
+    sticky: { true: 'sticky z-2', false: 'relative' },
   },
   compoundVariants: [{ layout: 'grid', sticky: true, class: 'top-0' }],
 });

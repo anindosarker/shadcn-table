@@ -26,7 +26,7 @@ export type ST_TableContainerProps = DivProps;
 // once scrollbar-width is set, so scrollbar-width: thin only applies in
 // engines without ::-webkit-scrollbar support (Firefox).
 const tableContainerVariants = cva(
-  'relative min-w-0 max-w-full overflow-auto supports-[not_selector(::-webkit-scrollbar)]:[scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent',
+  'relative min-w-0 max-w-full overflow-auto supports-[not_selector(::-webkit-scrollbar)]:scrollbar-thin [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent',
 );
 
 export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
