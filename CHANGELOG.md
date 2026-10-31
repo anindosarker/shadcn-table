@@ -13,6 +13,34 @@ date; merging it publishes the section as the GitHub release notes.
 
 - `ST_Checkbox` moved to `components/inputs/`, `ST_Tooltip` to `components/buttons/`, `useST_MediaQuery` to `hooks/`; barrel imports are unchanged, deep imports follow the new paths.
 
+#### Spec 02
+
+- Changed: `react` and `react-dom` move to `^19.2.0` (consumer minimum React 19.2, for `useEffectEvent`); the library lint adds `eslint-plugin-react-hooks` 7.1.1 and `@eslint-community/eslint-plugin-eslint-comments` 4.8.1.
+
+#### Spec 03
+
+#### Spec 04
+
+#### Spec 05
+
+#### Spec 06
+
+- Changed: `tailwindcss` and `@tailwindcss/vite` move to `^4.3.3` (consumer minimum Tailwind 4.3, for `scrollbar-thin` and canonical classes).
+
+#### Spec 07
+
+- Changed: Two shared hooks, `useST_ComposedRef` (one callback ref for the internal and the user's ref) and `useST_MenuAnchor` (the anchor of the five menus).
+
+#### Spec 08
+
+#### Spec 09
+
+#### Spec 10
+
+#### Spec 11
+
+- Changed: The package adds the Tabler, Phosphor, Hugeicons and Remix Icon React packages as development dependencies for the icon sets.
+
 ## 0.6.4 - 2026-10-29
 
 ### Docs

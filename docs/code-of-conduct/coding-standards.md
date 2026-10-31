@@ -81,6 +81,7 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
 - An `eslint-disable` carries a reason after `--`.
 - Code compiles clean under `strict`, whatever the committed tsconfig says.
 - Docs never restate what the code says; they are updated in the same commit as the code.
+- A comment in library source is JSDoc on exported API or one sentence naming a non-obvious invariant or a quirk of the browser or of the tree's own spec library. No porting history (MUI, MRT, another base, a TanStack version) and nothing that restates the next line. A rationale shared by several files is written once, where the pattern lives.
 - Agents navigate TypeScript with the LSP tool (definitions, references, call hierarchy),
   `grep` only for strings, comments and non-TypeScript files.
 
@@ -93,7 +94,8 @@ pnpm format                                   # prettier, once, before the commi
 pnpm --filter shadcn-table tsc:radix          # ignore only the TS5101 baseUrl notice
 pnpm --filter shadcn-table tsc:baseui
 pnpm --filter shadcn-table tsc:aria
-pnpm --filter shadcn-table lint
+pnpm --filter shadcn-table lint              # React Compiler rules, no-deprecated, unused and undescribed eslint-disable directives
+pnpm --filter shadcn-table check:tailwind    # canonical and logical Tailwind classes, every base
 pnpm --filter shadcn-table test:base          # Base UI stories
 pnpm --filter shadcn-table test:radix         # Radix UI stories
 pnpm --filter shadcn-table test:aria          # React Aria stories
