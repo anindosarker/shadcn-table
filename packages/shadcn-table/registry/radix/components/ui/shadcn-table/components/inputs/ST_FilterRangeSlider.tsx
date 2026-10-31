@@ -69,7 +69,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
           ? column.getFacetedMinMaxValues()
           : undefined) ?? [0, 1]);
 
-  //fix potential TanStack Table bugs where min or max is an array
   if (Array.isArray(min)) min = min[0];
   if (Array.isArray(max)) max = max[0];
   if (min === null) min = 0;
