@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
@@ -6,6 +7,7 @@ import {
   type ST_LinearProgressProps,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
+import { useCollapsingChildren } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
@@ -51,6 +53,26 @@ const linearProgressKeyframes = `@keyframes st-linear-progress-indeterminate {
 }
 `;
 
+// The bar keeps its progress until the collapse transition ends.
+const LinearProgressContent = ({
+  children,
+  isExpanded,
+}: {
+  children: ReactNode;
+  isExpanded: boolean;
+}) => {
+  const { onTransitionEnd, showChildren } = useCollapsingChildren(isExpanded);
+
+  return (
+    <CollapsibleContent
+      className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none"
+      onTransitionEnd={onTransitionEnd}
+    >
+      {showChildren && children}
+    </CollapsibleContent>
+  );
+};
+
 export const ST_LinearProgressBar = <TData extends ST_RowData>({
   isTopToolbar,
   ...rest
@@ -90,21 +112,18 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
             <style href="st-linear-progress" precedence="low">
               {linearProgressKeyframes}
             </style>
-            {/* React Aria keeps a collapsed panel's children mounted. */}
-            <CollapsibleContent className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none">
-              {isExpanded && (
-                <Progress
-                  aria-busy="true"
-                  {...progressComponentProps}
-                  className={cn(
-                    isIndeterminate && 'st-progress-indeterminate',
-                    progressComponentProps?.className,
-                  )}
-                  isIndeterminate={isIndeterminate}
-                  value={progressComponentProps?.value ?? undefined}
-                />
-              )}
-            </CollapsibleContent>
+            <LinearProgressContent isExpanded={isExpanded}>
+              <Progress
+                aria-busy="true"
+                {...progressComponentProps}
+                className={cn(
+                  isIndeterminate && 'st-progress-indeterminate',
+                  progressComponentProps?.className,
+                )}
+                isIndeterminate={isIndeterminate}
+                value={progressComponentProps?.value ?? undefined}
+              />
+            </LinearProgressContent>
           </Collapsible>
         );
       }}
