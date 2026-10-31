@@ -1,0 +1,19 @@
+{
+  "command": "pnpm --filter shadcn-table lint -f json",
+  "config": "plugin 5 rules by name (rules-of-hooks, exhaustive-deps), folded-core block; before the spec 02 config switch",
+  "commit": "48c0e7e8",
+  "filesLinted": 524,
+  "errors": 0,
+  "warnings": 18,
+  "byRule": {
+    "unused-disable-directive": 18
+  },
+  "byFile": {
+    "packages/shadcn-table/registry/aria/components/ui/shadcn-table/icons.ts": 1,
+    "packages/shadcn-table/registry/aria/components/ui/shadcn-table/types.ts": 5,
+    "packages/shadcn-table/registry/base/components/ui/shadcn-table/icons.ts": 1,
+    "packages/shadcn-table/registry/base/components/ui/shadcn-table/types.ts": 5,
+    "packages/shadcn-table/registry/radix/components/ui/shadcn-table/icons.ts": 1,
+    "packages/shadcn-table/registry/radix/components/ui/shadcn-table/types.ts": 5
+  }
+}
