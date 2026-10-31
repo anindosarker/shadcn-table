@@ -53,7 +53,7 @@ const linearProgressKeyframes = `@keyframes st-linear-progress-indeterminate {
 }
 `;
 
-// The bar keeps its progress until the collapse transition ends.
+// The bar keeps its progress until its collapse animation settles.
 const LinearProgressContent = ({
   children,
   isExpanded,
@@ -61,12 +61,13 @@ const LinearProgressContent = ({
   children: ReactNode;
   isExpanded: boolean;
 }) => {
-  const { onTransitionEnd, showChildren } = useCollapsingChildren(isExpanded);
+  const { panelRef, showChildren } = useCollapsingChildren(isExpanded);
 
   return (
     <CollapsibleContent
       className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none"
-      onTransitionEnd={onTransitionEnd}
+      // The part's props type leaves out the ref the DisclosurePanel takes.
+      {...{ ref: panelRef }}
     >
       {showChildren && children}
     </CollapsibleContent>

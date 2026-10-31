@@ -39,7 +39,7 @@ const detailPanelCellVariants = cva('w-full border-b text-sm px-4', {
   },
 });
 
-// The panel keeps its content until its collapse transition ends.
+// The panel keeps its content until its collapse animation settles.
 const DetailPanelCollapsible = ({
   children,
   isExpanded,
@@ -47,13 +47,14 @@ const DetailPanelCollapsible = ({
   children: ReactNode;
   isExpanded: boolean;
 }) => {
-  const { onTransitionEnd, showChildren } = useCollapsingChildren(isExpanded);
+  const { panelRef, showChildren } = useCollapsingChildren(isExpanded);
 
   return (
     <Collapsible isExpanded={isExpanded}>
       <CollapsibleContent
         className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none"
-        onTransitionEnd={onTransitionEnd}
+        // The part's props type leaves out the ref the DisclosurePanel takes.
+        {...{ ref: panelRef }}
       >
         {showChildren && children}
       </CollapsibleContent>
