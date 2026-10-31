@@ -1,9 +1,9 @@
-import { type ChangeEvent, type MouseEvent } from 'react';
 import { rankGlobalFuzzy } from '@/components/ui-aria/shadcn-table/shared/fns/sortFns';
 import {
   type ST_Row,
   type ST_RowData,
   type ST_CoreTableInstance,
+  type ST_SelectionEvent,
   type ST_TableInstance,
   type ST_TableState,
 } from '@/components/ui-aria/shadcn-table/types';
@@ -163,10 +163,7 @@ export const getST_RowSelectionHandler =
     staticRowIndex?: number;
     table: ST_CoreTableInstance<TData>;
   }) =>
-  (
-    event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLTableRowElement>,
-    value?: boolean,
-  ) => {
+  (event: ST_SelectionEvent, value?: boolean) => {
     const wasCurrentRowChecked = getIsRowSelected({ row, table });
     const checked = value ?? !wasCurrentRowChecked;
 
@@ -190,11 +187,7 @@ export const getST_SelectAllHandler =
   }: {
     table: ST_CoreTableInstance<TData>;
   }) =>
-  (
-    event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLButtonElement>,
-    value?: boolean,
-    forceAll?: boolean,
-  ) => {
+  (event: ST_SelectionEvent, value?: boolean, forceAll?: boolean) => {
     const {
       options: { enableRowPinning, rowPinningDisplayMode, selectAllMode },
     } = table;

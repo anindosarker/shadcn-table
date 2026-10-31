@@ -6,6 +6,7 @@
 
 - [ ] I followed [CONTRIBUTING.md](../CONTRIBUTING.md) and ran the gates of the area I changed locally (`docs/code-of-conduct/coding-standards.md`, Gates): `pnpm format`, `tsc:baseui`, `tsc:radix`, `tsc:aria`, `lint`, `test:base`, `test:radix`, `test:aria`, `pnpm check:bases`, and the docs `types:check`, `lint`, `build`.
 - [ ] A library change is made in every tree, or listed in that base's `<base>-diff.json`.
+- [ ] Every comment I added or changed in library source is a contract: JSDoc on exported API or one sentence on an invariant or quirk, no history, no restatement.
 - [ ] I understand every line of this pull request, including code written with AI assistance.
 
 ## Release impact

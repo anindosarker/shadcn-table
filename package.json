@@ -17,6 +17,8 @@
     "registry:hosted": "node packages/shadcn-table/scripts/registry/hosted.mjs",
     "add-part": "node packages/shadcn-table/scripts/registry/add-part.mjs",
     "check:bases": "node packages/shadcn-table/scripts/registry/check-bases.mjs",
+    "check:tailwind": "pnpm --filter shadcn-table check:tailwind",
+    "check:icons": "pnpm --filter shadcn-table check:icons",
     "registry:dev": "pnpm --filter shadcn-table registry:dev && serve packages/shadcn-table/.dev -l 5310",
     "storybook:base": "turbo run storybook:base --filter=shadcn-table",
     "storybook:radix": "turbo run storybook:radix --filter=shadcn-table",
@@ -39,7 +41,7 @@
   "packageManager": "pnpm@10.13.1",
   "pnpm": {
     "overrides": {
-      "@types/react": "19.1.13",
+      "@types/react": "^19.2.0",
       "vite": "npm:rolldown-vite@7.1.12"
     }
   }

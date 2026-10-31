@@ -19,6 +19,7 @@ import {
   ListFilter,
   Maximize,
   Minimize,
+  Minus,
   MoreHorizontal,
   MoreVertical,
   Pencil,
@@ -56,6 +57,7 @@ export const ST_Default_Icons = {
   FirstPageIcon: ChevronFirst,
   FullscreenExitIcon: Minimize,
   FullscreenIcon: Maximize,
+  IndeterminateIcon: Minus,
   KeyboardDoubleArrowDownIcon: ChevronsDown,
   LastPageIcon: ChevronLast,
   MoreHorizIcon: MoreHorizontal,
@@ -71,4 +73,5 @@ export const ST_Default_Icons = {
   VisibilityOffIcon: EyeOff,
 } as const;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- the Lucide map's own loose type; the icon sets type every map as ST_Icons from types.ts
 export type ST_Icons = Record<keyof typeof ST_Default_Icons, any>;

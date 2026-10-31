@@ -97,6 +97,9 @@ jobs:
       - run: pnpm --filter shadcn-table tsc:aria
         if: matrix.base == 'aria'
       - run: pnpm --filter shadcn-table lint
+      - run: pnpm --filter shadcn-table check:tailwind ${{ matrix.base }}
+      - run: pnpm --filter shadcn-table check:icons
+        if: matrix.base == 'base'
       - run: pnpm --filter shadcn-table storybook:build:${{ matrix.base }}
 
   # A common library file must be byte-identical in every tree; the files that
@@ -163,16 +166,29 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter shadcn-table exec shadcn registry validate "anindosarker/shadcn-table#${{ github.sha }}"
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/shadcn-table-radix#${{ github.sha }}" --dry-run
-      # The plain name is the GitHub shorthand alias of the Base UI item.
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/shadcn-table#${{ github.sha }}" --dry-run
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic-radix#${{ github.sha }}" --dry-run
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic-base#${{ github.sha }}" --dry-run
-      - run: pnpm --filter shadcn-table-docs exec shadcn add "anindosarker/shadcn-table/example-basic-aria#${{ github.sha }}" --dry-run
+      # Items depend on the GitHub address of the core item, which the CLI
+      # resolves on the default branch; the dev registry built from this
+      # checkout resolves every dependency at this SHA.
+      - name: Build and serve the dev registry from this checkout
+        run: |
+          pnpm --filter shadcn-table registry:dev
+          (pnpm exec serve packages/shadcn-table/.dev -l 5310 > serve.log 2>&1 &)
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:5310/r/shadcn-table-base-core.json > /dev/null && break
+            sleep 1
+          done
+          curl -sf http://localhost:5310/r/shadcn-table-base-core.json > /dev/null
+      - run: pnpm --filter shadcn-table-docs exec shadcn add http://localhost:5310/r/shadcn-table-radix.json --dry-run
+      # The plain name is the alias of the Base UI item.
+      - run: pnpm --filter shadcn-table-docs exec shadcn add http://localhost:5310/r/shadcn-table.json --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add http://localhost:5310/r/shadcn-table-base-tabler.json --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add http://localhost:5310/r/example-basic-radix.json --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add http://localhost:5310/r/example-basic-base.json --dry-run
+      - run: pnpm --filter shadcn-table-docs exec shadcn add http://localhost:5310/r/example-basic-aria.json --dry-run
 
   install:
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     needs: registry
     uses: ./.github/workflows/install.yml
     with:
-      source: anindosarker/shadcn-table/<item>#${{ github.sha }}
+      source: http://localhost:5310/r/<item>.json
