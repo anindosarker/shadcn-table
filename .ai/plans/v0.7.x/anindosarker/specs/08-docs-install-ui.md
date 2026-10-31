@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The Localization guide hard-codes three German commands instead of using the base-aware `InstallCommand`, lists the locale codes by hand twice and never names the export constants (F25). Decision D2: one `InstallCommand` with a locale selector, fed by `localeAddCommand`, with codes and export names generated from the registry. Decision D3: a base selector on every example toolbar, bound to the stored base. The install command also gains an icon library selector that picks the edition item (D30), a "Short form" toggle for the registry namespace and a section on projects created with shadcn create (D33); the Customize Icons guide covers switching editions (D30); the headless example and page explain the row spacer column (D24) and spread `containerProps` from `useST_FullScreenContainer` (D29). Docs app only; the three style rewrites already exist in `next.config.mjs` and are verified, not added. Runs as two streams (index, Run plan): S4 starts with the foundation and does phases 1 and 2 and the 1.6.4 lines (locale list, toolbar base select, guide, README, minimums, namespace renames); S5 starts when S2 and S3 have merged and does 1.6.5 to 1.6.7 (edition items from S3, `containerProps` from S2).
+The Localization guide hard-codes three German commands instead of using the base-aware `InstallCommand`, lists the locale codes by hand twice and never names the export constants (F25). Decision D2: one `InstallCommand` with a locale selector, fed by `localeAddCommand`, with codes and export names generated from the registry. Decision D3: a base selector on every example toolbar, bound to the stored base. The install command also gains an icon library selector that picks the edition item (D30), a "Short form" toggle for the registry namespace and a section on projects created with shadcn create (D33); the Customize Icons guide covers switching editions (D30); the headless example and page explain the row spacer column (D24) and spread `containerProps` from `useST_FullScreenContainer` (D29). Docs app only; the three style rewrites already exist in `next.config.mjs` and are verified, not added. Runs as two workstreams (index, Run plan): S4 starts with the foundation and does milestones 1 and 2 and the 1.6.4 lines (locale list, toolbar base select, guide, README, minimums, namespace renames); S5 starts when S2 and S3 have merged and does 1.6.5 to 1.6.7 (edition items from S3, `containerProps` from S2).
 
 ### 1.2 Goals
 
@@ -18,7 +18,7 @@ The Localization guide hard-codes three German commands instead of using the bas
 - The install page has a "Created with shadcn create" section; the Customize Icons guide shows switching editions with `--overwrite` (D30) (D33)
 - The custom-headless example comments the spacer column and spreads `containerProps`; the example page states both (D24) (D29)
 - Docs gates green, `check-pages.mjs` green for all three bases
-- Done when: docs `build` exits 0 and `check-pages.mjs` exits 0 for all three bases, with the install page containing `shadcn-table-tabler.json`, `@shadcn-table/` and "Created with shadcn create", and every example page a base select (P6)
+- Acceptance: docs `build` exits 0 and `check-pages.mjs` exits 0 for all three bases, with the install page containing `shadcn-table-tabler.json`, `@shadcn-table/` and "Created with shadcn create", and every example page a base select (P6)
 
 ### 1.3 Current structure
 
@@ -39,7 +39,7 @@ apps/shadcn-table-docs/
 ├── content/docs/examples/custom-headless.mdx, examples/<base>/custom-headless/TS.tsx ← no spacer note, hand-written Esc handling
 └── lib/install.ts                       ← libraryAddCommand, localeAddCommand, exampleAddCommand; NamespaceCommand in install-command.tsx (119)
 apps/shadcn-table-docs/next.config.mjs   ← `rewrites` `afterFiles` (23-36): `/r/:style(base-.*)/:name.json` to `/r/base/:name.json`, same for `radix-` and `aria-`; already in place
-vercel.json                              ← rewrites: storybook host and docs service, destinations are `{ service }` objects; unchanged by this part
+vercel.json                              ← rewrites: storybook host and docs service, destinations are `{ service }` objects; unchanged by this spec
 ```
 
 ### 1.4 Target structure
@@ -63,7 +63,7 @@ apps/shadcn-table-docs/
 ├── content/docs/getting-started/agents.mdx ← `@st` to `@shadcn-table` (24-28)
 ├── lib/install.ts                       ← registryNamespace 'shadcn-table' (92)
 ├── scripts/page-checks/{a,c}.mjs, _helpers.mjs ← toolbar, locale, icon and short form checks
-└── next.config.mjs                      ← keep: the three style rewrites exist; this part verifies them
+└── next.config.mjs                      ← keep: the three style rewrites exist; this spec verifies them
 README.md                                ← i18n line (70), `@st` to `@shadcn-table` (55)
 CONTRIBUTING.md                          ← example-map.mjs third output (68)
 ```
@@ -74,12 +74,12 @@ CONTRIBUTING.md                          ← example-map.mjs third output (68)
 
 #### 1.6.1 Data artifacts
 
-- `lib/locales.ts` (D2): generated by the existing `scripts/example-map.mjs` (committed output, prettier-formatted, rerun after adding or removing an example). A new locale always adds its `localization-i18n-<code>` example, which already requires that rerun, so the list cannot fall behind the examples. Source: `baseItems(catalog, REFERENCE_BASE)` from `packages/shadcn-table/scripts/registry/lib.mjs` over the committed `registry.json`, the same call `scripts/install.mjs` makes; after S3 (part 11) it returns `{ core, main, editions, locales }`, before that `{ main, locales }`. Codes from the locale item names (`-locale-<code>`) plus `en` from `shared/locales/en.ts`, found in the files of `main ?? core` taken as "the first of the two items whose `files` list that path" (`main` before S3 merges, `core` after: part 11 moves every non-icon file into core, D30), so the generator is correct in both merge orders; `exportName` read from each file's `export const ST_Localization_*`; `label` from `Intl.DisplayNames(['en'], { type: 'language' })`, the code itself when it has no name (`np`).
+- `lib/locales.ts` (D2): generated by the existing `scripts/example-map.mjs` (committed output, prettier-formatted, rerun after adding or removing an example). A new locale always adds its `localization-i18n-<code>` example, which already requires that rerun, so the list cannot fall behind the examples. Source: `baseItems(catalog, REFERENCE_BASE)` from `packages/shadcn-table/scripts/registry/lib.mjs` over the committed `registry.json`, the same call `scripts/install.mjs` makes; after S3 (spec 11) it returns `{ core, main, editions, locales }`, before that `{ main, locales }`. Codes from the locale item names (`-locale-<code>`) plus `en` from `shared/locales/en.ts`, found in the files of `main ?? core` taken as "the first of the two items whose `files` list that path" (`main` before S3 merges, `core` after: spec 11 moves every non-icon file into core, D30), so the generator is correct in both merge orders; `exportName` read from each file's `export const ST_Localization_*`; `label` from `Intl.DisplayNames(['en'], { type: 'language' })`, the code itself when it has no name (`np`).
 - `CHANGELOG.md` `## Unreleased`, `### Docs`: "The Localization guide installs any locale with the base, package manager and locale selectors and shows its import; every example toolbar has a base select."
 - `### Breaking`: "shadcn-table needs React 19.2 or later and Tailwind CSS 4.3 or later." Raising a minimum breaks users below it (D5) (D16)
 - `CONTRIBUTING.md:68` line for `example-map.mjs` names the third output.
 - `### Docs`: "The install command picks the icon library edition and offers a short registry-namespace form, served for any `style` of a base; the install page covers projects created with shadcn create; the headless example documents the spacer column and the full-screen container hook." (D24) (D29) (D30) (D33)
-- `apps/shadcn-table-docs/next.config.mjs` `rewrites` `afterFiles` (23-36) already maps `/r/:style(base-.*)/:name.json` to `/r/base/:name.json`, and the same for `radix-` and `aria-`, so the namespace template `/r/{style}/{name}.json` resolves for any `style` of a base (D33). Status keep: this part adds no rewrite and verifies the three with a local `next build && next start` curl. `vercel.json` unchanged.
+- `apps/shadcn-table-docs/next.config.mjs` `rewrites` `afterFiles` (23-36) already maps `/r/:style(base-.*)/:name.json` to `/r/base/:name.json`, and the same for `radix-` and `aria-`, so the namespace template `/r/{style}/{name}.json` resolves for any `style` of a base (D33). Status keep: this spec adds no rewrite and verifies the three with a local `next build && next start` curl. `vercel.json` unchanged.
 
 **Interfaces (lib/install.ts additions):**
 
@@ -203,7 +203,7 @@ Same markup as `BaseSwitch` (`Button` outline `sm`, `ChevronDownIcon`, `Dropdown
 #### 1.6.7 Headless example and page
 
 - `examples/<base>/custom-headless/TS.tsx`: one comment at the header map (base and radix 78, aria 116): with `enableColumnResizing` the default layout is `grid-no-grow` and includes the `st-row-spacer` column; render it for correct widths or set `layoutMode: 'grid'` (D24) (F30)
-- The example's wrapper spreads `containerProps` from `useST_FullScreenContainer(table)`, created and exported by part 10 (S2, merged before S5 branches), and drops its own Esc handling and full-screen classes (D29) (F32)
+- The example's wrapper spreads `containerProps` from `useST_FullScreenContainer(table)`, created and exported by spec 10 (S2, merged before S5 branches), and drops its own Esc handling and full-screen classes (D29) (F32)
 - `examples/custom-headless.mdx`: one sentence each on the spacer (linking `guides/column-size`) and on `useST_FullScreenContainer`; `api/st-hooks.mdx` lists the hook
 - `lib/example-variants.mjs` regenerated; `example-groups/map.tsx` unchanged
 
@@ -213,38 +213,38 @@ Same markup as `BaseSwitch` (`Button` outline `sm`, `ChevronDownIcon`, `Dropdown
 
 ## 2. Instructions for AI
 
-Two streams (index, Run plan). S4: worktree `docs-install`, branch `v0.7/docs-install`, from `claude/review` after the foundation merges, phases 1 to 3 below. S5: worktree `docs-install-2`, branch `v0.7/docs-install-2`, from `claude/review` after S2 and S3 have merged, phases 4 to 6. Docs dev server on its own port (`PORT=<port> pnpm --filter shadcn-table-docs dev`), never stopping other servers (P5). Gates recorded in `../trackers/08-tracker.md` once per stream.
+Two workstreams (index, Run plan). S4: worktree `docs-install`, branch `v0.7/docs-install`, from `claude/review` after the foundation merges, milestones 1 to 3 below. S5: worktree `docs-install-2`, branch `v0.7/docs-install-2`, from `claude/review` after S2 and S3 have merged, milestones 4 to 6. Docs dev server on its own port (`PORT=<port> pnpm --filter shadcn-table-docs dev`), never stopping other servers (P5). Gates recorded in `../trackers/08-tracker.md` once per workstream.
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: generated locale list and InstallCommand locale selector (S4)
+#### 2.1.1 Milestone 1: generated locale list and InstallCommand locale selector (S4)
 
 Lane: agent
 
 - 1.6.1 generator and `lib/locales.ts`; 1.6.2 (D2) (F25)
 - Gates: docs `types:check`, `lint`; `node scripts/example-map.mjs` twice leaves `git status` clean
 
-#### 2.1.2 Phase 2: toolbar base selector on every example toolbar (S4)
+#### 2.1.2 Milestone 2: toolbar base selector on every example toolbar (S4)
 
 Lane: agent
 
 - 1.6.3 (D3); `_helpers.mjs` `baseSwitch(page, id, check, { via: 'header' | 'toolbar' })`, `a.mjs` runs it once more on `basic` via the toolbar
 - Gates: docs `types:check`, `lint`, `build`; `check-pages.mjs a` with `--base base`, `--base radix`, `--base aria`
 
-#### 2.1.3 Phase 3: guide, README, minimums, namespace rename, S4 gates once (S4)
+#### 2.1.3 Milestone 3: guide, README, minimums, namespace rename, S4 gates once (S4)
 
 Lane: agent
 
-- 1.6.4 (minimum-version lines and the namespace rename included, D5, D16, D33) and the 1.6.1 changelog lines for the locale selector, the toolbar select and the `Breaking` minimums line in the `### Part 08` block; `CONTRIBUTING.md:68`; `c.mjs` counts `[aria-label="Locales"] [role="tab"]` (39), asserts the command contains the literal `/r/<base>/shadcn-table-locale-de.json` (page checks are plain `.mjs` and cannot import `lib/install.ts`), picks `fr` and asserts `-locale-fr.json` and `ST_Localization_FR`; `c.mjs` on `/docs/getting-started/agents` asserts `@shadcn-table/`
+- 1.6.4 (minimum-version lines and the namespace rename included, D5, D16, D33) and the 1.6.1 changelog lines for the locale selector, the toolbar select and the `Breaking` minimums line in the `### Spec 08` block; `CONTRIBUTING.md:68`; `c.mjs` counts `[aria-label="Locales"] [role="tab"]` (39), asserts the command contains the literal `/r/<base>/shadcn-table-locale-de.json` (page checks are plain `.mjs` and cannot import `lib/install.ts`), picks `fr` and asserts `-locale-fr.json` and `ST_Localization_FR`; `c.mjs` on `/docs/getting-started/agents` asserts `@shadcn-table/`
 - Browser check with agent-browser on the worktree dev server:
   1. `/docs/guides/localization`: the command reads `/r/base/shadcn-table-locale-de.json`; Locale menu to French: `-locale-fr.json` and `ST_Localization_FR`; package manager tab npm: `npx shadcn@latest`
   2. Same page, the `es` example toolbar Base select to React Aria: the header select reads React Aria, the install command shows the React Aria tab and `/r/aria/`, the example's DOM carries `[data-rac]`
   3. `/docs/examples/basic`: toolbar Base select to Radix UI: header reads Radix UI, the Code view shows the radix source, Copy prompt text names the radix install; full screen, the select still opens above the panel
   4. Console: zero errors and warnings on all pages
 - `pnpm format` once before the commit
-- Gates: 2.2 S4 lines, once at stream end
+- Gates: 2.2 S4 lines, once at workstream end
 
-#### 2.1.4 Phase 4: edition selector, Short form, create section, icons guide (S5)
+#### 2.1.4 Milestone 4: edition selector, Short form, create section, icons guide (S5)
 
 Lane: agent
 
@@ -253,21 +253,21 @@ Lane: agent
 - Local rewrite check against `next build && next start` of the docs app: `curl -s localhost:<port>/r/base-nova/shadcn-table.json | diff - apps/shadcn-table-docs/public/r/base/shadcn-table.json` empty, same for `radix-nova` and `aria-nova` (existing rewrites, 1.6.1)
 - Gates: docs `types:check`, `lint`, `build`; `check-pages.mjs` for the touched clusters per base; the local rewrite check
 
-#### 2.1.5 Phase 5: headless example and page (S5)
+#### 2.1.5 Milestone 5: headless example and page (S5)
 
 Lane: agent
 
 - 1.6.7 in the three example sources and the two pages; `node lib/example-variants.mjs`; `api/st-hooks.mdx` line
 - Gates: docs `types:check`, `lint`, `build`; `check-pages.mjs` cluster that renders `custom-headless` per base; in the rendered example, Esc leaves full screen (agent-browser)
 
-#### 2.1.6 Final phase: S5 gates once
+#### 2.1.6 Final milestone: S5 gates once
 
 Lane: agent
 
-- The 1.6.1 `Docs` changelog line for the editions, short form, create section and headless page in the `### Part 08` block
+- The 1.6.1 `Docs` changelog line for the editions, short form, create section and headless page in the `### Spec 08` block
 - Browser check with agent-browser: `/docs/getting-started/install`: icon selector to Tabler changes the command to `shadcn-table-tabler.json`; Short form on shows the two-step block with `@shadcn-table/`; the create section renders; console zero errors and warnings
 - `pnpm format` once before the commit
-- Gates: all of 2.2, once at stream end
+- Gates: all of 2.2, once at workstream end
 
 ### 2.2 Gates
 
@@ -276,4 +276,4 @@ Lane: agent
 - S4: `grep -rn "supportedLocales\|shadcn-table-locale-de.json   #" apps/shadcn-table-docs --exclude-dir=node_modules --exclude-dir=.next`: empty; `grep -rn '@st/\|@st\b' apps/shadcn-table-docs/content apps/shadcn-table-docs/lib README.md`: empty
 - S5: `grep -rn "NamespaceCommand" apps/shadcn-table-docs --exclude-dir=node_modules --exclude-dir=.next`: empty
 - S5: `next start` of the build serves `/r/base-nova/shadcn-table.json`, `/r/radix-nova/shadcn-table.json` and `/r/aria-nova/shadcn-table.json` with the bodies of the base folders (D33)
-- The agent-browser steps of the stream pass; `pr.yml` green on each PR
+- The agent-browser steps of the workstream pass; `pr.yml` green on each PR

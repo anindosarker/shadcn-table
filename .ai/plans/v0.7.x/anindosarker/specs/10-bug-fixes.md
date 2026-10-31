@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The next-app header demo and a shadcn part usage audit found functional bugs (range filter never applies, sort clear snaps back, Base UI and React Aria Collapsible width reveals break, radix menus drop focus) and places where the library works against its primitives (hidden menu triggers without opener state, nested controls inside menu items, hand-rolled focus, props restated or misused) (F27) (F28) (F31) (F37) (F38) (F39). Decisions D21 to D29 fix them inside the current architecture: the anchor-span pattern stays (D26), Collapsible stays (D25), no public prop, type, registry item or layout changes except the additions D29 names. F61 (row action menu stays open on a second opener click) is fixed inside the same hook (D26 addendum). Stream S2 (index, Run plan) (D34): branch `v0.7/bug-fixes`, worktree `shadcn-react-table.worktrees/bug-fixes`, cut from `claude/review` when S1 merges: `hooks/useST_ComposedRef.ts` (foundation, D5) and `hooks/useST_MenuAnchor.ts` (foundation, D26 interface; S1 set C wired the five menus) exist, `check:tailwind` (foundation, D16) runs. One builder pass over 1.6.2 to 1.6.8, the reviewer checklists merged into one stream review, gates once.
+The next-app header demo and a shadcn part usage audit found functional bugs (range filter never applies, sort clear snaps back, Base UI and React Aria Collapsible width reveals break, radix menus drop focus) and places where the library works against its primitives (hidden menu triggers without opener state, nested controls inside menu items, hand-rolled focus, props restated or misused) (F27) (F28) (F31) (F37) (F38) (F39). Decisions D21 to D29 fix them inside the current architecture: the anchor-span pattern stays (D26), Collapsible stays (D25), no public prop, type, registry item or layout changes except the additions D29 names. F61 (row action menu stays open on a second opener click) is fixed inside the same hook (D26 addendum). Workstream S2 (index, Run plan) (D34): branch `v0.7/bug-fixes`, worktree `shadcn-react-table.worktrees/bug-fixes`, cut from `claude/review` when S1 merges: `hooks/useST_ComposedRef.ts` (foundation, D5) and `hooks/useST_MenuAnchor.ts` (foundation, D26 interface; S1 set C wired the five menus) exist, `check:tailwind` (foundation, D16) runs. One builder pass over 1.6.2 to 1.6.8, the reviewer checklists merged into one workstream review, gates once.
 
 ### 1.2 Goals
 
@@ -18,7 +18,7 @@ The next-app header demo and a shadcn part usage audit found functional bugs (ra
 - The D28 list is applied in every base; F45 stays as is (D28)
 - `ButtonProps` accepts the shadcn Button props; `useST_FullScreenContainer` is exported (D29) (F32)
 - All library gates green per base; one Storybook play test per user-reachable fix
-- Done when: the Storybook play tests of 1.6.8 (range filter filters rows, sort clear stays cleared, search field open and close, menu opener `aria-expanded`, second-click close and focus return, show-hide Enter and Space) pass in `test:base`, `test:radix`, `test:aria`; judged: the search reveal per base against the foundation baseline `reference/10-*` (five-frame sequences of the next-app `collapsible-search-demo.tsx` at the route and port in `reference/10-route.md`), three judges on "no jump, field focused, closed state hidden" (P6)
+- Acceptance: the Storybook play tests of 1.6.8 (range filter filters rows, sort clear stays cleared, search field open and close, menu opener `aria-expanded`, second-click close and focus return, show-hide Enter and Space) pass in `test:base`, `test:radix`, `test:aria`; judged: the search reveal per base against the foundation baseline `reference/10-*` (five-frame sequences of the next-app `collapsible-search-demo.tsx` at the route and port in `reference/10-route.md`), three judges on "no jump, field focused, closed state hidden" (P6)
 
 ### 1.3 Current structure
 
@@ -55,7 +55,7 @@ packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
 ├── components/inputs/ST_GlobalFilterTextField.tsx   ← kept-mounted panel, width token, transition classes, own focus and Escape
 ├── components/table/ST_TableLayout.tsx  ← uses useST_FullScreenContainer
 ├── shared/utils/style.utils.ts          ← width keyframes gone; height keyframes radix only
-└── types.ts                             ← ButtonProps from the Button part
+└── types.ts                             ← ButtonProps from the Button spec
 packages/shadcn-table/stories/
 ├── features/Filtering.stories.tsx       ← range play test (D21)
 ├── features/Sorting.stories.tsx         ← clear-sort play test (D22)
@@ -69,7 +69,7 @@ packages/shadcn-table/stories/
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` `## Unreleased` `### Part 10` block: one `Fixed` line each for the range filter (D21), sort clear (D22), pagination `className` (D23), search field and panel animations in every base (D25), menu opener state, anchor spans, second-click close and focus return (D26) (F61), keyboard column visibility (D27), the D28 list in one line naming the parts touched, and the aria resize handle width (D28)
+- `CHANGELOG.md` `## Unreleased` `### Spec 10` block: one `Fixed` line each for the range filter (D21), sort clear (D22), pagination `className` (D23), search field and panel animations in every base (D25), menu opener state, anchor spans, second-click close and focus return (D26) (F61), keyboard column visibility (D27), the D28 list in one line naming the specs touched, and the aria resize handle width (D28)
 - `Added`: "`useST_FullScreenContainer(table)` for headless layouts; the toolbar buttons accept the shadcn Button `size` and `variant` props by type." (D29)
 - `registry.json` catalogs regenerated (`registry:build`) for the new hook file; item names and hosted paths unchanged; docs app copies re-installed per base
 - `base-diff.json`, `aria-diff.json`: no new entries; the hook stays byte-identical across bases and the per-base lines of the search field and the menus sit in files already listed; `check:bases` stays green
@@ -136,7 +136,7 @@ export const useST_FullScreenContainer: <TData extends ST_RowData>(
 - Aria panel gets `role="none"` (no trigger inside the Collapsible)
 - Height panels (`ST_LinearProgressBar`, `ST_ToolbarAlertBanner`, `ST_TableDetailPanel`, `ST_TableHeadCellFilterContainer`): base and aria transition `height` on the primitive's height variable with `data-starting-style` and `data-ending-style` (base) or the `aria-hidden` sequence (aria); radix keeps the tw-animate keyframes; every panel has `overflow-hidden`
 - `style.utils.ts`: width keyframes removed in every base; height keyframes stay only in radix
-- Does NOT change the toggle button's atom write, the `showGlobalFilter` state, or the Collapsible parts
+- Does NOT change the toggle button's atom write, the `showGlobalFilter` state, or the Collapsible specs
 
 **Operations:**
 
@@ -153,7 +153,7 @@ export const useST_FullScreenContainer: <TData extends ST_RowData>(
 
 #### 1.6.5 Menu anchor hook
 
-`useST_MenuAnchor` exists from the foundation with the D26 interface below (index, Run plan); S1 set C wired the five menus to it. This part adds behaviour only: the re-measure listeners, the second-click toggle (F61), the ref-based focus return in every base, the filter-mode submenu; and the openers spread `openerProps` (F37) (F39) (F40) (F49) (F57) (F58) (F61).
+`useST_MenuAnchor` exists from the foundation with the D26 interface below (index, Run plan); S1 set C wired the five menus to it. This spec adds behaviour only: the re-measure listeners, the second-click toggle (F61), the ref-based focus return in every base, the filter-mode submenu; and the openers spread `openerProps` (F37) (F39) (F40) (F49) (F57) (F58) (F61).
 
 - `openerProps` (`aria-haspopup="menu"`, `aria-expanded`, `onClick` toggle) for the opener button; `ST_ShowHideColumnsButton`, `ST_TableHeadCellColumnActionsButton`, `ST_ToggleRowActionMenuButton` and the filter text field adornment spread them; the cell `td` gets none
 - Second click (F61, D26 addendum): the hook's `toggle(anchor)` closes the menu when it is open from that same anchor and opens it otherwise; the opener handlers call `toggle` instead of setting the anchor unconditionally, so the primitive's outside-press close and the opener's click no longer re-open the menu
@@ -243,7 +243,7 @@ One row per D28 item; every base unless noted.
 | base `ST_ToolbarAlertBanner` chip spread (131-141) | refactor | spread before `render`, chain `onClick`, matching radix and aria (F59) |
 | aria `ST_SelectCheckbox` title (163-168) | refactor | honours `checkboxProps.title` (F60) |
 
-**Stays unchanged:** `ST_SelectCheckbox` per-row `RadioGroup` (F45, open by ruling), every public prop and type, part files under `components/ui/`.
+**Stays unchanged:** `ST_SelectCheckbox` per-row `RadioGroup` (F45, open by ruling), every public prop and type, spec files under `components/ui/`.
 
 #### 1.6.8 Stories and play tests
 
@@ -265,11 +265,11 @@ New or extended stories under `packages/shadcn-table/stories/`, one per user-rea
 
 ## 2. Instructions for AI
 
-Halt conditions of the index apply: no edit to a part file under `components/ui/`, no registry item name or hosted path change, no public option or type removed, no `eslint-disable` without a reason. D26 keeps the anchor pattern; D5 and D20 stand. Every change lands in base, radix and aria in the same pass. Stream S2: one builder (opus) end to end, one fable review on the whole diff with the checklists below merged, round 2 on the incremental diff, verify, merge (index, Run plan).
+Halt conditions of the index apply: no edit to a part file under `components/ui/`, no registry item name or hosted path change, no public option or type removed, no `eslint-disable` without a reason. D26 keeps the anchor pattern; D5 and D20 stand. Every change lands in base, radix and aria in the same pass. Workstream S2: one builder (opus) end to end, one fable review on the whole diff with the checklists below merged, round 2 on the incremental diff, verify, merge (index, Run plan).
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Reproduce, then one pass over 1.6.2 to 1.6.8
+#### 2.1.1 Milestone 1: Reproduce, then one pass over 1.6.2 to 1.6.8
 
 Lane: agent
 
@@ -279,17 +279,17 @@ Lane: agent
 - 1.6.5 (behaviour additions, `openerProps` and `spanProps` spread, `toggle` on every opener, F61) and 1.6.6 in every base
 - 1.6.7 rows in every base
 - Stories of 1.6.8: range, clear sort, headless full screen, search field, menu openers with the second-click assertion, keyboard column hiding, filter popover, modal exit, RTL
-- Reviewer checklist (one stream review): D21 copy before write, no seed, number rule; D22 previous-value guard only; D23 and D29 type and hook, no other public change, the conditional `tabIndex`; D25 one mechanism per primitive, `inert` when closed; D26 anchor pattern kept, public props intact, `toggle` on every opener, stock `DropdownMenuSub`; D27 stock `DropdownMenuCheckboxItem` in base and radix, the aria selection-mode group; every D28 row against its primitive (trigger, focus option, spread order, selector); no part file under `components/ui/` changed
-- Gates per phase: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `eslint --max-warnings 0` on the changed files
+- Reviewer checklist (one workstream review): D21 copy before write, no seed, number rule; D22 previous-value guard only; D23 and D29 type and hook, no other public change, the conditional `tabIndex`; D25 one mechanism per primitive, `inert` when closed; D26 anchor pattern kept, public props intact, `toggle` on every opener, stock `DropdownMenuSub`; D27 stock `DropdownMenuCheckboxItem` in base and radix, the aria selection-mode group; every D28 row against its primitive (trigger, focus option, spread order, selector); no spec file under `components/ui/` changed
+- Gates per milestone: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `eslint --max-warnings 0` on the changed files
 
-#### 2.1.2 Final phase: Gates once
+#### 2.1.2 Final milestone: Gates once
 
 Lane: agent
 
-- `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`; `check:bases` (no new `base-diff.json` or `aria-diff.json` entries); CHANGELOG lines from 1.6.1 in the `### Part 10` block
-- `grep -n "queueMicrotask"` over the files this part changes (`ST_ToggleGlobalFilterButton.tsx`, `ST_TableHeadCellFilterLabel.tsx`, `ST_ColumnActionMenu.tsx` in every base): empty; `cell.utils.ts:54` keeps its `queueMicrotask`, no row covers it
-- Judged: five-frame capture of the search reveal per base next to `reference/10-*`, three judges (index, Done when)
-- `pnpm format`; merge per the index Streams rule
+- `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`; `check:bases` (no new `base-diff.json` or `aria-diff.json` entries); CHANGELOG lines from 1.6.1 in the `### Spec 10` block
+- `grep -n "queueMicrotask"` over the files this spec changes (`ST_ToggleGlobalFilterButton.tsx`, `ST_TableHeadCellFilterLabel.tsx`, `ST_ColumnActionMenu.tsx` in every base): empty; `cell.utils.ts:54` keeps its `queueMicrotask`, no row covers it
+- Judged: five-frame capture of the search reveal per base next to `reference/10-*`, three judges (index, Acceptance)
+- `pnpm format`; merge per the index Workstreams rule
 - Gates: 2.2, recorded in `../trackers/10-tracker.md`
 
 ### 2.2 Gates

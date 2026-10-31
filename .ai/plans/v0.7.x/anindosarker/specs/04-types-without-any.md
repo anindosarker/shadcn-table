@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The library writes `any` at 43 sites the folded-core lint block hides (F7) and at 13 component and feature sites behind per-line disables. Each becomes `unknown`, a real generic, a `never` signature or a named TanStack type; the few that must stay `any` keep a reasoned per-line disable (D10) (D19). Casts and assertions the new types make unnecessary go with them; the rest stay (F23) (F24). Runs in stream S1 (index, Run plan) (D34): the type surface in `types.ts` and the signatures it touches (1.6.2 to 1.6.5, widening only) land in the foundation; the site edits are applied per file set A to D in all three bases together with 02, 05, 06 and 07; the long gates run once at stream end.
+The library writes `any` at 43 sites the folded-core lint block hides (F7) and at 13 component and feature sites behind per-line disables. Each becomes `unknown`, a real generic, a `never` signature or a named TanStack type; the few that must stay `any` keep a reasoned per-line disable (D10) (D19). Casts and assertions the new types make unnecessary go with them; the rest stay (F23) (F24). Runs in workstream S1 (index, Run plan) (D34): the type surface in `types.ts` and the signatures it touches (1.6.2 to 1.6.5, widening only) land in the foundation; the site edits are applied per file set A to D in all three bases together with 02, 05, 06 and 07; the long gates run once at workstream end.
 
 ### 1.2 Goals
 
@@ -12,7 +12,7 @@ The library writes `any` at 43 sites the folded-core lint block hides (F7) and a
 - The 11 component `no-explicit-any` disables are gone (D19)
 - Library, stories, docs examples and the three docs installs typecheck unchanged in what they pass (D10)
 - No new cast sites: five `as any` become named casts, listed in 1.6.2
-- Done when: the scoped eslint run of 2.2 exits 0 per base, and `grep -rc "no-explicit-any" packages/shadcn-table/registry/<base>/components/ui/shadcn-table | awk -F: '{s+=$2} END {print s}'` per base equals 8 (9 while `icons.ts:74` holds the foundation disable, until S3 merges) (P6)
+- Acceptance: the scoped eslint run of 2.2 exits 0 per base, and `grep -rc "no-explicit-any" packages/shadcn-table/registry/<base>/components/ui/shadcn-table | awk -F: '{s+=$2} END {print s}'` per base equals 8 (9 while `icons.ts:74` holds the foundation disable, until S3 merges) (P6)
 
 ### 1.3 Current structure
 
@@ -20,7 +20,7 @@ Paths below `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/`.
 
 ```
 shadcn-table/
-├── types.ts                              ← public types: 7 sites (the `icons.ts:74` record is part 11's, D30)
+├── types.ts                              ← public types: 7 sites (the `icons.ts:74` record is spec 11's, D30)
 ├── features/stConfigFeature.ts           ← 2 reasoned disables (edited values)
 ├── shared/fns/filterFns.ts, sortFns.ts   ← 18 + 2
 ├── shared/utils/                         ← tanstack.helpers 5, utils 2, cell 2, row 2, column 1
@@ -32,7 +32,7 @@ F7 counts `types.ts` as 8; its line list holds 7 and the total of 43 matches 7.
 
 ### 1.4 Target structure
 
-Same files. New exported type in `types.ts`: `ST_SelectionEvent`. One `filterMeta` slot in `features/stFeatures.ts`. `ST_IconProps` and the typed `ST_Icons` belong to part 11 (D30); this part leaves `icons.ts:74` as is.
+Same files. New exported type in `types.ts`: `ST_SelectionEvent`. One `filterMeta` slot in `features/stFeatures.ts`. `ST_IconProps` and the typed `ST_Icons` belong to spec 11 (D30); this spec leaves `icons.ts:74` as is.
 
 ### 1.5 Flow: none
 
@@ -122,24 +122,24 @@ F24 counts 13; the listed sites are 12.
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Site edits per file set
+#### 2.1.1 Milestone 1: Site edits per file set
 
 Lane: agent
 
 - Per set A to D (index, Run plan): the 1.6.2 to 1.6.5 rows whose files the set owns, in base, radix and aria in one pass; aria has no `ST_SelectCheckbox` sites
-- Reviewer (stream review) bounces until: no `any` outside the `keep` lines (8, plus `icons.ts:74` while the foundation disable holds), each with a reason; public types still accept what the docs examples and stories pass; no new casts: every cast left is pre-existing or one of the five `as any` replacements in 1.6.2 (`tanstack.helpers.ts:55,66`, `ST_TableBodyCell.tsx:349`, `ST_FilterOptionMenu.tsx:201`, `ST_FilterTextField.tsx:226`)
+- Reviewer (workstream review) bounces until: no `any` outside the `keep` lines (8, plus `icons.ts:74` while the foundation disable holds), each with a reason; public types still accept what the docs examples and stories pass; no new casts: every cast left is pre-existing or one of the five `as any` replacements in 1.6.2 (`tanstack.helpers.ts:55,66`, `ST_TableBodyCell.tsx:349`, `ST_FilterOptionMenu.tsx:201`, `ST_FilterTextField.tsx:226`)
 - Gates per set: `eslint --max-warnings 0 <own files>`, `prettier --check <own files>`
 
-#### 2.1.2 Final phase: Gates once
+#### 2.1.2 Final milestone: Gates once
 
 Lane: inline
 
-- 1.6.1 CHANGELOG line in the `### Part 04` block
+- 1.6.1 CHANGELOG line in the `### Spec 04` block
 - Verifier scratch typecheck of base plus stories: `packages/shadcn-table/tsconfig.stories.base.json` extending `./tsconfig.baseui.json`, `include` `registry/base`, `stories`, `.storybook`, the same `types`; `tsc -p` it; the file is deleted before the commit
 - If S3 merged first, `icons.ts:74` is already gone and the expected count is 8
-- Gates: 2.2 at stream end; `Gates: see 02-tracker.md` in `../trackers/04-tracker.md`
+- Gates: 2.2 at workstream end; `Gates: see 02-tracker.md` in `../trackers/04-tracker.md`
 
 ### 2.2 Gates
 

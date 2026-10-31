@@ -108,7 +108,7 @@
 - The 22 distinct non-canonical classes (37 sites, F13) take their canonical form in all three bases: `z-[n]` to `z-n`, spacing-scale pixel and rem values to scale steps (`min-h-[100px]` to `min-h-25`, `min-w-[70px]` to `min-w-17.5`, `mt-[3px]` to `mt-0.75`, `size-[18px]` to `size-4.5`, `m-[-0.25rem]` to `-m-1`, and the rest listed in F13), `rotate-[135deg]` to `rotate-135`, `-mx-[0.1rem]` to `mx-[-0.1rem]`, `outline-offset-[-2px]` to `-outline-offset-2`, `[&>[data-align=...]]:py-0` to `*:data-[align=...]:py-0`, the scrollbar `supports-[...]` form to `scrollbar-thin`. Same CSS output.
 - The library package moves `tailwindcss` and `@tailwindcss/vite` to `^4.3.3` and adds `@tailwindcss/node` and `@tailwindcss/oxide` as devDependencies (`canonicalizeCandidates` and `scrollbar-thin` need 4.3). Consumer minimum: Tailwind 4.3 or later, stated on the install page, the Versioning section and the changelog.
 - New gate `check:tailwind` in `packages/shadcn-table`: loads the design system with `@tailwindcss/node` `__unstable__loadDesignSystem`, runs `canonicalizeCandidates` over every class candidate in the library, fails on any class whose canonical form differs. Runs in CI with the other per-base checks.
-- Addendum 2026-10-31: the dependency bumps, the gate script, its CI step and the Storybook baseline captures (`reference/06-*`, taken with `reference/06-capture.mjs`) land in the cycle's foundation commit (D34); part 06's judged clause compares against that baseline. The class edits are applied by the S1 file sets, not by a separate stream.
+- Addendum 2026-10-31: the dependency bumps, the gate script, its CI step and the Storybook baseline captures (`reference/06-*`, taken with `reference/06-capture.mjs`) land in the cycle's foundation commit (D34); spec 06's judged clause compares against that baseline. The class edits are applied by the S1 file sets, not by a separate workstream.
 
 ### D17 The library lints as a Next 16 consumer does
 
@@ -116,7 +116,7 @@
 - The folded-core exemption block is removed: `@typescript-eslint/no-explicit-any`, `@typescript-eslint/no-unused-expressions`, `react-hooks/exhaustive-deps`, `react-hooks/rules-of-hooks` run on every library file; the `^_` ignore patterns for unused names go, matching `eslint-config-next`.
 - `@typescript-eslint/no-deprecated` is added with type-aware linting, so deprecated TanStack or DOM APIs fail `pnpm lint` (F8).
 - `pnpm lint` must report zero problems; CI runs it as before.
-- Addendum 2026-10-31: the config switch is the first step of stream S1, after the foundation (D34) adds the plugins; no temporary per-file relaxation block is ever written, since `reportUnusedDisableDirectives: 'error'` would turn the existing next-line directives into errors under one. Part 02's Done when is `lint` exit 0 under the new config plus the per-base expected count of `eslint-disable` lines recorded in `trackers/02-tracker.md` at the lead step.
+- Addendum 2026-10-31: the config switch is the first step of workstream S1, after the foundation (D34) adds the plugins; no temporary per-file relaxation block is ever written, since `reportUnusedDisableDirectives: 'error'` would turn the existing next-line directives into errors under one. Spec 02's Acceptance is `lint` exit 0 under the new config plus the per-base expected count of `eslint-disable` lines recorded in `trackers/02-tracker.md` at the lead step.
 
 ### D18 Shipped comments state a contract, never history
 
@@ -137,7 +137,7 @@
 - `shared/utils/style.utils.ts:182` `getCommonToolbarStyles` is deleted (F19). Exported types used only inside their own file or unreferenced in the tree stay exported; they are public type surface.
 - The anchor scaffolding copied into `ST_CellActionMenu`, `ST_ColumnActionMenu`, `ST_FilterOptionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu` (anchor state, `finalFocus`, invisible span trigger, `onOpenChange` reset) becomes one `hooks/useST_MenuAnchor.ts`, which holds the one copy of the menu rationale (F20, D5, D18). The six-file user-ref block is covered by D5. `handlePinColumn` stays defined in both places.
 - All three bases. No behavior change.
-- Addendum 2026-10-31: the hook is written in the foundation commit (D34) to D26's interface from the start (`openerProps`, `spanProps`, `rect`, `onOpenChange`, `toggle`, `focusAnchor` reading the anchor through a ref). Part 07 wires the five menus to it in S1 set C and owns its JSDoc; part 10 adds behaviour only. The `useState` anchor of D5 is never written.
+- Addendum 2026-10-31: the hook is written in the foundation commit (D34) to D26's interface from the start (`openerProps`, `spanProps`, `rect`, `onOpenChange`, `toggle`, `focusAnchor` reading the anchor through a ref). Spec 07 wires the five menus to it in S1 set C and owns its JSDoc; spec 10 adds behaviour only. The `useState` anchor of D5 is never written.
 
 ## Round 2: next-app header demo and shadcn create, 2026-10-30
 
@@ -147,30 +147,30 @@
 - The `isMounted` ref pattern in the mount effect goes, so the strict-mode re-run no longer seeds `[undefined, '']`. The effect itself follows D8.
 - Range inputs on number columns render `type="number"` with `inputMode="decimal"`. Text columns keep a text input.
 - One Storybook play test in `Filtering.stories.tsx` types a Min value and asserts the filtered row count.
-- Ships in a new part `10-bug-fixes`, branched after part 02. All three bases.
+- Ships in a new spec `10-bug-fixes`, branched after spec 02. All three bases.
 
 ### D22 Ranked results react only to a real global filter change
 
 - The ranked-results effect in `hooks/useST_Effects.ts` keeps the previous global filter value and returns early when `Object.is(prev, next)` holds. `undefined` to `undefined` is no change (F28).
 - `appliedSort` handling is otherwise unchanged. Clearing sort with no global filter stays cleared.
 - One Storybook play test with the default `enableGlobalFilterRankedResults`: sort a column, clear sort, assert no sort indicator.
-- An upstream issue on TanStack store for `atom.js:134` treating an `undefined` old value as always changed. The link goes in the part tracker; no code waits on it.
+- An upstream issue on TanStack store for `atom.js:134` treating an `undefined` old value as always changed. The link goes in the spec tracker; no code waits on it.
 - Addendum 2026-10-31: the agent does not file the issue; it writes the issue draft (title, repro, expected, version) into `trackers/10-tracker.md` under `## Attention` and the owner files it.
-- Part `10-bug-fixes`, all three bases. The next-app header demo drops its `enableGlobalFilterRankedResults: false` workaround after the fix.
+- Spec `10-bug-fixes`, all three bases. The next-app header demo drops its `enableGlobalFilterRankedResults: false` workaround after the fix.
 
 ### D23 Pagination `className` lands on the outer element
 
 - `components/toolbar/ST_TablePagination.tsx` merges `className` onto the outer div that carries `py-3`, not the inner `Pagination` nav (F29). A consumer `py-2` wins through `cn`.
 - The nav keeps its fixed classes. No new prop.
 - Matches `ST_BottomToolbar`, where `toolbarProps.className` lands on the outer element.
-- Part `10-bug-fixes`, all three bases. Changelog entry under `### Fixed`.
+- Spec `10-bug-fixes`, all three bases. Changelog entry under `### Fixed`.
 
 ### D24 Headless example documents the row spacer column
 
 - No library change. The spacer is a real display column in `grid-no-grow` and stays in `getHeaderGroups()` (F30).
 - The `custom-headless` example gets one comment at the header map: with resizing on, the default layout is `grid-no-grow` and includes `st-row-spacer`; render it for correct widths, or set `layoutMode: 'grid'`. The aria example gets the same comment at its `getFlatHeaders()` map.
 - The headless section of the docs gets the same note in one sentence, linking the column-size guide line that documents the spacer.
-- Part 08, docs only, all three bases' examples.
+- Spec 08, docs only, all three bases' examples.
 
 ### D25 Collapsible panels use each primitive's designed animation path, one mechanism
 
@@ -181,7 +181,7 @@
 - The aria panel gets `role="none"`, since no trigger is rendered inside the Collapsible.
 - The four height users (`ST_LinearProgressBar`, `ST_ToolbarAlertBanner`, `ST_TableDetailPanel`, `ST_TableHeadCellFilterContainer`) follow the same rule: transitions on the primitive's height variable in base and aria, keyframes in radix, `overflow-hidden` on every panel. The aria collapse that snaps today is fixed by this.
 - Width keyframes leave `style.utils.ts` in all bases. Height keyframes stay only where radix needs them.
-- Stale animation comments go (D18). Part `10-bug-fixes`. Storybook play test per base: open, input focused, panel wider than `3rem`; close, panel `inert`; Escape returns focus to the toggle.
+- Stale animation comments go (D18). Spec `10-bug-fixes`. Storybook play test per base: open, input focused, panel wider than `3rem`; close, panel `inert`; Escape returns focus to the toggle.
 
 ### D26 Menu anchor pattern stays; its defects are fixed inside the shared hook
 
@@ -192,16 +192,16 @@
   - While open, the hook re-measures the span rect from the anchor element on `resize` and capture-phase `scroll` (F39).
   - The anchor element is read through a ref at close, never from cleared state (F37, F58). `finalFocus` returns the element and lets the primitive decide (F40).
 - The base and radix filter-mode menu inside the column menu becomes `DropdownMenuSub` from the stock part, as aria already does. `ST_FilterOptionMenu` keeps its `anchorEl` mode for the text fields (F57).
-- Part `10-bug-fixes`, all three bases. Play test per base: opener announces its expanded state, Tab never lands on the span, the menu follows a resize.
-- Addendum 2026-10-31 (F61): a second click on the opener closes the menu. The hook exposes `toggle(anchor)`: open from that anchor already, it clears the anchor; otherwise it sets it. Every opener handler calls `toggle` instead of setting the anchor unconditionally, so the primitive's outside-press close and the opener click no longer re-open the menu. The `MenuOpeners` play test asserts the second click, and part 09's menu gate does too.
-- Addendum 2026-10-31: the hook's interface (`anchorEl`, `setAnchorEl` in; `onOpenChange`, `toggle`, `rect`, `openerProps`, `spanProps`, `focusAnchor` out) is fixed in the foundation commit (D34) so S1 set C can wire the menus before part 10 runs; part 10 adds the re-measure listeners, the toggle behaviour, the ref-based focus return per base and the filter-mode submenu.
+- Spec `10-bug-fixes`, all three bases. Play test per base: opener announces its expanded state, Tab never lands on the span, the menu follows a resize.
+- Addendum 2026-10-31 (F61): a second click on the opener closes the menu. The hook exposes `toggle(anchor)`: open from that anchor already, it clears the anchor; otherwise it sets it. Every opener handler calls `toggle` instead of setting the anchor unconditionally, so the primitive's outside-press close and the opener click no longer re-open the menu. The `MenuOpeners` play test asserts the second click, and spec 09's menu gate does too.
+- Addendum 2026-10-31: the hook's interface (`anchorEl`, `setAnchorEl` in; `onOpenChange`, `toggle`, `rect`, `openerProps`, `spanProps`, `focusAnchor` out) is fixed in the foundation commit (D34) so S1 set C can wire the menus before spec 10 runs; spec 10 adds the re-measure listeners, the toggle behaviour, the ref-based focus return per base and the filter-mode submenu.
 
 ### D27 Show-hide column rows are checkbox menu items with controls beside them
 
 - Each column row in `ST_ShowHideColumnsMenuItems` becomes a `DropdownMenuCheckboxItem` from the stock part: checked means visible, select toggles visibility, so Enter and Space work (F38).
 - Pin buttons and the drag handle leave the menuitem and sit in a sibling group in the same row, reachable by Tab. No control is nested inside a menuitem.
 - The aria switch no longer sits inside a `Label`; the checkbox item carries the column label (F48).
-- Column visibility, pinning and reordering behavior is unchanged. All three bases, part `10-bug-fixes`. Play test per base: arrow to a row, press Space, column hides; Tab reaches the pin buttons.
+- Column visibility, pinning and reordering behavior is unchanged. All three bases, spec `10-bug-fixes`. Play test per base: arrow to a row, press Space, column hides; Tab reaches the pin buttons.
 - Addendum 2026-10-31: the aria part has no `DropdownMenuCheckboxItem` (`registry/aria/components/ui/dropdown-menu.tsx:100-140` styles `DropdownMenuItem` by the menu's `selectionMode`). Aria: the column rows sit in one `DropdownMenuGroup` (React Aria `MenuSection`) with `selectionMode="multiple"`, `selectedKeys` the visible column ids, `onSelectionChange` toggling visibility, one `DropdownMenuItem` per column. Base and radix keep `DropdownMenuCheckboxItem`.
 
 ### D28 Parts used as designed, mechanical remainder
@@ -219,7 +219,7 @@
 - Base grouped-by chip spreads `chipProps` before `render` and chains the consumer `onClick`, matching radix and aria (F59).
 - Aria `ST_SelectCheckbox` honours `checkboxProps.title` (F60).
 - F45 stays open: the per-row radio group works for mouse and keyboard; only the screen reader count and arrow navigation differ.
-- No public prop, type, registry item or layout changes. All three bases, part `10-bug-fixes`. One play test per user-reachable behavior: filter popover opens with the input focused, clear chip has a name, modal close animates.
+- No public prop, type, registry item or layout changes. All three bases, spec `10-bug-fixes`. One play test per user-reachable behavior: filter popover opens with the input focused, clear chip has a name, modal close animates.
 - Addendum 2026-10-31 (F42, aria): the aria popover part exports `Popover`, `PopoverTrigger`, `PopoverHeader`, `PopoverTitle` and `PopoverDescription`, no `PopoverContent`. In aria `PopoverTrigger` wraps the filter button and `Popover` is the content; base and radix use `PopoverTrigger` plus `PopoverContent` as written.
 
 ### D29 Headless toolbars get the Button props type and a full-screen container hook
@@ -227,7 +227,7 @@
 - `ButtonProps` in `types.ts` becomes `React.ComponentProps<typeof Button>` in all bases, so `ST_ToggleGlobalFilterButton`, `ST_ToggleDensePaddingButton`, `ST_ShowHideColumnsButton` and `ST_ToggleFullScreenButton` accept `size` and `variant` by type as they already do at runtime (F32). Type only.
 - New exported hook `hooks/useST_FullScreenContainer.ts` taking `table` and returning `{ isFullScreen, containerProps }`; `containerProps` holds the Esc `onKeyDown`, `tabIndex` and the full-screen classes. `ST_TableLayout` uses the same hook, so one copy exists (F32).
 - The `custom-headless` example spreads `containerProps` on its wrapper, and the headless docs section gets one line on it.
-- Part `10-bug-fixes` for hook and type; part 08 for example and docs. All three bases. Play test: headless story presses Esc in full screen and exits.
+- Spec `10-bug-fixes` for hook and type; spec 08 for example and docs. All three bases. Play test: headless story presses Esc in full screen and exits.
 
 
 ### D30 Icon sets as registry editions, one `icons.ts` per consumer
@@ -241,10 +241,10 @@
   - Locale items and docs example items depend on `shadcn-table-core`.
 - A consumer ends with one `icons.ts` holding their library's map and only that icon package installed. Switching later is the edition item with `--overwrite`; core files are identical and skipped.
 - Verified on shadcn 4.23.0: dependencies resolve core first and files dedupe by target, a later edition replaces `icons.ts` under `--overwrite` without a prompt, and a module importing an uninstalled package fails the build, so no runtime choice exists.
-- Docs: install page command gets an icon library selector that changes the item name; an Icons guide covers switching and notes the previous icon package stays in `package.json`. The docs app `lib:install`, the next-app and the part 09 gate install editions.
-- New part `11-icon-sets` after part 01; docs in part 08. All three bases.
+- Docs: install page command gets an icon library selector that changes the item name; an Icons guide covers switching and notes the previous icon package stays in `package.json`. The docs app `lib:install`, the next-app and the spec 09 gate install editions.
+- New spec `11-icon-sets` after spec 01; docs in spec 08. All three bases.
 - Amended 2026-10-31: `icons/hugeicons.ts`, not `.tsx`; the per-icon wrapper uses `createElement`, since the file installs at the `icons.ts` target and JSX in a `.ts` file fails the consumer build.
-- Addendum 2026-10-31: the maps hold 35 keys. `ST_Checkbox.tsx:2,22` imports `MinusIcon` from `lucide-react` for the indeterminate dash; the key `IndeterminateIcon` (Lucide `Minus`) joins every map, the table in part 11 and `ST_IconKey`, and the checkbox reads it through the table icons. The icon types in `types.ts` (`ST_IconProps`, `ST_IconKey`, `ST_Icons`, replacing `LucideProps` at :39 and `ST_CircularProgressProps = LucideProps` at :136), the five icon devDependencies, `check-icons.mjs` (a regex over the map keys, no TypeScript import), the `pr.yml` and `install.yml` edits and the `smoke.mjs` item list land in the foundation commit (D34). The docs `font-awesome-icons` example types its `ST_Icons` with `ST_IconProps`, no `any`. Comments in `icons/*.ts` say "icon set", never "edition".
+- Addendum 2026-10-31: the maps hold 35 keys. `ST_Checkbox.tsx:2,22` imports `MinusIcon` from `lucide-react` for the indeterminate dash; the key `IndeterminateIcon` (Lucide `Minus`) joins every map, the table in spec 11 and `ST_IconKey`, and the checkbox reads it through the table icons. The icon types in `types.ts` (`ST_IconProps`, `ST_IconKey`, `ST_Icons`, replacing `LucideProps` at :39 and `ST_CircularProgressProps = LucideProps` at :136), the five icon devDependencies, `check-icons.mjs` (a regex over the map keys, no TypeScript import), the `pr.yml` and `install.yml` edits and the `smoke.mjs` item list land in the foundation commit (D34). The docs `font-awesome-icons` example types its `ST_Icons` with `ST_IconProps`, no `any`. Comments in `icons/*.ts` say "icon set", never "edition".
 
 ### D31 Logical direction classes, JS only where CSS cannot express it
 
@@ -252,14 +252,14 @@
 - Pinned sticky offsets in `shared/utils/style.utils.ts` use `insetInlineStart` and `insetInlineEnd`; the pixel values stay computed. The resize border on cells becomes `borderInlineEnd`.
 - JS keeps only the drag `translateX` sign and the pinning pixel values. `columnResizeDirection` stays as the TanStack option for drag math; the docs say to set it to `'rtl'` on RTL pages.
 - Verified: today the CLI's `transformRtl` skips `compoundVariants` and inline styles, so no double flip exists; after this change it finds no physical class to rewrite either.
-- Gate: `check:tailwind` fails on any physical direction class (D16). Part 06, all three bases. Part 09 adds one story check with `dir="rtl"` (unverified rendering today).
-- Addendum 2026-10-31: the one `dir="rtl"` story is part 10's, under `stories/fixed-bugs/` (`RTL.stories.tsx`: `columnResizeDirection: 'rtl'`, a pinned column, the handle at the inline-start edge, `inset-inline-start` on the pinned cell), run by `test:<base>`. Part 09 keeps its RTL Next pages in the gate apps.
+- Gate: `check:tailwind` fails on any physical direction class (D16). Spec 06, all three bases. Spec 09 adds one story check with `dir="rtl"` (unverified rendering today).
+- Addendum 2026-10-31: the one `dir="rtl"` story is spec 10's, under `stories/fixed-bugs/` (`RTL.stories.tsx`: `columnResizeDirection: 'rtl'`, a pinned column, the handle at the inline-start edge, `inset-inline-start` on the pinned cell), run by `test:<base>`. Spec 09 keeps its RTL Next pages in the gate apps.
 
 ### D32 Shadow literals follow the theme
 
 - The four fixed shadow colors (`shared/utils/style.utils.ts` two sites, `components/toolbar/ST_BottomToolbar.tsx:23`, `components/head/ST_TableHeadRow.tsx:22`) take their color from theme variables, for example `color-mix(in oklab, var(--foreground) 15%, transparent)`, so they follow theme and dark mode (F35).
 - Nothing else in F35 changes: shadcn styles set literal classes per part and no tokens, so no class of ours could follow a style; `rounded-*` steps and `font-bold` are intent and MRT parity; the base filter popover is fixed by D28 (F42). F35 gets a note recording the refuted premise.
-- Part 06, all three bases.
+- Spec 06, all three bases.
 
 ### D33 Install docs cover shadcn create and offer a registry namespace
 
@@ -267,14 +267,14 @@
 - An optional "Short form" toggle on the install command component reveals the `components.json` entry `"registries": { "@shadcn-table": "https://www.shadcn-table.com/r/{style}/{name}.json" }` and the short form `shadcn add @shadcn-table/<item>`. Verified: the CLI fills `{style}` with the project's literal `style` value such as `base-nova`.
 - Hosting adds three rewrite rules, `/r/base-*/`, `/r/radix-*/` and `/r/aria-*/` to the matching base folder. Existing hosted paths are unchanged.
 - The full-URL single command is the default everywhere, with base, package manager and icon library selectors; registering the namespace is never required. Item names carry the icon choice in both forms.
-- Part 08, docs and hosting config only. No library change.
-- Note 2026-10-31: the three rewrites already exist in the docs `next.config.mjs`; part 08 verifies them, adds none.
-- Addendum 2026-10-31: the repo ships the namespace `@st` today (`apps/shadcn-table-docs/lib/install.ts:92` `registryNamespace`, `getting-started/agents.mdx:24-28`, `guides/localization.mdx:22`, `api/index.mdx:17`, `README.md:55`). The decision stands as written: part 08 1.6.4 renames all of them to `@shadcn-table` in stream S4 and a grep gate keeps `@st` out of the docs content, `lib/` and the README.
+- Spec 08, docs and hosting config only. No library change.
+- Note 2026-10-31: the three rewrites already exist in the docs `next.config.mjs`; spec 08 verifies them, adds none.
+- Addendum 2026-10-31: the repo ships the namespace `@st` today (`apps/shadcn-table-docs/lib/install.ts:92` `registryNamespace`, `getting-started/agents.mdx:24-28`, `guides/localization.mdx:22`, `api/index.mdx:17`, `README.md:55`). The decision stands as written: spec 08 1.6.4 renames all of them to `@shadcn-table` in workstream S4 and a grep gate keeps `@st` out of the docs content, `lib/` and the README.
 
-### D34 One foundation commit before the streams; streams never touch shared config
+### D34 One foundation commit before the workstreams; workstreams never touch shared config
 
-- Everything two or more streams need lands as one commit series on `v0.7/foundation`, merged into `claude/review` before any stream starts: every dependency add of the cycle with one non-frozen `pnpm install` and the committed lockfile; the shared helpers `hooks/useST_ComposedRef.ts` and `hooks/useST_MenuAnchor.ts`; the `types.ts` type surface of parts 04, 05 and 11 (widening only) with the reasoned `keep` disables; `check-tailwind.mjs`, `check-icons.mjs`, their scripts and `pr.yml` steps; the `install.yml` and `pr.yml` registry edits of part 11; the `smoke.mjs` item list; the `CHANGELOG.md` `### Part NN` blocks; the coding-standards and PR template lines of parts 02, 06 and 07; the baselines under `.ai/plans/v0.7.x/anindosarker/reference/`.
-- After the foundation no stream touches `package.json`, the lockfile, `.github/workflows/` or `eslint.config.js`, except S1's own config switch (D17). `pnpm install --frozen-lockfile` only when `node_modules` is missing (P5).
+- Everything two or more workstreams need lands as one commit series on `v0.7/foundation`, merged into `claude/review` before any workstream starts: every dependency add of the cycle with one non-frozen `pnpm install` and the committed lockfile; the shared helpers `hooks/useST_ComposedRef.ts` and `hooks/useST_MenuAnchor.ts`; the `types.ts` type surface of specs 04, 05 and 11 (widening only) with the reasoned `keep` disables; `check-tailwind.mjs`, `check-icons.mjs`, their scripts and `pr.yml` steps; the `install.yml` and `pr.yml` registry edits of spec 11; the `smoke.mjs` item list; the `CHANGELOG.md` `### Spec NN` blocks; the coding-standards and PR template lines of specs 02, 06 and 07; the baselines under `.ai/plans/v0.7.x/anindosarker/reference/`.
+- After the foundation no workstream touches `package.json`, the lockfile, `.github/workflows/` or `eslint.config.js`, except S1's own config switch (D17). `pnpm install --frozen-lockfile` only when `node_modules` is missing (P5).
 - The ESLint config is not switched in the foundation, so `lint` stays green on its PR; the switch is S1's first step.
-- Every file the cycle changes has exactly one stream owner (index, Run plan, Streams). Generated outputs (`registry.json`, the docs `ui-*` copies) are regenerated by whoever merges, never hand-merged; a conflict in a comment-only hunk yields to the code change.
+- Every file the cycle changes has exactly one workstream owner (index, Run plan, Workstreams). Generated outputs (`registry.json`, the docs `ui-*` copies) are regenerated by whoever merges, never hand-merged; a conflict in a comment-only hunk yields to the code change.
 - Source: the 2026-10-31 plan review of the v0.7.x run schedule.

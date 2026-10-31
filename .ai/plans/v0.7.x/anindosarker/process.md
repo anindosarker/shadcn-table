@@ -1,6 +1,6 @@
 # Expedition process, v0.7.x
 
-Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The process itself (lanes, models, loop, gates once, Done when, attention, handoff) lives in the skill; this file says only what this project is.
+Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The process itself (lanes, models, loop, gates once, Acceptance, attention, handoff) lives in the skill; this file says only what this project is.
 
 ## P1 Branches and worktrees
 
@@ -9,10 +9,10 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 - Never force-push these branches; never bare `git stash` (shared stack).
 - After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit; tracker, ATTENTION and handoff commits during a round need no sync.
 
-## P2 Merge a part on green local gates
+## P2 Merge a spec on green local gates
 
 - `pr.yml` runs on pull requests only: the builder opens the draft PR into `claude/review` at its first push (body per `.github/pull_request_template.md`, the label the index names, the session URL last) so every push gets a CI run.
-- Merge commit the moment the recorded gates are green: `merge: v<major>.<minor> part <NN> (#<PR>)`, or `parts <NN>, <NN>` for a shared run. Then `dev` fast-forward. Start the next run at once.
+- Merge commit the moment the recorded gates are green: `merge: v<major>.<minor> spec <NN> (#<PR>)`, or `specs <NN>, <NN>` for a shared run. Then `dev` fast-forward. Start the next run at once.
 
 ## P3 Release once per round, in the background
 
@@ -30,9 +30,9 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
 - Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives.
-- Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; streams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
+- Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; workstreams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
 
 ## P6 Plans
 
-- Parts follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any part whose label differs.
-- `Done when` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced on `/Users/anindosarker/Work/Personal/React-table/test-projects/` first; upstream reports are searched on `shadcn-ui/ui` before filing.
+- Specs follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any spec whose label differs.
+- `Acceptance` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced on `/Users/anindosarker/Work/Personal/React-table/test-projects/` first; upstream reports are searched on `shadcn-ui/ui` before filing.

@@ -21,6 +21,6 @@ Gates:
 - `pnpm --filter shadcn-table-docs types:check`, `lint` at d8f1c516: green
 - CI run 41168338637: green
 
-- Phase 01 library moves: done (6f98f13f)
-- Phase 02 registry and docs copies: done (71c58fe1)
-- Final phase cleanup: done (d8f1c516)
+- Milestone 01 library moves: done (6f98f13f)
+- Milestone 02 registry and docs copies: done (71c58fe1)
+- Final milestone cleanup: done (d8f1c516)

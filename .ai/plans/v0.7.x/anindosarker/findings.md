@@ -310,7 +310,7 @@ Source for F27 to F32: test-projects/next-app/shadcn-table-bugs.md (header demo 
 - `shadcn create` and `init` write `iconLibrary` into `components.json` (lucide, hugeicons, tabler, phosphor, remixicon), and the CLI `transformIcons` rewrites only `<IconPlaceholder lucide=... tabler=... />` elements.
 - Effect: a consumer who chose another icon library still gets Lucide icons and the `lucide-react` package.
 - 16 of the 33 names have no upstream equivalent in the other libraries.
-- Corrected 2026-10-31 after checking every name against the packages: direct matches are Tabler 33 of 33, Hugeicons 31, Phosphor 29, Remix 27; the rest take a substitute (density rows, search-off, first and last page). Table in part 11.
+- Corrected 2026-10-31 after checking every name against the packages: direct matches are Tabler 33 of 33, Hugeicons 31, Phosphor 29, Remix 27; the rest take a substitute (density rows, search-off, first and last page). Table in spec 11.
 - Bases: radix and aria same (4 files import `lucide-react` in each).
 
 ### F34 RTL handled at runtime, not by transformRtl
@@ -517,4 +517,4 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - Repro: next-app `/header-demo` with `enableRowActions` and `renderRowActionMenuItems`, click the row actions button twice; the menu stays open. Source: `test-projects/next-app/shadcn-table-bugs.md` section 7, confirmed in the browser.
 - Likely the same in the other span-anchored menus (`ST_ColumnActionMenu`, `ST_CellActionMenu`, `ST_FilterOptionMenu`, `ST_ShowHideColumnsMenu`): every opener sets the anchor unconditionally.
 - Bases: all three (same opener handlers).
-- Relation: D26 keeps the anchor pattern; the fix is a toggle inside `useST_MenuAnchor` (D26 addendum, part 10).
+- Relation: D26 keeps the anchor pattern; the fix is a toggle inside `useST_MenuAnchor` (D26 addendum, spec 10).

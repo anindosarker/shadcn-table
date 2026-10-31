@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 22 distinct classes, in every base (F13). They take their canonical form in all three bases, same CSS output, and a new `check:tailwind` gate keeps them canonical (D16). The same pass makes direction logical: 20 static physical classes per base and the resize handle's direction variant become `ms-*`, `me-*`, `start-*`, `end-*` and `text-start` or `text-end`, pinning uses inline-axis offsets, and the gate fails on any physical direction class (D31) (F34). The four shadow literals take their color from theme variables (D32) (F35). Runs in stream S1 (index, Run plan) (D34): the dependency bumps, `check-tailwind.mjs`, its scripts, the `pr.yml` step, the coding-standards line and the Storybook baseline captures land in the foundation; the class, direction and shadow edits are applied per file set A to D by the same builders that apply 02, 04, 05 and 07, so no 28-file rebase exists; the long gates run once at stream end.
+A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 22 distinct classes, in every base (F13). They take their canonical form in all three bases, same CSS output, and a new `check:tailwind` gate keeps them canonical (D16). The same pass makes direction logical: 20 static physical classes per base and the resize handle's direction variant become `ms-*`, `me-*`, `start-*`, `end-*` and `text-start` or `text-end`, pinning uses inline-axis offsets, and the gate fails on any physical direction class (D31) (F34). The four shadow literals take their color from theme variables (D32) (F35). Runs in workstream S1 (index, Run plan) (D34): the dependency bumps, `check-tailwind.mjs`, its scripts, the `pr.yml` step, the coding-standards line and the Storybook baseline captures land in the foundation; the class, direction and shadow edits are applied per file set A to D by the same builders that apply 02, 04, 05 and 07, so no 28-file rebase exists; the long gates run once at workstream end.
 
 ### 1.2 Goals
 
@@ -15,13 +15,13 @@ A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 
 - The resize handle has no direction variant; pinned offsets use `insetInlineStart` and `insetInlineEnd`; the cell resize border uses `borderInlineEnd` (D31)
 - No `rgba(` literal in the library trees; shadows read theme variables (D32)
 - Rendered output unchanged in LTR: Storybook tests green, spot checks match
-- Done when: `pnpm check:tailwind` exits 0 for base, radix and aria under both rules, and `grep -rn "rgba(" packages/shadcn-table/registry/*/components/ui/shadcn-table` prints nothing; judged: Storybook captures of the resize handle, pinned columns, toolbar and header shadows per base in LTR against the foundation baseline `reference/06-*` (taken with `reference/06-capture.mjs`), three judges on "same position, same visible shadow" (P6)
+- Acceptance: `pnpm check:tailwind` exits 0 for base, radix and aria under both rules, and `grep -rn "rgba(" packages/shadcn-table/registry/*/components/ui/shadcn-table` prints nothing; judged: Storybook captures of the resize handle, pinned columns, toolbar and header shadows per base in LTR against the foundation baseline `reference/06-*` (taken with `reference/06-capture.mjs`), three judges on "same position, same visible shadow" (P6)
 
 ### 1.3 Current structure: none
 
 ### 1.4 Target structure
 
-Everything in this tree is written in the foundation (index, Run plan); this part's own edits are the class strings in the library files.
+Everything in this tree is written in the foundation (index, Run plan); this spec's own edits are the class strings in the library files.
 
 ```
 packages/shadcn-table/
@@ -126,7 +126,7 @@ The 20 static physical sites per base (F34) and the resize handle's cva `compoun
 - Arbitrary-value form: underscores for spaces, no spaces inside the brackets, so Tailwind reads one candidate
 - Gate: `check:tailwind` green on the four new shadow classes (a candidate `canonicalizeCandidates` rewrites or `candidatesToCss` drops is a failure)
 - Same blur and offset values; only the color changes, so light mode looks the same and dark mode gains a visible shadow (D32) (F35)
-- Does NOT touch `rounded-*` steps or `font-bold` (intent and MRT parity per F35), nor the base filter popover (part 10, D28)
+- Does NOT touch `rounded-*` steps or `font-bold` (intent and MRT parity per F35), nor the base filter popover (spec 10, D28)
 
 **Operations:**
 
@@ -151,28 +151,28 @@ pnpm --filter shadcn-table check:tailwind aria
 
 - `@tailwindcss/node` `^4.3.3` and `@tailwindcss/oxide` `^4.3.3`: new devDependencies of `packages/shadcn-table` (already in the store at 4.3.3 through the docs app)
 - `tailwindcss` and `@tailwindcss/vite` in `packages/shadcn-table` `dependencies` (`package.json:30,45`) from `^4.1.11` to `^4.3.3`: Storybook and the tests build with the package's Tailwind, and `scrollbar-thin` exists in 4.3.3 and not in 4.1.11; the docs app is on `^4.3.3` already
-- All of it lands in the foundation (index, Run plan); this part never touches `package.json` or the lockfile
+- All of it lands in the foundation (index, Run plan); this spec never touches `package.json` or the lockfile
 - No env vars
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Class edits per file set
+#### 2.1.1 Milestone 1: Class edits per file set
 
 Lane: agent
 
 - The foundation already provides `check:tailwind` (37 failures per base, 22 distinct, recorded as the baseline count in `trackers/02-tracker.md`), the 4.3.3 dependencies and the `reference/06-*` captures
-- Per set A to D (index, Run plan): the 1.6.2, 1.6.4 and 1.6.5 rows whose files the set owns, edited once on `registry/base` and copied to `registry/radix` and `registry/aria`; the files listed in `base-diff.json` and `aria-diff.json` are hand-edited per base (radix `style.utils.ts:56,58`); `check:bases` at stream end proves the copies
-- Reviewer (stream review) checks the three trees' changed lines against the 1.6.2 table, D31 (JS kept only for the drag sign and the pin pixels, `columnResizeDirection` untouched) and D32 (color only, blur and offset unchanged)
+- Per set A to D (index, Run plan): the 1.6.2, 1.6.4 and 1.6.5 rows whose files the set owns, edited once on `registry/base` and copied to `registry/radix` and `registry/aria`; the files listed in `base-diff.json` and `aria-diff.json` are hand-edited per base (radix `style.utils.ts:56,58`); `check:bases` at workstream end proves the copies
+- Reviewer (workstream review) checks the three trees' changed lines against the 1.6.2 table, D31 (JS kept only for the drag sign and the pin pixels, `columnResizeDirection` untouched) and D32 (color only, blur and offset unchanged)
 - Gates per set: `eslint --max-warnings 0 <own files>`, `prettier --check <own files>`
 
-#### 2.1.2 Final phase: Gates once
+#### 2.1.2 Final milestone: Gates once
 
 Lane: inline
 
-- CHANGELOG lines from 1.6.1 in the `### Part 06` block
-- `check:tailwind` zero failures under both rules (the physical-class rule reported the 20 static sites plus the handle before the sets, zero after); `pnpm registry:build`; `lib:install` per base; `test:*` once, at stream end
+- CHANGELOG lines from 1.6.1 in the `### Spec 06` block
+- `check:tailwind` zero failures under both rules (the physical-class rule reported the 20 static sites plus the handle before the sets, zero after); `pnpm registry:build`; `lib:install` per base; `test:*` once, at workstream end
 - Judged: Storybook captures per base in LTR with `reference/06-capture.mjs` (resize handle, pinned columns, toolbar, header shadows) next to `reference/06-*`, three judges on "same position, same visible shadow"; computed-style spot check: sticky header `z-index: 2` (`ST_TableHead.tsx:25`), empty body `min-height: 100px` (`ST_TableBody.tsx:180`)
 - `Gates: see 02-tracker.md` in `../trackers/06-tracker.md`
 

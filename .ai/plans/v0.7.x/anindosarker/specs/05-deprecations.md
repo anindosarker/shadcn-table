@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The library uses five deprecated APIs that strike through in a consumer editor: the `aggregationFns`, `filterFns` and `sortFns` registries, `table.store` and `navigator.platform` (F8). The registries are rebuilt from the individual `*Fn_*` exports, one helper owns the platform read (D11), and every `table.store` use becomes `table.Subscribe`, `table.atoms.<slice>.get()` or a per-atom subscription (D13). The `table.store` migration also covers the stories, the hand-written docs examples and one guide line (D13 amended). Runs in stream S1 (index, Run plan) (D34): the `ST_TableAtoms` and `ST_DisplayColumnOptions` types (1.6.5, 1.6.6) land in the foundation; the registries and the platform helper (1.6.2, 1.6.3) are the S1 lead step, after the 02 config switch (`no-deprecated` active) and the 03 atoms (the `useSelector(table.store)` site in `useST_TableInstance.ts` is gone); the `table.store` rewrites (1.6.4 to 1.6.8) are applied per file set A to D; the long gates run once at stream end.
+The library uses five deprecated APIs that strike through in a consumer editor: the `aggregationFns`, `filterFns` and `sortFns` registries, `table.store` and `navigator.platform` (F8). The registries are rebuilt from the individual `*Fn_*` exports, one helper owns the platform read (D11), and every `table.store` use becomes `table.Subscribe`, `table.atoms.<slice>.get()` or a per-atom subscription (D13). The `table.store` migration also covers the stories, the hand-written docs examples and one guide line (D13 amended). Runs in workstream S1 (index, Run plan) (D34): the `ST_TableAtoms` and `ST_DisplayColumnOptions` types (1.6.5, 1.6.6) land in the foundation; the registries and the platform helper (1.6.2, 1.6.3) are the S1 lead step, after the 02 config switch (`no-deprecated` active) and the 03 atoms (the `useSelector(table.store)` site in `useST_TableInstance.ts` is gone); the `table.store` rewrites (1.6.4 to 1.6.8) are applied per file set A to D; the long gates run once at workstream end.
 
 ### 1.2 Goals
 
@@ -13,7 +13,7 @@ The library uses five deprecated APIs that strike through in a consumer editor: 
 - `ST_AggregationFns`, `ST_FilterFns`, `ST_SortFns` keep their keys (11, 25, 7) and functions (D11)
 - Same re-render set for every migrated `Subscribe`; the page index check fires on the nine slices of D13 only
 - All three bases identical
-- Done when: `grep -rn 'table.store' packages/shadcn-table/registry/*/components/ui/shadcn-table packages/shadcn-table/stories apps/shadcn-table-docs/examples apps/shadcn-table-docs/content/docs/guides/row-pinning.mdx` prints nothing and `pnpm --filter shadcn-table lint` exits 0 with `no-deprecated` on (P6)
+- Acceptance: `grep -rn 'table.store' packages/shadcn-table/registry/*/components/ui/shadcn-table packages/shadcn-table/stories apps/shadcn-table-docs/examples apps/shadcn-table-docs/content/docs/guides/row-pinning.mdx` prints nothing and `pnpm --filter shadcn-table lint` exits 0 with `no-deprecated` on (P6)
 
 ### 1.3 Current structure
 
@@ -61,7 +61,7 @@ Same files. `shared/utils/utils.ts` gains `getPlatform`; `types.ts` gains `ST_Ta
 #### 1.6.1 Data artifacts
 
 - `CHANGELOG.md` `## Unreleased` `### Changed`, one line: "No deprecated TanStack or DOM API is used: the function registries come from the individual `*Fn_*` exports, state reads go through `table.Subscribe` and `table.atoms`, in the library, the stories and the docs examples; `getDefaultColumnOrderIds` and the display column helpers take only the `columnOrder`, `creatingRow` and `grouping` state they read; `table.atoms` is typed per row type."
-- `registry.json` and `public/r` regenerated; docs copies re-installed at stream end
+- `registry.json` and `public/r` regenerated; docs copies re-installed at workstream end
 
 #### 1.6.2 Function registries
 
@@ -160,11 +160,11 @@ export const getDefaultColumnOrderIds: <TData extends ST_RowData>(
 
 `useST_Effects.ts:112-127` subscribes to nine atoms instead of `table.store` (D13): `columnFilters`, `globalFilter`, `columnFilterFns`, `globalFilterFn`, `grouping`, `expanded`, `pagination`, `isLoading`, `showSkeletons`. Each `subscribe` feeds the same timeout-deferred check; cleanup clears the timeout and calls all nine `unsubscribe`. The owner-render effect at `:106-108` stays. Accepted narrowing: other slices no longer trigger the check.
 
-**Stays unchanged:** `checkPageIndex` logic and its input memo, the `useEffectEvent` handlers from part 02, the full-screen, column order and ranking effects' subscriptions.
+**Stays unchanged:** `checkPageIndex` logic and its input memo, the `useEffectEvent` handlers from spec 02, the full-screen, column order and ranking effects' subscriptions.
 
 #### 1.6.8 Stories and docs examples
 
-The same `.get()` rule as 1.6.5, per slice, in the part prop callbacks and cells above (D13). `table` there is `ST_CoreTableInstance<Person>`, so the typed `atoms` drop the three `as ST_TableState<Person>` casts and the `ST_TableState` imports they leave unused.
+The same `.get()` rule as 1.6.5, per slice, in the spec prop callbacks and cells above (D13). `table` there is `ST_CoreTableInstance<Person>`, so the typed `atoms` drop the three `as ST_TableState<Person>` casts and the `ST_TableState` imports they leave unused.
 
 ```tsx
 // before
@@ -182,29 +182,29 @@ const hoveredRow = table.atoms.hoveredRow.get();
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: registries and platform helper (S1 lead step)
+#### 2.1.1 Milestone 1: registries and platform helper (S1 lead step)
 
 Lane: agent
 
 - 1.6.2 and 1.6.3 in `registry/radix`, then `base` and `aria`
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `check:bases`; `grep -rnE "\b(aggregationFns|filterFns|sortFns)\b.*from '@tanstack/react-table'" registry` empty
 
-#### 2.1.2 Phase 2: `table.store` migration per file set
+#### 2.1.2 Milestone 2: `table.store` migration per file set
 
 Lane: agent
 
 - Per set A to D (index, Run plan): 1.6.4 to 1.6.7 in the library files the set owns, base, radix and aria in one pass; set D does 1.6.8 in the 3 stories, the 12 example sources and the guide line
 - Set D adds a play test to `PaginationEnabledDefaultMoreData` (`stories/features/Pagination.stories.tsx`): go to the last page, type a global search that leaves one page, expect page index 0 and a console error spy with zero calls; `test:<base>` carries it, no manual Playwright step
-- Reviewer (stream review) bounces until: every selector text is unchanged; no `table.store` left; the page index check fires on the nine slices and only those; no new cast
+- Reviewer (workstream review) bounces until: every selector text is unchanged; no `table.store` left; the page index check fires on the nine slices and only those; no new cast
 - Gates per set: `eslint --max-warnings 0 <own files>`, `prettier --check <own files>`
 
-#### 2.1.3 Final phase: Gates once
+#### 2.1.3 Final milestone: Gates once
 
 Lane: inline
 
-- 1.6.1 CHANGELOG line in the `### Part 05` block; `pnpm registry:build`, `lib:install base`, `radix`, `aria` at stream end
+- 1.6.1 CHANGELOG line in the `### Spec 05` block; `pnpm registry:build`, `lib:install base`, `radix`, `aria` at workstream end
 - Gates: 2.2, plus `CustomFilterFns`, `Filtering`, `Pagination`, `Search` stories per base (`ST_BASE=<base> pnpm --filter shadcn-table exec vitest run stories/features/{CustomFilterFns,Filtering,Pagination,Search}.stories.tsx`); `Gates: see 02-tracker.md` in `../trackers/05-tracker.md`
 
 ### 2.2 Gates

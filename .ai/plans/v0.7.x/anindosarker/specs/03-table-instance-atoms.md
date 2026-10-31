@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-`hooks/useST_TableInstance.ts` reads the previous render's table through `tableRef.current?.store.state` to feed its option-time transforms, which the `refs` rule flags 39 times (F2). D6: the hook owns its ten transform slices as TanStack atoms, created once, read with `useSelector`, handed to `useAppTable` through the v9 `atoms` option with the caller's atoms first. Runs entirely in the S1 lead step (index, Run plan), all three bases, right after the 02 config switch; the long gates run once at stream end.
+`hooks/useST_TableInstance.ts` reads the previous render's table through `tableRef.current?.store.state` to feed its option-time transforms, which the `refs` rule flags 39 times (F2). D6: the hook owns its ten transform slices as TanStack atoms, created once, read with `useSelector`, handed to `useAppTable` through the v9 `atoms` option with the caller's atoms first. Runs entirely in the S1 lead step (index, Run plan), all three bases, right after the 02 config switch; the long gates run once at workstream end.
 
 ### 1.2 Goals
 
@@ -12,7 +12,7 @@
 - No `tableRef`, `columnDefsRef` or `table.store` in the file
 - Owner re-render set: the `selectST_TransformState` slices plus the resize and drag flags, nothing more (D6 closes the resize and drag gap)
 - Caller `atoms` and controlled `state` keep precedence; public options, types and behavior unchanged; file byte-identical in the three bases
-- Done when: eslint with `react-hooks/refs` as an error on `hooks/useST_TableInstance.ts` exits 0 in every base, `grep -nE "tableRef|columnDefsRef|table\.store"` on that file prints nothing, and the three base copies diff empty (P6)
+- Acceptance: eslint with `react-hooks/refs` as an error on `hooks/useST_TableInstance.ts` exits 0 in every base, `grep -nE "tableRef|columnDefsRef|table\.store"` on that file prints nothing, and the three base copies diff empty (P6)
 
 ### 1.3 Current structure
 
@@ -20,7 +20,7 @@
 hooks/useST_TableInstance.ts   ← per base, identical
 ├── transformStateDefaults     ← overlay base for the first render
 ├── selectST_TransformState    ← exported; ShadcnTable passes it as the table selector
-├── useState(createSTTableHook), tableRef, initialState (useState initializer after part 02)
+├── useState(createSTTableHook), tableRef, initialState (useState initializer after spec 02)
 ├── statefulTableOptions.state ← defaults, initialState, tableRef.current?.store.state, options.state
 ├── columns                    ← columnDefsRef.current while resizing or dragging, else prepareColumns
 ├── data memo, useAppTable, tableRef.current = table
@@ -60,7 +60,7 @@ sequenceDiagram
 #### 1.6.1 Data artifacts
 
 - `CHANGELOG.md` `## Unreleased` `### Fixed`: "Column definitions are rebuilt when a column resize or a drag ends, also when the owner's table selector leaves those slices out."
-- `registry.json` unchanged in shape; `registry:build` and `lib:install <base>` refresh the copies at stream end
+- `registry.json` unchanged in shape; `registry:build` and `lib:install <base>` refresh the copies at workstream end
 
 #### 1.6.2 Setup initializer
 
@@ -148,30 +148,30 @@ const table = useAppTable(
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Base (S1 lead step)
+#### 2.1.1 Milestone 1: Base (S1 lead step)
 
 Lane: agent
 
 - 1.6.2 to 1.6.5 in `registry/base`, folding 02's D7 and D12 edits to this file (`initialState` copy, dependency lists); two new play stories in `stories/styling/RenderCounts.stories.tsx`: `ColumnsHoldWhileResizing` and `ColumnsHoldWhileDragging`, which set the resize flag or `draggingColumn` / `draggingRow` and a grouping from buttons, and assert no build while frozen and the expand column after release
 - Build count mechanism: the story passes a `columns` factory (or a `displayColumnDefOptions` getter) that increments a counter on every `prepareColumns` build; the story states the expected counts while frozen (0 new builds) and after release (1 build, the expand column present)
-- Reviewer (stream review) bounces on: a ref read or written in render; an owner re-render set other than 1.2 (`RootSkipsStateRenders`, `HookSelectorSkipsStateRenders` counts unchanged); a caller atom or controlled slice losing to an own atom; `isFrozen` not reactive (computed from anything but the selectors and the overlay); a public type touched
+- Reviewer (workstream review) bounces on: a ref read or written in render; an owner re-render set other than 1.2 (`RootSkipsStateRenders`, `HookSelectorSkipsStateRenders` counts unchanged); a caller atom or controlled slice losing to an own atom; `isFrozen` not reactive (computed from anything but the selectors and the overlay); a public type touched
 - Gates: `eslint --rule '{"react-hooks/refs":"error"}'` on the base file zero, `tsc:baseui`, `test:base`
 
-#### 2.1.2 Phase 2: Radix and aria copies (S1 lead step)
+#### 2.1.2 Milestone 2: Radix and aria copies (S1 lead step)
 
 Lane: agent
 
 - Copy `hooks/useST_TableInstance.ts` to `registry/radix` and `registry/aria`
 - Gates: `check:bases` (file not on any `*-diff.json` list, so byte-identical), `tsc:radix`, `tsc:aria`, `test:radix`, `test:aria`, the `refs` rule run on all three files
 
-#### 2.1.3 Final phase: Gates once
+#### 2.1.3 Final milestone: Gates once
 
 Lane: inline
 
-- 1.6.1 CHANGELOG line in the `### Part 03` block; `registry:build`; `lib:install` for the three bases at stream end
-- Gates: the full set in 2.2 at stream end; `Gates: see 02-tracker.md` in `../trackers/03-tracker.md`
+- 1.6.1 CHANGELOG line in the `### Spec 03` block; `registry:build`; `lib:install` for the three bases at workstream end
+- Gates: the full set in 2.2 at workstream end; `Gates: see 02-tracker.md` in `../trackers/03-tracker.md`
 
 ### 2.2 Gates
 
@@ -183,4 +183,4 @@ Lane: inline
   - resize and drag: `RenderCounts.stories.tsx` `ColumnsHoldWhileResizing`, `ColumnsHoldWhileDragging` (new)
   - owner re-render set and precedence: `RenderCounts.stories.tsx` `RootSkipsStateRenders`, `HookSelectorSkipsStateRenders`, `ControlledPagination`, `ControlledDensityAndSelection`, `ExternalAtomsDensityAndSelection`
 - `pnpm check:bases` green; `pnpm --filter shadcn-table-docs types:check`, `lint`, `build` green
-- `pr.yml` green on the PR (the next-app consumer check runs in part 09 1.6.2)
+- `pr.yml` green on the PR (the next-app consumer check runs in spec 09 1.6.2)

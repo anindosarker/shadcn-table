@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-Three library files sit outside the folder of their kind: two wrappers at the library root and a hook under `components/toolbar/`. They move to the folders of their kind in all three bases; only the files and their import paths change, no code rides along (D1). Branch `v0.7/restructure` from `claude/review`, worktree `shadcn-react-table.worktrees/restructure`, one PR into `claude/review` for CI, merged by merge commit once green. Every later library part rebases onto it.
+Three library files sit outside the folder of their kind: two wrappers at the library root and a hook under `components/toolbar/`. They move to the folders of their kind in all three bases; only the files and their import paths change, no code rides along (D1). Branch `v0.7/restructure` from `claude/review`, worktree `shadcn-react-table.worktrees/restructure`, one PR into `claude/review` for CI, merged by merge commit once green. Every later library spec rebases onto it.
 
 ### 1.2 Goals
 
@@ -13,7 +13,7 @@ Three library files sit outside the folder of their kind: two wrappers at the li
 - `registry.json` diff limited to the three moved file entries in each of the four main items (`shadcn-table-base`, `shadcn-table-radix`, `shadcn-table-aria`, `shadcn-table`)
 - Public barrel unchanged in content: the same names export from `index.ts`
 - All gates green on all three bases
-- Done when: `grep -rnE "shadcn-table/(ST_Checkbox|ST_Tooltip|components/toolbar/useST_MediaQuery)'" packages/shadcn-table apps/shadcn-table-docs/components` prints nothing and `pnpm check:bases` exits 0 (P6)
+- Acceptance: `grep -rnE "shadcn-table/(ST_Checkbox|ST_Tooltip|components/toolbar/useST_MediaQuery)'" packages/shadcn-table apps/shadcn-table-docs/components` prints nothing and `pnpm check:bases` exits 0 (P6)
 
 ### 1.3 Current structure
 
@@ -96,9 +96,9 @@ The three installed copies under `apps/shadcn-table-docs/components/ui-{base,rad
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Library moves
+#### 2.1.1 Milestone 1: Library moves
 
 Lane: agent
 
@@ -106,7 +106,7 @@ Lane: agent
 - `grep -rnE "shadcn-table/(ST_Checkbox|ST_Tooltip|components/toolbar/useST_MediaQuery)'" packages/shadcn-table` empty
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:bases`
 
-#### 2.1.2 Phase 2: Registry and docs copies
+#### 2.1.2 Milestone 2: Registry and docs copies
 
 Lane: agent
 
@@ -115,7 +115,7 @@ Lane: agent
 - 1.6.3 for the three bases
 - Gates: docs `types:check`, `lint`, `build`
 
-#### 2.1.3 Final phase: Cleanup
+#### 2.1.3 Final milestone: Cleanup
 
 Lane: inline
 

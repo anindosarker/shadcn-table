@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more files import `lucide-react` directly (`ST_Checkbox.tsx:2,22` imports `MinusIcon` for the indeterminate dash), and `lucide-react` is a dependency of every main item, so a project created with Tabler, Phosphor, Hugeicons or Remix gets a second icon set (F33). Decision D30: one icon map per library with the same 35 keys (the 34 of today plus `IndeterminateIcon`), a `shadcn-table-core` item without icons, and one edition item per library that supplies `icons.ts` and its package. The CLI resolves core first and dedupes files by target, so a consumer ends with one `icons.ts` and only their icon package. Verified on shadcn 4.23.0 (D30). Stream S3 (index, Run plan) (D34): branch `v0.7/icon-sets`, worktree `shadcn-react-table.worktrees/icon-sets`, from `claude/review` after the foundation merges, parallel to S1; the icon devDependencies, the icon types in `types.ts`, `check-icons.mjs`, the `pr.yml` and `install.yml` edits and the `smoke.mjs` item list are already in from the foundation.
+Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more files import `lucide-react` directly (`ST_Checkbox.tsx:2,22` imports `MinusIcon` for the indeterminate dash), and `lucide-react` is a dependency of every main item, so a project created with Tabler, Phosphor, Hugeicons or Remix gets a second icon set (F33). Decision D30: one icon map per library with the same 35 keys (the 34 of today plus `IndeterminateIcon`), a `shadcn-table-core` item without icons, and one edition item per library that supplies `icons.ts` and its package. The CLI resolves core first and dedupes files by target, so a consumer ends with one `icons.ts` and only their icon package. Verified on shadcn 4.23.0 (D30). Workstream S3 (index, Run plan) (D34): branch `v0.7/icon-sets`, worktree `shadcn-react-table.worktrees/icon-sets`, from `claude/review` after the foundation merges, parallel to S1; the icon devDependencies, the icon types in `types.ts`, `check-icons.mjs`, the `pr.yml` and `install.yml` edits and the `smoke.mjs` item list are already in from the foundation.
 
 ### 1.2 Goals
 
@@ -14,7 +14,7 @@ Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more
 - Per base the registry has `shadcn-table-core`, `shadcn-table` (Lucide) and four editions; locale and example items depend on core; `shadcn-table` keeps its name and hosted path
 - `shadcn add` of an edition into a scratch project installs core files plus one `icons.ts` and only that icon package; `--overwrite` of another edition replaces `icons.ts` without a prompt (D30)
 - Docs app copies and the next-app install use editions; all gates green per base
-- Done when: `pnpm check:icons` exits 0; `grep -rn "lucide-react" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists the three `icons.ts` only; the six `shadcn add` dry-runs against `registry:dev` on 5310 exit 0; the Tabler-then-Lucide `--overwrite` smoke leaves one `icons.ts` importing `lucide-react` and no `@tabler/icons-react` in the scratch `package.json` (P6)
+- Acceptance: `pnpm check:icons` exits 0; `grep -rn "lucide-react" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists the three `icons.ts` only; the six `shadcn add` dry-runs against `registry:dev` on 5310 exit 0; the Tabler-then-Lucide `--overwrite` smoke leaves one `icons.ts` importing `lucide-react` and no `@tabler/icons-react` in the scratch `package.json` (P6)
 
 ### 1.3 Current structure
 
@@ -84,7 +84,7 @@ scripts/release/smoke.mjs              ← foundation: expectedItems with core a
 - `icons/tabler.ts`, `icons/phosphor.ts`, `icons/remixicon.ts`: imports renamed to the Lucide-side names where needed, same `ST_Default_Icons` object with the same 35 keys, `satisfies ST_Icons`
 - `icons/hugeicons.ts`: icons are data, so each entry is `icon(ArrowDown02Icon)` where `icon = (data: IconSvgElement) => (props: ST_IconProps) => createElement(HugeiconsIcon, { icon: data, ...props })`. No JSX: the file installs at the `icons.ts` target and JSX in a `.ts` file fails the consumer's `tsc` and `next build` (D30)
 - Comments in `icons/*.ts` say "icon set", never "edition" (07's grep excludes these files but the word stays out of shipped comments)
-- Icon per library, checked against each package's type exports; phase 1 `tsc:*` with the foundation devDependencies is the proof. Direct matches: Tabler 34 of 34, Hugeicons 32, Phosphor 30, Remix 28; the rest are substitutes, marked `*`, each named in a comment on its entry. The "16 names without equivalent" count in F33 was an estimate; the verified counts stand (F33)
+- Icon per library, checked against each package's type exports; milestone 1 `tsc:*` with the foundation devDependencies is the proof. Direct matches: Tabler 34 of 34, Hugeicons 32, Phosphor 30, Remix 28; the rest are substitutes, marked `*`, each named in a comment on its entry. The "16 names without equivalent" count in F33 was an estimate; the verified counts stand (F33)
 
 | Lucide | Tabler | Phosphor | Hugeicons | Remix |
 | --- | --- | --- | --- | --- |
@@ -150,7 +150,7 @@ export const ST_Default_Icons: ST_Icons;
 | --- | --- | --- |
 | `icons.ts` | refactor | type import from `types.ts`, `satisfies ST_Icons`, `IndeterminateIcon` key; the foundation's reasoned `no-explicit-any` disable at `icons.ts:74` goes with the `any` record |
 | `icons/tabler.ts`, `icons/phosphor.ts`, `icons/hugeicons.ts`, `icons/remixicon.ts` | new | byte-identical across bases; `hugeicons.ts` uses `createElement` |
-| `types.ts` `ST_IconProps`, `ST_IconKey`, `ST_Icons` | keep | foundation type surface (index, Run plan): replaces `LucideProps` (39) and `ST_CircularProgressProps = LucideProps` (136), the second public use; this part consumes the types (D10) |
+| `types.ts` `ST_IconProps`, `ST_IconKey`, `ST_Icons` | keep | foundation type surface (index, Run plan): replaces `LucideProps` (39) and `ST_CircularProgressProps = LucideProps` (136), the second public use; this spec consumes the types (D10) |
 | `ST_Checkbox.tsx:2,22`, `ST_TablePagination.tsx:3` | refactor | `icons.IndeterminateIcon` from the table icons; icon type from `types.ts` (two-line overlap with S1 set C: whichever merges second resolves, code change wins) |
 | `examples/<base>/font-awesome-icons/TS.tsx:7,37` | refactor | `ST_Icons` import kept, `(props: any)` becomes `(props: ST_IconProps)`; docs `lint` reports no `any` there |
 
@@ -183,8 +183,8 @@ export const ST_Default_Icons: ST_Icons;
 
 #### 1.6.4 Installs in this repo
 
-- `apps/shadcn-table-docs/scripts/install.mjs`: today it reads `baseItems(...).main`, appends the locale items' files and rewrites `@/components/ui/` to `@/components/ui-<base>/` before `shadcn add` (`install.mjs:67-100`). After this part it merges `core.files`, `main.files` (the Lucide `icons.ts`) and the locale files into one item before the rewrite, so the docs copies hold every file with the `ui-<base>` alias; it never lets the CLI resolve core through a GitHub address. `en.ts` sits in core (part 08 reads it there)
-- next-app and the part 09 gate apps install an edition from the local registry: `shadcn-table` for base, one non-Lucide edition for radix and aria (part 09)
+- `apps/shadcn-table-docs/scripts/install.mjs`: today it reads `baseItems(...).main`, appends the locale items' files and rewrites `@/components/ui/` to `@/components/ui-<base>/` before `shadcn add` (`install.mjs:67-100`). After this spec it merges `core.files`, `main.files` (the Lucide `icons.ts`) and the locale files into one item before the rewrite, so the docs copies hold every file with the `ui-<base>` alias; it never lets the CLI resolve core through a GitHub address. `en.ts` sits in core (spec 08 reads it there)
+- next-app and the spec 09 gate apps install an edition from the local registry: `shadcn-table` for base, one non-Lucide edition for radix and aria (spec 09)
 - Storybook and the tests run on the source tree, which keeps `icons.ts` on Lucide
 
 #### 1.6.5 CI resolution through `registry:dev`
@@ -193,7 +193,7 @@ export const ST_Default_Icons: ST_Icons;
 - `pr.yml` `registry` job: the five `shadcn add ... --dry-run` lines at 166-171 resolve `anindosarker/shadcn-table/<item>#<sha>`; the CLI then resolves that item's `registryDependencies` (core) from the GitHub default branch, where core does not exist until 0.7.0 is on `master`. The job starts `pnpm --filter shadcn-table registry:dev` and `serve` the way `install.yml:175-186` does, waits for `http://localhost:5310/r/shadcn-table-base-core.json`, and dry-runs `http://localhost:5310/r/shadcn-table-radix.json`, `/r/shadcn-table.json` (alias), `/r/shadcn-table-base-tabler.json` and the three `/r/example-basic-<base>.json` URLs. `registry validate "anindosarker/shadcn-table#<sha>"` stays, it validates the catalog only
 - `install.yml`: the "Build and serve the dev registry" step (`install.yml:175-186`) moves before the "Add the library from the source" step (`install.yml:95`) and runs for every scenario, the `nextjs` one included (its `if: matrix.scenario != 'nextjs'` goes). The library step keeps the `source` template for releases (public URLs, whose dependencies hosted.mjs already re-points) and, when `source` names the GitHub form, swaps it for the dev URL `http://localhost:5310/r/$ITEM.json`. The example add at `install.yml:195` changes from `anindosarker/shadcn-table/$EXAMPLE_ITEM#$REF` to `http://localhost:5310/r/$EXAMPLE_ITEM.json`. `pr.yml:178` then passes `http://localhost:5310/r/<item>.json` as `source`
 - Workflow-file edits only, written in the foundation (index, Run plan); no ruleset or repository setting changes
-- Proof: the dry-run block runs locally against `registry:dev` in phase 2, and the PR's `registry` and `install` jobs are green in phase 3
+- Proof: the dry-run block runs locally against `registry:dev` in milestone 2, and the PR's `registry` and `install` jobs are green in milestone 3
 
 **Operations:**
 
@@ -208,31 +208,31 @@ export const ST_Default_Icons: ST_Icons;
 
 ### 1.7 Dependencies and env
 
-- `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons`, `@remixicon/react`: devDependencies of `packages/shadcn-table` so the maps typecheck; added with the lockfile in the foundation (index, Run plan); this part never touches `package.json` or the lockfile; listed as `dependencies` of their edition items only
+- `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons`, `@remixicon/react`: devDependencies of `packages/shadcn-table` so the maps typecheck; added with the lockfile in the foundation (index, Run plan); this spec never touches `package.json` or the lockfile; listed as `dependencies` of their edition items only
 - No env vars
 
 ## 2. Instructions for AI
 
-Halt conditions of the index apply: `shadcn-table`, locale and example item names and every hosted path stay; the new names are additions. No part file edit. Stream S3: one builder (opus) end to end, one fable review on the whole diff, gates once (index, Run plan).
+Halt conditions of the index apply: `shadcn-table`, locale and example item names and every hosted path stay; the new names are additions. No part file edit. Workstream S3: one builder (opus) end to end, one fable review on the whole diff, gates once (index, Run plan).
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Maps and imports
+#### 2.1.1 Milestone 1: Maps and imports
 
 Lane: agent
 
 - 1.6.2 in every base (maps copied byte-identical), the `ST_Checkbox.tsx` and `ST_TablePagination.tsx` import lines, the `font-awesome-icons` example retype; the devDependencies, the types and `check-icons.mjs` are already in from the foundation
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` (the proof that every icon name in the 1.6.2 table exists), `lint`, `check:icons`, `check:bases`; `grep -rn "lucide-react" registry/*/components/ui/shadcn-table` matches the three `icons.ts` only; `grep -rn "no-explicit-any" registry/*/components/ui/shadcn-table/icons.ts` empty
 
-#### 2.1.2 Phase 2: Registry build
+#### 2.1.2 Milestone 2: Registry build
 
 Lane: agent
 
-- 1.6.3 (`lib.mjs`, `hosted.mjs`, `examples.mjs`), 1.6.4 `install.mjs` merge, the `build.mjs --dev` example merge of 1.6.5; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`, `pnpm registry:dev`; the stream review checks the item set of 1.6.1 (names, files, `target`, dependencies, the two address forms) against `registry.json` and `.dev/registry.json`
+- 1.6.3 (`lib.mjs`, `hosted.mjs`, `examples.mjs`), 1.6.4 `install.mjs` merge, the `build.mjs --dev` example merge of 1.6.5; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`, `pnpm registry:dev`; the workstream review checks the item set of 1.6.1 (names, files, `target`, dependencies, the two address forms) against `registry.json` and `.dev/registry.json`
 - The `pr.yml` dry-run block of 1.6.5 run locally against `serve packages/shadcn-table/.dev -l 5310`: six green dry-runs, recorded in `trackers/11-tracker.md`
 - Gates: `check:bases`; registry.json diff shows only additions and the dependency re-point; the six dry-runs green
 
-#### 2.1.3 Phase 3: Installs, CLI smoke
+#### 2.1.3 Milestone 3: Installs, CLI smoke
 
 Lane: agent
 
@@ -241,12 +241,12 @@ Lane: agent
 - Record each smoke result in `trackers/11-tracker.md`
 - Gates: docs `types:check`, `lint`, `build`; the PR's `registry` and `install` jobs green
 
-#### 2.1.4 Final phase: Gates once
+#### 2.1.4 Final milestone: Gates once
 
 Lane: agent
 
-- CHANGELOG lines from 1.6.1 in the `### Part 11` block; `pnpm format`
-- Gates: 2.2 once, recorded in `../trackers/11-tracker.md`; merge per the index Streams rule
+- CHANGELOG lines from 1.6.1 in the `### Spec 11` block; `pnpm format`
+- Gates: 2.2 once, recorded in `../trackers/11-tracker.md`; merge per the index Workstreams rule
 
 ### 2.2 Gates
 
