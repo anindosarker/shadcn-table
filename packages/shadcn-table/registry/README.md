@@ -19,7 +19,7 @@ registry/<base>/
     shared/fns/                        filterFns.ts  sortFns.ts  aggregationFns.ts
     shared/utils/                      cell, column, row, style, pagination, virtualization, ...
     shared/locales/                    one <code>.ts per language
-    ShadcnTable.tsx  ST_Tooltip.tsx  types.ts  icons.ts  index.ts
+    ShadcnTable.tsx  types.ts  icons.ts  index.ts
   lib/utils.ts  index.css  components.json  registry.ts
 registry/README.md                     this file
 scripts/registry/bases.mjs             the base list (BASES) and the reference (radix)
