@@ -12,7 +12,7 @@ import {
   type ST_Row,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import { type ST_Features } from '@/components/ui/shadcn-table/features/stFeatures';
+import type { ST_Features } from '@/components/ui/shadcn-table/features/stFeatures';
 
 const fuzzy = constructSortFn<ST_Features, ST_RowData>({
   sort: (_dataValueA, _dataValueB, rowA, rowB, columnId) => {
