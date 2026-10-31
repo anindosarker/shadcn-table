@@ -1,6 +1,5 @@
 // The Remix icon set: the keys of the Lucide map in icons.ts, drawn with
-// @remixicon/react. Where Remix has no match, the closest icon stands in and
-// its entry names the Lucide original.
+// @remixicon/react.
 import { createElement } from 'react';
 import {
   RiArrowDownDoubleLine,
