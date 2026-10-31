@@ -43,3 +43,29 @@
 ## A8 Docs example items now list `lucide-react` as a dependency
 
 - Spec 11 made `shadcn-table-core` icon-free, so `examples.mjs` no longer skips `lucide-react`: the 17 examples per base that import it list it in `dependencies`. A project on another icon set that installs such an example also gets `lucide-react`. Keep, or rewrite those examples to the table icons later.
+
+## A9 Tailwind 4.3.3 canonicalizes `start-*` and `end-*` to `inset-s-*` and `inset-e-*`
+
+- D31 and spec 06 1.6.4 name `start-*` and `end-*` as the logical forms, but `check:tailwind` (canonicalizeCandidates on 4.3.3) rewrites them to `inset-s-*` and `inset-e-*`, so S1 wrote `inset-s-0`, `inset-e-0`, `inset-e-1`, `inset-e-[14%]` and `data-[pinned=true]:before:inset-s-0`. Same CSS (`inset-inline-start`, `inset-inline-end`). Keep, or amend D31's wording.
+
+## A10 `ST_CellActionMenu` reads the action cell ref inside the `Subscribe` render prop
+
+- 07 1.6.2 says the anchor is read at the component top; set C instead renders a file-local inner component under the kept `Subscribe source={table.atoms.actionCell}` and passes `anchorEl={table.refs.actionCellRef.current}` from that render prop, because a read at the top that feeds `useST_MenuAnchor` is a `react-hooks/refs` error and the element exists only in the ref set B's `ST_TableBodyCell` writes. `closeMenu` no longer nulls `actionCellRef`; the inner component's unmount cleanup does. Keep, or have `ST_TableBodyCell` publish the element through state next to `setActionCell` (S2 or a follow-up).
+
+## A11 `useST_Rows` no longer memoizes the rows
+
+- D9 and 02 1.6.6 hoist the getter results to locals as memo dependencies; set A removed the memo instead, because a memo on `getST_Rows(table)` with the slices as dependencies fails `exhaustive-deps` and with `table` alone would go stale. The ten slice subscriptions stay and the rows are read on each body render; `RenderCounts` stories show the same re-render set. Keep, or restore the memo with one reasoned `exhaustive-deps` disable (+1 on the expected count per base).
+
+## A12 Aria `Select` moved from `selectedKey` and `onSelectionChange` to `value` and `onChange`
+
+- `react-aria-components` 1.22.1 deprecates `selectedKey` and `onSelectionChange` on `Select`; `no-deprecated` reported 8 hits in aria `ST_EditCellTextField`, `ST_FilterTextField` and `ST_TablePagination`, outside the D11 and D13 lists. Set C migrated them to `value` and `onChange` with the same selection behavior and no disable. Revert means a reasoned disable per line and +8 on the aria expected count.
+
+## A13 Three smaller S1 judgment calls
+
+- The body cell skeleton width is drawn once at mount in the `useState` initializer (D8), not when loading first turns on: a column resized before loading starts keeps its mount-time skeleton width.
+- `Editing.stories.tsx` lost four `@ts-expect-error column id is a string key of Person` lines (`tsc -p tsconfig.stories.json` reported them unused after the immutable row copy); `GroupingColumnsSetState` and `VirtualizedDataSetAfterMount` set their after-mount data in a `setTimeout` instead of synchronously in the effect (`set-state-in-effect`).
+- `ST_SelectCheckbox` (base, radix): the radio now receives every common prop except `checked` and `title` through one `as ComponentProps<typeof RadioGroupItem>` cast on an entries filter; spec 04 1.6.2's row and its 2.1.1 cast list still describe the earlier pick form. Spec text to update at triage.
+
+## A14 Spec 06 shadows are lighter under `color-mix`
+
+- The S1 verifier's pixel comparison against `reference/06-*` found every element at the same position and every shadow present, but the light-mode pinned-edge and bottom-toolbar shadows lighter (peak 240 vs 223, 245 vs 234) and a faint new sticky-header band in dark mode, the expected effect of D32's `color-mix(in oklab, var(--foreground) 15%, transparent)` and `10%`. Three judges run on the captures (result in `trackers/06-tracker.md`). If a stronger light-mode shadow is wanted, raise the percentages per site.
