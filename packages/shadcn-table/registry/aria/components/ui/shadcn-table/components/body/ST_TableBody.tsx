@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -134,14 +133,13 @@ export const ST_TableBody = <TData extends ST_RowData>({
       : null;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilters: state.columnFilters,
         columnVisibility: state.columnVisibility,
         globalFilter: state.globalFilter,
         isFullScreen: state.isFullScreen,
       })}
-      source={table.store}
     >
       {({ columnFilters, globalFilter, isFullScreen }) => {
         const tableHeadHeight =
@@ -247,7 +245,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
 

@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import {
   type ButtonProps,
@@ -42,12 +41,11 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         rowPinning: state.rowPinning,
       })}
-      source={table.store}
     >
       {({ density }) =>
         rowPinningDisplayMode === 'top-and-bottom' && !row.getIsPinned() ? (
@@ -68,6 +66,6 @@ export const ST_TableBodyRowPinButton = <TData extends ST_RowData>({
           />
         )
       }
-    </Subscribe>
+    </table.Subscribe>
   );
 };

@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -44,13 +43,12 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
   const { columnDef } = column;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isLoading: state.isLoading,
         showSkeletons: state.showSkeletons,
         sorting: state.sorting,
       })}
-      source={table.store}
     >
       {({ isLoading, showSkeletons, sorting }) => {
         const isSorted = !!column.getIsSorted();
@@ -120,6 +118,6 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

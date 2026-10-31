@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -60,7 +59,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
 
   // Only the handle being dragged follows the drag offset.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => {
         const isResizing = state.columnResizing.isResizingColumn === column.id;
         return {
@@ -69,7 +68,6 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           isResizing,
         };
       }}
-      source={table.store}
     >
       {({ deltaOffset, density, isResizing }) => (
         <div
@@ -112,6 +110,6 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           />
         </div>
       )}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

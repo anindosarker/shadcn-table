@@ -1,5 +1,4 @@
 import { type KeyboardEvent } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -58,7 +57,7 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
     // The pinned offsets and edge shadows follow the column sizing, order,
     // pinning and visibility; a custom `Footer` often totals the filtered,
     // grouped, paginated or selected rows.
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilters: state.columnFilters,
         columnOrder: state.columnOrder,
@@ -83,7 +82,6 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
         rowSelection: state.rowSelection,
         sorting: state.sorting,
       })}
-      source={table.store}
     >
       {({ density }) => {
         const isColumnPinned =
@@ -141,6 +139,6 @@ export const ST_TableFooterCell = <TData extends ST_RowData>({
           </td>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
