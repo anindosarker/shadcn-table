@@ -13,7 +13,6 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - `pr.yml` runs on pull requests only: the builder opens the draft PR into `claude/review` at its first push (body per `.github/pull_request_template.md`, the label the index names, the session URL last) so every push gets a CI run.
 - Merge commit the moment the recorded gates are green: `merge: v<major>.<minor> part <NN> (#<PR>)`, or `parts <NN>, <NN>` for a shared run. Then `dev` fast-forward. Start the next run at once.
-- The next loop tick reads the CI result; red is fixed forward by the running part, or by a fix commit when none runs.
 
 ## P3 Release once per round, in the background
 
@@ -30,11 +29,10 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P5 Agent sandbox
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
-- Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives. No em dashes anywhere.
-- Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Add a dependency by hand plus its lockfile importer entry, verify with `pnpm install --frozen-lockfile`.
-- The owner is away: pick the default, stage judgment calls under `## Attention` in the tracker, halt only on a halt condition the index names.
+- Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives.
+- Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Add a dependency by hand plus its lockfile importer entry, verify with `pnpm install --frozen-lockfile`. `pnpm install --frozen-lockfile` only when `node_modules` is missing.
 
 ## P6 Plans
 
-- Parts follow `docs/code-of-conduct/planning-guidelines.md`; the Parts table lists `#`, `Part`, `Scope`; the index names the round's `release:` label, the version bump, and any part whose label differs.
-- `Done when` references: ui.shadcn.com pages, shadcn blocks, the previous release. Bugs are reproduced on `/Users/anindosarker/Work/Personal/React-table/test-projects/` first; upstream reports are searched on `shadcn-ui/ui` before filing.
+- Parts follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any part whose label differs.
+- `Done when` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced on `/Users/anindosarker/Work/Personal/React-table/test-projects/` first; upstream reports are searched on `shadcn-ui/ui` before filing.
