@@ -122,3 +122,11 @@
 ## A25 RTL gate wording: "inline-start edge" and "left side on screen" are different edges in RTL
 
 - Spec 09 1.6.2 asks for the resize handle "at the inline-start edge (the left side on screen)". In RTL the left side is the inline-end edge; the handle sits on the left (D31's direction-neutral `end`), and spec 10's RTL story asserts inline-end too. The gate passed on the left-side reading. Fix the spec wording at triage.
+
+## A26 React Aria: Escape on the focused full-screen toggle does not leave full screen
+
+- After a mouse click on `ST_ToggleFullScreenButton` in the aria base, focus stays on the button and Escape does not exit full screen; it works with focus on the wrapper or the search field, and base and radix work with focus on the button. Seen in the headless example and in `ST_TableLayout` (`/docs/examples/basic`). Cause: the aria button or its tooltip trigger stops the Escape keydown before the container's `onKeyDown`. Library side (spec 10 scope, D29); the `HeadlessFullScreen` story focuses the wrapper before Escape, so it does not cover this case.
+
+## A27 Docs page check `b.mjs` counted `[role="switch"]` rows that spec 10 replaced
+
+- Spec 10 (D27) turned the Show/Hide column rows into checkbox menu items in every base; the docs page check `scripts/page-checks/b.mjs` still counted switches, so `check-pages.mjs b` was red on `/docs/guides/column-hiding` for base and radix on `claude/review` after the spec 10 merge, unnoticed because `pr.yml` runs no page checks. S5 milestone 5 fixed the check (`[role="menuitemcheckbox"]`). Consider a page-check job in `pr.yml` for the docs clusters.
