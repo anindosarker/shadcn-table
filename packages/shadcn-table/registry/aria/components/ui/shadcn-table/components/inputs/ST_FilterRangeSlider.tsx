@@ -42,18 +42,12 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Slider.
   const {
     stFilterSliderProps,
   }: Pick<ST_TableOptions<TData>, 'stFilterSliderProps'> = table.options;
   const {
     stFilterSliderProps: columnFilterSliderProps,
   }: Pick<ST_ColumnDef<TData>, 'stFilterSliderProps'> = columnDef;
-  // The filter value and the faceted range feed the sync effect, so they are
-  // hook subscriptions: the facets follow the other columns' filters and the
-  // global filter.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 

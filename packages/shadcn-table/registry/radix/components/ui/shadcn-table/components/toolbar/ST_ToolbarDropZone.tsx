@@ -31,7 +31,6 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     setShowToolbarDropZone,
   } = table;
 
-  // These feed the drop zone effect, so they are hook subscriptions.
   const draggingColumn = useSelector(table.atoms.draggingColumn);
   const grouping = useSelector(table.atoms.grouping);
 

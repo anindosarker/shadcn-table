@@ -90,9 +90,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
   const { filterVariant } = columnDef;
-  // The filter value and the faceted values feed the value state, its sync
-  // effect and the dropdown memo, so they are hook subscriptions: the facets
-  // follow the other columns' filters and the global filter.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
@@ -518,8 +515,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : isSelectFilter ? (
             // Base UI Select raises no ChangeEvent, so a user onChange cannot fire.
-            // `items` gives the trigger the option label; Base UI's SelectValue
-            // shows the raw value otherwise. Custom children fall back to the value.
+            // `items` gives the trigger the option label; without it Base UI's
+            // SelectValue shows the raw value.
             <Select
               items={
                 textFieldProps.children

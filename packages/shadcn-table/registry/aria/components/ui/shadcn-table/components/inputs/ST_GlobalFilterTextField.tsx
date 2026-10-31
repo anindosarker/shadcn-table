@@ -39,8 +39,6 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     refs: { searchInputRef },
     setGlobalFilter,
   } = table;
-  // Feeds the search value state and its sync effect, so it is a hook
-  // subscription.
   const globalFilter = useSelector(table.atoms.globalFilter);
 
   const textFieldProps = {

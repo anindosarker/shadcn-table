@@ -70,8 +70,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
       paginationDisplayMode,
     },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Select.
   const {
     stPaginationProps,
   }: Pick<ST_TableOptions<TData>, 'stPaginationProps'> = table.options;
@@ -192,8 +190,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                 ) : (
                   <Select
                     disabled={disabled}
-                    // `items` gives the trigger the option label; Base UI's SelectValue
-                    // shows the raw value otherwise. Custom children fall back to the value.
+                    // `items` gives the trigger the option label; without it Base UI's
+                    // SelectValue shows the raw value.
                     items={
                       selectPropsChildren
                         ? undefined
