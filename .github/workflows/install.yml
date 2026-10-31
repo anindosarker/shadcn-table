@@ -11,8 +11,10 @@ on:
           Template of the main item's address. `<item>` is replaced by the
           scenario's committed item name (shadcn-table-base, shadcn-table-radix
           or shadcn-table-aria), `<base>` by its base name (base, radix or aria). pr.yml passes
-          `anindosarker/shadcn-table/<item>#<sha>`, release.yml passes
-          `https://www.shadcn-table.com/r/<base>/shadcn-table.json`.
+          `http://localhost:5310/r/<item>.json` (the dev registry this workflow
+          serves from the checkout), release.yml passes
+          `https://www.shadcn-table.com/r/<base>/shadcn-table.json`. A GitHub
+          address `anindosarker/shadcn-table/...` is swapped for the dev URL.
         type: string
         required: true
 
@@ -26,10 +28,6 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE: ${{ inputs.source }}
-      # The locale and example steps below pin the checkout's commit whatever
-      # the source is: the locale comes from the dev registry built here and the
-      # scenario's base of example-basic from the GitHub address at this SHA.
-      REF: ${{ github.sha }}
       # Each scenario names its base in the matrix (matrix.base): fresh,
       # existing and nextjs run on the Radix base and install the
       # shadcn-table-radix item; base scaffolds on Base UI and installs the
@@ -90,13 +88,31 @@ jobs:
         if: matrix.scenario == 'existing'
         run: pnpm add @tanstack/react-table@9.3.1 @tanstack/react-store@0.11.2 @tanstack/react-query
         working-directory: ${{ runner.temp }}/app
-      # The item address comes from the `source` template: in CI the GitHub
-      # address at this SHA, in a release the item's public URL on the site.
+      # Items depend on the GitHub address of the library's core item, which
+      # the CLI resolves on the default branch, not at this SHA. The dev
+      # registry built from the checkout pins every dependency to this SHA's
+      # library, so the library, the locale and the example install through it.
+      - name: Build and serve the dev registry from this checkout
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter shadcn-table registry:dev
+          (pnpm exec serve packages/shadcn-table/.dev -l 5310 > serve.log 2>&1 &)
+          for _ in $(seq 1 30); do
+            curl -sf "http://localhost:5310/r/$ITEM.json" > /dev/null && break
+            sleep 1
+          done
+          curl -sf "http://localhost:5310/r/$ITEM.json" > /dev/null
+        working-directory: repo
+      # The item address comes from the `source` template: in CI the dev
+      # registry URL, in a release the item's public URL on the site.
       - name: Add the library from the source
         run: |
           set -o pipefail
           address="${SOURCE//'<base>'/$BASE}"
           address="${address//'<item>'/$ITEM}"
+          case "$address" in
+            anindosarker/shadcn-table/*) address="http://localhost:5310/r/$ITEM.json" ;;
+          esac
           echo "installing $address"
           pnpm dlx shadcn@latest add "$address" --yes 2>&1 | tee shadcn-add.log
         working-directory: ${{ runner.temp }}/app
@@ -168,31 +184,15 @@ jobs:
           TSX
           pnpm exec next build
         working-directory: ${{ runner.temp }}/app
-      # A locale item depends on the unpinned GitHub address of its main item,
-      # which the CLI resolves on the default branch, not at this SHA. The dev
-      # registry built from the checkout pins that dependency to this SHA's
-      # library, so the locale is installed through it.
-      - name: Build and serve the dev registry from this checkout
-        if: matrix.scenario != 'nextjs'
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm --filter shadcn-table registry:dev
-          (pnpm exec serve packages/shadcn-table/.dev -l 5310 > serve.log 2>&1 &)
-          for _ in $(seq 1 30); do
-            curl -sf "http://localhost:5310/r/$ITEM-locale-de.json" > /dev/null && break
-            sleep 1
-          done
-          curl -sf "http://localhost:5310/r/$ITEM-locale-de.json" > /dev/null
-        working-directory: repo
-      # Example items pin the library to gitConfig.branch, so this add re-fetches
-      # the library from that branch; --overwrite lets it replace the files
-      # without a prompt. The library at this SHA was proven by the steps above.
+      # The example item comes from the dev registry too, so its core
+      # dependency resolves to this SHA's library; --overwrite lets it replace
+      # the files without a prompt.
       - name: Add a locale and the base's example-basic
         if: matrix.scenario != 'nextjs'
         run: |
           set -o pipefail
           pnpm dlx shadcn@latest add "http://localhost:5310/r/$ITEM-locale-de.json" --yes --overwrite 2>&1 | tee -a shadcn-add.log
-          pnpm dlx shadcn@latest add "anindosarker/shadcn-table/$EXAMPLE_ITEM#$REF" --yes --overwrite 2>&1 | tee -a shadcn-add.log
+          pnpm dlx shadcn@latest add "http://localhost:5310/r/$EXAMPLE_ITEM.json" --yes --overwrite 2>&1 | tee -a shadcn-add.log
         working-directory: ${{ runner.temp }}/app
       # The locale item depends on the library item, which lists `label` as a
       # registryDependency; --overwrite rewrites every resolved file whose

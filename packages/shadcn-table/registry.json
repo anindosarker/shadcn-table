@@ -459,6 +459,11 @@
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
@@ -467,6 +472,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -1639,6 +1649,11 @@
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
@@ -1647,6 +1662,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -2819,6 +2839,11 @@
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
@@ -2827,6 +2852,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -3999,6 +4029,11 @@
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
@@ -4007,6 +4042,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
