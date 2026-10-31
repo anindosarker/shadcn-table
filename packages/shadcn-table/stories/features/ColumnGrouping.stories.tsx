@@ -126,7 +126,7 @@ export const GroupingColumnModeRemoveCustomGroupedCell = () => (
       'st-row-expand': {
         //last item in array of grouping state
         GroupedCell: ({ row, table }) => {
-          const { grouping } = table.store.state;
+          const grouping = table.atoms.grouping.get();
           return row.getValue(grouping[grouping.length - 1]);
         },
       },
