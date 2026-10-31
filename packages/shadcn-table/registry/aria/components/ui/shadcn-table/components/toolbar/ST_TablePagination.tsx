@@ -1,7 +1,6 @@
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
-import { type LucideIcon } from 'lucide-react';
-import { createElement } from 'react';
+import { type ComponentType, createElement } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
@@ -23,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import {
+  type ST_IconProps,
   type ST_PaginationProps,
   type ST_RowData,
   type ST_TableOptions,
@@ -109,7 +109,10 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   } = SelectProps;
 
   const navItems: Partial<
-    Record<ST_UsePaginationItem['type'], { Icon: LucideIcon; label: string }>
+    Record<
+      ST_UsePaginationItem['type'],
+      { Icon: ComponentType<ST_IconProps>; label: string }
+    >
   > = {
     first: { Icon: FirstPageIcon, label: localization.goToFirstPage },
     last: { Icon: LastPageIcon, label: localization.goToLastPage },

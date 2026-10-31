@@ -10,12 +10,12 @@ import type { RefObject } from 'react';
 export interface ST_TableRefs {
   actionCellRef: RefObject<HTMLTableCellElement | null>;
   bottomToolbarRef: RefObject<HTMLDivElement | null>;
-  editInputRefs: RefObject<Record<string, HTMLInputElement> | null>;
-  filterInputRefs: RefObject<Record<string, HTMLInputElement> | null>;
+  editInputRefs: RefObject<Record<string, HTMLInputElement>>;
+  filterInputRefs: RefObject<Record<string, HTMLInputElement>>;
   searchInputRef: RefObject<HTMLInputElement | null>;
   tableContainerRef: RefObject<HTMLDivElement | null>;
   tableFooterRef: RefObject<HTMLTableSectionElement | null>;
-  tableHeadCellRefs: RefObject<Record<string, HTMLTableCellElement> | null>;
+  tableHeadCellRefs: RefObject<Record<string, HTMLTableCellElement>>;
   tableHeadRef: RefObject<HTMLTableSectionElement | null>;
   tableLayoutRef: RefObject<HTMLDivElement | null>;
   topToolbarRef: RefObject<HTMLDivElement | null>;
