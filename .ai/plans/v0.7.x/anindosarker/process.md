@@ -145,3 +145,15 @@ Rules the expedition skill reads for this cycle. Cite as `(P<n>)`. A new cycle c
 ## P49 Pause a run with `ScheduleWakeup stop`; resume a workflow with `resumeFromRunId`; a stopped loop restarts with the skill's loop prompt
 
 ## P50 The index names each part's `release:` label and the round's version bump
+
+## Done when
+
+## P51 Every part states one `Done when:` check the builder runs itself and loops on until it passes
+
+- Programmatic where one exists: `tsc`, a grep that must print nothing, a `diff` against a baseline captured before the change, a test.
+- Otherwise a reference plus judges: the output captured (screenshots per base, a rendered page, a JSON) next to the named reference (ui.shadcn.com pages, a shadcn block, the previous release), three `fable` judges asked whether ours matches on named points; iterate until they agree.
+- The verifier reruns the check once; a human looks only at what the judges disagreed on.
+
+## P52 A part running past its estimate gets the question "what is blocking you", not a code read
+
+- The loop tick asks the builder; the answer is usually a port, a server, a fixture or compute. Fix that, let it continue.
