@@ -12,6 +12,7 @@ The library lints with `eslint-plugin-react-hooks` 5.2.0 `recommended-latest` an
 - The only relaxations are the four temporary blocks in 1.6.2, each scoped to files and naming the part that deletes it; no new disable in library code beyond 1.6.6
 - test-projects/next-app, `base` re-installed: `npx eslint components/ui/shadcn-table` zero outside the same temporary scope
 - No option, type or visible behavior change; per-base tsc, tests and `check:bases` green
+- Done when: `pnpm --filter shadcn-table lint` exits 0 under the 1.6.2 config, and `grep -rn "eslint-disable" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists only the 1.6.6 lines and the four 1.6.2 blocks (P51)
 
 ### 1.3 Current structure
 

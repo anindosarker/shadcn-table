@@ -43,9 +43,6 @@ the index then holds what is shared. `<git_username>` is the GitHub login.
     one part must see from the other. Parts without such a reason run at the same time.
     Sequential parts that touch the same files are planned so the run can collapse them into
     one file-partitioned fan-out: the index lists each part's file set.
-14. **Integration never waits on CI.** Merge on green local gates, merge commit per part. CI
-    runs in the background: a PR opened at the first push where CI runs on pull requests only.
-
 ## Template
 
 Numbering is strict: every heading under `## 1.` and `## 2.` carries its dotted number.
@@ -158,7 +155,7 @@ New packages, env vars (name, default, purpose), reused infrastructure.
 
 ## Example
 
-Full example: `.ai/plans/v0.4.0/anindosarker/02-docs-weight.md`. Minimal shape:
+Full example: `.ai/plans/v0.6.x/anindosarker/08-versioning-page.md`. Minimal shape:
 
 ````markdown
 # 02: docs weight

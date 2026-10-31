@@ -18,6 +18,7 @@ The Localization guide hard-codes three German commands instead of using the bas
 - The install page has a "Created with shadcn create" section; the Customize Icons guide shows switching editions with `--overwrite` (D30) (D33)
 - The custom-headless example comments the spacer column and spreads `containerProps`; the example page states both (D24) (D29)
 - Docs gates green, `check-pages.mjs` green for all three bases
+- Done when: docs `build` exits 0 and `check-pages.mjs` exits 0 for all three bases, with the install page containing `shadcn-table-tabler.json`, `@shadcn-table/` and "Created with shadcn create", and every example page a base select (P51)
 
 ### 1.3 Current structure
 

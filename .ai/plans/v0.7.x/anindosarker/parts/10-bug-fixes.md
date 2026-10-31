@@ -17,6 +17,7 @@ The next-app header demo and a shadcn part usage audit found functional bugs (ra
 - The D28 list is applied in every base; F45 stays as is (D28)
 - `ButtonProps` accepts the shadcn Button props; `useST_FullScreenContainer` is exported (D29) (F32)
 - All library gates green per base; one Storybook play test per user-reachable fix
+- Done when: the Storybook play tests of 2.1 (range filter filters rows, sort clear stays cleared, pagination field open and close, menu opener `aria-expanded` and focus return, show-hide Enter and Space) pass in `test:base`, `test:radix`, `test:aria`; judged: the search reveal per base against the owner's `collapsible-search-demo.tsx` capture, three judges on "no jump, field focused, closed state hidden" (P51)
 
 ### 1.3 Current structure
 
@@ -92,7 +93,7 @@ packages/shadcn-table/stories/
 | fallback range input (base 625, radix 609, aria 659) | refactor | `type="number"` `inputMode="decimal"` for number columns |
 | `isNumberColumn` in `shared/utils/column.utils.ts` | new | range variant plus a number first value |
 | ranked results effect (`useST_Effects.ts:129-151`) | refactor | previous-value guard |
-| TanStack store issue for `atom.js:134` `undefined` comparison | new | link recorded in `10-tracker.md`; no code waits on it |
+| TanStack store issue for `atom.js:134` `undefined` comparison | new | link recorded in `trackers/10-tracker.md`; no code waits on it |
 
 **Stays unchanged:** `ST_FilterRangeSlider` value flow, `rangeFilterIndex` prop, `enableGlobalFilterRankedResults` option and default.
 
@@ -247,7 +248,7 @@ Halt rules of the index apply: no edit to a part file under `components/ui/`, no
 
 Lane: workflow
 
-- 1.6.2 and 1.6.3 in every base: one coder per base on `opus` (six to eight files each), one reviewer on the session model checking D21 (copy before write, no seed, number rule), D22 (previous-value guard only), D23 and D29 (type and hook, no other public change), one fix bounce; `index.ts` export of the hook; file the TanStack store issue and record the link in `10-tracker.md`
+- 1.6.2 and 1.6.3 in every base: one coder per base on `opus` (six to eight files each), one reviewer on the session model checking D21 (copy before write, no seed, number rule), D22 (previous-value guard only), D23 and D29 (type and hook, no other public change), one fix bounce; `index.ts` export of the hook; file the TanStack store issue and record the link in `trackers/10-tracker.md`
 - Stories: range, clear sort, headless full screen (1.6.8)
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `test:base`, `test:radix`, `test:aria`
 

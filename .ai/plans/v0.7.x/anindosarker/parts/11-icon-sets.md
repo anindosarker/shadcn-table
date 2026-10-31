@@ -14,6 +14,7 @@ Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more
 - Per base the registry has `shadcn-table-core`, `shadcn-table` (Lucide) and four editions; locale and example items depend on core; `shadcn-table` keeps its name and hosted path
 - `shadcn add` of an edition into a scratch project installs core files plus one `icons.ts` and only that icon package; `--overwrite` of another edition replaces `icons.ts` without a prompt (D30)
 - Docs app copies and the next-app install use editions; all gates green per base
+- Done when: `pnpm check:icons` exits 0; `grep -rn "lucide-react" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists the three `icons.ts` only; the six `shadcn add` dry-runs against `registry:dev` on 5310 exit 0; the Tabler-then-Lucide `--overwrite` smoke leaves one `icons.ts` importing `lucide-react` and no `@tabler/icons-react` in the scratch `package.json` (P51)
 
 ### 1.3 Current structure
 
@@ -218,7 +219,7 @@ Lane: agent
 Lane: workflow
 
 - 1.6.3 (`lib.mjs`, `hosted.mjs`, `examples.mjs`), 1.6.4 `install.mjs` merge, the `build.mjs --dev` example merge of 1.6.5; `pnpm registry:build`, `pnpm registry:items`, `pnpm registry:hosted`, `pnpm registry:dev`: one coder on `opus`, one verifier on the session model checking the item set of 1.6.1 (names, files, `target`, dependencies, the two address forms) against `registry.json` and `.dev/registry.json`, one fix bounce
-- The `pr.yml` dry-run block of 1.6.5 run locally against `serve packages/shadcn-table/.dev -l 5310`: six green dry-runs, recorded in `11-tracker.md`
+- The `pr.yml` dry-run block of 1.6.5 run locally against `serve packages/shadcn-table/.dev -l 5310`: six green dry-runs, recorded in `trackers/11-tracker.md`
 - Gates: `check:bases`; registry.json diff shows only additions and the dependency re-point; the six dry-runs green
 
 #### 2.1.3 Phase 3: Workflows, installs, CLI smoke
@@ -227,7 +228,7 @@ Lane: agent
 
 - 1.6.5 `pr.yml` and `install.yml` edits; docs `lib:install` for base, radix and aria
 - CLI smoke in a scratch Next project under the scratchpad (`pnpm dlx shadcn@latest init --template next --base <base> --preset nova --yes`, as `install.yml:87` does), per base, against the dev server on 5310: `add` the Tabler edition into the empty project (files land once, `icons.ts` is the Tabler map, only `@tabler/icons-react` installed), then `add` the Lucide edition with `--overwrite` (`icons.ts` replaced, no prompt), then `add` a locale item (core not re-installed, no icon package added), then `add` `example-basic` (core resolved from the dev server)
-- Record each smoke result in `11-tracker.md`
+- Record each smoke result in `trackers/11-tracker.md`
 - Gates: docs `types:check`, `lint`, `build`; the PR's `registry` and `install` jobs green
 
 #### 2.1.4 Final phase: Cleanup

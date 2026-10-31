@@ -13,6 +13,7 @@ The library uses five deprecated APIs that strike through in a consumer editor: 
 - `ST_AggregationFns`, `ST_FilterFns`, `ST_SortFns` keep their keys (11, 25, 7) and functions (D11)
 - Same re-render set for every migrated `Subscribe`; the page index check fires on the nine slices of D13 only
 - All three bases identical
+- Done when: `grep -rn 'table.store' packages/shadcn-table/registry/*/components/ui/shadcn-table apps/shadcn-table-docs/examples` prints nothing and `pnpm --filter shadcn-table lint` exits 0 with `no-deprecated` on (P51)
 
 ### 1.3 Current structure
 

@@ -14,6 +14,7 @@ Parts 01 to 08 prove the library with lint, types and Storybook; none of them ru
 - Per base, the installed edition matches: next-app (Lucide) has `icons.ts` importing `lucide-react`; `gate-radix` (Tabler) has `icons.ts` importing `@tabler/icons-react` and no `lucide-react` in `package.json`; `gate-aria` (Phosphor) the same with `@phosphor-icons/react` (D30)
 - An RTL gate page (`dir="rtl"`, `columnResizeDirection: 'rtl'`) shows the resize handle on the start edge and a pinned column stuck to the correct side, per base (D31)
 - 0.7.0 released: version PR `chore: version 0.7.0` merged, `release.yml` green, `node scripts/release/smoke.mjs` green
+- Done when: per base, `next build` exits 0 in the gate app and the browser check reports zero console errors; `eslint components/ui/shadcn-table` exits 0 in next-app; `gh release view v0.7.0` succeeds and `node scripts/release/smoke.mjs` exits 0 (P51)
 
 ### 1.3 Current structure
 
