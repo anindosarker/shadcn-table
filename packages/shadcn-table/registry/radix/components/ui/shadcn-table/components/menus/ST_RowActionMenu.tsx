@@ -2,7 +2,6 @@ import {
   type ComponentPropsWithRef,
   type MouseEvent,
   type ReactNode,
-  useRef,
 } from 'react';
 import {
   DropdownMenu,
@@ -16,6 +15,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -46,8 +46,10 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     },
   } = table;
 
-  const anchorRef = useRef<HTMLElement | null>(null);
-  if (anchorEl) anchorRef.current = anchorEl;
+  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   const menuItems: ReactNode[] = [];
   const editItem = parseFromValuesOrFunc(enableEditing, row) &&
@@ -70,34 +72,17 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
 
   if (!menuItems.length) return null;
 
-  const rect = anchorEl?.getBoundingClientRect();
-
   return (
-    <DropdownMenu
-      open={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
+    <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          anchorRef.current?.focus();
+          focusAnchor();
         }}
         className={cn('w-max', className)}
         {...rest}

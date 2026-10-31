@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, useMemo, useRef } from 'react';
+import { type ComponentPropsWithRef, useMemo } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +15,7 @@ import {
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export const stFilterOptions = (
   localization: ST_Localization,
@@ -231,30 +232,15 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     onSelect?.();
   };
 
-  const anchorRef = useRef<HTMLElement | null>(null);
-  if (anchorEl) anchorRef.current = anchorEl;
-
-  const rect = anchorEl?.getBoundingClientRect();
+  const { focusAnchor, onOpenChange, rect, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
+    <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
@@ -262,7 +248,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         side="right"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          anchorRef.current?.focus();
+          focusAnchor();
         }}
         className={cn('w-max', className)}
         {...rest}

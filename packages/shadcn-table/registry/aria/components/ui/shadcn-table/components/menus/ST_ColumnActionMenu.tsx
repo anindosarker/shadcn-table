@@ -14,6 +14,7 @@ import {
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenu> {
@@ -139,30 +140,15 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     (allowedColumnFilterOptions === undefined ||
       !!allowedColumnFilterOptions?.length);
 
-  const rect = anchorEl?.getBoundingClientRect();
+  const { onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   return (
-    <DropdownMenuTrigger
-      isOpen={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
-      {/* MenuTrigger positions the menu against its pressable child. */}
+    <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
       <Pressable>
-        <span
-          aria-hidden
-          role="button"
-          tabIndex={-1}
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} role="button" />
       </Pressable>
       <DropdownMenu
         placement="bottom start"
