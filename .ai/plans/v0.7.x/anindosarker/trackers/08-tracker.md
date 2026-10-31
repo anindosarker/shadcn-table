@@ -1,6 +1,6 @@
 # 08: docs install UI, tracker
 
-Status: done (28d26732)
+Status: done (92e811c5)
 Branch `v0.7/docs-install`, worktree docs-install, PR #71
 S5: branch `v0.7/docs-install-2`, worktree docs-install-2, PR #75
 S5 milestone 5: branch `v0.7/docs-install-3`, worktree docs-install-3, PR #76
