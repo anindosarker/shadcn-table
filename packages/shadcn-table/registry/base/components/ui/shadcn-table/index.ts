@@ -16,6 +16,7 @@ export * from '@/components/ui/shadcn-table/hooks/useShadcnTable';
 export * from '@/components/ui/shadcn-table/hooks/useST_MediaQuery';
 export * from '@/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer';
 export * from '@/components/ui/shadcn-table/hooks/useST_Effects';
+export * from '@/components/ui/shadcn-table/hooks/useST_FullScreenContainer';
 export * from '@/components/ui/shadcn-table/hooks/useST_RowVirtualizer';
 export * from '@/components/ui/shadcn-table/hooks/useST_Rows';
 export * from '@/components/ui/shadcn-table/hooks/useST_TableInstance';
