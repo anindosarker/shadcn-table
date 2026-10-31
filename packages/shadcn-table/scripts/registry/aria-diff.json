@@ -16,7 +16,6 @@
   "components/head/ST_TableHeadCellColumnActionsButton.tsx",
   "components/head/ST_TableHeadCellFilterContainer.tsx",
   "components/head/ST_TableHeadCellFilterLabel.tsx",
-  "components/head/ST_TableHeadCellResizeHandle.tsx",
   "components/inputs/ST_Checkbox.tsx",
   "components/inputs/ST_EditCellTextField.tsx",
   "components/inputs/ST_FilterCheckbox.tsx",
