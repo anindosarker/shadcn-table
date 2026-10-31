@@ -23,7 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import { type Person, data } from './makeData';
 
 const columns: ST_ColumnDef<Person>[] = [
@@ -95,11 +94,7 @@ const Example = () => {
     <ST_TableProvider table={table}>
       <div
         {...containerProps}
-        className={cn(
-          'my-8 flex flex-col bg-background',
-          containerProps.className,
-          isFullScreen && 'overflow-auto p-4',
-        )}
+        className={`flex flex-col bg-background ${isFullScreen ? 'overflow-auto' : 'my-8'} ${containerProps.className}`}
       >
         <h4>My Custom Headless Table</h4>
         <div className="flex items-center justify-between">
