@@ -126,9 +126,9 @@ F24 counts 13; the listed sites are 12.
 Lane: workflow
 
 - Coder: 1.6.2 to 1.6.5 in `registry/base`
-- Reviewer, bounces until: no `any` outside the 8 `keep` lines, each with a reason; public types still accept what the docs examples and stories pass; no new casts: every cast left is pre-existing or one of the five `as any` replacements in 1.6.2 (`tanstack.helpers.ts:55,66`, `ST_TableBodyCell.tsx:349`, `ST_FilterOptionMenu.tsx:201`, `ST_FilterTextField.tsx:226`)
+- Reviewer, bounces until: no `any` outside the `keep` lines (8, plus `icons.ts:74` until part 11 merges), each with a reason; public types still accept what the docs examples and stories pass; no new casts: every cast left is pre-existing or one of the five `as any` replacements in 1.6.2 (`tanstack.helpers.ts:55,66`, `ST_TableBodyCell.tsx:349`, `ST_FilterOptionMenu.tsx:201`, `ST_FilterTextField.tsx:226`)
 - Verifier: `tsc:baseui`; `tsc -p` a scratch config outside the repo extending `tsconfig.stories.json` with `@/*` on `registry/base/*` and `registry/base` plus `stories` included; `pnpm registry:build`, `lib:install base`, `radix`, `aria`, docs `types:check`
-- Gates: `pnpm --filter shadcn-table exec eslint --rule '{"@typescript-eslint/no-explicit-any":"error"}' registry/base` at the 8 lines only, `test:base`
+- Gates: `pnpm --filter shadcn-table exec eslint --rule '{"@typescript-eslint/no-explicit-any":"error"}' registry/base` at the `keep` lines only (8, plus `icons.ts:74` until part 11 merges), `test:base`
 
 #### 2.1.2 Phase 2: radix and aria
 
@@ -148,7 +148,7 @@ Lane: inline
 ### 2.2 Gates
 
 - `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json` green
-- `lint` zero problems with the part 02 `no-explicit-any` and `require-description` blocks deleted; `grep -rn 'no-explicit-any' registry/*/components/ui/shadcn-table` lists 8 lines in base and radix, 8 in aria
+- `lint` zero problems with the part 02 `no-explicit-any` and `require-description` blocks deleted; `grep -rn 'no-explicit-any' registry/*/components/ui/shadcn-table` lists the `keep` lines in each base: 8, plus `icons.ts:74` until part 11 merges (D30)
 - `test:base`, `test:radix`, `test:aria` green; `check:bases` green
 - `registry:build`, `lib:install` for the three bases, docs `types:check`, `lint`, `build` green
 - `pr.yml` green
