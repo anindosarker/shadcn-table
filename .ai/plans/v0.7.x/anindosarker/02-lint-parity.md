@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The library lints with `eslint-plugin-react-hooks` 5.2.0 `recommended-latest` and a folded-core exemption block, so a Next 16 consumer sees React Compiler and core hits the repo never reports (F1 to F6) (F9 to F12) (F17). This part lints the library as the consumer does (D17), fixes every local hit in all three bases (D4) (D5 a to c) (D7) (D8) (D9) (D12) (D14) (D15) and keeps suppressions per line and reasoned (D19). Branch `v0.7/lint-parity` from `claude/review` after part 01 merged, worktree `shadcn-react-table.worktrees/lint-parity`, one PR into `claude/review` for CI, merge commit when green.
+The library lints with `eslint-plugin-react-hooks` 5.2.0 `recommended-latest` and a folded-core exemption block, so a Next 16 consumer sees React Compiler and core hits the repo never reports (F1 to F6) (F9 to F12) (F17). This part lints the library as the consumer does (D17), fixes every local hit in all three bases (D4) (D5 a to c) (D7) (D8) (D9) (D12) (D14) (D15) and keeps suppressions per line and reasoned (D19). Runs inside the library sweep (index, Run schedule): branch `v0.7/library-sweep`, worktree `shadcn-react-table.worktrees/library-sweep`; merge commit into `claude/review` when the local gates are green, no CI wait.
 
 ### 1.2 Goals
 
@@ -177,7 +177,7 @@ Lane: workflow
 Lane: inline
 
 - 1.6.1 CHANGELOG and standards "## Gates" lines; `registry:build`; `lib:install` for the three bases
-- Next-app check per 2.2; `pnpm format`; PR into `claude/review` with `release:minor`, merge commit when green, push after each commit
+- Next-app check per 2.2; `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait, push after each commit
 - Gates: the full set in 2.2
 
 ### 2.2 Gates

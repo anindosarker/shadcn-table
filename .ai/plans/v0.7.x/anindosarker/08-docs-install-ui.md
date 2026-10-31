@@ -205,7 +205,7 @@ Same markup as `BaseSwitch` (`Button` outline `sm`, `ChevronDownIcon`, `Dropdown
 
 ## 2. Instructions for AI
 
-Branch `v0.7/docs-install-ui` from `claude/review` after parts 06, 10 and 11 merge (10 brings the whole 02 to 07 chain with it); worktree `shadcn-react-table.worktrees/docs-install-ui`; docs dev server on its own port (`PORT=<port> pnpm --filter shadcn-table-docs dev`), never stopping other servers. One PR into `claude/review` for CI, label `release:skip` (docs app and example sources; no library, `ui-*` or `vercel.json` change), merged by merge commit when green; push after every commit.
+Branch `v0.7/docs-install-ui` from `claude/review` after parts 06, 10 and 11 merge (10 brings the whole 02 to 07 chain with it); worktree `shadcn-react-table.worktrees/docs-install-ui`; docs dev server on its own port (`PORT=<port> pnpm --filter shadcn-table-docs dev`), never stopping other servers. merge commit into `claude/review` when the local gates are green, no CI wait; push after every commit.
 
 ### 2.1 Phases
 

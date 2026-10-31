@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 22 distinct classes, in every base (F13). They take their canonical form in all three bases, same CSS output, and a new `check:tailwind` gate keeps them canonical (D16). The same pass makes direction logical: 20 static physical classes per base and the resize handle's direction variant become `ms-*`, `me-*`, `start-*`, `end-*` and `text-start` or `text-end`, pinning uses inline-axis offsets, and the gate fails on any physical direction class (D31) (F34). The four shadow literals take their color from theme variables (D32) (F35). Branch `v0.7/tailwind-canonical` from `claude/review` after 01 merges, worktree `shadcn-react-table.worktrees/tailwind-canonical`, parallel to the 02 chain; the later merger rebases; one PR into `claude/review` for CI, merged by merge commit once green.
+A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 22 distinct classes, in every base (F13). They take their canonical form in all three bases, same CSS output, and a new `check:tailwind` gate keeps them canonical (D16). The same pass makes direction logical: 20 static physical classes per base and the resize handle's direction variant become `ms-*`, `me-*`, `start-*`, `end-*` and `text-start` or `text-end`, pinning uses inline-axis offsets, and the gate fails on any physical direction class (D31) (F34). The four shadow literals take their color from theme variables (D32) (F35). Branch `v0.7/tailwind-canonical` from `claude/review` after 01 merges, worktree `shadcn-react-table.worktrees/tailwind-canonical`, parallel to the 02 chain; the later merger rebases; merge commit into `claude/review` when the local gates are green, no CI wait.
 
 ### 1.2 Goals
 
@@ -179,7 +179,7 @@ Lane: agent
 
 - CHANGELOG lines from 1.6.1; coding-standards Gates line
 - Visual spot check per base in Storybook, against `claude/review`: sticky header over scrolled rows (`ST_TableHead.tsx:25`, `z-2`) and the empty-rows body height (`ST_TableBody.tsx:180`, `min-h-25`, 100px)
-- `pnpm format`; PR into `claude/review` with `release:minor`, merge commit when green, push right after each commit
+- `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait, push right after each commit
 
 ### 2.2 Gates
 

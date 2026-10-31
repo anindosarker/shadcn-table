@@ -151,7 +151,7 @@ Lines as of `e14088c9` in the base tree; parts 01 to 06 shift them, so each site
 
 ## 2. Instructions for AI
 
-Branch `v0.7/comments-dead-code` from `claude/review` after part 05 merges; worktree `shadcn-react-table.worktrees/comments-dead-code`. One PR into `claude/review` for CI, label `release:minor`, merged by merge commit when green; push after every commit.
+Runs inside the library sweep (index, Run schedule): branch `v0.7/library-sweep`, worktree `shadcn-react-table.worktrees/library-sweep`; merge commit into `claude/review` when the local gates are green, no CI wait; push after every commit.
 
 ### 2.1 Phases
 

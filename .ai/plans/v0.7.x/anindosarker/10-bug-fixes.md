@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The next-app header demo and a shadcn part usage audit found functional bugs (range filter never applies, sort clear snaps back, Base UI and React Aria Collapsible width reveals break, radix menus drop focus) and places where the library works against its primitives (hidden menu triggers without opener state, nested controls inside menu items, hand-rolled focus, props restated or misused) (F27) (F28) (F31) (F37) (F38) (F39). Decisions D21 to D29 fix them inside the current architecture: the anchor-span pattern stays (D26), Collapsible stays (D25), no public prop, type, registry item or layout changes except the additions D29 names. Depends on parts 07 and 06 merged: `hooks/useST_ComposedRef.ts` from part 02 (D5) and `hooks/useST_MenuAnchor.ts` from part 07 (D20) exist and the five menus already call the hook; `check:tailwind` from part 06 (D16) exists for the phase 2 gate. Branch `v0.7/bug-fixes` from `claude/review` after 07 and 06 merge, worktree `shadcn-react-table.worktrees/bug-fixes`; one PR into `claude/review` for CI, merged by merge commit once green; push right after each commit.
+The next-app header demo and a shadcn part usage audit found functional bugs (range filter never applies, sort clear snaps back, Base UI and React Aria Collapsible width reveals break, radix menus drop focus) and places where the library works against its primitives (hidden menu triggers without opener state, nested controls inside menu items, hand-rolled focus, props restated or misused) (F27) (F28) (F31) (F37) (F38) (F39). Decisions D21 to D29 fix them inside the current architecture: the anchor-span pattern stays (D26), Collapsible stays (D25), no public prop, type, registry item or layout changes except the additions D29 names. Depends on parts 07 and 06 merged: `hooks/useST_ComposedRef.ts` from part 02 (D5) and `hooks/useST_MenuAnchor.ts` from part 07 (D20) exist and the five menus already call the hook; `check:tailwind` from part 06 (D16) exists for the phase 2 gate. Branch `v0.7/bug-fixes` from `claude/review` after 07 and 06 merge, worktree `shadcn-react-table.worktrees/bug-fixes`; merge commit into `claude/review` when the local gates are green, no CI wait; push right after each commit.
 
 ### 1.2 Goals
 
@@ -280,7 +280,7 @@ Lane: agent
 
 - `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`; `check:bases`; CHANGELOG lines from 1.6.1; `base-diff.json` and `aria-diff.json` entries for the per-base lines
 - `grep -rn "queueMicrotask" packages/shadcn-table/registry/*/components/ui/shadcn-table`: empty
-- `pnpm format`; PR into `claude/review` with `release:minor`, merge commit when green
+- `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait
 
 ### 2.2 Gates
 

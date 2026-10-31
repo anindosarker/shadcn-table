@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The library uses five deprecated APIs that strike through in a consumer editor: the `aggregationFns`, `filterFns` and `sortFns` registries, `table.store` and `navigator.platform` (F8). The registries are rebuilt from the individual `*Fn_*` exports, one helper owns the platform read (D11), and every `table.store` use becomes `table.Subscribe`, `table.atoms.<slice>.get()` or a per-atom subscription (D13). The `table.store` migration also covers the stories and the hand-written docs examples (D13 amended). Needs part 03 merged (the `useSelector(table.store)` site in `useST_TableInstance.ts` is gone) and part 02 (`no-deprecated` active). Branch `v0.7/deprecations` from `claude/review` after 03, worktree `shadcn-react-table.worktrees/deprecations`; one PR into `claude/review` for CI, merge commit when green.
+The library uses five deprecated APIs that strike through in a consumer editor: the `aggregationFns`, `filterFns` and `sortFns` registries, `table.store` and `navigator.platform` (F8). The registries are rebuilt from the individual `*Fn_*` exports, one helper owns the platform read (D11), and every `table.store` use becomes `table.Subscribe`, `table.atoms.<slice>.get()` or a per-atom subscription (D13). The `table.store` migration also covers the stories and the hand-written docs examples (D13 amended). Needs part 03 merged (the `useSelector(table.store)` site in `useST_TableInstance.ts` is gone) and part 02 (`no-deprecated` active). Runs inside the library sweep (index, Run schedule): branch `v0.7/library-sweep`, worktree `shadcn-react-table.worktrees/library-sweep`; merge commit into `claude/review` when the local gates are green, no CI wait.
 
 ### 1.2 Goals
 
@@ -209,7 +209,7 @@ Lane: agent
 Lane: inline
 
 - 1.6.1; `pnpm registry:build`, `lib:install base`, `radix`, `aria`
-- `pnpm format`; PR into `claude/review` with `release:minor`, merge commit when green, push after each commit
+- `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait, push after each commit
 - Gates: 2.2
 
 ### 2.2 Gates

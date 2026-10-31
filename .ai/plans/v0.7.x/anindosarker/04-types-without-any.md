@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The library writes `any` at 43 sites the folded-core lint block hides (F7) and at 13 component and feature sites behind per-line disables. Each becomes `unknown`, a real generic, a `never` signature or a named TanStack type; the few that must stay `any` keep a reasoned per-line disable (D10) (D19). Casts and assertions the new types make unnecessary go with them; the rest stay (F23) (F24). Branch `v0.7/types-without-any` from `claude/review` after part 02 merged, worktree `shadcn-react-table.worktrees/types-without-any`, one PR into `claude/review` for CI, merge commit when green.
+The library writes `any` at 43 sites the folded-core lint block hides (F7) and at 13 component and feature sites behind per-line disables. Each becomes `unknown`, a real generic, a `never` signature or a named TanStack type; the few that must stay `any` keep a reasoned per-line disable (D10) (D19). Casts and assertions the new types make unnecessary go with them; the rest stay (F23) (F24). Runs inside the library sweep (index, Run schedule): branch `v0.7/library-sweep`, worktree `shadcn-react-table.worktrees/library-sweep`; merge commit into `claude/review` when the local gates are green, no CI wait.
 
 ### 1.2 Goals
 
@@ -141,7 +141,7 @@ Lane: agent
 Lane: inline
 
 - 1.6.1; delete the part 02 temporary blocks for these rules in `packages/shadcn-table/eslint.config.js`: `@typescript-eslint/no-explicit-any` off and `@eslint-community/eslint-comments/require-description` off (D10) (D19)
-- `pnpm format`; PR into `claude/review` with `release:minor`, merge commit when green, push after each commit
+- `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait, push after each commit
 - Gates: 2.2
 
 ### 2.2 Gates

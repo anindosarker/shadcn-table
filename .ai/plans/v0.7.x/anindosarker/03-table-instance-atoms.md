@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-`hooks/useST_TableInstance.ts` reads the previous render's table through `tableRef.current?.store.state` to feed its option-time transforms, which the `refs` rule flags 39 times (F2) and part 02 leaves under a temporary `react-hooks/refs` block. D6: the hook owns its ten transform slices as TanStack atoms, created once, read with `useSelector`, handed to `useAppTable` through the v9 `atoms` option with the caller's atoms first. Branch `v0.7/table-instance-atoms` from `claude/review` after part 04 merged, worktree `shadcn-react-table.worktrees/table-instance-atoms`, one PR into `claude/review` for CI, merge commit when green.
+`hooks/useST_TableInstance.ts` reads the previous render's table through `tableRef.current?.store.state` to feed its option-time transforms, which the `refs` rule flags 39 times (F2) and part 02 leaves under a temporary `react-hooks/refs` block. D6: the hook owns its ten transform slices as TanStack atoms, created once, read with `useSelector`, handed to `useAppTable` through the v9 `atoms` option with the caller's atoms first. Runs inside the library sweep (index, Run schedule): branch `v0.7/library-sweep`, worktree `shadcn-react-table.worktrees/library-sweep`; merge commit into `claude/review` when the local gates are green, no CI wait.
 
 ### 1.2 Goals
 
@@ -170,7 +170,7 @@ Lane: agent
 Lane: inline
 
 - 1.6.1 CHANGELOG line; `registry:build`; `lib:install` for the three bases
-- `pnpm format`; PR into `claude/review` with `release:minor`, merge commit when green, push after each commit
+- `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait, push after each commit
 - Gates: the full set in 2.2
 
 ### 2.2 Gates

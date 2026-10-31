@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more files import `lucide-react` directly, and `lucide-react` is a dependency of every main item, so a project created with Tabler, Phosphor, Hugeicons or Remix gets a second icon set (F33). Decision D30: one icon map per library with the same 34 keys, a `shadcn-table-core` item without icons, and one edition item per library that supplies `icons.ts` and its package. The CLI resolves core first and dedupes files by target, so a consumer ends with one `icons.ts` and only their icon package. Verified on shadcn 4.23.0 (D30). Branch `v0.7/icon-sets` from `claude/review` after 01 merges, worktree `shadcn-react-table.worktrees/icon-sets`, parallel to the 02 chain and part 06; one PR into `claude/review` for CI, merged by merge commit once green; push right after each commit.
+Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more files import `lucide-react` directly, and `lucide-react` is a dependency of every main item, so a project created with Tabler, Phosphor, Hugeicons or Remix gets a second icon set (F33). Decision D30: one icon map per library with the same 34 keys, a `shadcn-table-core` item without icons, and one edition item per library that supplies `icons.ts` and its package. The CLI resolves core first and dedupes files by target, so a consumer ends with one `icons.ts` and only their icon package. Verified on shadcn 4.23.0 (D30). Branch `v0.7/icon-sets` from `claude/review` after 01 merges, worktree `shadcn-react-table.worktrees/icon-sets`, parallel to the 02 chain and part 06; merge commit into `claude/review` when the local gates are green, no CI wait; push right after each commit.
 
 ### 1.2 Goals
 
@@ -235,7 +235,7 @@ Lane: agent
 Lane: agent
 
 - CHANGELOG lines from 1.6.1; `pr.yml` step; `pnpm format`
-- PR into `claude/review` with `release:minor`, merge commit when green
+- merge commit into `claude/review` when the gates are green, no CI wait
 
 ### 2.2 Gates
 
