@@ -137,9 +137,18 @@ const useBaseTabs = (surface: Surface) => {
  * and a chevron, styled like the example page's `Copy prompt` control, opening
  * a radio menu over the bases, like the command bar's "Choose base" menu
  * (components/agent-bar.tsx). Writes the group through `setBase`, so the
- * content-page tabs follow.
+ * content-page tabs follow. The example toolbar renders the same control
+ * (components/example-playground.tsx); `surface` names the one a switch came
+ * from in `base_switched`.
  */
-export const BaseSwitch = ({ className }: { className?: string }) => {
+export const BaseSwitch = ({
+  className,
+  surface = 'header',
+}: {
+  className?: string;
+  /** Where the select sits, reported with the switch. */
+  surface?: Surface;
+}) => {
   const base = useBase();
   return (
     <DropdownMenu>
@@ -161,7 +170,7 @@ export const BaseSwitch = ({ className }: { className?: string }) => {
           value={base}
           onValueChange={(value) => {
             if (!isBase(value) || value === base) return;
-            trackBaseSwitched({ from: base, to: value, surface: 'header' });
+            trackBaseSwitched({ from: base, to: value, surface });
             setBase(value);
           }}
         >
@@ -179,16 +188,27 @@ export const BaseSwitch = ({ className }: { className?: string }) => {
 /**
  * Base UI | Radix UI | React Aria tabs around content that differs per base
  * (the install commands), Base UI first shown. The header select writes the
- * same store, so either changes both.
+ * same store, so either changes both. `actions` sits at the end of the tab
+ * row, outside the tab list (the locale select of the install command).
  */
 export const BaseTabs = ({
   radix,
   base,
   aria,
   className,
-}: Record<Base, ReactNode> & { className?: string }) => {
+  actions,
+}: Record<Base, ReactNode> & {
+  className?: string;
+  /** Controls at the end of the tab row. */
+  actions?: ReactNode;
+}) => {
   const tabs = useBaseTabs('tabs');
   const content: Record<Base, ReactNode> = { base, radix, aria };
+  const triggers = bases.map((b) => (
+    <TabsTrigger key={b} value={TAB_VALUES[b]}>
+      {baseLabels[b]}
+    </TabsTrigger>
+  ));
   return (
     <Tabs
       groupId={BASE_GROUP_ID}
@@ -199,13 +219,14 @@ export const BaseTabs = ({
         className,
       )}
     >
-      <TabsList>
-        {bases.map((b) => (
-          <TabsTrigger key={b} value={TAB_VALUES[b]}>
-            {baseLabels[b]}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      {actions ? (
+        <div className="flex flex-wrap items-center gap-2 pe-2">
+          <TabsList className="min-w-0 flex-1">{triggers}</TabsList>
+          {actions}
+        </div>
+      ) : (
+        <TabsList>{triggers}</TabsList>
+      )}
       {bases.map((b) => (
         <TabsContent key={b} value={TAB_VALUES[b]}>
           {content[b]}
