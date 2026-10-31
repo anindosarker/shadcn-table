@@ -13,7 +13,7 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 
 const copyButtonVariants = cva(
-  'm-[-0.25rem] h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
+  '-m-1 h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
 );
 
 export interface ST_CopyButtonProps<TData extends ST_RowData>

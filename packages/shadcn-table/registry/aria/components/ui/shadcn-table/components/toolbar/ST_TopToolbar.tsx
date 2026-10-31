@@ -13,7 +13,7 @@ import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 const topToolbarVariants = cva(
-  'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
+  'relative z-1 grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
   {
     variants: {
       fullscreen: {
@@ -49,7 +49,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const attachRef = useST_ComposedRef(topToolbarRef, toolbarProps?.ref);
 
   const globalFilterProps = {
-    className: !isTablet ? 'z-[2]' : undefined,
+    className: !isTablet ? 'z-2' : undefined,
   };
 
   // Created outside the state subscription, so a full screen or global filter
@@ -113,7 +113,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
             {dropZone}
             <div
               className={cn(
-                'box-border flex w-full items-start justify-between gap-2 p-2 right-0 top-0',
+                'box-border flex w-full items-start justify-between gap-2 p-2 inset-e-0 top-0',
                 stackAlertBanner ? 'relative' : 'absolute',
               )}
             >

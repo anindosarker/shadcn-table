@@ -51,7 +51,7 @@ export interface ST_TablePaginationProps
 }
 
 const tablePaginationVariants = cva(
-  'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
+  'relative z-2 flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
 
 export const ST_TablePagination = <TData extends ST_RowData>({

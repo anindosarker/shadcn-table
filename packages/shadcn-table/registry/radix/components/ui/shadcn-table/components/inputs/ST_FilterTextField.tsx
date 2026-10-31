@@ -331,7 +331,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         className={cn(
           // The select addon overlays the trigger so the trigger spans the whole
           // group and the popper (sized from the trigger) matches the field.
-          isSelectFilter && 'absolute inset-y-0 right-0',
+          isSelectFilter && 'absolute inset-y-0 inset-e-0',
           hasFilterValue ? 'visible' : 'invisible',
         )}
       >
@@ -438,19 +438,19 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           filterTextFieldVariants(),
           // Chromium's date input needs 126px of content for its placeholder.
           isDateFilter
-            ? 'min-w-[140px]'
+            ? 'min-w-35'
             : isMultiSelectFilter
-              ? 'min-w-[120px]'
+              ? 'min-w-30'
               : isRangeFilter
-                ? 'min-w-[72px]'
+                ? 'min-w-18'
                 : !filterChipLabel
-                  ? 'min-w-[96px]'
+                  ? 'min-w-24'
                   : 'min-w-auto',
         )}
       >
         <InputGroup
           className={cn(
-            'h-8 text-sm [&>[data-align=inline-end]]:py-0 [&>[data-align=inline-start]]:py-0',
+            'h-8 text-sm *:data-[align=inline-end]:py-0 *:data-[align=inline-start]:py-0',
             // Chips wrap onto new lines, so the group may grow past its fixed height.
             isMultiSelectFilter && 'h-auto min-h-8',
           )}
@@ -524,7 +524,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 className={cn(
                   'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   // Keeps the chevron clear of the overlaid clear button.
-                  hasFilterValue && 'pr-9',
+                  hasFilterValue && 'pe-9',
                   textFieldProps.className,
                 )}
                 disabled={!!filterChipLabel || textFieldProps.disabled}
@@ -619,7 +619,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           {endAdornment}
         </InputGroup>
         {showChangeModeButton ? (
-          <label className="mt-[3px] block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',
               localization[

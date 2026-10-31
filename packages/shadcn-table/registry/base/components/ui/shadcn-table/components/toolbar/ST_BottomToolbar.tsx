@@ -17,7 +17,7 @@ import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_Comp
 export type ST_BottomToolbarProps = DivProps;
 
 const bottomToolbarVariants = cva(
-  'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out shadow-[inset_0_1px_2px_-1px_rgba(97,97,97,0.5)] left-0 right-0',
+  'relative z-1 grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out shadow-[inset_0_1px_2px_-1px_color-mix(in_oklab,var(--foreground)_15%,transparent)] inset-s-0 inset-e-0',
   {
     variants: {
       fullscreen: {
@@ -74,7 +74,7 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
         )}
         <div
           className={cn(
-            'flex justify-end right-0 top-0',
+            'flex justify-end inset-e-0 top-0',
             stackAlertBanner ? 'relative' : 'absolute',
           )}
         >
