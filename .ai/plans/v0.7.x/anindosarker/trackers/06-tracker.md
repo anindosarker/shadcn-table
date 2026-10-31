@@ -12,3 +12,4 @@ Gates: see 02-tracker.md
 ## Attention
 
 - S1 merge: the CHANGELOG direction line names `inset-s-` and `inset-e-` instead of 1.6.1's `start-` and `end-`, since Tailwind 4.3.3 canonicalizes those and the sets use the inset forms.
+- Final milestone: the judged Acceptance ran with one judge (the review fixer) instead of the three P6 names, since the fixer session has no sub-agent tool. The captures went to a scratch `--out` dir and were not kept, so no second judge can re-read them. Kept as recorded; revert means rerunning `reference/06-capture.mjs` per base and having two more judges read the captures against `reference/06-*`.
