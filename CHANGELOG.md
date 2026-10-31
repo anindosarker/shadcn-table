@@ -9,68 +9,51 @@ date; merging it publishes the section as the GitHub release notes.
 
 ## Unreleased
 
+### Breaking
+
+- shadcn-table needs React 19.2 or later and Tailwind CSS 4.3 or later.
+
+### Added
+
+- `useST_FullScreenContainer(table)` for headless layouts; the toolbar buttons accept the shadcn Button `size` and `variant` props by type.
+- Icon editions: `shadcn-table-tabler`, `shadcn-table-phosphor`, `shadcn-table-hugeicons` and `shadcn-table-remixicon` install the table with that icon library instead of Lucide; `shadcn-table` stays the Lucide edition. Switch later with the edition item and `--overwrite`.
+
 ### Changed
 
 - `ST_Checkbox` moved to `components/inputs/`, `ST_Tooltip` to `components/buttons/`, `useST_MediaQuery` to `hooks/`; barrel imports are unchanged, deep imports follow the new paths.
+- `react` and `react-dom` move to `^19.2.0` (consumer minimum React 19.2, for `useEffectEvent`); the library lint adds `eslint-plugin-react-hooks` 7.1.1 and `@eslint-community/eslint-plugin-eslint-comments` 4.8.1.
+- Public types no longer use `any`: `DropdownOption.value` is `string`, `enableRowPinning` callbacks receive `ST_Row`, the `ST_TableRefs` ref maps are non-null, `row.columnFiltersMeta` is `RankingInfo`, the row selection handlers accept `ST_SelectionEvent`, `flexRender` takes `Renderable<never>` and `object` props.
+- No deprecated TanStack or DOM API is used: the function registries come from the individual `*Fn_*` exports, state reads go through `table.Subscribe` and `table.atoms`, in the library, the stories and the docs examples; `getDefaultColumnOrderIds` and the display column helpers take only the `columnOrder`, `creatingRow` and `grouping` state they read; `table.atoms` is typed per row type.
+- `tailwindcss` and `@tailwindcss/vite` move to `^4.3.3` (consumer minimum Tailwind 4.3, for `scrollbar-thin` and canonical classes).
+- Tailwind classes use their canonical forms (`z-1` for `z-[1]`, `min-h-25` for `min-h-[100px]` and 20 more), so Tailwind 4.3 IntelliSense reports no hints in the installed files; same CSS.
+- Direction classes are logical (`ms-`, `me-`, `inset-s-`, `inset-e-`, `text-start`, `text-end`) and pinned offsets use the inline axis, so the table follows `dir` on any ancestor; set `columnResizeDirection: 'rtl'` on RTL pages for the drag math.
+- Toolbar and header shadows take their color from the theme instead of fixed `rgba` values.
+- Two shared hooks, `useST_ComposedRef` (one callback ref for the internal and the user's ref) and `useST_MenuAnchor` (the anchor of the five menus).
+- Library comments state contracts only: porting history, restated code and repeated rationale are gone, and the five menus share one anchor hook.
+- `getCommonToolbarStyles` is gone from `shared/utils/style.utils.ts`; nothing in the library used it.
+- The package adds the Tabler, Phosphor, Hugeicons and Remix Icon React packages as development dependencies for the icon sets.
+- `ST_Icons` values are typed `ComponentType<ST_IconProps>`; the table's own files import icons through `icons.ts` only; the checkbox's indeterminate dash is the new `IndeterminateIcon` key.
+- The library files without an icon map are the new `shadcn-table-core` item; `shadcn-table`, the icon set items, the locale items and the example items depend on it.
 
-#### Spec 02
+### Fixed
 
-- Changed: `react` and `react-dom` move to `^19.2.0` (consumer minimum React 19.2, for `useEffectEvent`); the library lint adds `eslint-plugin-react-hooks` 7.1.1 and `@eslint-community/eslint-plugin-eslint-comments` 4.8.1.
-- Fixed: The installed table lints clean under `eslint-config-next` 16 with the React Compiler rules: hooks run unconditionally, no ref is touched during render, no state is set inside an effect.
+- The installed table lints clean under `eslint-config-next` 16 with the React Compiler rules: hooks run unconditionally, no ref is touched during render, no state is set inside an effect.
+- Column definitions are rebuilt when a column resize or a drag ends, also when the owner's table selector leaves those slices out.
+- A Min or Max value in a range filter filters the rows, and range inputs on number columns take numbers only.
+- Clearing the sort with the default `enableGlobalFilterRankedResults` stays cleared.
+- A `className` in `stPaginationProps` lands on the pagination's outer element, so it can change the padding.
+- The search field and the progress bar, alert banner, detail panel and column filter panels open and close smoothly in every base; the search field focuses its input on open, is inert while closed, and Escape clears a typed value first, then closes the empty field and returns focus to the toggle.
+- Every menu opener announces `aria-haspopup` and `aria-expanded`, a second click on it closes its menu, Tab skips the anchor spans, a menu follows its opener on resize and scroll, and focus returns to the opener in every base.
+- Show and hide columns toggles a column with Enter and Space; the pin buttons and drag handle sit beside the menu item and take Tab.
+- Parts used as designed in `ST_TableHeadCellFilterLabel`, `ST_ColumnActionMenu`, `ST_ActionMenuItem`, `ST_EditCellTextField`, `ST_FilterTextField`, `ST_TableContainer`, `ST_EditRowModal`, `ST_FilterRangeSlider`, `ST_ToolbarAlertBanner`, `ST_SelectCheckbox` and the React Aria tooltips: the filter popover opens from its trigger with the input focused, filter modes open as a submenu, helper text describes the edit input, the filter chip clear button has a name, the edit modal plays its exit, and the slider composes a consumer ref.
+- The React Aria resize handle takes its width and height.
+- The checkbox's indeterminate dash reads `icons.IndeterminateIcon` from the table icons.
 
-#### Spec 03
+### Docs
 
-- Fixed: Column definitions are rebuilt when a column resize or a drag ends, also when the owner's table selector leaves those slices out.
-
-#### Spec 04
-
-- Changed: Public types no longer use `any`: `DropdownOption.value` is `string`, `enableRowPinning` callbacks receive `ST_Row`, the `ST_TableRefs` ref maps are non-null, `row.columnFiltersMeta` is `RankingInfo`, the row selection handlers accept `ST_SelectionEvent`, `flexRender` takes `Renderable<never>` and `object` props.
-
-#### Spec 05
-
-- Changed: No deprecated TanStack or DOM API is used: the function registries come from the individual `*Fn_*` exports, state reads go through `table.Subscribe` and `table.atoms`, in the library, the stories and the docs examples; `getDefaultColumnOrderIds` and the display column helpers take only the `columnOrder`, `creatingRow` and `grouping` state they read; `table.atoms` is typed per row type.
-
-#### Spec 06
-
-- Changed: `tailwindcss` and `@tailwindcss/vite` move to `^4.3.3` (consumer minimum Tailwind 4.3, for `scrollbar-thin` and canonical classes).
-- Changed: Tailwind classes use their canonical forms (`z-1` for `z-[1]`, `min-h-25` for `min-h-[100px]` and 20 more), so Tailwind 4.3 IntelliSense reports no hints in the installed files; same CSS.
-- Changed: Direction classes are logical (`ms-`, `me-`, `inset-s-`, `inset-e-`, `text-start`, `text-end`) and pinned offsets use the inline axis, so the table follows `dir` on any ancestor; set `columnResizeDirection: 'rtl'` on RTL pages for the drag math.
-- Changed: Toolbar and header shadows take their color from the theme instead of fixed `rgba` values.
-
-#### Spec 07
-
-- Changed: Two shared hooks, `useST_ComposedRef` (one callback ref for the internal and the user's ref) and `useST_MenuAnchor` (the anchor of the five menus).
-- Changed: Library comments state contracts only: porting history, restated code and repeated rationale are gone, and the five menus share one anchor hook.
-- Changed: `getCommonToolbarStyles` is gone from `shared/utils/style.utils.ts`; nothing in the library used it.
-
-#### Spec 08
-
-- Breaking: shadcn-table needs React 19.2 or later and Tailwind CSS 4.3 or later.
-- Docs: The Localization guide installs any locale with the base, package manager and locale selectors and shows its import; every example toolbar has a base select.
-- Docs: The docs name the registry namespace `@shadcn-table` (was `@st`); a project that registered `@st` keeps working, the name is local to its `components.json`.
-- Docs: The install command picks the icon library edition and offers a short registry-namespace form, served for any `style` of a base; the install page covers projects created with shadcn create; the headless example documents the spacer column and the full-screen container hook.
-
-#### Spec 09
-
-#### Spec 10
-
-- Fixed: A Min or Max value in a range filter filters the rows, and range inputs on number columns take numbers only.
-- Fixed: Clearing the sort with the default `enableGlobalFilterRankedResults` stays cleared.
-- Fixed: A `className` in `stPaginationProps` lands on the pagination's outer element, so it can change the padding.
-- Fixed: The search field and the progress bar, alert banner, detail panel and column filter panels open and close smoothly in every base; the search field focuses its input on open, is inert while closed, and Escape clears a typed value first, then closes the empty field and returns focus to the toggle.
-- Fixed: Every menu opener announces `aria-haspopup` and `aria-expanded`, a second click on it closes its menu, Tab skips the anchor spans, a menu follows its opener on resize and scroll, and focus returns to the opener in every base.
-- Fixed: Show and hide columns toggles a column with Enter and Space; the pin buttons and drag handle sit beside the menu item and take Tab.
-- Fixed: Parts used as designed in `ST_TableHeadCellFilterLabel`, `ST_ColumnActionMenu`, `ST_ActionMenuItem`, `ST_EditCellTextField`, `ST_FilterTextField`, `ST_TableContainer`, `ST_EditRowModal`, `ST_FilterRangeSlider`, `ST_ToolbarAlertBanner`, `ST_SelectCheckbox` and the React Aria tooltips: the filter popover opens from its trigger with the input focused, filter modes open as a submenu, helper text describes the edit input, the filter chip clear button has a name, the edit modal plays its exit, and the slider composes a consumer ref.
-- Fixed: The React Aria resize handle takes its width and height.
-- Fixed: The checkbox's indeterminate dash reads `icons.IndeterminateIcon` from the table icons.
-- Added: `useST_FullScreenContainer(table)` for headless layouts; the toolbar buttons accept the shadcn Button `size` and `variant` props by type.
-
-#### Spec 11
-
-- Changed: The package adds the Tabler, Phosphor, Hugeicons and Remix Icon React packages as development dependencies for the icon sets.
-- Added: Icon editions: `shadcn-table-tabler`, `shadcn-table-phosphor`, `shadcn-table-hugeicons` and `shadcn-table-remixicon` install the table with that icon library instead of Lucide; `shadcn-table` stays the Lucide edition. Switch later with the edition item and `--overwrite`.
-- Changed: `ST_Icons` values are typed `ComponentType<ST_IconProps>`; the table's own files import icons through `icons.ts` only; the checkbox's indeterminate dash is the new `IndeterminateIcon` key.
-- Changed: The library files without an icon map are the new `shadcn-table-core` item; `shadcn-table`, the icon set items, the locale items and the example items depend on it.
+- The Localization guide installs any locale with the base, package manager and locale selectors and shows its import; every example toolbar has a base select.
+- The docs name the registry namespace `@shadcn-table` (was `@st`); a project that registered `@st` keeps working, the name is local to its `components.json`.
+- The install command picks the icon library edition and offers a short registry-namespace form, served for any `style` of a base; the install page covers projects created with shadcn create; the headless example documents the spacer column and the full-screen container hook.
 
 ## 0.6.4 - 2026-10-29
 
