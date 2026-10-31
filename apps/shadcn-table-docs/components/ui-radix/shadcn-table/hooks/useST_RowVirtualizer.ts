@@ -66,6 +66,7 @@ export const useST_RowVirtualizer = <
     [draggingRowIndex],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- useVirtualizer returns mutable functions; the hook opts out with 'use no memo'
   const rowVirtualizer = useVirtualizer({
     count: renderDetailPanel ? rowCount * 2 : rowCount,
     enabled: !!enableRowVirtualization,
