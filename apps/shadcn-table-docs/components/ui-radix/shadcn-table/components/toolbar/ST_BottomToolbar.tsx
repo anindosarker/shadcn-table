@@ -14,7 +14,7 @@ import { ST_LinearProgressBar } from '@/components/ui-radix/shadcn-table/compone
 import { ST_TablePagination } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_TablePagination';
 import { ST_ToolbarAlertBanner } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_ToolbarDropZone } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarDropZone';
-import { useST_MediaQuery } from '@/components/ui-radix/shadcn-table/components/toolbar/useST_MediaQuery';
+import { useST_MediaQuery } from '@/components/ui-radix/shadcn-table/hooks/useST_MediaQuery';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 export type ST_BottomToolbarProps = DivProps;

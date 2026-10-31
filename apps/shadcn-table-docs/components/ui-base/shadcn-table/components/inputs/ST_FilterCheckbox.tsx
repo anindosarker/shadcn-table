@@ -1,7 +1,7 @@
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { ST_Checkbox } from '@/components/ui-base/shadcn-table/ST_Checkbox';
+import { ST_Checkbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_Checkbox';
 import { Label } from '@/components/ui-base/label';
 import {
   type CheckboxProps,
@@ -11,7 +11,7 @@ import {
   type ST_TableOptions,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 
 const filterCheckboxVariants = cva('', {
   variants: {

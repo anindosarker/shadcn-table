@@ -12,7 +12,7 @@ import { ST_TablePagination } from '@/components/ui-base/shadcn-table/components
 import { ST_ToolbarAlertBanner } from '@/components/ui-base/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_ToolbarDropZone } from '@/components/ui-base/shadcn-table/components/toolbar/ST_ToolbarDropZone';
 import { ST_ToolbarInternalButtons } from '@/components/ui-base/shadcn-table/components/toolbar/ST_ToolbarInternalButtons';
-import { useST_MediaQuery } from '@/components/ui-base/shadcn-table/components/toolbar/useST_MediaQuery';
+import { useST_MediaQuery } from '@/components/ui-base/shadcn-table/hooks/useST_MediaQuery';
 import { ST_GlobalFilterTextField } from '@/components/ui-base/shadcn-table/components/inputs/ST_GlobalFilterTextField';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 
