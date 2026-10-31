@@ -34,8 +34,8 @@ import {
   type ST_UsePaginationItem,
 } from '@/components/ui-radix/shadcn-table/shared/utils/pagination.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
-import { useST_MediaQuery } from '@/components/ui-radix/shadcn-table/components/toolbar/useST_MediaQuery';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
+import { useST_MediaQuery } from '@/components/ui-radix/shadcn-table/hooks/useST_MediaQuery';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];

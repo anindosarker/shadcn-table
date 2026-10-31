@@ -8,7 +8,7 @@ import {
   type ST_TableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 const expandAllButtonVariants = cva('', {

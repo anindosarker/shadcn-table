@@ -13,7 +13,7 @@ export * from '@/components/ui-aria/shadcn-table/shared/fns/sortFns';
 
 export { ST_TableProvider } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
 export * from '@/components/ui-aria/shadcn-table/hooks/useShadcnTable';
-export * from '@/components/ui-aria/shadcn-table/components/toolbar/useST_MediaQuery';
+export * from '@/components/ui-aria/shadcn-table/hooks/useST_MediaQuery';
 export * from '@/components/ui-aria/shadcn-table/hooks/useST_ColumnVirtualizer';
 export * from '@/components/ui-aria/shadcn-table/hooks/useST_Effects';
 export * from '@/components/ui-aria/shadcn-table/hooks/useST_RowVirtualizer';
@@ -22,8 +22,8 @@ export * from '@/components/ui-aria/shadcn-table/hooks/useST_TableInstance';
 export * from '@/components/ui-aria/shadcn-table/hooks/useST_TableOptions';
 
 export * from '@/components/ui-aria/shadcn-table/ShadcnTable';
-export * from '@/components/ui-aria/shadcn-table/ST_Checkbox';
-export * from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+export * from '@/components/ui-aria/shadcn-table/components/inputs/ST_Checkbox';
+export * from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 export * from '@/components/ui-aria/shadcn-table/components/body/ST_TableBody';
 export * from '@/components/ui-aria/shadcn-table/components/body/ST_TableBodyCell';
 export * from '@/components/ui-aria/shadcn-table/components/body/ST_TableBodyCellValue';

@@ -37,7 +37,7 @@ import {
   type VirtualizerOptions,
 } from '@tanstack/react-virtual';
 import { type LucideProps } from 'lucide-react';
-import { type ST_Checkbox } from '@/components/ui-base/shadcn-table/ST_Checkbox';
+import { type ST_Checkbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_Checkbox';
 import { type Collapsible } from '@/components/ui-base/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui-base/dialog';
 import { type RadioGroupItem } from '@/components/ui-base/radio-group';
