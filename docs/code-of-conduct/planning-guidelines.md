@@ -65,6 +65,7 @@ Two or three sentences: the problem and why this part exists. Link the decision.
 
 - Measurable outcome
 - Measurable outcome
+- Done when: the one check the builder runs itself and loops on, programmatic (`tsc`, a grep, a `diff` against a baseline, a test) or a reference plus judges (captures next to a named reference, three judges on named points)
 
 ### 1.3 Current structure _(optional, skip for greenfield)_
 
