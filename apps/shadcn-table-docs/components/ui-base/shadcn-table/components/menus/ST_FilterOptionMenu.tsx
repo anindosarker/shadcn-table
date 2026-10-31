@@ -237,63 +237,61 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     setAnchorEl,
   });
 
+  // The column mode name is written onto the column def from
+  // `columnFilterFns` in the root render, so that slice is selected.
   const menuItems = (
-    <>
-      {/* The column mode name is written onto the column def from
-        `columnFilterFns` in the root render, so that slice is selected. */}
-      <table.Subscribe
-        selector={(state) => ({
-          columnFilterFns: state.columnFilterFns,
-          globalFilterFn: state.globalFilterFn,
-        })}
-      >
-        {({ globalFilterFn }) => {
-          const filterOption =
-            !!header && columnDef
-              ? getColumnFilterFnName(columnDef)
-              : globalFilterFn;
+    <table.Subscribe
+      selector={(state) => ({
+        columnFilterFns: state.columnFilterFns,
+        globalFilterFn: state.globalFilterFn,
+      })}
+    >
+      {({ globalFilterFn }) => {
+        const filterOption =
+          !!header && columnDef
+            ? getColumnFilterFnName(columnDef)
+            : globalFilterFn;
 
-          return (
-            <>
-              {(header && column && columnDef
-                ? (columnDef.renderColumnFilterModeMenuItems?.({
-                    column,
-                    internalFilterOptions,
-                    onSelectFilterMode: handleSelectFilterMode,
-                    table,
-                  }) ??
-                  renderColumnFilterModeMenuItems?.({
-                    column,
-                    internalFilterOptions,
-                    onSelectFilterMode: handleSelectFilterMode,
-                    table,
-                  }))
-                : renderGlobalFilterModeMenuItems?.({
-                    internalFilterOptions,
-                    onSelectFilterMode: handleSelectFilterMode,
-                    table,
-                  })) ??
-                internalFilterOptions.map(
-                  ({ divider, label, option, symbol }, index) => (
-                    <ST_ActionMenuItem
-                      className={
-                        option === filterOption ? 'bg-accent' : undefined
-                      }
-                      divider={divider}
-                      icon={symbol}
-                      key={index}
-                      label={label}
-                      onClick={() =>
-                        handleSelectFilterMode(option as ST_FilterOption)
-                      }
-                    />
-                  ),
-                )}
-            </>
-          );
-        }}
-      </table.Subscribe>
-    </>
+        return (
+          <>
+            {(header && column && columnDef
+              ? (columnDef.renderColumnFilterModeMenuItems?.({
+                  column,
+                  internalFilterOptions,
+                  onSelectFilterMode: handleSelectFilterMode,
+                  table,
+                }) ??
+                renderColumnFilterModeMenuItems?.({
+                  column,
+                  internalFilterOptions,
+                  onSelectFilterMode: handleSelectFilterMode,
+                  table,
+                }))
+              : renderGlobalFilterModeMenuItems?.({
+                  internalFilterOptions,
+                  onSelectFilterMode: handleSelectFilterMode,
+                  table,
+                })) ??
+              internalFilterOptions.map(
+                ({ divider, label, option, symbol }, index) => (
+                  <ST_ActionMenuItem
+                    className={
+                      option === filterOption ? 'bg-accent' : undefined
+                    }
+                    divider={divider}
+                    icon={symbol}
+                    key={index}
+                    label={label}
+                    onClick={() =>
+                      handleSelectFilterMode(option as ST_FilterOption)
+                    }
+                  />
+                ),
+              )}
+          </>
+        );
+      }}
+    </table.Subscribe>
   );
 
   if (isSubMenu) {

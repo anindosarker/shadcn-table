@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react';
+import { type CSSProperties, type TransitionEvent, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { type ST_TooltipProps } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import {
@@ -8,6 +8,28 @@ import {
   type ST_CoreTableInstance,
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
+
+/**
+ * React Aria keeps a collapsed panel's children mounted, so a panel renders
+ * them only while expanded. This keeps them until the panel's own collapse
+ * transition ends, so it animates shut instead of snapping. Pass
+ * `animated: false` for a panel without a transition, which never fires
+ * `transitionend`.
+ */
+export const useCollapsingChildren = (isExpanded: boolean, animated = true) => {
+  const [isCollapsing, setIsCollapsing] = useState(false);
+  const [prevIsExpanded, setPrevIsExpanded] = useState(isExpanded);
+  if (prevIsExpanded !== isExpanded) {
+    setPrevIsExpanded(isExpanded);
+    setIsCollapsing(animated && !isExpanded);
+  }
+  return {
+    onTransitionEnd: (event: TransitionEvent<HTMLElement>) => {
+      if (event.target === event.currentTarget) setIsCollapsing(false);
+    },
+    showChildren: isExpanded || isCollapsing,
+  };
+};
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 

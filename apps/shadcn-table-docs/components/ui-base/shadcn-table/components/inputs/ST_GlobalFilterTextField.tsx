@@ -106,10 +106,15 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     textFieldProps.onKeyDown?.(event);
-    if (event.key !== 'Escape' || event.defaultPrevented || searchValue) {
+    if (event.key !== 'Escape' || event.defaultPrevented) {
       return;
     }
     event.preventDefault();
+    // Escape clears a value first, then closes the empty field.
+    if (searchValue) {
+      handleClear();
+      return;
+    }
     setShowGlobalFilter(false);
     returnFocusRef.current?.focus();
   };

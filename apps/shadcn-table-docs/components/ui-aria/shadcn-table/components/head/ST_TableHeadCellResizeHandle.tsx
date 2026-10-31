@@ -83,12 +83,10 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
                 : undefined,
           }}
         >
-          {/* Base UI and Radix mark the orientation with data-orientation,
-              React Aria with aria-orientation. */}
           <Separator
             orientation="vertical"
             className={cn(
-              'z-4 translate-x-1 touch-none select-none rounded-xs data-[orientation=vertical]:h-6 data-[orientation=vertical]:w-1 aria-[orientation=vertical]:h-6 aria-[orientation=vertical]:w-1',
+              'z-4 translate-x-1 touch-none select-none rounded-xs aria-[orientation=vertical]:h-6 aria-[orientation=vertical]:w-1',
               !isResizing && 'transition-all duration-150 ease-in-out',
               rest.className,
             )}
