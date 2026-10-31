@@ -226,8 +226,7 @@ export const RenderRowActionsAsync = () => {
   );
 };
 
-/* eslint-disable react-hooks/rules-of-hooks -- MRT export name is lowercase */
-export const renderRowActionMenuItemsAsync = () => {
+const RenderRowActionMenuItemsAsync = () => {
   const [rowActions, setRowActions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -276,7 +275,10 @@ export const renderRowActionMenuItemsAsync = () => {
   );
 };
 
-/* eslint-enable react-hooks/rules-of-hooks */
+export const renderRowActionMenuItemsAsync = () => (
+  <RenderRowActionMenuItemsAsync />
+);
+
 export const DelayedFacetedValues = () => {
   const [tableData, setTableData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(true);

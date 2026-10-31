@@ -5,7 +5,6 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
   type ST_Row,
-  type ST_TableState,
   ST_TableContainer,
   ST_TableProvider,
 } from '@/components/ui/shadcn-table';
@@ -42,8 +41,8 @@ const Example = () => {
     enableSorting: false,
     stRowDragHandleProps: ({ table }) => ({
       onDragEnd: () => {
-        const { draggingRow, hoveredRow } = table.store
-          .state as ST_TableState<Person>;
+        const draggingRow = table.atoms.draggingRow.get();
+        const hoveredRow = table.atoms.hoveredRow.get();
         if (hoveredRow && draggingRow) {
           data.splice(
             (hoveredRow as ST_Row<Person>).index,

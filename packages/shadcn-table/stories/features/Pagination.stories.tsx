@@ -1,6 +1,6 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { expect, waitFor } from 'storybook/test';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -61,6 +61,38 @@ export const PaginationEnabledDefaultMoreData = () => (
     }}
   />
 );
+
+let moreDataConsoleError: ReturnType<typeof spyOn> | undefined;
+
+PaginationEnabledDefaultMoreData.beforeEach = () => {
+  const spy = spyOn(console, 'error');
+  moreDataConsoleError = spy;
+  return () => spy.mockRestore();
+};
+
+// From the last page, a global search that leaves one page moves the table
+// back to page index 0 without a console error.
+PaginationEnabledDefaultMoreData.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  const canvas = within(canvasElement);
+  const rangeText = () =>
+    canvas.getByText(
+      (_, element) =>
+        element?.tagName === 'SPAN' &&
+        /^\d+-\d+ of \d+$/.test(element.textContent ?? ''),
+    ).textContent;
+  await waitFor(() => expect(rangeText()).toBe('1-10 of 551'));
+  await userEvent.click(canvas.getAllByLabelText('Go to last page')[0]);
+  await waitFor(() => expect(rangeText()).toBe('551-551 of 551'));
+  await userEvent.click(canvas.getByLabelText('Show/Hide search'));
+  await userEvent.type(
+    canvas.getByPlaceholderText('Search'),
+    moreData[0].address,
+  );
+  await waitFor(() => expect(rangeText()).toMatch(/^1-(\d+) of \1$/));
+  await expect(moreDataConsoleError).not.toHaveBeenCalled();
+};
 
 export const PaginationEnabledDefaultBigData = () => (
   <ShadcnTable
