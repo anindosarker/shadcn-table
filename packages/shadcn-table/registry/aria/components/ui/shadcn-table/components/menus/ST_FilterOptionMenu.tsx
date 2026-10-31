@@ -120,8 +120,7 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   isSubMenu?: boolean;
   onSelect?: () => void;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setFilterValue?: (filterValue: any) => void;
+  setFilterValue?: (filterValue: string | string[]) => void;
 }
 
 export const ST_FilterOptionMenu = <TData extends ST_RowData>({
@@ -181,8 +180,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       setGlobalFilterFn(option);
     } else if (option !== prevFilterMode) {
       const currentFilterValue = column.getFilterValue();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setColumnFilterFns((prev: { [key: string]: any }) => ({
+      setColumnFilterFns((prev) => ({
         ...prev,
         [header.id]: option,
       }));
@@ -201,8 +199,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       ) {
         if (
           currentFilterValue instanceof String ||
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (currentFilterValue as Array<any>)?.length
+          (currentFilterValue as ArrayLike<unknown> | undefined)?.length
         ) {
           column.setFilterValue([]);
           setFilterValue?.([]);
@@ -213,8 +210,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       ) {
         if (
           !Array.isArray(currentFilterValue) ||
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (!(currentFilterValue as Array<any>)?.every((v) => v === '') &&
+          (!currentFilterValue.every((v) => v === '') &&
             !rangeModes.includes(prevFilterMode))
         ) {
           column.setFilterValue(['', '']);

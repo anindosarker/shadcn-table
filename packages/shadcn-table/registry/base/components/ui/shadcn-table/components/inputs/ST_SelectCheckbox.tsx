@@ -1,3 +1,4 @@
+import { type ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
@@ -119,11 +120,8 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         e.stopPropagation();
         // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
-          // Base UI roots are spans; the handlers read only target and shiftKey.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const event = e as any;
-          if (selectAll) onSelectAllChange(event);
-          else onSelectionChange!(event);
+          if (selectAll) onSelectAllChange(e);
+          else onSelectionChange!(e);
         }
         checkboxProps?.onClick?.(e);
       },
@@ -133,6 +131,22 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       ),
       title: undefined,
     }) satisfies CheckboxProps | RadioProps;
+
+  // The fields a radio shares with the checkbox props.
+  const getRadioProps = ({
+    'aria-label': ariaLabel,
+    className,
+    disabled,
+    onClick,
+  }: ReturnType<typeof getCommonProps>): ComponentProps<
+    typeof RadioGroupItem
+  > => ({
+    'aria-label': ariaLabel,
+    className,
+    disabled,
+    onClick,
+    value: 'on',
+  });
 
   return (
     <table.Subscribe
@@ -177,11 +191,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               {enableMultiRowSelection === false ? (
                 // RadioGroupItem needs a RadioGroup: one group per row.
                 <RadioGroup value={isChecked ? 'on' : null}>
-                  <RadioGroupItem
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    {...(commonProps as any)}
-                    value="on"
-                  />
+                  <RadioGroupItem {...getRadioProps(commonProps)} />
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
