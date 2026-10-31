@@ -1,9 +1,13 @@
-import { type ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, type ComponentType } from 'react';
 import { ST_Default_Icons } from '@/components/ui-aria/shadcn-table/icons';
+import type { ST_IconProps } from '@/components/ui-aria/shadcn-table/types';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui-aria/checkbox';
 
-export type ST_CheckboxProps = ComponentPropsWithRef<typeof Checkbox>;
+export type ST_CheckboxProps = ComponentPropsWithRef<typeof Checkbox> & {
+  /** The indeterminate dash; the table passes its `icons.IndeterminateIcon`. */
+  indeterminateIcon?: ComponentType<ST_IconProps>;
+};
 
 // The indeterminate box takes the checked fill, and the part's own check is
 // hidden so the dash drawn below shows instead.
@@ -16,10 +20,14 @@ const indeterminateClassName =
  * centred, shows only while the part is indeterminate and lets clicks
  * through. React Aria marks the state with `data-indeterminate`.
  */
-export const ST_Checkbox = ({ className, ...props }: ST_CheckboxProps) => (
+export const ST_Checkbox = ({
+  className,
+  indeterminateIcon: IndeterminateIcon = ST_Default_Icons.IndeterminateIcon,
+  ...props
+}: ST_CheckboxProps) => (
   <span className="relative inline-flex">
     <Checkbox className={cn(indeterminateClassName, className)} {...props} />
-    <ST_Default_Icons.IndeterminateIcon
+    <IndeterminateIcon
       aria-hidden
       className="pointer-events-none absolute inset-0 m-auto hidden size-3.5 text-primary-foreground peer-data-disabled:opacity-50 peer-data-indeterminate:block"
     />

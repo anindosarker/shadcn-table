@@ -13,7 +13,6 @@ import { getST_SelectAllHandler } from '@/components/ui-base/shadcn-table/shared
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 
 export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {
@@ -124,8 +123,11 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
               {grouping.map((columnId, index) => (
                 <Fragment key={`${index}-${columnId}`}>
                   {index > 0 ? localization.thenBy : ''}
+                  {/* Base UI merges the render element's handlers with the
+                      chip props, so a consumer onClick runs too. */}
                   <Badge
                     variant="secondary"
+                    {...chipProps}
                     render={
                       <button
                         type="button"
@@ -134,7 +136,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
                         }
                       />
                     }
-                    {...chipProps}
                   >
                     {table.getColumn(columnId).columnDef.header}
                     <CancelIcon data-icon="inline-end" />
@@ -148,13 +149,10 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
           <Collapsible
             open={showAlertBanner || !!selectedAlert || !!groupedAlert}
           >
-            <style href="st-base-collapsible" precedence="low">
-              {stCollapsibleKeyframes}
-            </style>
             <CollapsibleContent
               className={
                 stackAlertBanner
-                  ? 'data-open:animate-[st-base-collapsible-down_200ms_ease-out] data-closed:animate-[st-base-collapsible-up_200ms_ease-out]'
+                  ? 'h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none'
                   : undefined
               }
             >

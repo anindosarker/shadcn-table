@@ -10,7 +10,6 @@ import { ST_FilterCheckbox } from '@/components/ui-base/shadcn-table/components/
 import { ST_FilterRangeFields } from '@/components/ui-base/shadcn-table/components/inputs/ST_FilterRangeFields';
 import { ST_FilterRangeSlider } from '@/components/ui-base/shadcn-table/components/inputs/ST_FilterRangeSlider';
 import { ST_FilterTextField } from '@/components/ui-base/shadcn-table/components/inputs/ST_FilterTextField';
-import { stCollapsibleKeyframes } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 
 export interface ST_TableHeadCellFilterContainerProps<TData extends ST_RowData>
   extends CollapseProps {
@@ -45,15 +44,11 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   return (
     <Subscribe source={table.atoms.showColumnFilters}>
       {(showColumnFilters) => (
-        // Base UI sets --collapsible-panel-height, which the st-base-collapsible-* keyframes read.
         <Collapsible
           open={showColumnFilters || columnFilterDisplayMode === 'popover'}
           {...rest}
         >
-          <style href="st-base-collapsible" precedence="low">
-            {stCollapsibleKeyframes}
-          </style>
-          <CollapsibleContent className="data-open:animate-[st-base-collapsible-down_200ms_ease-out] data-closed:animate-[st-base-collapsible-up_200ms_ease-out]">
+          <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
             {filterInput}
           </CollapsibleContent>
         </Collapsible>

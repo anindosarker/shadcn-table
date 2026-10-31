@@ -13,7 +13,6 @@ import { getST_SelectAllHandler } from '@/components/ui-aria/shadcn-table/shared
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-aria/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 
 export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {
@@ -156,14 +155,11 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
 
         return (
           <Collapsible isExpanded={isExpanded}>
-            <style href="st-aria-collapsible" precedence="low">
-              {stCollapsibleKeyframes}
-            </style>
             {/* React Aria keeps a collapsed panel's children mounted. */}
             <CollapsibleContent
               className={
                 stackAlertBanner
-                  ? 'aria-[hidden=false]:animate-[st-aria-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-aria-collapsible-up_200ms_ease-out]'
+                  ? 'h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none'
                   : undefined
               }
             >
