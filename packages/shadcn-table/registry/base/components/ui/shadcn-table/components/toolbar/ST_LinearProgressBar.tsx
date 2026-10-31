@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 
 export interface ST_LinearProgressBarProps extends ST_LinearProgressProps {
   isTopToolbar: boolean;
@@ -88,10 +87,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           <style href="st-linear-progress" precedence="low">
             {linearProgressKeyframes}
           </style>
-          <style href="st-collapsible" precedence="low">
-            {stCollapsibleKeyframes}
-          </style>
-          <CollapsibleContent className="data-open:animate-[st-collapsible-down_200ms_ease-out] data-closed:animate-[st-collapsible-up_200ms_ease-out]">
+          <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
             <Progress
               aria-busy="true"
               {...progressComponentProps}
