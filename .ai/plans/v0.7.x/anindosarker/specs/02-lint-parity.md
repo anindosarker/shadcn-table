@@ -159,7 +159,7 @@ Lane: agent
 
 - Per set A to D (index, Run plan), all rule groups in one pass on the set's files in base, radix and aria: D4, D5 (1.6.3, effect events; 1.6.4 through the foundation hook in set C), D7, D8, D9, D12, D14, D15, D19, per 1.6.3 to 1.6.6; 03's `hooks/useST_TableInstance.ts` edits are already in from the lead step
 - Reviewer (workstream review, whole diff) bounces on: a behavior change; a disable without a reason, file-wide, or outside 1.6.6; `table` in an effect dependency list; a store setter called in render; an unconditional setState in render (`react-hooks/set-state-in-render`); a base twin missed; a decision applied differently than written
-- Halt: a fix that needs a public type change, or a compiler rule the `'use no memo'` hooks still report
+- Blocked: a fix that needs a public type change, or a compiler rule the `'use no memo'` hooks still report; that site is recorded under `## Attention` in `../trackers/02-tracker.md` and skipped, the set continues (P5)
 - Gates per set: `eslint --max-warnings 0 <own files>` zero, `prettier --check <own files>`
 
 #### 2.1.3 Final milestone: Gates once
@@ -177,4 +177,5 @@ Lane: inline
 - `pnpm --filter shadcn-table test:base`, `test:radix`, `test:aria` green, `Styling/Render Counts` included (pins the owner re-render set)
 - `pnpm check:bases` green; `pnpm --filter shadcn-table-docs types:check`, `lint`, `build` green
 - The 1.2 `eslint-disable` count per base equals the tracker's expected count
+- Workstream S1 long gates, recorded here for 02 to 07 at the end of S1: `pnpm --filter shadcn-table exec tsc -p tsconfig.stories.json`, `check:tailwind`, `pnpm registry:build`, `lib:install` per base, and the 06 computed-style spot check (`z-index: 2` on the sticky header, `min-height: 100px` on the empty body)
 - `pr.yml` green on the PR

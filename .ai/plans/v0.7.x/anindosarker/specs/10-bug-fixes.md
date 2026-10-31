@@ -265,7 +265,7 @@ New or extended stories under `packages/shadcn-table/stories/`, one per user-rea
 
 ## 2. Instructions for AI
 
-Halt conditions of the index apply: no edit to a part file under `components/ui/`, no registry item name or hosted path change, no public option or type removed, no `eslint-disable` without a reason. D26 keeps the anchor pattern; D5 and D20 stand. Every change lands in base, radix and aria in the same pass. Workstream S2: one builder (opus) end to end, one fable review on the whole diff with the checklists below merged, round 2 on the incremental diff, verify, merge (index, Run plan).
+P5 applies: no edit to a part file under `components/ui/`, no registry item name or hosted path change, no public option or type removed, no `eslint-disable` without a reason. D26 keeps the anchor pattern; D5 and D20 stand. Every change lands in base, radix and aria in the same pass. Workstream S2: one builder (opus) end to end, one fable review on the whole diff with the checklists below merged, round 2 on the incremental diff, verify, merge (index, Run plan).
 
 ### 2.1 Milestones
 
@@ -288,7 +288,7 @@ Lane: agent
 
 - `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria`; `check:bases` (no new `base-diff.json` or `aria-diff.json` entries); CHANGELOG lines from 1.6.1 in the `### Spec 10` block
 - `grep -n "queueMicrotask"` over the files this spec changes (`ST_ToggleGlobalFilterButton.tsx`, `ST_TableHeadCellFilterLabel.tsx`, `ST_ColumnActionMenu.tsx` in every base): empty; `cell.utils.ts:54` keeps its `queueMicrotask`, no row covers it
-- Judged: five-frame capture of the search reveal per base next to `reference/10-*`, three judges (index, Acceptance)
+- Judged: five-frame capture of the search reveal per base next to `reference/10-*`, three judges (1.2 Acceptance)
 - `pnpm format`; merge per the index Workstreams rule
 - Gates: 2.2, recorded in `../trackers/10-tracker.md`
 

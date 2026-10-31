@@ -213,7 +213,7 @@ export const ST_Default_Icons: ST_Icons;
 
 ## 2. Instructions for AI
 
-Halt conditions of the index apply: `shadcn-table`, locale and example item names and every hosted path stay; the new names are additions. No part file edit. Workstream S3: one builder (opus) end to end, one fable review on the whole diff, gates once (index, Run plan).
+P5 applies: `shadcn-table`, locale and example item names and every hosted path stay; the new names are additions. No part file edit. Workstream S3: one builder (opus) end to end, one fable review on the whole diff, gates once (index, Run plan).
 
 ### 2.1 Milestones
 
