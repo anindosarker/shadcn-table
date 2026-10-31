@@ -4,15 +4,14 @@
 
 ### 1.1 Overview
 
-The library lints with `eslint-plugin-react-hooks` 5.2.0 `recommended-latest` and a folded-core exemption block, so a Next 16 consumer sees React Compiler and core hits the repo never reports (F1 to F6) (F9 to F12) (F17). This part lints the library as the consumer does (D17), fixes every local hit in all three bases (D4) (D5 a to c) (D7) (D8) (D9) (D12) (D14) (D15) and keeps suppressions per line and reasoned (D19). Runs inside the library sweep (index, Run schedule): branch `v0.7/library-sweep`, worktree `shadcn-react-table.worktrees/library-sweep`; merge commit into `claude/review` when the local gates are green, no CI wait.
+The library lints with `eslint-plugin-react-hooks` 5.2.0 `recommended-latest` and a folded-core exemption block, so a Next 16 consumer sees React Compiler and core hits the repo never reports (F1 to F6) (F9 to F12) (F17). This part lints the library as the consumer does (D17), fixes every local hit in all three bases (D4) (D5 a to c) (D7) (D8) (D9) (D12) (D14) (D15) and keeps suppressions per line and reasoned (D19). Runs in stream S1 (index, Run plan) (D34): the dependency adds, the lockfile and `hooks/useST_ComposedRef.ts` land in the foundation; the config switch and the `lint -f json` baseline are the S1 lead step; the fixes are applied per file set A to D together with 04, 05, 06 and 07; the long gates run once at stream end.
 
 ### 1.2 Goals
 
 - `pnpm --filter shadcn-table lint` reports zero problems under the 1.6.2 config (D17) (D19)
-- The only relaxations are the four temporary blocks in 1.6.2, each scoped to files and naming the part that deletes it; no new disable in library code beyond 1.6.6
-- test-projects/next-app, `base` re-installed: `npx eslint components/ui/shadcn-table` zero outside the same temporary scope
+- No relaxation block in the config, temporary or otherwise; no new disable in library code beyond 1.6.6 (the five 04 `keep` lines and the `icons.ts:74` line come from the foundation)
 - No option, type or visible behavior change; per-base tsc, tests and `check:bases` green
-- Done when: `pnpm --filter shadcn-table lint` exits 0 under the 1.6.2 config, and `grep -rn "eslint-disable" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists only the 1.6.6 lines and the four 1.6.2 blocks (P6)
+- Done when: `pnpm --filter shadcn-table lint` exits 0 under the 1.6.2 config (unused directives are errors there), and `grep -rc "eslint-disable" packages/shadcn-table/registry/<base>/components/ui/shadcn-table | awk -F: '{s+=$2} END {print s}'` per base equals the expected count recorded in `trackers/02-tracker.md` at the S1 lead step (P6)
 
 ### 1.3 Current structure
 
@@ -43,7 +42,7 @@ packages/shadcn-table/
 
 #### 1.6.1 Data artifacts
 
-- `package.json` fields as 1.4. The range D5 calls the peer range lives in `dependencies`; no `peerDependencies` field is added. `pnpm install` regenerates the lockfile.
+- `package.json` fields as 1.4. The range D5 calls the peer range lives in `dependencies`; no `peerDependencies` field is added. The dependency adds, the root override and the lockfile land in the foundation's single `pnpm install` (index, Run plan); this part never touches `package.json` or the lockfile.
 - `packages/shadcn-table/package.json` `lint` script: `eslint . --max-warnings 0`. Every rule the config reports as a warning, the seven React Compiler rules, `exhaustive-deps`, `incompatible-library` and `unsupported-syntax` included, fails `lint` (D17)
 - `registry.json`: `registry:build` adds `hooks/useST_ComposedRef.ts` to the four main items. Docs copies: `pnpm --filter shadcn-table-docs lib:install <base>` per base.
 - `CHANGELOG.md` `## Unreleased` `### Fixed`: "The installed table lints clean under `eslint-config-next` 16 with the React Compiler rules: hooks run unconditionally, no ref is touched during render, no state is set inside an effect."
@@ -76,21 +75,16 @@ export default defineConfig([
       '@eslint-community/eslint-comments/require-description': 'error',
     },
   })),
-  // Temporary, each block deleted by the part named; files listed from the phase 1 baseline.
-  { files: [`${LIB}/hooks/useST_TableInstance.ts`], rules: { 'react-hooks/refs': 'off' } },  // part 03
-  { files: [/* the 11 F7 files */], rules: { '@typescript-eslint/no-explicit-any': 'off' } }, // part 04
-  { files: [/* the 6 files holding the 11 undescribed any disables */],
-    rules: { '@eslint-community/eslint-comments/require-description': 'off' } },             // part 04
-  { files: [/* files with F8 hits */], rules: { '@typescript-eslint/no-deprecated': 'off' } },  // part 05
 ]);
 ```
 
 - Stories, `.storybook` and `scripts` get the plugin 7 rules through the first block; hits there are fixed under the same decisions
 - Does NOT switch off any rule for the whole library; does NOT keep `^_` patterns or `caughtErrors: 'none'` (every `catch (e)` in the library uses `e`)
+- Does NOT add temporary per-file relaxation blocks: with `reportUnusedDisableDirectives: 'error'` a per-file `no-explicit-any: off` block turns the 11 existing next-line directives into unused-directive errors. The S1 file sets fix every hit directly; `lint` is red by design between the lead step and the last set merge (index, Run plan)
 
 #### 1.6.3 `hooks/useST_ComposedRef.ts` (D5) (F2)
 
-One callback ref for an internal ref and the user's ref, memoized on both. Replaces the `userRef.current = <props>.ref` render write.
+One callback ref for an internal ref and the user's ref, memoized on both. Replaces the `userRef.current = <props>.ref` render write. The file is written in the foundation (index, Run plan); the sites below are set work.
 
 ```typescript
 export const useST_ComposedRef: <T>(
@@ -113,14 +107,10 @@ const attachRef = useST_ComposedRef(tableLayoutRef, layoutDivProps.ref);
 
 #### 1.6.4 Menu anchors (D5) (F2)
 
-```typescript
-const [lastAnchorEl, setLastAnchorEl] = useState<HTMLElement | null>(anchorEl);
-```
+Superseded: the foundation's `hooks/useST_MenuAnchor.ts` (D26 shape, index Run plan) replaces the `lastAnchorEl` state this section planned; set C applies 07 1.6.2 (wire the five menus to the hook) and that removes every `anchorRef` render read and write below. The sites stay listed so the set knows what to remove.
 
-- `finalFocus` focuses `lastAnchorEl`; `anchorRef` goes
-- Updated during render when `anchorEl` is non-null and differs from `lastAnchorEl` (D5), the previous-value pattern (D8); no effect
-- Sites: base `ST_ColumnActionMenu`, `ST_FilterOptionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu`; radix `ST_FilterOptionMenu`, `ST_RowActionMenu`; aria none. Part 07 folds them into `useST_MenuAnchor` (D20)
-- Site: base `components/menus/ST_CellActionMenu.tsx`: `anchorRef` at the component top (:49) and its render-time write `if (anchorEl) anchorRef.current = anchorEl` inside the `Subscribe` render prop (:103), fed by the `actionCellRef.current` read at :102; `lastAnchorEl` state replaces both, declared at the component top (D5) (F2). Radix and aria hold no anchor ref there
+- Sites: base `ST_ColumnActionMenu`, `ST_FilterOptionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu`; radix `ST_FilterOptionMenu`, `ST_RowActionMenu`; aria none (D20)
+- Site: base `components/menus/ST_CellActionMenu.tsx`: `anchorRef` at the component top (:49) and its render-time write `if (anchorEl) anchorRef.current = anchorEl` inside the `Subscribe` render prop (:103), fed by the `actionCellRef.current` read at :102; the hook call at the component top replaces both (D5) (F2). Radix and aria hold no anchor ref there
 
 #### 1.6.5 Hooks (D4) (D7) (D12) (D14)
 
@@ -139,7 +129,7 @@ const checkPageIndex = useEffectEvent((totalRowCount: number): void => { /* body
 #### 1.6.6 Components and utils (D7) (D8) (D9) (D15) (D19)
 
 - D7 (F3) handler writes keep one disable each, wording `// eslint-disable-next-line react-hooks/immutability -- runs in <handler>, not render; <object> is <owner>'s mutable <ref bag | row values cache>`: `ST_TableBodyCell` `handleContextMenu`, `ST_EditActionButtons`, `ST_EditCellTextField`, `ST_FilterTextField` (filter input refs), aria `ST_FilterTextField` `comboboxAnchor` x2
-- D8 (F4): `ST_TableBodyCell` skeleton width from the `useState` initializer; `ST_FilterRangeSlider`, `ST_FilterTextField`, `ST_GlobalFilterTextField` keep `prev<Value>` in state and set local state during render on change; store setters are never called in render (`setGlobalFilter(undefined)` is a no-op once the filter is undefined); `isMounted` refs go
+- D8 (F4): `ST_TableBodyCell` skeleton width from the `useState` initializer; `ST_FilterRangeSlider`, `ST_FilterTextField`, `ST_GlobalFilterTextField` keep `prev<Value>` in state and set local state during render on change, always behind the previous-value compare, never unconditionally (`react-hooks/set-state-in-render`); store setters are never called in render (`setGlobalFilter(undefined)` is a no-op once the filter is undefined); `isMounted` refs go
 - D9 (F5): debounce memos `useMemo(() => debounce(...), [])` with `// eslint-disable-next-line react-hooks/exhaustive-deps -- one debounced function per mount; a new one drops the pending call`; `ST_ShowHideColumnsMenu` and `useST_Rows` hoist getter results to locals, the block disable goes
 - D15: `ST_TableDetailPanel` drops `hover` without a binding; `filterFns.ts:180,188` trailing parameters removed (F11); `cell.utils.ts:121`, `row.utils.ts:211` `if / else` (F12)
 - D19 (F17): the nine feature-file `/* eslint-disable no-unused-vars */` blocks and the `ShadcnTable.tsx` `rules-of-hooks` block become `eslint-disable-next-line` on each reported line, same reason
@@ -148,51 +138,43 @@ const checkPageIndex = useEffectEvent((totalRowCount: number): void => { /* body
 
 ### 1.7 Dependencies and env
 
-- `eslint-plugin-react-hooks` ^7.1.1, `@eslint-community/eslint-plugin-eslint-comments` (latest), `@types/react`, `@types/react-dom` ^19.2.0; React 19.2 runtime for `useEffectEvent`
+- `eslint-plugin-react-hooks` 7.1.1, `@eslint-community/eslint-plugin-eslint-comments` 4.8.1 (pinned), `@types/react`, `@types/react-dom` ^19.2.0; React 19.2 runtime for `useEffectEvent`. All added in the foundation (index, Run plan)
 
 ## 2. Instructions for AI
 
 ### 2.1 Phases
 
-#### 2.1.1 Phase 1: Config and dependencies
+#### 2.1.1 Phase 1: Config switch and baseline (S1 lead step)
 
 Lane: agent
 
-- 1.6.1 package fields and override, `pnpm install`; 1.6.2 without the four temporary blocks
-- `pnpm --filter shadcn-table lint -f json`: record the count per rule and per file in `../trackers/02-tracker.md` as the baseline, split library, stories, other; derive the temporary block file lists from it
-- Add the temporary blocks; commit config and baseline
-- Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` green (lint stays red until phase 2)
+- 1.6.2 as written, no temporary blocks; the dependencies and `useST_ComposedRef.ts` are already on `claude/review` from the foundation
+- `pnpm --filter shadcn-table lint -f json` before the switch is the foundation baseline (`reference/02-lint-baseline.json`); rerun it after the switch and record the count per rule and per file in `../trackers/02-tracker.md`, split library, stories, other; the S1 file sets are built from that output unioned with the site lists of 04 1.6.2 and 1.6.5, 05 1.6.4 to 1.6.8 and 07 1.6.4, so comment-only files have an owner too
+- Record in `../trackers/02-tracker.md` the expected `eslint-disable` count per base after the sweep: the 1.6.6 lines, the five 04 `keep` lines, the 05 `navigator.platform` line and `icons.ts:74` while it holds the foundation disable
+- Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` green (`lint` red by design until the last set merges)
 
-#### 2.1.2 Phase 2: Fixes per rule group
+#### 2.1.2 Phase 2: Fixes per file set
 
-Lane: workflow
+Lane: agent
 
-- Order, each group in base, radix, aria before the next: D4, D5 (1.6.3, 1.6.4, effect events), D7, D8, D9, D12, D14, D15, D19
-- Coder builds per 1.6.3 to 1.6.6; tracker ticks each group with its remaining lint count
-- Reviewer bounces on: a behavior change; a disable without a reason, file-wide, or outside 1.6.6; `table` in an effect dependency list; a store setter called in render; a base twin missed; a decision applied differently than written
+- Per set A to D (index, Run plan), all rule groups in one pass on the set's files in base, radix and aria: D4, D5 (1.6.3, effect events; 1.6.4 through the foundation hook in set C), D7, D8, D9, D12, D14, D15, D19, per 1.6.3 to 1.6.6; 03's `hooks/useST_TableInstance.ts` edits are already in from the lead step
+- Reviewer (stream review, whole diff) bounces on: a behavior change; a disable without a reason, file-wide, or outside 1.6.6; `table` in an effect dependency list; a store setter called in render; an unconditional setState in render (`react-hooks/set-state-in-render`); a base twin missed; a decision applied differently than written
 - Halt: a fix that needs a public type change, or a compiler rule the `'use no memo'` hooks still report
-- Gates (verifier reruns): `lint` zero, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `test:base`, `test:radix`, `test:aria`, `check:bases`
+- Gates per set: `eslint --max-warnings 0 <own files>` zero, `prettier --check <own files>`
 
-#### 2.1.3 Final phase: Cleanup
+#### 2.1.3 Final phase: Gates once
 
 Lane: inline
 
-- 1.6.1 CHANGELOG and standards "## Gates" lines; `registry:build`; `lib:install` for the three bases
-- Next-app check per 2.2; `pnpm format`; merge commit into `claude/review` when the gates are green, no CI wait, push after each commit
-- Gates: the full set in 2.2
+- 1.6.1 CHANGELOG line in the `### Part 02` block; `registry:build`; `lib:install` for the three bases
+- `pnpm format`; merge per the index Streams rule; the next-app consumer check runs in part 09 1.6.2 from the local registry
+- Gates: the full set in 2.2, recorded in `../trackers/02-tracker.md` for the whole stream
 
 ### 2.2 Gates
 
-- `pnpm --filter shadcn-table lint` (`eslint . --max-warnings 0`) zero problems, warnings included; the four temporary blocks are the only relaxations
+- `pnpm --filter shadcn-table lint` (`eslint . --max-warnings 0`) zero problems, warnings included; no relaxation block in the config
 - `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria` green
 - `pnpm --filter shadcn-table test:base`, `test:radix`, `test:aria` green, `Styling/Render Counts` included (pins the owner re-render set)
 - `pnpm check:bases` green; `pnpm --filter shadcn-table-docs types:check`, `lint`, `build` green
-- Next-app, with root `pnpm registry:dev` serving 5310: zero problems apart from `react-hooks/refs` in `hooks/useST_TableInstance.ts` (part 03); `no-deprecated` is not in the Next config
-
-```sh
-cd ../test-projects/next-app   # sibling of the repo checkout
-npx shadcn@latest add http://localhost:5310/r/shadcn-table-base.json --overwrite --yes
-npx eslint components/ui/shadcn-table --rule '@typescript-eslint/no-explicit-any: off'   # part 04 owns any
-```
-
+- The 1.2 `eslint-disable` count per base equals the tracker's expected count
 - `pr.yml` green on the PR

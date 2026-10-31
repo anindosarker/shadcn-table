@@ -510,3 +510,11 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - `components/inputs/ST_SelectCheckbox.tsx:163-168` (aria): the tooltip title uses only the localization strings and ignores `checkboxProps.title`.
 - Base (171-172) and radix (164-165) honour it.
 - Bases: aria only.
+
+### F61 Row action menu stays open on a second click of its opener
+
+- `components/menus/ST_RowActionMenu.tsx:80-100` and `components/buttons/ST_ToggleRowActionMenuButton.tsx:48-52,108` (base): the visible button is not the trigger; the `DropdownMenuTrigger` is the hidden fixed span and the menu is controlled by `open={!!anchorEl}`. On the second click the primitive sees a press outside the popup and its trigger and closes (`setAnchorEl(null)`); the button's `onClick` then runs `handleOpenRowActionMenu`, which always sets `anchorEl` again, so the menu reopens.
+- Repro: next-app `/header-demo` with `enableRowActions` and `renderRowActionMenuItems`, click the row actions button twice; the menu stays open. Source: `test-projects/next-app/shadcn-table-bugs.md` section 7, confirmed in the browser.
+- Likely the same in the other span-anchored menus (`ST_ColumnActionMenu`, `ST_CellActionMenu`, `ST_FilterOptionMenu`, `ST_ShowHideColumnsMenu`): every opener sets the anchor unconditionally.
+- Bases: all three (same opener handlers).
+- Relation: D26 keeps the anchor pattern; the fix is a toggle inside `useST_MenuAnchor` (D26 addendum, part 10).

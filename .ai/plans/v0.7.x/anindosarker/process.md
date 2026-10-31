@@ -30,7 +30,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
 - Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives.
-- Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Add a dependency by hand plus its lockfile importer entry, verify with `pnpm install --frozen-lockfile`. `pnpm install --frozen-lockfile` only when `node_modules` is missing.
+- Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; streams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
 
 ## P6 Plans
 
