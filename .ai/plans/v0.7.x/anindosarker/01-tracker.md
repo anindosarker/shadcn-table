@@ -1,6 +1,6 @@
 # 01: restructure, tracker
 
-Status: running
+Status: done (6c5422ad)
 Branch `v0.7/restructure`, worktree restructure, PR #67
 Gates:
 - `pnpm --filter shadcn-table tsc:radix` at 6f98f13f: green
@@ -19,7 +19,7 @@ Gates:
 - `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `pnpm check:bases` at d8f1c516: green
 - `pnpm test:base`, `test:radix`, `test:aria` at d8f1c516: green
 - `pnpm --filter shadcn-table-docs types:check`, `lint` at d8f1c516: green
-- CI run 41168309522: [pending]
+- CI run 41168338637: green
 
 - Phase 01 library moves: done (6f98f13f)
 - Phase 02 registry and docs copies: done (71c58fe1)
