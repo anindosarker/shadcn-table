@@ -72,11 +72,8 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
     toolbars: (HTMLDivElement | null)[];
   } | null>(null);
 
-  // The toolbars change height on state this container does not render (an
-  // alert banner on selection), so their size is observed, not only measured
-  // after this container renders. The height is written to a CSS variable on
-  // the container node, not to React state, so a toolbar resize does not
-  // re-render the container and the table inside it.
+  // The toolbar height is observed and written to a CSS variable, not React
+  // state, so a toolbar resize does not re-render the container and the table.
   useIsomorphicLayoutEffect(() => {
     const measureToolbars = () => {
       const topToolbarHeight = topToolbarRef.current?.offsetHeight ?? 0;

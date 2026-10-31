@@ -52,8 +52,6 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  // The filter value and the faceted values behind the dropdown options memo
-  // follow the column and global filters, so both are hook subscriptions.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
@@ -161,9 +159,8 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
           }}
           open={!!anchorEl}
         >
-          {/* Base UI has no PopoverAnchor part: the anchor is a Positioner prop. The shadcn
-              PopoverContent owns its Positioner and does not forward `anchor`, so the
-              Portal, Positioner and Popup are composed here with the same classes. */}
+          {/* The shadcn PopoverContent does not forward `anchor` to its Positioner, so
+              the Portal, Positioner and Popup are composed here with the same classes. */}
           <PopoverPrimitive.Portal>
             <PopoverPrimitive.Positioner
               align="center"

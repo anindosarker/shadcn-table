@@ -65,7 +65,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     },
     setHoveredColumn,
   } = table;
-  // These feed the skeleton width effect, so they are hook subscriptions.
   const isLoading = useSelector(table.atoms.isLoading);
   const showSkeletons = useSelector(table.atoms.showSkeletons);
   const { column, row } = cell;
