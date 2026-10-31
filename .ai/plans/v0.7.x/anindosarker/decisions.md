@@ -221,11 +221,6 @@
 - The `custom-headless` example spreads `containerProps` on its wrapper, and the headless docs section gets one line on it.
 - Part `10-bug-fixes` for hook and type; part 08 for example and docs. All three bases. Play test: headless story presses Esc in full screen and exits.
 
-### D32 Shadow literals follow the theme
-
-- The four fixed shadow colors (`shared/utils/style.utils.ts` two sites, `components/toolbar/ST_BottomToolbar.tsx:23`, `components/head/ST_TableHeadRow.tsx:22`) take their color from theme variables, for example `color-mix(in oklab, var(--foreground) 15%, transparent)`, so they follow theme and dark mode (F35).
-- Nothing else in F35 changes: shadcn styles set literal classes per part and no tokens, so no class of ours could follow a style; `rounded-*` steps and `font-bold` are intent and MRT parity; the base filter popover is fixed by D28 (F42). F35 gets a note recording the refuted premise.
-- Part 06, all three bases.
 
 ### D30 Icon sets as registry editions, one `icons.ts` per consumer
 
@@ -249,6 +244,12 @@
 - JS keeps only the drag `translateX` sign and the pinning pixel values. `columnResizeDirection` stays as the TanStack option for drag math; the docs say to set it to `'rtl'` on RTL pages.
 - Verified: today the CLI's `transformRtl` skips `compoundVariants` and inline styles, so no double flip exists; after this change it finds no physical class to rewrite either.
 - Gate: `check:tailwind` fails on any physical direction class (D16). Part 06, all three bases. Part 09 adds one story check with `dir="rtl"` (unverified rendering today).
+
+### D32 Shadow literals follow the theme
+
+- The four fixed shadow colors (`shared/utils/style.utils.ts` two sites, `components/toolbar/ST_BottomToolbar.tsx:23`, `components/head/ST_TableHeadRow.tsx:22`) take their color from theme variables, for example `color-mix(in oklab, var(--foreground) 15%, transparent)`, so they follow theme and dark mode (F35).
+- Nothing else in F35 changes: shadcn styles set literal classes per part and no tokens, so no class of ours could follow a style; `rounded-*` steps and `font-bold` are intent and MRT parity; the base filter popover is fixed by D28 (F42). F35 gets a note recording the refuted premise.
+- Part 06, all three bases.
 
 ### D33 Install docs cover shadcn create and offer a registry namespace
 

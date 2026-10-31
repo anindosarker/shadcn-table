@@ -208,12 +208,14 @@ Shared root cause for all `react-hooks/*` compiler rules (F1 to F6, F10): the li
 - Over 300: ST_ColumnActionMenu:30-411 (382), ST_TableBodyCell:43-374 (332), ST_TableHeadCell:32-355 (324), ST_TablePagination:58-377 (320).
 - 200 to 300: ST_EditCellTextField:41-298 (258), ST_TableBodyRow:52-302 (251), ST_TableBody:29-252 (224), ST_FilterOptionMenu:124-338 (215), useST_Effects:12-226 (215).
 - 150 to 200: useST_TableOptions:32-227 (196), ST_ToolbarAlertBanner:36-230 (195), ST_ShowHideColumnsMenu:28-214 (187), cellKeyboardShortcuts (cell.utils:64-234, 171), ST_SelectCheckbox:48-210 (163), useST_TableInstance:71-230 (160), ST_ShowHideColumnsMenuItems:37-194 (158), ST_TableHeadCellFilterLabel:38-194 (157), ST_TableContainer:35-186 (152).
+- Deferred to v0.8.x: function length is a refactor the owner left open (2026-10-31).
 
 ### F22 Files over 600 lines: 3
 
 - `features/stConfigFeature.ts`: 713 lines.
 - `components/inputs/ST_FilterTextField.tsx` 656, `types.ts` 642.
 - Bases: radix 713, 640, 642; aria 713, 690, 658.
+- Deferred to v0.8.x: file length is a refactor the owner left open (2026-10-31).
 
 ### F23 `as unknown as` casts: 13 in 10 files
 
@@ -407,6 +409,7 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - Arrow keys cannot move between rows, and screen readers announce "1 of 1".
 - Base and radix leave the group unnamed; aria passes `aria-label` at 174.
 - Bases: all three.
+- Deferred to v0.8.x: single-select RadioGroup semantics left open by the owner (2026-10-31).
 
 ### F46 Field description and error not linked to the control
 
