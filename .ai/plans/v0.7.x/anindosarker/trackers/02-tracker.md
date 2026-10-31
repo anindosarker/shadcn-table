@@ -4,8 +4,14 @@ Status: running
 Branch `v0.7/library-sweep`, worktree `library-sweep`, PR #72 (workstream S1, specs 02 to 07)
 Gates:
 - `pnpm --filter shadcn-table lint` at 8b493528: red by design (new config, 668 errors, 51 warnings) until the last set merges
+- `pnpm --filter shadcn-table tsc:baseui`, `tsc:radix`, `tsc:aria` at d5e8abc7: green
+- `pnpm --filter shadcn-table exec tsc -p tsconfig.stories.json` at ba367b60: green
+- `pnpm check:bases` at d5e8abc7: green
+- `pnpm --filter shadcn-table test:base`, `test:radix`, `test:aria` at ba367b60: green, 63 files, 448 tests each (`ColumnsHoldWhileResizing`, `ColumnsHoldWhileDragging` new)
+- `ST_BASE=base vitest run` CustomFilterFns, Filtering, Sorting, Aggregation stories at d5e8abc7: green, 47 tests
 
 - Milestone 01 config switch and baseline: done (8b493528)
+- Lead step: 03 atoms (ba367b60), 05 registries and `getPlatform` (d5e8abc7); set worktrees `library-sweep-{a,b,c,d}` on `v0.7/library-sweep-{a,b,c,d}` cut at the lead head
 
 Lint after the switch (`lint -f json` at 8b493528, 719 problems: library 691, stories 28, other 0)
 
