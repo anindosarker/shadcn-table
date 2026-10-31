@@ -22,6 +22,8 @@ Gates:
 - CI run 41188659456 at b50b56b6: `registry` and the five `install` jobs green, `docs`, `test` x3, `bases` green; `library` x3 red on the foundation's `check:tailwind` step only (S1 scope, red by design until S1 merges; spec 11 files add no class)
 - six `shadcn add http://localhost:5310/r/<item>.json --dry-run` (shadcn-table-radix, shadcn-table, shadcn-table-base-tabler, example-basic-radix, -base, -aria) from the docs app at 20bd77f2: all exit 0, one `icons.ts` per add
 
+- Merge basis (P2): the PR merges on the recorded local gates plus the green `registry`, `install`, `docs`, `test` and `bases` CI jobs; the red `library` x3 jobs fail only on the foundation's `check:tailwind` step, which is S1's and turns green when S1 merges. No spec 11 code change
+- Review round 1 fixes: `pnpm check:bases`, `pnpm check:icons` (35 keys, 0 problems per base), `pnpm --filter shadcn-table lint` (0 errors, the 15 foundation warnings), docs `eslint scripts/install.mjs`, `node --check scripts/install.mjs` at ec037df1: green; the four `icons/*.ts` byte-identical across bases
 - Milestone 01 Maps and imports: done (97072f29)
 - Milestone 02 Registry build: done (20bd77f2)
 - Milestone 03 Installs, CLI smoke: done (c1aa55e4, run 41188659456)
@@ -33,3 +35,5 @@ Gates:
 - Example items now list `lucide-react` in `dependencies` when an example imports it (17 per base): core no longer installs it, so an icon set project would miss it.
 
 - `ST_Checkbox.tsx` line 22 is touched besides line 2 (spec 1.6.2 names `ST_Checkbox.tsx:2,22`): the dash renders `ST_Default_Icons.IndeterminateIcon` imported from `@/components/ui/shadcn-table/icons` (D30 "import from `./icons`"), not `table.options.icons`, since the checkbox has no table prop; a consumer `icons.IndeterminateIcon` override does not reach it.
+- Review round 1 (ATTENTION A3): the checkbox reading `IndeterminateIcon` from the table's `icons` option is declined in spec 11. The wiring (an `ST_Checkbox` prop fed by `ST_SelectCheckbox` and `ST_FilterCheckbox` from `table.options.icons`) belongs to workstream S2, which owns those files; spec 11 keeps the `ST_Default_Icons` import.
+- No `Claude-Session:` trailer on the branch commits (ATTENTION A5: no harness reminder gave one in either run): 97072f29, a473b818, 1f75adcc, 20bd77f2, 6163a18d, 26f40dd3, c1aa55e4, b50b56b6, 5a1f81b2, 2f064514, c0070f46, ec037df1, and no session URL line in the PR #73 body. Pushed commits are left as they are; nothing was fabricated.
