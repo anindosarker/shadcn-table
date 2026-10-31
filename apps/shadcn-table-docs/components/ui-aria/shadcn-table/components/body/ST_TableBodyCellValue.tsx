@@ -1,5 +1,4 @@
 import { type ReactNode, type RefObject } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_Cell,
   type ST_RowData,
@@ -30,7 +29,7 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
   const { columnDef } = column;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         filterValue: column.getFilterValue(),
         globalFilter: state.globalFilter,
@@ -38,7 +37,6 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
         columnFilterFns: state.columnFilterFns,
         grouping: state.grouping,
       })}
-      source={table.store}
     >
       {({ filterValue, globalFilter, globalFilterFn }) => {
         let renderedCellValue =
@@ -129,6 +127,6 @@ export const ST_TableBodyCellValue = <TData extends ST_RowData>({
 
         return renderedCellValue;
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

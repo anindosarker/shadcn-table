@@ -251,6 +251,144 @@ export const HookSelectorFollowsTransformState = {
   },
 };
 
+// Column defs hold while a column resizes or a column or row drags: the
+// column build (counted through the row numbers display column options, read
+// once per build) does not run while the gesture is on, so grouping set
+// meanwhile adds no expand column; the gesture's end runs one build, which
+// adds it.
+const columnBuilds = { count: 0 };
+const countingBuildDisplayColumnDefOptions = new Proxy(
+  {},
+  {
+    get: (_target, key) => {
+      if (key === 'st-row-numbers') columnBuilds.count++;
+      return undefined;
+    },
+  },
+);
+
+const FrozenColumnsTable = () => (
+  <ShadcnTable
+    columns={numberedColumns}
+    data={numbered}
+    displayColumnDefOptions={countingBuildDisplayColumnDefOptions}
+    enableGrouping
+    enableRowNumbers
+    initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    rowNumberDisplayMode="static"
+    renderTopToolbarCustomActions={({ table }) => (
+      <div className="flex gap-2">
+        <button
+          onClick={() =>
+            table.setColumnResizing((old) => ({
+              ...old,
+              isResizingColumn: 'age',
+            }))
+          }
+          type="button"
+        >
+          Start resize
+        </button>
+        <button
+          onClick={() =>
+            table.setColumnResizing((old) => ({
+              ...old,
+              isResizingColumn: false,
+            }))
+          }
+          type="button"
+        >
+          End resize
+        </button>
+        <button
+          onClick={() => table.setDraggingColumn(table.getColumn('age'))}
+          type="button"
+        >
+          Start column drag
+        </button>
+        <button onClick={() => table.setDraggingColumn(null)} type="button">
+          End column drag
+        </button>
+        <button
+          onClick={() => table.setDraggingRow(table.getRowModel().rows[0])}
+          type="button"
+        >
+          Start row drag
+        </button>
+        <button onClick={() => table.setDraggingRow(null)} type="button">
+          End row drag
+        </button>
+        <button onClick={() => table.setGrouping(['age'])} type="button">
+          Group by age
+        </button>
+        <button onClick={() => table.setGrouping([])} type="button">
+          Ungroup
+        </button>
+      </div>
+    )}
+  />
+);
+
+const expandAllButton = (root: HTMLElement) =>
+  within(root).queryByRole('button', { name: 'Expand all' });
+
+// Grouping set while frozen: no build, no expand column; the release builds
+// once and the expand column appears.
+const expectHeldUntilRelease = async (
+  canvasElement: HTMLElement,
+  start: string,
+  end: string,
+) => {
+  const canvas = within(canvasElement);
+  await userEvent.click(canvas.getByText(start));
+  await sleep(100);
+  const buildsWhileFrozen = columnBuilds.count;
+  await userEvent.click(canvas.getByText('Group by age'));
+  await waitFor(() => expect(bodyText(canvasElement)).toMatch(/\(1\)/));
+  await sleep(100);
+  expect(columnBuilds.count, `${start}: builds while frozen`).toBe(
+    buildsWhileFrozen,
+  );
+  expect(expandAllButton(canvasElement)).not.toBeInTheDocument();
+  await userEvent.click(canvas.getByText(end));
+  await waitFor(() =>
+    expect(expandAllButton(canvasElement)).toBeInTheDocument(),
+  );
+  await sleep(100);
+  expect(columnBuilds.count, `${end}: builds after release`).toBe(
+    buildsWhileFrozen + 1,
+  );
+  await userEvent.click(canvas.getByText('Ungroup'));
+  await waitFor(() =>
+    expect(expandAllButton(canvasElement)).not.toBeInTheDocument(),
+  );
+};
+
+export const ColumnsHoldWhileResizing = {
+  render: () => <FrozenColumnsTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+    await expectHeldUntilRelease(canvasElement, 'Start resize', 'End resize');
+  },
+};
+
+export const ColumnsHoldWhileDragging = {
+  render: () => <FrozenColumnsTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(firstNames(canvasElement)[0]).toBe('P01'));
+    await expectHeldUntilRelease(
+      canvasElement,
+      'Start column drag',
+      'End column drag',
+    );
+    await expectHeldUntilRelease(
+      canvasElement,
+      'Start row drag',
+      'End row drag',
+    );
+  },
+};
+
 const DataReplacementTable = () => {
   const [rows, setRows] = useState(numbered.slice(0, 3));
   return (

@@ -11,7 +11,7 @@ const indeterminateClassName =
   'data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground dark:data-[state=indeterminate]:bg-primary data-[state=indeterminate]:[&_[data-slot=checkbox-indicator]_svg]:hidden';
 
 /**
- * shadcn's Checkbox with MRT's indeterminate look: a dash on the checked fill.
+ * shadcn's Checkbox with an indeterminate dash on the checked fill.
  * The part draws a check for every state, so the dash sits over the box,
  * centred, shows only while the part is indeterminate and lets clicks
  * through. Radix marks the state with `data-state="indeterminate"`.

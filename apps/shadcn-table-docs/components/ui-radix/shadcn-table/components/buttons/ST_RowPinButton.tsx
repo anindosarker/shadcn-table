@@ -64,7 +64,7 @@ export const ST_RowPinButton = <TData extends ST_RowData>({
                 <PushPinIcon
                   className={
                     rowPinningDisplayMode === 'sticky'
-                      ? 'rotate-[135deg]'
+                      ? 'rotate-135'
                       : pinningPosition === 'top'
                         ? 'rotate-180'
                         : ''

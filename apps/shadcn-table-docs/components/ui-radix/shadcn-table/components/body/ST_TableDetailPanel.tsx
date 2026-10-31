@@ -1,5 +1,4 @@
 import { type RefObject } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Collapsible, CollapsibleContent } from '@/components/ui-radix/collapsible';
 import { cn } from '@/lib/utils';
@@ -58,14 +57,16 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
     },
   } = table;
 
-  // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
-  const { hover: _hover, ...tableRowProps } =
-    parseFromValuesOrFunc(stTableBodyRowProps, {
+  const tableRowProps = {
+    ...parseFromValuesOrFunc(stTableBodyRowProps, {
       isDetailPanel: true,
       row,
       staticRowIndex,
       table,
-    }) ?? {};
+    }),
+  };
+  // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
+  delete tableRowProps.hover;
 
   const tableCellProps = {
     ...parseFromValuesOrFunc(stDetailPanelProps, {
@@ -76,7 +77,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnVisibility: state.columnVisibility,
@@ -84,7 +85,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
         isExpanded: row.getIsExpanded(),
         isLoading: state.isLoading,
       })}
-      source={table.store}
     >
       {({ isLoading }) => {
         const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
@@ -130,9 +130,9 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
                 tableCellProps.align === 'center'
                   ? 'text-center'
                   : tableCellProps.align === 'right'
-                    ? 'text-right flex-row-reverse'
+                    ? 'text-end flex-row-reverse'
                     : tableCellProps.align === 'left'
-                      ? 'text-left'
+                      ? 'text-start'
                       : tableCellProps.align === 'justify'
                         ? 'text-justify'
                         : 'text-start',
@@ -152,6 +152,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
           </tr>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

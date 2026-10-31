@@ -1,16 +1,13 @@
-import { useCallback, useRef } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { type DivProps } from '@/components/ui-aria/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui-aria/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_BottomToolbar } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_BottomToolbar';
 import { ST_TopToolbar } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_TopToolbar';
 import { ST_TableContainer } from '@/components/ui-aria/shadcn-table/components/table/ST_TableContainer';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui-aria/shadcn-table/hooks/useST_ComposedRef';
 
 export type ST_TableLayoutProps = DivProps;
 
@@ -47,27 +44,7 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
     ...rest,
   };
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // tableLayoutRef null while the children's layout effects run.
-  const userRef = useRef(layoutDivProps.ref);
-  userRef.current = layoutDivProps.ref;
-  const attachRef = useCallback(
-    (node: HTMLDivElement) => {
-      tableLayoutRef.current = node;
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        tableLayoutRef.current = null;
-      };
-    },
-    [tableLayoutRef],
-  );
+  const attachRef = useST_ComposedRef(tableLayoutRef, layoutDivProps.ref);
 
   // Created outside the full screen subscription, so toggling full screen
   // re-renders only this element.

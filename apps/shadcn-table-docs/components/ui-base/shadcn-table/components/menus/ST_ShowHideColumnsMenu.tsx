@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, useMemo, useRef, useState } from 'react';
+import { type ComponentPropsWithRef, useMemo, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui-base/button';
@@ -12,11 +12,11 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableState,
 } from '@/components/ui-base/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui-base/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui-base/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -49,9 +49,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       localization,
     },
   } = table;
-  // These feed the column list memos, so they are hook subscriptions.
   const columnOrder = useSelector(table.atoms.columnOrder);
-  const columnPinning = useSelector(table.atoms.columnPinning);
+  // A pin change reorders the leaf column getters below.
+  useSelector(table.atoms.columnPinning);
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -59,31 +59,31 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       .forEach((col) => col.toggleVisibility(value));
   };
 
-  /* eslint-disable react-hooks/exhaustive-deps */
+  const columns = getAllColumns();
+  const centerLeafColumns = getCenterLeafColumns();
+  const startLeafColumns = getStartLeafColumns();
+  const endLeafColumns = getEndLeafColumns();
   const allColumns = useMemo(() => {
-    const columns = getAllColumns();
     if (
       columnOrder.length > 0 &&
       !columns.some((col) => col.columnDef.columnDefType === 'group')
     ) {
       return [
-        ...getStartLeafColumns(),
+        ...startLeafColumns,
         ...Array.from(new Set(columnOrder)).map((colId) =>
-          getCenterLeafColumns().find((col) => col?.id === colId),
+          centerLeafColumns.find((col) => col?.id === colId),
         ),
-        ...getEndLeafColumns(),
+        ...endLeafColumns,
       ].filter(Boolean);
     }
     return columns;
   }, [
     columnOrder,
-    columnPinning,
-    getAllColumns(),
-    getCenterLeafColumns(),
-    getStartLeafColumns(),
-    getEndLeafColumns(),
+    columns,
+    centerLeafColumns,
+    startLeafColumns,
+    endLeafColumns,
   ]) as ST_Column<TData>[];
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   const isNestedColumns = allColumns.some(
     (col) => col.columnDef.columnDefType === 'group',
@@ -102,44 +102,21 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     null,
   );
 
-  // Base UI reads the popup's finalFocus when the menu closes, after this
-  // component re-rendered with anchorEl cleared; the ref keeps the element
-  // from the last open render.
-  const anchorRef = useRef<HTMLElement | null>(null);
-  if (anchorEl) anchorRef.current = anchorEl;
-
-  const rect = anchorEl?.getBoundingClientRect();
+  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
+    <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger
-        // The library anchors its menus to an invisible span, not a button.
         nativeButton={false}
-        render={
-          <span
-            aria-hidden
-            style={{
-              position: 'fixed',
-              left: rect?.left ?? 0,
-              top: rect?.top ?? 0,
-              width: rect?.width ?? 0,
-              height: rect?.height ?? 0,
-              pointerEvents: 'none',
-            }}
-          />
-        }
+        render={<span {...spanProps} />}
       />
       <DropdownMenuContent
         align="start"
-        // Focus goes back to the real anchor; returning false keeps Base UI
-        // off the invisible trigger.
         finalFocus={() => {
-          anchorRef.current?.focus();
+          focusAnchor();
           return false;
         }}
         className={cn('w-max', className)}
@@ -165,7 +142,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
                       getDefaultColumnOrderIds(
                         {
                           ...table.options,
-                          state: table.store.state as ST_TableState<TData>,
+                          state: {
+                            columnOrder: table.atoms.columnOrder.get(),
+                            creatingRow: table.atoms.creatingRow.get(),
+                            grouping: table.atoms.grouping.get(),
+                          },
                         },
                         true,
                       ),

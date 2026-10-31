@@ -19,7 +19,7 @@ export interface ST_TableHeadRowProps<TData extends ST_RowData>
 }
 
 const tableHeadRowVariants = cva(
-  'top-0 bg-background shadow-[4px_0_8px_rgba(0,0,0,0.1)]',
+  'top-0 bg-background shadow-[4px_0_8px_color-mix(in_oklab,var(--foreground)_10%,transparent)]',
   {
     variants: {
       layout: { grid: 'flex', semantic: '' },

@@ -1,5 +1,3 @@
-import { useCallback, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -7,12 +5,10 @@ import {
   type ST_RowData,
   type TableFooterProps,
 } from '@/components/ui-radix/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui-radix/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_TableFooterRow } from '@/components/ui-radix/shadcn-table/components/footer/ST_TableFooterRow';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui-radix/shadcn-table/hooks/useST_ComposedRef';
 
 export interface ST_TableFooterProps extends TableFooterProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
@@ -22,7 +18,7 @@ const tableFooterVariants = cva('', {
   variants: {
     layout: { grid: 'grid', semantic: '' },
     sticky: {
-      true: 'bottom-0 sticky z-[1] opacity-[0.97] outline outline-1 outline-border',
+      true: 'bottom-0 sticky z-1 opacity-[0.97] outline outline-1 outline-border',
       false: 'relative',
     },
   },
@@ -43,32 +39,12 @@ export const ST_TableFooter = <TData extends ST_RowData>({
     ...rest,
   };
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // tableFooterRef null while the children's layout effects run.
-  const userRef = useRef(tableFooterProps.ref);
-  userRef.current = tableFooterProps.ref;
-  const attachRef = useCallback(
-    (node: HTMLTableSectionElement) => {
-      tableFooterRef.current = node;
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        tableFooterRef.current = null;
-      };
-    },
-    [tableFooterRef],
-  );
+  const attachRef = useST_ComposedRef(tableFooterRef, tableFooterProps.ref);
 
   return (
     // The footer groups follow the column order, pinning, visibility and
     // grouping.
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
@@ -76,7 +52,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
         grouping: state.grouping,
         isFullScreen: state.isFullScreen,
       })}
-      source={table.store}
     >
       {({ isFullScreen }) => {
         const stickFooter =
@@ -119,6 +94,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
           </tfoot>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

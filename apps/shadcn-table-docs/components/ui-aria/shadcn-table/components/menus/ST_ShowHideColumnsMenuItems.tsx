@@ -155,7 +155,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             (column.getCanPin() ? (
               <ST_ColumnPinningButtons column={column} />
             ) : (
-              <div className="w-[70px]" />
+              <div className="w-17.5" />
             ))}
           {enableHiding ? (
             <Label>

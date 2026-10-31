@@ -17,10 +17,8 @@ import {
 import { createRow } from '@/components/ui-radix/shadcn-table/shared/utils/tanstack.helpers';
 
 /**
- * `TableState_FeatureMap` is not generic and `Row` is invariant in `TData`, so
- * the instance-bearing slices and their `on*Change` options are typed over
- * `ST_RowData`. The `TData` shape is what `ST_TableState<TData>` and
- * `ST_TableOptions<TData>` show to users.
+ * Typed over `ST_RowData`, since `TableState_FeatureMap` is not generic and
+ * `Row` is invariant in `TData`; `ST_TableState<TData>` shows the typed shape.
  */
 export interface ST_TableState_Editing {
   creatingRow: ST_Row<ST_RowData> | null;
@@ -40,7 +38,6 @@ export interface ST_Table_Editing<TData extends ST_RowData> {
   setEditingRow: (updater: ST_Updater<ST_Row<TData> | null>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stEditingFeature: TableFeature;
@@ -49,19 +46,21 @@ declare module '@tanstack/react-table' {
     stEditingFeature: ST_TableState_Editing;
   }
   interface TableOptions_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stEditingFeature: ST_TableOptions_Editing;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
     TData extends RowData,
   > {
     stEditingFeature: ST_Table_Editing<TData>;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stEditingFeature: TableFeature = {
   getInitialState: (initialState) => ({

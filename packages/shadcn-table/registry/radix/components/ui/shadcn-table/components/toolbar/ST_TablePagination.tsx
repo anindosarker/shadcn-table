@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { type ComponentType, createElement } from 'react';
 import { Button } from '@/components/ui/button';
@@ -52,7 +51,7 @@ export interface ST_TablePaginationProps
 }
 
 const tablePaginationVariants = cva(
-  'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
+  'relative z-2 flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
 
 export const ST_TablePagination = <TData extends ST_RowData>({
@@ -71,8 +70,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
       paginationDisplayMode,
     },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Select.
   const {
     stPaginationProps,
   }: Pick<ST_TableOptions<TData>, 'stPaginationProps'> = table.options;
@@ -124,7 +121,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   // selector lists every slice that feeds it, and the row pins the label
   // range counts.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
@@ -135,7 +132,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         pagination: state.pagination,
         rowPinning: state.rowPinning,
       })}
-      source={table.store}
     >
       {({ pagination: { pageIndex = 0, pageSize = 10 } }) => {
         const totalRowCount = table.getRowCount();
@@ -359,6 +355,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

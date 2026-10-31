@@ -1,5 +1,4 @@
 import { type MouseEvent, useState } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui-aria/button';
 import { cn } from '@/lib/utils';
@@ -14,7 +13,7 @@ import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons
 import { ST_EditActionButtons } from '@/components/ui-aria/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_RowActionMenu';
 
-const commonIconButtonStyles = cva('ml-2.5');
+const commonIconButtonStyles = cva('ms-2.5');
 
 export interface ST_ToggleRowActionMenuButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -59,12 +58,11 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
       })}
-      source={table.store}
     >
       {({ creatingRow, editingRow }) => {
         const isCreating = creatingRow?.id === row.id;
@@ -128,6 +126,6 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

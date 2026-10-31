@@ -3,6 +3,8 @@ import {
   constructRow,
   flexRender as _flexRender,
   type Renderable,
+  type Row,
+  type Table,
 } from '@tanstack/react-table';
 import {
   type ST_ColumnHelper,
@@ -19,8 +21,8 @@ import {
 } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 
 export const flexRender = _flexRender as (
-  Comp: Renderable<any>,
-  props: any,
+  Comp: Renderable<never>,
+  props: object,
 ) => JSX.Element | ReactNode;
 
 export function createSRTColumnHelper<
@@ -32,6 +34,7 @@ export function createSRTColumnHelper<
         ? ({
             ...column,
             accessorFn: accessor,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TValue is a conditional on TAccessor that TS cannot narrow; mirrors table-core columnHelper
           } as any)
         : {
             ...column,
@@ -52,7 +55,7 @@ export const createRow = <TData extends ST_RowData>(
   parentId?: string,
 ): ST_Row<TData> =>
   constructRow<ST_Features, TData>(
-    table as any,
+    table as unknown as Table<ST_Features, TData>,
     'st-row-create',
     originalRow ??
       Object.assign(
@@ -63,6 +66,6 @@ export const createRow = <TData extends ST_RowData>(
       ),
     rowIndex,
     depth,
-    subRows as any,
+    subRows as unknown as Array<Row<ST_Features, TData>>,
     parentId,
   ) as unknown as ST_Row<TData>;

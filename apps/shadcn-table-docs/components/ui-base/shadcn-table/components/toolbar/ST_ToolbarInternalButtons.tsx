@@ -13,7 +13,7 @@ import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHoo
 
 export type ST_ToolbarInternalButtonsProps = DivProps;
 
-const toolbarInternalButtonsVariants = cva('z-[3] flex items-center');
+const toolbarInternalButtonsVariants = cva('z-3 flex items-center');
 
 export const ST_ToolbarInternalButtons = <TData extends ST_RowData>({
   ...rest

@@ -1,5 +1,4 @@
 import { type DragEvent, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -44,7 +43,7 @@ const tableBodyRowVariants = cva(
         animated: 'transition-all duration-150 ease-in-out',
         none: '',
       },
-      zIndex: { base: 'z-0', high: 'z-[2]' },
+      zIndex: { base: 'z-0', high: 'z-2' },
     },
   },
 );
@@ -108,14 +107,13 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   // subscription, so a selection, hover or pinning change re-renders the row
   // element only. The cells follow the column layout slices themselves.
   const cells = (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
         columnVisibility: state.columnVisibility,
         grouping: state.grouping,
       })}
-      source={table.store}
     >
       {() => {
         const visibleCells = row.getVisibleCells();
@@ -138,7 +136,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
           },
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 
   const detailPanel = renderDetailPanel && !row.getIsGrouped() && (
@@ -152,7 +150,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
   );
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         isDraggingRow: state.draggingRow?.id === row.id,
@@ -162,7 +160,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
         isRowSelected: getIsRowSelected({ row, table }),
         rowPinning: state.rowPinning,
       })}
-      source={table.store}
     >
       {({
         density,
@@ -297,6 +294,6 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

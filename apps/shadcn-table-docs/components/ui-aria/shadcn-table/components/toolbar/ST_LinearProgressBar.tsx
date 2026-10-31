@@ -2,7 +2,6 @@ import { Collapsible, CollapsibleContent } from '@/components/ui-aria/collapsibl
 import { Progress } from '@/components/ui-aria/progress';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_LinearProgressProps,
   type ST_RowData,
@@ -24,10 +23,8 @@ const linearProgressWrapperVariants = cva('absolute w-full', {
   },
 });
 
-// MUI LinearProgress indeterminate keyframes (indeterminate1), ported so the
-// loading bars animate in CSS like MUI's instead of re-rendering per frame.
-// Rendered as a hoisted <style href="st-linear-progress"> whether or not the
-// bar is indeterminate, so the rule exists before the class is set.
+// Hoisted as <style href="st-linear-progress"> so the rule exists before
+// the class is set.
 const linearProgressKeyframes = `@keyframes st-linear-progress-indeterminate {
   0% {
     left: -35%;
@@ -72,12 +69,11 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
   const isIndeterminate = progressComponentProps?.value == null;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isSaving: state.isSaving,
         showProgressBars: state.showProgressBars,
       })}
-      source={table.store}
     >
       {({ isSaving, showProgressBars }) => {
         const isExpanded =
@@ -116,6 +112,6 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           </Collapsible>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

@@ -37,7 +37,6 @@ export interface ST_Table_ColumnDragging<TData extends ST_RowData> {
   ) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stColumnDraggingFeature: TableFeature;
@@ -46,19 +45,21 @@ declare module '@tanstack/react-table' {
     stColumnDraggingFeature: ST_TableState_ColumnDragging;
   }
   interface TableOptions_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stColumnDraggingFeature: ST_TableOptions_ColumnDragging;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
     TData extends RowData,
   > {
     stColumnDraggingFeature: ST_Table_ColumnDragging<TData>;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stColumnDraggingFeature: TableFeature = {
   getInitialState: (initialState) => ({

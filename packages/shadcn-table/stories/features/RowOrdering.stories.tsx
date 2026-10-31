@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_Row,
-  type ST_TableState,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
@@ -77,8 +76,8 @@ export const RowOrderingEnabled = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.store
-            .state as ST_TableState<Person>;
+          const draggingRow = table.atoms.draggingRow.get();
+          const hoveredRow = table.atoms.hoveredRow.get();
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<Person>).index,
@@ -220,8 +219,8 @@ export const RowOrderingWithRowVirtualization = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.store
-            .state as ST_TableState<Person>;
+          const draggingRow = table.atoms.draggingRow.get();
+          const hoveredRow = table.atoms.hoveredRow.get();
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<Person>).index,
@@ -269,7 +268,8 @@ export const RowOrderingWithColumnVirtualization = () => {
       enableSorting={false}
       stRowDragHandleProps={({ table }) => ({
         onDragEnd: () => {
-          const { draggingRow, hoveredRow } = table.store.state;
+          const draggingRow = table.atoms.draggingRow.get();
+          const hoveredRow = table.atoms.hoveredRow.get();
           if (hoveredRow && draggingRow) {
             data.splice(
               (hoveredRow as ST_Row<(typeof fakeData)[0]>).index,
