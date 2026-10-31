@@ -9,13 +9,11 @@ import {
   type TableCellProps,
 } from '@/components/ui-radix/shadcn-table/types';
 
-// MUI Collapse orientation="horizontal": tw-animate-css ships only the height
-// pair (collapsible-down/up), so the width pair lives here, driven by the
-// radix-measured --radix-collapsible-content-width like the height pair.
-// overflow: hidden sits inside the keyframes so it applies only while the
-// animation runs, as MUI Collapse clips while transitioning and sets
-// overflow: visible once entered. Rendered as a hoisted
-// <style href="st-collapsible"> by the components that animate with it.
+// Horizontal collapse keyframes. tw-animate-css ships only the height pair, so
+// the width pair lives here, driven by --radix-collapsible-content-width.
+// overflow: hidden sits inside the keyframes so the panel clips only while it
+// animates. Rendered as a hoisted <style href="st-collapsible"> by the
+// components that animate with it.
 export const stCollapsibleKeyframes = `@keyframes st-collapsible-right {
   from {
     width: 0;
