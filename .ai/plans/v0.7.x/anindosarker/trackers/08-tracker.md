@@ -1,6 +1,6 @@
 # 08: docs install UI, tracker
 
-Status: done (bb89e856)
+Status: done (28d26732)
 Branch `v0.7/docs-install`, worktree docs-install, PR #71
 S5: branch `v0.7/docs-install-2`, worktree docs-install-2, PR #75
 S5 milestone 5: branch `v0.7/docs-install-3`, worktree docs-install-3, PR #76
@@ -53,7 +53,13 @@ Gates:
 - `check-pages.mjs d --base base|radix|aria`, three `next start` concurrent (ports 5346, 5347, 5348, `NEXT_DIST_DIR=.next`) at bb89e856: green (252 passed, 0 failed each)
 - `pnpm test:base` at bb89e856: green (71 files, 469 tests) on the second run; the first failed 20 story files on `Failed to import .storybook/vitest.setup.ts: SyntaxError` (vite import flake, no package change)
 - agent-browser on `next start` 5346 to 5348 at bb89e856, `/docs/examples/custom-headless`, real mouse click on the example's Toggle full screen, then Esc: base and radix enter full screen (`fixed inset-0`, `tabindex=-1`) and Esc leaves it: pass; aria enters full screen, Esc with focus in the search field or on the wrapper leaves it, Esc with focus on the toggle button does not (same on `/docs/examples/basic` with `ST_TableLayout`, see Attention). Captures `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table-shadcn-react-table/e001baee-c356-4fbd-b566-06e1457b6659/scratchpad/v08m5/` (`h<base>-full.png`, `h<base>-esc.png`, `baria-*.png`)
-- Acceptance (1.2) at bb89e856: build exit 0, `check-pages.mjs` exit 0 for all three bases (cluster d here; a to e at 38c6b5f7 by the S5 verifier, `38c6b5f7..bb89e856` touches only `custom-headless` sources, its page and `st-hooks.mdx`, cluster d and c); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+- Acceptance (1.2) at bb89e856, superseded by the review fix block below: cluster a was not rerun here (`st-hooks.mdx` is cluster a, `a.mjs` asserted 7 hook headings, red at bb89e856 with 8); the original clause claimed `38c6b5f7..bb89e856` touched clusters d and c only, which was wrong; install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+- Review fix (e81a216c `a.mjs` asserts 8 hook headings; 28d26732 headless wrapper classes via `filter(Boolean).join(' ')` in base, radix, aria):
+- `pnpm --filter shadcn-table-docs types:check`, `lint` (0 errors, 9 existing example warnings), `pnpm check:bases` at 28d26732: green
+- `pnpm --filter shadcn-table-docs build` at 28d26732: green, `git status` clean after
+- `check-pages.mjs a` and `d`, `--base base|radix|aria`, three `next start` concurrent (ports 5346, 5347, 5348, `NEXT_DIST_DIR=.next`) at 28d26732: green (a 302 passed, 0 failed each, `PASS /docs/api/st-hooks @1440 hook headings 8`; d 252 passed, 0 failed each)
+- `pnpm test:base` at bb89e856 reused: `bb89e856..28d26732` touches only docs example sources, `a.mjs` and `.ai/`, none in the package test tree
+- Acceptance (1.2) at 28d26732: build exit 0; `check-pages.mjs` exit 0 for all three bases (clusters a and d, the clusters `38c6b5f7..28d26732` touches: `st-hooks.mdx` and `a.mjs` in a, `custom-headless` in d; b, c, e at 38c6b5f7, untouched since); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
 
 ## Attention
 
@@ -72,12 +78,12 @@ Gates:
 - `DocsLocale` gained a fourth field, `example` (the example slug), because the example folders are not `localization-i18n-${code.toLowerCase()}` for `pt-BR`, `sr-Cyrl-RS`, `sr-Latn-RS`; renaming them would rename registry items.
 - CHANGELOG Spec 08 has an extra `Docs` line for the `@st` to `@shadcn-table` rename (not a Breaking line: the namespace name is local to a consumer's `components.json`, `@st` keeps working). `packages/shadcn-table/scripts/registry/hosted.mjs:16-17` still names `@st` in a comment (packages/ is out of S4 scope).
 - React Aria: Esc does not leave full screen while focus stays on `ST_ToggleFullScreenButton` after a mouse click, in the headless example and in `ST_TableLayout` (`/docs/examples/basic`); Esc with focus elsewhere in the container works, and base and radix work with focus on the button. The React Aria button or its tooltip trigger stops the Escape keydown before the container's `onKeyDown`. Library side (packages/, out of spec 08 scope); the `HeadlessFullScreen` story focuses the wrapper before Esc, so it does not cover this. Owner: follow-up in the aria tree.
-- The headless example had no Esc handling or full-screen classes to drop (the spec's "drops its own" did not apply); it now gains `ST_ToggleFullScreenButton` next to the search field so full screen is reachable, and keeps its own wrapper classes in a template string (`flex flex-col bg-background`, `my-8` inline, `overflow-auto` in full screen) because example sources are registry items and `@/lib/utils` (`cn`) has no registry mapping. The `st-hooks.mdx` snippet uses `cn` (consumer code). The milestone 5 MDX link to the hook is `/docs/api/st-hooks#usest_fullscreencontainer`.
+- The headless example had no Esc handling or full-screen classes to drop (the spec's "drops its own" did not apply); it now gains `ST_ToggleFullScreenButton` next to the search field so full screen is reachable, and keeps its own wrapper classes in a `filter(Boolean).join(' ')` list (`flex flex-col bg-background`, `my-8` inline, `overflow-auto` in full screen) because example sources are registry items and `@/lib/utils` (`cn`) has no registry mapping. The `st-hooks.mdx` snippet uses `cn` (consumer code). The milestone 5 MDX link to the hook is `/docs/api/st-hooks#usest_fullscreencontainer`.
 - No harness `Claude-Session:` or attribution reminder reached this run; commits and the PR #76 body carry none (A5).
 
 - Milestone 01 locale list and selector: done (970cf469)
 - Milestone 02 toolbar base select: done (8d8ef490)
 - Milestone 03 guide, README, minimums, namespace: done (0ed09813)
 - Milestone 04 edition select, Short form, create section, icons guide: done (2ec2c084)
-- Milestone 05 headless example: done (bb89e856)
-- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at bb89e856
+- Milestone 05 headless example: done (bb89e856, review fixes 28d26732)
+- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at 28d26732
