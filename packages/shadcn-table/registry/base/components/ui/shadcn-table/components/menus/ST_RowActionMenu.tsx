@@ -46,7 +46,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     },
   } = table;
 
-  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+  const { anchorRef, onOpenChange, spanProps } = useST_MenuAnchor({
     anchorEl,
     setAnchorEl,
   });
@@ -81,10 +81,7 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
       <DropdownMenuContent
         align="start"
         onClick={(event) => event.stopPropagation()}
-        finalFocus={() => {
-          focusAnchor();
-          return false;
-        }}
+        finalFocus={anchorRef}
         className={cn('w-max', className)}
         {...rest}
       >

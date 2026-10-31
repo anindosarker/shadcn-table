@@ -27,6 +27,7 @@ import {
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export type ST_GlobalFilterTextFieldProps = InputProps;
 
@@ -57,6 +58,10 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
   };
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
   const [searchValue, setSearchValue] = useState(globalFilter ?? '');
 
   const handleChangeDebounced = useMemo(
@@ -78,7 +83,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
 
   const handleGlobalFilterMenuOpen = (event: MouseEvent<FocusableElement>) => {
     if (event.currentTarget instanceof HTMLElement) {
-      setAnchorEl(event.currentTarget);
+      toggle(event.currentTarget);
     }
   };
 
@@ -138,6 +143,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
               <ST_Tooltip title={localization.changeSearchMode}>
                 <InputGroupButton
                   aria-label={localization.changeSearchMode}
+                  {...openerProps}
                   onClick={handleGlobalFilterMenuOpen}
                   size="icon-sm"
                   className="size-7"
