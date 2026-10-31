@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   type ST_ColumnDef,
   type ST_ColumnFiltersState,
@@ -624,26 +624,21 @@ export const CustomizeFilterTextFields = () => (
 );
 
 export const ManualFiltering = () => {
-  const [rows, setRows] = useState(() => [...data]);
   const [columnFilters, setColumnFilters] = useState<ST_ColumnFiltersState>([]);
 
   //this kind of logic would actually live on a server, not client-side
-  useEffect(() => {
-    if (columnFilters?.length) {
-      let filteredRows = [...data];
-      columnFilters.map((filter) => {
-        const { id: columnId, value: filterValue } = filter;
-        filteredRows = filteredRows.filter((row) => {
-          return row[columnId as keyof typeof row]
-            ?.toString()
-            ?.toLowerCase()
-            ?.includes?.((filterValue as string).toLowerCase());
-        });
+  const rows = useMemo(() => {
+    let filteredRows = [...data];
+    columnFilters.forEach((filter) => {
+      const { id: columnId, value: filterValue } = filter;
+      filteredRows = filteredRows.filter((row) => {
+        return row[columnId as keyof typeof row]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes?.((filterValue as string).toLowerCase());
       });
-      setRows(filteredRows);
-    } else {
-      setRows([...data]);
-    }
+    });
+    return filteredRows;
   }, [columnFilters]);
 
   return (
