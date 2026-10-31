@@ -47,6 +47,7 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
       onEditingRowCancel?.({ row, table });
       setEditingRow(null);
     }
+    // eslint-disable-next-line react-hooks/immutability -- runs in handleCancel, not render; _valuesCache is the row's mutable row values cache
     row._valuesCache = {} as ST_Row<TData>['_valuesCache'];
   };
 
