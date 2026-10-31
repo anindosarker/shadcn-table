@@ -8,12 +8,16 @@ import {
   getST_RowSelectionHandler,
   getST_SelectAllHandler,
 } from '@/components/ui/shadcn-table/shared/utils/row.utils';
-import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import {
+  getPlatform,
+  parseFromValuesOrFunc,
+} from '@/components/ui/shadcn-table/shared/utils/utils';
 
 const isWinCtrlMacMeta = (event: React.KeyboardEvent<HTMLTableCellElement>) => {
+  const platform = getPlatform();
   return (
-    (event.ctrlKey && navigator.platform.toLowerCase().includes('win')) ||
-    (event.metaKey && navigator.platform.toLowerCase().includes('mac'))
+    (event.ctrlKey && platform.includes('win')) ||
+    (event.metaKey && platform.includes('mac'))
   );
 };
 

@@ -21,6 +21,18 @@ export const assignRef = <T>(ref: Ref<T> | undefined, node: T | null) => {
   }
 };
 
+type NavigatorWithUAData = Navigator & {
+  userAgentData?: { platform: string };
+};
+
+/** Lower-cased OS name; `navigator.userAgentData.platform` first. */
+export const getPlatform = (): string =>
+  (
+    (navigator as NavigatorWithUAData).userAgentData?.platform ??
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- userAgentData is Chromium only; Firefox and Safari need the fallback
+    navigator.platform
+  ).toLowerCase();
+
 export const getValueAndLabel = (
   option?: DropdownOption | null,
 ): { label: string; value: string } => {
