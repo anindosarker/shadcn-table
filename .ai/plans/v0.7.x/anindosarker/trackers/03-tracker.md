@@ -4,6 +4,7 @@ Status: running
 Branch `v0.7/library-sweep`, worktree `library-sweep`, PR #72 (workstream S1)
 Gates: see 02-tracker.md
 
+- Verifier at 2172c9a0: spec 03 Acceptance rerun green, `pr.yml` red on the merge ref (02-tracker.md gates and Attention)
 - Milestone 01 base: done (ba367b60)
 - Milestone 02 radix and aria copies: done (ba367b60)
 - `eslint --rule '{"react-hooks/refs":"error"}'` on the three `useST_TableInstance.ts` at ba367b60: 0 problems (the file lints clean under the full config too); `grep -nE "tableRef|columnDefsRef|table\.store"` empty; three copies byte-identical
