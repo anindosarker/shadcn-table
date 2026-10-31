@@ -21,8 +21,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -41,6 +45,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-and-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -59,6 +66,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-multi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -77,6 +87,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-column-filtering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -95,6 +108,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -113,6 +129,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-pagination/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -126,6 +145,9 @@
           "type": "registry:component",
           "target": "@components/examples/basic/basic.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -144,6 +166,9 @@
           "type": "registry:component",
           "target": "@components/examples/chart-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "recharts"
@@ -165,6 +190,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-actions-space/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -183,6 +211,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-alignment/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -203,6 +234,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
       ]
     },
@@ -222,6 +254,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-column-filtering-ui/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -242,6 +277,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "table"
       ]
     },
@@ -263,7 +299,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -284,6 +324,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -298,6 +339,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-components/customize-filter-components.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -318,6 +362,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
       ]
     },
@@ -337,6 +382,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-variants/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -355,6 +403,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-global-filter-component/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -373,6 +424,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-remove-column-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -391,6 +445,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-row-selection/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -409,6 +466,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-table-styles/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -427,6 +487,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-actions/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -440,6 +503,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-hiding/disable-column-hiding.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -458,6 +524,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-density-toggle/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -473,10 +542,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -497,11 +568,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -522,11 +595,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "dialog"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -547,10 +622,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -571,11 +648,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -596,10 +675,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -620,7 +701,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -639,6 +724,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-click-to-copy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -659,6 +747,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "label",
         "radio-group"
       ]
@@ -679,6 +768,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -699,6 +791,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
       ]
     },
@@ -718,6 +811,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-resizing/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -736,6 +832,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -754,6 +853,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-conditionally/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -772,6 +874,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -785,6 +890,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-expanding-tree/enable-expanding-tree.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -803,6 +911,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-filter-facet-values/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -821,6 +932,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-dragging/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -839,6 +953,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-original/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -857,6 +974,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -875,6 +995,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -893,6 +1016,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-select/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -911,6 +1037,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -929,6 +1058,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-sticky/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -942,6 +1074,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-selection/enable-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -960,6 +1095,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -978,6 +1116,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-sticky-header/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -991,6 +1132,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-expanded/expanding-tree-expanded.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1004,6 +1148,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-flat-parse/expanding-tree-flat-parse.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1019,6 +1166,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -1040,10 +1188,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "export-to-csv"
+        "export-to-csv",
+        "lucide-react"
       ]
     },
     {
@@ -1064,11 +1214,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
         "jspdf",
-        "jspdf-autotable"
+        "jspdf-autotable",
+        "lucide-react"
       ]
     },
     {
@@ -1089,7 +1241,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1109,6 +1265,9 @@
           "target": "@components/examples/font-awesome-icons/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
@@ -1127,6 +1286,9 @@
           "target": "@components/examples/infinite-scrolling/infinite-scrolling.tsx"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -1144,11 +1306,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "alert",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -1162,6 +1326,9 @@
           "type": "registry:component",
           "target": "@components/examples/lazy-sub-rows/lazy-sub-rows.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -1185,6 +1352,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -1204,6 +1372,9 @@
           "type": "registry:component",
           "target": "@components/examples/loading/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1222,6 +1393,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ar/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1240,6 +1414,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-az/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1258,6 +1435,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-bg/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1276,6 +1456,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-cs/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1294,6 +1477,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-da/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1312,6 +1498,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-de/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1330,6 +1519,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-el/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1348,6 +1540,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-en/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1366,6 +1561,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-es/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1384,6 +1582,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-et/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1402,6 +1603,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fa/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1420,6 +1624,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1438,6 +1645,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1456,6 +1666,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-he/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1474,6 +1687,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1492,6 +1708,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hu/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1510,6 +1729,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1528,6 +1750,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-id/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1546,6 +1771,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-it/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1564,6 +1792,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ja/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1582,6 +1813,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ko/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1600,6 +1834,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-mk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1618,6 +1855,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-nl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1636,6 +1876,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-no/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1654,6 +1897,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-np/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1672,6 +1918,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1690,6 +1939,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1708,6 +1960,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt-BR/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1726,6 +1981,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ro/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1744,6 +2002,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ru/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1762,6 +2023,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1780,6 +2044,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Cyrl-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1798,6 +2065,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Latn-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1816,6 +2086,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sv/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1834,6 +2107,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-tr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1852,6 +2128,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-uk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1870,6 +2149,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-vi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1888,6 +2170,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hans/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1906,6 +2191,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hant/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1919,6 +2207,9 @@
           "type": "registry:component",
           "target": "@components/examples/manual-selection/manual-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1937,6 +2228,9 @@
           "type": "registry:component",
           "target": "@components/examples/minimal/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1950,6 +2244,9 @@
           "type": "registry:component",
           "target": "@components/examples/mui-theme/mui-theme.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -1970,6 +2267,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -1991,6 +2289,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -2007,11 +2306,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2025,6 +2326,9 @@
           "type": "registry:component",
           "target": "@components/examples/remote/remote.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -2045,7 +2349,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2064,6 +2372,12 @@
           "type": "registry:component",
           "target": "@components/examples/row-actions-menu-items/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2099,11 +2413,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2117,6 +2433,9 @@
           "type": "registry:component",
           "target": "@components/examples/single-row-selection/single-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -2135,6 +2454,9 @@
           "type": "registry:component",
           "target": "@components/examples/virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -2155,8 +2477,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2175,6 +2501,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-and-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2193,6 +2522,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-multi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2211,6 +2543,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-column-filtering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2229,6 +2564,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2247,6 +2585,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-pagination/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2260,6 +2601,9 @@
           "type": "registry:component",
           "target": "@components/examples/basic/basic.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2278,6 +2622,9 @@
           "type": "registry:component",
           "target": "@components/examples/chart-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
         "recharts"
@@ -2299,6 +2646,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-actions-space/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2317,6 +2667,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-alignment/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2337,6 +2690,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
       ]
     },
@@ -2356,6 +2710,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-column-filtering-ui/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2376,6 +2733,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "table"
       ]
     },
@@ -2397,7 +2755,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2418,6 +2780,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ]
     },
@@ -2432,6 +2795,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-components/customize-filter-components.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2452,6 +2818,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
       ]
     },
@@ -2471,6 +2838,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-variants/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2489,6 +2859,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-global-filter-component/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2507,6 +2880,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-remove-column-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2525,6 +2901,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-row-selection/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2543,6 +2922,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-table-styles/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2561,6 +2943,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-actions/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2574,6 +2959,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-hiding/disable-column-hiding.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2592,6 +2980,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-density-toggle/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2607,10 +2998,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2631,11 +3024,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2656,11 +3051,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
         "dialog"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2681,10 +3078,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2705,11 +3104,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2730,10 +3131,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -2754,7 +3157,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2773,6 +3180,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-click-to-copy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2793,6 +3203,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "label",
         "radio-group"
       ]
@@ -2813,6 +3224,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2833,6 +3247,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
       ]
     },
@@ -2852,6 +3267,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-resizing/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2870,6 +3288,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2888,6 +3309,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-conditionally/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2906,6 +3330,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2919,6 +3346,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-expanding-tree/enable-expanding-tree.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2937,6 +3367,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-filter-facet-values/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2955,6 +3388,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-dragging/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2973,6 +3409,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-original/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -2991,6 +3430,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3009,6 +3451,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3027,6 +3472,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-select/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3045,6 +3493,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3063,6 +3514,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-sticky/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3076,6 +3530,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-selection/enable-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3094,6 +3551,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3112,6 +3572,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-sticky-header/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3125,6 +3588,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-expanded/expanding-tree-expanded.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3138,6 +3604,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-flat-parse/expanding-tree-flat-parse.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3153,6 +3622,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ]
     },
@@ -3174,10 +3644,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ],
       "dependencies": [
-        "export-to-csv"
+        "export-to-csv",
+        "lucide-react"
       ]
     },
     {
@@ -3198,11 +3670,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ],
       "dependencies": [
         "jspdf",
-        "jspdf-autotable"
+        "jspdf-autotable",
+        "lucide-react"
       ]
     },
     {
@@ -3223,7 +3697,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3243,6 +3721,9 @@
           "target": "@components/examples/font-awesome-icons/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
@@ -3261,6 +3742,9 @@
           "target": "@components/examples/infinite-scrolling/infinite-scrolling.tsx"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -3278,11 +3762,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "alert",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -3296,6 +3782,9 @@
           "type": "registry:component",
           "target": "@components/examples/lazy-sub-rows/lazy-sub-rows.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -3319,6 +3808,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ]
     },
@@ -3338,6 +3828,9 @@
           "type": "registry:component",
           "target": "@components/examples/loading/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3356,6 +3849,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ar/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3374,6 +3870,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-az/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3392,6 +3891,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-bg/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3410,6 +3912,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-cs/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3428,6 +3933,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-da/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3446,6 +3954,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-de/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3464,6 +3975,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-el/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3482,6 +3996,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-en/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3500,6 +4017,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-es/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3518,6 +4038,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-et/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3536,6 +4059,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fa/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3554,6 +4080,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3572,6 +4101,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3590,6 +4122,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-he/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3608,6 +4143,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3626,6 +4164,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hu/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3644,6 +4185,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3662,6 +4206,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-id/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3680,6 +4227,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-it/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3698,6 +4248,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ja/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3716,6 +4269,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ko/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3734,6 +4290,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-mk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3752,6 +4311,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-nl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3770,6 +4332,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-no/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3788,6 +4353,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-np/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3806,6 +4374,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3824,6 +4395,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3842,6 +4416,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt-BR/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3860,6 +4437,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ro/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3878,6 +4458,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ru/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3896,6 +4479,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3914,6 +4500,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Cyrl-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3932,6 +4521,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Latn-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3950,6 +4542,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sv/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3968,6 +4563,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-tr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -3986,6 +4584,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-uk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4004,6 +4605,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-vi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4022,6 +4626,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hans/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4040,6 +4647,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hant/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4053,6 +4663,9 @@
           "type": "registry:component",
           "target": "@components/examples/manual-selection/manual-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4071,6 +4684,9 @@
           "type": "registry:component",
           "target": "@components/examples/minimal/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4084,6 +4700,9 @@
           "type": "registry:component",
           "target": "@components/examples/mui-theme/mui-theme.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4104,6 +4723,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ]
     },
@@ -4125,6 +4745,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
       ]
     },
@@ -4141,11 +4762,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4159,6 +4782,9 @@
           "type": "registry:component",
           "target": "@components/examples/remote/remote.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4179,7 +4805,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4198,6 +4828,12 @@
           "type": "registry:component",
           "target": "@components/examples/row-actions-menu-items/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4233,11 +4869,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4251,6 +4889,9 @@
           "type": "registry:component",
           "target": "@components/examples/single-row-selection/single-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4269,6 +4910,9 @@
           "type": "registry:component",
           "target": "@components/examples/virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -4289,8 +4933,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4309,6 +4957,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-and-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4327,6 +4978,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-multi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4345,6 +4999,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-column-filtering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4363,6 +5020,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4381,6 +5041,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-pagination/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4394,6 +5057,9 @@
           "type": "registry:component",
           "target": "@components/examples/basic/basic.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4412,6 +5078,9 @@
           "type": "registry:component",
           "target": "@components/examples/chart-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "dependencies": [
         "recharts"
@@ -4433,6 +5102,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-actions-space/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4451,6 +5123,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-alignment/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4471,6 +5146,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
       ]
     },
@@ -4490,6 +5166,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-column-filtering-ui/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4510,6 +5189,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "checkbox",
         "table"
       ]
@@ -4532,7 +5212,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4553,6 +5237,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ]
     },
@@ -4567,6 +5252,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-components/customize-filter-components.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4587,6 +5275,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
       ]
     },
@@ -4606,6 +5295,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-variants/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4624,6 +5316,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-global-filter-component/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4642,6 +5337,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-remove-column-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4660,6 +5358,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-row-selection/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4678,6 +5379,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-table-styles/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4696,6 +5400,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-actions/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4709,6 +5416,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-hiding/disable-column-hiding.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4727,6 +5437,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-density-toggle/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4742,10 +5455,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4766,11 +5481,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4791,11 +5508,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
         "dialog"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4816,10 +5535,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4840,11 +5561,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4865,10 +5588,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -4889,7 +5614,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4908,6 +5637,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-click-to-copy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4928,6 +5660,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "label",
         "radio-group"
       ]
@@ -4948,6 +5681,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -4968,6 +5704,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
       ]
     },
@@ -4987,6 +5724,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-resizing/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5005,6 +5745,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5023,6 +5766,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-conditionally/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5041,6 +5787,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5054,6 +5803,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-expanding-tree/enable-expanding-tree.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5072,6 +5824,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-filter-facet-values/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5090,6 +5845,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-dragging/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5108,6 +5866,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-original/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5126,6 +5887,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5144,6 +5908,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5162,6 +5929,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-select/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5180,6 +5950,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5198,6 +5971,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-sticky/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5211,6 +5987,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-selection/enable-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5229,6 +6008,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5247,6 +6029,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-sticky-header/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5260,6 +6045,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-expanded/expanding-tree-expanded.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5273,6 +6061,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-flat-parse/expanding-tree-flat-parse.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5288,6 +6079,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ]
     },
@@ -5309,10 +6101,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ],
       "dependencies": [
-        "export-to-csv"
+        "export-to-csv",
+        "lucide-react"
       ]
     },
     {
@@ -5333,11 +6127,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ],
       "dependencies": [
         "jspdf",
-        "jspdf-autotable"
+        "jspdf-autotable",
+        "lucide-react"
       ]
     },
     {
@@ -5358,7 +6154,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5378,6 +6178,9 @@
           "target": "@components/examples/font-awesome-icons/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
@@ -5396,6 +6199,9 @@
           "target": "@components/examples/infinite-scrolling/infinite-scrolling.tsx"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -5413,11 +6219,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "alert",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -5431,6 +6239,9 @@
           "type": "registry:component",
           "target": "@components/examples/lazy-sub-rows/lazy-sub-rows.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -5454,6 +6265,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ]
     },
@@ -5473,6 +6285,9 @@
           "type": "registry:component",
           "target": "@components/examples/loading/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5491,6 +6306,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ar/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5509,6 +6327,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-az/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5527,6 +6348,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-bg/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5545,6 +6369,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-cs/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5563,6 +6390,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-da/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5581,6 +6411,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-de/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5599,6 +6432,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-el/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5617,6 +6453,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-en/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5635,6 +6474,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-es/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5653,6 +6495,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-et/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5671,6 +6516,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fa/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5689,6 +6537,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5707,6 +6558,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5725,6 +6579,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-he/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5743,6 +6600,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5761,6 +6621,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hu/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5779,6 +6642,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5797,6 +6663,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-id/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5815,6 +6684,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-it/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5833,6 +6705,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ja/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5851,6 +6726,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ko/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5869,6 +6747,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-mk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5887,6 +6768,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-nl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5905,6 +6789,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-no/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5923,6 +6810,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-np/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5941,6 +6831,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5959,6 +6852,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5977,6 +6873,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt-BR/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -5995,6 +6894,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ro/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6013,6 +6915,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ru/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6031,6 +6936,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6049,6 +6957,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Cyrl-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6067,6 +6978,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Latn-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6085,6 +6999,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sv/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6103,6 +7020,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-tr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6121,6 +7041,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-uk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6139,6 +7062,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-vi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6157,6 +7083,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hans/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6175,6 +7104,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hant/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6188,6 +7120,9 @@
           "type": "registry:component",
           "target": "@components/examples/manual-selection/manual-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6206,6 +7141,9 @@
           "type": "registry:component",
           "target": "@components/examples/minimal/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6219,6 +7157,9 @@
           "type": "registry:component",
           "target": "@components/examples/mui-theme/mui-theme.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6239,6 +7180,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ]
     },
@@ -6260,6 +7202,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
       ]
     },
@@ -6276,11 +7219,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6294,6 +7239,9 @@
           "type": "registry:component",
           "target": "@components/examples/remote/remote.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6314,7 +7262,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6333,6 +7285,12 @@
           "type": "registry:component",
           "target": "@components/examples/row-actions-menu-items/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6368,11 +7326,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6386,6 +7346,9 @@
           "type": "registry:component",
           "target": "@components/examples/single-row-selection/single-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6404,6 +7367,9 @@
           "type": "registry:component",
           "target": "@components/examples/virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -6424,8 +7390,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6444,6 +7414,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-and-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6462,6 +7435,9 @@
           "type": "registry:component",
           "target": "@components/examples/aggregation-multi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6480,6 +7456,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-column-filtering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6498,6 +7477,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6516,6 +7498,9 @@
           "type": "registry:component",
           "target": "@components/examples/alternate-pagination/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6529,6 +7514,9 @@
           "type": "registry:component",
           "target": "@components/examples/basic/basic.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6547,6 +7535,9 @@
           "type": "registry:component",
           "target": "@components/examples/chart-detail-panel/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "recharts"
@@ -6568,6 +7559,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-actions-space/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6586,6 +7580,9 @@
           "type": "registry:component",
           "target": "@components/examples/column-alignment/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6606,6 +7603,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
       ]
     },
@@ -6625,6 +7623,9 @@
           "type": "registry:component",
           "target": "@components/examples/custom-column-filtering-ui/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6645,6 +7646,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "table"
       ]
     },
@@ -6666,7 +7668,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6687,6 +7693,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -6701,6 +7708,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-components/customize-filter-components.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6721,6 +7731,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
       ]
     },
@@ -6740,6 +7751,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-filter-variants/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6758,6 +7772,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-global-filter-component/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6776,6 +7793,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-remove-column-grouping/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6794,6 +7814,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-row-selection/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6812,6 +7835,9 @@
           "type": "registry:component",
           "target": "@components/examples/customize-table-styles/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6830,6 +7856,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-actions/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6843,6 +7872,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-column-hiding/disable-column-hiding.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6861,6 +7893,9 @@
           "type": "registry:component",
           "target": "@components/examples/disable-density-toggle/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -6876,10 +7911,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6900,11 +7937,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6925,11 +7964,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "dialog"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6950,10 +7991,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6974,11 +8017,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6999,10 +8044,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -7023,7 +8070,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7042,6 +8093,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-click-to-copy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7062,6 +8116,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "label",
         "radio-group"
       ]
@@ -7082,6 +8137,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7102,6 +8160,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
       ]
     },
@@ -7121,6 +8180,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-resizing/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7139,6 +8201,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-column-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7157,6 +8222,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-conditionally/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7175,6 +8243,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-detail-panel-virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7188,6 +8259,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-expanding-tree/enable-expanding-tree.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7206,6 +8280,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-filter-facet-values/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7224,6 +8301,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-dragging/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7242,6 +8322,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-original/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7260,6 +8343,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-numbers-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7278,6 +8364,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-ordering/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7296,6 +8385,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-select/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7314,6 +8406,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-static/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7332,6 +8427,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-pinning-sticky/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7345,6 +8443,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-selection/enable-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7363,6 +8464,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-row-virtualization/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7381,6 +8485,9 @@
           "type": "registry:component",
           "target": "@components/examples/enable-sticky-header/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7394,6 +8501,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-expanded/expanding-tree-expanded.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7407,6 +8517,9 @@
           "type": "registry:component",
           "target": "@components/examples/expanding-tree-flat-parse/expanding-tree-flat-parse.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7422,6 +8535,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -7443,10 +8557,12 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
-        "export-to-csv"
+        "export-to-csv",
+        "lucide-react"
       ]
     },
     {
@@ -7467,11 +8583,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ],
       "dependencies": [
         "jspdf",
-        "jspdf-autotable"
+        "jspdf-autotable",
+        "lucide-react"
       ]
     },
     {
@@ -7492,7 +8610,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7512,6 +8634,9 @@
           "target": "@components/examples/font-awesome-icons/makeData.ts"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
@@ -7530,6 +8655,9 @@
           "target": "@components/examples/infinite-scrolling/infinite-scrolling.tsx"
         }
       ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
       "dependencies": [
         "@tanstack/react-query"
       ]
@@ -7547,11 +8675,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "alert",
         "spinner"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -7565,6 +8695,9 @@
           "type": "registry:component",
           "target": "@components/examples/lazy-sub-rows/lazy-sub-rows.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
         "@tanstack/react-query"
@@ -7588,6 +8721,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -7607,6 +8741,9 @@
           "type": "registry:component",
           "target": "@components/examples/loading/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7625,6 +8762,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ar/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7643,6 +8783,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-az/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7661,6 +8804,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-bg/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7679,6 +8825,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-cs/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7697,6 +8846,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-da/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7715,6 +8867,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-de/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7733,6 +8888,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-el/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7751,6 +8909,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-en/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7769,6 +8930,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-es/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7787,6 +8951,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-et/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7805,6 +8972,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fa/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7823,6 +8993,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7841,6 +9014,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-fr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7859,6 +9035,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-he/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7877,6 +9056,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7895,6 +9077,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hu/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7913,6 +9098,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-hy/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7931,6 +9119,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-id/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7949,6 +9140,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-it/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7967,6 +9161,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ja/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -7985,6 +9182,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ko/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8003,6 +9203,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-mk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8021,6 +9224,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-nl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8039,6 +9245,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-no/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8057,6 +9266,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-np/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8075,6 +9287,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pl/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8093,6 +9308,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8111,6 +9329,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-pt-BR/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8129,6 +9350,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ro/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8147,6 +9371,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-ru/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8165,6 +9392,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8183,6 +9413,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Cyrl-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8201,6 +9434,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sr-Latn-RS/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8219,6 +9455,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-sv/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8237,6 +9476,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-tr/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8255,6 +9497,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-uk/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8273,6 +9518,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-vi/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8291,6 +9539,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hans/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8309,6 +9560,9 @@
           "type": "registry:component",
           "target": "@components/examples/localization-i18n-zh-hant/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8322,6 +9576,9 @@
           "type": "registry:component",
           "target": "@components/examples/manual-selection/manual-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8340,6 +9597,9 @@
           "type": "registry:component",
           "target": "@components/examples/minimal/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8353,6 +9613,9 @@
           "type": "registry:component",
           "target": "@components/examples/mui-theme/mui-theme.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8373,6 +9636,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -8394,6 +9658,7 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
       ]
     },
@@ -8410,11 +9675,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -8428,6 +9695,9 @@
           "type": "registry:component",
           "target": "@components/examples/remote/remote.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8448,7 +9718,11 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8467,6 +9741,12 @@
           "type": "registry:component",
           "target": "@components/examples/row-actions-menu-items/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8502,11 +9782,13 @@
         }
       ],
       "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
         "tooltip"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -8520,6 +9802,9 @@
           "type": "registry:component",
           "target": "@components/examples/single-row-selection/single-row-selection.tsx"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -8538,6 +9823,9 @@
           "type": "registry:component",
           "target": "@components/examples/virtualized/makeData.ts"
         }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     }
   ]
