@@ -94,7 +94,13 @@ const Example = () => {
     <ST_TableProvider table={table}>
       <div
         {...containerProps}
-        className={`flex flex-col bg-background ${isFullScreen ? 'overflow-auto' : 'my-8'} ${containerProps.className}`}
+        className={[
+          'flex flex-col bg-background',
+          isFullScreen ? 'overflow-auto' : 'my-8',
+          containerProps.className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         <h4>My Custom Headless Table</h4>
         <div className="flex items-center justify-between">
