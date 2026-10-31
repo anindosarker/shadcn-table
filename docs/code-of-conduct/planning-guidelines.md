@@ -43,8 +43,8 @@ the index then holds what is shared. `<git_username>` is the GitHub login.
     one part must see from the other. Parts without such a reason run at the same time.
     Sequential parts that touch the same files are planned so the run can collapse them into
     one file-partitioned fan-out: the index lists each part's file set.
-14. **Integration never waits on CI.** Merge on green local gates, merge commit per part, CI
-    on the push as the second run. A PR only where a ruleset requires one.
+14. **Integration never waits on CI.** Merge on green local gates, merge commit per part. CI
+    runs in the background: a PR opened at the first push where CI runs on pull requests only.
 
 ## Template
 

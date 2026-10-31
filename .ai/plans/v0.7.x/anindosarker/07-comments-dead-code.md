@@ -119,6 +119,7 @@ Lines as of `e14088c9` in the base tree; parts 01 to 06 shift them, so each site
 | F14 base names | `features/stConfigFeature.ts:48-50` | refactor | cut to one sentence without base names: merged declarations must match across trees |
 | F14 v9 narration | `hooks/stTableHook.tsx:33`, `hooks/useST_TableInstance.ts:114`, `hooks/useST_TableOptions.ts:196`, `shared/utils/column.utils.ts:174` | refactor | drop "v9", keep the behavior in present tense |
 | F14 radix cross-base | radix `inputs/ST_FilterCheckbox.tsx:19` | refactor | cut to its own base: "Radix marks the mixed state with data-state." |
+| F15 stale API in JSDoc | `types.ts:371` (radix :371, aria :387) "`table.store.state` or the atoms" | refactor | "the atoms"; the 05 2.2 `table.store` grep must be empty (D13) |
 | F14 radix quirks | radix `ST_Checkbox:17`, `ST_Tooltip:28`, `ST_SelectCheckbox:111`, `ST_EditCellTextField:210`, `ST_FilterTextField:517,540`, `ST_CellActionMenu:129`, `stTableHook:75` | keep | keep: each states a quirk of the tree's own part library; multi-line ones cut to one sentence |
 | F15 inline labels | `shared/utils/pagination.utils.ts:54,56,59,65,67,70` | refactor | delete |
 | F15 restatements | `modals/ST_EditRowModal.tsx:94`, `buttons/ST_EditActionButtons.tsx:55`, `hooks/useST_Effects.ts:153`, `shared/utils/cell.utils.ts:165,179` | refactor | delete |
