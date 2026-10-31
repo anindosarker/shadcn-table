@@ -5,12 +5,9 @@ import {
   type SetStateAction,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { composeRenderProps } from 'react-aria-components';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import {
   type ST_Column,
@@ -19,7 +16,6 @@ import {
 import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
@@ -46,28 +42,12 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
 }: ST_ShowHideColumnsMenuItemsProps<TData>) => {
   const table = column.table;
   const {
-    options: {
-      enableColumnOrdering,
-      enableColumnPinning,
-      enableHiding,
-      localization,
-    },
+    options: { enableColumnOrdering, enableColumnPinning },
     setColumnOrder,
     setColumnPinning,
   } = table;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
-
-  const handleToggleColumnHidden = (column: ST_Column<TData>) => {
-    if (columnDefType === 'group') {
-      const switchChecked = column.getIsVisible();
-      column?.columns?.forEach?.((childColumn: ST_Column<TData>) => {
-        childColumn.toggleVisibility(!switchChecked);
-      });
-    } else {
-      column.toggleVisibility();
-    }
-  };
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -76,7 +56,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     try {
       // The part's MenuItem takes no ref, so the drag image is found from the handle.
       e.dataTransfer.setDragImage(
-        e.currentTarget.closest('[role="menuitem"]') as HTMLElement,
+        e.currentTarget.closest('[data-st-show-hide-row]') as HTMLElement,
         0,
         0,
       );
@@ -115,76 +95,61 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   return (
     <>
       <DropdownMenuItem
-        // MenuItem passes no drag handlers through, so its element takes them.
+        id={column.id}
+        isDisabled={!column.getCanHide()}
+        // MenuItem passes no drag handlers through, and a menu renders only
+        // collection nodes, so the row wraps the item element: the drag
+        // handle and pin buttons sit beside the item, not in it.
         render={(props) =>
           'href' in props ? (
             <a {...props} />
           ) : (
-            <div {...props} onDragEnter={handleDragEnter} />
+            <div
+              className={cn(
+                'flex items-center gap-2 rounded-md',
+                isDragging &&
+                  'opacity-50 outline-2 outline-dashed outline-muted-foreground',
+                !isDragging &&
+                  hoveredColumn?.id === column.id &&
+                  'outline-2 outline-dashed outline-primary',
+              )}
+              data-st-show-hide-row=""
+              onDragEnter={handleDragEnter}
+              role="none"
+              style={{ paddingLeft: `${(column.depth + 0.5) * 2}rem` }}
+            >
+              {columnDefType !== 'group' &&
+                enableColumnOrdering &&
+                !isNestedColumns &&
+                (columnDef.enableColumnOrdering !== false ? (
+                  <ST_GrabHandleButton
+                    onDragEnd={handleDragEnd}
+                    onDragStart={handleDragStart}
+                  />
+                ) : (
+                  <div className="w-7" />
+                ))}
+              {enableColumnPinning &&
+                (column.getCanPin() ? (
+                  <ST_ColumnPinningButtons column={column} />
+                ) : (
+                  <div className="w-17.5" />
+                ))}
+              <div {...props} />
+            </div>
           )
         }
         shouldCloseOnSelect={false}
+        textValue={String(columnDef.header)}
         {...rest}
-        className={cn(
-          showHideColumnsMenuItemVariants(),
-          isDragging &&
-            'opacity-50 outline-2 outline-dashed outline-muted-foreground',
-          !isDragging &&
-            hoveredColumn?.id === column.id &&
-            'outline-2 outline-dashed outline-primary',
-          className,
+        className={composeRenderProps(className, (className) =>
+          cn(showHideColumnsMenuItemVariants(), 'flex-1', className),
         )}
-        style={composeRenderProps(style, (style) => ({
-          paddingLeft: `${(column.depth + 0.5) * 2}rem`,
-          ...style,
-        }))}
+        style={style}
       >
-        <div className="flex flex-nowrap gap-2">
-          {columnDefType !== 'group' &&
-            enableColumnOrdering &&
-            !isNestedColumns &&
-            (columnDef.enableColumnOrdering !== false ? (
-              <ST_GrabHandleButton
-                onDragEnd={handleDragEnd}
-                onDragStart={handleDragStart}
-              />
-            ) : (
-              <div className="w-7" />
-            ))}
-          {enableColumnPinning &&
-            (column.getCanPin() ? (
-              <ST_ColumnPinningButtons column={column} />
-            ) : (
-              <div className="w-17.5" />
-            ))}
-          {enableHiding ? (
-            <Label>
-              <ST_Tooltip title={localization.toggleVisibility}>
-                <span className="inline-flex">
-                  <Subscribe source={table.atoms.columnVisibility}>
-                    {() => (
-                      <Switch
-                        isSelected={column.getIsVisible()}
-                        isDisabled={!column.getCanHide()}
-                        onChange={() => handleToggleColumnHidden(column)}
-                      />
-                    )}
-                  </Subscribe>
-                </span>
-              </ST_Tooltip>
-              <span
-                className={cn(
-                  columnDefType === 'display' && 'opacity-50',
-                  !column.getCanHide() && 'text-muted-foreground',
-                )}
-              >
-                {columnDef.header}
-              </span>
-            </Label>
-          ) : (
-            <p className="self-center">{columnDef.header}</p>
-          )}
-        </div>
+        <span className={cn(columnDefType === 'display' && 'opacity-50')}>
+          {columnDef.header}
+        </span>
       </DropdownMenuItem>
       {column.columns?.map((c: ST_Column<TData>, i) => (
         <ST_ShowHideColumnsMenuItems

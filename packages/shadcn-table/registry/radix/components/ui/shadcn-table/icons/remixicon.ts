@@ -44,8 +44,8 @@ import type {
 
 // Remix types its icons without children; each entry drops them.
 const icon = (Ri: RemixiconComponentType) => {
-  const Icon = ({ children: _children, ...props }: ST_IconProps) =>
-    createElement(Ri, props);
+  const Icon = (props: ST_IconProps) =>
+    createElement(Ri, { ...props, children: undefined });
   return Icon;
 };
 

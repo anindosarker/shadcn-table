@@ -84,6 +84,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
             title={undefined}
           >
             <ST_Checkbox
+              indeterminateIcon={table.options.icons.IndeterminateIcon}
               // React Aria keeps the mixed state in its own `isIndeterminate`
               // flag; `isSelected` is always a boolean.
               isSelected={column.getFilterValue() === 'true'}

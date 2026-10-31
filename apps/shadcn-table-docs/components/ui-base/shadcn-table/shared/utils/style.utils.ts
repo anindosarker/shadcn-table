@@ -9,53 +9,6 @@ import {
   type TableCellProps,
 } from '@/components/ui-base/shadcn-table/types';
 
-// Collapse keyframes. tw-animate-css ships only the height pair and reads the
-// Radix variable, which Base UI never sets; Collapsible.Panel measures itself
-// into --collapsible-panel-height and --collapsible-panel-width, so both pairs
-// live here. overflow: hidden sits inside the width keyframes so the panel
-// clips only while it animates. Rendered as a hoisted
-// <style href="st-base-collapsible"> by the components that animate with it.
-export const stCollapsibleKeyframes = `@keyframes st-base-collapsible-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--collapsible-panel-height);
-  }
-}
-
-@keyframes st-base-collapsible-up {
-  from {
-    height: var(--collapsible-panel-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
-@keyframes st-base-collapsible-right {
-  from {
-    width: 0;
-    overflow: hidden;
-  }
-  to {
-    width: var(--collapsible-panel-width);
-    overflow: hidden;
-  }
-}
-
-@keyframes st-base-collapsible-left {
-  from {
-    width: var(--collapsible-panel-width);
-    overflow: hidden;
-  }
-  to {
-    width: 0;
-    overflow: hidden;
-  }
-}
-`;
-
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({

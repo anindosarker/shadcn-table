@@ -43,6 +43,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import {
   getColumnFilterInfo,
+  isNumberColumn,
   useDropdownOptions,
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import {
@@ -53,6 +54,7 @@ import {
 } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
@@ -175,6 +177,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   );
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
   const [filterValue, setFilterValue] = useState<string | string[]>(() =>
     isMultiSelectFilter
       ? (column.getFilterValue() as string[]) || []
@@ -206,10 +212,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           if (isRangeFilter) {
             column.setFilterValue(
               (old: Array<FilterInputValue | undefined>) => {
-                const newFilterValues = old ?? ['', ''];
-                newFilterValues[rangeFilterIndex as number] =
-                  newValue ?? undefined;
-                return newFilterValues;
+                const next = Array.isArray(old) ? [...old] : ['', ''];
+                next[rangeFilterIndex as number] = newValue ?? undefined;
+                return next;
               },
             );
           } else {
@@ -262,9 +267,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     } else if (isRangeFilter) {
       setFilterValue('');
       column.setFilterValue((old: [string | undefined, string | undefined]) => {
-        const newFilterValues = (Array.isArray(old) && old) || ['', ''];
-        newFilterValues[rangeFilterIndex as number] = undefined;
-        return newFilterValues;
+        const next = Array.isArray(old) ? [...old] : ['', ''];
+        next[rangeFilterIndex as number] = undefined;
+        return next;
       });
     } else if (isAutocompleteFilter) {
       setAutocompleteValue(null);
@@ -285,7 +290,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   };
 
   const handleFilterMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    toggle(event.currentTarget);
   };
 
   // An outside change to the column filter resets the local value; the
@@ -353,6 +358,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         <span>
           <InputGroupButton
             aria-label={localization.changeFilterMode}
+            {...openerProps}
             onClick={handleFilterMenuOpen}
             size="icon-xs"
           >
@@ -363,7 +369,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       {filterChipLabel && (
         <Badge variant="secondary">
           {filterChipLabel}
-          <button type="button" onClick={handleClearEmptyFilterChip}>
+          <button
+            aria-label={localization.clearFilter}
+            onClick={handleClearEmptyFilterChip}
+            type="button"
+          >
             <CancelIcon className="size-3" />
           </button>
         </Badge>
@@ -607,6 +617,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : (
             <InputGroupInput
+              {...(isNumberColumn(column, table)
+                ? { inputMode: 'decimal', type: 'number' }
+                : undefined)}
               {...commonTextFieldProps}
               onChange={handleTextFieldChange}
               onClick={(e) => e.stopPropagation()}

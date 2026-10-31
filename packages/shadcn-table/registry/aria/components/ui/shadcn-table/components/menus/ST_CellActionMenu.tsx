@@ -128,7 +128,7 @@ const ST_CellActionMenuContent = <TData extends ST_RowData>({
     (!!menuItems?.length || !!internalMenuItems?.length) && (
       <DropdownMenuTrigger isOpen={!!cell} onOpenChange={onOpenChange}>
         <Pressable>
-          <span {...spanProps} role="button" />
+          <span {...spanProps} />
         </Pressable>
         {/* placement, crossOffset and offset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
         <DropdownMenu

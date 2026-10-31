@@ -84,6 +84,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
             title={undefined}
           >
             <ST_Checkbox
+              indeterminateIcon={table.options.icons.IndeterminateIcon}
               // Base UI keeps the mixed state in its own `indeterminate` flag;
               // `checked` is always a boolean.
               checked={column.getFilterValue() === 'true'}

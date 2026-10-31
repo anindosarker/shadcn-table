@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { type ST_TooltipProps } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import {
@@ -9,53 +9,38 @@ import {
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
 
-// Collapse keyframes. tw-animate-css ships only the height pair and reads the
-// Radix variable, which React Aria never sets; DisclosurePanel measures itself
-// into --disclosure-panel-height and --disclosure-panel-width and marks its
-// state only with aria-hidden, so both pairs live here. overflow: hidden sits
-// inside the width keyframes so the panel clips only while it animates.
-// Rendered as a hoisted <style href="st-aria-collapsible"> by the components that
-// animate with it.
-export const stCollapsibleKeyframes = `@keyframes st-aria-collapsible-down {
-  from {
-    height: 0;
+/**
+ * React Aria keeps a collapsed panel's children mounted, so a panel renders
+ * them only while expanded. This keeps them until the panel's own collapse
+ * animations settle, so it animates shut instead of snapping, the way React
+ * Aria waits before it hides the panel. A collapse that runs no transition
+ * (reduced motion, no transition class, or a panel still at zero height)
+ * drops them at once. Pass `panelRef` to the panel.
+ */
+export const useCollapsingChildren = (isExpanded: boolean) => {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [isCollapsing, setIsCollapsing] = useState(false);
+  const [prevIsExpanded, setPrevIsExpanded] = useState(isExpanded);
+  if (prevIsExpanded !== isExpanded) {
+    setPrevIsExpanded(isExpanded);
+    setIsCollapsing(!isExpanded);
   }
-  to {
-    height: var(--disclosure-panel-height);
-  }
-}
-
-@keyframes st-aria-collapsible-up {
-  from {
-    height: var(--disclosure-panel-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
-@keyframes st-aria-collapsible-right {
-  from {
-    width: 0;
-    overflow: hidden;
-  }
-  to {
-    width: var(--disclosure-panel-width);
-    overflow: hidden;
-  }
-}
-
-@keyframes st-aria-collapsible-left {
-  from {
-    width: var(--disclosure-panel-width);
-    overflow: hidden;
-  }
-  to {
-    width: 0;
-    overflow: hidden;
-  }
-}
-`;
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!isCollapsing || !panel) return;
+    let isCurrent = true;
+    Promise.all(panel.getAnimations().map((animation) => animation.finished))
+      .then(() => {
+        if (isCurrent) setIsCollapsing(false);
+      })
+      // A canceled animation means the panel expanded again.
+      .catch(() => {});
+    return () => {
+      isCurrent = false;
+    };
+  }, [isCollapsing]);
+  return { panelRef, showChildren: isExpanded || isCollapsing };
+};
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 

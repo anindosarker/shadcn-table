@@ -1,5 +1,6 @@
 import {
   type ChangeEvent,
+  type ComponentProps,
   type ComponentPropsWithoutRef,
   type ComponentPropsWithRef,
   type ComponentType,
@@ -46,6 +47,7 @@ import {
 } from '@tanstack/react-virtual';
 import { type ReadonlyAtom } from '@tanstack/react-store';
 import { type ST_Checkbox } from '@/components/ui-radix/shadcn-table/components/inputs/ST_Checkbox';
+import { type Button } from '@/components/ui-radix/button';
 import { type Collapsible } from '@/components/ui-radix/collapsible';
 import { type Dialog, type DialogContent } from '@/components/ui-radix/dialog';
 import { type RadioGroupItem } from '@/components/ui-radix/radio-group';
@@ -86,11 +88,13 @@ export type TableFooterProps = ComponentPropsWithRef<'tfoot'>;
 export type TableCellProps = ComponentPropsWithRef<'th'> &
   ComponentPropsWithRef<'td'>;
 
-export type ButtonProps = ComponentPropsWithRef<'button'>;
+/** Native button props plus the shadcn `Button` part's `size` and `variant`. */
+export type ButtonProps = ComponentPropsWithRef<'button'> &
+  Pick<ComponentProps<typeof Button>, 'size' | 'variant'>;
 
 export type InputProps = ComponentPropsWithRef<'input'>;
 
-export type SelectProps = ButtonProps &
+export type SelectProps = Omit<ButtonProps, 'size' | 'variant'> &
   Omit<ComponentPropsWithRef<'select'>, 'size'> & { native?: boolean };
 
 export type CheckboxProps = ComponentPropsWithRef<typeof ST_Checkbox>;

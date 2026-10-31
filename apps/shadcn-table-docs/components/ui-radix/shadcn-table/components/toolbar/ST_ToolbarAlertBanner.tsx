@@ -144,7 +144,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
             <CollapsibleContent
               className={
                 stackAlertBanner
-                  ? 'data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up'
+                  ? 'overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up'
                   : undefined
               }
             >

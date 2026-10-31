@@ -23,7 +23,7 @@ import {
   FilterRemoveIcon,
   FloppyDiskIcon,
   Layers01Icon,
-  LayoutThreeColumnIcon,
+  Layout3ColumnIcon,
   MinusSignIcon,
   MoreHorizontalIcon,
   MoreVerticalIcon,
@@ -91,6 +91,6 @@ export const ST_Default_Icons = {
   SearchOffIcon: icon(SearchRemoveIcon),
   SortIcon: icon(SortByDown01Icon),
   SyncAltIcon: icon(ArrowDataTransferHorizontalIcon),
-  ViewColumnIcon: icon(LayoutThreeColumnIcon),
+  ViewColumnIcon: icon(Layout3ColumnIcon),
   VisibilityOffIcon: icon(ViewOffIcon),
 } satisfies ST_Icons;

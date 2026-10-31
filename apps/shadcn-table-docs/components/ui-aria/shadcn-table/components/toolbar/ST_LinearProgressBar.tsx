@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { Collapsible, CollapsibleContent } from '@/components/ui-aria/collapsible';
 import { Progress } from '@/components/ui-aria/progress';
 import { cn } from '@/lib/utils';
@@ -6,9 +7,9 @@ import {
   type ST_LinearProgressProps,
   type ST_RowData,
 } from '@/components/ui-aria/shadcn-table/types';
+import { useCollapsingChildren } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 
 export interface ST_LinearProgressBarProps extends ST_LinearProgressProps {
   isTopToolbar: boolean;
@@ -52,6 +53,27 @@ const linearProgressKeyframes = `@keyframes st-linear-progress-indeterminate {
 }
 `;
 
+// The bar keeps its progress until its collapse animation settles.
+const LinearProgressContent = ({
+  children,
+  isExpanded,
+}: {
+  children: ReactNode;
+  isExpanded: boolean;
+}) => {
+  const { panelRef, showChildren } = useCollapsingChildren(isExpanded);
+
+  return (
+    <CollapsibleContent
+      className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none"
+      // The part's props type leaves out the ref the DisclosurePanel takes.
+      {...{ ref: panelRef }}
+    >
+      {showChildren && children}
+    </CollapsibleContent>
+  );
+};
+
 export const ST_LinearProgressBar = <TData extends ST_RowData>({
   isTopToolbar,
   ...rest
@@ -91,24 +113,18 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
             <style href="st-linear-progress" precedence="low">
               {linearProgressKeyframes}
             </style>
-            <style href="st-aria-collapsible" precedence="low">
-              {stCollapsibleKeyframes}
-            </style>
-            {/* React Aria keeps a collapsed panel's children mounted. */}
-            <CollapsibleContent className="aria-[hidden=false]:animate-[st-aria-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-aria-collapsible-up_200ms_ease-out]">
-              {isExpanded && (
-                <Progress
-                  aria-busy="true"
-                  {...progressComponentProps}
-                  className={cn(
-                    isIndeterminate && 'st-progress-indeterminate',
-                    progressComponentProps?.className,
-                  )}
-                  isIndeterminate={isIndeterminate}
-                  value={progressComponentProps?.value ?? undefined}
-                />
-              )}
-            </CollapsibleContent>
+            <LinearProgressContent isExpanded={isExpanded}>
+              <Progress
+                aria-busy="true"
+                {...progressComponentProps}
+                className={cn(
+                  isIndeterminate && 'st-progress-indeterminate',
+                  progressComponentProps?.className,
+                )}
+                isIndeterminate={isIndeterminate}
+                value={progressComponentProps?.value ?? undefined}
+              />
+            </LinearProgressContent>
           </Collapsible>
         );
       }}

@@ -102,7 +102,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     null,
   );
 
-  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+  const { anchorRef, onOpenChange, spanProps } = useST_MenuAnchor({
     anchorEl,
     setAnchorEl,
   });
@@ -115,10 +115,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       />
       <DropdownMenuContent
         align="start"
-        finalFocus={() => {
-          focusAnchor();
-          return false;
-        }}
+        finalFocus={anchorRef}
         className={cn('w-max', className)}
         {...rest}
       >
