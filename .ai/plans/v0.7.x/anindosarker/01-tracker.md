@@ -1,7 +1,7 @@
 # 01: restructure, tracker
 
 Status: running
-Branch `v0.7/restructure`, worktree restructure, PR #[n]
+Branch `v0.7/restructure`, worktree restructure, PR #67
 Gates:
 - `pnpm --filter shadcn-table tsc:radix` at 6f98f13f: green
 - `pnpm --filter shadcn-table tsc:baseui` at 6f98f13f: green
@@ -16,11 +16,11 @@ Gates:
 - `pnpm test:base` at 71c58fe1: green
 - `pnpm test:radix` at 71c58fe1: green
 - `pnpm test:aria` at 71c58fe1: green
+- `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `pnpm check:bases` at d8f1c516: green
+- `pnpm test:base`, `test:radix`, `test:aria` at d8f1c516: green
+- `pnpm --filter shadcn-table-docs types:check`, `lint` at d8f1c516: green
+- CI run 41168309522: [pending]
 
 - Phase 01 library moves: done (6f98f13f)
 - Phase 02 registry and docs copies: done (71c58fe1)
-- Final phase cleanup: planned
-
-## Notes
-
-- Outside `packages/shadcn-table/registry` and the docs copies, the only remaining reference to an old path is `packages/shadcn-table/registry/README.md:22` (root tree line lists `ST_Tooltip.tsx`), left for the final phase. Stories, docs examples, tests and scripts hold no old path.
+- Final phase cleanup: done (d8f1c516)
