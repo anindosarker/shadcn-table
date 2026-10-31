@@ -201,9 +201,11 @@ export const getST_SelectAllHandler =
         ? table.getIsAllRowsSelected()
         : table.getIsAllPageRowsSelected());
 
-    isAllMode
-      ? table.toggleAllRowsSelected(checked)
-      : table.toggleAllPageRowsSelected(checked);
+    if (isAllMode) {
+      table.toggleAllRowsSelected(checked);
+    } else {
+      table.toggleAllPageRowsSelected(checked);
+    }
     // Unselect all clears every pin, hand-pinned rows included; the selection
     // subscription in useST_Effects pins and unpins the rows that changed.
     if (

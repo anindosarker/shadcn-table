@@ -218,6 +218,7 @@ export const useDropdownOptions = <TData extends ST_RowData>({
     [
       columnDef.filterSelectOptions,
       facetedUniqueValues,
+      isAutocompleteFilter,
       isMultiSelectFilter,
       isSelectFilter,
     ],
