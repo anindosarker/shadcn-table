@@ -122,7 +122,7 @@ grep -c "lucide-react" package.json   # 0
 Lane: agent
 
 - 1.6.2 for `base` in next-app, then `radix` and `aria` in their throwaway apps; the `git status` pre-step before the next-app install; one root `pnpm registry:dev` serve on 5310, the agent's own dev ports, never stopping other servers
-- Record per base in `09-tracker.md`: edition installed and its `icons.ts` import, build result, eslint count (next-app only), console count, each menu's focus target and `aria-expanded`, the search field open and close result, the RTL handle edge and pinned offset; the same rows for all three apps
+- Record per base in `../trackers/09-tracker.md`: edition installed and its `icons.ts` import, build result, eslint count (next-app only), console count, each menu's focus target and `aria-expanded`, the search field open and close result, the RTL handle edge and pinned offset; the same rows for all three apps
 - Halt: any console warning or error, any eslint problem, a menu that does not return focus, an edition whose `icons.ts` or `package.json` names the wrong icon package, an RTL handle on the end edge or a pinned column on the wrong side; each goes to `ATTENTION-<date>.md` with the owning part (10, 11 or 06)
 - Gates: per base `next build` green, console zero warnings and errors, the five menu checks and the search field check (D5) (D16) (D25) (D26); next-app `npx eslint components/ui/shadcn-table` zero (D17); edition checks (D30); RTL checks (D31)
 

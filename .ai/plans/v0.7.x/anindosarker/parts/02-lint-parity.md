@@ -158,7 +158,7 @@ const checkPageIndex = useEffectEvent((totalRowCount: number): void => { /* body
 Lane: agent
 
 - 1.6.1 package fields and override, `pnpm install`; 1.6.2 without the four temporary blocks
-- `pnpm --filter shadcn-table lint -f json`: record the count per rule and per file in `02-tracker.md` as the baseline, split library, stories, other; derive the temporary block file lists from it
+- `pnpm --filter shadcn-table lint -f json`: record the count per rule and per file in `../trackers/02-tracker.md` as the baseline, split library, stories, other; derive the temporary block file lists from it
 - Add the temporary blocks; commit config and baseline
 - Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` green (lint stays red until phase 2)
 
