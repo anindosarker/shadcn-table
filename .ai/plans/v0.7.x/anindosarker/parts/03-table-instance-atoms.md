@@ -12,7 +12,7 @@
 - No `tableRef`, `columnDefsRef` or `table.store` in the file
 - Owner re-render set: the `selectST_TransformState` slices plus the resize and drag flags, nothing more (D6 closes the resize and drag gap)
 - Caller `atoms` and controlled `state` keep precedence; public options, types and behavior unchanged; file byte-identical in the three bases
-- Done when: eslint with `react-hooks/refs` as an error on `hooks/useST_TableInstance.ts` exits 0 in every base, `grep -nE "tableRef|columnDefsRef|table\.store"` on that file prints nothing, and the three base copies diff empty (P51)
+- Done when: eslint with `react-hooks/refs` as an error on `hooks/useST_TableInstance.ts` exits 0 in every base, `grep -nE "tableRef|columnDefsRef|table\.store"` on that file prints nothing, and the three base copies diff empty (P6)
 
 ### 1.3 Current structure
 

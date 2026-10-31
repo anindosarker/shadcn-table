@@ -14,7 +14,7 @@ Every registry item ships Lucide: `icons.ts` imports 33 Lucide icons, three more
 - Per base the registry has `shadcn-table-core`, `shadcn-table` (Lucide) and four editions; locale and example items depend on core; `shadcn-table` keeps its name and hosted path
 - `shadcn add` of an edition into a scratch project installs core files plus one `icons.ts` and only that icon package; `--overwrite` of another edition replaces `icons.ts` without a prompt (D30)
 - Docs app copies and the next-app install use editions; all gates green per base
-- Done when: `pnpm check:icons` exits 0; `grep -rn "lucide-react" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists the three `icons.ts` only; the six `shadcn add` dry-runs against `registry:dev` on 5310 exit 0; the Tabler-then-Lucide `--overwrite` smoke leaves one `icons.ts` importing `lucide-react` and no `@tabler/icons-react` in the scratch `package.json` (P51)
+- Done when: `pnpm check:icons` exits 0; `grep -rn "lucide-react" packages/shadcn-table/registry/*/components/ui/shadcn-table` lists the three `icons.ts` only; the six `shadcn add` dry-runs against `registry:dev` on 5310 exit 0; the Tabler-then-Lucide `--overwrite` smoke leaves one `icons.ts` importing `lucide-react` and no `@tabler/icons-react` in the scratch `package.json` (P6)
 
 ### 1.3 Current structure
 

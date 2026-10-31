@@ -13,7 +13,7 @@ Shipped library comments narrate MUI, MRT and TanStack v9 history, restate the n
 - The menu rationale exists once, in `hooks/useST_MenuAnchor.ts`; no menu holds `anchorRef`, a `getBoundingClientRect` style object or an inline close handler
 - `getCommonToolbarStyles` exists nowhere in the repo outside `.ai/` and generated output
 - No exported API loses its JSDoc; no behavior change; all gates green per base
-- Done when: `grep -rniE 'MUI|MRT|material-react-table|@mui|upstream|edition|forkedUi|getCommonToolbarStyles' packages/shadcn-table/registry/*/components/ui/shadcn-table` prints nothing and `tsc:radix`, `tsc:baseui`, `tsc:aria` exit 0 (P51)
+- Done when: `grep -rniE 'MUI|MRT|material-react-table|@mui|upstream|edition|forkedUi|getCommonToolbarStyles' packages/shadcn-table/registry/*/components/ui/shadcn-table` prints nothing and `tsc:radix`, `tsc:baseui`, `tsc:aria` exit 0 (P6)
 
 ### 1.3 Current structure
 

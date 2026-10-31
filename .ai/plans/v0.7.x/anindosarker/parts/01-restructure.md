@@ -13,7 +13,7 @@ Three library files sit outside the folder of their kind: two wrappers at the li
 - `registry.json` diff limited to the three moved file entries in each of the four main items (`shadcn-table-base`, `shadcn-table-radix`, `shadcn-table-aria`, `shadcn-table`)
 - Public barrel unchanged in content: the same names export from `index.ts`
 - All gates green on all three bases
-- Done when: `grep -rnE "shadcn-table/(ST_Checkbox|ST_Tooltip|components/toolbar/useST_MediaQuery)'" packages/shadcn-table apps/shadcn-table-docs/components` prints nothing and `pnpm check:bases` exits 0 (P51)
+- Done when: `grep -rnE "shadcn-table/(ST_Checkbox|ST_Tooltip|components/toolbar/useST_MediaQuery)'" packages/shadcn-table apps/shadcn-table-docs/components` prints nothing and `pnpm check:bases` exits 0 (P6)
 
 ### 1.3 Current structure
 

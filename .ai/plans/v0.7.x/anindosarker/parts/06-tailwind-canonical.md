@@ -15,7 +15,7 @@ A Tailwind 4.3 consumer sees `suggestCanonicalClasses` hints on 37 class sites, 
 - The resize handle has no direction variant; pinned offsets use `insetInlineStart` and `insetInlineEnd`; the cell resize border uses `borderInlineEnd` (D31)
 - No `rgba(` literal in the library trees; shadows read theme variables (D32)
 - Rendered output unchanged in LTR: Storybook tests green, spot checks match
-- Done when: `pnpm check:tailwind` exits 0 for base, radix and aria under both rules, and `grep -rn "rgba(" packages/shadcn-table/registry/*/components/ui/shadcn-table` prints nothing; judged: Storybook captures of the resize handle, pinned columns, toolbar and header shadows per base in LTR against the `claude/review` captures, three judges on "same position, same visible shadow" (P51)
+- Done when: `pnpm check:tailwind` exits 0 for base, radix and aria under both rules, and `grep -rn "rgba(" packages/shadcn-table/registry/*/components/ui/shadcn-table` prints nothing; judged: Storybook captures of the resize handle, pinned columns, toolbar and header shadows per base in LTR against the `claude/review` captures, three judges on "same position, same visible shadow" (P6)
 
 ### 1.3 Current structure: none
 

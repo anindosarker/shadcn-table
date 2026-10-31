@@ -12,7 +12,7 @@ The library writes `any` at 43 sites the folded-core lint block hides (F7) and a
 - The 11 component `no-explicit-any` disables are gone (D19)
 - Library, stories, docs examples and the three docs installs typecheck unchanged in what they pass (D10)
 - No new cast sites: five `as any` become named casts, listed in 1.6.2
-- Done when: `grep -rn "no-explicit-any" packages/shadcn-table/registry/<base>/components/ui/shadcn-table` lists only the 1.6.2 exceptions per base (plus `icons.ts:74` until part 11 merges), and `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json` and docs `types:check` exit 0 (P51)
+- Done when: `grep -rn "no-explicit-any" packages/shadcn-table/registry/<base>/components/ui/shadcn-table` lists only the 1.6.2 exceptions per base (plus `icons.ts:74` until part 11 merges), and `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json` and docs `types:check` exit 0 (P6)
 
 ### 1.3 Current structure
 

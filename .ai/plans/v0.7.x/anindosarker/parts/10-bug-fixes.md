@@ -17,7 +17,7 @@ The next-app header demo and a shadcn part usage audit found functional bugs (ra
 - The D28 list is applied in every base; F45 stays as is (D28)
 - `ButtonProps` accepts the shadcn Button props; `useST_FullScreenContainer` is exported (D29) (F32)
 - All library gates green per base; one Storybook play test per user-reachable fix
-- Done when: the Storybook play tests of 2.1 (range filter filters rows, sort clear stays cleared, pagination field open and close, menu opener `aria-expanded` and focus return, show-hide Enter and Space) pass in `test:base`, `test:radix`, `test:aria`; judged: the search reveal per base against the owner's `collapsible-search-demo.tsx` capture, three judges on "no jump, field focused, closed state hidden" (P51)
+- Done when: the Storybook play tests of 2.1 (range filter filters rows, sort clear stays cleared, pagination field open and close, menu opener `aria-expanded` and focus return, show-hide Enter and Space) pass in `test:base`, `test:radix`, `test:aria`; judged: the search reveal per base against the owner's `collapsible-search-demo.tsx` capture, three judges on "no jump, field focused, closed state hidden" (P6)
 
 ### 1.3 Current structure
 
