@@ -11,7 +11,7 @@ The library writes `any` at 43 sites the folded-core lint block hides (F7) and a
 - `eslint --rule '{"@typescript-eslint/no-explicit-any":"error"}'` over `registry/<base>` reports only the 8 reasoned lines in 1.6.2, per base (D10)
 - The 11 component `no-explicit-any` disables are gone (D19)
 - Library, stories, docs examples and the three docs installs typecheck unchanged in what they pass (D10)
-- No new cast sites: five `as any` become named casts, listed in 1.6.2
+- No new cast sites: six `as any` become named casts, listed in 1.6.2
 - Acceptance: the scoped eslint run of 2.2 exits 0 per base, and `grep -rc "no-explicit-any" packages/shadcn-table/registry/<base>/components/ui/shadcn-table | awk -F: '{s+=$2} END {print s}'` per base equals 8 (9 while `icons.ts:74` holds the foundation disable, until S3 merges) (P6)
 
 ### 1.3 Current structure
@@ -79,7 +79,7 @@ Targets checked against the installed `@tanstack/table-core` 9.3.1 types with a 
 | `ST_CellActionMenu.tsx:40` | refactor | `event?: any` | `event?: { stopPropagation(): void }` |
 | `ST_FilterTextField.tsx:209,226` | refactor | `newValue: any` | file-local `FilterInputValue = Date \| number \| string \| string[] \| null`; the local `string \| string[]` state takes it through one listed `as string \| string[]`, as at runtime today |
 | `ST_SelectCheckbox.tsx:125` (radix :120) | refactor | `e as any` | no cast: the click event is an `ST_SelectionEvent` |
-| `ST_SelectCheckbox.tsx:184` (radix :177) | refactor | `commonProps as any` | a `ComponentProps<typeof RadioGroupItem>` object from the shared fields |
+| `ST_SelectCheckbox.tsx:184` (radix :177) | refactor | `commonProps as any` | every common field except `checked` and `title`, cast once to `ComponentProps<typeof RadioGroupItem>` |
 
 #### 1.6.3 Filter meta
 
@@ -129,7 +129,7 @@ F24 counts 13; the listed sites are 12.
 Lane: agent
 
 - Per set A to D (index, Run plan): the 1.6.2 to 1.6.5 rows whose files the set owns, in base, radix and aria in one pass; aria has no `ST_SelectCheckbox` sites
-- Reviewer (workstream review) bounces until: no `any` outside the `keep` lines (8, plus `icons.ts:74` while the foundation disable holds), each with a reason; public types still accept what the docs examples and stories pass; no new casts: every cast left is pre-existing or one of the five `as any` replacements in 1.6.2 (`tanstack.helpers.ts:55,66`, `ST_TableBodyCell.tsx:349`, `ST_FilterOptionMenu.tsx:201`, `ST_FilterTextField.tsx:226`)
+- Reviewer (workstream review) bounces until: no `any` outside the `keep` lines (8, plus `icons.ts:74` while the foundation disable holds), each with a reason; public types still accept what the docs examples and stories pass; no new casts: every cast left is pre-existing or one of the six `as any` replacements in 1.6.2 (`tanstack.helpers.ts:55,66`, `ST_TableBodyCell.tsx:349`, `ST_FilterOptionMenu.tsx:201`, `ST_FilterTextField.tsx:226`, `ST_SelectCheckbox.tsx:139` (radix :137))
 - Gates per set: `eslint --max-warnings 0 <own files>`, `prettier --check <own files>`
 
 #### 2.1.2 Final milestone: Gates once
