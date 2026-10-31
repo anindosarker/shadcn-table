@@ -1,4 +1,4 @@
-import { type MouseEvent, useCallback, useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { type FocusableElement } from 'react-aria-components';
 import { useSelector } from '@tanstack/react-store';
@@ -123,12 +123,9 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
 
   // The aria Popover has no initial-focus option: its content focuses the
   // column's filter input when it mounts.
-  const focusFilterInput = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node) filterInputRefs.current?.[`${column.id}-0`]?.focus();
-    },
-    [column.id, filterInputRefs],
-  );
+  const focusFilterInput = (node: HTMLDivElement | null) => {
+    if (node) filterInput()?.focus();
+  };
 
   // Shows the column filters and focuses the column's input once it renders.
   const handleShowColumnFilters = (event: MouseEvent<FocusableElement>) => {
