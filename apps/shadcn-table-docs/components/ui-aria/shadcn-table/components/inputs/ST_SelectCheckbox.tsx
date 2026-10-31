@@ -79,6 +79,12 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         })),
     ...rest,
   };
+  // React Aria's checkbox props carry no title; a consumer's title still names
+  // the tooltip.
+  const checkboxTitle =
+    'title' in checkboxProps && typeof checkboxProps.title === 'string'
+      ? checkboxProps.title
+      : undefined;
 
   const onSelectionChange = row
     ? getST_RowSelectionHandler({
@@ -158,9 +164,10 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         return (
           <ST_Tooltip
             title={
-              selectAll
+              checkboxTitle ??
+              (selectAll
                 ? localization.toggleSelectAll
-                : localization.toggleSelectRow
+                : localization.toggleSelectRow)
             }
           >
             <span className="inline-flex">
@@ -174,6 +181,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
+                  indeterminateIcon={table.options.icons.IndeterminateIcon}
                   {...commonProps}
                   // React Aria keeps `isIndeterminate` as its own flag beside
                   // `isSelected`, so it goes after the spread.

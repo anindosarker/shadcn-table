@@ -9,54 +9,6 @@ import {
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
 
-// Collapse keyframes. tw-animate-css ships only the height pair and reads the
-// Radix variable, which React Aria never sets; DisclosurePanel measures itself
-// into --disclosure-panel-height and --disclosure-panel-width and marks its
-// state only with aria-hidden, so both pairs live here. overflow: hidden sits
-// inside the width keyframes so the panel clips only while it animates.
-// Rendered as a hoisted <style href="st-aria-collapsible"> by the components that
-// animate with it.
-export const stCollapsibleKeyframes = `@keyframes st-aria-collapsible-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--disclosure-panel-height);
-  }
-}
-
-@keyframes st-aria-collapsible-up {
-  from {
-    height: var(--disclosure-panel-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
-@keyframes st-aria-collapsible-right {
-  from {
-    width: 0;
-    overflow: hidden;
-  }
-  to {
-    width: var(--disclosure-panel-width);
-    overflow: hidden;
-  }
-}
-
-@keyframes st-aria-collapsible-left {
-  from {
-    width: var(--disclosure-panel-width);
-    overflow: hidden;
-  }
-  to {
-    width: 0;
-    overflow: hidden;
-  }
-}
-`;
-
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({

@@ -43,7 +43,6 @@
         "skeleton",
         "slider",
         "spinner",
-        "switch",
         "tooltip"
       ],
       "files": [
@@ -466,6 +465,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
@@ -1323,7 +1327,6 @@
         "skeleton",
         "slider",
         "spinner",
-        "switch",
         "tooltip"
       ],
       "files": [
@@ -1746,6 +1749,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
@@ -2603,7 +2611,6 @@
         "skeleton",
         "slider",
         "spinner",
-        "switch",
         "tooltip"
       ],
       "files": [
@@ -3026,6 +3033,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
@@ -3883,7 +3895,6 @@
         "skeleton",
         "slider",
         "spinner",
-        "switch",
         "tooltip"
       ],
       "files": [
@@ -4306,6 +4317,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_Effects.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",

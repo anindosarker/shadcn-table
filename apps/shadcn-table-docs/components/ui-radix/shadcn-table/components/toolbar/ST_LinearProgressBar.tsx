@@ -86,7 +86,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           <style href="st-linear-progress" precedence="low">
             {linearProgressKeyframes}
           </style>
-          <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+          <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
             <Progress
               aria-busy="true"
               {...progressComponentProps}

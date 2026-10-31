@@ -136,6 +136,22 @@ export const getDefaultColumnFilterFn = <TData extends ST_RowData>(
   return 'fuzzy';
 };
 
+/**
+ * True for a `range` filter column whose first defined value is a number, so
+ * its range inputs take numbers only.
+ */
+export const isNumberColumn = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+  table: ST_CoreTableInstance<TData>,
+): boolean => {
+  if (column.columnDef.filterVariant !== 'range') return false;
+  for (const row of table.getPreFilteredRowModel().rows) {
+    const value = row.getValue(column.id);
+    if (value !== undefined && value !== null) return typeof value === 'number';
+  }
+  return false;
+};
+
 const emptyFacetedUniqueValues: ReturnType<
   ST_Column<ST_RowData>['getFacetedUniqueValues']
 > = new Map();

@@ -1,7 +1,9 @@
-import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
+import { type ComponentPropsWithRef, useRef, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui-radix/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -117,9 +119,13 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     }
   };
 
+  // "Filter by column" hands focus to the column's filter input when the
+  // menu closes, instead of back to the opener.
+  const focusFilterOnCloseRef = useRef(false);
+
   const handleFilterByColumn = () => {
     setShowColumnFilters(true);
-    queueMicrotask(() => filterInputRefs.current?.[`${column.id}-0`]?.focus());
+    focusFilterOnCloseRef.current = true;
     setAnchorEl(null);
   };
 
@@ -130,10 +136,10 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     setAnchorEl(null);
   };
 
-  const handleOpenFilterModeMenu = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setFilterMenuAnchorEl(event.currentTarget);
-  };
+  const filterByColumnLabel = localization.filterByColumn?.replace(
+    '{column}',
+    String(columnDef.header),
+  );
 
   const isSelectFilter = !!columnDef.filterSelectOptions;
 
@@ -161,7 +167,11 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         align="start"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          focusAnchor();
+          const filterInput = focusFilterOnCloseRef.current
+            ? filterInputRefs.current?.[`${column.id}-0`]
+            : undefined;
+          if (filterInput) filterInput.focus();
+          else focusAnchor();
         }}
         className={cn('w-max', className)}
         {...rest}
@@ -234,37 +244,40 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       label={localization.clearFilter}
                       onClick={handleClearFilter}
                     />,
-                    columnFilterDisplayMode === 'subheader' && (
-                      <ST_ActionMenuItem
-                        disabled={showColumnFilters && !enableColumnFilterModes}
-                        divider={enableGrouping || enableHiding}
-                        icon={<FilterListIcon />}
-                        key={4}
-                        label={localization.filterByColumn?.replace(
-                          '{column}',
-                          String(columnDef.header),
-                        )}
-                        onClick={
-                          showColumnFilters
-                            ? handleOpenFilterModeMenu
-                            : handleFilterByColumn
-                        }
-                        onOpenSubMenu={
-                          showFilterModeSubMenu
-                            ? handleOpenFilterModeMenu
-                            : undefined
-                        }
-                      />
-                    ),
-                    showFilterModeSubMenu && (
-                      <ST_FilterOptionMenu
-                        anchorEl={filterMenuAnchorEl}
-                        header={header}
-                        key={5}
-                        onSelect={handleFilterByColumn}
-                        setAnchorEl={setFilterMenuAnchorEl}
-                      />
-                    ),
+                    columnFilterDisplayMode === 'subheader' &&
+                      (showFilterModeSubMenu ? (
+                        // The filter modes open as a submenu of this item.
+                        <DropdownMenuSub key={4}>
+                          <DropdownMenuSubTrigger
+                            className={cn(
+                              'my-0',
+                              (enableGrouping || enableHiding) &&
+                                'border-b bg-clip-padding',
+                            )}
+                          >
+                            <span className="inline-flex min-w-9 shrink-0">
+                              <FilterListIcon />
+                            </span>
+                            {filterByColumnLabel}
+                          </DropdownMenuSubTrigger>
+                          <ST_FilterOptionMenu
+                            anchorEl={filterMenuAnchorEl}
+                            header={header}
+                            isSubMenu
+                            onSelect={handleFilterByColumn}
+                            setAnchorEl={setFilterMenuAnchorEl}
+                          />
+                        </DropdownMenuSub>
+                      ) : (
+                        <ST_ActionMenuItem
+                          disabled={showColumnFilters}
+                          divider={enableGrouping || enableHiding}
+                          icon={<FilterListIcon />}
+                          key={4}
+                          label={filterByColumnLabel}
+                          onClick={handleFilterByColumn}
+                        />
+                      )),
                   ].filter(Boolean)
                 : []),
               ...(enableGrouping && column.getCanGroup()

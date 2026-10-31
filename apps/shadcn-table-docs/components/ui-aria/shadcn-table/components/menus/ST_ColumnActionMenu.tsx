@@ -1,4 +1,5 @@
 import { type ComponentPropsWithRef } from 'react';
+import { flushSync } from 'react-dom';
 import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
@@ -115,9 +116,11 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     }
   };
 
+  // React Aria restores focus to the opener only while focus is still inside
+  // the closing menu, so focusing the rendered filter input first keeps it.
   const handleFilterByColumn = () => {
-    setShowColumnFilters(true);
-    queueMicrotask(() => filterInputRefs.current?.[`${column.id}-0`]?.focus());
+    flushSync(() => setShowColumnFilters(true));
+    filterInputRefs.current?.[`${column.id}-0`]?.focus();
     setAnchorEl(null);
   };
 
@@ -148,7 +151,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   return (
     <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
       <Pressable>
-        <span {...spanProps} role="button" />
+        <span {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="bottom start"
