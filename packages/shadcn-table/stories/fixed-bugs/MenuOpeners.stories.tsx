@@ -124,8 +124,8 @@ export const ColumnActions = {
         })[0],
     );
 
-    // After "Filter by column" once, a later close of the same menu still
-    // returns focus to the opener, not to the now rendered filter input.
+    // "Filter by column" hands focus to the column's filter input. A later
+    // close of the same menu still returns focus to the opener.
     const getOpener = () =>
       within(canvasElement).getAllByRole('button', {
         hidden: true,
@@ -136,9 +136,10 @@ export const ColumnActions = {
       await body.findByRole('menuitem', { name: /Filter by First Name/ }),
     );
     await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
-    await within(canvasElement).findByRole('textbox', {
+    const filterInput = await within(canvasElement).findByRole('textbox', {
       name: 'Filter by First Name',
     });
+    await waitFor(() => expect(document.activeElement).toBe(filterInput));
     await userEvent.click(getOpener());
     await body.findByRole('menu');
     await userEvent.keyboard('{Escape}');
