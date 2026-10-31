@@ -81,8 +81,8 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
           : undefined;
 
         return (
-          <ST_Tooltip side="top" title={sortTooltip}>
-            <span className="relative inline-flex shrink-0 align-middle">
+          <span className="relative inline-flex shrink-0 align-middle">
+            <ST_Tooltip side="top" title={sortTooltip}>
               <button
                 type="button"
                 aria-label={sortTooltip}
@@ -109,13 +109,13 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
                   <ArrowDownwardIcon />
                 )}
               </button>
-              {sorting.length > 1 && column.getSortIndex() >= 0 && (
-                <span className="absolute top-[14%] inset-e-[14%] z-1 flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
-                  {column.getSortIndex() + 1}
-                </span>
-              )}
-            </span>
-          </ST_Tooltip>
+            </ST_Tooltip>
+            {sorting.length > 1 && column.getSortIndex() >= 0 && (
+              <span className="absolute top-[14%] inset-e-[14%] z-1 flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
+                {column.getSortIndex() + 1}
+              </span>
+            )}
+          </span>
         );
       }}
     </table.Subscribe>
