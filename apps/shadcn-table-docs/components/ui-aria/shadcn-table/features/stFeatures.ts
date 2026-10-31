@@ -8,10 +8,12 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  metaHelper,
   stockFeatures,
   tableFeatures,
   type TableFeatures,
 } from '@tanstack/react-table';
+import { type RankingInfo } from '@tanstack/match-sorter-utils';
 import { stCellActionsFeature } from '@/components/ui-aria/shadcn-table/features/stCellActionsFeature';
 import { stColumnDraggingFeature } from '@/components/ui-aria/shadcn-table/features/stColumnDraggingFeature';
 import { stConfigFeature } from '@/components/ui-aria/shadcn-table/features/stConfigFeature';
@@ -63,6 +65,7 @@ export const stFeatures = tableFeatures({
   filterFns,
   sortFns,
   aggregationFns,
+  filterMeta: metaHelper<RankingInfo>(),
 });
 
 export type ST_Features = typeof stFeatures;
