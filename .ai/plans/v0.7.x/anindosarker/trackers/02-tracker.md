@@ -3,6 +3,25 @@
 Status: running
 Branch `v0.7/library-sweep`, worktree `library-sweep`, PR #72 (workstream S1, specs 02 to 07)
 Gates:
+- S1 merge gates at 27ad7a70 (sets A to D merged, docs copies regenerated, CHANGELOG, two lead fixes):
+- `pnpm --filter shadcn-table lint` at 27ad7a70: green, exit 0, 0 problems (0 errors, 0 warnings); at d84bd445 it reported 6 `incompatible-library` warnings, fixed in b97c059b
+- `pnpm --filter shadcn-table tsc:radix` at 27ad7a70: green
+- `pnpm --filter shadcn-table tsc:baseui` at 27ad7a70: green
+- `pnpm --filter shadcn-table tsc:aria` at 27ad7a70: green
+- `pnpm check:bases` at 27ad7a70: green (145 library files, 24 and 38 allowed to differ; 216 example files, 2 and 10)
+- `pnpm check:tailwind` at 27ad7a70: green, 0 not canonical or physical in base (1215 candidates), radix (1187), aria (1193)
+- 02 Acceptance `grep -rc "eslint-disable" ... | awk` at 27ad7a70: base 54, radix 54, aria 56, equal to the expected 52, 52, 54 plus the two virtualizer `incompatible-library` lines per base (Set A attention)
+- 03 Acceptance at 27ad7a70: `eslint --rule '{"react-hooks/refs":"error"}'` on `useST_TableInstance.ts` 0 in each base; `grep -nE "tableRef|columnDefsRef|table\.store"` empty; three copies identical
+- 04 Acceptance at 27ad7a70: `eslint --rule '{"@typescript-eslint/no-explicit-any":"error"}' registry/<base>` exit 0 per base; `no-explicit-any` count 9 per base (8 plus the `icons.ts` foundation line until S3)
+- 05 Acceptance at 27ad7a70: `grep -rn 'table.store'` over the registry, stories, docs examples and `row-pinning.mdx` empty; `lint` exit 0 with `no-deprecated` on
+- 07 Acceptance at 27ad7a70: `grep -rniE 'MUI|MRT|material-react-table|@mui|upstream|edition|forkedUi|getCommonToolbarStyles' --exclude=icons.ts --exclude-dir=icons` empty (8 `MUI` hits in `style.utils.ts` at d84bd445, fixed in 27ad7a70); `tsc:radix`, `tsc:baseui`, `tsc:aria` exit 0
+- `grep -rn "rgba(" packages/shadcn-table/registry/*/components/ui/shadcn-table` at 27ad7a70: empty
+- `pnpm --filter shadcn-table test:base` at 27ad7a70 (`--browser.api.port 5341`): green, 64 files, 453 tests
+- `pnpm --filter shadcn-table test:radix` at 27ad7a70 (port 5344): green, 64 files, 453 tests
+- `pnpm --filter shadcn-table test:aria` at 27ad7a70 (port 5347): green, 64 files, 453 tests
+- `pnpm --filter shadcn-table-docs types:check` at 27ad7a70: green
+- `pnpm --filter shadcn-table-docs lint` at 27ad7a70: green, exit 0, 0 errors, 9 warnings (`<img>` in `examples/<base>/advanced/TS.tsx` x2 and `exhaustive-deps` in `examples/<base>/expanding-tree-flat-parse/TS.tsx` per base)
+- `pnpm --filter shadcn-table-docs build` at 27ad7a70: green, tree clean after
 - `pnpm --filter shadcn-table lint` at 8b493528: red by design (new config, 668 errors, 51 warnings) until the last set merges
 - `pnpm --filter shadcn-table tsc:baseui`, `tsc:radix`, `tsc:aria` at d5e8abc7: green
 - `pnpm --filter shadcn-table exec tsc -p tsconfig.stories.json` at ba367b60: green
@@ -16,6 +35,7 @@ Gates:
 - Set B: 77a0eba8 (`eslint --max-warnings 0` and `prettier --check` on `components/{body,head,footer,table}` of the three bases: 0; `tsc:baseui`, `tsc:radix`, `tsc:aria`: green; `check:tailwind`: 0 sites in set B per base)
 - Set C: ff32d364 (at ff32d364: `eslint --max-warnings 0` and `prettier --check` on the set C files of all three bases zero, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json`, `check:bases` green, `test:base`, `test:radix`, `test:aria` green, 64 files, 453 tests each, `check:tailwind` zero hits in set C files, set C `eslint-disable` lines base 6, radix 6, aria 8)
 - Set D: cde17938
+- Milestone S1 merge: done (27ad7a70); sets A to D merged (5599c724, 9dda6b63, b0d23112, da9eee9a), docs copies regenerated (ec16ade5), CHANGELOG (d84bd445), set worktrees removed, branches kept
 
 Lint after the switch (`lint -f json` at 8b493528, 719 problems: library 691, stories 28, other 0)
 
@@ -96,3 +116,6 @@ Foundation: branch `v0.7/foundation`, worktree `foundation`, PR #70
 - Set C: the single-selection radio (`ST_SelectCheckbox`, base and radix) gets a typed `RadioGroupItem` props object with `aria-label`, `className`, `disabled`, `onClick` and `value` (04 1.6.2), so other `stSelectCheckboxProps` fields (`id`, `data-*`, `style`) no longer reach the radio. Revert means spreading the checkbox props with a cast.
 - Set C: aria menus keep `role="button"` on the span (spec 10 drops it per D26) and call no `focusAnchor`: React Aria restores focus to the opener itself, which the `MenuFocusReturn` play tests confirm in all three bases.
 - Set D: the cell-edit stories in `Editing.stories.tsx` lost their four `@ts-expect-error column id is a string key of Person` lines; the immutable row copy (`{ ...r, [cell.column.id]: value }`) typechecks, so `tsc -p tsconfig.stories.json` reported them unused. `GroupingColumnsSetState` and `VirtualizedDataSetAfterMount` set their after-mount data in a `setTimeout` (still one batch) instead of synchronously in the effect (`set-state-in-effect`). Revert means a reasoned disable per site.
+- S1 merge: `lint` kept 6 `react-hooks/incompatible-library` warnings on `useVirtualizer` (Set A attention); b97c059b adds one reasoned `eslint-disable-next-line` per virtualizer hook and base, so the expected `eslint-disable` count is base 54, radix 54, aria 56. Revert means `lint` red until plugin 7 stops reporting opted-out functions.
+- S1 merge: `pnpm format` changed nothing after the merges, so step 3 has no format commit.
+- S1 merge: the CHANGELOG lines go into the existing `#### Spec NN` blocks under `### Changed` (the foundation's headings, see the first bullet), not `### Spec NN`.
