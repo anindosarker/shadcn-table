@@ -185,6 +185,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
+                  indeterminateIcon={table.options.icons.IndeterminateIcon}
                   {...commonProps}
                   // Base UI keeps `indeterminate` as its own flag beside `checked`,
                   // so it goes after the spread. getIsSomeRowsSelected and
