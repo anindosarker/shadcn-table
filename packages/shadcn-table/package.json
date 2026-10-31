@@ -20,7 +20,7 @@
     "test:base": "ST_BASE=base vitest run",
     "test:radix": "ST_BASE=radix vitest run",
     "test:aria": "ST_BASE=aria vitest run",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "check:tailwind": "node scripts/check-tailwind.mjs",
     "check:icons": "node scripts/check-icons.mjs",
     "tsc:radix": "tsc -p tsconfig.radix.json --noEmit",
