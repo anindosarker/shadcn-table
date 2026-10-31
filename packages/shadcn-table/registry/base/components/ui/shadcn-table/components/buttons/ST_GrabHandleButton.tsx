@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { type ButtonProps } from '@/components/ui/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const grabHandleButtonVariants = cva(

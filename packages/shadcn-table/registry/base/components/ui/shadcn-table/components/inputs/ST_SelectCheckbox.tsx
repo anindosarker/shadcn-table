@@ -1,7 +1,7 @@
 import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { ST_Checkbox } from '@/components/ui/shadcn-table/ST_Checkbox';
+import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   type CheckboxProps,
@@ -17,7 +17,7 @@ import {
   getST_SelectAllHandler,
 } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 // Base UI's BaseUIEvent<MouseEvent<HTMLSpanElement>>, read off the part instead

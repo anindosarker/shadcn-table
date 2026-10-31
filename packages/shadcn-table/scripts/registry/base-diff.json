@@ -1,9 +1,9 @@
 [
-  "ST_Checkbox.tsx",
-  "ST_Tooltip.tsx",
   "components/body/ST_TableDetailPanel.tsx",
+  "components/buttons/ST_Tooltip.tsx",
   "components/head/ST_TableHeadCellFilterContainer.tsx",
   "components/head/ST_TableHeadCellFilterLabel.tsx",
+  "components/inputs/ST_Checkbox.tsx",
   "components/inputs/ST_EditCellTextField.tsx",
   "components/inputs/ST_FilterCheckbox.tsx",
   "components/inputs/ST_FilterRangeSlider.tsx",

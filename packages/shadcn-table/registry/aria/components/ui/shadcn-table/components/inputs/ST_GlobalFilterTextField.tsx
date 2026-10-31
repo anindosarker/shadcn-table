@@ -24,7 +24,7 @@ import {
   debounce,
   parseFromValuesOrFunc,
 } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 import { stCollapsibleKeyframes } from '@/components/ui/shadcn-table/shared/utils/style.utils';
