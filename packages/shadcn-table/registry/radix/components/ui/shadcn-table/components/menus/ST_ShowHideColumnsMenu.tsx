@@ -16,6 +16,7 @@ import {
 import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -101,33 +102,21 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     null,
   );
 
-  const rect = anchorEl?.getBoundingClientRect();
+  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
+    <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          anchorEl?.focus();
+          focusAnchor();
         }}
         className={cn('w-max', className)}
         {...rest}
