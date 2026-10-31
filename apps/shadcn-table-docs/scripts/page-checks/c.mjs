@@ -11,6 +11,56 @@ async function marker(wrapper, id, label, selector, check) {
   check(`${id}: ${label}`, n > 0, `found=${n}`);
 }
 
+/**
+ * The Localization guide's install command (InstallCommand locale): German
+ * first on the page's base, then French through the Locale select, with the
+ * import line under the tabs following the pick.
+ */
+async function localeCommand(page, check, base) {
+  const command = async () =>
+    (await page
+      .locator('article pre:visible', { hasText: 'shadcn-table-locale-' })
+      .first()
+      .textContent()
+      .catch(() => '')) ?? '';
+  const importLine = async () =>
+    (await page
+      .locator('article p', { hasText: 'localization={' })
+      .first()
+      .textContent()
+      .catch(() => '')) ?? '';
+  const de = await command();
+  check(
+    'locale command: de on the base',
+    de.includes(`/r/${base}/shadcn-table-locale-de.json`),
+    de,
+  );
+  check(
+    'locale import line: de',
+    (await importLine()).includes('ST_Localization_DE'),
+    await importLine(),
+  );
+  const select = page.locator('article button[aria-label="Locale"]');
+  check('locale select', (await select.count()) === 1);
+  if (!(await select.count())) return;
+  await select.click();
+  const french = page.getByRole('menuitemradio', { name: 'French (fr)' });
+  await french.waitFor({ timeout: 5000 }).catch(() => {});
+  await french.click();
+  await french.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  const fr = await command();
+  check(
+    'locale command: fr',
+    fr.includes(`/r/${base}/shadcn-table-locale-fr.json`),
+    fr,
+  );
+  check(
+    'locale import line: fr',
+    (await importLine()).includes('localization={ST_Localization_FR}'),
+    await importLine(),
+  );
+}
+
 const TABLE = '#relevant-props-table';
 const STATE = '#relevant-state-options-table';
 const COLUMN = '#relevant-column-options-table';
@@ -97,11 +147,15 @@ const checks = {
     const links = await page.locator('main a[href^="/docs/guides/"]').count();
     check('guides toc links', links > 10, `links=${links}`);
   },
-  '/docs/guides/localization': async ({ page, check }) => {
+  '/docs/guides/localization': async ({ page, check, base }) => {
     await propTable(page, TABLE, check);
-    // 39 locale files; the header's base switch (#nd-subnav) has three tabs of its own.
-    const tabs = await page.locator('[role="tab"]:not(#nd-subnav *)').count();
+    // 39 locale files; the install command's base and package manager tabs
+    // are not in the Locales list.
+    const tabs = await page
+      .locator('[aria-label="Locales"] [role="tab"]')
+      .count();
     check('locale tabs', tabs === 39, `tabs=${tabs}`);
+    await localeCommand(page, check, base);
     const es = await example(page, 'localization-i18n-es', check);
     await marker(
       es,

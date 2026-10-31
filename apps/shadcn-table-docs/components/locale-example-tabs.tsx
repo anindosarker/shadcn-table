@@ -50,7 +50,7 @@ export function LocaleExampleTabs({ locales, panels }: LocaleExampleTabsProps) {
       className="not-prose my-4 gap-4"
     >
       <div className="scrollbar-none overflow-x-auto overflow-y-hidden border-b">
-        <TabsList variant="line" className="h-auto">
+        <TabsList variant="line" aria-label="Locales" className="h-auto">
           {locales.map((locale) => (
             <TabsTrigger key={locale} value={locale} className="px-3 py-1.5">
               {locale}

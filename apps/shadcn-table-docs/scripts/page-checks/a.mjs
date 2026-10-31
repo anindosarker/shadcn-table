@@ -272,11 +272,12 @@ const checks = {
   '/docs/getting-started/agents': async ({ page, check }) => {
     await agentBar(page, check);
     const txt = (await page.locator('article').textContent()) ?? '';
-    // The @st namespace form lives here only; the localization guide links
-    // to this page's Registry addresses section.
+    // The @shadcn-table namespace form lives here only; the localization
+    // guide links to this page's Registry addresses section.
     check(
       'namespace form',
-      txt.includes('registry add @st=') && txt.includes('add @st/shadcn-table'),
+      txt.includes('registry add @shadcn-table=') &&
+        txt.includes('add @shadcn-table/shadcn-table'),
     );
     check(
       'one address per base',

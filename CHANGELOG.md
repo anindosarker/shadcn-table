@@ -33,6 +33,10 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 08
 
+- Breaking: shadcn-table needs React 19.2 or later and Tailwind CSS 4.3 or later.
+- Docs: The Localization guide installs any locale with the base, package manager and locale selectors and shows its import; every example toolbar has a base select.
+- Docs: The docs name the registry namespace `@shadcn-table` (was `@st`); a project that registered `@st` keeps working, the name is local to its `components.json`.
+
 #### Spec 09
 
 #### Spec 10
