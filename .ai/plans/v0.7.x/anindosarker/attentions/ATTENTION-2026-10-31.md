@@ -7,6 +7,7 @@
 - Options:
   - a) Recommended: keep; the release step (spec 09, inline) regroups the block lines into the standard headings.
   - b) Revert to `### Spec NN` and change `next-version.mjs` to accept them.
+- Owner, 2026-10-31 in chat: option a accepted; the release step regroups the lines under the standard headings. Not to be discussed again.
 
 ## A2 The foundation edited `eslint.config.js`, which D34 reserved for S1
 
