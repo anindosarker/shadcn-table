@@ -18,6 +18,66 @@ import {
   paginationControls,
 } from './_helpers.mjs';
 
+/**
+ * The install page's edition select and Short form switch: both commands
+ * start on Lucide (`shadcn-table`), Tabler in the first select switches both
+ * (one pick per page) to `shadcn-table-tabler`, and Short form shows the
+ * `components.json` registries entry and the `@shadcn-table/<item>` command.
+ * The page is on the Radix UI tab when this runs.
+ */
+async function iconEditions(page, check, article) {
+  check(
+    'created with shadcn create section',
+    (await page
+      .locator('article h2', { hasText: 'Created with shadcn create' })
+      .count()) === 1,
+  );
+  const selects = page.locator('article button[aria-label="Icon library"]');
+  check(
+    'icon library select per command',
+    (await selects.count()) === 2,
+    String(await selects.count()),
+  );
+  if (!(await selects.count())) return;
+  check(
+    'icon library starts on Lucide',
+    (await selects.first().textContent())?.trim() === 'Lucide',
+    (await selects.first().textContent()) ?? '',
+  );
+  await selects.first().click();
+  const tabler = page.getByRole('menuitemradio', { name: 'Tabler' });
+  await tabler.waitFor({ timeout: 5000 }).catch(() => {});
+  await tabler.click();
+  await tabler.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  const commands = page.locator('article pre:visible', {
+    hasText: 'shadcn-table-tabler.json',
+  });
+  check(
+    'tabler: both commands install the edition',
+    (await commands.count()) === 2,
+    String(await commands.count()),
+  );
+  check(
+    'tabler: update command overwrites',
+    /\/r\/radix\/shadcn-table-tabler\.json --overwrite/.test(await article()),
+  );
+  const short = page.locator('article [role="switch"]').first();
+  await short.click();
+  await page.waitForTimeout(200);
+  const txt = await article();
+  check(
+    'short form: namespace command',
+    txt.includes('shadcn@latest add @shadcn-table/shadcn-table-tabler'),
+  );
+  check(
+    'short form: registries entry',
+    txt.includes('"registries"') &&
+      txt.includes('"@shadcn-table"') &&
+      txt.includes('/r/{style}/{name}.json'),
+  );
+  await short.click();
+}
+
 /** The agent bar: one visible prompt pointing at /SKILL.md, Copy prompt writes it. */
 async function agentBar(page, check) {
   const bar = page.locator('[data-slot="agent-bar"]');
@@ -267,6 +327,7 @@ const checks = {
       'radix tab again: install command',
       addCommand('radix', 'shadcn-table').test(await article()),
     );
+    await iconEditions(page, check, article);
     await agentBar(page, check);
   },
   '/docs/getting-started/agents': async ({ page, check }) => {
