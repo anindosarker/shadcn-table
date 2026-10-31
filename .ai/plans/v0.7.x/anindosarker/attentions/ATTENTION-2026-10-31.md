@@ -73,3 +73,28 @@
 ## A15 Install command keeps two code paths that build the same string
 
 - In `apps/shadcn-table-docs/components/mdx/install-command.tsx` the default form returns `editionAddCommand(library, base, pm, overwrite)` while the fallthrough `addCommand(installed, base, pm)` builds the same URL when `installed` is the edition item. The S5 review called one path redundant; the fixer kept both because spec 08 1.6.5 binds the default command to `editionAddCommand` and it has no other caller. Accept, or amend the spec and drop one path at triage.
+
+## A16 TanStack store issue to file (D22)
+
+- The issue draft (title, version, repro, expected, impact) sits under `## Attention` in `trackers/10-tracker.md`: `@tanstack/store` 0.11.2 `atom.js:134` notifies subscribers when an `undefined` atom is set to `undefined`. The library guards with `Object.is` itself; the owner files the issue on `TanStack/store`.
+
+## A17 `ButtonProps` is widened by intersection, not replaced by the Button part type
+
+- D29 and spec 10 1.6.3 say `ButtonProps = React.ComponentProps<typeof Button>`. S2 made it `ComponentPropsWithRef<'button'> & Pick<ComponentProps<typeof Button>, 'size' | 'variant'>` (aria: its omit type plus the same pick): the full part type drops props the library passes (`title`, drag handlers, aria `onClick` on `Element`), broke `tsc` in every base, and would remove public props. Keep, or amend D29 to the intersection form.
+
+## A18 Spec 10 judgment calls recorded in the tracker, each with a revert path
+
+- `useST_MenuAnchor` exposes `anchorRef` beside `focusAnchor` (base `finalFocus` takes a ref or element); the D26 interface grew by one member.
+- Escape in the search field clears a typed value first and closes on the next press (empty field closes at once); D25 says only "Escape closes it".
+- Aria search panel keeps React Aria's `group` role with `aria-label` instead of `role="none"` (`DisclosurePanel` allows `group` and `region` only). Radix panel uses `duration-200!` against Radix's inline `transition-duration: 0s` while measuring.
+- Aria popover filter focuses its input through a mount ref callback, not `autoFocus` (D28): four filter variants, one ref map.
+- "Filter by column" hands focus over with `flushSync` in base and aria (React Aria menus have no close-focus hook); radix keeps `onCloseAutoFocus`.
+- The cell context menu does not close on a second right-click on the same cell (no opener button); its inner content still unmounts on close, so no exit animation.
+- Aria `ST_SelectCheckbox` and `ST_FilterCheckbox` keep their tooltip wrappers: React Aria `Checkbox` and `RadioGroup` are not `Focusable` triggers.
+- The RTL story asserts the resize handle at the header cell's inline-end edge (D31's direction-neutral `end`), where spec 10 1.6.8 names the inline-start edge. Spec text or assertion to settle at triage.
+- `ST_ActionMenuItem` keeps the public `onOpenSubMenu` prop but only shows a submenu arrow; nothing calls it.
+- The search width token `--st-search-width` sits on the Collapsible root; the field `className` lands on the input, so a consumer overrides it from an ancestor selector.
+
+## A19 Review round 2 left one major that the round 2 fix closed
+
+- Spec 10's second review round found the "Filter by column" focus hand-off missing in base and aria; the round 2 fixer fixed it (1e9c8327, with a play-test assertion that fails before and passes after). The template returns `review-open` when round 2 ends with a major, so the main session ran one incremental confirmation review of the fixer's commits plus verify before merging, beyond the two review rounds the process names. Accept, or make a confirmation round part of the process.
