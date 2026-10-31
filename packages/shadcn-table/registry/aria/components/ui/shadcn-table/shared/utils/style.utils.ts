@@ -14,7 +14,8 @@ import {
  * them only while expanded. This keeps them until the panel's own collapse
  * transition ends, so it animates shut instead of snapping. Pass
  * `animated: false` for a panel without a transition, which never fires
- * `transitionend`.
+ * `transitionend`. Under `motion-reduce:transition-none` no transition runs
+ * either, so the children stay in the hidden panel until the next expand.
  */
 export const useCollapsingChildren = (isExpanded: boolean, animated = true) => {
   const [isCollapsing, setIsCollapsing] = useState(false);
