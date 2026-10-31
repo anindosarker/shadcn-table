@@ -24,6 +24,15 @@ Gates:
 
 - Merge basis (P2): the PR merges on the recorded local gates plus the green `registry`, `install`, `docs`, `test` and `bases` CI jobs; the red `library` x3 jobs fail only on the foundation's `check:tailwind` step, which is S1's and turns green when S1 merges. No spec 11 code change
 - Review round 1 fixes: `pnpm check:bases`, `pnpm check:icons` (35 keys, 0 problems per base), `pnpm --filter shadcn-table lint` (0 errors, the 15 foundation warnings), docs `eslint scripts/install.mjs`, `node --check scripts/install.mjs` at ec037df1: green; the four `icons/*.ts` byte-identical across bases
+- Verifier at 757490a8 (code since b50b56b6: icon set file headers and an `install.mjs` comment; `lib.mjs`, `build.mjs`, `hosted.mjs`, `examples.mjs` unchanged since 20bd77f2, so the builder's CLI smoke stands). Recorded by the builder and not rerun: `lint`, `check:icons`, `check:bases` at ec037df1; CLI smoke per base at 20bd77f2; CI run 41188659456. Run by the verifier, from a clean tree:
+  - `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria` at 757490a8: green
+  - `pnpm registry:build`, `registry:items`, `registry:hosted`, `--filter shadcn-table registry:dev` at 757490a8: green, tree clean after; per base core, `shadcn-table` and the four icon set items, `/r/<base>/` 160 files each, `shadcn-table` name and path unchanged
+  - `test:base`, `test:radix`, `test:aria` concurrently at 757490a8: green, 446 passed each (63 files)
+  - `storybook:build:base`, `:radix`, `:aria` concurrently at 757490a8: green
+  - docs `lib:install` base, radix, aria, then `types:check`, `lint` (0 errors, 9 warnings in other examples), `build` at 757490a8: green, tree clean after
+  - `check-pages.mjs --url http://localhost:5342 --base base|radix|aria` concurrently at 757490a8: green, 1654 passed, 0 failed per base
+  - `grep -rn "edition"` over `icons.ts` and `icons/` at 757490a8: empty; `grep -rn "lucide-react"` over the three trees: the three `icons.ts` only
+  - Acceptance at 757490a8: `pnpm check:icons` exit 0 (35 keys, 0 problems per base); lucide grep lists the three `icons.ts` only; the six `pr.yml` dry-runs against 5310 exit 0; scratch `shadcn init --template next --base base --preset nova`, Tabler item then `shadcn-table-base` `--overwrite`, stdin closed: both exit 0, one `icons.ts` (107 files both times), imports `lucide-react`, no Tabler import. Clause "no `@tabler/icons-react` in the scratch `package.json`": not applicable (ATTENTION A4, D30: the CLI never removes a dependency; it stays). Result: pass
 - Milestone 01 Maps and imports: done (97072f29)
 - Milestone 02 Registry build: done (20bd77f2)
 - Milestone 03 Installs, CLI smoke: done (c1aa55e4, run 41188659456)
