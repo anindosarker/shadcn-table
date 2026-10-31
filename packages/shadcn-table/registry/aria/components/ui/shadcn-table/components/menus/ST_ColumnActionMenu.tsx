@@ -1,5 +1,4 @@
 import { type ComponentPropsWithRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
@@ -170,7 +169,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         className={cn('w-max', className)}
         {...rest}
       >
-        <Subscribe
+        <table.Subscribe
           selector={(state) => ({
             columnFilters: state.columnFilters,
             columnPinning: state.columnPinning,
@@ -180,7 +179,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
             showColumnFilters: state.showColumnFilters,
             sorting: state.sorting,
           })}
-          source={table.store}
         >
           {({ columnSizing, columnVisibility, showColumnFilters }) => {
             const columnFilterValue = column.getFilterValue();
@@ -379,7 +377,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
               </>
             );
           }}
-        </Subscribe>
+        </table.Subscribe>
       </DropdownMenu>
     </DropdownMenuTrigger>
   );

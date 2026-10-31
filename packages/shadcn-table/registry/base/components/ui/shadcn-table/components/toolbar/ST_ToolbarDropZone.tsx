@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { type DragEvent, useEffect } from 'react';
@@ -54,12 +53,11 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   }, [enableGrouping, draggingColumn, grouping, setShowToolbarDropZone]);
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         hoveredColumn: state.hoveredColumn,
         showToolbarDropZone: state.showToolbarDropZone,
       })}
-      source={table.store}
     >
       {({ hoveredColumn, showToolbarDropZone }) =>
         showToolbarDropZone ? (
@@ -81,6 +79,6 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
           </div>
         ) : null
       }
-    </Subscribe>
+    </table.Subscribe>
   );
 };

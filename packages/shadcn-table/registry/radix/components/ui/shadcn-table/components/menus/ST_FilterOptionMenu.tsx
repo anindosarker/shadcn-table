@@ -1,5 +1,4 @@
 import { type ComponentPropsWithRef, useMemo, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -270,12 +269,11 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       >
         {/* The column mode name is written onto the column def from
             `columnFilterFns` in the root render, so that slice is selected. */}
-        <Subscribe
+        <table.Subscribe
           selector={(state) => ({
             columnFilterFns: state.columnFilterFns,
             globalFilterFn: state.globalFilterFn,
           })}
-          source={table.store}
         >
           {({ globalFilterFn }) => {
             const filterOption =
@@ -322,7 +320,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
               </>
             );
           }}
-        </Subscribe>
+        </table.Subscribe>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -39,7 +38,8 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
   } = table;
 
   const handleCancel = () => {
-    const { creatingRow, editingRow } = table.store.state;
+    const creatingRow = table.atoms.creatingRow.get();
+    const editingRow = table.atoms.editingRow.get();
     if (creatingRow?.id === row.id) {
       onCreatingRowCancel?.({ row, table });
       setCreatingRow(null);
@@ -51,7 +51,8 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
   };
 
   const handleSubmitRow = () => {
-    const { creatingRow, editingRow } = table.store.state;
+    const creatingRow = table.atoms.creatingRow.get();
+    const editingRow = table.atoms.editingRow.get();
     //look for auto-filled input values
     Object.values(editInputRefs.current ?? {})
       .filter((inputRef) => row.id === inputRef?.name?.split('_')?.[0])
@@ -82,13 +83,12 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
         isSaving: state.isSaving,
       })}
-      source={table.store}
     >
       {({ creatingRow, editingRow, isSaving }) => {
         const isCreating = creatingRow?.id === row.id;
@@ -148,6 +148,6 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

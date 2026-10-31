@@ -1,5 +1,4 @@
 import { useCallback, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui/shadcn-table/types';
@@ -110,12 +109,11 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const progressBar = <ST_LinearProgressBar isTopToolbar />;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isFullScreen: state.isFullScreen,
         showGlobalFilter: state.showGlobalFilter,
       })}
-      source={table.store}
     >
       {({ isFullScreen, showGlobalFilter }) => {
         const stackAlertBanner =
@@ -149,6 +147,6 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

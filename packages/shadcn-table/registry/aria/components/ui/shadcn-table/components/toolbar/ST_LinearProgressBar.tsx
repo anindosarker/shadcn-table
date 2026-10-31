@@ -2,7 +2,6 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_LinearProgressProps,
   type ST_RowData,
@@ -72,12 +71,11 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
   const isIndeterminate = progressComponentProps?.value == null;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isSaving: state.isSaving,
         showProgressBars: state.showProgressBars,
       })}
-      source={table.store}
     >
       {({ isSaving, showProgressBars }) => {
         const isExpanded =
@@ -116,6 +114,6 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           </Collapsible>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

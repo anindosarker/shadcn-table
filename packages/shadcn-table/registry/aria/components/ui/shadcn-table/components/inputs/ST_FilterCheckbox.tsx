@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
@@ -75,12 +74,11 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   );
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         filterValue: column.getFilterValue(),
       })}
-      source={table.store}
     >
       {({ density }) => (
         <ST_Tooltip title={filterLabel}>
@@ -123,6 +121,6 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
           </Label>
         </ST_Tooltip>
       )}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
