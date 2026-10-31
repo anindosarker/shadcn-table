@@ -33,9 +33,14 @@ Gates:
 - `pnpm test:base` at 2ec2c084: green
 - agent-browser on `next start` 5341 (pre-commit build, same code, prose differs): install page Icon library to Tabler gives `/r/base/shadcn-table-tabler.json` in both commands (update with `--overwrite`); Short form on shows the `registries` entry and `add @shadcn-table/shadcn-table-tabler`; create section renders; console and page errors zero: pass. Capture `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table-shadcn-react-table/e001baee-c356-4fbd-b566-06e1457b6659/scratchpad/s5-install-short.png`
 - Acceptance (1.2) at 2ec2c084: build exit 0, `check-pages.mjs` exit 0 for all three bases (a, b; c, d, e untouched since the S4 verifier), install page server HTML holds `shadcn-table-tabler.json`, `@shadcn-table/` and "Created with shadcn create"; example toolbar Base select unchanged since S4: pass for milestone 4, milestone 5 pending
+- Review fix (`useIconLibrary` reads the provider only): `pnpm --filter shadcn-table-docs types:check` at 0a54ba13: green
+- `pnpm --filter shadcn-table-docs lint` at 0a54ba13: green (0 errors, 9 existing example warnings)
+- `pnpm --filter shadcn-table-docs build` at 0a54ba13: green, `git status` clean after
+- `check-pages.mjs a` and `b`, `--base base|radix|aria`, six runs concurrent against one `next start` (port 5341, `NEXT_DIST_DIR=.next`) at 0a54ba13: green (a 302, b 268 each)
 
 ## Attention
 
+- Review nit on `install-command.tsx:187` (the `edition` branch duplicates the fallthrough) declined: spec 08 line 180 has the default `InstallCommand` render `editionAddCommand`, and dropping the branch leaves that exported helper with no caller. Owner: accept, or amend the spec and drop one path.
 - Spec 08 Acceptance is only reachable after S5 (install page strings `shadcn-table-tabler.json`, `@shadcn-table/`, "Created with shadcn create" are 1.6.5 and 1.6.6). The S4 verifier records the S4 part green and the full Acceptance as pending S5; PR #71 is marked ready on the S4 gates.
 - No harness `Claude-Session:` reminder reached the S4 verifier either; its commit and the PR #71 body keep `https://claude.ai/code/session_015VBrypUJXYCcQD6zrN4yeT`.
 - A dev server on a port other than 5320 (here 5342, distDir `.next-5342`) rewrites `apps/shadcn-table-docs/tsconfig.json` (expanded arrays, `.next-<port>` includes); 0ed09813 committed that rewrite, reverted in 7421a1e5. `.prettierignore` lists `*.json`, so `pnpm format` cannot catch it. Owner: pin `typescript.tsconfigPath` in `next.config.mjs` or make a gate diff the file.
