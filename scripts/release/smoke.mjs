@@ -7,8 +7,10 @@
 // storybook.shadcn-table.com:
 //   /r/<base>/shadcn-table.json for every base (BASES in
 //     packages/shadcn-table/scripts/registry/lib.mjs): 200, `dependencies`
+//     carries lucide-react (the Lucide icon set item) and
+//     `registryDependencies` names the core item
+//   /r/<base>/shadcn-table-core.json for every base: 200, `dependencies`
 //     carries the @tanstack/react-table pin of packages/shadcn-table/package.json
-//   /r/<base>/shadcn-table-core.json for every base: 200
 //   /r/<base>/registry.json for every base: the item names are exactly
 //     the ones hosted.mjs derives from the committed catalogs (the main item as
 //     shadcn-table, the core item as shadcn-table-core, the icon sets as
@@ -124,16 +126,31 @@ for (const base of BASES) {
   const itemUrl = `${SITE}/r/${base}/${HOSTED_NAME}.json`;
   const item = await get(itemUrl);
   if (checkStatus(`${itemUrl} 200 JSON`, item, 'json')) {
-    const deps = parseJson(item.text)?.dependencies ?? [];
+    const parsed = parseJson(item.text);
+    const deps = parsed?.dependencies ?? [];
+    const registryDeps = parsed?.registryDependencies ?? [];
     check(
-      `${itemUrl} dependencies pin ${tanstackPin}`,
-      deps.includes(tanstackPin),
+      `${itemUrl} dependencies carry lucide-react`,
+      deps.includes('lucide-react'),
       `dependencies=${deps.join(' ')}`,
+    );
+    check(
+      `${itemUrl} registryDependencies name ${CORE_NAME}`,
+      registryDeps.some((dep) => dep.endsWith(`/${CORE_NAME}.json`)),
+      `registryDependencies=${registryDeps.join(' ')}`,
     );
   }
 
   const coreUrl = `${SITE}/r/${base}/${CORE_NAME}.json`;
-  checkStatus(`${coreUrl} 200 JSON`, await get(coreUrl), 'json');
+  const core = await get(coreUrl);
+  if (checkStatus(`${coreUrl} 200 JSON`, core, 'json')) {
+    const deps = parseJson(core.text)?.dependencies ?? [];
+    check(
+      `${coreUrl} dependencies pin ${tanstackPin}`,
+      deps.includes(tanstackPin),
+      `dependencies=${deps.join(' ')}`,
+    );
+  }
 
   const catalogUrl = `${SITE}/r/${base}/registry.json`;
   const catalog = await get(catalogUrl);
