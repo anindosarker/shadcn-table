@@ -5,10 +5,12 @@ import {
   ST_TableBodyCellValue,
   ST_TablePagination,
   ST_TableProvider,
+  ST_ToggleFullScreenButton,
   ST_ToolbarAlertBanner,
   flexRender,
   type ST_ColumnDef,
   useShadcnTable,
+  useST_FullScreenContainer,
 } from '@/components/ui/shadcn-table';
 import {
   Table,
@@ -18,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 import { type Person, data } from './makeData';
 
 const columns: ST_ColumnDef<Person>[] = [
@@ -60,21 +63,39 @@ const Example = () => {
     paginationDisplayMode: 'pages',
   });
 
+  //Esc handler, tabIndex and full-screen classes for your own wrapper, the same ones `ST_TableLayout` uses
+  const { containerProps, isFullScreen } = useST_FullScreenContainer(table);
+
   return (
     <ST_TableProvider table={table}>
-      <div className="my-8 flex flex-col">
+      <div
+        {...containerProps}
+        className={cn(
+          'my-8 flex flex-col bg-background',
+          containerProps.className,
+          isFullScreen && 'overflow-auto p-4',
+        )}
+      >
         <h4>My Custom Headless Table</h4>
         <div className="flex items-center justify-between">
           {/**
            * Use ST components along side your own markup.
            * They read the table from the `ST_TableProvider` around them.
            */}
-          <ST_GlobalFilterTextField />
+          <div className="flex items-center gap-2">
+            <ST_GlobalFilterTextField />
+            <ST_ToggleFullScreenButton />
+          </div>
           <ST_TablePagination />
         </div>
         {/* Your own markup with the shadcn Table parts, driven by the power of TanStack Table */}
         <Table>
           <TableHeader>
+            {/**
+             * With `enableColumnResizing`, the default `layoutMode` is `grid-no-grow`,
+             * which adds the `st-row-spacer` display column to the headers.
+             * Render it for correct column widths, or set `layoutMode: 'grid'`.
+             */}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
