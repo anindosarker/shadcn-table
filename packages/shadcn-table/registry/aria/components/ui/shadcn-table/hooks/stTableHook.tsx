@@ -19,21 +19,17 @@ import {
 } from '@/components/ui/shadcn-table/types';
 
 /**
- * The table context every ST table publishes on. `createTableHook` falls back
- * to a context private to `@tanstack/react-table`, and
- * `createTableHookContexts` creates a fresh one, so each table hook is handed
- * this one explicitly: `useSTContext` then reads any table, whichever hook
- * built it.
+ * The table context every ST table publishes on, handed to each table hook
+ * explicitly so `useSTContext` reads any table, whichever hook built it.
  */
 export const { tableContext, useTableContext } =
   createTableHookContexts<ST_Features>();
 
 /**
- * Builds the table hook for one mounted table. v9 copies the `filterFns`,
- * `sortFns` and `aggregationFns` registries off `features` once, at
- * construction, so the call's own registries are merged over the built-ins
- * here and core resolves every name itself. A plain callable in
- * `aggregationFns` is taken as the `aggregate` step of a definition.
+ * Builds the table hook for one mounted table. The `filterFns`, `sortFns` and
+ * `aggregationFns` registries are read off `features` once, at construction,
+ * so the call's own registries are merged over the built-ins here; a plain
+ * callable in `aggregationFns` becomes the `aggregate` step of a definition.
  */
 export const createSTTableHook = <TData extends ST_RowData>({
   aggregationFns = {},

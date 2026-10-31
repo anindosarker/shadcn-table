@@ -12,6 +12,7 @@ Gates:
 
 - Milestone 01 config switch and baseline: done (8b493528)
 - Lead step: 03 atoms (ba367b60), 05 registries and `getPlatform` (d5e8abc7); set worktrees `library-sweep-{a,b,c,d}` on `v0.7/library-sweep-{a,b,c,d}` cut at the lead head
+- Set A: 90487682
 
 Lint after the switch (`lint -f json` at 8b493528, 719 problems: library 691, stories 28, other 0)
 
@@ -81,3 +82,7 @@ Foundation: branch `v0.7/foundation`, worktree `foundation`, PR #70
 - S1 lead: aria `Select` `selectedKey` and `onSelectionChange` are deprecated in `react-aria-components` 1.22.1 (`value`, `onChange` replace them): 8 `no-deprecated` hits in aria `ST_EditCellTextField` (2), `ST_FilterTextField` (4), `ST_TablePagination` (2), outside the D11 and D13 lists. `lint` 0 needs them gone, so set C migrates them to `value` and `onChange` with the same selection behaviour, no disable. Revert means a reasoned disable per line and +8 on the aria expected count.
 - S1 lead: the expected `eslint-disable` count uses 04's eight `no-explicit-any` keep lines (`types.ts` 5, `tanstack.helpers.ts:35`, `stConfigFeature.ts` 2), not the "five 04 keep lines" of 02 2.1.1, and keeps the reasoned `stConfigFeature.ts:56,63` `no-unused-vars` lines and the reasoned `exhaustive-deps` lines at `ST_Table.tsx:68` and `ST_FilterOptionMenu.tsx:170` (D12: adding `table` would recompute per render, or the read is once per mount by design).
 - S1 lead: the harness gave no `Claude-Session:` line for this session, so the S1 lead commits and the PR #72 body carry none.
+- Set A: `react-hooks/incompatible-library` still reports `useVirtualizer` in `useST_RowVirtualizer` and `useST_ColumnVirtualizer` (2 per base, 6 in all) with `'use no memo'` first in the body or at module level: plugin 7.1.1 logs the compile error for opted-out functions too, and the rule reports it. Left as is per 02 2.1.2 (Blocked), so `lint` stays red on these 6. Fix at the merge: one `// eslint-disable-next-line react-hooks/incompatible-library -- useVirtualizer returns mutable functions; the hook opts out with 'use no memo'` per hook, expected count +2 per base (base 54, radix 54, aria 56).
+- Set A: Tailwind 4.3.3 canonicalizes `start-0` to `inset-s-0`, so `check:tailwind` fails on D31's `start-*`; `style.utils.ts` uses `data-[pinned=true]:before:inset-s-0` (same CSS, logical). Sets B and C will meet the same on their `start-0` and `end-0` sites.
+- Set A: `useST_Rows` no longer memoizes the rows: a memo on `getST_Rows(table)` with the slices as dependencies fails `exhaustive-deps` (unnecessary dependencies), and with `table` alone it would go stale when the body re-renders from a subscription. The ten slice subscriptions stay, the rows are read on each body render; `ST_TableBodyRow` is not memoized, so the re-render set is unchanged (RenderCounts green). Revert means a reasoned `exhaustive-deps` disable on the memo list, +1 per base.
+- Set A: the virtualizer hooks call every hook unconditionally (D4), so their `useSelector` calls select a constant while virtualization is off; without that a density change re-rendered every body cell (RenderCounts `Profiled Thousand Rows`).

@@ -50,13 +50,11 @@ export const getValueAndLabel = (
   return { label, value };
 };
 
-// debounce from @mui/utils.
 export interface Cancelable {
   clear(): void;
 }
 
-// Corresponds to 10 frames at 60 Hz.
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
   wait = 166,
 ): T & Cancelable {
@@ -75,7 +73,6 @@ export function debounce<T extends (...args: any[]) => any>(
   return debounced as T & Cancelable;
 }
 
-// createFilterOptions from @mui/material useAutocomplete.
 export interface CreateFilterOptionsConfig<Value> {
   ignoreAccents?: boolean;
   ignoreCase?: boolean;

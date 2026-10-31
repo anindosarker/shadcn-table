@@ -25,19 +25,19 @@ export interface ST_Table_Refs {
   refs: ST_TableRefs;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stRefsFeature: TableFeature;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stRefsFeature: ST_Table_Refs;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stRefsFeature: TableFeature = {
   constructTableAPIs: (table) => {
