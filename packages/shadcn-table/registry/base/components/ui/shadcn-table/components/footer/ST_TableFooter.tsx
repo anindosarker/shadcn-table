@@ -1,5 +1,4 @@
 import { useCallback, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -68,7 +67,7 @@ export const ST_TableFooter = <TData extends ST_RowData>({
   return (
     // The footer groups follow the column order, pinning, visibility and
     // grouping.
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
@@ -76,7 +75,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
         grouping: state.grouping,
         isFullScreen: state.isFullScreen,
       })}
-      source={table.store}
     >
       {({ isFullScreen }) => {
         const stickFooter =
@@ -119,6 +117,6 @@ export const ST_TableFooter = <TData extends ST_RowData>({
           </tfoot>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

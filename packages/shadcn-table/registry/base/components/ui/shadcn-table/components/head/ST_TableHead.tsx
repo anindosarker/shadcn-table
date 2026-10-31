@@ -1,5 +1,4 @@
 import { useCallback, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -74,7 +73,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
   // The header groups follow column order, pinning, visibility and grouping;
   // the selected rows only matter while the alert banner overlays the head.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
@@ -84,7 +83,6 @@ export const ST_TableHead = <TData extends ST_RowData>({
         rowSelection: isHeadOverlay ? state.rowSelection : null,
         showAlertBanner: isHeadOverlay ? state.showAlertBanner : null,
       })}
-      source={table.store}
     >
       {({ isFullScreen, showAlertBanner }) => {
         const stickyHeader = enableStickyHeader || isFullScreen;
@@ -134,6 +132,6 @@ export const ST_TableHead = <TData extends ST_RowData>({
           </thead>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

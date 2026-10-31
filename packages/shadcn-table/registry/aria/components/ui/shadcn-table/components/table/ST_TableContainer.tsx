@@ -5,7 +5,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type DivProps } from '@/components/ui/shadcn-table/types';
@@ -129,7 +128,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
   const tableElement = <ST_Table />;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         actionCell: state.actionCell,
         creatingRow: state.creatingRow,
@@ -138,7 +137,6 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
         isLoading: state.isLoading,
         showLoadingOverlay: state.showLoadingOverlay,
       })}
-      source={table.store}
     >
       {({
         actionCell,
@@ -181,6 +179,6 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

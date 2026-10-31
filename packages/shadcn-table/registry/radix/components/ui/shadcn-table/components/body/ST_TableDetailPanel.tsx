@@ -1,5 +1,4 @@
 import { type RefObject } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
@@ -76,7 +75,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnVisibility: state.columnVisibility,
@@ -84,7 +83,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
         isExpanded: row.getIsExpanded(),
         isLoading: state.isLoading,
       })}
-      source={table.store}
     >
       {({ isLoading }) => {
         const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
@@ -152,6 +150,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
           </tr>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

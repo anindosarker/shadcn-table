@@ -1,5 +1,4 @@
 import { type DragEvent, type KeyboardEvent } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -123,7 +122,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   const filterContainer = <ST_TableHeadCellFilterContainer header={header} />;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
@@ -145,7 +144,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
         showColumnFilters: state.showColumnFilters,
         sorting: state.sorting,
       })}
-      source={table.store}
     >
       {({
         density,
@@ -350,6 +348,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
           </th>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
