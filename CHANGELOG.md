@@ -7,6 +7,12 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+- `ST_Checkbox` moved to `components/inputs/`, `ST_Tooltip` to `components/buttons/`, `useST_MediaQuery` to `hooks/`; barrel imports are unchanged, deep imports follow the new paths.
+
 ## 0.6.4 - 2026-10-29
 
 ### Docs
