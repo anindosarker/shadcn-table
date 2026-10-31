@@ -41,8 +41,6 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Dialog.
   const {
     stCreateRowModalProps,
     stEditRowDialogProps,
@@ -89,7 +87,7 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
                 onEditingRowCancel?.({ row: liveRow, table });
                 setEditingRow(null);
               }
-              liveRow._valuesCache = {} as ST_Row<TData>['_valuesCache']; //reset values cache
+              liveRow._valuesCache = {} as ST_Row<TData>['_valuesCache'];
               onOpenChange?.(nextOpen, details);
             }}
             open={open}

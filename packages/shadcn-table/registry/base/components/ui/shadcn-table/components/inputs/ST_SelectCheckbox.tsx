@@ -20,10 +20,6 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
-// Base UI's BaseUIEvent<MouseEvent<HTMLSpanElement>>, read off the part instead
-// of '@base-ui/react/types': under verbatimModuleSyntax an inline `type`
-// import keeps a side-effect import that Vite's dep scanner misses, and the
-// late re-optimization reloads Storybook mid-run.
 type SelectClickEvent = Parameters<NonNullable<CheckboxProps['onClick']>>[0];
 
 const selectCheckboxVariants = cva('z-0', {
@@ -56,8 +52,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   const {
     options: { enableMultiRowSelection, localization, selectAllMode },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Checkbox and RadioGroupItem.
   const {
     stSelectAllCheckboxProps,
     stSelectCheckboxProps,

@@ -29,9 +29,6 @@ export const ST_CopyButton = <TData extends ST_RowData>({
   const {
     options: { localization },
   } = table;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Button.
   const {
     stCopyButtonProps,
   }: Pick<ST_TableOptions<TData>, 'stCopyButtonProps'> = table.options;

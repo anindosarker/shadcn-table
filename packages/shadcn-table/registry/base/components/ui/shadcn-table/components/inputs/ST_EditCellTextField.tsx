@@ -165,8 +165,8 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         if (isSelectEdit) {
           const select = (
             <Select
-              // `items` gives the trigger the option label; Base UI's SelectValue
-              // shows the raw value otherwise. Custom children fall back to the value.
+              // `items` gives the trigger the option label; without it Base UI's
+              // SelectValue shows the raw value.
               items={
                 textFieldProps.children
                   ? undefined

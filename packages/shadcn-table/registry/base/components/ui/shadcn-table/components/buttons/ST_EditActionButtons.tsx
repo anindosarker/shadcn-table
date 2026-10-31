@@ -54,7 +54,6 @@ export const ST_EditActionButtons = <TData extends ST_RowData>({
   const handleSubmitRow = () => {
     const creatingRow = table.atoms.creatingRow.get();
     const editingRow = table.atoms.editingRow.get();
-    //look for auto-filled input values
     Object.values(editInputRefs.current ?? {})
       .filter((inputRef) => row.id === inputRef?.name?.split('_')?.[0])
       ?.forEach((input) => {

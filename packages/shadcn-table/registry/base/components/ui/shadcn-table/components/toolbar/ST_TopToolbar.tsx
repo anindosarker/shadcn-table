@@ -53,8 +53,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   };
 
   // Created outside the state subscription, so a full screen or global filter
-  // change re-renders only the toolbar element, the alert banner and the
-  // actions row.
+  // change does not re-render them.
   const dropZone = ['both', 'top'].includes(positionToolbarDropZone ?? '') && (
     <ST_ToolbarDropZone />
   );

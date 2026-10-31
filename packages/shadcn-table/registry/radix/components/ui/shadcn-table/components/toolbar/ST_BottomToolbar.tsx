@@ -55,8 +55,8 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
 
   const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
-  // Created outside the full screen subscription, so toggling full screen
-  // re-renders only the toolbar element.
+  // Created outside the full screen subscription, so a toggle does not
+  // re-render it.
   const toolbarContent = (
     <>
       <ST_LinearProgressBar isTopToolbar={false} />

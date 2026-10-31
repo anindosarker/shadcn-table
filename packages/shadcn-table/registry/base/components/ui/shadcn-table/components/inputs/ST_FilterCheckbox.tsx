@@ -46,9 +46,6 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
     options: { localization },
   } = table;
   const { columnDef } = column;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Checkbox.
   const {
     stFilterCheckboxProps,
   }: Pick<ST_TableOptions<TData>, 'stFilterCheckboxProps'> = table.options;

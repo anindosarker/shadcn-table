@@ -43,8 +43,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
       renderDetailPanel,
     },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Button.
   const {
     stExpandButtonProps,
   }: Pick<ST_TableOptions<TData>, 'stExpandButtonProps'> = table.options;
