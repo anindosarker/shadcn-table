@@ -1,6 +1,6 @@
 # 09: release, tracker
 
-Status: running
+Status: done (e9a7282c)
 Branch `claude/review` (inline, no spec branch), registry `pnpm registry:dev` on 5310 at 56eaad0e
 Gates:
 - gate-radix `next build` at 56eaad0e: green
@@ -9,7 +9,7 @@ Gates:
 
 - Milestone 01 Runtime gate: done (radix and aria checked; base blocked, A21; misses A22 to A25)
 - Release run 1 (41210269119) green: version PR #78 merged as e9a7282c (`merge: version 0.7.0 (#78)`); run 2 (41210330158) tagged v0.7.0, production wait green, smoke red: `shadcn-table.json dependencies pin @tanstack/react-table@9.3.1` for every base (the pin lives on `shadcn-table-core.json` since spec 11); fixed forward in `scripts/release/smoke.mjs` (pin on the core item, lucide-react and the core dependency on the Lucide item; 28 passed against production), merged on `claude/review`, then `dev` into `master` and `gh workflow run release.yml --ref master -f version=0.7.0 -f dry_run=false` per P3
-- Final milestone Release: running; CHANGELOG regrouped at 4a4cea21 (A1), `dev` fast-forwarded, PR #77 `release: 0.7.0` (dev into master, release:minor) opened; gate apps deleted, the run's registry serve on 5310 stopped
+- Final milestone Release: done; release.yml dispatch run 41211487847 green (production wait, smoke 28 checks, five installs, GitHub release https://github.com/anindosarker/shadcn-table/releases/tag/v0.7.0); `claude/review` and `dev` fast-forwarded to `master`; CHANGELOG regrouped at 4a4cea21 (A1), `dev` fast-forwarded, PR #77 `release: 0.7.0` (dev into master, release:minor) opened; gate apps deleted, the run's registry serve on 5310 stopped
 
 Runtime gate (Playwright 1.64.1, real mouse clicks, `next dev` on 5351 radix and 5352 aria; search traces also on `next start` 5353 and 5354):
 - base (next-app): not installed, not checked (pre-step failed)
