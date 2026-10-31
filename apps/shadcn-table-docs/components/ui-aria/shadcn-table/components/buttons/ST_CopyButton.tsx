@@ -13,7 +13,7 @@ import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/
 import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 
 const copyButtonVariants = cva(
-  'm-[-0.25rem] h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
+  '-m-1 h-auto min-w-0 cursor-copy border-none bg-transparent py-0 font-[inherit] [font-size:inherit] tracking-[inherit] text-inherit [text-align:inherit] [text-transform:inherit]',
 );
 
 export interface ST_CopyButtonProps<TData extends ST_RowData>
@@ -29,9 +29,6 @@ export const ST_CopyButton = <TData extends ST_RowData>({
   const {
     options: { localization },
   } = table;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Button.
   const {
     stCopyButtonProps,
   }: Pick<ST_TableOptions<TData>, 'stCopyButtonProps'> = table.options;

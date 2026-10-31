@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -14,7 +13,7 @@ export interface ST_TableHeadCellSortLabelProps<TData extends ST_RowData>
 }
 
 const tableHeadCellSortLabelVariants = cva(
-  'inline-flex w-[3ch] flex-[0_0] cursor-pointer items-center justify-start [flex-direction:inherit] outline-none transition-all duration-150 ease-in-out focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:mx-1 [&_svg]:size-[18px] [&_svg]:text-muted-foreground [&_svg]:transition-[opacity,transform,rotate] [&_svg]:duration-200 [&_svg]:select-none dark:[&_svg]:text-foreground',
+  'inline-flex w-[3ch] flex-[0_0] cursor-pointer items-center justify-start [flex-direction:inherit] outline-none transition-all duration-150 ease-in-out focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:mx-1 [&_svg]:size-4.5 [&_svg]:text-muted-foreground [&_svg]:transition-[opacity,transform,rotate] [&_svg]:duration-200 [&_svg]:select-none dark:[&_svg]:text-foreground',
   {
     variants: {
       direction: {
@@ -44,13 +43,12 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
   const { columnDef } = column;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isLoading: state.isLoading,
         showSkeletons: state.showSkeletons,
         sorting: state.sorting,
       })}
-      source={table.store}
     >
       {({ isLoading, showSkeletons, sorting }) => {
         const isSorted = !!column.getIsSorted();
@@ -112,7 +110,7 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
                 )}
               </button>
               {sorting.length > 1 && column.getSortIndex() >= 0 && (
-                <span className="absolute top-[14%] right-[14%] z-[1] flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
+                <span className="absolute top-[14%] inset-e-[14%] z-1 flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
                   {column.getSortIndex() + 1}
                 </span>
               )}
@@ -120,6 +118,6 @@ export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

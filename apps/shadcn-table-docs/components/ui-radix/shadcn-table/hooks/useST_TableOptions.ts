@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { ST_Default_Icons } from '@/components/ui-radix/shadcn-table/icons';
 import { ST_Localization_EN } from '@/components/ui-radix/shadcn-table/shared/locales/en';
 import {
@@ -46,7 +46,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableColumnOrdering = false,
   enableColumnPinning = false,
   enableColumnResizing = false,
-  enableColumnVirtualization,
+  enableColumnVirtualization: enableColumnVirtualizationProp,
   enableDensityToggle = true,
   enableExpandAll = true,
   enableExpanding,
@@ -64,7 +64,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enablePagination = true,
   enableRowPinning = false,
   enableRowSelection = false,
-  enableRowVirtualization,
+  enableRowVirtualization: enableRowVirtualizationProp,
   enableSelectAll = true,
   enableSorting = true,
   enableStickyHeader = false,
@@ -74,7 +74,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableTopToolbar = true,
   getRowCanExpand,
   icons,
-  id = useId(),
+  id: idProp,
   layoutMode,
   localization,
   manualFiltering,
@@ -95,29 +95,36 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   selectAllMode = 'page',
   ...rest
 }: ST_TableOptions<TData>) => {
-  icons = useMemo(() => ({ ...ST_Default_Icons, ...icons }), [icons]);
-  localization = useMemo(
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
+  const definedIcons = useMemo(
+    () => ({ ...ST_Default_Icons, ...icons }),
+    [icons],
+  );
+  const definedLocalization = useMemo(
     () => ({
       ...ST_Localization_EN,
       ...localization,
     }),
     [localization],
   );
-  defaultColumn = useMemo(
+  const definedDefaultColumn = useMemo(
     () => ({ ...ST_DefaultColumn, ...defaultColumn }),
     [defaultColumn],
   );
-  defaultDisplayColumn = useMemo(
+  const definedDefaultDisplayColumn = useMemo(
     () => ({
       ...ST_DefaultDisplayColumn,
       ...defaultDisplayColumn,
     }),
     [defaultDisplayColumn],
   );
-  //cannot be changed after initialization
-  [enableColumnVirtualization, enableRowVirtualization] = useMemo(
-    () => [enableColumnVirtualization, enableRowVirtualization],
-    [],
+  // Virtualization is fixed at mount.
+  const [{ enableColumnVirtualization, enableRowVirtualization }] = useState(
+    () => ({
+      enableColumnVirtualization: enableColumnVirtualizationProp,
+      enableRowVirtualization: enableRowVirtualizationProp,
+    }),
   );
 
   if (!columnResizeDirection) {
@@ -158,8 +165,8 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     columnResizeDirection,
     columnResizeMode,
     createDisplayMode,
-    defaultColumn,
-    defaultDisplayColumn,
+    defaultColumn: definedDefaultColumn,
+    defaultDisplayColumn: definedDefaultDisplayColumn,
     editDisplayMode,
     enableBottomToolbar,
     enableColumnActions,
@@ -193,8 +200,8 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableTableHead,
     enableToolbarInternalActions,
     enableTopToolbar,
-    // v9 makes `row.toggleExpanded()` a no-op when `row.getCanExpand()` is
-    // false, and detail-panel rows have no sub rows, so a table with
+    // `row.toggleExpanded()` is a no-op when `row.getCanExpand()` is false,
+    // and detail-panel rows have no sub rows, so a table with
     // `renderDetailPanel` treats every row as expandable.
     getRowCanExpand:
       getRowCanExpand ??
@@ -202,10 +209,10 @@ export const useST_TableOptions: <TData extends ST_RowData>(
         !!renderDetailPanel ||
         ((enableExpanding ?? true) && !!row.subRows?.length)),
     getSubRows: (row) => row?.subRows,
-    icons,
+    icons: definedIcons,
     id,
     layoutMode,
-    localization,
+    localization: definedLocalization,
     manualFiltering,
     manualGrouping,
     manualPagination,

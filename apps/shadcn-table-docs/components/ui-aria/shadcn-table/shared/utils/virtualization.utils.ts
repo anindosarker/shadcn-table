@@ -1,9 +1,8 @@
 import { type Range, defaultRangeExtractor } from '@tanstack/react-virtual';
 
 /**
- * When scroll, the `draggingRow` or `draggingColumn` can be removed from document because of virtualization,
- * then, the `dragEnd` event on `ST_TableBodyRowGrabHandle` or `ST_TableHeadCellGrabHandle` will not fire.
- * We should keep the `draggingRow` or `draggingColumn` in `getVirtualItems()` to avoid this thing.
+ * Keeps the dragged row or column rendered while it scrolls out of the
+ * virtualized range, so its `dragend` fires.
  */
 export const extraIndexRangeExtractor = (
   range: Range,

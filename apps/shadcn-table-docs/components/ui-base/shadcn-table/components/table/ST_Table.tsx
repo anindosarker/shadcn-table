@@ -39,7 +39,6 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
       renderCaption,
     },
   } = table;
-  // These feed the column size memo, so they are hook subscriptions.
   const columnSizing = useSelector(table.atoms.columnSizing);
   const columnResizing = useSelector(table.atoms.columnResizing);
   const columnVisibility = useSelector(table.atoms.columnVisibility);
