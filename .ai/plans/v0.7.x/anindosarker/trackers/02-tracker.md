@@ -12,6 +12,7 @@ Gates:
 
 - Milestone 01 config switch and baseline: done (8b493528)
 - Lead step: 03 atoms (ba367b60), 05 registries and `getPlatform` (d5e8abc7); set worktrees `library-sweep-{a,b,c,d}` on `v0.7/library-sweep-{a,b,c,d}` cut at the lead head
+- Set D: cde17938
 
 Lint after the switch (`lint -f json` at 8b493528, 719 problems: library 691, stories 28, other 0)
 
@@ -81,3 +82,4 @@ Foundation: branch `v0.7/foundation`, worktree `foundation`, PR #70
 - S1 lead: aria `Select` `selectedKey` and `onSelectionChange` are deprecated in `react-aria-components` 1.22.1 (`value`, `onChange` replace them): 8 `no-deprecated` hits in aria `ST_EditCellTextField` (2), `ST_FilterTextField` (4), `ST_TablePagination` (2), outside the D11 and D13 lists. `lint` 0 needs them gone, so set C migrates them to `value` and `onChange` with the same selection behaviour, no disable. Revert means a reasoned disable per line and +8 on the aria expected count.
 - S1 lead: the expected `eslint-disable` count uses 04's eight `no-explicit-any` keep lines (`types.ts` 5, `tanstack.helpers.ts:35`, `stConfigFeature.ts` 2), not the "five 04 keep lines" of 02 2.1.1, and keeps the reasoned `stConfigFeature.ts:56,63` `no-unused-vars` lines and the reasoned `exhaustive-deps` lines at `ST_Table.tsx:68` and `ST_FilterOptionMenu.tsx:170` (D12: adding `table` would recompute per render, or the read is once per mount by design).
 - S1 lead: the harness gave no `Claude-Session:` line for this session, so the S1 lead commits and the PR #72 body carry none.
+- Set D: the cell-edit stories in `Editing.stories.tsx` lost their four `@ts-expect-error column id is a string key of Person` lines; the immutable row copy (`{ ...r, [cell.column.id]: value }`) typechecks, so `tsc -p tsconfig.stories.json` reported them unused. `GroupingColumnsSetState` and `VirtualizedDataSetAfterMount` set their after-mount data in a `setTimeout` (still one batch) instead of synchronously in the effect (`set-state-in-effect`). Revert means a reasoned disable per site.
