@@ -233,7 +233,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
             onDragOver={handleDragOver}
             ref={(node: HTMLTableCellElement) => {
               if (node) {
-                tableHeadCellRefs.current![column.id] = node;
+                tableHeadCellRefs.current[column.id] = node;
                 if (columnDefType !== 'group') {
                   columnVirtualizer?.measureElement?.(node);
                 }
