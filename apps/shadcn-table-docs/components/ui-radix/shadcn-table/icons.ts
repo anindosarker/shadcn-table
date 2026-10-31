@@ -34,6 +34,7 @@ import {
   X,
   XCircle,
 } from 'lucide-react';
+import type { ST_Icons } from '@/components/ui-radix/shadcn-table/types';
 
 export const ST_Default_Icons = {
   ArrowDownwardIcon: ArrowDown,
@@ -71,7 +72,4 @@ export const ST_Default_Icons = {
   SyncAltIcon: ArrowLeftRight,
   ViewColumnIcon: Columns3,
   VisibilityOffIcon: EyeOff,
-} as const;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- the Lucide map's own loose type; the icon sets type every map as ST_Icons from types.ts
-export type ST_Icons = Record<keyof typeof ST_Default_Icons, any>;
+} satisfies ST_Icons;
