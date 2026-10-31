@@ -50,12 +50,12 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   const isPinned = column?.getIsPinned();
 
   return cn(
-    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:left-0 data-[pinned=true]:before:-z-[1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
+    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
     column
       ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
         : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
           : undefined
       : undefined,
   );
@@ -75,8 +75,8 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   const {
     options: { enableColumnVirtualization, layoutMode },
   } = table;
-  // The live store: the caller's subscription lists these slices.
-  const { draggingColumn, hoveredColumn } = table.store.state;
+  const draggingColumn = table.atoms.draggingColumn.get();
+  const hoveredColumn = table.atoms.hoveredColumn.get();
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
@@ -112,11 +112,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
             'sticky opacity-[0.97]',
           ),
           style: {
-            left:
+            insetInlineStart:
               isColumnPinned === 'start'
                 ? `${column.getStart('start')}px`
                 : undefined,
-            right:
+            insetInlineEnd:
               isColumnPinned === 'end'
                 ? `${column.getAfter('end')}px`
                 : undefined,
@@ -136,11 +136,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
         ? 'transition-none'
         : 'transition-[padding] duration-150 ease-in-out',
       column.getIsResizing() || draggingColumn?.id === column.id
-        ? 'z-[2]'
+        ? 'z-2'
         : columnDefType !== 'group' && isColumnPinned
-          ? 'z-[1]'
+          ? 'z-1'
           : 'z-0',
-      'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+      'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
       pinnedStyles.className,
       tableCellProps?.className,
     ),
