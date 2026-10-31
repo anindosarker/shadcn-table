@@ -1,10 +1,11 @@
 import { type ComponentPropsWithRef, useMemo, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
-import { Header, Pressable } from 'react-aria-components';
+import { Header, Pressable, type Selection } from 'react-aria-components';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
+  DropdownMenuGroup,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -24,6 +25,23 @@ export interface ST_ShowHideColumnsMenuProps
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
 }
+
+/** The columns the menu lists, group children included, in menu order. */
+const getListedColumns = <TData extends ST_RowData>(
+  columns: ST_Column<TData>[],
+): ST_Column<TData>[] =>
+  columns.flatMap((column) =>
+    !column.columnDef.header || column.columnDef.visibleInShowHideMenu === false
+      ? []
+      : [column, ...getListedColumns(column.columns ?? [])],
+  );
+
+const getVisibleColumnIds = <TData extends ST_RowData>(
+  columns: ST_Column<TData>[],
+) =>
+  getListedColumns(columns)
+    .filter((column) => column.getIsVisible())
+    .map((column) => column.id);
 
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
@@ -59,6 +77,17 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       .forEach((col) => col.toggleVisibility(value));
   };
 
+  const toggleColumn = (column: ST_Column<TData>) => {
+    if (column.columnDef.columnDefType === 'group') {
+      const isVisible = column.getIsVisible();
+      column.columns?.forEach((childColumn) =>
+        childColumn.toggleVisibility(!isVisible),
+      );
+    } else {
+      column.toggleVisibility();
+    }
+  };
+
   const columns = getAllColumns();
   const centerLeafColumns = getCenterLeafColumns();
   const startLeafColumns = getStartLeafColumns();
@@ -84,6 +113,14 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     startLeafColumns,
     endLeafColumns,
   ]) as ST_Column<TData>[];
+
+  const handleSelectionChange = (keys: Selection) => {
+    const visibleIds = new Set(getVisibleColumnIds(allColumns));
+    getListedColumns(allColumns).forEach((column) => {
+      const isSelected = keys === 'all' || keys.has(column.id);
+      if (isSelected !== visibleIds.has(column.id)) toggleColumn(column);
+    });
+  };
 
   const isNestedColumns = allColumns.some(
     (col) => col.columnDef.columnDefType === 'group',
@@ -175,16 +212,30 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
           )}
         </Subscribe>
         <DropdownMenuSeparator />
-        {allColumns.map((column, index) => (
-          <ST_ShowHideColumnsMenuItems
-            allColumns={allColumns}
-            column={column}
-            hoveredColumn={hoveredColumn}
-            isNestedColumns={isNestedColumns}
-            key={`${index}-${column.id}`}
-            setHoveredColumn={setHoveredColumn}
-          />
-        ))}
+        <Subscribe source={table.atoms.columnVisibility}>
+          {() => (
+            // The column rows select their columns: selected means visible.
+            <DropdownMenuGroup
+              aria-label={localization.showHideColumns}
+              onSelectionChange={handleSelectionChange}
+              selectedKeys={
+                enableHiding ? getVisibleColumnIds(allColumns) : undefined
+              }
+              selectionMode={enableHiding ? 'multiple' : 'none'}
+            >
+              {allColumns.map((column, index) => (
+                <ST_ShowHideColumnsMenuItems
+                  allColumns={allColumns}
+                  column={column}
+                  hoveredColumn={hoveredColumn}
+                  isNestedColumns={isNestedColumns}
+                  key={`${index}-${column.id}`}
+                  setHoveredColumn={setHoveredColumn}
+                />
+              ))}
+            </DropdownMenuGroup>
+          )}
+        </Subscribe>
       </DropdownMenu>
     </DropdownMenuTrigger>
   );
