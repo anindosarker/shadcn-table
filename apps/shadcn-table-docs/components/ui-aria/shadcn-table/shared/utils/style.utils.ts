@@ -9,16 +9,13 @@ import {
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
 
-// MUI Collapse: tw-animate-css ships only the height pair (collapsible-down/up)
-// and reads the Radix variable, which React Aria never sets. React Aria's
-// DisclosurePanel measures itself into --disclosure-panel-height and
-// --disclosure-panel-width and marks its state only with aria-hidden, so both
-// pairs live here, driven by those variables. The horizontal pair is MUI
-// Collapse orientation="horizontal". overflow: hidden sits inside the width
-// keyframes so it applies only while the animation runs, as MUI Collapse clips
-// while transitioning and sets overflow: visible once entered. Rendered as a
-// hoisted <style href="st-aria-collapsible"> by the components that animate with
-// it.
+// Collapse keyframes. tw-animate-css ships only the height pair and reads the
+// Radix variable, which React Aria never sets; DisclosurePanel measures itself
+// into --disclosure-panel-height and --disclosure-panel-width and marks its
+// state only with aria-hidden, so both pairs live here. overflow: hidden sits
+// inside the width keyframes so the panel clips only while it animates.
+// Rendered as a hoisted <style href="st-aria-collapsible"> by the components that
+// animate with it.
 export const stCollapsibleKeyframes = `@keyframes st-aria-collapsible-down {
   from {
     height: 0;
