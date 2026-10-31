@@ -89,7 +89,7 @@ export const initCommand = (
  * (`radix-nova`, `base-sera`, `aria-nova`, ...), which the site maps onto
  * the base.
  */
-export const registryNamespace = 'st';
+export const registryNamespace = 'shadcn-table';
 
 export const registryAddCommand = (pm: PackageManager = 'pnpm') =>
   `${runners[pm]} registry add @${registryNamespace}=${siteUrl}/r/{style}/{name}.json`;
