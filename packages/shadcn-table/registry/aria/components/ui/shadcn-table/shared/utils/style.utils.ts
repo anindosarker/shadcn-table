@@ -1,4 +1,4 @@
-import { type CSSProperties, type TransitionEvent, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { type ST_TooltipProps } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
@@ -12,24 +12,34 @@ import {
 /**
  * React Aria keeps a collapsed panel's children mounted, so a panel renders
  * them only while expanded. This keeps them until the panel's own collapse
- * transition ends, so it animates shut instead of snapping. Pass
- * `animated: false` for a panel without a transition, which never fires
- * `transitionend`. Under `motion-reduce:transition-none` no transition runs
- * either, so the children stay in the hidden panel until the next expand.
+ * animations settle, so it animates shut instead of snapping, the way React
+ * Aria waits before it hides the panel. A collapse that runs no transition
+ * (reduced motion, no transition class, or a panel still at zero height)
+ * drops them at once. Pass `panelRef` to the panel.
  */
-export const useCollapsingChildren = (isExpanded: boolean, animated = true) => {
+export const useCollapsingChildren = (isExpanded: boolean) => {
+  const panelRef = useRef<HTMLDivElement>(null);
   const [isCollapsing, setIsCollapsing] = useState(false);
   const [prevIsExpanded, setPrevIsExpanded] = useState(isExpanded);
   if (prevIsExpanded !== isExpanded) {
     setPrevIsExpanded(isExpanded);
-    setIsCollapsing(animated && !isExpanded);
+    setIsCollapsing(!isExpanded);
   }
-  return {
-    onTransitionEnd: (event: TransitionEvent<HTMLElement>) => {
-      if (event.target === event.currentTarget) setIsCollapsing(false);
-    },
-    showChildren: isExpanded || isCollapsing,
-  };
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!isCollapsing || !panel) return;
+    let isCurrent = true;
+    Promise.all(panel.getAnimations().map((animation) => animation.finished))
+      .then(() => {
+        if (isCurrent) setIsCollapsing(false);
+      })
+      // A canceled animation means the panel expanded again.
+      .catch(() => {});
+    return () => {
+      isCurrent = false;
+    };
+  }, [isCollapsing]);
+  return { panelRef, showChildren: isExpanded || isCollapsing };
 };
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');

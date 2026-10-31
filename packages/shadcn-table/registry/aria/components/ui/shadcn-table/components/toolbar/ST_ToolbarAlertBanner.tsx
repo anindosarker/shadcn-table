@@ -32,7 +32,7 @@ const toolbarAlertBannerVariants = cva(
   },
 );
 
-// A stacked banner keeps its alert until the collapse transition ends; an
+// A stacked banner keeps its alert until its collapse animation settles; an
 // overlay banner has no transition and drops it at once.
 const AlertBannerContent = ({
   animated,
@@ -43,10 +43,7 @@ const AlertBannerContent = ({
   children: ReactNode;
   isExpanded: boolean;
 }) => {
-  const { onTransitionEnd, showChildren } = useCollapsingChildren(
-    isExpanded,
-    animated,
-  );
+  const { panelRef, showChildren } = useCollapsingChildren(isExpanded);
 
   return (
     <CollapsibleContent
@@ -55,7 +52,8 @@ const AlertBannerContent = ({
           ? 'h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none'
           : undefined
       }
-      onTransitionEnd={onTransitionEnd}
+      // The part's props type leaves out the ref the DisclosurePanel takes.
+      {...{ ref: panelRef }}
     >
       {showChildren && children}
     </CollapsibleContent>
