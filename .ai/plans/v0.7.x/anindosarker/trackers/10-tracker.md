@@ -27,8 +27,18 @@ Gates:
   - `eslint-disable` count at 3633b9f6: base 53, radix 53, aria 55, unchanged; `grep -rn "queueMicrotask"` at 3633b9f6: only `shared/utils/cell.utils.ts` per base
   - `pnpm --filter shadcn-table test:base` (port 5341), `test:radix` (5344), `test:aria` (5347), concurrently at 3633b9f6: green, 71 files, 469 tests each (new: `PanelCollapse` `ProgressAndBannerCollapse`; `MenuOpeners` `ColumnActions` filter-by-column step; `SearchField` `OpenCloseAndEscape` clear-then-close step)
   - `pnpm --filter shadcn-table-docs types:check` at 3633b9f6: green; `lint`: exit 0, 0 errors, the same 9 warnings; `build`: green
-  - New play tests against the pre-fix code: `PanelCollapse` fails on the ec656f3d parent aria toolbar files (progress gone at once); the `MenuOpeners` filter-by-column step passes on the pre-fix code too (see the declined finding under Attention)
-  - CI run: pending (PR #74) at 3633b9f6
+  - New play tests against the pre-fix code: `PanelCollapse` fails on the ec656f3d parent aria toolbar files (progress gone at once); the `MenuOpeners` filter-by-column step as written then passes on the pre-fix code too (see the declined finding under Attention)
+  - CI run 41199417119 (PR #74) at a86309a8: green, all 15 checks
+- Review round 2 fixes, rerun after the last code change (4de7e42f library, b2b1647a regenerated aria docs copies):
+  - `pnpm registry:build` and `pnpm --filter shadcn-table-docs lib:install base`, `radix`, `aria` at 3ea4cbb4 (committed in 25202af6), `lib:install aria` again at 4de7e42f (committed in b2b1647a): green, `registry.json` unchanged
+  - `pnpm --filter shadcn-table lint`, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `exec tsc -p tsconfig.stories.json` at b2b1647a: green
+  - `pnpm check:tailwind` at b2b1647a: green, 0 not canonical or physical (aria 1233 candidates); `pnpm check:bases` at b2b1647a: green, registry/aria 38 allowed to differ (`ST_TableHeadCellResizeHandle.tsx` back out of `aria-diff.json`, 47816b07)
+  - `eslint-disable` count at b2b1647a: base 53, radix 53, aria 55, unchanged; `grep -rn "queueMicrotask"`: only `shared/utils/cell.utils.ts` per base
+  - `pnpm --filter shadcn-table test:base` (port 5341), `test:radix` (5344), `test:aria` (5347), concurrently at b2b1647a: green, 71 files, 469 tests each; aria `DetailPanel` file 5 more runs under load (docs build alongside): green each time
+  - `pnpm --filter shadcn-table-docs types:check` at b2b1647a: green; `lint`: exit 0, 0 errors, the same 9 warnings; `build`: green
+  - `MenuOpeners` `ColumnActions` now asserts the focused `Filter by First Name` textbox after "Filter by column": fails at a86309a8 in base and aria (focus on the opener), passes in radix; passes at 1e9c8327 in all three
+  - Aria `DetailPanel` `Single Expand` failed at a86309a8 and 25202af6 under load (6 of 6 local runs, and CI run 41200347057 at 25202af6): row 1's collapse ran no transition, so `transitionend` never fired and its detail stayed mounted in the hidden panel; fixed in 4de7e42f
+  - CI run 41201459254 (PR #74) at b2b1647a: green, all 15 checks
 
 - Ride-alongs: done (174fac3c icons lint, 4bcae752 Remix type fix, bc3ffa65 checkbox `indeterminateIcon`, 5bea26a0 registry and docs copies)
 - Milestone 01 reproduce and 1.6.2 to 1.6.8: done (43af46f6 library, 382a33a4 stories)
@@ -47,7 +57,7 @@ Notes:
 - Base and radix `ST_FilterOptionMenu` gain `isSubMenu` (as aria has) for the filter-mode `DropdownMenuSub`.
 - `isNumberColumn` sits in `shared/utils/column.utils.ts`, which `index.ts` re-exports whole, so it is public.
 - The edit modal keeps the last row in state while it plays its exit; `ST_TableContainer` mounts it whenever a display mode is `modal`, and no longer selects `actionCell`.
-- Aria detail panel, progress bar and stacked alert banner keep their content mounted until their collapse transition ends, through one `useCollapsingChildren` hook in aria `shared/utils/style.utils.ts` (internal, not re-exported; the file is already on `aria-diff.json`). The overlay banner has no transition and drops its content at once.
+- Aria detail panel, progress bar and stacked alert banner keep their content mounted until the panel's own collapse animations settle (`getAnimations()`, as React Aria waits before it hides the panel), through one `useCollapsingChildren` hook in aria `shared/utils/style.utils.ts` (internal, not re-exported; the file is already on `aria-diff.json`). A collapse with no transition (the overlay banner, reduced motion, a fast toggle) drops it at once. The part's `CollapsibleContent` props type leaves out the `ref` the DisclosurePanel takes, so the panels pass it as `{...{ ref: panelRef }}`; revert: a sentinel element inside the panel.
 - 2c38ea8e was pushed with one lint error (React Compiler `preserve-manual-memoization` on an aria `useCallback`), fixed in 7b4370db.
 
 ## Attention
@@ -66,10 +76,10 @@ Notes:
 - Escape in the search field clears a typed value first and closes the field on the next press (an empty field closes at once), like a native search input; D25 says only "Escape closes it". Revert: drop the clear step so Escape always closes, leaving the filter applied behind the closed field.
 - Aria popover filter focuses its input through a mount ref callback on the popover content (`focusFilterInput`), not `autoFocus` as D28 names: the popover hosts four filter variants (text, range fields, range slider, checkbox) and only the table's `filterInputRefs` reaches all of them; `autoFocus` would need a new prop threaded through `ST_TableHeadCellFilterContainer` into each input.
 - Review finding "`focusFilterOnCloseRef` never reset" declined: `ST_ColumnActionMenu` renders only while `anchorEl` is set (`ST_TableHeadCellColumnActionsButton`), so every open is a fresh mount with the flag false. The new `MenuOpeners` `ColumnActions` step (filter by column, reopen, Escape, focus on the opener) passes before and after.
-- "Filter by column" does not hand focus to the column's filter input in base and aria (radix does), found while writing that step. Base: the menu unmounts in the same commit that mounts the filter row, so `finalFocus` runs before the input's ref is set and falls back to the opener. Aria: `handleFilterByColumn` focuses the input before the hidden filter row renders. D28 (F43) asks for the primitive's close-focus hook; a fix needs either a menu that stays mounted while closed or focusing the input after the filter row commits. Not fixed in this round.
+- "Filter by column" in aria (1e9c8327) shows the filter row and closes the menu in one `flushSync`, then focuses the input: React Aria menus have no close-focus hook and the open menu keeps the page inert, and the menu restores focus a frame later only when focus fell to the body. Base commits the filter row with `flushSync` before the menu unmounts so `finalFocus` finds the input; radix keeps `onCloseAutoFocus`. Not the review's shared `ST_TableHeadCellFilterContainer` effect: it needs a table-level pending ref (a public `ST_TableRefs` change, D28 "no public type changes"), and it misses the filter-mode submenu path where the row is already shown.
 - The cell context menu does not close on a second right-click on the same cell: the cell has no opener button, a native context menu reopens there too, and a per-cell hook would cost a hook per cell. `ST_CellActionMenu` stays mounted (F53) but its inner content still unmounts on close, so it shows no exit animation.
 - Aria `ST_SelectCheckbox` and `ST_FilterCheckbox` keep their tooltip wrappers: React Aria `Checkbox` and `RadioGroup` are not `Focusable` triggers. Pagination, filter field and sort label buttons are the triggers now.
 - `ST_ActionMenuItem` keeps `onOpenSubMenu` (public prop) but only shows a submenu arrow; nothing calls it.
 - The RTL story asserts the resize handle at the header cell's inline-end edge (the left side in RTL, D31's direction-neutral `end`), not the inline-start edge the 1.6.8 row names.
-- The sort label tooltip moved inside its span. The resize handle keeps only its own base's orientation selector (`data-[orientation=vertical]` base and radix, `aria-[orientation=vertical]` aria), so `components/head/ST_TableHeadCellResizeHandle.tsx` joins `aria-diff.json`.
+- The sort label tooltip moved inside its span. The resize handle keeps both orientation selectors and its shared comment in every base (47816b07 reverts ee714824), so `aria-diff.json` gets no new entry (2.1.2).
 - No harness reminder gave a `Claude-Session:` line (ATTENTION A5), so the commits and the PR #74 body carry none.
