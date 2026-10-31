@@ -8,7 +8,7 @@ import {
   type ST_ColumnPinningPosition,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 
 const columnPinningButtonsVariants = cva('min-w-[70px] text-center');
 
