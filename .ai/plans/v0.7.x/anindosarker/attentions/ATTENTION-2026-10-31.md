@@ -69,3 +69,7 @@
 ## A14 Spec 06 shadows are lighter under `color-mix`
 
 - The S1 verifier's pixel comparison against `reference/06-*` found every element at the same position and every shadow present, but the light-mode pinned-edge and bottom-toolbar shadows lighter (peak 240 vs 223, 245 vs 234) and a faint new sticky-header band in dark mode, the expected effect of D32's `color-mix(in oklab, var(--foreground) 15%, transparent)` and `10%`. Three judges run on the captures (result in `trackers/06-tracker.md`). If a stronger light-mode shadow is wanted, raise the percentages per site.
+
+## A15 Install command keeps two code paths that build the same string
+
+- In `apps/shadcn-table-docs/components/mdx/install-command.tsx` the default form returns `editionAddCommand(library, base, pm, overwrite)` while the fallthrough `addCommand(installed, base, pm)` builds the same URL when `installed` is the edition item. The S5 review called one path redundant; the fixer kept both because spec 08 1.6.5 binds the default command to `editionAddCommand` and it has no other caller. Accept, or amend the spec and drop one path at triage.
