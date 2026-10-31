@@ -14,10 +14,8 @@ import {
 } from '@/components/ui/shadcn-table/types';
 
 /**
- * `TableState_FeatureMap` is not generic and `Cell` is invariant in `TData`, so
- * the slice and its `onActionCellChange` option are typed over `ST_RowData`.
- * The `TData` shape is what `ST_TableState<TData>` and `ST_TableOptions<TData>`
- * show to users.
+ * Typed over `ST_RowData`, since `TableState_FeatureMap` is not generic and
+ * `Cell` is invariant in `TData`; `ST_TableState<TData>` shows the typed shape.
  */
 export interface ST_TableState_CellActions {
   actionCell: ST_Cell<ST_RowData> | null;

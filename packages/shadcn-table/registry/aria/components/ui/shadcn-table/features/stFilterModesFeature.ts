@@ -83,12 +83,8 @@ export const stFilterModesFeature: TableFeature = {
           TableOptions_ColumnFiltering<TableFeatures, RowData>,
           'onColumnFiltersChange'
         >;
-    // Core memoizes the filtered row model on the `columnFilters` and
-    // `globalFilter` atoms, so a mode change alone leaves the rows on the
-    // previous mode's function. Emitting the same filters as a new array
-    // re-runs filtering once the columns pick up the new mode; the raw handler,
-    // because `setColumnFilters` would drop filters by the old mode's rules.
-    // With no filter set there is nothing to re-run, so no handler call.
+    // The filtered row model is memoized on the filter atoms, so a mode change
+    // re-emits the set filters through the raw handler to re-run filtering.
     const rerunFilters = () => {
       const { atoms } = table as unknown as ST_TableInstance<ST_RowData>;
       if (!atoms.columnFilters.get().length && !atoms.globalFilter.get())

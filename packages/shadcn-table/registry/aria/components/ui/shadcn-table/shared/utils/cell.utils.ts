@@ -168,7 +168,6 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
     );
     let nextCell: HTMLElement | undefined = undefined;
 
-    //home/end first or last cell in row
     const findEdgeCell = (rowIndex: 'c' | 'f' | 'l', edge: 'f' | 'l') => {
       const row =
         rowIndex === 'c'
@@ -182,7 +181,6 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
       return targetCell as HTMLElement;
     };
 
-    //page up/down first or last cell in column
     const findBottomTopCell = (columnIndex: number, edge: 'b' | 't') => {
       const row =
         edge === 't'

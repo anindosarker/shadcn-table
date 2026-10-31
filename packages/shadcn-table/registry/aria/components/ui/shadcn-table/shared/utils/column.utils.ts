@@ -173,8 +173,8 @@ export const getColumnFilterInfo = <TData extends ST_RowData>({
   const allowedColumnFilterOptions =
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
 
-  // v9 computes facets as soon as the row model is registered; the option
-  // keeps them empty until enabled
+  // Facets are computed as soon as the row model is registered; the option
+  // keeps them empty until enabled.
   const facetedUniqueValues = enableFacetedValues
     ? column.getFacetedUniqueValues()
     : emptyFacetedUniqueValues;
