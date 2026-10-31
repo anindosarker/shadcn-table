@@ -1,4 +1,5 @@
 import { type ComponentPropsWithRef, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,11 +118,12 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   };
 
   // "Filter by column" hands focus to the column's filter input when the
-  // menu closes, instead of back to the opener.
+  // menu closes, instead of back to the opener. The filter row commits before
+  // the menu unmounts, so `finalFocus` finds the input.
   const focusFilterOnCloseRef = useRef(false);
 
   const handleFilterByColumn = () => {
-    setShowColumnFilters(true);
+    flushSync(() => setShowColumnFilters(true));
     focusFilterOnCloseRef.current = true;
     setAnchorEl(null);
   };
