@@ -50,7 +50,6 @@ export const getValueAndLabel = (
   return { label, value };
 };
 
-// debounce from @mui/utils.
 export interface Cancelable {
   clear(): void;
 }
@@ -74,7 +73,6 @@ export function debounce<T extends (...args: never[]) => unknown>(
   return debounced as T & Cancelable;
 }
 
-// createFilterOptions from @mui/material useAutocomplete.
 export interface CreateFilterOptionsConfig<Value> {
   ignoreAccents?: boolean;
   ignoreCase?: boolean;

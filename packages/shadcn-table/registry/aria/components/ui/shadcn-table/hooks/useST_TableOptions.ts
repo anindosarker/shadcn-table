@@ -200,8 +200,8 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableTableHead,
     enableToolbarInternalActions,
     enableTopToolbar,
-    // v9 makes `row.toggleExpanded()` a no-op when `row.getCanExpand()` is
-    // false, and detail-panel rows have no sub rows, so a table with
+    // `row.toggleExpanded()` is a no-op when `row.getCanExpand()` is false,
+    // and detail-panel rows have no sub rows, so a table with
     // `renderDetailPanel` treats every row as expandable.
     getRowCanExpand:
       getRowCanExpand ??

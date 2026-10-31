@@ -159,8 +159,8 @@ const createSetup = <TData extends ST_RowData>(
       },
     } as ST_StatefulTableOptions<TData>);
   initialState.globalFilterFn = definedTableOptions.globalFilterFn ?? 'fuzzy';
-  // v9 spreads a partial `columnPinning` over its defaults without filling
-  // the other side, so `{ start: [...] }` alone would read `end` as undefined
+  // A partial `columnPinning` is spread over the defaults without filling the
+  // other side, so `{ start: [...] }` alone would read `end` as undefined.
   if (initialState.columnPinning) {
     initialState.columnPinning = {
       start: initialState.columnPinning.start ?? [],
@@ -341,12 +341,9 @@ export const useST_TableInstance = <
     ],
   );
 
-  // The ST state, setters and refs come from the features on the core table.
-  // The ST options type their rows, cells and columns for `TData` (state,
-  // `on*Change`, column defs), which the erased feature slots cannot hold
-  // since `Row` is invariant in `TData`, so the options go in under core's
-  // type; the result cast re-applies the ST wrapper types to the row, column,
-  // cell and header getters. Caller atoms win over own atoms.
+  // The erased feature slots cannot hold the `TData`-typed ST options, since
+  // `Row` is invariant in `TData`, so the options go in under core's type and
+  // the result cast re-applies the ST types; caller atoms win over own atoms.
   const table = useAppTable(
     {
       ...definedTableOptions,

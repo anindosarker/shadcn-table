@@ -137,11 +137,9 @@ export interface ST_PartPropTypes {
 export type ST_PartProps = object;
 
 /**
- * `ST_PartPropTypes` with every part tree-neutral. The feature-map
- * augmentation (stConfigFeature) and the table instance types (`table.options`,
- * `column.columnDef`) use it, so they stay identical across trees; the options
- * a user writes (`ST_TableOptions`, `ST_ColumnDef`) take this tree's
- * `ST_PartPropTypes`.
+ * `ST_PartPropTypes` with every part tree-neutral, so the feature-map
+ * augmentation and the table instance types stay identical across trees; the
+ * options a user writes take this tree's `ST_PartPropTypes`.
  */
 export type ST_NeutralPartPropTypes = Record<
   keyof ST_PartPropTypes,
@@ -439,9 +437,8 @@ export type ST_TableInstance<
 /**
  * The core table that `row.table`, `cell.table`, `column.table` and
  * `header.table` point to. It is the instance `constructTable` builds, not the
- * per-render wrapper `useShadcnTable` returns, so it has no `state` (read
- * `table.store.state` or the atoms) and no `AppTable` (`useAppTable` attaches
- * it to the wrapper).
+ * per-render wrapper `useShadcnTable` returns, so it has no `state` (read the
+ * atoms) and no `AppTable` (`useAppTable` attaches it to the wrapper).
  */
 export type ST_CoreTableInstance<TData extends ST_RowData = ST_RowData> = Omit<
   ST_TableInstance<TData>,

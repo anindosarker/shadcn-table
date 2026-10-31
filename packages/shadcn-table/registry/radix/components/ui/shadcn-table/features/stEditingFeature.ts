@@ -17,10 +17,8 @@ import {
 import { createRow } from '@/components/ui/shadcn-table/shared/utils/tanstack.helpers';
 
 /**
- * `TableState_FeatureMap` is not generic and `Row` is invariant in `TData`, so
- * the instance-bearing slices and their `on*Change` options are typed over
- * `ST_RowData`. The `TData` shape is what `ST_TableState<TData>` and
- * `ST_TableOptions<TData>` show to users.
+ * Typed over `ST_RowData`, since `TableState_FeatureMap` is not generic and
+ * `Row` is invariant in `TData`; `ST_TableState<TData>` shows the typed shape.
  */
 export interface ST_TableState_Editing {
   creatingRow: ST_Row<ST_RowData> | null;
