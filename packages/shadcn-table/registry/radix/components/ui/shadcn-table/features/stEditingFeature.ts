@@ -40,7 +40,6 @@ export interface ST_Table_Editing<TData extends ST_RowData> {
   setEditingRow: (updater: ST_Updater<ST_Row<TData> | null>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stEditingFeature: TableFeature;
@@ -49,19 +48,21 @@ declare module '@tanstack/react-table' {
     stEditingFeature: ST_TableState_Editing;
   }
   interface TableOptions_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stEditingFeature: ST_TableOptions_Editing;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
     TData extends RowData,
   > {
     stEditingFeature: ST_Table_Editing<TData>;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stEditingFeature: TableFeature = {
   getInitialState: (initialState) => ({

@@ -31,7 +31,6 @@ export interface ST_Table_CellActions<TData extends ST_RowData> {
   setActionCell: (updater: ST_Updater<ST_Cell<TData> | null>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stCellActionsFeature: TableFeature;
@@ -40,19 +39,21 @@ declare module '@tanstack/react-table' {
     stCellActionsFeature: ST_TableState_CellActions;
   }
   interface TableOptions_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stCellActionsFeature: ST_TableOptions_CellActions;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
     TData extends RowData,
   > {
     stCellActionsFeature: ST_Table_CellActions<TData>;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stCellActionsFeature: TableFeature = {
   getInitialState: (initialState) => ({
