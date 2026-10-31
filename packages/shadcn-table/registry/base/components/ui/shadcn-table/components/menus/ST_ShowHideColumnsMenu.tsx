@@ -12,7 +12,6 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
@@ -165,7 +164,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
                       getDefaultColumnOrderIds(
                         {
                           ...table.options,
-                          state: table.store.state as ST_TableState<TData>,
+                          state: {
+                            columnOrder: table.atoms.columnOrder.get(),
+                            creatingRow: table.atoms.creatingRow.get(),
+                            grouping: table.atoms.grouping.get(),
+                          },
                         },
                         true,
                       ),

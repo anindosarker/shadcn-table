@@ -1,5 +1,4 @@
 import { type MouseEvent } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -67,12 +66,11 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
   const detailPanel = !!renderDetailPanel?.({ row, table });
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         expanded: state.expanded,
       })}
-      source={table.store}
     >
       {({ density }) => {
         const isExpanded = row.getIsExpanded();
@@ -127,6 +125,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

@@ -5,7 +5,6 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_RowData,
   type ST_TableOptions,
@@ -76,7 +75,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   // The selected count reads the filtered selected row model, so the selector
   // lists the filter slices besides the ones the banner shows.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
@@ -87,7 +86,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
         rowSelection: state.rowSelection,
         showAlertBanner: state.showAlertBanner,
       })}
-      source={table.store}
     >
       {({ density, grouping, rowSelection, showAlertBanner }) => {
         const totalRowCount = rowCount ?? getCoreRowModel().rows.length;
@@ -215,6 +213,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
           </Collapsible>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

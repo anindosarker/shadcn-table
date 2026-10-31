@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { type ComponentType, createElement } from 'react';
 import { Button } from '@/components/ui/button';
@@ -124,7 +123,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   // selector lists every slice that feeds it, and the row pins the label
   // range counts.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
@@ -135,7 +134,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         pagination: state.pagination,
         rowPinning: state.rowPinning,
       })}
-      source={table.store}
     >
       {({ pagination: { pageIndex = 0, pageSize = 10 } }) => {
         const totalRowCount = table.getRowCount();
@@ -375,6 +373,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

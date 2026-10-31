@@ -1,5 +1,4 @@
 import { type MouseEvent, useState } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -59,12 +58,11 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
       })}
-      source={table.store}
     >
       {({ creatingRow, editingRow }) => {
         const isCreating = creatingRow?.id === row.id;
@@ -128,6 +126,6 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

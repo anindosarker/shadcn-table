@@ -1,6 +1,5 @@
 import { type MouseEvent } from 'react';
 import { type FocusableElement } from 'react-aria-components';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
@@ -129,7 +128,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     }) satisfies CheckboxProps | RadioProps;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         isLoading: state.isLoading,
@@ -153,7 +152,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               isSomeSelected: row.getIsSomeSelected(),
             }),
       })}
-      source={table.store}
     >
       {({ density, isLoading }) => {
         const allRowsSelected = selectAll ? getAllRowsSelected() : undefined;
@@ -196,6 +194,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

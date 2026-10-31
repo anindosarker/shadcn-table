@@ -8,7 +8,6 @@ import {
   useId,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { Field, FieldDescription, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -99,7 +98,8 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   const saveInputValueToRowCache = (newValue: string) => {
     //@ts-expect-error _valuesCache is TanStack-internal
     row._valuesCache[column.id] = newValue;
-    const { creatingRow, editingRow } = table.store.state;
+    const creatingRow = table.atoms.creatingRow.get();
+    const editingRow = table.atoms.editingRow.get();
     if (creatingRow?.id === row.id) {
       setCreatingRow(row);
     } else if (editingRow?.id === row.id) {
@@ -133,11 +133,10 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   }
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isCreating: state.creatingRow?.id === row.id,
       })}
-      source={table.store}
     >
       {({ isCreating }) => {
         const isFormMode = ['custom', 'modal'].includes(
@@ -278,6 +277,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         );
         return withField(input);
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

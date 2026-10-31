@@ -250,7 +250,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   };
 
   // React Aria refills the input with the chosen item's label after
-  // onSelectionChange; handleAutocompleteChange owns that case so the filter
+  // onChange; handleAutocompleteChange owns that case so the filter
   // gets the option value.
   const itemPressLabel = useRef<string | null>(null);
 
@@ -524,8 +524,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               inputValue={(filterValue as string) ?? ''}
               items={autocompleteItems}
               onInputChange={handleAutocompleteInputChange}
-              onSelectionChange={handleAutocompleteChange}
-              selectedKey={autocompleteValue}
+              onChange={handleAutocompleteChange}
+              value={autocompleteValue}
             >
               <ComboboxInput
                 type="text"
@@ -555,10 +555,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             <Select
               aria-label={filterPlaceholder}
               isDisabled={!!filterChipLabel || textFieldProps.disabled}
-              onSelectionChange={(key) => handleChange(key ?? '')}
+              onChange={(key) => handleChange(key ?? '')}
               placeholder={filterPlaceholder}
               // React Aria shows the placeholder for null, never for "".
-              selectedKey={(filterValue as string) || null}
+              value={(filterValue as string) || null}
             >
               <SelectTrigger
                 aria-label={filterPlaceholder}

@@ -1,5 +1,4 @@
 import { type ComponentPropsWithRef, useMemo } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
@@ -241,12 +240,11 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   // The column mode name is written onto the column def from
   // `columnFilterFns` in the root render, so that slice is selected.
   const menuItems = (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         globalFilterFn: state.globalFilterFn,
       })}
-      source={table.store}
     >
       {({ globalFilterFn }) => {
         const filterOption =
@@ -293,7 +291,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 
   if (isSubMenu) {
