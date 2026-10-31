@@ -59,7 +59,11 @@ Gates:
 - `pnpm --filter shadcn-table-docs build` at 28d26732: green, `git status` clean after
 - `check-pages.mjs a` and `d`, `--base base|radix|aria`, three `next start` concurrent (ports 5346, 5347, 5348, `NEXT_DIST_DIR=.next`) at 28d26732: green (a 302 passed, 0 failed each, `PASS /docs/api/st-hooks @1440 hook headings 8`; d 252 passed, 0 failed each)
 - `pnpm test:base` at bb89e856 reused: `bb89e856..28d26732` touches only docs example sources, `a.mjs` and `.ai/`, none in the package test tree
-- Acceptance (1.2) at 28d26732: build exit 0; `check-pages.mjs` exit 0 for all three bases (clusters a and d, the clusters `38c6b5f7..28d26732` touches: `st-hooks.mdx` and `a.mjs` in a, `custom-headless` in d; b, c, e at 38c6b5f7, untouched since); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+- Acceptance (1.2) at 28d26732, superseded by the 92e811c5 block below: its clause "b, c, e at 38c6b5f7, untouched since" was false. `38c6b5f7..28d26732` holds the spec 10 merge c318a189, whose 9f7905a1 (D27) turned the Show/Hide rows into checkbox menu items in every `components/ui-*` copy; `check-pages.mjs b --base base` and `--base radix` at 28d26732 were red on `/docs/guides/column-hiding` (`b.mjs:200` counted `[role="switch"]`), a spec 10 cause, not this branch's diff (`56eaad0e..28d26732` touches cluster a and d pages only)
+- Review fix 2 (92e811c5 `b.mjs` column-hiding check counts `[role="menuitemcheckbox"]`):
+- `pnpm exec eslint --max-warnings 0 scripts/page-checks/b.mjs` at 92e811c5: green
+- `check-pages.mjs b`, `c`, `e`, `--base base|radix|aria`, nine runs concurrent against one `next start` (port 5349, `NEXT_DIST_DIR=.next`, the 28d26732 build; `28d26732..92e811c5` touches only `b.mjs` and `.ai/`, neither in the build) at 92e811c5: green (b 268 passed, 0 failed each, `PASS /docs/guides/column-hiding @1440 disable-column-hiding: column checkbox rows`; c 285 each; e 596 each)
+- Acceptance (1.2) at 92e811c5: build exit 0 (28d26732, reused, `28d26732..92e811c5` touches only `b.mjs` and `.ai/`); `check-pages.mjs` exit 0 for all three bases, every cluster: a and d at 28d26732 (`28d26732..92e811c5` touches no a or d check or page), b, c, e at 92e811c5 (above); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
 
 ## Attention
 
@@ -80,10 +84,11 @@ Gates:
 - React Aria: Esc does not leave full screen while focus stays on `ST_ToggleFullScreenButton` after a mouse click, in the headless example and in `ST_TableLayout` (`/docs/examples/basic`); Esc with focus elsewhere in the container works, and base and radix work with focus on the button. The React Aria button or its tooltip trigger stops the Escape keydown before the container's `onKeyDown`. Library side (packages/, out of spec 08 scope); the `HeadlessFullScreen` story focuses the wrapper before Esc, so it does not cover this. Owner: follow-up in the aria tree.
 - The headless example had no Esc handling or full-screen classes to drop (the spec's "drops its own" did not apply); it now gains `ST_ToggleFullScreenButton` next to the search field so full screen is reachable, and keeps its own wrapper classes in a `filter(Boolean).join(' ')` list (`flex flex-col bg-background`, `my-8` inline, `overflow-auto` in full screen) because example sources are registry items and `@/lib/utils` (`cn`) has no registry mapping. The `st-hooks.mdx` snippet uses `cn` (consumer code). The milestone 5 MDX link to the hook is `/docs/api/st-hooks#usest_fullscreencontainer`.
 - No harness `Claude-Session:` or attribution reminder reached this run; commits and the PR #76 body carry none (A5).
+- `b.mjs` (cluster b, column-hiding) is outside spec 08's own pages; the review fixer updated its selector to the D27 checkbox rows so Acceptance is green at HEAD, and `claude/review` keeps the red check until PR #76 merges. No harness `Claude-Session:` reminder reached the fixer; 92e811c5 carries no trailer.
 
 - Milestone 01 locale list and selector: done (970cf469)
 - Milestone 02 toolbar base select: done (8d8ef490)
 - Milestone 03 guide, README, minimums, namespace: done (0ed09813)
 - Milestone 04 edition select, Short form, create section, icons guide: done (2ec2c084)
 - Milestone 05 headless example: done (bb89e856, review fixes 28d26732)
-- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at 28d26732
+- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at 92e811c5
