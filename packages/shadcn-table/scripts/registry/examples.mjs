@@ -16,12 +16,15 @@
  * - title and description from the example's docs page frontmatter
  *   (content/docs/examples/<slug>.mdx, or the page that renders the
  *   example's component), else the slug in Title Case
- * - registryDependencies: the shadcn parts that base's sources import
- *   from `@/components/ui/<part>` (library paths excluded). No dependency on
- *   the library item: the example works on every base's item alike, so
- *   the docs say to install the table first.
+ * - registryDependencies: that base's core item (coreItemAddress in lib.mjs:
+ *   the GitHub address, the local server URL under `--dev`), then the shadcn
+ *   parts that base's sources import from `@/components/ui/<part>` (library
+ *   paths excluded). Core carries no icon map: a project without the table
+ *   gets core plus the example, and the icon map comes from the table item
+ *   it installs (`shadcn-table` or an icon set item).
  * - dependencies: third-party packages imported by the example files, other
- *   than react, react-dom and lucide-react (already library dependencies)
+ *   than react and react-dom; lucide-react is listed when an example imports
+ *   it, since core does not install it
  * - files: `examples/<base>/<slug>/<file>`, targets under
  *   `@components/examples/<slug>/` in every base, keeping the folder
  *   layout, so the files land side by side in the project's components
@@ -33,6 +36,9 @@
  *
  * Usage (repo root):
  *   pnpm registry:items                               # writes registry.json
+ *   node packages/shadcn-table/scripts/registry/examples.mjs --dev --out <file>
+ *     writes the catalog to <file> instead, core addresses as local server
+ *     URLs (build.mjs --dev merges it into .dev/registry.json)
  *   node packages/shadcn-table/scripts/registry/examples.mjs --resolve <dir>
  *     also writes one resolved item json (files[].content filled in) per
  *     example into <dir>, for local `shadcn add <file> --dry-run` checks
@@ -42,6 +48,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   aliasItems,
+  coreItemAddress,
   DEFAULT_BASE,
   DOCS,
   BASES,
@@ -59,14 +66,21 @@ const { findExamplePage, loadExamplePages } =
 const APP_DIR = DOCS;
 const EXAMPLES_DIR = path.join(APP_DIR, 'examples');
 const PAGES_DIR = path.join(APP_DIR, 'content', 'docs', 'examples');
-const OUT_FILE = path.join(APP_DIR, 'registry.json');
+const DEFAULT_OUT_FILE = path.join(APP_DIR, 'registry.json');
 
 const LIBRARY_IMPORT = '@/components/ui/shadcn-table';
 const UI_IMPORT_PREFIX = '@/components/ui/';
-/** Packages the library item already installs. */
-const SKIPPED_PACKAGES = new Set(['react', 'react-dom', 'lucide-react']);
+/** Packages every project already has. */
+const SKIPPED_PACKAGES = new Set(['react', 'react-dom']);
 
 const args = process.argv.slice(2);
+const outIndex = args.indexOf('--out');
+if (outIndex !== -1 && !args[outIndex + 1]) {
+  console.error('--out needs a file');
+  process.exit(1);
+}
+const OUT_FILE =
+  outIndex === -1 ? DEFAULT_OUT_FILE : path.resolve(args[outIndex + 1]);
 const resolveIndex = args.indexOf('--resolve');
 const resolveDir =
   resolveIndex === -1 ? null : path.resolve(args[resolveIndex + 1] ?? '');
@@ -143,7 +157,7 @@ async function buildItem({ base, slug, pages }) {
         specifier === LIBRARY_IMPORT ||
         specifier.startsWith(`${LIBRARY_IMPORT}/`)
       ) {
-        // Covered by the library item.
+        // Covered by the core dependency.
       } else if (specifier.startsWith(UI_IMPORT_PREFIX)) {
         registryDependencies.add(
           specifier.slice(UI_IMPORT_PREFIX.length).split('/')[0],
@@ -174,10 +188,8 @@ async function buildItem({ base, slug, pages }) {
     title,
     description,
     files,
+    registryDependencies: [coreItemAddress(base), ...registryDependencies],
   };
-  if (registryDependencies.size) {
-    item.registryDependencies = [...registryDependencies];
-  }
   if (dependencies.size) item.dependencies = [...dependencies].sort();
   return { item, sources };
 }

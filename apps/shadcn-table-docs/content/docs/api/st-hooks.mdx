@@ -135,3 +135,34 @@ const rowVirtualizer = useST_RowVirtualizer(table);
 ```
 
 You would only need to use this hook if you are writing a custom headless table and want the same default row virtualization behavior that ST provides. If you are using the ST components, this hook is already used internally by the `ST_Table` component.
+
+### useST_FullScreenContainer
+
+[Source Code](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts)
+
+This hook consumes a `table` instance and returns `isFullScreen` and `containerProps`: the Esc `onKeyDown` handler, `tabIndex` and the full-screen classes for the element that fills the screen.
+
+```tsx
+import { cn } from '@/lib/utils';
+import {
+  useShadcnTable,
+  useST_FullScreenContainer,
+} from '@/components/ui/shadcn-table';
+
+const table = useShadcnTable({
+  ...options,
+});
+
+const { containerProps } = useST_FullScreenContainer(table);
+
+return (
+  <div
+    {...containerProps}
+    className={cn('bg-background', containerProps.className)}
+  >
+    {/* your toolbar and table markup */}
+  </div>
+);
+```
+
+You would only need to use this hook if you are writing a custom headless table with its own wrapper. If you are using the ST components, this hook is already used internally by the `ST_TableLayout` component. See the [Custom Headless Example](/docs/examples/custom-headless).

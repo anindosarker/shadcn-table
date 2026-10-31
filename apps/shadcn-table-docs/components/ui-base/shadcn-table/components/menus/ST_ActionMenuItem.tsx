@@ -5,7 +5,6 @@ import {
 } from 'react';
 import { cva } from 'class-variance-authority';
 import { DropdownMenuItem } from '@/components/ui-base/dropdown-menu';
-import { Button } from '@/components/ui-base/button';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui-base/shadcn-table/types';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
@@ -17,6 +16,10 @@ export interface ST_ActionMenuItemProps
   divider?: boolean;
   icon: ReactNode;
   label: string;
+  /**
+   * When set, the item shows a submenu arrow. Not called: a submenu opens
+   * through `DropdownMenuSub`.
+   */
   onOpenSubMenu?: MouseEventHandler<HTMLElement>;
 }
 
@@ -37,11 +40,6 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
 
   return (
     <DropdownMenuItem
-      tabIndex={0}
-      // Base UI closes the menu on a plain item's click by default but keeps
-      // it open for checkbox and radio items; explicit so every library item
-      // closes unless the caller opts out.
-      closeOnClick
       {...rest}
       className={cn(
         actionMenuItemVariants(),
@@ -53,17 +51,7 @@ export const ST_ActionMenuItem = <TData extends ST_RowData>({
         <span className="inline-flex min-w-9 shrink-0">{icon}</span>
         {label}
       </div>
-      {onOpenSubMenu && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-xs"
-          onClick={onOpenSubMenu}
-          onMouseEnter={onOpenSubMenu}
-        >
-          <ArrowRightIcon />
-        </Button>
-      )}
+      {onOpenSubMenu && <ArrowRightIcon aria-hidden />}
     </DropdownMenuItem>
   );
 };

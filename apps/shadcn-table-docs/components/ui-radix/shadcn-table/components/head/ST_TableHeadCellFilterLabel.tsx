@@ -1,14 +1,15 @@
 import { type MouseEvent, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui-radix/button';
 import {
   Popover,
-  PopoverAnchor,
   PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui-radix/popover';
 import { cn } from '@/lib/utils';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui-radix/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import {
   type ButtonProps,
@@ -22,7 +23,7 @@ import {
 import { getValueAndLabel } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 
 const tableHeadCellFilterLabelVariants = cva(
-  'ml-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
+  'ms-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
   {
     variants: {
       active: {
@@ -55,14 +56,12 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  // The filter value and the faceted values behind the dropdown options memo
-  // follow the column and global filters, so both are hook subscriptions.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
   const filterValue = column.getFilterValue() as [string, string] | string;
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
 
   const {
     currentFilterOption,
@@ -123,58 +122,72 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
           )
           .replace('" "', '');
 
+  const filterInput = () => filterInputRefs.current?.[`${column.id}-0`];
+
+  // Shows the column filters and focuses the column's input once it renders.
+  const handleShowColumnFilters = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    flushSync(() => setShowColumnFilters(true));
+    filterInput()?.focus();
+    filterInput()?.select();
+  };
+
+  const buttonProps = {
+    size: 'icon-sm',
+    type: 'button',
+    variant: 'ghost',
+    ...rest,
+    className: cn(
+      tableHeadCellFilterLabelVariants({ active: isFilterActive }),
+      rest.className,
+    ),
+  } as const;
+
   return (
     <>
       {(columnFilterDisplayMode === 'popover' ||
         (!!filterValue && !isRangeFilter) ||
         (isRangeFilter && (!!filterValue?.[0] || !!filterValue?.[1]))) && (
         <span className="flex-none animate-in fade-in zoom-in-75 duration-150">
-          <ST_Tooltip side="top" title={filterTooltip}>
-            <Button
-              onClick={(event: MouseEvent<HTMLButtonElement>) => {
-                if (columnFilterDisplayMode === 'popover') {
-                  setAnchorEl(event.currentTarget);
-                } else {
-                  setShowColumnFilters(true);
-                }
-                queueMicrotask(() => {
-                  filterInputRefs.current?.[`${column.id}-0`]?.focus?.();
-                  filterInputRefs.current?.[`${column.id}-0`]?.select?.();
-                });
-                event.stopPropagation();
-              }}
-              size="icon-sm"
-              type="button"
-              variant="ghost"
-              {...rest}
-              className={cn(
-                tableHeadCellFilterLabelVariants({ active: isFilterActive }),
-                rest.className,
-              )}
-            >
-              <FilterAltIcon className="size-6" />
-            </Button>
-          </ST_Tooltip>
+          {columnFilterDisplayMode === 'popover' ? (
+            <Popover onOpenChange={setOpen} open={open}>
+              <ST_Tooltip side="top" title={filterTooltip}>
+                <PopoverTrigger asChild>
+                  <Button
+                    onClick={(event: MouseEvent<HTMLButtonElement>) =>
+                      event.stopPropagation()
+                    }
+                    {...buttonProps}
+                  >
+                    <FilterAltIcon className="size-6" />
+                  </Button>
+                </PopoverTrigger>
+              </ST_Tooltip>
+              <PopoverContent
+                align="center"
+                className="w-auto"
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.key === 'Enter' && setOpen(false)}
+                onOpenAutoFocus={(event) => {
+                  const input = filterInput();
+                  if (!input) return;
+                  event.preventDefault();
+                  input.focus();
+                  input.select();
+                }}
+                side="top"
+              >
+                <ST_TableHeadCellFilterContainer header={header} />
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <ST_Tooltip side="top" title={filterTooltip}>
+              <Button onClick={handleShowColumnFilters} {...buttonProps}>
+                <FilterAltIcon className="size-6" />
+              </Button>
+            </ST_Tooltip>
+          )}
         </span>
-      )}
-      {columnFilterDisplayMode === 'popover' && (
-        <Popover
-          onOpenChange={(open) => {
-            if (!open) setAnchorEl(null);
-          }}
-          open={!!anchorEl}
-        >
-          {anchorEl && <PopoverAnchor virtualRef={{ current: anchorEl }} />}
-          <PopoverContent
-            align="center"
-            className="w-auto"
-            onClick={(event) => event.stopPropagation()}
-            onKeyDown={(event) => event.key === 'Enter' && setAnchorEl(null)}
-            side="top"
-          >
-            <ST_TableHeadCellFilterContainer header={header} />
-          </PopoverContent>
-        </Popover>
       )}
     </>
   );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { type ButtonProps } from '@/components/ui/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_ToggleFullScreenButtonProps = ButtonProps;

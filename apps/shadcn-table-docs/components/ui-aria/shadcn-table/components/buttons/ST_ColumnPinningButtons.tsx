@@ -8,9 +8,9 @@ import {
   type ST_ColumnPinningPosition,
   type ST_RowData,
 } from '@/components/ui-aria/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 
-const columnPinningButtonsVariants = cva('min-w-[70px] text-center');
+const columnPinningButtonsVariants = cva('min-w-17.5 text-center');
 
 export interface ST_ColumnPinningButtonsProps<TData extends ST_RowData>
   extends DivProps {

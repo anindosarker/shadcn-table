@@ -20,8 +20,6 @@ export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   ...rest
 }: ST_TableBodyRowGrabHandleProps<TData>) => {
   const table = row.table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Button.
   const {
     stRowDragHandleProps,
   }: Pick<ST_TableOptions<TData>, 'stRowDragHandleProps'> = table.options;

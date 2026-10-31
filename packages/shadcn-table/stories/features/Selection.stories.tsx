@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Minus, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   type ST_ColumnDef,
+  type ST_CoreTableInstance,
   type ST_RowSelectionState,
   ST_SelectCheckbox,
   getST_RowSelectionHandler,
@@ -18,7 +19,7 @@ const meta: Meta = {
 
 export default meta;
 
-const columns: ST_ColumnDef<(typeof data)[0]>[] = [
+const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -36,6 +37,8 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     header: 'Address',
   },
 ];
+
+type Person = (typeof data)[number];
 
 const data = [...Array(15)].map(() => ({
   address: faker.location.streetAddress(),
@@ -280,6 +283,43 @@ export const MultiSelectRowWithHoldShift = () => {
     useState<number>();
 
   //--------------------------------------------------
+  const handleMultiRowSelection = (
+    table: ST_CoreTableInstance<Person>,
+    opts: { end: number; start: number },
+  ) => {
+    const { end, start } = opts;
+    const rows = table.getRowModel().rows;
+    const res: ST_RowSelectionState = {};
+    for (let i = end; i >= start; i--) {
+      if (!rows[i]?.getCanSelect()) {
+        continue;
+      }
+      res[rows[i]['id']] = true;
+    }
+    table.setRowSelection((updater) => {
+      return { ...updater, ...res };
+    });
+  };
+
+  //--------------------------------------------------
+  const handleMultiRowSelectionWithShiftKey = (
+    table: ST_CoreTableInstance<Person>,
+    opts: { rowId: string; rowIndex: number },
+  ) => {
+    const { rowId, rowIndex } = opts;
+    if (prevSelectedStaticRowIndex === undefined) {
+      table.setRowSelection((updater) => {
+        return { ...updater, [rowId]: true };
+      });
+    } else {
+      const start = Math.min(prevSelectedStaticRowIndex, rowIndex);
+      const end = Math.max(prevSelectedStaticRowIndex, rowIndex);
+      handleMultiRowSelection(table, { end, start });
+    }
+    setPrevSelectedStaticRowIndex(rowIndex);
+  };
+
+  //--------------------------------------------------
   const table = useShadcnTable({
     columns,
     data,
@@ -290,13 +330,13 @@ export const MultiSelectRowWithHoldShift = () => {
     stSelectAllCheckboxProps: {
       onClick: () => setPrevSelectedStaticRowIndex(undefined),
     },
-    stSelectCheckboxProps: ({ row, staticRowIndex }) => ({
+    stSelectCheckboxProps: ({ row, staticRowIndex, table }) => ({
       onClick: (e) => {
         if (e.shiftKey) {
           if (!row.getCanSelect() || staticRowIndex === undefined) {
             return;
           }
-          handleMultiRowSelectionWithShiftKey({
+          handleMultiRowSelectionWithShiftKey(table, {
             rowId: row.id,
             rowIndex: staticRowIndex,
           });
@@ -306,12 +346,12 @@ export const MultiSelectRowWithHoldShift = () => {
       },
     }),
     stTableBodyCellProps: { style: { userSelect: 'none' } },
-    stTableBodyRowProps: ({ row, staticRowIndex }) => ({
+    stTableBodyRowProps: ({ row, staticRowIndex, table }) => ({
       onClick: (e) => {
         if (!e.shiftKey || !row.getCanSelect()) {
           return;
         }
-        handleMultiRowSelectionWithShiftKey({
+        handleMultiRowSelectionWithShiftKey(table, {
           rowId: row.id,
           rowIndex: staticRowIndex,
         });
@@ -321,53 +361,15 @@ export const MultiSelectRowWithHoldShift = () => {
     stTableContainerProps: { className: 'h-[600px]' },
   });
 
-  //--------------------------------------------------
-  const handleMultiRowSelectionWithShiftKey = useCallback(
-    (opts: { rowId: string; rowIndex: number }) => {
-      const { rowId, rowIndex } = opts;
-      if (prevSelectedStaticRowIndex === undefined) {
-        table.setRowSelection((updater) => {
-          return { ...updater, [rowId]: true };
-        });
-      } else {
-        const start = Math.min(prevSelectedStaticRowIndex, rowIndex);
-        const end = Math.max(prevSelectedStaticRowIndex, rowIndex);
-        handleMultiRowSelection({ end, start });
-      }
-      setPrevSelectedStaticRowIndex(rowIndex);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [prevSelectedStaticRowIndex],
-  );
-
-  //--------------------------------------------------
-  const handleMultiRowSelection = useCallback(
-    (opts: { end: number; start: number }) => {
-      const { end, start } = opts;
-      const rows = table.getRowModel().rows;
-      const res: ST_RowSelectionState = {};
-      for (let i = end; i >= start; i--) {
-        if (!rows[i]?.getCanSelect()) {
-          continue;
-        }
-        res[rows[i]['id']] = true;
-      }
-      table.setRowSelection((updater) => {
-        return { ...updater, ...res };
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
   // Reset prevSelectedStaticRowIndex when sorting changes. The handle's state
   // is a first-render snapshot, so subscribe to the sorting atom instead.
+  const sortingAtom = table.atoms.sorting;
   useEffect(() => {
-    const subscription = table.atoms.sorting.subscribe(() =>
+    const subscription = sortingAtom.subscribe(() =>
       setPrevSelectedStaticRowIndex(undefined),
     );
     return () => subscription.unsubscribe();
-  }, [table]);
+  }, [sortingAtom]);
 
   return <ShadcnTable table={table} />;
 };

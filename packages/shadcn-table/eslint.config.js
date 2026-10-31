@@ -1,9 +1,17 @@
 import js from '@eslint/js';
+import comments from '@eslint-community/eslint-plugin-eslint-comments';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
+
+const LIB = 'registry/*/components/ui/shadcn-table';
+// Type-aware rules resolve `@/` per base, so each base lints with its tsconfig.
+const BASE_PROJECTS = {
+  base: './tsconfig.baseui.json',
+  radix: './tsconfig.radix.json',
+  aria: './tsconfig.aria.json',
+};
 
 export default defineConfig([
   // Parts (registry/<base>/components/ui/<part>.tsx) are what `shadcn add`
@@ -15,9 +23,9 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      // reactRefresh.configs.vite,
+      reactHooks.configs.flat.recommended,
     ],
+    linterOptions: { reportUnusedDisableDirectives: 'error' },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -25,39 +33,16 @@ export default defineConfig([
       // candidates; pin the parser to this package.
       parserOptions: { tsconfigRootDir: import.meta.dirname },
     },
-    rules: {
-      // Unused code is checked here, not by tsc (the tsconfigs carry no
-      // noUnusedLocals / noUnusedParameters, see the parts above); `_`
-      // prefixed names are tolerated as tsc tolerated them, and so is an
-      // unused catch binding, which noUnusedLocals never reported.
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrors: 'none',
-        },
-      ],
-    },
   },
-  {
-    // Folded core (MRT-verbatim types/hooks/utils/fns): linted as MRT's
-    // .eslintrc lints them (no-explicit-any off, no react-hooks plugin);
-    // no-unused-vars keeps the locals check and skips arguments, MRT's
-    // signatures carry unused ones.
-    files: [
-      'registry/*/components/ui/shadcn-table/{fns,hooks,utils,shared/fns,shared/utils}/**/*.{ts,tsx}',
-      'registry/*/components/ui/shadcn-table/{icons,types}.ts',
-    ],
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        { args: 'none', varsIgnorePattern: '^_' },
-      ],
-      'react-hooks/exhaustive-deps': 'off',
-      'react-hooks/rules-of-hooks': 'off',
+  ...Object.entries(BASE_PROJECTS).map(([base, project]) => ({
+    files: [`${LIB.replace('*', base)}/**/*.{ts,tsx}`],
+    languageOptions: {
+      parserOptions: { project, tsconfigRootDir: import.meta.dirname },
     },
-  },
+    plugins: { '@eslint-community/eslint-comments': comments },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'error',
+      '@eslint-community/eslint-comments/require-description': 'error',
+    },
+  })),
 ]);

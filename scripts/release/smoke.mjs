@@ -8,10 +8,12 @@
 //   /r/<base>/shadcn-table.json for every base (BASES in
 //     packages/shadcn-table/scripts/registry/lib.mjs): 200, `dependencies`
 //     carries the @tanstack/react-table pin of packages/shadcn-table/package.json
+//   /r/<base>/shadcn-table-core.json for every base: 200
 //   /r/<base>/registry.json for every base: the item names are exactly
 //     the ones hosted.mjs derives from the committed catalogs (the main item as
-//     shadcn-table, its locales as shadcn-table-locale-<code>, the base's
-//     example items of the docs app as example-<slug>)
+//     shadcn-table, the core item as shadcn-table-core, the icon sets as
+//     shadcn-table-<library>, its locales as shadcn-table-locale-<code>, the
+//     base's example items of the docs app as example-<slug>)
 //   Storybook /<base>/ for every base: 200 HTML; / redirects to
 //     /<DEFAULT_BASE>/ with the query kept (the vercel.json redirect)
 //   /SKILL.md: 200, names every base (BASE_LABELS)
@@ -30,6 +32,8 @@ import {
 const SITE = 'https://www.shadcn-table.com';
 const STORYBOOK = 'https://storybook.shadcn-table.com';
 const HOSTED_NAME = 'shadcn-table';
+const CORE_NAME = `${HOSTED_NAME}-core`;
+const ICON_SETS = ['tabler', 'phosphor', 'hugeicons', 'remixicon'];
 const DOCS_PACKAGE_NAME = 'shadcn-table-docs';
 const LABELS = BASES.map((base) => BASE_LABELS[base]);
 
@@ -66,6 +70,8 @@ const expectedItems = (base) => {
   );
   return [
     HOSTED_NAME,
+    CORE_NAME,
+    ...ICON_SETS.map((library) => `${HOSTED_NAME}-${library}`),
     ...locales,
     ...baseExampleItems(examples, base).map((item) => item.name),
   ];
@@ -125,6 +131,9 @@ for (const base of BASES) {
       `dependencies=${deps.join(' ')}`,
     );
   }
+
+  const coreUrl = `${SITE}/r/${base}/${CORE_NAME}.json`;
+  checkStatus(`${coreUrl} 200 JSON`, await get(coreUrl), 'json');
 
   const catalogUrl = `${SITE}/r/${base}/registry.json`;
   const catalog = await get(catalogUrl);

@@ -2,8 +2,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
-  useCallback,
-  useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -46,6 +45,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import {
   getColumnFilterInfo,
+  isNumberColumn,
   useDropdownOptions,
 } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import {
@@ -54,13 +54,16 @@ import {
   getValueAndLabel,
   parseFromValuesOrFunc,
 } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
 
 const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
 );
 
+/** Every value the filter inputs hand to the column filter. */
+type FilterInputValue = Date | number | string | string[] | null;
 export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
@@ -91,9 +94,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
   const { filterVariant } = columnDef;
-  // The filter value and the faceted values feed the value state, its sync
-  // effect and the dropdown memo, so they are hook subscriptions: the facets
-  // follow the other columns' filters and the global filter.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
@@ -188,6 +188,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   );
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
   const [filterValue, setFilterValue] = useState<string | string[]>(() =>
     isMultiSelectFilter
       ? (column.getFilterValue() as string[]) || []
@@ -212,29 +216,30 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // The popup anchors to the whole input group so it spans the filter cell.
   const comboboxAnchor = useComboboxAnchor();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleChangeDebounced = useCallback(
-    debounce(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (newValue: any) => {
-        if (isRangeFilter) {
-          column.setFilterValue((old: Array<Date | null | number | string>) => {
-            const newFilterValues = old ?? ['', ''];
-            newFilterValues[rangeFilterIndex as number] = newValue ?? undefined;
-            return newFilterValues;
-          });
-        } else {
-          column.setFilterValue(newValue ?? undefined);
-        }
-      },
-      isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
-    ),
+  const handleChangeDebounced = useMemo(
+    () =>
+      debounce(
+        (newValue: FilterInputValue) => {
+          if (isRangeFilter) {
+            column.setFilterValue(
+              (old: Array<FilterInputValue | undefined>) => {
+                const next = Array.isArray(old) ? [...old] : ['', ''];
+                next[rangeFilterIndex as number] = newValue ?? undefined;
+                return next;
+              },
+            );
+          } else {
+            column.setFilterValue(newValue ?? undefined);
+          }
+        },
+        isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one debounced function per mount; a new one drops the pending call
     [],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (newValue: any) => {
-    setFilterValue(newValue ?? '');
+  const handleChange = (newValue: FilterInputValue) => {
+    setFilterValue((newValue ?? '') as string | string[]);
     handleChangeDebounced(newValue);
   };
 
@@ -250,7 +255,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   };
 
   // React Aria refills the input with the chosen item's label after
-  // onSelectionChange; handleAutocompleteChange owns that case so the filter
+  // onChange; handleAutocompleteChange owns that case so the filter
   // gets the option value.
   const itemPressLabel = useRef<string | null>(null);
 
@@ -283,9 +288,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     } else if (isRangeFilter) {
       setFilterValue('');
       column.setFilterValue((old: [string | undefined, string | undefined]) => {
-        const newFilterValues = (Array.isArray(old) && old) || ['', ''];
-        newFilterValues[rangeFilterIndex as number] = undefined;
-        return newFilterValues;
+        const next = Array.isArray(old) ? [...old] : ['', ''];
+        next[rangeFilterIndex as number] = undefined;
+        return next;
       });
     } else if (isAutocompleteFilter) {
       setAutocompleteValue(null);
@@ -308,28 +313,28 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
 
   const handleFilterMenuOpen = (event: MouseEvent<FocusableElement>) => {
     if (event.currentTarget instanceof HTMLElement) {
-      setAnchorEl(event.currentTarget);
+      toggle(event.currentTarget);
     }
   };
 
-  const isMounted = useRef(false);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      const filterValue = column.getFilterValue();
-      if (filterValue === undefined) {
-        handleClear();
-      } else if (isRangeFilter && rangeFilterIndex !== undefined) {
-        setFilterValue(
-          (filterValue as [string, string])[rangeFilterIndex] ?? '',
-        );
-      } else {
-        setFilterValue(filterValue as string);
-      }
+  // An outside change to the column filter resets the local value; the
+  // store is not written here.
+  const columnFilterValue = column.getFilterValue();
+  const [prevColumnFilterValue, setPrevColumnFilterValue] =
+    useState(columnFilterValue);
+  if (columnFilterValue !== prevColumnFilterValue) {
+    setPrevColumnFilterValue(columnFilterValue);
+    if (columnFilterValue === undefined) {
+      if (isAutocompleteFilter) setAutocompleteValue(null);
+      setFilterValue(isMultiSelectFilter ? [] : '');
+    } else if (isRangeFilter && rangeFilterIndex !== undefined) {
+      setFilterValue(
+        (columnFilterValue as [string, string])[rangeFilterIndex] ?? '',
+      );
+    } else {
+      setFilterValue(columnFilterValue as string);
     }
-    isMounted.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [column.getFilterValue()]);
+  }
 
   if (columnDef.Filter) {
     return (
@@ -353,21 +358,19 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         className={cn(
           // The select addon overlays the trigger so the trigger spans the whole
           // group and the popper (sized from the trigger) matches the field.
-          isSelectFilter && 'absolute inset-y-0 right-0',
+          isSelectFilter && 'absolute inset-y-0 inset-e-0',
           hasFilterValue ? 'visible' : 'invisible',
         )}
       >
         <ST_Tooltip side="right" title={localization.clearFilter ?? ''}>
-          <span>
-            <InputGroupButton
-              aria-label={localization.clearFilter}
-              isDisabled={!filterValue?.toString()?.length}
-              onClick={handleClear}
-              size="icon-xs"
-            >
-              <CloseIcon />
-            </InputGroupButton>
-          </span>
+          <InputGroupButton
+            aria-label={localization.clearFilter}
+            isDisabled={!filterValue?.toString()?.length}
+            onClick={handleClear}
+            size="icon-xs"
+          >
+            <CloseIcon />
+          </InputGroupButton>
         </ST_Tooltip>
       </InputGroupAddon>
     ) : null;
@@ -375,20 +378,23 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const startAdornment = showChangeModeButton ? (
     <InputGroupAddon align="inline-start">
       <ST_Tooltip title={localization.changeFilterMode}>
-        <span>
-          <InputGroupButton
-            aria-label={localization.changeFilterMode}
-            onClick={handleFilterMenuOpen}
-            size="icon-xs"
-          >
-            <FilterListIcon />
-          </InputGroupButton>
-        </span>
+        <InputGroupButton
+          aria-label={localization.changeFilterMode}
+          {...openerProps}
+          onClick={handleFilterMenuOpen}
+          size="icon-xs"
+        >
+          <FilterListIcon />
+        </InputGroupButton>
       </ST_Tooltip>
       {filterChipLabel && (
         <Badge variant="secondary">
           {filterChipLabel}
-          <button type="button" onClick={handleClearEmptyFilterChip}>
+          <button
+            aria-label={localization.clearFilter}
+            onClick={handleClearEmptyFilterChip}
+            type="button"
+          >
             <CancelIcon className="size-3" />
           </button>
         </Badge>
@@ -405,7 +411,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         ? undefined
         : filterPlaceholder,
     ref: (inputRef) => {
-      filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+      // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+      filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
         inputRef as HTMLInputElement;
     },
     title: filterPlaceholder,
@@ -464,22 +471,24 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           filterTextFieldVariants(),
           // Chromium's date input needs 126px of content for its placeholder.
           isDateFilter
-            ? 'min-w-[140px]'
+            ? 'min-w-35'
             : isMultiSelectFilter
-              ? 'min-w-[120px]'
+              ? 'min-w-30'
               : isRangeFilter
-                ? 'min-w-[72px]'
+                ? 'min-w-18'
                 : !filterChipLabel
-                  ? 'min-w-[96px]'
+                  ? 'min-w-24'
                   : 'min-w-auto',
         )}
         ref={(node) => {
+          // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; comboboxAnchor is the combobox's mutable anchor ref
           comboboxAnchor.current =
             node?.querySelector<HTMLDivElement>(
               ':scope > [data-slot="input-group"]',
             ) ?? null;
           if (node && isMultiSelectFilter) {
-            filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+            // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+            filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
               node.querySelector<HTMLInputElement>(
                 '[data-slot="combobox-chip-input"]',
               )!;
@@ -488,7 +497,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       >
         <InputGroup
           className={cn(
-            'h-8 text-sm [&>[data-align=inline-end]]:py-0 [&>[data-align=inline-start]]:py-0',
+            'h-8 text-sm *:data-[align=inline-end]:py-0 *:data-[align=inline-start]:py-0',
             // Chips wrap onto new lines, so the group may grow past its fixed height.
             isMultiSelectFilter && 'h-auto min-h-8',
           )}
@@ -524,8 +533,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               inputValue={(filterValue as string) ?? ''}
               items={autocompleteItems}
               onInputChange={handleAutocompleteInputChange}
-              onSelectionChange={handleAutocompleteChange}
-              selectedKey={autocompleteValue}
+              onChange={handleAutocompleteChange}
+              value={autocompleteValue}
             >
               <ComboboxInput
                 type="text"
@@ -555,17 +564,17 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             <Select
               aria-label={filterPlaceholder}
               isDisabled={!!filterChipLabel || textFieldProps.disabled}
-              onSelectionChange={(key) => handleChange(key ?? '')}
+              onChange={(key) => handleChange(key ?? '')}
               placeholder={filterPlaceholder}
               // React Aria shows the placeholder for null, never for "".
-              selectedKey={(filterValue as string) || null}
+              value={(filterValue as string) || null}
             >
               <SelectTrigger
                 aria-label={filterPlaceholder}
                 className={cn(
                   'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   // Keeps the chevron clear of the overlaid clear button.
-                  hasFilterValue && 'pr-9',
+                  hasFilterValue && 'pe-9',
                   textFieldProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}
@@ -657,6 +666,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : (
             <InputGroupInput
+              {...(isNumberColumn(column, table)
+                ? { inputMode: 'decimal', type: 'number' }
+                : undefined)}
               {...commonTextFieldProps}
               onChange={handleTextFieldChange}
               onClick={(e) => e.stopPropagation()}
@@ -666,7 +678,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           {endAdornment}
         </InputGroup>
         {showChangeModeButton ? (
-          <label className="mt-[3px] block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',
               localization[

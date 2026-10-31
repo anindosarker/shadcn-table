@@ -15,7 +15,7 @@ const config = {
   // Hosted registry (public/r/<base>/<name>.json, written by
   // packages/shadcn-table/scripts/registry/hosted.mjs, `pnpm registry:hosted`):
   // the namespace form
-  // `@st=https://www.shadcn-table.com/r/{style}/{name}.json` sends the
+  // `@shadcn-table=https://www.shadcn-table.com/r/{style}/{name}.json` sends the
   // project's shadcn style (`radix-nova`, `base-sera`, `aria-nova`, ...),
   // which maps onto the base directory. `/r/radix/*`, `/r/base/*` and
   // `/r/aria/*` are served as they are, the catalogs

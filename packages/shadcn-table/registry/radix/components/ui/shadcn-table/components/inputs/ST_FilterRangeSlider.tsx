@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, useRef, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
@@ -42,18 +43,12 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Slider.
   const {
     stFilterSliderProps,
   }: Pick<ST_TableOptions<TData>, 'stFilterSliderProps'> = table.options;
   const {
     stFilterSliderProps: columnFilterSliderProps,
   }: Pick<ST_ColumnDef<TData>, 'stFilterSliderProps'> = columnDef;
-  // The filter value and the faceted range feed the sync effect, so they are
-  // hook subscriptions: the facets follow the other columns' filters and the
-  // global filter.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
@@ -68,6 +63,9 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
     ...rest,
   };
 
+  const sliderRootRef = useRef<HTMLDivElement>(null);
+  const attachSliderRef = useST_ComposedRef(sliderRootRef, sliderProps.ref);
+
   let [min, max] =
     sliderProps.min !== undefined && sliderProps.max !== undefined
       ? [sliderProps.min, sliderProps.max]
@@ -75,7 +73,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
           ? column.getFacetedMinMaxValues()
           : undefined) ?? [0, 1]);
 
-  //fix potential TanStack Table bugs where min or max is an array
   if (Array.isArray(min)) min = min[0];
   if (Array.isArray(max)) max = max[0];
   if (min === null) min = 0;
@@ -84,8 +81,6 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   const [filterValues, setFilterValues] = useState([min, max]);
   const columnFilterValue = column.getFilterValue();
 
-  const isMounted = useRef(false);
-
   // prevent moving the focus to the next/prev cell when using the arrow keys
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -93,16 +88,20 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
     }
   };
 
-  useEffect(() => {
-    if (isMounted.current) {
-      if (columnFilterValue === undefined) {
-        setFilterValues([min, max]);
-      } else if (Array.isArray(columnFilterValue)) {
-        setFilterValues(columnFilterValue);
-      }
+  // An outside filter change or a new facet range resets the thumbs.
+  const [prevSync, setPrevSync] = useState({ columnFilterValue, max, min });
+  if (
+    prevSync.columnFilterValue !== columnFilterValue ||
+    prevSync.max !== max ||
+    prevSync.min !== min
+  ) {
+    setPrevSync({ columnFilterValue, max, min });
+    if (columnFilterValue === undefined) {
+      setFilterValues([min, max]);
+    } else if (Array.isArray(columnFilterValue)) {
+      setFilterValues(columnFilterValue);
     }
-    isMounted.current = true;
-  }, [columnFilterValue, min, max]);
+  }
 
   return (
     <Subscribe source={table.atoms.columnSizing}>
@@ -128,15 +127,12 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
             {...sliderProps}
             ref={(node) => {
               if (node) {
-                filterInputRefs.current![`${column.id}-0`] =
+                filterInputRefs.current[`${column.id}-0`] =
                   node.querySelector<HTMLInputElement>(
                     '[data-slot="slider-thumb"]',
                   )!;
-                if (sliderProps?.ref) {
-                  // @ts-expect-error the slider root node goes onto the ref prop
-                  sliderProps.ref = node;
-                }
               }
+              return attachSliderRef(node);
             }}
             className={cn(
               filterRangeSliderVariants({ showChangeModeButton }),

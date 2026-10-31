@@ -1,5 +1,4 @@
 import { type MouseEvent, useState } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,11 +9,12 @@ import {
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_RowActionMenu';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
-const commonIconButtonStyles = cva('ml-2.5');
+const commonIconButtonStyles = cva('ms-2.5');
 
 export interface ST_ToggleRowActionMenuButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -44,12 +44,15 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   } = table;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openerProps, toggle } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   const handleOpenRowActionMenu = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-    if (event.currentTarget instanceof HTMLElement)
-      setAnchorEl(event.currentTarget);
+    if (event.currentTarget instanceof HTMLElement) toggle(event.currentTarget);
   };
 
   const handleStartEditMode = (event: MouseEvent) => {
@@ -59,12 +62,11 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
       })}
-      source={table.store}
     >
       {({ creatingRow, editingRow }) => {
         const isCreating = creatingRow?.id === row.id;
@@ -106,6 +108,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
                 <ST_Tooltip title={localization.rowActions}>
                   <Button
                     aria-label={localization.rowActions}
+                    {...openerProps}
                     onClick={handleOpenRowActionMenu}
                     size="icon-sm"
                     type="button"
@@ -128,6 +131,6 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

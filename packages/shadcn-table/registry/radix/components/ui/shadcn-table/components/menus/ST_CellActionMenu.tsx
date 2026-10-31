@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, useEffect } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import {
   DropdownMenu,
@@ -14,15 +14,40 @@ import { openEditingCell } from '@/components/ui/shadcn-table/shared/utils/cell.
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui/shadcn-table/components/menus/ST_ActionMenuItem';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 export type ST_CellActionMenuProps = ComponentPropsWithRef<
   typeof DropdownMenuContent
 >;
 
-export const ST_CellActionMenu = <TData extends ST_RowData>({
+export const ST_CellActionMenu = <TData extends ST_RowData>(
+  props: ST_CellActionMenuProps,
+) => {
+  const table = useSTContext<TData>();
+  return (
+    <Subscribe source={table.atoms.actionCell}>
+      {(actionCell) =>
+        actionCell && (
+          <ST_CellActionMenuContent
+            {...props}
+            anchorEl={table.refs.actionCellRef.current}
+            cell={actionCell as ST_Cell<TData>}
+          />
+        )
+      }
+    </Subscribe>
+  );
+};
+
+const ST_CellActionMenuContent = <TData extends ST_RowData>({
+  anchorEl,
+  cell,
   className,
   ...rest
-}: ST_CellActionMenuProps) => {
+}: ST_CellActionMenuProps & {
+  anchorEl: HTMLElement | null;
+  cell: ST_Cell<TData>;
+}) => {
   const table = useSTContext<TData>();
   const {
     options: {
@@ -36,117 +61,98 @@ export const ST_CellActionMenu = <TData extends ST_RowData>({
     refs: { actionCellRef },
   } = table;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClose = (event?: any) => {
+  const handleClose = (event?: { stopPropagation(): void }) => {
     event?.stopPropagation();
     table.setActionCell(null);
-    actionCellRef.current = null;
   };
 
+  // The menu unmounts when it closes, and the action cell goes with it.
+  useEffect(
+    () => () => {
+      actionCellRef.current = null;
+    },
+    [actionCellRef],
+  );
+
+  const { focusAnchor, onOpenChange, rect, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl: (anchor) => {
+      if (!anchor) handleClose();
+    },
+  });
+
+  const { row } = cell;
+  const { column } = cell;
+  const { columnDef } = column;
+
+  const internalMenuItems = [
+    (parseFromValuesOrFunc(enableClickToCopy, cell) === 'context-menu' ||
+      parseFromValuesOrFunc(columnDef.enableClickToCopy, cell) ===
+        'context-menu') && (
+      <ST_ActionMenuItem
+        icon={<ContentCopy />}
+        key={'st-copy'}
+        label={localization.copy}
+        onClick={(event) => {
+          event.stopPropagation();
+          navigator.clipboard.writeText(cell.getValue() as string);
+          handleClose();
+        }}
+      />
+    ),
+    parseFromValuesOrFunc(enableEditing, row) && editDisplayMode === 'cell' && (
+      <ST_ActionMenuItem
+        icon={<EditIcon />}
+        key={'st-edit'}
+        label={localization.edit}
+        onClick={() => {
+          openEditingCell({ cell, table });
+          handleClose();
+        }}
+      />
+    ),
+  ].filter(Boolean);
+
+  const renderActionProps = {
+    cell,
+    closeMenu: handleClose,
+    column,
+    internalMenuItems,
+    row,
+    table,
+  };
+
+  const menuItems =
+    columnDef.renderCellActionMenuItems?.(renderActionProps) ??
+    renderCellActionMenuItems?.(renderActionProps);
+
   return (
-    <Subscribe source={table.atoms.actionCell}>
-      {(actionCell) => {
-        if (!actionCell) return null;
-        const cell = actionCell as ST_Cell<TData>;
-        const { row } = cell;
-        const { column } = cell;
-        const { columnDef } = column;
-
-        const internalMenuItems = [
-          (parseFromValuesOrFunc(enableClickToCopy, cell) === 'context-menu' ||
-            parseFromValuesOrFunc(columnDef.enableClickToCopy, cell) ===
-              'context-menu') && (
-            <ST_ActionMenuItem
-              icon={<ContentCopy />}
-              key={'st-copy'}
-              label={localization.copy}
-              onClick={(event) => {
-                event.stopPropagation();
-                navigator.clipboard.writeText(cell.getValue() as string);
-                handleClose();
-              }}
-            />
-          ),
-          parseFromValuesOrFunc(enableEditing, row) &&
-            editDisplayMode === 'cell' && (
-              <ST_ActionMenuItem
-                icon={<EditIcon />}
-                key={'st-edit'}
-                label={localization.edit}
-                onClick={() => {
-                  openEditingCell({ cell, table });
-                  handleClose();
-                }}
-              />
-            ),
-        ].filter(Boolean);
-
-        const renderActionProps = {
-          cell,
-          closeMenu: handleClose,
-          column,
-          internalMenuItems,
-          row,
-          table,
-        };
-
-        const menuItems =
-          columnDef.renderCellActionMenuItems?.(renderActionProps) ??
-          renderCellActionMenuItems?.(renderActionProps);
-
-        const anchorEl = actionCellRef.current;
-        const rect = anchorEl?.getBoundingClientRect();
-
-        return (
-          (!!menuItems?.length || !!internalMenuItems?.length) && (
-            <DropdownMenu
-              open={!!cell}
-              onOpenChange={(open) => {
-                if (!open) handleClose();
-              }}
-            >
-              <DropdownMenuTrigger asChild>
-                <span
-                  aria-hidden
-                  style={{
-                    position: 'fixed',
-                    left: rect?.left ?? 0,
-                    top: rect?.top ?? 0,
-                    width: rect?.width ?? 0,
-                    height: rect?.height ?? 0,
-                    pointerEvents: 'none',
-                  }}
-                />
-              </DropdownMenuTrigger>
-              {/* align, alignOffset and sideOffset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
-              <DropdownMenuContent
-                align="start"
-                alignOffset={100}
-                sideOffset={-((rect?.height ?? 0) + 8)}
-                onClick={(event) => event.stopPropagation()}
-                // The menu opens on contextmenu, which Chrome on macOS fires on
-                // mousedown, so the right button's pointerup lands on the menu item
-                // that is now under the cursor. Radix MenuItem selects on a pointerup
-                // without a prior pointerdown on it, closing the menu (and running
-                // the item) before the user lets go. Swallow right-button pointerups
-                // in the capture phase; Escape, outside click and left click still
-                // work.
-                onPointerUpCapture={(event) => {
-                  if (event.button === 2) event.stopPropagation();
-                }}
-                onCloseAutoFocus={(event) => {
-                  event.preventDefault();
-                  if (!table.atoms.editingCell.get()) anchorEl?.focus();
-                }}
-                className={cn('w-max', className)}
-                {...rest}
-              >
-                {menuItems ?? internalMenuItems}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )
-        );
-      }}
-    </Subscribe>
+    (!!menuItems?.length || !!internalMenuItems?.length) && (
+      <DropdownMenu open={!!cell} onOpenChange={onOpenChange}>
+        <DropdownMenuTrigger asChild>
+          <span {...spanProps} />
+        </DropdownMenuTrigger>
+        {/* align, alignOffset and sideOffset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
+        <DropdownMenuContent
+          align="start"
+          alignOffset={100}
+          sideOffset={-((rect?.height ?? 0) + 8)}
+          onClick={(event) => event.stopPropagation()}
+          // Chrome on macOS opens the context menu on mousedown and Radix MenuItem
+          // selects on the right-button pointerup that follows, so it is swallowed.
+          onPointerUpCapture={(event) => {
+            if (event.button === 2) event.stopPropagation();
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (!table.atoms.editingCell.get()) focusAnchor();
+          }}
+          className={cn('w-max', className)}
+          {...rest}
+        >
+          {menuItems ?? internalMenuItems}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
   );
 };

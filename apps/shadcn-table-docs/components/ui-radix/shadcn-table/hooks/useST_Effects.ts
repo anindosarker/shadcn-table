@@ -1,10 +1,9 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useEffectEvent, useReducer, useRef } from 'react';
 import {
   type ST_RowData,
   type ST_RowSelectionState,
   type ST_SortingState,
   type ST_TableInstance,
-  type ST_TableState,
 } from '@/components/ui-radix/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui-radix/shadcn-table/shared/utils/displayColumn.utils';
 import { getCanRankRows } from '@/components/ui-radix/shadcn-table/shared/utils/row.utils';
@@ -15,19 +14,28 @@ export const useST_Effects = <TData extends ST_RowData>(
   const {
     getPrePaginatedRowModel,
     options: { rowCount },
+    setColumnOrder,
+    setPageIndex,
+    setRowPinning,
+    setSorting,
   } = table;
   // The owner may not re-render on state changes (`ShadcnTable` selects only
-  // the transform state), so the effects below read the store and its atoms
-  // and subscribe to the slices they react to.
+  // the transform state), so the effects below read the atoms and subscribe
+  // to the slices they react to.
 
   const totalColumnCount = table.options.columns.length;
   const totalRowCount = rowCount ?? getPrePaginatedRowModel().rows.length;
 
-  const rerender = useReducer(() => ({}), {})[1];
+  const [, rerender] = useReducer(() => ({}), {});
   const initialBodyHeight = useRef<string>(null);
   const previousTop = useRef<number>(null);
-  const latestTable = useRef(table);
-  latestTable.current = table;
+
+  const readOptions = useEffectEvent(() => table.options);
+  const readTotalRowCount = useEffectEvent(
+    () => table.options.rowCount ?? table.getPrePaginatedRowModel().rows.length,
+  );
+  const canRankRows = useEffectEvent(() => getCanRankRows(table));
+  const getIsSomeRowsPinned = useEffectEvent(() => table.getIsSomeRowsPinned());
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -64,27 +72,35 @@ export const useST_Effects = <TData extends ST_RowData>(
       clearTimeout(timeout);
       unsubscribe();
     };
-  }, []);
+  }, [table.atoms.isFullScreen]);
 
   useEffect(() => {
     if (totalColumnCount !== table.atoms.columnOrder.get().length) {
-      table.setColumnOrder(
+      setColumnOrder(
         getDefaultColumnOrderIds({
-          ...table.options,
-          state: table.store.state as ST_TableState<TData>,
+          ...readOptions(),
+          state: {
+            columnOrder: table.atoms.columnOrder.get(),
+            creatingRow: table.atoms.creatingRow.get(),
+            grouping: table.atoms.grouping.get(),
+          },
         }),
       );
     }
-  }, [totalColumnCount]);
+  }, [
+    setColumnOrder,
+    table.atoms.columnOrder,
+    table.atoms.creatingRow,
+    table.atoms.grouping,
+    totalColumnCount,
+  ]);
 
   const lastPageCheck = useRef<unknown[]>(null);
-  const checkPageIndex = (totalRowCount: number) => {
-    const { enablePagination } = latestTable.current.options;
-    const {
-      isLoading,
-      pagination: { pageIndex, pageSize },
-      showSkeletons,
-    } = table.store.state;
+  const checkPageIndex = useEffectEvent((totalRowCount: number): void => {
+    const { enablePagination } = table.options;
+    const isLoading = table.atoms.isLoading.get();
+    const { pageIndex, pageSize } = table.atoms.pagination.get();
+    const showSkeletons = table.atoms.showSkeletons.get();
     const inputs = [totalRowCount, enablePagination, isLoading, showSkeletons];
     if (lastPageCheck.current?.every((input, i) => input === inputs[i])) {
       return;
@@ -96,11 +112,9 @@ export const useST_Effects = <TData extends ST_RowData>(
     const isOutOfBounds: boolean = pageIndex < 0 || pageIndex >= totalPages;
 
     if (isOutOfBounds) {
-      table.setPageIndex(totalPages - 1);
+      setPageIndex(totalPages - 1);
     }
-  };
-  const latestCheckPageIndex = useRef(checkPageIndex);
-  latestCheckPageIndex.current = checkPageIndex;
+  });
 
   //data and option changes arrive with an owner render
   useEffect(() => {
@@ -111,20 +125,36 @@ export const useST_Effects = <TData extends ST_RowData>(
   //task so the row model is read after the components rendered the change
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined;
-    const { unsubscribe } = table.store.subscribe(() => {
+    const scheduleCheck = () => {
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        const { rowCount } = latestTable.current.options;
-        latestCheckPageIndex.current(
-          rowCount ?? table.getPrePaginatedRowModel().rows.length,
-        );
-      });
-    });
+      timeout = setTimeout(() => checkPageIndex(readTotalRowCount()));
+    };
+    const subscriptions = [
+      table.atoms.columnFilters.subscribe(scheduleCheck),
+      table.atoms.globalFilter.subscribe(scheduleCheck),
+      table.atoms.columnFilterFns.subscribe(scheduleCheck),
+      table.atoms.globalFilterFn.subscribe(scheduleCheck),
+      table.atoms.grouping.subscribe(scheduleCheck),
+      table.atoms.expanded.subscribe(scheduleCheck),
+      table.atoms.pagination.subscribe(scheduleCheck),
+      table.atoms.isLoading.subscribe(scheduleCheck),
+      table.atoms.showSkeletons.subscribe(scheduleCheck),
+    ];
     return () => {
       clearTimeout(timeout);
-      unsubscribe();
+      subscriptions.forEach(({ unsubscribe }) => unsubscribe());
     };
-  }, []);
+  }, [
+    table.atoms.columnFilterFns,
+    table.atoms.columnFilters,
+    table.atoms.expanded,
+    table.atoms.globalFilter,
+    table.atoms.globalFilterFn,
+    table.atoms.grouping,
+    table.atoms.isLoading,
+    table.atoms.pagination,
+    table.atoms.showSkeletons,
+  ]);
 
   useEffect(() => {
     let appliedSort: ST_SortingState = table.atoms.sorting.get();
@@ -134,29 +164,33 @@ export const useST_Effects = <TData extends ST_RowData>(
       }
     });
     const applyRanking = (globalFilter: unknown) => {
-      if (!getCanRankRows(latestTable.current)) return;
+      if (!canRankRows()) return;
       if (globalFilter) {
-        table.setSorting([]);
+        setSorting([]);
       } else {
-        table.setSorting(() => appliedSort || []);
+        setSorting(() => appliedSort || []);
       }
     };
-    applyRanking(table.atoms.globalFilter.get());
-    const globalFilterSubscription =
-      table.atoms.globalFilter.subscribe(applyRanking);
+    let previousGlobalFilter: unknown = table.atoms.globalFilter.get();
+    applyRanking(previousGlobalFilter);
+    // The atom notifies for an unchanged `undefined` value too, which would
+    // restore a sort the user just cleared.
+    const globalFilterSubscription = table.atoms.globalFilter.subscribe(
+      (globalFilter) => {
+        if (Object.is(previousGlobalFilter, globalFilter)) return;
+        previousGlobalFilter = globalFilter;
+        applyRanking(globalFilter);
+      },
+    );
     return () => {
       sortingSubscription.unsubscribe();
       globalFilterSubscription.unsubscribe();
     };
-  }, []);
+  }, [setSorting, table.atoms.globalFilter, table.atoms.sorting]);
 
-  //fix pinned row top style when density changes
   useEffect(() => {
     const fixPinnedRows = () => {
-      if (
-        latestTable.current.options.enableRowPinning &&
-        table.getIsSomeRowsPinned()
-      ) {
+      if (readOptions().enableRowPinning && getIsSomeRowsPinned()) {
         setTimeout(() => {
           rerender();
         }, 150);
@@ -165,7 +199,7 @@ export const useST_Effects = <TData extends ST_RowData>(
     fixPinnedRows();
     const { unsubscribe } = table.atoms.density.subscribe(fixPinnedRows);
     return unsubscribe;
-  }, []);
+  }, [table.atoms.density]);
 
   //pin or unpin every row whose selection changed, whatever changed it (a
   //click, a Shift range, select all, controlled state or the table APIs)
@@ -183,8 +217,7 @@ export const useST_Effects = <TData extends ST_RowData>(
           ),
         );
         previousSelection = rowSelection;
-        const { enableRowPinning, rowPinningDisplayMode } =
-          latestTable.current.options;
+        const { enableRowPinning, rowPinningDisplayMode } = readOptions();
         if (
           !changedRowIds.size ||
           !enableRowPinning ||
@@ -200,15 +233,16 @@ export const useST_Effects = <TData extends ST_RowData>(
         // order, whatever order the selection lists them in.
         if (selectedRowIds.length > 1) {
           const positions = new Map(
-            table
-              .getPrePaginatedRowModel()
-              .flatRows.map((row, index) => [row.id, index]),
+            getPrePaginatedRowModel().flatRows.map((row, index) => [
+              row.id,
+              index,
+            ]),
           );
           const position = (rowId: string) =>
             positions.get(rowId) ?? positions.size;
           selectedRowIds.sort((a, b) => position(a) - position(b));
         }
-        table.setRowPinning(({ bottom = [], top = [] }) =>
+        setRowPinning(({ bottom = [], top = [] }) =>
           rowPinningDisplayMode.includes('bottom')
             ? {
                 bottom: [...bottom.filter(isUnchanged), ...selectedRowIds],
@@ -222,5 +256,5 @@ export const useST_Effects = <TData extends ST_RowData>(
       },
     );
     return unsubscribe;
-  }, []);
+  }, [getPrePaginatedRowModel, setRowPinning, table.atoms.rowSelection]);
 };

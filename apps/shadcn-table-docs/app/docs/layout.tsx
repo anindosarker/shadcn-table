@@ -4,6 +4,7 @@ import { baseOptions } from '@/lib/layout.shared';
 import { SidebarSection } from '@/components/sidebar-section';
 import { SidebarSeparator } from '@/components/sidebar-separator';
 import { SiteNav } from '@/components/site-nav';
+import { IconLibraryProvider } from '@/components/icon-library-selector';
 
 export default function Layout({ children }: LayoutProps<'/docs'>) {
   const { nav, ...base } = baseOptions();
@@ -23,7 +24,8 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
         components: { Folder: SidebarSection, Separator: SidebarSeparator },
       }}
     >
-      {children}
+      {/* The install commands of a page share one icon library pick. */}
+      <IconLibraryProvider>{children}</IconLibraryProvider>
     </DocsLayout>
   );
 }

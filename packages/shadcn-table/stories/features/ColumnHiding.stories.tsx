@@ -1,6 +1,7 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Column Hiding Examples',
@@ -243,3 +244,49 @@ export const ColumnHidingWithColumnsHiddenAndNotVisibleInShowHide = () => (
     }}
   />
 );
+
+/** Space on a focused column row hides the column; Tab reaches the pin buttons. */
+export const ColumnHidingKeyboardToggle = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} enableColumnPinning />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByRole('columnheader', { name: /Last Name/ });
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide columns' }),
+    );
+    const menu = await body.findByRole('menu');
+    const row = within(menu).getByRole('menuitemcheckbox', {
+      name: 'Last Name',
+    });
+    await waitFor(() => expect(row).toHaveAttribute('aria-checked', 'true'));
+    row.focus();
+    await userEvent.keyboard(' ');
+    await waitFor(() =>
+      expect(
+        canvas.queryByRole('columnheader', { hidden: true, name: /Last Name/ }),
+      ).toBeNull(),
+    );
+    await waitFor(() =>
+      expect(
+        within(menu).getByRole('menuitemcheckbox', { name: 'Last Name' }),
+      ).toHaveAttribute('aria-checked', 'false'),
+    );
+    await userEvent.keyboard('{Enter}');
+    await canvas.findByRole('columnheader', {
+      hidden: true,
+      name: /Last Name/,
+    });
+
+    // Tab leaves the row's menu item for the pin buttons beside it.
+    await userEvent.tab();
+    await waitFor(() => {
+      const active = document.activeElement;
+      expect(active?.tagName).toBe('BUTTON');
+      expect(active?.getAttribute('role')).toBeNull();
+      expect(menu.contains(active)).toBe(true);
+    });
+  },
+};

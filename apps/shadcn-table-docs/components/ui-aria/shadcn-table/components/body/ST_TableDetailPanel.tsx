@@ -1,5 +1,4 @@
-import { type RefObject } from 'react';
-import { Subscribe } from '@tanstack/react-table';
+import { type ReactNode, type RefObject } from 'react';
 import { cva } from 'class-variance-authority';
 import { Collapsible, CollapsibleContent } from '@/components/ui-aria/collapsible';
 import { cn } from '@/lib/utils';
@@ -10,8 +9,8 @@ import {
   type ST_VirtualItem,
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
+import { useCollapsingChildren } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { stCollapsibleKeyframes } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 
 export interface ST_TableDetailPanelProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -40,6 +39,29 @@ const detailPanelCellVariants = cva('w-full border-b text-sm px-4', {
   },
 });
 
+// The panel keeps its content until its collapse animation settles.
+const DetailPanelCollapsible = ({
+  children,
+  isExpanded,
+}: {
+  children: ReactNode;
+  isExpanded: boolean;
+}) => {
+  const { panelRef, showChildren } = useCollapsingChildren(isExpanded);
+
+  return (
+    <Collapsible isExpanded={isExpanded}>
+      <CollapsibleContent
+        className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none"
+        // The part's props type leaves out the ref the DisclosurePanel takes.
+        {...{ ref: panelRef }}
+      >
+        {showChildren && children}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
+
 export const ST_TableDetailPanel = <TData extends ST_RowData>({
   parentRowRef,
   row,
@@ -59,14 +81,16 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
     },
   } = table;
 
-  // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
-  const { hover: _hover, ...tableRowProps } =
-    parseFromValuesOrFunc(stTableBodyRowProps, {
+  const tableRowProps = {
+    ...parseFromValuesOrFunc(stTableBodyRowProps, {
       isDetailPanel: true,
       row,
       staticRowIndex,
       table,
-    }) ?? {};
+    }),
+  };
+  // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
+  delete tableRowProps.hover;
 
   const tableCellProps = {
     ...parseFromValuesOrFunc(stDetailPanelProps, {
@@ -77,7 +101,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnVisibility: state.columnVisibility,
@@ -85,7 +109,6 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
         isExpanded: row.getIsExpanded(),
         isLoading: state.isLoading,
       })}
-      source={table.store}
     >
       {({ isLoading }) => {
         const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
@@ -131,9 +154,9 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
                 tableCellProps.align === 'center'
                   ? 'text-center'
                   : tableCellProps.align === 'right'
-                    ? 'text-right flex-row-reverse'
+                    ? 'text-end flex-row-reverse'
                     : tableCellProps.align === 'left'
-                      ? 'text-left'
+                      ? 'text-start'
                       : tableCellProps.align === 'justify'
                         ? 'text-justify'
                         : 'text-start',
@@ -143,22 +166,14 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                // React Aria sets --disclosure-panel-height, which the
-                // st-aria-collapsible-* keyframes read, and keeps a collapsed
-                // panel's children mounted.
-                <Collapsible isExpanded={row.getIsExpanded()}>
-                  <style href="st-aria-collapsible" precedence="low">
-                    {stCollapsibleKeyframes}
-                  </style>
-                  <CollapsibleContent className="overflow-hidden aria-[hidden=false]:animate-[st-aria-collapsible-down_200ms_ease-out] aria-hidden:animate-[st-aria-collapsible-up_200ms_ease-out]">
-                    {row.getIsExpanded() && DetailPanel}
-                  </CollapsibleContent>
-                </Collapsible>
+                <DetailPanelCollapsible isExpanded={row.getIsExpanded()}>
+                  {DetailPanel}
+                </DetailPanelCollapsible>
               )}
             </td>
           </tr>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

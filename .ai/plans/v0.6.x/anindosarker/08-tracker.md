@@ -1,6 +1,6 @@
 # 08: versioning page, tracker
 
-Status: done
+Status: done (c320cec2)
 Branch `v0.6/versioning-page`, worktree 07
 Gates:
 - `pnpm types:check` (apps/shadcn-table-docs) on the commit tree, parent 61e37a34: green

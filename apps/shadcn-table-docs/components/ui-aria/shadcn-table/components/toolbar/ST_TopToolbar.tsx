@@ -1,23 +1,19 @@
-import { useCallback, useRef } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type ST_RowData } from '@/components/ui-aria/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui-aria/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_LinearProgressBar } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_LinearProgressBar';
 import { ST_TablePagination } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_TablePagination';
 import { ST_ToolbarAlertBanner } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_ToolbarDropZone } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_ToolbarDropZone';
 import { ST_ToolbarInternalButtons } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_ToolbarInternalButtons';
-import { useST_MediaQuery } from '@/components/ui-aria/shadcn-table/components/toolbar/useST_MediaQuery';
+import { useST_MediaQuery } from '@/components/ui-aria/shadcn-table/hooks/useST_MediaQuery';
 import { ST_GlobalFilterTextField } from '@/components/ui-aria/shadcn-table/components/inputs/ST_GlobalFilterTextField';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui-aria/shadcn-table/hooks/useST_ComposedRef';
 
 const topToolbarVariants = cva(
-  'relative z-[1] grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
+  'relative z-1 grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
   {
     variants: {
       fullscreen: {
@@ -50,35 +46,14 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
 
   const toolbarProps = parseFromValuesOrFunc(stTopToolbarProps, { table });
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // topToolbarRef null while the children's layout effects run.
-  const userRef = useRef(toolbarProps?.ref);
-  userRef.current = toolbarProps?.ref;
-  const attachRef = useCallback(
-    (node: HTMLDivElement) => {
-      topToolbarRef.current = node;
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        topToolbarRef.current = null;
-      };
-    },
-    [topToolbarRef],
-  );
+  const attachRef = useST_ComposedRef(topToolbarRef, toolbarProps?.ref);
 
   const globalFilterProps = {
-    className: !isTablet ? 'z-[2]' : undefined,
+    className: !isTablet ? 'z-2' : undefined,
   };
 
   // Created outside the state subscription, so a full screen or global filter
-  // change re-renders only the toolbar element, the alert banner and the
-  // actions row.
+  // change does not re-render them.
   const dropZone = ['both', 'top'].includes(positionToolbarDropZone ?? '') && (
     <ST_ToolbarDropZone />
   );
@@ -110,12 +85,11 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const progressBar = <ST_LinearProgressBar isTopToolbar />;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isFullScreen: state.isFullScreen,
         showGlobalFilter: state.showGlobalFilter,
       })}
-      source={table.store}
     >
       {({ isFullScreen, showGlobalFilter }) => {
         const stackAlertBanner =
@@ -138,7 +112,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
             {dropZone}
             <div
               className={cn(
-                'box-border flex w-full items-start justify-between gap-2 p-2 right-0 top-0',
+                'box-border flex w-full items-start justify-between gap-2 p-2 inset-e-0 top-0',
                 stackAlertBanner ? 'relative' : 'absolute',
               )}
             >
@@ -149,6 +123,6 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

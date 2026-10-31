@@ -2,14 +2,12 @@ import { Collapsible, CollapsibleContent } from '@/components/ui-base/collapsibl
 import { Progress } from '@/components/ui-base/progress';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_LinearProgressProps,
   type ST_RowData,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 
 export interface ST_LinearProgressBarProps extends ST_LinearProgressProps {
   isTopToolbar: boolean;
@@ -24,10 +22,8 @@ const linearProgressWrapperVariants = cva('absolute w-full', {
   },
 });
 
-// MUI LinearProgress indeterminate keyframes (indeterminate1), ported so the
-// loading bars animate in CSS like MUI's instead of re-rendering per frame.
-// Rendered as a hoisted <style href="st-linear-progress"> whether or not the
-// bar is indeterminate, so the rule exists before the class is set.
+// Hoisted as <style href="st-linear-progress"> so the rule exists before
+// the class is set.
 const linearProgressKeyframes = `@keyframes st-linear-progress-indeterminate {
   0% {
     left: -35%;
@@ -73,12 +69,11 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
   const isIndeterminate = progressComponentProps?.value == null;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isSaving: state.isSaving,
         showProgressBars: state.showProgressBars,
       })}
-      source={table.store}
     >
       {({ isSaving, showProgressBars }) => (
         <Collapsible
@@ -92,10 +87,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           <style href="st-linear-progress" precedence="low">
             {linearProgressKeyframes}
           </style>
-          <style href="st-base-collapsible" precedence="low">
-            {stCollapsibleKeyframes}
-          </style>
-          <CollapsibleContent className="data-open:animate-[st-base-collapsible-down_200ms_ease-out] data-closed:animate-[st-base-collapsible-up_200ms_ease-out]">
+          <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
             <Progress
               aria-busy="true"
               {...progressComponentProps}
@@ -108,6 +100,6 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           </CollapsibleContent>
         </Collapsible>
       )}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

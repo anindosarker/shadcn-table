@@ -18,6 +18,7 @@ export const useST_RowVirtualizer = <
   table: ST_TableInstance<TData>,
   rows?: ST_Row<TData>[],
 ): ST_RowVirtualizer<TScrollElement, TItemElement> | undefined => {
+  'use no memo';
   const {
     getRowModel,
     options: {
@@ -29,24 +30,30 @@ export const useST_RowVirtualizer = <
     refs: { tableContainerRef },
   } = table;
 
-  if (!enableRowVirtualization) return undefined;
-
-  // These feed the memo and the virtualizer, so they are hook subscriptions.
-  const density = useSelector(table.atoms.density);
-  const draggingRow = useSelector(table.atoms.draggingRow);
-  const expanded = useSelector(table.atoms.expanded);
+  // Off, the hook selects a constant, so these slices never re-render the
+  // caller.
+  const density = useSelector(table.atoms.density, (value) =>
+    enableRowVirtualization ? value : undefined,
+  );
+  const draggingRow = useSelector(table.atoms.draggingRow, (value) =>
+    enableRowVirtualization ? value : undefined,
+  );
+  const expanded = useSelector(table.atoms.expanded, (value) =>
+    enableRowVirtualization ? value : undefined,
+  );
 
   const rowVirtualizerProps = parseFromValuesOrFunc(rowVirtualizerOptions, {
     table,
   });
 
   const realRows = rows ?? getRowModel().rows;
+  const draggingRowId = draggingRow?.id;
   const draggingRowIndex = useMemo(
     () =>
-      draggingRow?.id
-        ? realRows.findIndex((r) => r.id === draggingRow?.id)
+      draggingRowId
+        ? realRows.findIndex((r) => r.id === draggingRowId)
         : undefined,
-    [realRows, draggingRow?.id],
+    [realRows, draggingRowId],
   );
 
   const rowCount = realRows.length;
@@ -54,8 +61,15 @@ export const useST_RowVirtualizer = <
   const normalRowHeight =
     density === 'compact' ? 37 : density === 'comfortable' ? 58 : 73;
 
+  const rangeExtractor = useCallback(
+    (range: Range) => extraIndexRangeExtractor(range, draggingRowIndex),
+    [draggingRowIndex],
+  );
+
+  // eslint-disable-next-line react-hooks/incompatible-library -- useVirtualizer returns mutable functions; the hook opts out with 'use no memo'
   const rowVirtualizer = useVirtualizer({
     count: renderDetailPanel ? rowCount * 2 : rowCount,
+    enabled: !!enableRowVirtualization,
     estimateSize: (index) =>
       renderDetailPanel && index % 2 === 1
         ? expanded === true
@@ -69,16 +83,13 @@ export const useST_RowVirtualizer = <
         ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 4,
-    rangeExtractor: useCallback(
-      (range: Range) => {
-        return extraIndexRangeExtractor(range, draggingRowIndex);
-      },
-      [draggingRowIndex],
-    ),
+    rangeExtractor,
     ...rowVirtualizerProps,
   }) as unknown as ST_RowVirtualizer<TScrollElement, TItemElement>;
 
-  rowVirtualizer.virtualRows = rowVirtualizer.getVirtualItems() as any;
+  if (!enableRowVirtualization) return undefined;
+
+  rowVirtualizer.virtualRows = rowVirtualizer.getVirtualItems();
 
   if (rowVirtualizerInstanceRef) {
     // @ts-expect-error Virtualizer generics vs the ST_RowVirtualizer ref type

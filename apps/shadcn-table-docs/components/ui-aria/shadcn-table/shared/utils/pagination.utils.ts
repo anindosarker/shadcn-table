@@ -50,24 +50,12 @@ export const getPaginationItems = ({
   );
 
   const siblingsStart = Math.max(
-    Math.min(
-      // Natural start
-      page - siblingCount,
-      // Lower boundary when page is high
-      count - boundaryCount - siblingCount * 2 - 1,
-    ),
-    // Greater than startPages
+    Math.min(page - siblingCount, count - boundaryCount - siblingCount * 2 - 1),
     boundaryCount + 2,
   );
 
   const siblingsEnd = Math.min(
-    Math.max(
-      // Natural end
-      page + siblingCount,
-      // Upper boundary when page is low
-      boundaryCount + siblingCount * 2 + 2,
-    ),
-    // Less than endPages
+    Math.max(page + siblingCount, boundaryCount + siblingCount * 2 + 2),
     count - boundaryCount - 1,
   );
 
@@ -154,8 +142,7 @@ export const getST_ShownRowRange = <TData extends ST_RowData>(
       rowPinningDisplayMode,
     },
   } = table;
-  // The live store: the caller's subscription lists this slice.
-  const { rowPinning } = table.store.state;
+  const rowPinning = table.atoms.rowPinning.get();
 
   let firstRowIndex = pageIndex * pageSize;
   let lastRowIndex = Math.min(firstRowIndex + pageSize, totalRowCount);

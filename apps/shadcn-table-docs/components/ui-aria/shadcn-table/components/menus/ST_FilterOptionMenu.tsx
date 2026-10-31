@@ -1,5 +1,4 @@
 import { type ComponentPropsWithRef, useMemo } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
@@ -17,6 +16,7 @@ import {
 import { getColumnFilterFnName } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui-aria/shadcn-table/components/menus/ST_ActionMenuItem';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
 
 export const stFilterOptions = (
   localization: ST_Localization,
@@ -120,8 +120,7 @@ export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   isSubMenu?: boolean;
   onSelect?: () => void;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setFilterValue?: (filterValue: any) => void;
+  setFilterValue?: (filterValue: string | string[]) => void;
 }
 
 export const ST_FilterOptionMenu = <TData extends ST_RowData>({
@@ -181,8 +180,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       setGlobalFilterFn(option);
     } else if (option !== prevFilterMode) {
       const currentFilterValue = column.getFilterValue();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setColumnFilterFns((prev: { [key: string]: any }) => ({
+      setColumnFilterFns((prev) => ({
         ...prev,
         [header.id]: option,
       }));
@@ -201,8 +199,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       ) {
         if (
           currentFilterValue instanceof String ||
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (currentFilterValue as Array<any>)?.length
+          (currentFilterValue as ArrayLike<unknown> | undefined)?.length
         ) {
           column.setFilterValue([]);
           setFilterValue?.([]);
@@ -213,8 +210,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       ) {
         if (
           !Array.isArray(currentFilterValue) ||
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (!(currentFilterValue as Array<any>)?.every((v) => v === '') &&
+          (!currentFilterValue.every((v) => v === '') &&
             !rangeModes.includes(prevFilterMode))
         ) {
           column.setFilterValue(['', '']);
@@ -236,17 +232,19 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     onSelect?.();
   };
 
-  const rect = anchorEl?.getBoundingClientRect();
+  const { onOpenChange, rect, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   // The column mode name is written onto the column def from
   // `columnFilterFns` in the root render, so that slice is selected.
   const menuItems = (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         globalFilterFn: state.globalFilterFn,
       })}
-      source={table.store}
     >
       {({ globalFilterFn }) => {
         const filterOption =
@@ -293,7 +291,7 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
           </>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 
   if (isSubMenu) {
@@ -305,27 +303,9 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   }
 
   return (
-    <DropdownMenuTrigger
-      isOpen={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
-      {/* MenuTrigger positions the menu against its pressable child. */}
+    <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
       <Pressable>
-        <span
-          aria-hidden
-          role="button"
-          tabIndex={-1}
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="right top"

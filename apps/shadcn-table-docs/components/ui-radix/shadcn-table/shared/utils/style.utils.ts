@@ -1,6 +1,6 @@
 import { type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
-import { type ST_TooltipProps } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { type ST_TooltipProps } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import {
   type ST_Column,
   type ST_Header,
@@ -8,36 +8,6 @@ import {
   type ST_CoreTableInstance,
   type TableCellProps,
 } from '@/components/ui-radix/shadcn-table/types';
-
-// MUI Collapse orientation="horizontal": tw-animate-css ships only the height
-// pair (collapsible-down/up), so the width pair lives here, driven by the
-// radix-measured --radix-collapsible-content-width like the height pair.
-// overflow: hidden sits inside the keyframes so it applies only while the
-// animation runs, as MUI Collapse clips while transitioning and sets
-// overflow: visible once entered. Rendered as a hoisted
-// <style href="st-collapsible"> by the components that animate with it.
-export const stCollapsibleKeyframes = `@keyframes st-collapsible-right {
-  from {
-    width: 0;
-    overflow: hidden;
-  }
-  to {
-    width: var(--radix-collapsible-content-width);
-    overflow: hidden;
-  }
-}
-
-@keyframes st-collapsible-left {
-  from {
-    width: var(--radix-collapsible-content-width);
-    overflow: hidden;
-  }
-  to {
-    width: 0;
-    overflow: hidden;
-  }
-}
-`;
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
@@ -50,12 +20,12 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   const isPinned = column?.getIsPinned();
 
   return cn(
-    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:left-0 data-[pinned=true]:before:-z-[1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
+    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
     column
       ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
         : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
           : undefined
       : undefined,
   );
@@ -75,8 +45,8 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   const {
     options: { enableColumnVirtualization, layoutMode },
   } = table;
-  // The live store: the caller's subscription lists these slices.
-  const { draggingColumn, hoveredColumn } = table.store.state;
+  const draggingColumn = table.atoms.draggingColumn.get();
+  const hoveredColumn = table.atoms.hoveredColumn.get();
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
@@ -112,11 +82,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
             'sticky opacity-[0.97]',
           ),
           style: {
-            left:
+            insetInlineStart:
               isColumnPinned === 'start'
                 ? `${column.getStart('start')}px`
                 : undefined,
-            right:
+            insetInlineEnd:
               isColumnPinned === 'end'
                 ? `${column.getAfter('end')}px`
                 : undefined,
@@ -136,11 +106,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
         ? 'transition-none'
         : 'transition-[padding] duration-150 ease-in-out',
       column.getIsResizing() || draggingColumn?.id === column.id
-        ? 'z-[2]'
+        ? 'z-2'
         : columnDefType !== 'group' && isColumnPinned
-          ? 'z-[1]'
+          ? 'z-1'
           : 'z-0',
-      'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+      'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
       pinnedStyles.className,
       tableCellProps?.className,
     ),
@@ -157,9 +127,6 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
     },
   };
 };
-
-export const getCommonToolbarStyles = () =>
-  'relative z-[1] grid min-h-14 flex-wrap-reverse items-start overflow-hidden bg-background transition-all duration-150 ease-in-out';
 
 export const getCommonTooltipProps = (
   side?: ST_TooltipProps['side'],

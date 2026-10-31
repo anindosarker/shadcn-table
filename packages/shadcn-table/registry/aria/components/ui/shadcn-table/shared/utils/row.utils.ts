@@ -1,11 +1,10 @@
-import { type ChangeEvent, type MouseEvent } from 'react';
 import { rankGlobalFuzzy } from '@/components/ui/shadcn-table/shared/fns/sortFns';
 import {
   type ST_Row,
   type ST_RowData,
   type ST_CoreTableInstance,
+  type ST_SelectionEvent,
   type ST_TableInstance,
-  type ST_TableState,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 
@@ -27,8 +26,8 @@ export const getST_Rows = <TData extends ST_RowData>(
       rowPinningDisplayMode,
     },
   } = table;
-  // The live store: the caller's subscription lists these slices.
-  const { creatingRow, pagination } = table.store.state as ST_TableState<TData>;
+  const creatingRow = table.atoms.creatingRow.get();
+  const pagination = table.atoms.pagination.get();
 
   const isRankingRows = getIsRankingRows(table);
 
@@ -109,7 +108,8 @@ export const getCanRankRows = <TData extends ST_RowData>(
       manualSorting,
     },
   } = table;
-  const { expanded, globalFilterFn } = table.store.state;
+  const expanded = table.atoms.expanded.get();
+  const globalFilterFn = table.atoms.globalFilterFn.get();
 
   return (
     !manualExpanding &&
@@ -126,7 +126,8 @@ export const getCanRankRows = <TData extends ST_RowData>(
 export const getIsRankingRows = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) => {
-  const { globalFilter, sorting } = table.store.state;
+  const globalFilter = table.atoms.globalFilter.get();
+  const sorting = table.atoms.sorting.get();
 
   return (
     getCanRankRows(table) &&
@@ -163,10 +164,7 @@ export const getST_RowSelectionHandler =
     staticRowIndex?: number;
     table: ST_CoreTableInstance<TData>;
   }) =>
-  (
-    event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLTableRowElement>,
-    value?: boolean,
-  ) => {
+  (event: ST_SelectionEvent, value?: boolean) => {
     const wasCurrentRowChecked = getIsRowSelected({ row, table });
     const checked = value ?? !wasCurrentRowChecked;
 
@@ -174,8 +172,8 @@ export const getST_RowSelectionHandler =
     // `isRowRangeSelectionEvent` accepts) TanStack extends the toggle to the
     // rows between the last toggled row and this one (`enableRowRangeSelection`)
     row.getToggleSelectedHandler()({
-      nativeEvent: (event as any).nativeEvent,
-      shiftKey: (event as any).shiftKey,
+      nativeEvent: event.nativeEvent,
+      shiftKey: 'shiftKey' in event ? event.shiftKey : undefined,
       target: { checked },
     });
 
@@ -190,11 +188,7 @@ export const getST_SelectAllHandler =
   }: {
     table: ST_CoreTableInstance<TData>;
   }) =>
-  (
-    event: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLButtonElement>,
-    value?: boolean,
-    forceAll?: boolean,
-  ) => {
+  (event: ST_SelectionEvent, value?: boolean, forceAll?: boolean) => {
     const {
       options: { enableRowPinning, rowPinningDisplayMode, selectAllMode },
     } = table;
@@ -208,9 +202,11 @@ export const getST_SelectAllHandler =
         ? table.getIsAllRowsSelected()
         : table.getIsAllPageRowsSelected());
 
-    isAllMode
-      ? table.toggleAllRowsSelected(checked)
-      : table.toggleAllPageRowsSelected(checked);
+    if (isAllMode) {
+      table.toggleAllRowsSelected(checked);
+    } else {
+      table.toggleAllPageRowsSelected(checked);
+    }
     // Unselect all clears every pin, hand-pinned rows included; the selection
     // subscription in useST_Effects pins and unpins the rows that changed.
     if (

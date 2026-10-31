@@ -45,8 +45,7 @@ export const enableRowNumbersStatic = () => (
   <ShadcnTable columns={columns} data={data} enableRowNumbers />
 );
 
-export const enableRowNumbersConditionally = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+const EnableRowNumbersConditionally = () => {
   const [enableRowNumbers, setEnableRowNumbers] = useState(false);
   return (
     <ShadcnTable
@@ -61,6 +60,10 @@ export const enableRowNumbersConditionally = () => {
     />
   );
 };
+
+export const enableRowNumbersConditionally = () => (
+  <EnableRowNumbersConditionally />
+);
 
 export const enableRowNumbersStaticGrid = () => (
   <ShadcnTable

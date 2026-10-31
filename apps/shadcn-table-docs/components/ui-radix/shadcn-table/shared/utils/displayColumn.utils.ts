@@ -1,9 +1,9 @@
 import {
   type ST_DefinedTableOptions,
   type ST_DisplayColumnIds,
+  type ST_DisplayColumnOptions,
   type ST_Localization,
   type ST_RowData,
-  type ST_StatefulTableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
 import {
   getAllLeafColumnDefs,
@@ -33,21 +33,21 @@ export function defaultDisplayColumnProps<TData extends ST_RowData>({
 }
 
 export const showRowPinningColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => {
   const { enableRowPinning, rowPinningDisplayMode } = tableOptions;
   return !!(enableRowPinning && !rowPinningDisplayMode?.startsWith('select'));
 };
 
 export const showRowDragColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => {
   const { enableRowDragging, enableRowOrdering } = tableOptions;
   return !!(enableRowDragging || enableRowOrdering);
 };
 
 export const showRowExpandColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => {
   const {
     enableExpanding,
@@ -63,7 +63,7 @@ export const showRowExpandColumn = <TData extends ST_RowData>(
 };
 
 export const showRowActionsColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => {
   const {
     createDisplayMode,
@@ -80,19 +80,19 @@ export const showRowActionsColumn = <TData extends ST_RowData>(
 };
 
 export const showRowSelectionColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => !!tableOptions.enableRowSelection;
 
 export const showRowNumbersColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => !!tableOptions.enableRowNumbers;
 
 export const showRowSpacerColumn = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ): boolean => tableOptions.layoutMode === 'grid-no-grow';
 
 export const getLeadingDisplayColumnIds = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ) =>
   [
     showRowPinningColumn(tableOptions) && 'st-row-pin',
@@ -108,7 +108,7 @@ export const getLeadingDisplayColumnIds = <TData extends ST_RowData>(
   ].filter(Boolean) as ST_DisplayColumnIds[];
 
 export const getTrailingDisplayColumnIds = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
 ) =>
   [
     tableOptions.positionActionsColumn === 'last' &&
@@ -121,9 +121,9 @@ export const getTrailingDisplayColumnIds = <TData extends ST_RowData>(
   ].filter(Boolean) as ST_DisplayColumnIds[];
 
 export const getDefaultColumnOrderIds = <TData extends ST_RowData>(
-  tableOptions: ST_StatefulTableOptions<TData>,
+  tableOptions: ST_DisplayColumnOptions<TData>,
   reset = false,
-) => {
+): string[] => {
   const {
     state: { columnOrder: currentColumnOrderIds = [] },
   } = tableOptions;

@@ -84,16 +84,65 @@ export const initCommand = (
 ) => `${runners[pm]} init --base ${base}`;
 
 /**
- * Namespace form, the alternative to the direct URL: register the registry
- * once, then add items by name. `{style}` is the project's shadcn style
- * (`radix-nova`, `base-sera`, `aria-nova`, ...), which the site maps onto
- * the base.
+ * The icon libraries the table ships an edition for (registry items
+ * `shadcn-table` and `shadcn-table-<library>`): each installs the same
+ * `icons.ts` path with that library's icons and package, on top of
+ * `shadcn-table-core`. Lucide is the default edition.
  */
-export const registryNamespace = 'st';
+export const iconLibraries = [
+  'lucide',
+  'tabler',
+  'phosphor',
+  'hugeicons',
+  'remixicon',
+] as const;
+export type IconLibrary = (typeof iconLibraries)[number];
 
-export const registryAddCommand = (pm: PackageManager = 'pnpm') =>
-  `${runners[pm]} registry add @${registryNamespace}=${siteUrl}/r/{style}/{name}.json`;
+/** The icon library shown before the reader picks one. */
+export const defaultIconLibrary: IconLibrary = 'lucide';
 
+/** Reader-facing name per icon library. */
+export const iconLibraryLabels: Readonly<Record<IconLibrary, string>> = {
+  lucide: 'Lucide',
+  tabler: 'Tabler',
+  phosphor: 'Phosphor',
+  hugeicons: 'Hugeicons',
+  remixicon: 'Remix Icon',
+};
+
+export const isIconLibrary = (value: unknown): value is IconLibrary =>
+  iconLibraries.includes(value as IconLibrary);
+
+/** `shadcn-table` for lucide, `shadcn-table-<library>` otherwise. */
+export const editionItem = (library: IconLibrary) =>
+  library === 'lucide' ? libraryItem : `${libraryItem}-${library}`;
+
+/**
+ * `shadcn add` of the library edition for an icon library on a base;
+ * `overwrite` appends `--overwrite`, the update and switch form.
+ */
+export const editionAddCommand = (
+  library: IconLibrary,
+  base: Base = defaultBase,
+  pm: PackageManager = 'pnpm',
+  overwrite = false,
+) =>
+  `${addCommand(editionItem(library), base, pm)}${overwrite ? ' --overwrite' : ''}`;
+
+/**
+ * Namespace form, the alternative to the direct URL: register the registry
+ * once in `components.json`, then add items by name. `{style}` is the
+ * project's shadcn style (`radix-nova`, `base-sera`, `aria-nova`, ...), which
+ * the site maps onto the base.
+ */
+export const registryNamespace = 'shadcn-table';
+
+/** The `components.json` entry that registers the namespace. */
+export const registryEntry = `"registries": {
+  "@${registryNamespace}": "${siteUrl}/r/{style}/{name}.json"
+}`;
+
+/** `shadcn add @shadcn-table/<item>`, once `registryEntry` is in components.json. */
 export const namespaceAddCommand = (
   item: string = libraryItem,
   pm: PackageManager = 'pnpm',

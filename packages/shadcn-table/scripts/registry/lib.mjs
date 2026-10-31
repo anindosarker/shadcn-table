@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_BASE, BASE_LABELS } from './bases.mjs';
+import { DEFAULT_BASE, BASE_LABELS, baseItemName } from './bases.mjs';
 
 export const PKG = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -39,13 +39,45 @@ const pkgJson = JSON.parse(
   fs.readFileSync(path.join(PKG, 'package.json'), 'utf8'),
 );
 
-// Locale items depend on the main item. A bare name would resolve to
-// shadcn/ui's own registry, so the dependency is the GitHub item address,
-// which the CLI resolves through the root registry.json of the repo.
-const mainItemAddress = (item) =>
+// Locale, icon set and example items depend on the core item. A bare name
+// would resolve to shadcn/ui's own registry, so the dependency is the GitHub
+// item address, which the CLI resolves through the root registry.json of the
+// repo; under `--dev` it is the local server's URL.
+const itemAddress = (item) =>
   DEV
     ? `${process.env.REGISTRY_BASE_URL ?? 'http://localhost:5310/r'}/${item}.json`
     : `${GITHUB_REPO}/${item}`;
+
+/**
+ * The address of a base's core item, `shadcn-table-<base>-core`, in the form
+ * registryDependencies take: the GitHub item address, or the local server URL
+ * under `--dev`.
+ *
+ * @param {string} base
+ */
+export const coreItemAddress = (base) =>
+  itemAddress(`${baseItemName('shadcn-table', base)}-core`);
+
+// The icon map every item installs at components/ui/shadcn-table/icons.ts:
+// icons.ts (Lucide) for the main item, icons/<set>.ts for the icon set items.
+const ICON_MAP = 'icons.ts';
+const ICON_SET_DIR = 'icons';
+const LUCIDE = 'lucide-react';
+
+/**
+ * The icon sets besides Lucide: the item suffix and file name
+ * (`icons/<set>.ts`), and the npm packages the map imports. Each set's
+ * packages are devDependencies here and pinned in its item.
+ */
+export const ICON_SETS = Object.freeze({
+  tabler: { title: 'Tabler', packages: ['@tabler/icons-react'] },
+  phosphor: { title: 'Phosphor', packages: ['@phosphor-icons/react'] },
+  hugeicons: {
+    title: 'Hugeicons',
+    packages: ['@hugeicons/react', '@hugeicons/core-free-icons'],
+  },
+  remixicon: { title: 'Remix', packages: ['@remixicon/react'] },
+});
 
 const walk = (dir) => {
   const out = [];
@@ -88,9 +120,16 @@ const uiImports = (files) => {
 };
 
 /**
- * The items of one base: the main item (every library file of the tree
- * except the non-English locales) and one item per locale. `path` values are relative to the package, `target` values are the
- * alias paths the CLI installs to.
+ * The items of one base, in this order:
+ * - core, `<name>-core`: every library file except the icon maps and the
+ *   non-English locales, every dependency but lucide-react
+ * - main, `<name>`: the Lucide map icons.ts, lucide-react, on core
+ * - one icon set item per ICON_SETS entry, `<name>-<set>`: icons/<set>.ts
+ *   installed at the icons.ts target, its packages, on core
+ * - one item per non-English locale, `<name>-locale-<code>`, on core
+ *
+ * `path` values are relative to the package, `target` values are the alias
+ * paths the CLI installs to.
  *
  * @param {{
  *   dir: string,
@@ -130,8 +169,18 @@ export const buildBaseItems = ({
   const isLocale = (key) => /^(shared[\\/])?locales[\\/]/.test(key);
   const localeCode = (key) => path.basename(key).replace(/\.ts$/, '');
 
+  const isIconMap = (key) =>
+    key === ICON_MAP || key.startsWith(`${ICON_SET_DIR}${path.sep}`);
+  const iconMapEntry = libEntries.find(([key]) => key === ICON_MAP)?.[1];
+  if (!iconMapEntry) {
+    throw new Error(`buildBaseItems: ${LIB_REL}/${ICON_MAP} missing in ${dir}`);
+  }
+
   const coreFiles = libEntries
-    .filter(([key]) => !isLocale(key) || localeCode(key) === 'en')
+    .filter(
+      ([key]) =>
+        !isIconMap(key) && (!isLocale(key) || localeCode(key) === 'en'),
+    )
     .map(([, entry]) => entry);
   const localeFiles = libEntries.filter(
     ([key]) => isLocale(key) && localeCode(key) !== 'en',
@@ -139,19 +188,56 @@ export const buildBaseItems = ({
   const registryDependencies = uiImports(
     coreFiles.map((entry) => path.join(PKG, entry.path)),
   );
+  const lucide = dependencies.find((dep) => dep.name === LUCIDE);
+  if (!lucide) {
+    throw new Error(`buildBaseItems: ${name} lists no ${LUCIDE} dependency`);
+  }
+  const onCore = [itemAddress(`${name}-core`)];
 
-  const main = {
-    name,
+  const core = {
+    name: `${name}-core`,
     type: 'registry:ui',
-    title,
-    description,
-    dependencies: dependencies.map((n) => withVersion(n, 'dependencies')),
+    title: `${title} core`,
+    description: `${description} The library without an icon map: install it through ${name} (Lucide) or one of the icon set items.`,
+    dependencies: dependencies
+      .filter((dep) => dep !== lucide)
+      .map((n) => withVersion(n, 'dependencies')),
     devDependencies: devDependencies.map((n) =>
       withVersion(n, 'devDependencies'),
     ),
     registryDependencies,
     files: coreFiles,
   };
+
+  const main = {
+    name,
+    type: 'registry:ui',
+    title,
+    description,
+    dependencies: [withVersion(lucide, 'dependencies')],
+    registryDependencies: onCore,
+    files: [iconMapEntry],
+  };
+
+  const iconSets = Object.entries(ICON_SETS).map(
+    ([set, { title: label, packages }]) => {
+      const file = path.join(libDir, ICON_SET_DIR, `${set}.ts`);
+      if (!fs.existsSync(file)) {
+        throw new Error(`buildBaseItems: ${rel(file)} missing`);
+      }
+      return {
+        name: `${name}-${set}`,
+        type: 'registry:ui',
+        title: `${title} with ${label} icons`,
+        description: `${description} Installs the ${label} icon map instead of Lucide.`,
+        dependencies: packages.map((pkg) =>
+          withVersion({ name: pkg, pinned: true }, 'devDependencies'),
+        ),
+        registryDependencies: onCore,
+        files: [{ ...fileEntry(uiDir, file), target: iconMapEntry.target }],
+      };
+    },
+  );
 
   const locales = localeFiles.map(([key, entry]) => {
     const code = localeCode(key);
@@ -160,24 +246,32 @@ export const buildBaseItems = ({
       type: 'registry:ui',
       title: `${title} locale: ${code}`,
       description: `The ${code} localization for ${name}.`,
-      registryDependencies: [mainItemAddress(name)],
+      registryDependencies: onCore,
       files: [entry],
     };
   });
 
-  return [main, ...locales];
+  return [core, main, ...iconSets, ...locales];
 };
 
+// The suffixes after `<name>-<base>` of the items buildBaseItems emits besides
+// the main item and the locales.
+const ITEM_SUFFIXES = ['core', ...Object.keys(ICON_SETS)];
+
 // Whether a committed item name carries the base: `<name>-<base>`
-// (baseItemName) or a locale item of one, `<name>-<base>-locale-<code>`. The
-// GitHub shorthand aliases (aliasItems) carry none.
+// (baseItemName), its core or icon set item, `<name>-<base>-<suffix>`, or a
+// locale item, `<name>-<base>-locale-<code>`. The GitHub shorthand aliases
+// (aliasItems) carry none.
 const hasBaseName = (name, base) =>
-  name.endsWith(`-${base}`) || name.includes(`-${base}-locale-`);
+  name.endsWith(`-${base}`) ||
+  ITEM_SUFFIXES.some((suffix) => name.endsWith(`-${base}-${suffix}`)) ||
+  name.includes(`-${base}-locale-`);
 
 /**
  * The GitHub shorthand aliases (decisions.md, decision 7): one copy of every
  * DEFAULT_BASE item under its plain name (`shadcn-table`,
- * `shadcn-table-locale-<code>`, `example-<slug>`), because `shadcn add
+ * `shadcn-table-core`, `shadcn-table-<set>`, `shadcn-table-locale-<code>`,
+ * `example-<slug>`), because `shadcn add
  * anindosarker/shadcn-table/<name>` reads the committed catalog and cannot pick
  * a base. Same type, files and dependencies as the source item; only the name
  * and the description change. build.mjs and examples.mjs append them to the
@@ -191,9 +285,14 @@ const hasBaseName = (name, base) =>
 export const aliasItems = (items) =>
   items.map((item) => {
     const suffix = `-${DEFAULT_BASE}`;
+    const itemSuffix = ITEM_SUFFIXES.find((s) =>
+      item.name.endsWith(`${suffix}-${s}`),
+    );
     const name = item.name.endsWith(suffix)
       ? item.name.slice(0, -suffix.length)
-      : item.name.replace(`${suffix}-locale-`, '-locale-');
+      : itemSuffix
+        ? `${item.name.slice(0, -`${suffix}-${itemSuffix}`.length)}-${itemSuffix}`
+        : item.name.replace(`${suffix}-locale-`, '-locale-');
     if (name === item.name) {
       throw new Error(
         `aliasItems: ${item.name} is not a ${DEFAULT_BASE} item name`,
@@ -208,9 +307,11 @@ export const aliasItems = (items) =>
 
 /**
  * One base's items in a catalog built from the committed registry.json: the
- * items whose files live in registry/<base>, split into the main item and its
- * locale items (named `<main>-locale-<code>`). The GitHub shorthand aliases
- * (aliasItems) share the default base's files and are skipped.
+ * items whose files live in registry/<base>, split into the core item
+ * (`<main>-core`), the main item (the Lucide one, `<main>`), the icon set
+ * items (`<main>-<set>`, in ICON_SETS order) and the locale items
+ * (`<main>-locale-<code>`). The GitHub shorthand aliases (aliasItems) share
+ * the default base's files and are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog
  * @param {string} base
@@ -221,15 +322,15 @@ export const baseItems = (catalog, base) => {
       hasBaseName(item.name, base) &&
       item.files.every((file) => file.path.startsWith(`registry/${base}/`)),
   );
-  const main = own.find((item) =>
-    own.every(
-      (other) =>
-        other === item || other.name.startsWith(`${item.name}-locale-`),
-    ),
-  );
+  const core = own.find((item) => item.name.endsWith(`-${base}-core`));
+  const mainName = core?.name.slice(0, -'-core'.length);
   return {
-    main,
-    locales: own.filter((item) => item !== main),
+    core,
+    main: own.find((item) => item.name === mainName),
+    editions: Object.keys(ICON_SETS)
+      .map((set) => own.find((item) => item.name === `${mainName}-${set}`))
+      .filter(Boolean),
+    locales: own.filter((item) => item.name.startsWith(`${mainName}-locale-`)),
   };
 };
 

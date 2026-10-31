@@ -1,7 +1,5 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
-import { type LucideIcon } from 'lucide-react';
-import { createElement } from 'react';
+import { type ComponentType, createElement } from 'react';
 import { Button } from '@/components/ui-base/button';
 import { Label } from '@/components/ui-base/label';
 import {
@@ -23,6 +21,7 @@ import {
 } from '@/components/ui-base/select';
 import { cn } from '@/lib/utils';
 import {
+  type ST_IconProps,
   type ST_PaginationProps,
   type ST_RowData,
   type ST_TableOptions,
@@ -34,8 +33,8 @@ import {
   type ST_UsePaginationItem,
 } from '@/components/ui-base/shadcn-table/shared/utils/pagination.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
-import { useST_MediaQuery } from '@/components/ui-base/shadcn-table/components/toolbar/useST_MediaQuery';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
+import { useST_MediaQuery } from '@/components/ui-base/shadcn-table/hooks/useST_MediaQuery';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100];
@@ -52,7 +51,7 @@ export interface ST_TablePaginationProps
 }
 
 const tablePaginationVariants = cva(
-  'relative z-[2] flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
+  'relative z-2 flex flex-wrap items-center gap-2 justify-self-end px-2 py-3 justify-center md:justify-between',
 );
 
 export const ST_TablePagination = <TData extends ST_RowData>({
@@ -71,8 +70,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
       paginationDisplayMode,
     },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Select.
   const {
     stPaginationProps,
   }: Pick<ST_TableOptions<TData>, 'stPaginationProps'> = table.options;
@@ -109,7 +106,10 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   } = SelectProps;
 
   const navItems: Partial<
-    Record<ST_UsePaginationItem['type'], { Icon: LucideIcon; label: string }>
+    Record<
+      ST_UsePaginationItem['type'],
+      { Icon: ComponentType<ST_IconProps>; label: string }
+    >
   > = {
     first: { Icon: FirstPageIcon, label: localization.goToFirstPage },
     last: { Icon: LastPageIcon, label: localization.goToLastPage },
@@ -121,7 +121,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
   // selector lists every slice that feeds it, and the row pins the label
   // range counts.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
@@ -132,7 +132,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
         pagination: state.pagination,
         rowPinning: state.rowPinning,
       })}
-      source={table.store}
     >
       {({ pagination: { pageIndex = 0, pageSize = 10 } }) => {
         const totalRowCount = table.getRowCount();
@@ -157,6 +156,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             className={cn(
               tablePaginationVariants(),
               position === 'top' && enableToolbarInternalActions && 'mt-12',
+              restPaginationProps?.className,
             )}
           >
             {showRowsPerPage && (
@@ -191,8 +191,8 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                 ) : (
                   <Select
                     disabled={disabled}
-                    // `items` gives the trigger the option label; Base UI's SelectValue
-                    // shows the raw value otherwise. Custom children fall back to the value.
+                    // `items` gives the trigger the option label; without it Base UI's
+                    // SelectValue shows the raw value.
                     items={
                       selectPropsChildren
                         ? undefined
@@ -241,10 +241,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             {paginationDisplayMode === 'pages' ? (
               // Not PaginationPrevious/Next: they hardcode English text and
               // lucide icons, which bypasses localization and icon overrides.
-              <Pagination
-                {...restPaginationProps}
-                className={cn('mx-0 w-auto', restPaginationProps?.className)}
-              >
+              <Pagination {...restPaginationProps} className="mx-0 w-auto">
                 <PaginationContent>
                   {getPaginationItems({
                     boundaryCount,
@@ -372,6 +369,6 @@ export const ST_TablePagination = <TData extends ST_RowData>({
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

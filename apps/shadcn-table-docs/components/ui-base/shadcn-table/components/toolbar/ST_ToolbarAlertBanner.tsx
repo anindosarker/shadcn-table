@@ -5,7 +5,6 @@ import { Collapsible, CollapsibleContent } from '@/components/ui-base/collapsibl
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import { Fragment } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import {
   type ST_RowData,
   type ST_TableOptions,
@@ -14,7 +13,6 @@ import { getST_SelectAllHandler } from '@/components/ui-base/shadcn-table/shared
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
-import { stCollapsibleKeyframes } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 
 export interface ST_ToolbarAlertBannerProps
   extends React.ComponentProps<typeof Alert> {
@@ -22,7 +20,7 @@ export interface ST_ToolbarAlertBannerProps
 }
 
 const toolbarAlertBannerVariants = cva(
-  'relative left-0 right-0 top-0 z-[2] w-full',
+  'relative inset-s-0 inset-e-0 top-0 z-2 w-full',
   {
     variants: {
       bottomOffset: {
@@ -54,8 +52,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
     },
     refs: { tableLayoutRef },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Button.
   const {
     stToolbarAlertBannerChipProps,
   }: Pick<
@@ -77,7 +73,7 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   // The selected count reads the filtered selected row model, so the selector
   // lists the filter slices besides the ones the banner shows.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
@@ -88,7 +84,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
         rowSelection: state.rowSelection,
         showAlertBanner: state.showAlertBanner,
       })}
-      source={table.store}
     >
       {({ density, grouping, rowSelection, showAlertBanner }) => {
         const totalRowCount = rowCount ?? getCoreRowModel().rows.length;
@@ -128,8 +123,11 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
               {grouping.map((columnId, index) => (
                 <Fragment key={`${index}-${columnId}`}>
                   {index > 0 ? localization.thenBy : ''}
+                  {/* Base UI merges the render element's handlers with the
+                      chip props, so a consumer onClick runs too. */}
                   <Badge
                     variant="secondary"
+                    {...chipProps}
                     render={
                       <button
                         type="button"
@@ -138,7 +136,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
                         }
                       />
                     }
-                    {...chipProps}
                   >
                     {table.getColumn(columnId).columnDef.header}
                     <CancelIcon data-icon="inline-end" />
@@ -152,13 +149,10 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
           <Collapsible
             open={showAlertBanner || !!selectedAlert || !!groupedAlert}
           >
-            <style href="st-base-collapsible" precedence="low">
-              {stCollapsibleKeyframes}
-            </style>
             <CollapsibleContent
               className={
                 stackAlertBanner
-                  ? 'data-open:animate-[st-base-collapsible-down_200ms_ease-out] data-closed:animate-[st-base-collapsible-up_200ms_ease-out]'
+                  ? 'h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none'
                   : undefined
               }
             >
@@ -225,6 +219,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
           </Collapsible>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
