@@ -222,78 +222,80 @@ export const GroupingColumnsSetState = () => {
   const [data, setData] = useState<ST_RowData[]>([]);
 
   useEffect(() => {
-    // Do something and set columns and data
+    // Columns and data arrive after mount, as from a fetch.
+    const timeout = setTimeout(() => {
+      setColumns([
+        {
+          accessorKey: 'name.firstName', //access nested data with dot notation
+          header: 'First Name',
+        },
+        {
+          accessorKey: 'name.lastName',
+          header: 'Last Name',
+        },
+        {
+          accessorKey: 'address', //normal accessorKey
+          header: 'Address',
+        },
+        {
+          accessorKey: 'city',
+          header: 'City',
+        },
+        {
+          accessorKey: 'state',
+          header: 'State',
+        },
+      ]);
 
-    setColumns([
-      {
-        accessorKey: 'name.firstName', //access nested data with dot notation
-        header: 'First Name',
-      },
-      {
-        accessorKey: 'name.lastName',
-        header: 'Last Name',
-      },
-      {
-        accessorKey: 'address', //normal accessorKey
-        header: 'Address',
-      },
-      {
-        accessorKey: 'city',
-        header: 'City',
-      },
-      {
-        accessorKey: 'state',
-        header: 'State',
-      },
-    ]);
-
-    setData([
-      {
-        address: '261 Erdman Ford',
-        city: 'East Daphne',
-        name: {
-          firstName: 'John',
-          lastName: 'Doe',
+      setData([
+        {
+          address: '261 Erdman Ford',
+          city: 'East Daphne',
+          name: {
+            firstName: 'John',
+            lastName: 'Doe',
+          },
+          state: 'Kentucky',
         },
-        state: 'Kentucky',
-      },
-      {
-        address: '769 Dominic Grove',
-        city: 'Columbus',
-        name: {
-          firstName: 'Jane',
-          lastName: 'Doe',
+        {
+          address: '769 Dominic Grove',
+          city: 'Columbus',
+          name: {
+            firstName: 'Jane',
+            lastName: 'Doe',
+          },
+          state: 'Ohio',
         },
-        state: 'Ohio',
-      },
-      {
-        address: '566 Brakus Inlet',
-        city: 'South Linda',
-        name: {
-          firstName: 'Joe',
-          lastName: 'Doe',
+        {
+          address: '566 Brakus Inlet',
+          city: 'South Linda',
+          name: {
+            firstName: 'Joe',
+            lastName: 'Doe',
+          },
+          state: 'West Virginia',
         },
-        state: 'West Virginia',
-      },
-      {
-        address: '722 Emie Stream',
-        city: 'Lincoln',
-        name: {
-          firstName: 'Kevin',
-          lastName: 'Vandy',
+        {
+          address: '722 Emie Stream',
+          city: 'Lincoln',
+          name: {
+            firstName: 'Kevin',
+            lastName: 'Vandy',
+          },
+          state: 'Nebraska',
         },
-        state: 'Nebraska',
-      },
-      {
-        address: '32188 Larkin Turnpike',
-        city: 'Charleston',
-        name: {
-          firstName: 'Joshua',
-          lastName: 'Rolluffs',
+        {
+          address: '32188 Larkin Turnpike',
+          city: 'Charleston',
+          name: {
+            firstName: 'Joshua',
+            lastName: 'Rolluffs',
+          },
+          state: 'South Carolina',
         },
-        state: 'South Carolina',
-      },
-    ]);
+      ]);
+    });
+    return () => clearTimeout(timeout);
   }, []);
 
   return <ShadcnTable columns={columns} data={data} enableGrouping />;
