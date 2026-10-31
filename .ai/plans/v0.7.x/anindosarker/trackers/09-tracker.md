@@ -7,7 +7,8 @@ Gates:
 - gate-aria `next build` at 56eaad0e: green
 - next-app: not run (blocked, see Attention)
 
-- Milestone 01 Runtime gate: running (radix and aria checked; base blocked; failures under Attention)
+- Milestone 01 Runtime gate: done (radix and aria checked; base blocked, A21; misses A22 to A25)
+- Final milestone Release: running; CHANGELOG regrouped at 4a4cea21 (A1), `dev` fast-forwarded, PR #77 `release: 0.7.0` (dev into master, release:minor) opened; gate apps deleted, the run's registry serve on 5310 stopped
 
 Runtime gate (Playwright 1.64.1, real mouse clicks, `next dev` on 5351 radix and 5352 aria; search traces also on `next start` 5353 and 5354):
 - base (next-app): not installed, not checked (pre-step failed)
