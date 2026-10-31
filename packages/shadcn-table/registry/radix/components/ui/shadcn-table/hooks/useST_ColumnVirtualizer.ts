@@ -15,7 +15,8 @@ export const useST_ColumnVirtualizer = <
   TItemElement extends Element = HTMLTableCellElement,
 >(
   table: ST_TableInstance<TData>,
-): ST_ColumnVirtualizer | undefined => {
+): ST_ColumnVirtualizer<TScrollElement, TItemElement> | undefined => {
+  'use no memo';
   const {
     options: {
       columnVirtualizerInstanceRef,
@@ -26,11 +27,9 @@ export const useST_ColumnVirtualizer = <
     refs: { tableContainerRef },
   } = table;
 
-  if (!enableColumnVirtualization) return undefined;
-
-  // These feed the memos and the virtualizer, so they are hook subscriptions.
-  const columnPinning = useSelector(table.atoms.columnPinning);
-  const columnVisibility = useSelector(table.atoms.columnVisibility);
+  // Pinning and visibility change the pinned indexes below.
+  useSelector(table.atoms.columnPinning);
+  useSelector(table.atoms.columnVisibility);
   const draggingColumn = useSelector(table.atoms.draggingColumn);
 
   const columnVirtualizerProps = parseFromValuesOrFunc(
@@ -41,61 +40,73 @@ export const useST_ColumnVirtualizer = <
   );
 
   const visibleColumns = table.getVisibleLeafColumns();
+  const numVisibleColumns = visibleColumns.length;
+  const startColumns = table.getStartVisibleLeafColumns();
+  const endColumns = table.getEndVisibleLeafColumns();
 
   const [leftPinnedIndexes, rightPinnedIndexes] = useMemo(
     () =>
       enableColumnPinning
         ? [
-            table.getStartVisibleLeafColumns().map((c) => c.getPinnedIndex()),
-            table
-              .getEndVisibleLeafColumns()
-              .map(
-                (column) => visibleColumns.length - column.getPinnedIndex() - 1,
-              )
+            startColumns.map((c) => c.getPinnedIndex()),
+            endColumns
+              .map((column) => numVisibleColumns - column.getPinnedIndex() - 1)
               .sort((a, b) => a - b),
           ]
         : [[], []],
-    [columnPinning, columnVisibility, enableColumnPinning],
+    [enableColumnPinning, endColumns, numVisibleColumns, startColumns],
   );
 
   const numPinnedLeft = leftPinnedIndexes.length;
   const numPinnedRight = rightPinnedIndexes.length;
 
+  const draggingColumnId = draggingColumn?.id;
   const draggingColumnIndex = useMemo(
     () =>
-      draggingColumn?.id
-        ? visibleColumns.findIndex((c) => c.id === draggingColumn?.id)
+      draggingColumnId
+        ? visibleColumns.findIndex((c) => c.id === draggingColumnId)
         : undefined,
-    [draggingColumn?.id],
+    [draggingColumnId, visibleColumns],
+  );
+
+  const rangeExtractor = useCallback(
+    (range: Range) => {
+      const newIndexes = extraIndexRangeExtractor(range, draggingColumnIndex);
+      if (!numPinnedLeft && !numPinnedRight) {
+        return newIndexes;
+      }
+      return [
+        ...new Set([
+          ...leftPinnedIndexes,
+          ...newIndexes,
+          ...rightPinnedIndexes,
+        ]),
+      ];
+    },
+    [
+      draggingColumnIndex,
+      leftPinnedIndexes,
+      numPinnedLeft,
+      numPinnedRight,
+      rightPinnedIndexes,
+    ],
   );
 
   const columnVirtualizer = useVirtualizer({
-    count: visibleColumns.length,
+    count: numVisibleColumns,
+    enabled: !!enableColumnVirtualization,
     estimateSize: (index) => visibleColumns[index].getSize(),
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
     overscan: 3,
-    rangeExtractor: useCallback(
-      (range: Range) => {
-        const newIndexes = extraIndexRangeExtractor(range, draggingColumnIndex);
-        if (!numPinnedLeft && !numPinnedRight) {
-          return newIndexes;
-        }
-        return [
-          ...new Set([
-            ...leftPinnedIndexes,
-            ...newIndexes,
-            ...rightPinnedIndexes,
-          ]),
-        ];
-      },
-      [leftPinnedIndexes, rightPinnedIndexes, draggingColumnIndex],
-    ),
+    rangeExtractor,
     ...columnVirtualizerProps,
   }) as unknown as ST_ColumnVirtualizer<TScrollElement, TItemElement>;
 
+  if (!enableColumnVirtualization) return undefined;
+
   const virtualColumns = columnVirtualizer.getVirtualItems();
-  columnVirtualizer.virtualColumns = virtualColumns as any;
+  columnVirtualizer.virtualColumns = virtualColumns;
   const numColumns = virtualColumns.length;
 
   if (numColumns) {
@@ -124,5 +135,5 @@ export const useST_ColumnVirtualizer = <
     columnVirtualizerInstanceRef.current = columnVirtualizer;
   }
 
-  return columnVirtualizer as any;
+  return columnVirtualizer;
 };
