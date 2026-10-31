@@ -31,7 +31,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui-radix/tooltip';
-import { useBase } from '@/components/base-selector';
+import { BaseSwitch, useBase } from '@/components/base-selector';
 import { CodeExplorer, type ExplorerFile } from '@/components/code-explorer';
 import { ExampleSwitcher } from '@/components/example-switcher';
 import { GitHubIcon } from '@/components/github-icon';
@@ -269,6 +269,7 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               </Button>
             ))}
           </div>
+          <BaseSwitch surface="example" />
           <div
             role="group"
             aria-label="Open example"

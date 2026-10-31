@@ -125,6 +125,8 @@ const checks = {
     // The header's base switch re-renders the example on Base UI and the
     // code view shows that variant's imports; Radix again afterwards.
     await baseSwitch(page, 'basic', check);
+    // The example toolbar's own base select drives the same switch.
+    await baseSwitch(page, 'basic', check, { via: 'toolbar' });
   },
   '/docs/guides/pagination': async ({ page, check }) => {
     const propNames = await names(page, '#relevant-props-table');
