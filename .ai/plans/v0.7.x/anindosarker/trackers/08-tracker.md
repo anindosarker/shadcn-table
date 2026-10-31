@@ -14,9 +14,13 @@ Gates:
 - 2.2 S4 greps (`supportedLocales|shadcn-table-locale-de.json   #`, `@st/|@st\b`) at 0ed09813: empty
 - `pnpm check:bases`, `pnpm test:base` at 0ed09813: green
 - agent-browser on dev server 5342 at 0ed09813: step 1 (de command, French gives `-locale-fr.json` and `ST_Localization_FR`, npm gives `npx shadcn@latest`), step 2 (es toolbar to React Aria: header React Aria, install tab React Aria with `/r/aria/`, 53 `[data-rac]`), step 3 (basic toolbar to Radix UI: header Radix UI, code view, prompt `/r/radix/example-basic.json`, full screen menu on top): pass; step 4 console: zero on Base UI and Radix UI, React Aria dev warnings (see Attention)
+- Review fix: `apps/shadcn-table-docs/tsconfig.json` reverted to c9b32366; `pnpm --filter shadcn-table-docs types:check` at 7421a1e5: green, file unchanged after the run
 
 ## Attention
 
+- A dev server on a port other than 5320 (here 5342, distDir `.next-5342`) rewrites `apps/shadcn-table-docs/tsconfig.json` (expanded arrays, `.next-<port>` includes); 0ed09813 committed that rewrite, reverted in 7421a1e5. `.prettierignore` lists `*.json`, so `pnpm format` cannot catch it. Owner: pin `typescript.tsconfigPath` in `next.config.mjs` or make a gate diff the file.
+- Commits 970cf469, 8d8ef490, 0ed09813 and 37e0cbd4 lack the `Claude-Session:` trailer (pushed, no force-push per P1). No harness reminder reached the fixer subagent, so later commits and the PR #71 body carry `https://claude.ai/code/session_015VBrypUJXYCcQD6zrN4yeT`, the line on c9b32366 and 5c5964f6; replace if the run's session differs.
+- PR #71 Release impact CHANGELOG box left unticked (it applies to `release:patch|minor|major` only); the Changes section now states the Spec 08 lines are present under `release:skip`.
 - Dev console on React Aria shows `<Focusable> child must have an interactive ARIA role.` and a missing aria-label warning from the rendered library, with the header select alone too (existing, not from S4); prod `check-pages` reports no console errors. Owner: library side (S1 or S2) or accept.
 - `DocsLocale` gained a fourth field, `example` (the example slug), because the example folders are not `localization-i18n-${code.toLowerCase()}` for `pt-BR`, `sr-Cyrl-RS`, `sr-Latn-RS`; renaming them would rename registry items.
 - CHANGELOG Spec 08 has an extra `Docs` line for the `@st` to `@shadcn-table` rename (not a Breaking line: the namespace name is local to a consumer's `components.json`, `@st` keeps working). `packages/shadcn-table/scripts/registry/hosted.mjs:16-17` still names `@st` in a comment (packages/ is out of S4 scope).
