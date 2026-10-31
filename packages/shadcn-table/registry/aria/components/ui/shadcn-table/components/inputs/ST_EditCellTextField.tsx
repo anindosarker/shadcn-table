@@ -79,12 +79,17 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const helper =
-    helperText == null || helperText === '' ? null : error ? (
-      <FieldError>{helperText}</FieldError>
-    ) : (
-      <FieldDescription>{helperText}</FieldDescription>
-    );
+  const helperId = `${id}-helper`;
+  const hasHelper = !(helperText == null || helperText === '');
+  const helper = !hasHelper ? null : error ? (
+    <FieldError id={helperId}>{helperText}</FieldError>
+  ) : (
+    <FieldDescription id={helperId}>{helperText}</FieldDescription>
+  );
+  const describedBy =
+    [textFieldProps['aria-describedby'], hasHelper ? helperId : undefined]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
   // React Aria collections throw on a repeated id, so a repeated option value
   // is offered once.
@@ -207,6 +212,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                 }}
                 size="sm"
                 {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
+                aria-describedby={describedBy}
                 aria-invalid={error || textFieldProps['aria-invalid']}
                 className={cn('w-full', textFieldProps.className)}
                 onBlur={(event) => {
@@ -273,6 +279,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             value={value ?? ''}
             autoComplete="off"
             {...textFieldProps}
+            aria-describedby={describedBy}
             aria-invalid={error || textFieldProps['aria-invalid']}
             onBlur={handleBlur}
             onChange={handleChange}

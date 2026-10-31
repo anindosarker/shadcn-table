@@ -114,7 +114,6 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
   return (
     <table.Subscribe
       selector={(state) => ({
-        actionCell: state.actionCell,
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
         isFullScreen: state.isFullScreen,
@@ -123,7 +122,6 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
       })}
     >
       {({
-        actionCell,
         creatingRow,
         editingRow,
         isFullScreen,
@@ -158,8 +156,10 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
           >
             {loading ? <ST_TableLoadingOverlay /> : null}
             {tableElement}
-            {(createModalOpen || editModalOpen) && <ST_EditRowModal open />}
-            {enableCellActions && actionCell && <ST_CellActionMenu />}
+            {(createDisplayMode === 'modal' || editDisplayMode === 'modal') && (
+              <ST_EditRowModal open={!!(createModalOpen || editModalOpen)} />
+            )}
+            {enableCellActions && <ST_CellActionMenu />}
           </div>
         );
       }}

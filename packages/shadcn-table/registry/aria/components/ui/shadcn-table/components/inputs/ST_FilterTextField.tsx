@@ -394,7 +394,11 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       {filterChipLabel && (
         <Badge variant="secondary">
           {filterChipLabel}
-          <button type="button" onClick={handleClearEmptyFilterChip}>
+          <button
+            aria-label={localization.clearFilter}
+            onClick={handleClearEmptyFilterChip}
+            type="button"
+          >
             <CancelIcon className="size-3" />
           </button>
         </Badge>

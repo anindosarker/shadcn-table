@@ -123,8 +123,11 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
               {grouping.map((columnId, index) => (
                 <Fragment key={`${index}-${columnId}`}>
                   {index > 0 ? localization.thenBy : ''}
+                  {/* Base UI merges the render element's handlers with the
+                      chip props, so a consumer onClick runs too. */}
                   <Badge
                     variant="secondary"
+                    {...chipProps}
                     render={
                       <button
                         type="button"
@@ -133,7 +136,6 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
                         }
                       />
                     }
-                    {...chipProps}
                   >
                     {table.getColumn(columnId).columnDef.header}
                     <CancelIcon data-icon="inline-end" />
