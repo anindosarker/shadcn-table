@@ -3,7 +3,6 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type RefObject,
-  useEffect,
   useState,
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
@@ -87,17 +86,12 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     table,
   });
 
-  const [skeletonWidth, setSkeletonWidth] = useState(100);
-  useEffect(() => {
-    if ((!isLoading && !showSkeletons) || skeletonWidth !== 100) return;
+  const [skeletonWidth] = useState(() => {
     const size = column.getSize();
-    setSkeletonWidth(
-      columnDefType === 'display'
-        ? size / 2
-        : Math.round(Math.random() * (size - size / 3) + size / 3),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, showSkeletons]);
+    return columnDefType === 'display'
+      ? size / 2
+      : Math.round(Math.random() * (size - size / 3) + size / 3);
+  });
 
   const isEditable = isCellEditable({ cell, table });
 
@@ -139,6 +133,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     if (isRightClickable) {
       e.preventDefault();
       table.setActionCell(cell);
+      // eslint-disable-next-line react-hooks/immutability -- runs in handleContextMenu, not render; table.refs is the table's mutable ref bag
       table.refs.actionCellRef.current = e.currentTarget;
     }
   };

@@ -58,14 +58,16 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
     },
   } = table;
 
-  // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
-  const { hover: _hover, ...tableRowProps } =
-    parseFromValuesOrFunc(stTableBodyRowProps, {
+  const tableRowProps = {
+    ...parseFromValuesOrFunc(stTableBodyRowProps, {
       isDetailPanel: true,
       row,
       staticRowIndex,
       table,
-    }) ?? {};
+    }),
+  };
+  // `hover` is ST_TableBodyRow's flag, not a <tr> attribute.
+  delete tableRowProps.hover;
 
   const tableCellProps = {
     ...parseFromValuesOrFunc(stDetailPanelProps, {
