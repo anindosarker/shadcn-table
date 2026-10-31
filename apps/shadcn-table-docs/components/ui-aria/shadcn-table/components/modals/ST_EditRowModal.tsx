@@ -1,4 +1,5 @@
-import { Subscribe } from '@tanstack/react-table';
+import { useState } from 'react';
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -41,8 +42,6 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Dialog.
   const {
     stCreateRowModalProps,
     stEditRowDialogProps,
@@ -51,82 +50,86 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
     'stCreateRowModalProps' | 'stEditRowDialogProps'
   > = table.options;
 
+  const liveCreatingRow = useSelector(table.atoms.creatingRow);
+  const liveEditingRow = useSelector(table.atoms.editingRow);
+  const liveRow = liveCreatingRow ?? liveEditingRow;
+  // The dialog stays mounted and keeps the last row while it plays its exit
+  // state after the row is cleared.
+  const [shown, setShown] = useState({
+    isCreating: !!liveCreatingRow,
+    row: liveRow,
+  });
+  if (liveRow && liveRow !== shown.row) {
+    setShown({ isCreating: !!liveCreatingRow, row: liveRow });
+  }
+  const row = (liveRow ?? shown.row) as ST_Row<TData> | null;
+  if (!row) return null;
+  const creatingRow = (liveRow ? !!liveCreatingRow : shown.isCreating)
+    ? row
+    : null;
+
+  const dialogProps = {
+    ...parseFromValuesOrFunc(stEditRowDialogProps, { row, table }),
+    ...(creatingRow &&
+      parseFromValuesOrFunc(stCreateRowModalProps, { row, table })),
+    ...rest,
+  };
+  const { onOpenChange, ...contentProps } = dialogProps;
+
+  const internalEditComponents = row
+    .getAllCells()
+    .filter((cell) => cell.column.columnDef.columnDefType === 'data')
+    .map((cell) => <ST_EditCellTextField cell={cell} key={cell.id} />);
+
   return (
-    <Subscribe
-      selector={(state) => ({
-        creatingRow: state.creatingRow,
-        editingRow: state.editingRow,
-      })}
-      source={table.store}
-    >
-      {({ creatingRow, editingRow }) => {
-        const row = (creatingRow ?? editingRow) as ST_Row<TData>;
-
-        const dialogProps = {
-          ...parseFromValuesOrFunc(stEditRowDialogProps, { row, table }),
-          ...(creatingRow &&
-            parseFromValuesOrFunc(stCreateRowModalProps, { row, table })),
-          ...rest,
-        };
-        const { onOpenChange, ...contentProps } = dialogProps;
-
-        const internalEditComponents = row
-          .getAllCells()
-          .filter((cell) => cell.column.columnDef.columnDefType === 'data')
-          .map((cell) => <ST_EditCellTextField cell={cell} key={cell.id} />);
-
-        return (
-          <Dialog
-            showCloseButton={false}
-            {...contentProps}
-            className={cn(
-              editRowModalVariants({ className: contentProps.className }),
-            )}
-            isOpen={open}
-            onOpenChange={(nextOpen) => {
-              if (nextOpen) return;
-              const liveCreatingRow = table.atoms.creatingRow.get();
-              const liveRow = (liveCreatingRow ??
-                table.atoms.editingRow.get()) as ST_Row<TData>;
-              if (liveCreatingRow) {
-                onCreatingRowCancel?.({ row: liveRow, table });
-                setCreatingRow(null);
-              } else {
-                onEditingRowCancel?.({ row: liveRow, table });
-                setEditingRow(null);
-              }
-              liveRow._valuesCache = {} as ST_Row<TData>['_valuesCache'];
-              onOpenChange?.(nextOpen);
-            }}
-          >
-            {((creatingRow &&
-              renderCreateRowDialogContent?.({
-                internalEditComponents,
-                row,
-                table,
-              })) ||
-              renderEditRowDialogContent?.({
-                internalEditComponents,
-                row,
-                table,
-              })) ?? (
-              <>
-                <DialogHeader>
-                  <DialogTitle>{localization.edit}</DialogTitle>
-                </DialogHeader>
-                <div className="min-h-0 overflow-y-auto">
-                  <form onSubmit={(e) => e.preventDefault()}>
-                    <FieldGroup>{internalEditComponents}</FieldGroup>
-                  </form>
-                </div>
-                <DialogFooter>
-                  <ST_EditActionButtons row={row} variant="text" />
-                </DialogFooter>
-              </>
-            )}
-          </Dialog>
-        );
+    <Dialog
+      showCloseButton={false}
+      {...contentProps}
+      className={cn(
+        editRowModalVariants({ className: contentProps.className }),
+      )}
+      isOpen={open}
+      onOpenChange={(nextOpen) => {
+        if (nextOpen) return;
+        const liveCreatingRow = table.atoms.creatingRow.get();
+        const liveRow = (liveCreatingRow ??
+          table.atoms.editingRow.get()) as ST_Row<TData>;
+        if (liveCreatingRow) {
+          onCreatingRowCancel?.({ row: liveRow, table });
+          setCreatingRow(null);
+        } else {
+          onEditingRowCancel?.({ row: liveRow, table });
+          setEditingRow(null);
+        }
+        liveRow._valuesCache = {} as ST_Row<TData>['_valuesCache'];
+        onOpenChange?.(nextOpen);
       }}
-    </Subscribe>
+    >
+      {((creatingRow &&
+        renderCreateRowDialogContent?.({
+          internalEditComponents,
+          row,
+          table,
+        })) ||
+        renderEditRowDialogContent?.({
+          internalEditComponents,
+          row,
+          table,
+        })) ?? (
+        <>
+          <DialogHeader>
+            <DialogTitle>{localization.edit}</DialogTitle>
+          </DialogHeader>
+          <div className="min-h-0 overflow-y-auto">
+            <form onSubmit={(e) => e.preventDefault()}>
+              <FieldGroup>{internalEditComponents}</FieldGroup>
+            </form>
+          </div>
+          <DialogFooter>
+            <ST_EditActionButtons row={row} variant="text" />
+          </DialogFooter>
+        </>
+      )}
+    </Dialog>
   );
 };

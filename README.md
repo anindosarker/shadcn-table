@@ -51,8 +51,8 @@ pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json
 Namespace form, any base (`{style}` resolves to the project's style):
 
 ```bash
-pnpm dlx shadcn@latest registry add @st=https://www.shadcn-table.com/r/{style}/{name}.json
-pnpm dlx shadcn@latest add @st/shadcn-table
+pnpm dlx shadcn@latest registry add @shadcn-table=https://www.shadcn-table.com/r/{style}/{name}.json
+pnpm dlx shadcn@latest add @shadcn-table/shadcn-table
 ```
 
 GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table-base` (Base UI), `anindosarker/shadcn-table/shadcn-table-radix` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).
@@ -67,7 +67,7 @@ GitHub addresses, as a fallback: `anindosarker/shadcn-table/shadcn-table-base` (
 - **Columns:** ordering, resizing, hiding, pinning and drag-and-drop
 - **Editing:** in cell, row, modal and table modes
 - **Layout:** toolbars, density toggle and full-screen mode
-- **i18n:** 38 locales, installed as separate registry items
+- **i18n:** 39 languages, English built in and 38 locale items, one command each: `pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table-locale-de.json` ([guide](https://www.shadcn-table.com/docs/guides/localization))
 
 ## Community
 

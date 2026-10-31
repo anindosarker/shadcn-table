@@ -1,7 +1,6 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { ST_Checkbox } from '@/components/ui/shadcn-table/ST_Checkbox';
+import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
 import { Label } from '@/components/ui/label';
 import {
   type CheckboxProps,
@@ -11,7 +10,7 @@ import {
   type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 
 const filterCheckboxVariants = cva('', {
   variants: {
@@ -47,9 +46,6 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
     options: { localization },
   } = table;
   const { columnDef } = column;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Checkbox.
   const {
     stFilterCheckboxProps,
   }: Pick<ST_TableOptions<TData>, 'stFilterCheckboxProps'> = table.options;
@@ -75,12 +71,11 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
   );
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         filterValue: column.getFilterValue(),
       })}
-      source={table.store}
     >
       {({ density }) => (
         <ST_Tooltip title={filterLabel}>
@@ -89,6 +84,7 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
             title={undefined}
           >
             <ST_Checkbox
+              indeterminateIcon={table.options.icons.IndeterminateIcon}
               // React Aria keeps the mixed state in its own `isIndeterminate`
               // flag; `isSelected` is always a boolean.
               isSelected={column.getFilterValue() === 'true'}
@@ -123,6 +119,6 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
           </Label>
         </ST_Tooltip>
       )}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

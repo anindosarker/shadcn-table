@@ -196,8 +196,8 @@ const checks = {
     const w = await example(page, 'disable-column-hiding', check);
     const menu = await openMenu(page, w, 'Show/Hide columns');
     check(
-      'disable-column-hiding: column switches',
-      (await count(menu, '[role="switch"]')) > 0,
+      'disable-column-hiding: column checkbox rows',
+      (await count(menu, '[role="menuitemcheckbox"]')) > 0,
     );
     await page.keyboard.press('Escape');
   },
@@ -267,7 +267,22 @@ const checks = {
     );
   },
 
-  '/docs/guides/customize-icons': async ({ page, check }) => {
+  '/docs/guides/customize-icons': async ({ page, check, base }) => {
+    // Icon editions: the update form of the edition command, Lucide first.
+    const edition = page.locator('article pre:visible', {
+      hasText: `/r/${base}/shadcn-table.json --overwrite`,
+    });
+    check(
+      'edition command',
+      (await edition.count()) === 1,
+      String(await edition.count()),
+    );
+    check(
+      'icon library select',
+      (await page
+        .locator('article button[aria-label="Icon library"]')
+        .count()) === 1,
+    );
     await propTable(page, '#relevant-props-table', check);
     const w = await example(page, 'font-awesome-icons', check);
     check(

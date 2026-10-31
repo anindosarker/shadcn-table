@@ -26,7 +26,6 @@ export interface ST_Table_Toolbars {
   setShowToolbarDropZone: (updater: ST_Updater<boolean>) => void;
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters */
 declare module '@tanstack/react-table' {
   interface Plugins {
     stToolbarsFeature: TableFeature;
@@ -35,19 +34,22 @@ declare module '@tanstack/react-table' {
     stToolbarsFeature: ST_TableState_Toolbars;
   }
   interface TableOptions_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stToolbarsFeature: ST_TableOptions_Toolbars;
   }
   interface Table_FeatureMap<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TFeatures extends TableFeatures,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declaration merging repeats the TanStack type parameters
     TData extends RowData,
   > {
     stToolbarsFeature: ST_Table_Toolbars;
   }
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const stToolbarsFeature: TableFeature = {
   getInitialState: (initialState) => ({

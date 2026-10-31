@@ -45,9 +45,8 @@ import {
 
 export const stConfigFeature: TableFeature = {};
 
-// The augmentation takes the tree-neutral part props types: when one program
-// holds both trees, the Radix UI and Base UI declarations of a merged member
-// must match.
+// The augmentation takes the tree-neutral part props types, since merged
+// declarations must match when one program holds several trees.
 declare module '@tanstack/react-table' {
   interface Plugins {
     stConfigFeature: TableFeature;

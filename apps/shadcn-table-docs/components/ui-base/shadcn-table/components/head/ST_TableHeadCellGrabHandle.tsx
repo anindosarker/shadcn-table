@@ -29,9 +29,6 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
     setDraggingColumn,
     setHoveredColumn,
   } = table;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Button.
   const {
     stColumnDragHandleProps,
   }: Pick<ST_TableOptions<TData>, 'stColumnDragHandleProps'> = table.options;

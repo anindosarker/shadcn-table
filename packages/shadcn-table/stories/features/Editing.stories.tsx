@@ -97,8 +97,7 @@ export const EditingEnabledEditModeModalDefault = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -167,8 +166,7 @@ export const EditingFeatureEnabledConditionally = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -220,8 +218,7 @@ export const EditingEnabledEditModeRow = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -298,8 +295,7 @@ export const EditingValidationHelperText = () => {
       editDisplayMode="table"
       enableEditing
       onEditingRowSave={({ exitEditingMode, row, values }) => {
-        tableData[row.index] = values;
-        setTableData([...tableData]);
+        setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
         exitEditingMode();
       }}
     />
@@ -321,8 +317,7 @@ export const EditingEnabledEditModeRowCustomSave = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -386,8 +381,7 @@ export const EditingEnabledEditModeRowVirtualized = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -442,9 +436,11 @@ export const EditingEnabledEditModeCell = () => {
   const [tableData, setTableData] = useState(data);
 
   const handleSaveCell = (cell: ST_Cell<Person>, value: string) => {
-    // @ts-expect-error column id is a string key of Person
-    tableData[cell.row.index][cell.column.id] = value;
-    setTableData([...tableData]);
+    setTableData(
+      tableData.map((r, i) =>
+        i === cell.row.index ? { ...r, [cell.column.id]: value } : r,
+      ),
+    );
   };
 
   return (
@@ -493,9 +489,11 @@ export const EditingEnabledEditModeCellWithRowActions = () => {
   const [tableData, setTableData] = useState(data);
 
   const handleSaveCell = (cell: ST_Cell<Person>, value: string) => {
-    // @ts-expect-error column id is a string key of Person
-    tableData[cell.row.index][cell.column.id] = value;
-    setTableData([...tableData]);
+    setTableData(
+      tableData.map((r, i) =>
+        i === cell.row.index ? { ...r, [cell.column.id]: value } : r,
+      ),
+    );
   };
 
   return (
@@ -545,9 +543,11 @@ export const EditingEnabledEditModeTable = () => {
   const [tableData, setTableData] = useState(data);
 
   const handleSaveCell = (cell: ST_Cell<Person>, value: string) => {
-    // @ts-expect-error column id is a string key of Person
-    tableData[+cell.row.index][cell.column.id] = value;
-    setTableData([...tableData]);
+    setTableData(
+      tableData.map((r, i) =>
+        i === +cell.row.index ? { ...r, [cell.column.id]: value } : r,
+      ),
+    );
     console.info('saved cell with value: ', value);
   };
 
@@ -594,8 +594,7 @@ export const EditSelectVariant = () => {
     row,
     values,
   }) => {
-    tableData[+row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === +row.index ? values : r)));
   };
 
   return (
@@ -639,8 +638,7 @@ export const EditSelectVariantAlternate = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
   };
 
   return (
@@ -733,8 +731,7 @@ export const EditingCustomizeInput = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
   };
 
   return (
@@ -781,8 +778,7 @@ export const EditingEnabledAsync = () => {
   }) => {
     setIsSaving(true);
     setTimeout(() => {
-      tableData[row.index] = values;
-      setTableData([...tableData]);
+      setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
       setIsSaving(false);
     }, 1500);
   };
@@ -864,7 +860,7 @@ export const EditingNestedData = () => {
       data={tableData}
       enableEditing
       onEditingRowSave={({ row, values }) => {
-        tableData[row.index] = {
+        const saved = {
           address: row._valuesCache.address,
           name: {
             firstName: values.firstName,
@@ -873,7 +869,7 @@ export const EditingNestedData = () => {
           phoneNumber: row._valuesCache.phoneNumber,
           state: row._valuesCache.state,
         };
-        setTableData([...tableData]);
+        setTableData(tableData.map((r, i) => (i === row.index ? saved : r)));
       }}
     />
   );
@@ -887,8 +883,7 @@ export const EditingEnabledEditModeTableWithGroupedRows = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -934,8 +929,7 @@ export const EnableEditingConditionally = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -980,8 +974,7 @@ export const EnableEditingConditionallyCell = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -1026,8 +1019,7 @@ export const EnableEditingConditionallyTable = () => {
     row,
     values,
   }) => {
-    tableData[row.index] = values;
-    setTableData([...tableData]);
+    setTableData(tableData.map((r, i) => (i === row.index ? values : r)));
     exitEditingMode();
   };
 
@@ -1068,9 +1060,11 @@ export const EditingCellManualOnChange = () => {
   const [tableData, setTableData] = useState(data);
 
   const handleSaveCell = (cell: ST_Cell<Person>, value: string) => {
-    // @ts-expect-error column id is a string key of Person
-    tableData[cell.row.index][cell.column.id] = value;
-    setTableData([...tableData]);
+    setTableData(
+      tableData.map((r, i) =>
+        i === cell.row.index ? { ...r, [cell.column.id]: value } : r,
+      ),
+    );
   };
 
   return (

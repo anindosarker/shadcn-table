@@ -8,7 +8,6 @@ import {
   useId,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { Field, FieldDescription, FieldError } from '@/components/ui-base/field';
 import { Input } from '@/components/ui-base/input';
@@ -80,12 +79,17 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
     ...rest,
   };
 
-  const helper =
-    helperText == null || helperText === '' ? null : error ? (
-      <FieldError>{helperText}</FieldError>
-    ) : (
-      <FieldDescription>{helperText}</FieldDescription>
-    );
+  const helperId = `${id}-helper`;
+  const hasHelper = !(helperText == null || helperText === '');
+  const helper = !hasHelper ? null : error ? (
+    <FieldError id={helperId}>{helperText}</FieldError>
+  ) : (
+    <FieldDescription id={helperId}>{helperText}</FieldDescription>
+  );
+  const describedBy =
+    [textFieldProps['aria-describedby'], hasHelper ? helperId : undefined]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
   const selectOptions = parseFromValuesOrFunc(editSelectOptions, {
     cell,
@@ -98,8 +102,10 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
 
   const saveInputValueToRowCache = (newValue: string) => {
     //@ts-expect-error _valuesCache is TanStack-internal
+    // eslint-disable-next-line react-hooks/immutability -- runs in saveInputValueToRowCache, not render; _valuesCache is the row's mutable row values cache
     row._valuesCache[column.id] = newValue;
-    const { creatingRow, editingRow } = table.store.state;
+    const creatingRow = table.atoms.creatingRow.get();
+    const editingRow = table.atoms.editingRow.get();
     if (creatingRow?.id === row.id) {
       setCreatingRow(row);
     } else if (editingRow?.id === row.id) {
@@ -133,11 +139,10 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
   }
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         isCreating: state.creatingRow?.id === row.id,
       })}
-      source={table.store}
     >
       {({ isCreating }) => {
         const isFormMode = ['custom', 'modal'].includes(
@@ -165,8 +170,8 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         if (isSelectEdit) {
           const select = (
             <Select
-              // `items` gives the trigger the option label; Base UI's SelectValue
-              // shows the raw value otherwise. Custom children fall back to the value.
+              // `items` gives the trigger the option label; without it Base UI's
+              // SelectValue shows the raw value.
               items={
                 textFieldProps.children
                   ? undefined
@@ -197,12 +202,13 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
                 id={id}
                 ref={(inputRef) => {
                   if (inputRef) {
-                    editInputRefs.current![column.id] =
+                    editInputRefs.current[column.id] =
                       inputRef as unknown as HTMLInputElement;
                   }
                 }}
                 size="sm"
                 {...(textFieldProps as ComponentProps<typeof SelectTrigger>)}
+                aria-describedby={describedBy}
                 aria-invalid={error || textFieldProps['aria-invalid']}
                 className={cn('w-full', textFieldProps.className)}
                 onBlur={(event) => {
@@ -265,7 +271,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             id={id}
             ref={(inputRef) => {
               if (inputRef) {
-                editInputRefs.current![column.id] = inputRef;
+                editInputRefs.current[column.id] = inputRef;
               }
             }}
             name={column.id}
@@ -279,6 +285,7 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
             value={value ?? ''}
             autoComplete="off"
             {...textFieldProps}
+            aria-describedby={describedBy}
             aria-invalid={error || textFieldProps['aria-invalid']}
             onBlur={handleBlur}
             onChange={handleChange}
@@ -293,6 +300,6 @@ export const ST_EditCellTextField = <TData extends ST_RowData>({
         );
         return withField(input);
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

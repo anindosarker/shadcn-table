@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import {
   ShadcnTable,
   type ST_ColumnDef,
+  type ST_IconProps,
   type ST_Icons,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
@@ -35,30 +36,52 @@ config.autoAddCss = false;
  * If you skip customizing some icons, those particular icons will fallback the the default Material UI icons.
  */
 const fontAwesomeIcons: Partial<ST_Icons> = {
-  ArrowDownwardIcon: (props: any) => (
-    <FontAwesomeIcon icon={faSortDown} {...props} />
+  ArrowDownwardIcon: ({ className, style }: ST_IconProps) => (
+    <FontAwesomeIcon
+      icon={faSortDown}
+      className={className}
+      style={{ ...style }}
+    />
   ),
   ClearAllIcon: () => <FontAwesomeIcon icon={faBarsStaggered} />,
   DensityLargeIcon: () => <FontAwesomeIcon icon={faGripLines} />,
   DensityMediumIcon: () => <FontAwesomeIcon icon={faBars} />,
   DensitySmallIcon: () => <FontAwesomeIcon icon={faBars} />,
   DragHandleIcon: () => <FontAwesomeIcon icon={faGripLines} />,
-  FilterListIcon: (props: any) => (
-    <FontAwesomeIcon icon={faFilter} {...props} />
+  FilterListIcon: ({ className, style }: ST_IconProps) => (
+    <FontAwesomeIcon
+      icon={faFilter}
+      className={className}
+      style={{ ...style }}
+    />
   ),
   FilterListOffIcon: () => <FontAwesomeIcon icon={faFilterCircleXmark} />,
   FullscreenExitIcon: () => <FontAwesomeIcon icon={faCompress} />,
   FullscreenIcon: () => <FontAwesomeIcon icon={faExpand} />,
-  SearchIcon: (props: any) => <FontAwesomeIcon icon={faSearch} {...props} />,
+  SearchIcon: ({ className, style }: ST_IconProps) => (
+    <FontAwesomeIcon
+      icon={faSearch}
+      className={className}
+      style={{ ...style }}
+    />
+  ),
   SearchOffIcon: () => <FontAwesomeIcon icon={faSearchMinus} />,
   ViewColumnIcon: () => <FontAwesomeIcon icon={faColumns} />,
   MoreVertIcon: () => <FontAwesomeIcon icon={faEllipsisVertical} />,
   MoreHorizIcon: () => <FontAwesomeIcon icon={faEllipsisH} />,
-  SortIcon: (props: any) => (
-    <FontAwesomeIcon icon={faArrowDownWideShort} {...props} /> //props so that style rotation transforms are applied
+  SortIcon: ({ className, style }: ST_IconProps) => (
+    <FontAwesomeIcon
+      icon={faArrowDownWideShort}
+      className={className}
+      style={{ ...style }}
+    /> // className and style carry the rotation
   ),
-  PushPinIcon: (props: any) => (
-    <FontAwesomeIcon icon={faThumbTack} {...props} /> //props so that style rotation transforms are applied
+  PushPinIcon: ({ className, style }: ST_IconProps) => (
+    <FontAwesomeIcon
+      icon={faThumbTack}
+      className={className}
+      style={{ ...style }}
+    /> // className and style carry the rotation
   ),
   VisibilityOffIcon: () => <FontAwesomeIcon icon={faEyeSlash} />,
 };

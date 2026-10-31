@@ -5,19 +5,16 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type DivProps } from '@/components/ui-base/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui-base/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_Table } from '@/components/ui-base/shadcn-table/components/table/ST_Table';
 import { ST_TableLoadingOverlay } from '@/components/ui-base/shadcn-table/components/table/ST_TableLoadingOverlay';
 import { ST_CellActionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_CellActionMenu';
 import { ST_EditRowModal } from '@/components/ui-base/shadcn-table/components/modals/ST_EditRowModal';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui-base/shadcn-table/hooks/useST_ComposedRef';
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -29,7 +26,7 @@ export type ST_TableContainerProps = DivProps;
 // once scrollbar-width is set, so scrollbar-width: thin only applies in
 // engines without ::-webkit-scrollbar support (Firefox).
 const tableContainerVariants = cva(
-  'relative min-w-0 max-w-full overflow-auto supports-[not_selector(::-webkit-scrollbar)]:[scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent',
+  'relative min-w-0 max-w-full overflow-auto supports-[not_selector(::-webkit-scrollbar)]:scrollbar-thin [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent',
 );
 
 export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
@@ -58,27 +55,16 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
   // virtualizers pick up their scroll element on mount.
   const [, setContainerNode] = useState<HTMLDivElement | null>(null);
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // tableContainerRef null while the children's layout effects run.
-  const userRef = useRef(tableContainerProps.ref);
-  userRef.current = tableContainerProps.ref;
+  const composedRef = useST_ComposedRef(
+    tableContainerRef,
+    tableContainerProps.ref,
+  );
   const attachRef = useCallback(
     (node: HTMLDivElement) => {
-      tableContainerRef.current = node;
       setContainerNode(node);
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        tableContainerRef.current = null;
-      };
+      return composedRef(node);
     },
-    [tableContainerRef],
+    [composedRef],
   );
 
   const toolbarObserverRef = useRef<{
@@ -86,11 +72,8 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
     toolbars: (HTMLDivElement | null)[];
   } | null>(null);
 
-  // The toolbars change height on state this container does not render (an
-  // alert banner on selection), so their size is observed, not only measured
-  // after this container renders. The height is written to a CSS variable on
-  // the container node, not to React state, so a toolbar resize does not
-  // re-render the container and the table inside it.
+  // The toolbar height is observed and written to a CSS variable, not React
+  // state, so a toolbar resize does not re-render the container and the table.
   useIsomorphicLayoutEffect(() => {
     const measureToolbars = () => {
       const topToolbarHeight = topToolbarRef.current?.offsetHeight ?? 0;
@@ -129,19 +112,16 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
   const tableElement = <ST_Table />;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
-        actionCell: state.actionCell,
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
         isFullScreen: state.isFullScreen,
         isLoading: state.isLoading,
         showLoadingOverlay: state.showLoadingOverlay,
       })}
-      source={table.store}
     >
       {({
-        actionCell,
         creatingRow,
         editingRow,
         isFullScreen,
@@ -176,11 +156,13 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
           >
             {loading ? <ST_TableLoadingOverlay /> : null}
             {tableElement}
-            {(createModalOpen || editModalOpen) && <ST_EditRowModal open />}
-            {enableCellActions && actionCell && <ST_CellActionMenu />}
+            {(createDisplayMode === 'modal' || editDisplayMode === 'modal') && (
+              <ST_EditRowModal open={!!(createModalOpen || editModalOpen)} />
+            )}
+            {enableCellActions && <ST_CellActionMenu />}
           </div>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

@@ -15,6 +15,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_ActionMenuItem } from '@/components/ui-aria/shadcn-table/components/menus/ST_ActionMenuItem';
+import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenu> {
@@ -45,6 +46,11 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     },
   } = table;
 
+  const { onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
+
   const menuItems: ReactNode[] = [];
   const editItem = parseFromValuesOrFunc(enableEditing, row) &&
     ['modal', 'row'].includes(editDisplayMode!) && (
@@ -66,30 +72,10 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
 
   if (!menuItems.length) return null;
 
-  const rect = anchorEl?.getBoundingClientRect();
-
   return (
-    <DropdownMenuTrigger
-      isOpen={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
-      {/* MenuTrigger positions the menu against its pressable child. */}
+    <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
       <Pressable>
-        <span
-          aria-hidden
-          role="button"
-          tabIndex={-1}
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="bottom start"

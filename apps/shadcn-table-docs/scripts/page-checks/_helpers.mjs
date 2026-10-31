@@ -346,8 +346,34 @@ export async function headerBaseMenu(page, check, current) {
   await page.waitForTimeout(200);
 }
 
+/** The base select in the toolbar of example `#example-<id>`. */
+export const toolbarBase = (page, id) =>
+  page.locator(`[id="example-${id}"] header button[aria-label="Base"]`);
+
 /**
- * Site-wide base switch (the header select above): Base UI re-renders example
+ * Picks a base by label through the toolbar select of example `#example-<id>`,
+ * then waits for the menu to close. Same menu as the header select.
+ */
+export const pickToolbarBase = async (page, id, label) => {
+  const button = toolbarBase(page, id);
+  if (((await button.textContent()) ?? '').trim() === label) return;
+  await button.click();
+  const items = page.getByRole('menuitemradio');
+  await items
+    .first()
+    .waitFor({ timeout: 5000 })
+    .catch(() => {});
+  await items.filter({ hasText: label }).click();
+  await items
+    .first()
+    .waitFor({ state: 'detached', timeout: 5000 })
+    .catch(() => {});
+};
+
+/**
+ * Site-wide base switch (the header select above, or with `via: 'toolbar'`
+ * the example's own toolbar select, which writes the same store and must
+ * move the header select with it): Base UI re-renders example
  * `#example-<id>` (rows again, Base UI markup: Base UI collapsibles set
  * data-open/data-closed, Radix's set data-state), then React Aria does (rows
  * again, React Aria markup: React Aria Components set data-rac on what they
@@ -359,11 +385,28 @@ export async function headerBaseMenu(page, check, current) {
  * explorer highlights the active file in the browser, so the code view's text
  * is read only once a `code` element is in the explorer.
  */
-export async function baseSwitch(page, id, check) {
+export async function baseSwitch(page, id, check, { via = 'header' } = {}) {
   const panel = page.locator(`[id="example-${id}"]`);
   const header = headerBase(page);
   check('base switch in header', (await header.count()) === 1);
   if (!(await header.count())) return;
+  const toolbar = via === 'toolbar';
+  if (toolbar) {
+    check(
+      `${id}: base switch in toolbar`,
+      (await toolbarBase(page, id).count()) === 1,
+    );
+    if (!(await toolbarBase(page, id).count())) return;
+  }
+  const pickBase = async (label) => {
+    if (!toolbar) return pickHeaderBase(page, label);
+    await pickToolbarBase(page, id, label);
+    check(
+      `${id}: header follows toolbar to ${label}`,
+      (await headerBaseLabel(page)) === label,
+      await headerBaseLabel(page),
+    );
+  };
   const rows = panel.locator('table tbody tr');
   const code = panel.locator('[data-slot="code-explorer"] code');
   const source = async () => {
@@ -397,7 +440,7 @@ export async function baseSwitch(page, id, check) {
       .catch(() => {});
   };
   const pick = async (label) => {
-    await pickHeaderBase(page, label);
+    await pickBase(label);
     await rows
       .first()
       .waitFor({ timeout: 60000 })
@@ -459,7 +502,7 @@ export async function baseSwitch(page, id, check) {
     neutral(ariaSource),
     `len=${ariaSource.length}`,
   );
-  await pickHeaderBase(page, 'Radix UI');
+  await pickBase('Radix UI');
   await page.waitForTimeout(200);
   const radixSource = await source();
   check(

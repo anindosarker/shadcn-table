@@ -1,10 +1,11 @@
 import { type ComponentPropsWithRef, useMemo, useState } from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
-import { Header, Pressable } from 'react-aria-components';
+import { Header, Pressable, type Selection } from 'react-aria-components';
 import { Button } from '@/components/ui-aria/button';
 import {
   DropdownMenu,
+  DropdownMenuGroup,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui-aria/dropdown-menu';
@@ -12,11 +13,11 @@ import { cn } from '@/lib/utils';
 import {
   type ST_Column,
   type ST_RowData,
-  type ST_TableState,
 } from '@/components/ui-aria/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui-aria/shadcn-table/shared/utils/displayColumn.utils';
 import { ST_ShowHideColumnsMenuItems } from '@/components/ui-aria/shadcn-table/components/menus/ST_ShowHideColumnsMenuItems';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
+import { useST_MenuAnchor } from '@/components/ui-aria/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenu> {
@@ -24,6 +25,23 @@ export interface ST_ShowHideColumnsMenuProps
   isSubMenu?: boolean;
   setAnchorEl: (anchorEl: HTMLElement | null) => void;
 }
+
+/** The columns the menu lists, group children included, in menu order. */
+const getListedColumns = <TData extends ST_RowData>(
+  columns: ST_Column<TData>[],
+): ST_Column<TData>[] =>
+  columns.flatMap((column) =>
+    !column.columnDef.header || column.columnDef.visibleInShowHideMenu === false
+      ? []
+      : [column, ...getListedColumns(column.columns ?? [])],
+  );
+
+const getVisibleColumnIds = <TData extends ST_RowData>(
+  columns: ST_Column<TData>[],
+) =>
+  getListedColumns(columns)
+    .filter((column) => column.getIsVisible())
+    .map((column) => column.id);
 
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
@@ -49,9 +67,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       localization,
     },
   } = table;
-  // These feed the column list memos, so they are hook subscriptions.
   const columnOrder = useSelector(table.atoms.columnOrder);
-  const columnPinning = useSelector(table.atoms.columnPinning);
+  // A pin change reorders the leaf column getters below.
+  useSelector(table.atoms.columnPinning);
 
   const handleToggleAllColumns = (value?: boolean) => {
     getAllLeafColumns()
@@ -59,31 +77,50 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
       .forEach((col) => col.toggleVisibility(value));
   };
 
-  /* eslint-disable react-hooks/exhaustive-deps */
+  const toggleColumn = (column: ST_Column<TData>) => {
+    if (column.columnDef.columnDefType === 'group') {
+      const isVisible = column.getIsVisible();
+      column.columns?.forEach((childColumn) =>
+        childColumn.toggleVisibility(!isVisible),
+      );
+    } else {
+      column.toggleVisibility();
+    }
+  };
+
+  const columns = getAllColumns();
+  const centerLeafColumns = getCenterLeafColumns();
+  const startLeafColumns = getStartLeafColumns();
+  const endLeafColumns = getEndLeafColumns();
   const allColumns = useMemo(() => {
-    const columns = getAllColumns();
     if (
       columnOrder.length > 0 &&
       !columns.some((col) => col.columnDef.columnDefType === 'group')
     ) {
       return [
-        ...getStartLeafColumns(),
+        ...startLeafColumns,
         ...Array.from(new Set(columnOrder)).map((colId) =>
-          getCenterLeafColumns().find((col) => col?.id === colId),
+          centerLeafColumns.find((col) => col?.id === colId),
         ),
-        ...getEndLeafColumns(),
+        ...endLeafColumns,
       ].filter(Boolean);
     }
     return columns;
   }, [
     columnOrder,
-    columnPinning,
-    getAllColumns(),
-    getCenterLeafColumns(),
-    getStartLeafColumns(),
-    getEndLeafColumns(),
+    columns,
+    centerLeafColumns,
+    startLeafColumns,
+    endLeafColumns,
   ]) as ST_Column<TData>[];
-  /* eslint-enable react-hooks/exhaustive-deps */
+
+  const handleSelectionChange = (keys: Selection) => {
+    const visibleIds = new Set(getVisibleColumnIds(allColumns));
+    getListedColumns(allColumns).forEach((column) => {
+      const isSelected = keys === 'all' || keys.has(column.id);
+      if (isSelected !== visibleIds.has(column.id)) toggleColumn(column);
+    });
+  };
 
   const isNestedColumns = allColumns.some(
     (col) => col.columnDef.columnDefType === 'group',
@@ -102,30 +139,15 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     null,
   );
 
-  const rect = anchorEl?.getBoundingClientRect();
+  const { onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   return (
-    <DropdownMenuTrigger
-      isOpen={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
-      {/* MenuTrigger positions the menu against its pressable child. */}
+    <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
       <Pressable>
-        <span
-          aria-hidden
-          role="button"
-          tabIndex={-1}
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="bottom start"
@@ -153,7 +175,11 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
                       getDefaultColumnOrderIds(
                         {
                           ...table.options,
-                          state: table.store.state as ST_TableState<TData>,
+                          state: {
+                            columnOrder: table.atoms.columnOrder.get(),
+                            creatingRow: table.atoms.creatingRow.get(),
+                            grouping: table.atoms.grouping.get(),
+                          },
                         },
                         true,
                       ),
@@ -186,16 +212,30 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
           )}
         </Subscribe>
         <DropdownMenuSeparator />
-        {allColumns.map((column, index) => (
-          <ST_ShowHideColumnsMenuItems
-            allColumns={allColumns}
-            column={column}
-            hoveredColumn={hoveredColumn}
-            isNestedColumns={isNestedColumns}
-            key={`${index}-${column.id}`}
-            setHoveredColumn={setHoveredColumn}
-          />
-        ))}
+        <Subscribe source={table.atoms.columnVisibility}>
+          {() => (
+            // The column rows select their columns: selected means visible.
+            <DropdownMenuGroup
+              aria-label={localization.showHideColumns}
+              onSelectionChange={handleSelectionChange}
+              selectedKeys={
+                enableHiding ? getVisibleColumnIds(allColumns) : undefined
+              }
+              selectionMode={enableHiding ? 'multiple' : 'none'}
+            >
+              {allColumns.map((column, index) => (
+                <ST_ShowHideColumnsMenuItems
+                  allColumns={allColumns}
+                  column={column}
+                  hoveredColumn={hoveredColumn}
+                  isNestedColumns={isNestedColumns}
+                  key={`${index}-${column.id}`}
+                  setHoveredColumn={setHoveredColumn}
+                />
+              ))}
+            </DropdownMenuGroup>
+          )}
+        </Subscribe>
       </DropdownMenu>
     </DropdownMenuTrigger>
   );

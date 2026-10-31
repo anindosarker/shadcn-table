@@ -1,7 +1,6 @@
-import { Subscribe } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { type ButtonProps } from '@/components/ui/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 export type ST_ToggleGlobalFilterButtonProps = ButtonProps;
@@ -15,22 +14,19 @@ export const ST_ToggleGlobalFilterButton = ({
       icons: { SearchIcon, SearchOffIcon },
       localization,
     },
-    refs: { searchInputRef },
     setShowGlobalFilter,
   } = table;
 
   const handleToggleSearch = () => {
     setShowGlobalFilter(!table.atoms.showGlobalFilter.get());
-    queueMicrotask(() => searchInputRef.current?.focus());
   };
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         globalFilter: state.globalFilter,
         showGlobalFilter: state.showGlobalFilter,
       })}
-      source={table.store}
     >
       {({ globalFilter, showGlobalFilter }) => (
         <ST_Tooltip title={rest?.title ?? localization.showHideSearch}>
@@ -47,6 +43,6 @@ export const ST_ToggleGlobalFilterButton = ({
           </Button>
         </ST_Tooltip>
       )}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

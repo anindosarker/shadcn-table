@@ -7,6 +7,14 @@ Shadcn Table uses [Lucide icons](https://lucide.dev) by default for all of its i
 
 If you need to, you can customize and replace some or all of the icons with your own custom icons. You can either use other Lucide icons or icons from a completely different library.
 
+### Icon editions
+
+The table ships one edition per icon library: Lucide (`shadcn-table`), Tabler, Phosphor, Hugeicons and Remix Icon (`shadcn-table-<library>`). Each one installs the same `icons.ts` with that library's icons and adds only its icon package. To switch, pick the library and run the command with `--overwrite`:
+
+<InstallCommand overwrite />
+
+The `icons` option below overrides single icons on any edition.
+
 ### Relevant Table Options
 
 <TableOptionsTable onlyOptions={new Set(['icons'])} />

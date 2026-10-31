@@ -1,8 +1,9 @@
-import { type ComponentPropsWithRef, type MouseEvent, useState } from 'react';
-import { Subscribe } from '@tanstack/react-table';
+import { type ComponentPropsWithRef, useRef } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui-radix/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -14,6 +15,7 @@ import {
 import { getColumnFilterFnName } from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
 import { ST_ActionMenuItem } from '@/components/ui-radix/shadcn-table/components/menus/ST_ActionMenuItem';
 import { ST_FilterOptionMenu } from '@/components/ui-radix/shadcn-table/components/menus/ST_FilterOptionMenu';
+import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
 
 export interface ST_ColumnActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
@@ -66,9 +68,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
 
-  const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
-
   const handleClearSort = () => {
     column.clearSorting();
     setAnchorEl(null);
@@ -117,9 +116,13 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     }
   };
 
+  // "Filter by column" hands focus to the column's filter input when the
+  // menu closes, instead of back to the opener.
+  const focusFilterOnCloseRef = useRef(false);
+
   const handleFilterByColumn = () => {
     setShowColumnFilters(true);
-    queueMicrotask(() => filterInputRefs.current?.[`${column.id}-0`]?.focus());
+    focusFilterOnCloseRef.current = true;
     setAnchorEl(null);
   };
 
@@ -130,10 +133,10 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     setAnchorEl(null);
   };
 
-  const handleOpenFilterModeMenu = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setFilterMenuAnchorEl(event.currentTarget);
-  };
+  const filterByColumnLabel = localization.filterByColumn?.replace(
+    '{column}',
+    String(columnDef.header),
+  );
 
   const isSelectFilter = !!columnDef.filterSelectOptions;
 
@@ -147,38 +150,30 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     (allowedColumnFilterOptions === undefined ||
       !!allowedColumnFilterOptions?.length);
 
-  const rect = anchorEl?.getBoundingClientRect();
+  const { focusAnchor, onOpenChange, spanProps } = useST_MenuAnchor({
+    anchorEl,
+    setAnchorEl,
+  });
 
   return (
-    <DropdownMenu
-      open={!!anchorEl}
-      onOpenChange={(open) => {
-        if (!open) setAnchorEl(null);
-      }}
-    >
+    <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
-        <span
-          aria-hidden
-          style={{
-            position: 'fixed',
-            left: rect?.left ?? 0,
-            top: rect?.top ?? 0,
-            width: rect?.width ?? 0,
-            height: rect?.height ?? 0,
-            pointerEvents: 'none',
-          }}
-        />
+        <span {...spanProps} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
-          anchorEl?.focus();
+          const filterInput = focusFilterOnCloseRef.current
+            ? filterInputRefs.current?.[`${column.id}-0`]
+            : undefined;
+          if (filterInput) filterInput.focus();
+          else focusAnchor();
         }}
         className={cn('w-max', className)}
         {...rest}
       >
-        <Subscribe
+        <table.Subscribe
           selector={(state) => ({
             columnFilters: state.columnFilters,
             columnPinning: state.columnPinning,
@@ -188,7 +183,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
             showColumnFilters: state.showColumnFilters,
             sorting: state.sorting,
           })}
-          source={table.store}
         >
           {({ columnSizing, columnVisibility, showColumnFilters }) => {
             const columnFilterValue = column.getFilterValue();
@@ -247,37 +241,41 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                       label={localization.clearFilter}
                       onClick={handleClearFilter}
                     />,
-                    columnFilterDisplayMode === 'subheader' && (
-                      <ST_ActionMenuItem
-                        disabled={showColumnFilters && !enableColumnFilterModes}
-                        divider={enableGrouping || enableHiding}
-                        icon={<FilterListIcon />}
-                        key={4}
-                        label={localization.filterByColumn?.replace(
-                          '{column}',
-                          String(columnDef.header),
-                        )}
-                        onClick={
-                          showColumnFilters
-                            ? handleOpenFilterModeMenu
-                            : handleFilterByColumn
-                        }
-                        onOpenSubMenu={
-                          showFilterModeSubMenu
-                            ? handleOpenFilterModeMenu
-                            : undefined
-                        }
-                      />
-                    ),
-                    showFilterModeSubMenu && (
-                      <ST_FilterOptionMenu
-                        anchorEl={filterMenuAnchorEl}
-                        header={header}
-                        key={5}
-                        onSelect={handleFilterByColumn}
-                        setAnchorEl={setFilterMenuAnchorEl}
-                      />
-                    ),
+                    columnFilterDisplayMode === 'subheader' &&
+                      (showFilterModeSubMenu ? (
+                        // The filter modes open as a submenu of this item.
+                        <DropdownMenuSub key={4}>
+                          <DropdownMenuSubTrigger
+                            className={cn(
+                              'my-0',
+                              (enableGrouping || enableHiding) &&
+                                'border-b bg-clip-padding',
+                            )}
+                          >
+                            <span className="inline-flex min-w-9 shrink-0">
+                              <FilterListIcon />
+                            </span>
+                            {filterByColumnLabel}
+                          </DropdownMenuSubTrigger>
+                          <ST_FilterOptionMenu
+                            // The submenu owns its open state.
+                            anchorEl={null}
+                            header={header}
+                            isSubMenu
+                            onSelect={handleFilterByColumn}
+                            setAnchorEl={() => {}}
+                          />
+                        </DropdownMenuSub>
+                      ) : (
+                        <ST_ActionMenuItem
+                          disabled={showColumnFilters}
+                          divider={enableGrouping || enableHiding}
+                          icon={<FilterListIcon />}
+                          key={4}
+                          label={filterByColumnLabel}
+                          onClick={handleFilterByColumn}
+                        />
+                      )),
                   ].filter(Boolean)
                 : []),
               ...(enableGrouping && column.getCanGroup()
@@ -388,7 +386,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
               </>
             );
           }}
-        </Subscribe>
+        </table.Subscribe>
       </DropdownMenuContent>
     </DropdownMenu>
   );

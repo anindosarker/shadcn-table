@@ -1,8 +1,7 @@
-import { type MouseEvent } from 'react';
-import { Subscribe } from '@tanstack/react-table';
+import { type ComponentProps, type MouseEvent } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { ST_Checkbox } from '@/components/ui/shadcn-table/ST_Checkbox';
+import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   type CheckboxProps,
@@ -18,7 +17,7 @@ import {
   getST_SelectAllHandler,
 } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const selectCheckboxVariants = cva('z-0', {
@@ -51,8 +50,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   const {
     options: { enableMultiRowSelection, localization, selectAllMode },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Checkbox and RadioGroupItem.
   const {
     stSelectAllCheckboxProps,
     stSelectCheckboxProps,
@@ -116,8 +113,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
           if (selectAll) onSelectAllChange(e);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          else onSelectionChange!(e as any);
+          else onSelectionChange!(e);
         }
         checkboxProps?.onClick?.(e);
       },
@@ -128,8 +124,20 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       title: undefined,
     }) as CheckboxProps | RadioProps;
 
+  // The radio takes every checkbox prop except the checkbox-only `checked` and
+  // `title`; RadioGroup carries the checked state.
+  const getRadioProps = (commonProps: ReturnType<typeof getCommonProps>) =>
+    ({
+      ...Object.fromEntries(
+        Object.entries(commonProps).filter(
+          ([key]) => key !== 'checked' && key !== 'title',
+        ),
+      ),
+      value: 'on',
+    }) as ComponentProps<typeof RadioGroupItem>;
+
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         isLoading: state.isLoading,
@@ -153,7 +161,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               isSomeSelected: row.getIsSomeSelected(),
             }),
       })}
-      source={table.store}
     >
       {({ density, isLoading }) => {
         const allRowsSelected = selectAll ? getAllRowsSelected() : undefined;
@@ -172,14 +179,11 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               {enableMultiRowSelection === false ? (
                 // RadioGroupItem needs a RadioGroup: one group per row.
                 <RadioGroup value={isChecked ? 'on' : null}>
-                  <RadioGroupItem
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    {...(commonProps as any)}
-                    value="on"
-                  />
+                  <RadioGroupItem {...getRadioProps(commonProps)} />
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
+                  indeterminateIcon={table.options.icons.IndeterminateIcon}
                   {...commonProps}
                   // `checked` carries the indeterminate state, so it goes after
                   // the spread. getIsSomeRowsSelected and getIsSomeSelected
@@ -201,6 +205,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

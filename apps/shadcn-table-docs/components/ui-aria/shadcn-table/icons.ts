@@ -19,6 +19,7 @@ import {
   ListFilter,
   Maximize,
   Minimize,
+  Minus,
   MoreHorizontal,
   MoreVertical,
   Pencil,
@@ -33,6 +34,7 @@ import {
   X,
   XCircle,
 } from 'lucide-react';
+import type { ST_Icons } from '@/components/ui-aria/shadcn-table/types';
 
 export const ST_Default_Icons = {
   ArrowDownwardIcon: ArrowDown,
@@ -56,6 +58,7 @@ export const ST_Default_Icons = {
   FirstPageIcon: ChevronFirst,
   FullscreenExitIcon: Minimize,
   FullscreenIcon: Maximize,
+  IndeterminateIcon: Minus,
   KeyboardDoubleArrowDownIcon: ChevronsDown,
   LastPageIcon: ChevronLast,
   MoreHorizIcon: MoreHorizontal,
@@ -69,6 +72,4 @@ export const ST_Default_Icons = {
   SyncAltIcon: ArrowLeftRight,
   ViewColumnIcon: Columns3,
   VisibilityOffIcon: EyeOff,
-} as const;
-
-export type ST_Icons = Record<keyof typeof ST_Default_Icons, any>;
+} satisfies ST_Icons;

@@ -6,14 +6,14 @@ How to write an implementation plan for this repository. Applies to humans and a
 
 ```
 .ai/plans/<plan>/<git_username>/
-├── <plan>-plan.md       ← the plan (template below); for a multi-part plan the index: goals, parts, dependency graph, integration
+├── <plan>-plan.md       ← the plan (template below); for a multi-spec plan the index: goals, specs, dependency graph with file ownership per spec, integration
 ├── decisions.md         ← every decision the owner made, grouped, with the why
-├── 01-<part>.md         ← optional: one file per part when the plan is too large for one file
-├── 02-<part>.md
+├── 01-<spec>.md         ← optional: one file per spec when the plan is too large for one file
+├── 02-<spec>.md
 └── reference/           ← optional supporting material
 ```
 
-Default is one file, `<plan>-plan.md`. Split into part files only when the plan outgrows it;
+Default is one file, `<plan>-plan.md`. Split into spec files only when the plan outgrows it;
 the index then holds what is shared. `<git_username>` is the GitHub login.
 
 ## Rules
@@ -30,16 +30,19 @@ the index then holds what is shared. `<git_username>` is the GitHub login.
    illustrate.
 6. **No marketing prose.** Plain section names, direct descriptions, exact technical terms.
 7. **Status on every operation**: `new`, `keep` or `refactor`. A stub is `new` with "stub,
-   implement in phase N".
+   implement in milestone N".
 8. **Pin what stays unchanged.** Every component lists what it touches but does not modify.
 9. **Design in, implementation out.** Include interfaces, types, constants, file shapes,
    usage examples. Never method bodies or algorithm walkthroughs. Test: a decision goes in;
    how to do it stays in the code.
-10. **Cleanup phase always last.** Delete old code, update references, run the repo gates.
-11. **Gates per phase.** Each phase names the commands that must pass, per base where the
+10. **Cleanup milestone always last.** Delete old code, update references, run the repo gates.
+11. **Gates per milestone.** Each milestone names the commands that must pass, per base where the
     repository has bases.
 12. **No em dashes.** Use a comma, a colon or a new sentence.
-
+13. **Dependency edges need a file reason.** The index names, per edge, the files or symbols
+    one spec must see from the other. Specs without such a reason run at the same time.
+    Sequential specs that touch the same files are planned so the run can collapse them into
+    one file-partitioned fan-out: the index lists each spec's file set.
 ## Template
 
 Numbering is strict: every heading under `## 1.` and `## 2.` carries its dotted number.
@@ -47,18 +50,19 @@ A skipped optional section keeps its heading with `: none` after the name, so nu
 stable and no reader guesses at a gap.
 
 ````markdown
-# [Part name]
+# [Spec name]
 
 ## 1. Architecture
 
 ### 1.1 Overview
 
-Two or three sentences: the problem and why this part exists. Link the decision.
+Two or three sentences: the problem and why this spec exists. Link the decision.
 
 ### 1.2 Goals
 
 - Measurable outcome
 - Measurable outcome
+- Acceptance: the one check the builder runs itself and loops on, programmatic (`tsc`, a grep, a `diff` against a baseline, a test) or a reference plus judges (captures next to a named reference, three judges on named points)
 
 ### 1.3 Current structure _(optional, skip for greenfield)_
 
@@ -89,7 +93,7 @@ Sketch: [reference/flow.excalidraw](reference/flow.excalidraw) _(when one exists
 
 ### 1.6 Components
 
-One block per logical unit the part introduces or modifies. Required: a short description
+One block per logical unit the spec introduces or modifies. Required: a short description
 and a bullet list of what it does and does not do. Optional: operations table, interfaces,
 dependencies, stays unchanged, usage examples.
 
@@ -132,14 +136,14 @@ New packages, env vars (name, default, purpose), reused infrastructure.
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: [Name]
+#### 2.1.1 Milestone 1: [Name]
 
 - Step
 - Step
 
-#### 2.1.N Final phase: Cleanup
+#### 2.1.N Final milestone: Cleanup
 
 - Delete old code, update references
 - Repo gates
@@ -151,7 +155,7 @@ New packages, env vars (name, default, purpose), reused infrastructure.
 
 ## Example
 
-Full example: `.ai/plans/v0.4.0/anindosarker/02-docs-weight.md`. Minimal shape:
+Full example: `.ai/plans/v0.6.x/anindosarker/08-versioning-page.md`. Minimal shape:
 
 ````markdown
 # 02: docs weight
@@ -202,13 +206,13 @@ Client component; highlights the active file when opened.
 
 ## 2. Instructions for AI
 
-### 2.1 Phases
+### 2.1 Milestones
 
-#### 2.1.1 Phase 1: Explorer
+#### 2.1.1 Milestone 1: Explorer
 
 - Change `ExplorerFile`, render `DynamicCodeBlock`
 
-#### 2.1.2 Final phase: Cleanup
+#### 2.1.2 Final milestone: Cleanup
 
 - Remove `highlight` and `CodeBlock` imports from `example-snippet.tsx`
 - `pnpm format`, docs `types:check`, `lint`, `build`

@@ -1,9 +1,8 @@
 import { type MouseEvent } from 'react';
 import { type FocusableElement } from 'react-aria-components';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { ST_Checkbox } from '@/components/ui-aria/shadcn-table/ST_Checkbox';
+import { ST_Checkbox } from '@/components/ui-aria/shadcn-table/components/inputs/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui-aria/radio-group';
 import {
   type CheckboxProps,
@@ -19,7 +18,7 @@ import {
   getST_SelectAllHandler,
 } from '@/components/ui-aria/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
 
 const selectCheckboxVariants = cva('z-0', {
@@ -52,8 +51,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   const {
     options: { enableMultiRowSelection, localization, selectAllMode },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Checkbox and RadioGroupItem.
   const {
     stSelectAllCheckboxProps,
     stSelectCheckboxProps,
@@ -82,6 +79,12 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         })),
     ...rest,
   };
+  // React Aria's checkbox props carry no title; a consumer's title still names
+  // the tooltip.
+  const checkboxTitle =
+    'title' in checkboxProps && typeof checkboxProps.title === 'string'
+      ? checkboxProps.title
+      : undefined;
 
   const onSelectionChange = row
     ? getST_RowSelectionHandler({
@@ -129,7 +132,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     }) satisfies CheckboxProps | RadioProps;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         isLoading: state.isLoading,
@@ -153,7 +156,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               isSomeSelected: row.getIsSomeSelected(),
             }),
       })}
-      source={table.store}
     >
       {({ density, isLoading }) => {
         const allRowsSelected = selectAll ? getAllRowsSelected() : undefined;
@@ -162,9 +164,10 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         return (
           <ST_Tooltip
             title={
-              selectAll
+              checkboxTitle ??
+              (selectAll
                 ? localization.toggleSelectAll
-                : localization.toggleSelectRow
+                : localization.toggleSelectRow)
             }
           >
             <span className="inline-flex">
@@ -178,6 +181,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
+                  indeterminateIcon={table.options.icons.IndeterminateIcon}
                   {...commonProps}
                   // React Aria keeps `isIndeterminate` as its own flag beside
                   // `isSelected`, so it goes after the spread.
@@ -196,6 +200,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

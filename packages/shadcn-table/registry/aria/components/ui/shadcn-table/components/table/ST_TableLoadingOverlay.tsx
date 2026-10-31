@@ -8,7 +8,7 @@ import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 export type ST_TableLoadingOverlayProps = ST_CircularProgressProps;
 
 const tableLoadingOverlayVariants = cva(
-  'absolute inset-0 z-[3] flex max-h-screen w-full items-center justify-center bg-background/50',
+  'absolute inset-0 z-3 flex max-h-screen w-full items-center justify-center bg-background/50',
 );
 
 export const ST_TableLoadingOverlay = ({

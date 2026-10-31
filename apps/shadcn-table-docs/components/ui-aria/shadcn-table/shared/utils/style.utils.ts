@@ -1,6 +1,6 @@
-import { type CSSProperties } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { type ST_TooltipProps } from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+import { type ST_TooltipProps } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import {
   type ST_Column,
   type ST_Header,
@@ -9,56 +9,38 @@ import {
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
 
-// MUI Collapse: tw-animate-css ships only the height pair (collapsible-down/up)
-// and reads the Radix variable, which React Aria never sets. React Aria's
-// DisclosurePanel measures itself into --disclosure-panel-height and
-// --disclosure-panel-width and marks its state only with aria-hidden, so both
-// pairs live here, driven by those variables. The horizontal pair is MUI
-// Collapse orientation="horizontal". overflow: hidden sits inside the width
-// keyframes so it applies only while the animation runs, as MUI Collapse clips
-// while transitioning and sets overflow: visible once entered. Rendered as a
-// hoisted <style href="st-aria-collapsible"> by the components that animate with
-// it.
-export const stCollapsibleKeyframes = `@keyframes st-aria-collapsible-down {
-  from {
-    height: 0;
+/**
+ * React Aria keeps a collapsed panel's children mounted, so a panel renders
+ * them only while expanded. This keeps them until the panel's own collapse
+ * animations settle, so it animates shut instead of snapping, the way React
+ * Aria waits before it hides the panel. A collapse that runs no transition
+ * (reduced motion, no transition class, or a panel still at zero height)
+ * drops them at once. Pass `panelRef` to the panel.
+ */
+export const useCollapsingChildren = (isExpanded: boolean) => {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [isCollapsing, setIsCollapsing] = useState(false);
+  const [prevIsExpanded, setPrevIsExpanded] = useState(isExpanded);
+  if (prevIsExpanded !== isExpanded) {
+    setPrevIsExpanded(isExpanded);
+    setIsCollapsing(!isExpanded);
   }
-  to {
-    height: var(--disclosure-panel-height);
-  }
-}
-
-@keyframes st-aria-collapsible-up {
-  from {
-    height: var(--disclosure-panel-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
-@keyframes st-aria-collapsible-right {
-  from {
-    width: 0;
-    overflow: hidden;
-  }
-  to {
-    width: var(--disclosure-panel-width);
-    overflow: hidden;
-  }
-}
-
-@keyframes st-aria-collapsible-left {
-  from {
-    width: var(--disclosure-panel-width);
-    overflow: hidden;
-  }
-  to {
-    width: 0;
-    overflow: hidden;
-  }
-}
-`;
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!isCollapsing || !panel) return;
+    let isCurrent = true;
+    Promise.all(panel.getAnimations().map((animation) => animation.finished))
+      .then(() => {
+        if (isCurrent) setIsCollapsing(false);
+      })
+      // A canceled animation means the panel expanded again.
+      .catch(() => {});
+    return () => {
+      isCurrent = false;
+    };
+  }, [isCollapsing]);
+  return { panelRef, showChildren: isExpanded || isCollapsing };
+};
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
@@ -71,12 +53,12 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   const isPinned = column?.getIsPinned();
 
   return cn(
-    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:left-0 data-[pinned=true]:before:-z-[1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
+    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
     column
       ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
         : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_rgba(97,97,97,0.5)_inset]'
+          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
           : undefined
       : undefined,
   );
@@ -96,8 +78,8 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   const {
     options: { enableColumnVirtualization, layoutMode },
   } = table;
-  // The live store: the caller's subscription lists these slices.
-  const { draggingColumn, hoveredColumn } = table.store.state;
+  const draggingColumn = table.atoms.draggingColumn.get();
+  const hoveredColumn = table.atoms.hoveredColumn.get();
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
@@ -133,11 +115,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
             'sticky opacity-[0.97]',
           ),
           style: {
-            left:
+            insetInlineStart:
               isColumnPinned === 'start'
                 ? `${column.getStart('start')}px`
                 : undefined,
-            right:
+            insetInlineEnd:
               isColumnPinned === 'end'
                 ? `${column.getAfter('end')}px`
                 : undefined,
@@ -157,11 +139,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
         ? 'transition-none'
         : 'transition-[padding] duration-150 ease-in-out',
       column.getIsResizing() || draggingColumn?.id === column.id
-        ? 'z-[2]'
+        ? 'z-2'
         : columnDefType !== 'group' && isColumnPinned
-          ? 'z-[1]'
+          ? 'z-1'
           : 'z-0',
-      'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ring',
+      'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
       pinnedStyles.className,
       tableCellProps?.className,
     ),
@@ -178,9 +160,6 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
     },
   };
 };
-
-export const getCommonToolbarStyles = () =>
-  'relative z-[1] grid min-h-14 flex-wrap-reverse items-start overflow-hidden bg-background transition-all duration-150 ease-in-out';
 
 export const getCommonTooltipProps = (
   side?: ST_TooltipProps['side'],

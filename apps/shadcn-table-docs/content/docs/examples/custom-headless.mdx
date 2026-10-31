@@ -7,6 +7,10 @@ For advanced use cases where you want to be in 100% control of your UI component
 
 The power and flexibility here is almost limitless, as you can combine some already built-in Shadcn Table components alongside your own custom components. For the ST components to work properly, all you need to do is pass the `table` object returned from the `useShadcnTable` hook.
 
+With column resizing on, the default `"grid-no-grow"` layout adds the `st-row-spacer` column to the headers: render it for correct column widths, or set `layoutMode: 'grid'` (see [Layout Modes](/docs/guides/column-size#layout-modes)).
+
+To make your own wrapper the full-screen element, spread `containerProps` from [`useST_FullScreenContainer(table)`](/docs/api/st-hooks#usest_fullscreencontainer) on it: it adds the full-screen classes, and Esc leaves full screen.
+
 <CustomHeadlessExample />
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

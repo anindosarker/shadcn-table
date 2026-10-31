@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { getCommonTooltipProps } from '@/components/ui/shadcn-table/shared/utils/style.utils';
-import { assignRef } from '@/components/ui/shadcn-table/shared/utils/utils';
+import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 export interface ST_TooltipProps {
   title?: React.ReactNode;
@@ -60,26 +60,12 @@ export const ST_Tooltip = ({
   const triggerRef = React.useRef<HTMLElement | null>(null);
   React.useEffect(() => applyTooltipLabel(triggerRef.current, title));
 
-  // TooltipTrigger takes no ref: the child's own ref is merged with the
-  // trigger ref, read through a ref so the callback keeps one identity.
+  // TooltipTrigger takes no ref, so the child's own ref is merged with the
+  // trigger ref.
   const trigger = children as React.ReactElement<{
     ref?: React.Ref<HTMLElement>;
   }>;
-  const childRef = React.useRef(trigger.props.ref);
-  childRef.current = trigger.props.ref;
-  const attachRef = React.useCallback((node: HTMLElement) => {
-    triggerRef.current = node;
-    const ref = childRef.current;
-    const cleanup = assignRef(ref, node);
-    return () => {
-      if (typeof cleanup === 'function') {
-        cleanup();
-      } else {
-        assignRef(ref, null);
-      }
-      triggerRef.current = null;
-    };
-  }, []);
+  const attachRef = useST_ComposedRef(triggerRef, trigger.props.ref);
 
   if (disableHoverListener || (!title && title !== 0)) {
     return <>{children}</>;

@@ -39,12 +39,12 @@ export const ShadcnTable = <TData extends ST_RowData>(
   } else {
     // A table built here re-renders this component only on the state its
     // option-time transforms read; the components subscribe to the rest.
-    /* eslint-disable react-hooks/rules-of-hooks -- the props hold either a table or options for the life of the component */
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- the props hold either a table or options for the life of the component
     table = useST_TableInstance(
+      // eslint-disable-next-line react-hooks/rules-of-hooks -- the props hold either a table or options for the life of the component
       useST_TableOptions(props),
       selectST_TransformState,
     );
-    /* eslint-enable react-hooks/rules-of-hooks */
   }
 
   return (
