@@ -32,6 +32,14 @@ export const HOMEPAGE: string;
 /** True when build.mjs runs with `--dev`. */
 export const DEV: boolean;
 
+/** The address of a base's core item in registryDependencies form. */
+export function coreItemAddress(base: string): string;
+
+/** The icon sets besides Lucide, keyed by item suffix and file name. */
+export const ICON_SETS: Readonly<
+  Record<string, { title: string; packages: string[] }>
+>;
+
 export interface BaseDependency {
   name: string;
   /** Take the version from package.json instead of leaving it unversioned. */
@@ -49,8 +57,9 @@ export interface BaseItemsOptions {
 }
 
 /**
- * The items of one base: the main item first, then one item per
- * non-English locale.
+ * The core item (`<name>-core`), the main Lucide item (`<name>`), one item
+ * per ICON_SETS entry (`<name>-<set>`), then one item per non-English locale,
+ * all on core.
  */
 export function buildBaseItems(base: BaseItemsOptions): RegistryItem[];
 
@@ -63,13 +72,18 @@ export function aliasItems<T extends { name: string; description?: string }>(
 ): T[];
 
 /**
- * One base's main item and locale items in a catalog built from the committed
- * registry.json, aliases skipped.
+ * One base's core item, main (Lucide) item, icon set items and locale items in
+ * a catalog built from the committed registry.json, aliases skipped.
  */
 export function baseItems(
   catalog: { items: RegistryItem[] },
   base: string,
-): { main: RegistryItem | undefined; locales: RegistryItem[] };
+): {
+  core: RegistryItem | undefined;
+  main: RegistryItem | undefined;
+  editions: RegistryItem[];
+  locales: RegistryItem[];
+};
 
 /**
  * One base's example items in the docs catalog (examples.mjs), each under its

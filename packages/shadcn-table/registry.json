@@ -4,10 +4,10 @@
   "homepage": "https://github.com/anindosarker/shadcn-table",
   "items": [
     {
-      "name": "shadcn-table-base",
+      "name": "shadcn-table-base-core",
       "type": "registry:ui",
-      "title": "Shadcn Table (Base UI)",
-      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table.",
+      "title": "Shadcn Table (Base UI) core",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table. The library without an icon map: install it through shadcn-table-base (Lucide) or one of the icon set items.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
         "@tanstack/react-store@0.11.2",
@@ -15,7 +15,6 @@
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
         "class-variance-authority",
-        "lucide-react",
         "@base-ui/react"
       ],
       "devDependencies": [
@@ -504,11 +503,6 @@
           "target": "@ui/shadcn-table/hooks/useShadcnTable.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/icons.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/icons.ts"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/index.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/index.ts"
@@ -586,12 +580,108 @@
       ]
     },
     {
+      "name": "shadcn-table-base",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI)",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-base-tabler",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Tabler icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table. Installs the Tabler icon map instead of Lucide.",
+      "dependencies": [
+        "@tabler/icons-react@^3.50.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/tabler.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-base-phosphor",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Phosphor icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table. Installs the Phosphor icon map instead of Lucide.",
+      "dependencies": [
+        "@phosphor-icons/react@^2.1.10"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/phosphor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-base-hugeicons",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Hugeicons icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table. Installs the Hugeicons icon map instead of Lucide.",
+      "dependencies": [
+        "@hugeicons/react@^1.1.10",
+        "@hugeicons/core-free-icons@^4.4.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/hugeicons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-base-remixicon",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Remix icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the Base UI base, ported from material-react-table. Installs the Remix icon map instead of Lucide.",
+      "dependencies": [
+        "@remixicon/react@^4.9.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/remixicon.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
       "name": "shadcn-table-base-locale-ar",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ar",
       "description": "The ar localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -607,7 +697,7 @@
       "title": "Shadcn Table (Base UI) locale: az",
       "description": "The az localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -623,7 +713,7 @@
       "title": "Shadcn Table (Base UI) locale: bg",
       "description": "The bg localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -639,7 +729,7 @@
       "title": "Shadcn Table (Base UI) locale: cs",
       "description": "The cs localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -655,7 +745,7 @@
       "title": "Shadcn Table (Base UI) locale: da",
       "description": "The da localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -671,7 +761,7 @@
       "title": "Shadcn Table (Base UI) locale: de",
       "description": "The de localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -687,7 +777,7 @@
       "title": "Shadcn Table (Base UI) locale: el",
       "description": "The el localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -703,7 +793,7 @@
       "title": "Shadcn Table (Base UI) locale: es",
       "description": "The es localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -719,7 +809,7 @@
       "title": "Shadcn Table (Base UI) locale: et",
       "description": "The et localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -735,7 +825,7 @@
       "title": "Shadcn Table (Base UI) locale: fa",
       "description": "The fa localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -751,7 +841,7 @@
       "title": "Shadcn Table (Base UI) locale: fi",
       "description": "The fi localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -767,7 +857,7 @@
       "title": "Shadcn Table (Base UI) locale: fr",
       "description": "The fr localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -783,7 +873,7 @@
       "title": "Shadcn Table (Base UI) locale: he",
       "description": "The he localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -799,7 +889,7 @@
       "title": "Shadcn Table (Base UI) locale: hr",
       "description": "The hr localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -815,7 +905,7 @@
       "title": "Shadcn Table (Base UI) locale: hu",
       "description": "The hu localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -831,7 +921,7 @@
       "title": "Shadcn Table (Base UI) locale: hy",
       "description": "The hy localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -847,7 +937,7 @@
       "title": "Shadcn Table (Base UI) locale: id",
       "description": "The id localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -863,7 +953,7 @@
       "title": "Shadcn Table (Base UI) locale: it",
       "description": "The it localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -879,7 +969,7 @@
       "title": "Shadcn Table (Base UI) locale: ja",
       "description": "The ja localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -895,7 +985,7 @@
       "title": "Shadcn Table (Base UI) locale: ko",
       "description": "The ko localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -911,7 +1001,7 @@
       "title": "Shadcn Table (Base UI) locale: mk",
       "description": "The mk localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -927,7 +1017,7 @@
       "title": "Shadcn Table (Base UI) locale: nl",
       "description": "The nl localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -943,7 +1033,7 @@
       "title": "Shadcn Table (Base UI) locale: no",
       "description": "The no localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -959,7 +1049,7 @@
       "title": "Shadcn Table (Base UI) locale: np",
       "description": "The np localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -975,7 +1065,7 @@
       "title": "Shadcn Table (Base UI) locale: pl",
       "description": "The pl localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -991,7 +1081,7 @@
       "title": "Shadcn Table (Base UI) locale: pt-BR",
       "description": "The pt-BR localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1007,7 +1097,7 @@
       "title": "Shadcn Table (Base UI) locale: pt",
       "description": "The pt localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1023,7 +1113,7 @@
       "title": "Shadcn Table (Base UI) locale: ro",
       "description": "The ro localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1039,7 +1129,7 @@
       "title": "Shadcn Table (Base UI) locale: ru",
       "description": "The ru localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1055,7 +1145,7 @@
       "title": "Shadcn Table (Base UI) locale: sk",
       "description": "The sk localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1071,7 +1161,7 @@
       "title": "Shadcn Table (Base UI) locale: sr-Cyrl-RS",
       "description": "The sr-Cyrl-RS localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1087,7 +1177,7 @@
       "title": "Shadcn Table (Base UI) locale: sr-Latn-RS",
       "description": "The sr-Latn-RS localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1103,7 +1193,7 @@
       "title": "Shadcn Table (Base UI) locale: sv",
       "description": "The sv localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1119,7 +1209,7 @@
       "title": "Shadcn Table (Base UI) locale: tr",
       "description": "The tr localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1135,7 +1225,7 @@
       "title": "Shadcn Table (Base UI) locale: uk",
       "description": "The uk localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1151,7 +1241,7 @@
       "title": "Shadcn Table (Base UI) locale: vi",
       "description": "The vi localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1167,7 +1257,7 @@
       "title": "Shadcn Table (Base UI) locale: zh-Hans",
       "description": "The zh-Hans localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1183,7 +1273,7 @@
       "title": "Shadcn Table (Base UI) locale: zh-Hant",
       "description": "The zh-Hant localization for shadcn-table-base.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -1194,10 +1284,10 @@
       ]
     },
     {
-      "name": "shadcn-table-radix",
+      "name": "shadcn-table-radix-core",
       "type": "registry:ui",
-      "title": "Shadcn Table",
-      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.",
+      "title": "Shadcn Table core",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table. The library without an icon map: install it through shadcn-table-radix (Lucide) or one of the icon set items.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
         "@tanstack/react-store@0.11.2",
@@ -1205,7 +1295,6 @@
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
         "class-variance-authority",
-        "lucide-react",
         "radix-ui"
       ],
       "devDependencies": [
@@ -1694,11 +1783,6 @@
           "target": "@ui/shadcn-table/hooks/useShadcnTable.ts"
         },
         {
-          "path": "registry/radix/components/ui/shadcn-table/icons.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/icons.ts"
-        },
-        {
           "path": "registry/radix/components/ui/shadcn-table/index.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/index.ts"
@@ -1776,12 +1860,108 @@
       ]
     },
     {
+      "name": "shadcn-table-radix",
+      "type": "registry:ui",
+      "title": "Shadcn Table",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/icons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-radix-tabler",
+      "type": "registry:ui",
+      "title": "Shadcn Table with Tabler icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table. Installs the Tabler icon map instead of Lucide.",
+      "dependencies": [
+        "@tabler/icons-react@^3.50.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/icons/tabler.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-radix-phosphor",
+      "type": "registry:ui",
+      "title": "Shadcn Table with Phosphor icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table. Installs the Phosphor icon map instead of Lucide.",
+      "dependencies": [
+        "@phosphor-icons/react@^2.1.10"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/icons/phosphor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-radix-hugeicons",
+      "type": "registry:ui",
+      "title": "Shadcn Table with Hugeicons icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table. Installs the Hugeicons icon map instead of Lucide.",
+      "dependencies": [
+        "@hugeicons/react@^1.1.10",
+        "@hugeicons/core-free-icons@^4.4.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/icons/hugeicons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-radix-remixicon",
+      "type": "registry:ui",
+      "title": "Shadcn Table with Remix icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui, ported from material-react-table. Installs the Remix icon map instead of Lucide.",
+      "dependencies": [
+        "@remixicon/react@^4.9.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "files": [
+        {
+          "path": "registry/radix/components/ui/shadcn-table/icons/remixicon.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
       "name": "shadcn-table-radix-locale-ar",
       "type": "registry:ui",
       "title": "Shadcn Table locale: ar",
       "description": "The ar localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1797,7 +1977,7 @@
       "title": "Shadcn Table locale: az",
       "description": "The az localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1813,7 +1993,7 @@
       "title": "Shadcn Table locale: bg",
       "description": "The bg localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1829,7 +2009,7 @@
       "title": "Shadcn Table locale: cs",
       "description": "The cs localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1845,7 +2025,7 @@
       "title": "Shadcn Table locale: da",
       "description": "The da localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1861,7 +2041,7 @@
       "title": "Shadcn Table locale: de",
       "description": "The de localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1877,7 +2057,7 @@
       "title": "Shadcn Table locale: el",
       "description": "The el localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1893,7 +2073,7 @@
       "title": "Shadcn Table locale: es",
       "description": "The es localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1909,7 +2089,7 @@
       "title": "Shadcn Table locale: et",
       "description": "The et localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1925,7 +2105,7 @@
       "title": "Shadcn Table locale: fa",
       "description": "The fa localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1941,7 +2121,7 @@
       "title": "Shadcn Table locale: fi",
       "description": "The fi localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1957,7 +2137,7 @@
       "title": "Shadcn Table locale: fr",
       "description": "The fr localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1973,7 +2153,7 @@
       "title": "Shadcn Table locale: he",
       "description": "The he localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -1989,7 +2169,7 @@
       "title": "Shadcn Table locale: hr",
       "description": "The hr localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2005,7 +2185,7 @@
       "title": "Shadcn Table locale: hu",
       "description": "The hu localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2021,7 +2201,7 @@
       "title": "Shadcn Table locale: hy",
       "description": "The hy localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2037,7 +2217,7 @@
       "title": "Shadcn Table locale: id",
       "description": "The id localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2053,7 +2233,7 @@
       "title": "Shadcn Table locale: it",
       "description": "The it localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2069,7 +2249,7 @@
       "title": "Shadcn Table locale: ja",
       "description": "The ja localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2085,7 +2265,7 @@
       "title": "Shadcn Table locale: ko",
       "description": "The ko localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2101,7 +2281,7 @@
       "title": "Shadcn Table locale: mk",
       "description": "The mk localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2117,7 +2297,7 @@
       "title": "Shadcn Table locale: nl",
       "description": "The nl localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2133,7 +2313,7 @@
       "title": "Shadcn Table locale: no",
       "description": "The no localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2149,7 +2329,7 @@
       "title": "Shadcn Table locale: np",
       "description": "The np localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2165,7 +2345,7 @@
       "title": "Shadcn Table locale: pl",
       "description": "The pl localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2181,7 +2361,7 @@
       "title": "Shadcn Table locale: pt-BR",
       "description": "The pt-BR localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2197,7 +2377,7 @@
       "title": "Shadcn Table locale: pt",
       "description": "The pt localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2213,7 +2393,7 @@
       "title": "Shadcn Table locale: ro",
       "description": "The ro localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2229,7 +2409,7 @@
       "title": "Shadcn Table locale: ru",
       "description": "The ru localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2245,7 +2425,7 @@
       "title": "Shadcn Table locale: sk",
       "description": "The sk localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2261,7 +2441,7 @@
       "title": "Shadcn Table locale: sr-Cyrl-RS",
       "description": "The sr-Cyrl-RS localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2277,7 +2457,7 @@
       "title": "Shadcn Table locale: sr-Latn-RS",
       "description": "The sr-Latn-RS localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2293,7 +2473,7 @@
       "title": "Shadcn Table locale: sv",
       "description": "The sv localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2309,7 +2489,7 @@
       "title": "Shadcn Table locale: tr",
       "description": "The tr localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2325,7 +2505,7 @@
       "title": "Shadcn Table locale: uk",
       "description": "The uk localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2341,7 +2521,7 @@
       "title": "Shadcn Table locale: vi",
       "description": "The vi localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2357,7 +2537,7 @@
       "title": "Shadcn Table locale: zh-Hans",
       "description": "The zh-Hans localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2373,7 +2553,7 @@
       "title": "Shadcn Table locale: zh-Hant",
       "description": "The zh-Hant localization for shadcn-table-radix.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "files": [
         {
@@ -2384,10 +2564,10 @@
       ]
     },
     {
-      "name": "shadcn-table-aria",
+      "name": "shadcn-table-aria-core",
       "type": "registry:ui",
-      "title": "Shadcn Table (React Aria)",
-      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table.",
+      "title": "Shadcn Table (React Aria) core",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table. The library without an icon map: install it through shadcn-table-aria (Lucide) or one of the icon set items.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
         "@tanstack/react-store@0.11.2",
@@ -2395,7 +2575,6 @@
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
         "class-variance-authority",
-        "lucide-react",
         "react-aria-components"
       ],
       "devDependencies": [
@@ -2884,11 +3063,6 @@
           "target": "@ui/shadcn-table/hooks/useShadcnTable.ts"
         },
         {
-          "path": "registry/aria/components/ui/shadcn-table/icons.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/icons.ts"
-        },
-        {
           "path": "registry/aria/components/ui/shadcn-table/index.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/index.ts"
@@ -2966,12 +3140,108 @@
       ]
     },
     {
+      "name": "shadcn-table-aria",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria)",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/icons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-tabler",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) with Tabler icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table. Installs the Tabler icon map instead of Lucide.",
+      "dependencies": [
+        "@tabler/icons-react@^3.50.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/icons/tabler.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-phosphor",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) with Phosphor icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table. Installs the Phosphor icon map instead of Lucide.",
+      "dependencies": [
+        "@phosphor-icons/react@^2.1.10"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/icons/phosphor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-hugeicons",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) with Hugeicons icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table. Installs the Hugeicons icon map instead of Lucide.",
+      "dependencies": [
+        "@hugeicons/react@^1.1.10",
+        "@hugeicons/core-free-icons@^4.4.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/icons/hugeicons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-aria-remixicon",
+      "type": "registry:ui",
+      "title": "Shadcn Table (React Aria) with Remix icons",
+      "description": "A fully featured data table built on TanStack Table and shadcn/ui on the React Aria base, ported from material-react-table. Installs the Remix icon map instead of Lucide.",
+      "dependencies": [
+        "@remixicon/react@^4.9.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "files": [
+        {
+          "path": "registry/aria/components/ui/shadcn-table/icons/remixicon.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
       "name": "shadcn-table-aria-locale-ar",
       "type": "registry:ui",
       "title": "Shadcn Table (React Aria) locale: ar",
       "description": "The ar localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -2987,7 +3257,7 @@
       "title": "Shadcn Table (React Aria) locale: az",
       "description": "The az localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3003,7 +3273,7 @@
       "title": "Shadcn Table (React Aria) locale: bg",
       "description": "The bg localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3019,7 +3289,7 @@
       "title": "Shadcn Table (React Aria) locale: cs",
       "description": "The cs localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3035,7 +3305,7 @@
       "title": "Shadcn Table (React Aria) locale: da",
       "description": "The da localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3051,7 +3321,7 @@
       "title": "Shadcn Table (React Aria) locale: de",
       "description": "The de localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3067,7 +3337,7 @@
       "title": "Shadcn Table (React Aria) locale: el",
       "description": "The el localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3083,7 +3353,7 @@
       "title": "Shadcn Table (React Aria) locale: es",
       "description": "The es localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3099,7 +3369,7 @@
       "title": "Shadcn Table (React Aria) locale: et",
       "description": "The et localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3115,7 +3385,7 @@
       "title": "Shadcn Table (React Aria) locale: fa",
       "description": "The fa localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3131,7 +3401,7 @@
       "title": "Shadcn Table (React Aria) locale: fi",
       "description": "The fi localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3147,7 +3417,7 @@
       "title": "Shadcn Table (React Aria) locale: fr",
       "description": "The fr localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3163,7 +3433,7 @@
       "title": "Shadcn Table (React Aria) locale: he",
       "description": "The he localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3179,7 +3449,7 @@
       "title": "Shadcn Table (React Aria) locale: hr",
       "description": "The hr localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3195,7 +3465,7 @@
       "title": "Shadcn Table (React Aria) locale: hu",
       "description": "The hu localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3211,7 +3481,7 @@
       "title": "Shadcn Table (React Aria) locale: hy",
       "description": "The hy localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3227,7 +3497,7 @@
       "title": "Shadcn Table (React Aria) locale: id",
       "description": "The id localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3243,7 +3513,7 @@
       "title": "Shadcn Table (React Aria) locale: it",
       "description": "The it localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3259,7 +3529,7 @@
       "title": "Shadcn Table (React Aria) locale: ja",
       "description": "The ja localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3275,7 +3545,7 @@
       "title": "Shadcn Table (React Aria) locale: ko",
       "description": "The ko localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3291,7 +3561,7 @@
       "title": "Shadcn Table (React Aria) locale: mk",
       "description": "The mk localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3307,7 +3577,7 @@
       "title": "Shadcn Table (React Aria) locale: nl",
       "description": "The nl localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3323,7 +3593,7 @@
       "title": "Shadcn Table (React Aria) locale: no",
       "description": "The no localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3339,7 +3609,7 @@
       "title": "Shadcn Table (React Aria) locale: np",
       "description": "The np localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3355,7 +3625,7 @@
       "title": "Shadcn Table (React Aria) locale: pl",
       "description": "The pl localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3371,7 +3641,7 @@
       "title": "Shadcn Table (React Aria) locale: pt-BR",
       "description": "The pt-BR localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3387,7 +3657,7 @@
       "title": "Shadcn Table (React Aria) locale: pt",
       "description": "The pt localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3403,7 +3673,7 @@
       "title": "Shadcn Table (React Aria) locale: ro",
       "description": "The ro localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3419,7 +3689,7 @@
       "title": "Shadcn Table (React Aria) locale: ru",
       "description": "The ru localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3435,7 +3705,7 @@
       "title": "Shadcn Table (React Aria) locale: sk",
       "description": "The sk localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3451,7 +3721,7 @@
       "title": "Shadcn Table (React Aria) locale: sr-Cyrl-RS",
       "description": "The sr-Cyrl-RS localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3467,7 +3737,7 @@
       "title": "Shadcn Table (React Aria) locale: sr-Latn-RS",
       "description": "The sr-Latn-RS localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3483,7 +3753,7 @@
       "title": "Shadcn Table (React Aria) locale: sv",
       "description": "The sv localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3499,7 +3769,7 @@
       "title": "Shadcn Table (React Aria) locale: tr",
       "description": "The tr localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3515,7 +3785,7 @@
       "title": "Shadcn Table (React Aria) locale: uk",
       "description": "The uk localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3531,7 +3801,7 @@
       "title": "Shadcn Table (React Aria) locale: vi",
       "description": "The vi localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3547,7 +3817,7 @@
       "title": "Shadcn Table (React Aria) locale: zh-Hans",
       "description": "The zh-Hans localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3563,7 +3833,7 @@
       "title": "Shadcn Table (React Aria) locale: zh-Hant",
       "description": "The zh-Hant localization for shadcn-table-aria.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "files": [
         {
@@ -3574,10 +3844,10 @@
       ]
     },
     {
-      "name": "shadcn-table",
+      "name": "shadcn-table-core",
       "type": "registry:ui",
-      "title": "Shadcn Table (Base UI)",
-      "description": "Alias of shadcn-table-base: the GitHub shorthand anindosarker/shadcn-table/shadcn-table installs the Base UI copy.",
+      "title": "Shadcn Table (Base UI) core",
+      "description": "Alias of shadcn-table-base-core: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-core installs the Base UI copy.",
       "dependencies": [
         "@tanstack/react-table@9.3.1",
         "@tanstack/react-store@0.11.2",
@@ -3585,7 +3855,6 @@
         "@tanstack/match-sorter-utils@8.19.4",
         "highlight-words@2.0.0",
         "class-variance-authority",
-        "lucide-react",
         "@base-ui/react"
       ],
       "devDependencies": [
@@ -4074,11 +4343,6 @@
           "target": "@ui/shadcn-table/hooks/useShadcnTable.ts"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/icons.ts",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/icons.ts"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/index.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/index.ts"
@@ -4156,12 +4420,108 @@
       ]
     },
     {
+      "name": "shadcn-table",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI)",
+      "description": "Alias of shadcn-table-base: the GitHub shorthand anindosarker/shadcn-table/shadcn-table installs the Base UI copy.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-tabler",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Tabler icons",
+      "description": "Alias of shadcn-table-base-tabler: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-tabler installs the Base UI copy.",
+      "dependencies": [
+        "@tabler/icons-react@^3.50.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/tabler.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-phosphor",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Phosphor icons",
+      "description": "Alias of shadcn-table-base-phosphor: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-phosphor installs the Base UI copy.",
+      "dependencies": [
+        "@phosphor-icons/react@^2.1.10"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/phosphor.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-hugeicons",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Hugeicons icons",
+      "description": "Alias of shadcn-table-base-hugeicons: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-hugeicons installs the Base UI copy.",
+      "dependencies": [
+        "@hugeicons/react@^1.1.10",
+        "@hugeicons/core-free-icons@^4.4.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/hugeicons.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
+      "name": "shadcn-table-remixicon",
+      "type": "registry:ui",
+      "title": "Shadcn Table (Base UI) with Remix icons",
+      "description": "Alias of shadcn-table-base-remixicon: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-remixicon installs the Base UI copy.",
+      "dependencies": [
+        "@remixicon/react@^4.9.0"
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "files": [
+        {
+          "path": "registry/base/components/ui/shadcn-table/icons/remixicon.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/icons.ts"
+        }
+      ]
+    },
+    {
       "name": "shadcn-table-locale-ar",
       "type": "registry:ui",
       "title": "Shadcn Table (Base UI) locale: ar",
       "description": "Alias of shadcn-table-base-locale-ar: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ar installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4177,7 +4537,7 @@
       "title": "Shadcn Table (Base UI) locale: az",
       "description": "Alias of shadcn-table-base-locale-az: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-az installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4193,7 +4553,7 @@
       "title": "Shadcn Table (Base UI) locale: bg",
       "description": "Alias of shadcn-table-base-locale-bg: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-bg installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4209,7 +4569,7 @@
       "title": "Shadcn Table (Base UI) locale: cs",
       "description": "Alias of shadcn-table-base-locale-cs: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-cs installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4225,7 +4585,7 @@
       "title": "Shadcn Table (Base UI) locale: da",
       "description": "Alias of shadcn-table-base-locale-da: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-da installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4241,7 +4601,7 @@
       "title": "Shadcn Table (Base UI) locale: de",
       "description": "Alias of shadcn-table-base-locale-de: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-de installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4257,7 +4617,7 @@
       "title": "Shadcn Table (Base UI) locale: el",
       "description": "Alias of shadcn-table-base-locale-el: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-el installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4273,7 +4633,7 @@
       "title": "Shadcn Table (Base UI) locale: es",
       "description": "Alias of shadcn-table-base-locale-es: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-es installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4289,7 +4649,7 @@
       "title": "Shadcn Table (Base UI) locale: et",
       "description": "Alias of shadcn-table-base-locale-et: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-et installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4305,7 +4665,7 @@
       "title": "Shadcn Table (Base UI) locale: fa",
       "description": "Alias of shadcn-table-base-locale-fa: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fa installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4321,7 +4681,7 @@
       "title": "Shadcn Table (Base UI) locale: fi",
       "description": "Alias of shadcn-table-base-locale-fi: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fi installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4337,7 +4697,7 @@
       "title": "Shadcn Table (Base UI) locale: fr",
       "description": "Alias of shadcn-table-base-locale-fr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-fr installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4353,7 +4713,7 @@
       "title": "Shadcn Table (Base UI) locale: he",
       "description": "Alias of shadcn-table-base-locale-he: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-he installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4369,7 +4729,7 @@
       "title": "Shadcn Table (Base UI) locale: hr",
       "description": "Alias of shadcn-table-base-locale-hr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hr installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4385,7 +4745,7 @@
       "title": "Shadcn Table (Base UI) locale: hu",
       "description": "Alias of shadcn-table-base-locale-hu: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hu installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4401,7 +4761,7 @@
       "title": "Shadcn Table (Base UI) locale: hy",
       "description": "Alias of shadcn-table-base-locale-hy: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-hy installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4417,7 +4777,7 @@
       "title": "Shadcn Table (Base UI) locale: id",
       "description": "Alias of shadcn-table-base-locale-id: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-id installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4433,7 +4793,7 @@
       "title": "Shadcn Table (Base UI) locale: it",
       "description": "Alias of shadcn-table-base-locale-it: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-it installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4449,7 +4809,7 @@
       "title": "Shadcn Table (Base UI) locale: ja",
       "description": "Alias of shadcn-table-base-locale-ja: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ja installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4465,7 +4825,7 @@
       "title": "Shadcn Table (Base UI) locale: ko",
       "description": "Alias of shadcn-table-base-locale-ko: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ko installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4481,7 +4841,7 @@
       "title": "Shadcn Table (Base UI) locale: mk",
       "description": "Alias of shadcn-table-base-locale-mk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-mk installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4497,7 +4857,7 @@
       "title": "Shadcn Table (Base UI) locale: nl",
       "description": "Alias of shadcn-table-base-locale-nl: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-nl installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4513,7 +4873,7 @@
       "title": "Shadcn Table (Base UI) locale: no",
       "description": "Alias of shadcn-table-base-locale-no: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-no installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4529,7 +4889,7 @@
       "title": "Shadcn Table (Base UI) locale: np",
       "description": "Alias of shadcn-table-base-locale-np: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-np installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4545,7 +4905,7 @@
       "title": "Shadcn Table (Base UI) locale: pl",
       "description": "Alias of shadcn-table-base-locale-pl: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pl installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4561,7 +4921,7 @@
       "title": "Shadcn Table (Base UI) locale: pt-BR",
       "description": "Alias of shadcn-table-base-locale-pt-BR: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pt-BR installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4577,7 +4937,7 @@
       "title": "Shadcn Table (Base UI) locale: pt",
       "description": "Alias of shadcn-table-base-locale-pt: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-pt installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4593,7 +4953,7 @@
       "title": "Shadcn Table (Base UI) locale: ro",
       "description": "Alias of shadcn-table-base-locale-ro: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ro installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4609,7 +4969,7 @@
       "title": "Shadcn Table (Base UI) locale: ru",
       "description": "Alias of shadcn-table-base-locale-ru: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-ru installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4625,7 +4985,7 @@
       "title": "Shadcn Table (Base UI) locale: sk",
       "description": "Alias of shadcn-table-base-locale-sk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sk installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4641,7 +5001,7 @@
       "title": "Shadcn Table (Base UI) locale: sr-Cyrl-RS",
       "description": "Alias of shadcn-table-base-locale-sr-Cyrl-RS: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sr-Cyrl-RS installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4657,7 +5017,7 @@
       "title": "Shadcn Table (Base UI) locale: sr-Latn-RS",
       "description": "Alias of shadcn-table-base-locale-sr-Latn-RS: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sr-Latn-RS installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4673,7 +5033,7 @@
       "title": "Shadcn Table (Base UI) locale: sv",
       "description": "Alias of shadcn-table-base-locale-sv: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-sv installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4689,7 +5049,7 @@
       "title": "Shadcn Table (Base UI) locale: tr",
       "description": "Alias of shadcn-table-base-locale-tr: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-tr installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4705,7 +5065,7 @@
       "title": "Shadcn Table (Base UI) locale: uk",
       "description": "Alias of shadcn-table-base-locale-uk: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-uk installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4721,7 +5081,7 @@
       "title": "Shadcn Table (Base UI) locale: vi",
       "description": "Alias of shadcn-table-base-locale-vi: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-vi installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4737,7 +5097,7 @@
       "title": "Shadcn Table (Base UI) locale: zh-Hans",
       "description": "Alias of shadcn-table-base-locale-zh-Hans: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-zh-Hans installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {
@@ -4753,7 +5113,7 @@
       "title": "Shadcn Table (Base UI) locale: zh-Hant",
       "description": "Alias of shadcn-table-base-locale-zh-Hant: the GitHub shorthand anindosarker/shadcn-table/shadcn-table-locale-zh-Hant installs the Base UI copy.",
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "files": [
         {

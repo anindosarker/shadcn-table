@@ -9,16 +9,17 @@
  * variants (lib/example-variants.mjs) import from there, so a reader on any
  * base tab sees that base's copy render.
  *
- * Source: the built item packages/shadcn-table/public/r/<item>.json
- * (`pnpm -w registry:build`) plus the files of its locale items
- * (<item>-locale-<code>.json: the localization examples import every
- * locale), merged into one item so the CLI never resolves the locale items'
- * GitHub dependency. The item is rewritten on the way in: its
- * `@/components/ui/` imports point at `@/components/ui-<base>/` (the CLI
- * rewrites only `@/registry/...` specifiers). Each copy renders its own
- * keyframes in a hoisted style element; on every base but the reference
- * (radix) the st-collapsible-* keyframe names and the st-collapsible style href
- * become st-<base>-collapsible (st-base-collapsible, st-aria-collapsible) so
+ * Source: the built items in packages/shadcn-table/public/r/
+ * (`pnpm -w registry:build`): the core item <item>-core.json, the Lucide item
+ * <item>.json (icons.ts) and the locale items <item>-locale-<code>.json (the
+ * localization examples import every locale), merged into one item so the
+ * CLI never resolves the core dependency through its GitHub address. The item
+ * is rewritten on the way in: its `@/components/ui/` imports point at
+ * `@/components/ui-<base>/` (the CLI rewrites only `@/registry/...`
+ * specifiers). Each copy renders its own keyframes in a hoisted style
+ * element; on every base but the reference (radix) the st-collapsible-*
+ * keyframe names and the st-collapsible style href become
+ * st-<base>-collapsible (st-base-collapsible, st-aria-collapsible) so
  * they do not collide with the Radix copy's (keyframe names are global and
  * React keeps one style per href).
  * `shadcn add` then runs with a temporary components.json (the base's style,
@@ -64,30 +65,40 @@ if (!BASES.includes(base)) {
   console.error(`usage: node scripts/install.mjs <${BASES.join('|')}>`);
   process.exit(1);
 }
-/** The base's committed item name, from the library's registry.json. */
-const itemName = baseItems(
+/** The base's committed core and main item names, from registry.json. */
+const { core, main } = baseItems(
   JSON.parse(fs.readFileSync(path.join(LIB, 'registry.json'), 'utf8')),
   base,
-).main?.name;
-if (!itemName) {
+);
+const itemName = main?.name;
+if (!core || !itemName) {
   console.error(
-    `install: no ${base} item in packages/shadcn-table/registry.json`,
+    `install: no ${base} core or main item in packages/shadcn-table/registry.json`,
   );
   process.exit(1);
 }
 const style = `${base}-${STYLE}`;
 const uiAlias = `@/components/ui-${base}`;
 const uiDir = path.join(APP, 'components', `ui-${base}`);
-const itemFile = path.join(LIB_R, `${itemName}.json`);
+const readItem = (name) => {
+  const file = path.join(LIB_R, `${name}.json`);
+  if (!fs.existsSync(file)) {
+    console.error(
+      `install: ${path.relative(APP, file)} missing; run pnpm -w registry:build first`,
+    );
+    process.exit(1);
+  }
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+};
 
-if (!fs.existsSync(itemFile)) {
-  console.error(
-    `install: ${path.relative(APP, itemFile)} missing; run pnpm -w registry:build first`,
-  );
-  process.exit(1);
-}
-
-const item = JSON.parse(fs.readFileSync(itemFile, 'utf8'));
+// Core carries the dependencies and the bare parts; the main item adds
+// icons.ts and lucide-react. Its registryDependency on core is left out, the
+// merged item holds core's files.
+const item = readItem(core.name);
+const lucide = readItem(itemName);
+item.name = itemName;
+item.files.push(...lucide.files);
+item.dependencies = [...(item.dependencies ?? []), ...lucide.dependencies];
 const localeItems = fs
   .readdirSync(LIB_R)
   .filter((f) => f.startsWith(`${itemName}-locale-`) && f.endsWith('.json'))
