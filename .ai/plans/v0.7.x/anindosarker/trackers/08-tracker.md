@@ -2,7 +2,7 @@
 
 Status: running
 Branch `v0.7/docs-install`, worktree docs-install, PR #71
-S5: branch `v0.7/docs-install-2`, worktree docs-install-2
+S5: branch `v0.7/docs-install-2`, worktree docs-install-2, PR #75
 Gates:
 - S4:
 - `pnpm --filter shadcn-table-docs types:check` and `eslint --max-warnings 0` on the milestone files at 970cf469: green
