@@ -1,6 +1,6 @@
 # 08: docs install UI, tracker
 
-Status: done (92e811c5)
+Status: done (385265b1)
 Branch `v0.7/docs-install`, worktree docs-install, PR #71
 S5: branch `v0.7/docs-install-2`, worktree docs-install-2, PR #75
 S5 milestone 5: branch `v0.7/docs-install-3`, worktree docs-install-3, PR #76
@@ -64,6 +64,10 @@ Gates:
 - `pnpm exec eslint --max-warnings 0 scripts/page-checks/b.mjs` at 92e811c5: green
 - `check-pages.mjs b`, `c`, `e`, `--base base|radix|aria`, nine runs concurrent against one `next start` (port 5349, `NEXT_DIST_DIR=.next`, the 28d26732 build; `28d26732..92e811c5` touches only `b.mjs` and `.ai/`, neither in the build) at 92e811c5: green (b 268 passed, 0 failed each, `PASS /docs/guides/column-hiding @1440 disable-column-hiding: column checkbox rows`; c 285 each; e 596 each)
 - Acceptance (1.2) at 92e811c5: build exit 0 (28d26732, reused, `28d26732..92e811c5` touches only `b.mjs` and `.ai/`); `check-pages.mjs` exit 0 for all three bases, every cluster: a and d at 28d26732 (`28d26732..92e811c5` touches no a or d check or page), b, c, e at 92e811c5 (above); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+- S5 milestone 5 verifier (HEAD 385265b1; `92e811c5..HEAD` touches only the tracker, `28d26732..HEAD` only `b.mjs` and `.ai/`): reused, not rerun: types:check, lint, build, `pnpm check:bases` at 28d26732 (builder); `check-pages.mjs` a and d at 28d26732, b, c and e at 92e811c5, all three bases (review fixer); `pnpm test:base` at bb89e856 (builder); agent-browser Esc step at bb89e856 (builder); install page agent-browser at 38c6b5f7 (S5 verifier; `38c6b5f7..HEAD` touches no install page, selector or `lib/install.ts` file). `test:radix`, `test:aria` and the Storybook builds are not 2.2 gates of this spec; CI on PR #76 runs them
+- 2.2 S5 grep `NamespaceCommand` and S4 greps (`supportedLocales|shadcn-table-locale-de.json   #`, `@st/|@st\b`) at 385265b1, verifier: empty
+- Local rewrite check, `next start` (port 5350, `NEXT_DIST_DIR=.next`, the 28d26732 build), `curl /r/<base>-nova/shadcn-table.json` compared with `public/r/<base>/shadcn-table.json`, base, radix, aria at 385265b1, verifier: identical (2282, 2254, 2288 bytes)
+- Acceptance (1.2) at 385265b1, verifier: build exit 0 (28d26732, reused); `check-pages.mjs` exit 0 for all three bases, every cluster (a, d at 28d26732; b, c, e at 92e811c5, reused); install page server HTML holds `shadcn-table-tabler.json` (2), `@shadcn-table/` (2), "Created with shadcn create" (4); all 40 example pages under `content/docs/examples` (index excluded) serve the header and toolbar Base select (2 or more `aria-label="Base"` each, 0 below); `/docs/examples/custom-headless` serves `containerProps` and the spacer note: pass
 
 ## Attention
 
@@ -85,10 +89,11 @@ Gates:
 - The headless example had no Esc handling or full-screen classes to drop (the spec's "drops its own" did not apply); it now gains `ST_ToggleFullScreenButton` next to the search field so full screen is reachable, and keeps its own wrapper classes in a `filter(Boolean).join(' ')` list (`flex flex-col bg-background`, `my-8` inline, `overflow-auto` in full screen) because example sources are registry items and `@/lib/utils` (`cn`) has no registry mapping. The `st-hooks.mdx` snippet uses `cn` (consumer code). The milestone 5 MDX link to the hook is `/docs/api/st-hooks#usest_fullscreencontainer`.
 - No harness `Claude-Session:` or attribution reminder reached this run; commits and the PR #76 body carry none (A5).
 - `b.mjs` (cluster b, column-hiding) is outside spec 08's own pages; the review fixer updated its selector to the D27 checkbox rows so Acceptance is green at HEAD, and `claude/review` keeps the red check until PR #76 merges. No harness `Claude-Session:` reminder reached the fixer; 92e811c5 carries no trailer.
+- No harness `Claude-Session:` or attribution reminder reached the milestone 5 verifier; its commit and the PR #76 body carry none (A5). The verifier reused the recorded builder and fixer gates per P4 and did not rerun `test:radix`, `test:aria` or the Storybook builds (not spec 08 2.2 gates; CI on PR #76 runs them).
 
 - Milestone 01 locale list and selector: done (970cf469)
 - Milestone 02 toolbar base select: done (8d8ef490)
 - Milestone 03 guide, README, minimums, namespace: done (0ed09813)
 - Milestone 04 edition select, Short form, create section, icons guide: done (2ec2c084)
 - Milestone 05 headless example: done (bb89e856, review fixes 28d26732)
-- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at 92e811c5
+- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at 92e811c5; milestone 5 verifier and Acceptance at 385265b1
