@@ -61,3 +61,15 @@ export const OpenCloseAndEscape = {
     await waitFor(() => expect(document.activeElement).toBe(toggle));
   },
 };
+
+/** The field beside the toolbar buttons, opening toward the start. */
+export const PositionRight = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+};
+
+/** The field on its own at the toolbar start, opening toward the end. */
+export const PositionLeft = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} positionGlobalFilter="left" />
+  ),
+};
