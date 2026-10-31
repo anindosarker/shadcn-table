@@ -13,12 +13,13 @@
  * (`pnpm -w registry:build`): the core item <item>-core.json, the Lucide item
  * <item>.json (icons.ts) and the locale items <item>-locale-<code>.json (the
  * localization examples import every locale), merged into one item so the
- * CLI never resolves the core dependency through its GitHub address. The item is rewritten on the way in: its
- * `@/components/ui/` imports point at `@/components/ui-<base>/` (the CLI
- * rewrites only `@/registry/...` specifiers). Each copy renders its own
- * keyframes in a hoisted style element; on every base but the reference
- * (radix) the st-collapsible-* keyframe names and the st-collapsible style href
- * become st-<base>-collapsible (st-base-collapsible, st-aria-collapsible) so
+ * CLI never resolves the core dependency through its GitHub address. The item
+ * is rewritten on the way in: its `@/components/ui/` imports point at
+ * `@/components/ui-<base>/` (the CLI rewrites only `@/registry/...`
+ * specifiers). Each copy renders its own keyframes in a hoisted style
+ * element; on every base but the reference (radix) the st-collapsible-*
+ * keyframe names and the st-collapsible style href become
+ * st-<base>-collapsible (st-base-collapsible, st-aria-collapsible) so
  * they do not collide with the Radix copy's (keyframe names are global and
  * React keeps one style per href).
  * `shadcn add` then runs with a temporary components.json (the base's style,
