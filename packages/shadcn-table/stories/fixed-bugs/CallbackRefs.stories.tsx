@@ -108,12 +108,13 @@ const assertCallbackRef = async (
 };
 
 const providerRecorder = createRecorder();
+const providerRef = providerRecorder.ref;
 
 const ProviderTable = () => {
   const table = useShadcnTable({ columns, data });
   return (
     <ST_TableProvider table={table}>
-      <ST_TableContainer ref={providerRecorder.ref} />
+      <ST_TableContainer ref={providerRef} />
     </ST_TableProvider>
   );
 };
@@ -187,8 +188,11 @@ const VirtualizedTableLoadedAfterMount = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setRows(manyRows);
-    setIsLoading(false);
+    const timeout = setTimeout(() => {
+      setRows(manyRows);
+      setIsLoading(false);
+    });
+    return () => clearTimeout(timeout);
   }, []);
 
   return (

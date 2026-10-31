@@ -15,6 +15,7 @@ Gates:
 - Set A: 90487682
 - Set B: 77a0eba8 (`eslint --max-warnings 0` and `prettier --check` on `components/{body,head,footer,table}` of the three bases: 0; `tsc:baseui`, `tsc:radix`, `tsc:aria`: green; `check:tailwind`: 0 sites in set B per base)
 - Set C: ff32d364 (at ff32d364: `eslint --max-warnings 0` and `prettier --check` on the set C files of all three bases zero, `tsc:radix`, `tsc:baseui`, `tsc:aria`, `tsc -p tsconfig.stories.json`, `check:bases` green, `test:base`, `test:radix`, `test:aria` green, 64 files, 453 tests each, `check:tailwind` zero hits in set C files, set C `eslint-disable` lines base 6, radix 6, aria 8)
+- Set D: cde17938
 
 Lint after the switch (`lint -f json` at 8b493528, 719 problems: library 691, stories 28, other 0)
 
@@ -94,3 +95,4 @@ Foundation: branch `v0.7/foundation`, worktree `foundation`, PR #70
 - Set C: Tailwind 4.3.3 canonicalizes `start-0` and `end-0` to `inset-s-0` and `inset-e-0`, so set C uses those (06 1.6.4 names `start-`/`end-`; `check:tailwind` rejects them). Sets A and B hit the same on `before:start-0` and `end-[14%]`.
 - Set C: the single-selection radio (`ST_SelectCheckbox`, base and radix) gets a typed `RadioGroupItem` props object with `aria-label`, `className`, `disabled`, `onClick` and `value` (04 1.6.2), so other `stSelectCheckboxProps` fields (`id`, `data-*`, `style`) no longer reach the radio. Revert means spreading the checkbox props with a cast.
 - Set C: aria menus keep `role="button"` on the span (spec 10 drops it per D26) and call no `focusAnchor`: React Aria restores focus to the opener itself, which the `MenuFocusReturn` play tests confirm in all three bases.
+- Set D: the cell-edit stories in `Editing.stories.tsx` lost their four `@ts-expect-error column id is a string key of Person` lines; the immutable row copy (`{ ...r, [cell.column.id]: value }`) typechecks, so `tsc -p tsconfig.stories.json` reported them unused. `GroupingColumnsSetState` and `VirtualizedDataSetAfterMount` set their after-mount data in a `setTimeout` (still one batch) instead of synchronously in the effect (`set-state-in-effect`). Revert means a reasoned disable per site.
