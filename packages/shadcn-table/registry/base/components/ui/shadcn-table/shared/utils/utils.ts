@@ -55,8 +55,7 @@ export interface Cancelable {
   clear(): void;
 }
 
-// Corresponds to 10 frames at 60 Hz.
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: never[]) => unknown>(
   func: T,
   wait = 166,
 ): T & Cancelable {

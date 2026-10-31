@@ -171,8 +171,8 @@ export const getST_RowSelectionHandler =
     // `isRowRangeSelectionEvent` accepts) TanStack extends the toggle to the
     // rows between the last toggled row and this one (`enableRowRangeSelection`)
     row.getToggleSelectedHandler()({
-      nativeEvent: (event as any).nativeEvent,
-      shiftKey: (event as any).shiftKey,
+      nativeEvent: event.nativeEvent,
+      shiftKey: 'shiftKey' in event ? event.shiftKey : undefined,
       target: { checked },
     });
 

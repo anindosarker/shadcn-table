@@ -98,7 +98,7 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
         table,
         // @ts-expect-error event.target is typed EventTarget, not Element
         staticRowIndex: +event.target.getAttribute('data-index'),
-      })(event as any);
+      })(event);
     } else if (
       header?.column?.id === 'st-row-select' &&
       table.options.enableSelectAll
@@ -106,7 +106,7 @@ export const cellKeyboardShortcuts = <TData extends ST_RowData = ST_RowData>({
       event.preventDefault();
       getST_SelectAllHandler({
         table,
-      })(event as any);
+      })(event);
     } else if (
       cell?.column?.id === 'st-row-expand' &&
       (cell.row.getCanExpand() ||
