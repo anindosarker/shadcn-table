@@ -98,3 +98,7 @@
 ## A19 Review round 2 left one major that the round 2 fix closed
 
 - Spec 10's second review round found the "Filter by column" focus hand-off missing in base and aria; the round 2 fixer fixed it (1e9c8327, with a play-test assertion that fails before and passes after). The template returns `review-open` when round 2 ends with a major, so the main session ran one incremental confirmation review of the fixer's commits plus verify before merging, beyond the two review rounds the process names. Accept, or make a confirmation round part of the process.
+
+## A20 Search field input shows no focus ring after a pointer-opened reveal
+
+- Spec 10's judged Acceptance passed 2 of 3. The dissenting judge: after the toggle button is clicked, the input receives focus (the capture logs confirm `document.activeElement` is the input in every base) but shows no ring or caret in the frames, while the owner's Base UI demo (the reference) shows a 3 px ring. The input group styles focus with `focus-visible`, which Chromium does not apply to script focus that follows a pointer click; the Escape path shows the toggle's ring as the reference does. Accept the styling difference, or make the field show `focus-within` styling after a programmatic open.

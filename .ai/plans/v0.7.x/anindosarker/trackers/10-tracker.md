@@ -64,6 +64,7 @@ Notes:
 - The edit modal keeps the last row in state while it plays its exit; `ST_TableContainer` mounts it whenever a display mode is `modal`, and no longer selects `actionCell`.
 - Aria detail panel, progress bar and stacked alert banner keep their content mounted until the panel's own collapse animations settle (`getAnimations()`, as React Aria waits before it hides the panel), through one `useCollapsingChildren` hook in aria `shared/utils/style.utils.ts` (internal, not re-exported; the file is already on `aria-diff.json`). A collapse with no transition (the overlay banner, reduced motion, a fast toggle) drops it at once. The part's `CollapsibleContent` props type leaves out the `ref` the DisclosurePanel takes, so the panels pass it as `{...{ ref: panelRef }}`; revert: a sentinel element inside the panel.
 - 2c38ea8e was pushed with one lint error (React Compiler `preserve-manual-memoization` on an aria `useCallback`), fixed in 7b4370db.
+- Judged Acceptance (main session, run wf_f326124a-b73): three fable judges on the 90 search-reveal frames of 382a33a4 against `reference/10-*`, question "no jump, field focused, closed state hidden": 2 of 3 pass (15 of 15 pairs each); the dissenting judge failed the six open pairs on the visual focus criterion only (no focus ring on the input after a pointer-opened reveal; the capture logs confirm the input is `document.activeElement`), see ATTENTION A20
 
 ## Attention
 
