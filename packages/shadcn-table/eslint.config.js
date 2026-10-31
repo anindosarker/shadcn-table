@@ -15,9 +15,11 @@ export default defineConfig([
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
       // reactRefresh.configs.vite,
     ],
+    // The two rules of plugin 5 `recommended-latest`; plugin 7's preset adds
+    // the React Compiler rules, which the spec 02 config switch turns on.
+    plugins: { 'react-hooks': reactHooks },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -26,6 +28,8 @@ export default defineConfig([
       parserOptions: { tsconfigRootDir: import.meta.dirname },
     },
     rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       // Unused code is checked here, not by tsc (the tsconfigs carry no
       // noUnusedLocals / noUnusedParameters, see the parts above); `_`
       // prefixed names are tolerated as tsc tolerated them, and so is an
