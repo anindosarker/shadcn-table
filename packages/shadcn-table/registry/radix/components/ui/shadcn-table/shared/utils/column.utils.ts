@@ -136,7 +136,9 @@ export const getDefaultColumnFilterFn = <TData extends ST_RowData>(
   return 'fuzzy';
 };
 
-const emptyFacetedUniqueValues = new Map<any, number>();
+const emptyFacetedUniqueValues: ReturnType<
+  ST_Column<ST_RowData>['getFacetedUniqueValues']
+> = new Map();
 
 export const getColumnFilterInfo = <TData extends ST_RowData>({
   header,

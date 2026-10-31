@@ -20,6 +20,8 @@ import {
   filterFn_weakEquals,
 } from '@tanstack/react-table';
 
+const emptyRangeValues: ReadonlyArray<unknown> = ['', undefined];
+
 const fuzzy = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
   columnId: string,
@@ -37,7 +39,7 @@ const fuzzy = <TFeatures extends TableFeatures, TData extends RowData>(
   return itemRank.passed;
 };
 
-fuzzy.autoRemove = (val: any) => !val;
+fuzzy.autoRemove = (val: unknown) => !val;
 
 const contains = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -51,7 +53,7 @@ const contains = <TFeatures extends TableFeatures, TData extends RowData>(
     .trim()
     .includes(filterValue.toString().toLowerCase().trim());
 
-contains.autoRemove = (val: any) => !val;
+contains.autoRemove = (val: unknown) => !val;
 
 const startsWith = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -65,7 +67,7 @@ const startsWith = <TFeatures extends TableFeatures, TData extends RowData>(
     .trim()
     .startsWith(filterValue.toString().toLowerCase().trim());
 
-startsWith.autoRemove = (val: any) => !val;
+startsWith.autoRemove = (val: unknown) => !val;
 
 const endsWith = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -79,7 +81,7 @@ const endsWith = <TFeatures extends TableFeatures, TData extends RowData>(
     .trim()
     .endsWith(filterValue.toString().toLowerCase().trim());
 
-endsWith.autoRemove = (val: any) => !val;
+endsWith.autoRemove = (val: unknown) => !val;
 
 const equals = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -89,7 +91,7 @@ const equals = <TFeatures extends TableFeatures, TData extends RowData>(
   row.getValue<number | string | null>(id)?.toString().toLowerCase().trim() ===
   filterValue.toString().toLowerCase().trim();
 
-equals.autoRemove = (val: any) => !val;
+equals.autoRemove = (val: unknown) => !val;
 
 const notEquals = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -99,7 +101,7 @@ const notEquals = <TFeatures extends TableFeatures, TData extends RowData>(
   row.getValue<number | string | null>(id)?.toString().toLowerCase().trim() !==
   filterValue.toString().toLowerCase().trim();
 
-notEquals.autoRemove = (val: any) => !val;
+notEquals.autoRemove = (val: unknown) => !val;
 
 const greaterThan = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -113,7 +115,7 @@ const greaterThan = <TFeatures extends TableFeatures, TData extends RowData>(
         .toLowerCase()
         .trim() > filterValue.toString().toLowerCase().trim();
 
-greaterThan.autoRemove = (val: any) => !val;
+greaterThan.autoRemove = (val: unknown) => !val;
 
 const greaterThanOrEqualTo = <
   TFeatures extends TableFeatures,
@@ -124,7 +126,7 @@ const greaterThanOrEqualTo = <
   filterValue: number | string,
 ): boolean => equals(row, id, filterValue) || greaterThan(row, id, filterValue);
 
-greaterThanOrEqualTo.autoRemove = (val: any) => !val;
+greaterThanOrEqualTo.autoRemove = (val: unknown) => !val;
 
 const lessThan = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
@@ -138,7 +140,7 @@ const lessThan = <TFeatures extends TableFeatures, TData extends RowData>(
         .toLowerCase()
         .trim() < filterValue.toString().toLowerCase().trim();
 
-lessThan.autoRemove = (val: any) => !val;
+lessThan.autoRemove = (val: unknown) => !val;
 
 const lessThanOrEqualTo = <
   TFeatures extends TableFeatures,
@@ -149,22 +151,22 @@ const lessThanOrEqualTo = <
   filterValue: number | string,
 ): boolean => equals(row, id, filterValue) || lessThan(row, id, filterValue);
 
-lessThanOrEqualTo.autoRemove = (val: any) => !val;
+lessThanOrEqualTo.autoRemove = (val: unknown) => !val;
 
 const between = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
   id: string,
   filterValues: [number | string, number | string],
 ): boolean =>
-  ((['', undefined] as any[]).includes(filterValues[0]) ||
+  (emptyRangeValues.includes(filterValues[0]) ||
     greaterThan(row, id, filterValues[0])) &&
   ((!isNaN(+filterValues[0]) &&
     !isNaN(+filterValues[1]) &&
     +filterValues[0] > +filterValues[1]) ||
-    (['', undefined] as any[]).includes(filterValues[1]) ||
+    emptyRangeValues.includes(filterValues[1]) ||
     lessThan(row, id, filterValues[1]));
 
-between.autoRemove = (val: any) => !val;
+between.autoRemove = (val: unknown) => !val;
 
 const betweenInclusive = <
   TFeatures extends TableFeatures,
@@ -174,31 +176,29 @@ const betweenInclusive = <
   id: string,
   filterValues: [number | string, number | string],
 ): boolean =>
-  ((['', undefined] as any[]).includes(filterValues[0]) ||
+  (emptyRangeValues.includes(filterValues[0]) ||
     greaterThanOrEqualTo(row, id, filterValues[0])) &&
   ((!isNaN(+filterValues[0]) &&
     !isNaN(+filterValues[1]) &&
     +filterValues[0] > +filterValues[1]) ||
-    (['', undefined] as any[]).includes(filterValues[1]) ||
+    emptyRangeValues.includes(filterValues[1]) ||
     lessThanOrEqualTo(row, id, filterValues[1]));
 
-betweenInclusive.autoRemove = (val: any) => !val;
+betweenInclusive.autoRemove = (val: unknown) => !val;
 
 const empty = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
   id: string,
-  _filterValue: number | string,
 ): boolean => !row.getValue<number | string | null>(id)?.toString().trim();
 
-empty.autoRemove = (val: any) => !val;
+empty.autoRemove = (val: unknown) => !val;
 
 const notEmpty = <TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
   id: string,
-  _filterValue: number | string,
 ): boolean => !!row.getValue<number | string | null>(id)?.toString().trim();
 
-notEmpty.autoRemove = (val: any) => !val;
+notEmpty.autoRemove = (val: unknown) => !val;
 
 export const ST_FilterFns = {
   arrIncludes: filterFn_arrIncludes,
