@@ -2,9 +2,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   type MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
+  useMemo,
   useState,
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
@@ -60,6 +58,8 @@ const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
 );
 
+/** Every value the filter inputs hand to the column filter. */
+type FilterInputValue = Date | number | string | string[] | null;
 export interface ST_FilterTextFieldProps<TData extends ST_RowData>
   extends InputProps {
   header: ST_Header<TData>;
@@ -90,9 +90,6 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
   const { filterVariant } = columnDef;
-  // The filter value and the faceted values feed the value state, its sync
-  // effect and the dropdown memo, so they are hook subscriptions: the facets
-  // follow the other columns' filters and the global filter.
   useSelector(table.atoms.columnFilters);
   useSelector(table.atoms.globalFilter);
 
@@ -202,29 +199,31 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   // The popup anchors to the whole input group so it spans the filter cell.
   const comboboxAnchor = useComboboxAnchor();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleChangeDebounced = useCallback(
-    debounce(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (newValue: any) => {
-        if (isRangeFilter) {
-          column.setFilterValue((old: Array<Date | null | number | string>) => {
-            const newFilterValues = old ?? ['', ''];
-            newFilterValues[rangeFilterIndex as number] = newValue ?? undefined;
-            return newFilterValues;
-          });
-        } else {
-          column.setFilterValue(newValue ?? undefined);
-        }
-      },
-      isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
-    ),
+  const handleChangeDebounced = useMemo(
+    () =>
+      debounce(
+        (newValue: FilterInputValue) => {
+          if (isRangeFilter) {
+            column.setFilterValue(
+              (old: Array<FilterInputValue | undefined>) => {
+                const newFilterValues = old ?? ['', ''];
+                newFilterValues[rangeFilterIndex as number] =
+                  newValue ?? undefined;
+                return newFilterValues;
+              },
+            );
+          } else {
+            column.setFilterValue(newValue ?? undefined);
+          }
+        },
+        isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one debounced function per mount; a new one drops the pending call
     [],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (newValue: any) => {
-    setFilterValue(newValue ?? '');
+  const handleChange = (newValue: FilterInputValue) => {
+    setFilterValue((newValue ?? '') as string | string[]);
     handleChangeDebounced(newValue);
   };
 
@@ -289,24 +288,24 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     setAnchorEl(event.currentTarget);
   };
 
-  const isMounted = useRef(false);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      const filterValue = column.getFilterValue();
-      if (filterValue === undefined) {
-        handleClear();
-      } else if (isRangeFilter && rangeFilterIndex !== undefined) {
-        setFilterValue(
-          (filterValue as [string, string])[rangeFilterIndex] ?? '',
-        );
-      } else {
-        setFilterValue(filterValue as string);
-      }
+  // An outside change to the column filter resets the local value; the
+  // store is not written here.
+  const columnFilterValue = column.getFilterValue();
+  const [prevColumnFilterValue, setPrevColumnFilterValue] =
+    useState(columnFilterValue);
+  if (columnFilterValue !== prevColumnFilterValue) {
+    setPrevColumnFilterValue(columnFilterValue);
+    if (columnFilterValue === undefined) {
+      if (isAutocompleteFilter) setAutocompleteValue(null);
+      setFilterValue(isMultiSelectFilter ? [] : '');
+    } else if (isRangeFilter && rangeFilterIndex !== undefined) {
+      setFilterValue(
+        (columnFilterValue as [string, string])[rangeFilterIndex] ?? '',
+      );
+    } else {
+      setFilterValue(columnFilterValue as string);
     }
-    isMounted.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [column.getFilterValue()]);
+  }
 
   if (columnDef.Filter) {
     return (
@@ -329,7 +328,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         className={cn(
           // The select addon overlays the trigger so the trigger spans the whole
           // group and the popper (sized from the trigger) matches the field.
-          isSelectFilter && 'absolute inset-y-0 right-0',
+          isSelectFilter && 'absolute inset-y-0 inset-e-0',
           hasFilterValue ? 'visible' : 'invisible',
         )}
       >
@@ -381,7 +380,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         ? undefined
         : filterPlaceholder,
     ref: (inputRef) => {
-      filterInputRefs.current![`${column.id}-${rangeFilterIndex ?? 0}`] =
+      // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+      filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
         inputRef as HTMLInputElement;
     },
     title: filterPlaceholder,
@@ -435,19 +435,19 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           filterTextFieldVariants(),
           // Chromium's date input needs 126px of content for its placeholder.
           isDateFilter
-            ? 'min-w-[140px]'
+            ? 'min-w-35'
             : isMultiSelectFilter
-              ? 'min-w-[120px]'
+              ? 'min-w-30'
               : isRangeFilter
-                ? 'min-w-[72px]'
+                ? 'min-w-18'
                 : !filterChipLabel
-                  ? 'min-w-[96px]'
+                  ? 'min-w-24'
                   : 'min-w-auto',
         )}
       >
         <InputGroup
           className={cn(
-            'h-8 text-sm [&>[data-align=inline-end]]:py-0 [&>[data-align=inline-start]]:py-0',
+            'h-8 text-sm *:data-[align=inline-end]:py-0 *:data-[align=inline-start]:py-0',
             // Chips wrap onto new lines, so the group may grow past its fixed height.
             isMultiSelectFilter && 'h-auto min-h-8',
           )}
@@ -515,8 +515,8 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : isSelectFilter ? (
             // Base UI Select raises no ChangeEvent, so a user onChange cannot fire.
-            // `items` gives the trigger the option label; Base UI's SelectValue
-            // shows the raw value otherwise. Custom children fall back to the value.
+            // `items` gives the trigger the option label; without it Base UI's
+            // SelectValue shows the raw value.
             <Select
               items={
                 textFieldProps.children
@@ -537,7 +537,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 className={cn(
                   'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   // Keeps the chevron clear of the overlaid clear button.
-                  hasFilterValue && 'pr-9',
+                  hasFilterValue && 'pe-9',
                   textFieldProps.className,
                 )}
                 disabled={!!filterChipLabel || textFieldProps.disabled}
@@ -632,7 +632,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           {endAdornment}
         </InputGroup>
         {showChangeModeButton ? (
-          <label className="mt-[3px] block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',
               localization[

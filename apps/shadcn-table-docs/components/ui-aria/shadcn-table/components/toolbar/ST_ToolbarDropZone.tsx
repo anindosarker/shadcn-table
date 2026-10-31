@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { type DragEvent, useEffect } from 'react';
@@ -11,7 +10,7 @@ import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHoo
 export type ST_ToolbarDropZoneProps = DivProps;
 
 const toolbarDropZoneVariants = cva(
-  'absolute z-[4] box-border flex h-full w-full items-center justify-center border-2 border-dashed border-primary backdrop-blur-sm',
+  'absolute z-4 box-border flex h-full w-full items-center justify-center border-2 border-dashed border-primary backdrop-blur-sm',
   {
     variants: {
       hovered: {
@@ -32,7 +31,6 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     setShowToolbarDropZone,
   } = table;
 
-  // These feed the drop zone effect, so they are hook subscriptions.
   const draggingColumn = useSelector(table.atoms.draggingColumn);
   const grouping = useSelector(table.atoms.grouping);
 
@@ -54,12 +52,11 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
   }, [enableGrouping, draggingColumn, grouping, setShowToolbarDropZone]);
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         hoveredColumn: state.hoveredColumn,
         showToolbarDropZone: state.showToolbarDropZone,
       })}
-      source={table.store}
     >
       {({ hoveredColumn, showToolbarDropZone }) =>
         showToolbarDropZone ? (
@@ -81,6 +78,6 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
           </div>
         ) : null
       }
-    </Subscribe>
+    </table.Subscribe>
   );
 };

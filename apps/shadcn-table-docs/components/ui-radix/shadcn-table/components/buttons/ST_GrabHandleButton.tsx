@@ -7,7 +7,7 @@ import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/button
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 const grabHandleButtonVariants = cva(
-  'my-0 -mx-[0.1rem] cursor-grab transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',
+  'my-0 mx-[-0.1rem] cursor-grab transition-all duration-150 ease-in-out hover:bg-transparent hover:opacity-100 active:cursor-grabbing dark:hover:bg-transparent',
   {
     variants: {
       location: {

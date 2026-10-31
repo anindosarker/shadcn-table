@@ -1,4 +1,4 @@
-import { Subscribe } from '@tanstack/react-table';
+import { type ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Checkbox } from '@/components/ui-base/shadcn-table/components/inputs/ST_Checkbox';
@@ -20,10 +20,6 @@ import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 
-// Base UI's BaseUIEvent<MouseEvent<HTMLSpanElement>>, read off the part instead
-// of '@base-ui/react/types': under verbatimModuleSyntax an inline `type`
-// import keeps a side-effect import that Vite's dep scanner misses, and the
-// late re-optimization reloads Storybook mid-run.
 type SelectClickEvent = Parameters<NonNullable<CheckboxProps['onClick']>>[0];
 
 const selectCheckboxVariants = cva('z-0', {
@@ -56,8 +52,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
   const {
     options: { enableMultiRowSelection, localization, selectAllMode },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Checkbox and RadioGroupItem.
   const {
     stSelectAllCheckboxProps,
     stSelectCheckboxProps,
@@ -120,11 +114,8 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         e.stopPropagation();
         // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
-          // Base UI roots are spans; the handlers read only target and shiftKey.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const event = e as any;
-          if (selectAll) onSelectAllChange(event);
-          else onSelectionChange!(event);
+          if (selectAll) onSelectAllChange(e);
+          else onSelectionChange!(e);
         }
         checkboxProps?.onClick?.(e);
       },
@@ -135,8 +126,24 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       title: undefined,
     }) satisfies CheckboxProps | RadioProps;
 
+  // The fields a radio shares with the checkbox props.
+  const getRadioProps = ({
+    'aria-label': ariaLabel,
+    className,
+    disabled,
+    onClick,
+  }: ReturnType<typeof getCommonProps>): ComponentProps<
+    typeof RadioGroupItem
+  > => ({
+    'aria-label': ariaLabel,
+    className,
+    disabled,
+    onClick,
+    value: 'on',
+  });
+
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         isLoading: state.isLoading,
@@ -160,7 +167,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               isSomeSelected: row.getIsSomeSelected(),
             }),
       })}
-      source={table.store}
     >
       {({ density, isLoading }) => {
         const allRowsSelected = selectAll ? getAllRowsSelected() : undefined;
@@ -179,11 +185,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               {enableMultiRowSelection === false ? (
                 // RadioGroupItem needs a RadioGroup: one group per row.
                 <RadioGroup value={isChecked ? 'on' : null}>
-                  <RadioGroupItem
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    {...(commonProps as any)}
-                    value="on"
-                  />
+                  <RadioGroupItem {...getRadioProps(commonProps)} />
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
@@ -205,6 +207,6 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

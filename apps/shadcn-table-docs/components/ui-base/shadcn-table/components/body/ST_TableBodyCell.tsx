@@ -2,11 +2,10 @@ import {
   type DragEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type RefObject,
-  useEffect,
   useState,
 } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -51,7 +50,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   const table = cell.table;
   const {
     options: {
-      columnResizeDirection,
       columnResizeMode,
       createDisplayMode,
       editDisplayMode,
@@ -67,7 +65,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     },
     setHoveredColumn,
   } = table;
-  // These feed the skeleton width effect, so they are hook subscriptions.
   const isLoading = useSelector(table.atoms.isLoading);
   const showSkeletons = useSelector(table.atoms.showSkeletons);
   const { column, row } = cell;
@@ -88,17 +85,12 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     table,
   });
 
-  const [skeletonWidth, setSkeletonWidth] = useState(100);
-  useEffect(() => {
-    if ((!isLoading && !showSkeletons) || skeletonWidth !== 100) return;
+  const [skeletonWidth] = useState(() => {
     const size = column.getSize();
-    setSkeletonWidth(
-      columnDefType === 'display'
-        ? size / 2
-        : Math.round(Math.random() * (size - size / 3) + size / 3),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, showSkeletons]);
+    return columnDefType === 'display'
+      ? size / 2
+      : Math.round(Math.random() * (size - size / 3) + size / 3);
+  });
 
   const isEditable = isCellEditable({ cell, table });
 
@@ -140,6 +132,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     if (isRightClickable) {
       e.preventDefault();
       table.setActionCell(cell);
+      // eslint-disable-next-line react-hooks/immutability -- runs in handleContextMenu, not render; table.refs is the table's mutable ref bag
       table.refs.actionCellRef.current = e.currentTarget;
     }
   };
@@ -165,7 +158,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   );
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
@@ -189,7 +182,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
           : undefined,
         rowPinning: state.rowPinning,
       })}
-      source={table.store}
     >
       {({
         density,
@@ -218,9 +210,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
               : undefined;
 
         const draggingBorders = showResizeBorder
-          ? columnResizeDirection === 'ltr'
-            ? { borderRight: borderStyle }
-            : { borderLeft: borderStyle }
+          ? { borderInlineEnd: borderStyle }
           : borderStyle
             ? {
                 borderBottom:
@@ -286,9 +276,9 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
               tableCellProps.align === 'center'
                 ? 'text-center'
                 : tableCellProps.align === 'right'
-                  ? 'text-right flex-row-reverse'
+                  ? 'text-end flex-row-reverse'
                   : tableCellProps.align === 'left'
-                    ? 'text-left'
+                    ? 'text-start'
                     : tableCellProps.align === 'justify'
                       ? 'text-justify'
                       : 'text-start',
@@ -345,8 +335,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                   columnDef.Cell?.({
                     cell,
                     column,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    renderedCellValue: cell.renderValue() as any,
+                    renderedCellValue: cell.renderValue() as ReactNode,
                     row,
                     rowRef,
                     staticColumnIndex,
@@ -369,6 +358,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
           </td>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

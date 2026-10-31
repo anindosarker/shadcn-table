@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Separator } from '@/components/ui-radix/separator';
 import { cn } from '@/lib/utils';
@@ -17,31 +16,15 @@ const resizeHandleVariants = cva(
   {
     variants: {
       density: {
-        compact: '',
-        comfortable: '',
-        spacious: '',
-      },
-      direction: {
-        ltr: '',
-        rtl: '',
+        compact: '-me-2',
+        comfortable: '-me-4',
+        spacious: '-me-6',
       },
       display: {
-        true: '',
-        false: '',
+        true: 'inset-e-1',
+        false: 'inset-e-0',
       },
     },
-    compoundVariants: [
-      { density: 'compact', direction: 'ltr', class: '-mr-2' },
-      { density: 'comfortable', direction: 'ltr', class: '-mr-4' },
-      { density: 'spacious', direction: 'ltr', class: '-mr-6' },
-      { density: 'compact', direction: 'rtl', class: '-ml-2' },
-      { density: 'comfortable', direction: 'rtl', class: '-ml-4' },
-      { density: 'spacious', direction: 'rtl', class: '-ml-6' },
-      { direction: 'ltr', display: true, class: 'right-1' },
-      { direction: 'ltr', display: false, class: 'right-0' },
-      { direction: 'rtl', display: true, class: 'left-1' },
-      { direction: 'rtl', display: false, class: 'left-0' },
-    ],
   },
 );
 
@@ -60,7 +43,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
 
   // Only the handle being dragged follows the drag offset.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => {
         const isResizing = state.columnResizing.isResizingColumn === column.id;
         return {
@@ -69,14 +52,12 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           isResizing,
         };
       }}
-      source={table.store}
     >
       {({ deltaOffset, density, isResizing }) => (
         <div
           className={cn(
             resizeHandleVariants({
               density,
-              direction: columnResizeDirection,
               display: column.columnDef.columnDefType === 'display',
             }),
             header.subHeaders.length || columnResizeMode === 'onEnd'
@@ -105,13 +86,13 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           <Separator
             orientation="vertical"
             className={cn(
-              'z-[4] translate-x-1 touch-none select-none rounded-xs data-[orientation=vertical]:h-6 data-[orientation=vertical]:w-1',
+              'z-4 translate-x-1 touch-none select-none rounded-xs data-[orientation=vertical]:h-6 data-[orientation=vertical]:w-1',
               !isResizing && 'transition-all duration-150 ease-in-out',
               rest.className,
             )}
           />
         </div>
       )}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

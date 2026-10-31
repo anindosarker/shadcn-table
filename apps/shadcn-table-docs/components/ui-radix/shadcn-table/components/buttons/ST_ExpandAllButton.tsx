@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui-radix/button';
 import { cn } from '@/lib/utils';
@@ -39,8 +38,6 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
     },
     toggleAllRowsExpanded,
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Button.
   const {
     stExpandAllButtonProps,
   }: Pick<
@@ -58,7 +55,7 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
   // The expand getters walk the row model, so the selector lists every slice
   // that feeds it besides the expanded state.
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         columnFilterFns: state.columnFilterFns,
         columnFilters: state.columnFilters,
@@ -71,7 +68,6 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
         pagination: state.pagination,
         sorting: state.sorting,
       })}
-      source={table.store}
     >
       {({ density, isLoading }) => {
         const isAllRowsExpanded = getIsAllRowsExpanded();
@@ -119,6 +115,6 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };

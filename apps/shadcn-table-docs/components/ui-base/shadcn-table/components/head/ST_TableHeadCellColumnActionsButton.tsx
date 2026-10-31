@@ -34,9 +34,6 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
       localization,
     },
   } = table;
-  // table.options and the column def hold the part props tree-neutral
-  // (ST_NeutralPartPropTypes); the options as written (ST_TableOptions,
-  // ST_ColumnDef) type them for this tree's Button.
   const {
     stColumnActionsButtonProps,
   }: Pick<ST_TableOptions<TData>, 'stColumnActionsButtonProps'> = table.options;

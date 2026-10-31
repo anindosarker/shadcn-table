@@ -1,5 +1,4 @@
 import { type MouseEvent } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui-radix/button';
 import { cn } from '@/lib/utils';
@@ -44,8 +43,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
       renderDetailPanel,
     },
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Button.
   const {
     stExpandButtonProps,
   }: Pick<ST_TableOptions<TData>, 'stExpandButtonProps'> = table.options;
@@ -67,12 +64,11 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
   const detailPanel = !!renderDetailPanel?.({ row, table });
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         density: state.density,
         expanded: state.expanded,
       })}
-      source={table.store}
     >
       {({ density }) => {
         const isExpanded = row.getIsExpanded();
@@ -127,6 +123,6 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
           </ST_Tooltip>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
