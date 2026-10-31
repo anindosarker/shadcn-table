@@ -5,7 +5,7 @@ import { Button } from '@/components/ui-base/button';
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import { Popover } from '@/components/ui-base/popover';
 import { cn } from '@/lib/utils';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui-base/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import {
   type ButtonProps,

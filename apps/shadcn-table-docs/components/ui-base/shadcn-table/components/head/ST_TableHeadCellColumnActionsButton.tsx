@@ -10,7 +10,7 @@ import {
   type ST_TableOptions,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_ColumnActionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_ColumnActionMenu';
 
 const columnActionsButtonVariants = cva(

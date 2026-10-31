@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { Button } from '@/components/ui-aria/button';
 import { Popover } from '@/components/ui-aria/popover';
 import { cn } from '@/lib/utils';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import {
   type ButtonProps,

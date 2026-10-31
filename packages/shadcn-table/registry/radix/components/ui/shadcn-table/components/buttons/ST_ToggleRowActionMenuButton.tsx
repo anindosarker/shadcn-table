@@ -10,7 +10,7 @@ import {
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_RowActionMenu';
 

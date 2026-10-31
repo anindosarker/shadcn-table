@@ -6,7 +6,7 @@ import {
   type ST_Header,
   type ST_RowData,
 } from '@/components/ui-radix/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 
 export interface ST_TableHeadCellSortLabelProps<TData extends ST_RowData>
   extends ButtonProps {

@@ -1,7 +1,7 @@
 import { type MouseEvent, useState } from 'react';
 import { Button } from '@/components/ui-radix/button';
 import { type ButtonProps } from '@/components/ui-radix/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-radix/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_ShowHideColumnsMenu } from '@/components/ui-radix/shadcn-table/components/menus/ST_ShowHideColumnsMenu';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 

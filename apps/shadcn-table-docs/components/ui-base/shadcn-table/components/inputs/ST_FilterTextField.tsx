@@ -53,7 +53,7 @@ import {
   getValueAndLabel,
   parseFromValuesOrFunc,
 } from '@/components/ui-base/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/ST_Tooltip';
+import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_FilterOptionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_FilterOptionMenu';
 
 const filterTextFieldVariants = cva(

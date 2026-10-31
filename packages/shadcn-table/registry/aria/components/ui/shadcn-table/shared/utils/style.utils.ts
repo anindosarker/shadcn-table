@@ -1,6 +1,6 @@
 import { type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
-import { type ST_TooltipProps } from '@/components/ui/shadcn-table/ST_Tooltip';
+import { type ST_TooltipProps } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   type ST_Column,
   type ST_Header,
