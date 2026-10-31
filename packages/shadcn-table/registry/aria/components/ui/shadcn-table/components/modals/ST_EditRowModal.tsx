@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -41,8 +40,6 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
     setCreatingRow,
     setEditingRow,
   } = table;
-  // table.options holds the part props tree-neutral (ST_NeutralPartPropTypes);
-  // the options as written (ST_TableOptions) type them for this tree's Dialog.
   const {
     stCreateRowModalProps,
     stEditRowDialogProps,
@@ -52,12 +49,11 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
   > = table.options;
 
   return (
-    <Subscribe
+    <table.Subscribe
       selector={(state) => ({
         creatingRow: state.creatingRow,
         editingRow: state.editingRow,
       })}
-      source={table.store}
     >
       {({ creatingRow, editingRow }) => {
         const row = (creatingRow ?? editingRow) as ST_Row<TData>;
@@ -127,6 +123,6 @@ export const ST_EditRowModal = <TData extends ST_RowData = ST_RowData>({
           </Dialog>
         );
       }}
-    </Subscribe>
+    </table.Subscribe>
   );
 };
