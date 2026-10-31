@@ -422,7 +422,7 @@ const checks = {
   '/docs/api/st-hooks': async ({ page, check }) => {
     await switcher(page, 'ST Hooks', 2, check);
     const n = await page.locator('article h3').count();
-    check('hook headings', n === 7, String(n));
+    check('hook headings', n === 8, String(n));
   },
 };
 

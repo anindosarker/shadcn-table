@@ -5,10 +5,12 @@ import {
   ST_TableBodyCellValue,
   ST_TablePagination,
   ST_TableProvider,
+  ST_ToggleFullScreenButton,
   ST_ToolbarAlertBanner,
   flexRender,
   type ST_ColumnDef,
   useShadcnTable,
+  useST_FullScreenContainer,
 } from '@/components/ui/shadcn-table';
 import {
   Table,
@@ -60,21 +62,41 @@ const Example = () => {
     paginationDisplayMode: 'pages',
   });
 
+  //Esc handler, tabIndex and full-screen classes for your own wrapper, the same ones `ST_TableLayout` uses
+  const { containerProps, isFullScreen } = useST_FullScreenContainer(table);
+
   return (
     <ST_TableProvider table={table}>
-      <div className="my-8 flex flex-col">
+      <div
+        {...containerProps}
+        className={[
+          'flex flex-col bg-background',
+          isFullScreen ? 'overflow-auto' : 'my-8',
+          containerProps.className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
         <h4>My Custom Headless Table</h4>
         <div className="flex items-center justify-between">
           {/**
            * Use ST components along side your own markup.
            * They read the table from the `ST_TableProvider` around them.
            */}
-          <ST_GlobalFilterTextField />
+          <div className="flex items-center gap-2">
+            <ST_GlobalFilterTextField />
+            <ST_ToggleFullScreenButton />
+          </div>
           <ST_TablePagination />
         </div>
         {/* Your own markup with the shadcn Table parts, driven by the power of TanStack Table */}
         <Table>
           <TableHeader>
+            {/**
+             * With `enableColumnResizing`, the default `layoutMode` is `grid-no-grow`,
+             * which adds the `st-row-spacer` display column to the headers.
+             * Render it for correct column widths, or set `layoutMode: 'grid'`.
+             */}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (

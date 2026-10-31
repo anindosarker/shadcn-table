@@ -196,8 +196,8 @@ const checks = {
     const w = await example(page, 'disable-column-hiding', check);
     const menu = await openMenu(page, w, 'Show/Hide columns');
     check(
-      'disable-column-hiding: column switches',
-      (await count(menu, '[role="switch"]')) > 0,
+      'disable-column-hiding: column checkbox rows',
+      (await count(menu, '[role="menuitemcheckbox"]')) > 0,
     );
     await page.keyboard.press('Escape');
   },

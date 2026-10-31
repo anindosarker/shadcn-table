@@ -1,8 +1,9 @@
 # 08: docs install UI, tracker
 
-Status: running
+Status: done (385265b1)
 Branch `v0.7/docs-install`, worktree docs-install, PR #71
 S5: branch `v0.7/docs-install-2`, worktree docs-install-2, PR #75
+S5 milestone 5: branch `v0.7/docs-install-3`, worktree docs-install-3, PR #76
 Gates:
 - S4:
 - `pnpm --filter shadcn-table-docs types:check` and `eslint --max-warnings 0` on the milestone files at 970cf469: green
@@ -44,6 +45,30 @@ Gates:
 - agent-browser on `next start` 5345 at 38c6b5f7 (covers the 0a54ba13 review fix in `icon-library-selector.tsx`), verifier: Icon library to Tabler gives `/r/base/shadcn-table-tabler.json` in the add and the `--overwrite` update commands; Short form on shows the `registries` entry with `@shadcn-table` and `add @shadcn-table/shadcn-table-tabler`; "Created with shadcn create" renders; console and page errors zero: pass. Capture `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table-shadcn-react-table/e001baee-c356-4fbd-b566-06e1457b6659/scratchpad/v08/install-aria.png`
 - Acceptance (1.2) at 38c6b5f7, verifier: build exit 0 (0a54ba13, builder), `check-pages.mjs` exit 0 for all three bases (all clusters, above); install page server HTML holds `shadcn-table-tabler.json` (2), `@shadcn-table/` (2), "Created with shadcn create" (4); all 40 example pages under `content/docs/examples` (index excluded) serve the header and toolbar Base select (2 or more `aria-label="Base"` each): pass. The headless example clause (1.6.7, milestone 5) is not applicable in this run, pending S2
 
+- S5 milestone 5:
+- `pnpm --filter shadcn-table-docs types:check`, `eslint --max-warnings 0` on the three `custom-headless/TS.tsx` at 458d7996: green
+- `pnpm --filter shadcn-table-docs build` at 458d7996: red (`custom-headless/TS.tsx: project import "@/lib/utils" has no registry mapping`), fixed in bb89e856
+- `pnpm --filter shadcn-table-docs types:check`, `lint` (0 errors, 9 existing example warnings), `build`, `pnpm check:bases`, concurrent, at bb89e856: green, `git status` clean after
+- `node lib/example-variants.mjs` at bb89e856: 115 examples, 216 files per base; `example-groups/map.tsx` unchanged
+- `check-pages.mjs d --base base|radix|aria`, three `next start` concurrent (ports 5346, 5347, 5348, `NEXT_DIST_DIR=.next`) at bb89e856: green (252 passed, 0 failed each)
+- `pnpm test:base` at bb89e856: green (71 files, 469 tests) on the second run; the first failed 20 story files on `Failed to import .storybook/vitest.setup.ts: SyntaxError` (vite import flake, no package change)
+- agent-browser on `next start` 5346 to 5348 at bb89e856, `/docs/examples/custom-headless`, real mouse click on the example's Toggle full screen, then Esc: base and radix enter full screen (`fixed inset-0`, `tabindex=-1`) and Esc leaves it: pass; aria enters full screen, Esc with focus in the search field or on the wrapper leaves it, Esc with focus on the toggle button does not (same on `/docs/examples/basic` with `ST_TableLayout`, see Attention). Captures `/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table-shadcn-react-table/e001baee-c356-4fbd-b566-06e1457b6659/scratchpad/v08m5/` (`h<base>-full.png`, `h<base>-esc.png`, `baria-*.png`)
+- Acceptance (1.2) at bb89e856, superseded by the review fix block below: cluster a was not rerun here (`st-hooks.mdx` is cluster a, `a.mjs` asserted 7 hook headings, red at bb89e856 with 8); the original clause claimed `38c6b5f7..bb89e856` touched clusters d and c only, which was wrong; install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+- Review fix (e81a216c `a.mjs` asserts 8 hook headings; 28d26732 headless wrapper classes via `filter(Boolean).join(' ')` in base, radix, aria):
+- `pnpm --filter shadcn-table-docs types:check`, `lint` (0 errors, 9 existing example warnings), `pnpm check:bases` at 28d26732: green
+- `pnpm --filter shadcn-table-docs build` at 28d26732: green, `git status` clean after
+- `check-pages.mjs a` and `d`, `--base base|radix|aria`, three `next start` concurrent (ports 5346, 5347, 5348, `NEXT_DIST_DIR=.next`) at 28d26732: green (a 302 passed, 0 failed each, `PASS /docs/api/st-hooks @1440 hook headings 8`; d 252 passed, 0 failed each)
+- `pnpm test:base` at bb89e856 reused: `bb89e856..28d26732` touches only docs example sources, `a.mjs` and `.ai/`, none in the package test tree
+- Acceptance (1.2) at 28d26732, superseded by the 92e811c5 block below: its clause "b, c, e at 38c6b5f7, untouched since" was false. `38c6b5f7..28d26732` holds the spec 10 merge c318a189, whose 9f7905a1 (D27) turned the Show/Hide rows into checkbox menu items in every `components/ui-*` copy; `check-pages.mjs b --base base` and `--base radix` at 28d26732 were red on `/docs/guides/column-hiding` (`b.mjs:200` counted `[role="switch"]`), a spec 10 cause, not this branch's diff (`56eaad0e..28d26732` touches cluster a and d pages only)
+- Review fix 2 (92e811c5 `b.mjs` column-hiding check counts `[role="menuitemcheckbox"]`):
+- `pnpm exec eslint --max-warnings 0 scripts/page-checks/b.mjs` at 92e811c5: green
+- `check-pages.mjs b`, `c`, `e`, `--base base|radix|aria`, nine runs concurrent against one `next start` (port 5349, `NEXT_DIST_DIR=.next`, the 28d26732 build; `28d26732..92e811c5` touches only `b.mjs` and `.ai/`, neither in the build) at 92e811c5: green (b 268 passed, 0 failed each, `PASS /docs/guides/column-hiding @1440 disable-column-hiding: column checkbox rows`; c 285 each; e 596 each)
+- Acceptance (1.2) at 92e811c5: build exit 0 (28d26732, reused, `28d26732..92e811c5` touches only `b.mjs` and `.ai/`); `check-pages.mjs` exit 0 for all three bases, every cluster: a and d at 28d26732 (`28d26732..92e811c5` touches no a or d check or page), b, c, e at 92e811c5 (above); install page and example Base select clauses unchanged since 38c6b5f7; headless clause: example spreads `containerProps` and comments the spacer, page states both: pass
+- S5 milestone 5 verifier (HEAD 385265b1; `92e811c5..HEAD` touches only the tracker, `28d26732..HEAD` only `b.mjs` and `.ai/`): reused, not rerun: types:check, lint, build, `pnpm check:bases` at 28d26732 (builder); `check-pages.mjs` a and d at 28d26732, b, c and e at 92e811c5, all three bases (review fixer); `pnpm test:base` at bb89e856 (builder); agent-browser Esc step at bb89e856 (builder); install page agent-browser at 38c6b5f7 (S5 verifier; `38c6b5f7..HEAD` touches no install page, selector or `lib/install.ts` file). `test:radix`, `test:aria` and the Storybook builds are not 2.2 gates of this spec; CI on PR #76 runs them
+- 2.2 S5 grep `NamespaceCommand` and S4 greps (`supportedLocales|shadcn-table-locale-de.json   #`, `@st/|@st\b`) at 385265b1, verifier: empty
+- Local rewrite check, `next start` (port 5350, `NEXT_DIST_DIR=.next`, the 28d26732 build), `curl /r/<base>-nova/shadcn-table.json` compared with `public/r/<base>/shadcn-table.json`, base, radix, aria at 385265b1, verifier: identical (2282, 2254, 2288 bytes)
+- Acceptance (1.2) at 385265b1, verifier: build exit 0 (28d26732, reused); `check-pages.mjs` exit 0 for all three bases, every cluster (a, d at 28d26732; b, c, e at 92e811c5, reused); install page server HTML holds `shadcn-table-tabler.json` (2), `@shadcn-table/` (2), "Created with shadcn create" (4); all 40 example pages under `content/docs/examples` (index excluded) serve the header and toolbar Base select (2 or more `aria-label="Base"` each, 0 below); `/docs/examples/custom-headless` serves `containerProps` and the spacer note: pass
+
 ## Attention
 
 - Review nit on `install-command.tsx:187` (the `edition` branch duplicates the fallthrough) declined: spec 08 line 180 has the default `InstallCommand` render `editionAddCommand`, and dropping the branch leaves that exported helper with no caller. Owner: accept, or amend the spec and drop one path.
@@ -54,16 +79,21 @@ Gates:
 - PR #71 Release impact CHANGELOG box left unticked (it applies to `release:patch|minor|major` only); the Changes section now states the Spec 08 lines are present under `release:skip`.
 - Dev console on React Aria shows `<Focusable> child must have an interactive ARIA role.` and a missing aria-label warning from the rendered library, with the header select alone too (existing, not from S4); prod `check-pages` reports no console errors. Owner: library side (S1 or S2) or accept.
 - No harness `Claude-Session:` reminder reached the S5 verifier; its commit has no `Claude-Session:` trailer and the PR #75 body no session line (the S5 builder commits carry none either). Owner: add the run's session line if one applies.
-- Milestone 5 pending S2: useST_FullScreenContainer not on claude/review yet. The `### Spec 08` Docs line for S5 omits "the headless example documents the spacer column and the full-screen container hook"; the main session adds that clause with milestone 5.
+- Milestone 5 pending S2: useST_FullScreenContainer not on claude/review yet. The `### Spec 08` Docs line for S5 omits "the headless example documents the spacer column and the full-screen container hook"; the main session adds that clause with milestone 5. Resolved: milestone 5 on `v0.7/docs-install-3` (PR #76) adds the clause.
 - S5 page checks for the install page and the Customize Icons guide went into `a.mjs` and `b.mjs`, where those routes already live, not `c.mjs` as 2.1.4 says (c.mjs holds guides from editing onward).
 - The `IconLibraryProvider` sits in `app/docs/layout.tsx`, so the pick also carries across client navigation between docs pages (no storage; a reload resets to Lucide). `<InstallCommand overwrite />` in `guides/best-practices.mdx` gets the icon select and Short form too.
 - The Short form switch is per command (not shared like the icon pick) and applies to every non-locale `InstallCommand`; `registryAddCommand` (the `shadcn registry add` form) is removed from `lib/install.ts` with `NamespaceCommand`, its last user; `agents.mdx` keeps its static `registry add` block.
 - `DocsLocale` gained a fourth field, `example` (the example slug), because the example folders are not `localization-i18n-${code.toLowerCase()}` for `pt-BR`, `sr-Cyrl-RS`, `sr-Latn-RS`; renaming them would rename registry items.
 - CHANGELOG Spec 08 has an extra `Docs` line for the `@st` to `@shadcn-table` rename (not a Breaking line: the namespace name is local to a consumer's `components.json`, `@st` keeps working). `packages/shadcn-table/scripts/registry/hosted.mjs:16-17` still names `@st` in a comment (packages/ is out of S4 scope).
+- React Aria: Esc does not leave full screen while focus stays on `ST_ToggleFullScreenButton` after a mouse click, in the headless example and in `ST_TableLayout` (`/docs/examples/basic`); Esc with focus elsewhere in the container works, and base and radix work with focus on the button. The React Aria button or its tooltip trigger stops the Escape keydown before the container's `onKeyDown`. Library side (packages/, out of spec 08 scope); the `HeadlessFullScreen` story focuses the wrapper before Esc, so it does not cover this. Owner: follow-up in the aria tree.
+- The headless example had no Esc handling or full-screen classes to drop (the spec's "drops its own" did not apply); it now gains `ST_ToggleFullScreenButton` next to the search field so full screen is reachable, and keeps its own wrapper classes in a `filter(Boolean).join(' ')` list (`flex flex-col bg-background`, `my-8` inline, `overflow-auto` in full screen) because example sources are registry items and `@/lib/utils` (`cn`) has no registry mapping. The `st-hooks.mdx` snippet uses `cn` (consumer code). The milestone 5 MDX link to the hook is `/docs/api/st-hooks#usest_fullscreencontainer`.
+- No harness `Claude-Session:` or attribution reminder reached this run; commits and the PR #76 body carry none (A5).
+- `b.mjs` (cluster b, column-hiding) is outside spec 08's own pages; the review fixer updated its selector to the D27 checkbox rows so Acceptance is green at HEAD, and `claude/review` keeps the red check until PR #76 merges. No harness `Claude-Session:` reminder reached the fixer; 92e811c5 carries no trailer.
+- No harness `Claude-Session:` or attribution reminder reached the milestone 5 verifier; its commit and the PR #76 body carry none (A5). The verifier reused the recorded builder and fixer gates per P4 and did not rerun `test:radix`, `test:aria` or the Storybook builds (not spec 08 2.2 gates; CI on PR #76 runs them).
 
 - Milestone 01 locale list and selector: done (970cf469)
 - Milestone 02 toolbar base select: done (8d8ef490)
 - Milestone 03 guide, README, minimums, namespace: done (0ed09813)
 - Milestone 04 edition select, Short form, create section, icons guide: done (2ec2c084)
-- Milestone 05 headless example: pending S2
-- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7, headless clause pending S2
+- Milestone 05 headless example: done (bb89e856, review fixes 28d26732)
+- Milestone 06 S5 gates: done for milestone 4 (2ec2c084); verifier gates and Acceptance at 38c6b5f7; milestone 5 gates and Acceptance at 92e811c5; milestone 5 verifier and Acceptance at 385265b1
