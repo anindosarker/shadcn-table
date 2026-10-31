@@ -106,8 +106,6 @@ Rules the expedition skill reads for this project. Cite as `(P<n>)`. Numbers are
 
 ## Agent rules
 
-Every sub-agent prompt says "read `.ai/expedition/process.md`, section Agent rules" instead of repeating them.
-
 ## P35 Work only in the worktree and branch named in the task; never the main checkout or another worktree
 
 ## P36 Never kill or use ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start
