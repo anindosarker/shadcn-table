@@ -13,6 +13,7 @@ Gates:
 - Milestone 01 config switch and baseline: done (8b493528)
 - Lead step: 03 atoms (ba367b60), 05 registries and `getPlatform` (d5e8abc7); set worktrees `library-sweep-{a,b,c,d}` on `v0.7/library-sweep-{a,b,c,d}` cut at the lead head
 - Set A: 90487682
+- Set B: 77a0eba8 (`eslint --max-warnings 0` and `prettier --check` on `components/{body,head,footer,table}` of the three bases: 0; `tsc:baseui`, `tsc:radix`, `tsc:aria`: green; `check:tailwind`: 0 sites in set B per base)
 
 Lint after the switch (`lint -f json` at 8b493528, 719 problems: library 691, stories 28, other 0)
 
@@ -86,3 +87,5 @@ Foundation: branch `v0.7/foundation`, worktree `foundation`, PR #70
 - Set A: Tailwind 4.3.3 canonicalizes `start-0` to `inset-s-0`, so `check:tailwind` fails on D31's `start-*`; `style.utils.ts` uses `data-[pinned=true]:before:inset-s-0` (same CSS, logical). Sets B and C will meet the same on their `start-0` and `end-0` sites.
 - Set A: `useST_Rows` no longer memoizes the rows: a memo on `getST_Rows(table)` with the slices as dependencies fails `exhaustive-deps` (unnecessary dependencies), and with `table` alone it would go stale when the body re-renders from a subscription. The ten slice subscriptions stay, the rows are read on each body render; `ST_TableBodyRow` is not memoized, so the re-render set is unchanged (RenderCounts green). Revert means a reasoned `exhaustive-deps` disable on the memo list, +1 per base.
 - Set A: the virtualizer hooks call every hook unconditionally (D4), so their `useSelector` calls select a constant while virtualization is off; without that a density change re-rendered every body cell (RenderCounts `Profiled Thousand Rows`).
+- Set B: Tailwind 4.3.3 canonicalizes `end-*` to `inset-e-*` (`end-1 -> inset-e-1` from `check:tailwind`), so the resize handle and the sort badge use `inset-e-1`, `inset-e-0`, `inset-e-[14%]` instead of 06 1.6.4's `end-*`; same CSS (`inset-inline-end`). Sets A and C (`start-0`, `end-0`) meet the same rule.
+- Set B: the body cell skeleton width is now drawn once at mount in the `useState` initializer (02 1.6.6, D8), not when loading first turns on; a column resized before loading starts keeps the mount-time width.
