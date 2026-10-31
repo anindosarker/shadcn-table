@@ -171,9 +171,17 @@ export const useST_Effects = <TData extends ST_RowData>(
         setSorting(() => appliedSort || []);
       }
     };
-    applyRanking(table.atoms.globalFilter.get());
-    const globalFilterSubscription =
-      table.atoms.globalFilter.subscribe(applyRanking);
+    let previousGlobalFilter: unknown = table.atoms.globalFilter.get();
+    applyRanking(previousGlobalFilter);
+    // The atom notifies for an unchanged `undefined` value too, which would
+    // restore a sort the user just cleared.
+    const globalFilterSubscription = table.atoms.globalFilter.subscribe(
+      (globalFilter) => {
+        if (Object.is(previousGlobalFilter, globalFilter)) return;
+        previousGlobalFilter = globalFilter;
+        applyRanking(globalFilter);
+      },
+    );
     return () => {
       sortingSubscription.unsubscribe();
       globalFilterSubscription.unsubscribe();

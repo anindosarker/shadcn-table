@@ -43,6 +43,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import {
   getColumnFilterInfo,
+  isNumberColumn,
   useDropdownOptions,
 } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import {
@@ -206,10 +207,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           if (isRangeFilter) {
             column.setFilterValue(
               (old: Array<FilterInputValue | undefined>) => {
-                const newFilterValues = old ?? ['', ''];
-                newFilterValues[rangeFilterIndex as number] =
-                  newValue ?? undefined;
-                return newFilterValues;
+                const next = Array.isArray(old) ? [...old] : ['', ''];
+                next[rangeFilterIndex as number] = newValue ?? undefined;
+                return next;
               },
             );
           } else {
@@ -262,9 +262,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
     } else if (isRangeFilter) {
       setFilterValue('');
       column.setFilterValue((old: [string | undefined, string | undefined]) => {
-        const newFilterValues = (Array.isArray(old) && old) || ['', ''];
-        newFilterValues[rangeFilterIndex as number] = undefined;
-        return newFilterValues;
+        const next = Array.isArray(old) ? [...old] : ['', ''];
+        next[rangeFilterIndex as number] = undefined;
+        return next;
       });
     } else if (isAutocompleteFilter) {
       setAutocompleteValue(null);
@@ -607,6 +607,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
             </Combobox>
           ) : (
             <InputGroupInput
+              {...(isNumberColumn(column, table)
+                ? { inputMode: 'decimal', type: 'number' }
+                : undefined)}
               {...commonTextFieldProps}
               onChange={handleTextFieldChange}
               onClick={(e) => e.stopPropagation()}
