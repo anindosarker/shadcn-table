@@ -174,6 +174,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 </RadioGroup>
               ) : (
                 <ST_Checkbox
+                  indeterminateIcon={table.options.icons.IndeterminateIcon}
                   {...commonProps}
                   // React Aria keeps `isIndeterminate` as its own flag beside
                   // `isSelected`, so it goes after the spread.
