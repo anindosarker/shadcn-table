@@ -126,21 +126,17 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       title: undefined,
     }) satisfies CheckboxProps | RadioProps;
 
-  // The fields a radio shares with the checkbox props.
-  const getRadioProps = ({
-    'aria-label': ariaLabel,
-    className,
-    disabled,
-    onClick,
-  }: ReturnType<typeof getCommonProps>): ComponentProps<
-    typeof RadioGroupItem
-  > => ({
-    'aria-label': ariaLabel,
-    className,
-    disabled,
-    onClick,
-    value: 'on',
-  });
+  // The radio takes every checkbox prop except the checkbox-only `checked` and
+  // `title`; RadioGroup carries the checked state.
+  const getRadioProps = (commonProps: ReturnType<typeof getCommonProps>) =>
+    ({
+      ...Object.fromEntries(
+        Object.entries(commonProps).filter(
+          ([key]) => key !== 'checked' && key !== 'title',
+        ),
+      ),
+      value: 'on',
+    }) as ComponentProps<typeof RadioGroupItem>;
 
   return (
     <table.Subscribe
