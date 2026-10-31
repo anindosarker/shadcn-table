@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, useRef, useState } from 'react';
+import { type ComponentPropsWithRef, useRef } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,9 +67,6 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   } = table;
   const { column } = header;
   const { columnDef } = column;
-
-  const [filterMenuAnchorEl, setFilterMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
 
   const handleClearSort = () => {
     column.clearSorting();
@@ -261,11 +258,12 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
                             {filterByColumnLabel}
                           </DropdownMenuSubTrigger>
                           <ST_FilterOptionMenu
-                            anchorEl={filterMenuAnchorEl}
+                            // The submenu owns its open state.
+                            anchorEl={null}
                             header={header}
                             isSubMenu
                             onSelect={handleFilterByColumn}
-                            setAnchorEl={setFilterMenuAnchorEl}
+                            setAnchorEl={() => {}}
                           />
                         </DropdownMenuSub>
                       ) : (

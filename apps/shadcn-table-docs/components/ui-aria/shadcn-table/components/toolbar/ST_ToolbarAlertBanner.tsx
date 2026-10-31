@@ -4,12 +4,13 @@ import { Button } from '@/components/ui-aria/button';
 import { Collapsible, CollapsibleContent } from '@/components/ui-aria/collapsible';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { Fragment, type MouseEvent } from 'react';
+import { Fragment, type MouseEvent, type ReactNode } from 'react';
 import {
   type ST_RowData,
   type ST_TableOptions,
 } from '@/components/ui-aria/shadcn-table/types';
 import { getST_SelectAllHandler } from '@/components/ui-aria/shadcn-table/shared/utils/row.utils';
+import { useCollapsingChildren } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_SelectCheckbox } from '@/components/ui-aria/shadcn-table/components/inputs/ST_SelectCheckbox';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
@@ -30,6 +31,36 @@ const toolbarAlertBannerVariants = cva(
     },
   },
 );
+
+// A stacked banner keeps its alert until the collapse transition ends; an
+// overlay banner has no transition and drops it at once.
+const AlertBannerContent = ({
+  animated,
+  children,
+  isExpanded,
+}: {
+  animated: boolean;
+  children: ReactNode;
+  isExpanded: boolean;
+}) => {
+  const { onTransitionEnd, showChildren } = useCollapsingChildren(
+    isExpanded,
+    animated,
+  );
+
+  return (
+    <CollapsibleContent
+      className={
+        animated
+          ? 'h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none'
+          : undefined
+      }
+      onTransitionEnd={onTransitionEnd}
+    >
+      {showChildren && children}
+    </CollapsibleContent>
+  );
+};
 
 export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
   stackAlertBanner,
@@ -155,76 +186,70 @@ export const ST_ToolbarAlertBanner = <TData extends ST_RowData>({
 
         return (
           <Collapsible isExpanded={isExpanded}>
-            {/* React Aria keeps a collapsed panel's children mounted. */}
-            <CollapsibleContent
-              className={
-                stackAlertBanner
-                  ? 'h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none'
-                  : undefined
-              }
+            <AlertBannerContent
+              animated={!!stackAlertBanner}
+              isExpanded={isExpanded}
             >
-              {isExpanded && (
-                <Alert
-                  {...alertProps}
-                  className={cn(
-                    toolbarAlertBannerVariants({
-                      bottomOffset:
-                        !stackAlertBanner &&
-                        positionToolbarAlertBanner === 'bottom',
-                    }),
-                    alertProps?.className,
-                  )}
+              <Alert
+                {...alertProps}
+                className={cn(
+                  toolbarAlertBannerVariants({
+                    bottomOffset:
+                      !stackAlertBanner &&
+                      positionToolbarAlertBanner === 'bottom',
+                  }),
+                  alertProps?.className,
+                )}
+              >
+                <div
+                  className="col-start-2"
+                  style={{
+                    maxWidth: `calc(${
+                      tableLayoutRef.current?.clientWidth ?? 360
+                    }px - 1rem)`,
+                    width: '100%',
+                  }}
                 >
-                  <div
-                    className="col-start-2"
-                    style={{
-                      maxWidth: `calc(${
-                        tableLayoutRef.current?.clientWidth ?? 360
-                      }px - 1rem)`,
-                      width: '100%',
-                    }}
-                  >
-                    {renderToolbarAlertBannerContent?.({
-                      groupedAlert,
-                      selectedAlert,
-                      table,
-                    }) ?? (
-                      <>
-                        {alertProps?.title && (
-                          <AlertTitle>{alertProps.title}</AlertTitle>
+                  {renderToolbarAlertBannerContent?.({
+                    groupedAlert,
+                    selectedAlert,
+                    table,
+                  }) ?? (
+                    <>
+                      {alertProps?.title && (
+                        <AlertTitle>{alertProps.title}</AlertTitle>
+                      )}
+                      <div
+                        className={cn(
+                          'flex flex-col',
+                          positionToolbarAlertBanner !== 'head-overlay'
+                            ? 'px-4 py-2'
+                            : density === 'spacious'
+                              ? 'px-5 py-3'
+                              : density === 'comfortable'
+                                ? 'px-3 py-2'
+                                : 'px-2 py-1',
                         )}
-                        <div
-                          className={cn(
-                            'flex flex-col',
-                            positionToolbarAlertBanner !== 'head-overlay'
-                              ? 'px-4 py-2'
-                              : density === 'spacious'
-                                ? 'px-5 py-3'
-                                : density === 'comfortable'
-                                  ? 'px-3 py-2'
-                                  : 'px-2 py-1',
-                          )}
-                        >
-                          {alertProps?.children}
-                          {alertProps?.children &&
-                            (selectedAlert || groupedAlert) && <br />}
-                          <div className="flex">
-                            {enableRowSelection &&
-                              enableSelectAll &&
-                              positionToolbarAlertBanner === 'head-overlay' && (
-                                <ST_SelectCheckbox />
-                              )}{' '}
-                            {selectedAlert}
-                          </div>
-                          {selectedAlert && groupedAlert && <br />}
-                          {groupedAlert}
+                      >
+                        {alertProps?.children}
+                        {alertProps?.children &&
+                          (selectedAlert || groupedAlert) && <br />}
+                        <div className="flex">
+                          {enableRowSelection &&
+                            enableSelectAll &&
+                            positionToolbarAlertBanner === 'head-overlay' && (
+                              <ST_SelectCheckbox />
+                            )}{' '}
+                          {selectedAlert}
                         </div>
-                      </>
-                    )}
-                  </div>
-                </Alert>
-              )}
-            </CollapsibleContent>
+                        {selectedAlert && groupedAlert && <br />}
+                        {groupedAlert}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </Alert>
+            </AlertBannerContent>
           </Collapsible>
         );
       }}
