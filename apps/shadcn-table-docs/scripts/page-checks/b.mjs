@@ -267,7 +267,22 @@ const checks = {
     );
   },
 
-  '/docs/guides/customize-icons': async ({ page, check }) => {
+  '/docs/guides/customize-icons': async ({ page, check, base }) => {
+    // Icon editions: the update form of the edition command, Lucide first.
+    const edition = page.locator('article pre:visible', {
+      hasText: `/r/${base}/shadcn-table.json --overwrite`,
+    });
+    check(
+      'edition command',
+      (await edition.count()) === 1,
+      String(await edition.count()),
+    );
+    check(
+      'icon library select',
+      (await page
+        .locator('article button[aria-label="Icon library"]')
+        .count()) === 1,
+    );
     await propTable(page, '#relevant-props-table', check);
     const w = await example(page, 'font-awesome-icons', check);
     check(
