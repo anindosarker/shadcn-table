@@ -44,6 +44,9 @@ date; merging it publishes the section as the GitHub release notes.
 #### Spec 11
 
 - Changed: The package adds the Tabler, Phosphor, Hugeicons and Remix Icon React packages as development dependencies for the icon sets.
+- Added: Icon editions: `shadcn-table-tabler`, `shadcn-table-phosphor`, `shadcn-table-hugeicons` and `shadcn-table-remixicon` install the table with that icon library instead of Lucide; `shadcn-table` stays the Lucide edition. Switch later with the edition item and `--overwrite`.
+- Changed: `ST_Icons` values are typed `ComponentType<ST_IconProps>`; the table's own files import icons through `icons.ts` only; the checkbox's indeterminate dash is the new `IndeterminateIcon` key.
+- Changed: The library files without an icon map are the new `shadcn-table-core` item; `shadcn-table`, the icon set items, the locale items and the example items depend on it.
 
 ## 0.6.4 - 2026-10-29
 

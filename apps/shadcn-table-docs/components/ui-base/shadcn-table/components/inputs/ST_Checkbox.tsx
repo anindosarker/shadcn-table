@@ -1,5 +1,5 @@
 import { type ComponentPropsWithRef } from 'react';
-import { MinusIcon } from 'lucide-react';
+import { ST_Default_Icons } from '@/components/ui-base/shadcn-table/icons';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui-base/checkbox';
 
@@ -19,7 +19,7 @@ const indeterminateClassName =
 export const ST_Checkbox = ({ className, ...props }: ST_CheckboxProps) => (
   <span className="relative inline-flex">
     <Checkbox className={cn(indeterminateClassName, className)} {...props} />
-    <MinusIcon
+    <ST_Default_Icons.IndeterminateIcon
       aria-hidden
       className="pointer-events-none absolute inset-0 m-auto hidden size-3.5 text-primary-foreground peer-data-disabled:opacity-50 peer-data-indeterminate:block"
     />
