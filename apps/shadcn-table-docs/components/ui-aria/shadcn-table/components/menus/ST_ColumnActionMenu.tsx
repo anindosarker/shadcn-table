@@ -116,12 +116,17 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
     }
   };
 
-  // React Aria restores focus to the opener only while focus is still inside
-  // the closing menu, so focusing the rendered filter input first keeps it.
+  // "Filter by column" hands focus to the column's filter input. React Aria
+  // menus have no close-focus hook, and the open menu keeps the rest of the
+  // page inert, so the filter row shows and the menu closes in one commit
+  // first. The menu restores focus to the opener a frame later only when
+  // focus fell to the body, so the focused input keeps it.
   const handleFilterByColumn = () => {
-    flushSync(() => setShowColumnFilters(true));
+    flushSync(() => {
+      setShowColumnFilters(true);
+      setAnchorEl(null);
+    });
     filterInputRefs.current?.[`${column.id}-0`]?.focus();
-    setAnchorEl(null);
   };
 
   const handleShowAllColumns = () => {
