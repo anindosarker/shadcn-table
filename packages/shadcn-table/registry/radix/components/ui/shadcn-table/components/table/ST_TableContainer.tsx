@@ -8,15 +8,13 @@ import {
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { type DivProps } from '@/components/ui/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Table } from '@/components/ui/shadcn-table/components/table/ST_Table';
 import { ST_TableLoadingOverlay } from '@/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay';
 import { ST_CellActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_CellActionMenu';
 import { ST_EditRowModal } from '@/components/ui/shadcn-table/components/modals/ST_EditRowModal';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -57,27 +55,16 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
   // virtualizers pick up their scroll element on mount.
   const [, setContainerNode] = useState<HTMLDivElement | null>(null);
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // tableContainerRef null while the children's layout effects run.
-  const userRef = useRef(tableContainerProps.ref);
-  userRef.current = tableContainerProps.ref;
+  const composedRef = useST_ComposedRef(
+    tableContainerRef,
+    tableContainerProps.ref,
+  );
   const attachRef = useCallback(
     (node: HTMLDivElement) => {
-      tableContainerRef.current = node;
       setContainerNode(node);
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        tableContainerRef.current = null;
-      };
+      return composedRef(node);
     },
-    [tableContainerRef],
+    [composedRef],
   );
 
   const toolbarObserverRef = useRef<{

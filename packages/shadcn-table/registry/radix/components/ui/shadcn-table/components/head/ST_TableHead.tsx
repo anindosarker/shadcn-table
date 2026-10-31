@@ -1,4 +1,3 @@
-import { useCallback, useRef } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -6,13 +5,11 @@ import {
   type ST_RowData,
   type TableHeadProps,
 } from '@/components/ui/shadcn-table/types';
-import {
-  assignRef,
-  parseFromValuesOrFunc,
-} from '@/components/ui/shadcn-table/shared/utils/utils';
+import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_TableHeadRow } from '@/components/ui/shadcn-table/components/head/ST_TableHeadRow';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 export interface ST_TableHeadProps extends TableHeadProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
@@ -46,27 +43,7 @@ export const ST_TableHead = <TData extends ST_RowData>({
     ...rest,
   };
 
-  // The user's ref is read through a ref so the callback keeps one identity:
-  // a new callback each render would detach and reattach the node, leaving
-  // tableHeadRef null while the children's layout effects run.
-  const userRef = useRef(tableHeadProps.ref);
-  userRef.current = tableHeadProps.ref;
-  const attachRef = useCallback(
-    (node: HTMLTableSectionElement) => {
-      tableHeadRef.current = node;
-      const ref = userRef.current;
-      const cleanup = assignRef(ref, node);
-      return () => {
-        if (typeof cleanup === 'function') {
-          cleanup();
-        } else {
-          assignRef(ref, null);
-        }
-        tableHeadRef.current = null;
-      };
-    },
-    [tableHeadRef],
-  );
+  const attachRef = useST_ComposedRef(tableHeadRef, tableHeadProps.ref);
 
   const isHeadOverlay = positionToolbarAlertBanner === 'head-overlay';
 
