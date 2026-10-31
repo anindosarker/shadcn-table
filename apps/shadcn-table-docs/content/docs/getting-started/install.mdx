@@ -9,7 +9,7 @@ description: 'Add shadcn-table to a shadcn/ui project'
 
 ## Prerequisites
 
-A shadcn/ui project on the Base UI, Radix UI or React Aria base, with Tailwind CSS v4 and React 18 or newer. React Aria is supported since 0.5.0.
+A shadcn/ui project on the Base UI, Radix UI or React Aria base, with React 19.2 or later and Tailwind CSS 4.3 or later. React Aria is supported since 0.5.0.
 
 No project yet? Create one. Pick your base with the tabs: Base UI, Radix UI or React Aria. A React Aria project has an `aria-*` style in `components.json` (`aria-nova` is the style the React Aria copy is built on).
 
@@ -50,7 +50,7 @@ components/ui/
 └── ...
 ```
 
-Your global stylesheet is unchanged. The table's animations ship inside its components as a `<style>` tag that React 19 hoists into `<head>` (React 18 renders it in place). Under a strict Content Security Policy, allow it with a nonce or `style-src 'unsafe-inline'`.
+Your global stylesheet is unchanged. The table's animations ship inside its components as a `<style>` tag that React hoists into `<head>`. Under a strict Content Security Policy, allow it with a nonce or `style-src 'unsafe-inline'`.
 
 <Callout type="warn" title="Known issue on React Aria">
   shadcn's `aria-nova` `label` part starts with an unused `import * as React from "react"`.

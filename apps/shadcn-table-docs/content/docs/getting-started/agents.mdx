@@ -21,11 +21,11 @@ pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/base/shadcn-table.json
 pnpm dlx shadcn@latest add https://www.shadcn-table.com/r/aria/shadcn-table.json    # React Aria
 ```
 
-Namespace form, registered once per project: `{style}` resolves to the project's own style, so the same `@st/<item>` address works on every base (`base-*`, `radix-*` and `aria-*` styles).
+Namespace form, registered once per project: `{style}` resolves to the project's own style, so the same `@shadcn-table/<item>` address works on every base (`base-*`, `radix-*` and `aria-*` styles).
 
 ```bash
-pnpm dlx shadcn@latest registry add @st=https://www.shadcn-table.com/r/{style}/{name}.json
-pnpm dlx shadcn@latest add @st/shadcn-table
+pnpm dlx shadcn@latest registry add @shadcn-table=https://www.shadcn-table.com/r/{style}/{name}.json
+pnpm dlx shadcn@latest add @shadcn-table/shadcn-table
 ```
 
 GitHub fallback when the site is unreachable: `anindosarker/shadcn-table/shadcn-table-base` (Base UI), `anindosarker/shadcn-table/shadcn-table-radix` (Radix UI) and `anindosarker/shadcn-table/shadcn-table-aria` (React Aria).

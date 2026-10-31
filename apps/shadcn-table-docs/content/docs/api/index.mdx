@@ -14,8 +14,9 @@ import { routes } from '@/lib/routes';
 The table is copied into your project like any shadcn component, so a version describes the registry, not a package.
 
 - **Public surface:** every name `components/ui/shadcn-table/index.ts` exports: components, hooks, helpers and types.
-- **Registry addresses:** `/r/<base>/shadcn-table.json`, `shadcn-table-locale-<code>` and `example-<slug>` under the `@st` namespace are stable. The GitHub shorthands are a fallback.
+- **Registry addresses:** `/r/<base>/shadcn-table.json`, `shadcn-table-locale-<code>` and `example-<slug>` under the `@shadcn-table` namespace are stable. The GitHub shorthands are a fallback.
 - **Bases:** Base UI, Radix UI and React Aria are one library at feature parity, checked in CI.
 - **TanStack Table:** pinned to `^9`. A breaking change there is a major here.
+- **Minimums:** React 19.2 or later and Tailwind CSS 4.3 or later.
 - **Renames:** a renamed option keeps its old name for one minor with a console warning, is listed under Deprecated in the changelog and is removed in the next major.
 - **Upgrade:** run `shadcn add --overwrite` for the item, then read the changelog for what moved. Edits inside `components/ui/shadcn-table/` are overwritten.
