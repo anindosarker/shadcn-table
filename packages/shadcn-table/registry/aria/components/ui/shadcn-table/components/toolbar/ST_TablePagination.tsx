@@ -156,6 +156,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             className={cn(
               tablePaginationVariants(),
               position === 'top' && enableToolbarInternalActions && 'mt-12',
+              restPaginationProps?.className,
             )}
           >
             {showRowsPerPage && (
@@ -226,10 +227,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
             {paginationDisplayMode === 'pages' ? (
               // Not PaginationPrevious/Next: they hardcode English text and
               // lucide icons, which bypasses localization and icon overrides.
-              <Pagination
-                {...restPaginationProps}
-                className={cn('mx-0 w-auto', restPaginationProps?.className)}
-              >
+              <Pagination {...restPaginationProps} className="mx-0 w-auto">
                 <PaginationContent>
                   {getPaginationItems({
                     boundaryCount,
