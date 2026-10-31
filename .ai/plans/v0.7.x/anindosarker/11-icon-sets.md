@@ -141,7 +141,7 @@ export const ST_Default_Icons: ST_Icons;
 | --- | --- | --- |
 | `icons.ts` | refactor | type import from `types.ts`, `satisfies ST_Icons` |
 | `icons/tabler.ts`, `icons/phosphor.ts`, `icons/hugeicons.ts`, `icons/remixicon.ts` | new | byte-identical across bases; `hugeicons.ts` uses `createElement` |
-| `types.ts` `ST_IconProps`, `ST_IconKey`, `ST_Icons` | new | replaces `LucideProps` (39) and the `any` record at `icons.ts:74`; this part owns the site, part 04 does not touch it (D10) |
+| `types.ts` `ST_IconProps`, `ST_IconKey`, `ST_Icons` | new | replaces `LucideProps` (39) and the `any` record at `icons.ts:74`; this part owns the site; the library sweep only adds a reasoned per-line disable at `icons.ts:74`, which this part deletes with the line, or the later merger drops on rebase (D10) |
 | `ST_Checkbox.tsx:2`, `ST_TablePagination.tsx:3` | refactor | import through `icons.ts` and `types.ts` |
 
 **Stays unchanged:** every call site of `icons.<Key>`, the `icons` option, `index.ts` exports.
