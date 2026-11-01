@@ -64,16 +64,41 @@ export const ST_Tooltip = ({
   // trigger ref.
   const trigger = children as React.ReactElement<{
     ref?: React.Ref<HTMLElement>;
+    disabled?: boolean;
+    isDisabled?: boolean;
   }>;
   const attachRef = useST_ComposedRef(triggerRef, trigger.props.ref);
+
+  // The library's `open` state controls the tooltip; Escape and blur override
+  // it until `open` changes, and each change clears the override.
+  const [dismissed, setDismissed] = React.useState<{ isOpen: boolean } | null>(
+    null,
+  );
+  const [prevOpen, setPrevOpen] = React.useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    setDismissed(null);
+  }
+  const isOpen = open === undefined ? undefined : (dismissed?.isOpen ?? open);
 
   if (disableHoverListener || (!title && title !== 0)) {
     return <>{children}</>;
   }
 
+  // React Aria's Focusable warns about a child that cannot take focus, so a
+  // disabled control renders without the trigger and keeps the title as its name.
+  if (trigger.props.disabled || trigger.props.isDisabled) {
+    return React.cloneElement(trigger, { ref: attachRef });
+  }
+
   return (
     <TooltipTrigger
-      isOpen={open}
+      isOpen={isOpen}
+      onOpenChange={
+        open === undefined
+          ? undefined
+          : (next) => setDismissed({ isOpen: next })
+      }
       delay={delayDuration}
       closeDelay={disableHoverableContent ? 0 : undefined}
     >

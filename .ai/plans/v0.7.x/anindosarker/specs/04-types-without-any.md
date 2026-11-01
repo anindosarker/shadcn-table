@@ -79,7 +79,7 @@ Targets checked against the installed `@tanstack/table-core` 9.3.1 types with a 
 | `ST_CellActionMenu.tsx:40` | refactor | `event?: any` | `event?: { stopPropagation(): void }` |
 | `ST_FilterTextField.tsx:209,226` | refactor | `newValue: any` | file-local `FilterInputValue = Date \| number \| string \| string[] \| null`; the local `string \| string[]` state takes it through one listed `as string \| string[]`, as at runtime today |
 | `ST_SelectCheckbox.tsx:125` (radix :120) | refactor | `e as any` | no cast: the click event is an `ST_SelectionEvent` |
-| `ST_SelectCheckbox.tsx:184` (radix :177) | refactor | `commonProps as any` | every common field except `checked` and `title`, cast once to `ComponentProps<typeof RadioGroupItem>` |
+| `ST_SelectCheckbox.tsx:184` (radix :177) | refactor | `commonProps as any` | every common prop except `checked` and `title`, through one `as ComponentProps<typeof RadioGroupItem>` cast on an entries filter (D41) |
 
 #### 1.6.3 Filter meta
 

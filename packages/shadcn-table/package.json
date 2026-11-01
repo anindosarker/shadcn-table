@@ -23,6 +23,7 @@
     "lint": "eslint . --max-warnings 0",
     "check:tailwind": "node scripts/check-tailwind.mjs",
     "check:icons": "node scripts/check-icons.mjs",
+    "check:aria-warnings": "node scripts/check-aria-warnings.mjs",
     "tsc:radix": "tsc -p tsconfig.radix.json --noEmit",
     "tsc:baseui": "tsc -p tsconfig.baseui.json --noEmit",
     "tsc:aria": "tsc -p tsconfig.aria.json --noEmit"

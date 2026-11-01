@@ -9,12 +9,12 @@ Specs 01 to 08 prove the library with lint, types and Storybook; none of them ru
 ### 1.2 Goals
 
 - Per base, an installed basic table page passes `next build` and opens with zero browser console warnings and errors (D5) (D16)
-- `npx eslint components/ui/shadcn-table` zero problems in next-app, base only (D17); `gate-radix` and `gate-aria` skip the eslint step and run every other check of 1.6.2
+- `npx eslint components/ui/shadcn-table` zero problems in the base gate app, base only (D17); `gate-radix` and `gate-aria` skip the eslint step and run every other check of 1.6.2
 - In every app, every menu opens and closes on the gate page; a second click on the opener closes it (F61); focus returns to the element it opened from, and the opener reads `aria-expanded` (D5) (D26)
-- Per base, the installed edition matches: next-app (Lucide) has `icons.ts` importing `lucide-react`; `gate-radix` (Tabler) has `icons.ts` importing `@tabler/icons-react` and no `lucide-react` in `package.json`; `gate-aria` (Phosphor) the same with `@phosphor-icons/react` (D30)
-- An RTL gate page (`dir="rtl"`, `columnResizeDirection: 'rtl'`) shows the resize handle on the start edge and a pinned column stuck to the correct side, per base (D31); the Storybook `dir="rtl"` story is spec 10's
+- Per base, the installed edition matches: `gate-base` (Lucide) has `icons.ts` importing `lucide-react`; `gate-radix` (Tabler) has `icons.ts` importing `@tabler/icons-react` only; `gate-aria` (Phosphor) the same with `@phosphor-icons/react`; the gate apps are initialized with `--icon-library` matching their edition (D30) (D40)
+- An RTL gate page (`dir="rtl"`, `columnResizeDirection: 'rtl'`) shows the resize handle on the inline-end edge (left on screen in RTL) and a pinned column stuck to the correct side, per base (D31) (D40); the Storybook `dir="rtl"` story is spec 10's
 - 0.7.0 released: version PR `chore: version 0.7.0` merged, `release.yml` green, `node scripts/release/smoke.mjs` green
-- Acceptance: per base, `next build` exits 0 in the gate app and the browser check reports zero console errors; `eslint components/ui/shadcn-table` exits 0 in next-app; `gh release view v0.7.0` succeeds and `node scripts/release/smoke.mjs` exits 0 (P6)
+- Acceptance: per base, `next build` exits 0 in the gate app and the browser check reports zero console errors; `eslint components/ui/shadcn-table` exits 0 in `gate-base`; `gh release view v0.7.0` succeeds and `node scripts/release/smoke.mjs` exits 0 (P6)
 
 ### 1.3 Current structure
 
@@ -63,14 +63,13 @@ sequenceDiagram
 
 #### 1.6.2 Runtime gate
 
-One `components.json` holds one style, so one Next app cannot render all three bases. next-app (base-nova) covers `base`; radix and aria each get a throwaway Next app made the way `.github/workflows/install.yml` makes its Next scenario.
+One `components.json` holds one style, so one Next app cannot render all three bases. Each base gets a throwaway Next app under `test-projects/checks/` made the way `.github/workflows/install.yml` makes its Next scenario (D40). The 0.7.0 run used `test-projects/next-app` for `base` and skipped it (A21); spec 09.1 reruns the base gate in `gate-base`.
 
 - Registry: root `pnpm registry:dev` on `claude/review` after 07, 08, 10 and 11 merged builds `packages/shadcn-table/.dev` and serves it on port 5310 (`/r/shadcn-table-<base>.json`, `/r/shadcn-table-<base>-<library>.json`); not `preview`, which also starts the three Storybooks and exits when shared servers hold their ports
-- Editions (D30): next-app installs `shadcn-table-base` (Lucide), `gate-radix` installs `shadcn-table-radix-tabler`, `gate-aria` installs `shadcn-table-aria-phosphor`; after each install, `icons.ts` imports the expected package and `package.json` lists only that icon package
-- Before any `shadcn add --overwrite` into next-app: `git -C ../test-projects/next-app status --short` is empty (the repo is clean at `148addc`), else the next-app install is blocked: the reason under `## Attention` in `../trackers/09-tracker.md`, the radix and aria apps continue (P5); the re-install is then the only working-tree change, left for the owner
+- Editions (D30): `gate-base` installs `shadcn-table-base` (Lucide), `gate-radix` installs `shadcn-table-radix-tabler`, `gate-aria` installs `shadcn-table-aria-phosphor`; each app is initialized with `--icon-library` matching its edition; after each install the table's `icons.ts` imports only the expected package (D40)
 - Page: one basic table, 20 rows, columns `firstName`, `lastName`, `age`, with `enableRowActions`, `enableCellActions`, `enableColumnFilterModes` and `enableRowSelection` on, so the column action, filter option, row action, cell action and show/hide columns menus all render
-- Browser, in next-app, `gate-radix` and `gate-aria` alike: agent-browser on `next dev` on the app's own port; each of the five menus opens and closes with Escape, a second click on its opener closes it (F61, D26 addendum), focus lands on the element it opened from and the opener's `aria-expanded` flips (D5) (D26); the search field opens focused and closes without a snap, programmatic: the panel width sampled twice during the 200 ms close transition (at about 60 ms and 140 ms after the toggle), both samples strictly between `3rem` and `14rem` in pixels, then `inert` at rest (D25); a column resize and a page change run; console zero warnings and errors
-- RTL page: `app/release-gate/rtl/page.tsx` in next-app and the same route in the gate apps render the table inside `<div dir="rtl">` with `columnResizeDirection: 'rtl'`, `enableColumnPinning` and one column pinned to `left`; the check reads the resize handle's bounding box against its header cell (handle at the inline-start edge, the left side on screen) and the pinned cell's computed `inset-inline-start` (D31)
+- Browser, in next-app, `gate-radix` and `gate-aria` alike: agent-browser on `next dev` on the app's own port; each of the five menus opens and closes with Escape, a second click on its opener closes it (F61, D26 addendum), focus lands on the element it opened from and the opener's `aria-expanded` flips (D5) (D26); the search field opens focused and closes without a snap, programmatic: the panel width sampled twice during the 200 ms close transition, at about 60 ms and 140 ms after the first frame in which the width changes (D40), both samples strictly between `3rem` and `14rem` in pixels, then `inert` at rest (D25); a column resize and a page change run; console zero warnings and errors
+- RTL page: `app/release-gate/rtl/page.tsx` in next-app and the same route in the gate apps render the table inside `<div dir="rtl">` with `columnResizeDirection: 'rtl'`, `enableColumnPinning` and one column pinned to `left`; the check reads the resize handle's bounding box against its header cell (handle at the inline-end edge, the left side on screen in RTL, D40) and the pinned cell's computed `inset-inline-start` (D31)
 - Does NOT edit `app/page.tsx`, commit in next-app or change library source; a failure goes to `ATTENTION-<date>.md` naming the owning spec
 
 **Operations:**
@@ -138,10 +137,10 @@ Lane: inline
 
 ### 2.2 Gates
 
-- Per base: `next build` green, browser console zero warnings and errors on the gate page and the RTL page; the five menus return focus, flip `aria-expanded` and close on a second opener click (F61); the search field opens focused and closes without a snap: both width samples taken during the 200 ms transition lie strictly between `3rem` and `14rem` (D5) (D16) (D25) (D26)
-- next-app (base): `npx eslint components/ui/shadcn-table` zero problems (D17)
-- Per base: the installed edition's `icons.ts` imports the expected package; `gate-radix` and `gate-aria` have no `lucide-react` (D30)
-- Per base: RTL page handle at the inline-start edge, pinned cell `inset-inline-start` set (D31)
+- Per base: `next build` green, browser console zero warnings and errors on the gate page and the RTL page; the five menus return focus, flip `aria-expanded` and close on a second opener click (F61); the search field opens focused and closes without a snap: both width samples, taken relative to the transition start (D40), lie strictly between `3rem` and `14rem` (D5) (D16) (D25) (D26)
+- `gate-base`: `npx eslint components/ui/shadcn-table` zero problems (D17)
+- Per base: the installed edition's `icons.ts` imports only the expected package (D30) (D40)
+- Per base: RTL page handle at the inline-end edge, pinned cell `inset-inline-start` set (D31) (D40)
 - `pr.yml` green on the `dev` into `master` PR
 - Version PR `chore: version 0.7.0` merged; `release.yml` green on its merge, install matrix included
 - `node scripts/release/smoke.mjs` green against www.shadcn-table.com

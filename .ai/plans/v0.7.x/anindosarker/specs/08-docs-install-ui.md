@@ -177,7 +177,7 @@ Same markup as `BaseSwitch` (`Button` outline `sm`, `ChevronDownIcon`, `Dropdown
 
 #### 1.6.5 Install command: icon library selector and Short form toggle
 
-- Default `InstallCommand` (install.mdx 28 and 110) renders `editionAddCommand(library, base, pm, overwrite)`; an `IconLibrarySwitch` sits in the base tab row next to the base and package manager controls, default `lucide`, labels "Lucide", "Tabler", "Phosphor", "Hugeicons", "Remix Icon"; copy analytics report `item: <edition item>` (D30)
+- Default `InstallCommand` (install.mdx 28 and 110) renders `editionAddCommand(library, base, pm, overwrite)`, the one builder of the edition command; `addCommand` serves explicit `item` props only (D43, sub-spec 08.1); an `IconLibrarySwitch` sits in the base tab row next to the base and package manager controls, default `lucide`, labels "Lucide", "Tabler", "Phosphor", "Hugeicons", "Remix Icon"; copy analytics report `item: <edition item>` (D30)
 - Selected library is shared by the two `InstallCommand` instances on the page through `useIconLibrary`, a React context provided by the page layout (`IconLibraryProvider` in `components/icon-library-selector.tsx`), default `lucide`, no storage of any kind
 - "Short form" toggle (a small switch at the end of the tab row): on, the command block shows two steps, the `components.json` entry `"registries": { "@shadcn-table": "https://www.shadcn-table.com/r/{style}/{name}.json" }` and `namespaceAddCommand(item, pm)`; off, the single full-URL command. Off by default; registering the namespace is never required (D33)
 - The existing `NamespaceCommand` component (install-command.tsx 119) is folded into this toggle and removed

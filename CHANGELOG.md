@@ -7,6 +7,18 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+- Pinned columns are opaque and their edge shadow falls on the scrolled columns, so they read on top in light mode too; the bottom toolbar shadow falls on the table body.
+- React Aria: the library logs no development warnings; Escape on the focused full-screen toggle leaves full screen.
+- The search field shows its focus ring after a click on the toggle.
+
+### Docs
+
+- The docs page checks run on every pull request; a dev server on another port no longer rewrites the docs `tsconfig.json`.
+
 ## 0.7.0 - 2026-10-31
 
 ### Breaking
