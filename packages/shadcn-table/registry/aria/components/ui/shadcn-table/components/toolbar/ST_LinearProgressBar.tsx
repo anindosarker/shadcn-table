@@ -114,8 +114,10 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
               {linearProgressKeyframes}
             </style>
             <LinearProgressContent isExpanded={isExpanded}>
+              {/* No localization key names the loading state, so the name is the English fallback, overridable through stLinearProgressProps. */}
               <Progress
                 aria-busy="true"
+                aria-label="Loading"
                 {...progressComponentProps}
                 className={cn(
                   isIndeterminate && 'st-progress-indeterminate',

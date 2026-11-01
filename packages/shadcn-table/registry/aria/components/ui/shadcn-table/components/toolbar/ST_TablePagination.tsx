@@ -190,6 +190,7 @@ export const ST_TablePagination = <TData extends ST_RowData>({
                   </NativeSelect>
                 ) : (
                   <Select
+                    aria-label={localization.rowsPerPage}
                     isDisabled={disabled}
                     onChange={(key) => {
                       if (key !== null) table.setPageSize(+key);

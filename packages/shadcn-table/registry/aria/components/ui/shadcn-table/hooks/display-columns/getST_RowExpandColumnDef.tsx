@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react';
 import { ST_ExpandAllButton } from '@/components/ui/shadcn-table/components/buttons/ST_ExpandAllButton';
 import { ST_ExpandButton } from '@/components/ui/shadcn-table/components/buttons/ST_ExpandButton';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   type ST_ColumnDef,
   type ST_NeutralPartPropTypes,
@@ -37,12 +36,11 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
         return (
           <div className="flex flex-row items-center gap-1">
             <ST_ExpandButton {...expandButtonProps} />
-            <ST_Tooltip
-              side="right"
+            <span
               title={table.getColumn(row.groupingColumnId).columnDef.header}
             >
-              <span>{row.groupingValue as ReactNode}</span>
-            </ST_Tooltip>
+              {row.groupingValue as ReactNode}
+            </span>
             {!!subRowsLength && <span>({subRowsLength})</span>}
           </div>
         );
