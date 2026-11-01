@@ -12,6 +12,8 @@ coverage
 .next/
 out/
 build
+# per-port docs dev tsconfig (apps/shadcn-table-docs/lib/dev-tsconfig.mjs)
+apps/shadcn-table-docs/tsconfig.*.json
 
 # build
 *.log
