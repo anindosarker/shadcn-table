@@ -1,5 +1,6 @@
 import {
   type ST_ColumnDef,
+  ShadcnTable,
   ST_TableProvider,
   ST_ToggleFullScreenButton,
   useShadcnTable,
@@ -10,7 +11,9 @@ import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 // A headless layout spreads `containerProps` from useST_FullScreenContainer
 // on its own wrapper: the wrapper fills the screen, and Escape inside it
-// leaves full screen.
+// leaves full screen. Escape also leaves full screen with focus on the
+// toggle and its tooltip open, which stops Escape at `document` in the aria
+// base, and Escape in the search field keeps full screen.
 
 const meta: Meta = {
   title: 'Fixed Bugs/Headless Full Screen',
@@ -67,5 +70,79 @@ export const EscapeLeavesFullScreen = {
     await userEvent.keyboard('{Escape}');
     await canvas.findByText('Inline');
     await waitFor(() => expect(wrapper.className).not.toContain('fixed'));
+  },
+};
+
+const isFullScreen = (canvasElement: HTMLElement) =>
+  !!canvasElement
+    .querySelector('[data-st-full-screen]')
+    ?.className.split(' ')
+    .includes('fixed');
+
+export const PointerClickThenEscape = {
+  render: () => <HeadlessTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Mason');
+    const toggle = canvas.getByRole('button', { name: 'Toggle full screen' });
+
+    await userEvent.click(toggle);
+    await canvas.findByText('Full screen');
+    // Entering full screen moves the toggle under the pointer, which opens
+    // its tooltip again.
+    await userEvent.hover(toggle);
+    expect(document.activeElement).toBe(toggle);
+
+    await userEvent.keyboard('{Escape}');
+    await canvas.findByText('Inline');
+  },
+};
+
+export const TableLayoutPointerClickThenEscape = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Mason');
+    const toggle = canvas.getByRole('button', { name: 'Toggle full screen' });
+
+    await userEvent.click(toggle);
+    await waitFor(() => expect(isFullScreen(canvasElement)).toBe(true));
+    await userEvent.hover(toggle);
+    expect(document.activeElement).toBe(toggle);
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(isFullScreen(canvasElement)).toBe(false));
+  },
+};
+
+export const EscapeInSearchKeepsFullScreen = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Mason');
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Toggle full screen' }),
+    );
+    await waitFor(() => expect(isFullScreen(canvasElement)).toBe(true));
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide search' }),
+    );
+    const input = canvas.getByPlaceholderText('Search');
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    await userEvent.keyboard('Ma');
+    // An open tooltip takes the first Escape to close itself (Radix), so the
+    // pointer leaves the toolbar and the tooltip closes first.
+    await userEvent.hover(canvas.getByText('Mason'));
+    await waitFor(() =>
+      expect(
+        document.querySelector('[data-slot="tooltip-content"]'),
+      ).toBeNull(),
+    );
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => expect(input).toHaveValue(''));
+    expect(isFullScreen(canvasElement)).toBe(true);
   },
 };
