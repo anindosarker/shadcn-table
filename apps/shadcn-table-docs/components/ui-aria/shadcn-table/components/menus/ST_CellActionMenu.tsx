@@ -127,8 +127,9 @@ const ST_CellActionMenuContent = <TData extends ST_RowData>({
   return (
     (!!menuItems?.length || !!internalMenuItems?.length) && (
       <DropdownMenuTrigger isOpen={!!cell} onOpenChange={onOpenChange}>
-        <Pressable>
-          <span {...spanProps} />
+        {/* isDisabled skips the focusable check on the inert span; the role satisfies the role check and stays hidden by aria-hidden. */}
+        <Pressable isDisabled>
+          <span {...spanProps} role="button" />
         </Pressable>
         {/* placement, crossOffset and offset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
         <DropdownMenu
