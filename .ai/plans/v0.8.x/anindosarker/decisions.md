@@ -108,3 +108,16 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: shadcn.io shows numbered pages; ui.shadcn.com and shadcn-vue show Previous and Next only; tablecn shows arrows with "Page 1 of 5".
 - Changes: `useST_TableOptions` default; `ST_BottomToolbar` border and height follow D7's row metrics.
 - Stays: `default` mode selectable; `renderBottomToolbarCustomActions` for a count or anything else on the left; page size and `rowsPerPageOptions` unchanged.
+
+### D14 Pinning and resizing on by default; actions column last and pinned
+
+- `enableColumnPinning` and `enableColumnResizing` default to true: the column menu's pin items (D5) and the resize handle (D6) are part of the default look. The row actions column (`enableRowActions`) is placed last (`positionActionsColumn: 'last'`), 48 px wide, pinned to the end so it stays visible while the table scrolls sideways, with a horizontal-dots trigger and a visually hidden header label.
+- Reference: every shadcn data table puts a horizontal-dots actions button in the last column with an empty header; none pins it because their tables do not scroll sideways; the demo pins it.
+- Changes: `useST_TableOptions` defaults; `getST_RowActionsColumnDef` size, header and default pinning; `ST_ToggleRowActionMenuButton` icon.
+- Stays: every piece is a table option a consumer can set back (`enableColumnPinning: false`, `positionActionsColumn: 'first'`, `displayColumnDefOptions['st-row-actions']`, `initialState.columnPinning`); the actions column is still defined through options, never in `columns`.
+
+### D15 Empty state keeps its texts, loses the italic
+
+- The empty table keeps one row spanning the columns with `localization.noRecordsToDisplay` (or `noResultsFound` while filters are active), centred and muted, 96 px tall, not italic, matching the shadcn references' "No results." row.
+- Changes: `ST_TableBody` empty row classes only.
+- Stays: the texts, `renderEmptyRowsFallback`.
