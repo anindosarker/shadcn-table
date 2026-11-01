@@ -518,3 +518,12 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - Likely the same in the other span-anchored menus (`ST_ColumnActionMenu`, `ST_CellActionMenu`, `ST_FilterOptionMenu`, `ST_ShowHideColumnsMenu`): every opener sets the anchor unconditionally.
 - Bases: all three (same opener handlers).
 - Relation: D26 keeps the anchor pattern; the fix is a toggle inside `useST_MenuAnchor` (D26 addendum, spec 10).
+
+## Round 4: triage of ATTENTION-2026-10-31
+
+### F62 Pinned columns read as under the scrolled columns in light mode, and text bleeds through them
+
+- `shared/utils/style.utils.ts:23-28` (base; radix and aria the same block): the pinned cell `::before` has `bg-background/97`, so scrolled cell text shows through a pinned cell at 3% in both themes; and the pinned-edge shadow is `inset`, so in light mode it darkens the pinned cell's own edge and the pinned column looks under the scrolled ones, while in dark mode the same inset edge is lighter than the background and reads as a highlight on top. `components/head/ST_TableHeadRow.tsx:22` and `components/toolbar/ST_BottomToolbar.tsx:20` use the same inset form.
+- Both predate 0.7.0: v0.6.2 has `bg-background/97` and `rgba(97,97,97,0.5) inset` at the same sites; D32 changed the color source only.
+- Seen on https://storybook.shadcn-table.com/base/?path=/story/features-column-pinning-examples--column-pinning-initial, light and dark, 2026-11-01. All three bases.
+- Decided in D47 (sub-spec 06.1).

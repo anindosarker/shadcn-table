@@ -255,7 +255,7 @@ New or extended stories under `packages/shadcn-table/stories/`, one per user-rea
 | `features/Sorting.stories.tsx` clear sort | sort, clear, no sort indicator with default ranked results (D22) |
 | `fixed-bugs/SearchField.stories.tsx` | open: input focused, panel wider than `3rem`; close: panel `inert`; Escape returns focus to the toggle (D25) |
 | `fixed-bugs/MenuOpeners.stories.tsx` | opener `aria-expanded` follows open state; a second click on the opener closes the menu and `aria-expanded` reads `false` (F61); Tab never lands on the span; menu moves after a resize; focus returns to the opener (D26) |
-| `fixed-bugs/RTL.stories.tsx` | table inside `<div dir="rtl">` with `columnResizeDirection: 'rtl'`, `enableColumnPinning` and one column pinned `left`; the resize handle's box sits at the header cell's inline-start edge and the pinned cell has `inset-inline-start` set (D31 addendum) |
+| `fixed-bugs/RTL.stories.tsx` | table inside `<div dir="rtl">` with `columnResizeDirection: 'rtl'`, `enableColumnPinning` and one column pinned `left`; the resize handle's box sits at the header cell's inline-end edge (the left side on screen in RTL, D40) and the pinned cell has `inset-inline-start` set (D31 addendum) |
 | `features/ColumnHiding.stories.tsx` keyboard | arrow to a row, Space hides the column; Tab reaches the pin buttons (D27) |
 | `fixed-bugs/FilterPopover.stories.tsx` | filter button `aria-expanded`; popover opens with the input focused; chip clear button has a name (D28) |
 | `fixed-bugs/ModalExit.stories.tsx` | edit modal close plays its exit state before unmount (D28) |

@@ -1,6 +1,6 @@
 # 10: bug fixes and parts as designed, tracker
 
-Status: built, review pending
+Status: done (c318a189)
 Branch `v0.7/bug-fixes`, worktree `bug-fixes`, PR #74 (workstream S2)
 Gates:
 - `pnpm --filter shadcn-table lint` at a190f38f (before the ride-along): red, 6 errors (`icons/hugeicons.ts:94` deprecated `LayoutThreeColumnIcon`, `icons/remixicon.ts:47` unused `_children`, per base; the task text had the two files swapped)

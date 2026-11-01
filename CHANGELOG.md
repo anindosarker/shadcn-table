@@ -7,6 +7,16 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+#### Spec 06.1
+
+#### Spec 08.1
+
+#### Spec 10.1
+
 ## 0.7.0 - 2026-10-31
 
 ### Breaking
