@@ -17,6 +17,9 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 10.1
 
+- Fixed: React Aria: the library logs no development warnings; Escape on the focused full-screen toggle leaves full screen.
+- Fixed: The search field shows its focus ring after a click on the toggle.
+
 ## 0.7.0 - 2026-10-31
 
 ### Breaking
