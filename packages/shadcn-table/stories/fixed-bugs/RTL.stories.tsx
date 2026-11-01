@@ -50,14 +50,10 @@ export const RightToLeft = {
 
     // The pinned edge shadow is cast outward, toward the scrolled columns,
     // which sit to the left in RTL: a negative x offset. Tailwind lists its
-    // empty ring layers first, so the shadow is the last of the list.
-    const shadow = getComputedStyle(pinnedCell).boxShadow;
-    const lengths = [...shadow.matchAll(/(-?[\d.]+)px/g)].map((match) =>
-      Number(match[1]),
+    // empty ring layers first, so the shadow is the tail of the list.
+    expect(getComputedStyle(pinnedCell).boxShadow).toMatch(
+      / -4px 0px 4px -4px$/,
     );
-    // Each layer lists x, y, blur and spread; x of the last layer.
-    const offsetX = lengths[lengths.length - 4];
-    expect(offsetX).toBeLessThan(0);
 
     const header = canvas.getByRole('columnheader', { name: /Last Name/ });
     const handle = header.querySelector<HTMLElement>('.cursor-col-resize');
