@@ -42,3 +42,8 @@
 ## A37 The aria multi-select chip list got an `aria-label` beyond the spec's table
 
 - Zero React Aria warnings needed one more label than spec 10.1 1.6.2 listed: the `TagGroup` of the multi-select filter chips in aria `ST_FilterTextField.tsx` now carries the filter label as `aria-label`. Same localization string the field uses. Keep.
+
+## A38 A consumer lint reports one unused disable directive in the installed library
+
+- `gate-base` `npx eslint components/ui/shadcn-table` (stock `eslint-config-next`) prints one warning: `shared/utils/utils.ts:32` "Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-deprecated')". The directive guards the `navigator.platform` fallback (D11) and is needed under the library's type-aware config only; a consumer without `no-deprecated` sees it as unused, so D17's zero-problem goal misses by one warning. The 0.7.0 base gate never ran (A21), so this is the first time it shows. Everything else in the 09.1 gate passed in all three apps.
+- Options: a) replace the `navigator.platform` fallback with a non-deprecated read (`navigator.userAgent`) so no directive is needed (amends D11); b) keep the directive and accept one consumer warning; c) note in the install docs that `reportUnusedDisableDirectives` may flag it.
