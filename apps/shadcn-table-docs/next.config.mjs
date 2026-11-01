@@ -6,12 +6,21 @@ const withMDX = createMDX({ agentRules: false });
 const config = {
   reactStrictMode: true,
   // A second `next dev` in the same folder refuses to start (.next/dev/lock).
-  // `PORT=5331 pnpm dev` runs a second server (own .next-<port>).
+  // `PORT=5331 pnpm dev` runs a second server (own .next-<port>, own
+  // tsconfig.<port>.json written by lib/dev-tsconfig.mjs).
   distDir:
     process.env.NEXT_DIST_DIR ??
     (process.env.PORT && process.env.PORT !== '5320'
       ? `.next-${process.env.PORT}`
       : '.next'),
+  // Next appends `<distDir>/types` to the tsconfig it reads; the second
+  // server's git-ignored copy takes that edit, not tsconfig.json.
+  typescript: {
+    tsconfigPath:
+      process.env.PORT && process.env.PORT !== '5320'
+        ? `tsconfig.${process.env.PORT}.json`
+        : 'tsconfig.json',
+  },
   // Hosted registry (public/r/<base>/<name>.json, written by
   // packages/shadcn-table/scripts/registry/hosted.mjs, `pnpm registry:hosted`):
   // the namespace form
