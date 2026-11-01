@@ -184,8 +184,8 @@ export const InstallCommand = ({
   const command = (base: Base, pm: PackageManager) => {
     if (locale) return localeAddCommand(selected.code, base, pm);
     if (short) return `${namespaceAddCommand(installed, pm)}${suffix}`;
-    if (edition) return editionAddCommand(library, base, pm, overwrite);
-    return `${addCommand(installed, base, pm)}${suffix}`;
+    if (item !== undefined) return `${addCommand(item, base, pm)}${suffix}`;
+    return editionAddCommand(library, base, pm, overwrite);
   };
   return (
     <>
