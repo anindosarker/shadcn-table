@@ -101,3 +101,10 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo stores one config under a fixed key (`view-settings.tsx:98`); no shadcn reference persists; Notion persists per view server-side.
 - Changes: a storage adapter behind the `viewSettings` slice (`useSyncExternalStore`, blocked storage tolerated), wired to column visibility and order state.
 - Stays: controlled `state` and `on*Change` props win over stored values when a consumer provides them.
+
+### D13 Footer and pagination defaults
+
+- `paginationDisplayMode` defaults to `pages` (rows-per-page select, numbered page buttons, previous and next), right-aligned. The footer's top edge is a plain 1 px hairline (`border-t`), the same line as between rows, instead of the inset shadow. The left side stays empty by default.
+- Reference: shadcn.io shows numbered pages; ui.shadcn.com and shadcn-vue show Previous and Next only; tablecn shows arrows with "Page 1 of 5".
+- Changes: `useST_TableOptions` default; `ST_BottomToolbar` border and height follow D7's row metrics.
+- Stays: `default` mode selectable; `renderBottomToolbarCustomActions` for a count or anything else on the left; page size and `rowsPerPageOptions` unchanged.

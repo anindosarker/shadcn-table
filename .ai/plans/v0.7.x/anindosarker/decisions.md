@@ -375,3 +375,11 @@
 
 - Sub-specs 06.1, 08.1 and 10.1 ship as 0.7.1, label `release:patch` on the `dev` into `master` PR; sub-spec `09.1` runs the gates per D40 and the release per P3.
 - Source: A14, A20, A26
+
+## Round 4: triage of ATTENTION-2026-11-01
+
+### D50 Skeleton widths are deterministic, never random during render
+
+- `ST_TableBodyCell` derives the loading placeholder width from the column size and the row index (same value on the server and the client), so no hydration warning; no `Math.random()` in render, no effect, no setState (D8 stands). Display columns keep half the column size. All three bases.
+- Sub-spec `02.1`, agent lane; ships as 0.7.2 with this round.
+- Source: F63 (owner, next-app bugs item 10)
