@@ -31,7 +31,9 @@ const body = within(document.body);
 
 /** The invisible span the open menu is anchored to. */
 const anchorSpanLeft = () => {
-  const span = [...document.querySelectorAll<HTMLElement>('span[inert]')].find(
+  const span = [
+    ...document.querySelectorAll<HTMLElement>('span[inert], a[inert]'),
+  ].find(
     (element) => element.style.position === 'fixed' && element.offsetWidth > 0,
   );
   return span?.getBoundingClientRect().left;
