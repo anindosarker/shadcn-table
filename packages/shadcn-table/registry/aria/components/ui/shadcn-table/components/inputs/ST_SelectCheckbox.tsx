@@ -18,7 +18,6 @@ import {
   getST_SelectAllHandler,
 } from '@/components/ui/shadcn-table/shared/utils/row.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 
 const selectCheckboxVariants = cva('z-0', {
@@ -80,7 +79,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     ...rest,
   };
   // React Aria's checkbox props carry no title; a consumer's title still names
-  // the tooltip.
+  // the control.
   const checkboxTitle =
     'title' in checkboxProps && typeof checkboxProps.title === 'string'
       ? checkboxProps.title
@@ -104,9 +103,11 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     isChecked: boolean | undefined;
   }) =>
     ({
-      'aria-label': selectAll
-        ? localization.toggleSelectAll
-        : localization.toggleSelectRow,
+      'aria-label':
+        checkboxTitle ??
+        (selectAll
+          ? localization.toggleSelectAll
+          : localization.toggleSelectRow),
       isSelected: isChecked,
       isDisabled:
         isLoading ||
@@ -162,42 +163,33 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         const isChecked = getIsChecked();
         const commonProps = getCommonProps({ density, isChecked, isLoading });
         return (
-          <ST_Tooltip
-            title={
-              checkboxTitle ??
-              (selectAll
-                ? localization.toggleSelectAll
-                : localization.toggleSelectRow)
-            }
-          >
-            <span className="inline-flex">
-              {enableMultiRowSelection === false ? (
-                // RadioGroupItem needs a RadioGroup: one group per row.
-                <RadioGroup
-                  aria-label={commonProps['aria-label']}
-                  value={isChecked ? 'on' : null}
-                >
-                  <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
-                </RadioGroup>
-              ) : (
-                <ST_Checkbox
-                  indeterminateIcon={table.options.icons.IndeterminateIcon}
-                  {...commonProps}
-                  // React Aria keeps `isIndeterminate` as its own flag beside
-                  // `isSelected`, so it goes after the spread.
-                  // getIsSomeRowsSelected and getIsSomeSelected include the
-                  // all-selected case, so that case is gated out.
-                  isIndeterminate={
-                    !isChecked && selectAll
-                      ? table.getIsSomeRowsSelected() && !allRowsSelected
-                      : row?.getIsSomeSelected() &&
-                        !row.getIsAllSubRowsSelected() &&
-                        row.getCanSelectSubRows()
-                  }
-                />
-              )}
-            </span>
-          </ST_Tooltip>
+          <span className="inline-flex">
+            {enableMultiRowSelection === false ? (
+              // RadioGroupItem needs a RadioGroup: one group per row.
+              <RadioGroup
+                aria-label={commonProps['aria-label']}
+                value={isChecked ? 'on' : null}
+              >
+                <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
+              </RadioGroup>
+            ) : (
+              <ST_Checkbox
+                indeterminateIcon={table.options.icons.IndeterminateIcon}
+                {...commonProps}
+                // React Aria keeps `isIndeterminate` as its own flag beside
+                // `isSelected`, so it goes after the spread.
+                // getIsSomeRowsSelected and getIsSomeSelected include the
+                // all-selected case, so that case is gated out.
+                isIndeterminate={
+                  !isChecked && selectAll
+                    ? table.getIsSomeRowsSelected() && !allRowsSelected
+                    : row?.getIsSomeSelected() &&
+                      !row.getIsAllSubRowsSelected() &&
+                      row.getCanSelectSubRows()
+                }
+              />
+            )}
+          </span>
         );
       }}
     </table.Subscribe>

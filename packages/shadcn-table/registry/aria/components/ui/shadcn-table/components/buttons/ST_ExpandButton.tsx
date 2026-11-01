@@ -81,44 +81,42 @@ export const ST_ExpandButton = <TData extends ST_RowData>({
               (isExpanded ? localization.collapse : localization.expand)
             }
           >
-            <span>
-              <Button
-                aria-label={localization.expand}
-                isDisabled={!canExpand && !detailPanel}
-                size="icon"
-                type="button"
-                variant="ghost"
-                {...iconButtonProps}
-                className={cn(
-                  expandButtonVariants({ density }),
-                  iconButtonProps?.className,
-                )}
-                onClick={handleToggleExpand}
-                style={{
-                  ...(positionExpandColumn === 'last'
-                    ? { marginRight: `${row.depth * 16}px` }
-                    : { marginLeft: `${row.depth * 16}px` }),
-                  ...iconButtonProps?.style,
-                }}
-              >
-                {iconButtonProps?.children ?? (
-                  <ExpandMoreIcon
-                    style={{
-                      transform: `rotate(${
-                        !canExpand && !renderDetailPanel
-                          ? positionExpandColumn === 'last'
-                            ? 90
-                            : -90
-                          : isExpanded
-                            ? -180
-                            : 0
-                      }deg)`,
-                      transition: 'transform 150ms',
-                    }}
-                  />
-                )}
-              </Button>
-            </span>
+            <Button
+              aria-label={localization.expand}
+              isDisabled={!canExpand && !detailPanel}
+              size="icon"
+              type="button"
+              variant="ghost"
+              {...iconButtonProps}
+              className={cn(
+                expandButtonVariants({ density }),
+                iconButtonProps?.className,
+              )}
+              onClick={handleToggleExpand}
+              style={{
+                ...(positionExpandColumn === 'last'
+                  ? { marginRight: `${row.depth * 16}px` }
+                  : { marginLeft: `${row.depth * 16}px` }),
+                ...iconButtonProps?.style,
+              }}
+            >
+              {iconButtonProps?.children ?? (
+                <ExpandMoreIcon
+                  style={{
+                    transform: `rotate(${
+                      !canExpand && !renderDetailPanel
+                        ? positionExpandColumn === 'last'
+                          ? 90
+                          : -90
+                        : isExpanded
+                          ? -180
+                          : 0
+                    }deg)`,
+                    transition: 'transform 150ms',
+                  }}
+                />
+              )}
+            </Button>
           </ST_Tooltip>
         );
       }}

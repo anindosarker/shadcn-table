@@ -81,36 +81,34 @@ export const ST_ExpandAllButton = ({ ...rest }: ST_ExpandAllButtonProps) => {
                 : localization.expandAll)
             }
           >
-            <span>
-              <Button
-                aria-label={localization.expandAll}
-                isDisabled={
-                  isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
-                }
-                onClick={() => toggleAllRowsExpanded(!getIsAllRowsExpanded())}
-                size="icon"
-                type="button"
-                variant="ghost"
-                {...iconButtonProps}
-                className={cn(
-                  expandAllButtonVariants({ density }),
-                  iconButtonProps?.className,
-                )}
-              >
-                {iconButtonProps?.children ?? (
-                  <KeyboardDoubleArrowDownIcon
-                    className={cn(
-                      'transition-transform duration-150',
-                      isAllRowsExpanded
-                        ? '-rotate-180'
-                        : getIsSomeRowsExpanded()
-                          ? '-rotate-90'
-                          : 'rotate-0',
-                    )}
-                  />
-                )}
-              </Button>
-            </span>
+            <Button
+              aria-label={localization.expandAll}
+              isDisabled={
+                isLoading || (!renderDetailPanel && !getCanSomeRowsExpand())
+              }
+              onClick={() => toggleAllRowsExpanded(!getIsAllRowsExpanded())}
+              size="icon"
+              type="button"
+              variant="ghost"
+              {...iconButtonProps}
+              className={cn(
+                expandAllButtonVariants({ density }),
+                iconButtonProps?.className,
+              )}
+            >
+              {iconButtonProps?.children ?? (
+                <KeyboardDoubleArrowDownIcon
+                  className={cn(
+                    'transition-transform duration-150',
+                    isAllRowsExpanded
+                      ? '-rotate-180'
+                      : getIsSomeRowsExpanded()
+                        ? '-rotate-90'
+                        : 'rotate-0',
+                  )}
+                />
+              )}
+            </Button>
           </ST_Tooltip>
         );
       }}

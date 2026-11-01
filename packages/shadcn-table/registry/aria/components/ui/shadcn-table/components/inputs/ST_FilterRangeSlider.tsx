@@ -123,6 +123,10 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
           }}
         >
           <Slider
+            aria-label={localization.filterByColumn?.replace(
+              '{column}',
+              String(columnDef.header),
+            )}
             maxValue={max}
             minValue={min}
             onChange={(values) => {

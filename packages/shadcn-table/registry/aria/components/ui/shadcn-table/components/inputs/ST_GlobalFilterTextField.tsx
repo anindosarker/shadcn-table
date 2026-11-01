@@ -145,7 +145,11 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
         <InputGroup className="focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
           {enableGlobalFilterModes ? (
             <InputGroupAddon align="inline-start">
-              <ST_Tooltip title={localization.changeSearchMode}>
+              {/* The closed panel is inert, and React Aria's Focusable warns about a child that cannot take focus. */}
+              <ST_Tooltip
+                disableHoverListener={!showGlobalFilter}
+                title={localization.changeSearchMode}
+              >
                 <InputGroupButton
                   aria-label={localization.changeSearchMode}
                   {...openerProps}
@@ -174,17 +178,18 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
             }}
           />
           <InputGroupAddon align="inline-end">
-            <ST_Tooltip title={localization.clearSearch ?? ''}>
-              <span>
-                <InputGroupButton
-                  aria-label={localization.clearSearch}
-                  isDisabled={!searchValue?.length}
-                  onClick={handleClear}
-                  size="icon-sm"
-                >
-                  <CloseIcon />
-                </InputGroupButton>
-              </span>
+            <ST_Tooltip
+              disableHoverListener={!showGlobalFilter}
+              title={localization.clearSearch ?? ''}
+            >
+              <InputGroupButton
+                aria-label={localization.clearSearch}
+                isDisabled={!searchValue?.length}
+                onClick={handleClear}
+                size="icon-sm"
+              >
+                <CloseIcon />
+              </InputGroupButton>
             </ST_Tooltip>
           </InputGroupAddon>
         </InputGroup>

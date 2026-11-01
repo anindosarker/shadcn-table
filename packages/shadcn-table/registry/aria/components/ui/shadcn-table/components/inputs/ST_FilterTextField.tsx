@@ -7,7 +7,11 @@ import {
   useState,
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
-import { type FocusableElement, type Key } from 'react-aria-components';
+import {
+  type FocusableElement,
+  type Key,
+  TagGroupContext,
+} from 'react-aria-components';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -624,18 +628,23 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
-                <ComboboxChipList>
-                  {({ id }: { id: string }) => (
-                    <ComboboxChip
-                      className="h-5 text-xs"
-                      id={id}
-                      key={id}
-                      textValue={optionLabel(id)}
-                    >
-                      {optionLabel(id)}
-                    </ComboboxChip>
-                  )}
-                </ComboboxChipList>
+                {/* The chip list part renders an unlabelled TagGroup; its context names it. */}
+                <TagGroupContext.Provider
+                  value={{ 'aria-label': filterPlaceholder }}
+                >
+                  <ComboboxChipList>
+                    {({ id }: { id: string }) => (
+                      <ComboboxChip
+                        className="h-5 text-xs"
+                        id={id}
+                        key={id}
+                        textValue={optionLabel(id)}
+                      >
+                        {optionLabel(id)}
+                      </ComboboxChip>
+                    )}
+                  </ComboboxChipList>
+                </TagGroupContext.Provider>
                 <ComboboxChipsInput
                   aria-label={filterPlaceholder}
                   className="min-w-4"
