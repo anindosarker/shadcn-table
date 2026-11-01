@@ -29,6 +29,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P5 Agent sandbox
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
+- Every agent stops what it started before it returns (dev servers, Storybook, `next start`, registry serves other than 5310, agent-browser and Chrome processes). The main session, at the end of a run, stops its own servers and watchers, removes the round's worktrees, deletes the throwaway apps under `test-projects/checks/` and ends its finished sub-agents.
 - Gates, smoke runs and bug repros never install into or modify an owner project (`test-projects/next-app`, `test-projects/vite-app`). Each gate creates its own throwaway app under `test-projects/checks/<base>-<purpose>/`.
 - Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line when a harness reminder gives one, otherwise no trailer.
 - Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; workstreams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
