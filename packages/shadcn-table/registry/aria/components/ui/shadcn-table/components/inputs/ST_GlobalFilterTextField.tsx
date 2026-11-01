@@ -139,10 +139,10 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
           itself; React Aria allows only the group and region roles here. */}
       <CollapsibleContent
         aria-label={localization.search}
-        className="overflow-hidden w-(--st-search-width) transition-[width,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none aria-hidden:w-12 aria-hidden:opacity-0"
+        className="-m-0.75 box-content overflow-hidden p-0.75 w-(--st-search-width) transition-[width,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none aria-hidden:w-12 aria-hidden:opacity-0"
         inert={!showGlobalFilter}
       >
-        <InputGroup>
+        <InputGroup className="focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
           {enableGlobalFilterModes ? (
             <InputGroupAddon align="inline-start">
               <ST_Tooltip title={localization.changeSearchMode}>

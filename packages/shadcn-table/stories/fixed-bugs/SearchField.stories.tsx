@@ -79,3 +79,24 @@ export const PositionLeft = {
     <ShadcnTable columns={columns} data={data} positionGlobalFilter="left" />
   ),
 };
+
+/** A pointer click on the toggle opens the field with the input focused and the group ring drawn. */
+export const RingAfterPointerOpen = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Mason');
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide search' }),
+    );
+    const { input } = panelOf(canvasElement);
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    const group = input.closest<HTMLElement>('[data-slot="input-group"]');
+    if (!group) throw new Error('input group not found');
+    await waitFor(() => {
+      const shadow = getComputedStyle(group).boxShadow;
+      expect(shadow).not.toBe('none');
+      expect(shadow).toMatch(/ 3px/);
+    });
+  },
+};
