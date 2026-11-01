@@ -2,7 +2,12 @@
 
 All notable changes to shadcn-table are recorded here, newest first, in the
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. Entries are
-written while the work happens, under `## Unreleased
+written while the work happens, under `## Unreleased`, below `### Breaking`,
+`### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`. The version pull request
+that the release workflow opens renames that heading to the version and the
+date; merging it publishes the section as the GitHub release notes.
+
+## Unreleased
 
 ### Fixed
 
