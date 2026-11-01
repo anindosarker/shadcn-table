@@ -146,9 +146,9 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
 
   return (
     <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
-      {/* isDisabled skips the focusable check on the inert span; the role satisfies the role check and stays hidden by aria-hidden. */}
+      {/* An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor. */}
       <Pressable isDisabled>
-        <span {...spanProps} role="button" />
+        <a {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="bottom start"
