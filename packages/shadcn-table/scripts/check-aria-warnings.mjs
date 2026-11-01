@@ -2,7 +2,8 @@
 /**
  * Counts React Aria development warnings on the aria Storybook dev server.
  *
- * Usage: node scripts/check-aria-warnings.mjs [--url http://localhost:5352]
+ * Usage: node scripts/check-aria-warnings.mjs [--url http://localhost:6008]
+ * (default: the aria Storybook dev port, BASE_PORTS.aria)
  *
  * Opens each story below, toggles one column action menu and one row action
  * menu where the story renders them, and counts console messages that carry
@@ -11,10 +12,12 @@
  */
 import { chromium } from 'playwright';
 
+import { BASE_PORTS } from './registry/bases.mjs';
+
 const args = process.argv.slice(2);
 const urlFlag = args.indexOf('--url');
 const baseUrl = (
-  urlFlag >= 0 ? args[urlFlag + 1] : 'http://localhost:5352'
+  urlFlag >= 0 ? args[urlFlag + 1] : `http://localhost:${BASE_PORTS.aria}`
 ).replace(/\/$/, '');
 
 const STORIES = [
