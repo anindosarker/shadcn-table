@@ -1,7 +1,8 @@
 // Writes `tsconfig.<PORT>.json` (`{ "extends": "./tsconfig.json" }`, git
 // ignored) before `next dev` on a port other than 5320. next.config.mjs points
-// `typescript.tsconfigPath` at it, so Next appends `.next-<PORT>/types` to the
-// copy and the committed `tsconfig.json` stays as it is.
+// `typescript.tsconfigPath` at it, so any `.next-<PORT>/types` edit Next makes
+// to the tsconfig it reads lands in the copy and the committed `tsconfig.json`
+// stays as it is.
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
