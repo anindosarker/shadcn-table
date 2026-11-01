@@ -69,18 +69,17 @@ export const ST_Tooltip = ({
   }>;
   const attachRef = useST_ComposedRef(triggerRef, trigger.props.ref);
 
-  // The library's `open` state controls the tooltip; Escape and blur close it
-  // until that state changes again.
-  const [dismissed, setDismissed] = React.useState<{
-    open: boolean | undefined;
-    isOpen: boolean;
-  } | null>(null);
-  const isOpen =
-    open === undefined
-      ? undefined
-      : dismissed?.open === open
-        ? dismissed.isOpen
-        : open;
+  // The library's `open` state controls the tooltip; Escape and blur override
+  // it until `open` changes, and each change clears the override.
+  const [dismissed, setDismissed] = React.useState<{ isOpen: boolean } | null>(
+    null,
+  );
+  const [prevOpen, setPrevOpen] = React.useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    setDismissed(null);
+  }
+  const isOpen = open === undefined ? undefined : (dismissed?.isOpen ?? open);
 
   if (disableHoverListener || (!title && title !== 0)) {
     return <>{children}</>;
@@ -98,7 +97,7 @@ export const ST_Tooltip = ({
       onOpenChange={
         open === undefined
           ? undefined
-          : (next) => setDismissed({ open, isOpen: next })
+          : (next) => setDismissed({ isOpen: next })
       }
       delay={delayDuration}
       closeDelay={disableHoverableContent ? 0 : undefined}
