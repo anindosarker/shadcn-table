@@ -74,8 +74,9 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
 
   return (
     <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
-      <Pressable>
-        <span {...spanProps} />
+      {/* An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor. */}
+      <Pressable isDisabled>
+        <a {...spanProps} />
       </Pressable>
       <DropdownMenu
         placement="bottom start"

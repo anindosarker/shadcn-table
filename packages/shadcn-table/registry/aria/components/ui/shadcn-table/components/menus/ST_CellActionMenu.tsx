@@ -127,8 +127,9 @@ const ST_CellActionMenuContent = <TData extends ST_RowData>({
   return (
     (!!menuItems?.length || !!internalMenuItems?.length) && (
       <DropdownMenuTrigger isOpen={!!cell} onOpenChange={onOpenChange}>
-        <Pressable>
-          <span {...spanProps} />
+        {/* An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor. */}
+        <Pressable isDisabled>
+          <a {...spanProps} />
         </Pressable>
         {/* placement, crossOffset and offset, measured from the anchor's bottom edge, put the menu at top = anchorTop - 8, left = anchorLeft + 100 */}
         <DropdownMenu
