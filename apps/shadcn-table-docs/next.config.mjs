@@ -13,8 +13,8 @@ const config = {
     (process.env.PORT && process.env.PORT !== '5320'
       ? `.next-${process.env.PORT}`
       : '.next'),
-  // Next appends `<distDir>/types` to the tsconfig it reads; the second
-  // server's git-ignored copy takes that edit, not tsconfig.json.
+  // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
+  // the second server's git-ignored copy, not tsconfig.json.
   typescript: {
     tsconfigPath:
       process.env.PORT && process.env.PORT !== '5320'
