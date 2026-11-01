@@ -132,11 +132,11 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
       {/* Radix zeroes the inline transition duration while it measures the
           panel, so the class duration is important. */}
       <CollapsibleContent
-        className="overflow-hidden w-(--st-search-width) transition-[width,opacity] duration-200! ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none data-[state=closed]:w-12 data-[state=closed]:opacity-0"
+        className="-m-0.75 box-content overflow-hidden p-0.75 w-(--st-search-width) transition-[width,opacity] duration-200! ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none data-[state=closed]:w-12 data-[state=closed]:opacity-0"
         forceMount
         inert={!showGlobalFilter}
       >
-        <InputGroup>
+        <InputGroup className="focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50">
           {enableGlobalFilterModes ? (
             <InputGroupAddon align="inline-start">
               <ST_Tooltip title={localization.changeSearchMode}>
