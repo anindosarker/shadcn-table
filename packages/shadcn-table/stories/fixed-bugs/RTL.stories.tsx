@@ -51,7 +51,7 @@ export const RightToLeft = {
     // The pinned edge shadow is cast outward, toward the scrolled columns,
     // which sit to the left in RTL: a negative x offset. Tailwind lists its
     // empty ring layers first, so the shadow is the last of the list.
-    const shadow = getComputedStyle(pinnedCell, '::before').boxShadow;
+    const shadow = getComputedStyle(pinnedCell).boxShadow;
     const lengths = [...shadow.matchAll(/(-?[\d.]+)px/g)].map((match) =>
       Number(match[1]),
     );
