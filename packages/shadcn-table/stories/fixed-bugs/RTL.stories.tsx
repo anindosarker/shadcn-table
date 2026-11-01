@@ -3,8 +3,9 @@ import { expect, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
 // A right-to-left page: the pinned column sticks through inset-inline-start,
-// and the resize handle sits at each header cell's inline-end edge, which is
-// the left side in RTL.
+// its edge shadow falls to the left onto the scrolled columns, and the resize
+// handle sits at each header cell's inline-end edge, which is the left side
+// in RTL.
 
 const meta: Meta = {
   title: 'Fixed Bugs/RTL',
@@ -46,6 +47,12 @@ export const RightToLeft = {
     if (!pinnedCell) throw new Error('pinned cell not found');
     await waitFor(() => expect(pinnedCell.style.insetInlineStart).not.toBe(''));
     expect(getComputedStyle(pinnedCell).position).toBe('sticky');
+
+    // The pinned edge shadow is cast outward, toward the scrolled columns,
+    // which sit to the left in RTL: a negative x offset.
+    const shadow = getComputedStyle(pinnedCell, '::before').boxShadow;
+    const offsetX = Number(/(-?[\d.]+)px/.exec(shadow)?.[1]);
+    expect(offsetX).toBeLessThan(0);
 
     const header = canvas.getByRole('columnheader', { name: /Last Name/ });
     const handle = header.querySelector<HTMLElement>('.cursor-col-resize');
