@@ -13,6 +13,9 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 06.1
 
+- Fixed: Pinned columns are opaque and their edge shadow falls on the scrolled columns, so
+  they read on top in light mode too; the bottom toolbar shadow falls on the table body.
+
 #### Spec 08.1
 
 - Docs: The docs page checks run on every pull request; a dev server on another port no longer rewrites the docs `tsconfig.json`.
