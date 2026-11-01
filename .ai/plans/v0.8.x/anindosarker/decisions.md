@@ -15,6 +15,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Header cells sit on a muted band with a hairline between columns; labels are medium weight in the muted foreground; each cell ends with a chevron menu trigger at full opacity; the sort arrow shows only while the column is sorted. The reference's header reads as a band, not as a bold first row.
 - Changes: `ST_TableHeadCell` background and dividers, label weight and colour, the column actions button becomes a chevron without the 30 percent opacity, `ST_TableHeadCellSortLabel` renders nothing when unsorted and a plain arrow when sorted (no button, no multi-sort index by default); the header row shadow and the 0.97 opacity go.
 - Stays: sorting state and multi-sort behaviour; `renderColumnActionsMenuItems`; the sort index badge as an opt-in (decided with the sort popover item).
+- Addendum 2026-11-01: no background on the header row. The owner checked the common shadcn data tables (ui.shadcn.com, tablecn, shadcn.io, shadcn-vue, shadcnstudio) and none tints the header; the demo was updated to match. The band is told apart by the muted label colour, the bottom hairline and the chevrons only. The tint-order note below applies to striped rows and hover only.
 - Tint order, owner note 2026-11-01: the header band is darker than the striped-row tint, which is darker than the row hover tint, all steps from the page background (the reference's four-step scheme: stripe, hover, header, grid line). The header must always read as one step above alternating rows.
 
 ### D3 Optional column icon
@@ -57,3 +58,9 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Hover tints the whole row evenly; the per-cell overlay layer, the row transition and the opacity drop while dragging go.
 - Changes: `ST_TableBodyRow`, `ST_TableBodyCell`, `ST_TableHeadCell` density classes and borders; the row-height estimates used by virtualization follow the new values.
 - Stays: 8 px horizontal cell padding at comfortable (the demo's `px-2 / px-3 / px-4` per density); the `hover` prop on `ST_TableBodyRow`.
+
+### D8 Toolbar button group
+
+- The top toolbar's built-in buttons form one right-aligned group in this order: search field and its toggle, filter picker, sort, the view items pinned to the toolbar, full screen, view settings. Buttons are `size="icon"` ghost and turn `secondary` with `aria-pressed` while their feature is active. The search field expands inline to the left of the group.
+- Changes: `ST_ToolbarInternalButtons` order and contents; `ST_ToggleGlobalFilterButton`, `ST_ToggleFullScreenButton` and the new buttons carry the active style; the separate columns and density buttons are replaced by the pinned view items (view settings item).
+- Stays: `renderToolbarInternalActions` replaces the whole group; `positionGlobalFilter`.
