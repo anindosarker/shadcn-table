@@ -38,3 +38,7 @@
 ## A36 The full-screen Escape listener matches any table's container
 
 - The document capture listener matches `[data-st-full-screen]` anywhere, so with two tables on a page Escape on a non-editable element inside table B leaves table A's full screen. One table per page is unaffected. A tighter match needs a container ref in `containerProps` (type widening, D29). Accept for 0.7.1, or widen later.
+
+## A37 The aria multi-select chip list got an `aria-label` beyond the spec's table
+
+- Zero React Aria warnings needed one more label than spec 10.1 1.6.2 listed: the `TagGroup` of the multi-select filter chips in aria `ST_FilterTextField.tsx` now carries the filter label as `aria-label`. Same localization string the field uses. Keep.
