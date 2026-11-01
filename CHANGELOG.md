@@ -15,6 +15,8 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 08.1
 
+- Docs: The docs page checks run on every pull request; a dev server on another port no longer rewrites the docs `tsconfig.json`.
+
 #### Spec 10.1
 
 ## 0.7.0 - 2026-10-31
