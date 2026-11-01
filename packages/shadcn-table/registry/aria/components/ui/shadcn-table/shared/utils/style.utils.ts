@@ -56,9 +56,9 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
     "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background data-[pinned=true]:before:content-['']",
     column
       ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
+        ? 'data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
         : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:before:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
+          ? 'data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
           : undefined
       : undefined,
   );
