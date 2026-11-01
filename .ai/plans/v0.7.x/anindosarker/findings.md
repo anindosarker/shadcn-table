@@ -527,3 +527,10 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - Both predate 0.7.0: v0.6.2 has `bg-background/97` and `rgba(97,97,97,0.5) inset` at the same sites; D32 changed the color source only.
 - Seen on https://storybook.shadcn-table.com/base/?path=/story/features-column-pinning-examples--column-pinning-initial, light and dark, 2026-11-01. All three bases.
 - Decided in D47 (sub-spec 06.1).
+
+### F63 Loading placeholders cause a React hydration warning
+
+- `components/body/ST_TableBodyCell.tsx:87-91` (all three bases): the skeleton width is drawn with `Math.random()` inside the `useState` initializer, so the server and the client render different widths and React warns on hydration for any table that renders placeholders on the server (a table that starts with `isLoading`, for example the docs home `EditingCRUDModal`). The placeholders then show the client widths; only the warning is wrong.
+- Since 0.7.0 (spec 02 under D8; A13 and D41 kept the mount-time width without an SSR check). v0.6.4 started at a fixed 100 and randomized in an effect, which hydrated clean. Still open in 0.7.1.
+- Reported by the owner from the next-app bugs list, item 10, 2026-11-01.
+- Fix shape within D8: a width that is the same on both sides at first render (a deterministic value from the column size and the row index, or the fixed width until mount with `useSyncExternalStore` or a `mounted` flag), never `Math.random()` during render.
