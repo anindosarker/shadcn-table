@@ -155,8 +155,9 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
 
   return (
     <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
-      <Pressable>
-        <span {...spanProps} />
+      {/* isDisabled skips the focusable check on the inert span; the role satisfies the role check and stays hidden by aria-hidden. */}
+      <Pressable isDisabled>
+        <span {...spanProps} role="button" />
       </Pressable>
       <DropdownMenu
         placement="bottom start"

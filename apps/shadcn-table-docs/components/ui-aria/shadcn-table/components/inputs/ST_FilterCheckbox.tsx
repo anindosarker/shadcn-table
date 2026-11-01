@@ -10,7 +10,6 @@ import {
   type ST_TableOptions,
 } from '@/components/ui-aria/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 
 const filterCheckboxVariants = cva('', {
   variants: {
@@ -78,46 +77,42 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
       })}
     >
       {({ density }) => (
-        <ST_Tooltip title={filterLabel}>
-          <Label
-            className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
-            title={undefined}
-          >
-            <ST_Checkbox
-              indeterminateIcon={table.options.icons.IndeterminateIcon}
-              // React Aria keeps the mixed state in its own `isIndeterminate`
-              // flag; `isSelected` is always a boolean.
-              isSelected={column.getFilterValue() === 'true'}
-              isIndeterminate={column.getFilterValue() === undefined}
-              {...checkboxProps}
-              onChange={(isSelected) => {
-                column.setFilterValue(
-                  column.getFilterValue() === undefined
-                    ? 'true'
-                    : column.getFilterValue() === 'true'
-                      ? 'false'
-                      : undefined,
-                );
-                checkboxProps?.onChange?.(isSelected);
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                checkboxProps?.onClick?.(e);
-              }}
-              className={cn(
-                filterCheckboxVariants({
-                  color:
-                    column.getFilterValue() === undefined
-                      ? 'default'
-                      : 'primary',
-                  density,
-                }),
-                checkboxProps?.className,
-              )}
-            />
-            {filterLabel}
-          </Label>
-        </ST_Tooltip>
+        <Label
+          className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
+          title={undefined}
+        >
+          <ST_Checkbox
+            indeterminateIcon={table.options.icons.IndeterminateIcon}
+            // React Aria keeps the mixed state in its own `isIndeterminate`
+            // flag; `isSelected` is always a boolean.
+            isSelected={column.getFilterValue() === 'true'}
+            isIndeterminate={column.getFilterValue() === undefined}
+            {...checkboxProps}
+            onChange={(isSelected) => {
+              column.setFilterValue(
+                column.getFilterValue() === undefined
+                  ? 'true'
+                  : column.getFilterValue() === 'true'
+                    ? 'false'
+                    : undefined,
+              );
+              checkboxProps?.onChange?.(isSelected);
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              checkboxProps?.onClick?.(e);
+            }}
+            className={cn(
+              filterCheckboxVariants({
+                color:
+                  column.getFilterValue() === undefined ? 'default' : 'primary',
+                density,
+              }),
+              checkboxProps?.className,
+            )}
+          />
+          {filterLabel}
+        </Label>
       )}
     </table.Subscribe>
   );

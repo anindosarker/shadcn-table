@@ -30,6 +30,7 @@ const ST_TableLayoutContainer = ({
 
   return (
     <div
+      data-st-full-screen={containerProps['data-st-full-screen']}
       onKeyDown={containerProps.onKeyDown}
       tabIndex={containerProps.tabIndex}
       {...layoutDivProps}
