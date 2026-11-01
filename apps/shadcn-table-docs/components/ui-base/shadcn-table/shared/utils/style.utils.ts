@@ -20,12 +20,12 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   const isPinned = column?.getIsPinned();
 
   return cn(
-    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background/97 data-[pinned=true]:before:content-['']",
+    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background data-[pinned=true]:before:content-['']",
     column
       ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:before:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
+        ? 'data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
         : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:before:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)_inset]'
+          ? 'data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
           : undefined
       : undefined,
   );
@@ -77,10 +77,7 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   const pinnedStyles: { className?: string; style?: CSSProperties } =
     isColumnPinned
       ? {
-          className: cn(
-            getCommonPinnedCellStyles({ column, table }),
-            'sticky opacity-[0.97]',
-          ),
+          className: cn(getCommonPinnedCellStyles({ column, table }), 'sticky'),
           style: {
             insetInlineStart:
               isColumnPinned === 'start'
