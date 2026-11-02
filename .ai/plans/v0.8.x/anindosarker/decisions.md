@@ -185,3 +185,11 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:60-69, 113-117`); ui.shadcn.com, shadcn-vue and tablecn use `hover:bg-muted/50` and `data-[state=selected]:bg-muted` with no variables.
 - Changes: `ST_TableLayout` root classes; `ST_TableBodyRow` and `ST_TableBodyCell` lose the per-cell `::after` overlay (D7) and read the tokens; `style.utils.ts` pinned shadow reads `--st-edge-shadow`.
 - Stays: the `hover` prop on `ST_TableBodyRow`; the selected-row state.
+
+### D24 New localization keys are optional, English only, other locales fall back
+
+- Every new user-facing string of the v0.8 chrome (column menu items D5 and D21, chips and picker D9, sort editor D10, view settings D11, scroll buttons D22, overflow and locked cues) is a key in `ST_Localization`. The new keys are optional members with English values in `en.ts` only; the other 38 locale files are untouched and fall back to English through the existing merge over `ST_Localization_EN` (`useST_TableOptions.ts:104-108`). Components read the merged object typed as `Required<ST_Localization>`. A full locale object such as `ST_Localization_DE` keeps type-checking. Translations arrive later per locale as ride-alongs.
+- Wording that differs from an existing key gets a new key and the old key stays: `sortAscending` / `sortDescending` beside `sortByColumnAsc` / `sortByColumnDesc`; `pinToStart` / `pinToEnd` beside `pinToLeft` / `pinToRight`; `hideThisColumn` beside `hideColumn`. Interpolation stays `{name}` style (`{n} sorts`, `{n} shown`).
+- Reference: MRT ships every key in every locale; the shadcn data tables hard-code English; the demo's strings are the English values (`view-settings.tsx:198-213`, `sort-popover.tsx`, `filter-bar.tsx`, `horizontal-overflow.tsx:100,115`, `column-header.tsx:489,568`).
+- Changes: `types.ts` `ST_Localization`; `shared/locales/en.ts`; the locale gate accepts a missing optional key and fails on a missing required one; every new component reads `localization`, never a literal.
+- Stays: existing keys and their texts; the `localization` option and the merge.
