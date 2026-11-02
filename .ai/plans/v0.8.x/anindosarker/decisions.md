@@ -63,6 +63,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 - The top toolbar's built-in buttons form one right-aligned group in this order: search field and its toggle, filter picker, sort, the view items pinned to the toolbar, full screen, view settings. Buttons are `size="icon"` ghost and turn `secondary` with `aria-pressed` while their feature is active. The search field expands inline to the left of the group.
 - Changes: `ST_ToolbarInternalButtons` order and contents; `ST_ToggleGlobalFilterButton`, `ST_ToggleFullScreenButton` and the new buttons carry the active style; the separate columns and density buttons are replaced by the pinned view items (view settings item).
+- Addendum 2026-11-02: the `secondary` fill applies only to the filter button while any filter exists, the sort button while any sort exists, and the chips themselves (`filter-bar.tsx:239`, `sort-popover.tsx:101`). Search, full screen, settings and every pinned view button stay ghost and show state through their icon only.
 - Stays: `renderToolbarInternalActions` replaces the whole group; `positionGlobalFilter`.
 
 ### D9 Filter chips are the default filter display
@@ -128,3 +129,31 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: Notion, Airtable and Linear show the full value on hover of a truncated cell; the shadcn data tables do not truncate.
 - Changes: `ST_TableBodyCell` wraps the value in `ST_OverflowText`; one `TooltipProvider` per table body; `enableCellOverflowTooltip` option default true.
 - Stays: `hover:text-clip` goes; a tag list with a "+n" popover stays an app-level custom `Cell`, not a library component.
+
+### D18 Chrome icons are the demo's picks
+
+- The library's `icons` map gains a key for every chrome icon the new look uses, with the demo's exact Lucide picks (`test-projects/next-app/components/demos/header-demo/*.tsx` at `2c0269f`):
+  - Column header: `ChevronDown` (menu trigger), `ArrowUp` and `ArrowDown` (sort state), `ListFilter` (filter item), `Pin` and `Pin` rotated 90 degrees (pin to start, pin to end), `PinOff` (unpin), `EyeOff` (hide), `X` (clear sort, clear filter), `Lock` (fixed position).
+  - Filter chips and picker: `ListFilter`, `Plus` ("+ Filter"), `Trash2` (remove, delete all), `X` (clear filters), `ChevronDown` (chip caret).
+  - Sort editor: `ArrowUpDown` (toolbar button and chip), `GripVertical` (rule handle), `Plus`, `Trash2`, `X`.
+  - View settings: `Settings2` (button), `Columns3` (columns), `ChevronRight` (columns row), density `Rows4`, `Rows3`, `Rows2` (compact, comfortable, spacious), wrap `WrapText` off and `ArrowRightToLine` on, grid lines as four library-drawn glyphs (`createLucideIcon` from plain row and column lines: all, rows, columns; `Square` for none), sticky header `PanelTop` on and `PanelTopDashed` off, alternating rows `GapVertical` on and `SquareCenterlineDashedVertical` off, row numbers `ListOrdered` on and `List` off, pin toggle `Pin` and `PinOff`, reset `RotateCcw`.
+  - Row actions: `MoreHorizontal` (existing key). Sideways scroll cue: `ChevronLeft`, `ChevronRight`.
+- Column-type icons (`Type`, `User`, `Calendar`, `Hash`, `Tags`, and the rest of `demo-context.tsx`) are app choices passed through `columnDef.icon` (D3); the library ships none.
+- Changes: new keys in `icons.ts` and `ST_IconKey`; the four grid-line glyphs ship in the library; every icon set from v0.7 (Tabler, Phosphor, Hugeicons, Remix) maps every new key, with a documented substitute where a set lacks the glyph; `check:icons` covers the new keys.
+- Stays: existing keys and their defaults; consumers override any key through `icons`.
+
+### D19 Sticky header scroll box capped at 70 percent of the window
+
+- `enableStickyHeader` stays off by default (forced on under row virtualization as today). When on, the scroll container owns the y axis and its height is capped by the CSS variable `--st-sticky-max-height`, default `70vh`; a consumer who owns the page layout sets the variable (`calc(100vh - 12rem)`, `none`) instead of a prop. Full screen keeps filling the padded window (D1). Pinned header cells sit above both scroll directions.
+- Reference: the demo (`header-demo.tsx:653-655`, `max-h-[70vh]`); MRT's inherited `clamp(350px, calc(100vh - toolbar), 9999px)` lets the header scroll out whenever page content sits above the table; the "fill the window height" variant needs runtime measurement and has no reference (v5 deleted).
+- Changes: `ST_TableContainer` max-height rule for the sticky case.
+- Stays: `enableStickyHeader`, `stTableContainerProps` style override, the full-screen rule.
+
+### D20 Column dragging on by default, header cell as the drag source
+
+- `enableColumnOrdering` defaults to true. The header cell itself is the drag source: grab cursor on hover only where the column can be dragged, a click still opens the column menu (D4), only a real drag moves the column. The grip button is optional and off by default (`showColumnDragHandle`, default false); `ST_GrabHandleButton` stays for row dragging and the columns menu.
+- Feedback: the dragged column gets a 1 px dashed `--muted-foreground` border and 50 percent opacity, the drop target a 2 px dashed `--primary` border, both down the whole column (today's values). Any cell of a column is a drop target; a drop takes the target's pinning. While dragging near an inner edge of the unpinned area the box scrolls sideways (64 px hot zone, up to 20 px per frame, with hit-tested `dragenter` for cells scrolling under a still pointer). Esc or dropping outside the table cancels: `dragover` sets `dropEffect` to `move` or `none` and `dragend` reorders only when the effect is not `none`; this also fixes today's library, which reorders on a cancelled drag.
+- Display columns stay non-draggable by default; the row actions column takes drops and moves through the columns menu but its header is not a drag source (D14). The order persists under D12 and Reset view restores it.
+- Reference: the demo (`column-header.tsx:234-327`, `use-drag-auto-scroll.ts`); Notion and Airtable drag the header with no grip; MRT shows a grip; the shadcn data tables have no reordering.
+- Changes: `useST_TableOptions` default; `ST_TableHeadCell` becomes the drag source and drops the grip unless the option is set; `ST_TableHeadCellGrabHandle` and the `dragend` handlers take the cancel rule; a `useDragAutoScroll` hook on `ST_TableContainer`.
+- Stays: `enableColumnOrdering: false` on the table or a column, `enableColumnDragging`, the grouping drop zone, `stColumnDragHandleProps`.
