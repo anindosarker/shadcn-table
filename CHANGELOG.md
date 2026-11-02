@@ -19,6 +19,8 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 08.2
 
+- A docs `next start` on any port serves the default build; the per-port build directory applies to `next dev` only.
+
 ## 0.7.1 - 2026-11-01
 
 ### Fixed
