@@ -15,6 +15,8 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 10.2
 
+- React Aria: the select and filter checkboxes and grouped values show their tooltips again.
+
 ### Docs
 
 #### Spec 08.2
