@@ -148,3 +148,12 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`header-demo.tsx:653-655`, `max-h-[70vh]`); MRT's inherited `clamp(350px, calc(100vh - toolbar), 9999px)` lets the header scroll out whenever page content sits above the table; the "fill the window height" variant needs runtime measurement and has no reference (v5 deleted).
 - Changes: `ST_TableContainer` max-height rule for the sticky case.
 - Stays: `enableStickyHeader`, `stTableContainerProps` style override, the full-screen rule.
+
+### D20 Column dragging on by default, header cell as the drag source
+
+- `enableColumnOrdering` defaults to true. The header cell itself is the drag source: grab cursor on hover only where the column can be dragged, a click still opens the column menu (D4), only a real drag moves the column. The grip button is optional and off by default (`showColumnDragHandle`, default false); `ST_GrabHandleButton` stays for row dragging and the columns menu.
+- Feedback: the dragged column gets a 1 px dashed `--muted-foreground` border and 50 percent opacity, the drop target a 2 px dashed `--primary` border, both down the whole column (today's values). Any cell of a column is a drop target; a drop takes the target's pinning. While dragging near an inner edge of the unpinned area the box scrolls sideways (64 px hot zone, up to 20 px per frame, with hit-tested `dragenter` for cells scrolling under a still pointer). Esc or dropping outside the table cancels: `dragover` sets `dropEffect` to `move` or `none` and `dragend` reorders only when the effect is not `none`; this also fixes today's library, which reorders on a cancelled drag.
+- Display columns stay non-draggable by default; the row actions column takes drops and moves through the columns menu but its header is not a drag source (D14). The order persists under D12 and Reset view restores it.
+- Reference: the demo (`column-header.tsx:234-327`, `use-drag-auto-scroll.ts`); Notion and Airtable drag the header with no grip; MRT shows a grip; the shadcn data tables have no reordering.
+- Changes: `useST_TableOptions` default; `ST_TableHeadCell` becomes the drag source and drops the grip unless the option is set; `ST_TableHeadCellGrabHandle` and the `dragend` handlers take the cancel rule; a `useDragAutoScroll` hook on `ST_TableContainer`.
+- Stays: `enableColumnOrdering: false` on the table or a column, `enableColumnDragging`, the grouping drop zone, `stColumnDragHandleProps`.
