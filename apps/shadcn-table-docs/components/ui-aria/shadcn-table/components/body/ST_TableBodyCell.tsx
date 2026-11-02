@@ -4,7 +4,6 @@ import {
   type MouseEvent,
   type ReactNode,
   type RefObject,
-  useState,
 } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
@@ -85,12 +84,15 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     table,
   });
 
-  const [skeletonWidth] = useState(() => {
-    const size = column.getSize();
-    return columnDefType === 'display'
-      ? size / 2
-      : Math.round(Math.random() * (size - size / 3) + size / 3);
-  });
+  // Same value on the server and the client: stepped by the row index.
+  const skeletonSize = column.getSize();
+  const skeletonWidth =
+    columnDefType === 'display'
+      ? skeletonSize / 2
+      : Math.round(
+          skeletonSize / 3 +
+            (((row.index * 37) % 67) / 100) * (skeletonSize - skeletonSize / 3),
+        );
 
   const isEditable = isCellEditable({ cell, table });
 

@@ -25,12 +25,15 @@ type NavigatorWithUAData = Navigator & {
   userAgentData?: { platform: string };
 };
 
-/** Lower-cased OS name; `navigator.userAgentData.platform` first. */
+/**
+ * Lower-cased OS name; `navigator.userAgentData.platform` first (Chromium only),
+ * else the platform word matched in `navigator.userAgent`, else the whole user agent.
+ */
 export const getPlatform = (): string =>
   (
     (navigator as NavigatorWithUAData).userAgentData?.platform ??
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- userAgentData is Chromium only; Firefox and Safari need the fallback
-    navigator.platform
+    /Mac|Win|Linux|iPhone|iPad|Android/.exec(navigator.userAgent)?.[0] ??
+    navigator.userAgent
   ).toLowerCase();
 
 export const getValueAndLabel = (
