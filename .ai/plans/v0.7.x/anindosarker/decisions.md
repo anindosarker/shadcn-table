@@ -436,8 +436,20 @@
 - `stories/features/ColumnDragging.stories.tsx` adds `enableColumnOrdering` beside `enableColumnDragging`, so the handle has a drop target and the drag reorders, as the column ordering story does; the Column Dragging docs guide says in one sentence that dragging needs ordering or grouping as its target. No library change (the gating is MRT's). Rides along with sub-spec `02.1`.
 - Source: F64
 
-### D61 Aria checkboxes and the group value show their tooltip through a standalone React Aria `Tooltip`
+### D61 Aria checkboxes and the group value show their tooltip through a standalone React Aria `Tooltip` (amended by D63)
 
 - Aria `ST_Tooltip` gains a `standalone` mode: the child renders as is (no `Focusable`, no `TooltipTrigger`) and the part's `Tooltip` renders beside it with `triggerRef` (the child ref `ST_Tooltip` already holds) and `isOpen` from the `open` prop, React Aria's documented standalone use ("`triggerRef` ... only required when used standalone"). `ST_SelectCheckbox`, `ST_FilterCheckbox` and the row-expand grouping value drive `open` from the control's `onHoverStart`, `onHoverEnd`, `onFocus` and `onBlur` (`CheckboxProps extends HoverEvents`); the grouping value span uses pointer enter and leave. Same bubble, same text as base and radix; no wrapper element, no warning, no Tab stop. Aria tree only; base and radix unchanged. Supersedes the A34 line of D42 for those three sites.
 - Sub-spec `10.2`, agent lane, ships as 0.7.2.
 - Source: A34
+
+## Round 5: triage of ATTENTION-2026-11-02
+
+### D62 The aria standalone tooltip carries its own trigger state context
+
+- `react-aria-components` 1.22.1's `Tooltip` reads `TooltipTriggerStateContext` in its inner component even with `triggerRef` and `isOpen` set, so the aria `ST_Tooltip` standalone mode wraps the part's `Tooltip` in a `TooltipTriggerStateContext.Provider` built from `isOpen`. The provider stays until an upstream fix lands; no upstream report filed by the run, the owner files one on `adobe/react-spectrum` if wanted (P6 search first). D61 behaviour unchanged. Shipped in 0.7.2.
+- Source: A40
+
+### D63 The aria standalone checkbox bubble opens on keyboard focus only
+
+- D61 amended: `ST_SelectCheckbox` and `ST_FilterCheckbox` open the bubble on hover, and on focus only when the control matches `:focus-visible`; a press closes it. This matches the base and radix tooltip parts, which open on keyboard focus and close on pointer down, so a mouse click shows no bubble in any base. The grouping value keeps pointer enter and leave. Shipped in 0.7.2 (`0882acc0`).
+- Source: A41
