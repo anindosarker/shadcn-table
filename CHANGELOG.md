@@ -13,6 +13,9 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 02.1
 
+- Loading placeholders no longer cause a hydration warning on server-rendered tables; the platform helper reads `navigator.userAgent` instead of the deprecated `navigator.platform`.
+- Docs: The Column Dragging story and guide show that dragging needs column ordering or grouping as its drop target.
+
 #### Spec 10.2
 
 ### Docs
