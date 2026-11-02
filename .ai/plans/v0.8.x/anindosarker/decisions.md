@@ -63,6 +63,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 - The top toolbar's built-in buttons form one right-aligned group in this order: search field and its toggle, filter picker, sort, the view items pinned to the toolbar, full screen, view settings. Buttons are `size="icon"` ghost and turn `secondary` with `aria-pressed` while their feature is active. The search field expands inline to the left of the group.
 - Changes: `ST_ToolbarInternalButtons` order and contents; `ST_ToggleGlobalFilterButton`, `ST_ToggleFullScreenButton` and the new buttons carry the active style; the separate columns and density buttons are replaced by the pinned view items (view settings item).
+- Addendum 2026-11-02: the `secondary` fill applies only to the filter button while any filter exists, the sort button while any sort exists, and the chips themselves (`filter-bar.tsx:239`, `sort-popover.tsx:101`). Search, full screen, settings and every pinned view button stay ghost and show state through their icon only.
 - Stays: `renderToolbarInternalActions` replaces the whole group; `positionGlobalFilter`.
 
 ### D9 Filter chips are the default filter display
