@@ -129,3 +129,15 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: Notion, Airtable and Linear show the full value on hover of a truncated cell; the shadcn data tables do not truncate.
 - Changes: `ST_TableBodyCell` wraps the value in `ST_OverflowText`; one `TooltipProvider` per table body; `enableCellOverflowTooltip` option default true.
 - Stays: `hover:text-clip` goes; a tag list with a "+n" popover stays an app-level custom `Cell`, not a library component.
+
+### D18 Chrome icons are the demo's picks
+
+- The library's `icons` map gains a key for every chrome icon the new look uses, with the demo's exact Lucide picks (`test-projects/next-app/components/demos/header-demo/*.tsx` at `2c0269f`):
+  - Column header: `ChevronDown` (menu trigger), `ArrowUp` and `ArrowDown` (sort state), `ListFilter` (filter item), `Pin` and `Pin` rotated 90 degrees (pin to start, pin to end), `PinOff` (unpin), `EyeOff` (hide), `X` (clear sort, clear filter), `Lock` (fixed position).
+  - Filter chips and picker: `ListFilter`, `Plus` ("+ Filter"), `Trash2` (remove, delete all), `X` (clear filters), `ChevronDown` (chip caret).
+  - Sort editor: `ArrowUpDown` (toolbar button and chip), `GripVertical` (rule handle), `Plus`, `Trash2`, `X`.
+  - View settings: `Settings2` (button), `Columns3` (columns), `ChevronRight` (columns row), density `Rows4`, `Rows3`, `Rows2` (compact, comfortable, spacious), wrap `WrapText` off and `ArrowRightToLine` on, grid lines as four library-drawn glyphs (`createLucideIcon` from plain row and column lines: all, rows, columns; `Square` for none), sticky header `PanelTop` on and `PanelTopDashed` off, alternating rows `GapVertical` on and `SquareCenterlineDashedVertical` off, row numbers `ListOrdered` on and `List` off, pin toggle `Pin` and `PinOff`, reset `RotateCcw`.
+  - Row actions: `MoreHorizontal` (existing key). Sideways scroll cue: `ChevronLeft`, `ChevronRight`.
+- Column-type icons (`Type`, `User`, `Calendar`, `Hash`, `Tags`, and the rest of `demo-context.tsx`) are app choices passed through `columnDef.icon` (D3); the library ships none.
+- Changes: new keys in `icons.ts` and `ST_IconKey`; the four grid-line glyphs ship in the library; every icon set from v0.7 (Tabler, Phosphor, Hugeicons, Remix) maps every new key, with a documented substitute where a set lacks the glyph; `check:icons` covers the new keys.
+- Stays: existing keys and their defaults; consumers override any key through `icons`.
