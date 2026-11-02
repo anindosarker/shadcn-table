@@ -197,32 +197,41 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 : localization.toggleSelectRow)
             }
           >
-            {enableMultiRowSelection === false ? (
-              // RadioGroupItem needs a RadioGroup: one group per row.
-              <RadioGroup
-                aria-label={commonProps['aria-label']}
-                className="w-fit"
-                value={isChecked ? 'on' : null}
-              >
-                <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
-              </RadioGroup>
-            ) : (
-              <ST_Checkbox
-                indeterminateIcon={table.options.icons.IndeterminateIcon}
-                {...commonProps}
-                // React Aria keeps `isIndeterminate` as its own flag beside
-                // `isSelected`, so it goes after the spread.
-                // getIsSomeRowsSelected and getIsSomeSelected include the
-                // all-selected case, so that case is gated out.
-                isIndeterminate={
-                  !isChecked && selectAll
-                    ? table.getIsSomeRowsSelected() && !allRowsSelected
-                    : row?.getIsSomeSelected() &&
-                      !row.getIsAllSubRowsSelected() &&
-                      row.getCanSelectSubRows()
-                }
-              />
-            )}
+            {/* Body: block-level and as wide as the control, so the cell centres
+                it and the bubble anchors on the control. Header: on the top of the
+                line box, the header text line top. Never on the baseline. */}
+            <span
+              className={cn(
+                selectAll ? 'inline-flex align-top' : 'flex w-fit items-center',
+              )}
+            >
+              {enableMultiRowSelection === false ? (
+                // RadioGroupItem needs a RadioGroup: one group per row.
+                <RadioGroup
+                  aria-label={commonProps['aria-label']}
+                  className="w-fit"
+                  value={isChecked ? 'on' : null}
+                >
+                  <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
+                </RadioGroup>
+              ) : (
+                <ST_Checkbox
+                  indeterminateIcon={table.options.icons.IndeterminateIcon}
+                  {...commonProps}
+                  // React Aria keeps `isIndeterminate` as its own flag beside
+                  // `isSelected`, so it goes after the spread.
+                  // getIsSomeRowsSelected and getIsSomeSelected include the
+                  // all-selected case, so that case is gated out.
+                  isIndeterminate={
+                    !isChecked && selectAll
+                      ? table.getIsSomeRowsSelected() && !allRowsSelected
+                      : row?.getIsSomeSelected() &&
+                        !row.getIsAllSubRowsSelected() &&
+                        row.getCanSelectSubRows()
+                  }
+                />
+              )}
+            </span>
           </ST_Tooltip>
         );
       }}
