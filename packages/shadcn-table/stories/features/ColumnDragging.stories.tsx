@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 
@@ -53,9 +54,43 @@ const data = [...Array(100)].map(() => ({
   state: faker.location.state(),
 }));
 
-export const ColumnDraggingEnabled = () => (
-  <ShadcnTable columns={columns} data={data} enableColumnDragging />
-);
+const headerNames = (canvasElement: HTMLElement) =>
+  Array.from(canvasElement.querySelectorAll('thead th')).map((th) =>
+    (th.textContent ?? '').trim(),
+  );
+
+export const ColumnDraggingEnabled = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableColumnDragging
+      enableColumnOrdering
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const headers = await canvas.findAllByRole('columnheader');
+    expect(headers[0]).toHaveTextContent('First Name');
+    expect(headers[2]).toHaveTextContent('Email Address');
+    const handle = within(headers[0]).getByRole('button', { name: 'Move' });
+    fireEvent.dragStart(handle);
+    fireEvent.dragEnter(headers[2]);
+    fireEvent.dragOver(headers[2]);
+    fireEvent.drop(headers[2]);
+    fireEvent.dragEnd(handle);
+    await waitFor(() =>
+      expect(headerNames(canvasElement)).toEqual([
+        'Last Name',
+        'Email Address',
+        'First Name',
+        'Address',
+        'City',
+        'State',
+      ]),
+    );
+  },
+};
 
 export const ColumnDraggingDisabledPerColumn = () => (
   <ShadcnTable
