@@ -430,3 +430,8 @@
 
 - `getPlatform` in `shared/utils/utils.ts` falls back from `userAgentData.platform` to a `navigator.userAgent` match instead of the deprecated `navigator.platform`, so no `no-deprecated` disable exists in the library and a consumer lint with `reportUnusedDisableDirectives` reports zero problems (D11 amended, D17 met). All three bases. Sub-spec `02.1`.
 - Source: A38
+
+### D60 The column dragging story turns column ordering on
+
+- `stories/features/ColumnDragging.stories.tsx` adds `enableColumnOrdering` beside `enableColumnDragging`, so the handle has a drop target and the drag reorders, as the column ordering story does; the Column Dragging docs guide says in one sentence that dragging needs ordering or grouping as its target. No library change (the gating is MRT's). Rides along with sub-spec `02.1`.
+- Source: F64
