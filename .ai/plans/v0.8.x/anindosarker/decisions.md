@@ -157,3 +157,11 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:234-327`, `use-drag-auto-scroll.ts`); Notion and Airtable drag the header with no grip; MRT shows a grip; the shadcn data tables have no reordering.
 - Changes: `useST_TableOptions` default; `ST_TableHeadCell` becomes the drag source and drops the grip unless the option is set; `ST_TableHeadCellGrabHandle` and the `dragend` handlers take the cancel rule; a `useDragAutoScroll` hook on `ST_TableContainer`.
 - Stays: `enableColumnOrdering: false` on the table or a column, `enableColumnDragging`, the grouping drop zone, `stColumnDragHandleProps`.
+
+### D21 Locked columns show their lock only while a drag is active
+
+- A column with `enableColumnOrdering: false` is locked: it looks normal at rest, shows no grab cursor and cannot be dragged. While another column drags, every cell of the locked column shows diagonal stripes (`repeating-linear-gradient(135deg, color-mix(in srgb, var(--muted-foreground) 12%, transparent) 0 6px, transparent 6px 12px)`) fading in over a muted fill, the header label gives way to the lock icon and "Fixed" (icon alone on narrow display columns), and the cursor shows not-allowed over it (`dropEffect: "none"`). The column menu lists a disabled "Fixed position" item with the lock icon, the one greyed item beside D5's active sort direction.
+- Which columns are locked is an app choice; the library locks only the row numbers column by default. The row actions column moves (D14).
+- Reference: the demo (`column-header.tsx:134-232, 437-439, 565-570`); Notion and Airtable fix the primary column with no cue; MRT hides the grip only.
+- Changes: `ST_TableHeadCell` and `ST_TableBodyCell` locked overlay driven by `draggingColumn`; the column menu item; `localization.fixedPosition`, `localization.fixed`; `icons.Lock` (D18).
+- Stays: `enableColumnOrdering: false` as the flag; the columns menu hides the grip for locked columns as today.
