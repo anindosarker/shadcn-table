@@ -17,7 +17,7 @@ export interface ST_TooltipProps {
   disableHoverableContent?: boolean;
   disableHoverListener?: boolean;
   open?: boolean;
-  /** Aria only: no TooltipTrigger; the bubble positions on the child and opens from `open`. */
+  /** Aria only: no TooltipTrigger; the bubble positions on the child and opens from `open`; `delayDuration` and `disableHoverableContent` do not apply. */
   standalone?: boolean;
 }
 
