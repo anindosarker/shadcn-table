@@ -1,4 +1,8 @@
 import * as React from 'react';
+import {
+  type TooltipTriggerState,
+  TooltipTriggerStateContext,
+} from 'react-aria-components';
 import { Tooltip, TooltipTrigger } from '@/components/ui-aria/tooltip';
 import { getCommonTooltipProps } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 import { useST_ComposedRef } from '@/components/ui-aria/shadcn-table/hooks/useST_ComposedRef';
@@ -13,6 +17,8 @@ export interface ST_TooltipProps {
   disableHoverableContent?: boolean;
   disableHoverListener?: boolean;
   open?: boolean;
+  /** Aria only: no TooltipTrigger; the bubble positions on the child and opens from `open`. */
+  standalone?: boolean;
 }
 
 /** Trigger nodes whose aria-label this component wrote, so a title change updates it. */
@@ -50,6 +56,7 @@ export const ST_Tooltip = ({
   side = 'bottom',
   disableHoverListener,
   open,
+  standalone,
   ...rest
 }: ST_TooltipProps) => {
   const {
@@ -80,9 +87,42 @@ export const ST_Tooltip = ({
     setDismissed(null);
   }
   const isOpen = open === undefined ? undefined : (dismissed?.isOpen ?? open);
+  const onOpenChange =
+    open === undefined
+      ? undefined
+      : (next: boolean) => setDismissed({ isOpen: next });
 
   if (disableHoverListener || (!title && title !== 0)) {
     return <>{children}</>;
+  }
+
+  // React Aria's standalone Tooltip: no TooltipTrigger and no Focusable, so a
+  // control that is not a focusable element (a checkbox label, a radio group,
+  // a text span) keeps its own role. The caller opens it from its own events.
+  // React Aria 1.22's Tooltip positions from the TooltipTriggerStateContext
+  // state even when `isOpen` is given, so the state goes in that context.
+  if (standalone) {
+    const state: TooltipTriggerState = {
+      isOpen: isOpen ?? false,
+      shouldSkipAnimation: false,
+      open: () => onOpenChange?.(true),
+      close: () => onOpenChange?.(false),
+    };
+    return (
+      <>
+        {React.cloneElement(trigger, { ref: attachRef })}
+        <TooltipTriggerStateContext.Provider value={state}>
+          <Tooltip
+            triggerRef={triggerRef}
+            isOpen={state.isOpen}
+            onOpenChange={onOpenChange}
+            placement={commonSide}
+          >
+            {title}
+          </Tooltip>
+        </TooltipTriggerStateContext.Provider>
+      </>
+    );
   }
 
   // React Aria's Focusable warns about a child that cannot take focus, so a
@@ -94,11 +134,7 @@ export const ST_Tooltip = ({
   return (
     <TooltipTrigger
       isOpen={isOpen}
-      onOpenChange={
-        open === undefined
-          ? undefined
-          : (next) => setDismissed({ isOpen: next })
-      }
+      onOpenChange={onOpenChange}
       delay={delayDuration}
       closeDelay={disableHoverableContent ? 0 : undefined}
     >
