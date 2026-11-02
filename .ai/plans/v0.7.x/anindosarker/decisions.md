@@ -375,3 +375,69 @@
 
 - Sub-specs 06.1, 08.1 and 10.1 ship as 0.7.1, label `release:patch` on the `dev` into `master` PR; sub-spec `09.1` runs the gates per D40 and the release per P3.
 - Source: A14, A20, A26
+
+## Round 4: triage of ATTENTION-2026-11-01
+
+### D50 Skeleton widths are deterministic, never random during render
+
+- `ST_TableBodyCell` derives the loading placeholder width from the column size and the row index (same value on the server and the client), so no hydration warning; no `Math.random()` in render, no effect, no setState (D8 stands). Display columns keep half the column size. All three bases.
+- Sub-spec `02.1`, agent lane; ships as 0.7.2 with this round.
+- Source: F63 (owner, next-app bugs item 10)
+
+### D51 The pinned edge shadow sits on the cell, not on its backdrop
+
+- Body cells are `overflow-hidden` (`ST_TableBodyCell.tsx:39`), which clips a `::before` shadow, so the outward edge shadow is a `data-[pinned=true]:shadow-[...]` class on the pinned cell with its `rtl:` mirror; the `::before` keeps the opaque backdrop. Same color, blur and direction as D47. Spec 06.1 text updated in place.
+- Source: A28
+
+### D52 Judged clauses run in the main session
+
+- Sub-agent sandboxes have no agent-spawn tool, so the three judges of every judged Acceptance clause run from the main session after the verifier returns, before the merge; the verifier records the capture paths. The workflow template says so in the verify prompt; the run never waits on a judge inside a sandbox.
+- Source: A29
+
+### D53 The pages CI job stays as built
+
+- Fourteen to fifteen minutes per base, five clusters to the end, red once; accepted. A shared build artifact is a later optimization, not a decision.
+- Source: A30
+
+### D54 The docs `distDir` follows the port only under `next dev`
+
+- `next.config.mjs` derives `.next-<port>` from `PORT` only when the command is `next dev` (`process.env.NEXT_DEV` set by the dev script, or the `npm_lifecycle_event` check), so `next start -p <port>` finds the default build without `NEXT_DIST_DIR`. Sub-spec `08.2`, inline lane.
+- Source: A31
+
+### D55 The aria menu anchor is an `<a>` element without `href` or role
+
+- D26 holds: no role on a hidden element. React Aria's `Pressable` skips its role check for `a`, so the five aria menus render `<a {...spanProps} />` (`aria-hidden`, `tabIndex -1`, `inert`) inside `<Pressable isDisabled>`; `useST_MenuAnchor` keeps the `spanProps` name. Shipped in 0.7.1.
+- Source: A32
+
+### D56 `ST_TableLayout` passes the full-screen container attribute
+
+- One line per base: the layout forwards `data-st-full-screen` from `containerProps` beside `onKeyDown` and `tabIndex`; spec 10.1 1.6.4's "does NOT change `ST_TableLayout`" is amended. Shipped in 0.7.1.
+- Source: A33
+
+### D57 The aria progress bar's label stays an overridable English string
+
+- No `ST_Localization` key for the loading state in 0.7.x; `aria-label` is "Loading", overridable through `stLinearProgressProps`. A `loading` key joins the localization type in v0.8.x.
+- Deferred to v0.8.x
+- Source: A35
+
+### D58 The full-screen Escape listener matches any table container
+
+- One table per page is the supported case; with two tables in full screen, Escape inside one leaves the other's full screen too. A container ref in `containerProps` (type widening, D29) is a v0.8.x item.
+- Deferred to v0.8.x
+- Source: A36, A37
+
+### D59 The platform helper reads `navigator.userAgent` as its fallback
+
+- `getPlatform` in `shared/utils/utils.ts` falls back from `userAgentData.platform` to a `navigator.userAgent` match instead of the deprecated `navigator.platform`, so no `no-deprecated` disable exists in the library and a consumer lint with `reportUnusedDisableDirectives` reports zero problems (D11 amended, D17 met). All three bases. Sub-spec `02.1`.
+- Source: A38
+
+### D60 The column dragging story turns column ordering on
+
+- `stories/features/ColumnDragging.stories.tsx` adds `enableColumnOrdering` beside `enableColumnDragging`, so the handle has a drop target and the drag reorders, as the column ordering story does; the Column Dragging docs guide says in one sentence that dragging needs ordering or grouping as its target. No library change (the gating is MRT's). Rides along with sub-spec `02.1`.
+- Source: F64
+
+### D61 Aria checkboxes and the group value show their tooltip through a standalone React Aria `Tooltip`
+
+- Aria `ST_Tooltip` gains a `standalone` mode: the child renders as is (no `Focusable`, no `TooltipTrigger`) and the part's `Tooltip` renders beside it with `triggerRef` (the child ref `ST_Tooltip` already holds) and `isOpen` from the `open` prop, React Aria's documented standalone use ("`triggerRef` ... only required when used standalone"). `ST_SelectCheckbox`, `ST_FilterCheckbox` and the row-expand grouping value drive `open` from the control's `onHoverStart`, `onHoverEnd`, `onFocus` and `onBlur` (`CheckboxProps extends HoverEvents`); the grouping value span uses pointer enter and leave. Same bubble, same text as base and radix; no wrapper element, no warning, no Tab stop. Aria tree only; base and radix unchanged. Supersedes the A34 line of D42 for those three sites.
+- Sub-spec `10.2`, agent lane, ships as 0.7.2.
+- Source: A34

@@ -1,7 +1,8 @@
-import { type MouseEvent } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { type FocusableElement } from 'react-aria-components';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
@@ -60,6 +61,9 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
 
   const selectAll = !row;
 
+  // The control's own hover and focus open the standalone tooltip.
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
   const getAllRowsSelected = () =>
     selectAllMode === 'page'
       ? table.getIsAllPageRowsSelected()
@@ -116,8 +120,28 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       // React Aria change callbacks carry no DOM event (shiftKey), so selection
       // runs in onClick.
       ...checkboxProps,
+      onHoverStart: (e) => {
+        setTooltipOpen(true);
+        checkboxProps?.onHoverStart?.(e);
+      },
+      onHoverEnd: (e) => {
+        setTooltipOpen(false);
+        checkboxProps?.onHoverEnd?.(e);
+      },
+      onFocus: (e) => {
+        // Keyboard focus only, as React Aria's TooltipTrigger does.
+        if ((e.target as HTMLElement).matches(':focus-visible'))
+          setTooltipOpen(true);
+        checkboxProps?.onFocus?.(e);
+      },
+      onBlur: (e) => {
+        setTooltipOpen(false);
+        checkboxProps?.onBlur?.(e);
+      },
       onClick: (e: MouseEvent<FocusableElement>) => {
         e.stopPropagation();
+        // A press closes the bubble, as in React Aria's TooltipTrigger.
+        setTooltipOpen(false);
         // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
           // The handlers read only target, shiftKey and nativeEvent.
@@ -163,11 +187,21 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         const isChecked = getIsChecked();
         const commonProps = getCommonProps({ density, isChecked, isLoading });
         return (
-          <span className="inline-flex">
+          <ST_Tooltip
+            standalone
+            open={tooltipOpen}
+            title={
+              checkboxTitle ??
+              (selectAll
+                ? localization.toggleSelectAll
+                : localization.toggleSelectRow)
+            }
+          >
             {enableMultiRowSelection === false ? (
               // RadioGroupItem needs a RadioGroup: one group per row.
               <RadioGroup
                 aria-label={commonProps['aria-label']}
+                className="w-fit"
                 value={isChecked ? 'on' : null}
               >
                 <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
@@ -189,7 +223,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 }
               />
             )}
-          </span>
+          </ST_Tooltip>
         );
       }}
     </table.Subscribe>
