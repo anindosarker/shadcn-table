@@ -5,7 +5,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P1 Branches and worktrees
 
 - `claude/review` integration, `dev` its fast-forward mirror, `master` release only.
-- A run branch is `v<major>.<minor>/<slug>` from `origin/claude/review`, never from an unmerged tip; its worktree is `../shadcn-react-table.worktrees/<slug>`. Never touch `wt1` and `wt2`.
+- A run branch is `v<major>.<minor>/<slug>` from `origin/claude/review`, never from an unmerged tip. It is checked out in a pool worktree: `../shadcn-react-table.worktrees/01` to `09` exist, clean, dependencies installed; the run plan assigns one per workstream and the main session runs `git -C <wt> checkout -B v<major>.<minor>/<slug> origin/claude/review && git -C <wt> push -u origin v<major>.<minor>/<slug>` there. Never create or remove a worktree, never touch `wt1`, `wt2` and `changelog`; after the merge the pool worktree keeps its branch until the next run reuses it. `pnpm install --frozen-lockfile` only when the lockfile changed since the worktree's last install.
 - Never force-push these branches; never bare `git stash` (shared stack).
 - After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit; tracker, ATTENTION and handoff commits during a round need no sync.
 
