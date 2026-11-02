@@ -121,3 +121,10 @@ The reference for every look decision is the owner's header demo (`test-projects
 - The empty table keeps one row spanning the columns with `localization.noRecordsToDisplay` (or `noResultsFound` while filters are active), centred and muted, 96 px tall, not italic, matching the shadcn references' "No results." row.
 - Changes: `ST_TableBody` empty row classes only.
 - Stays: the texts, `renderEmptyRowsFallback`.
+
+### D17 Cut-off text gets a tooltip
+
+- Cell text is cut with an ellipsis on one line by default; the wrap view setting (D11) shows it in full. A tooltip with the full value opens only when the text is actually cut off (`scrollWidth > clientWidth`), after the normal delay. Plain text cells get it automatically; custom cells opt in through the exported `ST_OverflowText`; `columnDef.overflowTooltip` sets it per column (`false`, `'value'`, or a render); display columns never show it.
+- Reference: Notion, Airtable and Linear show the full value on hover of a truncated cell; the shadcn data tables do not truncate.
+- Changes: `ST_TableBodyCell` wraps the value in `ST_OverflowText`; one `TooltipProvider` per table body; `enableCellOverflowTooltip` option default true.
+- Stays: `hover:text-clip` goes; a tag list with a "+n" popover stays an app-level custom `Cell`, not a library component.
