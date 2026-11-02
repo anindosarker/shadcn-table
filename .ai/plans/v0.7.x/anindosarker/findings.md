@@ -534,9 +534,10 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - Since 0.7.0 (spec 02 under D8; A13 and D41 kept the mount-time width without an SSR check). v0.6.4 started at a fixed 100 and randomized in an effect, which hydrated clean. Still open in 0.7.1.
 - Reported by the owner from the next-app bugs list, item 10, 2026-11-01.
 - Fix shape within D8: a width that is the same on both sides at first render (a deterministic value from the column size and the row index, or the fixed width until mount with `useSyncExternalStore` or a `mounted` flag), never `Math.random()` during render.
+- Decided in D50; spec 02.1.
 
 ### F64 Column dragging does not work in the Storybook example
 
 - https://storybook.shadcn-table.com/base/?path=/story/features-column-dragging-examples--column-dragging-enabled (0.7.1 build): dragging a column header does not reorder the columns. Reported by the owner 2026-11-02; bases, exact failure (no drag start, no drop, or no state update) and whether 0.6.4 behaves the same are to be reproduced in the browser before the fix (P6). Candidate area: the drag handlers under `components/head/ST_TableHeadCellGrabHandle.tsx` and `features/stColumnDraggingFeature.ts`, touched by spec 02 (D5 refs, D7 no input mutation) and spec 10.
 - Reproduced 2026-11-02 (live 0.7.1, real pointer events, base, radix, aria alike): the drag starts (handle `draggable`, `dragstart` fires, the source header goes dashed), no header highlights, the order never changes, no console message. Cause is the story, not the library: `stories/features/ColumnDragging.stories.tsx:57` sets `enableColumnDragging` alone; `ST_TableHeadCell.tsx:79` sets `hoveredColumn` only when `enableColumnOrdering` is on, and `ST_TableHeadCellGrabHandle.tsx:67-70` reorders only with ordering or a grouping drop zone (MRT parity). The column ordering and row ordering stories reorder correctly. No library file in `v0.6.4..v0.7.1` changed the drag path beyond comments and a class rename, so 0.6.4 behaves the same.
-- Decided in D60.
+- Decided in D60; spec 02.1.
