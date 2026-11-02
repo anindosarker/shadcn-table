@@ -13,6 +13,8 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 10.3
 
+- The row select checkbox is centred in its cell and the select-all checkbox sits on the header line, the same in every base.
+
 ## 0.7.2 - 2026-11-02
 
 ### Fixed
