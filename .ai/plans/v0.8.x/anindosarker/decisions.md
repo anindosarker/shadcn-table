@@ -148,6 +148,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`header-demo.tsx:653-655`, `max-h-[70vh]`); MRT's inherited `clamp(350px, calc(100vh - toolbar), 9999px)` lets the header scroll out whenever page content sits above the table; the "fill the window height" variant needs runtime measurement and has no reference (v5 deleted).
 - Changes: `ST_TableContainer` max-height rule for the sticky case.
 - Stays: `enableStickyHeader`, `stTableContainerProps` style override, the full-screen rule.
+- Addendum 2026-11-03: the `70vh` default applies only when the sticky header is on by choice (the option or the view setting). A table whose sticky header is forced by `enableRowVirtualization` (`useST_TableOptions.ts:144`) keeps today's full-height rule (`clamp(350px, calc(100vh - toolbar), 9999px)`); it reads the same `--st-sticky-max-height` variable, only the default differs. No silent shrink for virtualized tables.
 
 ### D20 Column dragging on by default, header cell as the drag source
 
