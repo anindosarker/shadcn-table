@@ -165,3 +165,11 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:134-232, 437-439, 565-570`); Notion and Airtable fix the primary column with no cue; MRT hides the grip only.
 - Changes: `ST_TableHeadCell` and `ST_TableBodyCell` locked overlay driven by `draggingColumn`; the column menu item; `localization.fixedPosition`, `localization.fixed`; `icons.Lock` (D18).
 - Stays: `enableColumnOrdering: false` as the flag; the columns menu hides the grip for locked columns as today.
+
+### D22 Hidden-columns cue: pinned-edge shadow and hover scroll chevrons
+
+- The inner-edge pinned cells, header and body, cast a small soft shadow towards the scrolling content (`drop-shadow-sm` tinted `--border` in light mode and black at 50 percent in dark mode, clipped so only the inner side shows), always on while that side has visible pinned columns; a side with nothing pinned gets no shadow. On a side with hidden columns, hovering the table shows a ghost icon button (`bg-background text-muted-foreground`) centred in the header row just inside the pinned columns' inner edge; a click scrolls 80 percent of the visible unpinned width, smooth; hidden buttons are `invisible` and out of the tab order. The thin always-visible scrollbar stays. On by default (`enableScrollButtons`).
+- Overflow state is tracked with a passive scroll listener and a ResizeObserver writing `data-overflow-start` / `data-overflow-end` on the scroll wrapper, with no re-render per scroll.
+- Reference: the demo (`column-header.tsx:95-124`, `horizontal-overflow.tsx`; v13 promoted at `cca3413`); Airtable and Linear show the edge shadow only; Notion shows nothing beyond the scrollbar.
+- Changes: `style.utils.ts` pinned shadow colour and placement; a `useHorizontalOverflow` hook and `ST_ScrollButtons` in `ST_TableContainer`; `icons.ChevronLeft` / `ChevronRight` (D18); `localization.scrollLeft` / `scrollRight`.
+- Stays: the container scrollbar rules; pinned cells keep opaque backgrounds (D7, 0.7.1 D47).
