@@ -16,7 +16,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Changes: `ST_TableHeadCell` background and dividers, label weight and colour, the column actions button becomes a chevron without the 30 percent opacity, `ST_TableHeadCellSortLabel` renders nothing when unsorted and a plain arrow when sorted (no button, no multi-sort index by default); the header row shadow and the 0.97 opacity go.
 - Stays: sorting state and multi-sort behaviour; `renderColumnActionsMenuItems`; the sort index badge as an opt-in (decided with the sort popover item).
 - Addendum 2026-11-01: no background on the header row. The owner checked the common shadcn data tables (ui.shadcn.com, tablecn, shadcn.io, shadcn-vue, shadcnstudio) and none tints the header; the demo was updated to match. The band is told apart by the muted label colour, the bottom hairline and the chevrons only. The tint-order note below applies to striped rows and hover only.
-- Tint order, owner note 2026-11-01: the header band is darker than the striped-row tint, which is darker than the row hover tint, all steps from the page background (the reference's four-step scheme: stripe, hover, header, grid line). The header must always read as one step above alternating rows.
+- Tint order, owner note 2026-11-01: the header band is darker than the striped-row tint, which is darker than the row hover tint, all steps from the page background (the reference's four-step scheme: stripe, hover, header, grid line). The header must always read as one step above alternating rows. Superseded by D23 (hover reads stronger than stripe; header has no tint).
 
 ### D3 Optional column icon
 
@@ -174,3 +174,14 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:95-124`, `horizontal-overflow.tsx`; v13 promoted at `cca3413`); Airtable and Linear show the edge shadow only; Notion shows nothing beyond the scrollbar.
 - Changes: `style.utils.ts` pinned shadow colour and placement; a `useHorizontalOverflow` hook and `ST_ScrollButtons` in `ST_TableContainer`; `icons.ChevronLeft` / `ChevronRight` (D18); `localization.scrollLeft` / `scrollRight`.
 - Stays: the container scrollbar rules; pinned cells keep opaque backgrounds (D7, 0.7.1 D47).
+- Addendum 2026-11-03: the shadow colour comes from the `--st-edge-shadow` token (D23), not from `--border` light / black dark.
+
+### D23 Tint tokens: four theme-derived CSS variables, declared inside the components
+
+- The table root (`ST_TableLayout`) declares four CSS variables through Tailwind arbitrary-property utilities with `dark:` twins; no stylesheet, no registry `cssVars`, a library install never touches `globals.css`. Cells read them (`bg-(--st-stripe)`, `group-hover/row:bg-(--st-hover)`, `data-[state=selected]:bg-(--st-selected)`, `drop-shadow-(color:--st-edge-shadow)` on the pinned inner-edge cells).
+- Defaults, all opaque mixes with `--background` so pinned cells reuse the same token and never turn see-through (0.7.1 D47): `--st-stripe` = `color-mix(in srgb, var(--muted) 70%, var(--background))` light, 25 percent dark; `--st-hover` = `--border` 50 percent light, `--muted` 55 percent dark; `--st-selected` = `--primary` 20 percent (today's value); `--st-edge-shadow` = `oklch(from var(--background) calc(l - 0.08) c h)` in both modes, `--border` where relative colour syntax is unsupported (`supports-[…]:` variant).
+- Order rule: hover replaces the stripe on a hovered row and reads stronger than it; selection reads stronger than hover; the header stays `--background`; grid lines stay `--border`. The demo's percentages are the defaults; a spec may tune them only within this order. No hard-coded colour anywhere.
+- Override: `stTableLayoutProps.className` or any ancestor sets the same variable; no new table options.
+- Reference: the demo (`column-header.tsx:60-69, 113-117`); ui.shadcn.com, shadcn-vue and tablecn use `hover:bg-muted/50` and `data-[state=selected]:bg-muted` with no variables.
+- Changes: `ST_TableLayout` root classes; `ST_TableBodyRow` and `ST_TableBodyCell` lose the per-cell `::after` overlay (D7) and read the tokens; `style.utils.ts` pinned shadow reads `--st-edge-shadow`.
+- Stays: the `hover` prop on `ST_TableBodyRow`; the selected-row state.
