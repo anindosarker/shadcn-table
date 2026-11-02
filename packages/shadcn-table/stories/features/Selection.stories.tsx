@@ -11,7 +11,8 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Selection Examples',
@@ -47,6 +48,23 @@ const data = [...Array(15)].map(() => ({
   lastName: faker.person.lastName(),
 }));
 
+const SELECT_CONTROL = '[data-slot="checkbox"], [data-slot="radio-group-item"]';
+
+// The first body row's select control is centred in its cell (D64).
+const expectBodyControlCentred = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const control = canvasElement.querySelector<HTMLElement>(
+      `tbody tr td ${SELECT_CONTROL}`,
+    );
+    expect(control).not.toBeNull();
+    const cell = control!.closest('td')!.getBoundingClientRect();
+    const box = control!.getBoundingClientRect();
+    expect(
+      Math.abs(box.top + box.height / 2 - (cell.top + cell.height / 2)),
+    ).toBeLessThanOrEqual(1);
+  });
+};
+
 export const SelectionEnabled = () => (
   <ShadcnTable
     columns={columns}
@@ -55,6 +73,25 @@ export const SelectionEnabled = () => (
     enableRowSelection
   />
 );
+
+// Body control centred in its cell; the select-all control's top on the
+// header text line top, the th's padding-top (D64).
+SelectionEnabled.play = async ({ canvasElement }: StoryContext) => {
+  await expectBodyControlCentred(canvasElement);
+  await waitFor(() => {
+    const control = canvasElement.querySelector<HTMLElement>(
+      `thead th ${SELECT_CONTROL}`,
+    );
+    expect(control).not.toBeNull();
+    const th = control!.closest('th')!;
+    const lineTop =
+      th.getBoundingClientRect().top +
+      parseFloat(getComputedStyle(th).paddingTop);
+    expect(
+      Math.abs(control!.getBoundingClientRect().top - lineTop),
+    ).toBeLessThanOrEqual(1);
+  });
+};
 
 export const DisableSelectAll = () => (
   <ShadcnTable
@@ -207,6 +244,11 @@ export const SingleSelectionRadio = () => (
     enableRowSelection
   />
 );
+
+// The radio story has no header control.
+SingleSelectionRadio.play = async ({ canvasElement }: StoryContext) => {
+  await expectBodyControlCentred(canvasElement);
+};
 
 export const SingleSelectionRadioWithRowClick = () => (
   <ShadcnTable
