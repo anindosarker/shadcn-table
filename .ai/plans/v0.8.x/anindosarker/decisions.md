@@ -141,3 +141,10 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Column-type icons (`Type`, `User`, `Calendar`, `Hash`, `Tags`, and the rest of `demo-context.tsx`) are app choices passed through `columnDef.icon` (D3); the library ships none.
 - Changes: new keys in `icons.ts` and `ST_IconKey`; the four grid-line glyphs ship in the library; every icon set from v0.7 (Tabler, Phosphor, Hugeicons, Remix) maps every new key, with a documented substitute where a set lacks the glyph; `check:icons` covers the new keys.
 - Stays: existing keys and their defaults; consumers override any key through `icons`.
+
+### D19 Sticky header scroll box capped at 70 percent of the window
+
+- `enableStickyHeader` stays off by default (forced on under row virtualization as today). When on, the scroll container owns the y axis and its height is capped by the CSS variable `--st-sticky-max-height`, default `70vh`; a consumer who owns the page layout sets the variable (`calc(100vh - 12rem)`, `none`) instead of a prop. Full screen keeps filling the padded window (D1). Pinned header cells sit above both scroll directions.
+- Reference: the demo (`header-demo.tsx:653-655`, `max-h-[70vh]`); MRT's inherited `clamp(350px, calc(100vh - toolbar), 9999px)` lets the header scroll out whenever page content sits above the table; the "fill the window height" variant needs runtime measurement and has no reference (v5 deleted).
+- Changes: `ST_TableContainer` max-height rule for the sticky case.
+- Stays: `enableStickyHeader`, `stTableContainerProps` style override, the full-screen rule.
