@@ -7,6 +7,18 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+- Loading placeholders no longer cause a hydration warning on server-rendered tables; the platform helper reads `navigator.userAgent` instead of the deprecated `navigator.platform`.
+- React Aria: the select and filter checkboxes and grouped values show their tooltips again.
+
+### Docs
+
+- The Column Dragging story and guide show that dragging needs column ordering or grouping as its drop target.
+- A docs `next start` on any port serves the default build; the per-port build directory applies to `next dev` only.
+
 ## 0.7.1 - 2026-11-01
 
 ### Fixed

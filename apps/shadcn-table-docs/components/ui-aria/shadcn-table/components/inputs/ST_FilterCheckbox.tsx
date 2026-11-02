@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_Checkbox } from '@/components/ui-aria/shadcn-table/components/inputs/ST_Checkbox';
 import { Label } from '@/components/ui-aria/label';
 import {
@@ -64,6 +66,16 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
     ...rest,
   };
 
+  // The checkbox's own hover and focus open the standalone tooltip.
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  // React Aria's checkbox props carry no title; a consumer's title still
+  // names the tooltip.
+  const checkboxTitle =
+    'title' in checkboxProps && typeof checkboxProps.title === 'string'
+      ? checkboxProps.title
+      : undefined;
+
   const filterLabel = localization.filterByColumn?.replace(
     '{column}',
     columnDef.header,
@@ -77,42 +89,70 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
       })}
     >
       {({ density }) => (
-        <Label
-          className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
-          title={undefined}
+        <ST_Tooltip
+          standalone
+          open={tooltipOpen}
+          title={checkboxTitle ?? filterLabel}
         >
-          <ST_Checkbox
-            indeterminateIcon={table.options.icons.IndeterminateIcon}
-            // React Aria keeps the mixed state in its own `isIndeterminate`
-            // flag; `isSelected` is always a boolean.
-            isSelected={column.getFilterValue() === 'true'}
-            isIndeterminate={column.getFilterValue() === undefined}
-            {...checkboxProps}
-            onChange={(isSelected) => {
-              column.setFilterValue(
-                column.getFilterValue() === undefined
-                  ? 'true'
-                  : column.getFilterValue() === 'true'
-                    ? 'false'
-                    : undefined,
-              );
-              checkboxProps?.onChange?.(isSelected);
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              checkboxProps?.onClick?.(e);
-            }}
-            className={cn(
-              filterCheckboxVariants({
-                color:
-                  column.getFilterValue() === undefined ? 'default' : 'primary',
-                density,
-              }),
-              checkboxProps?.className,
-            )}
-          />
-          {filterLabel}
-        </Label>
+          <Label
+            className="flex h-8 items-center gap-2 text-sm font-normal text-muted-foreground"
+            title={undefined}
+          >
+            <ST_Checkbox
+              indeterminateIcon={table.options.icons.IndeterminateIcon}
+              // React Aria keeps the mixed state in its own `isIndeterminate`
+              // flag; `isSelected` is always a boolean.
+              isSelected={column.getFilterValue() === 'true'}
+              isIndeterminate={column.getFilterValue() === undefined}
+              {...checkboxProps}
+              onHoverStart={(e) => {
+                setTooltipOpen(true);
+                checkboxProps?.onHoverStart?.(e);
+              }}
+              onHoverEnd={(e) => {
+                setTooltipOpen(false);
+                checkboxProps?.onHoverEnd?.(e);
+              }}
+              onFocus={(e) => {
+                // Keyboard focus only, as React Aria's TooltipTrigger does.
+                if ((e.target as HTMLElement).matches(':focus-visible'))
+                  setTooltipOpen(true);
+                checkboxProps?.onFocus?.(e);
+              }}
+              onBlur={(e) => {
+                setTooltipOpen(false);
+                checkboxProps?.onBlur?.(e);
+              }}
+              onChange={(isSelected) => {
+                column.setFilterValue(
+                  column.getFilterValue() === undefined
+                    ? 'true'
+                    : column.getFilterValue() === 'true'
+                      ? 'false'
+                      : undefined,
+                );
+                checkboxProps?.onChange?.(isSelected);
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                // A press closes the bubble, as in React Aria's TooltipTrigger.
+                setTooltipOpen(false);
+                checkboxProps?.onClick?.(e);
+              }}
+              className={cn(
+                filterCheckboxVariants({
+                  color:
+                    column.getFilterValue() === undefined
+                      ? 'default'
+                      : 'primary',
+                  density,
+                }),
+                checkboxProps?.className,
+              )}
+            />
+            {filterLabel}
+          </Label>
+        </ST_Tooltip>
       )}
     </table.Subscribe>
   );

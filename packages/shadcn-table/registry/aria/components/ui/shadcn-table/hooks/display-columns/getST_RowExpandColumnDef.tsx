@@ -1,4 +1,5 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
+import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_ExpandAllButton } from '@/components/ui/shadcn-table/components/buttons/ST_ExpandAllButton';
 import { ST_ExpandButton } from '@/components/ui/shadcn-table/components/buttons/ST_ExpandButton';
 import {
@@ -8,6 +9,33 @@ import {
   type ST_StatefulTableOptions,
 } from '@/components/ui/shadcn-table/types';
 import { defaultDisplayColumnProps } from '@/components/ui/shadcn-table/shared/utils/displayColumn.utils';
+
+/**
+ * The grouped value with the grouping column's header as its tooltip. A
+ * component of its own: `Cell` runs as a plain function, so it holds no state.
+ */
+const ST_GroupingValue = ({
+  header,
+  value,
+}: {
+  header: string;
+  value: ReactNode;
+}) => {
+  // Pointer enter and leave open the standalone tooltip; the span takes no
+  // focus.
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  return (
+    <ST_Tooltip side="right" standalone open={tooltipOpen} title={header}>
+      <span
+        onPointerEnter={() => setTooltipOpen(true)}
+        onPointerLeave={() => setTooltipOpen(false)}
+        title={header}
+      >
+        {value}
+      </span>
+    </ST_Tooltip>
+  );
+};
 
 export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
@@ -36,11 +64,10 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
         return (
           <div className="flex flex-row items-center gap-1">
             <ST_ExpandButton {...expandButtonProps} />
-            <span
-              title={table.getColumn(row.groupingColumnId).columnDef.header}
-            >
-              {row.groupingValue as ReactNode}
-            </span>
+            <ST_GroupingValue
+              header={table.getColumn(row.groupingColumnId).columnDef.header}
+              value={row.groupingValue as ReactNode}
+            />
             {!!subRowsLength && <span>({subRowsLength})</span>}
           </div>
         );
