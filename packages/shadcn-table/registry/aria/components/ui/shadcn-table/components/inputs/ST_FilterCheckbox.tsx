@@ -114,7 +114,9 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
                 checkboxProps?.onHoverEnd?.(e);
               }}
               onFocus={(e) => {
-                setTooltipOpen(true);
+                // Keyboard focus only, as React Aria's TooltipTrigger does.
+                if ((e.target as HTMLElement).matches(':focus-visible'))
+                  setTooltipOpen(true);
                 checkboxProps?.onFocus?.(e);
               }}
               onBlur={(e) => {
@@ -133,6 +135,8 @@ export const ST_FilterCheckbox = <TData extends ST_RowData>({
               }}
               onClick={(e) => {
                 e.stopPropagation();
+                // A press closes the bubble, as in React Aria's TooltipTrigger.
+                setTooltipOpen(false);
                 checkboxProps?.onClick?.(e);
               }}
               className={cn(

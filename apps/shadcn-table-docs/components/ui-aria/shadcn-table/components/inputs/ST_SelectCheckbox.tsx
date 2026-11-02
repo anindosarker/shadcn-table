@@ -129,7 +129,9 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
         checkboxProps?.onHoverEnd?.(e);
       },
       onFocus: (e) => {
-        setTooltipOpen(true);
+        // Keyboard focus only, as React Aria's TooltipTrigger does.
+        if ((e.target as HTMLElement).matches(':focus-visible'))
+          setTooltipOpen(true);
         checkboxProps?.onFocus?.(e);
       },
       onBlur: (e) => {
@@ -138,6 +140,8 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
       },
       onClick: (e: MouseEvent<FocusableElement>) => {
         e.stopPropagation();
+        // A press closes the bubble, as in React Aria's TooltipTrigger.
+        setTooltipOpen(false);
         // A checked radio stays checked on click, as a native radio does.
         if (!(enableMultiRowSelection === false && getIsChecked())) {
           // The handlers read only target, shiftKey and nativeEvent.
