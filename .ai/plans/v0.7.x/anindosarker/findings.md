@@ -540,3 +540,11 @@ Audit of how the library uses the shadcn parts and their primitives (@base-ui/re
 - https://storybook.shadcn-table.com/base/?path=/story/features-column-dragging-examples--column-dragging-enabled (0.7.1 build): dragging a column header does not reorder the columns. Reported by the owner 2026-11-02; bases, exact failure (no drag start, no drop, or no state update) and whether 0.6.4 behaves the same are to be reproduced in the browser before the fix (P6). Candidate area: the drag handlers under `components/head/ST_TableHeadCellGrabHandle.tsx` and `features/stColumnDraggingFeature.ts`, touched by spec 02 (D5 refs, D7 no input mutation) and spec 10.
 - Reproduced 2026-11-02 (live 0.7.1, real pointer events, base, radix, aria alike): the drag starts (handle `draggable`, `dragstart` fires, the source header goes dashed), no header highlights, the order never changes, no console message. Cause is the story, not the library: `stories/features/ColumnDragging.stories.tsx:57` sets `enableColumnDragging` alone; `ST_TableHeadCell.tsx:79` sets `hoveredColumn` only when `enableColumnOrdering` is on, and `ST_TableHeadCellGrabHandle.tsx:67-70` reorders only with ordering or a grouping drop zone (MRT parity). The column ordering and row ordering stories reorder correctly. No library file in `v0.6.4..v0.7.1` changed the drag path beyond comments and a class rename, so 0.6.4 behaves the same.
 - Decided in D60.
+
+## Round 5: triage of ATTENTION-2026-11-02
+
+### F65 Select checkboxes are not vertically centred, and aria sits 5 px below base
+
+- `ST_SelectCheckbox` in body cells: top offset aria 18.5 px, base 13.5 px in a 53 px cell (centred 16.5), control 20 px; header cell: aria 19, base 12 (`th` padding-top 12, `vertical-align: top`). Measured 2026-11-02 on `features-selection-examples--selection-enabled` at tags `v0.7.1` and `v0.7.2`, so not caused by 10.2. Reported by the owner from the 10.2 judge captures (A39).
+- Computed display of the aria `ST_Checkbox.tsx:28` wrapper `span.relative.inline-flex`: `flex` in 0.7.1 (a flex item of the outer `inline-flex` span 10.2 removed), `inline-flex` in 0.7.2; base keeps its outer `inline-flex` span at `ST_SelectCheckbox.tsx:180` and the wrapper computes `flex`. Either way the outermost inline-level box sits on the cell's text baseline, differently per base.
+- Decided in D64.

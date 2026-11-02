@@ -453,3 +453,10 @@
 
 - D61 amended: `ST_SelectCheckbox` and `ST_FilterCheckbox` open the bubble on hover, and on focus only when the control matches `:focus-visible`; a press closes it. This matches the base and radix tooltip parts, which open on keyboard focus and close on pointer down, so a mouse click shows no bubble in any base. The grouping value keeps pointer enter and leave. Shipped in 0.7.2 (`0882acc0`).
 - Source: A41
+
+### D64 The select checkbox is vertically centred in body cells and on the header line in all three bases
+
+- Measured on `features-selection-examples--selection-enabled` (0.7.1 and 0.7.2 alike, control 20 px): body cell top offset aria 18.5, base 13.5 (centred 16.5); header aria 19, base 12. Cause: the outermost box in the aria cell is an `inline-flex` span on the cell's text baseline; in base that span is a flex item. Not a 10.2 regression (F65).
+- Target: in the body cell the control's centre equals the cell's centre within 1 px; in the header cell the control's top equals the header text line's top (base today, 12 px) within 1 px; the three bases measure the same within 1 px. The mechanism (a `flex items-center` wrapper replacing the `inline-flex` span, or the equivalent) is the spec's; radio single-selection and the aria `w-fit` RadioGroup included; no public prop or type changes.
+- Sub-spec `10.3`, agent lane, ships as 0.7.3 with release sub-spec `09.3`.
+- Source: A39
