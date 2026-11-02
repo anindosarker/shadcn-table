@@ -84,7 +84,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     table,
   });
 
-  // Same value on the server and the client: stepped by the row index, no random.
+  // Same value on the server and the client: stepped by the row index.
   const skeletonSize = column.getSize();
   const skeletonWidth =
     columnDefType === 'display'
