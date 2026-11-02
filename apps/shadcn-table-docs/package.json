@@ -9,7 +9,7 @@
   "scripts": {
     "build": "pnpm -w registry:build && pnpm -w registry:items && pnpm -w registry:hosted && node lib/example-variants.mjs && next build",
     "predev": "node lib/example-variants.mjs",
-    "dev": "node lib/dev-tsconfig.mjs && next dev -p ${PORT:-5320}",
+    "dev": "NEXT_DEV=1 node lib/dev-tsconfig.mjs && NEXT_DEV=1 next dev -p ${PORT:-5320}",
     "start": "next start -p 5320",
     "preview": "NEXT_DIST_DIR=.next-preview pnpm build && NEXT_DIST_DIR=.next-preview next start -p 5330",
     "types:check": "node lib/example-variants.mjs && next typegen && tsc --noEmit",
