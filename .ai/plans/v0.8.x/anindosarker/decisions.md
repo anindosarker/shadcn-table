@@ -193,3 +193,11 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: MRT ships every key in every locale; the shadcn data tables hard-code English; the demo's strings are the English values (`view-settings.tsx:198-213`, `sort-popover.tsx`, `filter-bar.tsx`, `horizontal-overflow.tsx:100,115`, `column-header.tsx:489,568`).
 - Changes: `types.ts` `ST_Localization`; `shared/locales/en.ts`; the locale gate accepts a missing optional key and fails on a missing required one; every new component reads `localization`, never a literal.
 - Stays: existing keys and their texts; the `localization` option and the merge.
+
+### D25 Menus open from real triggers; the span anchor stays for the cell context menu only
+
+- Behaviour: every menu and popover of the chrome opens from the element the user presses (chevron and label for the column menu, D4; row actions dots; sort button and chip; filter chips and picker; view settings button, its pinned buttons and its Columns row; scroll buttons) and a second press on that element closes it. The cell context menu opens at the pointer position on right-click as today.
+- Implementation is the agent's call; the accepted shape: each exported menu takes its opener as a `trigger` element (radix `asChild`, base `render`, aria's equivalent) with optional controlled `open` / `onOpenChange`; the label and the chevron are two triggers of one controlled column menu; the filter-mode menu becomes a submenu or trigger menu; `useST_MenuAnchor` remains for `ST_CellActionMenu` only; `anchorEl` / `setAnchorEl` leave the four exported menus and the changelog lists the break. Supersedes v0.7.x D26 for every menu but the cell menu.
+- Reference: the demo (`column-header.tsx:481, 500-508`, `columns-menu.tsx:24-55`); the shadcn data tables open every menu from a `DropdownMenuTrigger`.
+- Changes: `ST_ColumnActionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu`, `ST_FilterOptionMenu` and their openers in all three bases; the `MenuOpeners` play test moves to the trigger pattern.
+- Stays: `ST_CellActionMenu` with `actionCell` / `onActionCellChange`; `renderColumnActionsMenuItems`, `renderRowActionMenuItems`.
