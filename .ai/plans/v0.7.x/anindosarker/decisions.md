@@ -435,3 +435,9 @@
 
 - `stories/features/ColumnDragging.stories.tsx` adds `enableColumnOrdering` beside `enableColumnDragging`, so the handle has a drop target and the drag reorders, as the column ordering story does; the Column Dragging docs guide says in one sentence that dragging needs ordering or grouping as its target. No library change (the gating is MRT's). Rides along with sub-spec `02.1`.
 - Source: F64
+
+### D61 Aria checkboxes and the group value show their tooltip through a standalone React Aria `Tooltip`
+
+- Aria `ST_Tooltip` gains a `standalone` mode: the child renders as is (no `Focusable`, no `TooltipTrigger`) and the part's `Tooltip` renders beside it with `triggerRef` (the child ref `ST_Tooltip` already holds) and `isOpen` from the `open` prop, React Aria's documented standalone use ("`triggerRef` ... only required when used standalone"). `ST_SelectCheckbox`, `ST_FilterCheckbox` and the row-expand grouping value drive `open` from the control's `onHoverStart`, `onHoverEnd`, `onFocus` and `onBlur` (`CheckboxProps extends HoverEvents`); the grouping value span uses pointer enter and leave. Same bubble, same text as base and radix; no wrapper element, no warning, no Tab stop. Aria tree only; base and radix unchanged. Supersedes the A34 line of D42 for those three sites.
+- Sub-spec `10.2`, agent lane, ships as 0.7.2.
+- Source: A34
