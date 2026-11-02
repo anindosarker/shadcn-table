@@ -73,10 +73,7 @@ export const ColumnDraggingEnabled = {
     const headers = await canvas.findAllByRole('columnheader');
     expect(headers[0]).toHaveTextContent('First Name');
     expect(headers[2]).toHaveTextContent('Email Address');
-    const handle = within(headers[0]).getAllByRole('button', {
-      hidden: true,
-      name: 'Move',
-    })[0];
+    const handle = within(headers[0]).getByRole('button', { name: 'Move' });
     fireEvent.dragStart(handle);
     fireEvent.dragEnter(headers[2]);
     fireEvent.dragOver(headers[2]);
