@@ -22,7 +22,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 ## P4 Gates
 
-- Per-base gates run concurrently on their own ports: `check-pages.mjs --base <base>`, `storybook:build:<base>`, `test:<base>`. The dev registry on 5310 (`pnpm registry:dev`) is shared during a run: reuse it, start it when missing, never kill it mid-run; the main session stops it at the end of the run when the run started it.
+- Per-base gates run concurrently on their own ports: `check-pages.mjs --base <base>`, `storybook:build:<base>`, `test:<base>`. When the owner says the machine is slow or hot (2026-11-02), the release gate apps and any gate the main session starts run one base after another; builders keep one burst per spec. The dev registry on 5310 (`pnpm registry:dev`) is shared during a run: reuse it, start it when missing, never kill it mid-run; the main session stops it at the end of the run when the run started it.
 - A recorded gate line stays valid while `git diff --name-only <commit>..HEAD` touches only `.ai/` and `CHANGELOG.md`; CI is the second run for tsc, lint, tests and builds.
 - Known flake: `Profiled Thousand Rows` (vitest browser mode), `gh run rerun --failed <id>` once before red.
 
