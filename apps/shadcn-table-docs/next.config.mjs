@@ -6,11 +6,13 @@ const withMDX = createMDX({ agentRules: false });
 const config = {
   reactStrictMode: true,
   // A second `next dev` in the same folder refuses to start (.next/dev/lock).
-  // `PORT=5331 pnpm dev` runs a second server (own .next-<port>, own
-  // tsconfig.<port>.json written by lib/dev-tsconfig.mjs).
+  // A second dev server uses `PORT=<port> pnpm dev` (own .next-<port>, own
+  // tsconfig.<port>.json written by lib/dev-tsconfig.mjs); NEXT_DEV=1, set by
+  // the dev script, limits that to `next dev`. `next start` uses .next on any
+  // port.
   distDir:
     process.env.NEXT_DIST_DIR ??
-    (process.env.PORT && process.env.PORT !== '5320'
+    (process.env.NEXT_DEV && process.env.PORT && process.env.PORT !== '5320'
       ? `.next-${process.env.PORT}`
       : '.next'),
   // Any `<distDir>/types` edit Next makes to the tsconfig it reads lands in
