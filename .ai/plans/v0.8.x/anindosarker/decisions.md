@@ -223,3 +223,9 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 - Full screen is a `fixed inset-0` overlay, so a second table reaches full screen only from code, never from a user; the document-level Escape listener stays as it is and no `containerProps` ref is added. No work; v0.7.x D58 closed as accepted.
 - Source: v0.7.x D58
+
+### D29 No length-driven refactor; the mode folder is the shape for a new mode, not a rewrite
+
+- v0.7.x F21 (19 functions over 150 lines) and F22 (3 files over 600 lines) close as accepted; `coding-standards.md` keeps its limits as guidance for new code and names the existing files as accepted. No split of `ST_FilterTextField`, `ST_TablePagination` or `stConfigFeature.ts` now.
+- When a mode is added to a component that switches on one (`ST_FilterTextField` on `filterVariant`, `ST_TablePagination` on `paginationDisplayMode`), that change moves the component into its own folder: the shell, a `modes.ts` with the key union, a map and a `get<X>Mode` function, and `modes/` with one file per mode. Not before.
+- Source: v0.7.x F21, F22
