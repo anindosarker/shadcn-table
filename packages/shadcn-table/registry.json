@@ -52,6 +52,11 @@
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
@@ -302,6 +307,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -320,6 +330,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
@@ -485,6 +500,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
@@ -1361,6 +1381,11 @@
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
@@ -1611,6 +1636,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -1629,6 +1659,11 @@
           "path": "registry/radix/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
@@ -1794,6 +1829,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
@@ -2670,6 +2710,11 @@
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
@@ -2920,6 +2965,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -2938,6 +2988,11 @@
           "path": "registry/aria/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
@@ -3103,6 +3158,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
@@ -3979,6 +4039,11 @@
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/body/ST_TableBody.tsx"
@@ -4229,6 +4294,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -4247,6 +4317,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
@@ -4412,6 +4487,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_FullScreenContainer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",

@@ -111,7 +111,13 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
     <table
       {...tableProps}
       ref={attachTableRef}
-      style={{ ...columnSizeVars, ...tableProps?.style }}
+      style={{
+        ...columnSizeVars,
+        // Grid columns grow into spare width; past the frame they keep their
+        // set widths and the box scrolls sideways.
+        minWidth: layoutMode === 'grid' ? table.getTotalSize() : undefined,
+        ...tableProps?.style,
+      }}
       className={cn(
         tableVariants({ layoutMode, className: tableProps.className }),
       )}

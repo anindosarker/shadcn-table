@@ -86,3 +86,8 @@ export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_TopToolb
 export * from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
 export * from '@/components/ui-radix/shadcn-table/shared/utils/viewSettingsStorage.utils';
 export * from '@/components/ui-radix/shadcn-table/components/icons/ST_GridLineIcons';
+// spec 02
+export * from '@/components/ui-radix/shadcn-table/components/body/ST_OverflowText';
+export * from '@/components/ui-radix/shadcn-table/components/table/ST_ScrollButtons';
+export * from '@/components/ui-radix/shadcn-table/components/table/ST_ViewPendingScript';
+export * from '@/components/ui-radix/shadcn-table/hooks/useST_HorizontalOverflow';

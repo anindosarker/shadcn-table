@@ -19,8 +19,16 @@ import {
   cellKeyboardShortcuts,
   openEditingCell,
 } from '@/components/ui-base/shadcn-table/shared/utils/cell.utils';
-import { getCommonSRTCellStyles } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
+import {
+  getST_ColumnDropTargetProps,
+  lockedCellClassName,
+} from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
+import {
+  getCommonSRTCellStyles,
+  gridLineClassName,
+} from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
+import { ST_OverflowText } from '@/components/ui-base/shadcn-table/components/body/ST_OverflowText';
 import { ST_TableBodyCellValue } from '@/components/ui-base/shadcn-table/components/body/ST_TableBodyCellValue';
 import { ST_CopyButton } from '@/components/ui-base/shadcn-table/components/buttons/ST_CopyButton';
 import { ST_EditCellTextField } from '@/components/ui-base/shadcn-table/components/inputs/ST_EditCellTextField';
@@ -35,7 +43,20 @@ export interface ST_TableBodyCellProps<TData extends ST_RowData>
 }
 
 const bodyCellVariants = cva(
-  'border-b text-sm overflow-hidden -outline-offset-1 hover:text-clip',
+  'content-center overflow-hidden text-sm -outline-offset-1',
+  {
+    variants: {
+      density: {
+        compact: 'h-10 px-2',
+        comfortable: 'h-12 px-3',
+        spacious: 'h-14 px-4',
+      },
+      wrap: {
+        false: 'truncate',
+        true: 'whitespace-normal wrap-break-word py-1',
+      },
+    },
+  },
 );
 
 export const ST_TableBodyCell = <TData extends ST_RowData>({
@@ -53,6 +74,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
       createDisplayMode,
       editDisplayMode,
       enableCellActions,
+      enableCellOverflowTooltip,
       enableClickToCopy,
       enableColumnOrdering,
       enableColumnPinning,
@@ -111,22 +133,20 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     openEditingCell({ cell, table });
   };
 
+  const dropTargetProps = getST_ColumnDropTargetProps(column);
+
   const handleDragEnter = (e: DragEvent<HTMLTableCellElement>) => {
     tableCellProps?.onDragEnter?.(e);
     if (enableGrouping && table.atoms.hoveredColumn.get()?.id === 'drop-zone') {
       setHoveredColumn(null);
     }
-    if (enableColumnOrdering && table.atoms.draggingColumn.get()) {
-      setHoveredColumn(
-        columnDef.enableColumnOrdering !== false ? column : null,
-      );
-    }
+    if (enableColumnOrdering) dropTargetProps.onDragEnter();
   };
 
   const handleDragOver = (e: DragEvent<HTMLTableCellElement>) => {
-    if (columnDef.enableColumnOrdering !== false) {
-      e.preventDefault();
-    }
+    tableCellProps?.onDragOver?.(e);
+    if (table.atoms.draggingColumn.get()) dropTargetProps.onDragOver(e);
+    else e.preventDefault();
   };
 
   const handleContextMenu = (e: MouseEvent<HTMLTableCellElement>) => {
@@ -149,6 +169,19 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
     });
   };
 
+  const isLocked =
+    enableColumnOrdering !== false && columnDef.enableColumnOrdering === false;
+
+  // Plain text cells show a tooltip when cut off; display columns never.
+  const overflowTooltip =
+    enableCellOverflowTooltip === true &&
+    columnDefType !== 'display' &&
+    columnDef.overflowTooltip !== false
+      ? typeof columnDef.overflowTooltip === 'function'
+        ? columnDef.overflowTooltip({ cell, column, row, table })
+        : String(cell.getValue() ?? '')
+      : null;
+
   // Created outside the cell's state subscription, so a density, editing or
   // dragging change re-renders the td, not the value.
   const cellValue = (
@@ -166,16 +199,17 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
         columnPinning: state.columnPinning,
         columnVisibility: state.columnVisibility,
         density: state.density,
+        // Only a locked column follows a column drag, for its overlay.
+        dragActive: isLocked && !!state.draggingColumn,
+        gridLines: state.viewSettings.gridLines,
         grouping: state.grouping,
         // Per cell, so an action, edit, drag or hover change re-renders only
         // the cells it concerns.
         isActionCell: state.actionCell?.id === cell.id,
         isCreatingRow: state.creatingRow?.id === row.id,
-        isDraggingColumn: state.draggingColumn?.id === column.id,
         isDraggingRow: state.draggingRow?.id === row.id,
         isEditingCell: state.editingCell?.id === cell.id,
         isEditingRow: state.editingRow?.id === row.id,
-        isHoveredColumn: state.hoveredColumn?.id === column.id,
         isHoveredRow: state.hoveredRow?.id === row.id,
         isResizingColumn: state.columnResizing.isResizingColumn === column.id,
         // A pinned cell's offset follows the other columns' sizes.
@@ -183,58 +217,46 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
           ? state.columnSizing
           : undefined,
         rowPinning: state.rowPinning,
+        wrapText: state.viewSettings.wrapText,
       })}
     >
       {({
         density,
+        dragActive,
+        gridLines,
         isActionCell,
         isCreatingRow,
-        isDraggingColumn,
         isDraggingRow,
         isEditingCell,
         isEditingRow,
-        isHoveredColumn,
         isHoveredRow,
         isResizingColumn,
+        wrapText,
       }) => {
         const isFirstColumn = column.getIsFirstColumn();
         const isLastColumn = column.getIsLastColumn();
-        const isLastRow = numRows && staticRowIndex === numRows - 1;
+        // By index, not :last-child: a virtualized body's last DOM row is not
+        // the last row.
+        const isLastRow = !!numRows && staticRowIndex === numRows - 1;
         const showResizeBorder =
           isResizingColumn && columnResizeMode === 'onChange';
 
-        const borderStyle = showResizeBorder
-          ? `2px solid var(--color-primary)`
-          : isDraggingColumn || isDraggingRow
-            ? `1px dashed var(--color-muted-foreground)`
-            : isHoveredColumn || isHoveredRow || isResizingColumn
-              ? `2px dashed var(--color-primary)`
-              : undefined;
+        // Row drags keep their dashed outline; column drags show nothing on
+        // the body.
+        const rowDragBorder = isDraggingRow
+          ? '1px dashed var(--color-muted-foreground)'
+          : isHoveredRow
+            ? '2px dashed var(--color-primary)'
+            : undefined;
 
         const draggingBorders = showResizeBorder
-          ? { borderInlineEnd: borderStyle }
-          : borderStyle
+          ? { borderInlineEnd: '2px solid var(--color-primary)' }
+          : rowDragBorder
             ? {
-                borderBottom:
-                  isDraggingRow ||
-                  isHoveredRow ||
-                  (isLastRow && !isResizingColumn)
-                    ? borderStyle
-                    : undefined,
-                borderLeft:
-                  isDraggingColumn ||
-                  isHoveredColumn ||
-                  ((isDraggingRow || isHoveredRow) && isFirstColumn)
-                    ? borderStyle
-                    : undefined,
-                borderRight:
-                  isDraggingColumn ||
-                  isHoveredColumn ||
-                  ((isDraggingRow || isHoveredRow) && isLastColumn)
-                    ? borderStyle
-                    : undefined,
-                borderTop:
-                  isDraggingRow || isHoveredRow ? borderStyle : undefined,
+                borderBottom: rowDragBorder,
+                borderInlineEnd: isLastColumn ? rowDragBorder : undefined,
+                borderInlineStart: isFirstColumn ? rowDragBorder : undefined,
+                borderTop: rowDragBorder,
               }
             : undefined;
 
@@ -275,7 +297,13 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
               ...draggingBorders,
             }}
             className={cn(
-              bodyCellVariants(),
+              bodyCellVariants({
+                density: density ?? 'comfortable',
+                wrap: !!wrapText,
+              }),
+              gridLineClassName(gridLines, isLastColumn),
+              isLastRow && 'border-b-0',
+              columnDefType === 'display' && 'px-0',
               tableCellProps.align === 'center'
                 ? 'text-center'
                 : tableCellProps.align === 'right'
@@ -286,21 +314,6 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                       ? 'text-justify'
                       : 'text-start',
               layoutMode?.startsWith('grid') && 'items-center',
-              density === 'compact'
-                ? columnDefType === 'display'
-                  ? 'px-2 py-0'
-                  : 'p-2'
-                : density === 'comfortable'
-                  ? columnDefType === 'display'
-                    ? 'px-3 py-2'
-                    : 'p-4'
-                  : columnDefType === 'display'
-                    ? 'px-5 py-4'
-                    : 'p-6',
-              columnDefType !== 'display' && 'text-ellipsis',
-              row.getIsPinned() || density === 'compact'
-                ? 'whitespace-nowrap'
-                : 'whitespace-normal',
               isRightClickable
                 ? 'cursor-context-menu'
                 : isEditable && editDisplayMode === 'cell'
@@ -311,6 +324,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                 (editDisplayMode === 'cell' && isEditable) ||
                 (editDisplayMode === 'table' && (isCreating || isEditing))) &&
                 'hover:outline hover:outline-1 hover:outline-muted-foreground',
+              isLocked && lockedCellClassName(dragActive),
               commonCellStyles.className,
             )}
           >
@@ -347,6 +361,15 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                   })
                 ) : isCreating || isEditing ? (
                   <ST_EditCellTextField cell={cell} />
+                ) : overflowTooltip !== null ? (
+                  <ST_OverflowText tooltip={overflowTooltip} wrap={wrapText}>
+                    {showClickToCopyButton &&
+                    columnDef.enableClickToCopy !== false ? (
+                      <ST_CopyButton cell={cell}>{cellValue}</ST_CopyButton>
+                    ) : (
+                      cellValue
+                    )}
+                  </ST_OverflowText>
                 ) : showClickToCopyButton &&
                   columnDef.enableClickToCopy !== false ? (
                   <ST_CopyButton cell={cell}>{cellValue}</ST_CopyButton>
