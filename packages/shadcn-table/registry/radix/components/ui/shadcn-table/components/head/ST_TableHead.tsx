@@ -9,7 +9,9 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_ToolbarAlertBanner } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_TableHeadRow } from '@/components/ui/shadcn-table/components/head/ST_TableHeadRow';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
+import { useST_ColumnFlip } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
+import { useST_DragAutoScroll } from '@/components/ui/shadcn-table/hooks/useST_DragAutoScroll';
 
 export interface ST_TableHeadProps extends TableHeadProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
@@ -44,6 +46,9 @@ export const ST_TableHead = <TData extends ST_RowData>({
   };
 
   const attachRef = useST_ComposedRef(tableHeadRef, tableHeadProps.ref);
+
+  useST_ColumnFlip(table);
+  useST_DragAutoScroll(table);
 
   const isHeadOverlay = positionToolbarAlertBanner === 'head-overlay';
 
