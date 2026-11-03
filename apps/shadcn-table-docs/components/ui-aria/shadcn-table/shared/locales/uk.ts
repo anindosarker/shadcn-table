@@ -55,6 +55,7 @@ export const ST_Localization_UK: ST_Localization = {
   groupedBy: 'Групувати за',
   hideAll: 'Приховати все',
   hideColumn: 'Приховати стовпець {column}',
+  loading: 'Завантаження',
   max: 'Макс',
   min: 'Мін',
   move: 'Перемістити',

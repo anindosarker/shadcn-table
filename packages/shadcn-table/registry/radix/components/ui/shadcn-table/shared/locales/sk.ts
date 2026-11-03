@@ -56,6 +56,7 @@ export const ST_Localization_SK: ST_Localization = {
   groupedBy: 'Zoskupené podľa ',
   hideAll: 'Skryť všetko',
   hideColumn: 'Skryť stĺpec {column}',
+  loading: 'Načítava sa',
   max: 'Max.',
   min: 'Min.',
   move: 'Presunúť',

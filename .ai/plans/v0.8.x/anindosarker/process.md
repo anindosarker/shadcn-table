@@ -29,6 +29,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P5 Agent sandbox
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
+- The owner's demo at `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` is read-only reference code; its server on port 3000 is the owner's, never started, stopped or restarted by an agent (D34).
 - Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives.
 - Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; workstreams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
 - Never rename or remove a registry item or hosted path (`registry.json` loses a `"name"`, `public/r/<base>/` loses a file). Never remove a public option or type (a `-export` in `types.ts` or `index.ts` without a matching `+export`). Never change a GitHub ruleset or repository setting. Never add an `eslint-disable` without a ` -- ` reason. Never edit a file another workstream owns, or `eslint.config.js` and `.github/workflows/` after the foundation (S1's config switch excepted).
@@ -38,3 +39,11 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - Specs follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any spec whose label differs.
 - `Acceptance` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced on `/Users/anindosarker/Work/Personal/React-table/test-projects/` first; upstream reports are searched on `shadcn-ui/ui` before filing.
+
+## P7 Styling lives in the components
+
+- No stylesheet, no `globals.css` edit, no registry `cssVars`, no custom CSS class. Every style is a Tailwind utility (arbitrary properties and `dark:` twins included) on a component element; a CSS variable the library reads (`--st-*`) is declared the same way on the table root. A library install never touches the consumer's global CSS. Owner rule 2026-11-03 (D23).
+
+## P7 Orchestration
+
+- Per round, by cost: fewest main-session wakes, fewest agents that still prove every Acceptance. As a rule one Workflow per round from the skill's stage library (build, spec check, review only where a spec says `Review: fable`, verify, judges inside the script, gate, merge, release); a single Agent for one bounded task; inline for mechanical edits. Judged clauses run inside the workflow script, three fable judges in parallel, majority (supersedes the main-session judging of D52). Applies from the round after 0.7.4.

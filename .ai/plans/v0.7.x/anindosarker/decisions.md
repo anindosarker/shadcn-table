@@ -389,7 +389,7 @@
 - Body cells are `overflow-hidden` (`ST_TableBodyCell.tsx:39`), which clips a `::before` shadow, so the outward edge shadow is a `data-[pinned=true]:shadow-[...]` class on the pinned cell with its `rtl:` mirror; the `::before` keeps the opaque backdrop. Same color, blur and direction as D47. Spec 06.1 text updated in place.
 - Source: A28
 
-### D52 Judged clauses run in the main session
+### D52 Judged clauses run in the main session (superseded by D67)
 
 - Sub-agent sandboxes have no agent-spawn tool, so the three judges of every judged Acceptance clause run from the main session after the verifier returns, before the merge; the verifier records the capture paths. The workflow template says so in the verify prompt; the run never waits on a judge inside a sandbox.
 - Source: A29
@@ -460,3 +460,21 @@
 - Target: in the body cell the control's centre equals the cell's centre within 1 px; in the header cell the control's top equals the header text line's top (base today, 12 px) within 1 px; the three bases measure the same within 1 px. The mechanism (a `flex items-center` wrapper replacing the `inline-flex` span, or the equivalent) is the spec's; radio single-selection and the aria `w-fit` RadioGroup included; no public prop or type changes.
 - Sub-spec `10.3`, agent lane, ships as 0.7.3 with release sub-spec `09.3`.
 - Source: A39
+
+## Round 6: v0.8.x carry-overs pulled back, 2026-11-03
+
+### D65 Single-row selection uses one RadioGroup around the body
+
+- When `enableMultiRowSelection` is `false`, `ST_TableBody` renders one `RadioGroup` (value: the selected row id, `aria-label` from `localization.select`) around its rows and the select cell renders only `RadioGroupItem` with `value={row.id}`; arrow keys move between rows and screen readers announce "n of m". All three bases, no public API change. Replaces the one-group-per-row shape (F45). Sub-spec `10.4`, agent lane, ships as 0.7.4.
+- Shipped shape (spec 10.4 1.6.2, markup constraint: the aria part has no render prop and a div cannot sit inside `<tbody>`): the group wraps the `<table>` in `ST_Table`, label `localization.toggleSelectRow`, `className="block"`.
+- Source: F45 (v0.8.x D26 moved here)
+
+### D66 The loading state has a localization key
+
+- `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too. Overridable through `stLinearProgressProps` as before. Rides along with sub-spec `10.4`; `release:patch` (an untranslatable a11y string, treated as a fix).
+- Source: D57 (v0.8.x D27 moved here)
+
+### D67 Orchestration per round, by cost; judges inside the workflow
+
+- The spec states what must be proven (`Acceptance:`), never a lane; the run manager composes one Workflow per round from the skill's stage library (build, spec check, optional review, verify, judges, gate, merge, release) so the main session wakes once, or at a `needs-decision`. Reviews only where a spec says `Review: fable`; nits and minors are fixed by the builder, no fixer agent. Judges run inside the script, three fable in parallel, majority; D52 superseded. Skill, templates and `status.py` updated 2026-11-03; applies from the round after 0.7.4 (P7).
+- Source: owner, 2026-11-03 ("the skill should be open-ended", "you should have used a dynamic workflow")

@@ -31,6 +31,7 @@
   "components/menus/ST_ShowHideColumnsMenu.tsx",
   "components/menus/ST_ShowHideColumnsMenuItems.tsx",
   "components/modals/ST_EditRowModal.tsx",
+  "components/table/ST_Table.tsx",
   "components/toolbar/ST_LinearProgressBar.tsx",
   "components/toolbar/ST_TablePagination.tsx",
   "components/toolbar/ST_ToolbarAlertBanner.tsx",

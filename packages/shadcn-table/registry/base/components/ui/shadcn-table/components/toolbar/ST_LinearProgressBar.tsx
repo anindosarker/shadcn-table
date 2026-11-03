@@ -57,7 +57,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
 }: ST_LinearProgressBarProps) => {
   const table = useSTContext<TData>();
   const {
-    options: { stLinearProgressProps },
+    options: { localization, stLinearProgressProps },
   } = table;
 
   const { progressComponentProps, collapsibleProps } = {
@@ -90,6 +90,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
           <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
             <Progress
               aria-busy="true"
+              aria-label={localization.loading}
               {...progressComponentProps}
               className={cn(
                 isIndeterminate && 'st-progress-indeterminate',

@@ -55,6 +55,7 @@ export const ST_Localization_JA: ST_Localization = {
   groupedBy: 'グループ化',
   hideAll: '全て隠す',
   hideColumn: '{column}を隠す',
+  loading: '読み込み中',
   max: '最大',
   min: '最小',
   move: '移動',

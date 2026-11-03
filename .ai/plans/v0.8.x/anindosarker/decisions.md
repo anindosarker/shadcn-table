@@ -16,7 +16,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Changes: `ST_TableHeadCell` background and dividers, label weight and colour, the column actions button becomes a chevron without the 30 percent opacity, `ST_TableHeadCellSortLabel` renders nothing when unsorted and a plain arrow when sorted (no button, no multi-sort index by default); the header row shadow and the 0.97 opacity go.
 - Stays: sorting state and multi-sort behaviour; `renderColumnActionsMenuItems`; the sort index badge as an opt-in (decided with the sort popover item).
 - Addendum 2026-11-01: no background on the header row. The owner checked the common shadcn data tables (ui.shadcn.com, tablecn, shadcn.io, shadcn-vue, shadcnstudio) and none tints the header; the demo was updated to match. The band is told apart by the muted label colour, the bottom hairline and the chevrons only. The tint-order note below applies to striped rows and hover only.
-- Tint order, owner note 2026-11-01: the header band is darker than the striped-row tint, which is darker than the row hover tint, all steps from the page background (the reference's four-step scheme: stripe, hover, header, grid line). The header must always read as one step above alternating rows.
+- Tint order, owner note 2026-11-01: the header band is darker than the striped-row tint, which is darker than the row hover tint, all steps from the page background (the reference's four-step scheme: stripe, hover, header, grid line). The header must always read as one step above alternating rows. Superseded by D23 (hover reads stronger than stripe; header has no tint).
 
 ### D3 Optional column icon
 
@@ -148,6 +148,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`header-demo.tsx:653-655`, `max-h-[70vh]`); MRT's inherited `clamp(350px, calc(100vh - toolbar), 9999px)` lets the header scroll out whenever page content sits above the table; the "fill the window height" variant needs runtime measurement and has no reference (v5 deleted).
 - Changes: `ST_TableContainer` max-height rule for the sticky case.
 - Stays: `enableStickyHeader`, `stTableContainerProps` style override, the full-screen rule.
+- Addendum 2026-11-03: the `70vh` default applies only when the sticky header is on by choice (the option or the view setting). A table whose sticky header is forced by `enableRowVirtualization` (`useST_TableOptions.ts:144`) keeps today's full-height rule (`clamp(350px, calc(100vh - toolbar), 9999px)`); it reads the same `--st-sticky-max-height` variable, only the default differs. No silent shrink for virtualized tables.
 
 ### D20 Column dragging on by default, header cell as the drag source
 
@@ -157,3 +158,112 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:234-327`, `use-drag-auto-scroll.ts`); Notion and Airtable drag the header with no grip; MRT shows a grip; the shadcn data tables have no reordering.
 - Changes: `useST_TableOptions` default; `ST_TableHeadCell` becomes the drag source and drops the grip unless the option is set; `ST_TableHeadCellGrabHandle` and the `dragend` handlers take the cancel rule; a `useDragAutoScroll` hook on `ST_TableContainer`.
 - Stays: `enableColumnOrdering: false` on the table or a column, `enableColumnDragging`, the grouping drop zone, `stColumnDragHandleProps`.
+
+### D21 Locked columns show their lock only while a drag is active
+
+- A column with `enableColumnOrdering: false` is locked: it looks normal at rest, shows no grab cursor and cannot be dragged. While another column drags, every cell of the locked column shows diagonal stripes (`repeating-linear-gradient(135deg, color-mix(in srgb, var(--muted-foreground) 12%, transparent) 0 6px, transparent 6px 12px)`) fading in over a muted fill, the header label gives way to the lock icon and "Fixed" (icon alone on narrow display columns), and the cursor shows not-allowed over it (`dropEffect: "none"`). The column menu lists a disabled "Fixed position" item with the lock icon, the one greyed item beside D5's active sort direction.
+- Which columns are locked is an app choice; the library locks only the row numbers column by default. The row actions column moves (D14).
+- Reference: the demo (`column-header.tsx:134-232, 437-439, 565-570`); Notion and Airtable fix the primary column with no cue; MRT hides the grip only.
+- Changes: `ST_TableHeadCell` and `ST_TableBodyCell` locked overlay driven by `draggingColumn`; the column menu item; `localization.fixedPosition`, `localization.fixed`; `icons.Lock` (D18).
+- Stays: `enableColumnOrdering: false` as the flag; the columns menu hides the grip for locked columns as today.
+
+### D22 Hidden-columns cue: pinned-edge shadow and hover scroll chevrons
+
+- The inner-edge pinned cells, header and body, cast a small soft shadow towards the scrolling content (`drop-shadow-sm` tinted `--border` in light mode and black at 50 percent in dark mode, clipped so only the inner side shows), always on while that side has visible pinned columns; a side with nothing pinned gets no shadow. On a side with hidden columns, hovering the table shows a ghost icon button (`bg-background text-muted-foreground`) centred in the header row just inside the pinned columns' inner edge; a click scrolls 80 percent of the visible unpinned width, smooth; hidden buttons are `invisible` and out of the tab order. The thin always-visible scrollbar stays. On by default (`enableScrollButtons`).
+- Overflow state is tracked with a passive scroll listener and a ResizeObserver writing `data-overflow-start` / `data-overflow-end` on the scroll wrapper, with no re-render per scroll.
+- Reference: the demo (`column-header.tsx:95-124`, `horizontal-overflow.tsx`; v13 promoted at `cca3413`); Airtable and Linear show the edge shadow only; Notion shows nothing beyond the scrollbar.
+- Changes: `style.utils.ts` pinned shadow colour and placement; a `useHorizontalOverflow` hook and `ST_ScrollButtons` in `ST_TableContainer`; `icons.ChevronLeft` / `ChevronRight` (D18); `localization.scrollLeft` / `scrollRight`.
+- Stays: the container scrollbar rules; pinned cells keep opaque backgrounds (D7, 0.7.1 D47).
+- Addendum 2026-11-03: the shadow colour comes from the `--st-edge-shadow` token (D23), not from `--border` light / black dark.
+
+### D23 Tint tokens: four theme-derived CSS variables, declared inside the components
+
+- The table root (`ST_TableLayout`) declares four CSS variables through Tailwind arbitrary-property utilities with `dark:` twins; no stylesheet, no registry `cssVars`, a library install never touches `globals.css`. Cells read them (`bg-(--st-stripe)`, `group-hover/row:bg-(--st-hover)`, `data-[state=selected]:bg-(--st-selected)`, `drop-shadow-(color:--st-edge-shadow)` on the pinned inner-edge cells).
+- Defaults, all opaque mixes with `--background` so pinned cells reuse the same token and never turn see-through (0.7.1 D47): `--st-stripe` = `color-mix(in srgb, var(--muted) 70%, var(--background))` light, 25 percent dark; `--st-hover` = `--border` 50 percent light, `--muted` 55 percent dark; `--st-selected` = `--primary` 20 percent (today's value); `--st-edge-shadow` = `oklch(from var(--background) calc(l - 0.08) c h)` in both modes, `--border` where relative colour syntax is unsupported (`supports-[…]:` variant).
+- Order rule: hover replaces the stripe on a hovered row and reads stronger than it; selection reads stronger than hover; the header stays `--background`; grid lines stay `--border`. The demo's percentages are the defaults; a spec may tune them only within this order. No hard-coded colour anywhere.
+- Override: `stTableLayoutProps.className` or any ancestor sets the same variable; no new table options.
+- Reference: the demo (`column-header.tsx:60-69, 113-117`); ui.shadcn.com, shadcn-vue and tablecn use `hover:bg-muted/50` and `data-[state=selected]:bg-muted` with no variables.
+- Changes: `ST_TableLayout` root classes; `ST_TableBodyRow` and `ST_TableBodyCell` lose the per-cell `::after` overlay (D7) and read the tokens; `style.utils.ts` pinned shadow reads `--st-edge-shadow`.
+- Stays: the `hover` prop on `ST_TableBodyRow`; the selected-row state.
+
+### D24 New localization keys are optional, English only, other locales fall back
+
+- Every new user-facing string of the v0.8 chrome (column menu items D5 and D21, chips and picker D9, sort editor D10, view settings D11, scroll buttons D22, overflow and locked cues) is a key in `ST_Localization`. The new keys are optional members with English values in `en.ts` only; the other 38 locale files are untouched and fall back to English through the existing merge over `ST_Localization_EN` (`useST_TableOptions.ts:104-108`). Components read the merged object typed as `Required<ST_Localization>`. A full locale object such as `ST_Localization_DE` keeps type-checking. Translations arrive later per locale as ride-alongs.
+- Wording that differs from an existing key gets a new key and the old key stays: `sortAscending` / `sortDescending` beside `sortByColumnAsc` / `sortByColumnDesc`; `pinToStart` / `pinToEnd` beside `pinToLeft` / `pinToRight`; `hideThisColumn` beside `hideColumn`. Interpolation stays `{name}` style (`{n} sorts`, `{n} shown`).
+- Reference: MRT ships every key in every locale; the shadcn data tables hard-code English; the demo's strings are the English values (`view-settings.tsx:198-213`, `sort-popover.tsx`, `filter-bar.tsx`, `horizontal-overflow.tsx:100,115`, `column-header.tsx:489,568`).
+- Changes: `types.ts` `ST_Localization`; `shared/locales/en.ts`; the locale gate accepts a missing optional key and fails on a missing required one; every new component reads `localization`, never a literal.
+- Stays: existing keys and their texts; the `localization` option and the merge.
+
+### D25 Menus open from real triggers; the span anchor stays for the cell context menu only
+
+- Behaviour: every menu and popover of the chrome opens from the element the user presses (chevron and label for the column menu, D4; row actions dots; sort button and chip; filter chips and picker; view settings button, its pinned buttons and its Columns row; scroll buttons) and a second press on that element closes it. The cell context menu opens at the pointer position on right-click as today.
+- Implementation is the agent's call; the accepted shape: each exported menu takes its opener as a `trigger` element (radix `asChild`, base `render`, aria's equivalent) with optional controlled `open` / `onOpenChange`; the label and the chevron are two triggers of one controlled column menu; the filter-mode menu becomes a submenu or trigger menu; `useST_MenuAnchor` remains for `ST_CellActionMenu` only; `anchorEl` / `setAnchorEl` leave the four exported menus and the changelog lists the break. Supersedes v0.7.x D26 for every menu but the cell menu.
+- Reference: the demo (`column-header.tsx:481, 500-508`, `columns-menu.tsx:24-55`); the shadcn data tables open every menu from a `DropdownMenuTrigger`.
+- Changes: `ST_ColumnActionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu`, `ST_FilterOptionMenu` and their openers in all three bases; the `MenuOpeners` play test moves to the trigger pattern.
+- Stays: `ST_CellActionMenu` with `actionCell` / `onActionCellChange`; `renderColumnActionsMenuItems`, `renderRowActionMenuItems`.
+- Addendum 2026-11-03: nothing public is removed. The four exported menus accept a `trigger` element beside the existing `anchorEl` / `setAnchorEl`; both stay supported, the chrome uses `trigger`, a consumer with no trigger element keeps `anchorEl`. The `useST_MenuAnchor` export and its types stay. P5 holds as written; the changelog lists the v0.8 default flips under `### Changed` with the option that restores each, no `### Breaking` block.
+
+## Round 2: v0.7.x carry-overs, 2026-11-03
+
+### D26 Single-row selection uses one RadioGroup around the body (moved to v0.7.x D65)
+
+- When `enableMultiRowSelection` is `false`, `ST_TableBody` renders one `RadioGroup` (value: the selected row id) around the rows, and the select cell renders only `RadioGroupItem` with `value={row.id}`; arrow keys move between rows and screen readers announce "n of m". All three bases, no public API change. Replaces the one-group-per-row shape (`ST_SelectCheckbox.tsx` base :181, radix :174, aria :173).
+- Source: v0.7.x F45
+
+### D27 The loading state has a localization key (moved to v0.7.x D66)
+
+- `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too, so all three announce the same. Overridable through `stLinearProgressProps` as before. Rides along with the first v0.8.x spec that touches localization or the toolbar.
+- Source: v0.7.x D57
+
+### D28 One full-screen table at a time; Escape leaves it
+
+- The full-screen container is a `fixed inset-0` overlay, so a second table reaches full screen only from code; the document-level Escape listener stays as it is. The full-screen guide gets one sentence: one full-screen table at a time, Escape leaves it (nested tables inside it leave with it). No `containerProps` ref. Rides along with the first v0.8.x docs spec.
+- Source: v0.7.x D58, closed
+
+### D28 One full-screen table at a time; no container-scoped Escape
+
+- Full screen is a `fixed inset-0` overlay, so a second table reaches full screen only from code, never from a user; the document-level Escape listener stays as it is and no `containerProps` ref is added. No work; v0.7.x D58 closed as accepted.
+- Source: v0.7.x D58
+
+### D29 No length-driven refactor; the mode folder is the shape for a new mode, not a rewrite
+
+- v0.7.x F21 (19 functions over 150 lines) and F22 (3 files over 600 lines) close as accepted; `coding-standards.md` keeps its limits as guidance for new code and names the existing files as accepted. No split of `ST_FilterTextField`, `ST_TablePagination` or `stConfigFeature.ts` now.
+- When a mode is added to a component that switches on one (`ST_FilterTextField` on `filterVariant`, `ST_TablePagination` on `paginationDisplayMode`), that change moves the component into its own folder: the shell, a `modes.ts` with the key union, a map and a `get<X>Mode` function, and `modes/` with one file per mode. Not before.
+- Source: v0.7.x F21, F22
+
+## Round 3: discussion continued, 2026-11-03
+
+### D30 Width rule: `semantic` is the default layout mode
+
+Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/header-demo-v14` and picked `grow`.
+
+- `layoutMode` defaults to `semantic` in every case except virtualization (which still needs `grid`). A semantic table spreads spare width over every column in proportion to its size, display and pinned columns included; once the columns exceed the frame every column renders at its set width and the table scrolls sideways. Sticky offsets are computed from set widths and are exact whenever the table can scroll (measured on `/header-demo-v14`, 2026-11-03: with spare width the table cannot scroll, so the offset difference never shows).
+- Resizing stays on (D14) in semantic: the auto-switch to `grid-no-grow` when `enableColumnResizing` is true (`useST_TableOptions.ts:135`) goes. While spare width exists a dragged edge moves faster than the pointer; accepted.
+- Reference: the owner's `/header-demo-v14` with the `semantic` width rule; ui.shadcn.com, tablecn and shadcn-vue render semantic tables.
+- Changes: `useST_TableOptions` default rule; the resize handle and `columnResizeMode` verified in semantic; Storybook `LayoutMode` stories unchanged.
+- Stays: `grid` and `grid-no-grow` selectable; `columnDef.grow`; virtualization forces `grid`.
+
+### D31 Width rule: proportional grow, narrow columns fixed
+
+- Supersedes D30. The default is the library's `grid` layout mode with `grow: false` on every display column and every pinned column: data columns split the spare width in the ratio of their sizes, the row numbers and row actions columns and any pinned column keep their set width, sticky offsets stay exact. Once the columns exceed the frame every column renders at its set width and the table scrolls sideways. Virtualization already uses `grid`.
+- Resizing stays on (D14): while spare width exists a dragged edge moves faster than the pointer (the column keeps its share of the spare width); accepted, same as semantic.
+- Reference: the owner's `/header-demo-v14` with the `grow` width rule (`header-demo.tsx:627-633`, pinned and display columns excluded from the growable set); Storybook `Features/Layout Mode Examples` `Grid`.
+- Changes: `useST_TableOptions` default `layoutMode: 'grid'`, no auto-switch on resizing; `getST_RowActionsColumnDef`, `getST_RowNumbersColumnDef` and the other display column defs set `grow: false`; pinned columns get `flex-grow: 0` from `style.utils.ts` while pinned.
+- Stays: `semantic` and `grid-no-grow` selectable; `columnDef.grow` on a data column overrides.
+
+### D32 Version 0.8.0 as a minor release
+
+- The cycle ships once as 0.8.0 with the `release:minor` label, after 0.7.4. No public option, type or export is removed (D25 addendum, P5); every default that flips in v0.8 (column ordering, pinning and resizing on; `paginationDisplayMode: 'pages'`; `columnFilterDisplayMode: 'chips'`; `layoutMode: 'grid'`; actions column last and pinned; view settings and sort popover on) is listed under `### Changed` with the option that restores the old behaviour.
+- Reference: 0.7.0 shipped as a minor with the same changelog shape; the package is pre-1.0.
+- Changes: the release spec and the index name the label and the bump.
+- Stays: P1 to P7.
+
+### D33 Docs ship with 0.8.0
+
+- The docs site is updated in this cycle as its own workstream: every guide whose behaviour v0.8 changes is rewritten from the shipped code, and a guide is added for each new surface (column icons, filter chips and picker, sort editor, view settings and persistence, overflow tooltip, scroll cues, tint tokens). The agent decides the pages; the owner does not review the list. The docs workstream merges after the library workstreams and before the release spec, with `check-pages.mjs` per base as its gate (P4).
+- Stays: the generated per-base library copies in `apps/shadcn-table-docs/components/ui-<base>/`; the live example pages.
+
+### D34 Acceptance reference is the live demo, pinned by a capture at the foundation
+
+- Agent-settled. The visual reference for every look spec is `/header-demo` in `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` (branch `playground/header-demo-theming`, a separate repository), served at `http://localhost:3000/header-demo` by the owner's dev server. Builders and judges read the demo code for exact values and open the page for comparison; they never edit that repository and never start, stop or restart that server (it runs outside P5's port range).
+- The foundation step records the demo commit hash and captures light and dark screenshots at 1800 by 1150 of the default view, the column menu, the sort editor, the filter chips and picker, the view settings panel, a column drag in progress and the scroll cues under `.ai/plans/v0.8.x/anindosarker/reference/`, so Acceptance has a fixed reference if the demo branch moves during the run.

@@ -326,6 +326,7 @@ export interface ST_Localization {
   groupedBy: string;
   hideAll: string;
   hideColumn: string;
+  loading: string;
   max: string;
   min: string;
   move: string;

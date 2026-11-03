@@ -40,3 +40,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - Specs follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any spec whose label differs.
 - `Acceptance` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced in a throwaway app under `/Users/anindosarker/Work/Personal/React-table/test-projects/checks/` first (P5); upstream reports are searched on `shadcn-ui/ui` before filing.
+
+## P7 Orchestration
+
+- Per round, by cost: fewest main-session wakes, fewest agents that still prove every Acceptance. As a rule one Workflow per round from the skill's stage library (build, spec check, review only where a spec says `Review: fable`, verify, judges inside the script, gate, merge, release); a single Agent for one bounded task; inline for mechanical edits. Judged clauses run inside the workflow script, three fable judges in parallel, majority (supersedes the main-session judging of D52). Applies from the round after 0.7.4.
