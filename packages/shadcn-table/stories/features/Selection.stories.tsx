@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Selection Examples',
@@ -63,6 +63,38 @@ const expectBodyControlCentred = async (canvasElement: HTMLElement) => {
       Math.abs(box.top + box.height / 2 - (cell.top + cell.height / 2)),
     ).toBeLessThanOrEqual(1);
   });
+};
+
+// Single-row selection: one radio group for the table and one radio per row; a
+// click checks row 2 and ArrowDown moves the check, and the selection, to row 3
+// (D65). The story has no table instance, so `rowSelection` is read through the
+// rows' `data-selected`: row 3 alone, `{ [row3.id]: true }`.
+const expectOneRadioGroup = async (canvasElement: HTMLElement) => {
+  const canvas = within(canvasElement);
+  await waitFor(() =>
+    expect(canvas.getAllByRole('radiogroup')).toHaveLength(1),
+  );
+  const rows = Array.from(canvasElement.querySelectorAll('tbody tr'));
+  expect(canvas.getAllByRole('radio')).toHaveLength(rows.length);
+  await userEvent.click(canvas.getAllByRole('radio')[1]);
+  await waitFor(() => expect(canvas.getAllByRole('radio')[1]).toBeChecked());
+  // Held, as a person presses it: Radix checks the radio it focuses only while
+  // an arrow key is down, and it moves focus in a timeout.
+  await userEvent.keyboard('{ArrowDown>}');
+  await waitFor(() => {
+    const radios = canvas.getAllByRole('radio');
+    expect(radios[2]).toBeChecked();
+    expect(
+      radios.filter((radio) =>
+        radio.matches(':checked, [aria-checked="true"]'),
+      ),
+    ).toHaveLength(1);
+    const selected = Array.from(
+      canvasElement.querySelectorAll('tbody tr'),
+    ).flatMap((tr, index) => (tr.hasAttribute('data-selected') ? [index] : []));
+    expect(selected).toEqual([2]);
+  });
+  await userEvent.keyboard('{/ArrowDown}');
 };
 
 export const SelectionEnabled = () => (
@@ -248,6 +280,7 @@ export const SingleSelectionRadio = () => (
 // The radio story has no header control.
 SingleSelectionRadio.play = async ({ canvasElement }: StoryContext) => {
   await expectBodyControlCentred(canvasElement);
+  await expectOneRadioGroup(canvasElement);
 };
 
 export const SingleSelectionRadioWithRowClick = () => (
@@ -262,6 +295,12 @@ export const SingleSelectionRadioWithRowClick = () => (
     })}
   />
 );
+
+SingleSelectionRadioWithRowClick.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await expectOneRadioGroup(canvasElement);
+};
 
 export const SelectCheckboxSecondaryColor = () => (
   <ShadcnTable
