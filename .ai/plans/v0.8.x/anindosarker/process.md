@@ -42,3 +42,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P7 Styling lives in the components
 
 - No stylesheet, no `globals.css` edit, no registry `cssVars`, no custom CSS class. Every style is a Tailwind utility (arbitrary properties and `dark:` twins included) on a component element; a CSS variable the library reads (`--st-*`) is declared the same way on the table root. A library install never touches the consumer's global CSS. Owner rule 2026-11-03 (D23).
+
+## P7 Orchestration
+
+- Per round, by cost: fewest main-session wakes, fewest agents that still prove every Acceptance. As a rule one Workflow per round from the skill's stage library (build, spec check, review only where a spec says `Review: fable`, verify, judges inside the script, gate, merge, release); a single Agent for one bounded task; inline for mechanical edits. Judged clauses run inside the workflow script, three fable judges in parallel, majority (supersedes the main-session judging of D52). Applies from the round after 0.7.4.

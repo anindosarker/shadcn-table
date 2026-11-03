@@ -389,7 +389,7 @@
 - Body cells are `overflow-hidden` (`ST_TableBodyCell.tsx:39`), which clips a `::before` shadow, so the outward edge shadow is a `data-[pinned=true]:shadow-[...]` class on the pinned cell with its `rtl:` mirror; the `::before` keeps the opaque backdrop. Same color, blur and direction as D47. Spec 06.1 text updated in place.
 - Source: A28
 
-### D52 Judged clauses run in the main session
+### D52 Judged clauses run in the main session (superseded by D67)
 
 - Sub-agent sandboxes have no agent-spawn tool, so the three judges of every judged Acceptance clause run from the main session after the verifier returns, before the merge; the verifier records the capture paths. The workflow template says so in the verify prompt; the run never waits on a judge inside a sandbox.
 - Source: A29
@@ -473,3 +473,8 @@
 
 - `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too. Overridable through `stLinearProgressProps` as before. Rides along with sub-spec `10.4`; `release:patch` (an untranslatable a11y string, treated as a fix).
 - Source: D57 (v0.8.x D27 moved here)
+
+### D67 Orchestration per round, by cost; judges inside the workflow
+
+- The spec states what must be proven (`Acceptance:`), never a lane; the run manager composes one Workflow per round from the skill's stage library (build, spec check, optional review, verify, judges, gate, merge, release) so the main session wakes once, or at a `needs-decision`. Reviews only where a spec says `Review: fable`; nits and minors are fixed by the builder, no fixer agent. Judges run inside the script, three fable in parallel, majority; D52 superseded. Skill, templates and `status.py` updated 2026-11-03; applies from the round after 0.7.4 (P7).
+- Source: owner, 2026-11-03 ("the skill should be open-ended", "you should have used a dynamic workflow")
