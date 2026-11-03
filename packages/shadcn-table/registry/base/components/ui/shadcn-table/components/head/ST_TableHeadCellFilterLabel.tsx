@@ -143,6 +143,9 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
     ),
   } as const;
 
+  // Chips show the filter in the toolbar instead.
+  if (columnFilterDisplayMode === 'chips') return null;
+
   return (
     <>
       {(columnFilterDisplayMode === 'popover' ||

@@ -80,6 +80,20 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     setIsDragging(false);
     setHoveredColumn(null);
     if (hoveredColumn && !isColumnDragCancelled(e)) {
+      // The column slide reads where every header sat before the reorder.
+      const positions = new Map<string, number>();
+      Object.entries(table.refs.tableHeadCellRefs.current ?? {}).forEach(
+        ([id, cell]) => {
+          if (cell?.isConnected) {
+            positions.set(id, cell.getBoundingClientRect().left);
+          }
+        },
+      );
+      table.setColumnFlipPending({
+        dragDrop: false,
+        movedId: column.id,
+        positions,
+      });
       applyColumnReorder(column, hoveredColumn, table);
     }
   };
