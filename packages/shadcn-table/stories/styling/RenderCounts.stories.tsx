@@ -539,7 +539,7 @@ const CountsReadout = () => {
 const readCounts = (root: HTMLElement): RenderCounts =>
   JSON.parse(root.querySelector('[data-testid="counts"]')?.textContent || '{}');
 
-// The last cell of the first row is a data column: `p-2` under compact.
+// The last cell of the first row is a data column: `h-10 px-2` under compact.
 const dataCellClass = (root: HTMLElement) =>
   root.querySelector('tbody tr td:last-child')?.className ?? '';
 
@@ -647,7 +647,9 @@ export const ProfiledThousandRows = {
     // row and head cell components themselves do not render; the other toolbar
     // buttons do not commit.
     await userEvent.click(canvas.getByLabelText('Toggle density'));
-    await waitFor(() => expect(dataCellClass(canvasElement)).toContain('p-2'));
+    await waitFor(() =>
+      expect(dataCellClass(canvasElement)).toContain('h-10 px-2'),
+    );
     await userEvent.click(canvas.getByText('Snapshot counts'));
     const afterDensity = readCounts(canvasElement);
     expect(sum(afterDensity.probeCell), 'density: probe cells').toBe(1000);
@@ -853,7 +855,7 @@ export const ControlledDensityAndSelection = {
     await waitFor(() =>
       expect(canvas.getByTestId('owner-density')).toHaveTextContent('compact'),
     );
-    expect(dataCellClass(canvasElement)).toContain('p-2');
+    expect(dataCellClass(canvasElement)).toContain('h-10 px-2');
     await userEvent.click(canvas.getAllByLabelText('Toggle select row')[1]);
     await waitFor(() =>
       expect(canvas.getByTestId('owner-selection')).toHaveTextContent('1'),
@@ -907,7 +909,9 @@ export const ExternalAtomsDensityAndSelection = {
     const canvas = within(canvasElement);
     await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
     await userEvent.click(canvas.getByText('Set compact'));
-    await waitFor(() => expect(dataCellClass(canvasElement)).toContain('p-2'));
+    await waitFor(() =>
+      expect(dataCellClass(canvasElement)).toContain('h-10 px-2'),
+    );
     await userEvent.click(canvas.getByText('Select two'));
     await waitFor(() =>
       expect(
