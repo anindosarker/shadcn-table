@@ -38,8 +38,10 @@ export const ST_ToolbarDropZone = <TData extends ST_RowData>({
     setHoveredColumn({ id: 'drop-zone' });
   };
 
+  // An accepted drop, so the dragend that follows is not read as cancelled.
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
   };
 
   useEffect(() => {

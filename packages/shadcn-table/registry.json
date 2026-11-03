@@ -217,6 +217,11 @@
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
@@ -382,6 +387,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -410,6 +420,11 @@
           "path": "registry/base/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -547,6 +562,11 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -570,6 +590,11 @@
           "path": "registry/base/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
@@ -1501,6 +1526,11 @@
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
@@ -1666,6 +1696,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -1694,6 +1729,11 @@
           "path": "registry/radix/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -1831,6 +1871,11 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -1854,6 +1899,11 @@
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
@@ -2785,6 +2835,11 @@
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
@@ -2950,6 +3005,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -2978,6 +3038,11 @@
           "path": "registry/aria/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -3115,6 +3180,11 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -3138,6 +3208,11 @@
           "path": "registry/aria/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
@@ -4069,6 +4144,11 @@
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
@@ -4234,6 +4314,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -4262,6 +4347,11 @@
           "path": "registry/base/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -4399,6 +4489,11 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -4422,6 +4517,11 @@
           "path": "registry/base/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",

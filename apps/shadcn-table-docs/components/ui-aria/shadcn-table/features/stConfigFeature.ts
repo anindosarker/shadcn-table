@@ -1,4 +1,4 @@
-import { type ReactNode, type RefObject } from 'react';
+import { type ComponentType, type ReactNode, type RefObject } from 'react';
 import {
   type CellData,
   type DeepKeys,
@@ -24,6 +24,7 @@ import {
   type ST_FilterOption,
   type ST_Header,
   type ST_HeaderGroup,
+  type ST_IconProps,
   type ST_Icons,
   type ST_InternalFilterOption,
   type ST_LinearProgressProps,
@@ -73,7 +74,7 @@ export interface ST_TableOptions_Config<
   TParts extends ST_NeutralPartPropTypes = ST_NeutralPartPropTypes,
 > {
   aggregationFns?: Record<string, Exclude<ST_AggregationFn<TData>, string>>;
-  columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
+  columnFilterDisplayMode?: 'chips' | 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
     LiteralUnion<string & ST_FilterOption>
   > | null;
@@ -93,6 +94,8 @@ export interface ST_TableOptions_Config<
   editDisplayMode?: 'cell' | 'custom' | 'modal' | 'row' | 'table';
   enableBottomToolbar?: boolean;
   enableCellActions?: ((cell: ST_Cell<TData>) => boolean) | boolean;
+  /** Shows a tooltip with the full text over a body cell whose text is cut off. */
+  enableCellOverflowTooltip?: boolean;
   enableClickToCopy?:
     | 'context-menu'
     | ((cell: ST_Cell<TData>) => 'context-menu' | boolean)
@@ -115,13 +118,19 @@ export interface ST_TableOptions_Config<
   enableRowNumbers?: boolean;
   enableRowOrdering?: boolean;
   enableRowVirtualization?: boolean;
+  /** Shows scroll chevrons in the header row while columns overflow sideways. */
+  enableScrollButtons?: boolean;
   enableSelectAll?: boolean;
+  /** Puts sorting in a toolbar sort editor. */
+  enableSortPopover?: boolean;
   enableStickyFooter?: boolean;
   enableStickyHeader?: boolean;
   enableTableFooter?: boolean;
   enableTableHead?: boolean;
   enableToolbarInternalActions?: boolean;
   enableTopToolbar?: boolean;
+  /** Puts the table preferences behind one view settings toolbar button. */
+  enableViewSettings?: boolean;
   filterFns?: Record<string, Exclude<ST_FilterFn<TData>, string>>;
   globalFilterModeOptions?: ST_FilterOption[] | null;
   icons?: Partial<ST_Icons>;
@@ -355,6 +364,8 @@ export interface ST_TableOptions_Config<
   stTopToolbarProps?:
     | ((props: { table: ST_TableInstance<TData> }) => DivProps)
     | DivProps;
+  /** Content Security Policy nonce for the inline script the table renders. */
+  nonce?: string;
   onCreatingRowCancel?: (props: {
     row: ST_Row<TData>;
     table: ST_CoreTableInstance<TData>;
@@ -378,6 +389,11 @@ export interface ST_TableOptions_Config<
     values: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   }) => Promise<void> | void;
   paginationDisplayMode?: 'custom' | 'default' | 'pages';
+  /**
+   * Saves the view settings, pins, column order, pinning and visibility to
+   * `localStorage`; a string is the storage key.
+   */
+  persistViewSettings?: boolean | string;
   positionActionsColumn?: 'first' | 'last';
   positionCreatingRow?: 'bottom' | 'top' | number;
   positionExpandColumn?: 'first' | 'last';
@@ -480,6 +496,12 @@ export interface ST_TableOptions_Config<
       }) => Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>)
     | Partial<VirtualizerOptions<HTMLDivElement, HTMLTableRowElement>>;
   selectAllMode?: 'all' | 'page';
+  /** Renders the inline clear button inside the global search field. */
+  showClearSearchButton?: boolean;
+  /** Renders the grip button in each draggable header cell. */
+  showColumnDragHandle?: boolean;
+  /** Shows each sorted column's position in a multi-column sort. */
+  showSortIndex?: boolean;
   sortFns?: Record<string, Exclude<ST_SortFn<TData>, string>>;
 }
 
@@ -586,6 +608,8 @@ export interface ST_ColumnDef_Config<
         table: ST_CoreTableInstance<TData>;
       }) => ReactNode)
     | ReactNode;
+  /** The column-type icon shown before the header label. */
+  icon?: ComponentType<ST_IconProps> | ReactNode;
   stColumnActionsButtonProps?:
     | ((props: {
         column: ST_Column<TData>;
@@ -680,6 +704,19 @@ export interface ST_ColumnDef_Config<
         table: ST_CoreTableInstance<TData>;
       }) => TableCellProps)
     | TableCellProps;
+  /**
+   * The tooltip a cut-off body cell shows: `false` turns it off, `'value'`
+   * shows the cell value, a function renders the content.
+   */
+  overflowTooltip?:
+    | false
+    | 'value'
+    | ((props: {
+        cell: ST_Cell<TData, TValue>;
+        column: ST_Column<TData, TValue>;
+        row: ST_Row<TData>;
+        table: ST_CoreTableInstance<TData>;
+      }) => ReactNode);
   PlaceholderCell?: (props: {
     cell: ST_Cell<TData, TValue>;
     column: ST_Column<TData, TValue>;
