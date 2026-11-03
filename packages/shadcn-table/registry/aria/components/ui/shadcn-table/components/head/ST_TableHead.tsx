@@ -15,7 +15,7 @@ export interface ST_TableHeadProps extends TableHeadProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
 }
 
-const tableHeadVariants = cva('opacity-[0.97]', {
+const tableHeadVariants = cva('', {
   variants: {
     layout: { grid: 'grid', semantic: '' },
     sticky: { true: 'sticky z-2', false: 'relative' },
@@ -59,10 +59,12 @@ export const ST_TableHead = <TData extends ST_RowData>({
         isFullScreen: state.isFullScreen,
         rowSelection: isHeadOverlay ? state.rowSelection : null,
         showAlertBanner: isHeadOverlay ? state.showAlertBanner : null,
+        stickyHeaderSetting: state.viewSettings.stickyHeader,
       })}
     >
-      {({ isFullScreen, showAlertBanner }) => {
-        const stickyHeader = enableStickyHeader || isFullScreen;
+      {({ isFullScreen, showAlertBanner, stickyHeaderSetting }) => {
+        const stickyHeader =
+          enableStickyHeader || isFullScreen || stickyHeaderSetting;
 
         return (
           <thead
