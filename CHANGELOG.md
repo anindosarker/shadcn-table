@@ -13,6 +13,15 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 01
 
+- Options, all off until set: `enableViewSettings`, `enableSortPopover`, `enableScrollButtons`, `enableCellOverflowTooltip`, `persistViewSettings`, `nonce`, `showClearSearchButton`, `showColumnDragHandle`, `showSortIndex`; `columnFilterDisplayMode` accepts `'chips'`.
+- Column options: `icon` (the column-type icon before the header label) and `overflowTooltip`.
+- Icon keys, with a glyph in the Lucide, Tabler, Phosphor, Hugeicons and Remix editions: `AddIcon`, `ArrowUpwardIcon`, `DeleteIcon`, `GridLinesAllIcon`, `GridLinesColumnsIcon`, `GridLinesNoneIcon`, `GridLinesRowsIcon`, `LockIcon`, `PushPinOffIcon`, `RowNumbersOffIcon`, `RowNumbersOnIcon`, `SettingsIcon`, `SingleLineIcon`, `StickyHeaderOffIcon`, `StickyHeaderOnIcon`, `StripedOffIcon`, `StripedOnIcon`, `SwapVertIcon`, `WrapTextIcon`; the grid line glyphs ship as `ST_GridLinesAllIcon`, `ST_GridLinesRowsIcon` and `ST_GridLinesColumnsIcon`.
+- Localization keys, optional, English only (other locales fall back to English): column menu `sortAscending`, `sortDescending`, `filter`, `pinToStart`, `pinToEnd`, `fixedPosition`, `fixed`, `hideThisColumn`, `columnMenu`, `sortedAscending`, `sortedDescending`; filter chips `addFilter`, `filterBy`, `noColumns`, `removeFilter`, `deleteAllFilters`, `clearFilters`, `backToColumns`, `isEmpty`, `isNotEmpty`, `showColumnToEditFilter`, `rangeSummary`, `yes`, `no`, `beforeValue`, `afterValue`; sort editor `sort`, `sortBy`, `ascending`, `descending`, `dragToReorder`, `removeSortOn`, `addSort`, `deleteSort`, `sortsCount`; view settings `viewSettings`, `columns`, `density`, `wrapCellText`, `singleLineCells`, `gridLines`, `stickyHeader`, `alternatingRowColors`, `pinToToolbar`, `unpinFromToolbar`, `resetView`, `columnsShown`, `gridLinesNone`, `gridLinesRows`, `gridLinesColumns`, `gridLinesAll`, `densityCompact`, `densityComfortable`, `densitySpacious`; scroll cues `scrollLeft`, `scrollRight`.
+- State slices: `viewSettings` (`setViewSettings`, `resetViewSettings`, `onViewSettingsChange`), `filterChips` (`setFilterChips`, `onFilterChipsChange`) and `columnFlipPending` (`setColumnFlipPending`); `table.refs.tableRef` points at the `<table>`.
+- Helpers: `getST_ColumnDropTargetProps`, `isColumnDragCancelled` and `applyColumnReorder` for column drags; the view storage functions `getViewSettingsKey`, `readStoredView`, `writeStoredView`, `removeStoredView`, `subscribeStoredView`, `getStoredViewSnapshot`, `getServerSnapshot` and `escapeForScript`.
+- A column drag ended with Escape or dropped outside the table no longer reorders the columns, from the header grip and from the columns menu.
+- The sticky header scroll box height reads `--st-sticky-max-height` when the table root sets it.
+
 #### Spec 02
 
 #### Spec 03
