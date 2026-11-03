@@ -142,5 +142,5 @@ export const readStoredView = (
   return view;
 };
 
-/** Escapes text for a JSON string inside an inline script: `<` becomes `<`. */
+/** Escapes text for a JSON string inside an inline script: every `<` becomes the six characters backslash, u, 0, 0, 3, c. */
 export const escapeForScript = (text: string) => text.replace(/</g, '\\u003c');
