@@ -55,6 +55,7 @@ export const ST_Localization_EL: ST_Localization = {
   groupedBy: 'Ομαδοποιημένο ανά ',
   hideAll: 'Απόκρυψη όλων',
   hideColumn: 'Απόκρυψη στήλης {column}',
+  loading: 'Φόρτωση',
   max: 'Μέγιστο',
   min: 'Ελάχιστο',
   move: 'Μετακίνηση',

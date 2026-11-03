@@ -55,6 +55,7 @@ export const ST_Localization_HR: ST_Localization = {
   groupedBy: 'Grupirano po ',
   hideAll: 'Sakrij sve',
   hideColumn: 'Sakrij stupac {column}',
+  loading: 'Učitavanje',
   max: 'Maks.',
   min: 'Min.',
   move: 'Premjesti',

@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { useSelector } from '@tanstack/react-store';
+import { RadioGroup } from '@/components/ui-base/radio-group';
 import { useST_ColumnVirtualizer } from '@/components/ui-base/shadcn-table/hooks/useST_ColumnVirtualizer';
 import { type TableProps } from '@/components/ui-base/shadcn-table/types';
 import { parseCSSVarId } from '@/components/ui-base/shadcn-table/shared/utils/style.utils';
@@ -26,12 +27,36 @@ const tableVariants = cva(
   },
 );
 
+// Single-row selection: one radio group for every row radio, so arrow keys move
+// between rows and the radios count as "n of m". A div around the <table> is the
+// only placement every base allows; `block` resets the part's grid.
+const ST_SelectRadioGroup = ({ children }: { children: ReactNode }) => {
+  const table = useSTContext();
+  const rowSelection = useSelector(table.atoms.rowSelection);
+  const value =
+    Object.keys(rowSelection).find((id) => rowSelection[id]) ?? null;
+  return (
+    <RadioGroup
+      aria-label={table.options.localization.toggleSelectRow}
+      className="block"
+      onValueChange={(id: unknown) =>
+        table.getRow(String(id)).toggleSelected(true)
+      }
+      value={value}
+    >
+      {children}
+    </RadioGroup>
+  );
+};
+
 export const ST_Table = ({ ...rest }: ST_TableProps) => {
   const table = useSTContext();
   const {
     getFlatHeaders,
     options: {
       columns,
+      enableMultiRowSelection,
+      enableRowSelection,
       enableTableFooter,
       enableTableHead,
       layoutMode,
@@ -81,7 +106,7 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
     columnVirtualizer,
   };
 
-  return (
+  const tableElement = (
     <table
       {...tableProps}
       style={{ ...columnSizeVars, ...tableProps?.style }}
@@ -98,5 +123,11 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
       )}
       {enableTableFooter && <ST_TableFooter {...commonTableGroupProps} />}
     </table>
+  );
+
+  return enableRowSelection && enableMultiRowSelection === false ? (
+    <ST_SelectRadioGroup>{tableElement}</ST_SelectRadioGroup>
+  ) : (
+    tableElement
   );
 };

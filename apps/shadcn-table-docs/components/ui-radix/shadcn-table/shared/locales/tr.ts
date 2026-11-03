@@ -55,6 +55,7 @@ export const ST_Localization_TR: ST_Localization = {
   groupedBy: 'Gruplandı ',
   hideAll: 'Tümünü Gizle',
   hideColumn: '{column} Sütununu Gizle',
+  loading: 'Yükleniyor',
   max: 'Azami',
   min: 'Asgari',
   move: 'Taşı',

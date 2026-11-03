@@ -55,6 +55,7 @@ export const ST_Localization_AR: ST_Localization = {
   groupedBy: 'مجمعة حسب ',
   hideAll: 'إخفاء الكل',
   hideColumn: 'إخفاء {column} العمود',
+  loading: 'جارٍ التحميل',
   max: 'الأعلى',
   min: 'الأقل',
   move: 'حرك',
