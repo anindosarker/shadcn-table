@@ -39,7 +39,7 @@ CHANGELOG.md                                     ← `#### Spec 05` block under 
 
 ```
 packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_TableOptions.ts ← the flips, no other change
-packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_TableInstance.ts ← actions column seeded into columnPinning.right
+packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_TableInstance.ts ← actions column seeded into initialState.columnPinning.end
 packages/shadcn-table/stories/**                 ← stock look everywhere; explicit modes only where a story demonstrates one
 apps/shadcn-table-docs/examples/<base>/{four filter examples}/TS.tsx ← columnFilterDisplayMode: 'subheader'
 apps/shadcn-table-docs/examples/<base>/alternate-pagination/TS.tsx ← paginationDisplayMode: 'default'
