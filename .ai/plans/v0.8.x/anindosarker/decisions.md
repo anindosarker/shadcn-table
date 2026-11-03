@@ -253,6 +253,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Reference: the owner's `/header-demo-v14` with the `grow` width rule (`header-demo.tsx:627-633`, pinned and display columns excluded from the growable set); Storybook `Features/Layout Mode Examples` `Grid`.
 - Changes: `useST_TableOptions` default `layoutMode: 'grid'`, no auto-switch on resizing; `getST_RowActionsColumnDef`, `getST_RowNumbersColumnDef` and the other display column defs set `grow: false`; pinned columns get `flex-grow: 0` from `style.utils.ts` while pinned.
 - Stays: `semantic` and `grid-no-grow` selectable; `columnDef.grow` on a data column overrides.
+- Addendum 2026-11-04: the mechanism is the agent's call. The demo now sizes columns with CSS `grid-template-columns` (pinned and display columns in px, data columns `minmax(px, fr)`, commit `d4e1d61`); the library may keep its flex-row grid mode or move to grid tracks, whichever keeps today's pinned offsets and resize behaviour. Acceptance compares behaviour, not pixels: the same columns grow, the same columns stay at their set width, proportions within 2 px per column at the reference viewport, exact widths and sideways scroll once the columns exceed the frame.
 
 ### D32 Version 0.8.0 as a minor release
 
