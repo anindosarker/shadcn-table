@@ -96,7 +96,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Changes: `ST_ViewSettingsButton` and the pinned-item buttons in `ST_ToolbarInternalButtons`; a `viewSettings` state slice (`wrapText`, `gridLines`, `stickyHeader`, `striped`, `rowNumbers`, `pins`) beside the existing density state; `gridLines` and `wrapText` take effect in the head and body cells; labels through `localization`, icons through `icons`.
 - Stays: `ST_ShowHideColumnsMenu` as the Columns row's menu; `enableStickyHeader`, `enableRowNumbers` as the option-level defaults the switches change at runtime; persistence of these settings is a separate decision.
 
-### D12 View settings persist per table
+### D12 (superseded by D36) View settings persist per table
 
 Superseded by D36 (2026-11-04), addenda included: persistence is opt-in, the key is automatic.
 
@@ -236,7 +236,7 @@ Superseded by D36 (2026-11-04), addenda included: persistence is opt-in, the key
 
 ## Round 3: discussion continued, 2026-11-03
 
-### D30 Width rule: `semantic` is the default layout mode
+### D30 (superseded by D31) Width rule: `semantic` is the default layout mode
 
 Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/header-demo-v14` and picked `grow`.
 
