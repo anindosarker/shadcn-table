@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { type ST_TooltipProps } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
 import {
   type ST_Column,
+  type ST_GridLinesState,
   type ST_Header,
   type ST_RowData,
   type ST_CoreTableInstance,
@@ -63,6 +64,45 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
       : undefined,
   );
 };
+
+/** The CSS variables the table tints read, declared on the table root. */
+export const ST_TINT_VARS = {
+  edgeShadow: '--st-edge-shadow',
+  hover: '--st-hover',
+  selected: '--st-selected',
+  stripe: '--st-stripe',
+} as const;
+
+/**
+ * The edge shadow of the inner pinned cell, the last visible start-pinned or
+ * the first visible end-pinned column, clipped to fall on the unpinned side
+ * only; `undefined` for every other cell.
+ */
+export const pinnedEdgeShadowClassName = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+): string | undefined => {
+  const isPinned = column.getIsPinned();
+  if (isPinned === 'start' && column.getIsLastColumn('start')) {
+    return 'drop-shadow-sm drop-shadow-(color:--st-edge-shadow) [clip-path:inset(0_-8px_0_0)] rtl:[clip-path:inset(0_0_0_-8px)]';
+  }
+  if (isPinned === 'end' && column.getIsFirstColumn('end')) {
+    return 'drop-shadow-sm drop-shadow-(color:--st-edge-shadow) [clip-path:inset(0_0_0_-8px)] rtl:[clip-path:inset(0_-8px_0_0)]';
+  }
+  return undefined;
+};
+
+/** The cell borders `gridLines` draws; the last column has no end border. */
+export const gridLineClassName = (
+  gridLines: ST_GridLinesState,
+  isLastColumn: boolean,
+) =>
+  cn(
+    'border-border',
+    (gridLines === 'rows' || gridLines === 'all') && 'border-b',
+    (gridLines === 'columns' || gridLines === 'all') &&
+      !isLastColumn &&
+      'border-e',
+  );
 
 export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   column,

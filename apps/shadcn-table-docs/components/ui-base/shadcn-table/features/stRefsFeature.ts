@@ -16,6 +16,7 @@ export interface ST_TableRefs {
   tableHeadCellRefs: RefObject<Record<string, HTMLTableCellElement>>;
   tableHeadRef: RefObject<HTMLTableSectionElement | null>;
   tableLayoutRef: RefObject<HTMLDivElement | null>;
+  tableRef: RefObject<HTMLTableElement | null>;
   topToolbarRef: RefObject<HTMLDivElement | null>;
 }
 
@@ -50,6 +51,7 @@ export const stRefsFeature: TableFeature = {
       tableHeadCellRefs: { current: {} },
       tableHeadRef: { current: null },
       tableLayoutRef: { current: null },
+      tableRef: { current: null },
       topToolbarRef: { current: null },
     };
   },

@@ -144,7 +144,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
               maxHeight: isFullScreen
                 ? 'calc(100vh - var(--st-toolbar-height, 0px))'
                 : enableStickyHeader
-                  ? 'clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px)'
+                  ? 'var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))'
                   : undefined,
               ...tableContainerProps?.style,
             }}

@@ -11,6 +11,7 @@ import type {
 } from '@tanstack/react-table';
 import type {
   ST_Column,
+  ST_ColumnFlipPending,
   ST_RowData,
   ST_Updater,
 } from '@/components/ui-radix/shadcn-table/types';
@@ -21,16 +22,22 @@ import type {
 type ST_ErasedColumn = ST_Column<ST_RowData>;
 
 export interface ST_TableState_ColumnDragging {
+  /** Set by a reorder right before `setColumnOrder`; the column slide takes and clears it. */
+  columnFlipPending: ST_ColumnFlipPending | null;
   draggingColumn: ST_ErasedColumn | null;
   hoveredColumn: Partial<ST_ErasedColumn> | null;
 }
 
 export interface ST_TableOptions_ColumnDragging {
+  onColumnFlipPendingChange?: OnChangeFn<ST_ColumnFlipPending | null>;
   onDraggingColumnChange?: OnChangeFn<ST_ErasedColumn | null>;
   onHoveredColumnChange?: OnChangeFn<Partial<ST_ErasedColumn> | null>;
 }
 
 export interface ST_Table_ColumnDragging<TData extends ST_RowData> {
+  setColumnFlipPending: (
+    updater: ST_Updater<ST_ColumnFlipPending | null>,
+  ) => void;
   setDraggingColumn: (updater: ST_Updater<ST_Column<TData> | null>) => void;
   setHoveredColumn: (
     updater: ST_Updater<Partial<ST_Column<TData>> | null>,
@@ -63,16 +70,26 @@ declare module '@tanstack/react-table' {
 
 export const stColumnDraggingFeature: TableFeature = {
   getInitialState: (initialState) => ({
+    columnFlipPending: null,
     draggingColumn: null,
     hoveredColumn: null,
     ...initialState,
   }),
   getDefaultTableOptions: (table) => ({
+    onColumnFlipPendingChange: makeStateUpdater('columnFlipPending', table),
     onDraggingColumnChange: makeStateUpdater('draggingColumn', table),
     onHoveredColumnChange: makeStateUpdater('hoveredColumn', table),
   }),
   constructTableAPIs: (table) => {
     assignTableAPIs('stColumnDraggingFeature', table, {
+      table_setColumnFlipPending: {
+        fn: (updater: ST_Updater<ST_ColumnFlipPending | null>) =>
+          (
+            table.options as ST_TableOptions_ColumnDragging
+          ).onColumnFlipPendingChange?.((old) =>
+            functionalUpdate(updater, old),
+          ),
+      },
       table_setDraggingColumn: {
         fn: (updater: ST_Updater<ST_ErasedColumn | null>) =>
           (

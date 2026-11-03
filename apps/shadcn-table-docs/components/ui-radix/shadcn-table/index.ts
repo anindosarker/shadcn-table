@@ -82,3 +82,7 @@ export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarA
 export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarDropZone';
 export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ToolbarInternalButtons';
 export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_TopToolbar';
+// spec 01
+export * from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
+export * from '@/components/ui-radix/shadcn-table/shared/utils/viewSettingsStorage.utils';
+export * from '@/components/ui-radix/shadcn-table/components/icons/ST_GridLineIcons';
