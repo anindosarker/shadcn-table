@@ -257,3 +257,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Reference: 0.7.0 shipped as a minor with the same changelog shape; the package is pre-1.0.
 - Changes: the release spec and the index name the label and the bump.
 - Stays: P1 to P7.
+
+### D33 Docs ship with 0.8.0
+
+- The docs site is updated in this cycle as its own workstream: every guide whose behaviour v0.8 changes is rewritten from the shipped code, and a guide is added for each new surface (column icons, filter chips and picker, sort editor, view settings and persistence, overflow tooltip, scroll cues, tint tokens). The agent decides the pages; the owner does not review the list. The docs workstream merges after the library workstreams and before the release spec, with `check-pages.mjs` per base as its gate (P4).
+- Stays: the generated per-base library copies in `apps/shadcn-table-docs/components/ui-<base>/`; the live example pages.
