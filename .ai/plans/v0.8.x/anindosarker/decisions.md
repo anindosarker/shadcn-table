@@ -218,3 +218,8 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 - The full-screen container is a `fixed inset-0` overlay, so a second table reaches full screen only from code; the document-level Escape listener stays as it is. The full-screen guide gets one sentence: one full-screen table at a time, Escape leaves it (nested tables inside it leave with it). No `containerProps` ref. Rides along with the first v0.8.x docs spec.
 - Source: v0.7.x D58, closed
+
+### D28 One full-screen table at a time; no container-scoped Escape
+
+- Full screen is a `fixed inset-0` overlay, so a second table reaches full screen only from code, never from a user; the document-level Escape listener stays as it is and no `containerProps` ref is added. No work; v0.7.x D58 closed as accepted.
+- Source: v0.7.x D58
