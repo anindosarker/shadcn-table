@@ -1,7 +1,10 @@
 import {
+  cloneElement,
   type ComponentPropsWithRef,
   type MouseEvent,
+  type ReactElement,
   type ReactNode,
+  useState,
 } from 'react';
 import { Pressable } from 'react-aria-components';
 import {
@@ -19,20 +22,32 @@ import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuA
 
 export interface ST_RowActionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenu> {
-  anchorEl: HTMLElement | null;
+  /** The element the menu opens from when no `trigger` is given; `null` while closed. */
+  anchorEl?: HTMLElement | null;
   handleEdit: (event: MouseEvent) => void;
+  /** Controlled open state with a `trigger`. */
+  onOpenChange?: (open: boolean) => void;
+  /** Controlled open state with a `trigger`. */
+  open?: boolean;
   row: ST_Row<TData>;
-  setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  setAnchorEl?: (anchorEl: HTMLElement | null) => void;
   staticRowIndex?: number;
+  /** The element that opens and closes the menu; rendered disabled while the menu has no items. */
+  trigger?: ReactElement<{ isDisabled?: boolean }>;
 }
+
+const noAnchor = () => {};
 
 export const ST_RowActionMenu = <TData extends ST_RowData>({
   className,
-  anchorEl,
+  anchorEl = null,
   handleEdit,
+  onOpenChange: onOpenChangeProp,
+  open: openProp,
   row,
-  setAnchorEl,
+  setAnchorEl = noAnchor,
   staticRowIndex,
+  trigger,
   ...rest
 }: ST_RowActionMenuProps<TData>) => {
   const table = row.table;
@@ -50,6 +65,14 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     anchorEl,
     setAnchorEl,
   });
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isOpen = trigger ? (openProp ?? uncontrolledOpen) : !!anchorEl;
+  const handleTriggerOpenChange = (next: boolean) => {
+    setUncontrolledOpen(next);
+    onOpenChangeProp?.(next);
+  };
+  const closeMenu = () =>
+    trigger ? handleTriggerOpenChange(false) : setAnchorEl(null);
 
   const menuItems: ReactNode[] = [];
   const editItem = parseFromValuesOrFunc(enableEditing, row) &&
@@ -63,21 +86,28 @@ export const ST_RowActionMenu = <TData extends ST_RowData>({
     );
   if (editItem) menuItems.push(editItem);
   const rowActionMenuItems = renderRowActionMenuItems?.({
-    closeMenu: () => setAnchorEl(null),
+    closeMenu,
     row,
     staticRowIndex,
     table,
   });
   if (rowActionMenuItems?.length) menuItems.push(...rowActionMenuItems);
 
-  if (!menuItems.length) return null;
+  if (!menuItems.length) {
+    return trigger ? cloneElement(trigger, { isDisabled: true }) : null;
+  }
 
   return (
-    <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
-      {/* An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor. */}
-      <Pressable isDisabled>
-        <a {...spanProps} />
-      </Pressable>
+    <DropdownMenuTrigger
+      isOpen={isOpen}
+      onOpenChange={trigger ? handleTriggerOpenChange : onOpenChange}
+    >
+      {trigger ?? (
+        // An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor.
+        <Pressable isDisabled>
+          <a {...spanProps} />
+        </Pressable>
+      )}
       <DropdownMenu
         placement="bottom start"
         onClick={(event) => event.stopPropagation()}
