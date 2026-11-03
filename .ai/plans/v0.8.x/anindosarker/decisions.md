@@ -295,3 +295,4 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Reference: the demo (`use-column-flip.ts`, `use-drag-auto-scroll.ts`, report §13); Notion previews in the header and slides the body on drop; MRT and the shadcn tables animate nothing.
 - Changes: a `useColumnFlip` hook on `ST_TableContainer`, head and body cell `data-flip-column` attributes, `ST_ShowHideColumnsMenuItems` drop path calls the flip prepare, `ST_TableHeadCell` drag feedback per state.
 - Stays: D20's drag source, drop rule and cancel rule; D21.
+- Addendum 2026-11-04, owner: animate with CSS, never with per-frame JavaScript. The header preview is a CSS `translate` transition as in the demo; the drop and menu slides use the demo's `element.animate()` (compositor-run) or an equivalent CSS transition; no `requestAnimationFrame` loop writes styles per frame. The auto-scroll loop (D20) scrolls the box and dispatches events only.
