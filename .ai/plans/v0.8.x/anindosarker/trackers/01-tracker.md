@@ -12,6 +12,8 @@ Gates:
 - `storybook:build:base` at 88f29ad5: green
 - `pnpm install --frozen-lockfile` at 88f29ad5: green, tree clean
 - `pnpm format` at 88f29ad5: no change
+- Verifier at 031edfd2: every 2.2 gate above recorded by the builder and still valid (`git diff --name-only` since 64f4efe1 and 88f29ad5 touches only the tracker and `CHANGELOG.md`); none rerun, CI is the second run
+- Verifier at 031edfd2: Acceptance rerun once: `node .ai/plans/v0.8.x/anindosarker/reference/01-check.mjs` "3 bases, 0 problems", exit 0; `ls reference/01-*.png` 14 files; `reference/01-demo-commit.txt` holds a 40-character hash (4fde6ea9...); tsc, lint, checks and tests from the recorded lines: green
 
 - Milestone 01 dependency, captures and changelog: done (92cfca14)
 - Milestone 02 types, options, slices, helpers, icons, strings: done (64f4efe1)
