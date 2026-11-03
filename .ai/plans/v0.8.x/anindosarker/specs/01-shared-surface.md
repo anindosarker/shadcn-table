@@ -62,7 +62,10 @@ packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
 ├── components/head/ST_TableHeadCellGrabHandle.tsx, components/menus/ST_ShowHideColumnsMenuItems.tsx ← reorder through applyColumnReorder, cancel rule
 ├── components/toolbar/ST_ToolbarDropZone.tsx ← dragover sets dropEffect 'move'
 ├── components/table/ST_TableContainer.tsx ← sticky maxHeight reads var(--st-sticky-max-height, <today's clamp>)
+├── components/body/ST_TableBodyCell.tsx   ← data-flip-column={column.id} on the td (2.1.2)
+├── shared/utils/displayColumn.utils.ts    ← showRowNumbersColumn reads enableRowNumbers || viewSettings.rowNumbers (2.1.2)
 └── index.ts                               ← exports for drag.utils, viewSettingsStorage.utils, ST_GridLineIcons
+packages/shadcn-table/stories/styling/DefaultLook.stories.tsx ← the capture story for specs 02, 03 and 04 (2.1.2)
 packages/shadcn-table/package.json, pnpm-lock.yaml ← lucide-react ^1.64.0
 .ai/plans/v0.8.x/anindosarker/reference/   ← 01-default-{light,dark}.png, 01-column-menu-*.png, 01-sort-editor-*.png, 01-chips-*.png, 01-view-settings-*.png, 01-drag-*.png, 01-scroll-cues-*.png (light and dark each), 01-demo-commit.txt, 01-surface.json
 CHANGELOG.md                               ← `## Unreleased` with `#### Spec 01` to `#### Spec 06` under `### Added` / `### Changed` / `### Docs`
