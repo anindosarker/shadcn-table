@@ -22,6 +22,7 @@ The header becomes the demo's quiet band with one chevron menu per column, the c
 
 ```
 packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
+├── components/head/ST_TableHeadCellFilterContainer.tsx ← `open` prop from 01; `ST_TableHeadCellFilterLabel.tsx` is spec 04's
 ├── components/head/ST_TableHeadCell.tsx            ← font-bold band (27-29); showDragHandle 161-176; resize and drag borders 178-199; sort on click 300-315; grip and actions 330-345; drag handlers 73-90
 ├── components/head/ST_TableHeadCellSortLabel.tsx   ← button with tooltip, SyncAlt when unsorted (15-123)
 ├── components/head/ST_TableHeadCellColumnActionsButton.tsx ← MoreVert at opacity-30 (17-19); anchorEl state and useST_MenuAnchor (47-57); tooltip (71-102)
@@ -55,7 +56,7 @@ packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
 ├── hooks/useST_DragAutoScroll.ts                   ← new
 └── index.ts                                        ← useST_ColumnFlip, useST_DragAutoScroll, ST_TableHeadCellLockedOverlay
 packages/shadcn-table/stories/features/ColumnDragging.stories.tsx ← header drag, preview, cancel, locked plays; grip story keeps showColumnDragHandle
-packages/shadcn-table/stories/features/ColumnActions.stories.tsx ← omit-rule plays
+packages/shadcn-table/stories/features/ColumnActions.stories.tsx ← omit-rule plays added
 packages/shadcn-table/scripts/registry/base-diff.json, aria-diff.json ← ST_ColumnActionMenu.tsx, ST_FilterOptionMenu.tsx, ST_TableHeadCellColumnActionsButton.tsx already listed (aria); add per-base trigger differences where they arise
 ```
 
@@ -90,7 +91,7 @@ sequenceDiagram
 - Classes: `group/th relative h-10 p-0 font-medium text-muted-foreground border-b` plus `gridLineClassName` from 01 for the column hairline (`border-e` only for `columns` and `all`, not on the last column); no background except `bg-background` when sticky or pinned; `font-bold` and `[&:hover_button]:opacity-100` go; density padding becomes `px-2`, `px-3`, `px-4` on the inner flex row
 - Inner row `flex h-full items-center gap-1.5`: optional icon (`columnDef.icon`: an element renders as is, anything else renders as a component, `size-3.5 shrink-0 opacity-70`), the label as a `button type="button"` (`min-w-0 truncate text-sm hover:text-foreground`, `aria-label` `localization.columnMenu` with the column name) that sets the menu open, the sort span, then the chevron button `ms-auto`
 - One `useState` open flag per header cell, passed to `ST_TableHeadCellColumnActionsButton` as `open` / `onOpenChange`; the chevron is the primitive trigger (radix `asChild`, base `render`, aria the `MenuTrigger` child); the label is a plain button that sets `open` to true (a radix trigger opens on pointerdown and would fight the drag); a second click on the chevron closes through the primitive
-- `ST_TableHeadCellSortLabel`: `null` when unsorted; sorted renders a `span` with `ArrowUpwardIcon` or `ArrowDownwardIcon` `size-3 text-muted-foreground/80` and `aria-label` `sortedAscending` / `sortedDescending`; the multi-sort index badge stays behind `enableMultiSort` only when `showSortIndex` (existing behaviour) is set; no button, no tooltip
+- `ST_TableHeadCellSortLabel`: `null` when unsorted; sorted renders a `span` with `ArrowUpwardIcon` or `ArrowDownwardIcon` `size-3 text-muted-foreground/80` and `aria-label` `sortedAscending` / `sortedDescending`; the multi-sort index badge renders only with `showSortIndex` (01, D10 addendum) while more than one sort exists; no button, no tooltip
 - `ST_TableHeadCellColumnActionsButton`: `Button size="icon-xs" variant="ghost"` with `ExpandMoreIcon`, `aria-label` `localization.columnActions`, no tooltip; renders `<ST_ColumnActionMenu trigger={button} open onOpenChange />`; the `anchorEl` path remains for a consumer who renders the menu elsewhere
 - `ST_TableHeadRow`: the `shadow-[4px_0_8px...]` goes; `ST_TableHead`: `opacity-[0.97]` goes
 - Does NOT call `column.getToggleSortingHandler()` anywhere; does NOT render the grip unless `showColumnDragHandle`; does NOT render the filter label in chips mode (spec 04 gates it inside the label)
@@ -120,7 +121,7 @@ sequenceDiagram
 **Interfaces:**
 
 ```typescript
-export interface ST_ColumnActionMenuProps<TData extends ST_RowData> extends ST_DropdownMenuContentProps {
+export interface ST_ColumnActionMenuProps<TData extends ST_RowData> extends ComponentPropsWithRef<typeof DropdownMenuContent> {
   readonly anchorEl?: HTMLElement | null;
   readonly header: ST_Header<TData>;
   readonly onOpenChange?: (open: boolean) => void;
@@ -176,7 +177,7 @@ export const useST_DragAutoScroll: <TData extends ST_RowData>(table: ST_TableIns
 
 #### 1.6.8 Stories and play tests
 
-- `ColumnActions.stories.tsx` (new): four states (unsorted unfiltered unpinned, sorted and filtered, pinned start, locked) with plays asserting the exact item list per state, the disabled active direction, the disabled Fixed position, stacking (`sorting.length` 2 after two columns), the reset size item after a programmatic resize
+- `ColumnActions.stories.tsx` (existing, extended): four states (unsorted unfiltered unpinned, sorted and filtered, pinned start, locked) with plays asserting the exact item list per state, the disabled active direction, the disabled Fixed position, stacking (`sorting.length` 2 after two columns), the reset size item after a programmatic resize
 - `ColumnDragging.stories.tsx`: the default story drags by the header (`fireEvent.dragStart` on the `th`, `dragOver` on the table with `clientX` inside the next slot, `dragEnd`); plays assert the preview translate on the target header and none on a body cell mid-drag, the reorder after drop, an animation on the moved column's cells (`getAnimations().length > 0` right after the drop), Escape (a `dragEnd` with `dropEffect: 'none'`) restoring the order, the locked overlay opacity during the drag; a `WithGrip` story keeps the grip play with `showColumnDragHandle`
 - `Sorting`, `TableProvider`, `RenderCounts`: the "Sort by ... ascending" clicks open the chevron (`aria-label` columnActions) and click the `sortAscending` item; `MenuOpeners` and `MenuFocusReturn` are not edited here (spec 05 rewrites both; their column menu plays are red until then and the two files are excluded from this spec's `test:<base>` runs, noted in the tracker); `RTL`: the handle lookup follows the new class; `AriaTooltips`: the column actions tooltip expectation goes
 - `DefaultLook` captures (spec 02's story, read-only here): header at rest, Status menu open, mid-drag of Assignee over Project, per base, light and dark, for the judges
@@ -213,7 +214,7 @@ Lane: agent
 
 Lane: agent
 
-- Remove dead imports (`SyncAltIcon` use in the sort label, the Separator in the handle, `MoreVertIcon` in the actions button); `pnpm format`; `pnpm registry:build`; `lib:install` per base; `#### Spec 03` changelog block
+- Remove dead imports (`SyncAltIcon` use in the sort label, the Separator in the handle, `MoreVertIcon` in the actions button); `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 03` changelog block
 - Gates: 2.2
 
 ### 2.2 Gates

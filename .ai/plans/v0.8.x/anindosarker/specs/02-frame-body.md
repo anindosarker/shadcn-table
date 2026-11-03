@@ -61,7 +61,7 @@ packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
 ├── hooks/useST_HorizontalOverflow.ts          ← new
 ├── hooks/useST_RowVirtualizer.ts              ← 40/48/56
 └── index.ts                                   ← ST_OverflowText, ST_ScrollButtons, useST_HorizontalOverflow
-packages/shadcn-table/stories/styling/DefaultLook.stories.tsx ← new: the demo's column set, 50 rows, the v0.8 options set explicitly; captures for the judges; play tests of 1.6.9
+packages/shadcn-table/stories/styling/DefaultLook.stories.tsx ← from 01; captures for the judges; play tests of 1.6.9 added
 packages/shadcn-table/scripts/registry/base-diff.json, aria-diff.json ← ST_OverflowText.tsx, ST_TableBody.tsx (aria)
 ```
 
@@ -78,7 +78,7 @@ packages/shadcn-table/scripts/registry/base-diff.json, aria-diff.json ← ST_Ove
 
 `ST_TableLayout.tsx`, `useST_FullScreenContainer.ts` (D1) (D23) (D36).
 
-- Root `div`: `flex flex-col gap-2` plus the token declarations as utilities, light then dark: `[--st-stripe:color-mix(in_srgb,var(--muted)_70%,var(--background))] dark:[--st-stripe:color-mix(in_srgb,var(--muted)_25%,var(--background))]`, `--st-hover` from `--border` 50 percent light and `--muted` 55 percent dark, `--st-selected` from `--primary` 20 percent, `--st-edge-shadow` `oklch(from_var(--background)_calc(l_-_0.08)_c_h)` with `supports-[not(color:oklch(from_red_l_c_h))]:[--st-edge-shadow:var(--border)]`; `check:tailwind` decides the canonical spelling, the builder keeps whatever it accepts
+- Root `div`: `data-slot="st-table-layout"`, `group/st`, `flex flex-col gap-2` plus the token declarations as utilities, light then dark: `[--st-stripe:color-mix(in_srgb,var(--muted)_70%,var(--background))] dark:[--st-stripe:color-mix(in_srgb,var(--muted)_25%,var(--background))]`, `--st-hover` from `--border` 50 percent light and `--muted` 55 percent dark, `--st-selected` from `--primary` 20 percent, `--st-edge-shadow` `oklch(from_var(--background)_calc(l_-_0.08)_c_h)` with `supports-[not(color:oklch(from_red_l_c_h))]:[--st-edge-shadow:var(--border)]`; `check:tailwind` decides the canonical spelling, the builder keeps whatever it accepts
 - Order: `ST_TopToolbar`, then the frame `div` (`rounded-md border bg-background shadow overflow-hidden flex min-h-0 flex-col`) holding `ST_TableContainer` and `ST_BottomToolbar`
 - Full screen: `fullScreenClassName` becomes `fixed inset-0 z-50 flex flex-col bg-background p-4`; the frame gets `flex-1 min-h-0`, the container `flex-1 min-h-0 overflow-auto`
 - `data-st-view-pending` is set by the script (1.6.8) and removed by the layout once the stored view is applied; while set, `aria-busy`
@@ -92,7 +92,7 @@ packages/shadcn-table/scripts/registry/base-diff.json, aria-diff.json ← ST_Ove
 
 - Sticky case: `enableStickyHeader || viewSettings.stickyHeader` (slice from 01) and not `enableRowVirtualization`: `maxHeight: var(--st-sticky-max-height, 70vh)`; `enableRowVirtualization`: `var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))`; full screen: `flex-1 min-h-0`, no maxHeight
 - A wrapper `div.group/st-scroll relative flex min-h-0 flex-col` around the scroll box; `useST_HorizontalOverflow(wrapperRef, scrollRef)` writes `data-overflow-start`, `data-overflow-end`, `--st-scrollbar-y` and `--st-pin-start` / `--st-pin-end` (pinned widths from `table.getLeftTotalSize()` and `getRightTotalSize()`) on the wrapper, with a passive scroll listener and one ResizeObserver on the box and its first child, rAF-batched, RTL-aware (`scrollLeft` sign); no React state
-- `ST_ScrollButtons`: two `Button size="icon-xs" variant="ghost"` with `ChevronLeftIcon` / `ChevronRightIcon`, `aria-label` `localization.scrollLeft` / `scrollRight`, absolutely placed `top-5 -translate-y-1/2 z-5 bg-background text-muted-foreground` at `inset-s-[calc(var(--st-pin-start)+--spacing(1))]` and `inset-e-[calc(var(--st-pin-end)+var(--st-scrollbar-y)+--spacing(1))]`; `invisible opacity-0 pointer-events-none` with `tabIndex={-1}` unless the wrapper is hovered (`group-hover/st-scroll:`) and the matching overflow attribute is set (`group-data-[overflow-start]/st-scroll:`); click scrolls `0.8 * (clientWidth - pinStart - pinEnd)` with `behavior: 'smooth'`; rendered only when `enableScrollButtons !== false`
+- `ST_ScrollButtons`: two `Button size="icon-xs" variant="ghost"` with `ChevronLeftIcon` / `ChevronRightIcon`, `aria-label` `localization.scrollLeft` / `scrollRight`, absolutely placed `top-5 -translate-y-1/2 z-5 bg-background text-muted-foreground` at `inset-s-[calc(var(--st-pin-start)+--spacing(1))]` and `inset-e-[calc(var(--st-pin-end)+var(--st-scrollbar-y)+--spacing(1))]`; `invisible opacity-0 pointer-events-none` with `tabIndex={-1}` unless the wrapper is hovered (`group-hover/st-scroll:`) and the matching overflow attribute is set (`group-data-[overflow-start]/st-scroll:`); click scrolls `0.8 * (clientWidth - pinStart - pinEnd)` with `behavior: 'smooth'`; rendered only when `enableScrollButtons === true` (spec 05 sets the default; until then only a story that sets it shows them)
 - Does NOT change the scrollbar rules (28-30) or the toolbar height measure
 
 **Interfaces:**
@@ -106,10 +106,10 @@ export const ST_ScrollButtons: <TData extends ST_RowData>(props: { table: ST_Tab
 
 `ST_TableBody.tsx`, `ST_TableBodyRow.tsx`, `ST_TableBodyCell.tsx`, `useST_RowVirtualizer.ts` (D7) (D15) (D21) (D23) (D37).
 
-- Row: `group/row` when `hover` is true; the `[&>td]:after` overlay, the `dimmed` opacity and the `animated` transition variants go; `defaultRowHeight` 40, 48, 56; the pinned-row tint `bg-primary/10` stays as the one non-token tint (pinned rows are a selection-like state); sticky checks read `enableStickyHeader || viewSettings.stickyHeader`
-- Cell classes: `h-10 px-2`, `h-12 px-3`, `h-14 px-4` by density, display columns `px-0`; `content-center overflow-hidden`; `truncate` by default, `whitespace-normal break-words py-1` with `viewSettings.wrapText`; `gridLineClassName(viewSettings.gridLines, isLastColumn)` from 01 plus `group-last/row:border-b-0`; backgrounds `bg-background`, `odd:bg-(--st-stripe)` on the row's odd index when `viewSettings.striped`, `group-hover/row:bg-(--st-hover)`, `group-data-[selected=true]/row:bg-(--st-selected)` (the row marker is `data-selected`); pinned cells use the same tokens through `getCommonPinnedCellStyles`
+- Row: `group/row` always, `data-hover` when `hover` is true (the cells' hover tint keys on `group-data-[hover]/row:`); the `[&>td]:after` overlay, the `dimmed` opacity and the `animated` transition variants go; `defaultRowHeight` 40, 48, 56; the pinned-row tint `bg-primary/10` stays as the one non-token tint (pinned rows are a selection-like state); sticky checks read `enableStickyHeader || viewSettings.stickyHeader`
+- Cell classes: `h-10 px-2`, `h-12 px-3`, `h-14 px-4` by density, display columns `px-0`; `content-center overflow-hidden`; `truncate` by default, `whitespace-normal break-words py-1` with `viewSettings.wrapText`; `gridLineClassName(viewSettings.gridLines, isLastColumn)` from 01 plus `group-last/row:border-b-0`; backgrounds `bg-background`, `group-odd/row:bg-(--st-stripe)` when `viewSettings.striped`, `group-data-[hover]/row:group-hover/row:bg-(--st-hover)`, `group-data-[selected=true]/row:bg-(--st-selected)` (the row marker is `data-selected`); pinned cells use the same tokens through `getCommonPinnedCellStyles`
 - Selector: adds `gridLines`, `wrapText`, `striped`, and `dragActive` (true while `draggingColumn` is set, only for columns with `enableColumnOrdering: false`); drops `isHoveredColumn` and `isDraggingColumn` for column drags so a hover move never re-renders body cells; row-drag highlighting keeps its own classes
-- Drag: `data-flip-column={column.id}` on every `td`; `getST_ColumnDropTargetProps(column)` from 01 replaces the local handlers; the column-drag dashed borders on body cells go; `lockedCellClassName(dragActive)` from 01 on locked columns
+- Drag: `data-flip-column={column.id}` on every `td` (rendered since 01, kept); `getST_ColumnDropTargetProps(column)` from 01 replaces the local handlers; the column-drag dashed borders on body cells go; `lockedCellClassName(dragActive)` from 01 on locked columns
 - Empty row: `h-24 text-center text-muted-foreground` and the existing texts; `renderEmptyRowsFallback` unchanged
 - `ST_TableBody` wraps rows in one `TooltipProvider delayDuration={500}` on radix and base; aria has no provider and `ST_OverflowText` opens its tooltip standalone there (aria-diff)
 - `useST_RowVirtualizer` `normalRowHeight` 40, 48, 56
@@ -131,7 +131,7 @@ export const ST_ScrollButtons: <TData extends ST_RowData>(props: { table: ST_Tab
 `ST_OverflowText.tsx`, exported (D17).
 
 - `span.block min-w-0 truncate` around the value; on pointer enter it measures `scrollWidth > clientWidth` and opens the tooltip only then (controlled `open`); with `viewSettings.wrapText` it renders the plain span, no tooltip; `tooltip` prop `'value' | ReactNode`
-- `ST_TableBodyCell` wraps `cellValue` (and the copy-button child) when `enableCellOverflowTooltip !== false` and `columnDef.overflowTooltip !== false`; `'value'` or undefined shows the string value, a function its result; display columns never
+- `ST_TableBodyCell` wraps `cellValue` (and the copy-button child) when `enableCellOverflowTooltip === true` (spec 05 sets the default) and `columnDef.overflowTooltip !== false`; `'value'` or undefined shows the string value, a function its result; display columns never
 - Per base: radix `TooltipTrigger asChild`, base `render`, aria standalone `ST_Tooltip` mode with `placement`; listed in the diff files
 - Does NOT add a `TooltipProvider` per cell; does NOT render while the pending skeleton is shown
 
@@ -149,7 +149,7 @@ export interface ST_OverflowTextProps { readonly children: ReactNode; readonly c
 - `getCommonSRTCellStyles`: a pinned column in grid mode gets `flex: 0 0 auto` (D31); the `opacity-50` on dragged and hovered columns no longer applies to body cells (head cells keep their own feedback in spec 03)
 - `ST_Table.tsx`: grid mode sets `minWidth: table.getTotalSize()` on the table so columns keep exact widths once they exceed the frame
 - `defaultDisplayColumnProps` sets `grow: false` before the `displayColumnDefOptions` spread; `getST_RowActionsColumnDef` size 48, `Header` renders `localization.actions` in an `sr-only` span, `enableColumnOrdering: true` (the column moves through the columns menu, D14)
-- `showRowNumbersColumn` in `displayColumn.utils.ts` reads `enableRowNumbers || viewSettings.rowNumbers`, so the view settings switch (spec 04) adds and removes the `#` column pinned start (D11)
+- `showRowNumbersColumn` in `displayColumn.utils.ts` already reads `enableRowNumbers || viewSettings.rowNumbers` (01), so the view settings switch (spec 04) adds and removes the `#` column pinned start (D11); unchanged here
 - Does NOT flip `layoutMode`, `positionActionsColumn` or default pinning (spec 05)
 
 **Stays unchanged:** `reorderColumn`; the row spacer column (grid-no-grow only).
@@ -174,7 +174,7 @@ export interface ST_OverflowTextProps { readonly children: ReactNode; readonly c
 
 `stories/styling/DefaultLook.stories.tsx` (new), updates to the stories the changed classes break.
 
-- `DefaultLook`: the demo's columns (Name, Status, Project, Assignee, Due, Estimate, Priority, Tags, Reporter) with `columnDef.icon`, 50 rows, `enableRowActions`, the v0.8 options set explicitly (`layoutMode: 'grid'`, `enableColumnPinning`, `enableColumnResizing`, `enableColumnOrdering`, `paginationDisplayMode: 'pages'`, `positionActionsColumn: 'last'`, `initialState.columnPinning.right: ['st-row-actions']`); the capture source for the judges; plays: measure the first body row and the header heights at each density, assert no `::after` background on hover, scroll cue visibility and scroll delta, tooltip open on the truncated Name cell and closed on a short Project cell, the pending attribute with a seeded `localStorage` entry (`persistViewSettings: true`) and its absence without one, the sticky container height
+- `DefaultLook` (created by spec 01, plays added here): the capture source for the judges; plays: measure the first body row and the header heights at each density, assert no `::after` background on hover, scroll cue visibility and scroll delta, tooltip open on the truncated Name cell and closed on a short Project cell, the pending attribute with a seeded `localStorage` entry (`persistViewSettings: true`) and its absence without one, the sticky container height
 - `RTL.stories.tsx`: the boxShadow assertion becomes a `filter` drop-shadow assertion on the inner-edge cell; `RenderCounts.stories.tsx` and `TableProvider.stories.tsx`: `'p-2'` assertions become `h-10 px-2`; `RowPinning`, `Virtualization`, `StickyHeader` offsets and heights follow the new metrics
 - Does NOT touch stories spec 05 rewrites for the default flips (`Pagination`, `Filtering`, `Toolbar`, `ColumnDragging`)
 
@@ -204,7 +204,7 @@ Lane: agent
 
 Lane: agent
 
-- Delete the removed variants' dead imports; `pnpm format`; `pnpm registry:build`; `lib:install` per base; `#### Spec 02` changelog block
+- Delete the removed variants' dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 02` changelog block
 - Gates: 2.2
 
 ### 2.2 Gates

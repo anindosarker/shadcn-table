@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-Specs 01 to 06 prove the library with types, lint, Storybook play tests, judged captures and the docs page check; none of them runs the installed files in a consumer app. This spec installs the table from the local registry into a throwaway Next 16 app per base, builds it, opens it with zero console warnings and exercises the new chrome, then ships 0.8.0 as a minor release (D32). Workstream S5 (index, Run plan): inline in the main session after S4 merges; works on `claude/review`, `dev` and `master`, no spec branch or worktree. Release: label `release:minor` on the `dev` into `master` PR, version 0.8.0. Steps per P3.
+Specs 01 to 06 prove the library with types, lint, Storybook play tests, judged captures and the docs page check; none of them runs the installed files in a consumer app. This spec installs the table from the local registry into a throwaway Next 16 app per base, builds it, opens it with zero console warnings and exercises the new chrome, then ships 0.8.0 as a minor release (D32). Workstream S (index, Run plan): inline in the main session after E merges; works on `claude/review`, `dev` and `master`, no spec branch or worktree. Release: label `release:minor` on the `dev` into `master` PR, version 0.8.0. Steps per P3.
 
 ### 1.2 Goals
 

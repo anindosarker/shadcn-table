@@ -26,12 +26,6 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 ### D4 Label click opens the column menu
 
-- Clicking a header label opens the column menu, the same as the chevron. Sorting is a deliberate action taken from the menu (or the sort popover), never a side effect of clicking the label; this matches the shadcn data table pattern, where the header button opens a dropdown with the sort items.
-- Changes: `ST_TableHeadCell` label becomes a menu trigger; the sort toggle on the label goes; no option re-enables it.
-- Stays: a consumer who wants one-click sorting writes a custom `Header` that calls `column.toggleSorting`.
-
-### D4 Label click opens the column menu
-
 - Clicking a header label opens the column menu, the same as the chevron. Sorting is a deliberate action from the menu or the sort popover; no shadcn data-table reference sorts on label click, and an accidental sort on a wide table is costly.
 - Changes: `ST_TableHeadCell` label becomes the second trigger of the column menu; the sort-on-click handler and its `cursor-pointer` go.
 - Stays: a consumer who wants quick sort writes a custom `Header` with `column.getToggleSortingHandler()`; no `enableHeaderSortClick` option is added.
@@ -41,15 +35,15 @@ The reference for every look decision is the owner's header demo (`test-projects
 - The default column menu lists only what applies right now, in this order: Sort ascending, Sort descending, Clear sort (only while this column is sorted); Filter by column, Clear filter (only while this column has a filter value); Pin to start, Pin to end (each hidden while the column is already pinned there), Unpin (only while pinned); Hide column. Non-applicable items are omitted, not greyed out; the one greyed item is the sort direction already active on this column.
 - Sorting from the menu follows the Notion rule: the same column replaces its own direction, another column is appended to the current sort (`column.toggleSorting(desc, true)`).
 - Filter by column adds a filter chip for the column in the toolbar and opens it; Clear filter clears the value and removes the chip.
-- Dropped from the default list: Show all columns (the columns menu has it) and Reset column size (double-click on the resize handle; the item stays available through `showResetColumnSizeMenuItem`).
+- Dropped from the default list: Show all columns (the columns menu has it) and Reset column size (double-click on the resize handle).
 - Stays: `renderColumnActionsMenuItems` for consumer items.
-- Addendum 2026-11-01: Reset column size returns to the default menu, shown only while the column's width differs from its default (same omit rule as Clear sort); double-click on the handle stays as the shortcut; no tooltip on the handle (closes F2). `showResetColumnSizeMenuItem` is no longer needed as a gate for the default list.
+- Addendum 2026-11-01: Reset column size returns to the default menu, shown only while the column's width differs from its default (same omit rule as Clear sort); double-click on the handle stays as the shortcut; no tooltip on the handle (closes F2). No gating option exists or is added for it (wording fix 2026-11-04: an earlier draft named `showResetColumnSizeMenuItem`, which never existed).
 
 ### D6 Resize handle
 
 - The handle is a full-height hairline on the column's trailing edge: invisible at rest, lit while the pointer is anywhere over the header cell, primary while dragging, `col-resize` cursor over the edge; double-click resets the width. No thicker divider: drag-to-resize is an expected table behaviour, the hover light and the cursor teach it.
 - Changes: `ST_TableHeadCellResizeHandle` loses the short separator, the density offsets and the 2 px cell border while resizing.
-- Stays: `columnResizeMode`, per-column `enableResizing`, `showResetColumnSizeMenuItem`.
+- Stays: `columnResizeMode`, per-column `enableResizing`.
 
 ### D7 Row heights and grid lines
 
@@ -80,14 +74,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Changes: `ST_SortPopover` component and chip, mounted by `ST_TopToolbar` and `ST_ToolbarInternalButtons`; labels through `localization`; icons through `icons`.
 - Stacked sorts: `enableMultiSort` was already true by default, but the stock UI reached a second sort only by Shift-click on the header sort button. With the editor and the D5 menu rule, stacking is an explicit action with no modifier key.
 - Stays: `enableMultiSort`, `enableSorting`, per-column `enableSorting`; the header shows the static sort arrow (D2); the sort index badge is not shown by default.
-
-### D11 View settings button
-
-- One settings button at the right end of the toolbar group opens a panel with these rows: Columns (opens the columns menu), Density (select), Wrap cell text (switch), Grid lines (select, D7), Sticky header (switch), Alternating row colors (switch), Row numbers (switch), and Reset view. Each row has a pin toggle that places that control in the toolbar as an icon button; pinned by default: columns and density. Row icons follow the current value. On by default (`enableViewSettings`), replacing the separate columns and density buttons.
-- Reset view restores every row to its default and also resets column pinning (closes F1).
-- Reference: ui.shadcn.com, shadcn-vue and tablecn have a "View" dropdown with column toggles only; Notion keeps wrap and layout in its view menu; none pins controls to the toolbar.
-- Changes: `ST_ViewSettingsButton` and panel; a `viewSettings` state slice (`wrapText`, `gridLines`, `striped`, `rowNumbers`, `pins`; density and sticky header map to their existing state and option); `ST_ToolbarInternalButtons` renders the pinned items; labels through `localization`, icons through `icons`.
-- Stays: `ST_ShowHideColumnsMenu` as the columns menu body; `enableDensityToggle`, `enableHiding`, `enableStickyHeader`, `enableRowNumbers` as the switches' gates; persistence is off (own item).
+- Addendum 2026-11-04, agent-settled: the opt-in for the multi-sort index badge is a new table option `showSortIndex` (default `false`); with it on, the sorted header's arrow carries the 1-based index while more than one sort exists.
 
 ### D11 View settings panel
 
@@ -126,6 +113,8 @@ Superseded by D36 (2026-11-04), addenda included: persistence is opt-in, the key
 - Changes: `ST_TableBody` empty row classes only.
 - Stays: the texts, `renderEmptyRowsFallback`.
 
+D16: number unused (no decision was written).
+
 ### D17 Cut-off text gets a tooltip
 
 - Cell text is cut with an ellipsis on one line by default; the wrap view setting (D11) shows it in full. A tooltip with the full value opens only when the text is actually cut off (`scrollWidth > clientWidth`), after the normal delay. Plain text cells get it automatically; custom cells opt in through the exported `ST_OverflowText`; `columnDef.overflowTooltip` sets it per column (`false`, `'value'`, or a render); display columns never show it.
@@ -159,7 +148,7 @@ Superseded by D36 (2026-11-04), addenda included: persistence is opt-in, the key
 - Feedback: the dragged column gets a 1 px dashed `--muted-foreground` border and 50 percent opacity, the drop target a 2 px dashed `--primary` border, both down the whole column (today's values). Superseded by D37 (2026-11-04): this static feedback remains only as the reduced-motion fallback. Any cell of a column is a drop target; a drop takes the target's pinning. While dragging near an inner edge of the unpinned area the box scrolls sideways (64 px hot zone, up to 20 px per frame, with hit-tested `dragenter` for cells scrolling under a still pointer). Esc or dropping outside the table cancels: `dragover` sets `dropEffect` to `move` or `none` and `dragend` reorders only when the effect is not `none`; this also fixes today's library, which reorders on a cancelled drag.
 - Display columns stay non-draggable by default; the row actions column takes drops and moves through the columns menu but its header is not a drag source (D14). The order persists under D12 and Reset view restores it.
 - Reference: the demo (`column-header.tsx:234-327`, `use-drag-auto-scroll.ts`); Notion and Airtable drag the header with no grip; MRT shows a grip; the shadcn data tables have no reordering.
-- Changes: `useST_TableOptions` default; `ST_TableHeadCell` becomes the drag source and drops the grip unless the option is set; `ST_TableHeadCellGrabHandle` and the `dragend` handlers take the cancel rule; a `useDragAutoScroll` hook on `ST_TableContainer`.
+- Changes: `useST_TableOptions` default; `ST_TableHeadCell` becomes the drag source and drops the grip unless the option is set; `ST_TableHeadCellGrabHandle` and the `dragend` handlers take the cancel rule; a `useST_DragAutoScroll` hook mounted from `ST_TableHead` on the container element (amended 2026-11-04 for the ownership split).
 - Stays: `enableColumnOrdering: false` on the table or a column, `enableColumnDragging`, the grouping drop zone, `stColumnDragHandleProps`.
 
 ### D21 Locked columns show their lock only while a drag is active
@@ -219,11 +208,6 @@ Superseded by D36 (2026-11-04), addenda included: persistence is opt-in, the key
 - `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too, so all three announce the same. Overridable through `stLinearProgressProps` as before. Rides along with the first v0.8.x spec that touches localization or the toolbar.
 - Source: v0.7.x D57
 - Deferred to v0.7.x (shipped there as the moved decision)
-
-### D28 One full-screen table at a time; Escape leaves it
-
-- The full-screen container is a `fixed inset-0` overlay, so a second table reaches full screen only from code; the document-level Escape listener stays as it is. The full-screen guide gets one sentence: one full-screen table at a time, Escape leaves it (nested tables inside it leave with it). No `containerProps` ref. Rides along with the first v0.8.x docs spec.
-- Source: v0.7.x D58, closed
 
 ### D28 One full-screen table at a time; no container-scoped Escape
 
@@ -295,6 +279,6 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Implementation (agent's call): header preview as inline `translate` per header cell through refs, the transition as Tailwind utilities active under `data-flip-sliding` on the table; drop and menu slides and the highlight through `element.animate()`; `will-change` only while a slide runs; no constructed or injected stylesheet (P8); no re-render per frame; state per table instance.
 - Limits: header groups and column virtualization get the highlight only; row virtualization previews the header and skips the body slide; the body slide is skipped above 200 rendered rows; a drop into a pinned region is not previewed; touch screens have no drag (unchanged).
 - Reference: the demo (`use-column-flip.ts`, `use-drag-auto-scroll.ts`, report §13); Notion previews in the header and slides the body on drop; MRT and the shadcn tables animate nothing.
-- Changes: a `useColumnFlip` hook on `ST_TableContainer`, head and body cell `data-flip-column` attributes, `ST_ShowHideColumnsMenuItems` drop path calls the flip prepare, `ST_TableHeadCell` drag feedback per state.
+- Changes: a `useST_ColumnFlip` hook mounted from `ST_TableHead` on the table element (amended 2026-11-04 for the ownership split), head and body cell `data-flip-column` attributes, `ST_ShowHideColumnsMenuItems` drop path calls the flip prepare, `ST_TableHeadCell` drag feedback per state.
 - Stays: D20's drag source, drop rule and cancel rule; D21.
 - Addendum 2026-11-04, owner: animate with CSS, never with per-frame JavaScript. The header preview is a CSS `translate` transition as in the demo; the drop and menu slides use the demo's `element.animate()` (compositor-run) or an equivalent CSS transition; no `requestAnimationFrame` loop writes styles per frame. The auto-scroll loop (D20) scrolls the box and dispatches events only.

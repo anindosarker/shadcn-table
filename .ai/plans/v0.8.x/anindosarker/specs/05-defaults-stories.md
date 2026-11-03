@@ -66,7 +66,7 @@ apps/shadcn-table-docs/components/ui-<base>/     ← regenerated
 - `layoutMode = layoutMode || 'grid'`; the `enableColumnResizing ? 'grid-no-grow' : 'semantic'` branch goes; the virtualization upgrade from an explicit `'semantic'` stays
 - `enableStickyHeader = false` stays; lines 143-145 stay
 - `ST_DefaultDisplayColumn.enableColumnOrdering: false` stays (display columns stay non-draggable; the actions column def from spec 02 overrides it)
-- `useST_TableInstance.ts`: when `enableRowActions`, `positionActionsColumn === 'last'`, `enableColumnPinning` and neither `initialState.columnPinning` nor `state.columnPinning` is given, the default `columnPinning.right` includes `'st-row-actions'`; a consumer's pinning wins untouched
+- `useST_TableInstance.ts`: when `enableRowActions`, `positionActionsColumn === 'last'`, `enableColumnPinning` and neither `initialState.columnPinning` nor `state.columnPinning` is given, the seed `{ right: ['st-row-actions'] }` is written into `initialState.columnPinning` (the normalisation at 162-169), so the first render and `resetColumnPinning()` both keep the actions column pinned (D14); a consumer's pinning wins untouched
 - Does NOT change any type (spec 01) or component (specs 02 to 04)
 
 #### 1.6.3 Stories and play tests
@@ -106,7 +106,7 @@ Lane: agent
 
 Lane: agent
 
-- 1.6.3 and 1.6.4; `pnpm registry:build`; `lib:install` per base; docs `types:check` and `lint`
+- 1.6.3 and 1.6.4; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; docs `types:check` and `lint`
 - Gates: `test:base`, `test:radix`, `test:aria`; `storybook:build:<base>` per base; `check-pages.mjs --base <base>` per base against the agent's own dev server (`PORT` in 5340 to 5360, P5)
 
 #### 2.1.3 Final milestone: Cleanup and gates once

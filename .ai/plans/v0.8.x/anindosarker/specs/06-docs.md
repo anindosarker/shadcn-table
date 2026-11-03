@@ -12,7 +12,7 @@ The docs site describes the 0.7 chrome: subheader filters, a grip for dragging, 
 - Every guide whose behaviour changed is rewritten from the shipped code: column actions, column filtering, column ordering, column grouping, column pinning, column resizing, column size, display columns, row actions, pagination, density toggle, column hiding, toolbar customization, global filtering, full screen, sticky header, virtualization, customize components, customize icons, localization, state management, row pinning, detail panel, usage, best practices, and the `st-components` API page
 - The prop tables list every new option, column option and state slice with its shipped default; the hard-coded counts in the page checks follow
 - One new example, `persistent-view`, in all three bases, with its example page and registry items; no existing example or item is renamed or removed (P5)
-- Acceptance: programmatic, `check-pages.mjs --base <base>` exits 0 per base against the agent's own dev server; docs `types:check`, `lint` and `build` exit 0; `node reference/06-check.mjs` (committed by this spec) exits 0: every option name in `reference/01-surface.json` appears in `lib/prop-tables/tableOptions.ts` or `columnOptions.ts`, every new guide slug appears in `content/docs/guides/meta.json`, `lib/routes.ts` and one page-check cluster, and no guide contains the strings `grid-no-grow` as a default, `Move` as a drag handle, or `Show/Hide columns` as a toolbar button except where an explicit option is shown (P6)
+- Acceptance: programmatic, `check-pages.mjs --base <base>` exits 0 per base against the agent's own dev server; docs `types:check`, `lint` and `build` exit 0; `node reference/06-check.mjs` (committed by this spec) exits 0: every option name in `reference/01-surface.json` appears in `lib/prop-tables/tableOptions.ts` or `columnOptions.ts`, every new guide slug appears in `content/docs/guides/meta.json`, `lib/routes.ts` and one page-check cluster; the string `grid-no-grow` appears in no guide except `column-size.mdx`, `column-resizing.mdx` and `display-columns.mdx`; the string `Show/Hide columns` appears in no guide except `column-hiding.mdx` and `toolbar-customization.mdx`; the strings `aria-label="Move"` and `drag handle button` appear in no guide (P6)
 
 ### 1.3 Current structure
 
@@ -62,7 +62,7 @@ apps/shadcn-table-docs/
 #### 1.6.1 Data artifacts
 
 - `CHANGELOG.md` `#### Spec 06` under `### Docs` (D32): the seven new guides, the rewritten guides, the new example
-- `apps/shadcn-table-docs/registry.json`: `pnpm registry:items` adds `example-persistent-view-<base>`; `examples/map.tsx` and `example-groups/map.tsx`: `node scripts/example-map.mjs`; `components/ui-<base>/`: `pnpm -w registry:build` then `pnpm lib:install <base>`
+- `apps/shadcn-table-docs/registry.json`: `pnpm registry:items` adds `example-persistent-view-<base>`; `examples/map.tsx` and `example-groups/map.tsx`: `node scripts/example-map.mjs`; `components/ui-<base>/`: `pnpm -w registry:build` then `pnpm --filter shadcn-table-docs lib:install <base>`
 - `lib/prop-tables/tableOptions.ts`: rows for `enableViewSettings`, `enableSortPopover`, `enableScrollButtons`, `enableCellOverflowTooltip`, `persistViewSettings`, `nonce`, `showClearSearchButton`, `showColumnDragHandle`, `columnFilterDisplayMode`, `paginationDisplayMode`; defaults updated for `enableColumnOrdering`, `enableColumnPinning`, `enableColumnResizing`, `layoutMode`, `positionActionsColumn`; `columnOptions.ts`: `icon`, `overflowTooltip`, the locked meaning of `enableColumnOrdering: false`, `grow` for display and pinned columns; `stateOptions.ts`: `filterChips`, `viewSettings`
 - `reference/06-check.mjs`: the Acceptance greps
 
@@ -103,7 +103,7 @@ Per the audit table (`reference/06-audit.md`, committed from the plan audit): `c
 
 Lane: agent
 
-- `pnpm -w registry:build`; `pnpm lib:install radix|base|aria`; 1.6.1 prop-table rows from the shipped `stConfigFeature.ts` and `useST_TableOptions.ts`
+- `pnpm -w registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria`; 1.6.1 prop-table rows from the shipped `stConfigFeature.ts` and `useST_TableOptions.ts`
 - Gates: docs `types:check`
 
 #### 2.1.2 Milestone 2: Guides, example, registrations

@@ -5,7 +5,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P1 Branches and worktrees
 
 - `claude/review` integration, `dev` its fast-forward mirror, `master` release only.
-- A run branch is `v<major>.<minor>/<slug>` from `origin/claude/review`, never from an unmerged tip; its worktree is `../shadcn-react-table.worktrees/<slug>`. Never touch `wt1` and `wt2`.
+- A run branch is `v<major>.<minor>/<slug>` from `origin/claude/review`, never from an unmerged tip. Its worktree is one of the pool `../shadcn-react-table.worktrees/01`, `02`, `03` (clean, dependencies installed), reset for the branch with `git -C <wt> fetch origin && git -C <wt> checkout -B <branch> origin/claude/review && git -C <wt> push -u origin <branch>`; a new numbered worktree only when every pool one is in use, and it joins the pool; never remove one. Never touch `wt1` and `wt2`.
 - Never force-push these branches; never bare `git stash` (shared stack).
 - After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit; tracker, ATTENTION and handoff commits during a round need no sync.
 
@@ -42,7 +42,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 ## P7 Orchestration
 
-- Per round, by cost: fewest main-session wakes, fewest agents that still prove every Acceptance. As a rule one Workflow per round from the skill's stage library (build, spec check, review only where a spec says `Review: fable`, verify, judges inside the script, gate, merge, release); a single Agent for one bounded task; inline for mechanical edits. Judged clauses run inside the workflow script, three fable judges in parallel, majority (supersedes the main-session judging of D52). Applies from the round after 0.7.4.
+- Per round, by cost: fewest main-session wakes, fewest agents that still prove every Acceptance. As a rule one Workflow per round from the skill's stage library (build, spec check, review only where a spec says `Review: fable`, verify, judges inside the script, gate, merge, release); a single Agent for one bounded task; inline for mechanical edits. Judged clauses run inside the workflow script, three fable judges in parallel, majority (supersedes the main-session judging of v0.7.x D52). Applies from the round after 0.7.4.
 
 ## P8 Styling lives in the components
 
