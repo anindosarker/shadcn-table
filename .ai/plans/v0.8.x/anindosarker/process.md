@@ -38,3 +38,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - Specs follow `docs/code-of-conduct/planning-guidelines.md`; the index names the round's `release:` label, the version bump, and any spec whose label differs.
 - `Acceptance` references: ui.shadcn.com pages, shadcn blocks, the previous release, a capture of `claude/review` before the change, or an owner-supplied demo. Bugs are reproduced on `/Users/anindosarker/Work/Personal/React-table/test-projects/` first; upstream reports are searched on `shadcn-ui/ui` before filing.
+
+## P7 Styling lives in the components
+
+- No stylesheet, no `globals.css` edit, no registry `cssVars`, no custom CSS class. Every style is a Tailwind utility (arbitrary properties and `dark:` twins included) on a component element; a CSS variable the library reads (`--st-*`) is declared the same way on the table root. A library install never touches the consumer's global CSS. Owner rule 2026-11-03 (D23).
