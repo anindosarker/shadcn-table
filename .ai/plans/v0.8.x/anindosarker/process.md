@@ -25,12 +25,13 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 - Per-base gates run concurrently on their own ports: `check-pages.mjs --base <base>`, `storybook:build:<base>`, `test:<base>`. The dev registry on 5310 (`pnpm registry:dev`) is shared: reuse it, start it when missing, never kill it.
 - A recorded gate line stays valid while `git diff --name-only <commit>..HEAD` touches only `.ai/` and `CHANGELOG.md`; CI is the second run for tsc, lint, tests and builds.
 - Known flake: `Profiled Thousand Rows` (vitest browser mode), `gh run rerun --failed <id>` once before red.
+- `pnpm --filter shadcn-table-docs lib:install <base>` reads `packages/shadcn-table/public/r/` (run `pnpm -w registry:build` first) and writes one shared temporary `components.json`: the three bases install one after another, never in parallel.
 
 ## P5 Agent sandbox
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
 - The owner's demo at `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` is read-only reference code; its server on port 3000 is the owner's, never started, stopped or restarted by an agent (D34).
-- Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives.
+- Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives; a sub-agent that received no reminder commits without one (no rewrite of pushed commits).
 - Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; workstreams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
 - Never rename or remove a registry item or hosted path (`registry.json` loses a `"name"`, `public/r/<base>/` loses a file). Never remove a public option or type (a `-export` in `types.ts` or `index.ts` without a matching `+export`). Never change a GitHub ruleset or repository setting. Never add an `eslint-disable` without a ` -- ` reason. Never edit a file another workstream owns, or `eslint.config.js` and `.github/workflows/` after the foundation.
 - The run never stops for one spec: a spec that cannot be finished (it contradicts an accepted decision, or its Acceptance is unreachable) commits what is coherent, records why under `## Attention` in its tracker and returns blocked; its dependents are skipped, every other workstream merges and the release ships what merged.
