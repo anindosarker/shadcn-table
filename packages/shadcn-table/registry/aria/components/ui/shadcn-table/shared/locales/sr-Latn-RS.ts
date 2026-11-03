@@ -55,6 +55,7 @@ export const ST_Localization_SR_LATN_RS: ST_Localization = {
   groupedBy: 'Grupisano po ',
   hideAll: 'Sakrij sve',
   hideColumn: 'Sakrij {column} kolonu',
+  loading: 'Učitavanje',
   max: 'Max',
   min: 'Min',
   move: 'Pomeri',

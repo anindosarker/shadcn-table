@@ -2,7 +2,7 @@ import { type ComponentProps, type MouseEvent } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { RadioGroupItem } from '@/components/ui/radio-group';
 import {
   type CheckboxProps,
   type RadioProps,
@@ -125,7 +125,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
     }) as CheckboxProps | RadioProps;
 
   // The radio takes every checkbox prop except the checkbox-only `checked` and
-  // `title`; RadioGroup carries the checked state.
+  // `title`; the table's RadioGroup (ST_Table) carries the checked state.
   const getRadioProps = (commonProps: ReturnType<typeof getCommonProps>) =>
     ({
       ...Object.fromEntries(
@@ -133,7 +133,7 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
           ([key]) => key !== 'checked' && key !== 'title',
         ),
       ),
-      value: 'on',
+      value: row?.id,
     }) as ComponentProps<typeof RadioGroupItem>;
 
   return (
@@ -184,10 +184,8 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               )}
             >
               {enableMultiRowSelection === false ? (
-                // RadioGroupItem needs a RadioGroup: one group per row.
-                <RadioGroup className="w-fit" value={isChecked ? 'on' : null}>
-                  <RadioGroupItem {...getRadioProps(commonProps)} />
-                </RadioGroup>
+                // One RadioGroup per table, around the <table> (ST_Table).
+                <RadioGroupItem {...getRadioProps(commonProps)} />
               ) : (
                 <ST_Checkbox
                   indeterminateIcon={table.options.icons.IndeterminateIcon}

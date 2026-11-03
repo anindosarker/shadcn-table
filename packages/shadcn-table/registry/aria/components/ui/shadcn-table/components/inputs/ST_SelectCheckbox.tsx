@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import { ST_Checkbox } from '@/components/ui/shadcn-table/components/inputs/ST_Checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { RadioGroupItem } from '@/components/ui/radio-group';
 import {
   type CheckboxProps,
   type RadioProps,
@@ -206,14 +206,11 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
               )}
             >
               {enableMultiRowSelection === false ? (
-                // RadioGroupItem needs a RadioGroup: one group per row.
-                <RadioGroup
-                  aria-label={commonProps['aria-label']}
-                  className="w-fit"
-                  value={isChecked ? 'on' : null}
-                >
-                  <RadioGroupItem {...(commonProps as RadioProps)} value="on" />
-                </RadioGroup>
+                // One RadioGroup per table, around the <table> (ST_Table).
+                <RadioGroupItem
+                  {...(commonProps as RadioProps)}
+                  value={row?.id ?? ''}
+                />
               ) : (
                 <ST_Checkbox
                   indeterminateIcon={table.options.icons.IndeterminateIcon}

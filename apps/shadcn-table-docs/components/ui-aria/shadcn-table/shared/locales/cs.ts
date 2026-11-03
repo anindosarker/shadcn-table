@@ -56,6 +56,7 @@ export const ST_Localization_CS: ST_Localization = {
   groupedBy: 'Seskupeno podle ',
   hideAll: 'Skrýt vše',
   hideColumn: 'Skrýt sloupec {column}',
+  loading: 'Načítání',
   max: 'Max.',
   min: 'Min.',
   move: 'Přesunout',

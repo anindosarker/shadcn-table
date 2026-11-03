@@ -56,6 +56,7 @@ export const ST_Localization_FI: ST_Localization = {
   groupedBy: 'Ryhmitelty sarakkeella ',
   hideAll: 'Piilota kaikki',
   hideColumn: 'Piilota sarake {column}',
+  loading: 'Ladataan',
   max: 'Maksimi',
   min: 'Minimi',
   move: 'Siirrä',

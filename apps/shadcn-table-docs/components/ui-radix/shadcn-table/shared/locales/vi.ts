@@ -55,6 +55,7 @@ export const ST_Localization_VI: ST_Localization = {
   groupedBy: 'Nhóm dữ liệu theo ',
   hideAll: 'Ẩn tất cả',
   hideColumn: 'Ẩn cột {column}',
+  loading: 'Đang tải',
   max: 'Đến',
   min: 'Từ',
   move: 'Di chuyển',
