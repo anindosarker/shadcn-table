@@ -291,3 +291,10 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Implementation (agent's call): the `filterChips` slice records where the open editor is anchored (`chip`, `toolbar` or `header`); the toolbar chrome renders every editor, including the header-anchored one, from the header cell ref; the column menu only sets the slice; the glide is a measured inline `width` and `height` transition on the popup, no stylesheet (P8).
 - Changes: `ST_FilterChips` and a shared `ST_FilterEditor`; the column menu's Filter item; `stFilterChipsFeature` state shape.
 - Stays: `ST_TableHeadCellFilterContainer` and the `ST_Filter*` inputs as the editor's body; subheader and popover modes untouched.
+
+### D39 Filter modes live on the editor's top line in chips mode
+
+- In chips mode, a column with `enableColumnFilterModes` and `columnFilterModeOptions` shows an operator picker on the editor's top line ("Name [contains ▾]"): a stock dropdown menu radio list of the library's filter modes with their symbols and labels, the first option the default. Empty and not empty hide the value input and keep the filter active. Remove filter, Clear filters and Delete all filters put the mode back to the first option. The chip summary carries the mode ("Name contains: foo", "Name is empty", plain "Name" without a value). The in-field mode button and the "Filter Mode: X" line do not render in chips mode; subheader and popover modes keep them. No new option: `enableColumnFilterModes` stays off by default at table level and per column; `filterVariant` is unchanged.
+- Reference: the demo at `4fde6ea` (`filter-bar.tsx:93-215`, report §5); Notion and Airtable put the operator on the editor's top line.
+- Changes: `ST_FilterEditor` top line; the chip summary helper; `ST_FilterTextField` hides its mode button and `ST_TableHeadCellFilterLabel` its line in chips mode (the label already returns null there, D9).
+- Stays: `ST_FilterOptionMenu` and `columnFilterFns`; the existing `localization.changeFilterMode` and `filterMode` keys.
