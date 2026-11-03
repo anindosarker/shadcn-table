@@ -232,8 +232,18 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 ### D26 Width rule: `semantic` is the default layout mode
 
+Superseded by D27 (2026-11-03): the owner compared `semantic` and `grow` on `/header-demo-v14` and picked `grow`.
+
 - `layoutMode` defaults to `semantic` in every case except virtualization (which still needs `grid`). A semantic table spreads spare width over every column in proportion to its size, display and pinned columns included; once the columns exceed the frame every column renders at its set width and the table scrolls sideways. Sticky offsets are computed from set widths and are exact whenever the table can scroll (measured on `/header-demo-v14`, 2026-11-03: with spare width the table cannot scroll, so the offset difference never shows).
 - Resizing stays on (D14) in semantic: the auto-switch to `grid-no-grow` when `enableColumnResizing` is true (`useST_TableOptions.ts:135`) goes. While spare width exists a dragged edge moves faster than the pointer; accepted.
 - Reference: the owner's `/header-demo-v14` with the `semantic` width rule; ui.shadcn.com, tablecn and shadcn-vue render semantic tables.
 - Changes: `useST_TableOptions` default rule; the resize handle and `columnResizeMode` verified in semantic; Storybook `LayoutMode` stories unchanged.
 - Stays: `grid` and `grid-no-grow` selectable; `columnDef.grow`; virtualization forces `grid`.
+
+### D27 Width rule: proportional grow, narrow columns fixed
+
+- Supersedes D26. The default is the library's `grid` layout mode with `grow: false` on every display column and every pinned column: data columns split the spare width in the ratio of their sizes, the row numbers and row actions columns and any pinned column keep their set width, sticky offsets stay exact. Once the columns exceed the frame every column renders at its set width and the table scrolls sideways. Virtualization already uses `grid`.
+- Resizing stays on (D14): while spare width exists a dragged edge moves faster than the pointer (the column keeps its share of the spare width); accepted, same as semantic.
+- Reference: the owner's `/header-demo-v14` with the `grow` width rule (`header-demo.tsx:627-633`, pinned and display columns excluded from the growable set); Storybook `Features/Layout Mode Examples` `Grid`.
+- Changes: `useST_TableOptions` default `layoutMode: 'grid'`, no auto-switch on resizing; `getST_RowActionsColumnDef`, `getST_RowNumbersColumnDef` and the other display column defs set `grow: false`; pinned columns get `flex-grow: 0` from `style.utils.ts` while pinned.
+- Stays: `semantic` and `grid-no-grow` selectable; `columnDef.grow` on a data column overrides.
