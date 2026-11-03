@@ -460,3 +460,15 @@
 - Target: in the body cell the control's centre equals the cell's centre within 1 px; in the header cell the control's top equals the header text line's top (base today, 12 px) within 1 px; the three bases measure the same within 1 px. The mechanism (a `flex items-center` wrapper replacing the `inline-flex` span, or the equivalent) is the spec's; radio single-selection and the aria `w-fit` RadioGroup included; no public prop or type changes.
 - Sub-spec `10.3`, agent lane, ships as 0.7.3 with release sub-spec `09.3`.
 - Source: A39
+
+## Round 6: v0.8.x carry-overs pulled back, 2026-11-03
+
+### D65 Single-row selection uses one RadioGroup around the body
+
+- When `enableMultiRowSelection` is `false`, `ST_TableBody` renders one `RadioGroup` (value: the selected row id, `aria-label` from `localization.select`) around its rows and the select cell renders only `RadioGroupItem` with `value={row.id}`; arrow keys move between rows and screen readers announce "n of m". All three bases, no public API change. Replaces the one-group-per-row shape (F45). Sub-spec `10.4`, agent lane, ships as 0.7.4.
+- Source: F45 (v0.8.x D26 moved here)
+
+### D66 The loading state has a localization key
+
+- `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too. Overridable through `stLinearProgressProps` as before. Rides along with sub-spec `10.4`; `release:patch` (an untranslatable a11y string, treated as a fix).
+- Source: D57 (v0.8.x D27 moved here)
