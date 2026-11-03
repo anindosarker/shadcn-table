@@ -213,3 +213,8 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 - `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too, so all three announce the same. Overridable through `stLinearProgressProps` as before. Rides along with the first v0.8.x spec that touches localization or the toolbar.
 - Source: v0.7.x D57
+
+### D28 One full-screen table at a time; Escape leaves it
+
+- The full-screen container is a `fixed inset-0` overlay, so a second table reaches full screen only from code; the document-level Escape listener stays as it is. The full-screen guide gets one sentence: one full-screen table at a time, Escape leaves it (nested tables inside it leave with it). No `containerProps` ref. Rides along with the first v0.8.x docs spec.
+- Source: v0.7.x D58, closed
