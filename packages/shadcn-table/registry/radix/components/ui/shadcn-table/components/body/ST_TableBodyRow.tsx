@@ -28,25 +28,19 @@ export interface ST_TableBodyRowProps<TData extends ST_RowData>
   virtualRow?: ST_VirtualItem;
 }
 
-const tableBodyRowVariants = cva(
-  "box-border w-full bg-background [&>td]:after:absolute [&>td]:after:inset-0 [&>td]:after:-z-10 [&>td]:after:content-['']",
-  {
-    variants: {
-      layout: { grid: 'flex', semantic: '' },
-      opacity: { dimmed: 'opacity-50', normal: '', pinned: 'opacity-[0.97]' },
-      position: {
-        absolute: 'absolute',
-        relative: 'relative',
-        sticky: 'sticky',
-      },
-      transition: {
-        animated: 'transition-all duration-150 ease-in-out',
-        none: '',
-      },
-      zIndex: { base: 'z-0', high: 'z-2' },
+// The row carries `group/row` and its tint as `data-tint`; the cells paint
+// the tint tokens from it, so hover tints the whole row evenly.
+const tableBodyRowVariants = cva('group/row box-border w-full bg-background', {
+  variants: {
+    layout: { grid: 'flex', semantic: '' },
+    position: {
+      absolute: 'absolute',
+      relative: 'relative',
+      sticky: 'sticky',
     },
+    zIndex: { base: 'z-0', high: 'z-2' },
   },
-);
+});
 
 export const ST_TableBodyRow = <TData extends ST_RowData>({
   columnVirtualizer,
@@ -153,21 +147,15 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
     <table.Subscribe
       selector={(state) => ({
         density: state.density,
-        isDraggingRow: state.draggingRow?.id === row.id,
         isFullScreen: state.isFullScreen,
-        isHoveredRow: state.hoveredRow?.id === row.id,
         // Reads the live selection, so only this row's own change re-renders it.
         isRowSelected: getIsRowSelected({ row, table }),
         rowPinning: state.rowPinning,
+        stickyHeader: state.viewSettings.stickyHeader,
+        striped: state.viewSettings.striped,
       })}
     >
-      {({
-        density,
-        isDraggingRow,
-        isFullScreen,
-        isHoveredRow,
-        isRowSelected,
-      }) => {
+      {({ density, isFullScreen, isRowSelected, stickyHeader, striped }) => {
         const isRowPinned = enableRowPinning && row.getIsPinned();
 
         const [bottomPinnedIndex, topPinnedIndex] =
@@ -181,15 +169,16 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                 pinnedRowIds.indexOf(row.id),
               ];
 
+        const isStickyHeader = enableStickyHeader || stickyHeader;
         const tableHeadHeight =
-          ((enableStickyHeader || isFullScreen) &&
+          ((isStickyHeader || isFullScreen) &&
             tableHeadRef.current?.clientHeight) ||
           0;
         const tableFooterHeight =
           (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
 
         const defaultRowHeight =
-          density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69;
+          density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56;
 
         const rowHeight = customRowHeight || defaultRowHeight;
 
@@ -203,17 +192,15 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
             tableFooterHeight >
             (tableContainerRef.current?.clientHeight ?? Infinity);
 
-        const cellHighlightClass = isRowSelected
-          ? '[&>td]:after:bg-primary/20'
+        // One tint per row, strongest first: selection, pinning, stripe.
+        // Hover tints every row but a selected one.
+        const tint = isRowSelected
+          ? 'selected'
           : isRowPinned
-            ? '[&>td]:after:bg-primary/10'
-            : undefined;
-
-        const cellHighlightClassHover = !hover
-          ? undefined
-          : isRowSelected
-            ? 'hover:[&>td]:after:bg-primary/20'
-            : 'hover:[&>td]:after:bg-foreground/10';
+            ? 'pinned'
+            : striped && staticRowIndex % 2 === 1
+              ? 'stripe'
+              : undefined;
 
         return (
           <>
@@ -221,8 +208,10 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               data-index={
                 renderDetailPanel ? staticRowIndex * 2 : staticRowIndex
               }
+              data-hover={(hover && !isRowSelected) || undefined}
               data-pinned={!!isRowPinned || undefined}
               data-selected={isRowSelected || undefined}
+              data-tint={tint}
               onDragEnter={handleDragEnter}
               onDragOver={handleDragOver}
               ref={(node: HTMLTableRowElement | null) => {
@@ -241,7 +230,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
                   : topPinnedIndex !== undefined && isRowPinned
                     ? `${
                         topPinnedIndex * rowHeight +
-                        (enableStickyHeader || isFullScreen
+                        (isStickyHeader || isFullScreen
                           ? tableHeadHeight - 1
                           : 0)
                       }px`
@@ -261,24 +250,16 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               className={cn(
                 tableBodyRowVariants({
                   layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
-                  opacity: isRowPinned
-                    ? 'pinned'
-                    : isDraggingRow || isHoveredRow
-                      ? 'dimmed'
-                      : 'normal',
                   position: virtualRow
                     ? 'absolute'
                     : rowPinningDisplayMode?.includes('sticky') && isRowPinned
                       ? 'sticky'
                       : 'relative',
-                  transition: virtualRow ? 'none' : 'animated',
                   zIndex:
                     rowPinningDisplayMode?.includes('sticky') && isRowPinned
                       ? 'high'
                       : 'base',
                 }),
-                cellHighlightClass,
-                cellHighlightClassHover,
                 tableRowProps?.className,
               )}
             >
