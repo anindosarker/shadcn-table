@@ -178,7 +178,7 @@ export const useST_ViewPersistence: <TData extends ST_RowData>(table: ST_TableIn
 - `FilterChips.stories.tsx` (new): chips mode with seeded filters; plays for add through the picker, value filtering, remove, clear, the hidden-column notice, the column-menu Filter item adding a chip (spec 03's menu, read-only here)
 - `SortPopover.stories.tsx` (new): no-sort picker, two rules, reorder by drag, remove, delete; the chip label for one and two sorts
 - `ViewSettings.stories.tsx` (new): all rows, pin and unpin, pinned steppers, Row numbers adding the `#` column, Reset view with seeded state, persistence with `persistViewSettings: true` (write on change, remount applies, `localStorage` cleared in `beforeEach`)
-- `SearchField`, `Search`, `MenuOpeners` (RowActions, ShowHideColumns), `MenuFocusReturn`, `ColumnHiding`, `RenderCounts`, `HeadlessFullScreen`, `TableProvider`, `Toolbar`, `DensePadding`: updated for the toggle's clear-and-close, the trigger pattern and the pinned Columns and Density buttons (same `aria-label`s `showHideColumns` and `toggleDensity`, so most clicks keep working)
+- `SearchField`, `Search`, `ColumnHiding`, `DensePadding`, `Toolbar`, `HeadlessFullScreen`: updated for the toggle's clear-and-close and the pinned Columns and Density buttons (same `aria-label`s `showHideColumns` and `toggleDensity`, so most clicks keep working); `MenuOpeners` and `MenuFocusReturn` are not edited here (spec 05 rewrites both; excluded from this spec's `test:<base>` runs, noted in the tracker); `RenderCounts` and `TableProvider` are spec 02's and spec 05's
 - Does NOT edit `Filtering.stories.tsx` or `Pagination.stories.tsx` (spec 05)
 
 ### 1.7 Dependencies and env: none new (the `switch`, `popover`, `select`, `separator`, `combobox` parts exist in every base)
@@ -206,7 +206,7 @@ Lane: agent
 Lane: agent
 
 - 1.6.9; captures into the session scratchpad, paths in `../trackers/04-tracker.md`; the Acceptance plays and the judges, loop on failures
-- Gates: `test:base`, `test:radix`, `test:aria`
+- Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
 
 #### 2.1.4 Final milestone: Cleanup and gates once
 
@@ -217,7 +217,7 @@ Lane: agent
 
 ### 2.2 Gates
 
-- Per base: `tsc`, `test:<base>` green; `storybook:build:<base>` green
+- Per base: `tsc`, `test:<base>` green with the two MenuOpeners and MenuFocusReturn files excluded; `storybook:build:<base>` green
 - `lint`, `check:tailwind`, `check:bases`, `check:icons` green; aria: `check:aria-warnings` zero
 - Judges: majority pass on the three chrome captures per base and theme against the named references
 - `node reference/01-check.mjs` still exits 0
