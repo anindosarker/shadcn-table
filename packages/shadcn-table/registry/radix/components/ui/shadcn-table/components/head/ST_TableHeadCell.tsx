@@ -1,7 +1,6 @@
 import {
   type ComponentType,
   createElement,
-  type DragEvent,
   isValidElement,
   type KeyboardEvent,
   type ReactNode,
@@ -25,9 +24,14 @@ import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils
 import { ST_TableHeadCellColumnActionsButton } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import { ST_TableHeadCellFilterLabel } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellFilterLabel';
-import { ST_TableHeadCellGrabHandle } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle';
+import {
+  getST_ColumnDragHandlers,
+  ST_TableHeadCellGrabHandle,
+} from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle';
+import { ST_TableHeadCellLockedOverlay } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay';
 import { ST_TableHeadCellResizeHandle } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle';
 import { ST_TableHeadCellSortLabel } from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellSortLabel';
+import { prefersReducedMotion } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 
 export interface ST_TableHeadCellProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -80,7 +84,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       stTableHeadCellProps,
     },
     refs: { tableHeadCellRefs },
-    setHoveredColumn,
   } = table;
   const { column } = header;
   const { columnDef } = column;
@@ -102,24 +105,19 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
     columnDef.enableColumnActions !== false &&
     columnDefType !== 'group';
 
-  const handleDragEnter = () => {
-    const draggingColumn = table.atoms.draggingColumn.get();
-    const hoveredColumn = table.atoms.hoveredColumn.get();
-    if (enableGrouping && hoveredColumn?.id === 'drop-zone') {
-      setHoveredColumn(null);
-    }
-    if (enableColumnOrdering && draggingColumn && columnDefType !== 'group') {
-      setHoveredColumn(
-        columnDef.enableColumnOrdering !== false ? column : null,
-      );
-    }
+  const tableHeadCellRef = {
+    get current() {
+      return tableHeadCellRefs.current?.[column.id] ?? null;
+    },
   };
+  const dragHandlers = getST_ColumnDragHandlers(column, tableHeadCellRef);
 
-  const handleDragOver = (e: DragEvent) => {
-    if (columnDef.enableColumnOrdering !== false) {
-      e.preventDefault();
-    }
-  };
+  // A leaf header: the one cell per column the column slide moves.
+  const isLeaf = !header.isPlaceholder && !header.subHeaders.length;
+  const isLocked =
+    columnDefType !== 'group' &&
+    (enableColumnOrdering === false ||
+      columnDef.enableColumnOrdering === false);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTableCellElement>) => {
     tableCellProps?.onKeyDown?.(event);
@@ -139,11 +137,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   const grabHandle = (
     <ST_TableHeadCellGrabHandle
       column={column}
-      tableHeadCellRef={{
-        get current() {
-          return tableHeadCellRefs.current?.[column.id] ?? null;
-        },
-      }}
+      tableHeadCellRef={tableHeadCellRef}
     />
   );
   const columnActionsButton = (
@@ -197,16 +191,19 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
           columnDef.columnDefType !== 'group' &&
           column.getIsPinned();
 
-        const showDragHandle =
-          showColumnDragHandle &&
+        const canDrag =
+          isLeaf &&
+          columnDefType !== 'group' &&
           enableColumnDragging !== false &&
           columnDef.enableColumnDragging !== false &&
-          (enableColumnDragging ||
+          !!(
+            enableColumnDragging ||
             (enableColumnOrdering &&
               columnDef.enableColumnOrdering !== false) ||
             (enableGrouping &&
               columnDef.enableGrouping !== false &&
-              !grouping.includes(column.id)));
+              !grouping.includes(column.id))
+          );
 
         const stickyHeader =
           enableStickyHeader || isFullScreen || stickyHeaderSetting;
@@ -217,10 +214,16 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
         const isLastColumn =
           header.headerGroup?.headers.at(-1)?.id === header.id;
 
-        const borderStyle =
-          draggingColumn?.id === column.id
+        const isDragging = draggingColumn?.id === column.id;
+        // With the preview the dragged header sits in the gap with the drop
+        // outline; reduced motion keeps the static feedback on both cells.
+        const isPreview = !!draggingColumn && !prefersReducedMotion();
+        const borderStyle = isPreview
+          ? undefined
+          : isDragging
             ? `1px dashed var(--color-muted-foreground)`
-            : hoveredColumn?.id === column.id
+            : hoveredColumn?.id === column.id &&
+                hoveredColumn.id !== 'drop-zone'
               ? `2px dashed var(--color-primary)`
               : undefined;
 
@@ -290,8 +293,11 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
             data-index={staticColumnIndex}
             data-pinned={!!isColumnPinned || undefined}
             data-sort={column.getIsSorted() || undefined}
-            onDragEnter={handleDragEnter}
-            onDragOver={handleDragOver}
+            data-flip-column={isLeaf ? column.id : undefined}
+            data-flip-pinned={(isLeaf && !!isColumnPinned) || undefined}
+            draggable={canDrag || undefined}
+            onDragEnd={canDrag ? dragHandlers.onDragEnd : undefined}
+            onDragStart={canDrag ? dragHandlers.onDragStart : undefined}
             ref={(node: HTMLTableCellElement) => {
               if (node) {
                 tableHeadCellRefs.current[column.id] = node;
@@ -312,7 +318,17 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
               stickyHeader && 'sticky top-0 z-2',
               (stickyHeader || isColumnPinned) && 'bg-background',
               commonCellStyles.className,
-              'opacity-100',
+              isDragging ? 'opacity-50' : 'opacity-100',
+              isDragging && isPreview && 'z-1',
+              isDragging &&
+                isPreview &&
+                !isColumnPinned &&
+                'relative outline-2 -outline-offset-2 outline-primary outline-dashed',
+              canDrag && 'cursor-grab select-none active:cursor-grabbing',
+              isLocked && !!draggingColumn && 'cursor-not-allowed',
+              isLeaf &&
+                !isColumnPinned &&
+                '[table[data-flip-sliding]_&]:transition-[translate] [table[data-flip-sliding]_&]:duration-200 [table[data-flip-sliding]_&]:ease-out [table[data-flip-sliding]_&]:will-change-[translate]',
               gridLineClassName(gridLines, isLastColumn),
               'border-b',
             )}
@@ -338,7 +354,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
                       alignClassName,
                     )}
                   >
-                    {showDragHandle && grabHandle}
+                    {canDrag && showColumnDragHandle && grabHandle}
                     {columnIcon}
                     {label}
                     {column.getCanFilter() && filterLabel}
@@ -348,6 +364,12 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
                 ))}
             {showSubheaderFilter && filterContainer}
             {column.getCanResize() && resizeHandle}
+            {isLocked && (
+              <ST_TableHeadCellLockedOverlay
+                column={column}
+                dragActive={!!draggingColumn}
+              />
+            )}
           </th>
         );
       }}
