@@ -55,6 +55,7 @@ export const ST_Localization_KO: ST_Localization = {
   groupedBy: '다음으로 그룹화 됨 ',
   hideAll: '모두 숨기기',
   hideColumn: '{column} 숨기기',
+  loading: '로딩 중',
   max: '최대',
   min: '최소',
   move: '이동',

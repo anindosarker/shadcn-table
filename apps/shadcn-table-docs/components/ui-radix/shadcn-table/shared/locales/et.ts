@@ -56,6 +56,7 @@ export const ST_Localization_ET: ST_Localization = {
   groupedBy: 'Rühmitatud veeru järgi ',
   hideAll: 'Peida kõik',
   hideColumn: 'Peida veerg {column}',
+  loading: 'Laadimine',
   max: 'Maksimaalne',
   min: 'Minimaalne',
   move: 'Liiguta',

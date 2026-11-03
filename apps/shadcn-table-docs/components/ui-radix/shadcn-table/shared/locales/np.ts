@@ -56,6 +56,7 @@ export const ST_Localization_NP: ST_Localization = {
   groupedBy: 'समूह बनाईएको आधार',
   hideAll: 'सबै लुकाउनुहोस्',
   hideColumn: '{column} स्तम्भ लुकाउनुहोस्',
+  loading: 'लोड हुँदै',
   max: 'अधिकतम',
   min: 'न्यूनतम',
   move: 'सार्नुहोस्',

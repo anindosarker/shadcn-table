@@ -56,6 +56,7 @@ export const ST_Localization_ID: ST_Localization = {
   groupedBy: 'Dikelompokkan berdasarkan ',
   hideAll: 'Sembunyikan semua',
   hideColumn: 'Sembunyikan kolom {column}',
+  loading: 'Memuat',
   max: 'Maks',
   min: 'Min',
   move: 'Pindah',

@@ -55,6 +55,7 @@ export const ST_Localization_SR_CYRL_RS: ST_Localization = {
   groupedBy: 'Груписано по ',
   hideAll: 'Сакриј све',
   hideColumn: 'Сакриј {column} колону',
+  loading: 'Учитавање',
   max: 'Макс',
   min: 'Мин',
   move: 'Помери',

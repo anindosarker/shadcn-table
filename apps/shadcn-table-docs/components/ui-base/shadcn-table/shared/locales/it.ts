@@ -55,6 +55,7 @@ export const ST_Localization_IT: ST_Localization = {
   groupedBy: 'Raggruppa da ',
   hideAll: 'Nascondi tutto',
   hideColumn: 'Nascondi la colonna {column}',
+  loading: 'Caricamento',
   max: 'Massimo',
   min: 'Minimo',
   move: 'Sposta',

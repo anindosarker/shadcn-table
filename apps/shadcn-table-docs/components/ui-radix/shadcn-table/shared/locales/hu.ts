@@ -55,6 +55,7 @@ export const ST_Localization_HU: ST_Localization = {
   groupedBy: 'Csoportosítva: ',
   hideAll: 'Mindet elrejt',
   hideColumn: '{column} oszlop elrejtése',
+  loading: 'Betöltés',
   max: 'Max',
   min: 'Min',
   move: 'Mozgatás',
