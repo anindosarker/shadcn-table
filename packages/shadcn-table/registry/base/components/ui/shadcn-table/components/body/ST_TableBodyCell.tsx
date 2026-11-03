@@ -42,11 +42,8 @@ export interface ST_TableBodyCellProps<TData extends ST_RowData>
   staticRowIndex: number;
 }
 
-// Every cell paints its row's tint from the tokens the table root declares;
-// hover beats the stripe and the pinned tint, a selected row has no hover.
-// The last row draws no line under it.
 const bodyCellVariants = cva(
-  'content-center overflow-hidden text-sm -outline-offset-1 group-data-[tint=stripe]/row:bg-(--st-stripe) group-data-[tint=pinned]/row:bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))] group-data-[tint=selected]/row:bg-(--st-selected) group-hover/row:group-data-hover/row:bg-(--st-hover)',
+  'content-center overflow-hidden text-sm -outline-offset-1',
   {
     variants: {
       density: {

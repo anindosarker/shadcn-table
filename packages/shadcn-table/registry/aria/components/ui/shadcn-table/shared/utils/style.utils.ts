@@ -46,16 +46,15 @@ export const useCollapsingChildren = (isExpanded: boolean) => {
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
 /**
- * The pinned cell layer: an opaque background the tint tokens build on, so
- * scrolled content never shows through, and the edge shadow on the inner
- * pinned cell.
+ * The edge shadow of a pinned cell; its background is the row's, inherited,
+ * and every row tint is opaque, so scrolled content never shows through.
  */
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   column,
 }: {
   column?: ST_Column<TData>;
   table: ST_CoreTableInstance<TData>;
-}) => cn('bg-background', column && pinnedEdgeShadowClassName(column));
+}) => (column ? pinnedEdgeShadowClassName(column) : undefined);
 
 /** The CSS variables the table tints read, declared on the table root. */
 export const ST_TINT_VARS = {
@@ -159,7 +158,7 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 
   return {
     className: cn(
-      !isColumnPinned && 'bg-inherit',
+      'bg-inherit',
       layoutMode?.startsWith('grid') && 'flex',
       // Head and footer cells fade with a column drag; body cells do not.
       header &&

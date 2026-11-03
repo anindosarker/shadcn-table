@@ -55,7 +55,6 @@ const ST_TableLayoutContainer = ({
     const clearBusy = () => {
       if (!root.hasAttribute(ST_VIEW_PENDING_ATTR)) {
         root.removeAttribute('aria-busy');
-        observer.disconnect();
       }
     };
     const observer = new MutationObserver(clearBusy);
