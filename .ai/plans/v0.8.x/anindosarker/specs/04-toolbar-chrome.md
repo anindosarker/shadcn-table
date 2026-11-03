@@ -110,7 +110,7 @@ sequenceDiagram
 - Column filters set from `initialState`, controlled `columnFilters` or the header produce chips: the slice syncs on mount and on `columnFilters` change (ids with a value join `columnIds`; a cleared value keeps its chip until removed)
 - `ST_ColumnPicker`: the `combobox` part inline (`open`, `autoHighlight`, no trigger, `value` null), `placeholder` `localization.filterBy` or `sortBy`, items with the column icon and label, `localization.noColumns` when empty, `max-h-[min(24rem,var(--available-height))] w-65 gap-0 overflow-hidden p-0` content; used by chips, the sort button and "Add sort"
 - `ST_TableHeadCellFilterLabel` returns `null` when `columnFilterDisplayMode === 'chips'`
-- Does NOT change the `ST_Filter*` inputs or the filter functions
+- Does NOT change the `ST_Filter*` inputs or the filter functions; chips are new toolbar components, so no mode folder is created (D29)
 
 **Interfaces:**
 
