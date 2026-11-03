@@ -29,6 +29,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P5 Agent sandbox
 
 - Only the worktree and branch named in the task. Never kill ports 5273, 5320, 5330, 6006, 6007, 6008, 5310; take 5340 to 5360 and stop what you start.
+- The owner's demo at `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` is read-only reference code; its server on port 3000 is the owner's, never started, stopped or restarted by an agent (D34).
 - Commits: Conventional Commits, one concern each, `pnpm format` once before, push after each, the exact `Claude-Session:` line the harness reminder gives.
 - Never edit a shadcn part by hand (`pnpm add-part <base> <part>` only). Never change `BASES` in `scripts/registry/bases.mjs`. Dependencies are added in the cycle's foundation commit with one `pnpm install`; workstreams never touch `package.json` or the lockfile; `pnpm install --frozen-lockfile` only when `node_modules` is missing.
 - Never rename or remove a registry item or hosted path (`registry.json` loses a `"name"`, `public/r/<base>/` loses a file). Never remove a public option or type (a `-export` in `types.ts` or `index.ts` without a matching `+export`). Never change a GitHub ruleset or repository setting. Never add an `eslint-disable` without a ` -- ` reason. Never edit a file another workstream owns, or `eslint.config.js` and `.github/workflows/` after the foundation (S1's config switch excepted).
