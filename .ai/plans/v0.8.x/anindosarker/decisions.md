@@ -98,6 +98,8 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 ### D12 View settings persist per table
 
+Superseded by D36 (2026-11-04), addenda included: persistence is opt-in, the key is automatic.
+
 - The D11 rows, the pins, column visibility and column order are saved to `localStorage` under `shadcn-table:<id>:view`, one entry per table, on by default. The first render always uses the defaults and the stored state is applied after mount, so server-rendered tables hydrate cleanly; Reset view deletes the entry. The key needs a stable per-table name, so persistence runs only when the consumer sets the `id` option; without one it stays off and development mode logs one warning that names the option. `persistViewSettings: false` turns it off explicitly; a string overrides the key.
 - Reference: the demo stores one config under a fixed key (`view-settings.tsx:98`); no shadcn reference persists; Notion persists per view server-side.
 - Changes: a storage adapter behind the `viewSettings` slice (`useSyncExternalStore`, blocked storage tolerated), wired to column visibility and order state.
@@ -275,3 +277,11 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Reference: the demo after `2b5c664` (own input without the inner clear button, report §6); Notion and Linear close and clear with one X; ui.shadcn.com and tablecn have a plain input.
 - Changes: `ST_ToggleGlobalFilterButton` loses the `disabled` rule and gains the clear-and-close click; `ST_GlobalFilterTextField` renders the inline button only with the option; `localization.clearSearch` stays for both.
 - Stays: `positionGlobalFilter`, `enableGlobalFilter`, the Escape rule.
+
+### D36 View persistence is opt-in
+
+- Supersedes D12 and its addenda. `persistViewSettings` defaults to false: a stock table writes nothing to storage, renders no inline script and shows no skeleton. `persistViewSettings: true` saves the D11 rows, the pins, column visibility, order and pinning to `localStorage` under `shadcn-table:<key>:view`; the key is a hash of the column ids in definition order, replaced by the `id` option when set, or by a string given as the option value. Sorts and filters are not persisted. Reset view deletes the entry. Controlled `state` with `on*Change` wins over stored values. Two tables with identical column ids share one view; a column added, removed or renamed starts the view from the defaults, with one development line saying so. No warning for a missing `id`.
+- Reload without a flash (server rendering only): the table root renders one fixed inline script (`text/plain` on the client, `suppressHydrationWarning`) that marks the root `data-st-view-pending` before first paint when storage holds a view for this key that differs from the defaults; while marked, body cell content is invisible and a CSS skeleton bar shows (rules once on the body, no second tree, P7), `aria-busy` on; hydration applies the stored view in one render and clears the mark. A visitor with nothing stored sees the server-rendered table at once. The key is escaped for script embedding (`<` as `\u003c`); a `nonce` option passes through for strict Content Security Policy apps, which otherwise fall back to the default-order paint. Client-only apps read storage before the first paint and need none of this.
+- Reference: the demo (`header-demo-v20/view-settings.tsx:113-127`, `inline-script.tsx`), the `next-themes` pattern; no library reference persists on its own; Notion and Airtable persist server-side.
+- Changes: `persistViewSettings` option; a storage adapter behind the `viewSettings` slice (`useSyncExternalStore`, blocked storage tolerated); `ST_TableLayout` script and pending styles; the docs guide opens with the opt-in line.
+- Stays: D11 rows and pins; `initialState` as the defaults the stored view overrides.
