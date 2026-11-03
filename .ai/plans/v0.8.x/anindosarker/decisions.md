@@ -201,6 +201,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:481, 500-508`, `columns-menu.tsx:24-55`); the shadcn data tables open every menu from a `DropdownMenuTrigger`.
 - Changes: `ST_ColumnActionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu`, `ST_FilterOptionMenu` and their openers in all three bases; the `MenuOpeners` play test moves to the trigger pattern.
 - Stays: `ST_CellActionMenu` with `actionCell` / `onActionCellChange`; `renderColumnActionsMenuItems`, `renderRowActionMenuItems`.
+- Addendum 2026-11-03: nothing public is removed. The four exported menus accept a `trigger` element beside the existing `anchorEl` / `setAnchorEl`; both stay supported, the chrome uses `trigger`, a consumer with no trigger element keeps `anchorEl`. The `useST_MenuAnchor` export and its types stay. P5 holds as written; the changelog lists the v0.8 default flips under `### Changed` with the option that restores each, no `### Breaking` block.
 
 ## Round 2: v0.7.x carry-overs, 2026-11-03
 
@@ -249,3 +250,10 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Reference: the owner's `/header-demo-v14` with the `grow` width rule (`header-demo.tsx:627-633`, pinned and display columns excluded from the growable set); Storybook `Features/Layout Mode Examples` `Grid`.
 - Changes: `useST_TableOptions` default `layoutMode: 'grid'`, no auto-switch on resizing; `getST_RowActionsColumnDef`, `getST_RowNumbersColumnDef` and the other display column defs set `grow: false`; pinned columns get `flex-grow: 0` from `style.utils.ts` while pinned.
 - Stays: `semantic` and `grid-no-grow` selectable; `columnDef.grow` on a data column overrides.
+
+### D32 Version 0.8.0 as a minor release
+
+- The cycle ships once as 0.8.0 with the `release:minor` label, after 0.7.4. No public option, type or export is removed (D25 addendum, P5); every default that flips in v0.8 (column ordering, pinning and resizing on; `paginationDisplayMode: 'pages'`; `columnFilterDisplayMode: 'chips'`; `layoutMode: 'grid'`; actions column last and pinned; view settings and sort popover on) is listed under `### Changed` with the option that restores the old behaviour.
+- Reference: 0.7.0 shipped as a minor with the same changelog shape; the package is pre-1.0.
+- Changes: the release spec and the index name the label and the bump.
+- Stays: P1 to P7.
