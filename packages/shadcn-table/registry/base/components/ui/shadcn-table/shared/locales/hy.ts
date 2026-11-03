@@ -55,6 +55,7 @@ export const ST_Localization_HY: ST_Localization = {
   groupedBy: 'Խմբավորել',
   hideAll: 'Թաքցնել բոլորը',
   hideColumn: 'Թաքցնել {column} սյունակը',
+  loading: 'Բեռնում',
   max: 'Առվ',
   min: 'Նվզ',
   move: 'Շարժել',
