@@ -262,3 +262,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - The docs site is updated in this cycle as its own workstream: every guide whose behaviour v0.8 changes is rewritten from the shipped code, and a guide is added for each new surface (column icons, filter chips and picker, sort editor, view settings and persistence, overflow tooltip, scroll cues, tint tokens). The agent decides the pages; the owner does not review the list. The docs workstream merges after the library workstreams and before the release spec, with `check-pages.mjs` per base as its gate (P4).
 - Stays: the generated per-base library copies in `apps/shadcn-table-docs/components/ui-<base>/`; the live example pages.
+
+### D34 Acceptance reference is a capture of the demo, taken at the foundation
+
+- Agent-settled. The visual reference for every look spec is `/header-demo` in `test-projects/next-app` (branch `playground/header-demo-theming`, a separate repository outside the library). Its dev server is not available to run agents, so the foundation step captures it once from the main session: light and dark screenshots at 1800 by 1150 of the default view, the column menu, the sort editor, the filter chips and picker, the view settings panel, a column drag in progress, and the scroll cues, saved under `.ai/plans/v0.8.x/anindosarker/reference/` with the demo commit hash. Specs cite those files; builders and judges never read the demo repository.
+- Exact values (classes, icons, strings) come from the demo code at that commit, listed per spec by the audit agent.
