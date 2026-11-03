@@ -55,6 +55,7 @@ export const ST_Localization_AZ: ST_Localization = {
   groupedBy: 'Qruplandı ',
   hideAll: 'Hamısını Gizlə',
   hideColumn: '{column} Sütununu Gizlə',
+  loading: 'Yüklənir',
   max: 'Maksimum',
   min: 'Minimum',
   move: 'Daşı',

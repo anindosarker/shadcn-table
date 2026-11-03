@@ -55,6 +55,7 @@ export const ST_Localization_RO: ST_Localization = {
   groupedBy: 'Grupat după ',
   hideAll: 'Ascunde tot',
   hideColumn: 'Ascunde coloana {column}',
+  loading: 'Se încarcă',
   max: 'Max',
   min: 'Min',
   move: 'Mută',

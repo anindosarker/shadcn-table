@@ -55,6 +55,7 @@ export const ST_Localization_ZH_HANT: ST_Localization = {
   groupedBy: '分組依據 ',
   hideAll: '隱藏全部',
   hideColumn: '隱藏 {column} 欄位',
+  loading: '載入中',
   max: '最大',
   min: '最小',
   move: '移動',

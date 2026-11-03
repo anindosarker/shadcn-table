@@ -55,6 +55,7 @@ export const ST_Localization_MK: ST_Localization = {
   groupedBy: 'Групирано по ',
   hideAll: 'Скриј сè',
   hideColumn: 'Скриј ја колоната {column}',
+  loading: 'Вчитување',
   max: 'Макс',
   min: 'Мин',
   move: 'Премести',

@@ -55,6 +55,7 @@ export const ST_Localization_HE: ST_Localization = {
   groupedBy: 'קובץ לפי',
   hideAll: 'הסתר הכל',
   hideColumn: 'הסתר עמודה {column}',
+  loading: 'טוען',
   max: 'מקסימום',
   min: 'מינימום',
   move: 'הזז',

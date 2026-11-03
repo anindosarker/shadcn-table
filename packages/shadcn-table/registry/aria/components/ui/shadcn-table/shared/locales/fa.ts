@@ -55,6 +55,7 @@ export const ST_Localization_FA: ST_Localization = {
   groupedBy: 'گروه بندی توسط ',
   hideAll: 'پنهان کردن همه',
   hideColumn: 'پنهان کردن ستون {column}',
+  loading: 'در حال بارگذاری',
   max: 'حداکثر',
   min: 'حداقل',
   move: 'حرکت',

@@ -80,7 +80,7 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
 }: ST_LinearProgressBarProps) => {
   const table = useSTContext<TData>();
   const {
-    options: { stLinearProgressProps },
+    options: { localization, stLinearProgressProps },
   } = table;
 
   const { progressComponentProps, collapsibleProps } = {
@@ -114,10 +114,9 @@ export const ST_LinearProgressBar = <TData extends ST_RowData>({
               {linearProgressKeyframes}
             </style>
             <LinearProgressContent isExpanded={isExpanded}>
-              {/* No localization key names the loading state, so the name is the English fallback, overridable through stLinearProgressProps. */}
               <Progress
                 aria-busy="true"
-                aria-label="Loading"
+                aria-label={localization.loading}
                 {...progressComponentProps}
                 className={cn(
                   isIndeterminate && 'st-progress-indeterminate',
