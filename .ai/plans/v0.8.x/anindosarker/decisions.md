@@ -229,3 +229,11 @@ The reference for every look decision is the owner's header demo (`test-projects
 - v0.7.x F21 (19 functions over 150 lines) and F22 (3 files over 600 lines) close as accepted; `coding-standards.md` keeps its limits as guidance for new code and names the existing files as accepted. No split of `ST_FilterTextField`, `ST_TablePagination` or `stConfigFeature.ts` now.
 - When a mode is added to a component that switches on one (`ST_FilterTextField` on `filterVariant`, `ST_TablePagination` on `paginationDisplayMode`), that change moves the component into its own folder: the shell, a `modes.ts` with the key union, a map and a `get<X>Mode` function, and `modes/` with one file per mode. Not before.
 - Source: v0.7.x F21, F22
+
+### D26 Width rule: `semantic` is the default layout mode
+
+- `layoutMode` defaults to `semantic` in every case except virtualization (which still needs `grid`). A semantic table spreads spare width over every column in proportion to its size, display and pinned columns included; once the columns exceed the frame every column renders at its set width and the table scrolls sideways. Sticky offsets are computed from set widths and are exact whenever the table can scroll (measured on `/header-demo-v14`, 2026-11-03: with spare width the table cannot scroll, so the offset difference never shows).
+- Resizing stays on (D14) in semantic: the auto-switch to `grid-no-grow` when `enableColumnResizing` is true (`useST_TableOptions.ts:135`) goes. While spare width exists a dragged edge moves faster than the pointer; accepted.
+- Reference: the owner's `/header-demo-v14` with the `semantic` width rule; ui.shadcn.com, tablecn and shadcn-vue render semantic tables.
+- Changes: `useST_TableOptions` default rule; the resize handle and `columnResizeMode` verified in semantic; Storybook `LayoutMode` stories unchanged.
+- Stays: `grid` and `grid-no-grow` selectable; `columnDef.grow`; virtualization forces `grid`.
