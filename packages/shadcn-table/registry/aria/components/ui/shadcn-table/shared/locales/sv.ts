@@ -55,6 +55,7 @@ export const ST_Localization_SV: ST_Localization = {
   groupedBy: 'Gruppera efter ',
   hideAll: 'Göm alla',
   hideColumn: 'Göm {column} kolumn',
+  loading: 'Laddar',
   max: 'Max.',
   min: 'Min.',
   move: 'Flytta',

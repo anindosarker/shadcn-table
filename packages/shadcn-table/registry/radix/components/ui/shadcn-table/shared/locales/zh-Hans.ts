@@ -55,6 +55,7 @@ export const ST_Localization_ZH_HANS: ST_Localization = {
   groupedBy: '分组依据 ',
   hideAll: '隐藏全部',
   hideColumn: '隐藏 {column} 列',
+  loading: '加载中',
   max: '最大',
   min: '最小',
   move: '移动',
