@@ -1,13 +1,14 @@
 # 03: header, column menu and dragging, tracker
 
 Status: running
-Branch `v0.8/header-menu-drag`, worktree 02, PR #[n]
+Branch `v0.8/header-menu-drag`, worktree 02, PR #99
 Gates:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:bases` at a86805e0: green
+- `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:bases` at 2cfe9cf5: green
 
 - Milestone 01 header, menu and handle: done (a86805e0)
-- Milestone 02 drag, flip, locked: running
-- Milestone 03 stories, captures, judges: planned
+- Milestone 02 drag, flip, locked: done (2cfe9cf5)
+- Milestone 03 stories, captures, judges: running
 - Milestone 04 cleanup and gates once: planned
 
 ## Attention
