@@ -28,11 +28,20 @@ export interface ST_TableBodyRowProps<TData extends ST_RowData>
   virtualRow?: ST_VirtualItem;
 }
 
-// The row carries `group/row` and its tint as `data-tint`; the cells paint
-// the tint tokens from it, so hover tints the whole row evenly.
-const tableBodyRowVariants = cva('group/row box-border w-full bg-background', {
+// The row paints its tint from the tokens the table root declares and every
+// cell, pinned ones included, inherits it, so hover tints the row evenly.
+// Strongest first: selection, pinning, stripe; hover beats the last two and a
+// selected row has none.
+const tableBodyRowVariants = cva('group/row box-border w-full', {
   variants: {
+    hover: { false: '', true: 'hover:bg-(--st-hover)' },
     layout: { grid: 'flex', semantic: '' },
+    tint: {
+      none: 'bg-background',
+      pinned: 'bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))]',
+      selected: 'bg-(--st-selected)',
+      stripe: 'bg-(--st-stripe)',
+    },
     position: {
       absolute: 'absolute',
       relative: 'relative',
@@ -192,15 +201,13 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
             tableFooterHeight >
             (tableContainerRef.current?.clientHeight ?? Infinity);
 
-        // One tint per row, strongest first: selection, pinning, stripe.
-        // Hover tints every row but a selected one.
         const tint = isRowSelected
           ? 'selected'
           : isRowPinned
             ? 'pinned'
             : striped && staticRowIndex % 2 === 1
               ? 'stripe'
-              : undefined;
+              : 'none';
 
         return (
           <>
@@ -208,10 +215,8 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               data-index={
                 renderDetailPanel ? staticRowIndex * 2 : staticRowIndex
               }
-              data-hover={(hover && !isRowSelected) || undefined}
               data-pinned={!!isRowPinned || undefined}
               data-selected={isRowSelected || undefined}
-              data-tint={tint}
               onDragEnter={handleDragEnter}
               onDragOver={handleDragOver}
               ref={(node: HTMLTableRowElement | null) => {
@@ -249,12 +254,14 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               }}
               className={cn(
                 tableBodyRowVariants({
+                  hover: hover && !isRowSelected,
                   layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
                   position: virtualRow
                     ? 'absolute'
                     : rowPinningDisplayMode?.includes('sticky') && isRowPinned
                       ? 'sticky'
                       : 'relative',
+                  tint,
                   zIndex:
                     rowPinningDisplayMode?.includes('sticky') && isRowPinned
                       ? 'high'
