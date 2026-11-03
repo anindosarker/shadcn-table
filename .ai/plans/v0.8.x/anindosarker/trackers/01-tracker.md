@@ -1,6 +1,6 @@
 # 01: shared surface, tracker
 
-Status: done (88f29ad5)
+Status: merged (752cc62b192dd1215a1893154fae4513dcbe2029)
 Branch `v0.8/shared-surface`, worktree 01, PR #97
 Gates:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria` after the lucide-react bump at 016a792f: green
