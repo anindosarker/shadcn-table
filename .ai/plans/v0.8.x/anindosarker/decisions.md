@@ -102,6 +102,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo stores one config under a fixed key (`view-settings.tsx:98`); no shadcn reference persists; Notion persists per view server-side.
 - Changes: a storage adapter behind the `viewSettings` slice (`useSyncExternalStore`, blocked storage tolerated), wired to column visibility and order state.
 - Stays: controlled `state` and `on*Change` props win over stored values when a consumer provides them.
+- Addendum 2026-11-04: persistence needs no setup. The storage key is automatic, `shadcn-table:<hash of the column ids in definition order>:view`; the `id` option, when set, replaces the hash; `persistViewSettings` stays on by default, `false` turns it off, a string sets the key. No development warning for a missing `id`; the one development line left says a stored view was reset because its column ids no longer match the table. Two tables with identical column ids share one view; a column added, removed or renamed starts the view from the defaults.
 
 ### D13 Footer and pagination defaults
 
