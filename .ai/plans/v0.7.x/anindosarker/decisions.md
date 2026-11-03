@@ -466,6 +466,7 @@
 ### D65 Single-row selection uses one RadioGroup around the body
 
 - When `enableMultiRowSelection` is `false`, `ST_TableBody` renders one `RadioGroup` (value: the selected row id, `aria-label` from `localization.select`) around its rows and the select cell renders only `RadioGroupItem` with `value={row.id}`; arrow keys move between rows and screen readers announce "n of m". All three bases, no public API change. Replaces the one-group-per-row shape (F45). Sub-spec `10.4`, agent lane, ships as 0.7.4.
+- Shipped shape (spec 10.4 1.6.2, markup constraint: the aria part has no render prop and a div cannot sit inside `<tbody>`): the group wraps the `<table>` in `ST_Table`, label `localization.toggleSelectRow`, `className="block"`.
 - Source: F45 (v0.8.x D26 moved here)
 
 ### D66 The loading state has a localization key

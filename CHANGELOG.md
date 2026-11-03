@@ -11,8 +11,6 @@ date; merging it publishes the section as the GitHub release notes.
 
 ### Fixed
 
-#### Spec 10.4
-
 - Single-row selection is one radio group per table: arrow keys move between rows and screen readers announce the row count.
 - The loading state is localizable (`localization.loading`); every progress bar carries it as its label.
 
