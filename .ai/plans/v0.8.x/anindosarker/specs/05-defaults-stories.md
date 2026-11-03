@@ -9,7 +9,7 @@ Specs 02, 03 and 04 build the new chrome behind options whose defaults still poi
 ### 1.2 Goals
 
 - `useST_TableOptions` defaults: `columnFilterDisplayMode: 'chips'`, `enableSortPopover: true`, `enableViewSettings: true`, `enableScrollButtons: true`, `enableCellOverflowTooltip: true`, `persistViewSettings: false`, `showClearSearchButton: false`, `showColumnDragHandle: false`, `enableColumnOrdering: true`, `enableColumnPinning: true`, `enableColumnResizing: true`, `paginationDisplayMode: 'pages'`, `positionActionsColumn: 'last'`, `layoutMode: 'grid'` with no auto-switch on resizing; `enableStickyHeader` stays `false` and the virtualization rule stays (D19)
-- A table with `enableRowActions` and no `columnPinning` of its own seeds `columnPinning.right: ['st-row-actions']` (D14)
+- A table with `enableRowActions` and no `columnPinning` of its own seeds `columnPinning.end: ['st-row-actions']` (D14)
 - Every story renders the stock look unless it demonstrates an alternative; every play test passes per base; the `MenuOpeners` tests use the trigger pattern (D25)
 - The four docs filter examples and the alternate pagination example set their mode explicitly; the page checks that named old controls name the new ones; `check-pages` stays green per base at merge
 - `CHANGELOG.md` `### Changed` lists every flipped default with the option that restores it (D32)
@@ -66,7 +66,7 @@ apps/shadcn-table-docs/components/ui-<base>/     ← regenerated
 - `layoutMode = layoutMode || 'grid'`; the `enableColumnResizing ? 'grid-no-grow' : 'semantic'` branch goes; the virtualization upgrade from an explicit `'semantic'` stays
 - `enableStickyHeader = false` stays; lines 143-145 stay
 - `ST_DefaultDisplayColumn.enableColumnOrdering: false` stays (display columns stay non-draggable; the actions column def from spec 02 overrides it)
-- `useST_TableInstance.ts`: when `enableRowActions`, `positionActionsColumn === 'last'`, `enableColumnPinning` and neither `initialState.columnPinning` nor `state.columnPinning` is given, the seed `{ right: ['st-row-actions'] }` is written into `initialState.columnPinning` (the normalisation at 162-169), so the first render and `resetColumnPinning()` both keep the actions column pinned (D14); a consumer's pinning wins untouched
+- `useST_TableInstance.ts`: when `enableRowActions`, `positionActionsColumn === 'last'`, `enableColumnPinning` and neither `initialState.columnPinning` nor `state.columnPinning` is given, the seed `{ end: ['st-row-actions'] }` is written into `initialState.columnPinning` (the normalisation at 162-169), so the first render and `resetColumnPinning()` both keep the actions column pinned (D14); a consumer's pinning wins untouched
 - Does NOT change any type (spec 01) or component (specs 02 to 04)
 
 #### 1.6.3 Stories and play tests

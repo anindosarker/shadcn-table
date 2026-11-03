@@ -76,7 +76,7 @@ CHANGELOG.md                               ← `## Unreleased` with `#### Spec 0
 
 - `packages/shadcn-table/package.json` and `pnpm-lock.yaml`: `lucide-react` to `^1.64.0` (the demo's), one non-frozen `pnpm install`; every existing Lucide alias used in `icons.ts` verified by `tsc` after the bump (P5: the cycle's one dependency change)
 - `CHANGELOG.md`: `## Unreleased` above `## 0.7.4` with `### Added`, `### Changed`, `### Docs`; under `### Added` one `#### Spec 01` block listing each new option, column option, icon key, localization key and slice; empty `#### Spec 02` to `#### Spec 06` blocks under the section each spec names (02, 03, 04 Added; 05 Changed; 06 Docs), filled by their workstreams only (D32)
-- `reference/01-demo-commit.txt`: the `test-projects/next-app` HEAD hash at capture time; `reference/01-*.png`: twelve captures per 1.6.8; `reference/01-surface.json`: the lists the Acceptance script reads (`iconKeys`, `localizationKeys`, `options`, `columnOptions`)
+- `reference/01-demo-commit.txt`: the `test-projects/next-app` HEAD hash at capture time; `reference/01-*.png`: fourteen captures per 1.6.8; `reference/01-surface.json`: the lists the Acceptance script reads (`iconKeys`, `localizationKeys`, `options`, `columnOptions`)
 - `packages/shadcn-table/registry.json`: regenerated with `pnpm registry:build` (new files per base)
 - `packages/shadcn-table/scripts/registry/base-diff.json`, `aria-diff.json`: unchanged unless a per-base copy of a touched file must differ (none expected: every touched file is byte-identical today except the ones already listed, `ST_ShowHideColumnsMenuItems.tsx`, `style.utils.ts`, `ST_ColumnActionMenu.tsx` and `ST_FilterOptionMenu.tsx` in both files and `types.ts` in aria)
 
@@ -171,7 +171,7 @@ export interface ST_ColumnFlipPending {
 ```typescript
 export interface ST_StoredView {
   readonly columnOrder?: readonly string[];
-  readonly columnPinning?: { left?: readonly string[]; right?: readonly string[] };
+  readonly columnPinning?: { start?: readonly string[]; end?: readonly string[] };
   readonly columnVisibility?: Readonly<Record<string, boolean>>;
   readonly density?: ST_DensityState;
   readonly viewSettings?: Partial<ST_ViewSettingsState>;
@@ -258,7 +258,7 @@ Lane: agent
 - `index.ts` exports: `drag.utils`, `viewSettingsStorage.utils`, `ST_GridLineIcons`
 - Write `reference/01-surface.json` and the Acceptance script `reference/01-check.mjs` (node, no dependencies) that reads it and greps the three files per base
 - `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria` so the docs copies carry the new types
-- `stories/styling/DefaultLook.stories.tsx`: the demo's columns (Name, Status, Project, Assignee, Due, Estimate, Priority, Tags, Reporter) with `columnDef.icon`, 50 rows, `enableRowActions` with three items, `enableColumnOrdering: false` on Name and Due, and the v0.8 options set explicitly (`layoutMode: 'grid'`, `enableColumnPinning`, `enableColumnResizing`, `enableColumnOrdering`, `paginationDisplayMode: 'pages'`, `positionActionsColumn: 'last'`, `columnFilterDisplayMode: 'chips'`, `enableSortPopover`, `enableViewSettings`, `enableScrollButtons`, `enableCellOverflowTooltip`, `initialState.columnPinning.right: ['st-row-actions']`); no plays here (spec 02 adds them); the capture source for specs 02, 03 and 04
+- `stories/styling/DefaultLook.stories.tsx`: the demo's columns (Name, Status, Project, Assignee, Due, Estimate, Priority, Tags, Reporter) with `columnDef.icon`, 50 rows, `enableRowActions` with three items, `enableColumnOrdering: false` on Name and Due, and the v0.8 options set explicitly (`layoutMode: 'grid'`, `enableColumnPinning`, `enableColumnResizing`, `enableColumnOrdering`, `paginationDisplayMode: 'pages'`, `positionActionsColumn: 'last'`, `columnFilterDisplayMode: 'chips'`, `enableSortPopover`, `enableViewSettings`, `enableScrollButtons`, `enableCellOverflowTooltip`, `initialState.columnPinning.end: ['st-row-actions']`); no plays here (spec 02 adds them); the capture source for specs 02, 03 and 04
 - Gates: per base `tsc`; `lint`; `check:tailwind`; `check:icons`; `check:bases`; `node reference/01-check.mjs`
 
 #### 2.1.3 Final milestone: Cleanup and gates once

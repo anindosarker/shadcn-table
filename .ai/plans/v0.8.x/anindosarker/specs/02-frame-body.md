@@ -91,7 +91,7 @@ packages/shadcn-table/scripts/registry/base-diff.json, aria-diff.json ← ST_Ove
 `ST_TableContainer.tsx`, `useST_HorizontalOverflow.ts`, `ST_ScrollButtons.tsx` (D19) (D22).
 
 - Sticky case: `enableStickyHeader || viewSettings.stickyHeader` (slice from 01) and not `enableRowVirtualization`: `maxHeight: var(--st-sticky-max-height, 70vh)`; `enableRowVirtualization`: `var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))`; full screen: `flex-1 min-h-0`, no maxHeight
-- A wrapper `div.group/st-scroll relative flex min-h-0 flex-col` around the scroll box; `useST_HorizontalOverflow(wrapperRef, scrollRef)` writes `data-overflow-start`, `data-overflow-end`, `--st-scrollbar-y` and `--st-pin-start` / `--st-pin-end` (pinned widths from `table.getLeftTotalSize()` and `getRightTotalSize()`) on the wrapper, with a passive scroll listener and one ResizeObserver on the box and its first child, rAF-batched, RTL-aware (`scrollLeft` sign); no React state
+- A wrapper `div.group/st-scroll relative flex min-h-0 flex-col` around the scroll box; `useST_HorizontalOverflow(wrapperRef, scrollRef)` writes `data-overflow-start`, `data-overflow-end`, `--st-scrollbar-y` and `--st-pin-start` / `--st-pin-end` (pinned widths from `table.getStartTotalSize()` and `getEndTotalSize()`) on the wrapper, with a passive scroll listener and one ResizeObserver on the box and its first child, rAF-batched, RTL-aware (`scrollLeft` sign); no React state
 - `ST_ScrollButtons`: two `Button size="icon-xs" variant="ghost"` with `ChevronLeftIcon` / `ChevronRightIcon`, `aria-label` `localization.scrollLeft` / `scrollRight`, absolutely placed `top-5 -translate-y-1/2 z-5 bg-background text-muted-foreground` at `inset-s-[calc(var(--st-pin-start)+--spacing(1))]` and `inset-e-[calc(var(--st-pin-end)+var(--st-scrollbar-y)+--spacing(1))]`; `invisible opacity-0 pointer-events-none` with `tabIndex={-1}` unless the wrapper is hovered (`group-hover/st-scroll:`) and the matching overflow attribute is set (`group-data-[overflow-start]/st-scroll:`); click scrolls `0.8 * (clientWidth - pinStart - pinEnd)` with `behavior: 'smooth'`; rendered only when `enableScrollButtons === true` (spec 05 sets the default; until then only a story that sets it shows them)
 - Does NOT change the scrollbar rules (28-30) or the toolbar height measure
 
@@ -172,7 +172,7 @@ export interface ST_OverflowTextProps { readonly children: ReactNode; readonly c
 
 #### 1.6.9 Stories and play tests
 
-`stories/styling/DefaultLook.stories.tsx` (new), updates to the stories the changed classes break.
+`stories/styling/DefaultLook.stories.tsx` (from 01, plays added), updates to the stories the changed classes break.
 
 - `DefaultLook` (created by spec 01, plays added here): the capture source for the judges; plays: measure the first body row and the header heights at each density, assert no `::after` background on hover, scroll cue visibility and scroll delta, tooltip open on the truncated Name cell and closed on a short Project cell, the pending attribute with a seeded `localStorage` entry (`persistViewSettings: true`) and its absence without one, the sticky container height
 - `RTL.stories.tsx`: the boxShadow assertion becomes a `filter` drop-shadow assertion on the inner-edge cell; `RenderCounts.stories.tsx` and `TableProvider.stories.tsx`: `'p-2'` assertions become `h-10 px-2`; `RowPinning`, `Virtualization`, `StickyHeader` offsets and heights follow the new metrics
