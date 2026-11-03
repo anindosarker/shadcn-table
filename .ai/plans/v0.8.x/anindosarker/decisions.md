@@ -201,3 +201,10 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Reference: the demo (`column-header.tsx:481, 500-508`, `columns-menu.tsx:24-55`); the shadcn data tables open every menu from a `DropdownMenuTrigger`.
 - Changes: `ST_ColumnActionMenu`, `ST_RowActionMenu`, `ST_ShowHideColumnsMenu`, `ST_FilterOptionMenu` and their openers in all three bases; the `MenuOpeners` play test moves to the trigger pattern.
 - Stays: `ST_CellActionMenu` with `actionCell` / `onActionCellChange`; `renderColumnActionsMenuItems`, `renderRowActionMenuItems`.
+
+## Round 2: v0.7.x carry-overs, 2026-11-03
+
+### D26 Single-row selection uses one RadioGroup around the body
+
+- When `enableMultiRowSelection` is `false`, `ST_TableBody` renders one `RadioGroup` (value: the selected row id) around the rows, and the select cell renders only `RadioGroupItem` with `value={row.id}`; arrow keys move between rows and screen readers announce "n of m". All three bases, no public API change. Replaces the one-group-per-row shape (`ST_SelectCheckbox.tsx` base :181, radix :174, aria :173).
+- Source: v0.7.x F45
