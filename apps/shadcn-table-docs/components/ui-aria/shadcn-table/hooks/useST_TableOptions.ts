@@ -95,6 +95,9 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   selectAllMode = 'page',
   ...rest
 }: ST_TableOptions<TData>) => {
+  // The caller's own id, before a generated one fills in: the view settings
+  // storage key needs one that is stable across reloads.
+  const viewSettingsKeyInput = idProp;
   const generatedId = useId();
   const id = idProp ?? generatedId;
   const definedIcons = useMemo(
@@ -229,6 +232,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
+    viewSettingsKeyInput,
     ...rest,
   } as ST_DefinedTableOptions<TData>;
 };

@@ -17,7 +17,8 @@ import {
   type ST_Column,
   type ST_RowData,
 } from '@/components/ui-base/shadcn-table/types';
-import { reorderColumn } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
+import { applyColumnReorder } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
+import { isColumnDragCancelled } from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui-base/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui-base/shadcn-table/components/buttons/ST_GrabHandleButton';
 
@@ -47,8 +48,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const table = column.table;
   const {
     options: { enableColumnOrdering, enableColumnPinning, enableHiding },
-    setColumnOrder,
-    setColumnPinning,
   } = table;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -77,26 +76,26 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     }
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e: DragEvent<HTMLButtonElement>) => {
     setIsDragging(false);
     setHoveredColumn(null);
-    if (hoveredColumn) {
-      const reorderedColumns = reorderColumn(
-        column,
-        hoveredColumn,
-        table.atoms.columnOrder.get(),
-      );
-      setColumnOrder(reorderedColumns);
-      setColumnPinning(({ start = [], end = [] }) => ({
-        start: reorderedColumns.filter((header) => start.includes(header)),
-        end: reorderedColumns.filter((header) => end.includes(header)),
-      }));
+    if (hoveredColumn && !isColumnDragCancelled(e)) {
+      applyColumnReorder(column, hoveredColumn, table);
     }
   };
 
   const handleDragEnter = () => {
     if (!isDragging && columnDef.enableColumnOrdering !== false) {
       setHoveredColumn(column);
+    }
+  };
+
+  // Accepting the drop over a row keeps its dragend from reading as cancelled.
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect =
+        columnDef.enableColumnOrdering !== false ? 'move' : 'none';
     }
   };
 
@@ -128,6 +127,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             'outline-2 outline-dashed outline-primary',
         )}
         onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
         ref={rowRef}
         style={{ paddingLeft: `${(column.depth + 0.5) * 2}rem` }}
       >

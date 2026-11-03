@@ -6,7 +6,8 @@ import {
   type ST_RowData,
   type ST_TableOptions,
 } from '@/components/ui/shadcn-table/types';
-import { reorderColumn } from '@/components/ui/shadcn-table/shared/utils/column.utils';
+import { applyColumnReorder } from '@/components/ui/shadcn-table/shared/utils/column.utils';
+import { isColumnDragCancelled } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 
@@ -24,8 +25,6 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   const table = column.table;
   const {
     options: { enableColumnOrdering },
-    setColumnOrder,
-    setColumnPinning,
     setDraggingColumn,
     setHoveredColumn,
   } = table;
@@ -69,18 +68,10 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
     } else if (
       enableColumnOrdering &&
       hoveredColumn &&
-      hoveredColumn?.id !== draggingColumn?.id
+      hoveredColumn?.id !== draggingColumn?.id &&
+      !isColumnDragCancelled(event)
     ) {
-      const reorderedColumns = reorderColumn(
-        column,
-        hoveredColumn as ST_Column<TData>,
-        table.atoms.columnOrder.get(),
-      );
-      setColumnOrder(reorderedColumns);
-      setColumnPinning(({ start = [], end = [] }) => ({
-        start: reorderedColumns.filter((header) => start.includes(header)),
-        end: reorderedColumns.filter((header) => end.includes(header)),
-      }));
+      applyColumnReorder(column, hoveredColumn as ST_Column<TData>, table);
     }
     setDraggingColumn(null);
     setHoveredColumn(null);

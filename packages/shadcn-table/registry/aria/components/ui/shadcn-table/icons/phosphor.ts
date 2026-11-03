@@ -3,9 +3,13 @@
 import {
   ArrowCounterClockwiseIcon,
   ArrowDownIcon,
+  ArrowLineRightIcon,
+  ArrowUpIcon,
+  ArrowsDownUpIcon,
   ArrowsInIcon,
   ArrowsLeftRightIcon,
   ArrowsOutIcon,
+  BrowserIcon,
   CaretDoubleDownIcon,
   CaretDownIcon,
   CaretLeftIcon,
@@ -25,28 +29,45 @@ import {
   FunnelXIcon,
   ListDashesIcon,
   ListIcon,
+  ListNumbersIcon,
+  LockIcon,
   MagnifyingGlassIcon,
   MagnifyingGlassMinusIcon,
   MinusIcon,
   PencilSimpleIcon,
+  PlusIcon,
   PushPinIcon,
+  PushPinSlashIcon,
   RowsIcon,
+  SlidersHorizontalIcon,
   SortDescendingIcon,
+  SquareIcon,
+  SquareSplitVerticalIcon,
   StackIcon,
+  TextIndentIcon,
+  TrashIcon,
   XCircleIcon,
   XIcon,
 } from '@phosphor-icons/react';
 import type { ST_Icons } from '@/components/ui/shadcn-table/types';
+import {
+  ST_GridLinesAllIcon,
+  ST_GridLinesColumnsIcon,
+  ST_GridLinesRowsIcon,
+} from '@/components/ui/shadcn-table/components/icons/ST_GridLineIcons';
 
 export const ST_Default_Icons = {
+  AddIcon: PlusIcon,
   ArrowDownwardIcon: ArrowDownIcon,
   ArrowRightIcon: CaretRightIcon,
+  ArrowUpwardIcon: ArrowUpIcon,
   CancelIcon: XCircleIcon,
   ChevronLeftIcon: CaretLeftIcon,
   ChevronRightIcon: CaretRightIcon,
   ClearAllIcon: EraserIcon,
   CloseIcon: XIcon,
   ContentCopy: CopyIcon,
+  DeleteIcon: TrashIcon,
   // Stands in for Lucide Rows2.
   DensityLargeIcon: RowsIcon,
   // Stands in for Lucide Rows3.
@@ -63,19 +84,41 @@ export const ST_Default_Icons = {
   FirstPageIcon: CaretLineLeftIcon,
   FullscreenExitIcon: ArrowsInIcon,
   FullscreenIcon: ArrowsOutIcon,
+  GridLinesAllIcon: ST_GridLinesAllIcon,
+  GridLinesColumnsIcon: ST_GridLinesColumnsIcon,
+  GridLinesNoneIcon: SquareIcon,
+  GridLinesRowsIcon: ST_GridLinesRowsIcon,
   IndeterminateIcon: MinusIcon,
   KeyboardDoubleArrowDownIcon: CaretDoubleDownIcon,
   LastPageIcon: CaretLineRightIcon,
+  LockIcon: LockIcon,
   MoreHorizIcon: DotsThreeIcon,
   MoreVertIcon: DotsThreeVerticalIcon,
   PushPinIcon: PushPinIcon,
+  PushPinOffIcon: PushPinSlashIcon,
   RestartAltIcon: ArrowCounterClockwiseIcon,
+  RowNumbersOffIcon: ListIcon,
+  RowNumbersOnIcon: ListNumbersIcon,
   SaveIcon: FloppyDiskIcon,
   SearchIcon: MagnifyingGlassIcon,
   // Stands in for Lucide SearchX.
   SearchOffIcon: MagnifyingGlassMinusIcon,
+  // Stands in for Lucide Settings2.
+  SettingsIcon: SlidersHorizontalIcon,
+  SingleLineIcon: ArrowLineRightIcon,
   SortIcon: SortDescendingIcon,
+  // Stands in for Lucide PanelTopDashed.
+  StickyHeaderOffIcon: SquareIcon,
+  // Stands in for Lucide PanelTop.
+  StickyHeaderOnIcon: BrowserIcon,
+  // Stands in for Lucide SquareCenterlineDashedVertical.
+  StripedOffIcon: SquareSplitVerticalIcon,
+  // Stands in for Lucide GapVertical.
+  StripedOnIcon: RowsIcon,
+  SwapVertIcon: ArrowsDownUpIcon,
   SyncAltIcon: ArrowsLeftRightIcon,
   ViewColumnIcon: ColumnsIcon,
   VisibilityOffIcon: EyeSlashIcon,
+  // Stands in for Lucide WrapText.
+  WrapTextIcon: TextIndentIcon,
 } satisfies ST_Icons;

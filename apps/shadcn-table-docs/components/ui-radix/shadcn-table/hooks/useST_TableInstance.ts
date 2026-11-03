@@ -43,6 +43,7 @@ import { getST_RowPinningColumnDef } from '@/components/ui-radix/shadcn-table/ho
 import { getST_RowSelectColumnDef } from '@/components/ui-radix/shadcn-table/hooks/display-columns/getST_RowSelectColumnDef';
 import { getST_RowSpacerColumnDef } from '@/components/ui-radix/shadcn-table/hooks/display-columns/getST_RowSpacerColumnDef';
 import { useST_Effects } from '@/components/ui-radix/shadcn-table/hooks/useST_Effects';
+import { ST_DEFAULT_VIEW_SETTINGS } from '@/components/ui-radix/shadcn-table/features/stViewSettingsFeature';
 
 /**
  * The slices the option-time transforms below read before the table exists,
@@ -58,6 +59,7 @@ const transformStateDefaults = {
   isLoading: false,
   pagination: { pageIndex: 0, pageSize: 10 },
   showSkeletons: false,
+  viewSettings: ST_DEFAULT_VIEW_SETTINGS,
 };
 
 /**
@@ -87,6 +89,7 @@ const ST_TRANSFORM_SLICES = [
   'isLoading',
   'pagination',
   'showSkeletons',
+  'viewSettings',
 ] as const;
 
 type ST_TransformSlice = (typeof ST_TRANSFORM_SLICES)[number];
@@ -159,6 +162,12 @@ const createSetup = <TData extends ST_RowData>(
       },
     } as ST_StatefulTableOptions<TData>);
   initialState.globalFilterFn = definedTableOptions.globalFilterFn ?? 'fuzzy';
+  initialState.viewSettings = {
+    ...ST_DEFAULT_VIEW_SETTINGS,
+    rowNumbers: !!definedTableOptions.enableRowNumbers,
+    stickyHeader: !!definedTableOptions.enableStickyHeader,
+    ...initialState.viewSettings,
+  };
   // A partial `columnPinning` is spread over the defaults without filling the
   // other side, so `{ start: [...] }` alone would read `end` as undefined.
   if (initialState.columnPinning) {
@@ -215,6 +224,7 @@ export const useST_TableInstance = <
   const grouping = useSelector(readSources.grouping);
   const isLoading = useSelector(readSources.isLoading);
   const showSkeletons = useSelector(readSources.showSkeletons);
+  const viewSettings = useSelector(readSources.viewSettings);
   // Page changes and pointer moves stay off the owner.
   const pageSize = useSelector(readSources.pagination, (p) => p?.pageSize);
   const isResizingColumn = useSelector(
@@ -245,6 +255,7 @@ export const useST_TableInstance = <
       pageSize,
     },
     showSkeletons,
+    viewSettings,
     ...definedTableOptions.state,
   } as ST_TableState<TData>;
 
@@ -269,6 +280,7 @@ export const useST_TableInstance = <
         columnFilterFns,
         creatingRow,
         grouping,
+        viewSettings,
         ...definedTableOptions.state,
       } as ST_TableState<TData>,
     };
@@ -311,6 +323,7 @@ export const useST_TableInstance = <
     columnFilterFns,
     creatingRow,
     grouping,
+    viewSettings,
   ]);
   if (isFrozen && !heldColumns) {
     setHeldColumns(columns);

@@ -117,6 +117,28 @@ export const reorderColumn = <TData extends ST_RowData>(
 };
 
 /**
+ * Moves `column` to `target`, takes the target's pinning, and keeps each
+ * pinned side in the new order. Returns the new column order.
+ */
+export const applyColumnReorder = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+  target: ST_Column<TData>,
+  table: ST_CoreTableInstance<TData>,
+): ST_ColumnOrderState => {
+  const reorderedColumns = reorderColumn(
+    column,
+    target,
+    table.atoms.columnOrder.get(),
+  );
+  table.setColumnOrder(reorderedColumns);
+  table.setColumnPinning(({ start = [], end = [] }) => ({
+    start: reorderedColumns.filter((id) => start.includes(id)),
+    end: reorderedColumns.filter((id) => end.includes(id)),
+  }));
+  return reorderedColumns;
+};
+
+/**
  * The column's current filter mode name, or an empty string while it runs a
  * filterFn function.
  */

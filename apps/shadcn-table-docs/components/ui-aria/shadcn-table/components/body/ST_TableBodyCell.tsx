@@ -260,6 +260,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
 
         return (
           <td
+            data-flip-column={column.id}
             data-index={staticColumnIndex}
             data-pinned={!!isColumnPinned || undefined}
             tabIndex={enableKeyboardShortcuts ? 0 : undefined}
