@@ -208,3 +208,8 @@ The reference for every look decision is the owner's header demo (`test-projects
 
 - When `enableMultiRowSelection` is `false`, `ST_TableBody` renders one `RadioGroup` (value: the selected row id) around the rows, and the select cell renders only `RadioGroupItem` with `value={row.id}`; arrow keys move between rows and screen readers announce "n of m". All three bases, no public API change. Replaces the one-group-per-row shape (`ST_SelectCheckbox.tsx` base :181, radix :174, aria :173).
 - Source: v0.7.x F45
+
+### D27 The loading state has a localization key
+
+- `ST_Localization` gains `loading` (default `'Loading'`); the aria `ST_LinearProgressBar` reads `localization.loading` for its `aria-label`, and the base and radix bars set `aria-label={localization.loading}` too, so all three announce the same. Overridable through `stLinearProgressProps` as before. Rides along with the first v0.8.x spec that touches localization or the toolbar.
+- Source: v0.7.x D57
