@@ -12,7 +12,6 @@ export const getST_RowPinningColumnDef = <TData extends ST_RowData>(
 ): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
   return {
     Cell: ({ row }) => <ST_TableBodyRowPinButton row={row} />,
-    grow: false,
     ...defaultDisplayColumnProps({
       header: 'pin',
       id: 'st-row-pin',

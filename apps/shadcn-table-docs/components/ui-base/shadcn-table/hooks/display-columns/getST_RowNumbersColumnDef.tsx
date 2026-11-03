@@ -25,7 +25,6 @@ export const getST_RowNumbersColumnDef = <TData extends ST_RowData>(
       </Subscribe>
     ),
     Header: () => localization.rowNumber,
-    grow: false,
     ...defaultDisplayColumnProps({
       header: 'rowNumbers',
       id: 'st-row-numbers',
