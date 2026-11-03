@@ -257,7 +257,7 @@ Lane: agent
 Lane: agent
 
 - 1.6.2 to 1.6.8 in the radix tree, then copied byte-identical to base and aria (`style.utils.ts` and `types.ts` in aria keep their listed differences; apply the same hunks)
-- `ST_Table.tsx` attaches `tableRef`; `ST_TableBodyCell.tsx` renders `data-flip-column={column.id}` on the `td`; `displayColumn.utils.ts` `showRowNumbersColumn` reads `enableRowNumbers || viewSettings.rowNumbers`; `ST_TableHeadCellFilterContainer.tsx` gains `open?: boolean` that forces the Collapsible open; `ST_TableContainer.tsx` sticky maxHeight reads `var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))`
+- `ST_Table.tsx` attaches `tableRef`; `ST_TableBodyCell.tsx` renders `data-flip-column={column.id}` on the `td`; `displayColumn.utils.ts` `showRowNumbersColumn` reads `enableRowNumbers || viewSettings.rowNumbers`; `ST_TableHeadCellFilterContainer.tsx` already takes `open?: boolean` that forces the Collapsible open (radix and base spread `CollapseProps` after the computed `open`, aria reads `open ?? ...`), so it is left untouched; `ST_TableContainer.tsx` sticky maxHeight reads `var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))`
 - `index.ts` exports: `drag.utils`, `viewSettingsStorage.utils`, `ST_GridLineIcons`
 - Write `reference/01-surface.json` and the Acceptance script `reference/01-check.mjs` (node, no dependencies) that reads it and greps the three files per base
 - `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria` so the docs copies carry the new types
