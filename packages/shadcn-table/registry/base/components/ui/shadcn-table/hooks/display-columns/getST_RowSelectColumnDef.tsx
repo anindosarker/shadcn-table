@@ -20,7 +20,6 @@ export const getST_RowSelectColumnDef = <TData extends ST_RowData>(
       enableSelectAll && enableMultiRowSelection
         ? () => <ST_SelectCheckbox />
         : undefined,
-    grow: false,
     ...defaultDisplayColumnProps({
       header: 'select',
       id: 'st-row-select',

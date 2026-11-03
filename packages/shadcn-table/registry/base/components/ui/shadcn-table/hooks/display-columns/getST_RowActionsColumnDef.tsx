@@ -18,11 +18,19 @@ export const getST_RowActionsColumnDef = <TData extends ST_RowData>(
         staticRowIndex={staticRowIndex}
       />
     ),
+    // The header label is for screen readers only.
+    Header: () => (
+      <span className="sr-only">{tableOptions.localization.actions}</span>
+    ),
     ...defaultDisplayColumnProps({
       header: 'actions',
       id: 'st-row-actions',
-      size: 70,
+      size: 48,
       tableOptions,
     }),
+    // The column moves through the columns menu, unless the caller says not.
+    enableColumnOrdering:
+      tableOptions.displayColumnDefOptions?.['st-row-actions']
+        ?.enableColumnOrdering ?? true,
   };
 };

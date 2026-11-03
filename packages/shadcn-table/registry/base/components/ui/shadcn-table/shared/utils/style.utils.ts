@@ -12,25 +12,17 @@ import {
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
+/**
+ * The pinned cell layer: an opaque background the tint tokens build on, so
+ * scrolled content never shows through, and the edge shadow on the inner
+ * pinned cell.
+ */
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   column,
 }: {
   column?: ST_Column<TData>;
   table: ST_CoreTableInstance<TData>;
-}) => {
-  const isPinned = column?.getIsPinned();
-
-  return cn(
-    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background data-[pinned=true]:before:content-['']",
-    column
-      ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
-        : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
-          : undefined
-      : undefined,
-  );
-};
+}) => cn('bg-background', column && pinnedEdgeShadowClassName(column));
 
 /** The CSS variables the table tints read, declared on the table root. */
 export const ST_TINT_VARS = {
@@ -103,8 +95,9 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   };
 
   if (layoutMode === 'grid') {
+    // A pinned column keeps its width, so the sticky offsets stay exact.
     widthStyles.flex = `${
-      [0, false].includes(columnDef.grow!)
+      isColumnPinned || [0, false].includes(columnDef.grow!)
         ? 0
         : `var(--${header ? 'header' : 'col'}-${parseCSSVarId(
             header?.id ?? column.id,
@@ -133,9 +126,11 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 
   return {
     className: cn(
-      'bg-inherit',
+      !isColumnPinned && 'bg-inherit',
       layoutMode?.startsWith('grid') && 'flex',
-      draggingColumn?.id === column.id || hoveredColumn?.id === column.id
+      // Head and footer cells fade with a column drag; body cells do not.
+      header &&
+        (draggingColumn?.id === column.id || hoveredColumn?.id === column.id)
         ? 'opacity-50'
         : 'opacity-100',
       'relative',

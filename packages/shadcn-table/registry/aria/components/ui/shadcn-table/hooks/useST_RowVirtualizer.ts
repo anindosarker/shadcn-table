@@ -59,7 +59,7 @@ export const useST_RowVirtualizer = <
   const rowCount = realRows.length;
 
   const normalRowHeight =
-    density === 'compact' ? 37 : density === 'comfortable' ? 58 : 73;
+    density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56;
 
   const rangeExtractor = useCallback(
     (range: Range) => extraIndexRangeExtractor(range, draggingRowIndex),
