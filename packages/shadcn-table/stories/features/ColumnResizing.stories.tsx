@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
@@ -329,3 +330,100 @@ export const ColumnResizingLayoutGridGrowRTL = () => (
     />
   </div>
 );
+
+/**
+ * Mid-drag of the First Name resize handle, the lit header hairline and the
+ * body guide line are one 1 px line ending on the column's trailing edge
+ * (F39). Under 'onEnd' the edge is where the drag will put it: the cell's
+ * edge plus the drag.
+ */
+const expectResizeGuidesMeetEdge =
+  (mode: 'onChange' | 'onEnd') =>
+  async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole('columnheader', { name: /First Name/ });
+    const th = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="firstName"]',
+    )!;
+    const handle = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { hover: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await browserUserEvent?.hover(th);
+    const boxStyle = (element: HTMLElement) => {
+      const style = getComputedStyle(element);
+      return [
+        style.borderTop,
+        style.borderRight,
+        style.borderLeft,
+        style.outlineStyle,
+        style.boxShadow,
+      ].join('|');
+    };
+    const restingBox = boxStyle(th);
+    const start = th.getBoundingClientRect();
+    const startX = start.right;
+    const dx = 40;
+    fireEvent.mouseDown(handle, { clientX: startX, clientY: start.top + 5 });
+    fireEvent.mouseMove(document, {
+      clientX: startX + dx,
+      clientY: start.top + 5,
+    });
+    try {
+      await waitFor(() => {
+        const edge =
+          mode === 'onEnd' ? startX + dx : th.getBoundingClientRect().right;
+        // onChange moves the edge with the drag; onEnd only the hairline.
+        if (mode === 'onEnd') {
+          expect(th.getBoundingClientRect().right).toBe(startX);
+        } else {
+          expect(th.getBoundingClientRect().right).toBeGreaterThan(startX);
+        }
+        const line = handle.firstElementChild!.getBoundingClientRect();
+        expect(line.width).toBe(1);
+        expect(Math.abs(line.right - edge)).toBeLessThanOrEqual(0.25);
+        const cells = [
+          ...canvasElement.querySelectorAll<HTMLElement>(
+            'tbody td[data-flip-column="firstName"]',
+          ),
+        ];
+        expect(cells.length).toBeGreaterThan(0);
+        for (const cell of cells) {
+          const width = getComputedStyle(cell).borderInlineEndWidth;
+          if (mode === 'onEnd') {
+            // The body cells keep their width until the drop and clip, so
+            // onEnd shows the hairline alone.
+            expect(width).toBe('0px');
+            continue;
+          }
+          // The guide is the cell's 1 px end border: the hairline's x range,
+          // over the full row height.
+          expect(width).toBe('1px');
+          const box = cell.getBoundingClientRect();
+          expect(Math.abs(box.right - 1 - line.left)).toBeLessThanOrEqual(0.25);
+          expect(Math.abs(box.right - line.right)).toBeLessThanOrEqual(0.25);
+        }
+        // No box around the cell while it resizes.
+        expect(boxStyle(th)).toBe(restingBox);
+      });
+    } finally {
+      fireEvent.mouseUp(document, {
+        clientX: startX + dx,
+        clientY: start.top + 5,
+      });
+    }
+  };
+
+export const ResizeGuidesMeetEdge = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: expectResizeGuidesMeetEdge('onChange'),
+};
+
+export const ResizeGuidesMeetEdgeOnEnd = {
+  render: () => (
+    <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
+  ),
+  play: expectResizeGuidesMeetEdge('onEnd'),
+};

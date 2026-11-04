@@ -19,8 +19,12 @@ Gates:
 ## Attention
 
 - F41 icon only under `groupedColumnMode: 'remove'`: the task named 'remove' and 'reorder', but under 'reorder' the expand column shows only the expand-all button (no grouped label) and the grouped column keeps its own header and icon, so an icon there would stand alone; `getST_RowExpandColumnDef.tsx` sets `icon` for 'remove' only. Revert: drop the `groupedColumnMode === 'remove'` condition on `icon`.
+- F39 under `columnResizeMode: 'onEnd'` the body shows no guide, as before: the body cells keep their width until the drop and clip their content (`overflow-hidden`), so a guide at the pointer cannot be drawn from them; the header hairline follows the pointer and ends exactly on the edge the drop will set. A body guide for onEnd would need one table-level line element (a new design, not in this story).
+- F39 the "bordered box around the cell" from the owner's aria screenshot does not reproduce headless in any base (the play compares the header cell's borders, outline and box-shadow mid-drag with its resting style, green in base and aria); the guard stays.
 
 ## Notes
+
+- F39 geometry: the header hairline was centred on the edge (0.5 px past it) and the body guide a 2 px end border inside the cell, so the two lines overlapped by half a pixel. Both are now the same 1 px range ending on the edge: the hairline sits at `end-1` of the centred 8 px hit area (`end-0` for the last column), the body guide is a 1 px `border-inline-end` (a border spans the row borders, an absolutely placed line in the clipping cell leaves 1 px gaps).
 
 - F19: the 24 px funnel takes 12 px more of the header, so the existing play `OpensWithRowSelection` (labels fit at 120 px columns) went red; its story's name columns are now 180 px (the export example it mirrored leaves popover mode, D56). At 120 px the label truncates with an ellipsis (min-w-0 truncate, as settled).
 
