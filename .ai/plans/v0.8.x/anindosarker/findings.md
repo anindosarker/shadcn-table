@@ -170,3 +170,7 @@
 ### F40 Only the pinned view items animate in on load
 
 - Storybook aria, `Custom Column Actions` (owner screenshot 2026-11-05 00:50): on page load the two pinned view items (Columns, Density) fade and zoom in (`ST_ViewSettingsItems` keyed icon swap, spec 04 1.6.5: `animate-in fade-in zoom-in-75 duration-200 motion-reduce:animate-none`), while search, filter, sort, full screen and view settings appear without motion. Owner: "Add animations to other buttons." Fix: every button of the internal group (`ST_ToolbarInternalButtons.tsx`, three bases) gets the same mount animation so the toolbar appears as one; no animation under reduced motion; a play asserts `getAnimations()` on each button right after mount. Last fix story.
+
+### F41 The grouped column header shows no icon
+
+- Storybook aria, `Grouping Column Mode Remove Custom Grouped Cell` (owner screenshot 2026-11-05 00:37): with `groupedColumnMode: 'remove'` (and `'reorder'`) the library builds the combined grouping column ("State, Gender", `hooks/display-columns/` or `useST_TableInstance.ts`) without `icon`, so its header is the only one without one while State and Gender carry icons (D3, D49). Fix: the grouping column def takes the grouped column's `icon`; with several grouped columns, the first one's. Three bases, a play in `ColumnGrouping.stories.tsx` (the grouped header contains an `svg`). Last fix story.
