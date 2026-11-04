@@ -6,6 +6,7 @@
     "minimal",
     "advanced",
     "custom-headless",
+    "persistent-view",
     "---Data Export Examples---",
     "export-csv",
     "export-pdf",

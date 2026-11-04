@@ -3,7 +3,7 @@ title: 'Column Pinning Guide'
 description: 'How to use and customize the column pinning features of Shadcn Table'
 ---
 
-Column pinning is a cool feature that lets users pin (freeze) columns to the left or right of the table. Pinned columns will not scroll horizontally with the rest of the columns so that they always stay visible to the user.
+Column pinning lets users pin (freeze) columns to the start or end of the table (left and right in a left-to-right layout). Pinned columns do not scroll horizontally with the rest of the columns, so they always stay visible to the user. Column pinning is on by default: the column menu has Pin to start, Pin to end and Unpin items.
 
 ### Relevant Table Options
 
@@ -19,15 +19,15 @@ Column pinning is a cool feature that lets users pin (freeze) columns to the lef
 
 <StateOptionsTable onlyOptions={new Set(['columnPinning'])} />
 
-### Enable Column Pinning
+### Turn Column Pinning Off
 
-Column pinning can simply be enabled by setting the `enableColumnPinning` table option to `true`.
+Column pinning is enabled by default. Set the `enableColumnPinning` table option to `false` to remove the pin items from the column menu. To keep one column from being pinned, set `enablePinning: false` in its column definition.
 
 ```jsx
 const table = useShadcnTable({
   data,
   columns,
-  enableColumnPinning: true,
+  enableColumnPinning: false,
 });
 
 return <ShadcnTable table={table} />;
@@ -35,33 +35,25 @@ return <ShadcnTable table={table} />;
 
 ### Pin (Freeze) Columns By Default
 
-Columns can start out pinned in your table by setting the `columnPinning` states in `initialState` or `state`.
+Columns can start out pinned in your table by setting the `columnPinning` states in `initialState` or `state`. The pinning sides are `start` and `end`.
 
 ```jsx
 const table = useShadcnTable({
   data,
   columns,
-  enableColumnPinning: true,
   initialState: { columnPinning: { start: ['email'] } }, //pin email column to the start (left in LTR) by default
 });
 
 return <ShadcnTable table={table} />;
 ```
 
-### Apply Absolute Column Widths
+When `enableRowActions` is on, the row actions column is pinned to the end by default. That default applies only while you give no `columnPinning` of your own, so include `'st-row-actions'` in `end` if you set `columnPinning` and still want it pinned. See the [Row Actions Guide](/docs/guides/row-actions).
 
-You might consider using the `layoutMode: 'grid-no-grow'` table option to give all columns an exact width if you don't want the columns collapsing a little while scrolling. Some people like this subtle behavior, but others do not.
+### Pinned Column Widths and the Edge Shadow
 
-```jsx
-const table = useShadcnTable({
-  data,
-  columns,
-  enableColumnPinning: true,
-  layoutMode: 'grid-no-grow',
-});
+In the default `'grid'` layout, pinned columns keep their set width while the other data columns share the spare width, so a pinned column never changes width while the table scrolls.
 
-return <ShadcnTable table={table} />;
-```
+The pinned cells on the inner edge of each side, header and body, cast a small shadow towards the scrolling columns while that side has pinned columns. The shadow color comes from the `--st-edge-shadow` variable, see the [Tint Tokens Guide](/docs/guides/tint-tokens). When columns are hidden behind the scrolled edge, a scroll chevron shows in the header row on hover, see the [Scroll Cues Guide](/docs/guides/scroll-cues).
 
 #### Column Pinning Example
 

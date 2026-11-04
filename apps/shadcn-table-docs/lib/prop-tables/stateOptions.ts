@@ -164,6 +164,16 @@ export const stateOptions: StateOption[] = [
     type: 'Record<string, boolean> | boolean',
   },
   {
+    defaultValue: '{ columnIds: [], openAnchor: null, openColumnId: null }',
+    description:
+      'The filter chips shown in the toolbar, in the order they were added, and the column whose filter editor is open with where it is anchored. A chip exists before it has a value.',
+    link: '/docs/guides/filter-chips',
+    linkText: 'ST Filter Chips Docs',
+    source: 'ST',
+    stateOption: 'filterChips',
+    type: "{ columnIds: string[]; openAnchor: 'chip' | 'header' | 'toolbar' | null; openColumnId: string | null }",
+  },
+  {
     defaultValue: '',
     description: '',
     link: 'https://tanstack.com/table/latest/docs/api/features/filters',
@@ -319,5 +329,16 @@ export const stateOptions: StateOption[] = [
     source: 'TanStack Table',
     stateOption: 'sorting',
     type: 'Array<{ id: string, desc: boolean }>',
+  },
+  {
+    defaultValue:
+      "{ gridLines: 'rows', pins: ['columns', 'density'], rowNumbers: false, stickyHeader: false, striped: false, wrapText: false }",
+    description:
+      'The view settings panel values and the items pinned to the toolbar. rowNumbers and stickyHeader start from enableRowNumbers and enableStickyHeader.',
+    link: '/docs/guides/view-settings',
+    linkText: 'ST View Settings Docs',
+    source: 'ST',
+    stateOption: 'viewSettings',
+    type: 'ST_ViewSettingsState',
   },
 ];

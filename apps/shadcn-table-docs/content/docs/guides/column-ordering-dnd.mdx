@@ -3,7 +3,7 @@ title: 'Column Ordering/DnD Guide'
 description: 'How to use and customize the column ordering and drag and drop features of Shadcn Table'
 ---
 
-Whether you just want to change the default column order in your table or let columns be reordered by dragging and dropping, Shadcn Table has a simple API for this.
+Whether you just want to change the default column order in your table or let columns be reordered by dragging and dropping, Shadcn Table has a simple API for this. Column ordering is on by default: users drag a header cell to move its column.
 
 ### Relevant Table Options
 
@@ -12,6 +12,7 @@ Whether you just want to change the default column order in your table or let co
     new Set([
       'enableColumnDragging',
       'enableColumnOrdering',
+      'showColumnDragHandle',
       'onColumnOrderChange',
       'onDraggingColumnChange',
       'onHoveredColumnChange',
@@ -92,14 +93,68 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-### Enable Column Ordering with Drag and Drop
+### Column Ordering with Drag and Drop
 
-Shadcn Table has a built-in drag and drop feature to reorder columns. This feature is enabled by passing the `enableColumnOrdering` table option.
+`enableColumnOrdering` is `true` by default. The header cell itself is the drag source: the cursor turns into a grab hand over a header that can be dragged, a click still opens the [column menu](/docs/guides/column-actions), and only a real drag moves the column. Any cell of another column is a drop target, and a column dropped on a pinned column takes that column's pinning. Display columns such as row numbers and selection are not draggable; the row actions column takes drops and moves through the columns menu, but its header is not a drag source.
 
-`enableColumnDragging` alone renders the handle; the drop target comes from `enableColumnOrdering` or grouping.
+Pressing Escape or dropping outside the table cancels the drag and leaves the order as it was. While a drag is near the start or end edge of the scrolling (unpinned) area, the table scrolls sideways towards that edge, faster the closer the pointer is to it.
 
-The ability for a column to have a drag and drop handle can be specified by setting the `enableColumnOrdering` option on the column.
+Set `enableColumnOrdering: false` to turn reordering off for the whole table.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  enableColumnOrdering: false, //columns keep their order, headers are not draggable
+});
+```
+
+`enableColumnDragging` alone makes headers draggable onto the grouping drop zone without reordering; the drop targets between columns come from `enableColumnOrdering`.
 
 <EnableColumnOrderingExample />
+
+#### Show a Drag Handle
+
+The header needs no grip, but if you want a visible handle in each draggable header cell, set `showColumnDragHandle: true`. The header cell stays the drag source either way. Use `stColumnDragHandleProps` to customize the handle.
+
+```jsx
+const table = useShadcnTable({
+  data,
+  columns,
+  showColumnDragHandle: true, //render a grip button in each draggable header cell
+});
+```
+
+### Locked Columns
+
+A column with `enableColumnOrdering: false` in its column definition is locked. It looks like any other column at rest, shows no grab cursor and cannot be dragged. While another column is being dragged, every cell of the locked column shows diagonal stripes, its header shows a lock icon with "Fixed" (the icon alone on a narrow column), and the pointer shows that a drop is not allowed there. Its column menu lists a disabled "Fixed position" item with the lock icon.
+
+Which data columns are locked is up to you. The built-in display columns (row numbers, selection, expand and the like) are locked by default; the row actions column is not. With `enableColumnOrdering: false` on the table, every column menu shows the disabled "Fixed position" item.
+
+```jsx
+const columns = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+    enableColumnOrdering: false, //this column keeps its place
+  },
+  //...
+];
+```
+
+The "Fixed" and "Fixed position" texts come from the `fixed` and `fixedPosition` localization keys, and the lock from the `LockIcon` icon key.
+
+### Drag Animation
+
+While a column is dragged, only the header row previews the move: the other headers slide aside to open a gap where the column will land, and the dragged header sits in that gap, faded with a dashed outline. The body does not move during the drag, and the column order changes only on drop. On drop the body columns slide to catch up with the header and the moved column flashes a tint for 600 ms. Dragging back over the column's own place restores the preview, and dropping there changes nothing. A cancelled drag slides the headers back. A move made in the columns menu slides the header and the body together and flashes the same way.
+
+Only a reorder the user makes animates. Hydration, a [stored view](/docs/guides/view-settings) and Reset view apply the order at once. The slides are CSS transitions and compositor animations; nothing writes styles on every frame.
+
+- With reduced motion turned on in the operating system, nothing slides. The highlight stays, and the dragged column and the drop target show dashed borders instead.
+- Tables with header groups and tables with column virtualization get the highlight only.
+- With row virtualization the header previews the move and the body does not slide.
+- The body slide is skipped above 200 rendered rows.
+- A drop into a pinned area is not previewed.
+- Touch screens have no column drag.
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

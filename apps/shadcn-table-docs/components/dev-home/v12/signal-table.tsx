@@ -152,6 +152,8 @@ export default function SignalTable({
     // (selected count, grouped by) on its own row, so the search field
     // never covers it
     renderTopToolbarCustomActions: () => null,
+    // the Filtering step types into the State input under the header
+    columnFilterDisplayMode: 'subheader',
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     initialState: {

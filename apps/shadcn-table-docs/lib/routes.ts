@@ -148,6 +148,11 @@ export const routes: Array<RouteItem> = [
         label: 'Custom Headless Example',
       },
       {
+        href: '/docs/examples/persistent-view',
+        label: 'Persistent View Example',
+        keywords: ['localStorage', 'save', 'restore', 'view settings'],
+      },
+      {
         href: '/docs/examples/export-csv',
         label: 'Data Export Examples',
         secondaryItems: [
@@ -457,12 +462,27 @@ export const routes: Array<RouteItem> = [
             label: 'Custom Icons',
           },
           {
+            href: '/docs/guides/column-icons',
+            label: 'Column Icons',
+            keywords: ['header icon', 'column type'],
+          },
+          {
             href: '/docs/guides/localization',
             label: 'Localization / Custom Text (i18n)',
           },
           {
+            href: '/docs/guides/tint-tokens',
+            label: 'Tint Tokens (Row Colors)',
+            keywords: ['css variables', 'stripe', 'hover', 'selected', 'theme'],
+          },
+          {
             href: '/docs/guides/toolbar-customization',
             label: 'Toolbar Customization',
+          },
+          {
+            href: '/docs/guides/view-settings',
+            label: 'View Settings and Persistence',
+            keywords: ['localStorage', 'persist', 'pins', 'grid lines', 'wrap'],
           },
         ],
       },
@@ -485,6 +505,11 @@ export const routes: Array<RouteItem> = [
           {
             href: '/docs/guides/full-screen-toggle',
             label: 'Full Screen Toggle',
+          },
+          {
+            href: '/docs/guides/overflow-tooltip',
+            label: 'Overflow Tooltip (Truncation)',
+            keywords: ['ellipsis', 'truncate', 'wrap text'],
           },
         ],
       },
@@ -527,6 +552,11 @@ export const routes: Array<RouteItem> = [
           {
             href: '/docs/guides/column-filtering',
             label: 'Column Filtering',
+          },
+          {
+            href: '/docs/guides/filter-chips',
+            label: 'Filter Chips',
+            keywords: ['toolbar filters', 'filter editor', 'picker'],
           },
           {
             href: '/docs/guides/global-filtering',
@@ -573,6 +603,11 @@ export const routes: Array<RouteItem> = [
             label: 'Column Pinning (Sticky)',
           },
           {
+            href: '/docs/guides/scroll-cues',
+            label: 'Scroll Cues (Edge Shadow)',
+            keywords: ['horizontal scroll', 'chevrons', 'overflow'],
+          },
+          {
             href: '/docs/guides/row-pinning',
             label: 'Row Pinning (Sticky)',
           },
@@ -585,6 +620,11 @@ export const routes: Array<RouteItem> = [
           {
             href: '/docs/guides/sorting',
             label: 'Sorting',
+          },
+          {
+            href: '/docs/guides/sort-editor',
+            label: 'Sort Editor',
+            keywords: ['multi-sort', 'sort popover', 'sort rules'],
           },
           {
             href: '/docs/guides/row-ordering-dnd',

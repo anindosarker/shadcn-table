@@ -122,6 +122,15 @@ const checks = {
     );
   },
 
+  '/docs/guides/column-icons': async ({ page, check }) => {
+    await propTable(page, '#relevant-column-options-table', check);
+    const w = await example(page, 'persistent-view', check);
+    check(
+      'persistent-view: header column icons',
+      (await count(w, 'thead th svg[aria-hidden="true"]')) >= 5,
+    );
+  },
+
   '/docs/guides/column-filtering': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);

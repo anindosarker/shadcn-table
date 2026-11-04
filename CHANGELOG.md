@@ -78,6 +78,11 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 #### Spec 06
 
+- New guides for the v0.8 surfaces: Column Icons, Filter Chips, Sort Editor, View Settings and Persistence, Overflow Tooltip, Scroll Cues and Tint Tokens.
+- Guides rewritten for the v0.8 defaults and chrome: column actions, column filtering, column ordering (header dragging, locked columns, drag animation), column grouping, column pinning, column resizing, column size, display columns, row actions, pagination, density, column hiding, toolbar, global filtering, full screen, sticky header, virtualization, styling, icons, localization, state management, row pinning, detail panel, usage and best practices; the ST Components API page lists the new toolbar components, `ST_OverflowText`, `ST_ScrollButtons`, `ST_TableHeadCellLockedOverlay` and the menus' `trigger` prop.
+- The prop tables list every new option, column option and state slice with its shipped default.
+- New Persistent View example (`persistViewSettings` with column icons) in all three bases; the Multi-Sorting example works through the sort editor.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed

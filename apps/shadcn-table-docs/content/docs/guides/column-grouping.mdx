@@ -41,7 +41,7 @@ Shadcn Table has built-in column grouping features. There are options for both a
 
 ### Enable Grouping
 
-To enable grouping, set the `enableGrouping` table option to `true`. This will both add a drag handle button so that columns can be dragged to the dropzone to be grouped and will add an entry column actions menu to group or ungroup a column.
+To enable grouping, set the `enableGrouping` table option to `true`. This makes the header cells draggable, so that columns can be dragged to the dropzone to be grouped, and adds an item to the column menu to group or ungroup a column.
 
 ```jsx
 const table = useShadcnTable({
@@ -94,16 +94,16 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-#### Hide Drag Buttons for Grouping
+#### Turn Off Header Dragging for Grouping
 
-If you do not want the drag buttons that come with the grouping feature, you can independently disable them without disabling the grouping feature entirely by setting the `enableColumnDragging` table option to `false`.
+With grouping on, users can drag a header cell onto the grouping drop zone above the table to group by that column. If you do not want headers to be draggable, you can turn dragging off without disabling the grouping feature by setting the `enableColumnDragging` table option to `false`. This also stops column reordering by drag, which is on by default.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
   enableGrouping: true,
-  enableColumnDragging: false, //do not show drag handle buttons, but still show grouping options in column actions menu
+  enableColumnDragging: false, //headers are not draggable, but the column menu still has the grouping items
 });
 
 return <ShadcnTable table={table} />;
