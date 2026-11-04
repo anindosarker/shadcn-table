@@ -95,6 +95,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - A `multi-select` filter on a column of plain values keeps the rows whose value is picked; array values still match on any overlap and an empty selection keeps every row (`arrIncludesSome`, the variant's default).
 
+#### Fix F31
+
+- The focused filter input shows the full focus ring and rounded edge in the chip editor, the header-anchored editor and the subheader filter row; the filter container no longer clips them.
+
 ### Docs
 
 #### Spec 06
