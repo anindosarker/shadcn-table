@@ -81,7 +81,11 @@ const ST_FilterModeMenu = <TData extends ST_RowData>({
           value={current}
         >
           {options.map((option) => (
-            <DropdownMenuRadioItem key={option.option} value={option.option}>
+            <DropdownMenuRadioItem
+              closeOnClick
+              key={option.option}
+              value={option.option}
+            >
               <span className="w-4 text-center text-muted-foreground">
                 {option.symbol}
               </span>
