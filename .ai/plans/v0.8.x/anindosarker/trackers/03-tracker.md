@@ -1,6 +1,6 @@
 # 03: header, column menu and dragging, tracker
 
-Status: done
+Status: merged 8239218c
 Branch `v0.8/header-menu-drag`, worktree 02, PR #99
 Gates:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:bases` at a86805e0: green
@@ -29,3 +29,4 @@ Gates:
 Captures: /private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/252fd84e-2c81-46e1-b175-d3dcca5f3984/scratchpad/captures/03/<base>-<view>-<theme>.png for base radix, base, aria; view rest, menu, drag; theme light, dark (18 files)
 Captures: rest against `reference/01-default-*.png`, menu (Status) against `reference/01-column-menu-*.png`, drag (Assignee over Project) against `reference/01-drag-*.png`
 - The drag captures still show the old body feedback (faded dragged column, dashed hovered column): `getCommonSRTCellStyles` in `style.utils.ts` is spec 02's file and spec 02 removes that rule (1.6.7); the header preview, gap and faded dashed dragged header are this spec's and match the reference.
+- Merged 8239218c (#99); follow-up fix 47ef3f89 moves the TableProvider and RenderCounts sort clicks to the column menu.
