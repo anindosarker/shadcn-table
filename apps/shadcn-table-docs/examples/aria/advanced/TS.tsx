@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 //ST Imports
 import {
@@ -15,6 +15,13 @@ import {
 //shadcn Imports
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 //Icons Imports
 import {
@@ -30,7 +37,17 @@ import {
 //Mock Data
 import { data, type Employee } from './makeData';
 
+//what the action dialog shows: a title, a message and the people it acts on
+type ActionMessage = { title: string; message: string; names: string[] };
+
 const Example = () => {
+  const [action, setAction] = useState<ActionMessage | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const showAction = (message: ActionMessage) => {
+    setAction(message);
+    setDialogOpen(true);
+  };
+
   const columns = useMemo<ST_ColumnDef<Employee>[]>(
     () => [
       {
@@ -164,11 +181,16 @@ const Example = () => {
         </div>
       </div>
     ),
-    renderRowActionMenuItems: ({ closeMenu }) => [
+    renderRowActionMenuItems: ({ closeMenu, row }) => [
       <DropdownMenuItem
         key={0}
         onClick={() => {
           // View profile logic...
+          showAction({
+            title: 'View profile',
+            message: 'Opening the profile of',
+            names: [row.getValue<string>('name')],
+          });
           closeMenu();
         }}
         className="m-0"
@@ -180,6 +202,11 @@ const Example = () => {
         key={1}
         onClick={() => {
           // Send email logic...
+          showAction({
+            title: 'Send email',
+            message: 'Sending an email to',
+            names: [row.getValue<string>('name')],
+          });
           closeMenu();
         }}
         className="m-0"
@@ -189,21 +216,32 @@ const Example = () => {
       </DropdownMenuItem>,
     ],
     renderTopToolbar: ({ table }) => {
+      const selectedNames = () =>
+        table
+          .getSelectedRowModel()
+          .flatRows.map((row) => row.getValue<string>('name'));
+
       const handleDeactivate = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('deactivating ' + row.getValue('name'));
+        showAction({
+          title: 'Deactivate',
+          message: 'Deactivating',
+          names: selectedNames(),
         });
       };
 
       const handleActivate = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('activating ' + row.getValue('name'));
+        showAction({
+          title: 'Activate',
+          message: 'Activating',
+          names: selectedNames(),
         });
       };
 
       const handleContact = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('contact ' + row.getValue('name'));
+        showAction({
+          title: 'Contact',
+          message: 'Contacting',
+          names: selectedNames(),
         });
       };
 
@@ -249,7 +287,27 @@ const Example = () => {
     },
   });
 
-  return <ShadcnTable table={table} />;
+  return (
+    <>
+      <ShadcnTable table={table} />
+      {/* the actions above open this dialog instead of acting */}
+      <Dialog isOpen={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogHeader>
+          <DialogTitle>{action?.title}</DialogTitle>
+          <DialogDescription>
+            {action?.message} {action?.names.length}{' '}
+            {action?.names.length === 1 ? 'person' : 'people'}:
+          </DialogDescription>
+        </DialogHeader>
+        <ul className="list-disc ps-5">
+          {action?.names.map((name) => (
+            <li key={name}>{name}</li>
+          ))}
+        </ul>
+        <DialogFooter showCloseButton />
+      </Dialog>
+    </>
+  );
 };
 
 export default Example;

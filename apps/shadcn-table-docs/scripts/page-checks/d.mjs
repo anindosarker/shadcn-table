@@ -37,6 +37,45 @@ const checks = {
     );
     check('advanced: expand buttons', (await expandButtons(w).count()) > 0);
     await hasText(w, 'advanced', /Job Title/, check);
+    // F37: the toolbar actions open a shadcn Dialog with the selected
+    // names, not a browser alert
+    let alerted = false;
+    const onDialog = (d) => {
+      alerted = true;
+      d.dismiss().catch(() => {});
+    };
+    page.on('dialog', onDialog);
+    try {
+      // a DOM click: React Aria's input is visually hidden under its box
+      await w
+        .locator('tbody [role="checkbox"], tbody input[type="checkbox"]')
+        .first()
+        .evaluate((el) => el.click());
+      await w.getByRole('button', { name: 'Activate', exact: true }).click();
+      const dialog = page.getByRole('dialog');
+      await dialog.waitFor({ timeout: 5000 });
+      const text = (await dialog.innerText()) ?? '';
+      check(
+        'advanced: action dialog',
+        /Activate/.test(text) && /Activating 1 person/.test(text),
+        text.replace(/\s+/g, ' ').slice(0, 120),
+      );
+      await dialog
+        .locator('[data-slot="dialog-footer"] button')
+        .first()
+        .click();
+      await dialog.waitFor({ state: 'hidden', timeout: 5000 });
+      check('advanced: action dialog closes', true);
+    } catch (e) {
+      check(
+        'advanced: action dialog',
+        false,
+        String(e.message).split('\n')[0].slice(0, 160),
+      );
+    } finally {
+      page.off('dialog', onDialog);
+    }
+    check('advanced: no browser alert', !alerted);
   },
   '/docs/examples/aggregation-and-grouping': async ({ page, check }) => {
     const w = await example(page, 'aggregation-and-grouping', check);
