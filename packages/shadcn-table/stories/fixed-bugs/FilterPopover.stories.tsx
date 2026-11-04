@@ -89,16 +89,19 @@ const sizedColumns: ST_ColumnDef<Employee>[] = [
   { accessorKey: 'country', header: 'Country', size: 220 },
 ];
 
-// The funnel opens the popover with the input focused, and the label keeps
-// its full width beside the funnel and the chevron (F19).
+// The funnel opens the popover with the input focused, and at the docs
+// page's 1440 px the label keeps its full width beside the funnel and the
+// chevron (F19).
 export const OpensWithRowSelection = {
   render: () => (
-    <ShadcnTable
-      columnFilterDisplayMode="popover"
-      columns={sizedColumns}
-      data={employees}
-      enableRowSelection
-    />
+    <div style={{ width: 1440 }}>
+      <ShadcnTable
+        columnFilterDisplayMode="popover"
+        columns={sizedColumns}
+        data={employees}
+        enableRowSelection
+      />
+    </div>
   ),
   play: async ({ canvasElement }: StoryContext) => {
     await within(canvasElement).findByText('Mason');
@@ -113,7 +116,14 @@ export const OpensWithRowSelection = {
       '[aria-expanded]:not([aria-haspopup="menu"])',
     );
     if (!trigger) throw new Error('filter button not found');
-    await userEvent.click(trigger);
+    // A real press at the funnel's centre, so the th and the label see the
+    // pointer events a person's click sends.
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await (browserUserEvent ?? userEvent).click(trigger);
     await waitFor(() =>
       expect(trigger).toHaveAttribute('aria-expanded', 'true'),
     );

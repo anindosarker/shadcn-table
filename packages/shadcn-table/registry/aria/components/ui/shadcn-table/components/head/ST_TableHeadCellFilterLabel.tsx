@@ -20,7 +20,7 @@ import {
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
 
 const tableHeadCellFilterLabelVariants = cva(
-  'ms-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
+  'size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
   {
     variants: {
       active: {
