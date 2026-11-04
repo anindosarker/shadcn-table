@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { useState } from 'react';
 import {
   type ST_ColumnDef,
@@ -78,4 +79,29 @@ export const DraggingRowWhenFiltered = () => {
     },
   });
   return <ShadcnTable table={table} />;
+};
+
+// Filtered under row virtualization, the one matching row renders and its
+// grip drags that row, not the first row of the unfiltered data.
+DraggingRowWhenFiltered.play = async ({ canvasElement }: StoryContext) => {
+  await waitFor(() =>
+    expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(1),
+  );
+  const rows = canvasElement.querySelectorAll<HTMLElement>('tbody tr');
+  expect(rows[0]).toHaveTextContent('Foobar');
+  const grip = within(rows[0]!).getByRole('button', { name: 'Move' });
+  const dataTransfer = new DataTransfer();
+  fireEvent.dragStart(grip, { dataTransfer });
+  try {
+    // The dragged row, Foobar, takes the dashed drag outline.
+    await waitFor(() =>
+      expect(
+        rows[0]!.querySelector<HTMLElement>('td[data-flip-column="firstName"]')!
+          .style.borderTop,
+      ).toMatch(/dashed/),
+    );
+    expect(rows[0]).toHaveTextContent('Foobar');
+  } finally {
+    fireEvent.dragEnd(grip, { dataTransfer });
+  }
 };

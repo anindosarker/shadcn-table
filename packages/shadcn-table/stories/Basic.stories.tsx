@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryContext, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import { Building2Icon, CakeIcon, UserIcon } from 'lucide-react';
 
@@ -46,3 +47,25 @@ const meta: Meta<BasicArgs> = {
 export default meta;
 
 export const Default: StoryObj<BasicArgs> = {};
+
+/** Every data row renders, its cells in column order. */
+export const RendersRows: StoryObj<BasicArgs> = {
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText('Ada');
+    const rows = canvasElement.querySelectorAll('tbody tr');
+    expect(rows).toHaveLength(data.length);
+    rows.forEach((row, index) => {
+      const person = data[index]!;
+      expect(
+        [...row.querySelectorAll('td')].map((cell) =>
+          (cell.textContent ?? '').trim(),
+        ),
+      ).toEqual([
+        person.firstName,
+        person.lastName,
+        String(person.age),
+        person.city,
+      ]);
+    });
+  },
+};

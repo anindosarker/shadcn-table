@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
@@ -283,4 +284,16 @@ export const AccessorKeyWhileLoading = () => {
   return (
     <ShadcnTable columns={columns} data={[]} state={{ isLoading: true }} />
   );
+};
+
+// An accessorFn that reads nested data does not run on the skeleton rows:
+// the table renders its skeletons instead of throwing.
+AccessorKeyWhileLoading.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findByRole('columnheader', { name: /Name/ });
+  await waitFor(() =>
+    expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(10),
+  );
+  for (const cell of canvasElement.querySelectorAll('tbody td')) {
+    expect(cell.querySelector('[data-slot="skeleton"]')).not.toBeNull();
+  }
 };

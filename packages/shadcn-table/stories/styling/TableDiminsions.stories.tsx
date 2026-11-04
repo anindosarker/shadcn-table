@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
@@ -108,3 +109,17 @@ export const ContainerHeight = () => (
     />
   </div>
 );
+
+// The layout classes cap the table at 800px and centre it.
+MaxWidthAndCentered.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0]!.firstName);
+  const layout =
+    canvasElement.querySelector<HTMLElement>('.max-w-\\[800px\\]')!;
+  const box = layout.getBoundingClientRect();
+  const parent = layout.parentElement!.getBoundingClientRect();
+  expect(box.width).toBeLessThanOrEqual(800);
+  expect(parent.width).toBeGreaterThan(800);
+  expect(
+    Math.abs(box.left - parent.left - (parent.right - box.right)),
+  ).toBeLessThanOrEqual(1);
+};

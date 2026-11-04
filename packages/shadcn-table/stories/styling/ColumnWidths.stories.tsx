@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ShadcnTable } from '@/components/ui/shadcn-table';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { CakeIcon, HashIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -364,3 +365,19 @@ export const SmallWidthsGridNoGrowIndividualGrow = () => (
     layoutMode="grid-no-grow"
   />
 );
+
+// Under grid-no-grow every column renders at its set size.
+CustomWidthsGridNoGrow.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByRole('columnheader');
+  const width = (id: string) =>
+    canvasElement
+      .querySelector(`thead th[data-flip-column="${id}"]`)!
+      .getBoundingClientRect().width;
+  expect(width('firstName')).toBe(300);
+  expect(width('lastName')).toBe(100);
+  expect(
+    canvasElement
+      .querySelector('tbody td[data-flip-column="firstName"]')!
+      .getBoundingClientRect().width,
+  ).toBe(300);
+};

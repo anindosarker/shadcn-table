@@ -269,7 +269,7 @@ export const NextPageChangesRows = {
   render: () => <PaginationEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     expect(bodyRows(canvasElement).length).toBe(10);
     await userEvent.click(canvas.getAllByLabelText('Go to next page')[0]!);
     await waitFor(() =>
@@ -288,7 +288,7 @@ export const PageSizeChangesCount = {
   render: () => <CustomizePaginationComponents />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     expect(bodyRows(canvasElement).length).toBe(5);
     await userEvent.click(
       canvas
@@ -310,7 +310,7 @@ export const PagesModeNumbers = {
   render: () => <CustomPaginationPagesDisplayModeMoreData />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(moreData[0].firstName);
+    await canvas.findAllByText(moreData[0].firstName);
     expect(canvas.getByRole('button', { name: 'page 1' })).toHaveAttribute(
       'aria-current',
       'page',

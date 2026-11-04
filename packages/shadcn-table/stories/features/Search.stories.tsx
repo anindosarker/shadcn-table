@@ -208,7 +208,7 @@ const openSearch = async (canvasElement: HTMLElement) => {
 export const TypingFiltersRows = {
   render: () => <SearchContains />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     const term = data[7].lastName;
     const before = bodyRowTexts(canvasElement);
     expect(before.every((text) => text.includes(term))).toBe(false);
@@ -231,7 +231,7 @@ export const TypingFiltersRows = {
 export const ToggleClearsAndCloses = {
   render: () => <SearchEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     const before = bodyRowTexts(canvasElement);
     const toggle = await openSearch(canvasElement);
     await userEvent.keyboard(data[3].lastName);
@@ -250,7 +250,7 @@ export const ToggleClearsAndCloses = {
 export const EscapeClearsThenCloses = {
   render: () => <SearchEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     const before = bodyRowTexts(canvasElement);
     const toggle = await openSearch(canvasElement);
     await userEvent.keyboard(data[3].lastName);

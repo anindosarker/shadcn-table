@@ -110,7 +110,7 @@ const dataIds = ['firstName', 'lastName', 'address', 'state', 'phoneNumber'];
 export const GridGrowsColumns = {
   render: () => <DefaultGrid />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     const table = canvasElement.querySelector('table')!;
     expect(getComputedStyle(table).display).toBe('grid');
     const select = canvasElement.querySelector<HTMLElement>('thead th')!;
@@ -134,7 +134,7 @@ export const GridGrowsColumns = {
 export const SemanticLayoutRenders = {
   render: () => <Semantic />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     const table = canvasElement.querySelector('table')!;
     await waitFor(() => expect(getComputedStyle(table).display).toBe('table'));
     expect(

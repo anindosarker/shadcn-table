@@ -185,7 +185,7 @@ export const ProgressBarShown = {
   render: () => <ReloadingExample />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     await waitFor(() => {
       const bars = canvas.getAllByRole('progressbar');
       expect(bars).toHaveLength(2);
