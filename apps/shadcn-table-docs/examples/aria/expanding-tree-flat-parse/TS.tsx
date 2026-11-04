@@ -6,6 +6,7 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
+import { MailIcon, MapIcon, UserIcon } from 'lucide-react';
 
 export type Employee = {
   id: string;
@@ -90,19 +91,23 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
 
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
     ],

@@ -7,6 +7,13 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import {
+  CakeIcon,
+  DollarSignIcon,
+  MapIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const averageSalary = useMemo(
@@ -24,15 +31,18 @@ const Example = () => {
       {
         header: 'First Name',
         accessorKey: 'firstName',
+        icon: UserIcon,
         enableGrouping: false, //do not let this column be grouped
       },
       {
         header: 'Last Name',
         accessorKey: 'lastName',
+        icon: UserIcon,
       },
       {
         header: 'Age',
         accessorKey: 'age',
+        icon: CakeIcon,
         aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
         //required to render an aggregated cell
         AggregatedCell: ({ cell, table }) => (
@@ -54,6 +64,7 @@ const Example = () => {
       {
         header: 'Gender',
         accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
         //optionally, customize the cell render when this column is grouped. Make the text blue and pluralize the word
         GroupedCell: ({ cell, row }) => (
           <div className="text-primary">
@@ -64,10 +75,12 @@ const Example = () => {
       {
         header: 'State',
         accessorKey: 'state',
+        icon: MapIcon,
       },
       {
         header: 'Salary',
         accessorKey: 'salary',
+        icon: DollarSignIcon,
         aggregationFn: 'mean',
         //required to render an aggregated cell, show the average salary in the group
         AggregatedCell: ({ cell, table }) => (

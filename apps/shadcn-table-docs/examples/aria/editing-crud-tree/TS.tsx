@@ -19,7 +19,15 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { type User, fakeData, usStates } from './makeData';
-import { PencilIcon, Trash2Icon, UserPlusIcon } from 'lucide-react';
+import {
+  Building2Icon,
+  HashIcon,
+  MapIcon,
+  PencilIcon,
+  Trash2Icon,
+  UserIcon,
+  UserPlusIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const [creatingRowIndex, setCreatingRowIndex] = useState<
@@ -33,12 +41,14 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'Id',
         enableEditing: false,
         size: 80,
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         stEditTextFieldProps: {
           required: true,
@@ -55,6 +65,7 @@ const Example = () => {
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         stEditTextFieldProps: {
           required: true,
@@ -70,6 +81,7 @@ const Example = () => {
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
         stEditTextFieldProps: {
           required: true,
@@ -85,6 +97,7 @@ const Example = () => {
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
         editVariant: 'select',
         editSelectOptions: usStates,

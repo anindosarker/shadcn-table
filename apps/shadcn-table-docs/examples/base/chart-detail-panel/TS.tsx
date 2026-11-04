@@ -15,6 +15,7 @@ import {
   YAxis,
 } from 'recharts';
 import { data, type Person } from './makeData';
+import { HashIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -22,19 +23,23 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'ID',
         size: 56,
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'middleName',
+        icon: UserIcon,
         header: 'Middle Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
     ],

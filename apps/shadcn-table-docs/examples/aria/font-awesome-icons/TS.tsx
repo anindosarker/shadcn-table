@@ -29,6 +29,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 config.autoAddCss = false;
 
 /**
@@ -93,24 +94,29 @@ const Example = () => {
       [
         {
           accessorKey: 'firstName',
+          icon: UserIcon,
           header: 'First Name',
         },
         {
           accessorKey: 'lastName',
+          icon: UserIcon,
           header: 'Last Name',
         },
 
         {
           accessorKey: 'address',
+          icon: MapPinIcon,
           header: 'Address',
         },
         {
           accessorKey: 'city',
+          icon: Building2Icon,
           header: 'City',
         },
 
         {
           accessorKey: 'state',
+          icon: MapIcon,
           header: 'State',
         },
       ] as ST_ColumnDef<Person>[],

@@ -8,20 +8,24 @@ import { ST_Localization_HU } from '@/components/ui/shadcn-table/shared/locales/
 
 //mock data
 import { data, type Person } from './makeData';
+import { CakeIcon, UserIcon } from 'lucide-react';
 
 const columns: ST_ColumnDef<Person>[] = [
   //column definitions...
   {
     accessorKey: 'firstName',
+    icon: UserIcon,
     header: 'Keresztnév',
   },
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Vezetéknév',
     enableClickToCopy: true,
   },
   {
     accessorKey: 'age',
+    icon: CakeIcon,
     header: 'Kor',
   },
   //end
@@ -39,7 +43,7 @@ const Example = () => {
       enableRowActions
       enableRowSelection
       enableSelectAll={false}
-      initialState={{ showColumnFilters: true, showGlobalFilter: true }}
+      initialState={{ showGlobalFilter: true }}
       localization={ST_Localization_HU}
     />
   );

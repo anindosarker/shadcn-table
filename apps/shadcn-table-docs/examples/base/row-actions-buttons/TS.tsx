@@ -4,9 +4,13 @@ import { useMemo, useState } from 'react';
 import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
 import {
+  Building2Icon,
+  Mail as EmailIcon,
+  MapIcon,
+  MapPinIcon,
   Pencil as EditIcon,
   Trash2 as DeleteIcon,
-  Mail as EmailIcon,
+  UserIcon,
 } from 'lucide-react';
 import { data as initialData, type Person } from './makeData';
 
@@ -16,22 +20,27 @@ export const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
     ],

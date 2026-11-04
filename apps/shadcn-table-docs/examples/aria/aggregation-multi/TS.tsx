@@ -7,6 +7,12 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import {
+  DollarSignIcon,
+  MapIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const localeStringOptions = {
   style: 'currency',
@@ -21,22 +27,27 @@ const Example = () => {
       {
         header: 'First Name',
         accessorKey: 'firstName',
+        icon: UserIcon,
       },
       {
         header: 'Last Name',
         accessorKey: 'lastName',
+        icon: UserIcon,
       },
       {
         header: 'Gender',
         accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
       },
       {
         header: 'State',
         accessorKey: 'state',
+        icon: MapIcon,
       },
       {
         header: 'Salary',
         accessorKey: 'salary',
+        icon: DollarSignIcon,
         aggregationFn: ['count', 'mean', 'median', 'min', 'max'],
         //required to render an aggregated cell, show the average salary in the group
         AggregatedCell: ({ cell }) => (

@@ -15,7 +15,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { RefreshCw } from 'lucide-react';
+import {
+  CalendarClockIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  RefreshCw,
+  UserIcon,
+} from 'lucide-react';
 import {
   QueryClient,
   QueryClientProvider,
@@ -93,27 +100,33 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
       {
         accessorKey: 'phoneNumber',
+        icon: PhoneIcon,
         header: 'Phone Number',
       },
       {
         accessorFn: (row) => new Date(row.lastLogin),
         id: 'lastLogin',
+        icon: CalendarClockIcon,
         header: 'Last Login',
         Cell: ({ cell }) => new Date(cell.getValue<Date>()).toLocaleString(),
         filterFn: 'greaterThan',
@@ -128,7 +141,6 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data,
-    initialState: { showColumnFilters: true },
     manualFiltering: true, //turn off built-in client-side filtering
     manualPagination: true, //turn off built-in client-side pagination
     manualSorting: true, //turn off built-in client-side sorting

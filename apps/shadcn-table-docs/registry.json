@@ -48,6 +48,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -69,6 +72,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -90,6 +96,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -111,6 +120,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -132,6 +144,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -148,6 +163,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -171,6 +189,7 @@
         "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
+        "lucide-react",
         "recharts"
       ]
     },
@@ -193,6 +212,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -214,6 +236,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -236,6 +261,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -257,6 +285,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -279,6 +310,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "table"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -326,6 +360,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -342,6 +379,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -364,6 +404,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -385,6 +428,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -406,6 +452,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -427,6 +476,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -448,6 +500,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -469,6 +524,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -490,6 +548,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -506,6 +567,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -527,6 +591,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -727,6 +794,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -750,6 +820,9 @@
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "label",
         "radio-group"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -771,6 +844,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -793,6 +869,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -814,6 +893,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -835,6 +917,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -856,6 +941,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -877,6 +965,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -893,6 +984,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -914,6 +1008,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -935,6 +1032,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -956,6 +1056,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -977,6 +1080,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -998,6 +1104,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1019,6 +1128,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1040,6 +1152,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1061,6 +1176,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1077,6 +1195,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1098,6 +1219,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1119,6 +1243,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1135,6 +1262,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1151,6 +1281,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1168,6 +1301,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1271,7 +1407,8 @@
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/react-fontawesome"
+        "@fortawesome/react-fontawesome",
+        "lucide-react"
       ]
     },
     {
@@ -1290,7 +1427,8 @@
         "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -1331,7 +1469,8 @@
         "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -1354,6 +1493,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1375,6 +1517,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1396,6 +1541,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1417,6 +1565,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1438,6 +1589,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1459,6 +1613,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1480,6 +1637,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1501,6 +1661,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1522,6 +1685,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1543,6 +1709,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1564,6 +1733,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1585,6 +1757,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1606,6 +1781,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1627,6 +1805,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1648,6 +1829,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1669,6 +1853,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1690,6 +1877,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1711,6 +1901,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1732,6 +1925,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1753,6 +1949,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1774,6 +1973,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1795,6 +1997,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1816,6 +2021,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1837,6 +2045,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1858,6 +2069,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1879,6 +2093,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1900,6 +2117,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1921,6 +2141,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1942,6 +2165,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1963,6 +2189,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -1984,6 +2213,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2005,6 +2237,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2026,6 +2261,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2047,6 +2285,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2068,6 +2309,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2089,6 +2333,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2110,6 +2357,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2131,6 +2381,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2152,6 +2405,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2173,6 +2429,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2194,6 +2453,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2210,6 +2472,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2231,6 +2496,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2247,6 +2515,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2268,6 +2539,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2290,6 +2564,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2352,6 +2629,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2459,6 +2739,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2480,6 +2763,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2501,6 +2787,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2548,6 +2837,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2569,6 +2861,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2590,6 +2885,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2611,6 +2909,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2632,6 +2933,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2648,6 +2952,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2671,6 +2978,7 @@
         "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
+        "lucide-react",
         "recharts"
       ]
     },
@@ -2693,6 +3001,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2714,6 +3025,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2736,6 +3050,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2757,6 +3074,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2779,6 +3099,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "table"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2826,6 +3149,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2842,6 +3168,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2864,6 +3193,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2885,6 +3217,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2906,6 +3241,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2927,6 +3265,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2948,6 +3289,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2969,6 +3313,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -2990,6 +3337,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3006,6 +3356,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3027,6 +3380,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3227,6 +3583,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3250,6 +3609,9 @@
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "label",
         "radio-group"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3271,6 +3633,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3293,6 +3658,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3314,6 +3682,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3335,6 +3706,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3356,6 +3730,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3377,6 +3754,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3393,6 +3773,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3414,6 +3797,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3435,6 +3821,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3456,6 +3845,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3477,6 +3869,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3498,6 +3893,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3519,6 +3917,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3540,6 +3941,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3561,6 +3965,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3577,6 +3984,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3598,6 +4008,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3619,6 +4032,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3635,6 +4051,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3651,6 +4070,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3668,6 +4090,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3771,7 +4196,8 @@
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/react-fontawesome"
+        "@fortawesome/react-fontawesome",
+        "lucide-react"
       ]
     },
     {
@@ -3790,7 +4216,8 @@
         "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -3831,7 +4258,8 @@
         "anindosarker/shadcn-table/shadcn-table-radix-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -3854,6 +4282,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3875,6 +4306,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3896,6 +4330,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3917,6 +4354,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3938,6 +4378,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3959,6 +4402,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -3980,6 +4426,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4001,6 +4450,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4022,6 +4474,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4043,6 +4498,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4064,6 +4522,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4085,6 +4546,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4106,6 +4570,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4127,6 +4594,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4148,6 +4618,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4169,6 +4642,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4190,6 +4666,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4211,6 +4690,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4232,6 +4714,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4253,6 +4738,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4274,6 +4762,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4295,6 +4786,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4316,6 +4810,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4337,6 +4834,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4358,6 +4858,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4379,6 +4882,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4400,6 +4906,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4421,6 +4930,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4442,6 +4954,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4463,6 +4978,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4484,6 +5002,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4505,6 +5026,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4526,6 +5050,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4547,6 +5074,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4568,6 +5098,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4589,6 +5122,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4610,6 +5146,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4631,6 +5170,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4652,6 +5194,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4673,6 +5218,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4694,6 +5242,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4710,6 +5261,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4731,6 +5285,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4747,6 +5304,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4768,6 +5328,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4790,6 +5353,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4852,6 +5418,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4959,6 +5528,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -4980,6 +5552,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5001,6 +5576,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5048,6 +5626,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5069,6 +5650,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5090,6 +5674,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5111,6 +5698,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5132,6 +5722,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5148,6 +5741,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5171,6 +5767,7 @@
         "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "dependencies": [
+        "lucide-react",
         "recharts"
       ]
     },
@@ -5193,6 +5790,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5214,6 +5814,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5236,6 +5839,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5257,6 +5863,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5280,6 +5889,9 @@
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "checkbox",
         "table"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5327,6 +5939,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5343,6 +5958,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5365,6 +5983,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5386,6 +6007,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5407,6 +6031,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5428,6 +6055,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5449,6 +6079,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5470,6 +6103,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5491,6 +6127,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5507,6 +6146,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5528,6 +6170,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5728,6 +6373,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5751,6 +6399,9 @@
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "label",
         "radio-group"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5772,6 +6423,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5794,6 +6448,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5815,6 +6472,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5836,6 +6496,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5857,6 +6520,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5878,6 +6544,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5894,6 +6563,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5915,6 +6587,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5936,6 +6611,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5957,6 +6635,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5978,6 +6659,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -5999,6 +6683,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6020,6 +6707,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6041,6 +6731,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6062,6 +6755,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6078,6 +6774,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6099,6 +6798,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6120,6 +6822,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6136,6 +6841,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6152,6 +6860,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6169,6 +6880,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6272,7 +6986,8 @@
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/react-fontawesome"
+        "@fortawesome/react-fontawesome",
+        "lucide-react"
       ]
     },
     {
@@ -6291,7 +7006,8 @@
         "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6332,7 +7048,8 @@
         "anindosarker/shadcn-table/shadcn-table-aria-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -6355,6 +7072,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6376,6 +7096,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6397,6 +7120,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6418,6 +7144,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6439,6 +7168,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6460,6 +7192,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6481,6 +7216,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6502,6 +7240,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6523,6 +7264,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6544,6 +7288,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6565,6 +7312,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6586,6 +7336,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6607,6 +7360,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6628,6 +7384,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6649,6 +7408,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6670,6 +7432,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6691,6 +7456,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6712,6 +7480,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6733,6 +7504,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6754,6 +7528,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6775,6 +7552,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6796,6 +7576,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6817,6 +7600,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6838,6 +7624,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6859,6 +7648,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6880,6 +7672,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6901,6 +7696,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6922,6 +7720,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6943,6 +7744,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6964,6 +7768,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -6985,6 +7792,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7006,6 +7816,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7027,6 +7840,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7048,6 +7864,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7069,6 +7888,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7090,6 +7912,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7111,6 +7936,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7132,6 +7960,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7153,6 +7984,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7174,6 +8008,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7195,6 +8032,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7211,6 +8051,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7232,6 +8075,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7248,6 +8094,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7269,6 +8118,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7291,6 +8143,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7353,6 +8208,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7460,6 +8318,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7481,6 +8342,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7502,6 +8366,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7549,6 +8416,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7570,6 +8440,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7591,6 +8464,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7612,6 +8488,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7633,6 +8512,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7649,6 +8531,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7672,6 +8557,7 @@
         "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
+        "lucide-react",
         "recharts"
       ]
     },
@@ -7694,6 +8580,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7715,6 +8604,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7737,6 +8629,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7758,6 +8653,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7780,6 +8678,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "table"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7827,6 +8728,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7843,6 +8747,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7865,6 +8772,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7886,6 +8796,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7907,6 +8820,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7928,6 +8844,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7949,6 +8868,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7970,6 +8892,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7991,6 +8916,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8007,6 +8935,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8028,6 +8959,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8228,6 +9162,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8251,6 +9188,9 @@
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "label",
         "radio-group"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8272,6 +9212,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8294,6 +9237,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "dropdown-menu"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8315,6 +9261,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8336,6 +9285,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8357,6 +9309,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8378,6 +9333,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8394,6 +9352,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8415,6 +9376,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8436,6 +9400,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8457,6 +9424,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8478,6 +9448,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8499,6 +9472,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8520,6 +9496,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8541,6 +9520,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8562,6 +9544,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8578,6 +9563,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8599,6 +9587,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8620,6 +9611,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8636,6 +9630,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8652,6 +9649,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8669,6 +9669,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8772,7 +9775,8 @@
       "dependencies": [
         "@fortawesome/fontawesome-svg-core",
         "@fortawesome/free-solid-svg-icons",
-        "@fortawesome/react-fontawesome"
+        "@fortawesome/react-fontawesome",
+        "lucide-react"
       ]
     },
     {
@@ -8791,7 +9795,8 @@
         "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -8832,7 +9837,8 @@
         "anindosarker/shadcn-table/shadcn-table-base-core"
       ],
       "dependencies": [
-        "@tanstack/react-query"
+        "@tanstack/react-query",
+        "lucide-react"
       ]
     },
     {
@@ -8855,6 +9861,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8876,6 +9885,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8897,6 +9909,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8918,6 +9933,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8939,6 +9957,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8960,6 +9981,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -8981,6 +10005,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9002,6 +10029,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9023,6 +10053,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9044,6 +10077,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9065,6 +10101,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9086,6 +10125,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9107,6 +10149,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9128,6 +10173,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9149,6 +10197,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9170,6 +10221,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9191,6 +10245,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9212,6 +10269,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9233,6 +10293,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9254,6 +10317,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9275,6 +10341,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9296,6 +10365,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9317,6 +10389,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9338,6 +10413,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9359,6 +10437,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9380,6 +10461,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9401,6 +10485,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9422,6 +10509,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9443,6 +10533,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9464,6 +10557,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9485,6 +10581,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9506,6 +10605,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9527,6 +10629,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9548,6 +10653,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9569,6 +10677,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9590,6 +10701,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9611,6 +10725,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9632,6 +10749,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9653,6 +10773,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9674,6 +10797,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9695,6 +10821,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9711,6 +10840,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9732,6 +10864,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9748,6 +10883,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9769,6 +10907,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9791,6 +10932,9 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9853,6 +10997,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9960,6 +11107,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -9981,6 +11131,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -10002,6 +11155,9 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     }
   ]

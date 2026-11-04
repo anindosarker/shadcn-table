@@ -6,6 +6,7 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 export type Person = {
   firstName: string;
@@ -80,24 +81,29 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
 
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
 
       {
         accessorKey: 'state',
+        icon: MapIcon,
         enableColumnOrdering: false,
         header: 'State',
       },
