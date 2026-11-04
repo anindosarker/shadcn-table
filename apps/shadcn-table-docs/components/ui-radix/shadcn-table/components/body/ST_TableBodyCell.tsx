@@ -55,7 +55,32 @@ const bodyCellVariants = cva(
         false: 'truncate',
         true: 'whitespace-normal wrap-break-word py-1',
       },
+      // A flex (grid) cell keeps a fixed height; a semantic table cell treats
+      // it as a minimum and grows with its content.
+      grid: { false: '', true: '' },
     },
+    // Wrapped text in a grid row shows in full: the density height becomes
+    // the minimum.
+    compoundVariants: [
+      {
+        className: 'h-auto min-h-10',
+        density: 'compact',
+        grid: true,
+        wrap: true,
+      },
+      {
+        className: 'h-auto min-h-12',
+        density: 'comfortable',
+        grid: true,
+        wrap: true,
+      },
+      {
+        className: 'h-auto min-h-14',
+        density: 'spacious',
+        grid: true,
+        wrap: true,
+      },
+    ],
   },
 );
 
@@ -299,6 +324,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
             className={cn(
               bodyCellVariants({
                 density: density ?? 'comfortable',
+                grid: !!layoutMode?.startsWith('grid'),
                 wrap: !!wrapText,
               }),
               gridLineClassName(gridLines, isLastColumn),
