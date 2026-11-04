@@ -58,10 +58,10 @@ const Example = () => {
               : 0
             : //estimate normal row heights
               density === 'compact'
-              ? 37
+              ? 40
               : density === 'comfortable'
-                ? 58
-                : 73,
+                ? 48
+                : 56,
       };
     },
   });

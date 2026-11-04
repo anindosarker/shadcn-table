@@ -79,7 +79,7 @@ But now in ST Versions 1.4 and later, the `layoutMode` table option is automatic
 
 #### `enableStickyHeader` Prop
 
-The `enableStickyHeader` table option is automatically set to `true` when row virtualization is enabled. This keeps the table header sticky and visible while scrolling and adds a default max-height of 100vh to the table container.
+The `enableStickyHeader` table option is automatically set to `true` when row virtualization is enabled. This keeps the table header sticky and visible while scrolling and caps the table container at the full window height minus the toolbars (`clamp(350px, calc(100vh - toolbar height), 9999px)`), not the `70vh` a sticky header gets by choice. Set the `--st-sticky-max-height` CSS variable on the table layout or an ancestor to change the cap, see the [Sticky Header Guide](/docs/guides/sticky-header).
 
 ### Customize Virtualizer Props
 

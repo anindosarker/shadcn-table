@@ -61,8 +61,8 @@ const table = useShadcnTable({
         //Set a fixed height for pinned rows
         height: row.getIsPinned()
           ? `${
-              //Default st row height estimates. Adjust as needed.
-              density === 'compact' ? 37 : density === 'comfortable' ? 53 : 69
+              //The library's row heights per density. Adjust as needed.
+              density === 'compact' ? 40 : density === 'comfortable' ? 48 : 56
             }px`
           : undefined,
       },

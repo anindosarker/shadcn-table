@@ -30,11 +30,11 @@ Shadcn Table lets you easily change the default widths (sizes) of columns.
 
 ### Layout Modes
 
-Shadcn Table has 3 layout modes that affect how columns styles are applied internally. Depending on which features you enable, the `layoutMode` table option will automatically change to the appropriate value, though you can override it with your own value if you want.
+Shadcn Table has 3 layout modes that affect how column widths are applied. The `layoutMode` table option picks one; the default is `"grid"`, and virtualization always uses `"grid"`.
 
-1. `"semantic"` (default with default features) - uses default css styles that come with `<table>`, `<tr>`, `<td>`, etc. elements.
-2. `"grid"` (default when virtualization is enabled) - uses CSS Grid and Flexbox styles instead of default styles.
-3. `"grid-no-grow"` (default when column resizing is enabled) - uses CSS Grid and Flexbox styles, but also sets `flex-grow: 0` on all columns and adds an empty "spacer" column to the end of the table to fill the potential remaining space.
+1. `"grid"` (default) - uses CSS Flexbox rows. Data columns share the spare width of the table in the ratio of their `size`, while display columns (row numbers, selection, row actions and the like) and pinned columns keep their set width. Once the columns are wider than the table, every column renders at its set width and the table scrolls sideways. Resizing does not change the mode.
+2. `"grid-no-grow"` - uses the same Flexbox rows, but sets `flex-grow: 0` on every column and adds an empty "spacer" column to the end of the table to fill the remaining space. Every column keeps exactly its set width.
+3. `"semantic"` - uses the default CSS styles that come with `<table>`, `<tr>`, `<td>`, etc. elements. Not available with virtualization.
 
 If you want your columns to have an absolute width, you can use the `"grid-no-grow"` layout mode and set the `size` option on each column.
 
@@ -70,9 +70,9 @@ const columns = [
 
 ### Column Grow
 
-You can also set `grow` properties on the column definitions when using layoutMode `"grid-no-grow"` or `"grid"`.
+You can also set `grow` properties on the column definitions when using layoutMode `"grid"` or `"grid-no-grow"`.
 
-If the layout mode of your table is `"grid"` and you set `grow: false` on a column, that column will have a fixed size and will not grow to fill in the remaining space of the table.
+If the layout mode of your table is `"grid"` (the default), every data column grows in the ratio of its `size`. Set `grow: false` (or `0`) on a column to give it a fixed size; it will not grow to fill in the remaining space of the table. Display columns have `grow: false` by default, and a pinned column never grows while it is pinned, so the pinned offsets stay exact.
 
 If the layout mode of your table is `"grid-no-grow"` and you set `grow: true` on a column, that column will grow to fill in the remaining space of the table.
 
@@ -150,7 +150,7 @@ const table = useShadcnTable({
     },
     'st-row-numbers': {
       size: 40,
-      grow: true, //allow this column to grow to fill in remaining space
+      grow: false, //default is false for every display column
     },
   },
   enableRowNumbers: true,
