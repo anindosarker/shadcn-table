@@ -170,6 +170,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The home demo keeps every step active, with its check mark and "Now showing" label, for its whole run (at least 5.2 s), and the step titles name the feature: Sort editor, Global search, Cell editing, Filter chips, Column order, Striped rows.
 
+#### Home demo polish
+
+- The home demo replay leaves no tooltip, focus ring or page scroll behind when it closes a popover, keeps the table frame and the step list in place (a page of ten rows fits, the status keeps one height), slides the moved column over the others, opens the filter from the "+ Filter" pill and types the new estimate with no empty field.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed
