@@ -459,3 +459,21 @@ export const DropNoSlideReducedMotion = {
     }
   },
 };
+
+/** Dragging the first row's grip onto the third row moves it there. */
+export const DragReordersRows = {
+  render: () => <SlideTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(10));
+    const before = bodyRows(canvasElement).map(rowNum);
+    await dragFirstRowTwoDown(canvasElement);
+    await waitFor(() =>
+      expect(bodyRows(canvasElement).map(rowNum)).toEqual([
+        before[1],
+        before[2],
+        before[0],
+        ...before.slice(3),
+      ]),
+    );
+  },
+};
