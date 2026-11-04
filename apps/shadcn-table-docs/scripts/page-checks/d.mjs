@@ -31,9 +31,7 @@ async function singleExample(page, check) {
  * Filter button present.
  */
 async function chipsDefault(w, id, check) {
-  const funnels = await w
-    .locator('thead [aria-expanded]:not([aria-haspopup="menu"])')
-    .count();
+  const funnels = await w.locator('thead svg.lucide-funnel').count();
   check(`${id}: no header funnel`, funnels === 0, `funnels=${funnels}`);
   const filterButtons = await w.locator('button[aria-label="Filter"]').count();
   check(
