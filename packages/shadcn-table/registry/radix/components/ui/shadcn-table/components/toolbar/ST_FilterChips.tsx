@@ -3,7 +3,6 @@ import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
-  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
@@ -20,18 +19,20 @@ import {
   resetFilterMode,
   summarizeFilterValue,
 } from '@/components/ui/shadcn-table/shared/utils/filterSummary.utils';
-import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   ST_ColumnIcon,
   ST_ColumnPicker,
 } from '@/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker';
 import { ST_FilterEditor } from '@/components/ui/shadcn-table/components/toolbar/ST_FilterEditor';
-import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
+import {
+  closeFilterEditor,
+  filterEditorClassName,
+  focusFilterInput,
+} from '@/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor';
 import { flashST_Highlight } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 import { useST_PopupResize } from '@/components/ui/shadcn-table/hooks/useST_PopupResize';
 
-const editorClassName = 'w-auto min-w-65';
 const pickerClassName =
   'max-h-[min(24rem,var(--radix-popover-content-available-height))] w-65 gap-0 overflow-hidden p-0';
 
@@ -62,25 +63,6 @@ const useFilterChipColumns = <TData extends ST_RowData>(
   );
   return { chipIds, chips, columnFilters, filterChips, leafColumns };
 };
-
-const focusFilterInput = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
-  columnId: string,
-) => {
-  const input = table.refs.filterInputRefs.current?.[`${columnId}-0`];
-  if (!input) return false;
-  input.focus();
-  return true;
-};
-
-const closeEditor = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
-) =>
-  table.setFilterChips((old) => ({
-    ...old,
-    openAnchor: null,
-    openColumnId: null,
-  }));
 
 const ST_FilterChip = <TData extends ST_RowData>({
   column,
@@ -129,7 +111,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className={editorClassName}
+        className={filterEditorClassName}
         onOpenAutoFocus={(event) => {
           if (focusFilterInput(table, column.id)) event.preventDefault();
         }}
@@ -137,7 +119,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
       >
         <ST_FilterEditor
           column={column}
-          onRemoved={() => closeEditor(table)}
+          onRemoved={() => closeFilterEditor(table)}
           table={table}
         />
       </PopoverContent>
@@ -182,7 +164,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
     if (next) setEditingId(null);
     setOpen(next);
     if (!next && table.atoms.filterChips.get().openAnchor === 'toolbar') {
-      closeEditor(table);
+      closeFilterEditor(table);
     }
   };
 
@@ -214,7 +196,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
       {trigger}
       <PopoverContent
         align={variant === 'icon' ? 'end' : 'start'}
-        className={editingColumn ? editorClassName : pickerClassName}
+        className={editingColumn ? filterEditorClassName : pickerClassName}
         ref={popupRef}
         sideOffset={8}
       >
@@ -223,7 +205,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
             column={editingColumn}
             onBack={() => {
               setEditingId(null);
-              closeEditor(table);
+              closeFilterEditor(table);
             }}
             onRemoved={() => handleOpenChange(false)}
             table={table}
@@ -291,66 +273,9 @@ export const clearFilterChips = <TData extends ST_RowData>(
 };
 
 /**
- * The value editor the column menu opens, anchored to the column's header
- * cell; closing it returns focus to the header's menu button.
- */
-const ST_HeaderFilterEditor = <TData extends ST_RowData>({
-  column,
-  table,
-}: {
-  column: ST_Column<TData> | undefined;
-  table: ST_TableInstance<TData>;
-}) => {
-  const cell = column
-    ? (table.refs.tableHeadCellRefs.current?.[column.id] ?? null)
-    : null;
-  const { spanProps } = useST_MenuAnchor({
-    anchorEl: cell,
-    setAnchorEl: () => closeEditor(table),
-  });
-  const open = !!column && !!cell;
-
-  return (
-    <Popover
-      onOpenChange={(next) => {
-        if (!next) closeEditor(table);
-      }}
-      open={open}
-    >
-      <PopoverAnchor asChild>
-        <span {...spanProps} />
-      </PopoverAnchor>
-      {column && (
-        <PopoverContent
-          align="start"
-          className={editorClassName}
-          onCloseAutoFocus={(event) => {
-            event.preventDefault();
-            cell
-              ?.querySelector<HTMLElement>(`[${ST_COLUMN_ACTIONS_ATTR}]`)
-              ?.focus();
-          }}
-          // The closing column menu hands focus back to the header first.
-          onFocusOutside={(event) => event.preventDefault()}
-          onOpenAutoFocus={(event) => {
-            if (focusFilterInput(table, column.id)) event.preventDefault();
-          }}
-          sideOffset={8}
-        >
-          <ST_FilterEditor
-            column={column}
-            onRemoved={() => closeEditor(table)}
-            table={table}
-          />
-        </PopoverContent>
-      )}
-    </Popover>
-  );
-};
-
-/**
- * The chips mode filter row: one chip per filtered column, "+ Filter",
- * "Clear filters", and the editor the column menu opens on a header.
+ * The chips mode filter row: one chip per filtered column, "+ Filter" and
+ * "Clear filters". A custom `renderTopToolbar` can render it; the editor the
+ * column menu opens on a header is `ST_HeaderFilterEditor`.
  */
 export const ST_FilterChips = <TData extends ST_RowData>({
   table,
@@ -365,8 +290,7 @@ export const ST_FilterChips = <TData extends ST_RowData>({
     },
     refs: { topToolbarRef },
   } = table;
-  const { chipIds, chips, filterChips, leafColumns } =
-    useFilterChipColumns(table);
+  const { chipIds, chips, filterChips } = useFilterChipColumns(table);
   const hasSort = useSelector(
     table.atoms.sorting,
     (sorting) => sorting.length > 0,
@@ -401,11 +325,6 @@ export const ST_FilterChips = <TData extends ST_RowData>({
     if (chip) flashST_Highlight(chip);
   }, [openAnchor, openColumnId, topToolbarRef]);
 
-  const headerColumn =
-    openAnchor === 'header' && openColumnId
-      ? leafColumns.find((column) => column.id === openColumnId)
-      : undefined;
-
   return (
     <>
       {chips.map((column) => (
@@ -430,7 +349,6 @@ export const ST_FilterChips = <TData extends ST_RowData>({
           {localization.clearFilters}
         </Button>
       )}
-      <ST_HeaderFilterEditor column={headerColumn} table={table} />
     </>
   );
 };

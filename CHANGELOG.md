@@ -74,6 +74,15 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - `enableScrollButtons` defaults to `true`: hover chevrons on a side with hidden columns. Set `enableScrollButtons: false` to restore.
 - `enableCellOverflowTooltip` defaults to `true`: cut-off text shows a tooltip. Set `enableCellOverflowTooltip: false` to restore.
 
+### Fixed
+
+#### Spec 06.1 toolbar
+
+- With a custom `renderTopToolbar` in chips mode, the column menu's Filter item opens the header-anchored editor again: the new exported `ST_HeaderFilterEditor` is mounted by the table layout, outside the toolbar, and `ST_FilterChips` renders the chips row only.
+- The sort editor hides "Add sort" once the rule count reaches `maxMultiSortColCount`.
+- The columns menu shows the column icon before its label.
+- `localization.rowNumbers` reads "Row numbers" in English and "Zeilennummern" in German.
+
 ### Docs
 
 #### Spec 06
