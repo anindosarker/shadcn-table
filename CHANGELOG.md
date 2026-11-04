@@ -11,6 +11,10 @@ date; merging it publishes the section as the GitHub release notes.
 
 ### Added
 
+#### Row drop slide (D57)
+
+- D57: a row drop inside one table slides the rows into their new places and flashes the dropped row with the column drop highlight (`useST_RowFlip`); a drop into another table, reduced motion, row virtualization and more than 200 rows skip the slide.
+
 #### Spec 01
 
 - Options, none with a default: `enableViewSettings`, `enableSortPopover`, `enableScrollButtons`, `enableCellOverflowTooltip`, `persistViewSettings`, `nonce`, `showClearSearchButton`, `showColumnDragHandle`, `showSortIndex`; `columnFilterDisplayMode` accepts `'chips'`.
@@ -103,7 +107,7 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The view items pinned to the toolbar render before `ST_ViewSettingsButton` wherever it is placed, so pins show in a custom `renderTopToolbar` or `renderToolbarInternalActions`; the stock toolbar keeps its order and renders them once.
 
-#### Fix F19, F28, F30, F39, F40, F41, D56, D57
+#### Fix F19, F28, F30, F39, F40, F41, D56
 
 - F19: the popover-mode header funnel is a 24 px icon button (it was a 12 px target), 30% opaque at rest and full while active or hovered.
 - F28: under `layoutMode: 'semantic'` the body select checkbox is centred in its cell.
@@ -112,7 +116,6 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - F40: every built-in toolbar button fades and zooms in once on mount, as the pinned view items do; none under reduced motion.
 - F41: under `groupedColumnMode: 'remove'` the grouping column's header shows the first grouped column's icon.
 - D56: the export to CSV and export to PDF examples run on the chips filter default instead of popover mode.
-- D57: a row drop inside one table slides the rows into their new places and flashes the dropped row with the column drop highlight (`useST_RowFlip`); a drop into another table, reduced motion, row virtualization and more than 200 rows skip the slide.
 
 ### Docs
 
