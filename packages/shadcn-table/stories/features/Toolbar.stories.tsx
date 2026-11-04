@@ -14,7 +14,8 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Toolbar Examples',
@@ -371,3 +372,61 @@ export const renderCustomBottomToolbar = () => (
     renderBottomToolbar={() => <div className="p-8">Custom Bottom Toolbar</div>}
   />
 );
+
+/** The internal button group, found from its full screen toggle. */
+const internalButtonsGroup = (button: HTMLElement) => {
+  let group = button.parentElement;
+  while (group && !group.classList.contains('z-3')) group = group.parentElement;
+  if (!group) throw new Error('internal buttons group not found');
+  return group;
+};
+
+/** Whether the button, or its wrapper inside the group, runs a mount animation. */
+const animatesIn = (button: HTMLElement, group: HTMLElement) => {
+  for (
+    let element: HTMLElement | null = button;
+    element && element !== group;
+    element = element.parentElement
+  ) {
+    const style = getComputedStyle(element);
+    if (
+      style.display !== 'contents' &&
+      (element.getAnimations().length > 0 || style.animationName !== 'none')
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// Every internal toolbar button fades and zooms in on mount, as the pinned
+// view items do, so the toolbar appears as one (F40).
+export const InternalButtonsAnimateIn = {
+  render: () => <ShadcnTable columns={columns} data={data} enableSortPopover />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const fullScreen = await within(canvasElement).findByRole('button', {
+      name: /full screen/i,
+    });
+    const group = internalButtonsGroup(fullScreen);
+    const buttons = [...group.querySelectorAll<HTMLElement>('button')];
+    expect(buttons.length).toBeGreaterThan(3);
+    for (const button of buttons) {
+      expect(
+        animatesIn(button, group),
+        button.getAttribute('aria-label') ?? button.textContent ?? '',
+      ).toBe(true);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await waitFor(() => {
+      for (const button of buttons) {
+        for (
+          let element: HTMLElement | null = button;
+          element && element !== group;
+          element = element.parentElement
+        ) {
+          expect(getComputedStyle(element).opacity).toBe('1');
+        }
+      }
+    });
+  },
+};

@@ -53,6 +53,9 @@ export const ST_ToolbarInternalButtons = <TData extends ST_RowData>({
       {...rest}
       className={cn(
         toolbarInternalButtonsVariants({ className: rest.className }),
+        // Each built-in button fades and zooms in once, when it mounts.
+        !renderToolbarInternalActions &&
+          '*:animate-in *:fade-in *:zoom-in-75 *:duration-200 motion-reduce:*:animate-none',
       )}
     >
       {renderToolbarInternalActions?.({
