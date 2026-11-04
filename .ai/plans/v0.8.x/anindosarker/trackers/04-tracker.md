@@ -1,6 +1,6 @@
 # 04: toolbar chrome, tracker
 
-Status: done (27cf06cf)
+Status: merged (04c2360e)
 Branch `v0.8/toolbar-chrome`, worktree 03, PR #100
 Gates:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria` at 87b7608e: green
@@ -26,6 +26,7 @@ Gates:
 - `node .ai/plans/v0.8.x/anindosarker/reference/01-check.mjs` (verifier): green, 3 bases, 0 problems
 - Acceptance rerun (verifier): `vitest run` on `FilterChips`, `SortPopover`, `ViewSettings`, `Search`, `ColumnHiding`, `DensePadding`, `Toolbar`, `fixed-bugs/SearchField`, `fixed-bugs/HeadlessFullScreen` per base, port 5341, one base after another: green, 9 files, 77 tests each in base, radix, aria
 - Judges on the light and dark captures: not run by the verifier (the workflow's judge stage, P7)
+- CI run 41781126725 (466cc4a4): red only on the two excluded fixed-bugs/MenuOpeners plays in the three bases; every other job green
 
 - Milestone 01 group, chips, picker, sort editor: done (87b7608e)
 - Milestone 02 view settings, search, persistence, triggers: done (87b7608e)
@@ -41,6 +42,7 @@ Gates:
 
 ## Notes
 
+- Merge 04c2360e. Integration commit (chip flash through spec 03's column highlight, filter mode JSDoc) dropped: the merge commit's `test:aria` is red on `FilterChips` "Header Anchored Editor" (spec 03's react-aria `MenuTrigger` chevron carries `aria-haspopup="true"`, the editor's focus return and the play look for `[aria-haspopup="menu"]`), outside the integration commit's files.
 - Review round 1: `MenuOpeners` (spec 05's file, excluded here) still asserts the anchor span the two trigger menus no longer render; spec 05 rewrites it on the integration branch. The chip flash stays an inline `element.animate()` until spec 03's highlight helper merges; the chip-row separator keeps `h-4! self-center!` because the parts' `data-vertical:self-stretch` and `aria-[orientation=vertical]:self-stretch` outrank a plain `self-center`.
 
 - `vitest --exclude` does not reach the Storybook project's story include, so the two spec 05 files are left out by passing every other story file as a filter.
