@@ -39,6 +39,8 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
     handler(event);
   };
 
+  const isLastColumn = header.headerGroup?.headers.at(-1)?.id === header.id;
+
   // Only the handle being dragged follows the drag offset.
   return (
     <table.Subscribe
@@ -55,10 +57,8 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           aria-hidden
           {...rest}
           className={cn(
-            'absolute top-0 z-10 flex h-full w-2 cursor-col-resize touch-none justify-center select-none',
-            header.headerGroup?.headers.at(-1)?.id === header.id
-              ? 'inset-e-0'
-              : '-inset-e-1',
+            'absolute top-0 z-10 h-full w-2 cursor-col-resize touch-none select-none',
+            isLastColumn ? 'inset-e-0' : '-inset-e-1',
             className,
           )}
           onDoubleClick={() => {
@@ -81,9 +81,12 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
             ...rest.style,
           }}
         >
+          {/* The line's trailing side is the column edge, where the body's
+              resize guide (ST_TableBodyCell) also ends. */}
           <span
             className={cn(
-              'h-full w-px bg-transparent transition-colors group-hover/th:bg-foreground/15',
+              'absolute inset-y-0 w-px bg-transparent transition-colors group-hover/th:bg-foreground/15',
+              isLastColumn ? 'end-0' : 'end-1',
               isResizing && 'bg-primary group-hover/th:bg-primary',
             )}
           />
