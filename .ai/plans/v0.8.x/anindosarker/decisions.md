@@ -399,3 +399,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D57 Row drop slides the rows into place
 
 - Row dragging keeps its current drag preview. On drop, the rows slide from their old to their new positions and the moved row gets the D37 highlight, the same slide and flash a column drop plays; within one table only (a cross-table drop just appears in the target table). Reduced motion: no slide. Owner, 2026-11-05 (F20).
+
+### D58 A page sanity pass on the merged head before the release gate
+
+- After the last fix story merges and before spec 07's gate: on a worktree at the merged `claude/review` head, `examples:variants`, docs `types:check`, `lint`, `build` (a tracked file the build changes is a finding), `check-pages.mjs` every cluster for radix, base and aria one after another against a dev server whose log is scanned for errors (`Error`, `doesn't exist`, `not found in module`, `Unhandled`), and every route of `lib/routes.ts` fetched once; report only, findings for anything red. Owner, 2026-11-05: planned, not run now (the owner's dev server showed stale generated copies; they rebuild on `predev` at server start). Script: `scratchpad/v0.8-sanity-pages.js` (session-local), to be rewritten from this text if lost.
