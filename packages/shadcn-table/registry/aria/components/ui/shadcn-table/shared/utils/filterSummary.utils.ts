@@ -18,18 +18,51 @@ export const getColumnLabel = <TData extends ST_RowData>(
     ? column.columnDef.header
     : column.id;
 
+const RANGE_MODES: readonly string[] = [
+  'between',
+  'betweenInclusive',
+  'inNumberRange',
+];
+const RANGE_VARIANTS: readonly string[] = [
+  'date-range',
+  'datetime-range',
+  'range',
+  'range-slider',
+];
+
 /**
- * The filter modes the column's editor offers, in the order of
- * `columnFilterModeOptions`; none unless the column sets both
- * `enableColumnFilterModes` and `columnFilterModeOptions`.
+ * The filter modes the column's editor offers. The column and table flags and
+ * option lists apply as they do for the subheader's mode button: the column's
+ * `enableColumnFilterModes` and `columnFilterModeOptions` win over the
+ * table's, and no list offers every mode (only the range modes for a range
+ * variant). A checkbox or range slider offers none, as in the subheader.
  */
 export const getFilterModeOptions = <TData extends ST_RowData>(
   column: ST_Column<TData>,
 ): ST_InternalFilterOption[] => {
-  const { columnFilterModeOptions, enableColumnFilterModes } = column.columnDef;
-  if (!enableColumnFilterModes || !columnFilterModeOptions?.length) return [];
-  const options = stFilterOptions(column.table.options.localization);
-  return columnFilterModeOptions.flatMap(
+  const { columnDef, table } = column;
+  const { filterVariant } = columnDef;
+  const enabled =
+    columnDef.enableColumnFilterModes ?? table.options.enableColumnFilterModes;
+  if (
+    !enabled ||
+    filterVariant === 'checkbox' ||
+    filterVariant === 'range-slider'
+  ) {
+    return [];
+  }
+  const list =
+    columnDef.columnFilterModeOptions ?? table.options.columnFilterModeOptions;
+  if (list === null) return [];
+  let allowed: readonly string[] | undefined = list;
+  if (RANGE_VARIANTS.includes(filterVariant as string)) {
+    allowed = (allowed ?? RANGE_MODES).filter((mode) =>
+      RANGE_MODES.includes(mode),
+    );
+  }
+  const options = stFilterOptions(table.options.localization);
+  if (!allowed) return options;
+  return allowed.flatMap(
     (mode) => options.find((option) => option.option === mode) ?? [],
   );
 };
@@ -121,9 +154,7 @@ export const summarizeFilterValue = <TData extends ST_RowData>(
   if (Array.isArray(value)) {
     const isRange =
       filterVariant?.includes('range') ||
-      ['between', 'betweenInclusive', 'inNumberRange'].includes(
-        getColumnFilterFnName(column.columnDef),
-      );
+      RANGE_MODES.includes(getColumnFilterFnName(column.columnDef));
     if (isRange) {
       const [min, max] = value as unknown[];
       if (!isBlank(min) && !isBlank(max)) {
