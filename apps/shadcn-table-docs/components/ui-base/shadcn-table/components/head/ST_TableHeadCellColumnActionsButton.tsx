@@ -7,6 +7,7 @@ import {
   type ST_RowData,
   type ST_TableOptions,
 } from '@/components/ui-base/shadcn-table/types';
+import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_ColumnActionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_ColumnActionMenu';
 
@@ -63,6 +64,7 @@ export const ST_TableHeadCellColumnActionsButton = <TData extends ST_RowData>({
       trigger={
         <Button
           aria-label={localization.columnActions}
+          {...{ [ST_COLUMN_ACTIONS_ATTR]: '' }}
           size="icon-xs"
           type="button"
           variant="ghost"

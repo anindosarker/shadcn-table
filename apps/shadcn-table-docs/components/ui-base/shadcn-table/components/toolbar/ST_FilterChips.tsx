@@ -19,6 +19,7 @@ import {
   resetFilterMode,
   summarizeFilterValue,
 } from '@/components/ui-base/shadcn-table/shared/utils/filterSummary.utils';
+import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
 import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 import {
   ST_ColumnIcon,
@@ -335,7 +336,8 @@ const ST_HeaderFilterEditor = <TData extends ST_RowData>({
           align="start"
           className={editorClassName}
           finalFocus={() =>
-            cell?.querySelector<HTMLElement>('[aria-haspopup="menu"]') ?? true
+            cell?.querySelector<HTMLElement>(`[${ST_COLUMN_ACTIONS_ATTR}]`) ??
+            true
           }
           initialFocus={() => getFilterInput(table, column.id) ?? true}
           onKeyDownCapture={closeOnEscape(() => closeEditor(table))}
