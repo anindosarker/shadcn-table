@@ -113,6 +113,77 @@ const checks = {
       );
     }
   },
+  '/docs/guides/filter-chips': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-column-options-table', check);
+    await propTable(page, '#relevant-state-options-table', check);
+    const w = await example(page, 'basic', check);
+    await marker(
+      w,
+      'basic',
+      'filter button',
+      'button[aria-label="Filter"]',
+      check,
+    );
+  },
+  '/docs/guides/overflow-tooltip': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-column-options-table', check);
+    const w = await example(page, 'basic', check);
+    await marker(
+      w,
+      'basic',
+      'truncated cell text',
+      'tbody td span.truncate',
+      check,
+    );
+  },
+  '/docs/guides/scroll-cues': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    const w = await example(page, 'enable-column-pinning', check);
+    await marker(
+      w,
+      'enable-column-pinning',
+      'scroll buttons',
+      'button[aria-label="Scroll left"], button[aria-label="Scroll right"]',
+      check,
+    );
+  },
+  '/docs/guides/sort-editor': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-state-options-table', check);
+    const w = await example(page, 'multi-sorting', check);
+    await marker(
+      w,
+      'multi-sorting',
+      'sort chip',
+      'button:has-text("2 sorts")',
+      check,
+    );
+  },
+  '/docs/guides/tint-tokens': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    const w = await example(page, 'enable-row-selection', check);
+    await marker(
+      w,
+      'enable-row-selection',
+      'tint token root',
+      '[data-slot="st-table-layout"][class*="--st-hover"]',
+      check,
+    );
+  },
+  '/docs/guides/view-settings': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-state-options-table', check);
+    const w = await example(page, 'persistent-view', check);
+    await marker(
+      w,
+      'persistent-view',
+      'view settings button',
+      'button[aria-label="View settings"]',
+      check,
+    );
+  },
   '/docs/guides/full-screen-toggle': async ({ page, check }) => {
     await propTable(page, TABLE, check);
     await propTable(page, STATE, check);

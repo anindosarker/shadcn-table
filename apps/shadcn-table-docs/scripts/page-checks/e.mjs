@@ -73,6 +73,10 @@ const checks = {
       );
     },
   ),
+  '/docs/examples/persistent-view': examplePage(
+    'persistent-view',
+    'persistViewSettings: true',
+  ),
   '/docs/examples/popover-filters': examplePage(
     'alternate-column-filtering',
     "columnFilterDisplayMode: 'popover'",

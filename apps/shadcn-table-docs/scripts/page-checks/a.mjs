@@ -366,7 +366,7 @@ const checks = {
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
-    await propTable(page, '#props-table', 210, check);
+    await propTable(page, '#props-table', 211, check);
     await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {
@@ -417,7 +417,7 @@ const checks = {
   '/docs/api/st-components': async ({ page, check }) => {
     await switcher(page, 'ST Components', 2, check);
     const n = await page.locator('article h5').count();
-    check('component headings', n === 30, String(n));
+    check('component headings', n === 42, String(n));
   },
   '/docs/api/st-hooks': async ({ page, check }) => {
     await switcher(page, 'ST Hooks', 2, check);
