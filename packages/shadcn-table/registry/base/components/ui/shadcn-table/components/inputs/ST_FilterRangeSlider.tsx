@@ -1,8 +1,5 @@
 import { type KeyboardEvent, useRef, useState } from 'react';
-import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import {
   type SliderProps,
@@ -19,18 +16,6 @@ export interface ST_FilterRangeSliderProps<TData extends ST_RowData>
   extends SliderProps {
   header: ST_Header<TData>;
 }
-
-const filterRangeSliderVariants = cva('m-auto w-[calc(100%-8px)] px-1', {
-  variants: {
-    showChangeModeButton: {
-      false: 'mt-2.5',
-      true: 'mt-1.5',
-    },
-  },
-  defaultVariants: {
-    showChangeModeButton: false,
-  },
-});
 
 export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   header,
@@ -109,65 +94,59 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   }
 
   return (
-    <Subscribe source={table.atoms.columnSizing}>
-      {() => (
-        <div className="flex flex-col">
-          <Slider
-            max={max}
-            min={min}
-            onValueChange={(values) => {
-              setFilterValues(toArray(values));
-            }}
-            // Base UI fires onValueCommitted once per interaction, on release, and
-            // not when the value did not change.
-            onValueCommitted={(committed) => {
-              const value = toArray(committed);
-              if (value.length === 2) {
-                if (value[0] <= min && value[1] >= max) {
-                  column.setFilterValue(undefined);
-                } else {
-                  column.setFilterValue(value as [number, number]);
-                }
+    <div className="flex flex-col">
+      {/* The shadcn slider root is always full width, so this row insets it
+          by the thumb radius (size-3) to keep the thumbs inside the cell, and
+          gives the thumbs the text fields' height. */}
+      <div className="flex h-8 items-center px-1.5">
+        <Slider
+          max={max}
+          min={min}
+          onValueChange={(values) => {
+            setFilterValues(toArray(values));
+          }}
+          // Base UI fires onValueCommitted once per interaction, on release, and
+          // not when the value did not change.
+          onValueCommitted={(committed) => {
+            const value = toArray(committed);
+            if (value.length === 2) {
+              if (value[0] <= min && value[1] >= max) {
+                column.setFilterValue(undefined);
+              } else {
+                column.setFilterValue(value as [number, number]);
               }
-            }}
-            onKeyDown={handleKeyDown}
-            value={filterValues}
-            {...sliderProps}
-            ref={(node) => {
-              if (node) {
-                // Base UI Thumb renders a div with a nested <input type="range">;
-                // the input is the focus target.
-                filterInputRefs.current[`${column.id}-0`] =
-                  node.querySelector<HTMLInputElement>(
-                    '[data-slot="slider-thumb"] input',
-                  )!;
-              }
-              return attachSliderRef(node);
-            }}
-            className={cn(
-              filterRangeSliderVariants({ showChangeModeButton }),
-              sliderProps?.className,
-            )}
-            style={{
-              minWidth: `${column.getSize() - 50}px`,
-              ...sliderProps?.style,
-            }}
-          />
-          {showChangeModeButton ? (
-            <p className="m-[-3px_-6px] text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
-              {localization.filterMode.replace(
-                '{filterType}',
-                localization[
-                  `filter${
-                    currentFilterOption?.charAt(0)?.toUpperCase() +
-                    currentFilterOption?.slice(1)
-                  }` as keyof typeof localization
-                ],
-              )}
-            </p>
-          ) : null}
-        </div>
-      )}
-    </Subscribe>
+            }
+          }}
+          onKeyDown={handleKeyDown}
+          value={filterValues}
+          {...sliderProps}
+          ref={(node) => {
+            if (node) {
+              // Base UI Thumb renders a div with a nested <input type="range">;
+              // the input is the focus target.
+              // eslint-disable-next-line react-hooks/immutability -- runs in the ref callback, not render; filterInputRefs is the table's mutable ref bag
+              filterInputRefs.current[`${column.id}-0`] =
+                node.querySelector<HTMLInputElement>(
+                  '[data-slot="slider-thumb"] input',
+                )!;
+            }
+            return attachSliderRef(node);
+          }}
+        />
+      </div>
+      {showChangeModeButton ? (
+        <p className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          {localization.filterMode.replace(
+            '{filterType}',
+            localization[
+              `filter${
+                currentFilterOption?.charAt(0)?.toUpperCase() +
+                currentFilterOption?.slice(1)
+              }` as keyof typeof localization
+            ],
+          )}
+        </p>
+      ) : null}
+    </div>
   );
 };
