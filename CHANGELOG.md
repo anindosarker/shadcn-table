@@ -117,6 +117,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - F41: under `groupedColumnMode: 'remove'` the grouping column's header shows the first grouped column's icon.
 - D56: the export to CSV and export to PDF examples run on the chips filter default instead of popover mode.
 
+#### Fix F43
+
+- `renderTopToolbarCustomActions` and `renderBottomToolbarCustomActions` re-render when the row selection, filters or sorting change, so an action that reads the selected rows enables once a row is selected; the rest of the toolbar does not re-render.
+
 ### Docs
 
 #### Spec 06
