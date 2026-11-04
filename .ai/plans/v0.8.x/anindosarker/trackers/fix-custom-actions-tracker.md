@@ -1,6 +1,6 @@
 # Custom toolbar actions follow row selection (F43), tracker
 
-Status: verified
+Status: merged (483e2c22)
 Branch `v0.8/fix-custom-actions`, worktree 01, PR #116
 Gates:
 
