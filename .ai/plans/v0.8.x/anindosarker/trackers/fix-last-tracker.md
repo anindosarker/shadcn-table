@@ -24,6 +24,8 @@ Gates:
 
 ## Notes
 
+- F30 reproduced (no longer "found by reading"): with the table 200 px from the page edge, a Columns menu reorder slid every header, unmoved ones included, by 217 px. The menu now records `getST_ColumnFlipPositions(table)` (table-relative, the same measure the hook and the header grab handle use); `useST_ColumnFlip.ts` needed no change.
+
 - F39 geometry: the header hairline was centred on the edge (0.5 px past it) and the body guide a 2 px end border inside the cell, so the two lines overlapped by half a pixel. Both are now the same 1 px range ending on the edge: the hairline sits at `end-1` of the centred 8 px hit area (`end-0` for the last column), the body guide is a 1 px `border-inline-end` (a border spans the row borders, an absolutely placed line in the clipping cell leaves 1 px gaps).
 
 - F19: the 24 px funnel takes 12 px more of the header, so the existing play `OpensWithRowSelection` (labels fit at 120 px columns) went red; its story's name columns are now 180 px (the export example it mirrored leaves popover mode, D56). At 120 px the label truncates with an ellipsis (min-w-0 truncate, as settled).
