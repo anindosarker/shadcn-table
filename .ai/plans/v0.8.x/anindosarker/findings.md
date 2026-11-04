@@ -50,3 +50,34 @@
 ### F11 German locale misspells the row numbers label
 
 - `shared/locales/de.ts:73` in the three bases: `rowNumbers: 'Zeilennumern'`, missing an m (`Zeilennummern`). Found while settling A1; fixed with D41.
+
+### F12 Display column body cells lose their padding and nothing centres the content
+
+- `components/body/ST_TableBodyCell.tsx:336` (three bases): display cells get `px-0` since `89c64f19` (spec 02), and the align chain at `:337-346` falls to `text-start` with no `justify-center`, so the row checkbox sits at x=0 of the 60 px select cell with 40 px empty on its right, while the header checkbox sits at x=12 because the header inner div keeps `px-3 text-start` (`ST_TableHeadCell.tsx:345-354`). `ST_SelectCheckbox.tsx:180-186` says "the cell centres it"; it does not. Measured on `/docs/examples/export-csv`, Base UI: select td padding 0, `justify-content: normal`, checkbox left 0; header checkbox left 12.
+- The demo pairs `px-0` with centring: body `text-center` for row numbers (`header-demo.tsx:556-557`), display header cells `content-center p-0 text-center` (`column-header.tsx:411-433`). The library copied the `px-0` only.
+- Fix: display body cells and display header cells centre their content (`justify-center text-center`, header inner div `p-0` for display columns), per the demo; row numbers `tabular-nums text-muted-foreground`. Owner, 2026-11-04 19:12. Timing: item 3.
+
+### F15 Data columns sized below the cell padding clip their text
+
+- `apps/shadcn-table-docs/examples/<base>/export-to-csv/TS.tsx:17-20`: the `id` column has `size: 40`; with the 0.8 grid layout (flex basis from the size, `grow` in proportion) and `px-3` data cells the content box is 16.7 px at 1440 and the digits truncate. Under 0.7's semantic layout the column stretched. Fix: examples set no data column `size` below 56, or drop the `size`; the funnel icons on that page come from `columnFilterDisplayMode: 'popover'` (`TS.tsx:64`), intended. Timing: item 3, docs.
+
+### F13 Persistent view example has nine rows and shows no sticky header
+
+- `apps/shadcn-table-docs/examples/<base>/persistent-view/makeData.ts:10`: nine hand-written rows, options `persistViewSettings: true` and `id` only (`TS.tsx:44-51`); the mdx intro (`content/docs/examples/persistent-view.mdx:6`) lists the sticky header among the saved settings, but the table is shorter than the 70vh sticky max-height, so the setting shows nothing. Owner, 2026-11-04 19:14. Fix: D50 (the header demo's data and columns).
+
+### F14 Docs page CSS clips the pagination in every example
+
+- `apps/shadcn-table-docs/app/global.css:363-365`: `#nd-page .prose :is(p, ul, ol) { margin-block: 0.75rem }` reaches into the playground (`not-prose` does not stop an id-scoped rule) and gives the pagination `<ul>` 12 px top and bottom margin; the absolute pagination block becomes 77 px inside the `min-h-12 overflow-hidden` bottom toolbar (`ST_BottomToolbar.tsx:21, 66-70`), so the page box and arrows lose their bottom 29 px. Measured on `persistent-view` and `export-csv`, Base UI, 1440x900; the same rule adds the margin to any `<p>` inside a preview. Not caused by persistence. Fix: scope the rule to exclude `.not-prose` (docs app only). Timing: item 3, docs.
+
+### F16 Body cells misalign with the header when row numbers are turned on
+
+- `/docs/examples/persistent-view`, Base UI, grid lines "all", row numbers on through the view settings: the header has `#` (about 67 px) then First Name to 775 px, but the body's First Name cell ends at about 565 px, its text truncates ("Michael", "Joseph") and an empty cell fills the rest up to the header's edge; the digits and `#` hug the left edge (F12). Owner screenshot 2026-11-04 19:20. Cause not confirmed; suspects: the body reads a column size variable that shifts when the row numbers column is inserted at runtime, or the stored view keeps column sizes from before the column existed. Reproduce on `test-projects/` first (P6). Timing: item 3, library.
+
+### F17 A custom renderTopToolbar removes every column filter in chips mode
+
+- `ST_TableLayout.tsx:117`: `renderTopToolbar` replaces `ST_TopToolbar`, and `ST_TopToolbar.tsx:75` is the only place `ST_FilterChips` mounts; `ST_FilterEditor` renders only inside it (`ST_FilterChips.tsx:149, 236, 347`), including the editor the column menu's Filter item opens (`ST_ColumnActionMenu.tsx:181-189` sets the chips slice only). With the 0.8 default `columnFilterDisplayMode: 'chips'`, an app with its own top toolbar has no chip row, no editor and a dead Filter menu item; only the global search works. The advanced example (`examples/<base>/advanced/TS.tsx:178-235`) does this and also renders `ST_ToggleFiltersButton`, which flips `showColumnFilters`, a no-op in chips mode (`ST_TableHeadCell.tsx:211-212, 365`). Owner, 2026-11-04 19:16 "Filters do not work".
+- Two parts: library, the header-anchored editor and the Filter menu item must work without the built-in toolbar (the editor mounts from the head cell or the layout, not from the toolbar); docs, the advanced example uses `renderTopToolbarCustomActions` or renders `ST_FilterChips` in its toolbar, and drops the toggle button. Timing: item 3.
+
+### F18 Group header cells drift from their leaves when a leaf is pinned or does not grow
+
+- `style.utils.ts:76-77, 88-96` (three bases): a group header is never pinned and keeps `flex-grow` equal to its summed size, while a pinned leaf or a leaf with `grow: false` gets `flex 0 0 auto` (and `sticky` when pinned). The group cell then outgrows its leaves and scrolls away from them; the placeholder cells above pinned display columns (`expand`, `select` pinned start in the advanced example, `TS.tsx:115-236`) render empty (`ST_TableHeadCell.tsx:340-341`) with the display header's `px-3 text-start` while the body cells are `px-0` (F12). Owner, 2026-11-04 19:16 "the group header sizing is not correct". Fix: a group header takes the sum of its leaves' resolved flex (grow 0 when every leaf is pinned or non-growing, sticky with the same offset when all its leaves are pinned on one side); placeholder header cells follow their leaf's display styling. Timing: item 3, library.

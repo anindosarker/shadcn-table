@@ -363,3 +363,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Opt-in in the library stays (D3, D45); the examples and stories show the opted-in look everywhere. Play tests that assert on header text keep passing: the icon renders before the label, the label text is unchanged.
 - Timing: with the docs work of item 3.
 - Source: A9
+
+### D50 The persistent view example uses the header demo's data
+
+- `apps/shadcn-table-docs/examples/<base>/persistent-view/TS.tsx` renders the header demo's columns and data (the DefaultLook data set, F10, D46): many rows and columns, so the sticky header, the column order and the view settings the example describes are visible without scrolling the page. Owner, 2026-11-04 19:15. Finding F13.
+- Timing: with the docs work of item 3.
