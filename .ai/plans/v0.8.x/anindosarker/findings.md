@@ -134,3 +134,7 @@
 ### F31 The chip editor input has a different focus style from the stock input
 
 - Owner screenshots 2026-11-04 22:19 (docs site, dark, Base UI): the toolbar search box focused shows the shadcn focus ring (3 px, `ring-ring/50`) on a `rounded-lg` box; the chip editor's "Filter by Status" input focused shows a thin 1 px blue border, no ring, slightly squarer corners. A10/F23 was this difference, not the radius alone. Cause: the input is the stock `InputGroup` with the 3 px ring, but `components/head/ST_TableHeadCellFilterContainer.tsx` wraps it in a `CollapsibleContent` with `overflow-hidden` (base :51, aria :69; radix has no clip at rest), so the ring and the rounded edge are cut off and only the 1 px `border-ring` remains. The search box reserves room with `-m-0.75 box-content overflow-hidden p-0.75` (`ST_GlobalFilterTextField.tsx:147`). Fix story: the same `-m-0.75 p-0.75` on the container in base and aria (radix too, for the open animation), a play that asserts the focused group's ring is not clipped.
+
+### F32 Home demo: the edited column is off-screen
+
+- `/` home demo (`apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx`): the 15 DefaultLook columns overflow the frame, so the Editing step changes Estimate out of view and the visitor sees nothing happen. Owner, 2026-11-04 22:24: "The editing demo is not visible. I think you have too many columns." Fix: the demo renders the seven columns its steps use (Name, Status, Assignee, Project, Due, Estimate, Priority); the data stays. Docs fix story.

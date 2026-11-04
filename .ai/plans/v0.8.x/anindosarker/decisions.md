@@ -383,3 +383,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - A10 asked about the editor input's radius. The radius is the stock `rounded-lg`; what the owner saw (2026-11-04 22:19) was the 3 px focus ring and the rounded edge clipped by the filter container's `overflow-hidden` (F31). No radius change; F31 is fixed as a bug, the input then looks exactly like the search box.
 - Source: A10
+
+### D54 The home demo shows seven columns
+
+- Addendum to D46: the home demo table shows Name, Status, Assignee, Project, Due, Estimate and Priority only, so every scripted step acts in view at the home page width; the other DefaultLook columns are not defined for it (not hidden through visibility). Owner, 2026-11-04 22:24 (F32).
