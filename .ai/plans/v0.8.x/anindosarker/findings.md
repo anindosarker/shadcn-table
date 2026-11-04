@@ -44,3 +44,9 @@
 
 - `packages/shadcn-table/stories/styling/DefaultLook.stories.tsx:227`: the story's table helper passes `columnFilterDisplayMode="chips"`, `enableColumnOrdering`, `enableColumnPinning`, `enableColumnResizing`, `enableScrollButtons`, `enableSortPopover`, `enableViewSettings`, `enableCellOverflowTooltip`, `layoutMode="grid"`, `paginationDisplayMode="pages"`, `positionActionsColumn="last"` and the actions pinning seed, all of which spec 05 made the defaults; a reader takes them as required and the story no longer shows the stock table. Owner, 2026-11-04 19:05. Fix with A9: `ShadcnTable` with columns, data, `getRowId` and `enableRowActions` only; the same data becomes the docs example.
 
+
+## Round 4: triage of ATTENTION-2026-11-04
+
+### F11 German locale misspells the row numbers label
+
+- `shared/locales/de.ts:73` in the three bases: `rowNumbers: 'Zeilennumern'`, missing an m (`Zeilennummern`). Found while settling A1; fixed with D41.

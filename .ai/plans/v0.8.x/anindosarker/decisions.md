@@ -306,3 +306,53 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Workflow sub-agents receive no harness reminder, so the v0.8.x run's commits, PR bodies and merge commits go out without the `Claude-Session:` trailer; the owner accepted the gap for this run ("ignore"). P5 stays as written for sessions that get the reminder.
 - Source: A2
 
+
+## Round 4: triage of ATTENTION-2026-11-04
+
+### D41 The view settings row reads "Row numbers"
+
+- The English text of `localization.rowNumbers` becomes "Row numbers" (sentence case). It is the only title-case row label in the view settings; the other six rows, the demo (`view-settings.tsx:214`) and the 38 non-English locales are sentence case, and the only caller is `ST_ViewSettingsItems.tsx:75`. The row numbers display column uses the separate key `rowNumber` ("#"), unchanged.
+- Changes: `shared/locales/en.ts:113` in the three bases, with the `de.ts` typo (F11) in the same commit. Lands with the follow-up release (D45).
+- Source: A1
+
+### D42 Header cells show no hairline between them at rest
+
+- Kept as built: with the default `gridLines: 'rows'` neither the demo (`column-header.tsx:139-144, 633-634` at `4fde6ea9`, unchanged at HEAD) nor the library draws a trailing edge on a header cell at rest; the trailing line is the grid-line border under `columns` or `all`, or the resize hairline on hover (D6). The captures were read wrong; D2 addendum and D6 stand without change.
+- Source: A3
+
+### D43 Every built-in display column is locked by default, except row actions
+
+- Addendum to D21: the library default locks select, expand, pin, drag, row numbers and spacer (`ST_DefaultDisplayColumn.enableColumnOrdering: false`, `useST_TableOptions.ts:23`, spread by `displayColumn.utils.ts:26-34`); row actions opts in (`getST_RowActionsColumnDef.tsx:25-34`). The demo enables only row numbers and row actions and says the same in its own comment (`header-demo.tsx:597-604`, "Display columns do not reorder by default"); an app unlocks a column through `displayColumnDefOptions`. The docs describe this (`guides/display-columns.mdx:28`, `guides/column-ordering-dnd.mdx:132`).
+- D21's "the library locks only the row numbers column by default" reads as "every built-in display column except row actions".
+- Source: A6
+
+### D44 Tint tokens are overridden on the table root only
+
+- Addendum to D23: the four tokens are declared with plain values on the table root (`ST_TableLayout.tsx:24`), so an ancestor's value never reaches the cells; the override is `stTableLayoutProps.className`, as the tint-tokens guide says (`guides/tint-tokens.mdx:29-42`). A self-referencing fallback (`var(--st-stripe, …)`) is invalid CSS, and a second name per token (`--st-stripe-override`) would be new public surface; neither is wanted. D23's "or any ancestor sets the same variable" is withdrawn.
+- Source: A7
+
+### D45 Column icons stay opt-in; the examples and the home demo set them
+
+- D3 confirmed: the library never picks an icon for a column. Notion and Airtable show type icons because every property has a type chosen at creation; TanStack columns are untyped, and a guess from `filterVariant` or the data would be wrong on IDs and date strings. Owner, 2026-11-04.
+- The Basic, Minimal and Advanced quick examples (`apps/shadcn-table-docs/examples/<base>/{basic,minimal,advanced}/TS.tsx`) and the home demo set `icon` on every column definition, a Lucide icon each, as the demo and the DefaultLook story do, so the first table a visitor sees matches the demo.
+- Source: A9
+
+### D46 The docs home demo is the stock table with the header demo's look
+
+- Owner, 2026-11-04 19:07: the home demo at `apps/shadcn-table-docs/components/dev-home/v12/` is the 0.7 look (subheader filter inputs, filter icon in the header, selection column, "Clear selection" banner) and "should look like the demo table in my next app".
+- The home demo renders `ShadcnTable` with the DefaultLook data and columns (F10), `getRowId`, `enableRowActions` and an icon per column (D45); no pinned option that the stock defaults already give (chips, sort editor, view settings, row numbers, actions last, pages pagination). `columnFilterDisplayMode: 'subheader'` goes (`signal-table.tsx:156`).
+- The scripted steps (`signal-demo.tsx:68-134`) are rewritten for the 0.8 chrome: sort through the sort editor, search, a filter chip, a column drag, view settings. The selection and grouping steps go: they add a selection column and a grouping banner the demo look does not show. Editing stays only if it needs no chrome beyond a cell edit.
+- Timing: item 3 of the triage (0.8.0 or 0.8.1).
+- Source: A8
+
+### D47 The sort editor honours maxMultiSortColCount
+
+- Fix F7: "Add sort" is offered only while the rule count is below `maxMultiSortColCount` (`ST_SortPopover.tsx:86`, radix and base; aria :81); the editor writes through `table.setSorting`, which bypasses the cap table-core applies in `toggleSorting`. A play test in `stories/features/SortPopover.stories.tsx` covers the cap.
+- Timing: item 3 of the triage (0.8.0 or 0.8.1), owner decides later.
+- Source: A4
+
+### D48 The columns menu shows the column icon
+
+- D3 stands: `ST_ShowHideColumnsMenuItems.tsx:120-128` renders the icon before the label through the exported `ST_ColumnIcon` (`ST_ColumnPicker.tsx:33`), as the chips and the picker do; nothing when the column has none.
+- Timing: item 3 of the triage, owner decides later.
+- Source: A5
