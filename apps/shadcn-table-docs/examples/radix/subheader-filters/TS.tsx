@@ -54,6 +54,7 @@ const Example = () => {
           min: 30_000, //custom min (as opposed to faceted min)
           step: 10_000,
         },
+        size: 220,
       },
       {
         accessorKey: 'age',
@@ -61,7 +62,7 @@ const Example = () => {
         header: 'Age',
         filterVariant: 'range',
         filterFn: 'between',
-        size: 80,
+        size: 240,
       },
       {
         accessorKey: 'city',
@@ -69,6 +70,7 @@ const Example = () => {
         header: 'City',
         filterVariant: 'select',
         filterSelectOptions: citiesList, //custom options list (as opposed to faceted list)
+        size: 180,
       },
       {
         accessorKey: 'state',
@@ -76,6 +78,7 @@ const Example = () => {
         header: 'State',
         filterVariant: 'multi-select',
         filterSelectOptions: usStateList, //custom options list (as opposed to faceted list)
+        size: 200,
       },
       {
         accessorFn: (originalRow) => new Date(originalRow.hireDate), //convert to date for sorting and filtering
@@ -84,6 +87,7 @@ const Example = () => {
         header: 'Hire Date',
         filterVariant: 'date-range',
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), // convert back to string for display
+        size: 380,
       },
       {
         accessorFn: (originalRow) => new Date(originalRow.arrivalTime), //convert to date for sorting and filtering
@@ -95,6 +99,7 @@ const Example = () => {
           `${cell.getValue<Date>().toLocaleDateString()} ${cell
             .getValue<Date>()
             .toLocaleTimeString()}`, // convert back to string for display
+        size: 480,
       },
       {
         accessorFn: (originalRow) => new Date(originalRow.departureTime), //convert to date for sorting and filtering
@@ -103,6 +108,7 @@ const Example = () => {
         header: 'Departure Time',
         filterVariant: 'time-range',
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleTimeString(), // convert back to string for display
+        size: 320,
       },
     ],
     [],

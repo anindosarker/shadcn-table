@@ -121,6 +121,67 @@ const checks = {
         (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
           0,
       );
+      // F44: every filter input and caption sits inside its th and inside any
+      // clipping box between them, each caption's text inside its box; the
+      // slider track stays in its th and its "Filter Mode:" caption sits
+      // below the track.
+      const layout = await w.locator('thead').evaluate((thead) => {
+        const inside = (inner, outer) =>
+          inner.left >= outer.left - 1 &&
+          inner.right <= outer.right + 1 &&
+          inner.top >= outer.top - 1 &&
+          inner.bottom <= outer.bottom + 1;
+        const clipped = [];
+        let slider = 'no slider';
+        for (const th of thead.querySelectorAll('th')) {
+          const cell = th.getBoundingClientRect();
+          const parts = [
+            ...th.querySelectorAll(
+              '[data-slot="input-group"], [data-slot="slider-track"], [data-slot="slider-thumb"], label, p',
+            ),
+          ].filter((part) => !part.closest('[aria-hidden="true"]'));
+          for (const part of parts) {
+            const box = part.getBoundingClientRect();
+            let clip = part.parentElement;
+            let ok = inside(box, cell);
+            while (ok && clip && clip !== th) {
+              if (getComputedStyle(clip).overflowX !== 'visible')
+                ok = inside(box, clip.getBoundingClientRect());
+              clip = clip.parentElement;
+            }
+            // A caption's text overflowing its own box is cut too.
+            if (
+              ok &&
+              (part.tagName === 'LABEL' || part.tagName === 'P') &&
+              part.scrollWidth > part.clientWidth + 1
+            )
+              ok = false;
+            if (!ok)
+              clipped.push(
+                `${th.textContent?.trim().slice(0, 14)} ${part.dataset.slot ?? part.tagName}:${part.textContent?.trim().slice(0, 30)} [${Math.round(box.left - cell.left)}, ${Math.round(box.right - cell.left)}] in ${Math.round(cell.width)}`,
+              );
+          }
+          const track = th.querySelector('[data-slot="slider-track"]');
+          if (track) {
+            const caption = [...th.querySelectorAll('label, p')].find((el) =>
+              el.textContent?.startsWith('Filter Mode:'),
+            );
+            const trackBox = track.getBoundingClientRect();
+            const top = caption?.getBoundingClientRect().top ?? -1;
+            slider =
+              top >= trackBox.bottom
+                ? ''
+                : `caption top ${top} < track bottom ${trackBox.bottom}`;
+          }
+        }
+        return { clipped, slider };
+      });
+      check(
+        'subheader filters not clipped',
+        layout.clipped.length === 0,
+        layout.clipped.join(' '),
+      );
+      check('slider caption below track', layout.slider === '', layout.slider);
     },
   ),
   '/docs/examples/persistent-view': examplePage(
