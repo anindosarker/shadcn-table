@@ -129,6 +129,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The home demo shows seven columns (Name, Status, Assignee, Project, Due, Estimate, Priority) that fit its frame, so the Editing step's estimate change is in view.
 
+#### Fix F38
+
+- The Export to CSV and Export to PDF examples (popover filter mode) let the First Name and Last Name columns take the default width and size the ID column at 112 px, so no header label is cut off beside the funnel and the chevron.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed
