@@ -23,7 +23,8 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
-        "dropdown-menu"
+        "dropdown-menu",
+        "dialog"
       ],
       "dependencies": [
         "lucide-react"
@@ -2587,7 +2588,8 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base-core"
+        "anindosarker/shadcn-table/shadcn-table-base-core",
+        "badge"
       ],
       "dependencies": [
         "lucide-react"
@@ -2812,7 +2814,8 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
-        "dropdown-menu"
+        "dropdown-menu",
+        "dialog"
       ],
       "dependencies": [
         "lucide-react"
@@ -5376,7 +5379,8 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix-core"
+        "anindosarker/shadcn-table/shadcn-table-radix-core",
+        "badge"
       ],
       "dependencies": [
         "lucide-react"
@@ -5601,7 +5605,8 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
-        "dropdown-menu"
+        "dropdown-menu",
+        "dialog"
       ],
       "dependencies": [
         "lucide-react"
@@ -8166,7 +8171,8 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria-core"
+        "anindosarker/shadcn-table/shadcn-table-aria-core",
+        "badge"
       ],
       "dependencies": [
         "lucide-react"
@@ -8391,7 +8397,8 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
-        "dropdown-menu"
+        "dropdown-menu",
+        "dialog"
       ],
       "dependencies": [
         "lucide-react"
@@ -10955,7 +10962,8 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base-core"
+        "anindosarker/shadcn-table/shadcn-table-base-core",
+        "badge"
       ],
       "dependencies": [
         "lucide-react"
