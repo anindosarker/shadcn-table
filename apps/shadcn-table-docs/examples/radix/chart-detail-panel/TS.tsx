@@ -23,7 +23,7 @@ const Example = () => {
       {
         accessorKey: 'id',
         header: 'ID',
-        size: 50,
+        size: 56,
       },
       {
         accessorKey: 'firstName',
@@ -69,19 +69,19 @@ const Example = () => {
           <Line
             type="monotone"
             dataKey="Points"
-            stroke="hsl(var(--primary))"
+            stroke="var(--primary)"
             dot={false}
           />
           <Line
             type="monotone"
             dataKey="Assists"
-            stroke="hsl(var(--secondary-foreground))"
+            stroke="var(--secondary-foreground)"
             dot={false}
           />
           <Line
             type="monotone"
             dataKey="Turnovers"
-            stroke="hsl(var(--destructive))"
+            stroke="var(--destructive)"
             dot={false}
           />
         </LineChart>

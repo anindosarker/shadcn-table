@@ -16,7 +16,7 @@ const columnHelper = createSRTColumnHelper<Person>();
 const columns = [
   columnHelper.accessor('id', {
     header: 'ID',
-    size: 40,
+    size: 56,
   }),
   columnHelper.accessor('firstName', {
     header: 'First Name',

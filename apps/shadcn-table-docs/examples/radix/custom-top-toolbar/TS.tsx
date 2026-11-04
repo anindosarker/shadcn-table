@@ -6,6 +6,7 @@ import {
   type ST_ColumnDef,
   ST_ToggleDensePaddingButton,
   ST_ToggleFullScreenButton,
+  ST_ViewSettingsButton,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
@@ -80,6 +81,7 @@ const Example = () => {
         {/* along-side built-in buttons in whatever order you want them */}
         <ST_ToggleDensePaddingButton />
         <ST_ToggleFullScreenButton />
+        <ST_ViewSettingsButton table={table} />
       </div>
     ),
   });

@@ -16,7 +16,7 @@ const Example = () => {
         accessorKey: 'id',
         enableColumnPinning: false, //disable column pinning for this column
         header: 'ID',
-        size: 50,
+        size: 56,
       },
       //column definitions...
       {

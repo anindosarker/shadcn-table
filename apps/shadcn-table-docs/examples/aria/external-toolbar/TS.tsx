@@ -2,16 +2,14 @@
 
 import {
   ST_GlobalFilterTextField,
-  ST_ShowHideColumnsButton,
   ST_TablePagination,
-  ST_ToggleDensePaddingButton,
-  ST_ToggleFiltersButton,
   ST_ToolbarAlertBanner,
   useShadcnTable,
   type ST_ColumnDef,
   ST_TableContainer,
   ST_TableProvider,
   ST_Tooltip,
+  ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
@@ -60,9 +58,7 @@ const Example = () => {
           </div>
           <ST_GlobalFilterTextField />
           <div className="flex items-center gap-2">
-            <ST_ToggleFiltersButton />
-            <ST_ShowHideColumnsButton />
-            <ST_ToggleDensePaddingButton />
+            <ST_ViewSettingsButton table={table} />
             <ST_Tooltip title="Print">
               <Button
                 variant="ghost"

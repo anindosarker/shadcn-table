@@ -15,7 +15,7 @@ const Example = () => {
       {
         accessorKey: 'id',
         header: 'ID',
-        size: 50,
+        size: 56,
       },
       {
         accessorKey: 'firstName',

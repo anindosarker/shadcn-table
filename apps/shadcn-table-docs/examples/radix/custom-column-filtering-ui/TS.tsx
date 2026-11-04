@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react';
 import {
+  ShadcnTable,
   useShadcnTable,
   type ST_ColumnDef,
-  ST_TableContainer,
   ST_TableHeadCellFilterContainer,
   ST_TableProvider,
   useST_MediaQuery,
@@ -60,7 +60,9 @@ const Example = () => {
       <div
         className={`flex gap-2 ${isMobile ? 'flex-col-reverse' : 'flex-row'}`}
       >
-        <ST_TableContainer />
+        <div className="min-w-0 flex-1">
+          <ShadcnTable table={table} />
+        </div>
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
           <div className="flex flex-col gap-2 p-2">
             {table
