@@ -48,7 +48,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
           open={showColumnFilters || columnFilterDisplayMode === 'popover'}
           {...rest}
         >
-          <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
+          <CollapsibleContent className="-m-0.75 h-(--collapsible-panel-height) overflow-hidden p-0.75 transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
             {filterInput}
           </CollapsibleContent>
         </Collapsible>
