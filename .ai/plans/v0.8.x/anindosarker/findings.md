@@ -102,3 +102,7 @@
 ### F23 Filter chip editor input has the wrong border radius
 
 - `/docs/examples/expanding-tree-flat-parse`, Base UI, chip editor for Last Name (`components/toolbar/ST_FilterChips.tsx` editor, `ST_FilterTextField.tsx`): the text input inside the editor popover renders with a larger radius than the stock shadcn input (`rounded-md`) and the popover itself; owner, 2026-11-04 19:28. Check whether the Base UI `Input` part or a `rounded-*` on the editor wrapper sets it, and that the radix and aria editors match. Timing: item 3, library.
+
+### F24 Detail panel example: an expanded row shows no panel
+
+- `/docs/examples/detail-panel`, Base UI: row 3 is expanded (chevron down) but no detail panel row renders under it, and the expand cell covers the start of the ID cell ("3" half hidden). `components/body/ST_TableDetailPanel.tsx` changed in spec 02 (F6 `w-full min-w-0`); suspects: the detail row gets no height or `hidden` under the grid layout, or `renderDetailPanel` output collapses inside `CollapsibleContent`; the overlap is the display cell `px-0` (F12) plus the expand button's own width. Owner, 2026-11-04 19:30. Reproduce on `test-projects/` and in `stories/features/DetailPanel.stories.tsx` first. Timing: item 3, library.
