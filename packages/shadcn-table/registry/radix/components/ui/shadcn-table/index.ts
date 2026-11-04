@@ -86,3 +86,10 @@ export * from '@/components/ui/shadcn-table/components/toolbar/ST_TopToolbar';
 export * from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 export * from '@/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils';
 export * from '@/components/ui/shadcn-table/components/icons/ST_GridLineIcons';
+// spec 02
+export {
+  ST_OverflowText,
+  type ST_OverflowTextProps,
+} from '@/components/ui/shadcn-table/components/body/ST_OverflowText';
+export * from '@/components/ui/shadcn-table/components/table/ST_ScrollButtons';
+export * from '@/components/ui/shadcn-table/hooks/useST_HorizontalOverflow';

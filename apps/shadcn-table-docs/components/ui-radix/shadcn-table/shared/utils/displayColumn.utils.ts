@@ -25,6 +25,8 @@ export function defaultDisplayColumnProps<TData extends ST_RowData>({
     tableOptions;
   return {
     ...defaultDisplayColumn,
+    // Display columns keep their width while data columns grow.
+    grow: false,
     header: header ? localization[header]! : '',
     size,
     ...displayColumnDefOptions?.[id],

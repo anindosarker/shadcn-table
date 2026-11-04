@@ -48,7 +48,7 @@ const bodyText = (root: HTMLElement) =>
     .map((row) => row.textContent)
     .join();
 
-// The last cell of the first row is a data column: `p-2` under compact.
+// The last cell of the first row is a data column: `h-10 px-2` under compact.
 const dataCellClass = (root: HTMLElement) =>
   root.querySelector('tbody tr td:last-child')?.className ?? '';
 
@@ -84,7 +84,9 @@ export const HandComposition = {
     await expect(canvas.getByTestId('owner-bar')).toHaveTextContent('1-6 of 6');
     // the owner's density button drives the container's cells
     await userEvent.click(ownerBar.getByLabelText('Toggle density'));
-    await waitFor(() => expect(dataCellClass(canvasElement)).toContain('p-2'));
+    await waitFor(() =>
+      expect(dataCellClass(canvasElement)).toContain('h-10 px-2'),
+    );
     // the owner's search button opens the search in ST_TopToolbar, which
     // filters the container's rows and the owner's pagination summary
     await userEvent.click(ownerBar.getByLabelText('Show/Hide search'));
