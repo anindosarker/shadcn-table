@@ -159,6 +159,7 @@ const Example = () => {
     editDisplayMode: 'row', // ('modal', 'cell', 'table', and 'custom' are also available)
     enableColumnPinning: true,
     enableEditing: true,
+    positionActionsColumn: 'first',
     enableExpanding: true,
     positionCreatingRow: creatingRowIndex, //index where new row is inserted before
     getRowId: (row) => row.id,

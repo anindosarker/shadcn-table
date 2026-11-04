@@ -174,6 +174,7 @@ const Example = () => {
     enableClickToCopy: 'context-menu',
     enableColumnPinning: true,
     enableEditing: true,
+    positionActionsColumn: 'first',
     enableRowActions: true,
     getRowId: (row) => row.id,
     stToolbarAlertBannerProps: isLoadingUsersError

@@ -8,7 +8,8 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
   ST_GlobalFilterTextField,
-  ST_ToggleFiltersButton,
+  ST_FilterChips,
+  ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 
 //shadcn Imports
@@ -199,7 +200,7 @@ const Example = () => {
           <div className="flex items-center gap-2">
             {/* import ST sub-components */}
             <ST_GlobalFilterTextField />
-            <ST_ToggleFiltersButton />
+            <ST_FilterChips table={table} />
           </div>
           <div>
             <div className="flex gap-2">
@@ -228,6 +229,7 @@ const Example = () => {
               >
                 Contact
               </Button>
+              <ST_ViewSettingsButton table={table} />
             </div>
           </div>
         </div>

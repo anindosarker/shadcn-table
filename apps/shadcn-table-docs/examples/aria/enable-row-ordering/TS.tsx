@@ -2,11 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import {
+  ShadcnTable,
   useShadcnTable,
   type ST_ColumnDef,
   type ST_Row,
-  ST_TableContainer,
-  ST_TableProvider,
 } from '@/components/ui/shadcn-table';
 import { data as initData, type Person } from './makeData';
 
@@ -55,11 +54,7 @@ const Example = () => {
     }),
   });
 
-  return (
-    <ST_TableProvider table={table}>
-      <ST_TableContainer />
-    </ST_TableProvider>
-  );
+  return <ShadcnTable table={table} />;
 };
 
 export default Example;

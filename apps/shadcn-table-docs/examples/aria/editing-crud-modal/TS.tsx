@@ -157,6 +157,7 @@ const Example = () => {
     createDisplayMode: 'modal', //default ('row', and 'custom' are also available)
     editDisplayMode: 'modal', //default ('row', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
+    positionActionsColumn: 'first',
     getRowId: (row) => row.id,
     stToolbarAlertBannerProps: isLoadingUsersError
       ? {

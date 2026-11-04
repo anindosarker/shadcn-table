@@ -172,7 +172,7 @@ const Example = () => {
     editDisplayMode: 'table', // ('modal', 'row', 'cell', and 'custom' are also
     enableEditing: true,
     enableRowActions: true,
-    positionActionsColumn: 'last',
+    positionActionsColumn: 'first',
     getRowId: (row) => row.id,
     stToolbarAlertBannerProps: isLoadingUsersError
       ? {

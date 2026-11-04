@@ -8,6 +8,7 @@ import {
   ST_TableProvider,
   ST_ToggleFullScreenButton,
   ST_ToolbarAlertBanner,
+  ST_ViewSettingsButton,
   flexRender,
   type ST_ColumnDef,
   type ST_RowSelectionState,
@@ -111,6 +112,7 @@ const Example = () => {
           <div className="flex items-center gap-2">
             <ST_GlobalFilterTextField />
             <ST_ToggleFullScreenButton />
+            <ST_ViewSettingsButton table={table} />
           </div>
           <ST_TablePagination />
         </div>
