@@ -24,6 +24,15 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 02
 
+- The top toolbar sits above the table frame; the frame (`rounded-md border bg-background shadow`) holds the scroll box and the bottom toolbar with no inner padding, also in full screen, which now pads the window instead of stripping the frame. `stTableLayoutProps.className` restores the old box.
+- Body rows are 40, 48 and 56 px tall at compact, comfortable and spacious with `px-2`, `px-3` and `px-4` cell padding; rows are split by hairlines, none under the last row, and `viewSettings.gridLines` draws column lines; hover tints the whole row evenly. The bottom toolbar's top edge is the same hairline; the empty row is 96 px, muted, not italic.
+- The table root declares the tint tokens `--st-stripe`, `--st-hover`, `--st-selected` and `--st-edge-shadow` with dark twins; rows and pinned cells read them, and an ancestor or `stTableLayoutProps.className` overrides them. Pinned inner-edge cells cast the edge shadow towards the scrolling columns.
+- With `layoutMode: 'grid'` data columns share the spare width in proportion to their sizes, while display and pinned columns keep their width; past the frame every column keeps its set width and the table scrolls sideways. Display columns default to `grow: false`; the row actions column is 48 px with a visually hidden header label and moves through the columns menu (`displayColumnDefOptions['st-row-actions']` sets it back).
+- `enableScrollButtons: true` shows hover chevrons in the header row on a side with hidden columns; a click scrolls 80 percent of the unpinned width. `useST_HorizontalOverflow` and `ST_ScrollButtons` are exported for custom layouts.
+- `enableCellOverflowTooltip: true` truncates plain text cells on one line and shows the full value in a tooltip only when it is cut off; `viewSettings.wrapText` shows the text in full; `columnDef.overflowTooltip` sets it per column; `ST_OverflowText` is exported for custom cells.
+- The sticky header box caps at `var(--st-sticky-max-height, 70vh)` when the header is sticky by choice (`enableStickyHeader` or `viewSettings.stickyHeader`); a header forced sticky by row virtualization keeps the full-height rule.
+- With `persistViewSettings` on, a server-rendered table renders one inline script (with the `nonce` option) that marks the root `data-st-view-pending` and `aria-busy` before first paint when a stored view differs from the defaults; the body shows a skeleton bar while marked. Nothing is rendered with persistence off.
+
 #### Spec 03
 
 #### Spec 04

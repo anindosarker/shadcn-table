@@ -12,6 +12,7 @@ import {
   type TableBodyProps,
 } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
+import { ST_OverflowTooltipProvider } from '@/components/ui-base/shadcn-table/components/body/ST_OverflowText';
 import { ST_TableBodyRow } from '@/components/ui-base/shadcn-table/components/body/ST_TableBodyRow';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 
@@ -19,11 +20,16 @@ export interface ST_TableBodyProps extends TableBodyProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
 }
 
-const tableBodyVariants = cva('', {
-  variants: {
-    layout: { grid: 'grid', semantic: '' },
+// While the root waits for a stored view (`data-st-view-pending`), every
+// cell hides its content and shows a skeleton bar.
+const tableBodyVariants = cva(
+  "group-data-st-view-pending/st:[&_td]:text-transparent group-data-st-view-pending/st:[&_td>*]:invisible group-data-st-view-pending/st:[&_td]:before:absolute group-data-st-view-pending/st:[&_td]:before:inset-s-2 group-data-st-view-pending/st:[&_td]:before:top-1/2 group-data-st-view-pending/st:[&_td]:before:h-4 group-data-st-view-pending/st:[&_td]:before:w-3/5 group-data-st-view-pending/st:[&_td]:before:-translate-y-1/2 group-data-st-view-pending/st:[&_td]:before:rounded group-data-st-view-pending/st:[&_td]:before:bg-muted group-data-st-view-pending/st:[&_td]:before:content-['']",
+  {
+    variants: {
+      layout: { grid: 'grid', semantic: '' },
+    },
   },
-});
+);
 
 export const ST_TableBody = <TData extends ST_RowData>({
   columnVirtualizer,
@@ -138,18 +144,19 @@ export const ST_TableBody = <TData extends ST_RowData>({
         columnVisibility: state.columnVisibility,
         globalFilter: state.globalFilter,
         isFullScreen: state.isFullScreen,
+        stickyHeader: state.viewSettings.stickyHeader,
       })}
     >
-      {({ columnFilters, globalFilter, isFullScreen }) => {
+      {({ columnFilters, globalFilter, isFullScreen, stickyHeader }) => {
         const tableHeadHeight =
-          ((enableStickyHeader || isFullScreen) &&
+          ((enableStickyHeader || stickyHeader || isFullScreen) &&
             tableHeadRef.current?.clientHeight) ||
           0;
         const tableFooterHeight =
           (enableStickyFooter && tableFooterRef.current?.clientHeight) || 0;
 
         return (
-          <>
+          <ST_OverflowTooltipProvider>
             {topRows && (
               <tbody
                 {...tableBodyProps}
@@ -174,7 +181,6 @@ export const ST_TableBody = <TData extends ST_RowData>({
                   layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
                 }),
                 'relative',
-                !rows.length && 'min-h-25',
                 tableBodyProps?.className,
               )}
               style={{
@@ -203,7 +209,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                     >
                       {renderEmptyRowsFallback?.({ table }) ?? (
                         <p
-                          className="w-full py-8 text-center text-muted-foreground italic"
+                          className="flex h-24 w-full items-center justify-center text-center text-muted-foreground"
                           style={{
                             maxWidth: `min(100vw, ${
                               tableLayoutRef.current?.clientWidth ?? 360
@@ -241,7 +247,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
                 {bottomRows}
               </tbody>
             )}
-          </>
+          </ST_OverflowTooltipProvider>
         );
       }}
     </table.Subscribe>

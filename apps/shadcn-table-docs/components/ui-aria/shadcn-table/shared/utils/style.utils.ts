@@ -45,33 +45,16 @@ export const useCollapsingChildren = (isExpanded: boolean) => {
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
+/**
+ * The edge shadow of a pinned cell; its background is the row's, inherited,
+ * and every row tint is opaque, so scrolled content never shows through.
+ */
 export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   column,
 }: {
   column?: ST_Column<TData>;
   table: ST_CoreTableInstance<TData>;
-}) => {
-  const isPinned = column?.getIsPinned();
-
-  return cn(
-    "data-[pinned=true]:before:absolute data-[pinned=true]:before:top-0 data-[pinned=true]:before:inset-s-0 data-[pinned=true]:before:z-[-1] data-[pinned=true]:before:h-full data-[pinned=true]:before:w-full data-[pinned=true]:before:bg-background data-[pinned=true]:before:content-['']",
-    column
-      ? isPinned === 'start' && column.getIsLastColumn(isPinned)
-        ? 'data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
-        : isPinned === 'end' && column.getIsFirstColumn(isPinned)
-          ? 'data-[pinned=true]:shadow-[-4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)] rtl:data-[pinned=true]:shadow-[4px_0_4px_-4px_color-mix(in_oklab,var(--foreground)_15%,transparent)]'
-          : undefined
-      : undefined,
-  );
-};
-
-/** The CSS variables the table tints read, declared on the table root. */
-export const ST_TINT_VARS = {
-  edgeShadow: '--st-edge-shadow',
-  hover: '--st-hover',
-  selected: '--st-selected',
-  stripe: '--st-stripe',
-} as const;
+}) => (column ? pinnedEdgeShadowClassName(column) : undefined);
 
 /**
  * The edge shadow of the inner pinned cell, the last visible start-pinned or
@@ -136,8 +119,9 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   };
 
   if (layoutMode === 'grid') {
+    // A pinned column keeps its width, so the sticky offsets stay exact.
     widthStyles.flex = `${
-      [0, false].includes(columnDef.grow!)
+      isColumnPinned || [0, false].includes(columnDef.grow!)
         ? 0
         : `var(--${header ? 'header' : 'col'}-${parseCSSVarId(
             header?.id ?? column.id,
@@ -168,7 +152,9 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
     className: cn(
       'bg-inherit',
       layoutMode?.startsWith('grid') && 'flex',
-      draggingColumn?.id === column.id || hoveredColumn?.id === column.id
+      // Head and footer cells fade with a column drag; body cells do not.
+      header &&
+        (draggingColumn?.id === column.id || hoveredColumn?.id === column.id)
         ? 'opacity-50'
         : 'opacity-100',
       'relative',

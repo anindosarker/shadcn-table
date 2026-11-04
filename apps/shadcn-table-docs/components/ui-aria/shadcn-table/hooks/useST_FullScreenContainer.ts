@@ -5,8 +5,9 @@ import {
   type ST_TableInstance,
 } from '@/components/ui-aria/shadcn-table/types';
 
+// A padded window: the table frame keeps its border and radius inside it.
 const fullScreenClassName =
-  'fixed inset-0 z-50 m-0 h-dvh max-h-dvh w-dvw max-w-dvw rounded-none border-0 p-0';
+  'fixed inset-0 z-50 m-0 flex h-dvh max-h-dvh w-dvw max-w-dvw flex-col bg-background p-4';
 
 const editableSelector = 'input, textarea, select, [contenteditable]';
 

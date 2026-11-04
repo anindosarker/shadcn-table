@@ -48,11 +48,11 @@ export const RightToLeft = {
     await waitFor(() => expect(pinnedCell.style.insetInlineStart).not.toBe(''));
     expect(getComputedStyle(pinnedCell).position).toBe('sticky');
 
-    // The pinned edge shadow is cast outward, toward the scrolled columns,
-    // which sit to the left in RTL: a negative x offset. Tailwind lists its
-    // empty ring layers first, so the shadow is the tail of the list.
-    expect(getComputedStyle(pinnedCell).boxShadow).toMatch(
-      / -4px 0px 4px -4px$/,
+    // The pinned edge shadow is a drop-shadow filter clipped to the side of
+    // the scrolled columns, which sit to the left in RTL.
+    expect(getComputedStyle(pinnedCell).filter).toMatch(/^drop-shadow\(/);
+    expect(getComputedStyle(pinnedCell).clipPath).toBe(
+      'inset(0px 0px 0px -8px)',
     );
 
     const header = canvas.getByRole('columnheader', { name: /Last Name/ });
