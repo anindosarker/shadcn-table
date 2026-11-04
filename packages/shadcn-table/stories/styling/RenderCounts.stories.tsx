@@ -105,10 +105,18 @@ export const RootSkipsStateRenders = {
           ?.textContent,
       ).toBe('6'),
     );
+    const ageHeader = canvas.getByRole('columnheader', { name: /Age/ });
     await userEvent.click(
-      canvasElement.querySelector(
-        'button[aria-label="Sort by Age ascending"]',
-      ) as HTMLElement,
+      within(ageHeader).getByRole('button', { name: 'Column Actions' }),
+    );
+    await userEvent.click(
+      await within(document.body).findByRole('menuitem', {
+        name: /^Sort ascending$/,
+      }),
+    );
+    // A closing menu keeps the rest of the page aria-hidden.
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
     const cellClassName = canvasElement.querySelector('tbody td')?.className;
     await userEvent.click(canvas.getByLabelText('Toggle density'));
