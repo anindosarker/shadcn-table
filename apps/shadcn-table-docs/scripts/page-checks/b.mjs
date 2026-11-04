@@ -6,6 +6,7 @@ import {
   chipFilter,
   closeChipEditor,
   example,
+  headerLabelsFit,
   propTable,
 } from './_helpers.mjs';
 
@@ -174,6 +175,7 @@ const checks = {
       'alternate-column-filtering: no subheader filters',
       (await count(alternate, 'thead input')) === 0,
     );
+    await headerLabelsFit(alternate, 'alternate-column-filtering', check);
     const modes = await example(page, 'customize-filter-modes', check);
     await closeChipEditor(
       page,

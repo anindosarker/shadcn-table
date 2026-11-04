@@ -4,7 +4,7 @@
  * strips only survive inside guides), so each page asserts that single panel
  * plus the example's own markers.
  */
-import { example } from './_helpers.mjs';
+import { example, headerLabelsFit } from './_helpers.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -214,11 +214,13 @@ const checks = {
     const w = await example(page, 'export-to-csv', check);
     await singleExample(page, check);
     await hasText(w, 'export-to-csv', /Export All Data/, check);
+    await headerLabelsFit(w, 'export-to-csv', check);
   },
   '/docs/examples/export-pdf': async ({ page, check }) => {
     const w = await example(page, 'export-to-pdf', check);
     await singleExample(page, check);
     await hasText(w, 'export-to-pdf', /Export All Rows/, check);
+    await headerLabelsFit(w, 'export-to-pdf', check);
   },
 };
 
