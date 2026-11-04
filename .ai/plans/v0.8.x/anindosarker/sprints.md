@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-04 18:25
+Updated: 2026-11-04 18:50
 
 | Story                     | S1  | S2  | S3  | S4  | S5 |
 | ------------------------- | --- | --- | --- | --- | -- |
@@ -12,7 +12,7 @@ Updated: 2026-11-04 18:25
 | Defaults and stories (05) |     |     | [x] |     |    |
 | Component fixes F3 to F6  |     |     | [x] |     |    |
 | Docs (06)                 |     |     |     | [x] |    |
-| Gate fixes F8, F9        |     |     |     |     | [ ] |
-| Release 0.8.0 (07)        |     |     |     |     | [!] |
+| Gate fixes F8, F9        |     |     |     |     | [x] |
+| Release 0.8.0 (07)        |     |     |     |     | [ ] |
 
-Release 0.8.0 (07): gate blocked on F8 and F9; release held for the owner's local review.
+Release 0.8.0 (07): gate rerun after F8 and F9; the release steps wait for the owner's local review.
