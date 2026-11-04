@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   type ST_ColumnFiltersState,
@@ -410,4 +411,29 @@ export const PreventUnnecessaryPaginationChangeByOutOfBoundsCheck = () => {
       state={{ pagination }}
     />
   );
+};
+
+// The consumer's effect on columnFilters runs once per filter change, not on
+// every render.
+FilterModesRefetch.play = async ({ canvasElement }: StoryContext) => {
+  const log = spyOn(console, 'log');
+  try {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0]!.firstName);
+    const refetches = () =>
+      log.mock.calls.filter(([first]) => first === 'refetch');
+    const start = refetches().length;
+    await userEvent.type(
+      canvas.getByPlaceholderText('Filter by First Name'),
+      data[0]!.firstName,
+    );
+    await waitFor(() => expect(refetches().length).toBe(start + 1));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    expect(refetches().length).toBe(start + 1);
+    expect(refetches().at(-1)![1]).toEqual([
+      expect.objectContaining({ id: 'firstName', value: data[0]!.firstName }),
+    ]);
+  } finally {
+    log.mockRestore();
+  }
 };

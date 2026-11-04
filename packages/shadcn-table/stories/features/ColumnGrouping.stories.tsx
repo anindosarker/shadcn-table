@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_Column,
   type ST_ColumnDef,
@@ -434,5 +434,71 @@ export const GroupedHeaderHasIconReorder = {
       expect(th).not.toBeNull();
       expect(th!.querySelector('svg.lucide-map')).not.toBeNull();
     });
+  },
+};
+
+/**
+ * The banner names the grouped columns as chips, in grouping order; a chip
+ * click ungroups that column.
+ */
+export const GroupByBanner = {
+  render: () => <ColumnGroupingEnabledReorder />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const banner = (await canvas.findByText(/^Grouped by/)).closest('span')!;
+    expect(banner).toHaveTextContent(/^Grouped by State, then by Gender$/);
+    const chips = within(banner).getAllByRole('button');
+    expect(chips.map((chip) => chip.textContent)).toEqual(['State', 'Gender']);
+    await userEvent.click(chips[0]!);
+    await waitFor(() =>
+      expect(canvas.getByText(/^Grouped by/).closest('span')).toHaveTextContent(
+        /^Grouped by Gender$/,
+      ),
+    );
+  },
+};
+
+/**
+ * Expanding a collapsed group shows its rows under it, in data order.
+ */
+export const ExpandGroupShowsRows = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableGrouping
+      initialState={{ grouping: ['gender'] }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const [expand] = await canvas.findAllByRole('button', { name: 'Expand' });
+    const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
+    const groupCount = new Set(data.map((person) => person.gender)).size;
+    expect(rows()).toHaveLength(Math.min(groupCount, 10));
+    const groupText = (
+      rows()[0]!.querySelector('td[data-flip-column="gender"]')?.textContent ??
+      ''
+    ).trim();
+    const gender = [...new Set(data.map((person) => person.gender))]
+      .filter((value) => groupText.startsWith(value))
+      .sort((a, b) => b.length - a.length)[0]!;
+    const members = data.filter((person) => person.gender === gender);
+    expect(
+      rows()[1]!.querySelector('td[data-flip-column="firstName"]'),
+    ).toHaveTextContent(/^$/);
+    await userEvent.click(expand!);
+    // The rows under the group are its members, in data order.
+    await waitFor(() =>
+      members
+        .slice(0, 3)
+        .forEach((member, index) =>
+          expect(
+            rows()[index + 1]!.querySelector(
+              'td[data-flip-column="firstName"]',
+            ),
+          ).toHaveTextContent(member.firstName),
+        ),
+    );
   },
 };

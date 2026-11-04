@@ -255,3 +255,78 @@ export const DisabledPaginationComponents = () => (
     }}
   />
 );
+
+const bodyRows = (canvasElement: HTMLElement) =>
+  canvasElement.querySelectorAll('tbody tr');
+
+const firstRowFirstName = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector(
+    'tbody tr:first-child td[data-flip-column="firstName"]',
+  )?.textContent;
+
+/** Next page shows the next ten rows. */
+export const NextPageChangesRows = {
+  render: () => <PaginationEnabledDefault />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    expect(bodyRows(canvasElement).length).toBe(10);
+    await userEvent.click(canvas.getAllByLabelText('Go to next page')[0]!);
+    await waitFor(() =>
+      expect(firstRowFirstName(canvasElement)).toBe(data[10].firstName),
+    );
+    expect(bodyRows(canvasElement).length).toBe(10);
+    expect(canvas.getByRole('button', { name: 'page 2' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+  },
+};
+
+/** Choosing 20 rows per page renders 20 rows. */
+export const PageSizeChangesCount = {
+  render: () => <CustomizePaginationComponents />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    expect(bodyRows(canvasElement).length).toBe(5);
+    await userEvent.click(
+      canvas
+        .getAllByLabelText('Rows per page')
+        .find((element) => element.tagName === 'BUTTON')!,
+    );
+    await userEvent.click(
+      await within(document.body).findByRole('option', { name: '20' }),
+    );
+    await waitFor(() => expect(bodyRows(canvasElement).length).toBe(20));
+  },
+};
+
+/**
+ * Pages mode shows page numbers, the last one included (D13); clicking it
+ * shows the last row alone.
+ */
+export const PagesModeNumbers = {
+  render: () => <CustomPaginationPagesDisplayModeMoreData />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(moreData[0].firstName);
+    expect(canvas.getByRole('button', { name: 'page 1' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(
+      canvas.getByRole('button', { name: 'Go to page 2' }),
+    ).toHaveTextContent('2');
+    const last = canvas.getByRole('button', { name: 'Go to page 56' });
+    await userEvent.click(last);
+    await waitFor(() =>
+      expect(canvas.getByRole('button', { name: 'page 56' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      ),
+    );
+    expect(bodyRows(canvasElement).length).toBe(1);
+    expect(firstRowFirstName(canvasElement)).toBe(moreData[550].firstName);
+  },
+};

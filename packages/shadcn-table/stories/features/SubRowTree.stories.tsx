@@ -4,7 +4,8 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { CakeIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -247,3 +248,59 @@ export const SubRowTreeWithSingleSelection = () => (
     enableRowSelection
   />
 );
+
+type Node = { firstName: string; subRows?: Node[] };
+
+const rowFirstNames = (canvasElement: HTMLElement) =>
+  [
+    ...canvasElement.querySelectorAll(
+      'tbody tr td[data-flip-column="firstName"]',
+    ),
+  ].map((cell) => (cell.textContent ?? '').trim());
+
+/** Expanding a parent row shows its direct children right under it. */
+export const ExpandShowsChildren = {
+  render: () => <SubRowTreeEnabledDefault />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    expect(rowFirstNames(canvasElement)).toEqual(
+      data.map((person) => person.firstName),
+    );
+    const index = data.findIndex((person) => person.subRows.length > 0);
+    const parent =
+      canvasElement.querySelectorAll<HTMLElement>('tbody tr')[index]!;
+    await userEvent.click(
+      within(parent).getByRole('button', { name: 'Expand' }),
+    );
+    const children = data[index]!.subRows.map((child) => child.firstName);
+    await waitFor(() =>
+      expect(rowFirstNames(canvasElement)).toEqual([
+        ...data.slice(0, index + 1).map((person) => person.firstName),
+        ...children,
+        ...data.slice(index + 1).map((person) => person.firstName),
+      ]),
+    );
+  },
+};
+
+/** Expand all opens every level in tree order; collapse all closes them. */
+export const ExpandAllCollapseAll = {
+  render: () => <SubRowTreeEnabledDefault />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const flat = (nodes: Node[]): string[] =>
+      nodes.flatMap((node) => [node.firstName, ...flat(node.subRows ?? [])]);
+    await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
+    // Expanded rows paginate: the first page holds the first ten in order.
+    await waitFor(() =>
+      expect(rowFirstNames(canvasElement)).toEqual(flat(data).slice(0, 10)),
+    );
+    await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
+    await waitFor(() =>
+      expect(rowFirstNames(canvasElement)).toEqual(
+        data.map((person) => person.firstName),
+      ),
+    );
+  },
+};

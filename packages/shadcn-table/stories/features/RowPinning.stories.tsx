@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   Building2Icon,
   MailIcon,
@@ -320,3 +320,73 @@ export const RowAndColumnPinning = () => (
     }}
   />
 );
+
+const bodyRows = (canvasElement: HTMLElement) => [
+  ...canvasElement.querySelectorAll<HTMLElement>('tbody tr'),
+];
+
+const pinButton = (row: HTMLElement) =>
+  within(row).getByRole('button', { name: 'Pin' });
+
+/**
+ * `rowPinningDisplayMode: 'top'`: a pinned row moves to the top of the body
+ * and leaves its old place.
+ */
+export const PinRowTopMode = {
+  render: () => <RowPinningTopMode />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    const target = bodyRows(canvasElement)[9]!;
+    await userEvent.click(pinButton(target));
+    await waitFor(() => {
+      const first = bodyRows(canvasElement)[0]!;
+      expect(first).toHaveAttribute('data-pinned');
+      expect(first).toHaveTextContent(data[9].email);
+    });
+    expect(
+      bodyRows(canvasElement).filter((row) =>
+        row.textContent?.includes(data[9].email),
+      ),
+    ).toHaveLength(1);
+  },
+};
+
+/** Default sticky mode: the pinned row keeps its index and turns sticky. */
+export const PinRowSticky = {
+  render: () => <RowPinningStickyDefaultEnabled />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    expect(getComputedStyle(bodyRows(canvasElement)[4]!).position).not.toBe(
+      'sticky',
+    );
+    await userEvent.click(pinButton(bodyRows(canvasElement)[4]!));
+    await waitFor(() =>
+      expect(bodyRows(canvasElement)[4]).toHaveAttribute('data-pinned'),
+    );
+    const row = bodyRows(canvasElement)[4]!;
+    expect(row).toHaveTextContent(data[4].email);
+    expect(getComputedStyle(row).position).toBe('sticky');
+  },
+};
+
+/** A second click on the pin button unpins the row: back to static. */
+export const UnpinRow = {
+  render: () => <RowPinningStickyDefaultEnabled />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    await userEvent.click(pinButton(bodyRows(canvasElement)[2]!));
+    await waitFor(() =>
+      expect(bodyRows(canvasElement)[2]).toHaveAttribute('data-pinned'),
+    );
+    await userEvent.click(pinButton(bodyRows(canvasElement)[2]!));
+    await waitFor(() =>
+      expect(bodyRows(canvasElement)[2]).not.toHaveAttribute('data-pinned'),
+    );
+    const row = bodyRows(canvasElement)[2]!;
+    expect(row).toHaveTextContent(data[2].email);
+    expect(getComputedStyle(row).position).not.toBe('sticky');
+    expect(
+      canvasElement.querySelectorAll('tbody tr[data-pinned]'),
+    ).toHaveLength(0);
+  },
+};

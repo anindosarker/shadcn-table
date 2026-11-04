@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
@@ -69,3 +70,14 @@ export const SetRowHeight = () => (
     }}
   />
 );
+
+// The body cell classes set the cell padding: 2px block, 16px inline.
+SetRowHeight.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0]!.firstName);
+  const cell = canvasElement.querySelector<HTMLElement>('tbody td')!;
+  const style = getComputedStyle(cell);
+  expect(style.paddingTop).toBe('2px');
+  expect(style.paddingBottom).toBe('2px');
+  expect(style.paddingLeft).toBe('16px');
+  expect(style.paddingRight).toBe('16px');
+};

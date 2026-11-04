@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   useShadcnTable,
@@ -125,4 +126,23 @@ export const FullscreenIsAboveAppbar = () => {
       </div>
     </>
   );
+};
+
+// In full screen the table covers the sticky app bar: the topmost element at
+// the app bar's place belongs to the table.
+FullscreenIsAboveAppbar.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('John');
+  const appBar = canvas.getByText('App').parentElement!;
+  const box = appBar.getBoundingClientRect();
+  const topmost = () =>
+    document.elementFromPoint(box.left + 4, box.top + box.height / 2);
+  expect(appBar.contains(topmost())).toBe(true);
+  await userEvent.click(
+    canvas.getByRole('button', { name: 'Toggle full screen' }),
+  );
+  const root = canvasElement.querySelector('[data-st-full-screen]')!;
+  await waitFor(() => expect(root.contains(topmost())).toBe(true));
+  expect(appBar.contains(topmost())).toBe(false);
+  await userEvent.keyboard('{Escape}');
 };

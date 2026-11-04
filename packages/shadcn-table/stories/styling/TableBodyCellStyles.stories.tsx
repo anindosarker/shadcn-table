@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
@@ -141,3 +142,16 @@ export const CustomCellRender = () => (
     data={data}
   />
 );
+
+// The table-level body cell classes give every cell the end border and tint.
+StyleAllMuiTableBodyCell.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0]!.firstName);
+  for (const cell of canvasElement.querySelectorAll<HTMLElement>(
+    'tbody tr:first-child td',
+  )) {
+    const style = getComputedStyle(cell);
+    expect(style.borderRightWidth).toBe('1px');
+    expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(cell).toHaveClass('bg-sky-500/10');
+  }
+};

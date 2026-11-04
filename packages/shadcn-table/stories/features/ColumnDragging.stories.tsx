@@ -292,3 +292,80 @@ export const ColumnDraggingDisabledPerColumn = () => (
     enableColumnDragging
   />
 );
+
+/**
+ * The elements that started a box-shadow highlight while `run` ran, read
+ * from `element.animate()` calls so a loaded machine cannot miss the 600 ms
+ * flash.
+ */
+const recordHighlights = async (run: () => Promise<void>) => {
+  const highlighted = new Set<Element>();
+  const animate = Element.prototype.animate;
+  Element.prototype.animate = function (
+    this: Element,
+    keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
+    options?: number | KeyframeAnimationOptions,
+  ) {
+    if (
+      Array.isArray(keyframes) &&
+      keyframes.some((keyframe) => keyframe.boxShadow !== undefined)
+    ) {
+      highlighted.add(this);
+    }
+    return animate.call(this, keyframes, options);
+  };
+  try {
+    await run();
+  } finally {
+    Element.prototype.animate = animate;
+  }
+  return highlighted;
+};
+
+/**
+ * On drop the moved column, header and body cells, flashes the primary tint
+ * (D37); the other columns do not.
+ */
+export const DropHighlightsColumn = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableColumnDragging
+      enableColumnOrdering
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('columnheader');
+    const source = headerCell(canvasElement, 'First Name');
+    fireEvent.dragStart(source);
+    dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
+    await waitFor(() =>
+      expect(
+        parseFloat(headerCell(canvasElement, 'Last Name').style.translate),
+      ).toBeLessThan(0),
+    );
+    const highlighted = await recordHighlights(async () => {
+      dragEnd(source, 'move');
+      await waitFor(() =>
+        expect(headerNames(canvasElement).slice(0, 2)).toEqual([
+          'Last Name',
+          'First Name',
+        ]),
+      );
+    });
+    const highlights = (element: Element) => highlighted.has(element);
+    const firstNameCells = canvasElement.querySelectorAll(
+      'tbody td[data-flip-column="firstName"]',
+    );
+    expect(firstNameCells.length).toBeGreaterThan(0);
+    for (const cell of firstNameCells) expect(highlights(cell)).toBe(true);
+    expect(highlights(headerCell(canvasElement, 'First Name'))).toBe(true);
+    for (const cell of canvasElement.querySelectorAll(
+      'tbody td[data-flip-column="email"]',
+    )) {
+      expect(highlights(cell)).toBe(false);
+    }
+  },
+};

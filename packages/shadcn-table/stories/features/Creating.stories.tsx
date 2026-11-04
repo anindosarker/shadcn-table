@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_Row,
   type ST_TableOptions,
@@ -436,4 +437,67 @@ export const CreateWithCustomEditCell = () => {
       )}
     />
   );
+};
+
+/**
+ * Add opens an empty row in edit at the top; Save hands its values to
+ * `onCreatingRowSave`, which appends them to the data.
+ */
+export const CreateRowAppears = {
+  render: function CreateRowAppearsStory() {
+    const [tableData, setTableData] = useState(() => data.slice(0, 3));
+    const handleCreate: ST_TableOptions<Person>['onCreatingRowSave'] = ({
+      exitCreatingMode,
+      values,
+    }) => {
+      setTableData((rows) => [...rows, values]);
+      exitCreatingMode();
+    };
+    return (
+      <ShadcnTable
+        columns={[
+          { accessorKey: 'firstName', header: 'First Name' },
+          { accessorKey: 'lastName', header: 'Last Name' },
+        ]}
+        createDisplayMode="row"
+        data={tableData}
+        editDisplayMode="row"
+        enableEditing
+        onCreatingRowSave={handleCreate}
+        positionCreatingRow="top"
+        renderTopToolbarCustomActions={({ table }) => (
+          <Button onClick={() => table.setCreatingRow(true)}>Add</Button>
+        )}
+      />
+    );
+  },
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const rows = () => [
+      ...canvasElement.querySelectorAll<HTMLElement>('tbody tr'),
+    ];
+    expect(rows()).toHaveLength(3);
+    await userEvent.click(canvas.getByRole('button', { name: 'Add' }));
+    await waitFor(() => expect(rows()).toHaveLength(4));
+    const creating = rows()[0]!;
+    const [firstName, lastName] = within(creating).getAllByRole('textbox');
+    expect(firstName).toHaveValue('');
+    await userEvent.type(firstName!, 'Zelda');
+    await userEvent.type(lastName!, 'Quinn');
+    await userEvent.click(
+      within(creating).getByRole('button', { name: 'Save' }),
+    );
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll('tbody input')).toHaveLength(0),
+    );
+    expect(rows()).toHaveLength(4);
+    const last = rows()[3]!;
+    expect(
+      last.querySelector('td[data-flip-column="firstName"]'),
+    ).toHaveTextContent(/^Zelda$/);
+    expect(
+      last.querySelector('td[data-flip-column="lastName"]'),
+    ).toHaveTextContent(/^Quinn$/);
+  },
 };
