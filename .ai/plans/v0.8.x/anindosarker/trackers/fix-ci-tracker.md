@@ -1,6 +1,6 @@
 # CI fixes after S6, S7, tracker
 
-Status: verified
+Status: merged (4e5bf777)
 Branch `v0.8/fix-ci`, worktree 01, PR #108
 Gates:
 - `ST_BASE=radix vitest run --browser.api.port=5341` at 39d409b8: green (537)
