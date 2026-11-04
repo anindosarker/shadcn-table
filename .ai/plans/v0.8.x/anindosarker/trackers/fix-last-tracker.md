@@ -21,6 +21,7 @@ Gates:
 - F41 icon only under `groupedColumnMode: 'remove'`: the task named 'remove' and 'reorder', but under 'reorder' the expand column shows only the expand-all button (no grouped label) and the grouped column keeps its own header and icon, so an icon there would stand alone; `getST_RowExpandColumnDef.tsx` sets `icon` for 'remove' only. Revert: drop the `groupedColumnMode === 'remove'` condition on `icon`.
 - F39 under `columnResizeMode: 'onEnd'` the body shows no guide, as before: the body cells keep their width until the drop and clip their content (`overflow-hidden`), so a guide at the pointer cannot be drawn from them; the header hairline follows the pointer and ends exactly on the edge the drop will set. A body guide for onEnd would need one table-level line element (a new design, not in this story).
 - F39 the "bordered box around the cell" from the owner's aria screenshot does not reproduce headless in any base (the play compares the header cell's borders, outline and box-shadow mid-drag with its resting style, green in base and aria); the guard stays.
+- F40 mount fade starts at 10% opacity (`fade-in-10`), not 0 as on the pinned items: from 0, the existing play `ChipsDisplayMode` (`stories/features/Filtering.stories.tsx:133`, `toBeVisible` on the Filter button right after mount) went red in the full `test:base` because the button was at opacity 0 in its first frame. The difference is not visible at 200 ms. Revert: `*:fade-in` in `ST_ToolbarInternalButtons.tsx` and wait for the animation in that play.
 
 ## Notes
 
