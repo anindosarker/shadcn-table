@@ -27,3 +27,10 @@
 - Options:
   - a) Recommended: keep `fade-in-10`.
   - b) Start from 0 and change that play's assertion to wait for the animation.
+
+## A15 Custom toolbar actions re-render on search, filter and sort changes too
+
+- F43 fix: the custom actions of both toolbars render inside a `table.Subscribe` on `rowSelection`, `columnFilters`, `globalFilter` and `sorting` (`components/toolbar/ST_TopToolbar.tsx`, `ST_BottomToolbar.tsx`, three bases), so an action that reads any of those updates. A search keystroke therefore re-renders the actions (only the actions, not the toolbar).
+- Options:
+  - a) Recommended: keep the four-state selector.
+  - b) Narrow it to `rowSelection` only; actions reading filters, search or sorting would need their own subscription.
