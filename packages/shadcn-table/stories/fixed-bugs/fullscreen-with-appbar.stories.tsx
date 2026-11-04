@@ -4,6 +4,7 @@ import {
   useShadcnTable,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/AppBar overlaps with Fullscreen Modal',
@@ -75,26 +76,31 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'name.firstName', //access nested data with dot notation
     header: 'First Name',
+    icon: UserIcon,
     size: 150,
   },
   {
     accessorKey: 'name.lastName',
     header: 'Last Name',
+    icon: UserIcon,
     size: 150,
   },
   {
     accessorKey: 'address', //normal accessorKey
     header: 'Address',
+    icon: MapPinIcon,
     size: 200,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
     size: 150,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
     size: 150,
   },
 ];

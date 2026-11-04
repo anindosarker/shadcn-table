@@ -5,7 +5,14 @@ import {
   ShadcnTable,
   ST_ActionMenuItem,
 } from '@/components/ui/shadcn-table';
-import { Mail, UserX } from 'lucide-react';
+import {
+  Mail,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+  UserX,
+} from 'lucide-react';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { faker } from '@faker-js/faker';
 
@@ -27,22 +34,27 @@ const columns: ST_ColumnDef<Row>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 

@@ -2,6 +2,13 @@ import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  Building2Icon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Column Dragging Examples',
@@ -22,26 +29,32 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 
@@ -246,27 +259,33 @@ export const ColumnDraggingDisabledPerColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'email',
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         enableColumnDragging: false,
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}

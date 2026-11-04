@@ -6,6 +6,7 @@ import {
   useShadcnTable,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { CakeIcon, HashIcon, MailIcon, MapIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/dragging virtual when filtered',
@@ -32,26 +33,32 @@ const columns: ST_ColumnDef<(typeof initData)[0]>[] = [
   {
     accessorKey: 'id',
     header: 'ID',
+    icon: HashIcon,
   },
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 

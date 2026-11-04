@@ -1,6 +1,14 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
+import {
+  Building2Icon,
+  MailboxIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Dense Padding Examples',
@@ -12,30 +20,37 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'zipCode',
     header: 'Zip Code',
+    icon: MailboxIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 

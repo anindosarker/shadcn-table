@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { Building2Icon, UserIcon } from 'lucide-react';
 
 // `ST_TableProvider` and the table context (decisions items 3 and 4): hand
 // composition of library pieces, a reader beside and inside each of two
@@ -38,9 +39,9 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
 ];
 
 const bodyText = (root: HTMLElement) =>
