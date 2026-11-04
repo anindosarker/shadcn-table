@@ -41,23 +41,21 @@ interface Step {
 const BASE: SignalTableState = {
   sorting: [],
   columnFilters: [],
-  grouping: [],
-  expanded: {},
-  showColumnFilters: false,
-  rowSelection: {},
   globalFilter: '',
   showGlobalFilter: false,
-  salaryEdits: {},
+  columnOrder: [],
+  viewSettings: { striped: false },
+  estimateEdits: {},
 };
 
 /* The edit item closes the search first, so search shows only in its own
- * item. It then opens Kathryn Kirlin's salary cell (row 55, seventh in the
- * sorted table, and a "New" state row, so it survives the filter), types a
- * new value, then saves it; she then tops the list. */
+ * item. It then opens the estimate of "Review onboarding flow" (task-40,
+ * second in the due date sort, and In Review, so it survives the filter),
+ * types a new value, then saves it. */
 const EDIT_STEP = 2;
-const EDIT_ROW = '55';
-const EDIT_FROM = '97434';
-const EDIT_TO = '120000';
+const EDIT_ROW = 'task-40';
+const EDIT_FROM = '4';
+const EDIT_TO = '16';
 
 const clearSearch = (s: SignalTableState): SignalTableState => ({
   ...s,
@@ -68,19 +66,19 @@ const clearSearch = (s: SignalTableState): SignalTableState => ({
 const STEPS: readonly Step[] = [
   {
     feature: 'Sorting',
-    title: 'Sort by salary, highest first',
-    code: "sorting: [{ id: 'salary', desc: true }]",
+    title: 'Sort by due date in the sort editor',
+    code: "sorting: [{ id: 'due', desc: false }]",
     cue: 'sort',
-    apply: (s) => ({ ...s, sorting: [{ id: 'salary', desc: true }] }),
+    apply: (s) => ({ ...s, sorting: [{ id: 'due', desc: false }] }),
   },
   {
     feature: 'Search',
-    title: 'Search all columns for “in”',
-    code: "globalFilter: 'in'",
+    title: 'Search all columns for “billing”',
+    code: "globalFilter: 'billing'",
     cue: 'search',
-    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'in' }),
+    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'billing' }),
     typing: {
-      text: 'in',
+      text: 'billing',
       at: (s, partial) => ({
         ...s,
         showGlobalFilter: true,
@@ -90,52 +88,39 @@ const STEPS: readonly Step[] = [
   },
   {
     feature: 'Editing',
-    title: 'Edit a salary to $120,000',
+    title: 'Edit an estimate to 16h',
     code: "enableEditing: true, editDisplayMode: 'cell'",
     cue: 'edit',
     apply: (s) => ({
       ...clearSearch(s),
-      salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
+      estimateEdits: { [EDIT_ROW]: Number(EDIT_TO) },
     }),
     // the typed value lives in the open cell's input until it is saved
     typing: { text: EDIT_TO, at: (s) => clearSearch(s) },
   },
   {
     feature: 'Filtering',
-    title: 'Filter states starting with “New”',
-    code: "columnFilters: [{ id: 'state', value: 'New' }]",
+    title: 'Filter the status with a chip',
+    code: "columnFilters: [{ id: 'status', value: 'In Review' }]",
     cue: 'filter',
     apply: (s) => ({
       ...s,
-      showColumnFilters: true,
-      columnFilters: [{ id: 'state', value: 'New' }],
-    }),
-    typing: {
-      text: 'New',
-      at: (s, partial) => ({
-        ...s,
-        showColumnFilters: true,
-        columnFilters: partial ? [{ id: 'state', value: partial }] : [],
-      }),
-    },
-  },
-  {
-    feature: 'Selection',
-    title: 'Select rows',
-    code: 'enableRowSelection: true',
-    cue: 'select',
-    // the top three rows left after the filter
-    apply: (s) => ({
-      ...s,
-      rowSelection: { '55': true, '100': true, '45': true },
+      columnFilters: [{ id: 'status', value: 'In Review' }],
     }),
   },
   {
-    feature: 'Grouping',
-    title: 'Group rows by state',
-    code: "grouping: ['state']",
-    cue: 'group',
-    apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
+    feature: 'Column order',
+    title: 'Move Project next to Name',
+    code: "columnOrder: ['name', 'project', 'status', 'assignee', …]",
+    cue: 'order',
+    apply: (s) => ({ ...s, columnOrder: ['project', 'status', 'assignee'] }),
+  },
+  {
+    feature: 'View settings',
+    title: 'Stripe the rows in the view settings',
+    code: 'viewSettings: { striped: true }',
+    cue: 'view',
+    apply: (s) => ({ ...s, viewSettings: { striped: true } }),
   },
 ];
 
@@ -167,7 +152,7 @@ const typingMs = (step: number) => {
 
 type Mode = 'playing' | 'paused' | 'user';
 
-/** v5's replaying table for the homepage: six items on a loop, each one types
+/** The replaying table for the homepage: six items on a loop, each one types
  * any text letter by letter, then pulses what it changed. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);

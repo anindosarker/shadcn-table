@@ -15,6 +15,7 @@ import {
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'; //note: this is TanStack React Query V5
+import { MailIcon, MapIcon, UserIcon } from 'lucide-react';
 
 //Your API response shape will probably be different. Knowing a total row count is important though.
 type UserApiResponse = {
@@ -38,18 +39,22 @@ const columns: ST_ColumnDef<User>[] = [
   //column definitions...
   {
     accessorKey: 'firstName',
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'email',
+    icon: MailIcon,
     header: 'Email',
   },
   {
     accessorKey: 'state',
+    icon: MapIcon,
     header: 'State',
   },
   //end

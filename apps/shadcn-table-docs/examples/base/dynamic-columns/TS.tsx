@@ -12,7 +12,16 @@ import {
   ST_Tooltip,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
-import { RefreshCwIcon } from 'lucide-react';
+import {
+  CalendarClockIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  RefreshCwIcon,
+  TextIcon,
+  UserIcon,
+  type LucideIcon,
+} from 'lucide-react';
 import {
   keepPreviousData,
   QueryClient,
@@ -45,6 +54,16 @@ const columnNames = {
   phoneNumber: 'Phone Number',
   lastLogin: 'Last Login',
 } as const;
+
+//one icon per column, looked up by key; a column the API adds later gets the fallback
+const columnIcons: Record<string, LucideIcon> = {
+  firstName: UserIcon,
+  lastName: UserIcon,
+  address: MapPinIcon,
+  state: MapIcon,
+  phoneNumber: PhoneIcon,
+  lastLogin: CalendarClockIcon,
+};
 
 const Example = () => {
   //manage our own state for stuff we want to pass to the API
@@ -105,6 +124,7 @@ const Example = () => {
         ? Object.keys(data[0]).map((columnId) => ({
             header: columnNames[columnId as keyof User] ?? columnId,
             accessorKey: columnId,
+            icon: columnIcons[columnId] ?? TextIcon,
             id: columnId,
           }))
         : [],
@@ -121,7 +141,6 @@ const Example = () => {
     columns,
     data,
     enableRowSelection: true,
-    initialState: { showColumnFilters: true },
     manualFiltering: true, //turn off built-in client-side filtering
     manualPagination: true, //turn off built-in client-side pagination
     manualSorting: true, //turn off built-in client-side sorting

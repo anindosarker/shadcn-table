@@ -19,7 +19,14 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { type User, fakeData, usStates } from './makeData';
-import { Pencil, Trash2 } from 'lucide-react';
+import {
+  HashIcon,
+  MailIcon,
+  MapIcon,
+  Pencil,
+  Trash2,
+  UserIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const [validationErrors, setValidationErrors] = useState<
@@ -30,12 +37,14 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'Id',
         enableEditing: false,
         size: 80,
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         stEditTextFieldProps: {
           required: true,
@@ -52,6 +61,7 @@ const Example = () => {
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         stEditTextFieldProps: {
           required: true,
@@ -67,6 +77,7 @@ const Example = () => {
       },
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email',
         stEditTextFieldProps: {
           type: 'email',
@@ -83,6 +94,7 @@ const Example = () => {
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
         editVariant: 'select',
         editSelectOptions: usStates,
@@ -155,6 +167,7 @@ const Example = () => {
     createDisplayMode: 'row', // ('modal', and 'custom' are also available)
     editDisplayMode: 'row', // ('modal', 'cell', 'table', and 'custom' are also available)
     enableEditing: true,
+    positionActionsColumn: 'first',
     getRowId: (row) => row.id,
     stToolbarAlertBannerProps: isLoadingUsersError
       ? {

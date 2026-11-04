@@ -10,7 +10,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { RefreshCw } from 'lucide-react';
+import {
+  CalendarClockIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  RefreshCw,
+  UserIcon,
+} from 'lucide-react';
 import { useTableQueryParams } from '../hooks/useTableQueryParams';
 import { useUsersQuery } from '../hooks/useUsersQuery';
 import type { User } from '../lib/users.service';
@@ -21,27 +28,33 @@ export const UsersTable = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
       {
         accessorKey: 'phoneNumber',
+        icon: PhoneIcon,
         header: 'Phone Number',
       },
       {
         accessorFn: (row) => new Date(row.lastLogin),
         id: 'lastLogin',
+        icon: CalendarClockIcon,
         header: 'Last Login',
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleString(),
         filterFn: 'greaterThan',

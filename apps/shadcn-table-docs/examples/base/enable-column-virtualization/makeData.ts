@@ -1,3 +1,5 @@
+import { type LucideIcon, UserIcon, UserRoundIcon } from 'lucide-react';
+
 //seeded so that server and client render the same columns and names
 const createRandom = (seed: number) => {
   let state = seed >>> 0;
@@ -46,10 +48,16 @@ const firstNames = [
 
 const pick = <T>(list: T[]) => list[Math.floor(random() * list.length)];
 
+//one icon per column, looked up by key; the generated columns get the fallback
+const columnIcons: Record<string, LucideIcon> = {
+  '0': UserRoundIcon,
+};
+
 export const fakeColumns = [...Array(500)].map((_, i) => {
   return {
     accessorKey: i.toString(),
     header: 'Column ' + i.toString(),
+    icon: columnIcons[i.toString()] ?? UserIcon,
     size: randomInt(150, 249),
   };
 });

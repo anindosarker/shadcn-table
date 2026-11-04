@@ -7,7 +7,13 @@
  * headings, guide links, then holds the page through the full live demo loop
  * on Base UI, Radix UI and React Aria (demoLoop in _helpers.mjs).
  */
-import { codeToggle, demoLoop, example } from './_helpers.mjs';
+import {
+  chipFilter,
+  closeChipEditor,
+  codeToggle,
+  demoLoop,
+  example,
+} from './_helpers.mjs';
 
 /**
  * An example page renders exactly one playground panel (data-mode) and no
@@ -45,24 +51,52 @@ const checks = {
     'enable-filter-facet-values',
     'enableFacetedValues: true',
     async (page, w, check) => {
-      const selects = w.locator('thead select, thead [role="combobox"]');
-      check('faceted select filters', (await selects.count()) > 0);
+      const editor = await chipFilter(
+        page,
+        w,
+        'faceted-values',
+        'City',
+        '[data-slot="select-trigger"], [role="combobox"]',
+        check,
+      );
+      await closeChipEditor(page, editor);
     },
   ),
   '/docs/examples/filter-switching': examplePage(
     'customize-filter-modes',
     'enableColumnFilterModes: true',
     async (page, w, check) => {
-      check(
-        'filter mode buttons',
-        (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
-          0,
+      // the mode picker sits on the editor's top line in chips mode (D39)
+      const editor = await chipFilter(
+        page,
+        w,
+        'filter-switching',
+        'First Name',
+        'button[aria-label*="filter mode" i]',
+        check,
       );
+      await closeChipEditor(page, editor);
     },
   ),
   '/docs/examples/filter-variants': examplePage(
     'customize-filter-variants',
     "filterVariant: 'range-slider'",
+    async (page, w, check) => {
+      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
+      const editor = await chipFilter(
+        page,
+        w,
+        'filter-variants',
+        'Salary',
+        '[role="slider"], input[type="range"]',
+        check,
+      );
+      await closeChipEditor(page, editor);
+    },
+  ),
+  '/docs/examples/subheader-filters': examplePage(
+    'subheader-filters',
+    "columnFilterDisplayMode: 'subheader'",
     async (page, w, check) => {
       // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
       check(
@@ -71,11 +105,50 @@ const checks = {
           .locator('thead [role="slider"], thead input[type="range"]')
           .count()) > 0,
       );
+      check(
+        'date filter input',
+        (await w.locator('thead input[type="date"]').count()) > 0,
+      );
+      check(
+        'checkbox filter',
+        (await w
+          .locator('thead [role="checkbox"], thead [data-slot="checkbox"]')
+          .count()) > 0,
+      );
+      check(
+        'filter mode buttons',
+        (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
+          0,
+      );
     },
   ),
   '/docs/examples/persistent-view': examplePage(
     'persistent-view',
     'persistViewSettings: true',
+    async (page, w, check) => {
+      // F14: the docs prose margin must not push the pagination out of the
+      // bottom toolbar
+      const box = await w
+        .locator('[data-slot="pagination-content"]')
+        .last()
+        .evaluate((el) => {
+          const bar = el.closest('div.justify-between')?.parentElement;
+          if (!bar) return null;
+          const ul = el.getBoundingClientRect();
+          const rect = bar.getBoundingClientRect();
+          return {
+            bar: Math.round(rect.bottom),
+            inside: ul.top >= rect.top - 0.5 && ul.bottom <= rect.bottom + 0.5,
+            ul: Math.round(ul.bottom),
+          };
+        })
+        .catch(() => null);
+      check(
+        'pagination inside the bottom toolbar',
+        !!box?.inside,
+        box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
+      );
+    },
   ),
   '/docs/examples/popover-filters': examplePage(
     'alternate-column-filtering',
@@ -123,7 +196,22 @@ const checks = {
       );
     },
   ),
-  '/docs/examples/react-query': examplePage('react-query', 'useQuery'),
+  '/docs/examples/react-query': examplePage(
+    'react-query',
+    'useQuery',
+    async (page, w, check) => {
+      // a body row under the sticky header is a library layout fault: logged,
+      // not failed (spec 06.2 1.6.5)
+      const head = await w.locator('thead').first().boundingBox();
+      const row = await w.locator('tbody tr').first().boundingBox();
+      if (head && row && row.y < head.y + head.height - 0.5) {
+        console.warn(
+          `  warn react-query: first body row top ${Math.round(row.y)} above the sticky header bottom ${Math.round(head.y + head.height)}`,
+        );
+      }
+      check('react-query: header and first row measured', !!head && !!row);
+    },
+  ),
   '/docs/examples/remote': examplePage('remote', 'manualPagination: true'),
   '/docs/examples/lazy-detail-panel': examplePage(
     'lazy-detail-panel',
@@ -268,6 +356,21 @@ const checks = {
       'live demo rows',
       (await rows.count()) > 0,
       `rows=${await rows.count()}`,
+    );
+    // the stock 0.8 table: icons in the headers, filters as chips (no
+    // filter row under the headers), the view settings button
+    const demo = page.locator('.v5-demo-table');
+    check(
+      'demo: header icons',
+      (await demo.locator('thead th svg[aria-hidden="true"]').count()) >= 5,
+    );
+    check(
+      'demo: no subheader filter row',
+      (await demo.locator('thead input').count()) === 0,
+    );
+    check(
+      'demo: view settings button',
+      (await demo.locator('button[aria-label="View settings"]').count()) === 1,
     );
     check('features heading', txt.includes('Everything you need'));
     check(

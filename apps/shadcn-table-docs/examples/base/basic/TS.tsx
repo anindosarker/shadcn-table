@@ -6,6 +6,7 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 //example data type
 type Person = {
@@ -73,26 +74,31 @@ const Example = () => {
     () => [
       {
         accessorKey: 'name.firstName', //access nested data with dot notation
+        icon: UserIcon,
         header: 'First Name',
         size: 150,
       },
       {
         accessorKey: 'name.lastName',
+        icon: UserIcon,
         header: 'Last Name',
         size: 150,
       },
       {
         accessorKey: 'address', //normal accessorKey
+        icon: MapPinIcon,
         header: 'Address',
         size: 200,
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
         size: 150,
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
         size: 150,
       },

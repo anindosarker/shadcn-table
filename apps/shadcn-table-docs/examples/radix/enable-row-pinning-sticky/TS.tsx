@@ -7,24 +7,29 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { Building2Icon, MailIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
     ],
