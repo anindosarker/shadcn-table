@@ -159,6 +159,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - The persistent view example uses the header demo's column definitions: filter variants, filter fns, select options, status, priority and tag chips, progress, PR link and archived cells, sizes and the priority sort; Name is orderable, every view settings item is pinned and 50 rows show per page.
 - The advanced example's Activate, Deactivate and Contact buttons and row action items open a dialog with the selected names instead of a browser alert.
 
+#### Fix F45
+
+- The home demo keeps every step active, with its check mark and "Now showing" label, for its whole run (at least 5.2 s), and the step titles name the feature: Sort editor, Global search, Cell editing, Filter chips, Column order, Striped rows.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed
