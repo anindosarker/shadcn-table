@@ -395,3 +395,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D56 Only the Popover Filters page pins popover mode
 
 - `export-to-csv` and `export-to-pdf` (and any other example that is not about popover filters) drop `columnFilterDisplayMode: 'popover'` and run on the chips default (D9, D32); `alternate-column-filtering` (the Popover Filters page) is the one example that keeps `'popover'`. Their page checks follow (chips assertions instead of the funnel). Owner, 2026-11-05 (item 4 discussion).
+
+### D57 Row drop slides the rows into place
+
+- Row dragging keeps its current drag preview. On drop, the rows slide from their old to their new positions and the moved row gets the D37 highlight, the same slide and flash a column drop plays; within one table only (a cross-table drop just appears in the target table). Reduced motion: no slide. Owner, 2026-11-05 (F20).
