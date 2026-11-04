@@ -256,11 +256,19 @@ export const PortalsReadContext = {
     const canvas = within(canvasElement);
     const body = within(document.body);
     await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
-    await userEvent.click(canvas.getAllByLabelText('Column Actions')[0]);
-    await waitFor(() =>
-      expect(body.getByText('Sort by First Name ascending')).toBeTruthy(),
+    const firstNameHeader = canvas.getByRole('columnheader', {
+      name: /First Name/,
+    });
+    await userEvent.click(
+      within(firstNameHeader).getByRole('button', { name: 'Column Actions' }),
     );
-    await userEvent.keyboard('{Escape}');
+    await userEvent.click(
+      await body.findByRole('menuitem', { name: /^Sort ascending$/ }),
+    );
+    // A closing menu keeps the rest of the page aria-hidden.
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
+    );
     await userEvent.click(canvas.getByText('Create'));
     await waitFor(() => expect(body.getByRole('dialog')).toBeTruthy());
     expect(body.getByRole('dialog').querySelector('input')).not.toBeNull();
