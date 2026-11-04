@@ -1,6 +1,6 @@
 # Subheader filter layout (F44), tracker
 
-Status: verified
+Status: merged (5487d7517168af9d7c3f103105a8a869f567b572)
 Branch `v0.8/fix-subheader-filters`, worktree 01, PR #117
 Gates:
 - Repro on shipped code (7fc6473e), `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/Filtering.stories.tsx`: red as intended, 2 of 23 failed. FilteringChangeModeEnabledFaceted `SliderCaptionBelowTrack`: caption top 220 above track bottom 223. SubheaderRangeFieldsNarrow `SubheaderInputsInsideCell`: the table overflows its scroll box (445 > 442), the range fields widen their th past its size.
