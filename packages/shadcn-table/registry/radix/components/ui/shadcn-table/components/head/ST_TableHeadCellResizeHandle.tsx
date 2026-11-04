@@ -86,7 +86,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
           <span
             className={cn(
               'absolute inset-y-0 w-px bg-transparent transition-colors group-hover/th:bg-foreground/15',
-              isLastColumn ? 'end-0' : 'end-1',
+              isLastColumn ? 'inset-e-0' : 'inset-e-1',
               isResizing && 'bg-primary group-hover/th:bg-primary',
             )}
           />
