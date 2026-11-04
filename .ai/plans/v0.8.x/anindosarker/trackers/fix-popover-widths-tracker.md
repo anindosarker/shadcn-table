@@ -1,6 +1,6 @@
 # Popover-mode header widths (F38), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-popover-widths`, worktree 03, PR #113
 Gates:
 - Repro on shipped code (9ec16645), `node scripts/check-pages.mjs --base base --url http://localhost:5341 /docs/examples/export-csv /docs/examples/export-pdf /docs/examples/popover-filters` with the new `headerLabelsFit` assertion: red as expected, export-csv and export-pdf `ID(14>0) First Name(72>22) Last Name(71>22)`; popover-filters green (alternate-column-filtering sets no sizes).
@@ -10,6 +10,14 @@ Gates:
 - `node scripts/check-pages.mjs d --base base --url http://localhost:5341` at 67e26904: green (254 passed)
 - `node scripts/check-pages.mjs e --base base --url http://localhost:5341` at 67e26904: green (673 passed)
 - `node scripts/check-pages.mjs b --base base --url http://localhost:5341` at 67e26904: green (284 passed)
+- `pnpm --filter shadcn-table-docs build` at 9477eacb: green (verifier)
+- `node scripts/check-pages.mjs d --base radix --url http://localhost:5346` at 9477eacb: green (254 passed, verifier)
+- `node scripts/check-pages.mjs e --base radix --url http://localhost:5346` at 9477eacb: green (673 passed, verifier)
+- `node scripts/check-pages.mjs b --base radix --url http://localhost:5346` at 9477eacb: green (284 passed, verifier)
+- `node scripts/check-pages.mjs d --base aria --url http://localhost:5346` at 9477eacb: green (254 passed, verifier)
+- `node scripts/check-pages.mjs e --base aria --url http://localhost:5346` at 9477eacb: green (673 passed, verifier)
+- `node scripts/check-pages.mjs b --base aria --url http://localhost:5346` at 9477eacb: green (284 passed, verifier)
+- types:check, lint, check:bases and the base page checks at 67e26904 stay valid: `git diff --name-only 67e26904..9477eacb` touches only this tracker (verifier)
 
 - Milestone 01 F38 example widths: done (67e26904)
 
