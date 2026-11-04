@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, waitFor, within } from 'storybook/test';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Toolbar Examples',
@@ -428,5 +428,95 @@ export const InternalButtonsAnimateIn = {
         }
       }
     });
+  },
+};
+
+/**
+ * The built-in buttons sit in one group in the D8 order: search toggle,
+ * filter picker, sort, the pinned view items, full screen, view settings.
+ */
+export const InternalButtonsOrder = {
+  render: () => <ToolbarEnabledDefault />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const fullScreen = await within(canvasElement).findByRole('button', {
+      name: /full screen/i,
+    });
+    const labels = [
+      ...internalButtonsGroup(fullScreen).querySelectorAll('button'),
+    ].map((button) => button.getAttribute('aria-label'));
+    expect(labels).toEqual([
+      'Show/Hide search',
+      'Filter',
+      'Sort',
+      'Show/Hide columns',
+      'Toggle density',
+      'Toggle full screen',
+      'View settings',
+    ]);
+  },
+};
+
+/**
+ * Custom actions render in their toolbar: the top one before the internal
+ * button group, the bottom one below the table; a click runs the handler.
+ */
+export const CustomActionsRender = {
+  render: () => (
+    <>
+      <CustomTopToolbarActions />
+      <CustomBottomToolbarActions />
+    </>
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const prompt = spyOn(window, 'prompt').mockReturnValue(null);
+    try {
+      const canvas = within(canvasElement);
+      await canvas.findAllByRole('table');
+      const [topTable, bottomTable] = canvas.getAllByRole('table');
+      const top = canvasElement.querySelectorAll<HTMLElement>(
+        'button:has(.lucide-square-plus)',
+      )[0]!;
+      const bottom = canvasElement.querySelectorAll<HTMLElement>(
+        'button:has(.lucide-square-plus)',
+      )[1]!;
+      const [fullScreen] = canvas.getAllByRole('button', {
+        name: /full screen/i,
+      });
+      expect(
+        top.compareDocumentPosition(fullScreen!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(top.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        topTable!.getBoundingClientRect().top,
+      );
+      expect(bottom.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+        bottomTable!.getBoundingClientRect().bottom,
+      );
+      await userEvent.click(top);
+      expect(prompt).toHaveBeenCalledWith('Create new user modal');
+    } finally {
+      prompt.mockRestore();
+    }
+  },
+};
+
+/**
+ * With `positionToolbarAlertBanner="bottom"` the selection banner appears
+ * below the table once a row is selected.
+ */
+export const BottomToolbarAlertBanner = {
+  render: () => <ToolbarAlertBannerBottom />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('checkbox', { name: 'Toggle select row' });
+    expect(canvas.queryByText(/row\(s\) selected/)).toBeNull();
+    await userEvent.click(
+      canvas.getAllByRole('checkbox', { name: 'Toggle select row' })[0]!,
+    );
+    const text = await canvas.findByText(`1 of ${data.length} row(s) selected`);
+    const table = canvasElement.querySelector('table')!;
+    expect(text.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      table.getBoundingClientRect().bottom,
+    );
   },
 };
