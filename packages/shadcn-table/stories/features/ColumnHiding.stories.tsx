@@ -429,9 +429,12 @@ export const MenuReorderWithTableOffset = {
     fireEvent.dragEnter(menuRow(menu, 'First Name'));
     fireEvent.dragOver(menuRow(menu, 'First Name'));
     fireEvent.dragEnd(handle);
+    // The open menu hides the table from the accessibility tree.
     await waitFor(() =>
       expect(
-        canvas.getAllByRole('columnheader')[0].getAttribute('data-flip-column'),
+        canvasElement
+          .querySelector('thead th[data-flip-column]')
+          ?.getAttribute('data-flip-column'),
       ).toBe('address'),
     );
     // Columns after the moved range keep their place and do not slide.
