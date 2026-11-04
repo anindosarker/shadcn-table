@@ -66,18 +66,6 @@ const filterTextFieldVariants = cva(
   'relative inline-flex w-full min-w-0 flex-col align-top',
 );
 
-/**
- * Each filter field's minimum width: the class the field carries and the same
- * width in px for layout math (ST_FilterRangeFields stacks Min and Max when two
- * do not fit). Chromium's date input needs 126px of content for its placeholder.
- */
-export const ST_FILTER_FIELD_MIN_WIDTHS = {
-  date: { className: 'min-w-35', px: 140 },
-  multiSelect: { className: 'min-w-30', px: 120 },
-  range: { className: 'min-w-18', px: 72 },
-  text: { className: 'min-w-24', px: 96 },
-} as const;
-
 /** Every value the filter inputs hand to the column filter. */
 type FilterInputValue = Date | number | string | string[] | null;
 export interface ST_FilterTextFieldProps<TData extends ST_RowData>
@@ -488,14 +476,15 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
       <div
         className={cn(
           filterTextFieldVariants(),
+          // Chromium's date input needs 126px of content for its placeholder.
           isDateFilter
-            ? ST_FILTER_FIELD_MIN_WIDTHS.date.className
+            ? 'min-w-35'
             : isMultiSelectFilter
-              ? ST_FILTER_FIELD_MIN_WIDTHS.multiSelect.className
+              ? 'min-w-30'
               : isRangeFilter
-                ? ST_FILTER_FIELD_MIN_WIDTHS.range.className
+                ? 'min-w-18'
                 : !filterChipLabel
-                  ? ST_FILTER_FIELD_MIN_WIDTHS.text.className
+                  ? 'min-w-24'
                   : 'min-w-auto',
         )}
         ref={(node) => {

@@ -392,6 +392,29 @@ const subheaderInputsInsideCell = async (canvasElement: HTMLElement) => {
         `${part.dataset.slot ?? part.tagName} "${part.textContent}" [${box.left}, ${box.right}] x [${box.top}, ${box.bottom}] inside th [${cell.left}, ${cell.right}] x [${cell.top}, ${cell.bottom}]`,
       ).toBe(true);
     }
+    // A range filter's Filter Mode caption spans the range group, past the
+    // Min field.
+    let rangeGroups = 0;
+    for (const th of ths) {
+      // Top-level fields only: an autocomplete nests an input group.
+      const fields = Array.from(
+        th.querySelectorAll('[data-slot="input-group"]'),
+      ).filter(
+        (field) => !field.parentElement?.closest('[data-slot="input-group"]'),
+      );
+      const caption = Array.from(th.querySelectorAll('label, p')).find((el) =>
+        el.textContent?.startsWith('Filter Mode'),
+      );
+      if (fields.length !== 2 || !caption) continue;
+      rangeGroups += 1;
+      const minRight = fields[0].getBoundingClientRect().right;
+      const captionRight = caption.getBoundingClientRect().right;
+      expect(
+        captionRight,
+        `${th.textContent}: caption right ${captionRight} past Min right ${minRight}`,
+      ).toBeGreaterThan(minRight + 1);
+    }
+    expect(rangeGroups).toBeGreaterThan(0);
   });
 };
 
@@ -455,6 +478,15 @@ export const FilteringChangeModeEnabledFaceted = {
           header: 'State',
           icon: MapIcon,
         },
+        {
+          Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
+          accessorFn: (row) => new Date(row.birthDate),
+          filterVariant: 'date-range',
+          header: 'Birth Date',
+          icon: CalendarIcon,
+          id: 'birthDate',
+          size: 320,
+        },
       ]}
       data={data}
       enableColumnFilterModes
@@ -474,58 +506,79 @@ export const FilteringChangeModeEnabledFaceted = {
   },
 };
 
-/** Range fields too wide for their column stack, one per row. */
+/** Range fields wider than their column stay side by side, clipped by the th (D61). */
 export const SubheaderRangeFieldsNarrow = {
+  // The wrapper is the three column sizes (180 + 80 + 180) plus the frame's
+  // border wide, so the table cannot spread spare width over the columns.
   render: () => (
-    <ShadcnTable
-      columns={[
-        {
-          accessorKey: 'firstName',
-          header: 'First Name',
-          icon: UserIcon,
-        },
-        {
-          accessorKey: 'age',
-          filterVariant: 'range',
-          header: 'Age',
-          icon: CakeIcon,
-          size: 80,
-        },
-        {
-          Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
-          accessorFn: (row) => new Date(row.birthDate),
-          filterVariant: 'date-range',
-          header: 'Birth Date',
-          icon: CalendarIcon,
-          id: 'birthDate',
-          size: 180,
-        },
-      ]}
-      data={data}
-      enableColumnFilterModes
-      columnFilterDisplayMode="subheader"
-      initialState={{ showColumnFilters: true }}
-    />
+    <div className="w-111">
+      <ShadcnTable
+        columns={[
+          {
+            accessorKey: 'firstName',
+            header: 'First Name',
+            icon: UserIcon,
+          },
+          {
+            accessorKey: 'age',
+            filterVariant: 'range',
+            header: 'Age',
+            icon: CakeIcon,
+            size: 80,
+          },
+          {
+            Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
+            accessorFn: (row) => new Date(row.birthDate),
+            filterVariant: 'date-range',
+            header: 'Birth Date',
+            icon: CalendarIcon,
+            id: 'birthDate',
+            size: 180,
+          },
+        ]}
+        data={data}
+        enableColumnFilterModes
+        columnFilterDisplayMode="subheader"
+        initialState={{ showColumnFilters: true }}
+      />
+    </div>
   ),
   play: async ({ canvasElement, step }: StoryContext) => {
     await within(canvasElement).findAllByText(/Filter Mode/);
+    const thFor = (name: string) =>
+      Array.from(canvasElement.querySelectorAll('thead th')).find((cell) =>
+        cell.textContent?.startsWith(name),
+      )!;
     await step('SubheaderInputsInsideCell', () =>
-      subheaderInputsInsideCell(canvasElement),
-    );
-    await step('Range fields stack', () =>
       waitFor(() => {
-        for (const name of ['Age', 'Birth Date']) {
-          const th = Array.from(
-            canvasElement.querySelectorAll('thead th'),
-          ).find((cell) => cell.textContent?.startsWith(name))!;
+        for (const [name, size] of [
+          ['Age', 80],
+          ['Birth Date', 180],
+        ] as const) {
+          const th = thFor(name);
+          const cell = th.getBoundingClientRect();
           const [min, max] = Array.from(
             th.querySelectorAll('[data-slot="input-group"]'),
           ).map((group) => group.getBoundingClientRect());
+          // D61: Min and Max stay on one row at every width.
           expect(
-            max.top,
-            `${name}: Max top ${max.top} below Min bottom ${min.bottom}`,
-          ).toBeGreaterThanOrEqual(min.bottom);
+            Math.abs(max.top - min.top),
+            `${name}: Min top ${min.top}, Max top ${max.top}`,
+          ).toBeLessThanOrEqual(1);
+          // The th keeps its size and clips what is wider.
+          expect(
+            Math.abs(cell.width - size),
+            `${name}: th width ${cell.width} is its size ${size}`,
+          ).toBeLessThanOrEqual(1);
         }
+        const table = canvasElement.querySelector('table')!;
+        let scroller = table.parentElement!;
+        while (getComputedStyle(scroller).overflowX !== 'auto')
+          scroller = scroller.parentElement!;
+        expect(
+          scroller.scrollWidth,
+          'no horizontal overflow of the table',
+        ).toBeLessThanOrEqual(scroller.clientWidth);
       }),
     );
   },
