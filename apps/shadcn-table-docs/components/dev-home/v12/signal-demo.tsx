@@ -33,6 +33,7 @@ type Beat = [wait: number, run: (r: Replay) => void];
 interface Step {
   /** Feature name for the status line. */
   feature: string;
+  /** Short feature title in the step list. */
   title: string;
   code: string;
   /** The interaction, played before the state lands. */
@@ -117,7 +118,7 @@ const typeBeats = (
 const STEPS: readonly Step[] = [
   {
     feature: 'Sorting',
-    title: 'Sort by due date in the sort editor',
+    title: 'Sort editor',
     code: "sorting: [{ id: 'due', desc: false }]",
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'Sort'))],
@@ -129,7 +130,7 @@ const STEPS: readonly Step[] = [
   },
   {
     feature: 'Search',
-    title: 'Search all columns for “billing”',
+    title: 'Global search',
     code: "globalFilter: 'billing'",
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'Show/Hide search'))],
@@ -142,7 +143,7 @@ const STEPS: readonly Step[] = [
   },
   {
     feature: 'Editing',
-    title: 'Edit an estimate to 16h',
+    title: 'Cell editing',
     code: "enableEditing: true, editDisplayMode: 'cell'",
     beats: [
       [0, (r) => r.set(clearSearch)],
@@ -160,7 +161,7 @@ const STEPS: readonly Step[] = [
   },
   {
     feature: 'Filtering',
-    title: 'Filter the status with a chip',
+    title: 'Filter chips',
     code: "columnFilters: [{ id: 'status', value: 'In Review' }]",
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'Filter'))],
@@ -186,17 +187,20 @@ const STEPS: readonly Step[] = [
   },
   {
     feature: 'Column order',
-    title: 'Move Project next to Name',
+    title: 'Column order',
     code: "columnOrder: ['name', 'project', 'status', 'assignee', …]",
+    // the header pulses, slides next to Name, and pulses again where it
+    // landed, so the step plays about as long as the others
     beats: [
       [0, (r) => pulse(headerCell(r.root, 'project'))],
       [700, (r) => r.set(STEPS[4].apply)],
+      [900, (r) => pulse(headerCell(r.root, 'project'))],
     ],
     apply: (s) => ({ ...s, columnOrder: ['project', 'status', 'assignee'] }),
   },
   {
     feature: 'View settings',
-    title: 'Stripe the rows in the view settings',
+    title: 'Striped rows',
     code: 'viewSettings: { striped: true }',
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'View settings'))],
@@ -236,16 +240,39 @@ const HOLD_MS = 2200;
 // the finished table holds this long before the replay starts over
 const LAST_HOLD_MS = 3000;
 const REST_MS = 1400;
+// every step stays active at least this long, beats and hold together
+const MIN_STEP_MS = 5200;
 
 const beatsMs = (step: number) =>
   (STEPS[step]?.beats ?? []).reduce((ms, [wait]) => ms + wait, 0) + SHOW_MS;
 
 const holdMs = (step: number) =>
-  step === -1 ? REST_MS : step === STEPS.length - 1 ? LAST_HOLD_MS : HOLD_MS;
+  step === -1
+    ? REST_MS
+    : Math.max(
+        step === STEPS.length - 1 ? LAST_HOLD_MS : HOLD_MS,
+        MIN_STEP_MS - beatsMs(step),
+      );
 
 type Mode = 'playing' | 'paused' | 'user';
 /* beats: the step's interaction plays; hold: its state has landed */
 type Phase = 'beats' | 'hold';
+
+/** A step's interaction in flight. It outlives the effect that plays it, so
+ * a remount of that effect (Strict Mode in dev, Fast Refresh) resumes the
+ * beats instead of cutting them short. */
+interface Run {
+  /** The navigation this run belongs to (`token` in SignalDemo). */
+  token: number;
+  step: number;
+  start: number;
+  /** Beats already played. */
+  ran: number;
+  /** The popover trigger the step opened, closed when it lands. */
+  opened: HTMLElement | null;
+  mounted: boolean;
+  landed: boolean;
+}
 
 /** The replaying table for the homepage: six items on a loop, each one plays
  * its interaction on the table's own controls, then its state lands. */
@@ -260,12 +287,13 @@ export function SignalDemo() {
   const [resets, setResets] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
-  // the step the visitor or the loop moved to last, read by an interrupted
-  // step's cleanup so it does not land over a newer jump
-  const stepRef = useRef(-1);
+  // bumped on every move (the loop, a jump, Replay): an interrupted run lands
+  // its state only while no newer move happened
+  const tokenRef = useRef(0);
+  const runRef = useRef<Run | null>(null);
 
   const goTo = (next: number, nextPhase: Phase) => {
-    stepRef.current = next;
+    tokenRef.current += 1;
     setStep(next);
     setPhase(nextPhase);
   };
@@ -274,7 +302,6 @@ export function SignalDemo() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const last = STEPS.length - 1;
-      stepRef.current = last;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot read of a media query
       setStep(last);
       setState(stateAt(last));
@@ -300,43 +327,71 @@ export function SignalDemo() {
   useEffect(() => {
     const root = tableRef.current;
     if (!running || phase !== 'beats' || step < 0 || !root) return;
-    let opened: HTMLElement | null = null;
-    let finished = false;
-    const timers: ReturnType<typeof setTimeout>[] = [];
+    const prev = runRef.current;
+    const run: Run =
+      prev && prev.token === tokenRef.current && !prev.landed
+        ? prev
+        : {
+            token: tokenRef.current,
+            step,
+            start: performance.now(),
+            ran: 0,
+            opened: null,
+            mounted: false,
+            landed: false,
+          };
+    runRef.current = run;
+    run.mounted = true;
     const replay: Replay = {
       root,
       set: (update) => setState(update),
       edit: setEditing,
       open: (trigger) => {
         if (!trigger) return;
-        opened = trigger;
+        run.opened = trigger;
         trigger.click();
       },
     };
-    // closes what the step opened and lands its state
+    // closes what the step opened and lands its state, once
     const land = () => {
-      if (opened?.getAttribute('aria-expanded') === 'true') opened.click();
-      opened = null;
+      if (run.landed) return;
+      run.landed = true;
+      if (run.opened?.getAttribute('aria-expanded') === 'true') {
+        run.opened.click();
+      }
+      run.opened = null;
       setEditing(null);
-      if (stepRef.current !== step) return;
-      setState(stateAt(step));
+      if (tokenRef.current !== run.token) return;
+      setState(stateAt(run.step));
       setPhase('hold');
     };
+    // a resumed run plays only the beats it has not played, on its own clock
+    const elapsed = performance.now() - run.start;
+    const timers: ReturnType<typeof setTimeout>[] = [];
     let at = 0;
-    for (const [wait, run] of STEPS[step].beats) {
+    STEPS[step].beats.forEach(([wait, beat], i) => {
       at += wait;
-      timers.push(setTimeout(() => run(replay), at));
-    }
-    timers.push(
-      setTimeout(() => {
-        finished = true;
-        land();
-      }, at + SHOW_MS),
-    );
+      if (i < run.ran) return;
+      timers.push(
+        setTimeout(
+          () => {
+            run.ran = i + 1;
+            beat(replay);
+          },
+          Math.max(0, at - elapsed),
+        ),
+      );
+    });
+    timers.push(setTimeout(land, Math.max(0, at + SHOW_MS - elapsed)));
     return () => {
       timers.forEach(clearTimeout);
-      // stopped part way (a click, a jump, or scrolled away): finish at once
-      if (!finished) land();
+      run.mounted = false;
+      // a remount runs this effect again in the same task and resumes the
+      // run; stopped part way (a click, a jump, Replay, or scrolled away),
+      // it finishes at once
+      queueMicrotask(() => {
+        if (!run.mounted) land();
+      });
     };
   }, [running, phase, step, resets]);
 
