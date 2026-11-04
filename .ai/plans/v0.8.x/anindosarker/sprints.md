@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-04 20:32
+Updated: 2026-11-04 21:00
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- |
@@ -13,7 +13,7 @@ Updated: 2026-11-04 20:32
 | Component fixes F3 to F6       |     |     | [x] |     |     |     |     |     |
 | Docs (06)                      |     |     |     | [x] |     |     |     |     |
 | Gate fixes F8, F9              |     |     |     |     | [x] |     |     |     |
-| Toolbar and filters (06.1)     |     |     |     |     |     | [ ] |     |     |
+| Toolbar and filters (06.1)     |     |     |     |     |     | [x] |     |     |
 | Cells and layout (06.1)        |     |     |     |     |     | [ ] |     |     |
 | Docs app (06.2)                |     |     |     |     |     | [ ] |     |     |
 | Stories and DefaultLook (06.2) |     |     |     |     |     |     | ·   |     |
