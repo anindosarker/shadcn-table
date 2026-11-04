@@ -149,10 +149,10 @@ const checks = {
                 ok = inside(box, clip.getBoundingClientRect());
               clip = clip.parentElement;
             }
-            // A caption's text overflowing its own box is cut too.
+            // A Filter Mode caption's text overflowing its own box is cut too.
             if (
               ok &&
-              (part.tagName === 'LABEL' || part.tagName === 'P') &&
+              part.textContent?.startsWith('Filter Mode:') &&
               part.scrollWidth > part.clientWidth + 1
             )
               ok = false;
