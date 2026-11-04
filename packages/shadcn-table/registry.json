@@ -368,6 +368,11 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
@@ -1761,6 +1766,11 @@
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
@@ -3158,6 +3168,11 @@
           "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
@@ -4551,6 +4566,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
