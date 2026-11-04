@@ -2,6 +2,7 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { ST_BASE } from '../../.storybook/themes';
+import { CircleCheckIcon, MapIcon, UserIcon } from 'lucide-react';
 
 // Fixed bug (spec 10.2, D61): in React Aria the row select checkbox, a column
 // filter checkbox and a grouped row's value had no tooltip, because the aria
@@ -26,15 +27,16 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
   {
     Cell: ({ cell }) => (cell.getValue() === 'true' ? 'Yes' : 'No'),
     accessorFn: (originalRow) => (originalRow.isActive ? 'true' : 'false'),
     filterVariant: 'checkbox',
     header: 'Is Active',
+    icon: CircleCheckIcon,
     id: 'isActive',
   },
-  { accessorKey: 'state', header: 'State' },
+  { accessorKey: 'state', header: 'State', icon: MapIcon },
 ];
 
 const body = within(document.body);

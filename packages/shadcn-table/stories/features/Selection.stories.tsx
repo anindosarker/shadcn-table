@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Minus, Send } from 'lucide-react';
+import { CakeIcon, MapPinIcon, Minus, Send, UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   type ST_ColumnDef,
@@ -24,18 +24,22 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
 ];
 

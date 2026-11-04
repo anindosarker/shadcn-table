@@ -2,6 +2,13 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
+import {
+  Building2Icon,
+  CakeIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Header Groups Examples',
@@ -15,11 +22,13 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
 
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ],
     header: 'Name',
@@ -30,10 +39,12 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ],
     header: 'Info',
@@ -70,11 +81,13 @@ export const HeaderAndFooterGroups = () => (
             accessorKey: 'firstName',
             footer: 'First Name',
             header: 'First Name',
+            icon: UserIcon,
           },
           {
             accessorKey: 'lastName',
             footer: 'Last Name',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         footer: 'Name',
@@ -87,11 +100,13 @@ export const HeaderAndFooterGroups = () => (
             accessorKey: 'age',
             footer: 'Age',
             header: 'Age',
+            icon: CakeIcon,
           },
           {
             accessorKey: 'address',
             footer: 'Address',
             header: 'Address',
+            icon: MapPinIcon,
           },
         ],
         footer: 'Info',
@@ -146,16 +161,19 @@ export const MixedHeaderGroups = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           columns: [
             {
               accessorKey: 'address',
               header: 'Address',
+              icon: MapPinIcon,
             },
           ],
           header: 'Grouped',
@@ -164,10 +182,12 @@ export const MixedHeaderGroups = () => {
         {
           accessorKey: 'city',
           header: 'City',
+          icon: Building2Icon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
       ]}
       data={data}
@@ -182,6 +202,7 @@ export const DeepMixedHeaderGroups = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           columns: [
@@ -190,14 +211,17 @@ export const DeepMixedHeaderGroups = () => {
                 {
                   accessorKey: 'address',
                   header: 'Address',
+                  icon: MapPinIcon,
                 },
                 {
                   accessorKey: 'city',
                   header: 'City',
+                  icon: Building2Icon,
                 },
                 {
                   accessorKey: 'state',
                   header: 'State',
+                  icon: MapIcon,
                 },
               ],
               header: 'Location',
@@ -210,6 +234,7 @@ export const DeepMixedHeaderGroups = () => {
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
       ]}
       data={data}
@@ -281,8 +306,13 @@ export const GroupEdgesMatchLeavesNoGrow = {
         {
           ...columns[0],
           columns: [
-            { accessorKey: 'firstName', grow: false, header: 'First Name' },
-            { accessorKey: 'lastName', header: 'Last Name' },
+            {
+              icon: UserIcon,
+              accessorKey: 'firstName',
+              grow: false,
+              header: 'First Name',
+            },
+            { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
           ],
         },
         columns[1],

@@ -1,6 +1,15 @@
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  CakeIcon,
+  HashIcon,
+  MailboxIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Column Resizing Examples',
@@ -12,26 +21,32 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'zipCode',
     header: 'Zip Code',
+    icon: MailboxIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -71,15 +86,18 @@ export const ColumnResizingDefaultOnChangeGridWithIndividualShrink = () => (
         accessorKey: 'id',
         grow: false,
         header: 'ID',
+        icon: HashIcon,
         size: 50,
       },
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ]}
     data={data}
@@ -123,27 +141,33 @@ export const ColumnResizingDisabledSomeColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'zipCode',
         enableResizing: false,
         header: 'Zip Code',
+        icon: MailboxIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -192,12 +216,14 @@ export const ColumnResizingWithHeaderGroups = () => (
             accessorKey: 'firstName',
             footer: 'First Name',
             header: 'First Name',
+            icon: UserIcon,
           },
 
           {
             accessorKey: 'lastName',
             footer: 'Last Name',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         footer: 'Name',
@@ -209,11 +235,13 @@ export const ColumnResizingWithHeaderGroups = () => (
             accessorKey: 'age',
             footer: 'Age',
             header: 'Age',
+            icon: CakeIcon,
           },
           {
             accessorKey: 'address',
             footer: 'Address',
             header: 'Address',
+            icon: MapPinIcon,
           },
         ],
         footer: 'Info',
@@ -238,12 +266,14 @@ export const ColumnResizingWithHeaderGroupsGridGrow = () => (
             accessorKey: 'firstName',
             footer: 'First Name',
             header: 'First Name',
+            icon: UserIcon,
           },
 
           {
             accessorKey: 'lastName',
             footer: 'Last Name',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         footer: 'Name',
@@ -255,11 +285,13 @@ export const ColumnResizingWithHeaderGroupsGridGrow = () => (
             accessorKey: 'age',
             footer: 'Age',
             header: 'Age',
+            icon: CakeIcon,
           },
           {
             accessorKey: 'address',
             footer: 'Address',
             header: 'Address',
+            icon: MapPinIcon,
           },
         ],
         footer: 'Info',

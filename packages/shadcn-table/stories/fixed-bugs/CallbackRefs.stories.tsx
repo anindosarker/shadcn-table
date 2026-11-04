@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // Fixed bug (findings, decisions-review item 11): the components that forward
 // a ref dropped a React 19 callback ref's cleanup and, for the table
@@ -30,8 +31,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 // A callback ref that records every node it receives, every `null` call and

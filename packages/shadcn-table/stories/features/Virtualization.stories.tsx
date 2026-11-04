@@ -4,6 +4,20 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { expect, waitFor } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import {
+  Building2Icon,
+  GlobeIcon,
+  type LucideIcon,
+  MailIcon,
+  MailboxIcon,
+  MapIcon,
+  MapPinIcon,
+  PaletteIcon,
+  PawPrintIcon,
+  PhoneIcon,
+  QuoteIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Virtualization',
@@ -15,61 +29,75 @@ const longColumns: ST_ColumnDef<(typeof longData)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'middleName',
     header: 'Middle Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
     size: 300,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'zipCode',
     header: 'Zip Code',
+    icon: MailboxIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'country',
     header: 'Country',
+    icon: GlobeIcon,
     size: 200,
   },
   {
     accessorKey: 'favoriteColor',
     header: 'Favorite Color',
+    icon: PaletteIcon,
   },
   {
     accessorKey: 'favoriteQuote',
     header: 'Favorite Quote',
+    icon: QuoteIcon,
     size: 700,
   },
   {
     accessorKey: 'petName',
     header: 'Pet Name',
+    icon: PawPrintIcon,
   },
   {
     accessorKey: 'petType',
     header: 'Pet Type',
+    icon: PawPrintIcon,
   },
 ];
 
@@ -208,16 +236,19 @@ export const EnableRowVirtualizationStickyFooter = () => (
         accessorKey: 'firstName',
         footer: 'First Name',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'middleName',
         footer: 'Middle Name',
         header: 'Middle Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         footer: 'Last Name',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ]}
     data={longData}
@@ -266,16 +297,19 @@ export const EnableColumnVirtualizationWithFooter = () => (
         accessorKey: 'firstName',
         footer: 'First Name',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'middleName',
         footer: 'Middle Name',
         header: 'Middle Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         footer: 'Last Name',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ]}
     data={longData.slice(0, 15)}
@@ -291,16 +325,19 @@ export const EnableColumnVirtualizationStickyFooter = () => (
         accessorKey: 'firstName',
         footer: 'First Name',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'middleName',
         footer: 'Middle Name',
         header: 'Middle Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         footer: 'Last Name',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ]}
     data={longData.slice(0, 50)}
@@ -340,10 +377,15 @@ export const RowAndColumnVirtualizationWithFeatures = () => (
   />
 );
 
+// Icons by column key; every fake column holds first names, so none is
+// listed and each falls back to the name icon.
+const fakeColumnIcons: Record<string, LucideIcon> = {};
+
 const fakeColumns = [...Array(500)].map((_, i) => {
   return {
     accessorKey: i.toString(),
     header: 'Column ' + i.toString(),
+    icon: fakeColumnIcons[i.toString()] ?? UserIcon,
   };
 });
 

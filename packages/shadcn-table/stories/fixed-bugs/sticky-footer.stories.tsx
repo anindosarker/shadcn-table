@@ -1,5 +1,6 @@
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import { DollarSignIcon, HashIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/sticky-footer',
@@ -97,35 +98,42 @@ const mockColumns: ST_ColumnDef<(typeof mockData)[0]>[] = [
     filterVariant: 'multi-select',
     footer: 'SUM',
     header: 'No. ',
+    icon: HashIcon,
     size: 80,
   },
   {
     accessorKey: 'name',
     header: 'NAME',
+    icon: UserIcon,
     size: 190,
   },
   {
     accessorKey: 'firstName',
     header: 'FIRST NAME',
+    icon: UserIcon,
   },
   {
     accessorKey: 'middleName',
     header: 'MIDDLE NAME',
+    icon: UserIcon,
     size: 150,
   },
   {
     accessorKey: 'lastName',
     header: 'LAST NAME',
+    icon: UserIcon,
   },
   {
     accessorKey: 'salary',
     footer: '211514964',
     header: 'SALARY',
+    icon: DollarSignIcon,
   },
   {
     accessorKey: 'total',
     footer: '2540568645',
     header: 'TOTAL',
+    icon: DollarSignIcon,
   },
 ];
 
