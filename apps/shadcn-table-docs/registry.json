@@ -2267,8 +2267,7 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base-core",
-        "button"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
@@ -4747,8 +4746,7 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-radix-core",
-        "button"
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
       ]
     },
     {
@@ -7228,8 +7226,7 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-aria-core",
-        "button"
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
       ]
     },
     {
@@ -9708,8 +9705,7 @@
         }
       ],
       "registryDependencies": [
-        "anindosarker/shadcn-table/shadcn-table-base-core",
-        "button"
+        "anindosarker/shadcn-table/shadcn-table-base-core"
       ]
     },
     {
