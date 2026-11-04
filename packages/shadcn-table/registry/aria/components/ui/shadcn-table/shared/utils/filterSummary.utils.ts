@@ -162,8 +162,8 @@ export const summarizeFilterValue = <TData extends ST_RowData>(
           .replace('{min}', formatValue(min))
           .replace('{max}', formatValue(max));
       }
-      if (!isBlank(min)) return `≥ ${formatValue(min)}`;
-      if (!isBlank(max)) return `≤ ${formatValue(max)}`;
+      if (!isBlank(min)) return `${localization.min} ${formatValue(min)}`;
+      if (!isBlank(max)) return `${localization.max} ${formatValue(max)}`;
       return '';
     }
     const labels = value.filter((item) => !isBlank(item)).map(label);
