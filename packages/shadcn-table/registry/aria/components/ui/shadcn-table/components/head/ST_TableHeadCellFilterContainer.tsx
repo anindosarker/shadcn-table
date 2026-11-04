@@ -66,7 +66,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
           onExpandedChange={onOpenChange}
           {...rest}
         >
-          <CollapsibleContent className="h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none">
+          <CollapsibleContent className="-m-0.75 h-(--disclosure-panel-height) overflow-hidden p-0.75 transition-[height] duration-200 ease-out motion-reduce:transition-none">
             {filterInput}
           </CollapsibleContent>
         </Collapsible>
