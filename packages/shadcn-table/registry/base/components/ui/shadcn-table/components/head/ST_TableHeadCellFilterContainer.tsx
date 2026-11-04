@@ -14,11 +14,11 @@ import { ST_FilterRangeSlider } from '@/components/ui/shadcn-table/components/in
 import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_FilterTextField';
 
 // The subheader filter's inline padding, the label row's in ST_TableHeadCell
-// per density, in px for the range fields' layout.
+// per density.
 const subheaderPadding = {
-  comfortable: { className: 'px-3', px: 12 },
-  compact: { className: 'px-2', px: 8 },
-  spacious: { className: 'px-4', px: 16 },
+  comfortable: 'px-3',
+  compact: 'px-2',
+  spacious: 'px-4',
 } as const;
 
 export interface ST_TableHeadCellFilterContainerProps<TData extends ST_RowData>
@@ -38,9 +38,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   const { columnDef } = column;
   const { isRangeFilter } = getColumnFilterInfo({ header, table });
   const density = useSelector(table.atoms.density);
-  useSelector(table.atoms.columnSizing);
   const isSubheader = columnFilterDisplayMode === 'subheader';
-  const padding = subheaderPadding[density];
 
   // The filter input subscribes to its own value, so it is created outside
   // the open state subscription.
@@ -50,10 +48,7 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
     ) : columnDef.filterVariant === 'range-slider' ? (
       <ST_FilterRangeSlider header={header} />
     ) : isRangeFilter ? (
-      <ST_FilterRangeFields
-        header={header}
-        width={isSubheader ? column.getSize() - 2 * padding.px : undefined}
-      />
+      <ST_FilterRangeFields header={header} />
     ) : (
       <ST_FilterTextField header={header} />
     );
@@ -69,9 +64,14 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
             className={cn(
               // The focus ring's room: a negative margin and the same padding
               // in a popover, the inline padding in the subheader, which also
-              // keeps the inputs off the cell's bottom edge.
+              // keeps the inputs off the cell's bottom edge. In the subheader
+              // the filter adds no width to the th (contain-inline-size): the
+              // column keeps its size and clips what is wider (D61).
               isSubheader
-                ? cn('-mt-0.75 pt-0.75 pb-2', padding.className)
+                ? cn(
+                    'contain-inline-size pt-0.75 -mt-0.75 pb-2',
+                    subheaderPadding[density],
+                  )
                 : '-m-0.75 p-0.75',
               'h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none',
             )}
