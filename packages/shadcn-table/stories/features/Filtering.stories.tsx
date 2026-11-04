@@ -361,47 +361,175 @@ export const FilteringChangeModeEnabled = () => (
   />
 );
 
-export const FilteringChangeModeEnabledFaceted = () => (
-  <ShadcnTable
-    columns={[
-      {
-        accessorKey: 'firstName',
-        filterFn: 'fuzzy', // default
-        header: 'First Name',
-        icon: UserIcon,
-      },
-      {
-        accessorKey: 'lastName',
-        filterVariant: 'autocomplete',
-        header: 'Last Name',
-        icon: UserIcon,
-      },
-      {
-        accessorKey: 'age',
-        filterVariant: 'range-slider',
-        header: 'Age',
-        icon: CakeIcon,
-      },
-      {
-        accessorKey: 'gender',
-        filterVariant: 'select',
-        header: 'Gender',
-        icon: VenusAndMarsIcon,
-      },
-      {
-        accessorKey: 'state',
-        filterVariant: 'multi-select',
-        header: 'State',
-        icon: MapIcon,
-      },
-    ]}
-    data={data}
-    enableColumnFilterModes
-    enableFacetedValues
-    columnFilterDisplayMode="subheader"
-    initialState={{ showColumnFilters: true }}
-  />
-);
+// F44: a subheader filter (input, slider, caption) stays inside its th.
+const boxInside = (inner: DOMRect, outer: DOMRect) =>
+  inner.left >= outer.left - 1 &&
+  inner.right <= outer.right + 1 &&
+  inner.top >= outer.top - 1 &&
+  inner.bottom <= outer.bottom + 1;
+
+// React Aria's hidden native select carries its own (aria-hidden) label.
+const subheaderFilterParts = (th: Element) =>
+  Array.from(
+    th.querySelectorAll<HTMLElement>(
+      '[data-slot="input-group"], [data-slot="slider"], [data-slot="slider-thumb"], label, p',
+    ),
+  ).filter((part) => !part.closest('[aria-hidden="true"]'));
+
+/** Every input and caption in the subheader row sits inside its th. */
+const subheaderInputsInsideCell = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const ths = Array.from(canvasElement.querySelectorAll('thead th'));
+    const parts = ths.flatMap((th) =>
+      subheaderFilterParts(th).map((part) => ({ part, th })),
+    );
+    expect(parts.length).toBeGreaterThan(0);
+    for (const { part, th } of parts) {
+      const box = part.getBoundingClientRect();
+      const cell = th.getBoundingClientRect();
+      expect(
+        boxInside(box, cell),
+        `${part.dataset.slot ?? part.tagName} "${part.textContent}" [${box.left}, ${box.right}] x [${box.top}, ${box.bottom}] inside th [${cell.left}, ${cell.right}] x [${cell.top}, ${cell.bottom}]`,
+      ).toBe(true);
+    }
+  });
+};
+
+/** The slider's Filter Mode caption sits below the track, the slider inside its th. */
+const sliderCaptionBelowTrack = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const slider = canvasElement.querySelector<HTMLElement>(
+      'thead [data-slot="slider"]',
+    );
+    expect(slider).not.toBeNull();
+    const th = slider!.closest('th')!;
+    const track = th.querySelector('[data-slot="slider-track"]')!;
+    const caption = Array.from(th.querySelectorAll('label, p')).find((el) =>
+      el.textContent?.startsWith('Filter Mode'),
+    );
+    expect(caption).toBeDefined();
+    const trackBox = track.getBoundingClientRect();
+    const captionBox = caption!.getBoundingClientRect();
+    expect(
+      captionBox.top,
+      `caption top ${captionBox.top} at or below track bottom ${trackBox.bottom}`,
+    ).toBeGreaterThanOrEqual(trackBox.bottom);
+    expect(
+      boxInside(slider!.getBoundingClientRect(), th.getBoundingClientRect()),
+      'slider root inside th',
+    ).toBe(true);
+  });
+};
+
+export const FilteringChangeModeEnabledFaceted = {
+  render: () => (
+    <ShadcnTable
+      columns={[
+        {
+          accessorKey: 'firstName',
+          filterFn: 'fuzzy', // default
+          header: 'First Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'lastName',
+          filterVariant: 'autocomplete',
+          header: 'Last Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'age',
+          filterVariant: 'range-slider',
+          header: 'Age',
+          icon: CakeIcon,
+        },
+        {
+          accessorKey: 'gender',
+          filterVariant: 'select',
+          header: 'Gender',
+          icon: VenusAndMarsIcon,
+        },
+        {
+          accessorKey: 'state',
+          filterVariant: 'multi-select',
+          header: 'State',
+          icon: MapIcon,
+        },
+      ]}
+      data={data}
+      enableColumnFilterModes
+      enableFacetedValues
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement, step }: StoryContext) => {
+    await within(canvasElement).findAllByText(/Filter Mode/);
+    await step('SliderCaptionBelowTrack', () =>
+      sliderCaptionBelowTrack(canvasElement),
+    );
+    await step('SubheaderInputsInsideCell', () =>
+      subheaderInputsInsideCell(canvasElement),
+    );
+  },
+};
+
+/** Range fields too wide for their column stack, one per row. */
+export const SubheaderRangeFieldsNarrow = {
+  render: () => (
+    <ShadcnTable
+      columns={[
+        {
+          accessorKey: 'firstName',
+          header: 'First Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'age',
+          filterVariant: 'range',
+          header: 'Age',
+          icon: CakeIcon,
+          size: 80,
+        },
+        {
+          Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
+          accessorFn: (row) => new Date(row.birthDate),
+          filterVariant: 'date-range',
+          header: 'Birth Date',
+          icon: CalendarIcon,
+          id: 'birthDate',
+          size: 180,
+        },
+      ]}
+      data={data}
+      enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement, step }: StoryContext) => {
+    await within(canvasElement).findAllByText(/Filter Mode/);
+    await step('SubheaderInputsInsideCell', () =>
+      subheaderInputsInsideCell(canvasElement),
+    );
+    await step('Range fields stack', () =>
+      waitFor(() => {
+        for (const name of ['Age', 'Birth Date']) {
+          const th = Array.from(
+            canvasElement.querySelectorAll('thead th'),
+          ).find((cell) => cell.textContent?.startsWith(name))!;
+          const [min, max] = Array.from(
+            th.querySelectorAll('[data-slot="input-group"]'),
+          ).map((group) => group.getBoundingClientRect());
+          expect(
+            max.top,
+            `${name}: Max top ${max.top} below Min bottom ${min.bottom}`,
+          ).toBeGreaterThanOrEqual(min.bottom);
+        }
+      }),
+    );
+  },
+};
 
 export const FilteringChangeModeEnabledHidden = () => (
   <ShadcnTable
