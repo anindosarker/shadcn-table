@@ -13,6 +13,7 @@ import {
   codeToggle,
   demoLoop,
   example,
+  headerLabelsFit,
 } from './_helpers.mjs';
 
 /**
@@ -162,6 +163,7 @@ const checks = {
         'filter buttons in head',
         (await w.locator('thead button').count()) > 0,
       );
+      await headerLabelsFit(w, 'alternate-column-filtering', check);
     },
   ),
   '/docs/examples/infinite-scrolling': examplePage(
