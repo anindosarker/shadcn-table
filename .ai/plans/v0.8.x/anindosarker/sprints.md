@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 04:05
+Updated: 2026-11-05 04:55
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 | S9 | S10 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- | -- | --- |
@@ -28,7 +28,7 @@ Updated: 2026-11-05 04:05
 | Plays (06.3)                                     |     |     |     |     |     |     |     |     | [x] |     |
 | Custom actions follow selection F43              |     |     |     |     |     |     |     |     | [x] |     |
 | Subheader filter layout F44                      |     |     |     |     |     |     |     |     | [ ] |     |
-| Home demo steps and titles F45                   |     |     |     |     |     |     |     |     | [ ] |     |
+| Home demo steps and titles F45                   |     |     |     |     |     |     |     |     | [x] |     |
 | Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     | ·   |
 
