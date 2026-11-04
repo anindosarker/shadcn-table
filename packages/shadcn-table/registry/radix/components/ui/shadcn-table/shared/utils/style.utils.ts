@@ -23,14 +23,6 @@ export const getCommonPinnedCellStyles = <TData extends ST_RowData>({
   table: ST_CoreTableInstance<TData>;
 }) => (column ? pinnedEdgeShadowClassName(column) : undefined);
 
-/** The CSS variables the table tints read, declared on the table root. */
-export const ST_TINT_VARS = {
-  edgeShadow: '--st-edge-shadow',
-  hover: '--st-hover',
-  selected: '--st-selected',
-  stripe: '--st-stripe',
-} as const;
-
 /**
  * The edge shadow of the inner pinned cell, the last visible start-pinned or
  * the first visible end-pinned column, clipped to fall on the unpinned side
