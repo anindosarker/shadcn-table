@@ -99,6 +99,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The focused filter input shows the full focus ring and rounded edge in the chip editor, the header-anchored editor and the subheader filter row; the filter container no longer clips them.
 
+#### Fix F36
+
+- The view items pinned to the toolbar render before `ST_ViewSettingsButton` wherever it is placed, so pins show in a custom `renderTopToolbar` or `renderToolbarInternalActions`; the stock toolbar keeps its order and renders them once.
+
 ### Docs
 
 #### Spec 06
