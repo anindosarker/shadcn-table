@@ -174,6 +174,8 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   // header cell instead. The filter row commits before the menu unmounts, so
   // `finalFocus` finds the input.
   const focusFilterOnCloseRef = useRef(false);
+  // The header chip editor takes focus; the menu leaves it there.
+  const keepEditorFocusOnCloseRef = useRef(false);
 
   const handleFilterByColumn = () => {
     if (columnFilterDisplayMode === 'chips') {
@@ -184,6 +186,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         openAnchor: 'header',
         openColumnId: column.id,
       }));
+      keepEditorFocusOnCloseRef.current = true;
     } else {
       flushSync(() => setShowColumnFilters(true));
       focusFilterOnCloseRef.current = true;
@@ -441,7 +444,13 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         <DropdownMenuTrigger render={trigger} />
         <DropdownMenuContent
           align="end"
-          finalFocus={() => takeFilterInput() ?? true}
+          finalFocus={() => {
+            if (keepEditorFocusOnCloseRef.current) {
+              keepEditorFocusOnCloseRef.current = false;
+              return false;
+            }
+            return takeFilterInput() ?? true;
+          }}
           className={cn('w-44', className)}
           {...rest}
         >

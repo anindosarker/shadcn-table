@@ -172,6 +172,8 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
   // instead of back to the opener; in chips mode the editor opens on the
   // header cell instead.
   const focusFilterOnCloseRef = useRef(false);
+  // The header chip editor takes focus; the menu leaves it there.
+  const keepEditorFocusOnCloseRef = useRef(false);
 
   const handleFilterByColumn = () => {
     if (columnFilterDisplayMode === 'chips') {
@@ -182,6 +184,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         openAnchor: 'header',
         openColumnId: column.id,
       }));
+      keepEditorFocusOnCloseRef.current = true;
     } else {
       setShowColumnFilters(true);
       focusFilterOnCloseRef.current = true;
@@ -441,6 +444,11 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
         <DropdownMenuContent
           align="end"
           onCloseAutoFocus={(event) => {
+            if (keepEditorFocusOnCloseRef.current) {
+              keepEditorFocusOnCloseRef.current = false;
+              event.preventDefault();
+              return;
+            }
             if (focusFilterInput()) event.preventDefault();
           }}
           className={cn('w-44', className)}
