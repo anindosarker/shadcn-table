@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 01:00
+Updated: 2026-11-05 01:30
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- |
@@ -19,7 +19,7 @@ Updated: 2026-11-05 01:00
 | Multi-select filter fix F29    |     |     |     |     |     | [x] |     |     |
 | Stories and DefaultLook (06.2) |     |     |     |     |     |     | [x] |     |
 | CI fixes after S6, S7          |     |     |     |     |     |     | [ ] |     |
-| Editor focus ring fix F31      |     |     |     |     |     |     | [ ] |     |
+| Editor focus ring fix F31      |     |     |     |     |     |     | [x] |     |
 | Home demo columns F32          |     |     |     |     |     |     | [ ] |     |
 | Release 0.8.0 (07)             |     |     |     |     |     |     |     | ·   |
 
