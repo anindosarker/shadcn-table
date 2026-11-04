@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 02:55
+Updated: 2026-11-05 03:20
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- |
@@ -18,7 +18,7 @@ Updated: 2026-11-05 02:55
 | Docs app (06.2)                |     |     |     |     |     | [x] |     |     |
 | Multi-select filter fix F29    |     |     |     |     |     | [x] |     |     |
 | Stories and DefaultLook (06.2) |     |     |     |     |     |     | [x] |     |
-| CI fixes after S6, S7          |     |     |     |     |     |     | [ ] |     |
+| CI fixes after S6, S7          |     |     |     |     |     |     | [x] |     |
 | Editor focus ring fix F31      |     |     |     |     |     |     | [x] |     |
 | Home demo columns F32          |     |     |     |     |     |     | [x] |     |
 | Docs polish F33, F34, F35, F37 |     |     |     |     |     |     | [ ] |     |
