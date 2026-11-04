@@ -158,6 +158,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -1511,6 +1516,11 @@
           "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_Tooltip.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
@@ -2868,6 +2878,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -4221,6 +4236,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_Tooltip.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",

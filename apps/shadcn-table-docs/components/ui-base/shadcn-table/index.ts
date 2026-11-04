@@ -96,3 +96,4 @@ export * from '@/components/ui-base/shadcn-table/components/toolbar/ST_FilterEdi
 export * from '@/components/ui-base/shadcn-table/components/toolbar/ST_SortPopover';
 export * from '@/components/ui-base/shadcn-table/components/toolbar/ST_ViewSettingsButton';
 export * from '@/components/ui-base/shadcn-table/components/toolbar/ST_ViewSettingsItems';
+export * from '@/components/ui-base/shadcn-table/components/buttons/ST_TooltipButton';
