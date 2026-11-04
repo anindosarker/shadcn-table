@@ -1,5 +1,5 @@
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, fireEvent, waitFor, within } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
@@ -426,4 +426,106 @@ export const ResizeGuidesMeetEdgeOnEnd = {
     <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
   ),
   play: expectResizeGuidesMeetEdge('onEnd'),
+};
+
+const firstNameHeader = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<HTMLElement>(
+    'thead th[data-flip-column="firstName"]',
+  )!;
+
+const firstNameCells = (canvasElement: HTMLElement) => [
+  ...canvasElement.querySelectorAll<HTMLElement>(
+    'tbody td[data-flip-column="firstName"]',
+  ),
+];
+
+/** Drags the First Name handle by `dx` px and releases it. */
+const dragFirstNameHandle = (canvasElement: HTMLElement, dx: number) => {
+  const th = firstNameHeader(canvasElement);
+  const handle = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  const start = th.getBoundingClientRect();
+  const point = { clientX: start.right, clientY: start.top + 5 };
+  fireEvent.mouseDown(handle, point);
+  fireEvent.mouseMove(document, { ...point, clientX: start.right + dx });
+  fireEvent.mouseUp(document, { ...point, clientX: start.right + dx });
+};
+
+const widthOf = (element: HTMLElement) => element.getBoundingClientRect().width;
+
+/**
+ * Dragging the handle widens the column by the drag; every body cell of the
+ * column takes the header's width.
+ */
+export const DragResizesColumn = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const before = widthOf(th);
+    dragFirstNameHandle(canvasElement, 60);
+    // The table spreads spare width over its columns, so the column grows by
+    // most of the drag, not by exactly the drag.
+    await waitFor(() =>
+      expect(widthOf(th) - before).toBeGreaterThanOrEqual(45),
+    );
+    const cells = firstNameCells(canvasElement);
+    expect(cells.length).toBeGreaterThan(0);
+    for (const cell of cells) {
+      expect(Math.abs(widthOf(cell) - widthOf(th))).toBeLessThanOrEqual(1);
+    }
+  },
+};
+
+/** A double click on the handle puts a resized column back to its default. */
+export const DoubleClickResetsWidth = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const before = widthOf(th);
+    dragFirstNameHandle(canvasElement, 80);
+    await waitFor(() =>
+      expect(widthOf(th) - before).toBeGreaterThanOrEqual(60),
+    );
+    fireEvent.doubleClick(th.querySelector<HTMLElement>('.cursor-col-resize')!);
+    await waitFor(() =>
+      expect(Math.abs(widthOf(th) - before)).toBeLessThanOrEqual(1),
+    );
+    expect(
+      Math.abs(widthOf(firstNameCells(canvasElement)[0]!) - before),
+    ).toBeLessThanOrEqual(1);
+  },
+};
+
+/**
+ * After a resize the column menu offers Reset column size, and choosing it
+ * puts the width back (D5 addendum).
+ */
+export const ResizeMenuItemResets = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const before = widthOf(th);
+    dragFirstNameHandle(canvasElement, 70);
+    await waitFor(() =>
+      expect(widthOf(th) - before).toBeGreaterThanOrEqual(50),
+    );
+    await userEvent.click(
+      within(th).getByRole('button', { name: 'Column Actions' }),
+    );
+    const menu = await within(document.body).findByRole('menu');
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Reset column size' }),
+    );
+    await waitFor(() =>
+      expect(Math.abs(widthOf(th) - before)).toBeLessThanOrEqual(1),
+    );
+  },
 };
