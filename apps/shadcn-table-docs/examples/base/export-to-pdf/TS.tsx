@@ -69,7 +69,6 @@ const Example = () => {
     columns,
     data,
     enableRowSelection: true,
-    columnFilterDisplayMode: 'popover',
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'bottom',
     renderTopToolbarCustomActions: ({ table }) => (
