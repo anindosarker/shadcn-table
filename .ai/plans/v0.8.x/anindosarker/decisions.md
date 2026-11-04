@@ -411,3 +411,9 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D60 Header group cells carry no icon by default
 
 - A group column def may set `icon` and the header renders it before the label (D3); the examples and stories set icons on leaf columns only (D49), so group headers stay plain. Owner, 2026-11-05.
+
+## Round 5: run rulings, 2026-11-05
+
+### D61 Range filters keep Min and Max side by side at every column width
+
+- A `'range'`, `'date-range'`, `'datetime-range'` or `'time-range'` filter renders its two fields side by side in the subheader at every column width, as Material React Table does; a column narrower than the two fields clips them and the consumer sizes the column. No stacking in the library. The "Filter Mode" caption spans the whole range group, not the Min field only; the slider caption sits below the track; the subheader filter container keeps the label row's inline padding (F44). The subheader-filters page sets column sizes that fit. Owner, 2026-11-05 (F44, side-agent note).
