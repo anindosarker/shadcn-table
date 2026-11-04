@@ -51,6 +51,89 @@ export const OpensWithInputFocused = {
   },
 };
 
+type Employee = {
+  city: string;
+  company: string;
+  country: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+};
+
+const employees: Employee[] = [
+  {
+    city: 'Omaha',
+    company: 'Northwind Traders',
+    country: 'United States',
+    firstName: 'Mason',
+    id: 1,
+    lastName: 'Lee',
+  },
+  {
+    city: 'Lyon',
+    company: 'Contoso',
+    country: 'France',
+    firstName: 'Lily',
+    id: 2,
+    lastName: 'Park',
+  },
+];
+
+// The export CSV docs example: row selection and columns sized 40 to 300.
+const sizedColumns: ST_ColumnDef<Employee>[] = [
+  { accessorKey: 'id', header: 'ID', size: 40 },
+  { accessorKey: 'firstName', header: 'First Name', size: 120 },
+  { accessorKey: 'lastName', header: 'Last Name', size: 120 },
+  { accessorKey: 'company', header: 'Company', size: 300 },
+  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'country', header: 'Country', size: 220 },
+];
+
+// The funnel opens the popover with the input focused, and at the docs
+// page's 1440 px the label keeps its full width beside the funnel and the
+// chevron (F19).
+export const OpensWithRowSelection = {
+  render: () => (
+    <div style={{ width: 1440 }}>
+      <ShadcnTable
+        columnFilterDisplayMode="popover"
+        columns={sizedColumns}
+        data={employees}
+        enableRowSelection
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText('Mason');
+    const th = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="firstName"]',
+    );
+    if (!th) throw new Error('First Name header not found');
+    const label = within(th).getByText('First Name');
+    expect(label.scrollWidth).toBe(label.clientWidth);
+
+    const trigger = th.querySelector<HTMLElement>(
+      '[aria-expanded]:not([aria-haspopup="menu"])',
+    );
+    if (!trigger) throw new Error('filter button not found');
+    // A real press at the funnel's centre, so the th and the label see the
+    // pointer events a person's click sends.
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await (browserUserEvent ?? userEvent).click(trigger);
+    await waitFor(() =>
+      expect(trigger).toHaveAttribute('aria-expanded', 'true'),
+    );
+    const input = await within(document.body).findByPlaceholderText(
+      'Filter by First Name',
+    );
+    await waitFor(() => expect(document.activeElement).toBe(input));
+  },
+};
+
 export const EmptyModeChipClearHasName = {
   render: () => (
     <ShadcnTable

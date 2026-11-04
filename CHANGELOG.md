@@ -83,6 +83,14 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - The columns menu shows the column icon before its label.
 - `localization.rowNumbers` reads "Row numbers" in English and "Zeilennummern" in German.
 
+#### Spec 06.1 cells
+
+- Display cells (select, expand, pin, drag, row numbers, actions) centre their control in the body and the header, so the header and row checkboxes share one x; row numbers render as muted tabular digits.
+- A group header spans exactly its leaves: it grows only by its growing leaves, keeps its width when every leaf is pinned or has `grow: false`, and sticks with its leaves when they are all pinned to one side.
+- With `renderRowActions` the actions column shows the "Actions" header label, is 96 px wide by default (`displayColumnDefOptions['st-row-actions'].size` wins) and centres every control it returns; without it the column stays 48 px with the dots button.
+- The popover filter funnel no longer adds its own margin beside the header label.
+- With `renderDetailPanel`, a row whose panel renders nothing keeps a disabled expand button and Expand all skips it, instead of opening an empty detail row; rows with sub rows still expand.
+
 ### Docs
 
 #### Spec 06

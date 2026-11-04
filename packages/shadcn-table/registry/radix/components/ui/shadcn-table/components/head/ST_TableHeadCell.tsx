@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { cellKeyboardShortcuts } from '@/components/ui/shadcn-table/shared/utils/cell.utils';
 import {
+  getCellPinning,
   getCommonSRTCellStyles,
   gridLineClassName,
 } from '@/components/ui/shadcn-table/shared/utils/style.utils';
@@ -166,9 +167,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
         // A pinned cell's offset follows the other columns' sizes; widths
         // come from the CSS vars ST_Table sets.
         pinnedColumnSizing:
-          enableColumnPinning &&
-          columnDef.columnDefType !== 'group' &&
-          column.getIsPinned()
+          enableColumnPinning && getCellPinning({ column, header })
             ? state.columnSizing
             : undefined,
         showColumnFilters: state.showColumnFilters,
@@ -187,9 +186,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
         stickyHeaderSetting,
       }) => {
         const isColumnPinned =
-          enableColumnPinning &&
-          columnDef.columnDefType !== 'group' &&
-          column.getIsPinned();
+          enableColumnPinning && getCellPinning({ column, header });
 
         const canDrag =
           isLeaf &&
@@ -254,7 +251,11 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
             ? 'justify-center text-center'
             : tableCellProps.align === 'right'
               ? 'flex-row-reverse text-end'
-              : 'text-start';
+              : tableCellProps.align === 'left'
+                ? 'text-start'
+                : columnDefType === 'display'
+                  ? 'justify-center text-center'
+                  : 'text-start';
 
         // A plain text header is the second opener of the column menu; a
         // custom `Header` render keeps its own content and events.
@@ -346,11 +347,15 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
                       showSubheaderFilter && showColumnFilters
                         ? 'h-10'
                         : 'h-full',
-                      density === 'compact'
-                        ? 'px-2'
-                        : density === 'comfortable'
-                          ? 'px-3'
-                          : 'px-4',
+                      // A display column's control shares its x with the
+                      // body cell's, which has no padding.
+                      columnDefType === 'display'
+                        ? 'p-0'
+                        : density === 'compact'
+                          ? 'px-2'
+                          : density === 'comfortable'
+                            ? 'px-3'
+                            : 'px-4',
                       alignClassName,
                     )}
                   >
