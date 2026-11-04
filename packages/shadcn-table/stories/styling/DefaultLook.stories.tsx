@@ -293,6 +293,12 @@ const scrollBoxes = (root: HTMLElement) => [
 
 const fewRows = data.slice(0, 3);
 
+// Notes long enough to wrap at any frame width.
+const longNoteRows = fewRows.map((task) => ({
+  ...task,
+  notes: task.notes.repeat(4),
+}));
+
 // One table per density: rows 40, 48 and 56 px tall.
 export const RowMetrics = () => (
   <div className="flex flex-col gap-4">
@@ -307,6 +313,22 @@ export const RowMetrics = () => (
         />
       </div>
     ))}
+    <div data-density="wrap">
+      <DefaultLookTable
+        data={longNoteRows}
+        initialState={{
+          columnPinning: { end: ['st-row-actions'], start: [] },
+          viewSettings: {
+            gridLines: 'rows',
+            pins: ['columns', 'density'],
+            rowNumbers: false,
+            stickyHeader: false,
+            striped: false,
+            wrapText: true,
+          },
+        }}
+      />
+    </div>
   </div>
 );
 
@@ -327,6 +349,19 @@ RowMetrics.play = async ({ canvasElement }: StoryContext) => {
     const firstCell = bodyRows(root)[0].querySelector('td')!;
     expect(getComputedStyle(firstCell).borderBottomWidth).toBe('1px');
     expect(getComputedStyle(firstCell).borderInlineEndWidth).toBe('0px');
+  }
+
+  // Wrapped text shows in full: the row grows past the density height and
+  // no cell clips its content.
+  const wrapRoot = canvasElement.querySelector<HTMLElement>(
+    '[data-density="wrap"]',
+  )!;
+  await waitFor(() => expect(bodyRows(wrapRoot)).toHaveLength(3));
+  for (const row of bodyRows(wrapRoot)) {
+    expect(row.getBoundingClientRect().height).toBeGreaterThan(48);
+    for (const cell of row.querySelectorAll('td')) {
+      expect(cell.scrollHeight).toBeLessThanOrEqual(cell.clientHeight);
+    }
   }
 
   // Hover tints the whole row evenly: the row carries the hover tint and
