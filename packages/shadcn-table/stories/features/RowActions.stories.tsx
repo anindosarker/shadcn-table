@@ -243,13 +243,14 @@ export const RowActionsAndEditingCellEnabled = () => (
   />
 );
 
-export const RowActionsLastColumn = () => (
+// The actions column sits last and pinned by default; this one sits first.
+export const RowActionsFirstColumn = () => (
   <ShadcnTable
     columns={columns}
     data={data}
     enableRowActions
     initialState={{ density: 'compact' }}
-    positionActionsColumn="last"
+    positionActionsColumn="first"
     renderRowActionMenuItems={({ closeMenu, row }) => [
       <DropdownMenuItem
         key={1}
@@ -309,12 +310,12 @@ export const CustomRowActionButtons = () => (
   />
 );
 
-export const CustomRowActionButtonsLastColumn = () => (
+export const CustomRowActionButtonsFirstColumn = () => (
   <ShadcnTable
     columns={columns}
     data={data}
     enableRowActions
-    positionActionsColumn="last"
+    positionActionsColumn="first"
     renderRowActions={({ row }) => (
       <div style={{ display: 'flex', flexWrap: 'nowrap', gap: '0.5rem' }}>
         <Button

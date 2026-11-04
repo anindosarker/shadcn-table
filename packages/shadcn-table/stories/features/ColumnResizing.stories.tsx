@@ -46,27 +46,22 @@ const data = [...Array(88)].map(() => ({
 }));
 
 export const ColumnResizingEnabledDefaultOnChange = () => (
-  <ShadcnTable columns={columns} data={data} enableColumnResizing />
+  <ShadcnTable columns={columns} data={data} />
+);
+
+// Resizing is on by default; `false` removes the resize handles.
+export const ColumnResizingDisabled = () => (
+  <ShadcnTable columns={columns} data={data} enableColumnResizing={false} />
 );
 
 export const ColumnResizingEnabledDefaultOnChangeRTL = () => (
   <div style={{ direction: 'rtl' }}>
-    <ShadcnTable
-      columnResizeDirection="rtl"
-      columns={columns}
-      data={data}
-      enableColumnResizing
-    />
+    <ShadcnTable columnResizeDirection="rtl" columns={columns} data={data} />
   </div>
 );
 
 export const ColumnResizingEnabledDefaultOnChangeGrid = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnResizing
-    layoutMode="grid"
-  />
+  <ShadcnTable columns={columns} data={data} layoutMode="grid" />
 );
 
 export const ColumnResizingDefaultOnChangeGridWithIndividualShrink = () => (
@@ -88,7 +83,6 @@ export const ColumnResizingDefaultOnChangeGridWithIndividualShrink = () => (
       },
     ]}
     data={data}
-    enableColumnResizing
     layoutMode="grid"
   />
 );
@@ -99,19 +93,13 @@ export const ColumnResizingEnabledDefaultOnChangeGridRTL = () => (
       columnResizeDirection="rtl"
       columns={columns}
       data={data}
-      enableColumnResizing
       layoutMode="grid"
     />
   </div>
 );
 
 export const ColumnResizingEnabledDefaultOnChangeSemantic = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnResizing
-    layoutMode="semantic"
-  />
+  <ShadcnTable columns={columns} data={data} layoutMode="semantic" />
 );
 
 export const ColumnResizingEnabledDefaultOnChangeSemanticRTL = () => (
@@ -120,19 +108,13 @@ export const ColumnResizingEnabledDefaultOnChangeSemanticRTL = () => (
       columnResizeDirection="rtl"
       columns={columns}
       data={data}
-      enableColumnResizing
       layoutMode="semantic"
     />
   </div>
 );
 
 export const ColumnResizingEnabledNoColumnActions = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnActions={false}
-    enableColumnResizing
-  />
+  <ShadcnTable columns={columns} data={data} enableColumnActions={false} />
 );
 
 export const ColumnResizingDisabledSomeColumns = () => (
@@ -165,17 +147,11 @@ export const ColumnResizingDisabledSomeColumns = () => (
       },
     ]}
     data={data}
-    enableColumnResizing
   />
 );
 
 export const ColumnResizingEnabledOnEnd = () => (
-  <ShadcnTable
-    columnResizeMode="onEnd"
-    columns={columns}
-    data={data}
-    enableColumnResizing
-  />
+  <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
 );
 
 export const ColumnResizingEnabledOnEndRTL = () => (
@@ -185,7 +161,6 @@ export const ColumnResizingEnabledOnEndRTL = () => (
       columnResizeMode="onEnd"
       columns={columns}
       data={data}
-      enableColumnResizing
     />
   </div>
 );
@@ -195,7 +170,6 @@ export const ColumnResizingCustomDefaultWidths = () => (
     columns={columns}
     data={data}
     defaultColumn={{ maxSize: 300, minSize: 100, size: 150 }}
-    enableColumnResizing
   />
 );
 
@@ -203,8 +177,6 @@ export const ColumnResizingWithPinning = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnPinning
-    enableColumnResizing
     initialState={{
       columnPinning: { start: ['firstName', 'lastName'], end: [] },
     }}
@@ -254,7 +226,6 @@ export const ColumnResizingWithHeaderGroups = () => (
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     }))}
-    enableColumnResizing
   />
 );
 
@@ -301,7 +272,6 @@ export const ColumnResizingWithHeaderGroupsGridGrow = () => (
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     }))}
-    enableColumnResizing
     enableRowSelection
     layoutMode="grid"
   />
@@ -311,7 +281,6 @@ export const ColumnResizingLayoutGridGrow = () => (
   <ShadcnTable
     columns={columns.slice(0, 3)}
     data={data}
-    enableColumnResizing
     enableRowSelection
     layoutMode="grid"
   />
@@ -323,7 +292,6 @@ export const ColumnResizingLayoutGridGrowRTL = () => (
       columnResizeDirection="rtl"
       columns={columns.slice(0, 3)}
       data={data}
-      enableColumnResizing
       enableRowSelection
       layoutMode="grid"
     />

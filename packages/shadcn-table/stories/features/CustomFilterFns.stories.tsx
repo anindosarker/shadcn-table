@@ -79,6 +79,7 @@ export const CustomColumnFilterFn = () => (
     ]}
     data={data}
     filterFns={{ customFilterFn: lengthEquals }}
+    columnFilterDisplayMode="subheader"
     initialState={{
       columnFilters: [{ id: 'firstName', value: '5' }],
       showColumnFilters: true,
@@ -240,6 +241,7 @@ export const TwoTablesDifferentRegistries = () => (
         ]}
         data={data}
         filterFns={{ tableAFilterFn: lengthEquals }}
+        columnFilterDisplayMode="subheader"
         initialState={{
           columnFilters: [{ id: 'firstName', value: '5' }],
           showColumnFilters: true,
@@ -265,6 +267,7 @@ export const TwoTablesDifferentRegistries = () => (
           tableBFilterFn: (row, id, filterValue: string) =>
             String(row.getValue(id)).startsWith(filterValue),
         }}
+        columnFilterDisplayMode="subheader"
         initialState={{
           columnFilters: [
             { id: 'firstName', value: '5' },
@@ -309,6 +312,7 @@ export const UnknownFilterFnName = {
         },
       ]}
       data={data}
+      columnFilterDisplayMode="subheader"
       initialState={{
         columnFilters: [{ id: 'firstName', value: 'zzz' }],
         showColumnFilters: true,
@@ -415,6 +419,7 @@ export const ProgrammaticColumnFilterMode = {
       columns={modeColumns}
       data={modeData}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{
         columnFilters: [{ id: 'firstName', value: 'ack' }],
         showColumnFilters: true,
@@ -455,6 +460,7 @@ export const ColumnFilterModeSwitch = {
       columns={[{ accessorKey: 'firstName', header: 'First Name' }]}
       data={modeData}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
     />
   ),

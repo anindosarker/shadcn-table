@@ -83,6 +83,7 @@ export const NestedDetailPanelTable = {
       data={outerRows}
       enableRowActions
       initialState={{ expanded: true }}
+      paginationDisplayMode="default"
       renderDetailPanel={({ row, table }) => (
         <div data-testid={`detail-${row.id}`}>
           <span data-testid="outer-detail">
@@ -92,6 +93,7 @@ export const NestedDetailPanelTable = {
             columns={innerColumns}
             data={innerRows}
             enableBottomToolbar={false}
+            paginationDisplayMode="default"
             renderTopToolbarCustomActions={() => (
               <PaginationReader label="inner-reader" />
             )}

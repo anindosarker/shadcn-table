@@ -3,8 +3,9 @@ import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 
-// The five menus share useST_MenuAnchor: each opens from an invisible span
-// over its opener and, on Escape, hands focus back to that opener.
+// Each menu, on Escape, hands focus back to its opener: the column menu
+// chevron, the row actions button, the cell, the filter mode button and the
+// columns button.
 
 const meta: Meta = {
   title: 'Fixed Bugs/Menu Focus Return',
@@ -104,6 +105,7 @@ export const FilterOptionMenu = {
     <ShadcnTable
       columns={columns}
       data={data}
+      columnFilterDisplayMode="subheader"
       enableColumnFilterModes
       initialState={{ showColumnFilters: true }}
     />

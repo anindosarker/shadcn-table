@@ -89,6 +89,24 @@ export const FilteringEnabledDefault = () => (
   <ShadcnTable columns={columns} data={data} />
 );
 
+// Chips are the default filter display: the toolbar's Filter button adds a
+// chip per column. Features/Filter Chips covers the chip editor in depth.
+export const ChipsDisplayMode = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="chips"
+      columns={columns}
+      data={data}
+    />
+  ),
+  play: async ({ canvas }: StoryContext) => {
+    await expect(canvas.getByRole('button', { name: 'Filter' })).toBeVisible();
+    await expect(
+      canvas.queryByRole('textbox', { name: /Filter by/ }),
+    ).not.toBeInTheDocument();
+  },
+};
+
 export const PopoverDisplayMode = () => (
   <ShadcnTable
     columnFilterDisplayMode="popover"
@@ -212,6 +230,7 @@ export const FilterFnAndFilterVariants = () => (
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -251,6 +270,7 @@ export const FilterFnAndFilterVariantsFaceted = () => (
     ]}
     data={data}
     enableFacetedValues
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -294,6 +314,7 @@ export const FilteringChangeModeEnabled = () => (
     ]}
     data={data}
     enableColumnFilterModes
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -330,6 +351,7 @@ export const FilteringChangeModeEnabledFaceted = () => (
     data={data}
     enableColumnFilterModes
     enableFacetedValues
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -408,6 +430,7 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
     ]}
     data={data}
     enableColumnFilterModes
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -443,6 +466,7 @@ export const FilteringDisabledForCertainColumns = () => (
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -486,6 +510,7 @@ export const CustomFilterFunctionPerColumn = () => (
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -530,6 +555,7 @@ export const CustomFilterFns = () => (
           .startsWith(filterValue.toLowerCase());
       },
     }}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -582,6 +608,7 @@ export const CustomFilterComponent = () => (
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -619,6 +646,7 @@ export const CustomizeFilterTextFields = () => (
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -657,6 +685,7 @@ export const ExternalSetFilterValue = () => (
   <ShadcnTable
     columns={columns}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
     renderTopToolbarCustomActions={({ table }) => (
       <div>
@@ -749,6 +778,7 @@ export const RangeFilterMinValue = {
     <ShadcnTable
       columns={scoreColumns}
       data={scoreData}
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
     />
   ),
