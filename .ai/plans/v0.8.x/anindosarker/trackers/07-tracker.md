@@ -1,6 +1,6 @@
 # 07: release 0.8.0, tracker
 
-Status: blocked (runtime gate: 2 checks fail, see Attention; release held for the owner)
+Status: running (runtime gate run 1 found F8 and F9, both fixed at 941607e9; the rerun was stopped by the owner 2026-11-04 19:10, who reviews locally; release steps wait for the owner's go)
 Branch claude/review (inline, no spec branch), registry on 5310 (served from worktree 01 `.dev`, rebuilt 16:25 at bc21b6da; `git diff bc21b6da..7c2717aa -- packages/` empty, so it is claude/review's build; `pnpm -w registry:build` rerun at 7c2717aa, tree unchanged)
 Gates:
 - gate-base `next build` at 7c2717aa: green
