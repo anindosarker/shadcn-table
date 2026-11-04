@@ -24,6 +24,7 @@ Shadcn Table has a powerful built-in global filtering (search) feature that uses
       'onShowGlobalFilterChange',
       'positionGlobalFilter',
       'renderGlobalFilterModeMenuItems',
+      'showClearSearchButton',
     ])
   }
 />
@@ -137,9 +138,24 @@ const table = useShadcnTable({
 });
 ```
 
+#### Search Toggle and Clear Control
+
+The search toggle is the first button of the toolbar group. Closed, it shows a magnifier, and a click opens the search field to its left and focuses it. Open, it shows a crossed-out magnifier, and one click clears the search text and closes the field. The toggle is never disabled. Pressing Escape in the field clears the text first, then closes the empty field.
+
+The field itself renders no inline clear button by default, because the toggle already clears it. If you show the search field without the toggle, set `showClearSearchButton: true` to bring the inline X back. Both use the `clearSearch` localization key.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  initialState: { showGlobalFilter: true }, //the field is always shown, so there is no toggle
+  showClearSearchButton: true, //render the inline clear button inside the field
+});
+```
+
 #### Show Search Field by Default
 
-Additionally, if you want to show the search text box by default and not hide it behind the search icon, you can set the `showGlobalFilter` state to `true` in the `initialState`.
+Additionally, if you want to show the search text box by default and not hide it behind the search icon, you can set the `showGlobalFilter` state to `true` in the `initialState`. The toggle button is then not rendered.
 
 ### Manual Server-Side Global Filtering
 
@@ -177,7 +193,7 @@ Here is the full Remote Data example showing off server-side **filtering**, pagi
 
 ### Customize Global Filter Position
 
-You can customize the position of the global filter (search box) in the top toolbar by setting the `positionGlobalFilter` table option to `left` or `right`. It is shown on the right by default.
+You can customize the position of the global filter (search box) in the top toolbar by setting the `positionGlobalFilter` table option to `left` or `right`. It is shown on the right by default, just left of the toolbar button group.
 
 ```jsx
 const table = useShadcnTable({

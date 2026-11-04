@@ -3,7 +3,7 @@ title: 'Column Hiding Guide'
 description: 'How to use, customize, or disable column hiding and visibility features of Shadcn Table'
 ---
 
-The column hiding feature is enabled by default and allows the user to hide data columns from either the column actions menu or the show/hide columns menu.
+The column hiding feature is enabled by default and allows the user to hide data columns from either the column menu (Hide) or the columns menu. The columns menu opens from the Columns button, which is pinned to the toolbar by default (aria-label "Show/Hide columns"), and from the Columns row of the [view settings](/docs/guides/view-settings) panel. Unpin it in the panel to keep it only there.
 
 ### Relevant Table Options
 
@@ -97,7 +97,7 @@ See the [Display Columns Feature Guide](/docs/guides/display-columns#display-col
 
 ### Hide Column From Show Hide Menu
 
-By default, all columns are visible in the column show hide menu that is opened from the columns button in the toolbar internal actions button. You can hide a column from this menu by setting the `visibleInShowHideMenu` column option to `false`.
+By default, all columns are listed in the columns menu that opens from the pinned Columns button in the toolbar and from the Columns row of the view settings panel. You can hide a column from this menu by setting the `visibleInShowHideMenu` column option to `false`.
 
 ```jsx
 const columns = [
@@ -124,6 +124,17 @@ const table = useShadcnTable({
 The `ST_ShowHideColumnsMenu` component is one of the few ST components that is pretty opinionated and not easily customizable. Instead of trying to customize the menu with overrides, it might be easier for you to just build your own new button and menu from scratch using the Table and Column Instance APIs.
 
 Adding your own Toolbar Buttons is covered in the [Toolbar Guide](/docs/guides/toolbar-customization#customize-built-in-internal-toolbar-button-area)
+
+To open the stock menu from a button of your own, pass the button as the menu's `trigger`. A press opens the menu and a second press closes it; `open` and `onOpenChange` control it.
+
+```jsx
+import { Button } from '@/components/ui/button';
+import { ST_ShowHideColumnsMenu } from '@/components/ui/shadcn-table';
+
+<ST_ShowHideColumnsMenu trigger={<Button variant="outline">Columns</Button>} />;
+```
+
+The menu reads the table from context, so render it inside the table's toolbar (for example from `renderToolbarInternalActions`) or inside an `ST_TableProvider`.
 
 If all you want to do is customize the buttons above the columns menu, you can import and use the `ST_ShowHideColumnsMenuItems` component from shadcn table, which is a component that renders the columns in the list with the toggle switches, but then render your own buttons in the top or bottom of the menu itself.
 

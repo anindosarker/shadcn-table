@@ -3,13 +3,14 @@ title: 'Column Filtering Guide'
 description: 'How to use, customize, or disable filter features, client-side or server side, in Shadcn Table'
 ---
 
-Filtering is one of the most powerful features of Shadcn Table and is enabled by default. There is a lot of flexibility and customization available here. Whether you want to customize the powerful client-side filtering already built in or implement your own [server-side filtering](#manual-server-side-column-filtering), Shadcn Table has got you covered.
+Filtering is one of the most powerful features of Shadcn Table and is enabled by default. By default, column filters show as chips in the toolbar, each opening the column's filter input in an editor; see the [Filter Chips Guide](/docs/guides/filter-chips). There is a lot of flexibility and customization available here. Whether you want to customize the powerful client-side filtering already built in or implement your own [server-side filtering](#manual-server-side-column-filtering), Shadcn Table has got you covered.
 
 ### Relevant Table Options
 
 <TableOptionsTable
   onlyOptions={
     new Set([
+      'columnFilterDisplayMode',
       'columnFilterModeOptions',
       'enableColumnFilterModes',
       'enableColumnFilters',
@@ -64,7 +65,12 @@ Filtering is one of the most powerful features of Shadcn Table and is enabled by
 
 <StateOptionsTable
   onlyOptions={
-    new Set(['columnFilters', 'columnFilterFns', 'showColumnFilters'])
+    new Set([
+      'columnFilters',
+      'columnFilterFns',
+      'filterChips',
+      'showColumnFilters',
+    ])
   }
 />
 
@@ -125,7 +131,20 @@ const table = useShadcnTable({
 
 ### Column Filter Display Modes
 
-By default, column filters inputs show below the column header. You can switch to a more "excel-like" UI by setting the `columnFilterDisplayMode` table option to `'popover'`. This will show a filter icon in the column header that can be clicked to open a popover with the filter input.
+By default (`columnFilterDisplayMode: 'chips'`), filters live as chips in the toolbar: "+ Filter" or the toolbar filter button picks a column, the column's filter input opens in an editor, and a chip shows the column, the filter mode and the value. The [Filter Chips Guide](/docs/guides/filter-chips) covers the chips, the column picker and the editor. The filter variants below render the same inputs in every mode; the examples on this page set `columnFilterDisplayMode: 'subheader'` so their inputs show under the headers.
+
+To show the filter inputs below the column headers instead, set `columnFilterDisplayMode` to `'subheader'`. The toolbar then shows a filter toggle in place of the filter button, and `showColumnFilters` shows or hides the inputs.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  columnFilterDisplayMode: 'subheader', //filter inputs below the headers
+  initialState: { showColumnFilters: true }, //show them on load
+});
+```
+
+You can switch to a more "excel-like" UI by setting the `columnFilterDisplayMode` table option to `'popover'`. This will show a filter icon in the column header that can be clicked to open a popover with the filter input.
 
 ```jsx
 const table = useShadcnTable({
@@ -225,7 +244,7 @@ const table = useShadcnTable({
 
 #### Enable Column Filter Modes (Filter Switching)
 
-If you want to let the user switch between multiple different filter modes from a drop-down menu on the Filter Textfield, you can enable that with the `enableColumnFilterModes` table option or column option. This will enable the filter icon in the filter text field to open a drop-down menu with the available filter modes when clicked.
+If you want to let the user switch between multiple different filter modes from a drop-down menu on the Filter Textfield, you can enable that with the `enableColumnFilterModes` table option or column option. This will enable the filter icon in the filter text field to open a drop-down menu with the available filter modes when clicked. In the default chips mode, the mode picker sits on the filter editor's top line instead ("Name contains"), see the [Filter Chips Guide](/docs/guides/filter-chips#the-filter-editor).
 
 ```tsx
 const table = useShadcnTable({

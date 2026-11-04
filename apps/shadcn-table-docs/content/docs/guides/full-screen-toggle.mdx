@@ -35,11 +35,15 @@ return <ShadcnTable table={table} />;
 
 ### Change Z-Index of Full Screen Table
 
-Under the hood, when the table is full screen, these classes are applied to the root table container:
+Under the hood, when the table is full screen, these classes are applied to the root table layout element:
 
 ```txt
-fixed inset-0 z-50 h-dvh max-h-dvh w-dvw max-w-dvw rounded-none border-0 m-0 p-0
+fixed inset-0 z-50 m-0 flex h-dvh max-h-dvh w-dvw max-w-dvw flex-col bg-background p-4
 ```
+
+The table keeps its look in full screen: the toolbar stays above the bordered, rounded frame, and the frame grows to fill the padded window.
+
+Full screen is a fixed overlay over the whole page, so only one table is full screen at a time. Pressing Escape inside the table leaves full screen.
 
 If you need to change the `zIndex` of the full screen table, you can do so by passing in a `stTableLayoutProps` table option with a `style` object that has a `zIndex` property (or a `z-*` Tailwind class in `className`).
 
