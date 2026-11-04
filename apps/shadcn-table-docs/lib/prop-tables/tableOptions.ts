@@ -790,7 +790,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'enableViewSettings',
     defaultValue: 'true',
     description:
-      'Adds the view settings button to the toolbar. Its panel holds Columns, Density, Wrap cell text, Grid lines, Sticky header, Alternating row colors, Row Numbers and Reset view; pinned items show as toolbar buttons.',
+      'Adds the view settings button to the toolbar. Its panel holds Columns, Density, Wrap cell text, Grid lines, Sticky header, Alternating row colors, Row numbers and Reset view; pinned items show as toolbar buttons.',
     link: '/docs/guides/view-settings',
     linkText: 'ST View Settings Docs',
     required: false,
