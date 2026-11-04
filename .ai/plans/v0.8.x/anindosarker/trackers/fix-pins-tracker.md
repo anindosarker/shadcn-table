@@ -1,6 +1,6 @@
 # Pinned view items in custom toolbars (F36), tracker
 
-Status: verified
+Status: merged (1a0f67a73ea1fe69346b5e6a3b8e54810307e734)
 Branch `v0.8/fix-pins`, worktree 03, PR #111
 Gates:
 - Repro on shipped code (040c7460), `ST_BASE=base vitest run stories/fixed-bugs/PinnedItemsCustomToolbar.stories.tsx`: red as expected, `PinInCustomToolbar` fails at `findByRole('button', { name: 'Toggle density' })` (no pinned item beside the custom-placed settings button); `PinsInStockToolbarOrder` green (guards the stock order).
