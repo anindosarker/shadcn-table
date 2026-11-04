@@ -93,3 +93,8 @@
 ### F21 Row ordering example page copy says "column"
 
 - `apps/shadcn-table-docs/content/docs/examples/row-ordering.mdx`: the intro reads "shows how to enable column to be re-arranged via drag and drop" and "Learn more about column ordering in the Row Ordering Feature Guide"; both should say row. `row-dragging.mdx` repeats "Learn more about column ordering" under a row dragging intro. Docs, timing: item 3.
+
+### F22 Editing CRUD example: actions moved right and the delete button is gone
+
+- `/docs/examples/editing-crud` (and the inline row, cell, table and tree variants, `apps/shadcn-table-docs/examples/<base>/editing-crud*/TS.tsx`): the 0.7 example rendered the row actions column first with an edit and a delete icon button (`renderRowActions`); on 0.8 the column sits last (D14 default `positionActionsColumn: 'last'`, pinned) and only the pencil shows. Owner, 2026-11-04 19:23: "The action menu should be on the left, missing the delete button."
+- Two parts: the editing examples set `positionActionsColumn: 'first'` explicitly (docs); the missing delete is either the actions column's default width clipping the second button (`getST_RowActionsColumnDef.tsx` size, cell `truncate`/overflow from F12's display cell change) or the example's `renderRowActions` lost the delete control in spec 05's rewrite. Check `git diff v0.7.4..claude/review -- apps/shadcn-table-docs/examples/base/editing-crud/TS.tsx` before fixing. Timing: item 3.
