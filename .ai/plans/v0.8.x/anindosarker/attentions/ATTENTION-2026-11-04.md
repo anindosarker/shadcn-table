@@ -53,6 +53,14 @@
 ## A8 The docs home demo still shows subheader filters
 
 - `apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx:156` pins `columnFilterDisplayMode: 'subheader'` so its scripted Filtering step keeps typing into the header input; the first table a visitor sees is the 0.7 look, not the shipped chips (spec 06 review, minor).
+- Owner, 2026-11-04 16:33: "This doc's homepage is also not good. I think it's not properly implemented." The scripted steps (sort, search, edit, filter, select, group) were written for the 0.7 chrome.
 - Options:
-  - a) Recommended: rework the demo's Filtering step to open the chip editor, in 0.8.1 with the release notes review.
-  - b) Fix story now.
+  - a) Recommended: rework the home demo for the 0.8 chrome (chips, sort chip, view settings) as a 0.8.1 story.
+  - b) Fix story now, before the release.
+
+## A9 The quick examples show no column icons
+
+- `columnDef.icon` is optional (D3), so the Basic, Minimal and Advanced examples and the home demo render plain header labels while the owner's demo sets an icon on every column. Owner, 2026-11-04 16:33: "Why doesn't your default example have any icons?"
+- Options:
+  - a) Recommended: set a Lucide icon per column in the quick examples and the home demo (docs story, 0.8.1), so the first table a visitor sees matches the demo.
+  - b) Leave the examples plain; icons stay an opt-in shown in the column-icons guide only.
