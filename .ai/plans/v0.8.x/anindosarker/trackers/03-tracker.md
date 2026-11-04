@@ -18,7 +18,6 @@ Gates:
 
 - No `Claude-Session:` line reached this builder from the harness, so the spec 03 commits and the PR carry no attribution line.
 - The column menu groups follow the reference capture (`01-column-menu-*.png`, demo `column-header.tsx`): sort and filter items share the first group, pin, reset size, group by and Fixed position the second, Hide the third; the spec text puts a separator between sort and filter and Fixed position beside Hide.
-
 - `Selection Enabled` (`stories/features/Selection.stories.tsx`, spec 05's file) is red: it asserts the select-all control's top on the th's padding-top line; the D2 header has `p-0` and a centred 40 px row, so the control sits 9.5 px down, level with the label text line (10 px). Spec 05 should assert against the label's line instead.
 - `Portals Read Context` (`stories/features/TableProvider.stories.tsx`) is red: it expects the old menu text `Sort by First Name ascending`; the D5 menu says `Sort ascending`. Spec 03 1.6.8 asks this spec to fix it, but the Run plan gives the file to workstream A (spec 02), so it is left untouched per P5; a one-line change to `/^Sort ascending$/` fixes it, by spec 02 or at merge.
 
