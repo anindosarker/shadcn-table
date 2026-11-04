@@ -173,3 +173,31 @@ export const SingleSortHasNoAdd = {
     expect(body.queryByRole('button', { name: 'Add sort' })).toBeNull();
   },
 };
+
+// The editor offers "Add sort" only while the rule count is below
+// maxMultiSortColCount.
+export const MaxMultiSortCapsAdd = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      initialState={{
+        sorting: [
+          { desc: false, id: 'status' },
+          { desc: true, id: 'name' },
+        ],
+      }}
+      maxMultiSortColCount={2}
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: '2 sorts' }));
+    await waitFor(() => expect(ruleIds()).toEqual(['status', 'name']));
+    expect(body.queryByRole('button', { name: 'Add sort' })).toBeNull();
+  },
+};
