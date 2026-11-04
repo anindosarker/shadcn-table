@@ -593,7 +593,9 @@ export async function baseSwitch(page, id, check, { via = 'header' } = {}) {
 
 const DEMO_LAST = 'Now showing: View settings';
 const DEMO_MIN_HOLD_MS = 15000;
-const DEMO_TIMEOUT_MS = 30000;
+// the six steps play their interactions before their state lands (F33), so
+// the loop reaches the last step about 26 s after it starts
+const DEMO_TIMEOUT_MS = 45000;
 
 /**
  * Holds the home page through the full live demo loop on every base. The demo
