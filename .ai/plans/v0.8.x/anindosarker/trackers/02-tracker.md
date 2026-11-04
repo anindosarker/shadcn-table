@@ -1,6 +1,6 @@
 # 02: frame and body, tracker
 
-Status: done
+Status: merged 839a6a6e989fd933adcc07f378a676de848e5562
 Branch `v0.8/frame-body`, worktree 01, PR #98
 Gates:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria` at 89c64f19: green
