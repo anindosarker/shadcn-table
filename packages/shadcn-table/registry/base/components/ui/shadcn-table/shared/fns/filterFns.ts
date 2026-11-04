@@ -10,7 +10,6 @@ import {
   filterFn_arrHas,
   filterFn_arrIncludes,
   filterFn_arrIncludesAll,
-  filterFn_arrIncludesSome,
   filterFn_equalsString,
   filterFn_equalsStringSensitive,
   filterFn_inDateRange,
@@ -200,11 +199,34 @@ const notEmpty = <TFeatures extends TableFeatures, TData extends RowData>(
 
 notEmpty.autoRemove = (val: unknown) => !val;
 
+// `arrIncludesSome`, the `multi-select` default (F29): any overlap for an
+// array row value, as table-core's, and a picked value for a scalar one, which
+// table-core's rejects. It keeps the name so the filter mode label and the
+// filter option menu's array modes still find it. An empty selection keeps
+// every row.
+const arrIncludesSomeOrValue = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  id: string,
+  filterValues: ReadonlyArray<unknown>,
+): boolean => {
+  if (!filterValues?.length) return true;
+  const value = row.getValue<unknown>(id);
+  return Array.isArray(value)
+    ? filterValues.some((filterValue) => value.includes(filterValue))
+    : filterValues.includes(value);
+};
+
+arrIncludesSomeOrValue.autoRemove = (val: unknown) =>
+  !(val as ReadonlyArray<unknown> | undefined)?.length;
+
 export const ST_FilterFns = {
   arrIncludes: filterFn_arrIncludes,
   arrIncludesAll: filterFn_arrIncludesAll,
   arrHas: filterFn_arrHas,
-  arrIncludesSome: filterFn_arrIncludesSome,
+  arrIncludesSome: arrIncludesSomeOrValue,
   between,
   betweenInclusive,
   empty,
