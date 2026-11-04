@@ -1,4 +1,4 @@
-import { type ComponentType } from 'react';
+import { type ComponentType, createContext } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,15 @@ export type ST_ViewToggleId =
   | 'stickyHeader'
   | 'striped'
   | 'wrapText';
+
+/**
+ * Set by the stock `ST_ToolbarInternalButtons` group, which renders the
+ * pinned items itself in the toolbar order. Anywhere else
+ * `ST_ViewSettingsButton` renders them before its button.
+ */
+export const ST_InternalButtonsContext = createContext<{
+  insideInternalButtons: boolean;
+}>({ insideInternalButtons: false });
 
 /** The view settings rows in panel and toolbar order. */
 export const ST_VIEW_SETTINGS_ITEMS: readonly ST_ViewSettingsItemId[] = [
