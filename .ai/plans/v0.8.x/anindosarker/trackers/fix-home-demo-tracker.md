@@ -1,6 +1,6 @@
 # Home demo steps and titles (F45), tracker
 
-Status: verified
+Status: merged (6139e4cb)
 Branch `v0.8/fix-home-demo`, worktree 02, PR #118
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at 9b9e900b: green
