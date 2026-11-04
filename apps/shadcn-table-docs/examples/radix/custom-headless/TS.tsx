@@ -7,6 +7,7 @@ import {
   ST_TableProvider,
   ST_ToggleFullScreenButton,
   ST_ToolbarAlertBanner,
+  ST_ViewSettingsButton,
   flexRender,
   type ST_ColumnDef,
   useShadcnTable,
@@ -21,26 +22,32 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { type Person, data } from './makeData';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'name.firstName',
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'name.lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'address',
+    icon: MapPinIcon,
     header: 'Address',
   },
   {
     accessorKey: 'city',
+    icon: Building2Icon,
     header: 'City',
   },
   {
     accessorKey: 'state',
+    icon: MapIcon,
     header: 'State',
   },
 ];
@@ -86,6 +93,7 @@ const Example = () => {
           <div className="flex items-center gap-2">
             <ST_GlobalFilterTextField />
             <ST_ToggleFullScreenButton />
+            <ST_ViewSettingsButton table={table} />
           </div>
           <ST_TablePagination />
         </div>

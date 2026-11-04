@@ -6,29 +6,35 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { Building2Icon, DollarSignIcon, MapIcon, UserIcon } from 'lucide-react';
 
 const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
+    icon: UserIcon,
     header: 'First Name',
     sortDescFirst: false, //sort first name in ascending order by default on first sort click (default for non-numeric columns)
   },
   //column definitions...
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'city',
+    icon: Building2Icon,
     header: 'City',
   },
   {
     accessorKey: 'state',
+    icon: MapIcon,
     header: 'State',
   },
   //end
   {
     accessorKey: 'salary',
+    icon: DollarSignIcon,
     header: 'Salary',
     sortDescFirst: true, //sort salary in descending order by default on first sort click (default for numeric columns)
   },

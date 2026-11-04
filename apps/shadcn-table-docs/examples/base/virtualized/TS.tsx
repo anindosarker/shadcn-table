@@ -9,6 +9,21 @@ import {
   type ST_RowVirtualizer,
 } from '@/components/ui/shadcn-table';
 import { makeData, type Person } from './makeData';
+import {
+  Building2Icon,
+  CakeIcon,
+  CalendarIcon,
+  CircleCheckIcon,
+  DollarSignIcon,
+  GlobeIcon,
+  MailboxIcon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  PawPrintIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -16,74 +31,90 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         size: 150,
       },
       {
         accessorKey: 'middleName',
+        icon: UserIcon,
         header: 'Middle Name',
         size: 170,
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         size: 150,
       },
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email Address',
         size: 300,
       },
       {
         accessorKey: 'phoneNumber',
+        icon: PhoneIcon,
         header: 'Phone Number',
         size: 250,
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
         size: 300,
       },
       {
         accessorKey: 'zipCode',
+        icon: MailboxIcon,
         header: 'Zip Code',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
         size: 220,
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
       {
         accessorKey: 'country',
+        icon: GlobeIcon,
         header: 'Country',
         size: 350,
       },
       {
         accessorKey: 'petName',
+        icon: PawPrintIcon,
         header: 'Pet Name',
       },
       {
         accessorKey: 'age',
+        icon: CakeIcon,
         header: 'Age',
       },
       {
         accessorKey: 'salary',
+        icon: DollarSignIcon,
         header: 'Salary',
       },
       {
         accessorKey: 'dateOfBirth',
+        icon: CalendarIcon,
         header: 'Date of Birth',
       },
       {
         accessorKey: 'dateOfJoining',
+        icon: CalendarIcon,
         header: 'Date of Joining',
       },
       {
         accessorKey: 'isActive',
+        icon: CircleCheckIcon,
         header: 'Is Active',
       },
     ],

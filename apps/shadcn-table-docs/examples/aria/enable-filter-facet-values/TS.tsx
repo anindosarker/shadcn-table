@@ -7,18 +7,21 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { Building2Icon, DollarSignIcon, MapIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
     () => [
       {
         accessorKey: 'name',
+        icon: UserIcon,
         header: 'Name',
         filterVariant: 'autocomplete', // default
         size: 100,
       },
       {
         accessorKey: 'salary',
+        icon: DollarSignIcon,
         header: 'Salary',
         Cell: ({ cell }) =>
           cell.getValue<number>().toLocaleString('en-US', {
@@ -34,12 +37,14 @@ const Example = () => {
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
         filterVariant: 'select',
         //no need to specify filterSelectOptions if using faceted values
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
         filterVariant: 'multi-select',
         //no need to specify filterSelectOptions if using faceted values
@@ -52,8 +57,6 @@ const Example = () => {
     columns,
     data,
     enableFacetedValues: true,
-    columnFilterDisplayMode: 'subheader',
-    initialState: { showColumnFilters: true },
   });
 
   return <ShadcnTable table={table} />;

@@ -7,12 +7,14 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { CakeIcon, DollarSignIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         size: 100,
         stTableHeadCellProps: {
@@ -24,6 +26,7 @@ const Example = () => {
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         size: 100,
         stTableHeadCellProps: {
@@ -35,6 +38,7 @@ const Example = () => {
       },
       {
         accessorKey: 'age',
+        icon: CakeIcon,
         header: 'Age',
         stTableHeadCellProps: {
           align: 'right',
@@ -45,6 +49,7 @@ const Example = () => {
       },
       {
         accessorKey: 'salary',
+        icon: DollarSignIcon,
         header: 'Salary',
         stTableHeadCellProps: {
           align: 'right',

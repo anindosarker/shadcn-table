@@ -8,7 +8,8 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
   ST_GlobalFilterTextField,
-  ST_ToggleFiltersButton,
+  ST_FilterChips,
+  ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 
 //shadcn Imports
@@ -16,7 +17,15 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 //Icons Imports
-import { CircleUserIcon, SendIcon } from 'lucide-react';
+import {
+  BriefcaseIcon,
+  CalendarIcon,
+  CircleUserIcon,
+  DollarSignIcon,
+  MailIcon,
+  SendIcon,
+  UserIcon,
+} from 'lucide-react';
 
 //Mock Data
 import { data, type Employee } from './makeData';
@@ -31,6 +40,7 @@ const Example = () => {
           {
             accessorFn: (row) => `${row.firstName} ${row.lastName}`, //accessorFn used to join multiple data into a single cell
             id: 'name', //id is still required when using accessorFn instead of accessorKey
+            icon: UserIcon,
             header: 'Name',
             size: 250,
             Cell: ({ renderedCellValue, row }) => (
@@ -50,6 +60,7 @@ const Example = () => {
           },
           {
             accessorKey: 'email', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            icon: MailIcon,
             enableClickToCopy: true,
             filterVariant: 'autocomplete',
             header: 'Email',
@@ -63,6 +74,7 @@ const Example = () => {
         columns: [
           {
             accessorKey: 'salary',
+            icon: DollarSignIcon,
             // filterVariant: 'range', //if not using filter modes feature, use this instead of filterFn
             filterFn: 'between',
             header: 'Salary',
@@ -90,12 +102,14 @@ const Example = () => {
           },
           {
             accessorKey: 'jobTitle', //hey a simple column for once
+            icon: BriefcaseIcon,
             header: 'Job Title',
             size: 350,
           },
           {
             accessorFn: (row) => new Date(row.startDate), //convert to Date for sorting and filtering
             id: 'startDate',
+            icon: CalendarIcon,
             header: 'Start Date',
             filterVariant: 'date',
             filterFn: 'lessThan',
@@ -123,7 +137,6 @@ const Example = () => {
     enableRowActions: true,
     enableRowSelection: true,
     initialState: {
-      showColumnFilters: true,
       showGlobalFilter: true,
       columnPinning: {
         start: ['st-row-expand', 'st-row-select'],
@@ -199,7 +212,7 @@ const Example = () => {
           <div className="flex items-center gap-2">
             {/* import ST sub-components */}
             <ST_GlobalFilterTextField />
-            <ST_ToggleFiltersButton />
+            <ST_FilterChips table={table} />
           </div>
           <div>
             <div className="flex gap-2">
@@ -228,6 +241,7 @@ const Example = () => {
               >
                 Contact
               </Button>
+              <ST_ViewSettingsButton table={table} />
             </div>
           </div>
         </div>

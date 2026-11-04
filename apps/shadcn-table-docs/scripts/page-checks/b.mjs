@@ -2,7 +2,12 @@
  * Cluster B page checks: guides/accessibility to guides/display-columns.
  * Each entry: async ({ page, check }) => void, run after load at the first width.
  */
-import { example, propTable } from './_helpers.mjs';
+import {
+  chipFilter,
+  closeChipEditor,
+  example,
+  propTable,
+} from './_helpers.mjs';
 
 const count = (scope, selector) => scope.locator(selector).count();
 
@@ -135,23 +140,34 @@ const checks = {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // chips mode (the default): each filter is added through the toolbar
+    // Filter button and its editor opens from the chip
     const variants = await example(page, 'customize-filter-variants', check);
-    check(
-      'customize-filter-variants: date input',
-      (await count(variants, 'thead input[type="date"]')) > 0,
-    );
-    check(
-      'customize-filter-variants: range slider',
-      (await count(variants, 'thead [data-slot="slider"]')) > 0,
-    );
-    check(
-      'customize-filter-variants: checkbox filter',
-      (await count(variants, 'thead [data-slot="checkbox"]')) > 0,
-    );
+    for (const [column, control] of [
+      ['Salary', '[role="slider"], input[type="range"]'],
+      ['Status', '[role="checkbox"], [data-slot="checkbox"]'],
+    ]) {
+      const editor = await chipFilter(
+        page,
+        variants,
+        'customize-filter-variants',
+        column,
+        control,
+        check,
+      );
+      await closeChipEditor(page, editor);
+    }
     const facets = await example(page, 'enable-filter-facet-values', check);
-    check(
-      'enable-filter-facet-values: select filter',
-      (await count(facets, 'thead [data-slot="select-trigger"]')) > 0,
+    await closeChipEditor(
+      page,
+      await chipFilter(
+        page,
+        facets,
+        'enable-filter-facet-values',
+        'City',
+        '[data-slot="select-trigger"], [role="combobox"]',
+        check,
+      ),
     );
     const alternate = await example(page, 'alternate-column-filtering', check);
     check(
@@ -159,18 +175,32 @@ const checks = {
       (await count(alternate, 'thead input')) === 0,
     );
     const modes = await example(page, 'customize-filter-modes', check);
-    check(
-      'customize-filter-modes: filter mode buttons',
-      (await count(modes, 'button[aria-label="Change filter mode"]')) > 0,
+    await closeChipEditor(
+      page,
+      await chipFilter(
+        page,
+        modes,
+        'customize-filter-modes',
+        'First Name',
+        'button[aria-label="Change filter mode"]',
+        check,
+      ),
     );
     const components = await example(
       page,
       'customize-filter-components',
       check,
     );
-    check(
-      'customize-filter-components: filter inputs',
-      (await count(components, 'thead input')) > 0,
+    await closeChipEditor(
+      page,
+      await chipFilter(
+        page,
+        components,
+        'customize-filter-components',
+        'Age',
+        'input',
+        check,
+      ),
     );
   },
 
@@ -346,6 +376,17 @@ const checks = {
     check(
       'chart-detail-panel: recharts chart',
       (await count(chart, 'svg.recharts-surface')) > 0,
+    );
+    const lines = chart.locator('path.recharts-line-curve');
+    // an invalid stroke color computes to none: the line is not drawn
+    const stroke =
+      (await lines.count()) > 0
+        ? await lines.first().evaluate((el) => getComputedStyle(el).stroke)
+        : 'none';
+    check(
+      'chart-detail-panel: chart lines drawn',
+      (await lines.count()) > 0 && stroke !== 'none',
+      `lines=${await lines.count()} stroke=${stroke}`,
     );
     await example(page, 'enable-detail-panel-virtualized', check);
     await example(page, 'lazy-detail-panel', check);

@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import {
+  ShadcnTable,
   useShadcnTable,
   type ST_ColumnDef,
   type ST_Row,
-  ST_TableContainer,
-  ST_TableProvider,
 } from '@/components/ui/shadcn-table';
 import { data as initData, type Person } from './makeData';
+import { Building2Icon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -16,14 +16,17 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
     ],
@@ -55,11 +58,7 @@ const Example = () => {
     }),
   });
 
-  return (
-    <ST_TableProvider table={table}>
-      <ST_TableContainer />
-    </ST_TableProvider>
-  );
+  return <ShadcnTable table={table} />;
 };
 
 export default Example;
