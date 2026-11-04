@@ -1,6 +1,6 @@
 # Custom toolbar actions follow row selection (F43), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-custom-actions`, worktree 01, PR #116
 Gates:
 
@@ -16,6 +16,10 @@ Gates:
 - `ST_BASE=aria pnpm --filter shadcn-table exec vitest run stories/features/Toolbar.stories.tsx` at db365b35: green (20 passed)
 - `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/Selection.stories.tsx` at db365b35: green (22 passed)
 - `pnpm --filter shadcn-table test:base` at db365b35: green (79 files, 598 tests)
+- `pnpm --filter shadcn-table test:radix` at 048c21cd: green (79 files, 598 tests), verifier
+- `pnpm --filter shadcn-table test:aria` at 048c21cd: green (79 files, 598 tests), verifier
+- `pnpm --filter shadcn-table storybook:build:aria` at 048c21cd: green, verifier
+- Verifier: tsc per base, lint, check:bases, check:tailwind, test:base and the repro recorded at db365b35 stay valid (db365b35..048c21cd touches only the tracker)
 
 - Milestone 01 custom actions subscribe to table state: done (db365b35)
 
