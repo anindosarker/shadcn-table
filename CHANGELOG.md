@@ -129,6 +129,14 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The home demo shows seven columns (Name, Status, Assignee, Project, Due, Estimate, Priority) that fit its frame, so the Editing step's estimate change is in view.
 
+#### Docs polish
+
+- The home demo plays each step on the table's own controls before its state lands: the sort editor, the search box typing "billing", the Estimate cell edit, the Filter picker and its Status select, the Project column move and the view settings switch, each with a pulse on the control it uses.
+- The home demo's seven columns take the persistent-view definitions and read their headers in full: the demo band runs gutter to gutter with the steps beside the table from 1440px and under it below.
+- The home theme demo types its prompts at a reading pace, answers after a short beat and cycles the five themes in about 40 s; the mock app's member table stays inside its frame at every screen height.
+- The persistent view example uses the header demo's column definitions: filter variants, filter fns, select options, status, priority and tag chips, progress, PR link and archived cells, sizes and the priority sort; Name is orderable, every view settings item is pinned and 50 rows show per page.
+- The advanced example's Activate, Deactivate and Contact buttons and row action items open a dialog with the selected names instead of a browser alert.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed
