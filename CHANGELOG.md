@@ -28,6 +28,15 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 04
 
+- Filter chips (`columnFilterDisplayMode: 'chips'`): one chip per filtered column with its icon, label, mode and value; the toolbar filter button and "+ Filter" open a searchable column picker that swaps in place to the value editor (back button, 150 ms glide); Filter in a column menu opens the editor on the header cell; "Clear filters" clears every value and chip. `columnFilterDisplayMode: 'subheader'` keeps the filter row.
+- Sort editor (`enableSortPopover`): the toolbar Sort button opens a column picker, then the editor with one row per rule (drag to reorder, column, direction, remove), "Add sort" and "Delete sort"; a sort chip before the filter chips opens it. `enableSortPopover: false` keeps today's toolbar.
+- View settings (`enableViewSettings`): one panel for Columns, Density, Wrap cell text, Grid lines, Sticky header, Alternating row colors and Row numbers, each with a pin that places it in the toolbar as an icon button (Columns and Density pinned by default), and "Reset view". `enableViewSettings: false` keeps the columns and density buttons.
+- `useST_ViewPersistence`, mounted with `persistViewSettings`: the view settings, pins, density, column visibility, order and pinning are saved to `localStorage` on every change and applied once after hydration; "Reset view" deletes the stored view.
+- The search toggle is never disabled: open, one click clears the search and closes the field; the field's inline clear button renders only with `showClearSearchButton: true`.
+- `ST_ShowHideColumnsMenu` and `ST_RowActionMenu` take a `trigger` element (with `open` and `onOpenChange`) beside `anchorEl`; the columns and row action buttons open their menus from it, so focus returns through the primitive.
+- A drop in the columns menu slides header and body together and highlights the moved column.
+- Exports: `ST_FilterChips`, `ST_FilterEditor`, `ST_FilterPickerButton`, `ST_ColumnPicker`, `ST_SortPopover`, `ST_ViewSettingsButton`, `ST_ViewSettingsItems`, `useST_PopupResize`, `useST_ViewPersistence` and the filter summary helpers.
+
 ### Changed
 
 #### Spec 05
