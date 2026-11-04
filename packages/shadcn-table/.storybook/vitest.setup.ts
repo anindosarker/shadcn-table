@@ -1,6 +1,7 @@
 import * as a11yAddonAnnotations from '@storybook/addon-a11y/preview';
 import { setProjectAnnotations } from '@storybook/react-vite';
 import { beforeAll } from 'vitest';
+import { userEvent as browserUserEvent } from 'vitest/browser';
 import * as projectAnnotations from './preview';
 
 // Apply the preview config (global decorators, parameters, dark-mode harness)
@@ -14,6 +15,13 @@ const project = setProjectAnnotations([
 ]);
 
 beforeAll(project.beforeAll);
+
+// Playwright pointer input for plays that depend on trusted events (`:active`,
+// hit testing at a point); `storybook/test`'s userEvent dispatches synthetic
+// events. Only the Vitest run has it; plays fall back when it is missing.
+(
+  globalThis as { stBrowserUserEvent?: typeof browserUserEvent }
+).stBrowserUserEvent = browserUserEvent;
 
 /**
  * console.error calls that are expected from specific stories and would
