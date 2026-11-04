@@ -326,6 +326,9 @@ export const ServerSideDataExample = () => (
 export const SingleRowSelectionExample = () => (
   <ExampleSnippet name="single-row-selection" />
 );
+export const SubheaderFiltersExample = () => (
+  <ExampleSnippet name="subheader-filters" />
+);
 export const VirtualizedExample = () => <ExampleSnippet name="virtualized" />;
 
 export const exampleComponents = {
@@ -444,5 +447,6 @@ export const exampleComponents = {
   RowActionsMenuItemsExample,
   ServerSideDataExample,
   SingleRowSelectionExample,
+  SubheaderFiltersExample,
   VirtualizedExample,
 };

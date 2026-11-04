@@ -983,7 +983,7 @@
       "name": "example-enable-row-ordering-base",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
+      "description": "An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/base/enable-row-ordering/TS.tsx",
@@ -2462,6 +2462,27 @@
       ]
     },
     {
+      "name": "example-subheader-filters-base",
+      "type": "registry:block",
+      "title": "Subheader Filters Example",
+      "description": "An example of Shadcn Table which shows the column filters in a row under the headers, with the filter variants and the filter mode picker.",
+      "files": [
+        {
+          "path": "examples/base/subheader-filters/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/subheader-filters.tsx"
+        },
+        {
+          "path": "examples/base/subheader-filters/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ]
+    },
+    {
       "name": "example-virtualized-base",
       "type": "registry:block",
       "title": "Virtualized Example",
@@ -3462,7 +3483,7 @@
       "name": "example-enable-row-ordering-radix",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
+      "description": "An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/radix/enable-row-ordering/TS.tsx",
@@ -4941,6 +4962,27 @@
       ]
     },
     {
+      "name": "example-subheader-filters-radix",
+      "type": "registry:block",
+      "title": "Subheader Filters Example",
+      "description": "An example of Shadcn Table which shows the column filters in a row under the headers, with the filter variants and the filter mode picker.",
+      "files": [
+        {
+          "path": "examples/radix/subheader-filters/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/subheader-filters.tsx"
+        },
+        {
+          "path": "examples/radix/subheader-filters/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ]
+    },
+    {
       "name": "example-virtualized-radix",
       "type": "registry:block",
       "title": "Virtualized Example",
@@ -5942,7 +5984,7 @@
       "name": "example-enable-row-ordering-aria",
       "type": "registry:block",
       "title": "Row DnD Ordering Example",
-      "description": "An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.",
+      "description": "An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.",
       "files": [
         {
           "path": "examples/aria/enable-row-ordering/TS.tsx",
@@ -7414,6 +7456,27 @@
           "path": "examples/aria/single-row-selection/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/single-row-selection/single-row-selection.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ]
+    },
+    {
+      "name": "example-subheader-filters-aria",
+      "type": "registry:block",
+      "title": "Subheader Filters Example",
+      "description": "An example of Shadcn Table which shows the column filters in a row under the headers, with the filter variants and the filter mode picker.",
+      "files": [
+        {
+          "path": "examples/aria/subheader-filters/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/subheader-filters.tsx"
+        },
+        {
+          "path": "examples/aria/subheader-filters/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/makeData.ts"
         }
       ],
       "registryDependencies": [
@@ -9893,6 +9956,27 @@
           "path": "examples/base/single-row-selection/TS.tsx",
           "type": "registry:component",
           "target": "@components/examples/single-row-selection/single-row-selection.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ]
+    },
+    {
+      "name": "example-subheader-filters",
+      "type": "registry:block",
+      "title": "Subheader Filters Example",
+      "description": "Alias of example-subheader-filters-base: the GitHub shorthand anindosarker/shadcn-table/example-subheader-filters installs the Base UI copy.",
+      "files": [
+        {
+          "path": "examples/base/subheader-filters/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/subheader-filters.tsx"
+        },
+        {
+          "path": "examples/base/subheader-filters/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/subheader-filters/makeData.ts"
         }
       ],
       "registryDependencies": [

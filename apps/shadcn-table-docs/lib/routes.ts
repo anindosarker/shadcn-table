@@ -314,6 +314,11 @@ export const routes: Array<RouteItem> = [
             keywords: ['excel', 'alternative filter ui'],
           },
           {
+            href: '/docs/examples/subheader-filters',
+            label: 'Subheader Filters Example',
+            keywords: ['filter row', 'subheader', 'filter modes', 'inline'],
+          },
+          {
             href: '/docs/examples/custom-filter-ui',
             label: 'Custom Filter UI Example',
             keywords: ['alternative', 'drawer', 'sidebar'],
