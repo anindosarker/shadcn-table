@@ -368,3 +368,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - `apps/shadcn-table-docs/examples/<base>/persistent-view/TS.tsx` renders the header demo's columns and data (the DefaultLook data set, F10, D46): many rows and columns, so the sticky header, the column order and the view settings the example describes are visible without scrolling the page. Owner, 2026-11-04 19:15. Finding F13.
 - Timing: with the docs work of item 3.
+
+### D51 One example page keeps the subheader filter system
+
+- Every filtering example moves to the 0.8 chips (F26); one new page under Filtering Examples, "Subheader Filters Example", shows `columnFilterDisplayMode: 'subheader'` with the filter variants and the filter mode picker as 0.7 showed them, beside the Popover Filters page which keeps `'popover'`. The way back for the flipped default (D32) is visible in the docs, not only in the changelog. Owner, 2026-11-04 19:32.
+- Timing: with the docs work of item 3.
