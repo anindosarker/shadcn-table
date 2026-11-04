@@ -55,7 +55,7 @@
 
 - `components/body/ST_TableBodyCell.tsx:336` (three bases): display cells get `px-0` since `89c64f19` (spec 02), and the align chain at `:337-346` falls to `text-start` with no `justify-center`, so the row checkbox sits at x=0 of the 60 px select cell with 40 px empty on its right, while the header checkbox sits at x=12 because the header inner div keeps `px-3 text-start` (`ST_TableHeadCell.tsx:345-354`). `ST_SelectCheckbox.tsx:180-186` says "the cell centres it"; it does not. Measured on `/docs/examples/export-csv`, Base UI: select td padding 0, `justify-content: normal`, checkbox left 0; header checkbox left 12.
 - The demo pairs `px-0` with centring: body `text-center` for row numbers (`header-demo.tsx:556-557`), display header cells `content-center p-0 text-center` (`column-header.tsx:411-433`). The library copied the `px-0` only.
-- Fix: display body cells and display header cells centre their content (`justify-center text-center`, header inner div `p-0` for display columns), per the demo; row numbers `tabular-nums text-muted-foreground`. Owner, 2026-11-04 19:12. Timing: item 3.
+- Fix: display body cells and display header cells centre their content (`justify-center text-center`, header inner div `p-0` for display columns), per the demo; row numbers `tabular-nums text-muted-foreground`. Owner, 2026-11-04 19:12; again 19:37 on `/docs/examples/row-virtualization` (row numbers at the cell's left edge, virtualized body too). Timing: item 3.
 
 ### F15 Data columns sized below the cell padding clip their text
 
