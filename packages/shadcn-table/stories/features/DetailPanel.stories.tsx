@@ -608,3 +608,63 @@ export const PanelRendersVirtualized = {
   render: () => <PanelTable virtual />,
   play: expectPanelRenders,
 };
+
+// The conditional detail panel docs example: a row whose panel is null has a
+// disabled expand button, and every other row expands to a panel with height
+// (F24).
+const conditionalMembers: Member[] = [
+  ...members,
+  {
+    address: '',
+    city: 'Lake Edwin',
+    firstName: 'Ervin',
+    id: '3',
+    lastName: 'Reinger',
+  },
+];
+
+export const ConditionalPanelDisablesEmptyRow = {
+  render: () => (
+    <ShadcnTable
+      columns={[
+        { accessorKey: 'id', header: 'ID', size: 50 },
+        { accessorKey: 'firstName', header: 'First Name' },
+        { accessorKey: 'lastName', header: 'Last Name' },
+      ]}
+      data={conditionalMembers}
+      layoutMode="grid"
+      renderDetailPanel={({ row }) =>
+        row.original.address ? (
+          <div className="m-auto grid w-full grid-cols-2">
+            <p>Address: {row.original.address}</p>
+            <p>City: {row.original.city}</p>
+          </div>
+        ) : null
+      }
+    />
+  ),
+  play: async ({ canvas, userEvent }: StoryContext) => {
+    const expandButtons = await canvas.findAllByRole('button', {
+      name: 'Expand',
+    });
+    await expect(expandButtons).toHaveLength(3);
+    await expect(expandButtons[2]).toBeDisabled();
+    for (const [index, member] of members.entries()) {
+      await expect(expandButtons[index]).toBeEnabled();
+      await userEvent.click(expandButtons[index]);
+      await waitFor(() => {
+        const text = canvas.getByText(`Address: ${member.address}`);
+        expect(
+          text.closest('tr')!.getBoundingClientRect().height,
+        ).toBeGreaterThan(0);
+        expect(text.getBoundingClientRect().height).toBeGreaterThan(0);
+      });
+    }
+    // Expand all opens only the rows that have a panel.
+    await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));
+    await expect(canvas.getAllByText(/^Address:/)).toHaveLength(2);
+    await expect(
+      canvas.getAllByRole('button', { name: 'Expand' })[2],
+    ).toBeDisabled();
+  },
+};
