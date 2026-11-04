@@ -3,23 +3,16 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
 import {
-  CalendarClockIcon,
   CalendarIcon,
-  CalendarPlusIcon,
   CircleDotIcon,
   FlagIcon,
   FolderIcon,
   HashIcon,
   Pencil,
   Share2,
-  StickyNoteIcon,
-  TagsIcon,
-  TimerIcon,
   Trash2,
   TypeIcon,
   UserIcon,
-  UserPenIcon,
-  UsersIcon,
 } from 'lucide-react';
 import { DropdownMenuItem } from '@/components/ui-radix/dropdown-menu';
 import {
@@ -68,8 +61,9 @@ export type SignalCue =
 const PULSE = 'v12-cue';
 const PULSE_MS = 1200;
 
-// The persistent-view example's columns (the header demo's); the Filtering
-// step picks one Status value, and only Estimate edits.
+// Seven of the persistent-view example's columns (the header demo's), the
+// ones the steps use, so every step acts in view at the home page width (D54);
+// the Filtering step picks one Status value, and only Estimate edits.
 const columns: ST_ColumnDef<Task>[] = (
   [
     {
@@ -77,23 +71,23 @@ const columns: ST_ColumnDef<Task>[] = (
       enableColumnOrdering: false,
       header: 'Name',
       icon: TypeIcon,
-      size: 260,
+      size: 150,
     },
     {
       accessorKey: 'status',
       filterVariant: 'select',
       header: 'Status',
       icon: CircleDotIcon,
-      size: 150,
+      size: 105,
     },
-    { accessorKey: 'assignee', header: 'Assignee', icon: UserIcon, size: 160 },
-    { accessorKey: 'project', header: 'Project', icon: FolderIcon, size: 130 },
+    { accessorKey: 'assignee', header: 'Assignee', icon: UserIcon, size: 115 },
+    { accessorKey: 'project', header: 'Project', icon: FolderIcon, size: 100 },
     {
       accessorKey: 'due',
       enableColumnOrdering: false,
       header: 'Due',
       icon: CalendarIcon,
-      size: 130,
+      size: 110,
     },
     {
       accessorKey: 'estimate',
@@ -101,50 +95,9 @@ const columns: ST_ColumnDef<Task>[] = (
       enableEditing: true,
       header: 'Estimate',
       icon: HashIcon,
-      size: 120,
+      size: 110,
     },
-    { accessorKey: 'priority', header: 'Priority', icon: FlagIcon, size: 120 },
-    {
-      accessorFn: (row) => row.tags.join(', '),
-      enableSorting: false,
-      header: 'Tags',
-      icon: TagsIcon,
-      id: 'tags',
-      size: 200,
-    },
-    {
-      accessorKey: 'reporter',
-      header: 'Reporter',
-      icon: UserPenIcon,
-      size: 150,
-    },
-    {
-      accessorKey: 'team',
-      enableColumnOrdering: false,
-      header: 'Team',
-      icon: UsersIcon,
-      size: 120,
-    },
-    { accessorKey: 'sprint', header: 'Sprint', icon: TimerIcon, size: 120 },
-    {
-      accessorKey: 'created',
-      header: 'Created',
-      icon: CalendarPlusIcon,
-      size: 130,
-    },
-    {
-      accessorKey: 'updated',
-      header: 'Updated',
-      icon: CalendarClockIcon,
-      size: 130,
-    },
-    {
-      accessorKey: 'storyPoints',
-      header: 'Story points',
-      icon: HashIcon,
-      size: 130,
-    },
-    { accessorKey: 'notes', header: 'Notes', icon: StickyNoteIcon, size: 260 },
+    { accessorKey: 'priority', header: 'Priority', icon: FlagIcon, size: 85 },
   ] as ST_ColumnDef<Task>[]
 ).map((column) => ({ enableEditing: false, ...column }));
 
