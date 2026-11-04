@@ -476,13 +476,6 @@
   }
 }
 
-/* the status line wraps instead of cutting "Now showing: View settings" */
-.v12 .v5-steps [aria-live] {
-  overflow: visible;
-  white-space: normal;
-  text-overflow: clip;
-}
-
 /* the seven demo columns at the header demo's sizes need about 1080px, so
  * the steps sit beside the table from 1440px (the band runs gutter to
  * gutter, see home-page.tsx) and under it below */
