@@ -122,3 +122,11 @@
 ### F28 Semantic layout leaves the body select checkbox off centre
 
 - `components/inputs/ST_SelectCheckbox.tsx` (three bases): the body checkbox span is `flex w-fit`; under `layoutMode: 'semantic'` the cell is `display: table-cell`, so F12's `justify-center` has no effect and the box sits at the start. Found by the cells story, 2026-11-04. Fix: `mx-auto` on that span, a play `CheckboxesAlignSemantic` in `Selection.stories.tsx`. Not in a story yet; grid is the default, so no 0.8 page shows it.
+
+### F29 A multi-select filter on a string column matches no rows
+
+- `shared/utils/column.utils.ts:154` (three bases): `getDefaultColumnFilterFn` picks `arrIncludesSome` for `filterVariant: 'multi-select'` (registered at `shared/fns/filterFns.ts:207`), and table-core 9.3.1's `filterFn_arrIncludesSome` returns false unless the row value is an array; the State column of `customize-filter-variants` and `subheader-filters` holds strings, so picking two states shows nothing. Found by the docs app story, 2026-11-04; the home demo's Filtering step uses a `select` value until this lands. Fix story on the integration branch: the default for `multi-select` accepts a scalar row value (`filterValue.includes(rowValue)`) and an array value as before; a play on a string column.
+
+### F30 Columns menu reorder may slide by the table's page offset
+
+- `components/menus/ST_ShowHideColumnsMenuItems.tsx:83-91` (three bases) records viewport `left` values into `columnFlipPending`, while `hooks/useST_ColumnFlip.ts:42-55, 309-312` measures positions relative to the table, so a reorder from the columns menu may animate every column by the table's offset from the page edge. Found by reading, not reproduced (docs app story, 2026-11-04). Reproduce in `ColumnHiding.stories.tsx` with the table offset from the left before fixing.
