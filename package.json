@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build": "turbo run build --parallel",
-    "dev": "turbo run dev --parallel",
+    "dev": "concurrently -n docs,storybook -c blue,green \"pnpm --filter shadcn-table-docs dev\" \"pnpm storybook\"",
+    "dev:docs": "turbo run dev --parallel",
     "storybook": "concurrently -n base,radix,aria -c green,magenta,cyan \"pnpm --filter shadcn-table storybook:base\" \"pnpm --filter shadcn-table storybook:radix\" \"pnpm --filter shadcn-table storybook:aria\"",
     "format": "prettier --write \"**/*.{js,mjs,ts,tsx,md}\"",
     "preview": "node scripts/preview.mjs",
