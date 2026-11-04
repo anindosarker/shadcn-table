@@ -373,3 +373,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - Every filtering example moves to the 0.8 chips (F26); one new page under Filtering Examples, "Subheader Filters Example", shows `columnFilterDisplayMode: 'subheader'` with the filter variants and the filter mode picker as 0.7 showed them, beside the Popover Filters page which keeps `'popover'`. The way back for the flipped default (D32) is visible in the docs, not only in the changelog. Owner, 2026-11-04 19:32.
 - Timing: with the docs work of item 3.
+
+### D52 The actions column fits the controls renderRowActions returns
+
+- Addendum to D14: without `renderRowActions` the column stays 48 px with the hidden header label and the dots button. With `renderRowActions` set, the column shows the "Actions" header label (`localization.actions`, as 0.7.4) and sizes to its controls: 96 by default, `displayColumnDefOptions['st-row-actions'].size` wins; the cell never clips a control. The editing examples set `positionActionsColumn: 'first'` so their edit and delete controls sit where 0.7.4 showed them. Owner, 2026-11-04 19:23 and 19:24 (F22).
+- Source: A9

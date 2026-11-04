@@ -64,3 +64,10 @@
 - Options:
   - a) Recommended: set a Lucide icon per column in the quick examples and the home demo (docs story, 0.8.1), so the first table a visitor sees matches the demo.
   - b) Leave the examples plain; icons stay an opt-in shown in the column-icons guide only.
+
+## A10 The chip editor's input radius is the stock one
+
+- F23 names a wrong radius on the filter chip editor's input; the code has no override: every input part in the three bases and the docs copies is `rounded-lg` (`components/ui/input-group.tsx:17`, `input.tsx`), the popover around it too (`popover.tsx`), and the editor adds no radius class (`ST_FilterChips.tsx` editorClassName, `ST_FilterEditor.tsx`). The input looks as every other input on the site. A smaller radius inside the editor is a look choice.
+- Options:
+  - a) Recommended: keep (stock parts, no override).
+  - b) `rounded-md` on the editor's input group only, one class in `ST_FilterEditor.tsx` per base.

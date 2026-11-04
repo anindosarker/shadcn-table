@@ -101,7 +101,7 @@
 
 ### F23 Filter chip editor input has the wrong border radius
 
-- `/docs/examples/expanding-tree-flat-parse`, Base UI, chip editor for Last Name (`components/toolbar/ST_FilterChips.tsx` editor, `ST_FilterTextField.tsx`): the text input inside the editor popover renders with a larger radius than the stock shadcn input (`rounded-md`) and the popover itself; owner, 2026-11-04 19:28. Check whether the Base UI `Input` part or a `rounded-*` on the editor wrapper sets it, and that the radix and aria editors match. Timing: item 3, library.
+- `/docs/examples/expanding-tree-flat-parse`, Base UI, chip editor for Last Name (`components/toolbar/ST_FilterChips.tsx` editor, `ST_FilterTextField.tsx`): the text input inside the editor popover renders with a larger radius than the stock shadcn input (`rounded-md`) and the popover itself; owner, 2026-11-04 19:28. Checked: no override exists, every input part is `rounded-lg` like the popover. Parked as A10 (owner choice), no spec cites it.
 
 ### F24 Detail panel example: an expanded row shows no panel
 
