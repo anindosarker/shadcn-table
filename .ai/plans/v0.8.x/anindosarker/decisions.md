@@ -390,4 +390,4 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 ### D55 The persistent view example and the home demo render the demo's cells
 
-- Addendum to D46 and D50: the persistent-view example and the home demo use the header demo's cell renderers (status and priority chips, tag chips, assignee, estimate, due date) so the stock table looks as the demo does; the example pins every view settings item by default, leaves Name orderable, and shows 50 rows per page. Owner, 2026-11-04 22:32 (F35).
+- Addendum to D46 and D50: the persistent-view example and the home demo use the header demo's column definitions in full (`test-projects/next-app/components/demos/header-demo/header-demo.tsx`, read-only): cell renderers (status and priority chips, tag chips, assignee, estimate, due date), the filter variant and filter fn per column, select options, sizes, sorting settings, icons; the only differences are the import path and what the page demonstrates (persistence options). The example pins every view settings item by default, leaves Name orderable, and shows 50 rows per page. Owner, 2026-11-04 22:32 and 22:40 (F35).
