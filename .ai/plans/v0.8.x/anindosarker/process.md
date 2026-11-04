@@ -22,7 +22,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 ## P4 Gates
 
-- Per-base gates run concurrently on their own ports: `check-pages.mjs --base <base>`, `storybook:build:<base>`, `test:<base>`. The dev registry on 5310 (`pnpm registry:dev`) is shared: reuse it, start it when missing, never kill it.
+- Per-base gates run on their own ports: `check-pages.mjs --base <base>`, `storybook:build:<base>`, `test:<base>`. The machine is loaded while several workstreams run (owner, 2026-11-04): each agent runs its per-base gates one base after another, never two `test:<base>` or two Storybook builds at once, and starts a long gate only after its previous one exited. The dev registry on 5310 (`pnpm registry:dev`) is shared: reuse it, start it when missing, never kill it.
 - A recorded gate line stays valid while `git diff --name-only <commit>..HEAD` touches only `.ai/` and `CHANGELOG.md`; CI is the second run for tsc, lint, tests and builds.
 - Known flake: `Profiled Thousand Rows` (vitest browser mode), `gh run rerun --failed <id>` once before red.
 - `pnpm --filter shadcn-table-docs lib:install <base>` reads `packages/shadcn-table/public/r/` (run `pnpm -w registry:build` first) and writes one shared temporary `components.json`: the three bases install one after another, never in parallel.
