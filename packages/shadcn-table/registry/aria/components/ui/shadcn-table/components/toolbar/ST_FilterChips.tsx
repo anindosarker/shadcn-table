@@ -22,6 +22,7 @@ import {
   resetFilterMode,
   summarizeFilterValue,
 } from '@/components/ui/shadcn-table/shared/utils/filterSummary.utils';
+import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   ST_ColumnIcon,
@@ -335,7 +336,7 @@ const ST_HeaderFilterEditor = <TData extends ST_RowData>({
   // restore runs.
   const close = () => {
     flushSync(() => closeEditor(table));
-    cell?.querySelector<HTMLElement>('[aria-haspopup="menu"]')?.focus();
+    cell?.querySelector<HTMLElement>(`[${ST_COLUMN_ACTIONS_ATTR}]`)?.focus();
   };
 
   if (!column || !cell) return null;

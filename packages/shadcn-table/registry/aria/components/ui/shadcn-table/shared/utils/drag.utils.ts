@@ -11,6 +11,8 @@ export const ST_FLIP_COLUMN_ATTR = 'data-flip-column';
 export const ST_FLIP_SLIDING_ATTR = 'data-flip-sliding';
 /** Marks an element the column slide moves as one layer. */
 export const ST_FLIP_LAYER_ATTR = 'data-flip-layer';
+/** Marks the header's column menu button, the filter editor's focus return. */
+export const ST_COLUMN_ACTIONS_ATTR = 'data-st-column-actions';
 
 /** Whether a dragged column may land on `column`. */
 const getIsColumnDroppable = <TData extends ST_RowData>(

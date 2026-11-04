@@ -212,7 +212,7 @@ export const HeaderAnchoredEditor = {
 
     const headerCell = canvas.getByRole('columnheader', { name: /Status/ });
     const chevron = headerCell.querySelector<HTMLElement>(
-      '[aria-haspopup="menu"]',
+      '[data-st-column-actions]',
     );
     await userEvent.keyboard('{Escape}');
     await waitFor(() =>

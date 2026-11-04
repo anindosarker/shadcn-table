@@ -20,6 +20,7 @@ import {
   resetFilterMode,
   summarizeFilterValue,
 } from '@/components/ui/shadcn-table/shared/utils/filterSummary.utils';
+import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   ST_ColumnIcon,
@@ -324,7 +325,9 @@ const ST_HeaderFilterEditor = <TData extends ST_RowData>({
           className={editorClassName}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
-            cell?.querySelector<HTMLElement>('[aria-haspopup="menu"]')?.focus();
+            cell
+              ?.querySelector<HTMLElement>(`[${ST_COLUMN_ACTIONS_ATTR}]`)
+              ?.focus();
           }}
           // The closing column menu hands focus back to the header first.
           onFocusOutside={(event) => event.preventDefault()}
