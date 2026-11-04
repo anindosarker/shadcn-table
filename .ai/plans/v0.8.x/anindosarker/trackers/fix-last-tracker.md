@@ -1,6 +1,6 @@
 # Last fixes (F19, F28, F30, F39, F40, F41, D56, D57), tracker
 
-Status: verified (gates green, PR #114 ready, not merged)
+Status: merged (86382700756692c82ef8141e1a2bc441840842e4)
 Branch `v0.8/fix-last`, worktree 01, PR #114
 Gates:
 - Repro on shipped code (335c749c), base, `FunnelIsClickable`: red, the funnel button is 12.07 px wide (want at least 24).
