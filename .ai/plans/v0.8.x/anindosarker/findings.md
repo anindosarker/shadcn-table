@@ -130,3 +130,7 @@
 ### F30 Columns menu reorder may slide by the table's page offset
 
 - `components/menus/ST_ShowHideColumnsMenuItems.tsx:83-91` (three bases) records viewport `left` values into `columnFlipPending`, while `hooks/useST_ColumnFlip.ts:42-55, 309-312` measures positions relative to the table, so a reorder from the columns menu may animate every column by the table's offset from the page edge. Found by reading, not reproduced (docs app story, 2026-11-04). Reproduce in `ColumnHiding.stories.tsx` with the table offset from the left before fixing.
+
+### F31 The chip editor input has a different focus style from the stock input
+
+- Owner screenshots 2026-11-04 22:19 (docs site, dark, Base UI): the toolbar search box focused shows the shadcn focus ring (3 px, `ring-ring/50`) on a `rounded-lg` box; the chip editor's "Filter by Status" input focused shows a thin 1 px blue border, no ring, slightly squarer corners. A10/F23 was this difference, not the radius alone. Cause lookup in progress (`ST_FilterEditor.tsx`, `ST_FilterTextField.tsx` versus `ST_GlobalFilterTextField.tsx` and the `input-group` part); fix story once known, three bases.
