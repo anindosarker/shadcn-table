@@ -54,6 +54,30 @@ export async function example(page, id, check) {
 }
 
 /**
+ * No header label in example panel `w` is truncated: every `.truncate` label
+ * inside `thead th` (the column menu button or the plain label span) fits its
+ * box, `scrollWidth <= clientWidth`. Popover filter mode adds a funnel beside
+ * the chevron, so an example sized for the inline mode clips its labels (F38).
+ */
+export async function headerLabelsFit(w, id, check) {
+  const clipped = await w
+    .locator('thead th .truncate')
+    .evaluateAll((els) =>
+      els
+        .filter((el) => el.scrollWidth > el.clientWidth)
+        .map(
+          (el) =>
+            `${el.textContent?.trim()}(${el.scrollWidth}>${el.clientWidth})`,
+        ),
+    );
+  check(
+    `${id}: header labels not truncated`,
+    clipped.length === 0,
+    clipped.join(' '),
+  );
+}
+
+/**
  * The chips filter flow of example `w` (filters in chips mode): the toolbar
  * Filter button opens the column picker, picking `column` adds its chip and
  * opens the editor in place; closing it and clicking the chip opens the
