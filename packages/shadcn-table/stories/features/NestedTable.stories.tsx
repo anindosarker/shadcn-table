@@ -5,6 +5,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // A `ShadcnTable` inside another table's `renderDetailPanel` (decisions item
 // 4): context readers and custom renderers of each table read their own
@@ -44,6 +45,7 @@ const innerColumns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
     header: 'Inner',
+    icon: UserIcon,
     Cell: ({ renderedCellValue, table }) => (
       <span data-testid="inner-cell">
         {renderedCellValue} ({table.options.data.length})
@@ -56,6 +58,7 @@ const outerColumns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
     Cell: ({ renderedCellValue, table }) => (
       <span data-testid="outer-cell">
         {renderedCellValue} ({table.options.data.length})

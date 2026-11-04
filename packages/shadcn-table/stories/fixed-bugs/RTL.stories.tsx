@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { Building2Icon, UserIcon } from 'lucide-react';
 
 // A right-to-left page: the pinned column sticks through inset-inline-start,
 // its edge shadow falls to the left onto the scrolled columns, and the resize
@@ -21,9 +22,9 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
 ];
 
 export const RightToLeft = {

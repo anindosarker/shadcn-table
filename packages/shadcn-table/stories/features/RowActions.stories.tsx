@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Pencil, Share2, Trash2, UserCircle } from 'lucide-react';
+import {
+  MapIcon,
+  MapPinIcon,
+  Pencil,
+  PhoneIcon,
+  Share2,
+  Trash2,
+  UserCircle,
+  UserIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
@@ -17,22 +26,27 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 

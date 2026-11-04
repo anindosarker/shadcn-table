@@ -7,6 +7,13 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  Building2Icon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Column Grouping Examples',
@@ -26,22 +33,27 @@ const columns = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'gender',
     header: 'Gender',
+    icon: VenusAndMarsIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
 ] as ST_ColumnDef<Person>[];
 
@@ -182,10 +194,12 @@ export const ColumnGroupingEnabledCustomAggregate = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         AggregatedCell: ({ cell }) => (
@@ -193,14 +207,17 @@ export const ColumnGroupingEnabledCustomAggregate = () => (
         ),
         accessorKey: 'gender',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -228,22 +245,27 @@ export const GroupingColumnsSetState = () => {
         {
           accessorKey: 'name.firstName', //access nested data with dot notation
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'name.lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address', //normal accessorKey
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'city',
           header: 'City',
+          icon: Building2Icon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
       ]);
 
@@ -346,10 +368,12 @@ export const GroupingAndDraggingWithSomeDisabledGrouping = () => {
         accessorKey: 'firstName',
         enableGrouping: false,
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ],
     [],

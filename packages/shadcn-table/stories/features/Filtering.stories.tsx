@@ -12,6 +12,17 @@ import {
 import { faker } from '@faker-js/faker';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import {
+  CakeIcon,
+  CalendarIcon,
+  CircleCheckIcon,
+  ClockIcon,
+  HashIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Filtering Examples',
@@ -24,20 +35,24 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     Cell: ({ cell }) => (cell.getValue() ? 'Yes' : 'No'),
     accessorKey: 'isActive',
     header: 'Is Active',
+    icon: CircleCheckIcon,
     size: 110,
   },
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     filterVariant: 'range',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), //transform data to readable format for cell render
@@ -45,15 +60,18 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     filterFn: 'lessThan',
     filterVariant: 'date',
     header: 'Birth Date',
+    icon: CalendarIcon,
     id: 'birthDate',
   },
   {
     accessorKey: 'gender',
     header: 'Gender',
+    icon: VenusAndMarsIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
@@ -68,6 +86,7 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     ],
     filterVariant: 'multi-select',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 
@@ -156,6 +175,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (originalRow) => (originalRow.isActive ? 'true' : 'false'),
         filterVariant: 'checkbox',
         header: 'Is Active',
+        icon: CircleCheckIcon,
         id: 'isActive',
         size: 200,
       },
@@ -163,16 +183,19 @@ export const FilterFnAndFilterVariants = () => (
         accessorKey: 'firstName',
         filterFn: 'fuzzy', // default
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         filterFn: 'contains',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterVariant: 'range',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), //transform data to readable format for cell render
@@ -180,6 +203,7 @@ export const FilterFnAndFilterVariants = () => (
         filterFn: 'lessThan',
         filterVariant: 'date',
         header: 'Birth Date',
+        icon: CalendarIcon,
         id: 'birthDate',
       },
       {
@@ -187,6 +211,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (row) => new Date(row.hireDate), //transform data before processing so sorting works
         filterVariant: 'date-range',
         header: 'Hire Date',
+        icon: CalendarIcon,
         id: 'hireDate',
       },
       {
@@ -194,6 +219,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (row) => new Date(row.arrivalTime), //transform data before processing so sorting works
         filterVariant: 'datetime-range',
         header: 'Arrival time',
+        icon: ClockIcon,
         id: 'arrivalTime',
       },
       {
@@ -201,6 +227,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (row) => new Date(row.departureTime), //transform data before processing so sorting works
         filterVariant: 'time-range',
         header: 'Departure Time',
+        icon: ClockIcon,
         id: 'departureTime',
       },
       {
@@ -208,11 +235,13 @@ export const FilterFnAndFilterVariants = () => (
         filterSelectOptions: ['Male', 'Female', 'Other'],
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         filterFn: 'includesStringSensitive',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
@@ -227,6 +256,7 @@ export const FilterFnAndFilterVariants = () => (
         ],
         filterVariant: 'multi-select',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -246,26 +276,31 @@ export const FilterFnAndFilterVariantsFaceted = () => (
         })), //hard coded
         filterVariant: 'autocomplete',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         filterVariant: 'autocomplete', //faceted auto generated select options
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterVariant: 'range-slider',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'state',
         filterVariant: 'multi-select',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -281,35 +316,42 @@ export const FilteringChangeModeEnabled = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterFn: 'between',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), //transform data to readable format for cell render
         accessorFn: (row) => new Date(row.birthDate), //transform data before processing so sorting works
         filterVariant: 'date',
         header: 'Birth Date',
+        icon: CalendarIcon,
         id: 'birthDate',
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -326,26 +368,31 @@ export const FilteringChangeModeEnabledFaceted = () => (
         accessorKey: 'firstName',
         filterFn: 'fuzzy', // default
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         filterVariant: 'autocomplete',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterVariant: 'range-slider',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'state',
         filterVariant: 'multi-select',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -362,28 +409,34 @@ export const FilteringChangeModeEnabledHidden = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterFn: 'between',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -397,6 +450,7 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
@@ -408,24 +462,29 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
         ],
         filterFn: 'startsWith',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         columnFilterModeOptions: ['equals', 'notEquals'],
         filterFn: 'equals',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -441,28 +500,34 @@ export const FilteringDisabledForCertainColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         enableColumnFilter: false,
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         enableColumnFilter: false,
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -477,14 +542,17 @@ export const CustomFilterFunctionPerColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
@@ -494,10 +562,12 @@ export const CustomFilterFunctionPerColumn = () => (
             .toLowerCase()
             .startsWith(filterValue.toLowerCase()),
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
@@ -507,6 +577,7 @@ export const CustomFilterFunctionPerColumn = () => (
             .toLowerCase()
             .startsWith(filterValue.toLowerCase()),
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -521,28 +592,34 @@ export const CustomFilterFns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterFn: 'customFn',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         filterFn: 'customFn',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -568,14 +645,17 @@ export const CustomFilterComponent = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         Filter: ({ header }) => (
@@ -597,14 +677,17 @@ export const CustomFilterComponent = () => (
           row.getValue<string>('gender').toLowerCase() ===
           filterValue.toLowerCase(),
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -621,28 +704,34 @@ export const CustomizeFilterTextFields = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -723,28 +812,34 @@ export const InitialFilters = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterFn: 'between',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -768,8 +863,13 @@ const scoreData: Score[] = [
 ];
 
 const scoreColumns: ST_ColumnDef<Score>[] = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'score', filterVariant: 'range', header: 'Score' },
+  { accessorKey: 'name', header: 'Name', icon: UserIcon },
+  {
+    icon: HashIcon,
+    accessorKey: 'score',
+    filterVariant: 'range',
+    header: 'Score',
+  },
 ];
 
 /** A Min value filters the rows; the number range input rejects letters. */

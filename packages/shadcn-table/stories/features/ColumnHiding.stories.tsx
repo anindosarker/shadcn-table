@@ -1,4 +1,12 @@
-import { MailIcon, TypeIcon } from 'lucide-react';
+import {
+  MailIcon,
+  MailboxIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  TypeIcon,
+  UserIcon,
+} from 'lucide-react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
@@ -14,30 +22,37 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'zip',
     header: 'Zip',
+    icon: MailboxIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -84,31 +99,38 @@ export const ColumnHidingDisabledPerColumn = () => (
         accessorKey: 'firstName',
         enableHiding: false,
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         enableHiding: false,
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'zip',
         header: 'Zip',
+        icon: MailboxIcon,
       },
       {
         accessorKey: 'email',
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -123,10 +145,12 @@ export const ColumnHidingWithHeaderGroups = () => (
           {
             accessorKey: 'firstName',
             header: 'First Name',
+            icon: UserIcon,
           },
           {
             accessorKey: 'lastName',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         header: 'Name',
@@ -137,14 +161,17 @@ export const ColumnHidingWithHeaderGroups = () => (
           {
             accessorKey: 'address',
             header: 'Address',
+            icon: MapPinIcon,
           },
           {
             accessorKey: 'state',
             header: 'State',
+            icon: MapIcon,
           },
           {
             accessorKey: 'zip',
             header: 'Zip',
+            icon: MailboxIcon,
           },
         ],
         header: 'Mailing Info',
@@ -155,10 +182,12 @@ export const ColumnHidingWithHeaderGroups = () => (
           {
             accessorKey: 'email',
             header: 'Email Address',
+            icon: MailIcon,
           },
           {
             accessorKey: 'phoneNumber',
             header: 'Phone Number',
+            icon: PhoneIcon,
           },
         ],
         header: 'Contact Info',
@@ -174,32 +203,39 @@ export const ColumnHidingColumnsNotVisibleInShowHide = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
         visibleInShowHideMenu: false,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
         visibleInShowHideMenu: false,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'zip',
         header: 'Zip',
+        icon: MailboxIcon,
       },
       {
         accessorKey: 'email',
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -211,32 +247,39 @@ export const ColumnHidingWithColumnsHiddenAndNotVisibleInShowHide = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         enableHiding: false,
         header: 'Address',
+        icon: MapPinIcon,
         visibleInShowHideMenu: false,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'zip',
         header: 'Zip',
+        icon: MailboxIcon,
       },
       {
         accessorKey: 'email',
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}

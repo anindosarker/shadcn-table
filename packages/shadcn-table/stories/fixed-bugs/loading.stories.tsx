@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/Loading Data',
@@ -25,22 +26,27 @@ export const NestedLoadingDataWithInitialExpanded = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       //end
     ],
@@ -66,22 +72,27 @@ export const NestedLoadingDataWithInitialFilter = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       //end
     ],
@@ -107,22 +118,27 @@ export const NestedLoadingDataWithInitialGroup = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       //end
     ],
@@ -148,22 +164,27 @@ export const NestedLoadingDataWithInitialPage = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       //end
     ],
@@ -189,22 +210,27 @@ export const NestedLoadingDataWithInitialSort = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       //end
     ],
@@ -231,19 +257,23 @@ export const AccessorKeyWhileLoading = () => {
         accessorFn: (row) =>
           `${row.name.firstName.toUpperCase()} ${row.name.lastName.toUpperCase()}`,
         header: 'Name',
+        icon: UserIcon,
         id: 'name',
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ],
     [],

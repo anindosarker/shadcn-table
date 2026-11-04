@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { CakeIcon, UserIcon } from 'lucide-react';
 
 // Render counts and the subscriptions behind them (decisions item 5): a
 // 1,000-row table under a React Profiler with counters on rows, cells, head
@@ -39,7 +40,7 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
 ];
 
 const bodyText = (root: HTMLElement) =>
@@ -55,8 +56,8 @@ const numbered: Numbered[] = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 const numberedColumns: ST_ColumnDef<Numbered>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 const firstNames = (root: HTMLElement) =>
@@ -511,9 +512,9 @@ const profiledColumns: ST_ColumnDef<Profiled>[] = [
     },
     size: 60,
   },
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 // Shows the counters on demand. Its own state, so the snapshot re-renders this
@@ -727,8 +728,8 @@ const tree: Tree[] = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 const treeColumns: ST_ColumnDef<Tree>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 const rowNames = (root: HTMLElement) =>

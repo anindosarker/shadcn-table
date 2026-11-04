@@ -6,6 +6,13 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  CakeIcon,
+  DollarSignIcon,
+  MapIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Aggregation Examples',
@@ -33,12 +40,14 @@ const columns = [
     accessorKey: 'firstName',
     enableGrouping: false,
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     AggregatedCell: () => '-',
     accessorKey: 'lastName',
     enableGrouping: false,
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     AggregatedCell: ({ cell, table }) => (
@@ -59,6 +68,7 @@ const columns = [
     accessorKey: 'age',
     aggregationFn: 'max',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     GroupedCell: ({ cell }) => (
@@ -66,10 +76,12 @@ const columns = [
     ),
     accessorKey: 'gender',
     header: 'Gender',
+    icon: VenusAndMarsIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     AggregatedCell: ({ cell, table }) => (
@@ -113,6 +125,7 @@ const columns = [
     aggregationFn: 'mean',
     enableGrouping: false,
     header: 'Salary',
+    icon: DollarSignIcon,
   },
 ] as ST_ColumnDef<(typeof data)[0]>[];
 
@@ -198,11 +211,13 @@ export const MultiAggregationPerColumn = () => (
         accessorKey: 'firstName',
         enableGrouping: false,
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         enableGrouping: false,
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         AggregatedCell: ({ cell, table }) => (
@@ -237,6 +252,7 @@ export const MultiAggregationPerColumn = () => (
           ],
         }),
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         GroupedCell: ({ cell }) => (
@@ -244,10 +260,12 @@ export const MultiAggregationPerColumn = () => (
         ),
         accessorKey: 'gender',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         AggregatedCell: ({ cell, table }) => (
@@ -300,6 +318,7 @@ export const MultiAggregationPerColumn = () => (
         aggregationFn: ['count', 'mean'], //multiple aggregation functions
         enableGrouping: false,
         header: 'Salary',
+        icon: DollarSignIcon,
       },
     ]}
     data={data}
