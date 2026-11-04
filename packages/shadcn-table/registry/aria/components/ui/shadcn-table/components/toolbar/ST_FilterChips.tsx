@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { flushSync } from 'react-dom';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger } from '@/components/ui/popover';
@@ -74,6 +81,17 @@ const useFocusFilterInputOnMount = <TData extends ST_RowData>(
     [columnId, table],
   );
 
+/**
+ * The filter inputs stop Escape from bubbling to the popover's dismiss
+ * handler, so an Escape in an input closes the editor in the capture phase.
+ */
+const closeOnEscape =
+  (close: () => void) => (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'Escape' && event.target instanceof HTMLInputElement) {
+      close();
+    }
+  };
+
 const closeEditor = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) =>
@@ -128,7 +146,11 @@ const ST_FilterChip = <TData extends ST_RowData>({
         <ExpandMoreIcon />
       </Button>
       <Popover className={editorClassName} offset={8} placement="bottom start">
-        <div className="contents" ref={focusOnMount}>
+        <div
+          className="contents"
+          onKeyDownCapture={closeOnEscape(() => closeEditor(table))}
+          ref={focusOnMount}
+        >
           <ST_FilterEditor
             column={column}
             onRemoved={() => closeEditor(table)}
@@ -214,7 +236,11 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
         offset={8}
         placement={variant === 'icon' ? 'bottom end' : 'bottom start'}
       >
-        <div className="contents" ref={attachPopup}>
+        <div
+          className="contents"
+          onKeyDownCapture={closeOnEscape(() => handleOpenChange(false))}
+          ref={attachPopup}
+        >
           {editingColumn ? (
             <ST_FilterEditor
               column={editingColumn}
@@ -304,9 +330,12 @@ const ST_HeaderFilterEditor = <TData extends ST_RowData>({
     : null;
   const cellRef = useMemo(() => ({ current: cell }), [cell]);
   const focusOnMount = useFocusFilterInputOnMount(table, column?.id);
+  // The popover's focus scope contains focus while it is mounted, so the
+  // editor unmounts first and the chevron takes focus before the scope's
+  // restore runs.
   const close = () => {
+    flushSync(() => closeEditor(table));
     cell?.querySelector<HTMLElement>('[aria-haspopup="menu"]')?.focus();
-    closeEditor(table);
   };
 
   if (!column || !cell) return null;
@@ -322,7 +351,11 @@ const ST_HeaderFilterEditor = <TData extends ST_RowData>({
       placement="bottom start"
       triggerRef={cellRef}
     >
-      <div className="contents" ref={focusOnMount}>
+      <div
+        className="contents"
+        onKeyDownCapture={closeOnEscape(close)}
+        ref={focusOnMount}
+      >
         <ST_FilterEditor column={column} onRemoved={close} table={table} />
       </div>
     </Popover>

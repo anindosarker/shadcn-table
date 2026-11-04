@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import {
@@ -70,6 +70,17 @@ const focusFilterInput = <TData extends ST_RowData>(
   columnId: string,
 ) => getFilterInput(table, columnId)?.focus();
 
+/**
+ * The filter inputs stop Escape from bubbling to the popover's dismiss
+ * handler, so an Escape in an input closes the editor in the capture phase.
+ */
+const closeOnEscape =
+  (close: () => void) => (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'Escape' && event.target instanceof HTMLInputElement) {
+      close();
+    }
+  };
+
 const closeEditor = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,
 ) =>
@@ -130,6 +141,7 @@ const ST_FilterChip = <TData extends ST_RowData>({
         align="start"
         className={editorClassName}
         initialFocus={() => getFilterInput(table, column.id) ?? true}
+        onKeyDownCapture={closeOnEscape(() => closeEditor(table))}
         sideOffset={8}
       >
         <ST_FilterEditor
@@ -214,6 +226,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
       <PopoverContent
         align={variant === 'icon' ? 'end' : 'start'}
         className={editingColumn ? editorClassName : pickerClassName}
+        onKeyDownCapture={closeOnEscape(() => handleOpenChange(false))}
         ref={popupRef}
         sideOffset={8}
       >
@@ -325,6 +338,7 @@ const ST_HeaderFilterEditor = <TData extends ST_RowData>({
             cell?.querySelector<HTMLElement>('[aria-haspopup="menu"]') ?? true
           }
           initialFocus={() => getFilterInput(table, column.id) ?? true}
+          onKeyDownCapture={closeOnEscape(() => closeEditor(table))}
           sideOffset={8}
         >
           <ST_FilterEditor
