@@ -53,6 +53,54 @@ export async function example(page, id, check) {
   return panel;
 }
 
+/**
+ * The chips filter flow of example `w` (filters in chips mode): the toolbar
+ * Filter button opens the column picker, picking `column` adds its chip and
+ * opens the editor in place; closing it and clicking the chip opens the
+ * editor from the chip, where `control` (a selector inside the open popover)
+ * must render. Returns the open editor popover, closed again by the caller
+ * through `closeChipEditor`.
+ */
+export async function chipFilter(page, w, id, column, control, check) {
+  const editor = page.locator('[data-slot="popover-content"]:visible');
+  try {
+    await w.locator('button[aria-label="Filter"]').first().click();
+    await editor
+      .getByRole('option', { name: column, exact: true })
+      .first()
+      .click({ timeout: 5000 });
+    await page.keyboard.press('Escape');
+    await editor.first().waitFor({ state: 'hidden', timeout: 5000 });
+  } catch (e) {
+    check(
+      `${id}: ${column} chip added`,
+      false,
+      String(e.message).split('\n')[0],
+    );
+    return editor;
+  }
+  const chip = w.locator('[data-filter-chip]', { hasText: column });
+  check(`${id}: ${column} chip`, (await chip.count()) === 1);
+  if (!(await chip.count())) return editor;
+  await chip.first().click();
+  await editor
+    .first()
+    .waitFor({ timeout: 5000 })
+    .catch(() => {});
+  const n = await editor.locator(control).count();
+  check(`${id}: ${column} editor opens from the chip`, n > 0, `controls=${n}`);
+  return editor;
+}
+
+/** Closes the open chip editor. */
+export async function closeChipEditor(page, editor) {
+  await page.keyboard.press('Escape');
+  await editor
+    .first()
+    .waitFor({ state: 'hidden', timeout: 5000 })
+    .catch(() => {});
+}
+
 export async function paginationControls(wrapper, id, check) {
   const n =
     (await wrapper.locator('nav, [data-slot="pagination"]').count()) +
