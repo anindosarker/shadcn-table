@@ -178,3 +178,7 @@
 ### F42 Three top-level routes in `lib/routes.ts` have no page
 
 - `apps/shadcn-table-docs/lib/routes.ts` lists `/about`, `/changelog` and `/roadmap` (since `7b1f80fc` and `d035328d`, 2026-10-19), rendered by `components/table-of-contents-list.tsx`, with no app page behind them: a fetch returns 404. Found by the D58 sanity pass on `55ba7a7e` (every docs, api, examples and guides route is 200). Not a 0.8 regression. Fix: remove the three entries, or add the pages, in a later story.
+
+### F43 Custom toolbar actions do not follow row selection
+
+- `components/toolbar/ST_TopToolbar.tsx:76` (three bases) calls `renderTopToolbarCustomActions({ table })` in a render that is not subscribed to `rowSelection`, so a custom action reading the selection (story `CustomTopToolbarSelectionActions`, `stories/features/Toolbar.stories.tsx:176`) stays disabled after a row is selected while the selection banner updates; `ST_BottomToolbar.tsx:62` renders `renderBottomToolbarCustomActions` the same way. Found by the plays story (06.3, 2026-11-05); its play `CustomActionsRender` asserts render position and click only. Fix: render the custom actions inside `table.Subscribe` on the state they read, both toolbars, a play `CustomActionsFollowSelection`. Fix story on `claude/review` after 06.3.

@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 03:05
+Updated: 2026-11-05 03:40
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 | S9 | S10 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- | -- | --- |
@@ -25,7 +25,8 @@ Updated: 2026-11-05 03:05
 | Popover header widths F38                        |     |     |     |     |     |     | [x] |     |     |     |
 | Pinned items in custom toolbars F36              |     |     |     |     |     |     | [x] |     |     |     |
 | Last fixes (F19, F28, F30, F39 to F41, D56, D57) |     |     |     |     |     |     |     | [x] |     |     |
-| Plays (06.3)                                     |     |     |     |     |     |     |     |     | [ ] |     |
+| Plays (06.3)                                     |     |     |     |     |     |     |     |     | [x] |     |
+| Custom actions follow selection F43              |     |     |     |     |     |     |     |     | [ ] |     |
 | Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     | ·   |
 
