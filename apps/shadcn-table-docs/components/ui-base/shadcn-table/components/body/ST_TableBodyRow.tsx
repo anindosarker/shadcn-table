@@ -215,6 +215,7 @@ export const ST_TableBodyRow = <TData extends ST_RowData>({
               data-index={
                 renderDetailPanel ? staticRowIndex * 2 : staticRowIndex
               }
+              data-flip-row={row.id}
               data-pinned={!!isRowPinned || undefined}
               data-selected={isRowSelected || undefined}
               onDragEnter={handleDragEnter}

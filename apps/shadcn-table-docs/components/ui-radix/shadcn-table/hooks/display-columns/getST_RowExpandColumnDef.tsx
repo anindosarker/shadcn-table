@@ -8,6 +8,10 @@ import {
   type ST_RowData,
   type ST_StatefulTableOptions,
 } from '@/components/ui-radix/shadcn-table/types';
+import {
+  getAllLeafColumnDefs,
+  getColumnId,
+} from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
 import { defaultDisplayColumnProps } from '@/components/ui-radix/shadcn-table/shared/utils/displayColumn.utils';
 
 export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
@@ -71,6 +75,13 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
           );
         }
       : undefined,
+    // The column names the grouped columns, so it shows the first one's icon.
+    icon:
+      groupedColumnMode === 'remove' && grouping?.length
+        ? getAllLeafColumnDefs(tableOptions.columns).find(
+            (columnDef) => getColumnId(columnDef) === grouping[0],
+          )?.icon
+        : undefined,
     stTableBodyCellProps: alignProps,
     stTableHeadCellProps: alignProps,
     ...defaultDisplayColumnProps({

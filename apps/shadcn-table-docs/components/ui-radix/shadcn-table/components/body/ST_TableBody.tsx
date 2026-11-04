@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { useST_Rows } from '@/components/ui-radix/shadcn-table/hooks/useST_Rows';
 import { useST_RowVirtualizer } from '@/components/ui-radix/shadcn-table/hooks/useST_RowVirtualizer';
+import { useST_RowFlip } from '@/components/ui-radix/shadcn-table/hooks/useST_RowFlip';
 import {
   type ST_ColumnVirtualizer,
   type ST_Row,
@@ -64,6 +65,7 @@ export const ST_TableBody = <TData extends ST_RowData>({
   // (filters, global filter, sorting, grouping, expanded, pagination, row
   // pinning, creating row), so the row model reads below stay current.
   const rows = useST_Rows(table);
+  useST_RowFlip(table, rows);
 
   // The sticky stacking order: the pinned rows as the body shows them, the
   // rows kept from other pages included.
