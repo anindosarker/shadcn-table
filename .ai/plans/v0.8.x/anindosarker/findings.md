@@ -40,3 +40,7 @@
 
 - Aria base: 58 console warnings `<Focusable> child must be focusable` while the filter chip editor (20) and the sort editor (38) are open, 18 more on choosing a sort column (spec 04). The release gate requires zero React Aria warnings (v0.7.x D40). Found by the spec 07 gate.
 
+### F10 DefaultLook story sets every default explicitly
+
+- `packages/shadcn-table/stories/styling/DefaultLook.stories.tsx:227`: the story's table helper passes `columnFilterDisplayMode="chips"`, `enableColumnOrdering`, `enableColumnPinning`, `enableColumnResizing`, `enableScrollButtons`, `enableSortPopover`, `enableViewSettings`, `enableCellOverflowTooltip`, `layoutMode="grid"`, `paginationDisplayMode="pages"`, `positionActionsColumn="last"` and the actions pinning seed, all of which spec 05 made the defaults; a reader takes them as required and the story no longer shows the stock table. Owner, 2026-11-04 19:05. Fix with A9: `ShadcnTable` with columns, data, `getRowId` and `enableRowActions` only; the same data becomes the docs example.
+
