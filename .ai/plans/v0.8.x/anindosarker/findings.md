@@ -194,3 +194,7 @@
 ### F46 React Aria range slider renders both thumbs at 0 with no fill
 
 - `/docs/examples/subheader-filters`, aria base: the Salary `'range-slider'` filter (`inputs/ST_FilterRangeSlider.tsx`, aria copy) renders both thumbs at value 0 with no fill while the slider's min is 30000 and max 200000; radix and base render the thumbs at the ends. Found by the F44 build (2026-11-05), not changed there. Check the aria slider part's controlled value mapping (`value` versus `defaultValue`, `minValue`/`maxValue` props) in the aria copy of ST_FilterRangeSlider.
+
+### F47 A column drop slides the moved column under the cells that follow it
+
+- `hooks/useST_ColumnFlip.ts:312-329` (three bases) animates `translate` on every cell at the same stacking level, so during the D37 catch-up slide the moved column passes under the opaque cells later in the DOM: the eye sees it vanish at its old slot and pop in at the new one (home demo burst capture, 2026-11-05: Project's th at x 564, 482, 322, 249 with nothing drawn at 482). The home demo works around it with `z-1` on the moved column's cells (`signal-table.tsx`, merged in #119); that workaround goes once the hook raises the moved column (and its header) above the others for the slide's duration, `will-change` and `z-index` only while the animation runs. Play `MovedColumnOnTop` in `stories/features/ColumnDragging.stories.tsx`: mid-slide, `document.elementFromPoint` at the moved header's centre is that header.

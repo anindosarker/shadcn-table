@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 06:10
+Updated: 2026-11-05 07:30
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 | S9 | S10 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- | -- | --- |
@@ -29,7 +29,8 @@ Updated: 2026-11-05 06:10
 | Custom actions follow selection F43              |     |     |     |     |     |     |     |     | [x] |     |
 | Subheader filter layout F44                      |     |     |     |     |     |     |     |     | [x] |     |
 | Home demo steps and titles F45                   |     |     |     |     |     |     |     |     | [x] |     |
-| Home demo polish (F45 follow-up)                 |     |     |     |     |     |     |     |     | [ ] |     |
+| Home demo polish (F45 follow-up)                 |     |     |     |     |     |     |     |     | [x] |     |
+| Moved column slides on top F47                   |     |     |     |     |     |     |     |     | [ ] |     |
 | Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     | ·   |
 

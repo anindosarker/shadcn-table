@@ -41,3 +41,26 @@
 - Options:
   - a) Recommended: keep; the consumer sizes a filterable column (as Material React Table).
   - b) Let the th grow to the filter's min width again for single-field variants (text, select, multi-select), clip range fields only.
+
+## A17 At 1280 px wide the home demo's step list never shows together with the table
+
+- Below 1440 px the step list moves under the table (`v12.css:489-497`); the band is then 882 px (650 px table plus 232 px list) while a 720 px viewport minus the 60 px sticky nav shows 660 px, so a visitor sees the table or the list, not both. The replay no longer scrolls the page (fixed in #119). D46 makes no layout call for narrow widths.
+- Options:
+  - a) Recommended: below 1440 px the list drops the code lines and the hint, one row per step (about 150 px), so table and list fit a 720 px viewport together.
+  - b) Fewer rows per page below 1440 px (seven rows, 506 px table).
+  - c) Keep as is.
+
+## A18 The striped rows the demo lands are faint
+
+- The View settings step toggles Striped; odd rows go from `#0a0a0a` to `#111111` in dark and from white to `#f8f8f8` in light, the stock `--st-stripe` value (`ST_TableLayout.tsx:25`: `--muted` at 25 percent dark, 70 percent light). The demo keeps the stock tint (D46, P8), so the step's result is hard to see.
+- Options:
+  - a) Recommended: keep the stock tint; the demo is the library's default look.
+  - b) Raise the library default (`--st-stripe` at a stronger mix), a visible change for every consumer.
+  - c) The demo sets a stronger `--st-stripe` on its table root only.
+
+## A19 The sort chip shows no sort direction
+
+- After the Sorting step the chip reads "Due" with the swap icon and a chevron (`toolbar/ST_SortPopover.tsx:108-124`); the ascending arrow shows only in the Due header. The chip renders only while a sort exists (:105), so the step opens the editor from the toolbar Sort button.
+- Options:
+  - a) Recommended: keep; the header arrow carries the direction (spec 04 chip design).
+  - b) The chip's icon follows the first sort's direction (arrow up or down instead of the swap icon), library change in the three bases.
