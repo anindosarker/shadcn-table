@@ -63,6 +63,7 @@ export const DraggingRowWhenFiltered = () => {
     columns: columns,
     data: data,
     enableRowDragging: true,
+    columnFilterDisplayMode: 'subheader',
     initialState: {
       density: 'compact',
       columnFilters: [{ id: 'firstName', value: 'foo' }],

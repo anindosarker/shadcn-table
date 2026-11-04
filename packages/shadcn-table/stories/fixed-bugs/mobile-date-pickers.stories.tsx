@@ -71,6 +71,7 @@ export const MobileDateTimePickers = () => (
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );

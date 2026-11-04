@@ -106,8 +106,8 @@ export const SelectionEnabled = () => (
   />
 );
 
-// Body control centred in its cell; the select-all control's top on the
-// header text line top, the th's padding-top (D64).
+// Body control centred in its cell; the select-all control centred on the
+// header's label line, the 40 px row of a th with no padding (D64).
 SelectionEnabled.play = async ({ canvasElement }: StoryContext) => {
   await expectBodyControlCentred(canvasElement);
   await waitFor(() => {
@@ -115,12 +115,14 @@ SelectionEnabled.play = async ({ canvasElement }: StoryContext) => {
       `thead th ${SELECT_CONTROL}`,
     );
     expect(control).not.toBeNull();
-    const th = control!.closest('th')!;
-    const lineTop =
-      th.getBoundingClientRect().top +
-      parseFloat(getComputedStyle(th).paddingTop);
+    const labelLine = control!
+      .closest('th')!
+      .firstElementChild!.getBoundingClientRect();
+    const box = control!.getBoundingClientRect();
     expect(
-      Math.abs(control!.getBoundingClientRect().top - lineTop),
+      Math.abs(
+        box.top + box.height / 2 - (labelLine.top + labelLine.height / 2),
+      ),
     ).toBeLessThanOrEqual(1);
   });
 };

@@ -168,6 +168,7 @@ export const SubRowTreeFilterFromLeafRows = () => (
     enableExpanding
     enablePagination={false}
     filterFromLeafRows
+    columnFilterDisplayMode="subheader"
     initialState={{ expanded: true, showColumnFilters: true }}
   />
 );
@@ -178,6 +179,7 @@ export const SubRowTreeMaxLeafRowFilterDepth0 = () => (
     data={data}
     enableExpanding
     enablePagination={false}
+    columnFilterDisplayMode="subheader"
     initialState={{ expanded: true, showColumnFilters: true }}
     maxLeafRowFilterDepth={0}
   />
@@ -189,6 +191,7 @@ export const SubRowTreeMaxLeafRowFilterDepth1 = () => (
     data={data}
     enableExpanding
     enablePagination={false}
+    columnFilterDisplayMode="subheader"
     initialState={{ expanded: true, showColumnFilters: true }}
     maxLeafRowFilterDepth={1}
   />
@@ -201,6 +204,7 @@ export const SubRowTreeMaxLeafRowFilterDepthAndFilterFromLeafRows = () => (
     enableExpanding
     enablePagination={false}
     filterFromLeafRows
+    columnFilterDisplayMode="subheader"
     initialState={{ expanded: true, showColumnFilters: true }}
     maxLeafRowFilterDepth={0}
   />

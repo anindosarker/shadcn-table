@@ -39,11 +39,15 @@ const data = [...Array(100)].map(() => ({
   state: faker.location.state(),
 }));
 
-export const DefaultSemantic = () => (
+// The stock layout: grid, data columns grow in proportion (D31).
+export const DefaultGrid = () => (
+  <ShadcnTable columns={columns} data={data} enableRowSelection />
+);
+
+export const Semantic = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnOrdering
     enableRowSelection
     layoutMode="semantic"
   />
@@ -53,7 +57,6 @@ export const Grid = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnOrdering
     enableRowSelection
     layoutMode="grid"
   />
@@ -63,7 +66,6 @@ export const GridNoGrow = () => (
   <ShadcnTable
     columns={columns.slice(0, 2)}
     data={data}
-    enableColumnOrdering
     enableRowSelection
     layoutMode="grid-no-grow"
   />
@@ -73,8 +75,6 @@ export const GridWithResizing = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnOrdering
-    enableColumnResizing
     enableRowSelection
     layoutMode="grid"
   />
@@ -84,8 +84,6 @@ export const GridNoGrowWithResizing = () => (
   <ShadcnTable
     columns={columns.slice(0, 2)}
     data={data}
-    enableColumnOrdering
-    enableColumnResizing
     enableRowSelection
     layoutMode="grid-no-grow"
   />
