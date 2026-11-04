@@ -4,6 +4,7 @@ import {
   EnableFilterFacetValuesExample,
   CustomizeFilterModesExample,
   AlternateColumnFilteringExample,
+  SubheaderFiltersExample,
   CustomColumnFilteringUiExample,
 } from '@/examples/map';
 
@@ -15,6 +16,7 @@ const FilteringExamples = ({ isPage = false }) => (
       { label: 'Faceted Values', value: 'faceted-values' },
       { label: 'Filter Switching', value: 'filter-switching' },
       { label: 'Popover Filters', value: 'popover-filters' },
+      { label: 'Subheader Filters', value: 'subheader-filters' },
       { label: 'Custom Filter UI', value: 'custom-filter-ui' },
     ]}
     panels={{
@@ -22,6 +24,7 @@ const FilteringExamples = ({ isPage = false }) => (
       'faceted-values': <EnableFilterFacetValuesExample />,
       'filter-switching': <CustomizeFilterModesExample />,
       'popover-filters': <AlternateColumnFilteringExample />,
+      'subheader-filters': <SubheaderFiltersExample />,
       'custom-filter-ui': <CustomColumnFilteringUiExample />,
     }}
   />
