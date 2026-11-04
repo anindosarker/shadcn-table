@@ -1,6 +1,6 @@
 # Home demo columns (F32), tracker
 
-Status: verified
+Status: merged (b468d4283ab4c28387f74142ff72c1bfe5ffb8f8)
 Branch `v0.8/fix-home-columns`, worktree 02, PR #110
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at d0576c27: green
