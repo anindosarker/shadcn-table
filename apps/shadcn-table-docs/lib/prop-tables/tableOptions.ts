@@ -58,6 +58,17 @@ export const tableOptions: TableOption[] = [
     type: 'boolean',
   },
   {
+    tableOption: 'columnFilterDisplayMode',
+    defaultValue: "'chips'",
+    description:
+      "Where column filters show. 'chips' (the default) puts one chip per filter in the toolbar; 'subheader' puts an input under each header; 'popover' opens the input from the header filter icon; 'custom' renders nothing so you can place the filters yourself.",
+    link: '/docs/guides/column-filtering',
+    linkText: 'ST Column Filtering Docs',
+    required: false,
+    source: 'ST',
+    type: "'chips' | 'custom' | 'popover' | 'subheader'",
+  },
+  {
     tableOption: 'columnFilterModeOptions',
     defaultValue: '',
     description:
@@ -291,8 +302,9 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableColumnOrdering',
-    defaultValue: '',
-    description: '',
+    defaultValue: 'true',
+    description:
+      'Lets the user reorder columns by dragging a header cell. Set it to false to turn reordering off for the whole table, or set enableColumnOrdering: false on one column to lock it in place.',
     link: '/docs/guides/column-ordering-dnd',
     linkText: 'ST Column Ordering DnD Docs',
     required: false,
@@ -312,8 +324,9 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableColumnResizing',
-    defaultValue: '',
-    description: '',
+    defaultValue: 'true',
+    description:
+      'Shows the resize handle on the trailing edge of each header cell. Double-click the handle to reset the width. Set it to false to turn resizing off.',
     link: '/docs/guides/column-resizing',
     linkText: 'ST Column Resizing Docs',
     required: false,
@@ -506,12 +519,13 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableColumnPinning',
-    defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    defaultValue: 'true',
+    description:
+      'Adds the pin items to the column menu (Pin to start, Pin to end, Unpin). Set it to false to turn column pinning off.',
+    link: '/docs/guides/column-pinning',
+    linkText: 'ST Column Pinning Docs',
     required: false,
-    source: '',
+    source: 'ST',
     type: 'boolean',
   },
   {
@@ -523,6 +537,17 @@ export const tableOptions: TableOption[] = [
     required: false,
     source: '',
     type: '((cell: ST_Cell<TData>) => boolean) | boolean',
+  },
+  {
+    tableOption: 'enableCellOverflowTooltip',
+    defaultValue: 'true',
+    description:
+      'Shows a tooltip with the full value over a body cell whose text is cut off. Set it to false to turn the tooltip off for every column.',
+    link: '/docs/guides/overflow-tooltip',
+    linkText: 'ST Overflow Tooltip Docs',
+    required: false,
+    source: 'ST',
+    type: 'boolean',
   },
   {
     tableOption: 'enableRowActions',
@@ -639,6 +664,17 @@ export const tableOptions: TableOption[] = [
     type: 'boolean',
   },
   {
+    tableOption: 'enableScrollButtons',
+    defaultValue: 'true',
+    description:
+      'Shows a scroll chevron in the header row on each side that has columns out of view, while the pointer is over the table.',
+    link: '/docs/guides/scroll-cues',
+    linkText: 'ST Scroll Cues Docs',
+    required: false,
+    source: 'ST',
+    type: 'boolean',
+  },
+  {
     tableOption: 'enableSelectAll',
     defaultValue: 'true',
     description: '',
@@ -656,6 +692,17 @@ export const tableOptions: TableOption[] = [
     linkText: '',
     required: false,
     source: '',
+    type: 'boolean',
+  },
+  {
+    tableOption: 'enableSortPopover',
+    defaultValue: 'true',
+    description:
+      'Adds the sort button to the toolbar. It opens the sort editor, where the user adds, reorders and removes sort rules.',
+    link: '/docs/guides/sort-editor',
+    linkText: 'ST Sort Editor Docs',
+    required: false,
+    source: 'ST',
     type: 'boolean',
   },
   {
@@ -680,12 +727,13 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableStickyHeader',
-    defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    defaultValue: 'false',
+    description:
+      'Keeps the header row in view while the body scrolls. The scroll box is capped by the --st-sticky-max-height CSS variable (70vh by default). Row virtualization turns it on.',
+    link: '/docs/guides/sticky-header',
+    linkText: 'ST Sticky Header Docs',
     required: false,
-    source: '',
+    source: 'ST',
     type: 'boolean',
   },
   {
@@ -736,6 +784,17 @@ export const tableOptions: TableOption[] = [
     linkText: '',
     required: false,
     source: '',
+    type: 'boolean',
+  },
+  {
+    tableOption: 'enableViewSettings',
+    defaultValue: 'true',
+    description:
+      'Adds the view settings button to the toolbar. Its panel holds Columns, Density, Wrap cell text, Grid lines, Sticky header, Alternating row colors, Row Numbers and Reset view; pinned items show as toolbar buttons.',
+    link: '/docs/guides/view-settings',
+    linkText: 'ST View Settings Docs',
+    required: false,
+    source: 'ST',
     type: 'boolean',
   },
   {
@@ -876,10 +935,11 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'layoutMode',
-    defaultValue: "'semantic' //(changes based on other enabled features)",
-    description: '',
-    link: '/docs/guides/',
-    linkText: 'TODO',
+    defaultValue: "'grid'",
+    description:
+      "The width rule. 'grid' (the default) lets data columns share the spare width in the ratio of their sizes, while display columns and pinned columns keep their set width. 'grid-no-grow' keeps every column at its set width, 'semantic' renders a plain table layout. Virtualization always uses 'grid'.",
+    link: '/docs/guides/column-size',
+    linkText: 'ST Column Size Docs',
     required: false,
     source: 'ST',
     type: "'semantic' | 'grid' | 'grid-no-grow'",
@@ -991,6 +1051,17 @@ export const tableOptions: TableOption[] = [
     required: false,
     source: 'TanStack Table',
     type: 'TableMeta ',
+  },
+  {
+    tableOption: 'nonce',
+    defaultValue: '',
+    description:
+      'The Content Security Policy nonce for the inline script a table renders when persistViewSettings is on. Without it, a strict policy blocks the script and the table paints the default view before the stored one.',
+    link: '/docs/guides/view-settings',
+    linkText: 'ST View Settings Docs',
+    required: false,
+    source: 'ST',
+    type: 'string',
   },
   {
     tableOption: 'stEditRowDialogProps',
@@ -1742,6 +1813,17 @@ export const tableOptions: TableOption[] = [
     type: 'number',
   },
   {
+    tableOption: 'paginationDisplayMode',
+    defaultValue: "'pages'",
+    description:
+      "The pagination controls. 'pages' (the default) shows the rows per page select, numbered page buttons and previous and next; 'default' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
+    link: '/docs/guides/pagination',
+    linkText: 'ST Pagination Docs',
+    required: false,
+    source: 'ST',
+    type: "'custom' | 'default' | 'pages'",
+  },
+  {
     tableOption: 'paginateExpandedRows',
     defaultValue: '',
     description:
@@ -1753,11 +1835,23 @@ export const tableOptions: TableOption[] = [
     type: 'boolean',
   },
   {
+    tableOption: 'persistViewSettings',
+    defaultValue: 'false',
+    description:
+      'Saves the view settings, the pins, column visibility, order and pinning to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
+    link: '/docs/guides/view-settings',
+    linkText: 'ST View Settings Docs',
+    required: false,
+    source: 'ST',
+    type: 'boolean | string',
+  },
+  {
     tableOption: 'positionActionsColumn',
-    defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    defaultValue: "'last'",
+    description:
+      "Where the row actions column sits. By default it is the last column, pinned to the end. Set 'first' to put it before the data columns.",
+    link: '/docs/guides/row-actions',
+    linkText: 'ST Row Actions Docs',
     required: false,
     source: 'ST',
     type: "'first' | 'last'",
@@ -2022,6 +2116,39 @@ export const tableOptions: TableOption[] = [
     required: false,
     source: '',
     type: `'all' | 'page'`,
+  },
+  {
+    tableOption: 'showClearSearchButton',
+    defaultValue: 'false',
+    description:
+      'Renders the inline clear button inside the global search field. The search toggle already clears and closes the field, so turn this on when the field shows without the toggle.',
+    link: '/docs/guides/global-filtering',
+    linkText: 'ST Global Filtering Docs',
+    required: false,
+    source: 'ST',
+    type: 'boolean',
+  },
+  {
+    tableOption: 'showColumnDragHandle',
+    defaultValue: 'false',
+    description:
+      'Renders a grip button in each draggable header cell. The header cell itself is the drag source either way.',
+    link: '/docs/guides/column-ordering-dnd',
+    linkText: 'ST Column Ordering DnD Docs',
+    required: false,
+    source: 'ST',
+    type: 'boolean',
+  },
+  {
+    tableOption: 'showSortIndex',
+    defaultValue: 'false',
+    description:
+      "Shows each sorted column's 1-based position next to its sort arrow while more than one sort is active.",
+    link: '/docs/guides/sort-editor',
+    linkText: 'ST Sort Editor Docs',
+    required: false,
+    source: 'ST',
+    type: 'boolean',
   },
   {
     tableOption: 'sortDescFirst',

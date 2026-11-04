@@ -222,9 +222,10 @@ export const columnOptions: ColumnOption[] = [
   {
     columnOption: 'enableColumnOrdering',
     defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    description:
+      'Set it to false to lock the column: it cannot be dragged, and while another column drags it shows a lock with "Fixed" and refuses the drop. The column menu shows a disabled "Fixed position" item. The row numbers column is locked by default.',
+    link: '/docs/guides/column-ordering-dnd#locked-columns',
+    linkText: 'ST Column Ordering DnD Docs',
     source: 'ST',
     required: false,
     type: 'boolean',
@@ -373,6 +374,17 @@ export const columnOptions: ColumnOption[] = [
     type: 'string',
   },
   {
+    columnOption: 'icon',
+    defaultValue: '',
+    description:
+      'An icon component or element shown before the column label in the header, the filter chips, the column picker, the columns menu and the view settings rows. Nothing renders when it is unset.',
+    link: '/docs/guides/column-icons',
+    linkText: 'ST Column Icons Docs',
+    source: 'ST',
+    required: false,
+    type: 'ComponentType<ST_IconProps> | ReactNode',
+  },
+  {
     columnOption: 'id',
     defaultValue: '',
     description: '',
@@ -396,9 +408,9 @@ export const columnOptions: ColumnOption[] = [
     columnOption: 'grow',
     defaultValue: '',
     description:
-      "If `layoutMode` is `'grid'` or `'grid-no-grow'`, you can specify the flex grow value for individual columns to still grow and take up remaining space, or set to `false`/0 to not grow.",
-    link: '',
-    linkText: '',
+      "If `layoutMode` is `'grid'` (the default) or `'grid-no-grow'`, set the flex grow value for a column, or `false`/0 to keep it at its set width. In the default layout display columns and pinned columns do not grow; a data column grows in the ratio of its size.",
+    link: '/docs/guides/column-size',
+    linkText: 'ST Column Size Docs',
     source: 'ST',
     required: false,
     type: 'boolean | number',
@@ -432,6 +444,17 @@ export const columnOptions: ColumnOption[] = [
     source: 'TanStack Table',
     required: false,
     type: 'number',
+  },
+  {
+    columnOption: 'overflowTooltip',
+    defaultValue: "'value'",
+    description:
+      "The tooltip a cut-off body cell shows: false turns it off for this column, 'value' shows the cell value, a function renders the content.",
+    link: '/docs/guides/overflow-tooltip',
+    linkText: 'ST Overflow Tooltip Docs',
+    source: 'ST',
+    required: false,
+    type: "false | 'value' | ({ cell, column, row, table }) => ReactNode",
   },
   {
     columnOption: 'stCopyButtonProps',
