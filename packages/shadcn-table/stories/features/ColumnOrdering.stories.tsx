@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   type ST_ColumnOrderState,
@@ -186,3 +187,97 @@ export const ColumnOrderingEnabledWithColumnVirtualization = () => (
     enableColumnVirtualization
   />
 );
+
+const headerIds = (canvasElement: HTMLElement) =>
+  [...canvasElement.querySelectorAll('thead th[data-flip-column]')].map((th) =>
+    th.getAttribute('data-flip-column'),
+  );
+
+const firstRowIds = (canvasElement: HTMLElement) =>
+  [
+    ...canvasElement.querySelectorAll(
+      'tbody tr:first-child td[data-flip-column]',
+    ),
+  ].map((td) => td.getAttribute('data-flip-column'));
+
+/** Opens the Show/Hide columns menu and returns it. */
+const openColumnsMenu = async (canvasElement: HTMLElement) => {
+  await userEvent.click(
+    within(canvasElement).getByRole('button', { name: 'Show/Hide columns' }),
+  );
+  return within(document.body).findByRole('menu');
+};
+
+const menuItem = (menu: HTMLElement, name: string) =>
+  within(menu).getByRole('menuitemcheckbox', { name });
+
+/** Drags the menu row of `source` by its Move grip onto the row of `target`. */
+const menuDrag = (menu: HTMLElement, source: string, target: string) => {
+  const handle = within(
+    menuItem(menu, source).parentElement as HTMLElement,
+  ).getByRole('button', { name: 'Move' });
+  fireEvent.dragStart(handle);
+  fireEvent.dragEnter(menuItem(menu, target));
+  fireEvent.dragOver(menuItem(menu, target));
+  fireEvent.dragEnd(handle);
+};
+
+/**
+ * Dragging a row of the columns menu moves the column: the header order
+ * changes and the body cells follow.
+ */
+export const MenuReorderMovesColumn = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    expect(headerIds(canvasElement).slice(0, 4)).toEqual([
+      'firstName',
+      'lastName',
+      'email',
+      'address',
+    ]);
+    const menu = await openColumnsMenu(canvasElement);
+    menuDrag(menu, 'Address', 'First Name');
+    await waitFor(() =>
+      expect(headerIds(canvasElement).slice(0, 4)).toEqual([
+        'address',
+        'firstName',
+        'lastName',
+        'email',
+      ]),
+    );
+    expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+  },
+};
+
+/**
+ * A column with `enableColumnOrdering: false` has no grip in the columns
+ * menu, takes no drop, and keeps its index while other columns move.
+ */
+export const LockedColumnStaysPut = {
+  render: () => <ColumnOrderingDisabledPerColumn />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+    const menu = await openColumnsMenu(canvasElement);
+    expect(
+      within(menuItem(menu, 'State').parentElement as HTMLElement).queryByRole(
+        'button',
+        { name: 'Move' },
+      ),
+    ).toBeNull();
+    // A drop on the locked row is refused.
+    menuDrag(menu, 'First Name', 'State');
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(headerIds(canvasElement)[0]).toBe('firstName');
+    // Moving another column past it leaves it where it was.
+    menuDrag(menu, 'First Name', 'City');
+    await waitFor(() => expect(headerIds(canvasElement)[0]).toBe('lastName'));
+    expect(headerIds(canvasElement).indexOf('state')).toBe(5);
+    expect(firstRowIds(canvasElement)).toEqual(headerIds(canvasElement));
+  },
+};

@@ -8,7 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, screen, waitFor, within } from 'storybook/test';
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -1205,4 +1205,83 @@ export const EditingCellManualOnChange = () => {
       })}
     />
   );
+};
+
+const firstNameCell = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<HTMLElement>(
+    'tbody tr:first-child td[data-flip-column="firstName"]',
+  )!;
+
+/** Cell mode: double click, type, blur; the cell shows the new value. */
+export const CellEditSaves = {
+  render: () => <EditingEnabledEditModeCell />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText(data[0].firstName);
+    await userEvent.dblClick(firstNameCell(canvasElement));
+    const input = await within(firstNameCell(canvasElement)).findByRole(
+      'textbox',
+    );
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Zelda');
+    input.blur();
+    await waitFor(() =>
+      expect(
+        within(firstNameCell(canvasElement)).queryByRole('textbox'),
+      ).toBeNull(),
+    );
+    expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/);
+  },
+};
+
+/**
+ * Row mode: Cancel throws the typed value away and the row shows its old
+ * value; Save keeps the typed value.
+ */
+export const RowEditSaveCancel = {
+  render: () => <EditingEnabledEditModeRow />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText(data[0].firstName);
+    const edit = async () => {
+      const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
+      await userEvent.click(firstRowEdit!);
+      const input = await within(firstNameCell(canvasElement)).findByRole(
+        'textbox',
+      );
+      await userEvent.clear(input);
+      await userEvent.type(input, 'Zelda');
+    };
+    await edit();
+    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() =>
+      expect(
+        within(firstNameCell(canvasElement)).queryByRole('textbox'),
+      ).toBeNull(),
+    );
+    expect(firstNameCell(canvasElement)).toHaveTextContent(data[0].firstName);
+
+    await edit();
+    await userEvent.click(canvas.getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/),
+    );
+  },
+};
+
+/** Modal mode: the dialog's Save writes the typed value into the row. */
+export const ModalEditSaves = {
+  render: () => <EditingEnabledEditModeModalDefault />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText(data[0].firstName);
+    const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
+    await userEvent.click(firstRowEdit!);
+    const dialog = await screen.findByRole('dialog');
+    const input = within(dialog).getByLabelText('First Name');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Zelda');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/);
+  },
 };
