@@ -1,4 +1,9 @@
-import { type ComponentPropsWithRef, useMemo, useState } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type ReactElement,
+  useMemo,
+  useState,
+} from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui-base/button';
@@ -20,15 +25,27 @@ import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenuContent> {
-  anchorEl: HTMLElement | null;
+  /** The element the menu opens from when no `trigger` is given; `null` while closed. */
+  anchorEl?: HTMLElement | null;
   isSubMenu?: boolean;
-  setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  /** Controlled open state with a `trigger`. */
+  onOpenChange?: (open: boolean) => void;
+  /** Controlled open state with a `trigger`. */
+  open?: boolean;
+  setAnchorEl?: (anchorEl: HTMLElement | null) => void;
+  /** The element that opens and closes the menu, such as a button. */
+  trigger?: ReactElement;
 }
+
+const noAnchor = () => {};
 
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
-  anchorEl,
-  setAnchorEl,
+  anchorEl = null,
+  onOpenChange: onOpenChangeProp,
+  open: openProp,
+  setAnchorEl = noAnchor,
+  trigger,
   ...rest
 }: ST_ShowHideColumnsMenuProps) => {
   const table = useSTContext<TData>();
@@ -106,16 +123,28 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     anchorEl,
     setAnchorEl,
   });
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const handleTriggerOpenChange = (next: boolean) => {
+    setUncontrolledOpen(next);
+    onOpenChangeProp?.(next);
+  };
 
   return (
-    <DropdownMenu open={!!anchorEl} onOpenChange={onOpenChange}>
-      <DropdownMenuTrigger
-        nativeButton={false}
-        render={<span {...spanProps} />}
-      />
+    <DropdownMenu
+      open={trigger ? (openProp ?? uncontrolledOpen) : !!anchorEl}
+      onOpenChange={trigger ? handleTriggerOpenChange : onOpenChange}
+    >
+      {trigger ? (
+        <DropdownMenuTrigger render={trigger} />
+      ) : (
+        <DropdownMenuTrigger
+          nativeButton={false}
+          render={<span {...spanProps} />}
+        />
+      )}
       <DropdownMenuContent
         align="start"
-        finalFocus={anchorRef}
+        finalFocus={trigger ? undefined : anchorRef}
         className={cn('w-max', className)}
         {...rest}
       >
@@ -143,6 +172,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
                             columnOrder: table.atoms.columnOrder.get(),
                             creatingRow: table.atoms.creatingRow.get(),
                             grouping: table.atoms.grouping.get(),
+                            viewSettings: table.atoms.viewSettings.get(),
                           },
                         },
                         true,

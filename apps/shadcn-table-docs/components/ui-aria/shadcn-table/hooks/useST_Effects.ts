@@ -7,6 +7,7 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { getDefaultColumnOrderIds } from '@/components/ui-aria/shadcn-table/shared/utils/displayColumn.utils';
 import { getCanRankRows } from '@/components/ui-aria/shadcn-table/shared/utils/row.utils';
+import { useST_ViewPersistence } from '@/components/ui-aria/shadcn-table/hooks/useST_ViewPersistence';
 
 export const useST_Effects = <TData extends ST_RowData>(
   table: ST_TableInstance<TData, unknown>,
@@ -35,6 +36,8 @@ export const useST_Effects = <TData extends ST_RowData>(
     () => table.options.rowCount ?? table.getPrePaginatedRowModel().rows.length,
   );
   const canRankRows = useEffectEvent(() => getCanRankRows(table));
+
+  useST_ViewPersistence(table);
   const getIsSomeRowsPinned = useEffectEvent(() => table.getIsSomeRowsPinned());
 
   useEffect(() => {
@@ -83,6 +86,7 @@ export const useST_Effects = <TData extends ST_RowData>(
             columnOrder: table.atoms.columnOrder.get(),
             creatingRow: table.atoms.creatingRow.get(),
             grouping: table.atoms.grouping.get(),
+            viewSettings: table.atoms.viewSettings.get(),
           },
         }),
       );
@@ -92,6 +96,7 @@ export const useST_Effects = <TData extends ST_RowData>(
     table.atoms.columnOrder,
     table.atoms.creatingRow,
     table.atoms.grouping,
+    table.atoms.viewSettings,
     totalColumnCount,
   ]);
 

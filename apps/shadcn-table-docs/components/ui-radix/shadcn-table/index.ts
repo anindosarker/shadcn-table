@@ -86,3 +86,13 @@ export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_TopToolb
 export * from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
 export * from '@/components/ui-radix/shadcn-table/shared/utils/viewSettingsStorage.utils';
 export * from '@/components/ui-radix/shadcn-table/components/icons/ST_GridLineIcons';
+// spec 04
+export * from '@/components/ui-radix/shadcn-table/shared/utils/filterSummary.utils';
+export * from '@/components/ui-radix/shadcn-table/hooks/useST_PopupResize';
+export * from '@/components/ui-radix/shadcn-table/hooks/useST_ViewPersistence';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ColumnPicker';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterChips';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterEditor';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_SortPopover';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsButton';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsItems';
