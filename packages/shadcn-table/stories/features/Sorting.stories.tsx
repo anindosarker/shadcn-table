@@ -180,11 +180,14 @@ export const ClearSortStaysCleared = {
     await userEvent.click(aria('Column Actions'));
     await userEvent.click(
       await within(document.body).findByRole('menuitem', {
-        name: /Sort by Name ascending/,
+        name: /^Sort ascending$/,
       }),
     );
     await waitFor(() =>
       expect(bodyNames(canvasElement)).toEqual(['Luna', 'Milo', 'Otis']),
+    );
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
 
     await userEvent.click(aria('Column Actions'));
@@ -195,6 +198,10 @@ export const ClearSortStaysCleared = {
     );
     await waitFor(() =>
       expect(bodyNames(canvasElement)).toEqual(['Milo', 'Luna', 'Otis']),
+    );
+    // A closing menu keeps the rest of the page aria-hidden.
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
     // An owner render does not bring the cleared sort back.
     await userEvent.click(canvas.getByRole('button', { name: /Re-render/ }));

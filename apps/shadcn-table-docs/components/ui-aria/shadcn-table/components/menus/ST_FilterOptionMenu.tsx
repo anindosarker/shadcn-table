@@ -1,4 +1,9 @@
-import { type ComponentPropsWithRef, useMemo } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type ReactElement,
+  useMemo,
+  useState,
+} from 'react';
 import { Pressable } from 'react-aria-components';
 import {
   DropdownMenu,
@@ -114,23 +119,34 @@ const rangeVariants = ['range-slider', 'date-range', 'datetime-range', 'range'];
 
 export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
   extends ComponentPropsWithRef<typeof DropdownMenu> {
-  anchorEl: HTMLElement | null;
+  /** Opens the menu over this element when no `trigger` is given; `null` while closed. */
+  anchorEl?: HTMLElement | null;
   header?: ST_Header<TData>;
   /** Rendered as the submenu of a `DropdownMenuSub` instead of its own menu. */
   isSubMenu?: boolean;
+  /** Called when the menu opens or closes from its `trigger`. */
+  onOpenChange?: (open: boolean) => void;
   onSelect?: () => void;
-  setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  /** Whether the menu is open, with `trigger`; the menu keeps its own state without it. */
+  open?: boolean;
+  /** Clears the anchor when the anchored menu closes. */
+  setAnchorEl?: (anchorEl: HTMLElement | null) => void;
   setFilterValue?: (filterValue: string | string[]) => void;
+  /** The element that opens the menu; a second press on it closes the menu. */
+  trigger?: ReactElement;
 }
 
 export const ST_FilterOptionMenu = <TData extends ST_RowData>({
   className,
-  anchorEl,
+  anchorEl = null,
   header,
   isSubMenu,
+  onOpenChange: onTriggerOpenChange,
   onSelect,
+  open,
   setAnchorEl,
   setFilterValue,
+  trigger,
   ...rest
 }: ST_FilterOptionMenuProps<TData>) => {
   // Context, not `header.table`: the global filter menu has no header, and a
@@ -173,6 +189,12 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- options are read once per mount
     [],
   );
+
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const setTriggerOpen = (next: boolean) => {
+    setUncontrolledOpen(next);
+    onTriggerOpenChange?.(next);
+  };
 
   const handleSelectFilterMode = (option: ST_FilterOption) => {
     const prevFilterMode = columnDef ? getColumnFilterFnName(columnDef) : '';
@@ -228,13 +250,14 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
         }
       }
     }
-    setAnchorEl(null);
+    if (trigger) setTriggerOpen(false);
+    else setAnchorEl?.(null);
     onSelect?.();
   };
 
   const { onOpenChange, rect, spanProps } = useST_MenuAnchor({
     anchorEl,
-    setAnchorEl,
+    setAnchorEl: (next) => setAnchorEl?.(next),
   });
 
   // The column mode name is written onto the column def from
@@ -299,6 +322,24 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
       <DropdownMenuSubContent className={cn('w-max', className)} {...rest}>
         {menuItems}
       </DropdownMenuSubContent>
+    );
+  }
+
+  if (trigger) {
+    return (
+      <DropdownMenuTrigger
+        isOpen={open ?? uncontrolledOpen}
+        onOpenChange={setTriggerOpen}
+      >
+        {trigger}
+        <DropdownMenu
+          placement="bottom start"
+          className={cn('w-max', className)}
+          {...rest}
+        >
+          {menuItems}
+        </DropdownMenu>
+      </DropdownMenuTrigger>
     );
   }
 
