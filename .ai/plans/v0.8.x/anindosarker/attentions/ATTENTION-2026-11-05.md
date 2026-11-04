@@ -34,3 +34,10 @@
 - Options:
   - a) Recommended: keep the four-state selector.
   - b) Narrow it to `rowSelection` only; actions reading filters, search or sorting would need their own subscription.
+
+## A16 A subheader filter never widens its column any more
+
+- F44 fix: the subheader filter container has `contain-inline-size overflow-hidden` (`head/ST_TableHeadCellFilterContainer.tsx`, three bases), so a column keeps its `size` and clips a filter that is wider. Before the fix a wide filter grew the th past its size. D61 chose clipping for range fields; this applies it to every variant: a text filter (`min-w-24`) in a column under about 120 px is clipped too.
+- Options:
+  - a) Recommended: keep; the consumer sizes a filterable column (as Material React Table).
+  - b) Let the th grow to the filter's min width again for single-field variants (text, select, multi-select), clip range fields only.

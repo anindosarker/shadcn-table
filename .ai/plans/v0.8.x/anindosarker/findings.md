@@ -190,3 +190,7 @@
 ### F45 Home demo: some steps never highlight, titles read as instructions
 
 - Home page live demo (`apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx`, D46), owner 2026-11-05 03:5x: as the replay runs, only some of the six steps get the active highlight; and the step titles are instructions ("Sort by due date in the sort editor", "Search all columns for "billing"", "Edit an estimate to 16h", "Filter the status with a chip", "Move Project next to Name", "Stripe the rows in the view settings") where the owner wants short feature titles ("Sort editor", "Global search", "Cell editing", "Filter chips", "Column order", "Striped rows" or similar), the code line under each unchanged. Page check `_helpers.mjs` DEMO_LAST and `e.mjs` home entry follow the titles.
+
+### F46 React Aria range slider renders both thumbs at 0 with no fill
+
+- `/docs/examples/subheader-filters`, aria base: the Salary `'range-slider'` filter (`inputs/ST_FilterRangeSlider.tsx`, aria copy) renders both thumbs at value 0 with no fill while the slider's min is 30000 and max 200000; radix and base render the thumbs at the ends. Found by the F44 build (2026-11-05), not changed there. Check the aria slider part's controlled value mapping (`value` versus `defaultValue`, `minValue`/`maxValue` props) in the aria copy of ST_FilterRangeSlider.
