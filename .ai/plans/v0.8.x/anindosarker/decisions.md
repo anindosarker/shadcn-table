@@ -387,3 +387,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D54 The home demo shows seven columns
 
 - Addendum to D46: the home demo table shows Name, Status, Assignee, Project, Due, Estimate and Priority only, so every scripted step acts in view at the home page width; the other DefaultLook columns are not defined for it (not hidden through visibility). Owner, 2026-11-04 22:24 (F32).
+
+### D55 The persistent view example and the home demo render the demo's cells
+
+- Addendum to D46 and D50: the persistent-view example and the home demo use the header demo's cell renderers (status and priority chips, tag chips, assignee, estimate, due date) so the stock table looks as the demo does; the example pins every view settings item by default, leaves Name orderable, and shows 50 rows per page. Owner, 2026-11-04 22:32 (F35).
