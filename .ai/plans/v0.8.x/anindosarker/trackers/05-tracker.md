@@ -21,6 +21,7 @@ Gates:
 - `check-pages.mjs --base radix`, `--base base`, `--base aria` at dcaae068 (own docs server 5345): green, 1686 passed each, `disable-density-toggle` and both `chart-detail-panel` checks pass
 - `storybook:build:radix`, `storybook:build:base`, `storybook:build:aria` at dcaae068: green
 - `pnpm format` at dcaae068: no change
+- Verifier at 84044d5d (diff from dcaae068 touches only this tracker): every 2.2 gate line at dcaae068 stays valid, no gate rerun; Acceptance `node reference/05-check.mjs` rerun by the verifier: green, "3 bases, 14 defaults, ok"
 
 - Milestone 01 Flips and seed: done (e62987b8)
 - Milestone 02 Stories and docs examples: done (44fab6ff; F3 to F6 merged at dcaae068)
