@@ -356,3 +356,10 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - D3 stands: `ST_ShowHideColumnsMenuItems.tsx:120-128` renders the icon before the label through the exported `ST_ColumnIcon` (`ST_ColumnPicker.tsx:33`), as the chips and the picker do; nothing when the column has none.
 - Timing: item 3 of the triage, owner decides later.
 - Source: A5
+
+### D49 Every docs example and every story sets column icons
+
+- Extends D45: every column definition in `apps/shadcn-table-docs/examples/<base>/*/TS.tsx` (116 examples per base, 1 with icons today) and in every `packages/shadcn-table/stories/**/*.stories.tsx` (76 files, 4 with icons today) carries `icon`, a Lucide icon per column. Owner, 2026-11-04: "every example gets icons".
+- Opt-in in the library stays (D3, D45); the examples and stories show the opted-in look everywhere. Play tests that assert on header text keep passing: the icon renders before the label, the label text is unchanged.
+- Timing: with the docs work of item 3.
+- Source: A9
