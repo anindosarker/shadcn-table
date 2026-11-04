@@ -8,6 +8,9 @@ Gates:
 - `pnpm test:base`, `test:radix`, `test:aria` at f63f34fb, with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded (the other 71 files passed as explicit paths; vitest `--exclude` does not reach the storybook project): 471 passed, 2 red per base, `Selection Enabled` and `Portals Read Context` (see Attention)
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:icons`, `pnpm check:bases`, `node reference/01-check.mjs`, `pnpm registry:build`, `lib:install` per base at f63f34fb: green
 - `pnpm storybook:build:radix` at f63f34fb: green
+- `pnpm storybook:build:base`, `storybook:build:aria` at f88747ae (code as f63f34fb), one after another: green (verifier)
+- Acceptance, programmatic: `ColumnActions`, `ColumnDragging`, `Sorting` story plays per base at f88747ae: 23 of 23 passed on base, radix, aria (verifier)
+- Gates above this line without a name: builder; the tsc, lint, check, registry and test lines were not rerun (only the tracker changed since f63f34fb)
 
 - Milestone 01 header, menu and handle: done (a86805e0)
 - Milestone 02 drag, flip, locked: done (2cfe9cf5)
