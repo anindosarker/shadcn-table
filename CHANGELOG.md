@@ -74,6 +74,15 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - `enableScrollButtons` defaults to `true`: hover chevrons on a side with hidden columns. Set `enableScrollButtons: false` to restore.
 - `enableCellOverflowTooltip` defaults to `true`: cut-off text shows a tooltip. Set `enableCellOverflowTooltip: false` to restore.
 
+### Fixed
+
+#### Spec 06.1 cells
+
+- Display cells (select, expand, pin, drag, row numbers, actions) centre their control in the body and the header, so the header and row checkboxes share one x; row numbers render as muted tabular digits.
+- A group header spans exactly its leaves: it grows only by its growing leaves, keeps its width when every leaf is pinned or has `grow: false`, and sticks with its leaves when they are all pinned to one side.
+- With `renderRowActions` the actions column shows the "Actions" header label, is 96 px wide by default (`displayColumnDefOptions['st-row-actions'].size` wins) and centres every control it returns; without it the column stays 48 px with the dots button.
+- The popover filter funnel no longer adds its own margin beside the header label.
+
 ### Docs
 
 #### Spec 06
