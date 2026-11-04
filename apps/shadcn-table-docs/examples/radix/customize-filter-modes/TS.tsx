@@ -61,6 +61,7 @@ const Example = () => {
     columns,
     data,
     enableColumnFilterModes: true, //enable changing filter mode for all columns unless explicitly disabled in a column def
+    columnFilterDisplayMode: 'subheader',
     initialState: { showColumnFilters: true }, //show filters by default
     filterFns: {
       customFilterFn: (row, id, filterValue) => {

@@ -208,8 +208,8 @@ const checks = {
     await propTable(page, '#relevant-state-options-table', check);
     const w = await example(page, 'enable-column-ordering', check);
     check(
-      'enable-column-ordering: drag handles',
-      (await count(w, 'thead button[aria-label="Move"]')) > 0,
+      'enable-column-ordering: draggable headers',
+      (await count(w, 'thead [draggable="true"]')) > 0,
     );
   },
 
@@ -231,7 +231,7 @@ const checks = {
     const w = await example(page, 'enable-column-resizing', check);
     check(
       'enable-column-resizing: resize handles',
-      (await count(w, 'thead [data-slot="separator"]')) > 0,
+      (await count(w, 'thead .cursor-col-resize')) > 0,
     );
     const fa = await example(page, 'localization-i18n-fa', check);
     // React serialises the inline style as `direction:rtl` (no space).

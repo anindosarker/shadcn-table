@@ -59,6 +59,7 @@ export const SelectFilterAndGroupValue = {
       enableGrouping
       enableRowSelection
       groupedColumnMode="remove"
+      columnFilterDisplayMode="subheader"
       initialState={{
         expanded: true,
         grouping: ['state'],

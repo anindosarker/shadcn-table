@@ -168,6 +168,17 @@ const createSetup = <TData extends ST_RowData>(
     stickyHeader: !!definedTableOptions.enableStickyHeader,
     ...initialState.viewSettings,
   };
+  // The row actions column sits last and pinned to the end by default, unless
+  // the caller gives a pinning of its own.
+  if (
+    definedTableOptions.enableRowActions &&
+    definedTableOptions.positionActionsColumn === 'last' &&
+    definedTableOptions.enableColumnPinning &&
+    !initialState.columnPinning &&
+    !definedTableOptions.state?.columnPinning
+  ) {
+    initialState.columnPinning = { start: [], end: ['st-row-actions'] };
+  }
   // A partial `columnPinning` is spread over the defaults without filling the
   // other side, so `{ start: [...] }` alone would read `end` as undefined.
   if (initialState.columnPinning) {
