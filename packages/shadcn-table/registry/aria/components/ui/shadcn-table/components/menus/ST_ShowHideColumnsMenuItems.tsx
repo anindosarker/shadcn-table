@@ -18,6 +18,7 @@ import { isColumnDragCancelled } from '@/components/ui/shadcn-table/shared/utils
 import { ST_ColumnPinningButtons } from '@/components/ui/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
 import { ST_ColumnIcon } from '@/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker';
+import { getST_ColumnFlipPositions } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
@@ -69,19 +70,12 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     setIsDragging(false);
     setHoveredColumn(null);
     if (hoveredColumn && !isColumnDragCancelled(e)) {
-      // The column slide reads where every header sat before the reorder.
-      const positions = new Map<string, number>();
-      Object.entries(table.refs.tableHeadCellRefs.current ?? {}).forEach(
-        ([id, cell]) => {
-          if (cell?.isConnected) {
-            positions.set(id, cell.getBoundingClientRect().left);
-          }
-        },
-      );
+      // The column slide reads where every header sat before the reorder,
+      // measured as the slide measures: from the table's left edge.
       table.setColumnFlipPending({
         dragDrop: false,
         movedId: column.id,
-        positions,
+        positions: getST_ColumnFlipPositions(table),
       });
       applyColumnReorder(column, hoveredColumn, table);
     }
