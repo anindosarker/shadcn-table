@@ -32,3 +32,11 @@
 
 - `components/toolbar/ST_SortPopover.tsx:86`: "Add sort" is offered until every sortable column has a rule; `maxMultiSortColCount` is not read. Found by spec 06. Owner choice on timing: A4.
 
+### F8 Scroll chevron jumps on press and misses the click
+
+- `components/table/ST_ScrollButtons.tsx` (spec 02): the chevron button takes `active:not-aria-[haspopup]:translate-y-px` from `buttonVariants`, which replaces its `-translate-y-1/2` while pressed; the button moves 13 px down and a click at its centre lands on the header cell, so nothing scrolls (D22). All three bases. Found by the spec 07 gate.
+
+### F9 React Aria Focusable warnings in the chip and sort editors
+
+- Aria base: 58 console warnings `<Focusable> child must be focusable` while the filter chip editor (20) and the sort editor (38) are open, 18 more on choosing a sort column (spec 04). The release gate requires zero React Aria warnings (v0.7.x D40). Found by the spec 07 gate.
+
