@@ -10,9 +10,11 @@ const readPx = (element: HTMLElement, name: string) =>
   parseFloat(getComputedStyle(element).getPropertyValue(name)) || 0;
 
 // Hidden cues are `invisible`, which also drops them from the accessibility
-// tree and from hit testing; the wrapper carries `group/st-scroll`.
+// tree and from hit testing; the wrapper carries `group/st-scroll`. The press
+// keeps the centring: `buttonVariants`' `active:` nudge would replace the
+// `-translate-y-1/2` and move the chevron from under the pointer.
 const scrollButtonClassName =
-  'pointer-events-none invisible absolute top-5 z-5 -translate-y-1/2 bg-background text-muted-foreground opacity-0 transition-[opacity,visibility] duration-200';
+  'pointer-events-none invisible absolute top-5 z-5 -translate-y-1/2 bg-background text-muted-foreground opacity-0 transition-[opacity,visibility] duration-200 active:not-aria-[haspopup]:-translate-y-1/2';
 
 /**
  * Two chevrons centred in the 40 px header row, just inside the pinned
