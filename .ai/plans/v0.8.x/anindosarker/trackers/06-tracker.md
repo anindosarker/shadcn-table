@@ -1,6 +1,6 @@
 # 06: docs, tracker
 
-Status: done (af9780fb)
+Status: merged (e0e2e6ef)
 Branch `v0.8/docs`, worktree 02, PR #102
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at 73ec8c45: green
