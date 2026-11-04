@@ -298,3 +298,11 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Reference: the demo at `4fde6ea` (`filter-bar.tsx:93-215`, report §5); Notion and Airtable put the operator on the editor's top line.
 - Changes: `ST_FilterEditor` top line; the chip summary helper; `ST_FilterTextField` turns `showChangeModeButton` off in chips mode (its mode button, empty-mode badge and "Filter Mode: X" line go together).
 - Stays: `ST_FilterOptionMenu` and `columnFilterFns`; the existing `localization.changeFilterMode` and `filterMode` keys.
+
+## Round 3: run rulings, 2026-11-04
+
+### D40 v0.8 run commits carry no Claude-Session line
+
+- Workflow sub-agents receive no harness reminder, so the v0.8.x run's commits, PR bodies and merge commits go out without the `Claude-Session:` trailer; the owner accepted the gap for this run ("ignore"). P5 stays as written for sessions that get the reminder.
+- Source: A2
+
