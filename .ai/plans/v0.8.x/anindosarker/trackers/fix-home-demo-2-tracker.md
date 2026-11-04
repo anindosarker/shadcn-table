@@ -1,6 +1,6 @@
 # Home demo polish (F45 follow-up), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-home-demo-2`, worktree 02, PR #119 (draft)
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at 82ff1a2e: green
@@ -8,6 +8,9 @@ Gates:
 - `node scripts/check-pages.mjs e --base radix --url http://localhost:5341 /` at 82ff1a2e: green (38 passed)
 - `node scripts/check-pages.mjs e --base base --url http://localhost:5341 /` at 82ff1a2e: green (38 passed)
 - `node scripts/check-pages.mjs e --base aria --url http://localhost:5341 /` at 82ff1a2e: green (38 passed)
+- `pnpm --filter shadcn-table-docs build` at 73cc9d8d: green (exit 0, `git status --short` clean), verifier
+- types:check, lint and check-pages e (radix, base, aria) at 82ff1a2e: still valid at 73cc9d8d (`git diff --name-only 82ff1a2e..HEAD` touches only the tracker and `CHANGELOG.md`), verifier
+- headless Chromium watch, verifier, own dev server on 5345 (stopped), at 73cc9d8d: two full loops at 1440x900 dark and one at 1280x720 light, 100 ms DOM sampling plus 300 ms frames, a rAF burst of the Column order slide, Replay mid-Search, a table click during Editing, step jumps to Column order and Search, Replay from a jump: no tooltip, no focus ring on a toolbar button, demo height constant (650 px at 1440, 882 px at 1280), step list and status line fixed (status 32 px), table 520/520 with no inner or horizontal scroll, no page scroll, the moved Project header and body cells on top for the whole slide, Filter picker and chip in the chips row, editor 4 to 1 to 16 with no blank, loops identical within 10 ms, zero console errors; F45-5 (list below the fold at 1280x720), F45-8 (stock faint stripe) and F45-9 (chip has no direction) remain as recorded under Attention
 - headless Chromium watch, own dev server on 5341 (stopped), at ddaed45c: two full loops plus Replay mid-Search, a table click during Editing, the Name column menu, a reload, a jump to Column order and Replay from the jump at 1440x900 dark; one loop at 1280x720 light: no tooltip, no focus ring on a clicked control, no layout change, no page scroll, both loops identical to 100 ms, zero console errors
 
 - Milestone 01 fix with play: done (82ff1a2e)
