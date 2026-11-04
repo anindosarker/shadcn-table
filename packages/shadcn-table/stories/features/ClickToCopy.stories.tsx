@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   useShadcnTable,
@@ -174,4 +175,49 @@ export const ClickToCopyDisabledPerColumn = () => {
   });
 
   return <ShadcnTable table={table} />;
+};
+
+/**
+ * A click on a cell copies its text to the clipboard, and the tooltip says
+ * it was copied.
+ */
+export const ClickCopiesValue = {
+  render: () => <ClickToCopyEnabled />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+      undefined,
+    );
+    try {
+      const value = data[0].name.firstName;
+      const button = (
+        await within(canvasElement).findByText(value)
+      ).closest<HTMLElement>('button')!;
+      const browserUserEvent = (
+        globalThis as {
+          stBrowserUserEvent?: {
+            click: (element: Element) => Promise<void>;
+            hover: (element: Element) => Promise<void>;
+          };
+        }
+      ).stBrowserUserEvent;
+      const pointer = browserUserEvent ?? userEvent;
+      await pointer.click(button);
+      expect(writeText).toHaveBeenCalledWith(value);
+      // The press closes the tooltip; resting on the button again shows the
+      // copied title after the 1 s tooltip delay.
+      await pointer.hover(
+        within(canvasElement).getAllByRole('columnheader')[0]!,
+      );
+      await pointer.hover(button);
+      await waitFor(
+        () =>
+          expect(
+            document.querySelector('[data-slot="tooltip-content"]'),
+          ).toHaveTextContent('Copied to clipboard'),
+        { timeout: 2500 },
+      );
+    } finally {
+      writeText.mockRestore();
+    }
+  },
 };

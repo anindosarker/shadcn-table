@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -158,3 +159,42 @@ export const OnlyTopProgressBar = () => (
     state={{ showProgressBars: true }}
   />
 );
+
+/** While loading with no data, every body cell is a skeleton, ten rows. */
+export const SkeletonsWhileLoading = {
+  render: () => <Loading />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('columnheader');
+    await waitFor(() =>
+      expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(10),
+    );
+    const cells = canvasElement.querySelectorAll('tbody td');
+    expect(cells).toHaveLength(10 * columns.length);
+    for (const cell of cells) {
+      expect(cell.querySelector('[data-slot="skeleton"]')).not.toBeNull();
+      expect(cell).toHaveTextContent(/^$/);
+    }
+  },
+};
+
+/**
+ * `showProgressBars` draws the progress bars in both toolbars while the
+ * rows stay visible.
+ */
+export const ProgressBarShown = {
+  render: () => <ReloadingExample />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText(data[0].firstName);
+    await waitFor(() => {
+      const bars = canvas.getAllByRole('progressbar');
+      expect(bars).toHaveLength(2);
+      for (const bar of bars) {
+        const box = bar.getBoundingClientRect();
+        expect(box.width).toBeGreaterThan(0);
+        expect(box.height).toBeGreaterThan(0);
+      }
+    });
+    expect(canvasElement.querySelector('[data-slot="skeleton"]')).toBeNull();
+  },
+};

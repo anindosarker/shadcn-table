@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import {
   Building2Icon,
@@ -428,3 +428,75 @@ export const EmptyDataVirtualization = () => (
     stTableLayoutProps={{ className: 'mx-auto max-w-[1000px]' }}
   />
 );
+
+/** The table's scroll container: its nearest ancestor that scrolls. */
+const scrollBox = (canvasElement: HTMLElement) => {
+  let box = canvasElement.querySelector('table')?.parentElement ?? null;
+  while (box && getComputedStyle(box).overflowY !== 'auto') {
+    box = box.parentElement;
+  }
+  if (!box) throw new Error('scroll container not found');
+  return box;
+};
+
+const indexes = (elements: NodeListOf<Element>) =>
+  [...elements].map((element) => Number(element.getAttribute('data-index')));
+
+/**
+ * Row virtualization renders a window of the 500 rows; scrolling down
+ * renders rows further in the data.
+ */
+export const ScrollRendersFurtherRows = {
+  render: () => <MaxVirtualization />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText(fakeData[0]!['0']!);
+    const rows = () => canvasElement.querySelectorAll('tbody tr[data-index]');
+    expect(rows().length).toBeGreaterThan(0);
+    expect(rows().length).toBeLessThan(fakeData.length);
+    const lastBefore = Math.max(...indexes(rows()));
+    const box = scrollBox(canvasElement);
+    box.scrollTop = box.scrollHeight / 2;
+    box.dispatchEvent(new Event('scroll'));
+    await waitFor(() =>
+      expect(Math.min(...indexes(rows()))).toBeGreaterThan(lastBefore),
+    );
+    const first = Math.min(...indexes(rows()));
+    expect(
+      canvasElement.querySelector(`tbody tr[data-index="${first}"]`),
+    ).toHaveTextContent(fakeData[first]!['0']!);
+    expect(rows().length).toBeLessThan(fakeData.length);
+  },
+};
+
+/**
+ * Column virtualization renders a window of the 500 columns; scrolling
+ * sideways brings later headers in, the body cells with them.
+ */
+export const ColumnVirtualizationScrollsHeaders = {
+  render: () => <MaxVirtualization />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText(fakeData[0]!['0']!);
+    const headers = () =>
+      canvasElement.querySelectorAll('thead th[data-flip-column]');
+    expect(headers().length).toBeLessThan(fakeColumns.length);
+    expect(canvasElement.querySelector('thead')).not.toHaveTextContent(
+      'Column 250',
+    );
+    const box = scrollBox(canvasElement);
+    box.scrollLeft = box.scrollWidth / 2;
+    box.dispatchEvent(new Event('scroll'));
+    await waitFor(() =>
+      expect(
+        canvasElement.querySelector('thead th[data-flip-column="250"]'),
+      ).toHaveTextContent('Column 250'),
+    );
+    expect(headers().length).toBeLessThan(fakeColumns.length);
+    expect(
+      canvasElement.querySelector('thead th[data-flip-column="0"]'),
+    ).toBeNull();
+    const row = canvasElement.querySelector('tbody tr[data-index="0"]')!;
+    expect(row.querySelector('td[data-flip-column="250"]')).toHaveTextContent(
+      fakeData[0]!['250']!,
+    );
+  },
+};
