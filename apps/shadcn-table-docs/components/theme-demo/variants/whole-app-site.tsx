@@ -49,10 +49,12 @@ function useMedia(query: string) {
 
 /* home: what the frame shows grows with the screen's height; below these
  * heights the settings form, then the page header, then the card charts
- * and the table toolbar give way, and the table drops from 6 rows to 4 */
-const FORM = '[@media(max-height:919px)]:hidden';
-const HEADER = '[@media(max-height:819px)]:hidden';
-const CHART = '[@media(max-height:699px)]:hidden';
+ * and the table toolbar give way, and the table drops from 6 rows to 4.
+ * Each threshold is the height at which the frame holds that content with
+ * the table's toolbar row and page buttons (measured at 1440px wide). */
+const FORM = '[@media(max-height:999px)]:hidden';
+const HEADER = '[@media(max-height:859px)]:hidden';
+const CHART = '[@media(max-height:719px)]:hidden';
 
 // weekly active members, drawn as the sparkline
 const ACTIVE = [18, 21, 19, 24, 22, 26, 28];
@@ -171,8 +173,8 @@ export function WholeAppSite({
   home?: boolean;
 }) {
   const phone = useMedia('(max-width: 639px)');
-  const tall = useMedia('(min-height: 780px)');
-  const short = useMedia('(max-height: 699px)');
+  const tall = useMedia('(min-height: 800px)');
+  const short = useMedia('(max-height: 719px)');
 
   if (home && phone)
     return (

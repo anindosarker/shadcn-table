@@ -483,9 +483,35 @@
   text-overflow: clip;
 }
 
-@media (min-width: 1024px) {
+/* the seven demo columns at the header demo's sizes need about 1080px, so
+ * the steps sit beside the table from 1440px (the band runs gutter to
+ * gutter, see home-page.tsx) and under it below */
+@media (min-width: 1024px) and (max-width: 1439px) {
   .v12 .v5-demo {
-    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v12 .v5-steps {
+    border-top-width: 1px;
+    border-left-width: 0;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1439px) {
+  .v12 .v12-step-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .v12 .v12-step-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .v12 .v5-demo {
+    grid-template-columns: minmax(0, 1fr) 240px;
   }
 }
 

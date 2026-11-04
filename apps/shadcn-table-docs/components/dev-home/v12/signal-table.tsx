@@ -1,6 +1,12 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type HTMLAttributes,
+} from 'react';
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
 import {
   CalendarIcon,
@@ -14,6 +20,7 @@ import {
   TypeIcon,
   UserIcon,
 } from 'lucide-react';
+import { Badge } from '@/components/ui-radix/badge';
 import { DropdownMenuItem } from '@/components/ui-radix/dropdown-menu';
 import {
   ShadcnTable,
@@ -21,7 +28,14 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui-radix/shadcn-table';
 import { getST_ColumnFlipPositions } from '@/components/ui-radix/shadcn-table/hooks/useST_ColumnFlip';
-import { data, type Task } from '@/examples/.radix/persistent-view/makeData';
+import {
+  assignees,
+  data,
+  priorities,
+  projects,
+  statuses,
+  type Task,
+} from '@/examples/.radix/persistent-view/makeData';
 
 export interface SignalTableState {
   sorting: SortingState;
@@ -49,81 +63,128 @@ export interface SignalTableProps {
   /** An estimate cell the replay holds open in cell edit mode, with the
    * value shown in its input. */
   editing: { rowId: string; value: string } | null;
-  /** What the replay just changed, so it can pulse once. */
-  cue: SignalCue | null;
 }
 
-export type SignalCue =
-  | { kind: 'sort' | 'filter' | 'order' | 'search' | 'view' }
-  | { kind: 'edit'; rowId: string };
+/* A small dot tells the statuses and the priorities apart (the header
+ * demo's cells, as in the persistent-view example). */
+const statusDot: Record<string, string> = {
+  'Not Started': 'bg-zinc-400 dark:bg-zinc-500',
+  'In Progress': 'bg-blue-500',
+  'In Review': 'bg-amber-500',
+  Done: 'bg-green-500',
+};
 
-/* One-shot accent pulse class (v12.css). */
-const PULSE = 'v12-cue';
-const PULSE_MS = 1200;
+const priorityDot: Record<string, string> = {
+  Low: 'bg-zinc-400 dark:bg-zinc-500',
+  Medium: 'bg-sky-500',
+  High: 'bg-amber-500',
+  Urgent: 'bg-red-500',
+};
 
-// Seven of the persistent-view example's columns (the header demo's), the
-// ones the steps use, so every step acts in view at the home page width (D54);
-// the Filtering step picks one Status value, and only Estimate edits.
+// The persistent-view example's definitions (the header demo's, D55) for the
+// seven columns the steps use (D54). Three sizes differ so the seven headers
+// read in full and fit the frame at 1440 px: Name 196 (demo 260), Estimate
+// 136 (120) and Priority 132 (120), whose labels truncate at the demo's size
+// beside the header's menu button. Only Estimate edits.
 const columns: ST_ColumnDef<Task>[] = (
   [
     {
       accessorKey: 'name',
-      enableColumnOrdering: false,
       header: 'Name',
       icon: TypeIcon,
-      size: 150,
+      filterVariant: 'text',
+      enableColumnFilterModes: true,
+      columnFilterModeOptions: [
+        'fuzzy',
+        'contains',
+        'startsWith',
+        'endsWith',
+        'equals',
+        'notEquals',
+        'empty',
+        'notEmpty',
+      ],
+      size: 196,
     },
     {
       accessorKey: 'status',
-      filterVariant: 'select',
       header: 'Status',
       icon: CircleDotIcon,
-      size: 105,
+      filterVariant: 'select',
+      filterSelectOptions: statuses,
+      size: 150,
+      Cell: ({ cell }) => {
+        const status = cell.getValue<string>();
+        return (
+          <Badge className="max-w-full" variant="secondary">
+            <span
+              className={`size-1.5 shrink-0 rounded-full ${statusDot[status]}`}
+            />
+            <span className="truncate">{status}</span>
+          </Badge>
+        );
+      },
     },
-    { accessorKey: 'assignee', header: 'Assignee', icon: UserIcon, size: 115 },
-    { accessorKey: 'project', header: 'Project', icon: FolderIcon, size: 100 },
+    {
+      accessorKey: 'assignee',
+      header: 'Assignee',
+      icon: UserIcon,
+      filterVariant: 'select',
+      filterSelectOptions: assignees,
+      size: 160,
+    },
+    {
+      accessorKey: 'project',
+      header: 'Project',
+      icon: FolderIcon,
+      filterVariant: 'select',
+      filterSelectOptions: projects,
+      size: 130,
+    },
     {
       accessorKey: 'due',
       enableColumnOrdering: false,
       header: 'Due',
       icon: CalendarIcon,
-      size: 110,
+      filterVariant: 'date',
+      filterFn: 'lessThan',
+      size: 130,
     },
     {
       accessorKey: 'estimate',
-      Cell: ({ cell }) => `${cell.getValue<number>()}h`,
       enableEditing: true,
       header: 'Estimate',
       icon: HashIcon,
-      size: 110,
+      filterVariant: 'range',
+      size: 136,
+      Cell: ({ cell }) => (
+        <span className="tabular-nums">{cell.getValue<number>()}h</span>
+      ),
     },
-    { accessorKey: 'priority', header: 'Priority', icon: FlagIcon, size: 85 },
+    {
+      accessorKey: 'priority',
+      header: 'Priority',
+      icon: FlagIcon,
+      filterVariant: 'select',
+      filterSelectOptions: priorities,
+      size: 132,
+      sortFn: (rowA, rowB, columnId) =>
+        priorities.indexOf(rowA.getValue<string>(columnId)) -
+        priorities.indexOf(rowB.getValue<string>(columnId)),
+      Cell: ({ cell }) => {
+        const priority = cell.getValue<string>();
+        return (
+          <span className="flex min-w-0 items-center gap-1.5">
+            <span
+              className={`size-1.5 shrink-0 rounded-full ${priorityDot[priority]}`}
+            />
+            <span className="truncate">{priority}</span>
+          </span>
+        );
+      },
+    },
   ] as ST_ColumnDef<Task>[]
 ).map((column) => ({ enableEditing: false, ...column }));
-
-/** The toolbar control a cue pulses, found in the table's own markup. */
-const cueTarget = (root: HTMLElement, kind: SignalCue['kind']) => {
-  if (kind === 'filter') {
-    return root.querySelector<HTMLElement>('[data-filter-chip="status"]');
-  }
-  if (kind === 'view') {
-    return root.querySelector<HTMLElement>(
-      'button[aria-label="View settings"]',
-    );
-  }
-  if (kind === 'sort') {
-    // the sort chip: the toolbar button that names the sorted column
-    return (
-      [...root.querySelectorAll<HTMLElement>('button')].find(
-        (button) =>
-          !button.closest('table') &&
-          !button.hasAttribute('data-filter-chip') &&
-          button.textContent?.trim() === 'Due',
-      ) ?? null
-    );
-  }
-  return null;
-};
 
 /**
  * The homepage's replaying table: the stock table on the persistent-view
@@ -136,9 +197,7 @@ export default function SignalTable({
   state,
   onChange,
   editing,
-  cue,
 }: SignalTableProps) {
-  const rootRef = useRef<HTMLDivElement>(null);
   const rows = useMemo(
     () =>
       data.map((task) =>
@@ -197,26 +256,9 @@ export default function SignalTable({
               }
             },
           },
-    stTableBodyCellProps: ({ cell, row }) => ({
-      className:
-        cue?.kind === 'edit' &&
-        row.id === cue.rowId &&
-        cell.column.id === 'estimate'
-          ? PULSE
-          : undefined,
-    }),
-    // inline style, not a class: the top toolbar passes its own className
-    // to the search field, which replaces ours (keyframes in v12.css)
-    stSearchTextFieldProps:
-      cue?.kind === 'search'
-        ? {
-            style: {
-              outline: '1px solid var(--dh-accent)',
-              outlineOffset: 1,
-              animation: 'v12-pop 1200ms linear',
-            },
-          }
-        : {},
+    // lets the replay find the row it edits
+    stTableBodyRowProps: ({ row }) =>
+      ({ 'data-row-id': row.id }) as HTMLAttributes<HTMLTableRowElement>,
     stTableContainerProps: { className: 'max-h-[30rem]' },
   });
 
@@ -265,20 +307,19 @@ export default function SignalTable({
     );
   }, [striped]);
 
-  // pulse the toolbar control the replay just changed
-  const cueKind = cue?.kind;
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root || !cueKind) return;
-    const target = cueTarget(root, cueKind);
-    if (!target) return;
-    target.classList.add(PULSE);
-    const timer = setTimeout(() => target.classList.remove(PULSE), PULSE_MS);
-    return () => {
-      clearTimeout(timer);
-      target.classList.remove(PULSE);
-    };
-  }, [cueKind]);
+  // a reset or a jump drops the chips of columns without a filter, unless
+  // an editor is open on one (the Filtering step picks the column first)
+  const filtersKey = state.columnFilters.map((filter) => filter.id).join(',');
+  useLayoutEffect(() => {
+    const table = tableRef.current;
+    const chips = table.atoms.filterChips.get();
+    if (chips.openColumnId !== null) return;
+    const ids = filtersKey ? filtersKey.split(',') : [];
+    const kept = chips.columnIds.filter((id) => ids.includes(id));
+    if (kept.length !== chips.columnIds.length) {
+      table.setFilterChips({ ...chips, columnIds: kept });
+    }
+  }, [filtersKey]);
 
   // open or close the estimate cell the replay is editing
   const replayEditing = useRef(false);
@@ -300,9 +341,5 @@ export default function SignalTable({
     }
   }, [editingRowId]);
 
-  return (
-    <div ref={rootRef}>
-      <ShadcnTable table={table} />
-    </div>
-  );
+  return <ShadcnTable table={table} />;
 }

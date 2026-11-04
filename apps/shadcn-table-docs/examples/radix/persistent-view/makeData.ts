@@ -1,4 +1,5 @@
 export type Task = {
+  archived: boolean;
   assignee: string;
   created: string;
   due: string;
@@ -7,6 +8,9 @@ export type Task = {
   name: string;
   notes: string;
   priority: string;
+  /** Percent, 0 to 100 */
+  progress: number;
+  prLink: string;
   project: string;
   reporter: string;
   sprint: string;
@@ -17,8 +21,8 @@ export type Task = {
   updated: string;
 };
 
-const statuses = ['Not Started', 'In Progress', 'In Review', 'Done'];
-const assignees = [
+export const statuses = ['Not Started', 'In Progress', 'In Review', 'Done'];
+export const assignees = [
   'Ava Chen',
   'Ben Ortiz',
   'Chloe Park',
@@ -26,12 +30,17 @@ const assignees = [
   'Elena Rossi',
   'Farid Khan',
 ];
-const projects = ['Atlas', 'Beacon', 'Comet', 'Delta'];
-const priorities = ['Low', 'Medium', 'High', 'Urgent'];
-const tags = ['Frontend', 'Backend', 'Bug', 'Feature', 'Docs', 'Infra'];
-const reporters = ['Grace Liu', 'Hugo Silva', 'Iris Novak', 'Jonas Berg'];
-const teams = ['Platform', 'Growth', 'Payments', 'Mobile'];
-const sprints = [
+export const projects = ['Atlas', 'Beacon', 'Comet', 'Delta'];
+export const priorities = ['Low', 'Medium', 'High', 'Urgent'];
+export const tags = ['Frontend', 'Backend', 'Bug', 'Feature', 'Docs', 'Infra'];
+export const reporters = [
+  'Grace Liu',
+  'Hugo Silva',
+  'Iris Novak',
+  'Jonas Berg',
+];
+export const teams = ['Platform', 'Growth', 'Payments', 'Mobile'];
+export const sprints = [
   'Sprint 41',
   'Sprint 42',
   'Sprint 43',
@@ -115,8 +124,8 @@ export const data: Task[] = Array.from({ length: 50 }, (_, index) => {
     updated: isoDate(updated),
     storyPoints: pick([1, 2, 3, 5, 8, 13]),
   };
-  // two skipped draws keep the rows in step with the header demo
-  random();
-  random();
-  return { ...task, notes: pick(notes) };
+  const progress = Math.floor(random() * 21) * 5;
+  const prLink = `https://github.com/acme/app/pull/${1200 + index * 7}`;
+  const archived = random() < 0.2;
+  return { ...task, progress, prLink, archived, notes: pick(notes) };
 });
