@@ -1,6 +1,6 @@
 # 05: defaults and stories, tracker
 
-Status: done
+Status: merged 7db14760 (#101)
 Branch `v0.8/defaults-stories`, worktree 01, PR #101
 Gates:
 - `tsc:radix`, `tsc:baseui`, `tsc:aria` at e62987b8: green
