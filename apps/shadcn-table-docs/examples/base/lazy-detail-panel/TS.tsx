@@ -12,7 +12,14 @@ import {
 } from '@/components/ui/shadcn-table';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
-import { Minus as MinusIcon, Plus as AddIcon } from 'lucide-react';
+import {
+  MapIcon,
+  MapPinIcon,
+  Minus as MinusIcon,
+  PhoneIcon,
+  Plus as AddIcon,
+  UserIcon,
+} from 'lucide-react';
 import {
   QueryClient,
   QueryClientProvider,
@@ -110,22 +117,27 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
       {
         accessorKey: 'phoneNumber',
+        icon: PhoneIcon,
         header: 'Phone Number',
       },
     ],

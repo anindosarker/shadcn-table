@@ -10,6 +10,7 @@ import {
   useST_MediaQuery,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { CakeIcon, HashIcon, UserIcon, VenusAndMarsIcon } from 'lucide-react';
 
 const Example = () => {
   const isMobile = useST_MediaQuery('(max-width: 1000px)');
@@ -18,19 +19,23 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'ID',
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         filterVariant: 'autocomplete',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
         header: 'Gender',
         filterFn: 'equals',
         filterSelectOptions: ['Male', 'Female', 'Other'],
@@ -38,6 +43,7 @@ const Example = () => {
       },
       {
         accessorKey: 'age',
+        icon: CakeIcon,
         header: 'Age',
         filterVariant: 'range',
       },

@@ -20,7 +20,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { type User, fakeData, usStates } from './makeData';
-import { Trash2 } from 'lucide-react';
+import { HashIcon, MailIcon, MapIcon, Trash2, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const [validationErrors, setValidationErrors] = useState<
@@ -33,12 +33,14 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'Id',
         enableEditing: false,
         size: 80,
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         stEditTextFieldProps: ({ cell, row }) => ({
           type: 'text',
@@ -60,6 +62,7 @@ const Example = () => {
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         stEditTextFieldProps: ({ cell, row }) => ({
           type: 'text',
@@ -81,6 +84,7 @@ const Example = () => {
       },
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email',
         stEditTextFieldProps: ({ cell, row }) => ({
           type: 'email',
@@ -102,6 +106,7 @@ const Example = () => {
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
         editVariant: 'select',
         editSelectOptions: usStates,

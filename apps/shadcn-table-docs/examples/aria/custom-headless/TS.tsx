@@ -25,26 +25,32 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { type Person, data } from './makeData';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'name.firstName',
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'name.lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'address',
+    icon: MapPinIcon,
     header: 'Address',
   },
   {
     accessorKey: 'city',
+    icon: Building2Icon,
     header: 'City',
   },
   {
     accessorKey: 'state',
+    icon: MapIcon,
     header: 'State',
   },
 ];
