@@ -407,3 +407,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D59 Every story file gets plays, as a v0.8.x epic
 
 - On `claude/review` 79 story files hold 542 stories and 101 plays; 47 files have none (ColumnResizing, ColumnOrdering, ColumnPinning, Editing, Pagination, Toolbar, Search, RowPinning, LayoutMode, DefaultLook, StickyHeader among them), so `test:<base>` proves only that they mount. A new epic in this cycle, sub-spec 06.3 with its own spec file, gives every story file at least one play and each feature file one play per behaviour it demonstrates (resize drag and reset, pin and unpin, edit and save, page and page size, sticky header on scroll, and so on), written to fail when the behaviour is broken; it runs before the release and after the last fix story. The rule becomes P10. Owner, 2026-11-05.
+
+### D60 Header group cells carry no icon by default
+
+- A group column def may set `icon` and the header renders it before the label (D3); the examples and stories set icons on leaf columns only (D49), so group headers stay plain. Owner, 2026-11-05.
