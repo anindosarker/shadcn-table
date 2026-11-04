@@ -73,7 +73,20 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
           <Separator className="h-4! self-center!" orientation="vertical" />
         )}
         {hasChips && <ST_FilterChips table={table} />}
-        {renderTopToolbarCustomActions?.({ table })}
+        {renderTopToolbarCustomActions && (
+          // The actions read the table, most often the selected rows, so they
+          // re-render on the state they commonly read; the toolbar does not.
+          <table.Subscribe
+            selector={(state) => ({
+              columnFilters: state.columnFilters,
+              globalFilter: state.globalFilter,
+              rowSelection: state.rowSelection,
+              sorting: state.sorting,
+            })}
+          >
+            {() => renderTopToolbarCustomActions({ table })}
+          </table.Subscribe>
+        )}
       </div>
       {enableToolbarInternalActions ? (
         <div className="flex shrink-0 flex-wrap-reverse items-center justify-end gap-2">
