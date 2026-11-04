@@ -65,6 +65,7 @@ export const ST_SortPopover = <TData extends ST_RowData>({
         SwapVertIcon,
       },
       localization,
+      maxMultiSortColCount,
     },
   } = table;
   const sorting = useSelector(table.atoms.sorting);
@@ -83,7 +84,10 @@ export const ST_SortPopover = <TData extends ST_RowData>({
   const unusedColumns = sortableColumns.filter(
     (column) => !sorting.some((rule) => rule.id === column.id),
   );
-  const canAddSort = enableMultiSort !== false && unusedColumns.length > 0;
+  const canAddSort =
+    enableMultiSort !== false &&
+    unusedColumns.length > 0 &&
+    sorting.length < (maxMultiSortColCount ?? Infinity);
 
   const addSort = (column: ST_Column<TData>) =>
     table.setSorting((old) => [...old, { desc: false, id: column.id }]);

@@ -108,3 +108,5 @@ export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_SortPopo
 export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsButton';
 export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsItems';
 export * from '@/components/ui-radix/shadcn-table/components/buttons/ST_TooltipButton';
+// spec 06.1
+export { ST_HeaderFilterEditor } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_HeaderFilterEditor';

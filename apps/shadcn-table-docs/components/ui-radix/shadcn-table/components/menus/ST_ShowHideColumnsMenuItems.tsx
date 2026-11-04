@@ -21,6 +21,7 @@ import { applyColumnReorder } from '@/components/ui-radix/shadcn-table/shared/ut
 import { isColumnDragCancelled } from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui-radix/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui-radix/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { ST_ColumnIcon } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ColumnPicker';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
@@ -120,10 +121,12 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const label = (
     <span
       className={cn(
+        'flex items-center gap-2',
         columnDefType === 'display' && 'opacity-50',
         !column.getCanHide() && 'text-muted-foreground',
       )}
     >
+      <ST_ColumnIcon column={column} />
       {columnDef.header}
     </span>
   );

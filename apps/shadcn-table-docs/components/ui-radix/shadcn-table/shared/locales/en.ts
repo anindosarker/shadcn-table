@@ -110,7 +110,7 @@ export const ST_Localization_EN: Required<ST_Localization> = {
   resetView: 'Reset view',
   rowActions: 'Row Actions',
   rowNumber: '#',
-  rowNumbers: 'Row Numbers',
+  rowNumbers: 'Row numbers',
   rowsPerPage: 'Rows per page',
   save: 'Save',
   scrollLeft: 'Scroll left',
