@@ -23,10 +23,10 @@ import {
   getDensityLabel,
   getGridLinesLabel,
   getViewItemLabel,
+  getViewSettingsItems,
   isViewToggle,
   ST_DENSITY_VALUES,
   ST_GRID_LINES_VALUES,
-  ST_VIEW_SETTINGS_ITEMS,
   setViewToggle,
   ST_ViewItemIcon,
 } from '@/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsItems';
@@ -154,7 +154,7 @@ export const ST_ViewSettingsButton = <TData extends ST_RowData>({
         </Button>
       </ST_Tooltip>
       <Popover placement="bottom end" className="w-80 gap-0 p-1" offset={8}>
-        {ST_VIEW_SETTINGS_ITEMS.map((id) => {
+        {getViewSettingsItems(table).map((id) => {
           const label = getViewItemLabel(id, localization);
           const pinned = pins.includes(id);
           const pinLabel = pinned
