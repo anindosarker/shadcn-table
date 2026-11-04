@@ -121,6 +121,13 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - `renderTopToolbarCustomActions` and `renderBottomToolbarCustomActions` re-render when the row selection, filters or sorting change, so an action that reads the selected rows enables once a row is selected; the rest of the toolbar does not re-render.
 
+#### Fix F44
+
+- Subheader filters fit their columns: the filter row takes the label row's inline padding per density and a bottom padding, and adds no width to its column, so a column keeps its `size` and clips a wider filter.
+- The range slider's "Filter Mode" caption renders below the track, like the text field's caption, and the slider stays inside its cell.
+- Range filters keep Min and Max side by side at every column width (D61); their "Filter Mode" caption spans the whole range group instead of the Min field.
+- The subheader filters example sizes its columns to fit their filters.
+
 ### Docs
 
 #### Spec 06
