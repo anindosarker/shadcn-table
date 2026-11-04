@@ -124,6 +124,18 @@ const animate = (
 };
 
 /**
+ * Flashes the column highlight on an element: the primary tint fades out over
+ * the highlight duration. Reduced motion keeps it, as for a moved column.
+ */
+export const flashST_Highlight = (element: HTMLElement) =>
+  animate(
+    element,
+    [{ boxShadow: HIGHLIGHT }, { boxShadow: HIGHLIGHT_END }],
+    HIGHLIGHT_MS,
+    'box-shadow',
+  );
+
+/**
  * Column reorder animations, per table instance, on refs and the DOM only.
  *
  * While a column drags, only the header row previews: the other unpinned
@@ -313,11 +325,8 @@ export const useST_ColumnFlip = <TData extends ST_RowData>(
       }
     }
 
-    const highlight = [{ boxShadow: HIGHLIGHT }, { boxShadow: HIGHLIGHT_END }];
     for (const section of ['thead', 'tbody'] as const) {
-      cellsOf(section, pending.movedId).forEach((cell) =>
-        animate(cell, highlight, HIGHLIGHT_MS, 'box-shadow'),
-      );
+      cellsOf(section, pending.movedId).forEach(flashST_Highlight);
     }
   }, [columnOrder]);
 };

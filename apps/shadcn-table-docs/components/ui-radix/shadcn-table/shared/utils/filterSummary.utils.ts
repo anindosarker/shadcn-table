@@ -31,11 +31,12 @@ const RANGE_VARIANTS: readonly string[] = [
 ];
 
 /**
- * The filter modes the column's editor offers. The column and table flags and
- * option lists apply as they do for the subheader's mode button: the column's
+ * The filter modes the column's editor offers. The column's
  * `enableColumnFilterModes` and `columnFilterModeOptions` win over the
- * table's, and no list offers every mode (only the range modes for a range
- * variant). A checkbox or range slider offers none, as in the subheader.
+ * table's, and no list offers every mode. A range variant offers only the
+ * range modes the column's or table's list names (every range mode when
+ * neither sets a list). A checkbox or range slider offers none, as in the
+ * subheader.
  */
 export const getFilterModeOptions = <TData extends ST_RowData>(
   column: ST_Column<TData>,

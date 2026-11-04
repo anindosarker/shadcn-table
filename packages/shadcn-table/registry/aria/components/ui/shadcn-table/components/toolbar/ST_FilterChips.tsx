@@ -29,6 +29,7 @@ import {
   ST_ColumnPicker,
 } from '@/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker';
 import { ST_FilterEditor } from '@/components/ui/shadcn-table/components/toolbar/ST_FilterEditor';
+import { flashST_Highlight } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 import { useST_PopupResize } from '@/components/ui/shadcn-table/hooks/useST_PopupResize';
 
 const editorClassName = 'w-auto min-w-65';
@@ -410,20 +411,10 @@ export const ST_FilterChips = <TData extends ST_RowData>({
   useEffect(() => {
     if (!openColumnId || (openAnchor !== 'toolbar' && openAnchor !== 'header'))
       return;
-    topToolbarRef.current
-      ?.querySelector<HTMLElement>(
-        `[data-filter-chip="${CSS.escape(openColumnId)}"]`,
-      )
-      ?.animate(
-        [
-          {
-            boxShadow:
-              'inset 0 0 0 100vmax color-mix(in srgb, var(--primary) 25%, transparent)',
-          },
-          { boxShadow: 'inset 0 0 0 100vmax transparent' },
-        ],
-        { duration: 600, easing: 'ease-out' },
-      );
+    const chip = topToolbarRef.current?.querySelector<HTMLElement>(
+      `[data-filter-chip="${CSS.escape(openColumnId)}"]`,
+    );
+    if (chip) flashST_Highlight(chip);
   }, [openAnchor, openColumnId, topToolbarRef]);
 
   const headerColumn =
