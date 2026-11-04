@@ -56,6 +56,7 @@ export const PaginationEnabledDefaultMoreData = () => (
   <ShadcnTable
     columns={columns}
     data={moreData}
+    paginationDisplayMode="default"
     stTableContainerProps={{
       className: 'min-h-[600px]',
     }}

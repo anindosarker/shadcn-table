@@ -56,7 +56,12 @@ const data = [...Array(100)].map(() => ({
 }));
 
 export const ColumnOrderingEnabled = () => (
-  <ShadcnTable columns={columns} data={data} enableColumnOrdering />
+  <ShadcnTable columns={columns} data={data} />
+);
+
+// Ordering is on by default; `false` makes the headers static.
+export const ColumnOrderingDisabled = () => (
+  <ShadcnTable columns={columns} data={data} enableColumnOrdering={false} />
 );
 
 export const DisplayColumnOrderingEnabled = () => (
@@ -64,7 +69,6 @@ export const DisplayColumnOrderingEnabled = () => (
     columns={columns}
     data={data}
     defaultDisplayColumn={{ enableColumnOrdering: true }}
-    enableColumnOrdering
     enableRowActions
     enableRowDragging
     enableRowNumbers
@@ -103,35 +107,19 @@ export const ColumnOrderingDisabledPerColumn = () => (
       },
     ]}
     data={data}
-    enableColumnOrdering
   />
 );
 
 export const ColumnOrderingWithSelect = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnOrdering
-    enableRowSelection
-  />
+  <ShadcnTable columns={columns} data={data} enableRowSelection />
 );
 
 export const ColumnOrderingWithPinning = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnOrdering
-    enableColumnPinning
-  />
+  <ShadcnTable columns={columns} data={data} />
 );
 
 export const ColumnOrderingNoDragHandles = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnDragging={false}
-    enableColumnOrdering
-  />
+  <ShadcnTable columns={columns} data={data} enableColumnDragging={false} />
 );
 
 export const ColumnOrderingStateManaged = () => {
@@ -143,7 +131,6 @@ export const ColumnOrderingStateManaged = () => {
       columns={columns}
       data={data}
       defaultDisplayColumn={{ enableColumnOrdering: true, enableHiding: true }}
-      enableColumnOrdering
       enableRowSelection
       onColumnOrderChange={setColumnOrder}
       state={{ columnOrder }}
@@ -161,7 +148,6 @@ export const ColumnOrderingStateManagedCustom = () => {
       columns={columns}
       data={data}
       defaultDisplayColumn={{ enableColumnOrdering: true, enableHiding: true }}
-      enableColumnOrdering
       enableRowSelection
       onColumnOrderChange={setColumnOrder}
       state={{ columnOrder }}
@@ -176,7 +162,6 @@ export const ColumnOrderingEnabledWithColumnVirtualization = () => (
     }}
     columns={columns}
     data={data}
-    enableColumnOrdering
     enableColumnVirtualization
   />
 );

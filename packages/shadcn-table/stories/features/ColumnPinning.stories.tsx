@@ -45,14 +45,18 @@ const data = [...Array(100)].map(() => ({
 }));
 
 export const ColumnPinningEnabled = () => (
-  <ShadcnTable columns={columns} data={data} enableColumnPinning />
+  <ShadcnTable columns={columns} data={data} />
+);
+
+// Pinning is on by default; `false` drops the pin items from the column menu.
+export const ColumnPinningDisabled = () => (
+  <ShadcnTable columns={columns} data={data} enableColumnPinning={false} />
 );
 
 export const ColumnPinningInitial = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnPinning
     initialState={{ columnPinning: { start: ['email'], end: ['state'] } }}
   />
 );
@@ -87,24 +91,17 @@ export const ColumnPinningDisabledPerColumn = () => (
       },
     ]}
     data={data}
-    enableColumnPinning
   />
 );
 
 export const ColumnPinningWithSelect = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnPinning
-    enableRowSelection
-  />
+  <ShadcnTable columns={columns} data={data} enableRowSelection />
 );
 
 export const ColumnPinningWithDetailPanel = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnPinning
     enableExpanding
     renderDetailPanel={() => <h1>Hi</h1>}
   />

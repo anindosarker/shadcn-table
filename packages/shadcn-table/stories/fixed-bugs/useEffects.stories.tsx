@@ -72,6 +72,7 @@ export const FilterModesRefetch = () => {
       columns={columns}
       data={data}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
       onColumnFiltersChange={setColumnFilters}
       state={{ columnFilters }}
@@ -121,6 +122,7 @@ export const FilterOptionsAsync = () => {
       columns={columns}
       data={data}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
     />
   );
@@ -321,6 +323,7 @@ export const DelayedFacetedValues = () => {
       ]}
       data={tableData}
       enableFacetedValues
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
       state={{
         isLoading,

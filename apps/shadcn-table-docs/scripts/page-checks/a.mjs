@@ -206,7 +206,7 @@ const checks = {
     await codeToggle(
       page,
       'alternate-pagination',
-      "paginationDisplayMode: 'pages'",
+      "paginationDisplayMode: 'default'",
       check,
     );
     const remote = await example(page, 'remote', check);

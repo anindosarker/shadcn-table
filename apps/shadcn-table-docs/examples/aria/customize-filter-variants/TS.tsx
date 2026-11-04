@@ -92,6 +92,7 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data,
+    columnFilterDisplayMode: 'subheader',
     initialState: { showColumnFilters: true },
   });
 

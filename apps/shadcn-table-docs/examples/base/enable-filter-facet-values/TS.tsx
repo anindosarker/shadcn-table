@@ -52,6 +52,7 @@ const Example = () => {
     columns,
     data,
     enableFacetedValues: true,
+    columnFilterDisplayMode: 'subheader',
     initialState: { showColumnFilters: true },
   });
 

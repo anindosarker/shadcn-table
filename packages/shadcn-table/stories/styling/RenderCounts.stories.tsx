@@ -781,7 +781,7 @@ export const RowModelFollowsState = {
             Group by age
           </button>
           <button onClick={() => table.resetColumnFilters()} type="button">
-            Clear filters
+            Reset filters
           </button>
         </div>
       )}
@@ -818,7 +818,7 @@ export const RowModelFollowsState = {
         'P21-child',
       ]),
     );
-    await userEvent.click(canvas.getByText('Clear filters'));
+    await userEvent.click(canvas.getByText('Reset filters'));
     await userEvent.click(canvas.getByText('Group by age'));
     // five collapsed age groups of five rows each
     await waitFor(() =>
@@ -859,6 +859,11 @@ export const ControlledDensityAndSelection = {
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
+    // the pinned density button steps compact, comfortable, spacious
+    await userEvent.click(canvas.getByLabelText('Toggle density'));
+    await waitFor(() =>
+      expect(canvas.getByTestId('owner-density')).toHaveTextContent('spacious'),
+    );
     await userEvent.click(canvas.getByLabelText('Toggle density'));
     await waitFor(() =>
       expect(canvas.getByTestId('owner-density')).toHaveTextContent('compact'),

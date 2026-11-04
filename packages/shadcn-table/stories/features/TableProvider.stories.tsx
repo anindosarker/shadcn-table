@@ -56,7 +56,11 @@ const dataCellClass = (root: HTMLElement) =>
 // summary and two toolbar buttons of the owner's own layout, the top toolbar
 // and the table container. No piece takes a `table` prop.
 const HandComposedTable = () => {
-  const table = useShadcnTable({ columns, data });
+  const table = useShadcnTable({
+    columns,
+    data,
+    paginationDisplayMode: 'default',
+  });
   return (
     <ST_TableProvider table={table}>
       <div className="flex flex-col gap-2 rounded-md border p-2">
@@ -161,6 +165,7 @@ const ProvidedTable = ({ id, rows }: { id: string; rows: Person[] }) => {
     columns,
     data: rows,
     id,
+    paginationDisplayMode: 'default',
     renderTopToolbarCustomActions: () => (
       <ContextReader label={`${id}-inner`} />
     ),
@@ -205,8 +210,18 @@ const MountId = () => {
 // The reader follows the new table, and the subtree under the provider
 // remounts, so no state of the first table's components carries over.
 const SwappedTable = () => {
-  const first = useShadcnTable({ columns, data: data.slice(0, 2), id: 'a' });
-  const second = useShadcnTable({ columns, data: data.slice(2), id: 'b' });
+  const first = useShadcnTable({
+    columns,
+    data: data.slice(0, 2),
+    id: 'a',
+    paginationDisplayMode: 'default',
+  });
+  const second = useShadcnTable({
+    columns,
+    data: data.slice(2),
+    id: 'b',
+    paginationDisplayMode: 'default',
+  });
   const [swapped, setSwapped] = useState(false);
   return (
     <>
@@ -279,7 +294,9 @@ export const PortalsReadContext = {
     await userEvent.hover(canvas.getByText('Mason'));
     await userEvent.hover(canvas.getByLabelText('Toggle density'));
     await waitFor(() =>
-      expect(body.getAllByText('Toggle density').length).toBeGreaterThan(0),
+      expect(body.getAllByText('Density: Comfortable').length).toBeGreaterThan(
+        0,
+      ),
     );
   },
 };

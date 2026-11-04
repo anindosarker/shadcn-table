@@ -62,7 +62,7 @@ const bodyOrder = (root: ParentNode) =>
 const expectOrder = (root: ParentNode, names: string[]) =>
   waitFor(() => expect(bodyOrder(root)).toEqual(names));
 
-// The pagination label, `1-5 of 8`.
+// The pagination label, `1-5 of 8` (`paginationDisplayMode: 'default'`).
 const expectLabel = (root: ParentNode, label: string) =>
   waitFor(() =>
     expect(
@@ -278,6 +278,7 @@ export const SelectAllPageMode = () => (
     enableRowPinning
     enableRowSelection
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    paginationDisplayMode="default"
     rowPinningDisplayMode="select-sticky"
   />
 );
@@ -327,6 +328,7 @@ export const SelectAllAllMode = () => (
     enableRowPinning
     enableRowSelection
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    paginationDisplayMode="default"
     rowPinningDisplayMode="select-sticky"
     selectAllMode="all"
   />

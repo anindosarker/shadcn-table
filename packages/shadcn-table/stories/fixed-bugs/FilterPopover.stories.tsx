@@ -54,6 +54,7 @@ export const OpensWithInputFocused = {
 export const EmptyModeChipClearHasName = {
   render: () => (
     <ShadcnTable
+      columnFilterDisplayMode="subheader"
       columns={columns}
       data={data}
       enableColumnFilterModes
