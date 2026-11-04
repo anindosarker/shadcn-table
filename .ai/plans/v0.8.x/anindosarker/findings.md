@@ -154,3 +154,7 @@
 ### F36 Pin to toolbar does nothing in a custom toolbar
 
 - `/docs/examples/advanced` (Base UI): the pin buttons in the view settings panel toggle `viewSettings.pins` but nothing appears, because the pinned icon buttons are rendered by `ST_ViewSettingsItems` inside `ST_ToolbarInternalButtons` only (`components/toolbar/ST_ToolbarInternalButtons.tsx`), and a custom `renderTopToolbar` or `renderToolbarInternalActions` that renders `ST_ViewSettingsButton` (F27) has no items. Owner, 2026-11-04 22:36: "Pinning doesn't work." Library fix (D11): `ST_ViewSettingsButton` renders `ST_ViewSettingsItems` before itself whenever it is not inside the stock internal button group (a context flag set by `ST_ToolbarInternalButtons`, which keeps rendering the items in the D8 order), so pins show next to the button in every toolbar; a play with a custom `renderTopToolbar`: pin Density, its stepper appears beside the button.
+
+### F37 Advanced example uses window.alert for its actions
+
+- `/docs/examples/advanced` (`apps/shadcn-table-docs/examples/<base>/advanced/TS.tsx`, the Activate, Deactivate and Contact buttons and the row action items): each action calls `alert(...)`, a browser dialog. Owner, 2026-11-04 22:38: open a modal instead, the advanced example should show the shadcn `Dialog` (or `AlertDialog`) part with the message and the selected names. Docs story with F33 to F35.
