@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-04 22:05
+Updated: 2026-11-04 22:25
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- |
@@ -16,7 +16,7 @@ Updated: 2026-11-04 22:05
 | Toolbar and filters (06.1)     |     |     |     |     |     | [x] |     |     |
 | Cells and layout (06.1)        |     |     |     |     |     | [x] |     |     |
 | Docs app (06.2)                |     |     |     |     |     | [x] |     |     |
-| Multi-select filter fix F29    |     |     |     |     |     | [ ] |     |     |
+| Multi-select filter fix F29    |     |     |     |     |     | [x] |     |     |
 | Stories and DefaultLook (06.2) |     |     |     |     |     |     | [ ] |     |
 | Release 0.8.0 (07)             |     |     |     |     |     |     |     | ·   |
 
