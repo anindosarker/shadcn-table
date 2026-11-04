@@ -91,6 +91,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - The popover filter funnel no longer adds its own margin beside the header label.
 - With `renderDetailPanel`, a row whose panel renders nothing keeps a disabled expand button and Expand all skips it, instead of opening an empty detail row; rows with sub rows still expand.
 
+#### Fix F29
+
+- A `multi-select` filter on a column of plain values keeps the rows whose value is picked; array values still match on any overlap and an empty selection keeps every row (`arrIncludesSome`, the variant's default).
+
 ### Docs
 
 #### Spec 06
