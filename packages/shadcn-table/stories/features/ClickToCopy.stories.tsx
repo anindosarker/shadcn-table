@@ -212,8 +212,10 @@ export const ClickCopiesValue = {
       await waitFor(
         () =>
           expect(
-            document.querySelector('[data-slot="tooltip-content"]'),
-          ).toHaveTextContent('Copied to clipboard'),
+            [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
+              (tooltip) => tooltip.textContent,
+            ),
+          ).toContain('Copied to clipboard'),
         { timeout: 2500 },
       );
     } finally {
