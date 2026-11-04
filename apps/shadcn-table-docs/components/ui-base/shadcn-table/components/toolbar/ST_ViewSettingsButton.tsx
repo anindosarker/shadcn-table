@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui-base/button';
 import {
@@ -32,7 +33,9 @@ import {
   ST_DENSITY_VALUES,
   ST_GRID_LINES_VALUES,
   setViewToggle,
+  ST_InternalButtonsContext,
   ST_ViewItemIcon,
+  ST_ViewSettingsItems,
 } from '@/components/ui-base/shadcn-table/components/toolbar/ST_ViewSettingsItems';
 import { resetST_View } from '@/components/ui-base/shadcn-table/hooks/useST_ViewPersistence';
 
@@ -154,86 +157,90 @@ export const ST_ViewSettingsButton = <TData extends ST_RowData>({
     localization,
   } = table.options;
   const pins = useSelector(table.atoms.viewSettings, (state) => state.pins);
+  const { insideInternalButtons } = useContext(ST_InternalButtonsContext);
 
   return (
-    <Popover>
-      <ST_Tooltip title={localization.viewSettings}>
-        <PopoverTrigger
-          render={
-            <Button
-              aria-label={localization.viewSettings}
-              size="icon"
-              type="button"
-              variant="ghost"
-            />
-          }
-        >
-          <SettingsIcon />
-        </PopoverTrigger>
-      </ST_Tooltip>
-      <PopoverContent align="end" className="w-80 gap-0 p-1" sideOffset={8}>
-        {getViewSettingsItems(table).map((id) => {
-          const label = getViewItemLabel(id, localization);
-          const pinned = pins.includes(id);
-          const pinLabel = pinned
-            ? localization.unpinFromToolbar
-            : localization.pinToToolbar;
-          return (
-            <div
-              className="flex min-h-9 items-center gap-2 ps-2"
-              data-view-setting={id}
-              key={id}
-            >
-              <ST_ViewItemIcon
-                className="size-4 shrink-0 text-muted-foreground"
-                id={id}
-                table={table}
+    <>
+      {!insideInternalButtons && <ST_ViewSettingsItems table={table} />}
+      <Popover>
+        <ST_Tooltip title={localization.viewSettings}>
+          <PopoverTrigger
+            render={
+              <Button
+                aria-label={localization.viewSettings}
+                size="icon"
+                type="button"
+                variant="ghost"
               />
-              <span className="flex-1 text-sm">{label}</span>
-              <ST_ViewSettingsControl id={id} label={label} table={table} />
-              <ST_Tooltip title={pinLabel}>
-                <Button
-                  aria-label={`${pinLabel}: ${label}`}
-                  aria-pressed={pinned}
-                  onClick={() =>
-                    table.setViewSettings((old) => ({
-                      ...old,
-                      pins: old.pins.includes(id)
-                        ? old.pins.filter((pin) => pin !== id)
-                        : [...old.pins, id],
-                    }))
-                  }
-                  size="icon-sm"
-                  type="button"
-                  variant="ghost"
-                >
-                  {pinned ? (
-                    <PushPinIcon
-                      className="animate-in fade-in zoom-in-75 duration-200 motion-reduce:animate-none"
-                      key="pinned"
-                    />
-                  ) : (
-                    <PushPinOffIcon
-                      className="animate-in fade-in zoom-in-75 duration-200 motion-reduce:animate-none"
-                      key="unpinned"
-                    />
-                  )}
-                </Button>
-              </ST_Tooltip>
-            </div>
-          );
-        })}
-        <Separator className="my-1" />
-        <Button
-          className="justify-start"
-          onClick={() => resetST_View(table)}
-          type="button"
-          variant="ghost"
-        >
-          <RestartAltIcon />
-          {localization.resetView}
-        </Button>
-      </PopoverContent>
-    </Popover>
+            }
+          >
+            <SettingsIcon />
+          </PopoverTrigger>
+        </ST_Tooltip>
+        <PopoverContent align="end" className="w-80 gap-0 p-1" sideOffset={8}>
+          {getViewSettingsItems(table).map((id) => {
+            const label = getViewItemLabel(id, localization);
+            const pinned = pins.includes(id);
+            const pinLabel = pinned
+              ? localization.unpinFromToolbar
+              : localization.pinToToolbar;
+            return (
+              <div
+                className="flex min-h-9 items-center gap-2 ps-2"
+                data-view-setting={id}
+                key={id}
+              >
+                <ST_ViewItemIcon
+                  className="size-4 shrink-0 text-muted-foreground"
+                  id={id}
+                  table={table}
+                />
+                <span className="flex-1 text-sm">{label}</span>
+                <ST_ViewSettingsControl id={id} label={label} table={table} />
+                <ST_Tooltip title={pinLabel}>
+                  <Button
+                    aria-label={`${pinLabel}: ${label}`}
+                    aria-pressed={pinned}
+                    onClick={() =>
+                      table.setViewSettings((old) => ({
+                        ...old,
+                        pins: old.pins.includes(id)
+                          ? old.pins.filter((pin) => pin !== id)
+                          : [...old.pins, id],
+                      }))
+                    }
+                    size="icon-sm"
+                    type="button"
+                    variant="ghost"
+                  >
+                    {pinned ? (
+                      <PushPinIcon
+                        className="animate-in fade-in zoom-in-75 duration-200 motion-reduce:animate-none"
+                        key="pinned"
+                      />
+                    ) : (
+                      <PushPinOffIcon
+                        className="animate-in fade-in zoom-in-75 duration-200 motion-reduce:animate-none"
+                        key="unpinned"
+                      />
+                    )}
+                  </Button>
+                </ST_Tooltip>
+              </div>
+            );
+          })}
+          <Separator className="my-1" />
+          <Button
+            className="justify-start"
+            onClick={() => resetST_View(table)}
+            type="button"
+            variant="ghost"
+          >
+            <RestartAltIcon />
+            {localization.resetView}
+          </Button>
+        </PopoverContent>
+      </Popover>
+    </>
   );
 };

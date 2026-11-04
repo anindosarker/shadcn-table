@@ -12,7 +12,10 @@ import { ST_ToggleGlobalFilterButton } from '@/components/ui-radix/shadcn-table/
 import { ST_FilterPickerButton } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterChips';
 import { ST_SortPopover } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_SortPopover';
 import { ST_ViewSettingsButton } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsButton';
-import { ST_ViewSettingsItems } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsItems';
+import {
+  ST_InternalButtonsContext,
+  ST_ViewSettingsItems,
+} from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsItems';
 import { useSTContext } from '@/components/ui-radix/shadcn-table/hooks/stTableHook';
 
 export type ST_ToolbarInternalButtonsProps = DivProps;
@@ -55,7 +58,9 @@ export const ST_ToolbarInternalButtons = <TData extends ST_RowData>({
       {renderToolbarInternalActions?.({
         table,
       }) ?? (
-        <>
+        <ST_InternalButtonsContext.Provider
+          value={{ insideInternalButtons: true }}
+        >
           {enableFilters &&
             enableGlobalFilter &&
             !initialState?.showGlobalFilter && <ST_ToggleGlobalFilterButton />}
@@ -82,7 +87,7 @@ export const ST_ToolbarInternalButtons = <TData extends ST_RowData>({
           {enableViewSettings === true && (
             <ST_ViewSettingsButton table={table} />
           )}
-        </>
+        </ST_InternalButtonsContext.Provider>
       )}
     </div>
   );
