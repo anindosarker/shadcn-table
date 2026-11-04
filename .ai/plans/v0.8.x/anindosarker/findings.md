@@ -137,7 +137,7 @@
 
 ### F32 Home demo: the edited column is off-screen
 
-- `/` home demo (`apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx`): the 15 DefaultLook columns overflow the frame, so the Editing step changes Estimate out of view and the visitor sees nothing happen. Owner, 2026-11-04 22:24: "The editing demo is not visible. I think you have too many columns." Fix: the demo renders the seven columns its steps use (Name, Status, Assignee, Project, Due, Estimate, Priority); the data stays. Docs fix story.
+- `/` home demo (`apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx`): the 15 DefaultLook columns overflow the frame, so the Editing step changes Estimate out of view and the visitor sees nothing happen. Owner, 2026-11-04 22:24: "The editing demo is not visible. I think you have too many columns." Fix: the demo renders the seven columns its steps use (Name, Status, Assignee, Project, Due, Estimate, Priority); the data stays. Docs fix story. Fixed 2026-11-04 (PR #110) with a compromise: the frame beside the 300 px steps panel is 828 px at 1440 px, so the sizes shrank (Name 150, Status 105, Assignee 115, Project 100, Due 110, Estimate 110, Priority 85) and most header labels truncate ("St...", "Assi..."). The docs polish story (F33) restores readable headers: the steps panel narrows (or stacks under the table below 1440 px) in `components/dev-home/v12/v12.css` / `v5.css` so the table gets about 960 px, and the sizes go back to the demo's.
 
 ### F33 Home demo steps apply state without showing the interaction
 
