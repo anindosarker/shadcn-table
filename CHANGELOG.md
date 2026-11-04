@@ -83,6 +83,14 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - The prop tables list every new option, column option and state slice with its shipped default.
 - New Persistent View example (`persistViewSettings` with column icons) in all three bases; the Multi-Sorting example works through the sort editor.
 
+#### Spec 06.2
+
+- Every example column carries a Lucide icon; loop-built columns take theirs from a lookup by key.
+- The home demo renders the stock table on the header demo's data, and its replay plays the sort editor, search, a cell edit, a filter chip, a column move and the view settings.
+- The Persistent View example renders the header demo's 50 rows and 15 columns.
+- The filtering examples use the filter chips; the new Subheader Filters Example keeps the filter row under the headers with the filter variants and the filter mode picker (`columnFilterDisplayMode: 'subheader'`).
+- The docs prose spacing no longer clips the pagination of the example previews; the Chart Detail Panel example draws its lines; the editing examples put the actions column first; the custom toolbar examples show the view settings button.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed
