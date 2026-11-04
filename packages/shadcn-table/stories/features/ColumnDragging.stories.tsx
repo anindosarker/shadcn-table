@@ -59,6 +59,36 @@ const headerNames = (canvasElement: HTMLElement) =>
     (th.textContent ?? '').trim(),
   );
 
+const headerCell = (canvasElement: HTMLElement, name: string) =>
+  [...canvasElement.querySelectorAll<HTMLElement>('thead th')].find((th) =>
+    (th.textContent ?? '').trim().startsWith(name),
+  ) as HTMLElement;
+
+const bodyCell = (canvasElement: HTMLElement, id: string) =>
+  canvasElement.querySelector<HTMLElement>(
+    `tbody [data-flip-column="${id}"]`,
+  ) as HTMLElement;
+
+/** Ends the drag with `dropEffect`: `none` is Escape or a drop outside. */
+const dragEnd = (element: HTMLElement, dropEffect: 'move' | 'none') => {
+  const event = new DragEvent('dragend', { bubbles: true });
+  Object.defineProperty(event, 'dataTransfer', { value: { dropEffect } });
+  fireEvent(element, event);
+};
+
+/** A dragover on the table with the pointer over the middle of `target`. */
+const dragOverSlot = (canvasElement: HTMLElement, target: HTMLElement) => {
+  const rect = target.getBoundingClientRect();
+  fireEvent.dragOver(canvasElement.querySelector('table') as HTMLElement, {
+    clientX: rect.left + rect.width / 2,
+    clientY: rect.top + rect.height / 2,
+  });
+};
+
+/**
+ * The header cell is the drag source: mid-drag only the headers slide, the
+ * body stays still; the drop reorders and the body cells catch up.
+ */
 export const ColumnDraggingEnabled = {
   render: () => (
     <ShadcnTable
@@ -72,7 +102,125 @@ export const ColumnDraggingEnabled = {
     const canvas = within(canvasElement);
     const headers = await canvas.findAllByRole('columnheader');
     expect(headers[0]).toHaveTextContent('First Name');
-    expect(headers[2]).toHaveTextContent('Email Address');
+    expect(headers[0]).toHaveAttribute('draggable', 'true');
+    expect(
+      within(headers[0]).queryByRole('button', { name: 'Move' }),
+    ).toBeNull();
+
+    const source = headerCell(canvasElement, 'First Name');
+    fireEvent.dragStart(source);
+    dragOverSlot(canvasElement, headerCell(canvasElement, 'Last Name'));
+    await waitFor(() =>
+      expect(
+        parseFloat(headerCell(canvasElement, 'Last Name').style.translate),
+      ).toBeLessThan(0),
+    );
+    expect(bodyCell(canvasElement, 'lastName').style.translate).toBe('');
+    expect(
+      getComputedStyle(bodyCell(canvasElement, 'lastName')).translate,
+    ).toBe('none');
+
+    dragEnd(source, 'move');
+    await waitFor(() =>
+      expect(headerNames(canvasElement)).toEqual([
+        'Last Name',
+        'First Name',
+        'Email Address',
+        'Address',
+        'City',
+        'State',
+      ]),
+    );
+    expect(
+      bodyCell(canvasElement, 'firstName').getAnimations().length,
+    ).toBeGreaterThan(0);
+    expect(headerCell(canvasElement, 'Last Name').style.translate).toBe('');
+  },
+};
+
+/** Escape (a drag that ends with no drop effect) reorders nothing. */
+export const ColumnDraggingCancelled = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableColumnDragging
+      enableColumnOrdering
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('columnheader');
+    const source = headerCell(canvasElement, 'First Name');
+    fireEvent.dragStart(source);
+    dragOverSlot(canvasElement, headerCell(canvasElement, 'City'));
+    await waitFor(() =>
+      expect(headerCell(canvasElement, 'City').style.translate).not.toBe(''),
+    );
+    dragEnd(source, 'none');
+    await waitFor(() =>
+      expect(headerCell(canvasElement, 'City').style.translate).toBe(''),
+    );
+    expect(headerNames(canvasElement)).toEqual([
+      'First Name',
+      'Last Name',
+      'Email Address',
+      'Address',
+      'City',
+      'State',
+    ]);
+  },
+};
+
+/**
+ * A locked column looks normal at rest and shows the striped Fixed overlay
+ * only while another column drags.
+ */
+export const ColumnDraggingLockedColumn = {
+  render: () => (
+    <ShadcnTable
+      columns={columns.map((column) =>
+        column.header === 'Email Address'
+          ? { ...column, enableColumnOrdering: false }
+          : column,
+      )}
+      data={data}
+      enableColumnOrdering
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('columnheader');
+    const locked = headerCell(canvasElement, 'Email Address');
+    expect(locked).not.toHaveAttribute('draggable');
+    const overlay = within(locked).getByText('Fixed').closest('span');
+    expect(overlay).toHaveClass('opacity-0');
+
+    const source = headerCell(canvasElement, 'First Name');
+    fireEvent.dragStart(source);
+    await waitFor(() => expect(overlay).toHaveClass('opacity-100'));
+    dragOverSlot(canvasElement, locked);
+    expect(locked.style.translate).toBe('');
+    dragEnd(source, 'none');
+    await waitFor(() => expect(overlay).toHaveClass('opacity-0'));
+    expect(headerNames(canvasElement)[2]).toMatch(/^Email Address/);
+  },
+};
+
+/** With `showColumnDragHandle` the grip renders and drags the column too. */
+export const ColumnDraggingWithGrip = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableColumnDragging
+      enableColumnOrdering
+      showColumnDragHandle
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const headers = await canvas.findAllByRole('columnheader');
     const handle = within(headers[0]).getByRole('button', { name: 'Move' });
     fireEvent.dragStart(handle);
     fireEvent.dragEnter(headers[2]);

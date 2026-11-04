@@ -93,3 +93,7 @@ export {
 } from '@/components/ui-base/shadcn-table/components/body/ST_OverflowText';
 export * from '@/components/ui-base/shadcn-table/components/table/ST_ScrollButtons';
 export * from '@/components/ui-base/shadcn-table/hooks/useST_HorizontalOverflow';
+// spec 03
+export * from '@/components/ui-base/shadcn-table/components/head/ST_TableHeadCellLockedOverlay';
+export { useST_ColumnFlip } from '@/components/ui-base/shadcn-table/hooks/useST_ColumnFlip';
+export { useST_DragAutoScroll } from '@/components/ui-base/shadcn-table/hooks/useST_DragAutoScroll';

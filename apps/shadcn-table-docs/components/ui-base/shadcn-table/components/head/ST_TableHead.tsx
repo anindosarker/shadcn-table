@@ -9,13 +9,15 @@ import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/
 import { ST_ToolbarAlertBanner } from '@/components/ui-base/shadcn-table/components/toolbar/ST_ToolbarAlertBanner';
 import { ST_TableHeadRow } from '@/components/ui-base/shadcn-table/components/head/ST_TableHeadRow';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
+import { useST_ColumnFlip } from '@/components/ui-base/shadcn-table/hooks/useST_ColumnFlip';
 import { useST_ComposedRef } from '@/components/ui-base/shadcn-table/hooks/useST_ComposedRef';
+import { useST_DragAutoScroll } from '@/components/ui-base/shadcn-table/hooks/useST_DragAutoScroll';
 
 export interface ST_TableHeadProps extends TableHeadProps {
   columnVirtualizer?: ST_ColumnVirtualizer;
 }
 
-const tableHeadVariants = cva('opacity-[0.97]', {
+const tableHeadVariants = cva('', {
   variants: {
     layout: { grid: 'grid', semantic: '' },
     sticky: { true: 'sticky z-2', false: 'relative' },
@@ -45,6 +47,9 @@ export const ST_TableHead = <TData extends ST_RowData>({
 
   const attachRef = useST_ComposedRef(tableHeadRef, tableHeadProps.ref);
 
+  useST_ColumnFlip(table);
+  useST_DragAutoScroll(table);
+
   const isHeadOverlay = positionToolbarAlertBanner === 'head-overlay';
 
   // The header groups follow column order, pinning, visibility and grouping;
@@ -59,10 +64,12 @@ export const ST_TableHead = <TData extends ST_RowData>({
         isFullScreen: state.isFullScreen,
         rowSelection: isHeadOverlay ? state.rowSelection : null,
         showAlertBanner: isHeadOverlay ? state.showAlertBanner : null,
+        stickyHeaderSetting: state.viewSettings.stickyHeader,
       })}
     >
-      {({ isFullScreen, showAlertBanner }) => {
-        const stickyHeader = enableStickyHeader || isFullScreen;
+      {({ isFullScreen, showAlertBanner, stickyHeaderSetting }) => {
+        const stickyHeader =
+          enableStickyHeader || isFullScreen || stickyHeaderSetting;
 
         return (
           <thead

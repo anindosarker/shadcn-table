@@ -1,118 +1,57 @@
-import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ButtonProps,
   type ST_Header,
   type ST_RowData,
 } from '@/components/ui-base/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui-base/shadcn-table/components/buttons/ST_Tooltip';
 
 export interface ST_TableHeadCellSortLabelProps<TData extends ST_RowData>
   extends ButtonProps {
   header: ST_Header<TData>;
 }
 
-const tableHeadCellSortLabelVariants = cva(
-  'inline-flex w-[3ch] flex-[0_0] cursor-pointer items-center justify-start [flex-direction:inherit] outline-none transition-all duration-150 ease-in-out focus-visible:ring-[3px] focus-visible:ring-ring/50 [&_svg]:mx-1 [&_svg]:size-4.5 [&_svg]:text-muted-foreground [&_svg]:transition-[opacity,transform,rotate] [&_svg]:duration-200 [&_svg]:select-none dark:[&_svg]:text-foreground',
-  {
-    variants: {
-      direction: {
-        asc: '[&_svg]:rotate-180',
-        desc: '[&_svg]:rotate-0',
-      },
-      isSorted: {
-        true: 'opacity-100',
-        false: 'opacity-30',
-      },
-    },
-  },
-);
-
+/**
+ * The static sort arrow of a sorted header; renders nothing while the column
+ * is unsorted. Sorting happens from the column menu or the sort editor.
+ */
 export const ST_TableHeadCellSortLabel = <TData extends ST_RowData>({
+  className,
   header,
-  ...rest
 }: ST_TableHeadCellSortLabelProps<TData>) => {
   const table = header.table;
   const {
     options: {
-      icons: { ArrowDownwardIcon, SyncAltIcon },
+      icons: { ArrowDownwardIcon, ArrowUpwardIcon },
       localization,
+      showSortIndex,
     },
   } = table;
   const { column } = header;
-  const { columnDef } = column;
 
   return (
-    <table.Subscribe
-      selector={(state) => ({
-        isLoading: state.isLoading,
-        showSkeletons: state.showSkeletons,
-        sorting: state.sorting,
-      })}
-    >
-      {({ isLoading, showSkeletons, sorting }) => {
-        const isSorted = !!column.getIsSorted();
-
-        const sortTooltip =
-          isLoading || showSkeletons
-            ? ''
-            : column.getIsSorted()
-              ? column.getIsSorted() === 'desc'
-                ? localization.sortedByColumnDesc.replace(
-                    '{column}',
-                    columnDef.header,
-                  )
-                : localization.sortedByColumnAsc.replace(
-                    '{column}',
-                    columnDef.header,
-                  )
-              : column.getNextSortingOrder() === 'desc'
-                ? localization.sortByColumnDesc.replace(
-                    '{column}',
-                    columnDef.header,
-                  )
-                : localization.sortByColumnAsc.replace(
-                    '{column}',
-                    columnDef.header,
-                  );
-
-        const direction = isSorted
-          ? (column.getIsSorted() as 'asc' | 'desc')
-          : undefined;
+    <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
+      {({ sorting }) => {
+        const sorted = column.getIsSorted();
+        if (!sorted) return null;
+        const Icon = sorted === 'asc' ? ArrowUpwardIcon : ArrowDownwardIcon;
+        const sortIndex = column.getSortIndex();
 
         return (
-          <span className="relative inline-flex shrink-0 align-middle">
-            <ST_Tooltip side="top" title={sortTooltip}>
-              <button
-                type="button"
-                aria-label={sortTooltip}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  header.column.getToggleSortingHandler()?.(e);
-                }}
-                {...rest}
-                className={cn(
-                  tableHeadCellSortLabelVariants({
-                    direction,
-                    isSorted,
-                    className: rest.className,
-                  }),
-                )}
-              >
-                {!isSorted ? (
-                  <SyncAltIcon
-                    style={{
-                      transform: 'rotate(-90deg) scaleX(0.9) translateX(-1px)',
-                    }}
-                  />
-                ) : (
-                  <ArrowDownwardIcon />
-                )}
-              </button>
-            </ST_Tooltip>
-            {sorting.length > 1 && column.getSortIndex() >= 0 && (
-              <span className="absolute top-[14%] inset-e-[14%] z-1 flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1.5 text-xs leading-none font-medium">
-                {column.getSortIndex() + 1}
+          <span
+            aria-label={
+              sorted === 'asc'
+                ? localization.sortedAscending
+                : localization.sortedDescending
+            }
+            className={cn(
+              'flex shrink-0 items-center gap-0.5 text-muted-foreground/80',
+              className,
+            )}
+          >
+            <Icon aria-hidden className="size-3" />
+            {showSortIndex && sorting.length > 1 && sortIndex >= 0 && (
+              <span className="text-xs leading-none font-medium tabular-nums">
+                {sortIndex + 1}
               </span>
             )}
           </span>
