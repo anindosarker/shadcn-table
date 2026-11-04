@@ -125,9 +125,9 @@ export const PanelRowsAndRowNumbers = {
     expect(body.getByRole('button', { name: 'Reset view' })).toBeEnabled();
 
     expect(canvas.queryByRole('columnheader', { name: '#' })).toBeNull();
-    await userEvent.click(body.getByRole('switch', { name: 'Row Numbers' }));
+    await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
     await canvas.findByRole('columnheader', { name: '#' });
-    await userEvent.click(body.getByRole('switch', { name: 'Row Numbers' }));
+    await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
     await waitFor(() =>
       expect(canvas.queryByRole('columnheader', { name: '#' })).toBeNull(),
     );
@@ -267,7 +267,7 @@ export const PersistenceWithDisplayColumns = {
     await canvas.findByText('Plan audit log');
 
     await openPanel(canvasElement);
-    await userEvent.click(body.getByRole('switch', { name: 'Row Numbers' }));
+    await userEvent.click(body.getByRole('switch', { name: 'Row numbers' }));
     await canvas.findByRole('columnheader', { name: '#' });
     await waitFor(() =>
       expect(window.localStorage.getItem(STORAGE_KEY)).toContain(

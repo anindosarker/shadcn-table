@@ -35,6 +35,7 @@
   "components/toolbar/ST_ColumnPicker.tsx",
   "components/toolbar/ST_FilterChips.tsx",
   "components/toolbar/ST_FilterEditor.tsx",
+  "components/toolbar/ST_HeaderFilterEditor.tsx",
   "components/toolbar/ST_LinearProgressBar.tsx",
   "components/toolbar/ST_SortPopover.tsx",
   "components/toolbar/ST_TablePagination.tsx",
