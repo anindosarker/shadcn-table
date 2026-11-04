@@ -12,11 +12,11 @@ Gates:
 - `test:radix` at 2b0a0506: red, 517 of 519 (`Accessor Key While Loading`, MenuOpeners `Column Actions`; Attention 1 and 2)
 - `test:base` at 2b0a0506: red, same 2
 - `test:aria` at 2b0a0506: red, `Accessor Key While Loading` and MenuOpeners `Column Actions` (aria-haspopup `true`, fixed in the next commit: MenuOpeners file rerun on aria 4 of 4 green)
-- `storybook:build:base`, `storybook:build:radix`, `storybook:build:aria` at the MenuOpeners commit: green
-- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:bases`, `check:icons`, docs `types:check` and `lint`, `05-check.mjs`, `01-check.mjs` at the MenuOpeners commit: green
+- `storybook:build:base`, `storybook:build:radix`, `storybook:build:aria` at 44fab6ff: green
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:bases`, `check:icons`, docs `types:check` and `lint`, `05-check.mjs`, `01-check.mjs` at 44fab6ff: green
 
 - Milestone 01 Flips and seed: done (e62987b8)
-- Milestone 02 Stories and docs examples: done except the four red items below (2b0a0506 and the MenuOpeners commit)
+- Milestone 02 Stories and docs examples: done except the four red items below (2b0a0506 and 44fab6ff)
 - Milestone 03 Cleanup and gates once: done, gates above
 
 ## Attention
