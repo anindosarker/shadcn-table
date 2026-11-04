@@ -24,17 +24,15 @@ const columns = [
   columnHelper.accessor('id', {
     icon: HashIcon,
     header: 'ID',
-    size: 56,
+    size: 112,
   }),
   columnHelper.accessor('firstName', {
     icon: UserIcon,
     header: 'First Name',
-    size: 120,
   }),
   columnHelper.accessor('lastName', {
     icon: UserIcon,
     header: 'Last Name',
-    size: 120,
   }),
   columnHelper.accessor('company', {
     icon: BuildingIcon,
