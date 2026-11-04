@@ -25,6 +25,8 @@ Gates:
 
 ## Notes
 
+- D57 plays read the animations through a recorder around `Element.prototype.animate` instead of `getAnimations()` after the drop: in the full `test:base` on the loaded machine the real-pointer drag returned after 4.7 s, when the 200 ms slide had finished, and `DropSlidesRows` went red. The recorder asserts the same: the moved row and the first row get a translate slide, row 6 none, the moved row's cells a highlight; under reduced motion no slide and the highlight.
+
 - D57: `hooks/useST_RowFlip.ts` (mounted from `ST_TableBody`) mirrors the column flip's drop path. The grip's dragend measures every unpinned row's top by its row data into the new `rowFlipPending` state (`stRowDraggingFeature`) before the consumer's `onDragEnd` reorders the data; after the commit the hook matches rows by data (index row ids work), slides each moved `tr` with `element.animate()` and flashes the dropped row's cells with `flashST_Highlight`. A row that left the table plays nothing (cross-table drop), as does a drop that changed nothing (the pending clears on the next task). No `registry.ts` entry was needed: `buildBaseItems` lists every file of the tree; `registry.json` regenerated. Detail panel rows do not slide with their parent row (a known limit).
 - `DropNoSlideReducedMotion` emulates reduced motion by stubbing `window.matchMedia` in the play (the library reads the preference through it), since the Vitest browser runner has no media emulation command.
 

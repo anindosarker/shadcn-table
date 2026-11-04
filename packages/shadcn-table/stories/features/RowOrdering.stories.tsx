@@ -372,27 +372,60 @@ const dragFirstRowTwoDown = async (canvasElement: HTMLElement) => {
   return bodyRows(canvasElement)[2];
 };
 
-/** The running translate slides on an element, its highlight excluded. */
-const slides = (element: HTMLElement) =>
-  element
-    .getAnimations()
-    .filter((animation) =>
-      (animation.effect as KeyframeEffect)
-        .getKeyframes()
-        .some((keyframe) => keyframe.translate !== undefined),
-    );
+/**
+ * Records every `element.animate()` call while `run` runs, so a play reads
+ * the drop animations even when a loaded machine returns from the drag after
+ * the 200 ms slide has finished.
+ */
+const recordAnimations = async <T,>(run: () => Promise<T>) => {
+  const started: { element: Element; keyframes: Keyframe[] }[] = [];
+  const animate = Element.prototype.animate;
+  Element.prototype.animate = function (
+    this: Element,
+    keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
+    options?: number | KeyframeAnimationOptions,
+  ) {
+    if (Array.isArray(keyframes)) started.push({ element: this, keyframes });
+    return animate.call(this, keyframes, options);
+  };
+  try {
+    return { result: await run(), started };
+  } finally {
+    Element.prototype.animate = animate;
+  }
+};
+
+type Started = { element: Element; keyframes: Keyframe[] }[];
+
+/** The translate slides started on `element`. */
+const slidesOn = (started: Started, element: Element) =>
+  started.filter(
+    (animation) =>
+      animation.element === element &&
+      animation.keyframes.some((keyframe) => keyframe.translate !== undefined),
+  );
+
+/** The highlights started on `element`'s cells. */
+const highlightsIn = (started: Started, element: Element) =>
+  started.filter(
+    (animation) =>
+      animation.element.parentElement === element &&
+      animation.keyframes.some((keyframe) => keyframe.boxShadow !== undefined),
+  );
 
 // A row drop slides the rows between the old and the new index into place
 // and the moved row flashes the drop highlight (D57).
 export const DropSlidesRows = {
   render: () => <SlideTable />,
   play: async ({ canvasElement }: StoryContext) => {
-    const movedRow = await dragFirstRowTwoDown(canvasElement);
-    expect(movedRow.getAnimations().length).toBeGreaterThan(0);
-    expect(slides(movedRow).length).toBeGreaterThan(0);
-    expect(slides(bodyRows(canvasElement)[0]).length).toBeGreaterThan(0);
+    const { result: movedRow, started } = await recordAnimations(() =>
+      dragFirstRowTwoDown(canvasElement),
+    );
+    expect(slidesOn(started, movedRow).length).toBeGreaterThan(0);
+    expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
+    expect(slidesOn(started, bodyRows(canvasElement)[0]).length).toBe(1);
     // Rows past the new index keep their place.
-    expect(slides(bodyRows(canvasElement)[5]).length).toBe(0);
+    expect(slidesOn(started, bodyRows(canvasElement)[5]).length).toBe(0);
   },
 };
 
@@ -416,11 +449,11 @@ export const DropNoSlideReducedMotion = {
           } as MediaQueryList)
         : matchMedia.call(window, query);
     try {
-      const movedRow = await dragFirstRowTwoDown(canvasElement);
-      expect(slides(movedRow).length).toBe(0);
-      expect(movedRow.getAnimations({ subtree: true }).length).toBeGreaterThan(
-        0,
+      const { result: movedRow, started } = await recordAnimations(() =>
+        dragFirstRowTwoDown(canvasElement),
       );
+      expect(slidesOn(started, movedRow).length).toBe(0);
+      expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
     } finally {
       window.matchMedia = matchMedia;
     }
