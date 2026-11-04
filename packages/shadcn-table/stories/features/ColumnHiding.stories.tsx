@@ -1,3 +1,4 @@
+import { MailIcon, TypeIcon } from 'lucide-react';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
@@ -288,5 +289,40 @@ export const ColumnHidingKeyboardToggle = {
       expect(active?.getAttribute('role')).toBeNull();
       expect(menu.contains(active)).toBe(true);
     });
+  },
+};
+
+/** A column with an icon shows it before its label in the columns menu. */
+export const MenuItemsShowIcons = {
+  render: () => (
+    <ShadcnTable
+      columns={columns.map((column) =>
+        column.accessorKey === 'firstName'
+          ? { ...column, icon: TypeIcon }
+          : column.accessorKey === 'email'
+            ? { ...column, icon: MailIcon }
+            : column,
+      )}
+      data={data}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByRole('columnheader', { name: /First Name/ });
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide columns' }),
+    );
+    const menu = await body.findByRole('menu');
+    const item = (name: string) =>
+      within(menu).getByRole('menuitemcheckbox', { name });
+    expect(item('First Name').querySelector('svg.lucide-type')).not.toBeNull();
+    expect(
+      item('Email Address').querySelector('svg.lucide-mail'),
+    ).not.toBeNull();
+    // A column without an icon shows only the check indicator's svg.
+    expect(
+      item('Last Name').querySelectorAll('svg:not(.lucide-check)'),
+    ).toHaveLength(0);
   },
 };
