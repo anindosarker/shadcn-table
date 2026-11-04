@@ -6,7 +6,7 @@ How to write an implementation plan for this repository. Applies to humans and a
 
 ```
 .ai/plans/<plan>/<git_username>/
-├── <plan>-plan.md       ← the plan (template below); for a multi-spec plan the index: goals, specs, dependency graph with file ownership per spec, integration
+├── <plan>-plan.md       ← the plan (template below); for a multi-spec plan the index: ## Goals, ## Epics, ## Stories (files owned per story); sprints.md beside it
 ├── decisions.md         ← every decision the owner made, grouped, with the why
 ├── 01-<spec>.md         ← optional: one file per spec when the plan is too large for one file
 ├── 02-<spec>.md
@@ -39,10 +39,9 @@ the index then holds what is shared. `<git_username>` is the GitHub login.
 11. **Gates per milestone.** Each milestone names the commands that must pass, per base where the
     repository has bases.
 12. **No em dashes.** Use a comma, a colon or a new sentence.
-13. **Dependency edges need a file reason.** The index names, per edge, the files or symbols
-    one spec must see from the other. Specs without such a reason run at the same time.
-    Sequential specs that touch the same files are planned so the run can collapse them into
-    one file-partitioned fan-out: the index lists each spec's file set.
+13. **Dependency edges need a file reason.** Stories that share no file run in the same
+    sprint; a file dependency puts the later story in a later sprint (sprints.md); the index
+    Stories table lists each story's files.
 ## Template
 
 Numbering is strict: every heading under `## 1.` and `## 2.` carries its dotted number.
