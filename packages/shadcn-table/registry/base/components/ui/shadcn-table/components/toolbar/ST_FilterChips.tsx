@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,18 +19,22 @@ import {
   resetFilterMode,
   summarizeFilterValue,
 } from '@/components/ui/shadcn-table/shared/utils/filterSummary.utils';
-import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
 import {
   ST_ColumnIcon,
   ST_ColumnPicker,
 } from '@/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker';
 import { ST_FilterEditor } from '@/components/ui/shadcn-table/components/toolbar/ST_FilterEditor';
-import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
+import {
+  closeFilterEditor,
+  closeOnEscape,
+  filterEditorClassName,
+  focusFilterInput,
+  getFilterInput,
+} from '@/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor';
 import { flashST_Highlight } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
 import { useST_PopupResize } from '@/components/ui/shadcn-table/hooks/useST_PopupResize';
 
-const editorClassName = 'w-auto min-w-65';
 const pickerClassName =
   'max-h-[min(24rem,var(--available-height))] w-65 gap-0 overflow-hidden p-0';
 
@@ -61,36 +65,6 @@ const useFilterChipColumns = <TData extends ST_RowData>(
   );
   return { chipIds, chips, columnFilters, filterChips, leafColumns };
 };
-
-const getFilterInput = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
-  columnId: string,
-) => table.refs.filterInputRefs.current?.[`${columnId}-0`] ?? null;
-
-const focusFilterInput = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
-  columnId: string,
-) => getFilterInput(table, columnId)?.focus();
-
-/**
- * The filter inputs stop Escape from bubbling to the popover's dismiss
- * handler, so an Escape in an input closes the editor in the capture phase.
- */
-const closeOnEscape =
-  (close: () => void) => (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === 'Escape' && event.target instanceof HTMLInputElement) {
-      close();
-    }
-  };
-
-const closeEditor = <TData extends ST_RowData>(
-  table: ST_TableInstance<TData>,
-) =>
-  table.setFilterChips((old) => ({
-    ...old,
-    openAnchor: null,
-    openColumnId: null,
-  }));
 
 const ST_FilterChip = <TData extends ST_RowData>({
   column,
@@ -141,14 +115,14 @@ const ST_FilterChip = <TData extends ST_RowData>({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className={editorClassName}
+        className={filterEditorClassName}
         initialFocus={() => getFilterInput(table, column.id) ?? true}
-        onKeyDownCapture={closeOnEscape(() => closeEditor(table))}
+        onKeyDownCapture={closeOnEscape(() => closeFilterEditor(table))}
         sideOffset={8}
       >
         <ST_FilterEditor
           column={column}
-          onRemoved={() => closeEditor(table)}
+          onRemoved={() => closeFilterEditor(table)}
           table={table}
         />
       </PopoverContent>
@@ -193,7 +167,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
     if (next) setEditingId(null);
     setOpen(next);
     if (!next && table.atoms.filterChips.get().openAnchor === 'toolbar') {
-      closeEditor(table);
+      closeFilterEditor(table);
     }
   };
 
@@ -227,7 +201,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
       {trigger}
       <PopoverContent
         align={variant === 'icon' ? 'end' : 'start'}
-        className={editingColumn ? editorClassName : pickerClassName}
+        className={editingColumn ? filterEditorClassName : pickerClassName}
         onKeyDownCapture={closeOnEscape(() => handleOpenChange(false))}
         ref={popupRef}
         sideOffset={8}
@@ -237,7 +211,7 @@ const ST_FilterPickerPopover = <TData extends ST_RowData>({
             column={editingColumn}
             onBack={() => {
               setEditingId(null);
-              closeEditor(table);
+              closeFilterEditor(table);
             }}
             onRemoved={() => handleOpenChange(false)}
             table={table}
@@ -305,59 +279,9 @@ export const clearFilterChips = <TData extends ST_RowData>(
 };
 
 /**
- * The value editor the column menu opens, anchored to the column's header
- * cell; closing it returns focus to the header's menu button.
- */
-const ST_HeaderFilterEditor = <TData extends ST_RowData>({
-  column,
-  table,
-}: {
-  column: ST_Column<TData> | undefined;
-  table: ST_TableInstance<TData>;
-}) => {
-  const cell = column
-    ? (table.refs.tableHeadCellRefs.current?.[column.id] ?? null)
-    : null;
-  const { spanProps } = useST_MenuAnchor({
-    anchorEl: cell,
-    setAnchorEl: () => closeEditor(table),
-  });
-  const open = !!column && !!cell;
-
-  return (
-    <Popover
-      onOpenChange={(next) => {
-        if (!next) closeEditor(table);
-      }}
-      open={open}
-    >
-      <PopoverTrigger nativeButton={false} render={<span {...spanProps} />} />
-      {column && (
-        <PopoverContent
-          align="start"
-          className={editorClassName}
-          finalFocus={() =>
-            cell?.querySelector<HTMLElement>(`[${ST_COLUMN_ACTIONS_ATTR}]`) ??
-            true
-          }
-          initialFocus={() => getFilterInput(table, column.id) ?? true}
-          onKeyDownCapture={closeOnEscape(() => closeEditor(table))}
-          sideOffset={8}
-        >
-          <ST_FilterEditor
-            column={column}
-            onRemoved={() => closeEditor(table)}
-            table={table}
-          />
-        </PopoverContent>
-      )}
-    </Popover>
-  );
-};
-
-/**
- * The chips mode filter row: one chip per filtered column, "+ Filter",
- * "Clear filters", and the editor the column menu opens on a header.
+ * The chips mode filter row: one chip per filtered column, "+ Filter" and
+ * "Clear filters". A custom `renderTopToolbar` can render it; the editor the
+ * column menu opens on a header is `ST_HeaderFilterEditor`.
  */
 export const ST_FilterChips = <TData extends ST_RowData>({
   table,
@@ -372,8 +296,7 @@ export const ST_FilterChips = <TData extends ST_RowData>({
     },
     refs: { topToolbarRef },
   } = table;
-  const { chipIds, chips, filterChips, leafColumns } =
-    useFilterChipColumns(table);
+  const { chipIds, chips, filterChips } = useFilterChipColumns(table);
   const hasSort = useSelector(
     table.atoms.sorting,
     (sorting) => sorting.length > 0,
@@ -408,11 +331,6 @@ export const ST_FilterChips = <TData extends ST_RowData>({
     if (chip) flashST_Highlight(chip);
   }, [openAnchor, openColumnId, topToolbarRef]);
 
-  const headerColumn =
-    openAnchor === 'header' && openColumnId
-      ? leafColumns.find((column) => column.id === openColumnId)
-      : undefined;
-
   return (
     <>
       {chips.map((column) => (
@@ -437,7 +355,6 @@ export const ST_FilterChips = <TData extends ST_RowData>({
           {localization.clearFilters}
         </Button>
       )}
-      <ST_HeaderFilterEditor column={headerColumn} table={table} />
     </>
   );
 };

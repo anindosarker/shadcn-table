@@ -326,3 +326,45 @@ export const FilterModePickerTableLevel = {
     expect(modeItem('Empty')).toBeDefined();
   },
 };
+
+// A custom top toolbar renders no chips row; the column menu's Filter item
+// still opens the header-anchored editor.
+export const ChipsCustomToolbar = () => (
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    renderTopToolbar={() => <div>Custom toolbar</div>}
+    {...options}
+  />
+);
+
+export const HeaderEditorWithCustomToolbar = {
+  render: ChipsCustomToolbar,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    const headerCell = canvas.getByRole('columnheader', { name: /Status/ });
+    await userEvent.click(
+      within(headerCell).getByRole('button', { name: 'Column Actions' }),
+    );
+    await userEvent.click(
+      await body.findByRole('menuitem', { name: /^Filter$/ }),
+    );
+    const input = await body.findByRole('textbox', {
+      name: 'Filter by Status',
+    });
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    // Anchored to the header cell: the editor opens below it.
+    const editor = input.closest<HTMLElement>(
+      '[data-slot="popover-content"], [data-slot="popover"], [role="dialog"]',
+    );
+    expect(editor).not.toBeNull();
+    expect(editor!.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      headerCell.getBoundingClientRect().bottom - 1,
+    );
+    await userEvent.type(input, 'Done');
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+  },
+};
