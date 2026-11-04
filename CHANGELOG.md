@@ -59,6 +59,21 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 05
 
+The stock table takes the v0.8 look by default. Each line names the option that restores the old behaviour.
+
+- `enableColumnOrdering` defaults to `true`: headers are drag sources. Set `enableColumnOrdering: false` to restore static headers.
+- `enableColumnPinning` defaults to `true`: the column menu has the pin items. Set `enableColumnPinning: false` to restore.
+- `enableColumnResizing` defaults to `true`: headers have the resize handle. Set `enableColumnResizing: false` to restore.
+- `paginationDisplayMode` defaults to `'pages'`: numbered page buttons. Set `paginationDisplayMode: 'default'` to restore the range text with previous and next.
+- `columnFilterDisplayMode` defaults to `'chips'`: filters live in the toolbar chip row. Set `columnFilterDisplayMode: 'subheader'` to restore the inputs under the headers.
+- `layoutMode` defaults to `'grid'` and no longer switches to `'grid-no-grow'` when resizing is on. Set `layoutMode: 'semantic'` (or `'grid-no-grow'` with resizing) to restore.
+- `positionActionsColumn` defaults to `'last'`. Set `positionActionsColumn: 'first'` to restore.
+- With `enableRowActions` and no `columnPinning` of its own, a table pins the actions column to the end (`initialState.columnPinning.end: ['st-row-actions']`), so `resetColumnPinning()` keeps it pinned. Pass your own `initialState.columnPinning` (for example `{ start: [], end: [] }`) to restore.
+- `enableSortPopover` defaults to `true`: the toolbar sort editor. Set `enableSortPopover: false` to restore.
+- `enableViewSettings` defaults to `true`: one view settings button replaces the separate columns and density buttons. Set `enableViewSettings: false` to restore.
+- `enableScrollButtons` defaults to `true`: hover chevrons on a side with hidden columns. Set `enableScrollButtons: false` to restore.
+- `enableCellOverflowTooltip` defaults to `true`: cut-off text shows a tooltip. Set `enableCellOverflowTooltip: false` to restore.
+
 ### Docs
 
 #### Spec 06
