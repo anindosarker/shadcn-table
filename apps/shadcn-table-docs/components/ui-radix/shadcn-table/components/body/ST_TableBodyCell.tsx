@@ -197,9 +197,13 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
   const isLocked =
     enableColumnOrdering !== false && columnDef.enableColumnOrdering === false;
 
+  // Skeleton rows hold placeholder data, so their value is never read.
+  const isSkeleton = showSkeletons !== false && (isLoading || showSkeletons);
+
   // Plain text cells show a tooltip when cut off; display columns never.
   const overflowTooltip =
     enableCellOverflowTooltip === true &&
+    !isSkeleton &&
     columnDefType !== 'display' &&
     columnDef.overflowTooltip !== false
       ? typeof columnDef.overflowTooltip === 'function'
@@ -359,7 +363,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                 {cell.getIsPlaceholder() ? (
                   (columnDef.PlaceholderCell?.({ cell, column, row, table }) ??
                   null)
-                ) : showSkeletons !== false && (isLoading || showSkeletons) ? (
+                ) : isSkeleton ? (
                   <Skeleton
                     {...skeletonProps}
                     style={{
