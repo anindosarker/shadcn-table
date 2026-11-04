@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { getST_RowFlipPositions } from '@/components/ui/shadcn-table/hooks/useST_RowFlip';
 
 export interface ST_TableBodyRowGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -43,9 +44,21 @@ export const ST_TableBodyRowGrabHandle = <TData extends ST_RowData>({
   };
 
   const handleDragEnd = (event: DragEvent<HTMLButtonElement>) => {
+    // A drop on a row: measured before the consumer's handler reorders the
+    // data, so the rows can slide from where they sat.
+    if (table.atoms.hoveredRow.get()) {
+      table.setRowFlipPending({
+        movedRow: row.original,
+        positions: getST_RowFlipPositions(table),
+      });
+    }
     iconButtonProps?.onDragEnd?.(event);
     table.setDraggingRow(null);
     table.setHoveredRow(null);
+    // A drop that left the order as it was hands over nothing.
+    setTimeout(() => {
+      if (table.atoms.rowFlipPending.get()) table.setRowFlipPending(null);
+    });
   };
 
   return (
