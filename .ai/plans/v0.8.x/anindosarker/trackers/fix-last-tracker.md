@@ -22,4 +22,6 @@ Gates:
 
 ## Notes
 
+- F19: the 24 px funnel takes 12 px more of the header, so the existing play `OpensWithRowSelection` (labels fit at 120 px columns) went red; its story's name columns are now 180 px (the export example it mirrored leaves popover mode, D56). At 120 px the label truncates with an ellipsis (min-w-0 truncate, as settled).
+
 - `GroupedHeaderHasIconReorder` passes on the shipped code: under `groupedColumnMode: 'reorder'` the grouped column keeps its own header and icon, and the expand column shows only the expand-all button (no grouped label), so there is no defect there; the play stays as a guard.
