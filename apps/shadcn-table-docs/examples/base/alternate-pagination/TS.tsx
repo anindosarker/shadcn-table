@@ -10,7 +10,7 @@ const Example = () => {
     stPaginationProps: {
       showRowsPerPage: false,
     },
-    paginationDisplayMode: 'pages',
+    paginationDisplayMode: 'default',
   });
 
   return <ShadcnTable table={table} />;

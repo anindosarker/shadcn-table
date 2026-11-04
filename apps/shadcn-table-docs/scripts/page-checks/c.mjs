@@ -320,8 +320,8 @@ const checks = {
     await marker(
       multi,
       'multi-sorting',
-      'sort label',
-      'th button[aria-label*="Sort" i], th [aria-label*="Sort" i]',
+      'sorted header marker',
+      'th [aria-label="Sorted ascending"], th [aria-label="Sorted descending"]',
       check,
     );
     await example(page, 'remote', check);

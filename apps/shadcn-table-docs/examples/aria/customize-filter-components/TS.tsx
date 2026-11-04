@@ -90,6 +90,7 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data,
+    columnFilterDisplayMode: 'subheader',
     initialState: { showColumnFilters: true },
     stFilterTextFieldProps: {
       className: 'my-2 w-full',

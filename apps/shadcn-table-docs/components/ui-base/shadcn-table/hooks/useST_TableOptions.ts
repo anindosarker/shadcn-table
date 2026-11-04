@@ -33,7 +33,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   tableOptions: ST_TableOptions<TData>,
 ) => ST_DefinedTableOptions<TData> = <TData extends ST_RowData>({
   autoResetExpanded = false,
-  columnFilterDisplayMode = 'subheader',
+  columnFilterDisplayMode = 'chips',
   columnResizeDirection,
   columnResizeMode = 'onChange',
   createDisplayMode = 'modal',
@@ -41,11 +41,12 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   defaultDisplayColumn,
   editDisplayMode = 'modal',
   enableBottomToolbar = true,
+  enableCellOverflowTooltip = true,
   enableColumnActions = true,
   enableColumnFilters = true,
-  enableColumnOrdering = false,
-  enableColumnPinning = false,
-  enableColumnResizing = false,
+  enableColumnOrdering = true,
+  enableColumnPinning = true,
+  enableColumnResizing = true,
   enableColumnVirtualization: enableColumnVirtualizationProp,
   enableDensityToggle = true,
   enableExpandAll = true,
@@ -65,13 +66,16 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableRowPinning = false,
   enableRowSelection = false,
   enableRowVirtualization: enableRowVirtualizationProp,
+  enableScrollButtons = true,
   enableSelectAll = true,
+  enableSortPopover = true,
   enableSorting = true,
   enableStickyHeader = false,
   enableTableFooter = true,
   enableTableHead = true,
   enableToolbarInternalActions = true,
   enableTopToolbar = true,
+  enableViewSettings = true,
   getRowCanExpand,
   icons,
   id: idProp,
@@ -81,8 +85,9 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   manualGrouping,
   manualPagination,
   manualSorting,
-  paginationDisplayMode = 'default',
-  positionActionsColumn = 'first',
+  paginationDisplayMode = 'pages',
+  persistViewSettings = false,
+  positionActionsColumn = 'last',
   positionCreatingRow = 'top',
   positionExpandColumn = 'first',
   positionGlobalFilter = 'right',
@@ -93,6 +98,8 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   rowNumberDisplayMode = 'static',
   rowPinningDisplayMode = 'sticky',
   selectAllMode = 'page',
+  showClearSearchButton = false,
+  showColumnDragHandle = false,
   ...rest
 }: ST_TableOptions<TData>) => {
   // The caller's own id, before a generated one fills in: the view settings
@@ -134,8 +141,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     columnResizeDirection = 'ltr';
   }
 
-  layoutMode =
-    layoutMode || (enableColumnResizing ? 'grid-no-grow' : 'semantic');
+  layoutMode = layoutMode || 'grid';
   if (
     layoutMode === 'semantic' &&
     (enableRowVirtualization || enableColumnVirtualization)
@@ -172,6 +178,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     defaultDisplayColumn: definedDefaultDisplayColumn,
     editDisplayMode,
     enableBottomToolbar,
+    enableCellOverflowTooltip,
     enableColumnActions,
     enableColumnFilters,
     enableColumnOrdering,
@@ -196,13 +203,16 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableRowPinning,
     enableRowSelection,
     enableRowVirtualization,
+    enableScrollButtons,
     enableSelectAll,
+    enableSortPopover,
     enableSorting,
     enableStickyHeader,
     enableTableFooter,
     enableTableHead,
     enableToolbarInternalActions,
     enableTopToolbar,
+    enableViewSettings,
     // `row.toggleExpanded()` is a no-op when `row.getCanExpand()` is false,
     // and detail-panel rows have no sub rows, so a table with
     // `renderDetailPanel` treats every row as expandable.
@@ -221,6 +231,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     manualPagination,
     manualSorting,
     paginationDisplayMode,
+    persistViewSettings,
     positionActionsColumn,
     positionCreatingRow,
     positionExpandColumn,
@@ -232,6 +243,8 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
+    showClearSearchButton,
+    showColumnDragHandle,
     viewSettingsKeyInput,
     ...rest,
   } as ST_DefinedTableOptions<TData>;
