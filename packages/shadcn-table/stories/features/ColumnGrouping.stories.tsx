@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 import {
   type ST_Column,
   type ST_ColumnDef,
@@ -387,4 +388,51 @@ export const GroupingAndDraggingWithSomeDisabledGrouping = () => {
       enableGrouping
     />
   );
+};
+
+const headerCell = (canvasElement: HTMLElement, id: string) =>
+  canvasElement.querySelector<HTMLElement>(
+    `thead th[data-flip-column="${id}"]`,
+  );
+
+// Under groupedColumnMode 'remove' the grouping column names the grouped
+// columns, so its header carries the first grouped column's icon (F41, D3).
+export const GroupedHeaderHasIcon = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableGrouping
+      groupedColumnMode="remove"
+      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      const th = headerCell(canvasElement, 'st-row-expand');
+      expect(th).not.toBeNull();
+      expect(th).toHaveTextContent('State, Gender');
+      expect(th!.querySelector('svg.lucide-map')).not.toBeNull();
+    });
+  },
+};
+
+// Under 'reorder' the grouped column keeps its own header, icon included.
+export const GroupedHeaderHasIconReorder = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableGrouping
+      groupedColumnMode="reorder"
+      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      const th = headerCell(canvasElement, 'state');
+      expect(th).not.toBeNull();
+      expect(th!.querySelector('svg.lucide-map')).not.toBeNull();
+    });
+  },
 };
