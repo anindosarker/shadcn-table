@@ -484,3 +484,29 @@ export const MultiSelectRowWithHoldShift = () => {
 
   return <ShadcnTable table={table} />;
 };
+
+// Under the semantic layout the cell is a table cell, so the body checkbox
+// centres by its margins, not the grid's justify-center (F28).
+export const CheckboxesAlignSemantic = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowSelection
+      layoutMode="semantic"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      const control = canvasElement.querySelector<HTMLElement>(
+        `tbody tr td ${SELECT_CONTROL}`,
+      );
+      expect(control).not.toBeNull();
+      const cell = control!.closest('td')!.getBoundingClientRect();
+      const box = control!.getBoundingClientRect();
+      expect(
+        Math.abs(box.left + box.width / 2 - (cell.left + cell.width / 2)),
+      ).toBeLessThanOrEqual(1);
+    });
+  },
+};
