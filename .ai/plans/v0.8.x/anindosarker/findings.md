@@ -158,3 +158,7 @@
 ### F37 Advanced example uses window.alert for its actions
 
 - `/docs/examples/advanced` (`apps/shadcn-table-docs/examples/<base>/advanced/TS.tsx`, the Activate, Deactivate and Contact buttons and the row action items): each action calls `alert(...)`, a browser dialog. Owner, 2026-11-04 22:38: open a modal instead, the advanced example should show the shadcn `Dialog` (or `AlertDialog`) part with the message and the selected names. Docs story with F33 to F35.
+
+### F38 Popover-mode examples still truncate their headers
+
+- `/docs/examples/export-csv` (and `export-pdf`, `popover-filters`, any example with `columnFilterDisplayMode: 'popover'`): "First Name", "Last Name" show as "Fir...", "La..." because the example's `size` values (120, and 56 after F15) leave no room for label, funnel and chevron; a popover-mode header needs about 150 px for a two-word label (cells story note under F19). Owner, 2026-11-04 22:53: "Wasn't fixed." Docs fix: in popover-mode examples drop the `size` on text columns (the grid layout grows them) or set 160 or more; the ID column keeps 56; a page check asserts no header label has `scrollWidth > clientWidth` on those pages.
