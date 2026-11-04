@@ -1,6 +1,6 @@
 # Home demo steps and titles (F45), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-home-demo`, worktree 02, PR #118
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at 9b9e900b: green
@@ -8,6 +8,9 @@ Gates:
 - `node scripts/check-pages.mjs e --base radix --url http://localhost:5344 /` at 9b9e900b: green (29 passed)
 - `node scripts/check-pages.mjs e --base base --url http://localhost:5344 /` at 9b9e900b: green (29 passed)
 - `node scripts/check-pages.mjs e --base aria --url http://localhost:5344 /` at 9b9e900b: green (29 passed)
+- `pnpm --filter shadcn-table-docs build` at f2842f9b: green, `git status --short` clean (verifier)
+- headless Chromium full replay of the home demo, dev server on 5346, 1440x900, at f2842f9b: green, all six steps active in order (Sorting 1.1 s, Search 6.5 s, Editing 11.9 s, Filtering 17.3 s, Column order 24.6 s, View settings 30.0 s), titles match F45 (verifier)
+- types:check, lint and check-pages e (radix, base, aria) not rerun: recorded at 9b9e900b, only the tracker and CHANGELOG.md changed since (verifier)
 
 - Milestone 01 fix with play: done (9b9e900b)
 
