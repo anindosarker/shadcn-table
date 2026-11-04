@@ -1,6 +1,6 @@
 # Multi-select filter on scalar values (F29), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-multiselect`, worktree 01, PR #106
 Gates:
 - `pnpm test:radix stories/fixed-bugs/MultiSelectFilter.stories.tsx` on the shipped code (10ec402c plus the story): red as expected, Subheader String Column and Chips String Column show "No results found" after picking two states, Empty Selection Keeps Every Row shows no rows; Subheader Array Column green
@@ -13,6 +13,11 @@ Gates:
 - `pnpm test:base stories/fixed-bugs/MultiSelectFilter.stories.tsx` at fd7c5f40: green (4 of 4)
 - `pnpm test:aria stories/fixed-bugs/MultiSelectFilter.stories.tsx` at fd7c5f40: green (4 of 4)
 - `pnpm test:radix` at fd7c5f40: green (77 files, 537 tests)
+- `pnpm check:tailwind` at 56344d68: green (0 not canonical in the three bases), verifier
+- `pnpm test:base` at 56344d68: green (77 files, 537 tests), verifier
+- `pnpm test:aria` at 56344d68: green (77 files, 537 tests), verifier
+- `pnpm --filter shadcn-table storybook:build:base` at 56344d68: green, verifier
+- tsc per base, lint, check:bases, test:radix: recorded at fd7c5f40, valid (only tracker and CHANGELOG.md changed since), verifier
 
 - Milestone 01 fix and plays: done (fd7c5f40)
 
