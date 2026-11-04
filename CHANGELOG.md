@@ -26,6 +26,15 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### Spec 03
 
+- Header look: no band, a medium-weight muted label, the column `icon` before it, a full-opacity chevron at the end and a static sort arrow only while sorted; 40 px at every density, a hairline between columns only when grid lines are `columns` or `all`; the header row shadow and the 0.97 opacity are gone.
+- The header label and the chevron open the same column menu, a second click on the chevron closes it, and a label click never sorts.
+- The column menu lists only what applies, in order: Sort ascending, Sort descending, Clear sort; Filter, Clear filter; Pin to start, Pin to end, Unpin, Reset column size, Group by, Fixed position (disabled, locked columns); Hide. The active sort direction is the one disabled item, and sorting from the menu stacks onto the other columns' sorts. Show all columns leaves the menu (the columns menu has it).
+- The resize handle is a full-height hairline: invisible at rest, lit while the pointer is over the header, primary while resizing, reset on double-click; a resize never starts a column drag.
+- Columns drag by the header cell where they can be dragged; the grip renders only with `showColumnDragHandle`. While a column drags, the other headers slide aside to open a gap and the dragged header sits in it, faded with a dashed outline; on drop the body slides to catch up and the moved column highlights; Escape or a drop outside slides the headers back. Reduced motion keeps the static dashed feedback and the highlight. Near the inner edges of the unpinned area the table scrolls sideways.
+- Locked columns (`enableColumnOrdering: false`) show striped "Fixed" headers only while another column drags.
+- `ST_ColumnActionMenu` and `ST_FilterOptionMenu` accept a `trigger` element with optional `open` / `onOpenChange` beside `anchorEl` / `setAnchorEl`, which are now optional.
+- New exports: `useST_ColumnFlip`, `useST_DragAutoScroll`, `ST_TableHeadCellLockedOverlay`, `getST_ColumnDragHandlers`.
+
 #### Spec 04
 
 ### Changed
