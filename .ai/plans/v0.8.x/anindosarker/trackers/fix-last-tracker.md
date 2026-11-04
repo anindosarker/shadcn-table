@@ -1,6 +1,6 @@
 # Last fixes (F19, F28, F30, F39, F40, F41, D56, D57), tracker
 
-Status: running (gates green, PR #114 open, not merged)
+Status: verified (gates green, PR #114 ready, not merged)
 Branch `v0.8/fix-last`, worktree 01, PR #114
 Gates:
 - Repro on shipped code (335c749c), base, `FunnelIsClickable`: red, the funnel button is 12.07 px wide (want at least 24).
@@ -28,6 +28,18 @@ Gates:
 - `node scripts/check-pages.mjs d --base base --url http://localhost:5341` at 4fa8c378: green (261 passed)
 - `node scripts/check-pages.mjs d --base aria --url http://localhost:5341` at 4fa8c378: green (261 passed)
 - CI run: none reported on the draft PR at 4fa8c378 (`gh pr checks 114`: no checks)
+- `pnpm --filter shadcn-table tsc:radix` at e89351b7: green (verifier)
+- `pnpm --filter shadcn-table tsc:baseui` at e89351b7: green (verifier)
+- `pnpm --filter shadcn-table tsc:aria` at e89351b7: green (verifier)
+- `pnpm check:bases` at e89351b7: green (verifier)
+- `pnpm check:tailwind` at e89351b7: green (verifier)
+- `pnpm check:icons` at e89351b7: green (verifier)
+- `pnpm -w registry:build` at e89351b7: no diff, `registry.json` current (verifier)
+- `pnpm --filter shadcn-table-docs types:check` at e89351b7: green (verifier)
+- `pnpm --filter shadcn-table test:radix` at e89351b7: green (79 files, 553 tests) (verifier)
+- `pnpm --filter shadcn-table test:aria` at e89351b7: green (79 files, 553 tests) (verifier)
+- `pnpm --filter shadcn-table storybook:build:aria` at e89351b7: green (verifier)
+- Kept, not rerun (verifier): `pnpm lint` and the three cluster d page checks at 4fa8c378 (only the tracker changed since); `test:base` at ccbae6f3 (since then only `apps/shadcn-table-docs/scripts/page-checks/d.mjs` and the tracker changed, outside the package the suite runs).
 
 - Milestone 01 library fixes with plays (F19 funnel button, D57 row drop slide, F28 semantic checkbox, F30 columns menu flip offset, F39 resize hairline alignment, F40 toolbar mount animation, F41 grouped column icon in `getST_RowExpandColumnDef.tsx:63-70`): done (ccbae6f3)
 - Milestone 02 docs (D56 export examples on chips, page checks): done (4fa8c378)
