@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {
+  TooltipTrigger as TooltipTriggerPrimitive,
   type TooltipTriggerState,
   TooltipTriggerStateContext,
 } from 'react-aria-components';
+import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
 import { getCommonTooltipProps } from '@/components/ui/shadcn-table/shared/utils/style.utils';
 import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
@@ -129,6 +131,25 @@ export const ST_Tooltip = ({
   // disabled control renders without the trigger and keeps the title as its name.
   if (trigger.props.disabled || trigger.props.isDisabled) {
     return React.cloneElement(trigger, { ref: attachRef });
+  }
+
+  // A shadcn Button is a React Aria Button: it reads the trigger props from
+  // TooltipTrigger's focusable context itself, so it skips the part's
+  // <Focusable> wrapper. That wrapper checks focusability on mount and warns
+  // for a button mounted inside content a modal popover made inert (rows a
+  // sort or filter editor brings onto the page).
+  if (trigger.type === Button) {
+    return (
+      <TooltipTriggerPrimitive
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        delay={delayDuration ?? 0}
+        closeDelay={disableHoverableContent ? 0 : undefined}
+      >
+        {React.cloneElement(trigger, { ref: attachRef })}
+        <Tooltip placement={commonSide}>{title}</Tooltip>
+      </TooltipTriggerPrimitive>
+    );
   }
 
   return (
