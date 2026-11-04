@@ -34,6 +34,14 @@ export const ST_VIEW_SETTINGS_ITEMS: readonly ST_ViewSettingsItemId[] = [
   'rowNumbers',
 ];
 
+/** The view settings rows this table offers: density only with `enableDensityToggle`. */
+export const getViewSettingsItems = <TData extends ST_RowData>(
+  table: ST_TableInstance<TData>,
+): readonly ST_ViewSettingsItemId[] =>
+  table.options.enableDensityToggle === false
+    ? ST_VIEW_SETTINGS_ITEMS.filter((id) => id !== 'density')
+    : ST_VIEW_SETTINGS_ITEMS;
+
 export const ST_DENSITY_VALUES: readonly ST_DensityState[] = [
   'compact',
   'comfortable',
@@ -210,40 +218,71 @@ export const ST_ViewSettingsItems = <TData extends ST_RowData>({
   const viewSettings = useSelector(table.atoms.viewSettings);
   const density = useSelector(table.atoms.density);
 
-  return ST_VIEW_SETTINGS_ITEMS.filter((id) =>
-    viewSettings.pins.includes(id),
-  ).map((id) => {
-    const label = getViewItemLabel(id, localization);
-    if (id === 'columns') {
-      return (
-        <ST_ShowHideColumnsMenu
-          key={id}
-          trigger={
-            <ST_TooltipButton
-              aria-haspopup="menu"
-              aria-label={localization.showHideColumns}
+  return getViewSettingsItems(table)
+    .filter((id) => viewSettings.pins.includes(id))
+    .map((id) => {
+      const label = getViewItemLabel(id, localization);
+      if (id === 'columns') {
+        return (
+          <ST_ShowHideColumnsMenu
+            key={id}
+            trigger={
+              <ST_TooltipButton
+                aria-haspopup="menu"
+                aria-label={localization.showHideColumns}
+                size="icon"
+                tooltip={localization.showHideColumns}
+                type="button"
+                variant="ghost"
+              >
+                <ST_ViewItemIcon id={id} table={table} />
+              </ST_TooltipButton>
+            }
+          />
+        );
+      }
+      if (isViewToggle(id)) {
+        const on = viewSettings[id];
+        return (
+          <ST_Tooltip
+            key={id}
+            title={
+              id === 'wrapText' && on ? localization.singleLineCells : label
+            }
+          >
+            <Button
+              aria-label={label}
+              aria-pressed={on}
+              onClick={() => setViewToggle(table, id, !on)}
               size="icon"
-              tooltip={localization.showHideColumns}
               type="button"
               variant="ghost"
             >
               <ST_ViewItemIcon id={id} table={table} />
-            </ST_TooltipButton>
-          }
-        />
-      );
-    }
-    if (isViewToggle(id)) {
-      const on = viewSettings[id];
+            </Button>
+          </ST_Tooltip>
+        );
+      }
+      const isDensity = id === 'density';
       return (
         <ST_Tooltip
           key={id}
-          title={id === 'wrapText' && on ? localization.singleLineCells : label}
+          title={`${label}: ${
+            isDensity
+              ? getDensityLabel(density, localization)
+              : getGridLinesLabel(viewSettings.gridLines, localization)
+          }`}
         >
           <Button
-            aria-label={label}
-            aria-pressed={on}
-            onClick={() => setViewToggle(table, id, !on)}
+            aria-label={isDensity ? localization.toggleDensity : label}
+            onClick={() =>
+              isDensity
+                ? table.setDensity(nextValue(ST_DENSITY_VALUES, density))
+                : table.setViewSettings((old) => ({
+                    ...old,
+                    gridLines: nextValue(ST_GRID_LINES_VALUES, old.gridLines),
+                  }))
+            }
             size="icon"
             type="button"
             variant="ghost"
@@ -252,34 +291,5 @@ export const ST_ViewSettingsItems = <TData extends ST_RowData>({
           </Button>
         </ST_Tooltip>
       );
-    }
-    const isDensity = id === 'density';
-    return (
-      <ST_Tooltip
-        key={id}
-        title={`${label}: ${
-          isDensity
-            ? getDensityLabel(density, localization)
-            : getGridLinesLabel(viewSettings.gridLines, localization)
-        }`}
-      >
-        <Button
-          aria-label={isDensity ? localization.toggleDensity : label}
-          onClick={() =>
-            isDensity
-              ? table.setDensity(nextValue(ST_DENSITY_VALUES, density))
-              : table.setViewSettings((old) => ({
-                  ...old,
-                  gridLines: nextValue(ST_GRID_LINES_VALUES, old.gridLines),
-                }))
-          }
-          size="icon"
-          type="button"
-          variant="ghost"
-        >
-          <ST_ViewItemIcon id={id} table={table} />
-        </Button>
-      </ST_Tooltip>
-    );
-  });
+    });
 };
