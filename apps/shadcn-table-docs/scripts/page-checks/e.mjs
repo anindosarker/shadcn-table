@@ -474,10 +474,25 @@ const checks = {
       'no contributors section',
       !txt.includes('Maintainers and Contributors'),
     );
+    // a page of ten rows fits the table frame: no row cut off at the bottom,
+    // no scrollbar inside the table (F45 follow-up)
+    const clipped = await demo
+      .locator('table')
+      .first()
+      .evaluate((table) => {
+        const box = table.parentElement;
+        return box ? box.scrollHeight - box.clientHeight : 0;
+      });
+    check('demo: ten rows fit the frame', clipped <= 1, `clipped=${clipped}px`);
     // the six step titles name the feature (F45), and one full replay gives
     // every step the active state in turn: a recorder samples the list each
     // frame from a Replay click (outside the table, so the replay keeps
-    // playing) until the last step is active
+    // playing) until the loop starts over. It also records what the replay
+    // must never leave behind (F45 follow-up): a tooltip or a keyboard focus
+    // ring on a control it clicked, a page scroll, a change in the table
+    // frame's height or in the step list's place, an empty cell editor; and
+    // what it must show: the Filtering cue on the "+ Filter" pill, the moved
+    // column stacked above the cells it slides across
     const titles = await page
       .locator('[aria-label="Demo items"] .v5-step span.text-sm')
       .allTextContents();
@@ -499,13 +514,74 @@ const checks = {
       await steps.scrollIntoViewIfNeeded({ timeout: 10000 });
       await page.evaluate(() => {
         const seen = new Set();
+        const flaws = {
+          tooltips: new Set(),
+          rings: new Set(),
+          scrolls: new Set(),
+          frames: new Set(),
+          lists: new Set(),
+          emptyEdit: 0,
+          pillCue: false,
+          movedZ: new Set(),
+        };
         window.__demoSeen = seen;
+        window.__demoFlaws = flaws;
+        const aside = document.querySelector('[aria-label="Demo items"]');
+        const table = document.querySelector('.v5-demo-table');
+        const frame = table?.querySelector('table')?.parentElement;
+        const list = aside?.querySelector('ol');
         const sample = () => {
+          aside?.querySelectorAll('.v5-step').forEach((el, i) => {
+            if (el.getAttribute('data-state') === 'active') seen.add(i);
+          });
           document
-            .querySelectorAll('[aria-label="Demo items"] .v5-step')
-            .forEach((el, i) => {
-              if (el.getAttribute('data-state') === 'active') seen.add(i);
-            });
+            .querySelectorAll('[role="tooltip"]')
+            .forEach((el) => flaws.tooltips.add(el.textContent?.trim()));
+          const focused = document.activeElement;
+          if (
+            focused instanceof HTMLElement &&
+            focused.matches(':focus-visible') &&
+            !focused.matches('input, textarea') &&
+            (table?.contains(focused) ||
+              focused.closest('[data-slot="popover-content"]'))
+          ) {
+            flaws.rings.add(
+              focused.getAttribute('aria-label') ??
+                focused.textContent?.trim().slice(0, 20),
+            );
+          }
+          flaws.scrolls.add(Math.round(window.scrollY));
+          if (frame) flaws.frames.add(frame.offsetHeight);
+          if (aside && list) {
+            flaws.lists.add(
+              Math.round(
+                list.getBoundingClientRect().top -
+                  aside.getBoundingClientRect().top,
+              ),
+            );
+          }
+          const edit = table?.querySelector('tbody input');
+          if (edit instanceof HTMLInputElement && edit.value === '') {
+            flaws.emptyEdit += 1;
+          }
+          table?.querySelectorAll('.v12-cue').forEach((el) => {
+            if (
+              el.tagName === 'BUTTON' &&
+              !el.hasAttribute('aria-label') &&
+              el.textContent?.trim() === 'Filter'
+            ) {
+              flaws.pillCue = true;
+            }
+          });
+          const head = [...(table?.querySelectorAll('thead th') ?? [])].map(
+            (th) => th.getAttribute('data-flip-column'),
+          );
+          if (head[1] === 'project') {
+            const th = table?.querySelector(
+              'thead th[data-flip-column="project"]',
+            );
+            if (th) flaws.movedZ.add(getComputedStyle(th).zIndex);
+          }
           if (window.__demoSeen === seen) requestAnimationFrame(sample);
         };
         sample();
@@ -516,15 +592,70 @@ const checks = {
         .nth(expected.length - 1)
         .and(page.locator('[data-state="active"]'))
         .waitFor({ timeout: 45000 });
-      const seen = await page.evaluate(() => {
+      // the last step plays out, then the loop starts over
+      await steps
+        .locator('[aria-live]')
+        .filter({ hasText: 'Starting' })
+        .waitFor({ timeout: 15000 })
+        .catch(() => {});
+      const { seen, flaws } = await page.evaluate(() => {
         const list = [...window.__demoSeen].sort();
+        const f = window.__demoFlaws;
         window.__demoSeen = null;
-        return list;
+        return {
+          seen: list,
+          flaws: {
+            tooltips: [...f.tooltips],
+            rings: [...f.rings],
+            scrolls: [...f.scrolls],
+            frames: [...f.frames],
+            lists: [...f.lists],
+            emptyEdit: f.emptyEdit,
+            pillCue: f.pillCue,
+            movedZ: [...f.movedZ],
+          },
+        };
       });
       check(
         'demo: every step active in one replay',
         seen.length === expected.length,
         `active=${seen.join(',')}`,
+      );
+      check(
+        'demo: no tooltip during the replay',
+        flaws.tooltips.length === 0,
+        flaws.tooltips.join(' | '),
+      );
+      check(
+        'demo: no focus ring left by the replay',
+        flaws.rings.length === 0,
+        flaws.rings.join(' | '),
+      );
+      check(
+        'demo: the replay never scrolls the page',
+        flaws.scrolls.length === 1,
+        `scrollY=${flaws.scrolls.join(',')}`,
+      );
+      check(
+        'demo: the table frame keeps its height',
+        flaws.frames.length === 1,
+        `heights=${flaws.frames.join(',')}`,
+      );
+      check(
+        'demo: the step list never moves',
+        flaws.lists.length === 1,
+        `offsets=${flaws.lists.join(',')}`,
+      );
+      check(
+        'demo: the cell editor never shows empty',
+        flaws.emptyEdit === 0,
+        `frames=${flaws.emptyEdit}`,
+      );
+      check('demo: Filtering cues the + Filter pill', flaws.pillCue);
+      check(
+        'demo: the moved column rides above the others',
+        flaws.movedZ.length > 0 && flaws.movedZ.every((z) => z === '1'),
+        `zIndex=${flaws.movedZ.join(',')}`,
       );
     } catch (e) {
       check(
