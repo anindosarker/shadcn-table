@@ -10,21 +10,11 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
+import { ST_TooltipButton } from '@/components/ui-aria/shadcn-table/components/buttons/ST_TooltipButton';
 import { ST_EditActionButtons } from '@/components/ui-aria/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_RowActionMenu';
 
 const commonIconButtonStyles = cva('ms-2.5');
-
-// The menu trigger merges its props into this element, so they reach the
-// button inside the tooltip.
-const TooltipButton = ({
-  tooltip,
-  ...props
-}: ButtonProps & { tooltip: string }) => (
-  <ST_Tooltip title={tooltip}>
-    <Button {...props} />
-  </ST_Tooltip>
-);
 
 export interface ST_ToggleRowActionMenuButtonProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -111,7 +101,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
                 row={row}
                 staticRowIndex={staticRowIndex}
                 trigger={
-                  <TooltipButton
+                  <ST_TooltipButton
                     aria-haspopup="menu"
                     aria-label={localization.rowActions}
                     onClick={(event) => event.stopPropagation()}
@@ -123,7 +113,7 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
                     className={cn(commonIconButtonStyles(), rest.className)}
                   >
                     <MoreHorizIcon />
-                  </TooltipButton>
+                  </ST_TooltipButton>
                 }
               />
             ) : null}

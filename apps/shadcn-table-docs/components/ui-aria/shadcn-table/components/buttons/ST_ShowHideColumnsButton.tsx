@@ -1,21 +1,9 @@
-import { Button } from '@/components/ui-aria/button';
 import { type ButtonProps } from '@/components/ui-aria/shadcn-table/types';
-import { ST_Tooltip } from '@/components/ui-aria/shadcn-table/components/buttons/ST_Tooltip';
+import { ST_TooltipButton } from '@/components/ui-aria/shadcn-table/components/buttons/ST_TooltipButton';
 import { ST_ShowHideColumnsMenu } from '@/components/ui-aria/shadcn-table/components/menus/ST_ShowHideColumnsMenu';
 import { useSTContext } from '@/components/ui-aria/shadcn-table/hooks/stTableHook';
 
 export type ST_ShowHideColumnsButtonProps = ButtonProps;
-
-// The menu trigger merges its props into this element, so they reach the
-// button inside the tooltip.
-const TooltipButton = ({
-  tooltip,
-  ...props
-}: ButtonProps & { tooltip: string }) => (
-  <ST_Tooltip title={tooltip}>
-    <Button {...props} />
-  </ST_Tooltip>
-);
 
 export const ST_ShowHideColumnsButton = ({
   ...rest
@@ -31,7 +19,7 @@ export const ST_ShowHideColumnsButton = ({
   return (
     <ST_ShowHideColumnsMenu
       trigger={
-        <TooltipButton
+        <ST_TooltipButton
           aria-haspopup="menu"
           aria-label={localization.showHideColumns}
           size="icon"
@@ -45,7 +33,7 @@ export const ST_ShowHideColumnsButton = ({
           {...rest}
         >
           <ViewColumnIcon />
-        </TooltipButton>
+        </ST_TooltipButton>
       }
     />
   );
