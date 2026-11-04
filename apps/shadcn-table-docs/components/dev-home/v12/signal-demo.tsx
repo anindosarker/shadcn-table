@@ -3,11 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CheckIcon, HandIcon, RotateCcwIcon } from 'lucide-react';
-import type {
-  SignalCue,
-  SignalTableProps,
-  SignalTableState,
-} from './signal-table';
+import type { SignalTableProps, SignalTableState } from './signal-table';
 
 const SignalTable = dynamic(() => import('./signal-table'), {
   ssr: false,
@@ -21,21 +17,28 @@ const SignalTable = dynamic(() => import('./signal-table'), {
   ),
 });
 
+/** What a beat can do to the table on screen. */
+interface Replay {
+  /** The table wrapper; popovers render in portals outside it. */
+  root: HTMLElement;
+  set: (update: (s: SignalTableState) => SignalTableState) => void;
+  edit: (editing: SignalTableProps['editing']) => void;
+  /** Clicks a popover trigger, which the step closes again at its end. */
+  open: (trigger: HTMLElement | null) => void;
+}
+
+/** One timed action of a step: it runs `wait` ms after the previous one. */
+type Beat = [wait: number, run: (r: Replay) => void];
+
 interface Step {
   /** Feature name for the status line. */
   feature: string;
   title: string;
   code: string;
-  /** What pulses when this item plays. */
-  cue: SignalCue['kind'];
+  /** The interaction, played before the state lands. */
+  beats: readonly Beat[];
   /** Final table state once the item has played. */
   apply: (s: SignalTableState) => SignalTableState;
-  /** Text the replay types letter by letter, and the table state for each
-   * partial string, applied on top of the previous item's state. */
-  typing?: {
-    text: string;
-    at: (s: SignalTableState, partial: string) => SignalTableState;
-  };
 }
 
 const BASE: SignalTableState = {
@@ -52,10 +55,45 @@ const BASE: SignalTableState = {
  * item. It then opens the estimate of "Review onboarding flow" (task-40,
  * second in the due date sort, and In Review, so it survives the filter),
  * types a new value, then saves it. */
-const EDIT_STEP = 2;
 const EDIT_ROW = 'task-40';
 const EDIT_FROM = '4';
 const EDIT_TO = '16';
+const SEARCH = 'billing';
+
+/* One-shot accent pulse (v12.css), on the control a step is about to use. */
+const PULSE = 'v12-cue';
+const PULSE_MS = 1200;
+
+const pulse = (el: Element | null | undefined) => {
+  if (!el) return;
+  el.classList.remove(PULSE);
+  // restart the animation when the same control pulses twice
+  void (el as HTMLElement).offsetWidth;
+  el.classList.add(PULSE);
+  setTimeout(() => el.classList.remove(PULSE), PULSE_MS);
+};
+
+/** A toolbar button by its accessible name, outside the table itself. */
+const toolbarButton = (root: HTMLElement, label: string) =>
+  [...root.querySelectorAll<HTMLElement>(`button[aria-label="${label}"]`)].find(
+    (button) => !button.closest('table'),
+  ) ?? null;
+
+/** An option of the open popover (a column picker or a select list). */
+const option = (text: string) =>
+  [
+    ...document.querySelectorAll<HTMLElement>(
+      '[data-slot="popover-content"] [role="option"], [data-slot="select-content"] [role="option"]',
+    ),
+  ].find((el) => el.textContent?.trim() === text) ?? null;
+
+const headerCell = (root: HTMLElement, id: string) =>
+  root.querySelector<HTMLElement>(`thead th[data-flip-column="${id}"]`);
+
+const estimateCell = (root: HTMLElement) =>
+  root.querySelector<HTMLElement>(
+    `tbody tr[data-row-id="${EDIT_ROW}"] td[data-flip-column="estimate"]`,
+  );
 
 const clearSearch = (s: SignalTableState): SignalTableState => ({
   ...s,
@@ -63,46 +101,84 @@ const clearSearch = (s: SignalTableState): SignalTableState => ({
   showGlobalFilter: false,
 });
 
+// reading pace for the replay's typing
+const CHAR_MS = 140;
+
+/** Beats that type `text` one letter at a time through `at`. */
+const typeBeats = (
+  text: string,
+  at: (r: Replay, partial: string) => void,
+): Beat[] =>
+  [...text].map((_, i) => [
+    CHAR_MS,
+    (r: Replay) => at(r, text.slice(0, i + 1)),
+  ]);
+
 const STEPS: readonly Step[] = [
   {
     feature: 'Sorting',
     title: 'Sort by due date in the sort editor',
     code: "sorting: [{ id: 'due', desc: false }]",
-    cue: 'sort',
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'Sort'))],
+      [600, (r) => r.open(toolbarButton(r.root, 'Sort'))],
+      [700, () => pulse(option('Due'))],
+      [500, (r) => option('Due')?.click() ?? r.set(STEPS[0].apply)],
+    ],
     apply: (s) => ({ ...s, sorting: [{ id: 'due', desc: false }] }),
   },
   {
     feature: 'Search',
     title: 'Search all columns for “billing”',
     code: "globalFilter: 'billing'",
-    cue: 'search',
-    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'billing' }),
-    typing: {
-      text: 'billing',
-      at: (s, partial) => ({
-        ...s,
-        showGlobalFilter: true,
-        globalFilter: partial,
-      }),
-    },
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'Show/Hide search'))],
+      [600, (r) => r.set((s) => ({ ...s, showGlobalFilter: true }))],
+      ...typeBeats(SEARCH, (r, partial) =>
+        r.set((s) => ({ ...s, globalFilter: partial })),
+      ),
+    ],
+    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: SEARCH }),
   },
   {
     feature: 'Editing',
     title: 'Edit an estimate to 16h',
     code: "enableEditing: true, editDisplayMode: 'cell'",
-    cue: 'edit',
+    beats: [
+      [0, (r) => r.set(clearSearch)],
+      [500, (r) => pulse(estimateCell(r.root))],
+      [600, (r) => r.edit({ rowId: EDIT_ROW, value: EDIT_FROM })],
+      [500, (r) => r.edit({ rowId: EDIT_ROW, value: '' })],
+      ...typeBeats(EDIT_TO, (r, partial) =>
+        r.edit({ rowId: EDIT_ROW, value: partial }),
+      ),
+    ],
     apply: (s) => ({
       ...clearSearch(s),
       estimateEdits: { [EDIT_ROW]: Number(EDIT_TO) },
     }),
-    // the typed value lives in the open cell's input until it is saved
-    typing: { text: EDIT_TO, at: (s) => clearSearch(s) },
   },
   {
     feature: 'Filtering',
     title: 'Filter the status with a chip',
     code: "columnFilters: [{ id: 'status', value: 'In Review' }]",
-    cue: 'filter',
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'Filter'))],
+      [600, (r) => r.open(toolbarButton(r.root, 'Filter'))],
+      [700, () => pulse(option('Status'))],
+      [500, () => option('Status')?.click()],
+      [
+        700,
+        () =>
+          document
+            .querySelector<HTMLElement>(
+              '[data-slot="popover-content"] [data-slot="select-trigger"]',
+            )
+            ?.click(),
+      ],
+      [700, () => pulse(option('In Review'))],
+      [500, (r) => option('In Review')?.click() ?? r.set(STEPS[3].apply)],
+    ],
     apply: (s) => ({
       ...s,
       columnFilters: [{ id: 'status', value: 'In Review' }],
@@ -112,14 +188,39 @@ const STEPS: readonly Step[] = [
     feature: 'Column order',
     title: 'Move Project next to Name',
     code: "columnOrder: ['name', 'project', 'status', 'assignee', …]",
-    cue: 'order',
+    beats: [
+      [0, (r) => pulse(headerCell(r.root, 'project'))],
+      [700, (r) => r.set(STEPS[4].apply)],
+    ],
     apply: (s) => ({ ...s, columnOrder: ['project', 'status', 'assignee'] }),
   },
   {
     feature: 'View settings',
     title: 'Stripe the rows in the view settings',
     code: 'viewSettings: { striped: true }',
-    cue: 'view',
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'View settings'))],
+      [600, (r) => r.open(toolbarButton(r.root, 'View settings'))],
+      [
+        700,
+        () =>
+          pulse(
+            document.querySelector(
+              '[data-slot="popover-content"] [aria-label="Alternating row colors"]',
+            ),
+          ),
+      ],
+      [
+        500,
+        (r) => {
+          const toggle = document.querySelector<HTMLElement>(
+            '[data-slot="popover-content"] [aria-label="Alternating row colors"]',
+          );
+          if (toggle?.getAttribute('aria-checked') === 'false') toggle.click();
+          r.set(STEPS[5].apply);
+        },
+      ],
+    ],
     apply: (s) => ({ ...s, viewSettings: { striped: true } }),
   },
 ];
@@ -128,47 +229,52 @@ const STEPS: readonly Step[] = [
 const stateAt = (step: number) =>
   STEPS.slice(0, step + 1).reduce((s, x) => x.apply(s), BASE);
 
-// each item stays this long after its change lands (the 1200ms pulse fits
-// well inside)
-const STEP_MS = 3000;
+// after its last beat, a step's open popover stays up this long, then the
+// step's state lands and holds HOLD_MS (the 1200ms pulse fits well inside)
+const SHOW_MS = 1200;
+const HOLD_MS = 2200;
 // the finished table holds this long before the replay starts over
-const HOLD_MS = 3000;
+const LAST_HOLD_MS = 3000;
 const REST_MS = 1400;
-/* typing: a beat before the first letter, then one letter per CHAR_MS;
- * an edit is saved SAVE_MS after its last letter */
-const TYPE_LEAD_MS = 600;
-const CHAR_MS = 60;
-const SAVE_MS = 700;
 
-const typingMs = (step: number) => {
-  const typing = STEPS[step]?.typing;
-  if (!typing) return 0;
-  return (
-    TYPE_LEAD_MS +
-    typing.text.length * CHAR_MS +
-    (step === EDIT_STEP ? SAVE_MS : 0)
-  );
-};
+const beatsMs = (step: number) =>
+  (STEPS[step]?.beats ?? []).reduce((ms, [wait]) => ms + wait, 0) + SHOW_MS;
+
+const holdMs = (step: number) =>
+  step === -1 ? REST_MS : step === STEPS.length - 1 ? LAST_HOLD_MS : HOLD_MS;
 
 type Mode = 'playing' | 'paused' | 'user';
+/* beats: the step's interaction plays; hold: its state has landed */
+type Phase = 'beats' | 'hold';
 
-/** The replaying table for the homepage: six items on a loop, each one types
- * any text letter by letter, then pulses what it changed. */
+/** The replaying table for the homepage: six items on a loop, each one plays
+ * its interaction on the table's own controls, then its state lands. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);
+  const [phase, setPhase] = useState<Phase>('hold');
   const [mode, setMode] = useState<Mode>('playing');
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<SignalTableState>(BASE);
-  // letters typed so far for the current item; null when it is not typing
-  const [typed, setTyped] = useState<number | null>(null);
+  const [editing, setEditing] = useState<SignalTableProps['editing']>(null);
   // bumped on each restart so the table fades back in from its plain state
   const [resets, setResets] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+  // the step the visitor or the loop moved to last, read by an interrupted
+  // step's cleanup so it does not land over a newer jump
+  const stepRef = useRef(-1);
+
+  const goTo = (next: number, nextPhase: Phase) => {
+    stepRef.current = next;
+    setStep(next);
+    setPhase(nextPhase);
+  };
 
   // reduced motion: no autoplay, land on the finished table
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const last = STEPS.length - 1;
+      stepRef.current = last;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot read of a media query
       setStep(last);
       setState(stateAt(last));
@@ -190,81 +296,66 @@ export function SignalDemo() {
 
   const running = mode === 'playing' && visible;
 
-  // advance to the next item
+  // play the current step's beats, then land its state
   useEffect(() => {
-    if (!running) return;
+    const root = tableRef.current;
+    if (!running || phase !== 'beats' || step < 0 || !root) return;
+    let opened: HTMLElement | null = null;
+    let finished = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const replay: Replay = {
+      root,
+      set: (update) => setState(update),
+      edit: setEditing,
+      open: (trigger) => {
+        if (!trigger) return;
+        opened = trigger;
+        trigger.click();
+      },
+    };
+    // closes what the step opened and lands its state
+    const land = () => {
+      if (opened?.getAttribute('aria-expanded') === 'true') opened.click();
+      opened = null;
+      setEditing(null);
+      if (stepRef.current !== step) return;
+      setState(stateAt(step));
+      setPhase('hold');
+    };
+    let at = 0;
+    for (const [wait, run] of STEPS[step].beats) {
+      at += wait;
+      timers.push(setTimeout(() => run(replay), at));
+    }
+    timers.push(
+      setTimeout(() => {
+        finished = true;
+        land();
+      }, at + SHOW_MS),
+    );
+    return () => {
+      timers.forEach(clearTimeout);
+      // stopped part way (a click, a jump, or scrolled away): finish at once
+      if (!finished) land();
+    };
+  }, [running, phase, step, resets]);
+
+  // after a step's hold, start the next one
+  useEffect(() => {
+    if (!running || phase !== 'hold') return;
     const last = STEPS.length - 1;
-    const wait =
-      (step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS) +
-      typingMs(step);
     const t = setTimeout(() => {
       // after the last item, fade back to the plain table and start over
       if (step === last) {
         setResets((n) => n + 1);
-        setStep(-1);
         setState(BASE);
-        setTyped(null);
+        goTo(-1, 'hold');
         return;
       }
-      const next = step + 1;
-      setStep(next);
-      const typing = STEPS[next]?.typing;
-      if (typing) {
-        setState(typing.at(stateAt(next - 1), ''));
-        setTyped(0);
-      } else {
-        setState(stateAt(next));
-        setTyped(null);
-      }
-    }, wait);
+      goTo(step + 1, 'beats');
+    }, holdMs(step));
     return () => clearTimeout(t);
-  }, [running, step]);
-
-  // type the current item's text, one letter at a time
-  useEffect(() => {
-    const typing = STEPS[step]?.typing;
-    if (!running || !typing || typed === null) return;
-    const done = typed >= typing.text.length;
-    const t = setTimeout(
-      () => {
-        if (done) {
-          setState(stateAt(step));
-          setTyped(null);
-          return;
-        }
-        const n = typed + 1;
-        setState(typing.at(stateAt(step - 1), typing.text.slice(0, n)));
-        setTyped(n);
-      },
-      done
-        ? step === EDIT_STEP
-          ? SAVE_MS
-          : 0
-        : typed === 0
-          ? TYPE_LEAD_MS
-          : CHAR_MS,
-    );
-    return () => clearTimeout(t);
-  }, [running, step, typed]);
-
-  const editing =
-    step === EDIT_STEP && typed !== null
-      ? {
-          rowId: EDIT_ROW,
-          value: typed === 0 ? EDIT_FROM : EDIT_TO.slice(0, typed),
-        }
-      : null;
-
-  // the pulse starts once the change has landed: after any typing (and,
-  // for the edit, after the value is saved)
-  const cueKind =
-    step >= 0 && mode !== 'user' && typed === null ? STEPS[step].cue : null;
-  const cue: SignalCue | null =
-    cueKind === null
-      ? null
-      : cueKind === 'edit'
-        ? { kind: 'edit', rowId: EDIT_ROW }
-        : { kind: cueKind };
+  }, [running, phase, step]);
 
   const onChange = useCallback<SignalTableProps['onChange']>(
     (key, updater) =>
@@ -278,28 +369,25 @@ export function SignalDemo() {
     [],
   );
 
-  const takeControl = () => {
-    if (mode !== 'playing') return;
+  // a visitor's own pointer or key stops the replay; the replay's clicks
+  // are not trusted events and pass
+  const takeControl = (event: { isTrusted: boolean }) => {
+    if (!event.isTrusted || mode !== 'playing') return;
     setMode('user');
-    // a half-typed item lands on its finished state
-    if (typed !== null && step >= 0) {
-      setTyped(null);
-      setState(stateAt(step));
-    }
   };
 
   // start over from the first item straight away
   const replay = () => {
     setResets((n) => n + 1);
-    setTyped(null);
-    setStep(0);
-    setState(stateAt(0));
+    setEditing(null);
+    setState(BASE);
+    goTo(0, 'beats');
     setMode('playing');
   };
 
   const jumpTo = (i: number) => {
-    setTyped(null);
-    setStep(i);
+    setEditing(null);
+    goTo(i, 'hold');
     setState(stateAt(i));
     setMode('paused');
   };
@@ -317,15 +405,11 @@ export function SignalDemo() {
         className={`v5-demo-table min-w-0 ${
           resets === 0 ? '' : resets % 2 ? 'v12-reset-a' : 'v12-reset-b'
         }`}
+        ref={tableRef}
         onPointerDownCapture={takeControl}
         onKeyDownCapture={takeControl}
       >
-        <SignalTable
-          state={state}
-          onChange={onChange}
-          editing={editing}
-          cue={cue}
-        />
+        <SignalTable state={state} onChange={onChange} editing={editing} />
       </div>
 
       <aside className="v5-steps" aria-label="Demo items">
@@ -346,7 +430,7 @@ export function SignalDemo() {
           </button>
         </div>
 
-        <ol className="flex flex-col">
+        <ol className="v12-step-list flex flex-col">
           {STEPS.map((s, i) => {
             const done = i < step || (i === step && mode !== 'playing');
             const active = i === step && mode === 'playing';
@@ -368,14 +452,11 @@ export function SignalDemo() {
                   </span>
                   {active ? (
                     <span
-                      key={`${step}-${mode}`}
+                      key={`${step}-${mode}-${resets}`}
                       aria-hidden="true"
                       className="v5-step-progress"
                       style={{
-                        animationDuration: `${
-                          (i === STEPS.length - 1 ? HOLD_MS : STEP_MS) +
-                          typingMs(i)
-                        }ms`,
+                        animationDuration: `${beatsMs(i) + holdMs(i)}ms`,
                       }}
                     />
                   ) : null}
