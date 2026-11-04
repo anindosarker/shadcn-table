@@ -199,11 +199,9 @@ const notEmpty = <TFeatures extends TableFeatures, TData extends RowData>(
 
 notEmpty.autoRemove = (val: unknown) => !val;
 
-// `arrIncludesSome`, the `multi-select` default (F29): any overlap for an
-// array row value, as table-core's, and a picked value for a scalar one, which
-// table-core's rejects. It keeps the name so the filter mode label and the
-// filter option menu's array modes still find it. An empty selection keeps
-// every row.
+// Registered as `arrIncludesSome` (the `multi-select` default, so its mode label
+// resolves): any overlap for an array row value, membership for a scalar one,
+// and every row for an empty selection.
 const arrIncludesSomeOrValue = <
   TFeatures extends TableFeatures,
   TData extends RowData,
