@@ -38,6 +38,9 @@ interface Step {
   code: string;
   /** The interaction, played before the state lands. */
   beats: readonly Beat[];
+  /** How long what the step opened stays up after its last beat; SHOW_MS
+   * when unset. */
+  showMs?: number;
   /** Final table state once the item has played. */
   apply: (s: SignalTableState) => SignalTableState;
 }
@@ -80,6 +83,29 @@ const toolbarButton = (root: HTMLElement, label: string) =>
     (button) => !button.closest('table'),
   ) ?? null;
 
+/** The "+ Filter" pill beside the chips (named by its text only), or the
+ * toolbar filter button while the chips row has no pill yet. */
+const addFilterButton = (root: HTMLElement) =>
+  [...root.querySelectorAll<HTMLElement>('button:not([aria-label])')].find(
+    (button) =>
+      !button.closest('table') && button.textContent?.trim() === 'Filter',
+  ) ?? toolbarButton(root, 'Filter');
+
+/** Closes the open popover the way a click outside it does. Clicking its
+ * trigger again would hand focus back to the trigger: a focused toolbar
+ * button keeps its tooltip and focus ring up into the next step and, off
+ * screen, scrolls the page to itself. An open select inside the popover
+ * closes first, so this repeats until the trigger reads closed. */
+const clickOutside = (trigger: HTMLElement, tries = 3) => {
+  if (!tries || trigger.getAttribute('aria-expanded') !== 'true') return;
+  // Radix dismisses on the click that follows the pointerdown
+  document.body.dispatchEvent(
+    new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse' }),
+  );
+  document.body.click();
+  setTimeout(() => clickOutside(trigger, tries - 1), 50);
+};
+
 /** An option of the open popover (a column picker or a select list). */
 const option = (text: string) =>
   [
@@ -87,6 +113,18 @@ const option = (text: string) =>
       '[data-slot="popover-content"] [role="option"], [data-slot="select-content"] [role="option"]',
     ),
   ].find((el) => el.textContent?.trim() === text) ?? null;
+
+/* Where the replay's clicks move focus: the table and the popovers it opens
+ * (portalled outside the table). An open select keeps its focus: it marks
+ * the highlighted option, as for a visitor, and its focus trap fights a
+ * blur until the select closes. */
+const REPLAY_POPOVERS = '[data-slot="popover-content"]';
+/* Text fields keep the focus the replay gives them: they show a caret, as
+ * they do for a visitor. */
+const TEXT_FIELD =
+  'input:not([type="checkbox"], [type="radio"], [type="range"]), textarea';
+/* Focus this soon after a visitor's own pointer or key press is theirs. */
+const USER_FOCUS_MS = 300;
 
 const headerCell = (root: HTMLElement, id: string) =>
   root.querySelector<HTMLElement>(`thead th[data-flip-column="${id}"]`);
@@ -105,13 +143,15 @@ const clearSearch = (s: SignalTableState): SignalTableState => ({
 // reading pace for the replay's typing
 const CHAR_MS = 140;
 
-/** Beats that type `text` one letter at a time through `at`. */
+/** Beats that type `text` one letter at a time through `at`, the first one
+ * `first` ms after the previous beat. */
 const typeBeats = (
   text: string,
   at: (r: Replay, partial: string) => void,
+  first = CHAR_MS,
 ): Beat[] =>
   [...text].map((_, i) => [
-    CHAR_MS,
+    i === 0 ? first : CHAR_MS,
     (r: Replay) => at(r, text.slice(0, i + 1)),
   ]);
 
@@ -149,9 +189,11 @@ const STEPS: readonly Step[] = [
       [0, (r) => r.set(clearSearch)],
       [500, (r) => pulse(estimateCell(r.root))],
       [600, (r) => r.edit({ rowId: EDIT_ROW, value: EDIT_FROM })],
-      [500, (r) => r.edit({ rowId: EDIT_ROW, value: '' })],
-      ...typeBeats(EDIT_TO, (r, partial) =>
-        r.edit({ rowId: EDIT_ROW, value: partial }),
+      // the new value types over the old one, with no empty field between
+      ...typeBeats(
+        EDIT_TO,
+        (r, partial) => r.edit({ rowId: EDIT_ROW, value: partial }),
+        640,
       ),
     ],
     apply: (s) => ({
@@ -164,8 +206,10 @@ const STEPS: readonly Step[] = [
     title: 'Filter chips',
     code: "columnFilters: [{ id: 'status', value: 'In Review' }]",
     beats: [
-      [0, (r) => pulse(toolbarButton(r.root, 'Filter'))],
-      [600, (r) => r.open(toolbarButton(r.root, 'Filter'))],
+      // the "+ Filter" pill, so the cue, the picker and the new chip sit
+      // together in the chips row
+      [0, (r) => pulse(addFilterButton(r.root))],
+      [600, (r) => r.open(addFilterButton(r.root))],
       [700, () => pulse(option('Status'))],
       [500, () => option('Status')?.click()],
       [
@@ -202,6 +246,9 @@ const STEPS: readonly Step[] = [
     feature: 'View settings',
     title: 'Striped rows',
     code: 'viewSettings: { striped: true }',
+    // the panel covers half the table: it closes soon after the switch flips,
+    // so the stripes show for the whole hold
+    showMs: 700,
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'View settings'))],
       [600, (r) => r.open(toolbarButton(r.root, 'View settings'))],
@@ -243,8 +290,11 @@ const REST_MS = 1400;
 // every step stays active at least this long, beats and hold together
 const MIN_STEP_MS = 5200;
 
+const showMs = (step: number) => STEPS[step]?.showMs ?? SHOW_MS;
+
 const beatsMs = (step: number) =>
-  (STEPS[step]?.beats ?? []).reduce((ms, [wait]) => ms + wait, 0) + SHOW_MS;
+  (STEPS[step]?.beats ?? []).reduce((ms, [wait]) => ms + wait, 0) +
+  showMs(step);
 
 const holdMs = (step: number) =>
   step === -1
@@ -323,6 +373,45 @@ export function SignalDemo() {
 
   const running = mode === 'playing' && visible;
 
+  // the replay's clicks carry no pointer, so the browser draws a keyboard
+  // focus ring on the controls its popovers focus (the panel's first row, a
+  // select's trigger once the select closes), where a visitor's click
+  // shows none; while it plays, focus no visitor input caused leaves them
+  useEffect(() => {
+    if (!running) return;
+    let userAt = -Infinity;
+    const onInput = (event: Event) => {
+      if (event.isTrusted) userAt = event.timeStamp;
+    };
+    const onFocus = (event: FocusEvent) => {
+      const el = event.target;
+      if (!(el instanceof HTMLElement) || el.matches(TEXT_FIELD)) return;
+      if (event.timeStamp - userAt < USER_FOCUS_MS) return;
+      if (!tableRef.current?.contains(el) && !el.closest(REPLAY_POPOVERS)) {
+        return;
+      }
+      // a frame later, before the next paint: a select trigger the replay
+      // just clicked takes focus as it opens, and blurring it then closes
+      // the select and the popover around it, so an open one keeps it
+      requestAnimationFrame(() => {
+        if (
+          document.activeElement === el &&
+          el.getAttribute('aria-expanded') !== 'true'
+        ) {
+          el.blur();
+        }
+      });
+    };
+    document.addEventListener('pointerdown', onInput, true);
+    document.addEventListener('keydown', onInput, true);
+    document.addEventListener('focusin', onFocus);
+    return () => {
+      document.removeEventListener('pointerdown', onInput, true);
+      document.removeEventListener('keydown', onInput, true);
+      document.removeEventListener('focusin', onFocus);
+    };
+  }, [running]);
+
   // play the current step's beats, then land its state
   useEffect(() => {
     const root = tableRef.current;
@@ -356,9 +445,7 @@ export function SignalDemo() {
     const land = () => {
       if (run.landed) return;
       run.landed = true;
-      if (run.opened?.getAttribute('aria-expanded') === 'true') {
-        run.opened.click();
-      }
+      if (run.opened) clickOutside(run.opened);
       run.opened = null;
       setEditing(null);
       if (tokenRef.current !== run.token) return;
@@ -382,7 +469,7 @@ export function SignalDemo() {
         ),
       );
     });
-    timers.push(setTimeout(land, Math.max(0, at + SHOW_MS - elapsed)));
+    timers.push(setTimeout(land, Math.max(0, at + showMs(step) - elapsed)));
     return () => {
       timers.forEach(clearTimeout);
       run.mounted = false;
@@ -447,12 +534,20 @@ export function SignalDemo() {
     setMode('paused');
   };
 
+  // in the 240px aside "Now showing:" and the feature sit on two lines of
+  // their own, so the status keeps one height and the step list under it
+  // never moves; under the table (below 1440px) they share one line
   const status =
-    mode === 'user'
-      ? 'Paused'
-      : step === -1
-        ? 'Starting'
-        : `Now showing: ${STEPS[step].feature}`;
+    mode === 'user' ? (
+      'Paused'
+    ) : step === -1 ? (
+      'Starting'
+    ) : (
+      <>
+        <span className="truncate">Now showing:</span>{' '}
+        <span className="truncate">{STEPS[step].feature}</span>
+      </>
+    );
 
   return (
     <div ref={rootRef} className="v5-demo" data-running={running || undefined}>
@@ -475,7 +570,10 @@ export function SignalDemo() {
               className="v5-live-dot"
               data-on={running || undefined}
             />
-            <span className="truncate" aria-live="polite">
+            <span
+              className="flex h-8 min-w-0 items-center gap-x-1 min-[1440px]:flex-col min-[1440px]:items-start min-[1440px]:justify-center"
+              aria-live="polite"
+            >
               {status}
             </span>
           </p>
