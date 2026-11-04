@@ -10,6 +10,14 @@ Gates:
 - `node .ai/plans/v0.8.x/anindosarker/reference/06-check.mjs` at 23e6115e: green
 - `node scripts/check-pages.mjs --base radix --url http://localhost:5347` (own dev server) at 61792f9f: green (1792 passed, 0 failed)
 - `pnpm --filter shadcn-table-docs build` at dc29db70: green (its `registry:items` step regenerated `registry.json`, committed as af9780fb)
+- Builder ran every line above. Verifier lines below, at cb70852d (tree clean):
+- `node scripts/check-pages.mjs --base radix --url http://localhost:5347` (verifier, own dev server) at cb70852d: green (1792 passed, 0 failed); rerun because `registry.json` changed after 61792f9f
+- `node scripts/check-pages.mjs --base base --url http://localhost:5347` (verifier, own dev server) at cb70852d: green (1792 passed, 0 failed)
+- `node scripts/check-pages.mjs --base aria --url http://localhost:5347` (verifier, own dev server) at cb70852d: green (1792 passed, 0 failed)
+- `pnpm -w check:bases` (verifier) at cb70852d: green
+- `node .ai/plans/v0.8.x/anindosarker/reference/06-check.mjs` (verifier, Acceptance rerun) at cb70852d: green ("06-check: all checks pass")
+- Docs `types:check`, `lint`, `build`: recorded green by the builder (23e6115e, dc29db70); later diffs touch two `.mdx` guides and `registry.json` only, CI is the second run
+- Storybook build and `test:<base>`: not in spec 06 section 2.2; no file under `packages/` changed
 
 - Milestone 01 setup and prop tables: done (73ec8c45)
 - Milestone 02 guides, example, registrations: done (23e6115e)
