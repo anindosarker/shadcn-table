@@ -67,7 +67,7 @@
 
 ### F14 Docs page CSS clips the pagination in every example
 
-- `apps/shadcn-table-docs/app/global.css:363-365`: `#nd-page .prose :is(p, ul, ol) { margin-block: 0.75rem }` reaches into the playground (`not-prose` does not stop an id-scoped rule) and gives the pagination `<ul>` 12 px top and bottom margin; the absolute pagination block becomes 77 px inside the `min-h-12 overflow-hidden` bottom toolbar (`ST_BottomToolbar.tsx:21, 66-70`), so the page box and arrows lose their bottom 29 px. Measured on `persistent-view` and `export-csv`, Base UI, 1440x900; the same rule adds the margin to any `<p>` inside a preview. Not caused by persistence. Fix: scope the rule to exclude `.not-prose` (docs app only). Timing: item 3, docs.
+- `apps/shadcn-table-docs/app/global.css:363-365`: `#nd-page .prose :is(p, ul, ol) { margin-block: 0.75rem }` reaches into the playground (`not-prose` does not stop an id-scoped rule) and gives the pagination `<ul>` 12 px top and bottom margin; the absolute pagination block becomes 77 px inside the `min-h-12 overflow-hidden` bottom toolbar (`ST_BottomToolbar.tsx:21, 66-70`), so the page box and arrows lose their bottom 29 px. Measured on `persistent-view` and `export-csv`, Base UI, 1440x900; the same rule adds the margin to any `<p>` inside a preview. Not caused by persistence. Owner, 19:36, on `/docs/examples/react-query` (sticky header, scrolling body, pages pagination): the same clip, the page buttons cut at the bottom. In that screenshot the first body row also sits half under the sticky header; check whether the scrolled container or the header overlap is at fault. Fix: scope the rule to exclude `.not-prose` (docs app only). Timing: item 3, docs.
 
 ### F16 Body cells misalign with the header when row numbers are turned on
 
