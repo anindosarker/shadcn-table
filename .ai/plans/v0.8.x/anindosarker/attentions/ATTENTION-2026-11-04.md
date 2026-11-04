@@ -14,3 +14,10 @@
   - a) Recommended: the owner pastes the session URL; the workflow agent rules carry it from then on (commits, PR bodies, merge commits).
   - b) Accept the gap on branch commits; merge commits carry the line once supplied.
   - c) No line anywhere for v0.8.0, noted in the handoff.
+
+## A3 Header cells show no vertical hairline between them at rest
+
+- The demo captures (`reference/01-default-light.png`, `01-default-dark.png`) show a hairline between every header cell at rest; the built header shows one only on the hovered or open cell. The build follows the D2 addendum (the band is told apart by the muted label, the bottom hairline and the chevrons only) and D6 (the resize hairline is invisible at rest); the demo at capture time disagrees with that text. Spec 03's judges passed 3 of 3 on the decisions.
+- Options:
+  - a) Recommended: keep as built (D2 addendum and D6 as written; the shadcn data tables the owner checked show no column dividers in the header).
+  - b) Follow the capture: a `border-e` hairline on every header cell at rest, and D2 and D6 get an addendum.
