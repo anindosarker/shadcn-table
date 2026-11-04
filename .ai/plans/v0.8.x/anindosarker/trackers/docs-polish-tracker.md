@@ -1,6 +1,6 @@
 # Docs polish (F32, F33, F34, F35, F37), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/docs-polish`, worktree 02, PR #112
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at fe725e75: green
@@ -10,6 +10,13 @@ Gates:
 - `node scripts/check-pages.mjs d --base radix --url http://localhost:5355` at fe725e75: green (255 passed; the advanced dialog check also green on base and aria)
 - `node scripts/check-pages.mjs e --base radix --url http://localhost:5355` at fe725e75: green (672 passed, demo loop on the three bases)
 - `node .ai/plans/v0.8.x/anindosarker/reference/06.2-check.mjs apps/shadcn-table-docs/examples/radix` at fe725e75: green (217 files, no reports)
+- `pnpm --filter shadcn-table-docs types:check` at fe725e75 (verifier): reused, `fe725e75..7971d3a1` touches only the tracker and CHANGELOG.md
+- `pnpm --filter shadcn-table-docs lint` at fe725e75 (verifier): reused, same reason
+- `pnpm --filter shadcn-table-docs build` at 7971d3a1 (verifier): green
+- `node scripts/check-pages.mjs --base radix --url http://localhost:5345` (all clusters) at 7971d3a1 (verifier): green (1845 passed, 0 failed)
+- `node scripts/check-pages.mjs --base base --url http://localhost:5345` (all clusters) at 7971d3a1 (verifier): green (1845 passed, 0 failed)
+- `node scripts/check-pages.mjs --base aria --url http://localhost:5345` (all clusters) at 7971d3a1 (verifier): green (1845 passed, 0 failed)
+- `node .ai/plans/v0.8.x/anindosarker/reference/06.2-check.mjs apps/shadcn-table-docs/examples/{radix,base,aria}` at 7971d3a1 (verifier): green (217 files each, no reports)
 - CI: pending on PR #112
 
 - Milestone 01 persistent view as the demo (F35, D55): done (58787918)
@@ -19,6 +26,7 @@ Gates:
 
 ## Attention
 
+- The docs build regenerates `apps/shadcn-table-docs/registry.json` with new `registryDependencies` (`dialog` for the advanced examples, `badge` for persistent-view) that the branch does not commit; the verifier restored the file, since P9 leaves `registry.json` to the merger. The merger must regenerate it, or the hosted advanced and persistent-view items install without those parts.
 - Home demo frame is about 1085 px at 1440 px, not the 960 px F32 named: the header demo's seven sizes plus the actions column total 1218 px, so 960 px cannot show them without scrolling. The demo band now runs gutter to gutter (`v12-wide`, as the theme demo) with a 240 px steps panel beside the table from 1440 px and the steps under it below; Name is 196 px (demo 260), Estimate 136 (120) and Priority 132 (120), because "Estimate" and "Priority" truncate at 120 px beside the header menu button. Revert path: `components/dev-home/v12/v12.css` (1440 px rule) and the three sizes in `signal-table.tsx`.
 - Theme demo fix lives in `components/theme-demo/variants/whole-app.tsx` and `whole-app-site.tsx`, outside the story's listed files (`theme-demo.tsx` only mounts `WholeApp`): pacing constants (45 ms a character, 500 ms send, 1200 ms think, 8 s per theme) and the height thresholds (6 rows from 800 px, header from 860 px, form from 1000 px, toolbar and charts from 720 px). The table did not overflow at 1440x900; it overflowed at heights 780 to 850 and 920 to 999, and at 700.
 - Persistent view tags cell shows "+n" as a Badge with a `title` listing every tag, not the demo's popover: the Popover part's API differs per base, and the example must stay identical on the three bases.
