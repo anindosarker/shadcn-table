@@ -22,6 +22,10 @@ Gates:
 - `test:base`, `test:radix`, `test:aria` (the same 74 story files, port 5341, one base after another): green, 493 tests each
 - `storybook:build:base`, `storybook:build:radix`, `storybook:build:aria` (one after another): green
 - `node scripts/check-aria-warnings.mjs --url http://localhost:5352` (built aria Storybook served on 5352): 0 warnings
+- Verifier, at 3c6fca21 (466cc4a4..HEAD touches only this tracker, so every builder line at 466cc4a4 stands):
+- `node .ai/plans/v0.8.x/anindosarker/reference/01-check.mjs` (verifier): green, 3 bases, 0 problems
+- Acceptance rerun (verifier): `vitest run` on `FilterChips`, `SortPopover`, `ViewSettings`, `Search`, `ColumnHiding`, `DensePadding`, `Toolbar`, `fixed-bugs/SearchField`, `fixed-bugs/HeadlessFullScreen` per base, port 5341, one base after another: green, 9 files, 77 tests each in base, radix, aria
+- Judges on the light and dark captures: not run by the verifier (the workflow's judge stage, P7)
 
 - Milestone 01 group, chips, picker, sort editor: done (87b7608e)
 - Milestone 02 view settings, search, persistence, triggers: done (87b7608e)
