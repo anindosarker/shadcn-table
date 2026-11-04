@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { type DivProps } from '@/components/ui-radix/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-radix/shadcn-table/shared/utils/utils';
 import { ST_BottomToolbar } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_BottomToolbar';
+import { ST_HeaderFilterEditor } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_HeaderFilterEditor';
 import { ST_TopToolbar } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_TopToolbar';
 import { ST_TableContainer } from '@/components/ui-radix/shadcn-table/components/table/ST_TableContainer';
 import {
@@ -133,6 +134,9 @@ export const ST_TableLayout = ({ ...rest }: ST_TableLayoutProps) => {
       layoutDivProps={layoutDivProps}
     >
       {topToolbar}
+      {/* Outside the toolbar slot, so a custom toolbar keeps the column menu's
+          Filter item working in chips mode. */}
+      <ST_HeaderFilterEditor table={table} />
     </ST_TableLayoutContainer>
   );
 };

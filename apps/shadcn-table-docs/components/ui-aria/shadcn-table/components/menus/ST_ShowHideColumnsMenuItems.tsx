@@ -17,6 +17,7 @@ import { applyColumnReorder } from '@/components/ui-aria/shadcn-table/shared/uti
 import { isColumnDragCancelled } from '@/components/ui-aria/shadcn-table/shared/utils/drag.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui-aria/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui-aria/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { ST_ColumnIcon } from '@/components/ui-aria/shadcn-table/components/toolbar/ST_ColumnPicker';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
@@ -161,7 +162,13 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
         )}
         style={style}
       >
-        <span className={cn(columnDefType === 'display' && 'opacity-50')}>
+        <span
+          className={cn(
+            'flex items-center gap-2',
+            columnDefType === 'display' && 'opacity-50',
+          )}
+        >
+          <ST_ColumnIcon column={column} />
           {columnDef.header}
         </span>
       </DropdownMenuItem>
