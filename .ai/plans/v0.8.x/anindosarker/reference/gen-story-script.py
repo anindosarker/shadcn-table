@@ -3,7 +3,7 @@
 import re, sys, pathlib
 
 TPL = pathlib.Path('/Users/anindosarker/.claude/skills/expedition/templates/workflow.js').read_text()
-OUT = pathlib.Path('/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/a8f67844-b95f-442e-b11b-8a45bbe814b1/scratchpad')
+OUT = pathlib.Path(sys.argv[3]) if len(sys.argv) > 3 else pathlib.Path('/private/tmp/claude-501/-Users-anindosarker-Work-Personal-React-table/13d1b0a3-6637-482d-84a6-6db8776a4a16/scratchpad')
 BASE_SHA = sys.argv[1]
 ROOT = '/Users/anindosarker/Work/Personal/React-table/shadcn-react-table'
 
@@ -74,11 +74,26 @@ STORIES = {
 - Play assertions that read header text keep passing (the icon renders before the label, the text is unchanged); a play that breaks because of an icon is fixed in the play, never by dropping the icon.
 - Gates: `node reference/06.2-check.mjs packages/shadcn-table/stories`, test:base, test:radix, test:aria one after another, storybook:build:base, lint.""",
   ),
+  'plays': dict(
+    id='06.3', wt=f'{ROOT}.worktrees/02', branch='v0.8/plays',
+    plan='specs/06.3-plays.md', tracker='trackers/06.3-tracker.md',
+    title='v0.8 spec 06.3: plays for every story file', review=None, spec_check=False, label='release:skip',
+    specifics="""Story "Plays (06.3)" specifics (spec 06.3 whole: 1.6.2 feature plays, 1.6.3 styling, fixed-bugs and Basic, 1.6.4 check script; milestones 2.1.1 to 2.1.3, gates 2.2):
+""" + COMMON + """
+- Your files: every file under packages/shadcn-table/stories/ and the new .ai/plans/v0.8.x/anindosarker/reference/06.3-check.mjs; your tracker. No library source edit, no test runner config edit, no story args change beyond what a play needs (spec 1.6.2 "does NOT"): a behaviour the library lacks is an Attention line with file:line, never a skipped assertion. No CHANGELOG line; PR label release:skip.
+- Sprint S8 merged plays into Selection, ColumnHiding, ColumnResizing, Toolbar, ColumnGrouping, RowOrdering and fixed-bugs/FilterPopover (names FunnelIsClickable, DropSlidesRows, CheckboxesAlignSemantic, MenuReorderWithTableOffset, ResizeGuidesMeetEdge, InternalButtonsAnimateIn, GroupedHeaderHasIcon): keep them; where 1.6.2 lists a name they already cover, do not duplicate the behaviour, add the missing names only.
+- First, before any play: run test:base, test:radix, test:aria once each at the start commit and record the wall time per base in the tracker (spec 1.2 runtime goal: final runtime under twice that).
+- 1.6.2 play names are mandatory per file (the check script matches them as `play` on a story whose export name equals the listed name): write them exactly. Each play asserts the behaviour's visible result (width, order, sticky position, text, count, class), not element presence. Use the file's existing stories, or one new story where none fits (RowDragging: a two-table story mirroring the docs row-dragging example; Creating: a story whose onCreatingRowSave appends). Shared stBrowserUserEvent for real pointer work; within(canvasElement) queries by role and name.
+- One sample deliberate break per file (a local uncommitted edit that breaks the behaviour, the play must fail, then revert) noted in the tracker under "## Notes" (file, play, what was broken, failed as expected).
+- 1.6.3: one play per styling file asserting the computed style its stories set; one per fixed-bugs file asserting the bug's absence as the file name says; Basic.stories.tsx gets RendersRows.
+- 1.6.4: reference/06.3-check.mjs walks packages/shadcn-table/stories/, reports every *.stories.tsx without `play:` and, for each features/ file, the 1.6.2 names not found as a play on a story with that export name; exit 1 on any report. Commit it in milestone 2 and run it as a gate.
+- Milestone gates: tsc -p tsconfig.stories.json (no new error beyond the three at the start commit, HeaderGroups.stories.tsx:295 and ViewSettings.stories.tsx:293 are pre-existing), lint, test:base on the touched files; final: `node .ai/plans/v0.8.x/anindosarker/reference/06.3-check.mjs` exit 0, test:base, test:radix, test:aria in full one after another with the runtime recorded, storybook:build:base, lint, pnpm format.""",
+  ),
 }
 
 def gen(key, st):
     s = TPL
-    s = s.replace("name: 'v<cycle>-story-<slug>'", f"name: 'v0-8-s6-{key}'")
+    s = s.replace("name: 'v<cycle>-story-<slug>'", f"name: 'v0-8-story-{key}'")
     s = s.replace("description: 'v<cycle> story <Name (NN)> (worktree <name>): build, spec check, review, verify, judges, merge; the release story adds gate and release'",
                   f"description: 'v0.8.x sprint S6 story {st['id']} ({st['branch']}, worktree {st['wt'].rsplit('/',1)[1]}): build, spec check, fable review, verify; merge by the main session'")
     s = s.replace("""  phases: [
@@ -95,7 +110,9 @@ def gen(key, st):
     s = s.replace("const RELEASE_PREFIX = 'v<cycle>'", "const RELEASE_PREFIX = 'v0.8'")
     s = s.replace("const RELEASE_SPEC = `${PLANS}/specs/<release spec>.md`", "const RELEASE_SPEC = `${PLANS}/specs/07-release.md`")
     s = s.replace("const RUN_SPEC_CHECK = true, RUN_REVIEW = true, RUN_VERIFY = true, RUN_JUDGES = true, RUN_MERGE = true, RUN_GATE = true, RUN_RELEASE = true",
-                  "const RUN_SPEC_CHECK = true, RUN_REVIEW = true, RUN_VERIFY = true, RUN_JUDGES = true, RUN_MERGE = false, RUN_GATE = false, RUN_RELEASE = false")
+                  f"const RUN_SPEC_CHECK = {'true' if st.get('spec_check', True) else 'false'}, RUN_REVIEW = {'true' if st['review'] else 'false'}, RUN_VERIFY = true, RUN_JUDGES = true, RUN_MERGE = false, RUN_GATE = false, RUN_RELEASE = false")
+    if st.get('label'):
+        s = s.replace("const RELEASE_LABEL = 'release:minor'", f"const RELEASE_LABEL = '{st['label']}'")
     s = s.replace("const SERIAL_GATES = false", "const SERIAL_GATES = true")
     # SPECS block
     specs_re = re.compile(r"const SPECS = \[\n.*?\n\]\n", re.S)
@@ -112,7 +129,7 @@ def gen(key, st):
                   "The machine is loaded (P4): per-base gates one base after another, never two long gates at once.")
     s = s.replace("in parallel where independent, and record them. The long gates (pages check, Storybook build, browser tests per base) run here once, every base concurrently, never per milestone.",
                   "one after another (P4, loaded machine), and record them. The long gates (pages check, Storybook build, browser tests per base) run here once, one base after another, never per milestone.")
-    out = OUT / f"v0.8-s6-{key}.js"
+    out = OUT / f"v0.8-story-{key}.js"
     out.write_text(s)
     print(out)
 
