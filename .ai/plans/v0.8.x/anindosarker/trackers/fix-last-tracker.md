@@ -1,7 +1,7 @@
 # Last fixes (F19, F28, F30, F39, F40, F41, D56, D57), tracker
 
 Status: running
-Branch `v0.8/fix-last`, worktree 01, PR #[n]
+Branch `v0.8/fix-last`, worktree 01, PR #114
 Gates:
 - Repro on shipped code (335c749c), base, `FunnelIsClickable`: red, the funnel button is 12.07 px wide (want at least 24).
 - Repro on shipped code (335c749c), base, `DropSlidesRows`: red, the moved row has no translate animation after the drop (0 animations).
@@ -17,6 +17,8 @@ Gates:
 - Milestone 02 docs (D56 export examples on chips, page checks): planned
 
 ## Attention
+
+- F41 icon only under `groupedColumnMode: 'remove'`: the task named 'remove' and 'reorder', but under 'reorder' the expand column shows only the expand-all button (no grouped label) and the grouped column keeps its own header and icon, so an icon there would stand alone; `getST_RowExpandColumnDef.tsx` sets `icon` for 'remove' only. Revert: drop the `groupedColumnMode === 'remove'` condition on `icon`.
 
 ## Notes
 
