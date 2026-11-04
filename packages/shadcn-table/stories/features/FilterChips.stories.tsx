@@ -294,3 +294,35 @@ export const FilterModePicker = {
     );
   },
 };
+
+// The table-level flag with no column flags or option list offers every mode,
+// as the subheader's mode button does.
+export const FilterModePickerTableLevel = {
+  render: () => (
+    <ShadcnTable
+      columns={columns.map((column) => ({
+        ...column,
+        columnFilterModeOptions: undefined,
+        enableColumnFilterModes: undefined,
+      }))}
+      data={data}
+      enableColumnFilterModes
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const modeButton = await body.findByRole('button', {
+      name: 'Change filter mode',
+    });
+    await userEvent.click(modeButton);
+    await waitFor(() => expect(modeItem('Starts With')).toBeDefined());
+    expect(modeItem('Contains')).toBeDefined();
+    expect(modeItem('Empty')).toBeDefined();
+  },
+};
