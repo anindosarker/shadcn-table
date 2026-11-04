@@ -1,6 +1,6 @@
 # 05: defaults and stories, tracker
 
-Status: blocked (four component bugs the flipped defaults expose; specs 02 to 04 own the files, P5)
+Status: done
 Branch `v0.8/defaults-stories`, worktree 01, PR #101
 Gates:
 - `tsc:radix`, `tsc:baseui`, `tsc:aria` at e62987b8: green
@@ -14,21 +14,23 @@ Gates:
 - `test:aria` at 2b0a0506: red, `Accessor Key While Loading` and MenuOpeners `Column Actions` (aria-haspopup `true`, fixed in the next commit: MenuOpeners file rerun on aria 4 of 4 green)
 - `storybook:build:base`, `storybook:build:radix`, `storybook:build:aria` at 44fab6ff: green
 - `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:bases`, `check:icons`, docs `types:check` and `lint`, `05-check.mjs`, `01-check.mjs` at 44fab6ff: green
+- `test:radix`, `test:base`, `test:aria` at dcaae068: green, 519 of 519 each (run after the F3 to F6 merge)
+- `node reference/05-check.mjs`, `node reference/01-check.mjs`, `pnpm -w check:bases` at dcaae068: green
+- `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:icons` at dcaae068: green
+- docs `types:check` and `lint` at dcaae068: green (lint 0 errors, 9 existing warnings)
+- `check-pages.mjs --base radix`, `--base base`, `--base aria` at dcaae068 (own docs server 5345): green, 1686 passed each, `disable-density-toggle` and both `chart-detail-panel` checks pass
+- `storybook:build:radix`, `storybook:build:base`, `storybook:build:aria` at dcaae068: green
+- `pnpm format` at dcaae068: no change
 
 - Milestone 01 Flips and seed: done (e62987b8)
-- Milestone 02 Stories and docs examples: done except the four red items below (2b0a0506 and 44fab6ff)
-- Milestone 03 Cleanup and gates once: done, gates above
+- Milestone 02 Stories and docs examples: done (44fab6ff; F3 to F6 merged at dcaae068)
+- Milestone 03 Cleanup and gates once: done (dcaae068)
 
 ## Attention
 
-- Blocked: four component bugs surface under the new defaults and keep `test:<base>` and `check-pages` red; each fix is in a component file specs 02 to 04 own, which spec 05 may not edit (1.6.2 "Does NOT change any ... component", P5). Each needs the same change in radix, base and aria; then rerun `test:<base>` and `check-pages.mjs --base <base>` per base.
-- 1. `components/body/ST_TableBodyCell.tsx` (spec 02): the overflow tooltip (`enableCellOverflowTooltip`, now on) calls `cell.getValue()` on skeleton rows while `isLoading` or `showSkeletons`, so an `accessorFn` reading nested data throws on the placeholder rows (`fixed-bugs/loading` `Accessor Key While Loading`, all bases). Fix: compute `overflowTooltip` only when `!(isLoading || showSkeletons)`.
-- 2. `components/menus/ST_ColumnActionMenu.tsx` (spec 03): in chips mode the menu's Filter item opens the header chip editor, then the trigger branch's `onCloseAutoFocus` hands focus back to the chevron, so the editor input loses focus (MenuOpeners `Column Actions`, radix and base; aria passes). Fix: in `handleFilterByColumn` chips branch set a ref the trigger branch's `onCloseAutoFocus` reads to `preventDefault()`.
-- 3. `components/toolbar/ST_ViewSettingsItems.tsx` (spec 04): `enableDensityToggle: false` is ignored; the pinned density button and the Density row still render (check-pages b `disable-density-toggle: no density button`). Fix: leave out the density row and pin when `enableDensityToggle` is false.
-- 4. `components/body/ST_TableDetailPanel.tsx` (spec 02): under `layoutMode: 'grid'` (now the default) the detail cell is `flex` and its `CollapsibleContent` shrinks to its content, so a `ResponsiveContainer` measures 0 width and recharts draws nothing (check-pages b `chart-detail-panel: recharts chart`, d `chart-detail-panel: chart rendered`). Fix: `w-full min-w-0` on the `CollapsibleContent` in the grid layout.
-
 ## Notes
 
+- F3 to F6 (findings.md), the four component bugs the flipped defaults exposed, are fixed on claude/review (304283b4 overflow tooltip skips skeleton rows, 8c3b06ee chips Filter item keeps editor focus, f607d9b6 `enableDensityToggle: false` hides the density view setting, 811cbd94 grid detail panel fills the cell; registry rebuild e6db62a9) and merged here at dcaae068; the red `test:<base>` and `check-pages` lines at 2b0a0506 are superseded.
 - MenuOpeners accepts `aria-haspopup` `menu` or `true` (React Aria's MenuTrigger writes `true`).
 - Selection `Selection Enabled` asserts the select-all control centred on the header label line (first child of the th); the row is 39 px plus the 1 px border.
 - `RenderCounts`: `Profiled Thousand Rows` budget unchanged (passed in every base); `Row Model Follows State` custom button renamed `Reset filters` (chips add a `Clear filters` button).
