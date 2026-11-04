@@ -30,7 +30,8 @@ const body = within(document.body);
 
 const expectOpener = async (getOpener: () => HTMLElement) => {
   const opener = getOpener();
-  expect(opener).toHaveAttribute('aria-haspopup', 'menu');
+  // `true` means `menu` in ARIA; React Aria's MenuTrigger writes `true`.
+  expect(['menu', 'true']).toContain(opener.getAttribute('aria-haspopup'));
   expect(opener).toHaveAttribute('aria-expanded', 'false');
 
   // Open, then a second press on the same opener closes the menu. A modal
