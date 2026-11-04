@@ -1,6 +1,13 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import {
+  Building2Icon,
+  BuildingIcon,
+  GlobeIcon,
+  HashIcon,
+  UserIcon,
+} from 'lucide-react';
 
 // The popover filter opens from its filter button as the popover trigger,
 // with the column's input focused; the empty-mode chip's clear button has a
@@ -20,8 +27,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 export const OpensWithInputFocused = {
@@ -81,12 +88,12 @@ const employees: Employee[] = [
 
 // The export CSV docs example: row selection and columns sized 40 to 300.
 const sizedColumns: ST_ColumnDef<Employee>[] = [
-  { accessorKey: 'id', header: 'ID', size: 40 },
-  { accessorKey: 'firstName', header: 'First Name', size: 120 },
-  { accessorKey: 'lastName', header: 'Last Name', size: 120 },
-  { accessorKey: 'company', header: 'Company', size: 300 },
-  { accessorKey: 'city', header: 'City' },
-  { accessorKey: 'country', header: 'Country', size: 220 },
+  { accessorKey: 'id', header: 'ID', icon: HashIcon, size: 40 },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon, size: 120 },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon, size: 120 },
+  { accessorKey: 'company', header: 'Company', icon: BuildingIcon, size: 300 },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
+  { accessorKey: 'country', header: 'Country', icon: GlobeIcon, size: 220 },
 ];
 
 // The funnel opens the popover with the input focused, and at the docs

@@ -2,6 +2,7 @@ import { type CSSProperties } from 'react';
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Styling/Theming',
@@ -13,18 +14,22 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
 ];
 

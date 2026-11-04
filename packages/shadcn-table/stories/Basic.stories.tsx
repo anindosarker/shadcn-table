@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import { Building2Icon, CakeIcon, UserIcon } from 'lucide-react';
 
 type Person = {
   firstName: string;
@@ -25,10 +26,10 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
 ];
 
 // ShadcnTableProps is an Xor<{ columns; data }, { table }> union, which

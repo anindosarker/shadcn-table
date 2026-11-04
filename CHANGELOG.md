@@ -112,6 +112,11 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - The filtering examples use the filter chips; the new Subheader Filters Example keeps the filter row under the headers with the filter variants and the filter mode picker (`columnFilterDisplayMode: 'subheader'`).
 - The docs prose spacing no longer clips the pagination of the example previews; the Chart Detail Panel example draws its lines; the editing examples put the actions column first; the custom toolbar examples show the view settings button.
 
+#### Spec 06.2 stories
+
+- Every Storybook story column carries a Lucide icon, the same pick per field as the docs examples.
+- The Default Look story renders the stock table: columns, data, `getRowId` and the row actions only.
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed

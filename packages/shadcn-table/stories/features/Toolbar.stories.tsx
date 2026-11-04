@@ -1,4 +1,11 @@
-import { SquarePlus, Trash2 } from 'lucide-react';
+import {
+  CakeIcon,
+  MapPinIcon,
+  PhoneIcon,
+  SquarePlus,
+  Trash2,
+  UserIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   type ST_ColumnDef,
@@ -19,22 +26,27 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 

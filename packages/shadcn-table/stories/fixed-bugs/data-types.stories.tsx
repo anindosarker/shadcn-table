@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/Data Types',
@@ -22,27 +23,33 @@ const columns: ST_ColumnDef<Person>[] = [
     accessorKey: 'firstName',
     enableGlobalFilter: true,
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     Cell: ({ cell }) => cell.getValue<string[]>().join(', '),
     accessorKey: 'states',
     header: 'States',
+    icon: MapIcon,
   },
 ];
 

@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, waitFor } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // Fixed bugs (findings, v9 row model gaps): `enablePagination: false` with
 // `manualPagination: false` paginated to 10 rows, and `columnFilters` in state
@@ -15,8 +16,8 @@ export default meta;
 type Person = { firstName: string; lastName: string };
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 const twentyFive: Person[] = [...Array(25)].map((_, index) => ({

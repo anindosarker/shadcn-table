@@ -1,6 +1,13 @@
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  CakeIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Styling/Table Alignment Examples',
@@ -13,31 +20,37 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     accessorKey: 'firstName',
     footer: 'First Name',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     footer: 'Last Name',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     footer: 'Age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     footer: 'Address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     footer: 'State',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     footer: 'Phone Number',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -194,14 +207,17 @@ export const RightAlignNumberColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
         stTableBodyCellProps: {
           align: 'right',
         },
@@ -212,14 +228,17 @@ export const RightAlignNumberColumn = () => (
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}

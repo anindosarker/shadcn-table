@@ -6,6 +6,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { faker } from '@faker-js/faker';
+import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Column Action Examples',
@@ -25,22 +26,27 @@ const columns: ST_ColumnDef<Row>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -66,25 +72,30 @@ export const ColumnActionsDisabledPerColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         enableColumnActions: false,
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         enableColumnActions: false,
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         enableColumnActions: false,
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -97,25 +108,30 @@ export const ColumnActionsEnabledPerColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         enableColumnActions: true,
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         enableColumnActions: true,
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         enableColumnActions: true,
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -140,6 +156,7 @@ export const CustomColumnActionsPerColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
         renderColumnActionsMenuItems: () => [
           <DropdownMenuItem key={1}>Item 1</DropdownMenuItem>,
           <DropdownMenuItem key={2}>Item 2</DropdownMenuItem>,
@@ -148,6 +165,7 @@ export const CustomColumnActionsPerColumn = () => (
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
         renderColumnActionsMenuItems: () => [
           <DropdownMenuItem key={1}>Item 2</DropdownMenuItem>,
           <DropdownMenuItem key={3}>Item 3</DropdownMenuItem>,
@@ -157,6 +175,7 @@ export const CustomColumnActionsPerColumn = () => (
         accessorKey: 'address',
         enableColumnActions: true,
         header: 'Address',
+        icon: MapPinIcon,
         renderColumnActionsMenuItems: ({ internalColumnMenuItems }) => [
           ...internalColumnMenuItems,
           <DropdownMenuSeparator key={3332} />,
@@ -168,11 +187,13 @@ export const CustomColumnActionsPerColumn = () => (
         accessorKey: 'state',
         enableColumnActions: true,
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         enableColumnActions: true,
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -182,11 +203,16 @@ export const CustomColumnActionsPerColumn = () => (
 const body = within(document.body);
 
 const menuColumns: ST_ColumnDef<Row>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'address', header: 'Address' },
-  { accessorKey: 'state', enableColumnOrdering: false, header: 'State' },
-  { accessorKey: 'phoneNumber', header: 'Phone Number' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'address', header: 'Address', icon: MapPinIcon },
+  {
+    icon: MapIcon,
+    accessorKey: 'state',
+    enableColumnOrdering: false,
+    header: 'State',
+  },
+  { accessorKey: 'phoneNumber', header: 'Phone Number', icon: PhoneIcon },
 ];
 
 const menuData: Row[] = [

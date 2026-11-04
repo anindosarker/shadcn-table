@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ShadcnTable } from '@/components/ui/shadcn-table';
 import { type Meta } from '@storybook/react-vite';
+import { CalendarClockIcon, CalendarIcon, ClockIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/mobile date pickers',
@@ -32,6 +33,7 @@ export const MobileDateTimePickers = () => (
         filterFn: 'lessThan',
         filterVariant: 'date',
         header: 'Birth Date',
+        icon: CalendarIcon,
         id: 'birthDate',
       },
       {
@@ -39,6 +41,7 @@ export const MobileDateTimePickers = () => (
         accessorFn: (row) => new Date(row.hireDate), //transform data before processing so sorting works
         filterVariant: 'date-range',
         header: 'Hire Date',
+        icon: CalendarIcon,
         id: 'hireDate',
       },
       {
@@ -46,6 +49,7 @@ export const MobileDateTimePickers = () => (
         accessorFn: (row) => new Date(row.departureTime), //transform data before processing so sorting works
         filterVariant: 'datetime',
         header: 'Departure',
+        icon: ClockIcon,
         id: 'departureTime',
       },
       {
@@ -53,6 +57,7 @@ export const MobileDateTimePickers = () => (
         accessorFn: (row) => new Date(row.arrivalTime), //transform data before processing so sorting works
         filterVariant: 'datetime-range',
         header: 'Arrival time',
+        icon: ClockIcon,
         id: 'arrivalTime',
       },
       {
@@ -60,6 +65,7 @@ export const MobileDateTimePickers = () => (
         accessorFn: (row) => new Date(row.startTime), //transform data before processing so sorting works
         filterVariant: 'time',
         header: 'Start Time',
+        icon: ClockIcon,
         id: 'startTime',
       },
       {
@@ -67,6 +73,7 @@ export const MobileDateTimePickers = () => (
         accessorFn: (row) => new Date(row.deliverySlot), //transform data before processing so sorting works
         filterVariant: 'time-range',
         header: 'Delivery Slot',
+        icon: CalendarClockIcon,
         id: 'deliverySlot',
       },
     ]}

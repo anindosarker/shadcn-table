@@ -6,7 +6,7 @@ import {
   createRow,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
-import { Plus } from 'lucide-react';
+import { MapIcon, MapPinIcon, PhoneIcon, Plus, UserIcon } from 'lucide-react';
 import { faker } from '@faker-js/faker';
 import { Button } from '@/components/ui/button';
 import {
@@ -82,23 +82,28 @@ export const CreateRowIndexTop = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -133,23 +138,28 @@ export const CreateRowIndexBottom = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -184,23 +194,28 @@ export const CreateRowIndexIndex = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -235,23 +250,28 @@ export const CreateRowIndexIndexVirtualized = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -280,19 +300,23 @@ export const CreateRowIndexIndexExpanding = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -363,18 +387,22 @@ export const CreateWithCustomEditCell = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
           Edit: ({ cell }) => (
             <Select value={cell.getValue<string>()}>
               <SelectTrigger>
@@ -391,6 +419,7 @@ export const CreateWithCustomEditCell = () => {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       state={{ creatingRow }}

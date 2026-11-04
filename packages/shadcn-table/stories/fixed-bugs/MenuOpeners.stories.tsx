@@ -2,6 +2,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // Every chrome menu opens from the element the user presses (D25): the opener
 // announces its menu and its open state, a second press on it closes the
@@ -22,8 +23,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 const body = within(document.body);

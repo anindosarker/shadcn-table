@@ -5,6 +5,13 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  Building2Icon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Click to Copy Examples',
@@ -27,26 +34,32 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'name.firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'name.lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 
@@ -87,27 +100,33 @@ export const ClickToCopyEnabledPerColumn = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'email',
         enableClickToCopy: true,
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ],
     data,
@@ -122,27 +141,33 @@ export const ClickToCopyDisabledPerColumn = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'email',
         enableClickToCopy: false,
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ],
     data,

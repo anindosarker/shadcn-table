@@ -10,6 +10,14 @@ import {
 import { faker } from '@faker-js/faker';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  CakeIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/useEffects',
@@ -48,22 +56,27 @@ export const FilterModesRefetch = () => {
     {
       accessorKey: 'firstName',
       header: 'First Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'lastName',
       header: 'Last Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'address',
       header: 'Address',
+      icon: MapPinIcon,
     },
     {
       accessorKey: 'state',
       header: 'State',
+      icon: MapIcon,
     },
     {
       accessorKey: 'phoneNumber',
       header: 'Phone Number',
+      icon: PhoneIcon,
     },
   ];
 
@@ -94,24 +107,29 @@ export const FilterOptionsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         filterSelectOptions: stateFilterOptions,
         filterVariant: 'select',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [stateFilterOptions],
@@ -142,24 +160,29 @@ export const EditOptionsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         editSelectOptions: stateEditOptions,
         editVariant: 'select',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [stateEditOptions],
@@ -189,22 +212,27 @@ export const RenderRowActionsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [],
@@ -242,22 +270,27 @@ const RenderRowActionMenuItemsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [],
@@ -299,26 +332,31 @@ export const DelayedFacetedValues = () => {
           accessorKey: 'firstName',
           filterFn: 'fuzzy', // default
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           filterVariant: 'select',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'age',
           filterVariant: 'range-slider',
           header: 'Age',
+          icon: CakeIcon,
         },
         {
           accessorKey: 'gender',
           filterVariant: 'select',
           header: 'Gender',
+          icon: VenusAndMarsIcon,
         },
         {
           accessorKey: 'state',
           filterVariant: 'multi-select',
           header: 'State',
+          icon: MapIcon,
         },
       ]}
       data={tableData}
@@ -342,14 +380,17 @@ export const PreventUnnecessaryPaginationChangeByOutOfBoundsCheck = () => {
     {
       accessorKey: 'firstName',
       header: 'First Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'lastName',
       header: 'Last Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'address',
       header: 'Address',
+      icon: MapPinIcon,
     },
   ];
 

@@ -1,6 +1,7 @@
 import { type Meta } from '@storybook/react-vite';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Styling/Style Table Body Cells',
@@ -12,18 +13,22 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
 ];
 const data = [...Array(21)].map(() => ({
@@ -57,14 +62,17 @@ export const StyleMuiTableBodyCellConditionallyIn1Column = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
         stTableBodyCellProps: ({ cell }) => ({
           className: [
             cell.getValue<number>() > 40 ? 'bg-green-500/50' : undefined,
@@ -79,6 +87,7 @@ export const StyleMuiTableBodyCellConditionallyIn1Column = () => (
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ]}
     data={data}
@@ -94,6 +103,7 @@ export const CustomCellRender = () => (
         ),
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         Cell: ({ cell }) => (
@@ -101,6 +111,7 @@ export const CustomCellRender = () => (
         ),
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         Cell: ({ cell }) => (
@@ -119,10 +130,12 @@ export const CustomCellRender = () => (
         ),
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ]}
     data={data}

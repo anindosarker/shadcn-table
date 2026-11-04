@@ -6,6 +6,15 @@ import {
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react-vite';
+import {
+  Building2Icon,
+  HashIcon,
+  type LucideIcon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Row Ordering Examples',
@@ -27,30 +36,37 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'num',
     header: '#',
+    icon: HashIcon,
   },
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 
@@ -235,10 +251,15 @@ export const RowOrderingWithRowVirtualization = () => {
   );
 };
 
+// Icons by column key; every fake column holds first names, so none is
+// listed and each falls back to the name icon.
+const fakeColumnIcons: Record<string, LucideIcon> = {};
+
 const fakeColumns = [...Array(500)].map((_, i) => {
   return {
     accessorKey: i.toString(),
     header: 'Column ' + i.toString(),
+    icon: fakeColumnIcons[i.toString()] ?? UserIcon,
   };
 });
 
