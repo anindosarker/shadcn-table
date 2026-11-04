@@ -1,4 +1,6 @@
 import { Subscribe } from '@tanstack/react-table';
+import { useSelector } from '@tanstack/react-store';
+import { cn } from '@/lib/utils';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import {
   type CollapseProps,
@@ -10,6 +12,14 @@ import { ST_FilterCheckbox } from '@/components/ui/shadcn-table/components/input
 import { ST_FilterRangeFields } from '@/components/ui/shadcn-table/components/inputs/ST_FilterRangeFields';
 import { ST_FilterRangeSlider } from '@/components/ui/shadcn-table/components/inputs/ST_FilterRangeSlider';
 import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_FilterTextField';
+
+// The subheader filter's inline padding, the label row's in ST_TableHeadCell
+// per density, in px for the range fields' layout.
+const subheaderPadding = {
+  comfortable: { className: 'px-3', px: 12 },
+  compact: { className: 'px-2', px: 8 },
+  spacious: { className: 'px-4', px: 16 },
+} as const;
 
 /**
  * The Collapsible part's props under the names every base exposes: `open`,
@@ -41,6 +51,10 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
   const { column } = header;
   const { columnDef } = column;
   const { isRangeFilter } = getColumnFilterInfo({ header, table });
+  const density = useSelector(table.atoms.density);
+  useSelector(table.atoms.columnSizing);
+  const isSubheader = columnFilterDisplayMode === 'subheader';
+  const padding = subheaderPadding[density];
 
   // The filter input subscribes to its own value, so it is created outside
   // the open state subscription.
@@ -50,7 +64,10 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
     ) : columnDef.filterVariant === 'range-slider' ? (
       <ST_FilterRangeSlider header={header} />
     ) : isRangeFilter ? (
-      <ST_FilterRangeFields header={header} />
+      <ST_FilterRangeFields
+        header={header}
+        width={isSubheader ? column.getSize() - 2 * padding.px : undefined}
+      />
     ) : (
       <ST_FilterTextField header={header} />
     );
@@ -66,7 +83,17 @@ export const ST_TableHeadCellFilterContainer = <TData extends ST_RowData>({
           onExpandedChange={onOpenChange}
           {...rest}
         >
-          <CollapsibleContent className="-m-0.75 h-(--disclosure-panel-height) overflow-hidden p-0.75 transition-[height] duration-200 ease-out motion-reduce:transition-none">
+          <CollapsibleContent
+            className={cn(
+              // The focus ring's room: a negative margin and the same padding
+              // in a popover, the inline padding in the subheader, which also
+              // keeps the inputs off the cell's bottom edge.
+              isSubheader
+                ? cn('-mt-0.75 pt-0.75 pb-2', padding.className)
+                : '-m-0.75 p-0.75',
+              'h-(--disclosure-panel-height) overflow-hidden transition-[height] duration-200 ease-out motion-reduce:transition-none',
+            )}
+          >
             {filterInput}
           </CollapsibleContent>
         </Collapsible>
