@@ -189,34 +189,30 @@ export const ClickCopiesValue = {
     );
     try {
       const value = data[0].name.firstName;
-      const button = (
-        await within(canvasElement).findByText(value)
-      ).closest<HTMLElement>('button')!;
+      const [text] = await within(canvasElement).findAllByText(value);
+      const button = text!.closest<HTMLElement>('button')!;
       const browserUserEvent = (
         globalThis as {
           stBrowserUserEvent?: {
             click: (element: Element) => Promise<void>;
-            hover: (element: Element) => Promise<void>;
+            tab: (options?: { shift?: boolean }) => Promise<void>;
           };
         }
       ).stBrowserUserEvent;
-      const pointer = browserUserEvent ?? userEvent;
-      await pointer.click(button);
+      const input = browserUserEvent ?? userEvent;
+      await input.click(button);
       expect(writeText).toHaveBeenCalledWith(value);
-      // The press closes the tooltip; resting on the button again shows the
-      // copied title after the 1 s tooltip delay.
-      await pointer.hover(
-        within(canvasElement).getAllByRole('columnheader')[0]!,
-      );
-      await pointer.hover(button);
-      await waitFor(
-        () =>
-          expect(
-            [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
-              (tooltip) => tooltip.textContent,
-            ),
-          ).toContain('Copied to clipboard'),
-        { timeout: 2500 },
+      // The press closes the tooltip. Keyboard focus opens it at once, inside
+      // the 4 s the copied title lasts, without the 1 s hover delay.
+      await input.tab();
+      await input.tab({ shift: true });
+      expect(document.activeElement).toBe(button);
+      await waitFor(() =>
+        expect(
+          [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
+            (tooltip) => tooltip.textContent,
+          ),
+        ).toContain('Copied to clipboard'),
       );
     } finally {
       writeText.mockRestore();
