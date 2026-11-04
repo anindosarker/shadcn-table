@@ -110,3 +110,7 @@
 ### F25 Chart detail panel example renders empty charts
 
 - `/docs/examples/chart-detail-panel`, Base UI: every row opens expanded and each panel shows the recharts axes (0 to 60, #1 to #10, "Games Played") with no line or bars. F6 fixed the zero-width `ResponsiveContainer` in the detail cell (`ST_TableDetailPanel.tsx`, `w-full min-w-0`); the series still draws nothing, so either the panel's height collapses to the axes (`CollapsibleContent` height or the grid row height rule) or the example's data mapping broke in the spec 05 rewrite (`apps/shadcn-table-docs/examples/<base>/chart-detail-panel/TS.tsx`). Compare with live 0.7.4. Owner, 2026-11-04 19:31. Timing: item 3.
+
+### F26 Filtering examples still show the 0.7 subheader filters
+
+- `/docs/examples/filter-variants` (`apps/shadcn-table-docs/examples/<base>/customize-filter-variants/TS.tsx`, owned by spec 05) and the other filtering pages (faceted values, filter switching, popover filters, custom filter UI): the variants (checkbox, text, range slider, min/max range, select, autocomplete, date) still render as the subheader row of inputs instead of the 0.8 chips with their editor. Owner, 2026-11-04 19:31: "Example wasn't updated with new UI." Docs story: each filtering example shows its variants through the chip editor (D9); any variant the editor cannot show yet is a library finding of its own. Timing: item 3.
