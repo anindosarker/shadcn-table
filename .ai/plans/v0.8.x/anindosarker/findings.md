@@ -114,3 +114,7 @@
 ### F26 Filtering examples still show the 0.7 subheader filters
 
 - `/docs/examples/filter-variants` (`apps/shadcn-table-docs/examples/<base>/customize-filter-variants/TS.tsx`, owned by spec 05) and the other filtering pages (faceted values, filter switching, popover filters, custom filter UI): the variants (checkbox, text, range slider, min/max range, select, autocomplete, date) still render as the subheader row of inputs instead of the 0.8 chips with their editor. Owner, 2026-11-04 19:31: "Example wasn't updated with new UI." Docs story: each filtering example shows its variants through the chip editor (D9); any variant the editor cannot show yet is a library finding of its own. Timing: item 3.
+
+### F27 Examples with a custom toolbar lose the view settings button
+
+- Owner, 2026-11-04 19:33: "A lot of the examples are missing the settings button" (shown on live 0.7.4 `/docs/examples/sticky-header`, which predates view settings). On 0.8 the button comes from `ST_ToolbarInternalButtons.tsx`; an example that sets `renderToolbarInternalActions` or `renderTopToolbar` (the advanced example, F17, and others) renders none. Docs story: every example shows the view settings button unless the page is about replacing the toolbar; those render `ST_ToggleViewSettingsButton` (or the internal buttons component) in their custom toolbar. Checked page by page on local 0.8, not on the live site. Timing: item 3.
