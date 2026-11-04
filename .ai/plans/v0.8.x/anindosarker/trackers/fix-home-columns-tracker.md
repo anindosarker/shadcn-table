@@ -1,11 +1,15 @@
 # Home demo columns (F32), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-home-columns`, worktree 02, PR #110
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at d0576c27: green
 - `pnpm --filter shadcn-table-docs lint` at d0576c27: green (0 errors, 9 warnings, all in untouched example files)
 - `node scripts/check-pages.mjs e --base radix --url http://localhost:5341` at d0576c27: green (672 passed, 0 failed; includes `/ @1440 demo: seven data columns` and `demo: no horizontal scroll overflow=0px`)
+- `pnpm --filter shadcn-table-docs build` at e49db729: green (verifier)
+- `node scripts/check-pages.mjs e --base base --url http://localhost:5342` at e49db729: green (672 passed, 0 failed; seven data columns, overflow=0px) (verifier)
+- `node scripts/check-pages.mjs e --base aria --url http://localhost:5342` at e49db729: green (672 passed, 0 failed; seven data columns, overflow=0px) (verifier)
+- types:check, lint and radix cluster e at d0576c27 stay valid: `git diff --name-only d0576c27..e49db729` touches only the tracker and `CHANGELOG.md` (verifier)
 
 - Milestone 01 Seven demo columns: done (a88298e3, d0576c27)
 
