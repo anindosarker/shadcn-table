@@ -413,6 +413,65 @@ const checks = {
       'no contributors section',
       !txt.includes('Maintainers and Contributors'),
     );
+    // the six step titles name the feature (F45), and one full replay gives
+    // every step the active state in turn: a recorder samples the list each
+    // frame from a Replay click (outside the table, so the replay keeps
+    // playing) until the last step is active
+    const titles = await page
+      .locator('[aria-label="Demo items"] .v5-step span.text-sm')
+      .allTextContents();
+    const expected = [
+      'Sort editor',
+      'Global search',
+      'Cell editing',
+      'Filter chips',
+      'Column order',
+      'Striped rows',
+    ];
+    check(
+      'demo: step titles',
+      titles.join('|') === expected.join('|'),
+      titles.join(' | '),
+    );
+    try {
+      const steps = page.locator('[aria-label="Demo items"]');
+      await steps.scrollIntoViewIfNeeded({ timeout: 10000 });
+      await page.evaluate(() => {
+        const seen = new Set();
+        window.__demoSeen = seen;
+        const sample = () => {
+          document
+            .querySelectorAll('[aria-label="Demo items"] .v5-step')
+            .forEach((el, i) => {
+              if (el.getAttribute('data-state') === 'active') seen.add(i);
+            });
+          if (window.__demoSeen === seen) requestAnimationFrame(sample);
+        };
+        sample();
+      });
+      await steps.getByRole('button', { name: 'Replay' }).click();
+      await steps
+        .locator('.v5-step')
+        .nth(expected.length - 1)
+        .and(page.locator('[data-state="active"]'))
+        .waitFor({ timeout: 45000 });
+      const seen = await page.evaluate(() => {
+        const list = [...window.__demoSeen].sort();
+        window.__demoSeen = null;
+        return list;
+      });
+      check(
+        'demo: every step active in one replay',
+        seen.length === expected.length,
+        `active=${seen.join(',')}`,
+      );
+    } catch (e) {
+      check(
+        'demo: every step active in one replay',
+        false,
+        String(e.message).split('\n')[0].slice(0, 160),
+      );
+    }
     await demoLoop({ page, check, base });
   },
 };
