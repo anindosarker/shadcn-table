@@ -19,6 +19,9 @@ Gates:
 - `storybook:build:base`, `storybook:build:radix`, `storybook:build:aria` at 371cd87c: green
 - `registry:build` and `lib:install` per base folded into each fix commit; `node reference/01-check.mjs` at 371cd87c: green, 0 problems
 - `DefaultLook` RowMetrics play at 19ec6a31 (radix): green; red with the old cell classes (wrapped row stays 48 px)
+- Verifier at c802d041 (diff from 371cd87c touches only this tracker, so every 371cd87c line above stands): `pnpm test:base` run alone, green, 480 of 480
+- Verifier at c802d041: Acceptance plays (`DefaultLook`, 6 tests) per base, one base after another: base 6 of 6, radix 6 of 6, aria 6 of 6
+- Verifier: judges not rerun (they run inside the workflow script, P7); `check-pages.mjs` not in spec 2.2, not run
 
 - Milestone 01 one pass over 1.6.2 to 1.6.8: done (89c64f19)
 - Milestone 02 stories, captures, judges: done (5ecc689a)
