@@ -18,15 +18,12 @@ export interface ST_TableHeadRowProps<TData extends ST_RowData>
   headerGroup: ST_HeaderGroup<TData>;
 }
 
-const tableHeadRowVariants = cva(
-  'top-0 bg-background shadow-[4px_0_8px_color-mix(in_oklab,var(--foreground)_10%,transparent)]',
-  {
-    variants: {
-      layout: { grid: 'flex', semantic: '' },
-      sticky: { true: 'sticky', false: 'relative' },
-    },
+const tableHeadRowVariants = cva('top-0 bg-background', {
+  variants: {
+    layout: { grid: 'flex', semantic: '' },
+    sticky: { true: 'sticky', false: 'relative' },
   },
-);
+});
 
 export const ST_TableHeadRow = <TData extends ST_RowData>({
   columnVirtualizer,

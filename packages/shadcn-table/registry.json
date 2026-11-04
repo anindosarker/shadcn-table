@@ -39,7 +39,6 @@
         "progress",
         "radio-group",
         "select",
-        "separator",
         "skeleton",
         "slider",
         "spinner",
@@ -200,6 +199,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -467,6 +471,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -475,6 +484,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -1348,7 +1362,6 @@
         "progress",
         "radio-group",
         "select",
-        "separator",
         "skeleton",
         "slider",
         "spinner",
@@ -1509,6 +1522,11 @@
           "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -1776,6 +1794,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -1784,6 +1807,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -2657,7 +2685,6 @@
         "progress",
         "radio-group",
         "select",
-        "separator",
         "skeleton",
         "slider",
         "spinner",
@@ -2818,6 +2845,11 @@
           "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -3085,6 +3117,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -3093,6 +3130,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -3966,7 +4008,6 @@
         "progress",
         "radio-group",
         "select",
-        "separator",
         "skeleton",
         "slider",
         "spinner",
@@ -4127,6 +4168,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -4394,6 +4440,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -4402,6 +4453,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",

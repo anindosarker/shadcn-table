@@ -86,3 +86,7 @@ export * from '@/components/ui-aria/shadcn-table/components/toolbar/ST_TopToolba
 export * from '@/components/ui-aria/shadcn-table/shared/utils/drag.utils';
 export * from '@/components/ui-aria/shadcn-table/shared/utils/viewSettingsStorage.utils';
 export * from '@/components/ui-aria/shadcn-table/components/icons/ST_GridLineIcons';
+// spec 03
+export * from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellLockedOverlay';
+export { useST_ColumnFlip } from '@/components/ui-aria/shadcn-table/hooks/useST_ColumnFlip';
+export { useST_DragAutoScroll } from '@/components/ui-aria/shadcn-table/hooks/useST_DragAutoScroll';
