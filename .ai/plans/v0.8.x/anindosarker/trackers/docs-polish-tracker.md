@@ -1,6 +1,6 @@
 # Docs polish (F32, F33, F34, F35, F37), tracker
 
-Status: verified
+Status: merged (ddfb01bb8e1381ef35c3c75792d465a679d03a1b)
 Branch `v0.8/docs-polish`, worktree 02, PR #112
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at fe725e75: green
