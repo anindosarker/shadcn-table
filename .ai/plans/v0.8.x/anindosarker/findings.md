@@ -106,3 +106,7 @@
 ### F24 Detail panel example: an expanded row shows no panel
 
 - `/docs/examples/detail-panel`, Base UI: row 3 is expanded (chevron down) but no detail panel row renders under it, and the expand cell covers the start of the ID cell ("3" half hidden). `components/body/ST_TableDetailPanel.tsx` changed in spec 02 (F6 `w-full min-w-0`); suspects: the detail row gets no height or `hidden` under the grid layout, or `renderDetailPanel` output collapses inside `CollapsibleContent`; the overlap is the display cell `px-0` (F12) plus the expand button's own width. Owner, 2026-11-04 19:30. Reproduce on `test-projects/` and in `stories/features/DetailPanel.stories.tsx` first. Timing: item 3, library.
+
+### F25 Chart detail panel example renders empty charts
+
+- `/docs/examples/chart-detail-panel`, Base UI: every row opens expanded and each panel shows the recharts axes (0 to 60, #1 to #10, "Games Played") with no line or bars. F6 fixed the zero-width `ResponsiveContainer` in the detail cell (`ST_TableDetailPanel.tsx`, `w-full min-w-0`); the series still draws nothing, so either the panel's height collapses to the axes (`CollapsibleContent` height or the grid row height rule) or the example's data mapping broke in the spec 05 rewrite (`apps/shadcn-table-docs/examples/<base>/chart-detail-panel/TS.tsx`). Compare with live 0.7.4. Owner, 2026-11-04 19:31. Timing: item 3.
