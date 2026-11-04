@@ -76,6 +76,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const table = header.table;
   const {
     options: {
+      columnFilterDisplayMode,
       enableColumnFilterModes,
       icons: { CancelIcon, CloseIcon, FilterListIcon },
       localization,
@@ -168,7 +169,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         ? localization.max
         : '';
 
+  // In chips mode the filter editor's top line carries the mode picker.
   const showChangeModeButton = !!(
+    columnFilterDisplayMode !== 'chips' &&
     enableColumnFilterModes &&
     columnDef.enableColumnFilterModes !== false &&
     !rangeFilterIndex &&
