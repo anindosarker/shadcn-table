@@ -5,7 +5,8 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import {
   Building2Icon,
   HashIcon,
@@ -303,4 +304,158 @@ export const RowOrderingWithColumnVirtualization = () => {
       })}
     />
   );
+};
+
+/** Row ordering on 10 rows of its own data, reordered on drop. */
+const SlideTable = () => {
+  const [data, setData] = useState(() => initData.slice(0, 10));
+
+  return (
+    <ShadcnTable
+      autoResetPageIndex={false}
+      columns={columns}
+      data={data}
+      enableRowOrdering
+      enableSorting={false}
+      stRowDragHandleProps={({ table }) => ({
+        onDragEnd: () => {
+          const draggingRow = table.atoms.draggingRow.get();
+          const hoveredRow = table.atoms.hoveredRow.get();
+          if (hoveredRow && draggingRow) {
+            const next = [...data];
+            next.splice(
+              (hoveredRow as ST_Row<Person>).index,
+              0,
+              next.splice(draggingRow.index, 1)[0],
+            );
+            setData(next);
+          }
+        },
+      })}
+    />
+  );
+};
+
+const bodyRows = (canvasElement: HTMLElement) => [
+  ...canvasElement.querySelectorAll<HTMLElement>('tbody tr'),
+];
+
+const rowNum = (row: HTMLElement) =>
+  row.querySelector('td[data-flip-column="num"]')?.textContent?.trim();
+
+/** Drags the first row's grip onto the third row and drops it there. */
+const dragFirstRowTwoDown = async (canvasElement: HTMLElement) => {
+  await waitFor(() => expect(bodyRows(canvasElement).length).toBe(10));
+  const rows = bodyRows(canvasElement);
+  const moved = rowNum(rows[0])!;
+  const grip = within(rows[0]).getByRole('button', { name: 'Move' });
+  const target = rows[2].querySelector<HTMLElement>(
+    'td[data-flip-column="firstName"]',
+  )!;
+  const browserUserEvent = (
+    globalThis as {
+      stBrowserUserEvent?: {
+        dragAndDrop: (source: Element, target: Element) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent;
+  if (browserUserEvent) {
+    await browserUserEvent.dragAndDrop(grip, target);
+  } else {
+    fireEvent.dragStart(grip);
+    fireEvent.dragEnter(target);
+    fireEvent.dragOver(target);
+    fireEvent.drop(target);
+    fireEvent.dragEnd(grip);
+  }
+  await waitFor(() => expect(rowNum(bodyRows(canvasElement)[2])).toBe(moved));
+  return bodyRows(canvasElement)[2];
+};
+
+/**
+ * Records every `element.animate()` call while `run` runs, so a play reads
+ * the drop animations even when a loaded machine returns from the drag after
+ * the 200 ms slide has finished.
+ */
+const recordAnimations = async <T,>(run: () => Promise<T>) => {
+  const started: { element: Element; keyframes: Keyframe[] }[] = [];
+  const animate = Element.prototype.animate;
+  Element.prototype.animate = function (
+    this: Element,
+    keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
+    options?: number | KeyframeAnimationOptions,
+  ) {
+    if (Array.isArray(keyframes)) started.push({ element: this, keyframes });
+    return animate.call(this, keyframes, options);
+  };
+  try {
+    return { result: await run(), started };
+  } finally {
+    Element.prototype.animate = animate;
+  }
+};
+
+type Started = { element: Element; keyframes: Keyframe[] }[];
+
+/** The translate slides started on `element`. */
+const slidesOn = (started: Started, element: Element) =>
+  started.filter(
+    (animation) =>
+      animation.element === element &&
+      animation.keyframes.some((keyframe) => keyframe.translate !== undefined),
+  );
+
+/** The highlights started on `element`'s cells. */
+const highlightsIn = (started: Started, element: Element) =>
+  started.filter(
+    (animation) =>
+      animation.element.parentElement === element &&
+      animation.keyframes.some((keyframe) => keyframe.boxShadow !== undefined),
+  );
+
+// A row drop slides the rows between the old and the new index into place
+// and the moved row flashes the drop highlight (D57).
+export const DropSlidesRows = {
+  render: () => <SlideTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const { result: movedRow, started } = await recordAnimations(() =>
+      dragFirstRowTwoDown(canvasElement),
+    );
+    expect(slidesOn(started, movedRow).length).toBeGreaterThan(0);
+    expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
+    expect(slidesOn(started, bodyRows(canvasElement)[0]).length).toBe(1);
+    // Rows past the new index keep their place.
+    expect(slidesOn(started, bodyRows(canvasElement)[5]).length).toBe(0);
+  },
+};
+
+// Reduced motion: the rows do not slide, the highlight stays (D57).
+export const DropNoSlideReducedMotion = {
+  render: () => <SlideTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const matchMedia = window.matchMedia;
+    // The library reads the preference through matchMedia.
+    window.matchMedia = (query: string) =>
+      query.includes('prefers-reduced-motion')
+        ? ({
+            addEventListener: () => {},
+            addListener: () => {},
+            dispatchEvent: () => false,
+            matches: true,
+            media: query,
+            onchange: null,
+            removeEventListener: () => {},
+            removeListener: () => {},
+          } as MediaQueryList)
+        : matchMedia.call(window, query);
+    try {
+      const { result: movedRow, started } = await recordAnimations(() =>
+        dragFirstRowTwoDown(canvasElement),
+      );
+      expect(slidesOn(started, movedRow).length).toBe(0);
+      expect(highlightsIn(started, movedRow).length).toBeGreaterThan(0);
+    } finally {
+      window.matchMedia = matchMedia;
+    }
+  },
 };

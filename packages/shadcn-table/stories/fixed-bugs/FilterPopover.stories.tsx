@@ -86,11 +86,13 @@ const employees: Employee[] = [
   },
 ];
 
-// The export CSV docs example: row selection and columns sized 40 to 300.
+// Row selection and columns sized 40 to 300, as the export CSV docs example
+// had them in popover mode; the name columns are wide enough for the label
+// beside the 24 px funnel and the chevron.
 const sizedColumns: ST_ColumnDef<Employee>[] = [
   { accessorKey: 'id', header: 'ID', icon: HashIcon, size: 40 },
-  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon, size: 120 },
-  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon, size: 120 },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon, size: 180 },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon, size: 180 },
   { accessorKey: 'company', header: 'Company', icon: BuildingIcon, size: 300 },
   { accessorKey: 'city', header: 'City', icon: Building2Icon },
   { accessorKey: 'country', header: 'Country', icon: GlobeIcon, size: 220 },
@@ -166,5 +168,44 @@ export const EmptyModeChipClearHasName = {
     if (!(chip instanceof HTMLElement)) throw new Error('chip not found');
     const clear = within(chip).getByRole('button', { hidden: true });
     expect(clear).toHaveAccessibleName('Clear filter');
+  },
+};
+
+// The funnel is a 24 px icon button, so a click lands on it; the click opens
+// the filter popover and the label still truncates beside it (F19).
+export const FunnelIsClickable = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="popover"
+      columns={sizedColumns}
+      data={employees}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText('Mason');
+    const th = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="firstName"]',
+    );
+    if (!th) throw new Error('First Name header not found');
+    const trigger = th.querySelector<HTMLElement>(
+      '[aria-expanded]:not([aria-haspopup="menu"])',
+    );
+    if (!trigger) throw new Error('filter button not found');
+    // After the funnel's zoom-in, its box is the hit target.
+    await waitFor(() => {
+      const box = trigger.getBoundingClientRect();
+      expect(box.width).toBeGreaterThanOrEqual(24);
+      expect(box.height).toBeGreaterThanOrEqual(24);
+    });
+    const label = within(th).getByText('First Name');
+    expect(label).toHaveClass('min-w-0', 'truncate');
+
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await (browserUserEvent ?? userEvent).click(trigger);
+    await within(document.body).findByPlaceholderText('Filter by First Name');
   },
 };

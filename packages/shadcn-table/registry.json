@@ -578,6 +578,11 @@
           "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_RowVirtualizer.ts"
@@ -1976,6 +1981,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_PopupResize.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -3378,6 +3388,11 @@
           "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_RowVirtualizer.ts"
@@ -4776,6 +4791,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_PopupResize.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",

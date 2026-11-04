@@ -267,7 +267,9 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
         // By index, not :last-child: a virtualized body's last DOM row is not
         // the last row.
         const isLastRow = !!numRows && staticRowIndex === numRows - 1;
-        const showResizeBorder =
+        // onEnd leaves the cell's width until the drop, and the cell clips,
+        // so only onChange shows the body guide.
+        const showResizeGuide =
           isResizingColumn && columnResizeMode === 'onChange';
 
         // Row drags keep their dashed outline; column drags show nothing on
@@ -278,8 +280,10 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
             ? '2px dashed var(--color-primary)'
             : undefined;
 
-        const draggingBorders = showResizeBorder
-          ? { borderInlineEnd: '2px solid var(--color-primary)' }
+        // The guide is the header hairline's width and ends on the column
+        // edge, so the two read as one line; a border spans the row borders.
+        const draggingBorders = showResizeGuide
+          ? { borderInlineEnd: '1px solid var(--color-primary)' }
           : rowDragBorder
             ? {
                 borderBottom: rowDragBorder,

@@ -26,6 +26,21 @@ async function singleExample(page, check) {
   check('no group tab strip', strips === 0, `tablists=${strips}`);
 }
 
+/**
+ * The chips filter default (D56): no funnel in the headers, the toolbar's
+ * Filter button present.
+ */
+async function chipsDefault(w, id, check) {
+  const funnels = await w.locator('thead svg.lucide-funnel').count();
+  check(`${id}: no header funnel`, funnels === 0, `funnels=${funnels}`);
+  const filterButtons = await w.locator('button[aria-label="Filter"]').count();
+  check(
+    `${id}: toolbar Filter button`,
+    filterButtons > 0,
+    `buttons=${filterButtons}`,
+  );
+}
+
 const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
     const w = await example(page, 'advanced', check);
@@ -253,12 +268,14 @@ const checks = {
     const w = await example(page, 'export-to-csv', check);
     await singleExample(page, check);
     await hasText(w, 'export-to-csv', /Export All Data/, check);
+    await chipsDefault(w, 'export-to-csv', check);
     await headerLabelsFit(w, 'export-to-csv', check);
   },
   '/docs/examples/export-pdf': async ({ page, check }) => {
     const w = await example(page, 'export-to-pdf', check);
     await singleExample(page, check);
     await hasText(w, 'export-to-pdf', /Export All Rows/, check);
+    await chipsDefault(w, 'export-to-pdf', check);
     await headerLabelsFit(w, 'export-to-pdf', check);
   },
 };
