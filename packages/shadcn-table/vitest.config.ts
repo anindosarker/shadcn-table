@@ -3,9 +3,21 @@ import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, mergeConfig } from 'vitest/config';
+import { type BrowserCommand } from 'vitest/node';
 import viteConfig, { ST_BASE } from './vite.config';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Moves Playwright's real pointer off the page. Test files run one after
+// another in the same browser page, so a play that hovers or clicks with the
+// real pointer (stBrowserUserEvent) leaves it over the next file's story,
+// where Chromium hit-tests it again on every layout change and sends real
+// pointer events to whatever is under it: React Aria ends a synthetic hover
+// (no tooltip), and the Radix header filter editor lost its input focus. Run
+// after every test from .storybook/vitest.setup.ts.
+const resetPointer: BrowserCommand<[]> = async ({ page }) => {
+  await page.mouse.move(-1, -1);
+};
 
 // Every story in ./stories runs as a render test in headless Chromium through
 // Storybook's Vitest addon. See .ai/plans/storybook-tests/anindosarker/storybook-tests-plan.md.
@@ -44,6 +56,7 @@ export default mergeConfig(
               provider: playwright({}),
               headless: true,
               instances: [{ browser: 'chromium' }],
+              commands: { resetPointer },
             },
             setupFiles: ['./.storybook/vitest.setup.ts'],
             // The 1,000-row profiler stories (styling/RenderCounts, Profiled
