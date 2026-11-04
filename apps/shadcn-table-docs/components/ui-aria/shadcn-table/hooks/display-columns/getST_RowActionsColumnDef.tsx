@@ -10,22 +10,37 @@ import { defaultDisplayColumnProps } from '@/components/ui-aria/shadcn-table/sha
 export const getST_RowActionsColumnDef = <TData extends ST_RowData>(
   tableOptions: ST_StatefulTableOptions<TData>,
 ): ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes> => {
+  const { localization, renderRowActions } = tableOptions;
   return {
-    Cell: ({ cell, row, staticRowIndex }) => (
-      <ST_ToggleRowActionMenuButton
-        cell={cell}
-        row={row}
-        staticRowIndex={staticRowIndex}
-      />
-    ),
-    // The header label is for screen readers only.
-    Header: () => (
-      <span className="sr-only">{tableOptions.localization.actions}</span>
-    ),
+    Cell: ({ cell, row, staticRowIndex }) =>
+      renderRowActions ? (
+        <div className="flex items-center justify-center gap-1">
+          <ST_ToggleRowActionMenuButton
+            cell={cell}
+            row={row}
+            staticRowIndex={staticRowIndex}
+          />
+        </div>
+      ) : (
+        <ST_ToggleRowActionMenuButton
+          cell={cell}
+          row={row}
+          staticRowIndex={staticRowIndex}
+        />
+      ),
+    // The dots button's column labels itself for screen readers only; with
+    // `renderRowActions` the label shows above the controls.
+    Header: () =>
+      renderRowActions ? (
+        localization.actions
+      ) : (
+        <span className="sr-only">{localization.actions}</span>
+      ),
     ...defaultDisplayColumnProps({
       header: 'actions',
       id: 'st-row-actions',
-      size: 48,
+      // Two icon buttons and their gap fit 96 px; the dots button alone 48.
+      size: renderRowActions ? 96 : 48,
       tableOptions,
     }),
     // The column moves through the columns menu, unless the caller says not.
