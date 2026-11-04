@@ -70,12 +70,12 @@ export function HomePage({
         </section>
 
         <section className="v12-demo" aria-label="Demo">
-          <div className="v4-shell">
-            <div className="v12-bleed">
-              <RiseFigure caption="Live demo">
-                <SignalDemo />
-              </RiseFigure>
-            </div>
+          {/* gutter to gutter like the theming demo: the seven columns read
+           * in full beside the steps from 1440px */}
+          <div className="v12-wide">
+            <RiseFigure caption="Live demo">
+              <SignalDemo />
+            </RiseFigure>
           </div>
         </section>
 
