@@ -284,6 +284,60 @@ export const PersistenceWithDisplayColumns = {
   },
 };
 
+// Row numbers turned on through the view settings: every body cell keeps its
+// header cell's edges (F16), as on the persistent view docs page.
+export const RowNumbersKeepAlignment = {
+  render: () => (
+    <ViewSettingsTable
+      initialState={{
+        viewSettings: { gridLines: 'all' },
+      }}
+      persistViewSettings={`${STORAGE_KEY}-alignment`}
+    />
+  ),
+  beforeEach: () => {
+    window.localStorage.removeItem(`${STORAGE_KEY}-alignment`);
+    return () => window.localStorage.removeItem(`${STORAGE_KEY}-alignment`);
+  },
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Plan audit log');
+    await openPanel(canvasElement);
+    await userEvent.click(
+      within(document.body).getByRole('switch', { name: /row numbers/i }),
+    );
+    await canvas.findByRole('columnheader', { name: '#' });
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => {
+      const headers = [
+        ...canvasElement.querySelectorAll<HTMLElement>(
+          'thead th[data-flip-column]',
+        ),
+      ];
+      expect(headers.map((th) => th.dataset.flipColumn)).toContain(
+        'st-row-numbers',
+      );
+      for (const th of headers) {
+        const td = canvasElement.querySelector<HTMLElement>(
+          `tbody tr td[data-flip-column="${th.dataset.flipColumn}"]`,
+        );
+        expect(td, th.dataset.flipColumn).not.toBeNull();
+        const head = th.getBoundingClientRect();
+        const cell = td!.getBoundingClientRect();
+        expect(
+          Math.abs(head.left - cell.left),
+          `${th.dataset.flipColumn} left`,
+        ).toBeLessThanOrEqual(1);
+        expect(
+          Math.abs(head.right - cell.right),
+          `${th.dataset.flipColumn} right`,
+        ).toBeLessThanOrEqual(1);
+      }
+    });
+  },
+};
+
 export const ToolbarGroupOrder = {
   render: ViewSettingsSeeded,
   play: async ({ canvasElement }: StoryContext) => {
