@@ -16,6 +16,7 @@ import {
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
+import { ST_BASE } from '../../.storybook/themes';
 
 const meta: Meta = {
   title: 'Features/Toolbar Examples',
@@ -50,6 +51,10 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     icon: PhoneIcon,
   },
 ];
+
+// The React Aria button takes `isDisabled`; Radix and Base UI take `disabled`.
+const disabledProps = (disabled: boolean) =>
+  ST_BASE === 'aria' ? { isDisabled: disabled } : { disabled };
 
 const data = [...Array(5)].map(() => ({
   address: faker.location.streetAddress(),
@@ -200,7 +205,9 @@ export const CustomTopToolbarSelectionActions = () => (
       return (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
+            {...disabledProps(
+              table.getSelectedRowModel().flatRows.length === 0,
+            )}
             onClick={handleDeactivate}
             variant="destructive"
           >
@@ -208,14 +215,18 @@ export const CustomTopToolbarSelectionActions = () => (
           </Button>
           <Button
             className="bg-green-600 text-white hover:bg-green-700"
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
+            {...disabledProps(
+              table.getSelectedRowModel().flatRows.length === 0,
+            )}
             onClick={handleActivate}
           >
             Activate
           </Button>
           <Button
             className="bg-sky-600 text-white hover:bg-sky-700"
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
+            {...disabledProps(
+              table.getSelectedRowModel().flatRows.length === 0,
+            )}
             onClick={handleContact}
           >
             Contact
@@ -253,7 +264,9 @@ export const CustomBottomToolbarSelectionActions = () => (
       return (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
+            {...disabledProps(
+              table.getSelectedRowModel().flatRows.length === 0,
+            )}
             onClick={handleDeactivate}
             variant="destructive"
           >
@@ -261,14 +274,18 @@ export const CustomBottomToolbarSelectionActions = () => (
           </Button>
           <Button
             className="bg-green-600 text-white hover:bg-green-700"
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
+            {...disabledProps(
+              table.getSelectedRowModel().flatRows.length === 0,
+            )}
             onClick={handleActivate}
           >
             Activate
           </Button>
           <Button
             className="bg-sky-600 text-white hover:bg-sky-700"
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
+            {...disabledProps(
+              table.getSelectedRowModel().flatRows.length === 0,
+            )}
             onClick={handleContact}
           >
             Contact
@@ -303,7 +320,9 @@ export const ToolbarAlertBannerBottom = () => (
           <ST_Tooltip title="Remove Users">
             <span>
               <Button
-                disabled={table.getSelectedRowModel().flatRows.length === 0}
+                {...disabledProps(
+                  table.getSelectedRowModel().flatRows.length === 0,
+                )}
                 onClick={handleRemoveUsers}
                 size="icon"
                 variant="ghost"
@@ -342,7 +361,9 @@ export const ToolbarAlertBannerBottomWithActionsAlsoBottom = () => (
           <ST_Tooltip title="Remove Users">
             <span>
               <Button
-                disabled={table.getSelectedRowModel().flatRows.length === 0}
+                {...disabledProps(
+                  table.getSelectedRowModel().flatRows.length === 0,
+                )}
                 onClick={handleRemoveUsers}
                 size="icon"
                 variant="ghost"
@@ -458,7 +479,8 @@ export const InternalButtonsOrder = {
 
 /**
  * Custom actions render in their toolbar: the top one before the internal
- * button group, the bottom one below the table; a click runs the handler.
+ * button group, the bottom one below the table; a click runs the handler,
+ * before and after a row is selected.
  */
 export const CustomActionsRender = {
   render: () => (
@@ -494,9 +516,71 @@ export const CustomActionsRender = {
       );
       await userEvent.click(top);
       expect(prompt).toHaveBeenCalledWith('Create new user modal');
+      // Selecting a row re-renders the subscribed actions in place (F43).
+      await userEvent.click(
+        canvas.getAllByRole('checkbox', { name: 'Toggle select row' })[0]!,
+      );
+      await canvas.findByText(`1 of ${data.length} row(s) selected`);
+      const after = canvasElement.querySelectorAll<HTMLElement>(
+        'button:has(.lucide-square-plus)',
+      );
+      expect(after).toHaveLength(2);
+      expect(after[0]).toBeEnabled();
+      await userEvent.click(after[0]!);
+      expect(prompt).toHaveBeenCalledTimes(2);
     } finally {
       prompt.mockRestore();
     }
+  },
+};
+
+/**
+ * Custom actions that read the row selection follow it: the top and bottom
+ * actions are disabled until a row of their table is selected, then enabled,
+ * while the selection banner shows the same count (F43).
+ */
+export const CustomActionsFollowSelection = {
+  render: () => (
+    <>
+      <CustomTopToolbarSelectionActions />
+      <CustomBottomToolbarSelectionActions />
+    </>
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('table');
+    const actions = (index: number) =>
+      ['Deactivate', 'Activate', 'Contact'].map(
+        (name) => canvas.getAllByRole('button', { name })[index]!,
+      );
+    const checkboxes = () =>
+      canvas.getAllByRole('checkbox', { name: 'Toggle select row' });
+    for (const button of [...actions(0), ...actions(1)]) {
+      expect(button).toBeDisabled();
+    }
+    expect(canvas.queryByText(/row\(s\) selected/)).toBeNull();
+
+    await userEvent.click(checkboxes()[0]!);
+    await canvas.findByText(`1 of ${data.length} row(s) selected`);
+    await waitFor(() => {
+      for (const button of actions(0)) expect(button).toBeEnabled();
+    });
+    for (const button of actions(1)) expect(button).toBeDisabled();
+
+    await userEvent.click(checkboxes()[data.length + 1]!);
+    await waitFor(() =>
+      expect(
+        canvas.getAllByText(`1 of ${data.length} row(s) selected`),
+      ).toHaveLength(2),
+    );
+    await waitFor(() => {
+      for (const button of actions(1)) expect(button).toBeEnabled();
+    });
+
+    await userEvent.click(checkboxes()[0]!);
+    await waitFor(() => {
+      for (const button of actions(0)) expect(button).toBeDisabled();
+    });
   },
 };
 
