@@ -428,7 +428,23 @@ ScrollCues.play = async ({ canvasElement }: StoryContext) => {
     (parseFloat(wrapper.style.getPropertyValue('--st-pin-start')) || 0) +
     (parseFloat(wrapper.style.getPropertyValue('--st-pin-end')) || 0);
   const step = 0.8 * (box.clientWidth - pinned);
-  right.click();
+  // A real press at the chevron's centre: mousedown applies `:active`, and the
+  // button must stay under the pointer for the click to reach it (D22).
+  const browserUserEvent = (
+    globalThis as {
+      stBrowserUserEvent?: {
+        click: (element: Element) => Promise<void>;
+        hover: (element: Element) => Promise<void>;
+      };
+    }
+  ).stBrowserUserEvent;
+  if (browserUserEvent) {
+    await browserUserEvent.hover(wrapper);
+    await waitFor(() => expect(getComputedStyle(right).opacity).toBe('1'));
+    await browserUserEvent.click(right);
+  } else {
+    right.click();
+  }
   await waitFor(() =>
     expect(Math.abs(box.scrollLeft - step)).toBeLessThanOrEqual(1),
   );
