@@ -344,7 +344,9 @@ export const MenuItemsShowIcons = {
           ? { ...column, icon: TypeIcon }
           : column.accessorKey === 'email'
             ? { ...column, icon: MailIcon }
-            : column,
+            : column.accessorKey === 'lastName'
+              ? { ...column, icon: undefined }
+              : column,
       )}
       data={data}
     />
