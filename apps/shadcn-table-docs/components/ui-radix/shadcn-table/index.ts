@@ -97,3 +97,14 @@ export * from '@/components/ui-radix/shadcn-table/hooks/useST_HorizontalOverflow
 export * from '@/components/ui-radix/shadcn-table/components/head/ST_TableHeadCellLockedOverlay';
 export { useST_ColumnFlip } from '@/components/ui-radix/shadcn-table/hooks/useST_ColumnFlip';
 export { useST_DragAutoScroll } from '@/components/ui-radix/shadcn-table/hooks/useST_DragAutoScroll';
+// spec 04
+export * from '@/components/ui-radix/shadcn-table/shared/utils/filterSummary.utils';
+export * from '@/components/ui-radix/shadcn-table/hooks/useST_PopupResize';
+export * from '@/components/ui-radix/shadcn-table/hooks/useST_ViewPersistence';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ColumnPicker';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterChips';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterEditor';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_SortPopover';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsButton';
+export * from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ViewSettingsItems';
+export * from '@/components/ui-radix/shadcn-table/components/buttons/ST_TooltipButton';

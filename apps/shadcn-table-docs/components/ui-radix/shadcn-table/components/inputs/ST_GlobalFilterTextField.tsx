@@ -40,6 +40,7 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
       icons: { CloseIcon, SearchIcon },
       localization,
       manualFiltering,
+      showClearSearchButton,
       stSearchTextFieldProps,
     },
     refs: { searchInputRef },
@@ -119,6 +120,17 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
     returnFocusRef.current?.focus();
   };
 
+  // Closing the field drops the typed text and its pending debounced write.
+  const [prevShowGlobalFilter, setPrevShowGlobalFilter] =
+    useState(showGlobalFilter);
+  if (showGlobalFilter !== prevShowGlobalFilter) {
+    setPrevShowGlobalFilter(showGlobalFilter);
+    if (!showGlobalFilter) {
+      handleChangeDebounced.clear();
+      setSearchValue('');
+    }
+  }
+
   // An outside change to the global filter resets the search value; the store
   // is not written here.
   const [prevGlobalFilter, setPrevGlobalFilter] = useState(globalFilter);
@@ -167,20 +179,22 @@ export const ST_GlobalFilterTextField = <TData extends ST_RowData>({
               searchInputRef.current = inputRef;
             }}
           />
-          <InputGroupAddon align="inline-end">
-            <ST_Tooltip title={localization.clearSearch ?? ''}>
-              <span>
-                <InputGroupButton
-                  aria-label={localization.clearSearch}
-                  disabled={!searchValue?.length}
-                  onClick={handleClear}
-                  size="icon-sm"
-                >
-                  <CloseIcon />
-                </InputGroupButton>
-              </span>
-            </ST_Tooltip>
-          </InputGroupAddon>
+          {showClearSearchButton && (
+            <InputGroupAddon align="inline-end">
+              <ST_Tooltip title={localization.clearSearch ?? ''}>
+                <span>
+                  <InputGroupButton
+                    aria-label={localization.clearSearch}
+                    disabled={!searchValue?.length}
+                    onClick={handleClear}
+                    size="icon-sm"
+                  >
+                    <CloseIcon />
+                  </InputGroupButton>
+                </span>
+              </ST_Tooltip>
+            </InputGroupAddon>
+          )}
         </InputGroup>
         <ST_FilterOptionMenu
           anchorEl={anchorEl}
