@@ -127,6 +127,30 @@ SelectionEnabled.play = async ({ canvasElement }: StoryContext) => {
   });
 };
 
+// The select-all and row checkboxes share one x in their column (F12).
+export const CheckboxesAlign = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} enableRowSelection />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      const header = canvasElement.querySelector<HTMLElement>(
+        `thead th ${SELECT_CONTROL}`,
+      );
+      const body = canvasElement.querySelector<HTMLElement>(
+        `tbody tr td ${SELECT_CONTROL}`,
+      );
+      expect(header).not.toBeNull();
+      expect(body).not.toBeNull();
+      expect(
+        Math.abs(
+          header!.getBoundingClientRect().x - body!.getBoundingClientRect().x,
+        ),
+      ).toBeLessThanOrEqual(1);
+    });
+  },
+};
+
 export const DisableSelectAll = () => (
   <ShadcnTable
     columns={columns}

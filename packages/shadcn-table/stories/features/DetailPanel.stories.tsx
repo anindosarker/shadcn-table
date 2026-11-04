@@ -533,3 +533,78 @@ export const DetailPanelExpandAllDisabledGridNoGrow = () => (
     )}
   />
 );
+
+type Member = {
+  address: string;
+  city: string;
+  firstName: string;
+  id: string;
+  lastName: string;
+};
+
+const members: Member[] = [
+  {
+    address: '261 Erdman Ford',
+    city: 'East Daphne',
+    firstName: 'Dylan',
+    id: '1',
+    lastName: 'Murray',
+  },
+  {
+    address: '769 Dominic Grove',
+    city: 'Vancouver',
+    firstName: 'Raquel',
+    id: '2',
+    lastName: 'Kohler',
+  },
+];
+
+// The detail panel docs example under the grid layout.
+const PanelTable = ({ virtual }: { virtual?: boolean }) => (
+  <ShadcnTable
+    columns={[
+      { accessorKey: 'id', header: 'ID', size: 50 },
+      { accessorKey: 'firstName', header: 'First Name' },
+      { accessorKey: 'lastName', header: 'Last Name' },
+    ]}
+    data={members}
+    enableRowVirtualization={virtual}
+    layoutMode="grid"
+    renderDetailPanel={({ row }) => (
+      <div className="m-auto grid w-full grid-cols-2">
+        <p>Address: {row.original.address}</p>
+        <p>City: {row.original.city}</p>
+      </div>
+    )}
+  />
+);
+
+// An expanded row shows its panel with height and visible content (F24).
+const expectPanelRenders = async ({ canvas, userEvent }: StoryContext) => {
+  const [firstRowExpand] = await canvas.findAllByRole('button', {
+    name: 'Expand',
+  });
+  await userEvent.click(firstRowExpand);
+  await waitFor(() => {
+    const text = canvas.getByText('Address: 261 Erdman Ford');
+    const detailRow = text.closest('tr')!;
+    expect(detailRow.getBoundingClientRect().height).toBeGreaterThan(0);
+    const box = text.getBoundingClientRect();
+    expect(box.height).toBeGreaterThan(0);
+    expect(box.width).toBeGreaterThan(0);
+    expect(text).toBeVisible();
+    // Nothing clips the text: the cell and the panel wrapper hold it.
+    const cell = text.closest('td')!.getBoundingClientRect();
+    expect(box.bottom).toBeLessThanOrEqual(cell.bottom + 0.5);
+  });
+};
+
+export const PanelRenders = {
+  render: () => <PanelTable />,
+  play: expectPanelRenders,
+};
+
+export const PanelRendersVirtualized = {
+  render: () => <PanelTable virtual />,
+  play: expectPanelRenders,
+};

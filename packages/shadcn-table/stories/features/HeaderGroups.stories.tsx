@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Header Groups Examples',
@@ -228,3 +229,67 @@ export const HeaderGroupsWithRowVirtualization = () => (
 export const HeaderGroupsWithColumnVirtualization = () => (
   <ShadcnTable columns={columns} data={data} enableColumnVirtualization />
 );
+
+// Each group header spans exactly its leaves: the group row's cells, taken by
+// colSpan, against the leaf row's cells below them (F18).
+const expectGroupEdgesMatchLeaves = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const [groupRow, leafRow] = [
+      ...canvasElement.querySelectorAll<HTMLTableRowElement>('thead tr'),
+    ];
+    expect(groupRow).toBeDefined();
+    expect(leafRow).toBeDefined();
+    const leaves = [...leafRow.querySelectorAll<HTMLElement>('th')];
+    let index = 0;
+    for (const group of groupRow.querySelectorAll<HTMLTableCellElement>('th')) {
+      const span = leaves.slice(index, index + group.colSpan);
+      index += group.colSpan;
+      const rect = group.getBoundingClientRect();
+      const left = Math.min(
+        ...span.map((th) => th.getBoundingClientRect().left),
+      );
+      const right = Math.max(
+        ...span.map((th) => th.getBoundingClientRect().right),
+      );
+      const name = `${group.textContent} over ${span.map((th) => th.dataset.flipColumn).join(', ')}`;
+      expect(Math.abs(rect.left - left), `${name} left`).toBeLessThanOrEqual(1);
+      expect(Math.abs(rect.right - right), `${name} right`).toBeLessThanOrEqual(
+        1,
+      );
+    }
+    expect(index).toBe(leaves.length);
+  });
+};
+
+export const GroupEdgesMatchLeaves = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowSelection
+      initialState={{ columnPinning: { start: ['firstName'] } }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) =>
+    expectGroupEdgesMatchLeaves(canvasElement),
+};
+
+export const GroupEdgesMatchLeavesNoGrow = {
+  render: () => (
+    <ShadcnTable
+      columns={[
+        {
+          ...columns[0],
+          columns: [
+            { accessorKey: 'firstName', grow: false, header: 'First Name' },
+            { accessorKey: 'lastName', header: 'Last Name' },
+          ],
+        },
+        columns[1],
+      ]}
+      data={data}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) =>
+    expectGroupEdgesMatchLeaves(canvasElement),
+};
