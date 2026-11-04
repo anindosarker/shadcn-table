@@ -75,14 +75,17 @@ const DARK_LINE = 85;
 const STEP_MS = 90;
 const ADD_MS = 140;
 
-// the prompt types one character every CHAR_MS, sits SEND_MS before it is
-// sent, and the reply lands THINK_MS later, with the repaint
-const CHAR_MS = 22;
-const SEND_MS = 300;
-const THINK_MS = 700;
+// the prompt types one character every CHAR_MS (a reading pace), sits
+// SEND_MS before it is sent, and the reply lands THINK_MS later, with the
+// repaint
+const CHAR_MS = 45;
+const SEND_MS = 500;
+const THINK_MS = 1200;
 
-// long enough to read the reply after the repaint
-const CYCLE_MS = 6000;
+// per theme: the longest prompt (about 70 characters) types and lands in
+// about 5 s, then the repainted app holds about 3 s; the five themes cycle
+// in 40 s
+const CYCLE_MS = 8000;
 
 type Row =
   | { kind: 'hunk'; text: string }
