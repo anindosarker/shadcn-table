@@ -476,7 +476,7 @@
   }
 }
 
-/* the status line wraps instead of cutting "Now showing: Selection" */
+/* the status line wraps instead of cutting "Now showing: View settings" */
 .v12 .v5-steps [aria-live] {
   overflow: visible;
   white-space: normal;

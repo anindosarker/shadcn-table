@@ -1,34 +1,48 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import type {
-  ColumnFiltersState,
-  ExpandedState,
-  GroupingState,
-  RowSelectionState,
-  SortingState,
-} from '@tanstack/react-table';
+import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
+import {
+  CalendarClockIcon,
+  CalendarIcon,
+  CalendarPlusIcon,
+  CircleDotIcon,
+  FlagIcon,
+  FolderIcon,
+  HashIcon,
+  Pencil,
+  Share2,
+  StickyNoteIcon,
+  TagsIcon,
+  TimerIcon,
+  Trash2,
+  TypeIcon,
+  UserIcon,
+  UserPenIcon,
+  UsersIcon,
+} from 'lucide-react';
+import { DropdownMenuItem } from '@/components/ui-radix/dropdown-menu';
 import {
   ShadcnTable,
   useShadcnTable,
   type ST_ColumnDef,
 } from '@/components/ui-radix/shadcn-table';
-import {
-  data,
-  type Person,
-} from '@/examples/.radix/aggregation-and-grouping/makeData';
+import { getST_ColumnFlipPositions } from '@/components/ui-radix/shadcn-table/hooks/useST_ColumnFlip';
+import { data, type Task } from '@/examples/.radix/persistent-view/makeData';
 
 export interface SignalTableState {
   sorting: SortingState;
   columnFilters: ColumnFiltersState;
-  grouping: GroupingState;
-  expanded: ExpandedState;
-  showColumnFilters: boolean;
-  rowSelection: RowSelectionState;
   globalFilter: string;
   showGlobalFilter: boolean;
-  /** Saved salary edits by row id, applied on top of the sample data. */
-  salaryEdits: Record<string, number>;
+  /** Data column ids in their new order, filling the slots those columns
+   * hold in the default order; the first one is the column that moved.
+   * Empty for the default order. */
+  columnOrder: string[];
+  /** The view settings the replay changes, on top of the stock ones. */
+  viewSettings: { striped: boolean };
+  /** Saved estimate edits by row id, applied on top of the sample data. */
+  estimateEdits: Record<string, number>;
 }
 
 type Updater<T> = T | ((old: T) => T);
@@ -39,35 +53,131 @@ export interface SignalTableProps {
     key: K,
     updater: Updater<SignalTableState[K]>,
   ) => void;
-  /** A salary cell the replay holds open in cell edit mode, with the value
-   * shown in its input. */
+  /** An estimate cell the replay holds open in cell edit mode, with the
+   * value shown in its input. */
   editing: { rowId: string; value: string } | null;
   /** What the replay just changed, so it can pulse once. */
   cue: SignalCue | null;
 }
 
 export type SignalCue =
-  | { kind: 'sort' | 'filter' | 'group' | 'select' | 'search' }
+  | { kind: 'sort' | 'filter' | 'order' | 'search' | 'view' }
   | { kind: 'edit'; rowId: string };
 
-/* One-shot accent pulse classes (v12.css): outlined, and fill only. */
+/* One-shot accent pulse class (v12.css). */
 const PULSE = 'v12-cue';
-const PULSE_FILL = 'v12-cue-fill';
-const DIM_MARKS = 'v12-dim-marks';
+const PULSE_MS = 1200;
 
-const usd = (value: number | undefined) =>
-  value?.toLocaleString?.('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+// The persistent-view example's columns (the header demo's); the Filtering
+// step picks one Status value, and only Estimate edits.
+const columns: ST_ColumnDef<Task>[] = (
+  [
+    {
+      accessorKey: 'name',
+      enableColumnOrdering: false,
+      header: 'Name',
+      icon: TypeIcon,
+      size: 260,
+    },
+    {
+      accessorKey: 'status',
+      filterVariant: 'select',
+      header: 'Status',
+      icon: CircleDotIcon,
+      size: 150,
+    },
+    { accessorKey: 'assignee', header: 'Assignee', icon: UserIcon, size: 160 },
+    { accessorKey: 'project', header: 'Project', icon: FolderIcon, size: 130 },
+    {
+      accessorKey: 'due',
+      enableColumnOrdering: false,
+      header: 'Due',
+      icon: CalendarIcon,
+      size: 130,
+    },
+    {
+      accessorKey: 'estimate',
+      Cell: ({ cell }) => `${cell.getValue<number>()}h`,
+      enableEditing: true,
+      header: 'Estimate',
+      icon: HashIcon,
+      size: 120,
+    },
+    { accessorKey: 'priority', header: 'Priority', icon: FlagIcon, size: 120 },
+    {
+      accessorFn: (row) => row.tags.join(', '),
+      enableSorting: false,
+      header: 'Tags',
+      icon: TagsIcon,
+      id: 'tags',
+      size: 200,
+    },
+    {
+      accessorKey: 'reporter',
+      header: 'Reporter',
+      icon: UserPenIcon,
+      size: 150,
+    },
+    {
+      accessorKey: 'team',
+      enableColumnOrdering: false,
+      header: 'Team',
+      icon: UsersIcon,
+      size: 120,
+    },
+    { accessorKey: 'sprint', header: 'Sprint', icon: TimerIcon, size: 120 },
+    {
+      accessorKey: 'created',
+      header: 'Created',
+      icon: CalendarPlusIcon,
+      size: 130,
+    },
+    {
+      accessorKey: 'updated',
+      header: 'Updated',
+      icon: CalendarClockIcon,
+      size: 130,
+    },
+    {
+      accessorKey: 'storyPoints',
+      header: 'Story points',
+      icon: HashIcon,
+      size: 130,
+    },
+    { accessorKey: 'notes', header: 'Notes', icon: StickyNoteIcon, size: 260 },
+  ] as ST_ColumnDef<Task>[]
+).map((column) => ({ enableEditing: false, ...column }));
+
+/** The toolbar control a cue pulses, found in the table's own markup. */
+const cueTarget = (root: HTMLElement, kind: SignalCue['kind']) => {
+  if (kind === 'filter') {
+    return root.querySelector<HTMLElement>('[data-filter-chip="status"]');
+  }
+  if (kind === 'view') {
+    return root.querySelector<HTMLElement>(
+      'button[aria-label="View settings"]',
+    );
+  }
+  if (kind === 'sort') {
+    // the sort chip: the toolbar button that names the sorted column
+    return (
+      [...root.querySelectorAll<HTMLElement>('button')].find(
+        (button) =>
+          !button.closest('table') &&
+          !button.hasAttribute('data-filter-chip') &&
+          button.textContent?.trim() === 'Due',
+      ) ?? null
+    );
+  }
+  return null;
+};
 
 /**
- * v5's signal table for the homepage: a real ST instance whose sorting, filters,
- * grouping, selection, global search and salary edits are held by the
- * parent, so the replay can drive it and still hand every control back to
- * the visitor. Salary cells edit in place (editDisplayMode: 'cell').
+ * The homepage's replaying table: the stock table on the persistent-view
+ * data, whose sorting, filters, search, column order, view settings and
+ * estimate edits the parent drives, so the replay can play them and still
+ * hand every control back to the visitor. Estimate cells edit in place
+ * (editDisplayMode: 'cell').
  */
 export default function SignalTable({
   state,
@@ -75,98 +185,47 @@ export default function SignalTable({
   editing,
   cue,
 }: SignalTableProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const rows = useMemo(
     () =>
-      data.map((p, i) =>
-        String(i) in state.salaryEdits
-          ? { ...p, salary: state.salaryEdits[String(i)] }
-          : p,
+      data.map((task) =>
+        task.id in state.estimateEdits
+          ? { ...task, estimate: state.estimateEdits[task.id] }
+          : task,
       ),
-    [state.salaryEdits],
+    [state.estimateEdits],
   );
-
-  const columns = useMemo<ST_ColumnDef<Person>[]>(
-    () => [
-      {
-        header: 'First name',
-        accessorKey: 'firstName',
-        size: 120,
-        enableEditing: false,
-      },
-      {
-        header: 'Last name',
-        accessorKey: 'lastName',
-        size: 120,
-        enableEditing: false,
-      },
-      {
-        header: 'State',
-        accessorKey: 'state',
-        filterFn: 'startsWith',
-        size: 136,
-        enableEditing: false,
-        GroupedCell: ({ cell, row }) => (
-          <span className="font-medium text-(--dh-ink)">
-            {cell.getValue<string>()}{' '}
-            <span className="text-(--dh-ink-faint)">
-              ({row.subRows?.length})
-            </span>
-          </span>
-        ),
-      },
-      {
-        header: 'Salary',
-        accessorKey: 'salary',
-        aggregationFn: 'mean',
-        size: 140,
-        Cell: ({ cell }) => usd(cell.getValue<number>()),
-        AggregatedCell: ({ cell }) => (
-          <span className="text-(--dh-ink-muted)">
-            avg{' '}
-            <span className="font-medium text-(--dh-accent)">
-              {usd(cell.getValue<number>())}
-            </span>
-          </span>
-        ),
-      },
-    ],
-    [],
-  );
-
-  const searchThenFilter =
-    !!state.globalFilter &&
-    state.columnFilters.some((f) => f.id === 'state' && !!f.value);
 
   const table = useShadcnTable({
     columns,
     data: rows,
-    enableGrouping: true,
-    enableRowSelection: true,
+    getRowId: (row) => row.id,
+    enableRowActions: true,
+    renderRowActionMenuItems: ({ closeMenu }) => [
+      <DropdownMenuItem key="edit" onClick={() => closeMenu()}>
+        <Pencil /> Edit
+      </DropdownMenuItem>,
+      <DropdownMenuItem key="share" onClick={() => closeMenu()}>
+        <Share2 /> Share
+      </DropdownMenuItem>,
+      <DropdownMenuItem key="delete" onClick={() => closeMenu()}>
+        <Trash2 /> Delete
+      </DropdownMenuItem>,
+    ],
     enableEditing: true,
     editDisplayMode: 'cell',
     // plain substring search, so the replay's term matches whole words the
     // way the highlights show (the default fuzzy match also ranks results
-    // and drops the salary sort while searching)
+    // and drops the due date sort while searching)
     globalFilterFn: 'contains',
-    // giving the top toolbar a custom-actions slot stacks the alert banner
-    // (selected count, grouped by) on its own row, so the search field
-    // never covers it
-    renderTopToolbarCustomActions: () => null,
-    // the Filtering step types into the State input under the header
-    columnFilterDisplayMode: 'subheader',
-    enableDensityToggle: false,
-    enableFullScreenToggle: false,
-    initialState: {
-      density: 'compact',
-      pagination: { pageIndex: 0, pageSize: 10 },
+    state: {
+      columnFilters: state.columnFilters,
+      globalFilter: state.globalFilter,
+      showGlobalFilter: state.showGlobalFilter,
+      sorting: state.sorting,
     },
-    state,
     onSortingChange: (u) => onChange('sorting', u),
     onColumnFiltersChange: (u) => onChange('columnFilters', u),
-    onGroupingChange: (u) => onChange('grouping', u),
-    onExpandedChange: (u) => onChange('expanded', u),
-    onShowColumnFiltersChange: (u) => onChange('showColumnFilters', u),
-    onRowSelectionChange: (u) => onChange('rowSelection', u),
     onGlobalFilterChange: (u) => onChange('globalFilter', u ?? ''),
     onShowGlobalFilterChange: (u) => onChange('showGlobalFilter', u),
     // the replay shows its value in the open cell; a visitor's edit is
@@ -178,40 +237,21 @@ export default function SignalTable({
             onBlur: (event) => {
               const value = Number(event.target.value);
               if (Number.isFinite(value)) {
-                onChange('salaryEdits', (old) => ({
+                onChange('estimateEdits', (old) => ({
                   ...old,
                   [row.id]: value,
                 }));
               }
             },
           },
-    stTableHeadCellProps: ({ column }) => ({
+    stTableBodyCellProps: ({ cell, row }) => ({
       className:
-        (cue?.kind === 'sort' && column.id === 'salary') ||
-        (cue?.kind === 'filter' && column.id === 'state')
+        cue?.kind === 'edit' &&
+        row.id === cue.rowId &&
+        cell.column.id === 'estimate'
           ? PULSE
           : undefined,
     }),
-    stTableBodyCellProps: ({ cell, row }) => {
-      const pulse =
-        cue?.kind === 'edit' &&
-        row.id === cue.rowId &&
-        cell.column.id === 'salary'
-          ? PULSE
-          : (cue?.kind === 'group' && row.getIsGrouped()) ||
-              (cue?.kind === 'select' && row.getIsSelected())
-            ? PULSE_FILL
-            : '';
-      // once the State filter applies, the older search highlights in the
-      // other columns fade out (the search itself stays on)
-      const dim = searchThenFilter && cell.column.id !== 'state';
-      return {
-        className: [pulse, dim ? DIM_MARKS : ''].join(' ').trim() || undefined,
-      };
-    },
-    stToolbarAlertBannerProps: {
-      className: cue?.kind === 'select' ? PULSE : undefined,
-    },
     // inline style, not a class: the top toolbar passes its own className
     // to the search field, which replaces ours (keyframes in v12.css)
     stSearchTextFieldProps:
@@ -225,19 +265,69 @@ export default function SignalTable({
           }
         : {},
     stTableContainerProps: { className: 'max-h-[30rem]' },
-    stTableLayoutProps: { className: 'border-0 shadow-none bg-transparent' },
   });
 
-  // useShadcnTable returns a new table object every render, so the edit
-  // effect below reads the latest one through this ref instead of depending
-  // on it: a table dependency re-ran the effect, whose setEditingCell
-  // re-rendered, on every commit (React error #185).
+  // useShadcnTable returns a new table object every render, so the effects
+  // below read the latest one through this ref instead of depending on it: a
+  // table dependency re-ran the edit effect, whose setEditingCell re-rendered,
+  // on every commit (React error #185).
   const tableRef = useRef(table);
   useLayoutEffect(() => {
     tableRef.current = table;
   });
 
-  // open or close the salary cell the replay is editing
+  // the stock column order, before any replay or visitor move
+  const defaultOrder = useRef<string[] | null>(null);
+  if (defaultOrder.current === null) {
+    defaultOrder.current = [...table.atoms.columnOrder.get()];
+  }
+
+  // play the replay's column move: the headers slide from where they sat
+  // (the column drag animation) and the moved column flashes
+  const orderKey = state.columnOrder.join(',');
+  useLayoutEffect(() => {
+    const table = tableRef.current;
+    const base = defaultOrder.current ?? [];
+    const moved = orderKey ? orderKey.split(',') : [];
+    const slots = new Set(moved);
+    let next = 0;
+    const order = base.map((id) => (slots.has(id) ? moved[next++] : id));
+    const current = table.atoms.columnOrder.get();
+    if (order.join(',') === current.join(',')) return;
+    if (moved.length) {
+      table.setColumnFlipPending({
+        dragDrop: false,
+        movedId: moved[0],
+        positions: getST_ColumnFlipPositions(table),
+      });
+    }
+    table.setColumnOrder(order);
+  }, [orderKey]);
+
+  // the replay's view settings, over whatever the visitor set
+  const striped = state.viewSettings.striped;
+  useLayoutEffect(() => {
+    tableRef.current.setViewSettings((old) =>
+      old.striped === striped ? old : { ...old, striped },
+    );
+  }, [striped]);
+
+  // pulse the toolbar control the replay just changed
+  const cueKind = cue?.kind;
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || !cueKind) return;
+    const target = cueTarget(root, cueKind);
+    if (!target) return;
+    target.classList.add(PULSE);
+    const timer = setTimeout(() => target.classList.remove(PULSE), PULSE_MS);
+    return () => {
+      clearTimeout(timer);
+      target.classList.remove(PULSE);
+    };
+  }, [cueKind]);
+
+  // open or close the estimate cell the replay is editing
   const replayEditing = useRef(false);
   const editingRowId = editing?.rowId;
   useEffect(() => {
@@ -246,7 +336,7 @@ export default function SignalTable({
       const cell = table
         .getPreFilteredRowModel()
         .rowsById[editingRowId]?.getAllCells()
-        .find((c) => c.column.id === 'salary');
+        .find((c) => c.column.id === 'estimate');
       if (cell) {
         table.setEditingCell(cell);
         replayEditing.current = true;
@@ -257,5 +347,9 @@ export default function SignalTable({
     }
   }, [editingRowId]);
 
-  return <ShadcnTable table={table} />;
+  return (
+    <div ref={rootRef}>
+      <ShadcnTable table={table} />
+    </div>
+  );
 }
