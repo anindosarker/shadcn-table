@@ -2294,6 +2294,30 @@
       ]
     },
     {
+      "name": "example-persistent-view-base",
+      "type": "registry:block",
+      "title": "Persistent View Example",
+      "description": "An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.",
+      "files": [
+        {
+          "path": "examples/base/persistent-view/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/persistent-view.tsx"
+        },
+        {
+          "path": "examples/base/persistent-view/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
       "name": "example-react-query-base",
       "type": "registry:block",
       "title": "React Query Example",
@@ -4747,6 +4771,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button"
+      ]
+    },
+    {
+      "name": "example-persistent-view-radix",
+      "type": "registry:block",
+      "title": "Persistent View Example",
+      "description": "An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.",
+      "files": [
+        {
+          "path": "examples/radix/persistent-view/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/persistent-view.tsx"
+        },
+        {
+          "path": "examples/radix/persistent-view/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-radix-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {
@@ -7207,6 +7255,30 @@
       ]
     },
     {
+      "name": "example-persistent-view-aria",
+      "type": "registry:block",
+      "title": "Persistent View Example",
+      "description": "An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.",
+      "files": [
+        {
+          "path": "examples/aria/persistent-view/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/persistent-view.tsx"
+        },
+        {
+          "path": "examples/aria/persistent-view/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-aria-core"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
       "name": "example-react-query-aria",
       "type": "registry:block",
       "title": "React Query Example",
@@ -9660,6 +9732,30 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button"
+      ]
+    },
+    {
+      "name": "example-persistent-view",
+      "type": "registry:block",
+      "title": "Persistent View Example",
+      "description": "Alias of example-persistent-view-base: the GitHub shorthand anindosarker/shadcn-table/example-persistent-view installs the Base UI copy.",
+      "files": [
+        {
+          "path": "examples/base/persistent-view/TS.tsx",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/persistent-view.tsx"
+        },
+        {
+          "path": "examples/base/persistent-view/makeData.ts",
+          "type": "registry:component",
+          "target": "@components/examples/persistent-view/makeData.ts"
+        }
+      ],
+      "registryDependencies": [
+        "anindosarker/shadcn-table/shadcn-table-base-core"
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     },
     {

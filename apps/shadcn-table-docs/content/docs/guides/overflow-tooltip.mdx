@@ -1,0 +1,89 @@
+---
+title: 'Overflow Tooltip Guide'
+description: 'How Shadcn Table cuts long cell text with an ellipsis and shows the full value in a tooltip only when the text is cut off'
+---
+
+Body cell text stays on one line by default and is cut with an ellipsis when it does not fit. When the text of a cell is actually cut off, hovering or focusing the cell shows a tooltip with the full value after the normal tooltip delay. A cell whose text fits shows no tooltip.
+
+### Relevant Table Options
+
+<TableOptionsTable onlyOptions={new Set(['enableCellOverflowTooltip'])} />
+
+### Relevant Column Options
+
+<ColumnOptionsTable onlyOptions={new Set(['Cell', 'overflowTooltip'])} />
+
+### Show the Full Text Instead
+
+Users can switch on Wrap cell text in the [view settings](/docs/guides/view-settings) panel (or pin it to the toolbar). With it on, cell text wraps and shows in full, and no tooltip is needed. You can start a table wrapped with `wrapText: true` in `initialState.viewSettings`.
+
+### Turn the Tooltip Off
+
+Set `enableCellOverflowTooltip: false` to keep the ellipsis but never show the tooltip.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  enableCellOverflowTooltip: false,
+});
+```
+
+### Per Column
+
+The `overflowTooltip` column option sets the tooltip for one column:
+
+- `false` turns it off for the column
+- `'value'` (the default behaviour) shows the cell value
+- a function `({ cell, column, row, table }) => ReactNode` renders the tooltip content
+
+```jsx
+const columns = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+    overflowTooltip: false, //ids are short, no tooltip
+  },
+  {
+    accessorKey: 'description',
+    header: 'Description',
+    overflowTooltip: ({ row }) => (
+      <span>
+        {row.original.title}: {row.original.description}
+      </span>
+    ),
+  },
+];
+```
+
+Display columns (row numbers, selection, row actions and the like) never show it, and neither do skeleton rows or cells being edited.
+
+### Custom Cells
+
+A column with a custom `Cell` render gets no automatic tooltip, because the table cannot know which part of your markup may be cut off. Wrap the text in the exported `ST_OverflowText` to opt in. It truncates its content to one line and shows the tooltip only when the content is cut off. Pass `tooltip` to show something other than its children, and `wrap` (for example the Wrap cell text setting, `viewSettings.wrapText`) to render plain wrapping text with no tooltip.
+
+```jsx
+import { ST_OverflowText } from '@/components/ui/shadcn-table';
+
+const columns = [
+  {
+    accessorKey: 'email',
+    header: 'Email',
+    Cell: ({ cell }) => (
+      <ST_OverflowText>
+        <a href={`mailto:${cell.getValue()}`}>{cell.getValue()}</a>
+      </ST_OverflowText>
+    ),
+  },
+];
+```
+
+The table renders one tooltip provider per body, so `ST_OverflowText` works inside any body cell without a provider of your own.
+
+### Overflow Tooltip Example
+
+Narrow a column with its resize handle until its text is cut off, then hover a cell.
+
+<BasicExample />
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

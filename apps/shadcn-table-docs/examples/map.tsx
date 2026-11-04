@@ -309,6 +309,9 @@ export const MultiSortingExample = () => (
 export const PersistentStateExample = () => (
   <ExampleSnippet name="persistent-state" />
 );
+export const PersistentViewExample = () => (
+  <ExampleSnippet name="persistent-view" />
+);
 export const ReactQueryExample = () => <ExampleSnippet name="react-query" />;
 export const RemoteExample = () => <ExampleSnippet name="remote" />;
 export const RowActionsButtonsExample = () => (
@@ -434,6 +437,7 @@ export const exampleComponents = {
   MuiThemeExample,
   MultiSortingExample,
   PersistentStateExample,
+  PersistentViewExample,
   ReactQueryExample,
   RemoteExample,
   RowActionsButtonsExample,

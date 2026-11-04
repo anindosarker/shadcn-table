@@ -912,6 +912,17 @@ export const tableOptions: TableOption[] = [
     type: 'Partial<ST_Icons>;',
   },
   {
+    tableOption: 'id',
+    defaultValue: '',
+    description:
+      'A stable id for the table. With persistViewSettings: true it names the storage key (shadcn-table:<id>:view) instead of the hash of the column ids. Without it the table generates an id of its own.',
+    link: '/docs/guides/view-settings',
+    linkText: 'ST View Settings Docs',
+    required: false,
+    source: 'ST',
+    type: 'string',
+  },
+  {
     tableOption: 'initialState',
     defaultValue: '',
     description:

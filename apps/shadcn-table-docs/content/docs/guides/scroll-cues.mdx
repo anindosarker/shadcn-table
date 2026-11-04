@@ -1,0 +1,51 @@
+---
+title: 'Scroll Cues Guide'
+description: 'How Shadcn Table shows that columns are hidden sideways: the pinned edge shadow and the hover scroll chevrons'
+---
+
+When a table is wider than its frame, two cues tell users that more columns are out of view: a soft shadow on the inner edge of the pinned columns, and scroll chevrons that appear in the header row while the pointer is over the table. The thin scrollbar of the table container stays as well.
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={new Set(['enableColumnPinning', 'enableScrollButtons'])}
+/>
+
+### Pinned Edge Shadow
+
+The pinned cells on the inner edge of each pinned side, header and body, cast a small shadow towards the scrolling columns. It shows whenever that side has visible pinned columns, and a side with nothing pinned gets none. The shadow is clipped so only its inner side shows. Its color is the `--st-edge-shadow` variable, a shade darker than your `--background` (your `--border` color in browsers without relative color syntax); see the [Tint Tokens Guide](/docs/guides/tint-tokens) to change it. The row actions column is pinned to the end by default, so a table with row actions has an end edge shadow.
+
+### Scroll Chevrons
+
+On a side with columns scrolled out of view, hovering the table shows a small ghost button with a chevron, centred in the header row just inside the pinned columns. A click scrolls the table smoothly by 80 percent of the visible unpinned width. While a side has nothing more to show, its button is invisible, cannot be clicked and is out of the tab order.
+
+The chevrons are on by default. Set `enableScrollButtons: false` to remove them; the edge shadow and the scrollbar stay.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  enableScrollButtons: false, //no hover chevrons
+});
+```
+
+The buttons' labels come from the `scrollLeft` and `scrollRight` localization keys, and their icons from the `ChevronLeftIcon` and `ChevronRightIcon` icon keys. In a right-to-left table they scroll in the reading direction.
+
+### Overflow Attributes
+
+The table tracks its sideways overflow without re-rendering on scroll: a passive scroll listener and a resize observer write two attributes on the scroll wrapper around the table container (`data-slot="st-scroll-wrapper"`):
+
+- `data-overflow-start` while columns are hidden before the visible area
+- `data-overflow-end` while columns are hidden after it
+
+You can style your own cues from them with Tailwind's data attribute variants, for example on an element inside the wrapper with `group-data-overflow-end/st-scroll:opacity-100` (the wrapper is the `group/st-scroll` group). The wrapper also carries the pinned widths as `--st-pin-start` and `--st-pin-end`.
+
+`ST_ScrollButtons` is exported and takes the table as a prop; it must render inside that wrapper.
+
+### Scroll Cues Example
+
+Hover the table to see the chevrons; the start and end pinned columns cast the edge shadow.
+
+<EnableColumnPinningExample />
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

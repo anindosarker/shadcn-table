@@ -1,0 +1,71 @@
+---
+title: 'Sort Editor Guide'
+description: 'How to use and customize the toolbar sort editor of Shadcn Table to add, reorder and remove sort rules'
+---
+
+The sort editor puts every sort of the table in one place. A sort button in the toolbar opens it; it lists the active sort rules and lets users add, reorder and remove them without a modifier key. It is on by default.
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={
+    new Set([
+      'enableMultiSort',
+      'enableSortPopover',
+      'enableSorting',
+      'onSortingChange',
+      'showSortIndex',
+    ])
+  }
+/>
+
+### Relevant State
+
+<StateOptionsTable onlyOptions={new Set(['sorting'])} />
+
+### The Sort Button and the Sort Chip
+
+The sort button (aria-label "Sort") sits in the toolbar group between the filter button and the view settings items. With no sort active, it opens the "Sort by..." column picker directly: pick a column and the table is sorted by it, ascending.
+
+While sorts exist, the sort button turns to the `secondary` fill, and a sort chip appears at the start of the chip row, before the [filter chips](/docs/guides/filter-chips) and separated from them by a thin line. The chip names the sorted column when there is one sort and reads "2 sorts", "3 sorts" and so on when there are more (the `sortsCount` localization key). The chip and the button both open the editor.
+
+### The Sort Editor
+
+The editor lists one row per sort rule, in sort order:
+
+- a drag handle ("Drag to reorder") to move the rule up or down; the first rule sorts first
+- a column select ("Sort by..."), which offers the sortable columns that no other rule uses
+- a direction select, Ascending or Descending
+- a remove button ("Remove sort on {column}")
+
+Below the rules, "Add sort" opens the column picker with the columns not sorted yet and adds a rule for the picked column. "Delete sort" clears every rule and closes the editor. "Add sort" is hidden with `enableMultiSort: false` and when every sortable column already has a rule.
+
+### Stacked Sorts Without a Modifier Key
+
+`enableMultiSort` is `true` by default. Users stack sorts explicitly, either with "Add sort" in the editor or from a [column menu](/docs/guides/column-actions): choosing a direction on a column that is already sorted replaces its direction, choosing a direction on another column adds it after the current sorts. The header shows a small arrow on each sorted column; set `showSortIndex: true` to add each column's position next to its arrow while more than one sort is active.
+
+### Turn the Sort Editor Off
+
+Set `enableSortPopover: false` to remove the sort button and the sort chip. Sorting then happens from the column menu only. `enableSorting: false` turns sorting off altogether, and the sort button with it.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  enableSortPopover: false, //no sort button or sort chip in the toolbar
+});
+```
+
+The editor is exported as `ST_SortPopover` and takes the table as a prop, so you can place it in your own toolbar. `variant="chip"` renders the sort chip instead of the button.
+
+```jsx
+renderToolbarInternalActions: ({ table }) => <ST_SortPopover table={table} />,
+```
+
+The editor's texts use the `sort`, `sortBy`, `ascending`, `descending`, `dragToReorder`, `removeSortOn`, `addSort`, `deleteSort` and `sortsCount` localization keys, and its icons the `SwapVertIcon`, `DragHandleIcon`, `AddIcon`, `DeleteIcon` and `CloseIcon` icon keys.
+
+### Sort Editor Example
+
+<MultiSortingExample />
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

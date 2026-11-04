@@ -1,0 +1,153 @@
+---
+title: 'View Settings Guide'
+description: 'How the view settings panel, its toolbar pins and the opt-in view persistence of Shadcn Table work'
+---
+
+To remember each user's view across reloads, set `persistViewSettings: true`; nothing is stored until you do.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  persistViewSettings: true, //save the view settings, pins and column layout to localStorage
+});
+```
+
+The view settings panel collects the table's display preferences behind one button at the far right of the toolbar. Each setting can also be pinned to the toolbar as its own icon button. The panel is on by default (`enableViewSettings`).
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={
+    new Set([
+      'enableDensityToggle',
+      'enableRowNumbers',
+      'enableStickyHeader',
+      'enableViewSettings',
+      'id',
+      'nonce',
+      'persistViewSettings',
+    ])
+  }
+/>
+
+### Relevant State
+
+<StateOptionsTable
+  onlyOptions={
+    new Set([
+      'columnOrder',
+      'columnPinning',
+      'columnVisibility',
+      'density',
+      'viewSettings',
+    ])
+  }
+/>
+
+### Persist the View
+
+`persistViewSettings` is `false` by default: a stock table writes nothing to storage and renders no inline script. With `persistViewSettings: true`, the table saves the user's view to `localStorage` on every change and restores it on the next visit. Reset view deletes the stored entry.
+
+What is stored:
+
+- the view settings rows: wrap cell text, grid lines, sticky header, alternating row colors and row numbers
+- the toolbar pins
+- density
+- column visibility, column order and column pinning
+
+What is not stored: sorts, filters, the search text, the page and column sizes. To persist those, manage them through `state` yourself, as the [State Management Guide](/docs/guides/state-management#persistent-state) shows. A view equal to the table's `initialState` is not kept; the entry is removed instead.
+
+#### The Storage Key
+
+The entry is stored under `shadcn-table:<key>:view`. You do not need to name the table:
+
+- By default the key is a hash of the table's column ids in definition order. Two tables with the same column ids share one stored view.
+- Set the `id` table option to use it as the key instead, for example when two tables have the same columns but should keep separate views.
+- Pass a string as `persistViewSettings` to use that string as the whole storage key.
+
+When a column is added, removed or renamed, the hash changes and the view starts from the defaults. A stored view that names a column the table no longer has is dropped, and in development the console says so once.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  id: 'orders', //stored under shadcn-table:orders:view
+  persistViewSettings: true,
+});
+```
+
+#### Server Rendering Without a Flash
+
+A server-rendered page cannot read `localStorage`, so the server HTML shows the default view. To keep that default from flashing before the stored view applies, a table with `persistViewSettings` renders one small inline script with its server HTML. Before the first paint, the script checks storage for this table's key and, when the stored view differs from the defaults, marks the table root with `data-st-view-pending` and `aria-busy`. While marked, the body cells hide their content and show skeleton bars. Hydration applies the stored view in one render and clears the mark. A visitor with nothing stored sees the server-rendered table at once.
+
+Apps with a strict Content Security Policy pass the policy's nonce through the `nonce` table option so the script may run. Without it, the browser blocks the script and the table paints the default view first, then switches to the stored one after hydration.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  persistViewSettings: true,
+  nonce, //the CSP nonce of the current request
+});
+```
+
+Client-only apps read storage before the first paint and need none of this.
+
+### The View Settings Panel
+
+The view settings button (aria-label "View settings") opens a panel with these rows, each with an icon that follows its current value:
+
+- **Columns**: opens the columns menu, showing how many columns are shown ("5 shown"). See the [Column Hiding Guide](/docs/guides/column-hiding).
+- **Density**: a select of Compact, Comfortable and Spacious. See the [Density Toggle Guide](/docs/guides/density-toggle). Hidden with `enableDensityToggle: false`.
+- **Wrap cell text**: a switch. Off, cell text stays on one line and is cut with an ellipsis; on, it wraps. See the [Overflow Tooltip Guide](/docs/guides/overflow-tooltip).
+- **Grid lines**: a select of None, Rows (the default), Columns and All.
+- **Sticky header**: a switch, starting from `enableStickyHeader`. See the [Sticky Header Guide](/docs/guides/sticky-header).
+- **Alternating row colors**: a switch for striped rows, using the `--st-stripe` color. See the [Tint Tokens Guide](/docs/guides/tint-tokens).
+- **Row Numbers**: a switch, starting from `enableRowNumbers`. Turning it on adds the row numbers column pinned to the start.
+- **Reset view**: restores every row, the pins, density, column visibility, order and pinning to the table's `initialState`, and deletes the stored view when persistence is on.
+
+### Pin Items to the Toolbar
+
+Each row has a pin toggle ("Pin to toolbar", "Unpin from toolbar"). A pinned item shows in the toolbar between the sort button and the full screen toggle, as an icon button whose icon follows its value: Columns opens the columns menu, Density and Grid lines cycle through their values, and the switches toggle. Columns and Density are pinned by default.
+
+The pins are part of the `viewSettings` state, so you can change the default pins through `initialState`:
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  initialState: {
+    viewSettings: {
+      gridLines: 'rows',
+      pins: ['columns', 'density', 'wrapText'], //also pin Wrap cell text
+      rowNumbers: false,
+      stickyHeader: false,
+      striped: false,
+      wrapText: false,
+    },
+  },
+});
+```
+
+Search, filter, sort and full screen are fixed toolbar buttons and cannot be pinned or unpinned.
+
+### Turn the View Settings Off
+
+Set `enableViewSettings: false` to remove the view settings button and its pinned items. The separate columns button and density toggle return to the toolbar in their place.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  enableViewSettings: false,
+});
+```
+
+`ST_ViewSettingsButton` and `ST_ViewSettingsItems` (the pinned buttons) are exported and take the table as a prop, for a toolbar of your own. The panel's texts use the `viewSettings`, `columns`, `columnsShown`, `density`, `wrapCellText`, `singleLineCells`, `gridLines`, `stickyHeader`, `alternatingRowColors`, `rowNumbers`, `pinToToolbar`, `unpinFromToolbar` and `resetView` localization keys.
+
+### View Settings Example
+
+<PersistentViewExample />
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
