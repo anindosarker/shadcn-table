@@ -1,18 +1,18 @@
 # 03: header, column menu and dragging, tracker
 
-Status: running
+Status: done
 Branch `v0.8/header-menu-drag`, worktree 02, PR #99
 Gates:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:bases` at a86805e0: green
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:bases` at 2cfe9cf5: green
-- `pnpm test:base`, `test:radix`, `test:aria` at CLEANUP, with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded (the other 71 files passed as explicit paths; vitest `--exclude` does not reach the storybook project): 471 passed, 2 red per base, `Selection Enabled` and `Portals Read Context` (see Attention)
-- `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:icons`, `pnpm check:bases`, `node reference/01-check.mjs`, `pnpm registry:build`, `lib:install` per base at CLEANUP: green
-- `pnpm storybook:build:radix` at CLEANUP: green
+- `pnpm test:base`, `test:radix`, `test:aria` at f63f34fb, with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded (the other 71 files passed as explicit paths; vitest `--exclude` does not reach the storybook project): 471 passed, 2 red per base, `Selection Enabled` and `Portals Read Context` (see Attention)
+- `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria`, `pnpm lint`, `pnpm check:tailwind`, `pnpm check:icons`, `pnpm check:bases`, `node reference/01-check.mjs`, `pnpm registry:build`, `lib:install` per base at f63f34fb: green
+- `pnpm storybook:build:radix` at f63f34fb: green
 
 - Milestone 01 header, menu and handle: done (a86805e0)
 - Milestone 02 drag, flip, locked: done (2cfe9cf5)
 - Milestone 03 stories, captures, judges: done (4c758da1)
-- Milestone 04 cleanup and gates once: done (CLEANUP)
+- Milestone 04 cleanup and gates once: done (f63f34fb)
 
 ## Attention
 
