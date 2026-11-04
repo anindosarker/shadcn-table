@@ -59,7 +59,18 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
       )}
       <div className="flex w-full box-border items-center justify-between p-2">
         {renderBottomToolbarCustomActions ? (
-          renderBottomToolbarCustomActions({ table })
+          // The actions read the table, most often the selected rows, so they
+          // re-render on the state they commonly read; the toolbar does not.
+          <table.Subscribe
+            selector={(state) => ({
+              columnFilters: state.columnFilters,
+              globalFilter: state.globalFilter,
+              rowSelection: state.rowSelection,
+              sorting: state.sorting,
+            })}
+          >
+            {() => renderBottomToolbarCustomActions({ table })}
+          </table.Subscribe>
         ) : (
           <span />
         )}
