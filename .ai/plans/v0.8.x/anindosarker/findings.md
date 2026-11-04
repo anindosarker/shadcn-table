@@ -174,3 +174,7 @@
 ### F41 The grouped column header shows no icon
 
 - Storybook aria, `Grouping Column Mode Remove Custom Grouped Cell` (owner screenshot 2026-11-05 00:37): with `groupedColumnMode: 'remove'` (and `'reorder'`) the library builds the combined grouping column ("State, Gender", `hooks/display-columns/` or `useST_TableInstance.ts`) without `icon`, so its header is the only one without one while State and Gender carry icons (D3, D49). Fix: the grouping column def takes the grouped column's `icon`; with several grouped columns, the first one's. Three bases, a play in `ColumnGrouping.stories.tsx` (the grouped header contains an `svg`). Last fix story.
+
+### F42 Three top-level routes in `lib/routes.ts` have no page
+
+- `apps/shadcn-table-docs/lib/routes.ts` lists `/about`, `/changelog` and `/roadmap` (since `7b1f80fc` and `d035328d`, 2026-10-19), rendered by `components/table-of-contents-list.tsx`, with no app page behind them: a fetch returns 404. Found by the D58 sanity pass on `55ba7a7e` (every docs, api, examples and guides route is 200). Not a 0.8 regression. Fix: remove the three entries, or add the pages, in a later story.

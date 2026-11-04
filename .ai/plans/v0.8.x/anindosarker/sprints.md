@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 02:25
+Updated: 2026-11-05 03:05
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 | S9 | S10 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- | -- | --- |
@@ -26,7 +26,7 @@ Updated: 2026-11-05 02:25
 | Pinned items in custom toolbars F36              |     |     |     |     |     |     | [x] |     |     |     |
 | Last fixes (F19, F28, F30, F39 to F41, D56, D57) |     |     |     |     |     |     |     | [x] |     |     |
 | Plays (06.3)                                     |     |     |     |     |     |     |     |     | [ ] |     |
-| Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [ ] |     |
+| Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     | ·   |
 
 Release 0.8.0 (07): gate run 1 done in S5, F8 and F9 fixed; in S10 behind the last fixes (S8), the plays and the sanity pass (S9); the release steps wait for the owner's go.
