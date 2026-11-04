@@ -372,6 +372,30 @@ const checks = {
       'demo: view settings button',
       (await demo.locator('button[aria-label="View settings"]').count()) === 1,
     );
+    // seven data columns (D54), and at the desktop width they fit the frame,
+    // so the Estimate cell the Editing step changes is in view (F32)
+    const dataHeaders = await demo
+      .locator('thead th button[aria-label$=" column menu"]')
+      .count();
+    check(
+      'demo: seven data columns',
+      dataHeaders === 7,
+      `columns=${dataHeaders}`,
+    );
+    if ((page.viewportSize()?.width ?? 0) >= 1024) {
+      const overflow = await demo
+        .locator('table')
+        .first()
+        .evaluate((table) => {
+          const box = table.parentElement;
+          return box ? box.scrollWidth - box.clientWidth : 0;
+        });
+      check(
+        'demo: no horizontal scroll',
+        overflow <= 1,
+        `overflow=${overflow}px`,
+      );
+    }
     check('features heading', txt.includes('Everything you need'));
     check(
       'install steps heading',
