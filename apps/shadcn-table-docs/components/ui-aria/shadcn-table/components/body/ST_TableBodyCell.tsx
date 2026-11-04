@@ -342,7 +342,9 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                     ? 'text-start'
                     : tableCellProps.align === 'justify'
                       ? 'text-justify'
-                      : 'text-start',
+                      : columnDefType === 'display'
+                        ? 'justify-center text-center'
+                        : 'text-start',
               layoutMode?.startsWith('grid') && 'items-center',
               isRightClickable
                 ? 'cursor-context-menu'

@@ -41,6 +41,34 @@ export const pinnedEdgeShadowClassName = <TData extends ST_RowData>(
   return undefined;
 };
 
+/** The leaf headers under a header; a leaf header is its own. */
+const getLeafHeaders = <TData extends ST_RowData>(
+  header: ST_Header<TData>,
+): ST_Header<TData>[] =>
+  (header.getLeafHeaders() as unknown as ST_Header<TData>[]).filter(
+    (leaf) => !leaf.subHeaders.length,
+  );
+
+/**
+ * The side a cell sticks to: a column's pin, or for a group header the side
+ * every leaf below it is pinned to. Core reports a group as pinned when any
+ * leaf is, so a group with unpinned leaves would stick away from them.
+ */
+export const getCellPinning = <TData extends ST_RowData>({
+  column,
+  header,
+}: {
+  column: ST_Column<TData>;
+  header?: ST_Header<TData>;
+}): 'end' | 'start' | false => {
+  if (column.columnDef.columnDefType !== 'group') return column.getIsPinned();
+  if (!header) return false;
+  const sides = getLeafHeaders(header).map((leaf) => leaf.column.getIsPinned());
+  return sides.length && sides.every((side) => side && side === sides[0])
+    ? sides[0]
+    : false;
+};
+
 /** The cell borders `gridLines` draws; the last column has no end border. */
 export const gridLineClassName = (
   gridLines: ST_GridLinesState,
@@ -73,8 +101,15 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
   const { columnDef } = column;
   const { columnDefType } = columnDef;
 
-  const isColumnPinned =
-    columnDef.columnDefType !== 'group' && column.getIsPinned();
+  const isColumnPinned = getCellPinning({ column, header });
+  // A group header spans its leaves, so it grows as they do together.
+  const leafHeaders =
+    header && columnDefType === 'group' ? getLeafHeaders(header) : undefined;
+  const edgeColumn =
+    leafHeaders && isColumnPinned
+      ? (isColumnPinned === 'start' ? leafHeaders.at(-1) : leafHeaders[0])
+          ?.column
+      : column;
 
   const widthStyles: CSSProperties = {
     minWidth: `max(calc(var(--${header ? 'header' : 'col'}-${parseCSSVarId(
@@ -87,29 +122,55 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
 
   if (layoutMode === 'grid') {
     // A pinned column keeps its width, so the sticky offsets stay exact.
+    const growOf = (
+      cell: ST_Header<TData> | undefined,
+      of: ST_Column<TData>,
+    ) =>
+      of.getIsPinned() || [0, false].includes(of.columnDef.grow!)
+        ? []
+        : [
+            `var(--${cell ? 'header' : 'col'}-${parseCSSVarId(
+              cell?.id ?? of.id,
+            )}-size)`,
+          ];
+    const grows = leafHeaders
+      ? leafHeaders.flatMap((leaf) => growOf(leaf, leaf.column))
+      : isColumnPinned
+        ? []
+        : growOf(header, column);
     widthStyles.flex = `${
-      isColumnPinned || [0, false].includes(columnDef.grow!)
+      !grows.length
         ? 0
-        : `var(--${header ? 'header' : 'col'}-${parseCSSVarId(
-            header?.id ?? column.id,
-          )}-size)`
+        : grows.length === 1
+          ? grows[0]
+          : `calc(${grows.join(' + ')})`
     } 0 auto`;
   } else if (layoutMode === 'grid-no-grow') {
-    widthStyles.flex = `${+(columnDef.grow || 0)} 0 auto`;
+    widthStyles.flex = `${
+      leafHeaders
+        ? leafHeaders.reduce(
+            (sum, leaf) => sum + +(leaf.column.columnDef.grow || 0),
+            0,
+          )
+        : +(columnDef.grow || 0)
+    } 0 auto`;
   }
 
   const pinnedStyles: { className?: string; style?: CSSProperties } =
     isColumnPinned
       ? {
-          className: cn(getCommonPinnedCellStyles({ column, table }), 'sticky'),
+          className: cn(
+            getCommonPinnedCellStyles({ column: edgeColumn, table }),
+            'sticky',
+          ),
           style: {
             insetInlineStart:
               isColumnPinned === 'start'
-                ? `${column.getStart('start')}px`
+                ? `${(leafHeaders?.[0]?.column ?? column).getStart('start')}px`
                 : undefined,
             insetInlineEnd:
               isColumnPinned === 'end'
-                ? `${column.getAfter('end')}px`
+                ? `${(leafHeaders?.at(-1)?.column ?? column).getAfter('end')}px`
                 : undefined,
           },
         }
@@ -130,7 +191,7 @@ export const getCommonSRTCellStyles = <TData extends ST_RowData>({
         : 'transition-[padding] duration-150 ease-in-out',
       column.getIsResizing() || draggingColumn?.id === column.id
         ? 'z-2'
-        : columnDefType !== 'group' && isColumnPinned
+        : isColumnPinned
           ? 'z-1'
           : 'z-0',
       'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',

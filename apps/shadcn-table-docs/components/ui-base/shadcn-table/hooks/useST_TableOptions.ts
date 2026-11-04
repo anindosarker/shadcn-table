@@ -3,7 +3,9 @@ import { ST_Default_Icons } from '@/components/ui-base/shadcn-table/icons';
 import { ST_Localization_EN } from '@/components/ui-base/shadcn-table/shared/locales/en';
 import {
   type ST_DefinedTableOptions,
+  type ST_Row,
   type ST_RowData,
+  type ST_TableInstance,
   type ST_TableOptions,
 } from '@/components/ui-base/shadcn-table/types';
 
@@ -214,12 +216,17 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableTopToolbar,
     enableViewSettings,
     // `row.toggleExpanded()` is a no-op when `row.getCanExpand()` is false,
-    // and detail-panel rows have no sub rows, so a table with
-    // `renderDetailPanel` treats every row as expandable.
+    // and detail-panel rows have no sub rows, so a row can expand when its
+    // detail panel renders something; a row whose panel is null keeps a
+    // disabled expand button instead of opening an empty panel.
     getRowCanExpand:
       getRowCanExpand ??
       ((row) =>
-        !!renderDetailPanel ||
+        (!!renderDetailPanel &&
+          !!renderDetailPanel({
+            row: row as unknown as ST_Row<TData>,
+            table: row.table as unknown as ST_TableInstance<TData>,
+          })) ||
         ((enableExpanding ?? true) && !!row.subRows?.length)),
     getSubRows: (row) => row?.subRows,
     icons: definedIcons,
