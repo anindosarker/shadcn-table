@@ -4,8 +4,8 @@ Local docs site on http://localhost:5320, restarted after `claude/review` moved.
 
 ## Library
 
-- [ ] F12 `/docs/examples/export-csv`: select checkboxes centred in header and body, same x; `/docs/examples/row-virtualization`: row numbers centred, muted, tabular digits.
-- [ ] F16 `/docs/examples/persistent-view`, view settings, Row numbers on, grid lines All: every body cell edge matches its header cell. (Not reproduced in Storybook; if still wrong, screenshot it.)
+- [X] F12 `/docs/examples/export-csv`: select checkboxes centred in header and body, same x; `/docs/examples/row-virtualization`: row numbers centred, muted, tabular digits.
+- [X] F16 `/docs/examples/persistent-view`, view settings, Row numbers on, grid lines All: every body cell edge matches its header cell. (Not reproduced in Storybook; if still wrong, screenshot it.)
 - [ ] F17 `/docs/examples/advanced`: column menu on Name, Filter, the editor opens on the header and filters; the chips row shows in the custom toolbar.
 - [ ] F18 `/docs/examples/advanced`: Employee and Job Info group headers end exactly where their columns end; pin a column from its menu, the group still matches.
 - [ ] F19 `/docs/examples/export-csv`: the funnel opens the filter popover; First Name and Last Name no longer truncate.
