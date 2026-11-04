@@ -378,3 +378,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - Addendum to D14: without `renderRowActions` the column stays 48 px with the hidden header label and the dots button. With `renderRowActions` set, the column shows the "Actions" header label (`localization.actions`, as 0.7.4) and sizes to its controls: 96 by default, `displayColumnDefOptions['st-row-actions'].size` wins; the cell never clips a control. The editing examples set `positionActionsColumn: 'first'` so their edit and delete controls sit where 0.7.4 showed them. Owner, 2026-11-04 19:23 and 19:24 (F22).
 - Source: A9
+
+### D53 The chip editor input keeps the stock radius; its clipped focus ring is a bug
+
+- A10 asked about the editor input's radius. The radius is the stock `rounded-lg`; what the owner saw (2026-11-04 22:19) was the 3 px focus ring and the rounded edge clipped by the filter container's `overflow-hidden` (F31). No radius change; F31 is fixed as a bug, the input then looks exactly like the search box.
+- Source: A10
