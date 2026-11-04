@@ -28,3 +28,7 @@
 
 - `components/body/ST_TableDetailPanel.tsx` (spec 02): with `layoutMode: 'grid'` the detail cell is flex and its `CollapsibleContent` shrinks to content, so a recharts `ResponsiveContainer` measures 0 width (check-pages b and d 'chart-detail-panel'). Fixed with the round D fix commit (`w-full min-w-0`).
 
+### F7 Sort editor ignores maxMultiSortColCount
+
+- `components/toolbar/ST_SortPopover.tsx:86`: "Add sort" is offered until every sortable column has a rule; `maxMultiSortColCount` is not read. Found by spec 06. Owner choice on timing: A4.
+
