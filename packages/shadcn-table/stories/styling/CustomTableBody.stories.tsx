@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
@@ -74,3 +75,12 @@ export const CustomEmptyRowsJSX = () => (
     renderEmptyRowsFallback={() => <p>OMG THERE ARE NO ROWS 😳</p>}
   />
 );
+
+// With no rows the body shows the consumer's fallback instead of the default.
+CustomEmptyRowsJSX.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  const fallback = await canvas.findByText('OMG THERE ARE NO ROWS 😳');
+  expect(fallback.tagName).toBe('P');
+  expect(canvasElement.querySelector('tbody')).toContainElement(fallback);
+  expect(canvas.queryByText('No records to display')).toBeNull();
+};

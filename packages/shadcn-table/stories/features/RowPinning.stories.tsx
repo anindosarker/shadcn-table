@@ -335,7 +335,7 @@ const pinButton = (row: HTMLElement) =>
 export const PinRowTopMode = {
   render: () => <RowPinningTopMode />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     const target = bodyRows(canvasElement)[9]!;
     await userEvent.click(pinButton(target));
     await waitFor(() => {
@@ -355,7 +355,7 @@ export const PinRowTopMode = {
 export const PinRowSticky = {
   render: () => <RowPinningStickyDefaultEnabled />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     expect(getComputedStyle(bodyRows(canvasElement)[4]!).position).not.toBe(
       'sticky',
     );
@@ -373,7 +373,7 @@ export const PinRowSticky = {
 export const UnpinRow = {
   render: () => <RowPinningStickyDefaultEnabled />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     await userEvent.click(pinButton(bodyRows(canvasElement)[2]!));
     await waitFor(() =>
       expect(bodyRows(canvasElement)[2]).toHaveAttribute('data-pinned'),

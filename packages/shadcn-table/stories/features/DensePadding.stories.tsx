@@ -89,7 +89,7 @@ export const ToggleChangesRowHeight = {
   render: () => <DensePaddingToggleEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     const rowHeight = () =>
       canvasElement.querySelector('tbody tr')!.getBoundingClientRect().height;
     const heights = [rowHeight()];

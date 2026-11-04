@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
@@ -89,3 +90,23 @@ export const CustomizeDisplayColumns = () => (
     )}
   />
 );
+
+// The display column options style their cells: large red row numbers and an
+// italic actions header.
+CustomizeDisplayColumns.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0]!.firstName);
+  const number = canvasElement.querySelector<HTMLElement>(
+    'tbody td[data-flip-column="st-row-numbers"]',
+  )!;
+  expect(getComputedStyle(number).fontSize).toBe('24px');
+  expect(number).toHaveClass('text-red-500');
+  const actions = canvasElement.querySelector<HTMLElement>(
+    'thead th[data-flip-column="st-row-actions"]',
+  )!;
+  expect(getComputedStyle(actions).fontStyle).toBe('italic');
+  expect(
+    canvasElement
+      .querySelector('thead th[data-flip-column="st-row-actions"]')!
+      .getBoundingClientRect().width,
+  ).toBeGreaterThan(0);
+};

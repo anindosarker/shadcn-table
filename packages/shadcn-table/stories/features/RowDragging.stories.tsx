@@ -173,7 +173,7 @@ export const DragBetweenTables = {
   render: () => <TwoTables />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(initData[0]!.firstName);
+    await canvas.findAllByText(initData[0]!.firstName);
     const [source, target] = canvas.getAllByRole('table');
     const ids = (table: HTMLElement) =>
       [...table.querySelectorAll('tbody td[data-flip-column="id"]')].map(

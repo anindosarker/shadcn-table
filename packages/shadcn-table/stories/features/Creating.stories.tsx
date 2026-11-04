@@ -473,7 +473,7 @@ export const CreateRowAppears = {
   },
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     const rows = () => [
       ...canvasElement.querySelectorAll<HTMLElement>('tbody tr'),
     ];

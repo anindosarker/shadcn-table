@@ -262,7 +262,7 @@ const rowFirstNames = (canvasElement: HTMLElement) =>
 export const ExpandShowsChildren = {
   render: () => <SubRowTreeEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     expect(rowFirstNames(canvasElement)).toEqual(
       data.map((person) => person.firstName),
     );
@@ -288,7 +288,7 @@ export const ExpandAllCollapseAll = {
   render: () => <SubRowTreeEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     const flat = (nodes: Node[]): string[] =>
       nodes.flatMap((node) => [node.firstName, ...flat(node.subRows ?? [])]);
     await userEvent.click(canvas.getByRole('button', { name: 'Expand all' }));

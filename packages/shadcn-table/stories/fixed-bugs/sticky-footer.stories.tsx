@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { DollarSignIcon, HashIcon, UserIcon } from 'lucide-react';
 
@@ -161,4 +162,32 @@ export const PinnedColumnsWithStickyFooter = () => {
       }}
     />
   );
+};
+
+// The footer sticks to the bottom of the scrolling table and its pinned
+// cells stay sticky at their start offsets.
+PinnedColumnsWithStickyFooter.play = async ({
+  canvasElement,
+}: StoryContext) => {
+  await within(canvasElement).findAllByText('SUM');
+  const tfoot = canvasElement.querySelector<HTMLElement>('tfoot')!;
+  expect(getComputedStyle(tfoot).position).toBe('sticky');
+  expect(getComputedStyle(tfoot).bottom).toBe('0px');
+  const box = tfoot.parentElement!;
+  let scroller: HTMLElement | null = box;
+  while (scroller && getComputedStyle(scroller).overflowY !== 'auto') {
+    scroller = scroller.parentElement;
+  }
+  // The footer sits at the scroll box's bottom edge while rows scroll under.
+  await waitFor(() =>
+    expect(
+      Math.abs(
+        tfoot.getBoundingClientRect().bottom -
+          (scroller!.getBoundingClientRect().top + scroller!.clientHeight),
+      ),
+    ).toBeLessThanOrEqual(1),
+  );
+  const first = tfoot.querySelector<HTMLElement>('td, th')!;
+  expect(getComputedStyle(first).position).toBe('sticky');
+  expect(getComputedStyle(first).left).toBe('0px');
 };

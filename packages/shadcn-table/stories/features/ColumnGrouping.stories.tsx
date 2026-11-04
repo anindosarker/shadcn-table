@@ -490,12 +490,14 @@ export const ExpandGroupShowsRows = {
     await userEvent.click(expand!);
     // The rows under the group are its members, in data order.
     await waitFor(() =>
-      rows()
-        .slice(1, 4)
-        .forEach((row, index) =>
+      members
+        .slice(0, 3)
+        .forEach((member, index) =>
           expect(
-            row.querySelector('td[data-flip-column="firstName"]'),
-          ).toHaveTextContent(members[index]!.firstName),
+            rows()[index + 1]!.querySelector(
+              'td[data-flip-column="firstName"]',
+            ),
+          ).toHaveTextContent(member.firstName),
         ),
     );
   },

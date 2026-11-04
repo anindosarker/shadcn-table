@@ -1216,7 +1216,7 @@ const firstNameCell = (canvasElement: HTMLElement) =>
 export const CellEditSaves = {
   render: () => <EditingEnabledEditModeCell />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     await userEvent.dblClick(firstNameCell(canvasElement));
     const input = await within(firstNameCell(canvasElement)).findByRole(
       'textbox',
@@ -1241,7 +1241,7 @@ export const RowEditSaveCancel = {
   render: () => <EditingEnabledEditModeRow />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     const edit = async () => {
       const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
       await userEvent.click(firstRowEdit!);
@@ -1273,7 +1273,7 @@ export const ModalEditSaves = {
   render: () => <EditingEnabledEditModeModalDefault />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
     await userEvent.click(firstRowEdit!);
     const dialog = await screen.findByRole('dialog');

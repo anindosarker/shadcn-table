@@ -113,7 +113,7 @@ export const ToggleFullScreen = {
   render: () => <FullScreenToggleEnabledDefault />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
-    await canvas.findByText(data[0].firstName);
+    await canvas.findAllByText(data[0].firstName);
     const root = canvasElement.querySelector<HTMLElement>(
       '[data-st-full-screen]',
     )!;

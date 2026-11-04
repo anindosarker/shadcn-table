@@ -205,7 +205,7 @@ const firstNameCell = (canvasElement: HTMLElement) =>
 export const RightClickOpensMenu = {
   render: () => <CellActionsEnabled />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(data[0].firstName);
+    await within(canvasElement).findAllByText(data[0].firstName);
     expect(screen.queryByRole('menu')).toBeNull();
     fireEvent.contextMenu(firstNameCell(canvasElement));
     const menu = await screen.findByRole('menu');
@@ -227,7 +227,7 @@ export const MenuItemRuns = {
       undefined,
     );
     try {
-      await within(canvasElement).findByText(data[0].firstName);
+      await within(canvasElement).findAllByText(data[0].firstName);
       fireEvent.contextMenu(firstNameCell(canvasElement));
       const menu = await screen.findByRole('menu');
       await userEvent.click(

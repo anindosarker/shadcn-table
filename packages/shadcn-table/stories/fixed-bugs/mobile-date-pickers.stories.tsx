@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { ShadcnTable } from '@/components/ui/shadcn-table';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, waitFor, within } from 'storybook/test';
 import { CalendarClockIcon, CalendarIcon, ClockIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -82,3 +83,26 @@ export const MobileDateTimePickers = () => (
     initialState={{ showColumnFilters: true }}
   />
 );
+
+// The date and time filters are native inputs of the right type, and a date
+// filter narrows the rows.
+MobileDateTimePickers.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByRole('columnheader');
+  const inputs = (type: string) =>
+    canvasElement.querySelectorAll<HTMLInputElement>(
+      `thead input[type="${type}"]`,
+    );
+  await waitFor(() => expect(inputs('date')).toHaveLength(3));
+  expect(inputs('datetime-local')).toHaveLength(3);
+  expect(inputs('time')).toHaveLength(3);
+  const before = canvasElement.querySelectorAll('tbody tr').length;
+  expect(before).toBe(10);
+  // A Birth Date before every row's leaves no row.
+  fireEvent.change(inputs('date')[0]!, { target: { value: '0001-01-02' } });
+  await waitFor(() =>
+    expect(canvasElement.querySelectorAll('tbody tr')).toHaveLength(1),
+  );
+  expect(canvasElement.querySelector('tbody tr')).toHaveTextContent(
+    /^No (records to display|results found)/,
+  );
+};

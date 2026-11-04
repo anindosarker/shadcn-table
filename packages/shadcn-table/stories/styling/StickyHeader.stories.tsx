@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
@@ -135,3 +136,24 @@ export const enableStickyFooter = () => (
     stTableContainerProps={{ style: { maxHeight: 400 } }}
   />
 );
+
+// The sticky header stays at the top of the 400px box while the rows scroll.
+StickyHeaderShorterTable.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0]!.firstName);
+  const thead = canvasElement.querySelector<HTMLElement>('thead')!;
+  expect(getComputedStyle(thead).position).toBe('sticky');
+  let box: HTMLElement | null = thead.parentElement;
+  while (box && getComputedStyle(box).overflowY !== 'auto') {
+    box = box.parentElement;
+  }
+  expect(box!.getBoundingClientRect().height).toBeLessThanOrEqual(400);
+  box!.scrollTop = 300;
+  await waitFor(() => expect(box!.scrollTop).toBe(300));
+  await waitFor(() =>
+    expect(
+      Math.abs(
+        thead.getBoundingClientRect().top - box!.getBoundingClientRect().top,
+      ),
+    ).toBeLessThanOrEqual(1),
+  );
+};

@@ -449,7 +449,7 @@ const indexes = (elements: NodeListOf<Element>) =>
 export const ScrollRendersFurtherRows = {
   render: () => <MaxVirtualization />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(fakeData[0]!['0']!);
+    await within(canvasElement).findAllByText(fakeData[0]!['0']!);
     const rows = () => canvasElement.querySelectorAll('tbody tr[data-index]');
     expect(rows().length).toBeGreaterThan(0);
     expect(rows().length).toBeLessThan(fakeData.length);
@@ -475,7 +475,7 @@ export const ScrollRendersFurtherRows = {
 export const ColumnVirtualizationScrollsHeaders = {
   render: () => <MaxVirtualization />,
   play: async ({ canvasElement }: StoryContext) => {
-    await within(canvasElement).findByText(fakeData[0]!['0']!);
+    await within(canvasElement).findAllByText(fakeData[0]!['0']!);
     const headers = () =>
       canvasElement.querySelectorAll('thead th[data-flip-column]');
     expect(headers().length).toBeLessThan(fakeColumns.length);

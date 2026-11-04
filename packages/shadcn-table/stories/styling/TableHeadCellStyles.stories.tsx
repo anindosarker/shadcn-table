@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
@@ -131,3 +132,13 @@ export const CustomHeadCellRenders = () => (
     enableColumnResizing
   />
 );
+
+// The table-level head cell classes give every header the end border and tint.
+StyleAllMuiTableHeadCell.play = async ({ canvasElement }: StoryContext) => {
+  const headers = await within(canvasElement).findAllByRole('columnheader');
+  for (const th of headers) {
+    const style = getComputedStyle(th);
+    expect(style.borderRightWidth).toBe('1px');
+    expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  }
+};
