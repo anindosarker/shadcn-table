@@ -69,7 +69,9 @@ export const ViewSettingsSeeded = () => (
   />
 );
 
-export const ViewSettingsPersisted = () => {
+export const ViewSettingsPersisted = (
+  props: Partial<ST_TableOptions<Task>>,
+) => {
   const [mount, setMount] = useState(0);
   return (
     <>
@@ -79,6 +81,7 @@ export const ViewSettingsPersisted = () => {
       <ViewSettingsTable
         key={`mount-${mount}`}
         persistViewSettings={STORAGE_KEY}
+        {...props}
       />
     </>
   );
@@ -249,6 +252,34 @@ export const Persistence = {
     );
     await waitFor(() =>
       expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull(),
+    );
+  },
+};
+
+// Display columns sit in the stored column order; a stored view that names
+// them still restores.
+export const PersistenceWithDisplayColumns = {
+  render: () => <ViewSettingsPersisted enableRowActions />,
+  beforeEach: Persistence.beforeEach,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await openPanel(canvasElement);
+    await userEvent.click(body.getByRole('switch', { name: 'Row Numbers' }));
+    await canvas.findByRole('columnheader', { name: '#' });
+    await waitFor(() =>
+      expect(window.localStorage.getItem(STORAGE_KEY)).toContain(
+        'st-row-numbers',
+      ),
+    );
+    await userEvent.keyboard('{Escape}');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Remount' }));
+    await canvas.findByRole('columnheader', { name: '#' });
+    expect(window.localStorage.getItem(STORAGE_KEY)).toContain(
+      'st-row-numbers',
     );
   },
 };

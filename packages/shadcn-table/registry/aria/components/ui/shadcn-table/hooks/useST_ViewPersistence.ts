@@ -43,6 +43,24 @@ export const getST_ViewSettingsKey = <TData extends ST_RowData>(
     persistViewSettings: table.options.persistViewSettings,
   });
 
+/**
+ * The stored view, dropped as a whole when it names a data column the table
+ * lacks. Display columns come and go with the options and view settings, so
+ * the `st-` ids the view names count as known.
+ */
+const readKnownView = <TData extends ST_RowData>(
+  table: ST_CoreTableInstance<TData>,
+  key: string,
+): ST_StoredView | null => {
+  const view = readStoredView(key);
+  if (!view) return null;
+  const displayIds = [
+    ...(view.columnOrder ?? []),
+    ...Object.keys(view.columnVisibility ?? {}),
+  ].filter((id) => id.startsWith('st-'));
+  return readStoredView(key, [...getST_ViewColumnIds(table), ...displayIds]);
+};
+
 const readView = <TData extends ST_RowData>(
   table: ST_CoreTableInstance<TData>,
 ): ST_StoredView => ({
@@ -153,9 +171,7 @@ export const useST_ViewPersistence = <TData extends ST_RowData>(
     if (!key || !hydrated) return;
     if (appliedKeyRef.current !== key) {
       appliedKeyRef.current = key;
-      const view = stored
-        ? readStoredView(key, getST_ViewColumnIds(table))
-        : null;
+      const view = stored ? readKnownView(table, key) : null;
       // Layout effect updates render before paint, so the cleared mark never
       // shows the default view.
       if (view) applyView(table, view);
