@@ -1,6 +1,6 @@
 # Filter editor focus ring (F31), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-focus-ring`, worktree 03, PR #109
 Gates:
 - `pnpm test:base stories/fixed-bugs/FilterEditorFocusRing.stories.tsx` on the shipped code (c5724f8a plus the story): red as expected, Chip Editor Ring and Subheader Row Ring fail with "filter container padding-top: expected 0 to be greater than or equal to 3"; the first draft's rect check failed on the same `overflow-hidden` CollapsibleContent (group top minus 3 px above the panel top)
@@ -14,6 +14,10 @@ Gates:
 - `pnpm test:base` same three files at 90e55d1b: green (3 files, 17 tests)
 - `pnpm test:aria` same three files at 90e55d1b: green (3 files, 17 tests)
 - `pnpm test:base` at 90e55d1b: green (78 files, 539 tests)
+- `pnpm test:radix` at bad2eb22: green (78 files, 539 tests), verifier
+- `pnpm test:aria` at bad2eb22: green (78 files, 539 tests), verifier
+- `pnpm storybook:build:aria` at bad2eb22: green, verifier
+- tsc per base, lint, check:bases, check:tailwind, test:base at 90e55d1b: still valid (90e55d1b..bad2eb22 touches only the tracker and CHANGELOG.md), verifier
 
 - Milestone 01 fix and plays: done (90e55d1b)
 
