@@ -357,6 +357,21 @@ const checks = {
       (await rows.count()) > 0,
       `rows=${await rows.count()}`,
     );
+    // the stock 0.8 table: icons in the headers, filters as chips (no
+    // filter row under the headers), the view settings button
+    const demo = page.locator('.v5-demo-table');
+    check(
+      'demo: header icons',
+      (await demo.locator('thead th svg[aria-hidden="true"]').count()) >= 5,
+    );
+    check(
+      'demo: no subheader filter row',
+      (await demo.locator('thead input').count()) === 0,
+    );
+    check(
+      'demo: view settings button',
+      (await demo.locator('button[aria-label="View settings"]').count()) === 1,
+    );
     check('features heading', txt.includes('Everything you need'));
     check(
       'install steps heading',

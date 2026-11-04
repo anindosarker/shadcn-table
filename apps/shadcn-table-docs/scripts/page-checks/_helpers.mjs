@@ -567,7 +567,7 @@ export async function baseSwitch(page, id, check, { via = 'header' } = {}) {
   );
 }
 
-const DEMO_LAST = 'Now showing: Grouping';
+const DEMO_LAST = 'Now showing: View settings';
 const DEMO_MIN_HOLD_MS = 15000;
 const DEMO_TIMEOUT_MS = 30000;
 
@@ -630,9 +630,9 @@ export async function demoLoop({ page, check, base }) {
     if (!tab.toLowerCase().includes(label.toLowerCase()))
       throw new Error(`base not kept after reload: ${tab.trim()}`);
   };
-  await run(`demo: ${opened.toLowerCase()} reaches Grouping`);
+  await run(`demo: ${opened.toLowerCase()} reaches View settings`);
   for (const label of Object.values(BASE_LABELS).filter((l) => l !== opened)) {
-    const name = `demo: ${label.toLowerCase()} reaches Grouping`;
+    const name = `demo: ${label.toLowerCase()} reaches View settings`;
     if (crashed) check(name, false, 'skipped after crash');
     else await run(name, choose(label));
   }
