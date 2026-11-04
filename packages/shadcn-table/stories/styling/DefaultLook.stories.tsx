@@ -26,8 +26,8 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 
-// The v0.8 default look with every new option set explicitly, on the header
-// demo's columns and data: the capture source for specs 02, 03 and 04.
+// The v0.8 default look on the stock defaults, with the header demo's columns
+// and data: the capture source for specs 02, 03 and 04.
 const meta: Meta = {
   title: 'Styling/Default Look',
 };
@@ -223,28 +223,14 @@ const columns: ST_ColumnDef<Task>[] = [
   { accessorKey: 'notes', header: 'Notes', icon: StickyNoteIcon, size: 260 },
 ];
 
-// The v0.8 options, set explicitly; a story overrides what it tests.
+// The stock table: the v0.8 look comes from the defaults; a story overrides
+// what it tests.
 const DefaultLookTable = (props: Partial<ST_TableOptions<Task>>) => (
   <ShadcnTable
-    columnFilterDisplayMode="chips"
     columns={columns}
     data={data}
-    enableCellOverflowTooltip
-    enableColumnOrdering
-    enableColumnPinning
-    enableColumnResizing
     enableRowActions
-    enableScrollButtons
-    enableSortPopover
-    enableViewSettings
     getRowId={(row) => row.id}
-    initialState={{
-      columnPinning: { end: ['st-row-actions'], start: [] },
-      pagination: { pageIndex: 0, pageSize: 20 },
-    }}
-    layoutMode="grid"
-    paginationDisplayMode="pages"
-    positionActionsColumn="last"
     renderRowActionMenuItems={({ closeMenu, row }) => [
       <DropdownMenuItem
         key="edit"
