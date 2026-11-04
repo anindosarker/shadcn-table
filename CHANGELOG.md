@@ -103,6 +103,17 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The view items pinned to the toolbar render before `ST_ViewSettingsButton` wherever it is placed, so pins show in a custom `renderTopToolbar` or `renderToolbarInternalActions`; the stock toolbar keeps its order and renders them once.
 
+#### Fix F19, F28, F30, F39, F40, F41, D56, D57
+
+- F19: the popover-mode header funnel is a 24 px icon button (it was a 12 px target), 30% opaque at rest and full while active or hovered.
+- F28: under `layoutMode: 'semantic'` the body select checkbox is centred in its cell.
+- F30: a Columns menu reorder slides each header by the distance it moved, not by the table's offset from the page edge.
+- F39: while a column resizes, the header hairline and the body guide are one 1 px line ending on the column's trailing edge; the body guide no longer is a 2 px border inside the cell.
+- F40: every built-in toolbar button fades and zooms in once on mount, as the pinned view items do; none under reduced motion.
+- F41: under `groupedColumnMode: 'remove'` the grouping column's header shows the first grouped column's icon.
+- D56: the export to CSV and export to PDF examples run on the chips filter default instead of popover mode.
+- D57: a row drop inside one table slides the rows into their new places and flashes the dropped row with the column drop highlight (`useST_RowFlip`); a drop into another table, reduced motion, row virtualization and more than 200 rows skip the slide.
+
 ### Docs
 
 #### Spec 06
