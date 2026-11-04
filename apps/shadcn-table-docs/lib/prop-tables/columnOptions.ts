@@ -223,7 +223,7 @@ export const columnOptions: ColumnOption[] = [
     columnOption: 'enableColumnOrdering',
     defaultValue: '',
     description:
-      'Set it to false to lock the column: it cannot be dragged, and while another column drags it shows a lock with "Fixed" and refuses the drop. The column menu shows a disabled "Fixed position" item. The row numbers column is locked by default.',
+      'Set it to false to lock the column: it cannot be dragged, and while another column drags it shows a lock with "Fixed" and refuses the drop. The column menu shows a disabled "Fixed position" item. The built-in display columns other than row actions are locked by default.',
     link: '/docs/guides/column-ordering-dnd#locked-columns',
     linkText: 'ST Column Ordering DnD Docs',
     source: 'ST',
@@ -377,7 +377,7 @@ export const columnOptions: ColumnOption[] = [
     columnOption: 'icon',
     defaultValue: '',
     description:
-      'An icon component or element shown before the column label in the header, the filter chips, the column picker, the columns menu and the view settings rows. Nothing renders when it is unset.',
+      'An icon component or element shown before the column label in the header, in the filter chips and in the column picker of the filter and sort editors. Nothing renders when it is unset.',
     link: '/docs/guides/column-icons',
     linkText: 'ST Column Icons Docs',
     source: 'ST',

@@ -1,0 +1,113 @@
+---
+title: 'Filter Chips Guide'
+description: 'How the default filter chips, the column picker and the filter editor of Shadcn Table work, and how to switch to other filter display modes'
+---
+
+By default, column filters live in the toolbar as chips: one chip per filtered column, showing the column's icon, its label and a summary of the value. There are no filter inputs under the headers. This is the `'chips'` filter display mode, the default of the `columnFilterDisplayMode` table option.
+
+### Relevant Table Options
+
+<TableOptionsTable
+  onlyOptions={
+    new Set([
+      'columnFilterDisplayMode',
+      'enableColumnFilterModes',
+      'enableColumnFilters',
+      'enableFilters',
+      'onColumnFiltersChange',
+    ])
+  }
+/>
+
+### Relevant Column Options
+
+<ColumnOptionsTable
+  onlyOptions={
+    new Set([
+      'columnFilterModeOptions',
+      'enableColumnFilter',
+      'enableColumnFilterModes',
+      'filterVariant',
+      'icon',
+    ])
+  }
+/>
+
+### Relevant State
+
+<StateOptionsTable onlyOptions={new Set(['columnFilters', 'filterChips'])} />
+
+### Add a Filter
+
+There are three ways to start filtering a column, and all of them open the same value editor:
+
+- **The filter button** in the toolbar group (aria-label "Filter") opens a searchable "Filter by..." column list. Picking a column swaps the same popover to that column's value editor, with a "Back to columns" button at the top. The popover glides to its new size on the swap (at once with reduced motion).
+- **"+ Filter"**, a small button in the chip row, opens the same column list. It shows while a filter chip or a sort exists.
+- **Filter** in a [column menu](/docs/guides/column-actions) opens the value editor in a popover anchored to that column's header cell. Closing it returns focus to the column's chevron.
+
+Every entry point adds the column's chip to the chip row in the background and flashes it, so you can see where the filter went. Chips appear in the order they were added. A chip exists before it has a value: an empty value keeps the chip.
+
+### The Filter Editor
+
+The editor shows the column name on its top line, the column's filter input (the same input its `filterVariant` renders in other modes) and "Remove filter". Clicking a chip opens the same editor on the chip.
+
+When a column has `enableColumnFilterModes` and filter mode options, the top line also has a mode picker ("Name contains"), a dropdown of the filter modes with their symbols. "Is empty" and "is not empty" hide the value input and keep the filter active. The in-field mode button and the "Filter Mode" line of the other modes do not render in chips mode.
+
+### Remove Filters
+
+- "Remove filter" in a chip's editor clears that column's value and removes its chip.
+- "Clear filters", next to the chips, clears every filter value and removes every chip. It shows only while a chip exists.
+- "Delete all filters" at the bottom of the column list does the same.
+- "Clear filter" in a column menu, shown while the column has a value, clears the value and removes its chip.
+
+Removing a filter also puts its filter mode back to the column's first mode option.
+
+### Chip Summaries
+
+A chip reads like a sentence: the column label, the filter mode when one is picked, and the value, for example "Name contains: Jo", "Age: 20 to 40", "Email is empty", or just "Name" while the chip has no value. Ranges use the `rangeSummary` localization key (`'{min} to {max}'`), checkboxes `yes` and `no`, and date bounds `beforeValue` and `afterValue`.
+
+A chip for a hidden column stays in the row. Its editor says "Show the column to edit this filter." instead of showing the input.
+
+### Filter Chips State
+
+The `filterChips` state holds the chip order and the open editor: `columnIds` (the chips, in the order added), `openColumnId` and `openAnchor` (`'chip'`, `'toolbar'` or `'header'`, where the open editor is anchored). A column that gets a filter value from `initialState`, from `state` or from your own code joins the chip row on its own. Set `filterChips` in `initialState` to show empty chips on load.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  initialState: {
+    columnFilters: [{ id: 'state', value: 'Ohio' }], //shows a "State: Ohio" chip
+    filterChips: {
+      columnIds: ['state', 'city'], //the City chip shows too, with no value yet
+      openAnchor: null,
+      openColumnId: null,
+    },
+  },
+});
+```
+
+### Other Filter Display Modes
+
+The chips are one of four `columnFilterDisplayMode` values. The filter functions, filter variants and filter inputs are the same in every mode.
+
+- `'chips'` (default): chips in the toolbar, as described above
+- `'subheader'`: a filter input under each header, shown and hidden with the toolbar's filter toggle (`showColumnFilters` state)
+- `'popover'`: a filter icon in each header opens the input in a popover
+- `'custom'`: no built-in filter UI, so you can render your own
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  columnFilterDisplayMode: 'subheader', //filter inputs under the headers, as before v0.8
+});
+```
+
+See the [Column Filtering Guide](/docs/guides/column-filtering) for the filter variants and functions.
+
+### Filter Chips Example
+
+<BasicExample />
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**
