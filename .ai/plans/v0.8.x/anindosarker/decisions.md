@@ -46,6 +46,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Stays: `columnResizeMode`, per-column `enableResizing`.
 - Addendum 2026-11-05: applies to `columnResizeMode: 'onEnd'` too: the hairline follows the pointer, nothing else; no body guide line, no slide on release (A12).
 - Addendum 2026-11-05: the bordered box the owner saw while resizing in aria was the 2 px cell border this decision removes; gone with F39, guarded by the play `ResizeGuidesMeetEdge` (A13).
+- Source: A12, A13
 
 ### D7 Row heights and grid lines
 

@@ -89,6 +89,38 @@ STORIES = {
 - 1.6.4: reference/06.3-check.mjs walks packages/shadcn-table/stories/, reports every *.stories.tsx without `play:` and, for each features/ file, the 1.6.2 names not found as a play on a story with that export name; exit 1 on any report. Commit it in milestone 2 and run it as a gate.
 - Milestone gates: tsc -p tsconfig.stories.json (no new error beyond the three at the start commit, HeaderGroups.stories.tsx:295 and ViewSettings.stories.tsx:293 are pre-existing), lint, test:base on the touched files; final: `node .ai/plans/v0.8.x/anindosarker/reference/06.3-check.mjs` exit 0, test:base, test:radix, test:aria in full one after another with the runtime recorded, storybook:build:base, lint, pnpm format.""",
   ),
+  'grouping': dict(
+    id='06.4-grouping', wt=f'{ROOT}.worktrees/01', branch='v0.8/grouping-header',
+    plan='specs/06.4-library-follow-up.md', tracker='trackers/06.4-tracker.md',
+    title='v0.8 spec 06.4: grouping header', review=None, spec_check=False, label='release:minor',
+    specifics="""Story "Grouping header (06.4)" specifics (spec 06.4 sections 1.6.2, 1.6.3 and their plays in 1.6.8; milestone 2.1.1 only; the other sections belong to the story "Filters, toolbar, RTL (06.4)" running at the same time on worktree 03):
+""" + COMMON + """
+- Your files, three bases: hooks/display-columns/getST_RowExpandColumnDef.tsx, components/head/ST_TableHeadCell.tsx (the renderColumnIcon import only), shared/utils/column.utils.ts (the renderColumnIcon export); stories/features/ColumnGrouping.stories.tsx; CHANGELOG.md block `#### Spec 06.4 grouping` under `### Changed`; your tracker. Nothing else; never components/inputs, components/toolbar, hooks/useST_ColumnFlip.ts.
+- Decisions D68 (breadcrumb: expand chevron as is, then per grouped column its icon and name, `>` between segments) and D73 (default size the sum of the grouped columns' sizes, consumer size wins) are implemented exactly as the spec says; D60 keeps column-group headers plain.
+- Gates per 2.2 that touch your files: tsc per base, lint, check:bases, check:tailwind, check:icons, ColumnGrouping.stories.tsx per base one after another, test:base in full once.""",
+  ),
+  'filters': dict(
+    id='06.4-filters', wt=f'{ROOT}.worktrees/03', branch='v0.8/filters-toolbar-rtl',
+    plan='specs/06.4-library-follow-up.md', tracker='trackers/06.4-filters-tracker.md',
+    title='v0.8 spec 06.4: filters, toolbar, RTL', review=None, spec_check=False, label='release:minor',
+    specifics="""Story "Filters, toolbar, RTL (06.4)" specifics (spec 06.4 sections 1.6.4 to 1.6.7 and their plays in 1.6.8; milestones 2.1.2 and 2.1.3; sections 1.6.2 and 1.6.3 belong to the story "Grouping header (06.4)" running at the same time on worktree 01):
+""" + COMMON + """
+- Your files, three bases: components/inputs/ST_FilterTextField.tsx, components/toolbar/ST_HeaderFilterEditor.tsx, components/toolbar/ST_ToolbarInternalButtons.tsx, hooks/useST_ColumnFlip.ts; components/inputs/ST_FilterRangeSlider.tsx in aria only; stories/features/{FilterChips,Filtering,Toolbar,ColumnResizing}.stories.tsx; CHANGELOG.md blocks `#### Spec 06.4 filters` under `### Fixed` and `### Changed` as the spec says; your tracker. Nothing else; never hooks/display-columns, components/head, shared/utils/column.utils.ts.
+- D72 (P12): the accepted diff in decisions.md D72 is applied as is, in place, with `git apply` on radix and base (the spec's 1.6.5 says the offsets) and the equivalent in-place edit on aria; no helper function, no restructuring. The aria `autoHighlight` gap the spec records goes under "## Attention" in the tracker.
+- D70: `ST_ToolbarInternalButtons` uses the exact spec 04 animation from 0 (`fade-in`, not `fade-in-10`); the play `ChipsDisplayMode` waits for the mount animation.
+- Gates per 2.2 that touch your files: tsc per base, lint, check:bases, check:tailwind, check:icons, the four story files per base one after another, test:base in full once, storybook:build:aria plus the aria warnings check if 2.2 names it.""",
+  ),
+  'docs2': dict(
+    id='06.5', wt=f'{ROOT}.worktrees/02', branch='v0.8/docs-follow-up-2',
+    plan='specs/06.5-docs-follow-up.md', tracker='trackers/06.5-tracker.md',
+    title='v0.8 spec 06.5: docs follow-up', review=None, spec_check=False, label='release:minor',
+    specifics="""Story "Docs follow-up (06.5)" specifics (spec 06.5 whole):
+- Tracker format: ~/.claude/skills/expedition/templates/tracker.md; set the Branch line; commit it with your commits, always pushed.
+- Your files: everything under apps/shadcn-table-docs/ except components/ui-<base>/ (regenerated, never edited); the alert-dialog part install exactly as spec 1.6.5 says (through the docs installer, never a hand edit, P5); packages/shadcn-table/scripts/registry/examples-{base,aria}-diff.json entries the spec names (hand-kept allow lists, P9); apps/shadcn-table-docs/registry.json and the example maps regenerated as the spec says; reference/06.5-check.mjs; CHANGELOG.md block `#### Spec 06.5` under `### Docs`; your tracker. No library source (P5): a library bug goes under "## Attention" with file:line. Two library stories run at the same time on worktrees 01 and 03; their files are theirs.
+- The docs app scripts: build, dev, types:check, lint, lib:install, registry:items, examples:variants (apps/shadcn-table-docs/package.json). Page checks: scripts/check-pages.mjs --base <base> --url http://localhost:<port> against your own dev server (PORT=<5340 to 5360> pnpm --filter shadcn-table-docs dev), one base at a time, stop the server when done; the dev registry on 5310 is shared: start it with `pnpm registry:dev` only when missing, never kill it. Never touch ports 5273, 5320, 5330, 6006 to 6008. The machine is loaded (P4): long gates one base after another.
+- Reproduce first: each new page-check assertion the spec names in 1.6.7 is run red on the shipped code and noted in the tracker before the fix (P10 as the spec applies it to page checks).
+- Gates per 2.2: docs types:check, lint, `node reference/06.5-check.mjs`, check-pages clusters the spec names per base one after another, docs build.""",
+  ),
 }
 
 def gen(key, st):
