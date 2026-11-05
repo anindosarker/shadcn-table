@@ -3,10 +3,10 @@
 Status: verified
 Branch `v0.8/fix-theme-demo-speed`, worktree 03, PR #[n]
 Gates:
-- `pnpm --filter shadcn-table-docs types:check` at [commit]: green
-- `pnpm --filter shadcn-table-docs lint` at [commit]: green (0 errors, 9 existing warnings)
+- `pnpm --filter shadcn-table-docs types:check` at 5b426b83: green
+- `pnpm --filter shadcn-table-docs lint` at 5b426b83: green (0 errors, 9 existing warnings)
 
-- Milestone 01 timing constants: done ([commit])
+- Milestone 01 timing constants: done (5b426b83)
 
 ## Notes
 
