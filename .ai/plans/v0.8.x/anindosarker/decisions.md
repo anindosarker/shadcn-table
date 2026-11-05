@@ -426,3 +426,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D63 The home demo plays only while its popovers have room below the toolbar
 
 - The replay starts and resumes only while the toolbar and about 360 px below it are inside the viewport (the demo at least 70 percent visible); otherwise it holds on "Starting" or pauses where it is. The page never scrolls itself. Owner, 2026-11-05 (F48).
+
+### D64 The demo keeps the stock stripe tint
+
+- The View settings step lands the library's default `--st-stripe` (`--muted` at 25 percent in dark, 70 percent in light); neither the library default nor the demo's root changes. Owner, 2026-11-05.
+- Source: A18
