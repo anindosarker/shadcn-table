@@ -63,7 +63,12 @@ date; merging it publishes the section as the GitHub release notes.
 
 #### View settings icons (D75)
 
-- Lucide defaults for the view settings: grid lines `Frame`, `Equal`, `Equal` rotated and `Square`; Columns `Columns3Cog`; density `ListChevronsDownUp`, mirrored `ListIndentDecrease`, `ListChevronsUpDown`. The icon editions are unchanged.
+- Lucide defaults for the view settings: grid lines `Frame`, `Equal`, `Equal` rotated and `Square`; Columns `Columns3Cog`; density `ListChevronsDownUp`, mirrored `ListIndentDecrease`, `ListChevronsUpDown`.
+
+#### Edition icons (06.6)
+
+- The Tabler, Phosphor, Remix and Hugeicons editions take their own icons for grid lines, Columns and density (D77): Tabler `IconFrame`, `IconEqual`, `IconEqual` rotated, `IconTableOptions`; Phosphor `HashStraightIcon`, `EqualsIcon`, `EqualsIcon` rotated, `ArrowsInLineVerticalIcon`, mirrored `TextOutdentIcon`, `ArrowsOutLineVerticalIcon`; Remix `RiHashtag`, `RiEqualLine`, `RiEqualLine` rotated, `RiSquareLine`, `RiKanbanView`, `RiContractUpDownLine`, mirrored `RiIndentDecrease`, `RiExpandUpDownLine`; Hugeicons `FrameIcon`, `EqualIcon`, `EqualIcon` rotated, `Columns3CogIcon`, `ListChevronsDownUpIcon`, mirrored `ListIndentDecreaseIcon`, `UnfoldMoreIcon`.
+- The drawn glyph file `components/icons/ST_GridLineIcons.tsx` and its `index.ts` export are removed (D76; added in this cycle, never released).
 
 #### Spec 05
 
