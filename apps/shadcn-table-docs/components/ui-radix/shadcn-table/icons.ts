@@ -11,17 +11,22 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsDown,
-  Columns3,
+  Columns3Cog,
   Copy,
+  Equal,
   Eraser,
   EyeOff,
   Filter,
   FilterX,
+  Frame,
   GapVertical,
   GripVertical,
   Layers,
   List,
+  ListChevronsDownUp,
+  ListChevronsUpDown,
   ListFilter,
+  ListIndentDecrease,
   ListOrdered,
   Lock,
   Maximize,
@@ -36,9 +41,6 @@ import {
   PinOff,
   Plus,
   RotateCcw,
-  Rows2,
-  Rows3,
-  Rows4,
   Save,
   Search,
   SearchX,
@@ -49,13 +51,23 @@ import {
   WrapText,
   X,
   XCircle,
+  type LucideProps,
 } from 'lucide-react';
+import { createElement } from 'react';
+import { cn } from '@/lib/utils';
 import type { ST_Icons } from '@/components/ui-radix/shadcn-table/types';
-import {
-  ST_GridLinesAllIcon,
-  ST_GridLinesColumnsIcon,
-  ST_GridLinesRowsIcon,
-} from '@/components/ui-radix/shadcn-table/components/icons/ST_GridLineIcons';
+
+const EqualVertical = (props: LucideProps) =>
+  createElement(Equal, {
+    ...props,
+    className: cn('rotate-90', props.className),
+  });
+
+const ListIndentDecreaseFlipped = (props: LucideProps) =>
+  createElement(ListIndentDecrease, {
+    ...props,
+    className: cn('-scale-x-100', props.className),
+  });
 
 export const ST_Default_Icons = {
   AddIcon: Plus,
@@ -69,9 +81,9 @@ export const ST_Default_Icons = {
   CloseIcon: X,
   ContentCopy: Copy,
   DeleteIcon: Trash2,
-  DensityLargeIcon: Rows2,
-  DensityMediumIcon: Rows3,
-  DensitySmallIcon: Rows4,
+  DensityLargeIcon: ListChevronsUpDown,
+  DensityMediumIcon: ListIndentDecreaseFlipped,
+  DensitySmallIcon: ListChevronsDownUp,
   DragHandleIcon: GripVertical,
   DynamicFeedIcon: Layers,
   EditIcon: Pencil,
@@ -82,10 +94,10 @@ export const ST_Default_Icons = {
   FirstPageIcon: ChevronFirst,
   FullscreenExitIcon: Minimize,
   FullscreenIcon: Maximize,
-  GridLinesAllIcon: ST_GridLinesAllIcon,
-  GridLinesColumnsIcon: ST_GridLinesColumnsIcon,
+  GridLinesAllIcon: Frame,
+  GridLinesColumnsIcon: EqualVertical,
   GridLinesNoneIcon: Square,
-  GridLinesRowsIcon: ST_GridLinesRowsIcon,
+  GridLinesRowsIcon: Equal,
   IndeterminateIcon: Minus,
   KeyboardDoubleArrowDownIcon: ChevronsDown,
   LastPageIcon: ChevronLast,
@@ -109,7 +121,7 @@ export const ST_Default_Icons = {
   StripedOnIcon: GapVertical,
   SwapVertIcon: ArrowUpDown,
   SyncAltIcon: ArrowLeftRight,
-  ViewColumnIcon: Columns3,
+  ViewColumnIcon: Columns3Cog,
   VisibilityOffIcon: EyeOff,
   WrapTextIcon: WrapText,
 } satisfies ST_Icons;
