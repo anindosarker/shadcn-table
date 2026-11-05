@@ -134,6 +134,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 ### Docs
 
+#### Theme demo speed
+
+- The home page theme demo cycles its five themes in 25 s instead of 40 s: 25 ms per typed character, a 0.7 s reply, a 2.2 s hold per theme.
+
 #### Spec 06
 
 - New guides for the v0.8 surfaces: Column Icons, Filter Chips, Sort Editor, View Settings and Persistence, Overflow Tooltip, Scroll Cues and Tint Tokens.
