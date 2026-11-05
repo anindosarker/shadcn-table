@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 09:40
+Updated: 2026-11-05 10:05
 
 | Story                     | S1  | S2  | S3  | S4  | S5 | S6 | S7 | S8 | S9 | S10 |
 | ------------------------- | --- | --- | --- | --- | -- | -- | -- | -- | -- | --- |
@@ -31,9 +31,9 @@ Updated: 2026-11-05 09:40
 | Home demo steps and titles F45                   |     |     |     |     |     |     |     |     | [x] |     |
 | Home demo polish (F45 follow-up)                 |     |     |     |     |     |     |     |     | [x] |     |
 | Moved column slides on top F47                   |     |     |     |     |     |     |     |     | [x] |     |
-| Demo viewport start F48, D63                     |     |     |     |     |     |     |     |     | [ ] |     |
+| Demo viewport start F48, D63                     |     |     |     |     |     |     |     |     | [x] |     |
 | Theme demo speed                                 |     |     |     |     |     |     |     |     | [x] |     |
-| Demo cues and last title F49, D65                |     |     |     |     |     |     |     |     | ·   |     |
+| Demo cues and last title F49, D65                |     |     |     |     |     |     |     |     | [ ] |     |
 | Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     | ·   |
 
