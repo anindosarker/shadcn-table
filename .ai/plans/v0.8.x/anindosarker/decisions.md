@@ -686,3 +686,7 @@ index d099d3a0..d778bfba 100644
 ### D80 The pipeline releases; no releaser agent
 
 - The release is: the `dev` into `master` PR created with its `release:` label and auto-merge enabled; `version-pr.mjs` labels the bot version PR `release:skip` and enables auto-merge on it; `release.yml` does the rest as today (tag, production wait, smoke, installs, GitHub release). An agent appears only on a red check. Repository settings, done by the agent with the owner's one-time authorization (P5 exception, "you can do it"): "Allow auto-merge" on, the `master` ruleset gets the `pr.yml` jobs as required status checks. Order: the label fixes of D78 to D81 land first so the bot PR is green, then the settings. Owner, 2026-11-06.
+
+### D81 Branch flow: stories merge locally, CI on `dev`, one PR per release
+
+- Stories: branch from `claude/review`, local gates (the `pr.yml` pnpm scripts), merge commit into `claude/review`, branch deleted, no PR. `claude/review` fast-forwards into `dev` at every merge; `pr.yml` runs on every push to `dev` (the Linux run). The one PR per release is `dev` into `master` with its `release:` label, the owner's approval and auto-merge (D80). `actionlint` gates workflow edits; `act -j <job>` only for stories that change fonts, layout measurements or a workflow file. P1, P2 and P13 are folded into one rule (P1); the 18 story PRs of this cycle were a consequence of the old P2 only. Owner, 2026-11-06.

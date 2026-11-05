@@ -2,17 +2,15 @@
 
 Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The process itself (orchestration, models, loop, gates once, Acceptance, attention, handoff) lives in the skill; this file says only what this project is.
 
-## P1 Branches and worktrees
+## P1 Branches, merges, PRs and CI (one rule; P2 and P13 folded in, D81)
 
-- `claude/review` integration, `dev` its fast-forward mirror, `master` release only.
-- A run branch is `v<major>.<minor>/<slug>` from `origin/claude/review`, never from an unmerged tip. Its worktree is one of the pool `../shadcn-react-table.worktrees/01`, `02`, `03` (clean, dependencies installed), reset for the branch with `git -C <wt> fetch origin && git -C <wt> checkout -B <branch> origin/claude/review && git -C <wt> push -u origin <branch>`; a new numbered worktree only when every pool one is in use, and it joins the pool; never remove one. Never touch `wt1` and `wt2`. Branch and worktree per story are assigned at launch from the pool and recorded in the tracker.
-- Never force-push these branches; never bare `git stash` (shared stack).
-- After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit; tracker, ATTENTION and handoff commits during a sprint need no sync.
-
-## P2 Merge a spec on green local gates
-
-- `pr.yml` runs on pull requests only: the builder opens the draft PR into `claude/review` at its first push (body per `.github/pull_request_template.md`, the label the index names, the session URL last) so every push gets a CI run.
-- Merge commit the moment the recorded gates are green: `merge: v<major>.<minor> spec <NN> (#<PR>)`, or `specs <NN>, <NN>` for a shared run. Then `dev` fast-forward. Start the next run at once.
+- `claude/review` is where work lands, `dev` the always-releasable staging branch, `master` release only.
+- A story runs on a branch `v<major>.<minor>/<slug>` cut from `origin/claude/review`, never from an unmerged tip, in a pool worktree `../shadcn-react-table.worktrees/01`, `02`, `03` (clean, dependencies installed), reset with `git -C <wt> fetch origin && git -C <wt> checkout -B <branch> origin/claude/review && git -C <wt> push -u origin <branch>`; a new numbered worktree only when every pool one is busy, and it joins the pool; never remove one; never touch `wt1` and `wt2`. Branch and worktree are recorded in the tracker. Never force-push; never bare `git stash`.
+- Gates run locally: the `pr.yml` jobs are pnpm scripts, the builder runs the ones its files need and records them, the verifier reruns what is missing. A story merges into `claude/review` with a merge commit the moment its recorded gates are green (`merge: <story> (<spec>)`), the branch is deleted, the next story starts at once. No PR, no CI wait. A small fix (a constant, a copy change, a one-file docs fix) skips the verifier and is merged from the main session.
+- `claude/review` fast-forwards into `dev` at every story merge. `pr.yml` runs on each push to `dev`: that is the Linux run; a red is fixed forward on `claude/review` at once.
+- One PR per release: `dev` into `master`, created with its `release:` label, auto-merge enabled, the owner's approval, `release.yml` from there (P3). `.github/pull_request_template.md` applies to that PR only.
+- `actionlint` gates every change under `.github/workflows/`. `act -j <job>` (nektos act, Docker) is run by the verifier only for a story that changes fonts, layout measurements or a workflow file.
+- After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit.
 
 ## P3 Release once per release, in the background
 
@@ -66,9 +64,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 
 - When the owner wants to see a change before deciding, the preview is built on the generated docs copy under `apps/shadcn-table-docs/components/ui-<base>/` in a scratch worktree (no package rebuild, no browser tests unless asked) and shown on a dev server on 5340 to 5360. Once accepted, the decision carries the accepted diff verbatim (paths rewritten to the registry source), and the fix story applies that diff as is to the three bases, in place, no new helper functions. Owner, 2026-11-05 (D72).
 
-## P13 Small fixes land directly, CI runs at the release
-
-- A small fix (a constant, a copy change, a one-file docs fix) is built on a worktree branch, gated locally (the gates its files need, run as CI would), then fast-forwarded or merged into `claude/review` from the main session without a PR and without a verifier agent; `dev` mirrors. The release PR (`dev` into `master`, P3) is the CI run for everything since the last release. Stories with library source changes keep their builder, verifier and merger (the regen steps), their PR being a by-product of the first push. Owner, 2026-11-05.
+## P13 (folded into P1)
 
 ## P14 Release gates are scripts, never agents
 
