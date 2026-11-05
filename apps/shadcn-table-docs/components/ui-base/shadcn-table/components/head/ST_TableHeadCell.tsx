@@ -1,21 +1,14 @@
-import {
-  type ComponentType,
-  createElement,
-  isValidElement,
-  type KeyboardEvent,
-  type ReactNode,
-  useState,
-} from 'react';
+import { type KeyboardEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
   type ST_ColumnVirtualizer,
   type ST_Header,
-  type ST_IconProps,
   type ST_RowData,
   type TableCellProps,
 } from '@/components/ui-base/shadcn-table/types';
 import { cellKeyboardShortcuts } from '@/components/ui-base/shadcn-table/shared/utils/cell.utils';
+import { renderColumnIcon } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
 import {
   getCellPinning,
   getCommonSRTCellStyles,
@@ -44,22 +37,6 @@ export interface ST_TableHeadCellProps<TData extends ST_RowData>
 const headCellVariants = cva(
   'group/th border-b p-0 text-sm font-medium text-muted-foreground align-middle overflow-visible',
 );
-
-/** `columnDef.icon`: an element renders as is, anything else as a component. */
-const renderColumnIcon = (icon: ReactNode | ComponentType<ST_IconProps>) => {
-  if (icon == null || icon === false) return null;
-  const className = 'size-3.5 shrink-0 opacity-70';
-  if (
-    typeof icon === 'function' ||
-    (typeof icon === 'object' && !isValidElement(icon) && '$$typeof' in icon)
-  ) {
-    return createElement(icon as ComponentType<ST_IconProps>, {
-      'aria-hidden': true,
-      className,
-    });
-  }
-  return icon as ReactNode;
-};
 
 export const ST_TableHeadCell = <TData extends ST_RowData>({
   columnVirtualizer,

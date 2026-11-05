@@ -1,4 +1,10 @@
-import { useMemo } from 'react';
+import {
+  type ComponentType,
+  createElement,
+  isValidElement,
+  type ReactNode,
+  useMemo,
+} from 'react';
 import { constructAggregationFn } from '@tanstack/react-table';
 import {
   type DropdownOption,
@@ -9,10 +15,29 @@ import {
   type ST_DefinedTableOptions,
   type ST_FilterOption,
   type ST_Header,
+  type ST_IconProps,
   type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_CoreTableInstance,
 } from '@/components/ui-aria/shadcn-table/types';
+
+/** `columnDef.icon`: an element renders as is, anything else as a component. */
+export const renderColumnIcon = (
+  icon: ReactNode | ComponentType<ST_IconProps>,
+) => {
+  if (icon == null || icon === false) return null;
+  const className = 'size-3.5 shrink-0 opacity-70';
+  if (
+    typeof icon === 'function' ||
+    (typeof icon === 'object' && !isValidElement(icon) && '$$typeof' in icon)
+  ) {
+    return createElement(icon as ComponentType<ST_IconProps>, {
+      'aria-hidden': true,
+      className,
+    });
+  }
+  return icon as ReactNode;
+};
 
 export const getColumnId = <TData extends ST_RowData>(
   columnDef: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>,
