@@ -41,6 +41,38 @@ async function chipsDefault(w, id, check) {
   );
 }
 
+/**
+ * F51: sorting by `column` through its column menu shows the sort chip
+ * (ST_SortPopover variant="chip"), a button named after the column outside
+ * the table head.
+ */
+async function sortChip(page, w, id, column, check) {
+  try {
+    await w
+      .locator(`thead th button[aria-label="${column} column menu"]`)
+      .first()
+      .click();
+    await page
+      .getByRole('menuitem', { name: 'Sort ascending', exact: true })
+      .first()
+      .click({ timeout: 5000 });
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(300);
+    const chips = await w
+      .locator('button')
+      .evaluateAll(
+        (els, label) =>
+          els.filter(
+            (el) => !el.closest('thead') && el.textContent?.trim() === label,
+          ).length,
+        column,
+      );
+    check(`${id}: sort chip`, chips > 0, `chips=${chips}`);
+  } catch (e) {
+    check(`${id}: sort chip`, false, String(e.message).split('\n')[0]);
+  }
+}
+
 const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
     const w = await example(page, 'advanced', check);
@@ -91,6 +123,7 @@ const checks = {
       page.off('dialog', onDialog);
     }
     check('advanced: no browser alert', !alerted);
+    await sortChip(page, w, 'advanced', 'Name', check);
   },
   '/docs/examples/aggregation-and-grouping': async ({ page, check }) => {
     const w = await example(page, 'aggregation-and-grouping', check);

@@ -12,6 +12,38 @@ async function marker(wrapper, id, label, selector, check) {
 }
 
 /**
+ * F51: sorting by `column` through its column menu shows the sort chip
+ * (ST_SortPopover variant="chip"), a button named after the column outside
+ * the table head.
+ */
+async function sortChip(page, w, id, column, check) {
+  try {
+    await w
+      .locator(`thead th button[aria-label="${column} column menu"]`)
+      .first()
+      .click();
+    await page
+      .getByRole('menuitem', { name: 'Sort ascending', exact: true })
+      .first()
+      .click({ timeout: 5000 });
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(300);
+    const chips = await w
+      .locator('button')
+      .evaluateAll(
+        (els, label) =>
+          els.filter(
+            (el) => !el.closest('thead') && el.textContent?.trim() === label,
+          ).length,
+        column,
+      );
+    check(`${id}: sort chip`, chips > 0, `chips=${chips}`);
+  } catch (e) {
+    check(`${id}: sort chip`, false, String(e.message).split('\n')[0]);
+  }
+}
+
+/**
  * The Localization guide's install command (InstallCommand locale): German
  * first on the page's base, then French through the Locale select, with the
  * import line under the tabs following the pick.
@@ -441,6 +473,7 @@ const checks = {
       'nav, [data-slot="pagination"], button[aria-label*="page" i]',
       check,
     );
+    await sortChip(page, external, 'external-toolbar', 'First Name', check);
   },
   '/docs/guides/virtualization': async ({ page, check }) => {
     await propTable(page, TABLE, check);
