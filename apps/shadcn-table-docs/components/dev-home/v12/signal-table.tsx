@@ -208,8 +208,6 @@ export default function SignalTable({
     [state.estimateEdits],
   );
 
-  const movedId = state.columnOrder[0];
-
   const table = useShadcnTable({
     columns,
     data: rows,
@@ -261,12 +259,6 @@ export default function SignalTable({
     // lets the replay find the row it edits
     stTableBodyRowProps: ({ row }) =>
       ({ 'data-row-id': row.id }) as HTMLAttributes<HTMLTableRowElement>,
-    // the moved column rides above the cells it slides across, so the D37
-    // slide shows it travelling (the cells share z-0 and paint in DOM order)
-    stTableHeadCellProps: ({ column }) =>
-      column.id === movedId ? { className: 'z-1' } : {},
-    stTableBodyCellProps: ({ column }) =>
-      column.id === movedId ? { className: 'z-1' } : {},
     // a fixed height for the header and a page of ten 48px rows: no row cut
     // off at the bottom, and a page of fewer rows (the search) keeps the
     // pagination bar and the band where they were

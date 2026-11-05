@@ -369,3 +369,76 @@ export const DropHighlightsColumn = {
     }
   },
 };
+
+/** Whether the topmost element at the centre of `cell`'s drawn box is in it. */
+const drawnOnTop = (cell: HTMLElement) => {
+  const rect = cell.getBoundingClientRect();
+  const hit = document.elementFromPoint(
+    rect.left + rect.width / 2,
+    rect.top + rect.height / 2,
+  );
+  return !!hit && cell.contains(hit);
+};
+
+/**
+ * On drop the moved column slides on top of the cells it passes (F47): at
+ * every moment of the first 100 ms of the slide, the topmost element at the
+ * centre of its header and first body cell is that cell. Once the slide ends
+ * the cells keep no inline stacking.
+ */
+export const MovedColumnOnTop = {
+  render: () => (
+    <ShadcnTable
+      columns={columns.map((column) => ({ ...column, size: 60 }))}
+      data={data.slice(0, 5)}
+      enableColumnDragging
+      enableColumnOrdering
+      layoutMode="grid-no-grow"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByRole('columnheader');
+    const source = headerCell(canvasElement, 'City');
+    fireEvent.dragStart(source);
+    dragOverSlot(canvasElement, headerCell(canvasElement, 'Email Address'));
+    await waitFor(() =>
+      expect(
+        parseFloat(headerCell(canvasElement, 'Email Address').style.translate),
+      ).toBeGreaterThan(0),
+    );
+    dragEnd(source, 'move');
+    await waitFor(() =>
+      expect(headerNames(canvasElement).slice(0, 5)).toEqual([
+        'First Name',
+        'Last Name',
+        'City',
+        'Email Address',
+        'Address',
+      ]),
+    );
+    const table = canvasElement.querySelector('table') as HTMLElement;
+    const slides = table
+      .getAnimations({ subtree: true })
+      .filter((animation) =>
+        (animation.effect as KeyframeEffect | null)
+          ?.getKeyframes()
+          .some((keyframe) => keyframe.translate !== undefined),
+      );
+    expect(slides.length).toBeGreaterThan(0);
+    const header = headerCell(canvasElement, 'City');
+    const cell = bodyCell(canvasElement, 'city');
+    for (const animation of slides) animation.pause();
+    for (let time = 0; time <= 100; time += 10) {
+      for (const animation of slides) animation.currentTime = time;
+      expect({ time, header: drawnOnTop(header) }).toEqual({
+        time,
+        header: true,
+      });
+      expect({ time, body: drawnOnTop(cell) }).toEqual({ time, body: true });
+    }
+    for (const animation of slides) animation.finish();
+    await waitFor(() => expect(cell.style.zIndex).toBe(''));
+    expect(header.style.zIndex).toBe('');
+  },
+};

@@ -128,6 +128,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - Range filters keep Min and Max side by side at every column width (D61); their "Filter Mode" caption spans the whole range group instead of the Min field.
 - The subheader filters example sizes its columns to fit their filters.
 
+#### Fix F47
+
+- A column drop or a Columns menu reorder slides the moved column on top of the cells it passes, under the pinned columns, instead of under the cells that follow it in the DOM; the lift lasts only for the slide.
+
 ### Docs
 
 #### Spec 06
