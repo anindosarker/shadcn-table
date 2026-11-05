@@ -73,6 +73,48 @@ async function sortChip(page, w, id, column, check) {
   }
 }
 
+/**
+ * F53: the row's delete button opens a shadcn AlertDialog with the question,
+ * not a browser confirm; Cancel closes it and keeps every row.
+ */
+async function deleteDialog(page, w, id, check) {
+  let alerted = false;
+  const onDialog = (d) => {
+    alerted = true;
+    d.dismiss().catch(() => {});
+  };
+  page.on('dialog', onDialog);
+  try {
+    const before = await w.locator('tbody tr').count();
+    await w.locator('tbody button.text-destructive').first().click();
+    const dialog = page.getByRole('alertdialog');
+    await dialog.waitFor({ timeout: 5000 });
+    const text = (await dialog.innerText()) ?? '';
+    check(
+      `${id}: delete dialog`,
+      /Are you sure you want to delete this user\?/.test(text),
+      text.replace(/\s+/g, ' ').slice(0, 120),
+    );
+    await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await dialog.waitFor({ state: 'hidden', timeout: 5000 });
+    const after = await w.locator('tbody tr').count();
+    check(
+      `${id}: delete dialog cancel keeps the rows`,
+      after === before,
+      `before=${before} after=${after}`,
+    );
+  } catch (e) {
+    check(
+      `${id}: delete dialog`,
+      false,
+      String(e.message).split('\n')[0].slice(0, 160),
+    );
+  } finally {
+    page.off('dialog', onDialog);
+  }
+  check(`${id}: delete dialog, no browser confirm`, !alerted);
+}
+
 const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
     const w = await example(page, 'advanced', check);
@@ -256,26 +298,31 @@ const checks = {
     const w = await example(page, 'editing-crud-modal', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-modal', /Create New User/, check);
+    await deleteDialog(page, w, 'editing-crud-modal', check);
   },
   '/docs/examples/editing-crud-inline-cell': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-cell', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-cell', /Create New User/, check);
+    await deleteDialog(page, w, 'editing-crud-cell', check);
   },
   '/docs/examples/editing-crud-inline-row': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-row', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-row', /Create New User/, check);
+    await deleteDialog(page, w, 'editing-crud-row', check);
   },
   '/docs/examples/editing-crud-inline-table': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-table', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-table', /Create New User/, check);
+    await deleteDialog(page, w, 'editing-crud-table', check);
   },
   '/docs/examples/editing-crud-tree': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-tree', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-tree', /Create New User/, check);
+    await deleteDialog(page, w, 'editing-crud-tree', check);
     check(
       'editing-crud-tree: expand buttons',
       (await expandButtons(w).count()) > 0,

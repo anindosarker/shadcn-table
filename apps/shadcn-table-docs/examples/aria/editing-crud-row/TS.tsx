@@ -12,6 +12,14 @@ import {
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   QueryClient,
   QueryClientProvider,
   useMutation,
@@ -155,11 +163,8 @@ const Example = () => {
   };
 
   //DELETE action
-  const openDeleteConfirmModal = (row: ST_Row<User>) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUser(row.original.id);
-    }
-  };
+  const [deletingRow, setDeletingRow] = useState<ST_Row<User> | null>(null);
+  const openDeleteConfirmModal = (row: ST_Row<User>) => setDeletingRow(row);
 
   const table = useShadcnTable({
     columns,
@@ -228,7 +233,33 @@ const Example = () => {
     },
   });
 
-  return <ShadcnTable table={table} />;
+  return (
+    <>
+      <ShadcnTable table={table} />
+      <AlertDialog
+        isOpen={!!deletingRow}
+        onOpenChange={(open) => !open && setDeletingRow(null)}
+      >
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            Are you sure you want to delete this user?
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            variant="destructive"
+            onPress={() => {
+              if (deletingRow) deleteUser(deletingRow.original.id);
+              setDeletingRow(null);
+            }}
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialog>
+    </>
+  );
 };
 
 //CREATE hook (post new user to api)
