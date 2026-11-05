@@ -9,7 +9,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 - Gates run locally: the `pr.yml` jobs are pnpm scripts, the builder runs the ones its files need and records them, the verifier reruns what is missing. A story merges into `claude/review` with a merge commit the moment its recorded gates are green (`merge: <story> (<spec>)`), the branch is deleted, the next story starts at once. No PR, no CI wait. A small fix (a constant, a copy change, a one-file docs fix) skips the verifier and is merged from the main session.
 - `claude/review` fast-forwards into `dev` at every story merge. `pr.yml` runs on each push to `dev`: that is the Linux run; a red is fixed forward on `claude/review` at once.
 - One PR per release: `dev` into `master`, created with its `release:` label, auto-merge enabled, the owner's approval, `release.yml` from there (P3). `.github/pull_request_template.md` applies to that PR only.
-- `actionlint` gates every change under `.github/workflows/`. `act -j <job>` (nektos act, Docker) is run by the verifier only for a story that changes fonts, layout measurements or a workflow file.
+- `act -j <job>` (nektos act, Docker) runs a `pr.yml` job locally on Linux; the verifier uses it only for a story that changes fonts, layout measurements or a workflow file.
 - After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit.
 
 ## P3 Release once per release, in the background
