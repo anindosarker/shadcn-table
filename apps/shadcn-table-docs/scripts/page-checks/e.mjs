@@ -492,7 +492,8 @@ const checks = {
     // ring on a control it clicked, a page scroll, a change in the table
     // frame's height or in the step list's place, an empty cell editor; and
     // what it must show: the Filtering cue on the "+ Filter" pill, the moved
-    // column stacked above the cells it slides across
+    // column drawn on top of the cells it slides across (F47): mid-slide, the
+    // topmost element at its header's centre is that header
     const titles = await page
       .locator('[aria-label="Demo items"] .v5-step span.text-sm')
       .allTextContents();
@@ -522,7 +523,8 @@ const checks = {
           lists: new Set(),
           emptyEdit: 0,
           pillCue: false,
-          movedZ: new Set(),
+          movedOnTop: 0,
+          movedCovered: 0,
         };
         window.__demoSeen = seen;
         window.__demoFlaws = flaws;
@@ -580,7 +582,30 @@ const checks = {
             const th = table?.querySelector(
               'thead th[data-flip-column="project"]',
             );
-            if (th) flaws.movedZ.add(getComputedStyle(th).zIndex);
+            const sliding = th
+              ?.getAnimations()
+              .some(
+                (animation) =>
+                  animation.playState === 'running' &&
+                  animation.effect
+                    ?.getKeyframes()
+                    .some((keyframe) => keyframe.translate !== undefined),
+              );
+            if (th && sliding) {
+              const rect = th.getBoundingClientRect();
+              const x = rect.left + rect.width / 2;
+              const y = rect.top + rect.height / 2;
+              if (
+                x >= 0 &&
+                y >= 0 &&
+                x < window.innerWidth &&
+                y < window.innerHeight
+              ) {
+                const hit = document.elementFromPoint(x, y);
+                if (hit && th.contains(hit)) flaws.movedOnTop += 1;
+                else flaws.movedCovered += 1;
+              }
+            }
           }
           if (window.__demoSeen === seen) requestAnimationFrame(sample);
         };
@@ -612,7 +637,8 @@ const checks = {
             lists: [...f.lists],
             emptyEdit: f.emptyEdit,
             pillCue: f.pillCue,
-            movedZ: [...f.movedZ],
+            movedOnTop: f.movedOnTop,
+            movedCovered: f.movedCovered,
           },
         };
       });
@@ -653,9 +679,9 @@ const checks = {
       );
       check('demo: Filtering cues the + Filter pill', flaws.pillCue);
       check(
-        'demo: the moved column rides above the others',
-        flaws.movedZ.length > 0 && flaws.movedZ.every((z) => z === '1'),
-        `zIndex=${flaws.movedZ.join(',')}`,
+        'demo: the moved column slides on top of the others',
+        flaws.movedOnTop > 0 && flaws.movedCovered === 0,
+        `onTop=${flaws.movedOnTop} covered=${flaws.movedCovered}`,
       );
     } catch (e) {
       check(
