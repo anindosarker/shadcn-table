@@ -1,6 +1,6 @@
 # Expand column aligns start in every grouping mode (F58), tracker
 
-Status: verified
+Status: merged (dd9ef656)
 Branch `v0.8/fix-grouping-align-2`, worktree 01, PR #128
 Gates:
 - Repro on shipped code (f8d924f5): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/ColumnGrouping.stories.tsx` red as expected (1 failed, 24 passed): `GroupedExpandAlignsStartAllModes` under `groupedColumnMode: false` the depth-0 group row's chevron 34 px from its cell's start (limit 24)
