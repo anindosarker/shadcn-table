@@ -44,6 +44,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - The handle is a full-height hairline on the column's trailing edge: invisible at rest, lit while the pointer is anywhere over the header cell, primary while dragging, `col-resize` cursor over the edge; double-click resets the width. No thicker divider: drag-to-resize is an expected table behaviour, the hover light and the cursor teach it.
 - Changes: `ST_TableHeadCellResizeHandle` loses the short separator, the density offsets and the 2 px cell border while resizing.
 - Stays: `columnResizeMode`, per-column `enableResizing`.
+- Addendum 2026-11-05: applies to `columnResizeMode: 'onEnd'` too: the hairline follows the pointer, nothing else; no body guide line, no slide on release (A12).
 
 ### D7 Row heights and grid lines
 
