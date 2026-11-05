@@ -29,15 +29,15 @@ export const getST_RowExpandColumnDef = <TData extends ST_RowData>(
 
   const leafColumnDefs = getAllLeafColumnDefs(tableOptions.columns);
 
-  // A display column centres its controls; under 'remove' with grouping the
-  // column is as wide as the grouped columns, so its controls and labels sit
-  // at the start.
+  // A display column centres its controls; with grouping the column is wide
+  // (the grouped columns' widths under 'remove', room for the depth indent
+  // otherwise), so its controls and labels sit at the start.
   const alignProps =
     positionExpandColumn === 'last'
       ? ({
           align: 'right',
         } as const)
-      : groupedColumnMode === 'remove' && grouping?.length
+      : grouping?.length
         ? ({
             align: 'left',
           } as const)
