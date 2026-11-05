@@ -25,7 +25,7 @@ const Example = () => {
         icon: HashIcon,
         enableColumnPinning: false, //disable column pinning for this column
         header: 'ID',
-        size: 56,
+        size: 110,
       },
       //column definitions...
       {

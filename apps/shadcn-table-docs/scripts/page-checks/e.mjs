@@ -52,6 +52,7 @@ const checks = {
     'enable-filter-facet-values',
     'enableFacetedValues: true',
     async (page, w, check) => {
+      await headerLabelsFit(w, 'enable-filter-facet-values', check);
       const editor = await chipFilter(
         page,
         w,
@@ -83,6 +84,7 @@ const checks = {
     'customize-filter-variants',
     "filterVariant: 'range-slider'",
     async (page, w, check) => {
+      await headerLabelsFit(w, 'customize-filter-variants', check);
       // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
       const editor = await chipFilter(
         page,
@@ -321,6 +323,7 @@ const checks = {
         (await w.locator('table').count()) === 2,
         `tables=${await w.locator('table').count()}`,
       );
+      await headerLabelsFit(w, 'enable-row-dragging', check);
     },
   ),
   '/docs/examples/row-ordering': examplePage(

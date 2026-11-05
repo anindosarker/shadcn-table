@@ -27,7 +27,7 @@ const Example = () => {
         accessorKey: 'id',
         icon: HashIcon,
         header: 'ID',
-        size: 100,
+        size: 110,
         enableColumnFilter: false,
       },
       {

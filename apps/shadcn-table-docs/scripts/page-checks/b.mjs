@@ -306,6 +306,7 @@ const checks = {
       'customize-table-styles: striped body',
       (await count(styles, 'tbody[class*="nth-of-type"]')) === 1,
     );
+    await headerLabelsFit(styles, 'customize-table-styles', check);
   },
 
   '/docs/guides/customize-icons': async ({ page, check, base }) => {
@@ -338,6 +339,7 @@ const checks = {
       'column-alignment: right aligned cells',
       (await count(w, 'td[align="right"]')) > 0,
     );
+    await headerLabelsFit(w, 'column-alignment', check);
   },
 
   '/docs/guides/density-toggle': async ({ page, check }) => {
@@ -366,7 +368,13 @@ const checks = {
       'enable-detail-panel-conditionally: panel opens',
       /Address:/.test(body),
     );
-    await example(page, 'alternate-detail-panel', check);
+    await headerLabelsFit(
+      conditional,
+      'enable-detail-panel-conditionally',
+      check,
+    );
+    const alternate = await example(page, 'alternate-detail-panel', check);
+    await headerLabelsFit(alternate, 'alternate-detail-panel', check);
     // initialState.expanded = { 0: true }: the first panel (and its chart) is
     // open on load; clicking the first expand button would collapse it.
     const chart = await example(page, 'chart-detail-panel', check);

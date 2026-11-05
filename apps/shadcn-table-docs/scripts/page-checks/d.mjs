@@ -221,6 +221,7 @@ const checks = {
       'chart-detail-panel: chart rendered',
       (await w.locator('.recharts-wrapper, .recharts-surface').count()) > 0,
     );
+    await headerLabelsFit(w, 'chart-detail-panel', check);
   },
   '/docs/examples/column-grouping': async ({ page, check }) => {
     const w = await example(page, 'enable-column-grouping', check);
@@ -248,6 +249,7 @@ const checks = {
       'column-pinning: pinned cells',
       (await w.locator('[data-pinned], td.sticky, th.sticky').count()) > 0,
     );
+    await headerLabelsFit(w, 'enable-column-pinning', check);
   },
   '/docs/examples/column-virtualization': async ({ page, check }) => {
     const w = await example(page, 'enable-column-virtualization', check);
@@ -285,6 +287,7 @@ const checks = {
     const w = await example(page, 'enable-detail-panel-conditionally', check);
     await singleExample(page, check);
     check('detail-panel: expand buttons', (await expandButtons(w).count()) > 0);
+    await headerLabelsFit(w, 'enable-detail-panel-conditionally', check);
   },
   '/docs/examples/dynamic-columns': async ({ page, check }) => {
     const w = await example(page, 'dynamic-columns', check);
@@ -298,30 +301,35 @@ const checks = {
     const w = await example(page, 'editing-crud-modal', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-modal', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-modal', check);
     await deleteDialog(page, w, 'editing-crud-modal', check);
   },
   '/docs/examples/editing-crud-inline-cell': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-cell', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-cell', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-cell', check);
     await deleteDialog(page, w, 'editing-crud-cell', check);
   },
   '/docs/examples/editing-crud-inline-row': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-row', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-row', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-row', check);
     await deleteDialog(page, w, 'editing-crud-row', check);
   },
   '/docs/examples/editing-crud-inline-table': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-table', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-table', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-table', check);
     await deleteDialog(page, w, 'editing-crud-table', check);
   },
   '/docs/examples/editing-crud-tree': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-tree', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-tree', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-tree', check);
     await deleteDialog(page, w, 'editing-crud-tree', check);
     check(
       'editing-crud-tree: expand buttons',
