@@ -139,9 +139,8 @@ const Example = () => {
           {/* A React Aria table has one header row: the flat headers of this column set */}
           <TableHeader>
             {/**
-             * With `enableColumnResizing`, the default `layoutMode` is `grid-no-grow`,
-             * which adds the `st-row-spacer` display column to the headers.
-             * Render it for correct column widths, or set `layoutMode: 'grid'`.
+             * With `layoutMode: 'grid-no-grow'`, the headers include the `st-row-spacer`
+             * display column: render it for correct column widths.
              */}
             {table.getFlatHeaders().map((header) => (
               <TableHead
