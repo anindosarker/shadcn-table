@@ -12,6 +12,7 @@ import {
 import { faker } from '@faker-js/faker';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { ST_BASE } from '../../.storybook/themes';
 import {
   CakeIcon,
   CalendarIcon,
@@ -312,6 +313,69 @@ export const FilterFnAndFilterVariantsFaceted = () => (
     initialState={{ showColumnFilters: true }}
   />
 );
+
+/** The subheader th whose header text starts with `name`. */
+const filterHeaderCell = (canvasElement: HTMLElement, name: string) =>
+  Array.from(canvasElement.querySelectorAll<HTMLElement>('thead th')).find(
+    (th) => th.textContent?.trim().startsWith(name),
+  )!;
+
+// D72: the multi-select field ends in a chevron, shows its clear button only
+// once a value exists (the empty slot takes no room), and on radix and base
+// highlights the first match so Enter picks it.
+export const MultiSelectFieldControls = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="subheader"
+      columns={columns}
+      data={data}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    const input = await canvas.findByRole('combobox', {
+      name: 'Filter by State',
+    });
+    const th = filterHeaderCell(canvasElement, 'State');
+    const chips = th.querySelector<HTMLElement>('[data-slot="combobox-chips"]');
+    expect(chips).not.toBeNull();
+    expect(
+      chips!.querySelector('[data-slot="combobox-trigger"]'),
+      'chevron inside the chips field',
+    ).not.toBeNull();
+    const clear = within(th).getByRole('button', {
+      hidden: true,
+      name: 'Clear filter',
+    });
+    expect(
+      within(th).queryByRole('button', { name: 'Clear filter' }),
+    ).toBeNull();
+    expect(
+      clear.closest<HTMLElement>('[data-slot="input-group-addon"]')!
+        .offsetWidth,
+      'the empty clear slot takes no room',
+    ).toBe(0);
+
+    await userEvent.click(input);
+    // The aria combobox opens from the keyboard, not on a click.
+    if (!body.queryByRole('listbox')) await userEvent.keyboard('{ArrowDown}');
+    await userEvent.click(await body.findByRole('option', { name: /^AZ/ }));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(body.queryByRole('listbox')).toBeNull());
+    await waitFor(() =>
+      expect(
+        within(th).getByRole('button', { name: 'Clear filter' }),
+      ).toBeVisible(),
+    );
+
+    if (ST_BASE === 'aria') return;
+    await userEvent.type(input, 'CA');
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(within(chips!).getByText('CA')).toBeVisible());
+  },
+};
 
 export const FilteringChangeModeEnabled = () => (
   <ShadcnTable
