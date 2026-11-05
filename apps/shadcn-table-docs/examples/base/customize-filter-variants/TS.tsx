@@ -102,6 +102,8 @@ const Example = () => {
         icon: ClockIcon,
         header: 'Departure Time',
         filterVariant: 'time-range',
+        // 'Departure Time' needs about 110 px beside the icon and the chevron
+        size: 200,
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleTimeString(), // convert back to string for display
       },
     ],
