@@ -470,4 +470,72 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 ### D72 The multi-select filter field shows a chevron, a clear button and the first match highlighted
 
-- The `multi-select` filter (shadcn `Combobox` with `multiple`, the chips field) keeps its stock composition in place, with: the chips and the typing input in an inner wrapping box; a `ComboboxTrigger` chevron in its own column at the end of the field, vertically centred however many rows the chips take; the existing clear X in the group's trailing slot beside it once a value exists (the empty slot hidden until then, no gap); the chip editor popover at a fixed `w-65` so the chips wrap instead of widening it (F55); `autoHighlight` so typing highlights the first match and Enter picks it. Three bases. Previewed and accepted on the docs copy 2026-11-05 (diff in the session scratchpad `multiselect-chevron.diff`, to be applied to the library source). Owner, 2026-11-05.
+- The `multi-select` filter (shadcn `Combobox` with `multiple`, the chips field) keeps its stock composition in place, with: the chips and the typing input in an inner wrapping box; a `ComboboxTrigger` chevron in its own column at the end of the field, vertically centred however many rows the chips take; the existing clear X in the group's trailing slot beside it once a value exists (the empty slot hidden until then, no gap); the chip editor popover at a fixed `w-65` so the chips wrap instead of widening it (F55); `autoHighlight` so typing highlights the first match and Enter picks it. Three bases. Previewed on the docs copy and accepted. Owner, 2026-11-05.
+- The accepted diff, to apply as is to `ST_FilterTextField.tsx` in the three bases (paths rewritten from the docs copy to the registry), plus `filterEditorClassName = 'w-65'` in `ST_HeaderFilterEditor.tsx`:
+
+```diff
+diff --git a/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx b/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx
+index 94a82564..02f86b2e 100644
+--- a/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx
++++ b/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/components/inputs/ST_FilterTextField.tsx
+@@ -19,6 +19,7 @@ import {
+   ComboboxInput,
+   ComboboxItem,
+   ComboboxList,
++  ComboboxTrigger,
+   ComboboxValue,
+   useComboboxAnchor,
+ } from '@/components/ui/combobox';
+@@ -337,7 +338,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
+           // The select addon overlays the trigger so the trigger spans the whole
+           // group and the popper (sized from the trigger) matches the field.
+           isSelectFilter && 'absolute inset-y-0 inset-e-0',
+-          hasFilterValue ? 'visible' : 'invisible',
++          // The multi-select field carries its own chevron, so the empty clear
++          // slot takes no room there.
++          hasFilterValue
++            ? 'visible'
++            : isMultiSelectFilter
++              ? 'hidden'
++              : 'invisible',
+         )}
+       >
+         <ST_Tooltip side="right" title={localization.clearFilter ?? ''}>
+@@ -583,6 +590,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
+           ) : isMultiSelectFilter ? (
+             // Combobox items raise no ChangeEvent, so a user onChange cannot fire.
+             <Combobox
++              autoHighlight
+               disabled={!!filterChipLabel || textFieldProps.disabled}
+               items={multiSelectItems}
+               itemToStringLabel={optionLabel}
+@@ -593,14 +601,14 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
+               <ComboboxChips
+                 className={cn(
+                   nestedGroupClassName,
+-                  'px-1.5 py-0.5',
++                  'flex-nowrap px-1.5 py-0.5',
+                   textFieldProps.className,
+                 )}
+                 onClick={(e) => e.stopPropagation()}
+               >
+                 <ComboboxValue>
+                   {(values: string[]) => (
+-                    <>
++                    <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                       {values.map((value) => (
+                         <ComboboxChip className="h-5 text-xs" key={value}>
+                           {optionLabel(value)}
+@@ -617,9 +625,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
+                         placeholder={values.length ? '' : filterPlaceholder}
+                         title={filterPlaceholder}
+                       />
+-                    </>
++                    </div>
+                   )}
+                 </ComboboxValue>
++                <ComboboxTrigger className="ms-auto shrink-0 self-center" />
+               </ComboboxChips>
+               <ComboboxContent anchor={comboboxAnchor}>
+                 <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
+```
