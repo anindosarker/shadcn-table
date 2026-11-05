@@ -1,6 +1,6 @@
 # Expand column aligns start in every grouping mode (F58), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-grouping-align-2`, worktree 01, PR #128
 Gates:
 - Repro on shipped code (f8d924f5): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/ColumnGrouping.stories.tsx` red as expected (1 failed, 24 passed): `GroupedExpandAlignsStartAllModes` under `groupedColumnMode: false` the depth-0 group row's chevron 34 px from its cell's start (limit 24)
@@ -18,12 +18,17 @@ Gates:
 - `ST_BASE=radix ... DetailPanel.stories.tsx Aggregation.stories.tsx` at 051e426d: green (24/24)
 - `ST_BASE=aria ... DetailPanel.stories.tsx Aggregation.stories.tsx` at 051e426d: green (24/24)
 - `pnpm --filter shadcn-table test:base` at 051e426d: green (79 files, 608 tests)
+- `pnpm --filter shadcn-table test:radix` at fcfdab4a: green (79 files, 608 tests), verifier
+- `pnpm --filter shadcn-table test:aria` at fcfdab4a: green (79 files, 608 tests), verifier
+- `pnpm --filter shadcn-table storybook:build:aria` at fcfdab4a: green, verifier
+- tsc per base, `pnpm lint`, `pnpm check:bases`, `check:tailwind`, `test:base` recorded at 051e426d stay valid (diff since touches only the tracker), verifier
 
 - Milestone 01 F58 fix with play: done (051e426d)
+- Milestone 02 verify: done
 
 ## Attention
 
-- None.
+- F58 named the play `GroupedHeaderAlignsStart` as the one to gain the `false` and `'reorder'` cases; the builder added the sibling play `GroupedExpandAlignsStartAllModes` instead (its repro line above), leaving `GroupedHeaderAlignsStart` for `'remove'`. Verifier kept it: same coverage, one behaviour per play (P10).
 
 ## Notes
 
