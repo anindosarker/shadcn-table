@@ -3,10 +3,10 @@
 Status: verified
 Branch `v0.8/fix-demo-pace`, worktree 02, PR #[n]
 Gates:
-- `pnpm --filter shadcn-table-docs types:check` at [commit]: green
-- `node scripts/check-pages.mjs e --base base` at [commit]: [result]
+- `pnpm --filter shadcn-table-docs types:check` at 3d946632: green
+- `node scripts/check-pages.mjs e --base base` at 3d946632: green (home entry, base)
 
-- Milestone 01 timing constants: done ([commit])
+- Milestone 01 timing constants: done (3d946632)
 
 ## Notes
 
