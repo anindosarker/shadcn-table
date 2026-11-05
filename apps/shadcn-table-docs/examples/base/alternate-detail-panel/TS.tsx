@@ -32,7 +32,7 @@ const Example = () => {
         accessorKey: 'id',
         icon: HashIcon,
         header: 'ID',
-        size: 56,
+        size: 110,
       },
       {
         accessorKey: 'firstName',

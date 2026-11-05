@@ -9,6 +9,7 @@ import {
   type ST_ColumnDef,
   ST_GlobalFilterTextField,
   ST_FilterChips,
+  ST_SortPopover,
   ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 
@@ -250,6 +251,7 @@ const Example = () => {
           <div className="flex items-center gap-2">
             {/* import ST sub-components */}
             <ST_GlobalFilterTextField />
+            <ST_SortPopover table={table} variant="chip" />
             <ST_FilterChips table={table} />
           </div>
           <div>

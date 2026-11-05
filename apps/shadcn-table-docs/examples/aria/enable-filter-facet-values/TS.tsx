@@ -17,7 +17,7 @@ const Example = () => {
         icon: UserIcon,
         header: 'Name',
         filterVariant: 'autocomplete', // default
-        size: 100,
+        size: 110,
       },
       {
         accessorKey: 'salary',

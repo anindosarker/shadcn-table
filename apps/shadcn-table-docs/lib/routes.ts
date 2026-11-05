@@ -15,21 +15,6 @@ export const routes: Array<RouteItem> = [
     keywords: ['home', 'overview', 'getting-started'],
   },
   {
-    href: '/about',
-    label: 'About',
-    keywords: ['about', 'team', 'contributors'],
-  },
-  {
-    href: '/changelog',
-    label: 'Changelog',
-    keywords: ['changelog', 'updates', 'releases'],
-  },
-  {
-    href: '/roadmap',
-    label: 'Roadmap',
-    keywords: ['roadmap', 'future', 'plans'],
-  },
-  {
     label: 'Getting Started',
     href: '/docs/getting-started/introduction',
     items: [

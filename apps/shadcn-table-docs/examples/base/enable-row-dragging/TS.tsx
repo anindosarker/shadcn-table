@@ -45,9 +45,6 @@ const Example = () => {
     columns: ST_ColumnDef<Person>[];
   } = {
     columns,
-    defaultColumn: {
-      size: 100,
-    },
     enableRowDragging: true,
     enableFullScreenToggle: false,
     stTableContainerProps: {

@@ -350,9 +350,8 @@ const Example = () => {
   return (
     <div className="flex flex-col gap-2">
       <p className="text-sm text-muted-foreground">
-        Change the density, the grid lines or the column order, then reload the
-        page: the table comes back the way you left it. Reset view in the view
-        settings panel clears what was saved.
+        Change the density or the column order, then reload the page: the table
+        comes back the way you left it.
       </p>
       <ShadcnTable table={table} />
     </div>
