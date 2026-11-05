@@ -85,7 +85,6 @@ export * from '@/components/ui-base/shadcn-table/components/toolbar/ST_TopToolba
 // spec 01
 export * from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
 export * from '@/components/ui-base/shadcn-table/shared/utils/viewSettingsStorage.utils';
-export * from '@/components/ui-base/shadcn-table/components/icons/ST_GridLineIcons';
 // spec 02
 export {
   ST_OverflowText,
