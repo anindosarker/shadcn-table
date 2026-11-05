@@ -690,3 +690,7 @@ index d099d3a0..d778bfba 100644
 ### D81 Branch flow: stories merge locally, CI on `dev`, one PR per release
 
 - Stories: branch from `claude/review`, local gates (the `pr.yml` pnpm scripts), merge commit into `claude/review`, branch deleted, no PR. `claude/review` fast-forwards into `dev` at every merge; `pr.yml` runs on every push to `dev` (the Linux run). The one PR per release is `dev` into `master` with its `release:` label, the owner's approval and auto-merge (D80). `actionlint` gates workflow edits; `act -j <job>` only for stories that change fonts, layout measurements or a workflow file. P1, P2 and P13 are folded into one rule (P1); the 18 story PRs of this cycle were a consequence of the old P2 only. Owner, 2026-11-06.
+
+### D82 One CI definition: `scripts/ci.mjs`
+
+- One new file `scripts/ci.mjs` and one root script `"ci": "node scripts/ci.mjs"`: the job list of `pr.yml` (`library`, `bases`, `tests`, `docs`, `pages`, `registry`, `install`), each job a sequence of the existing pnpm scripts, `pnpm ci` runs all, `pnpm ci <job> [--base <base>]` one, per-base work serial by default (P4). `pr.yml` jobs run `pnpm ci <job>` under their setup steps; agents and trackers cite `pnpm ci <job>`. No other script is added. Owner, 2026-11-06.
