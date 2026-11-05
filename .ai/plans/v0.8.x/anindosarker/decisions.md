@@ -445,3 +445,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - The sort chip shows the swap icon, the first sort's label and a chevron; the sort direction shows in the sorted header's arrow only. Owner, 2026-11-05.
 - Source: A19
+
+### D68 The combined grouping header lists every grouped column with its icon
+
+- Under `groupedColumnMode: 'remove'` the grouping column's header keeps the expand chevron as it is, then one segment per grouped column in grouping order, each segment the column's icon followed by its header name, segments separated by a `>` chevron (a breadcrumb), replacing "State, Gender" with a single icon. Under `'reorder'` the expand column keeps its empty header (A11). Supersedes the "first grouped column's icon" part of the F41 fix. Owner, 2026-11-05.
+- Source: A11
