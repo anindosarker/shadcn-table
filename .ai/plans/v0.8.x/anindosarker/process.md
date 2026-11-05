@@ -69,3 +69,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P13 Small fixes land directly, CI runs at the release
 
 - A small fix (a constant, a copy change, a one-file docs fix) is built on a worktree branch, gated locally (the gates its files need, run as CI would), then fast-forwarded or merged into `claude/review` from the main session without a PR and without a verifier agent; `dev` mirrors. The release PR (`dev` into `master`, P3) is the CI run for everything since the last release. Stories with library source changes keep their builder, verifier and merger (the regen steps), their PR being a by-product of the first push. Owner, 2026-11-05.
+
+## P14 Release gates are scripts, never agents
+
+- A gate an agent would run by hand (an install, a build, a browser check, a capture comparison) is a checked-in script or a CI step before the spec that needs it is written; the spec's Acceptance names the script and its exit code. An agent runs a gate only when a script cannot (a judgment on a failing diff). Owner, 2026-11-06, after the 0.8.0 release (D78 to D80).

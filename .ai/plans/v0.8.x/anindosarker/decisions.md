@@ -672,3 +672,17 @@ index d099d3a0..d778bfba 100644
 - Remix (`@remixicon/react`): `GridLinesAllIcon: RiHashtag`, `GridLinesRowsIcon: RiEqualLine`, `GridLinesColumnsIcon: RiEqualLine` rotated, `GridLinesNoneIcon: RiSquareLine`, `ViewColumnIcon: RiKanbanView`, `DensitySmallIcon: RiContractUpDownLine`, `DensityMediumIcon: RiIndentDecrease` mirrored, `DensityLargeIcon: RiExpandUpDownLine`; every entry through the map's existing `icon()` helper.
 - Hugeicons (`@hugeicons/core-free-icons`): `GridLinesAllIcon: FrameIcon`, `GridLinesRowsIcon: EqualIcon`, `GridLinesColumnsIcon: EqualIcon` rotated, `GridLinesNoneIcon: SquareIcon` (kept), `ViewColumnIcon: Columns3CogIcon`, `DensitySmallIcon: ListChevronsDownUpIcon`, `DensityMediumIcon: ListIndentDecreaseIcon` mirrored, `DensityLargeIcon: UnfoldMoreIcon`; every entry through the map's existing `icon()` helper.
 - With the editions off the drawn glyphs, `components/icons/ST_GridLineIcons.tsx` is deleted in the three bases with its `index.ts` export line, `registry.json` and `public/r/` entries and docs copies (D76).
+
+## Round 6: 0.8.1 release automation, 2026-11-06
+
+### D78 The release gate is a CI step, not an agent
+
+- The 0.8.0 release took 80 minutes with 13 agents and 1.8M tokens; the three gate agents spent 35 minutes re-deriving by hand what 138 Storybook plays per base and `install.yml` already prove. From 0.8.1 the runtime gate of spec 07 1.6.2 is a checked-in Playwright file run as a step of `install.yml` on the Next app it scaffolds: console zero warnings and errors on the gate, persisted and RTL pages, the persisted page's `data-st-view-pending` timing on a real reload, the RTL header and handle boxes, the two default-state captures per base. The checks the plays already cover (toolbar order, column menu, filter, sort, view settings, drag, locked column, scroll chevron, search, actions column) are not repeated. No gate agent. Ships as 0.8.1 (sub-spec 07.1), no library change. Owner, 2026-11-06 ("fix the scripts, add new ones if needed, and from future plan it properly"; "v0.8.1").
+
+### D79 Captures are compared by pixel diff, judges removed
+
+- The gate step compares each capture with a reference PNG committed in the repo using `pixelmatch` (per-pixel colour tolerance, a maximum differing-pixel count); above the maximum the step fails and uploads the diff image as a CI artifact. The "three judges" line of spec 07 2.2 goes. Nobody looks at a passing diff. A failing diff: the owner in triage; the main session reads the diff image only in an unattended run before fixing forward. Owner, 2026-11-06 ("yes, that can reduce ai cost and time").
+
+### D80 The pipeline releases; no releaser agent
+
+- The release is: the `dev` into `master` PR created with its `release:` label and auto-merge enabled; `version-pr.mjs` labels the bot version PR `release:skip` and enables auto-merge on it; `release.yml` does the rest as today (tag, production wait, smoke, installs, GitHub release). An agent appears only on a red check. Repository settings, done by the agent with the owner's one-time authorization (P5 exception, "you can do it"): "Allow auto-merge" on, the `master` ruleset gets the `pr.yml` jobs as required status checks. Order: the label fixes of D78 to D81 land first so the bot PR is green, then the settings. Owner, 2026-11-06.
