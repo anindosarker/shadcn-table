@@ -1,6 +1,6 @@
 # Moved column slides on top (F47), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-column-flip-zorder`, worktree 01, PR #120
 Gates:
 - Repro on shipped code (905ef298): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/ColumnDragging.stories.tsx`: red as intended, `MovedColumnOnTop` failed with `expected { time: 30, body: false } to deeply equal { time: 30, body: true }` (the City body cell, sliding two slots left, was covered by a later sibling at 30 ms into the slide)
@@ -15,6 +15,10 @@ Gates:
 - `pnpm --filter shadcn-table test:base` at 7ac08fb4: green (79 files, 600 tests)
 - `pnpm --filter shadcn-table-docs types:check` at 7ac08fb4: green
 - `node scripts/check-pages.mjs e --base radix|base|aria --url http://localhost:5341` after `registry:build` and `lib:install` radix, base, aria, at 7ac08fb4: green (686 passed, 0 failed each; home "moved column slides on top" onTop=14 covered=0); server stopped, installed copies restored
+- `pnpm --filter shadcn-table test:radix` at 8d8baa79: green (79 files, 600 tests), verifier
+- `pnpm --filter shadcn-table test:aria` at 8d8baa79: green (79 files, 600 tests), verifier
+- `pnpm --filter shadcn-table storybook:build:aria` at 8d8baa79: green, verifier
+- Gates recorded at 7ac08fb4 reused by the verifier: `git diff --name-only 7ac08fb4..HEAD` touches only this tracker
 
 - Milestone 01 F47 fix with play, demo workaround removed: done (ad59379b, 7ac08fb4)
 
