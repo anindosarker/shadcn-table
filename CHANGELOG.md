@@ -148,6 +148,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - The aria `range-slider` filter reads `min` and `max` from `stFilterSliderProps` as radix and base do, so its thumbs start at the given bounds instead of 0; aria `SliderProps` accepts the two keys (F46).
 - In an RTL table a column drag preview lays the columns right to left: every header stays inside the table and only the dragged and target columns shift (F50).
 
+#### Fix F57
+
+- Under `groupedColumnMode: 'remove'` with grouping active, the grouping column aligns its header (expand-all button, then the breadcrumb), its group cells and its row chevrons to the start instead of the centre; the narrow expand column stays centred.
+
 ### Docs
 
 #### Fix F56
