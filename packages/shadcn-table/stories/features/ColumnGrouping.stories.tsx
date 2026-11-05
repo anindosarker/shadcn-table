@@ -395,8 +395,21 @@ const headerCell = (canvasElement: HTMLElement, id: string) =>
     `thead th[data-flip-column="${id}"]`,
   );
 
-// Under groupedColumnMode 'remove' the grouping column names the grouped
-// columns, so its header carries the first grouped column's icon (F41, D3).
+/** The first text node in `root` whose trimmed text equals `text`. */
+const textNode = (root: HTMLElement, text: string) => {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (node.textContent?.trim() === text) return node;
+  }
+  return null;
+};
+
+const precedes = (a: Node, b: Node) =>
+  !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+// Under groupedColumnMode 'remove' the grouping column's header is a
+// breadcrumb: the expand-all button, then per grouped column its icon and
+// name, segments separated by a chevron (D68).
 export const GroupedHeaderHasIcon = {
   render: () => (
     <ShadcnTable
@@ -411,8 +424,97 @@ export const GroupedHeaderHasIcon = {
     await waitFor(() => {
       const th = headerCell(canvasElement, 'st-row-expand');
       expect(th).not.toBeNull();
-      expect(th).toHaveTextContent('State, Gender');
-      expect(th!.querySelector('svg.lucide-map')).not.toBeNull();
+      expect(th).not.toHaveTextContent('State, Gender');
+      const button = th!.querySelector('button');
+      const mapIcon = th!.querySelector('svg.lucide-map');
+      const state = textNode(th!, 'State');
+      const genderIcon = th!.querySelector('svg.lucide-venus-and-mars');
+      const gender = textNode(th!, 'Gender');
+      expect(button).not.toBeNull();
+      expect(mapIcon).not.toBeNull();
+      expect(state).not.toBeNull();
+      expect(genderIcon).not.toBeNull();
+      expect(gender).not.toBeNull();
+      const separator = [...th!.querySelectorAll('svg')].find(
+        (svg) =>
+          !svg.closest('button') &&
+          precedes(state!, svg) &&
+          precedes(svg, genderIcon!),
+      );
+      expect(separator).toBeDefined();
+      const order = [
+        button!,
+        mapIcon!,
+        state!,
+        separator!,
+        genderIcon!,
+        gender!,
+      ];
+      order.slice(1).forEach((node, index) => {
+        expect(precedes(order[index]!, node)).toBe(true);
+      });
+    });
+  },
+};
+
+const thWidth = (canvasElement: HTMLElement) =>
+  headerCell(canvasElement, 'st-row-expand')!.getBoundingClientRect().width;
+
+// Under 'remove' the grouping column's default width is the sum of the
+// grouped columns' widths, recomputed as grouping changes (D73).
+export const GroupedHeaderWidthSumsColumns = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableGrouping
+      groupedColumnMode="remove"
+      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
+      layoutMode="grid"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() => {
+      expect(headerCell(canvasElement, 'st-row-expand')).not.toBeNull();
+      expect(Math.abs(thWidth(canvasElement) - 360)).toBeLessThanOrEqual(1);
+    });
+    const gender = textNode(
+      headerCell(canvasElement, 'st-row-expand')!,
+      'Gender',
+    )!;
+    // The head cell's label span: the outermost span around the breadcrumb.
+    let label = gender.parentElement!;
+    while (label.parentElement?.tagName === 'SPAN') label = label.parentElement;
+    expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth);
+    const banner = (await canvas.findByText(/^Grouped by/)).closest('span')!;
+    await userEvent.click(
+      within(banner).getByRole('button', { name: 'Gender' }),
+    );
+    await waitFor(() =>
+      expect(Math.abs(thWidth(canvasElement) - 180)).toBeLessThanOrEqual(1),
+    );
+  },
+};
+
+// An explicit `displayColumnDefOptions['st-row-expand'].size` wins over the
+// summed default (D73).
+export const GroupedHeaderWidthOverride = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      displayColumnDefOptions={{ 'st-row-expand': { size: 240 } }}
+      enableGrouping
+      groupedColumnMode="remove"
+      initialState={{ expanded: true, grouping: ['state', 'gender'] }}
+      layoutMode="grid"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      expect(headerCell(canvasElement, 'st-row-expand')).not.toBeNull();
+      expect(Math.abs(thWidth(canvasElement) - 240)).toBeLessThanOrEqual(1);
     });
   },
 };
