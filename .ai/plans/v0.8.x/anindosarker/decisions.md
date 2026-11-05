@@ -431,3 +431,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - The View settings step lands the library's default `--st-stripe` (`--muted` at 25 percent in dark, 70 percent in light); neither the library default nor the demo's root changes. Owner, 2026-11-05.
 - Source: A18
+
+### D65 The demo's last step is titled "Alternating row colors"
+
+- The step list's sixth title reads "Alternating row colors" (was "Striped rows"); the feature label and `DEMO_LAST` ("Now showing: View settings") stay. The cue (pulse outline) marks the control that acts and the editor or panel it opens: the sort chip and the sort editor, the filter pill and the chip editor, the view settings button and its panel (F49). Owner, 2026-11-05.

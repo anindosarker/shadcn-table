@@ -202,3 +202,7 @@
 ### F48 The home demo's popovers flip up over the hero when the table is only partly in view
 
 - Home page, owner screenshot 2026-11-05 09:05: the replay starts once 25 percent of the demo is visible (`apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx:286-297`, IntersectionObserver threshold 0.25); with the toolbar at the bottom edge of the viewport the Sort popover has no room below, flips up and covers the hero and the install prompt. Same for the filter and view settings popovers. The replay must not scroll the page (#119). Fix per the owner's ruling on the start condition.
+
+### F49 The home demo's cue is missing on the sort chip, the sort editor and the filter chip editor
+
+- Home page live demo, owner screenshots 2026-11-05 09:1x: during the Sorting step neither the sort chip ("Due") nor the sort editor popover carries the demo's cue highlight; during Filtering the opened filter chip editor ("Status", "In Review", "Remove filter") carries none either. D46 puts the cue on the sort chip and on the filter chip; the editor each opens is the thing the step demonstrates. `apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx` (SignalCue kinds and targets). Fix with F48's start condition merged first (same file).
