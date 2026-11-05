@@ -61,7 +61,7 @@ const Example = () => {
         header: 'Age',
         filterVariant: 'range',
         filterFn: 'between',
-        size: 80,
+        size: 110,
       },
       {
         accessorKey: 'city',

@@ -101,9 +101,8 @@ const Example = () => {
         <Table>
           <TableHeader>
             {/**
-             * With `enableColumnResizing`, the default `layoutMode` is `grid-no-grow`,
-             * which adds the `st-row-spacer` display column to the headers.
-             * Render it for correct column widths, or set `layoutMode: 'grid'`.
+             * With `layoutMode: 'grid-no-grow'`, the headers include the `st-row-spacer`
+             * display column: render it for correct column widths.
              */}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

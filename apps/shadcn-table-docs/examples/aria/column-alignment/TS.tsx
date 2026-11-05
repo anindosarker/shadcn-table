@@ -16,7 +16,6 @@ const Example = () => {
         accessorKey: 'firstName',
         icon: UserIcon,
         header: 'First Name',
-        size: 100,
         stTableHeadCellProps: {
           align: 'center',
         },
@@ -28,7 +27,6 @@ const Example = () => {
         accessorKey: 'lastName',
         icon: UserIcon,
         header: 'Last Name',
-        size: 100,
         stTableHeadCellProps: {
           align: 'center',
         },

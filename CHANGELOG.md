@@ -206,6 +206,14 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The home demo's cue marks the editor or panel a control opens as well as the control: the sort picker, the "Due" chip and its sort editor, the filter picker, the "Status" chip editor and the "Status: In Review" chip, and the view settings panel; the cue inside a popover now shows (it was invisible there), and the last step is titled "Alternating row colors".
 
+#### Spec 06.5
+
+- The sidebar no longer lists About, Changelog and Roadmap, which had no page behind them (F42).
+- The Advanced and External Toolbar examples show the sort chip in their custom toolbars while a sort is set, as the stock toolbar does (F51).
+- The Persistent View, Subheader Filters and Custom Headless pages are shorter; Persistent View says it stores the view in localStorage (F52).
+- The editing examples confirm a delete with a shadcn AlertDialog instead of a browser confirm, in the three bases (F53).
+- Example columns with an icon are wide enough to show their whole header label (F54).
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed

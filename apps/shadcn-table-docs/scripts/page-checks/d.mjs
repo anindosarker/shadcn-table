@@ -41,6 +41,80 @@ async function chipsDefault(w, id, check) {
   );
 }
 
+/**
+ * F51: sorting by `column` through its column menu shows the sort chip
+ * (ST_SortPopover variant="chip"), a button named after the column outside
+ * the table head.
+ */
+async function sortChip(page, w, id, column, check) {
+  try {
+    await w
+      .locator(`thead th button[aria-label="${column} column menu"]`)
+      .first()
+      .click();
+    await page
+      .getByRole('menuitem', { name: 'Sort ascending', exact: true })
+      .first()
+      .click({ timeout: 5000 });
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(300);
+    const chips = await w
+      .locator('button')
+      .evaluateAll(
+        (els, label) =>
+          els.filter(
+            (el) => !el.closest('thead') && el.textContent?.trim() === label,
+          ).length,
+        column,
+      );
+    check(`${id}: sort chip`, chips > 0, `chips=${chips}`);
+  } catch (e) {
+    check(`${id}: sort chip`, false, String(e.message).split('\n')[0]);
+  }
+}
+
+/**
+ * F53: the row's delete button opens a shadcn AlertDialog with the question,
+ * not a browser confirm; Cancel closes it and keeps every row.
+ */
+async function deleteDialog(page, w, id, check) {
+  let alerted = false;
+  const onDialog = (d) => {
+    alerted = true;
+    d.dismiss().catch(() => {});
+  };
+  page.on('dialog', onDialog);
+  try {
+    const before = await w.locator('tbody tr').count();
+    await w.locator('tbody button.text-destructive').first().click();
+    const dialog = page.getByRole('alertdialog');
+    await dialog.waitFor({ timeout: 5000 });
+    const text = (await dialog.innerText()) ?? '';
+    check(
+      `${id}: delete dialog`,
+      /Are you sure you want to delete this user\?/.test(text),
+      text.replace(/\s+/g, ' ').slice(0, 120),
+    );
+    await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await dialog.waitFor({ state: 'hidden', timeout: 5000 });
+    const after = await w.locator('tbody tr').count();
+    check(
+      `${id}: delete dialog cancel keeps the rows`,
+      after === before,
+      `before=${before} after=${after}`,
+    );
+  } catch (e) {
+    check(
+      `${id}: delete dialog`,
+      false,
+      String(e.message).split('\n')[0].slice(0, 160),
+    );
+  } finally {
+    page.off('dialog', onDialog);
+  }
+  check(`${id}: delete dialog, no browser confirm`, !alerted);
+}
+
 const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
     const w = await example(page, 'advanced', check);
@@ -91,6 +165,7 @@ const checks = {
       page.off('dialog', onDialog);
     }
     check('advanced: no browser alert', !alerted);
+    await sortChip(page, w, 'advanced', 'Name', check);
   },
   '/docs/examples/aggregation-and-grouping': async ({ page, check }) => {
     const w = await example(page, 'aggregation-and-grouping', check);
@@ -146,6 +221,7 @@ const checks = {
       'chart-detail-panel: chart rendered',
       (await w.locator('.recharts-wrapper, .recharts-surface').count()) > 0,
     );
+    await headerLabelsFit(w, 'chart-detail-panel', check);
   },
   '/docs/examples/column-grouping': async ({ page, check }) => {
     const w = await example(page, 'enable-column-grouping', check);
@@ -173,6 +249,7 @@ const checks = {
       'column-pinning: pinned cells',
       (await w.locator('[data-pinned], td.sticky, th.sticky').count()) > 0,
     );
+    await headerLabelsFit(w, 'enable-column-pinning', check);
   },
   '/docs/examples/column-virtualization': async ({ page, check }) => {
     const w = await example(page, 'enable-column-virtualization', check);
@@ -210,6 +287,7 @@ const checks = {
     const w = await example(page, 'enable-detail-panel-conditionally', check);
     await singleExample(page, check);
     check('detail-panel: expand buttons', (await expandButtons(w).count()) > 0);
+    await headerLabelsFit(w, 'enable-detail-panel-conditionally', check);
   },
   '/docs/examples/dynamic-columns': async ({ page, check }) => {
     const w = await example(page, 'dynamic-columns', check);
@@ -223,26 +301,36 @@ const checks = {
     const w = await example(page, 'editing-crud-modal', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-modal', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-modal', check);
+    await deleteDialog(page, w, 'editing-crud-modal', check);
   },
   '/docs/examples/editing-crud-inline-cell': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-cell', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-cell', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-cell', check);
+    await deleteDialog(page, w, 'editing-crud-cell', check);
   },
   '/docs/examples/editing-crud-inline-row': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-row', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-row', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-row', check);
+    await deleteDialog(page, w, 'editing-crud-row', check);
   },
   '/docs/examples/editing-crud-inline-table': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-table', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-table', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-table', check);
+    await deleteDialog(page, w, 'editing-crud-table', check);
   },
   '/docs/examples/editing-crud-tree': async ({ page, check }) => {
     const w = await example(page, 'editing-crud-tree', check);
     await singleExample(page, check);
     await hasText(w, 'editing-crud-tree', /Create New User/, check);
+    await headerLabelsFit(w, 'editing-crud-tree', check);
+    await deleteDialog(page, w, 'editing-crud-tree', check);
     check(
       'editing-crud-tree: expand buttons',
       (await expandButtons(w).count()) > 0,

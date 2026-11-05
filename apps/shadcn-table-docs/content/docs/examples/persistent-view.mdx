@@ -3,9 +3,7 @@ title: 'Persistent View Example'
 description: 'An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.'
 ---
 
-With `persistViewSettings: true`, Shadcn Table saves what the user sets in the view settings panel (density, wrap cell text, grid lines, sticky header, alternating row colors, row numbers and the toolbar pins) together with column visibility, order and pinning, and restores it on the next visit. Sorts and filters are not saved. Change a few settings in this example, drag a column header to a new place, then reload the page. See the [View Settings Guide](/docs/guides/view-settings) for the storage key, server rendering and the `nonce` option.
-
-The columns also set `icon`, which shows before each label in the header, the filter chips and the column picker. See the [Column Icons Guide](/docs/guides/column-icons).
+With `persistViewSettings: true`, Shadcn Table stores the view settings and the column visibility, order and pinning in localStorage and restores them on reload. Change a few settings or drag a column header, then reload the page. Learn more in the [View Settings Guide](/docs/guides/view-settings).
 
 <PersistentViewExample />
 
