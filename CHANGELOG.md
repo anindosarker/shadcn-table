@@ -61,6 +61,10 @@ date; merging it publishes the section as the GitHub release notes.
 
 ### Changed
 
+#### View settings icons (D75)
+
+- Lucide defaults for the view settings: grid lines `Frame`, `Equal`, `Equal` rotated and `Square`; Columns `Columns3Cog`; density `ListChevronsDownUp`, mirrored `ListIndentDecrease`, `ListChevronsUpDown`. The icon editions are unchanged.
+
 #### Spec 05
 
 The stock table takes the v0.8 look by default. Each line names the option that restores the old behaviour.
