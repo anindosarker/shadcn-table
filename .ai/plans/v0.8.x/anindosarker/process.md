@@ -2,7 +2,7 @@
 
 Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The process itself (orchestration, models, loop, gates once, Acceptance, attention, handoff) lives in the skill; this file says only what this project is.
 
-## P1 Branches, merges, PRs and CI (one rule; P2 and P13 folded in, D81)
+## P1 Branches, merges, PRs and CI (D81)
 
 - `claude/review` is where work lands, `dev` the always-releasable staging branch, `master` release only.
 - A story runs on a branch `v<major>.<minor>/<slug>` cut from `origin/claude/review`, never from an unmerged tip, in a pool worktree `../shadcn-react-table.worktrees/01`, `02`, `03` (clean, dependencies installed), reset with `git -C <wt> fetch origin && git -C <wt> checkout -B <branch> origin/claude/review && git -C <wt> push -u origin <branch>`; a new numbered worktree only when every pool one is busy, and it joins the pool; never remove one; never touch `wt1` and `wt2`. Branch and worktree are recorded in the tracker. Never force-push; never bare `git stash`.
@@ -63,8 +63,6 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P12 A previewed change is recorded as its diff
 
 - When the owner wants to see a change before deciding, the preview is built on the generated docs copy under `apps/shadcn-table-docs/components/ui-<base>/` in a scratch worktree (no package rebuild, no browser tests unless asked) and shown on a dev server on 5340 to 5360. Once accepted, the decision carries the accepted diff verbatim (paths rewritten to the registry source), and the fix story applies that diff as is to the three bases, in place, no new helper functions. Owner, 2026-11-05 (D72).
-
-## P13 (folded into P1)
 
 ## P14 Release gates are scripts, never agents
 
