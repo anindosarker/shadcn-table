@@ -1,6 +1,6 @@
 # Home demo plays only with room for its popovers (F48, D63), tracker
 
-Status: verified
+Status: merged (5fc514b7)
 Branch `v0.8/fix-demo-viewport`, worktree 02, PR #122
 Gates:
 - Repro on shipped code (b8435a27), Chromium 1440x900, dev server :5341: at scrollY 0 the toolbar's Sort button bottom is at y 743 (157 px above the bottom edge, the lowest the page allows at 900 px tall); the replay plays (`Now showing: Sorting`, `data-running`) and the Sort popover's top is at y 473, above the Sort button's top (711): flipped over the hero. The new home checks fail there: `demo: holds on Starting with the toolbar near the bottom edge` (room=157px, status `Now showing: Sorting`, running) and the follow-on `demo: plays only with room for its popovers` (timeout).
