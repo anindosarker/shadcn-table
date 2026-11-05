@@ -1,6 +1,6 @@
 # Home demo plays only with room for its popovers (F48, D63), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-demo-viewport`, worktree 02, PR #122
 Gates:
 - Repro on shipped code (b8435a27), Chromium 1440x900, dev server :5341: at scrollY 0 the toolbar's Sort button bottom is at y 743 (157 px above the bottom edge, the lowest the page allows at 900 px tall); the replay plays (`Now showing: Sorting`, `data-running`) and the Sort popover's top is at y 473, above the Sort button's top (711): flipped over the hero. The new home checks fail there: `demo: holds on Starting with the toolbar near the bottom edge` (room=157px, status `Now showing: Sorting`, running) and the follow-on `demo: plays only with room for its popovers` (timeout).
@@ -12,6 +12,10 @@ Gates:
 - `node scripts/check-pages.mjs e / --base base --url http://localhost:5341` at fdf0f8a2: green (43 passed)
 - `node scripts/check-pages.mjs e / --base radix --url http://localhost:5341` at fdf0f8a2: green (43 passed)
 - `node scripts/check-pages.mjs e / --base aria --url http://localhost:5341` at fdf0f8a2: green (43 passed)
+- `pnpm --filter shadcn-table-docs build` at d3c368b3: green (exit 0, `git status --short` clean after), verifier
+- types:check, lint and check-pages cluster e (base, radix, aria) recorded at fdf0f8a2 stay valid: `git diff --name-only fdf0f8a2..d3c368b3` touches only this tracker; not rerun, verifier
+- Chromium 1440x900, dev server :5342, at d3c368b3: toolbar 80 px above the bottom edge is not reachable (scrollY 0 leaves 157 px, the lowest the page allows); held there 15 s sampled every 500 ms: status `Starting` throughout, never running, no popover; Sort button top 81 (below the nav): plays the full replay, Sort popover top 118 below trigger bottom 113, Filter popover top 119 below 113, View settings popover top 119 below 113 (data-side bottom); scrolled away mid Filtering step: not running and no popover after 600 ms, status still `Now showing: Filtering` 5 s later; scrolled back: resumes to `Column order`; scrollY never changed on its own (per-frame sampler, 0 deviations): green, verifier
+- Chromium 1280x720, same run: toolbar 80 px above the bottom edge held 15 s on `Starting`, never running, no popover; Sort button top 81 (607 px room): Sort, Filter and View settings popovers open 5 to 8 px below their triggers; pause mid Filtering with no popover, holds 5 s, resumes to `Column order`; no self scroll: green, verifier
 
 - Milestone 01 D63 start condition: done (fdf0f8a2)
 
@@ -19,6 +23,7 @@ Gates:
 
 - `apps/shadcn-table-docs/scripts/page-checks/_helpers.mjs` (outside the story's file list) changed in `demoLoop`: it scrolled only the step status into view, which after the base reloads left the toolbar 157 px above the bottom edge, so the demo held and the radix and aria holds timed out. It now centres the whole demo. `demoLoop` has no caller besides the home entry in `e.mjs`.
 - The demo now holds on "Starting" on first load at 1440x900 and any viewport where the toolbar sits within 360 px of the bottom edge: a visitor sees it play only after scrolling the demo up. This is what D63 asks; noted because it changes the first impression of the home page.
+- A popover already open when the page is scrolled away fast (a scrollbar jump, or wheel steps of 100 px every frame) flips to the top side for its 200 ms close fade before it disappears: measured 1 to 6 sampled frames at 1440x900 and 1280x720 in the Filter and View settings steps, none in Sort. The pause lands as soon as the room drops under 360 px, so ordinary scrolling closes it below its trigger; a fix would be closing the popover without its exit animation on pause. Left as is.
 
 ## Notes
 
