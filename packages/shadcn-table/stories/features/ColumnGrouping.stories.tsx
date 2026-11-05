@@ -519,6 +519,42 @@ export const GroupedHeaderWidthOverride = {
   },
 };
 
+// Under 'remove' the wide grouping column aligns start: the header's
+// expand-all button and breadcrumb, the group rows' chevron and label, and the
+// leaf rows' chevron sit at the cell's start edge, not mid-column (F57).
+export const GroupedHeaderAlignsStart = {
+  render: () => <GroupingColumnModeRemove />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const startOffset = (element: Element, cell: Element) =>
+      element.getBoundingClientRect().left - cell.getBoundingClientRect().left;
+    const rows = () => [...canvasElement.querySelectorAll('tbody tr')];
+    const expandCell = (row: Element) =>
+      row.querySelector('td[data-flip-column="st-row-expand"]')!;
+    await waitFor(() => {
+      const th = headerCell(canvasElement, 'st-row-expand');
+      expect(th).not.toBeNull();
+      const breadcrumb = textNode(th!, 'Gender')!.parentElement!.closest(
+        'span:has(button)',
+      )!;
+      expect(startOffset(breadcrumb, th!)).toBeLessThanOrEqual(24);
+      const groupCell = expandCell(rows()[0]!);
+      expect(
+        startOffset(groupCell.querySelector('button')!, groupCell),
+      ).toBeLessThanOrEqual(24);
+      const leafRow = rows().find(
+        (row) =>
+          row
+            .querySelector('td[data-flip-column="firstName"]')
+            ?.textContent?.trim() !== '',
+      )!;
+      const leafCell = expandCell(leafRow);
+      expect(
+        startOffset(leafCell.querySelector('button')!, leafCell),
+      ).toBeLessThanOrEqual(32);
+    });
+  },
+};
+
 // Under 'reorder' the grouped column keeps its own header, icon included.
 export const GroupedHeaderHasIconReorder = {
   render: () => (
