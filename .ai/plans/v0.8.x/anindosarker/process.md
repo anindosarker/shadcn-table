@@ -61,3 +61,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P11 Attention items earn their place
 
 - Before an ATTENTION item or a discussion item reaches the owner, the agent reads the decisions of this cycle and the earlier cycles (`.ai/plans/*/anindosarker/decisions.md`, the specs they cite) and the findings: a question an existing decision already answers is settled by citing it (an addendum under that decision, `Source: A<n>`), never re-asked. A proposal the owner rejected before is not re-proposed. Only an unruled real choice (a visible behaviour or look, a public API, a scope change) is posted, with the decisions it touches named. Owner, 2026-11-05, after A12 re-proposed what D6 had rejected.
+
+## P12 A previewed change is recorded as its diff
+
+- When the owner wants to see a change before deciding, the preview is built on the generated docs copy under `apps/shadcn-table-docs/components/ui-<base>/` in a scratch worktree (no package rebuild, no browser tests unless asked) and shown on a dev server on 5340 to 5360. Once accepted, the decision carries the accepted diff verbatim (paths rewritten to the registry source), and the fix story applies that diff as is to the three bases, in place, no new helper functions. Owner, 2026-11-05 (D72).
