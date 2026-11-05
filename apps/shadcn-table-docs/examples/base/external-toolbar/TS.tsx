@@ -2,6 +2,7 @@
 
 import {
   ST_GlobalFilterTextField,
+  ST_SortPopover,
   ST_TablePagination,
   ST_ToolbarAlertBanner,
   useShadcnTable,
@@ -60,7 +61,10 @@ const Example = () => {
               Create New Account
             </Button>
           </div>
-          <ST_GlobalFilterTextField />
+          <div className="flex items-center gap-2">
+            <ST_GlobalFilterTextField />
+            <ST_SortPopover table={table} variant="chip" />
+          </div>
           <div className="flex items-center gap-2">
             <ST_ViewSettingsButton table={table} />
             <ST_Tooltip title="Print">
