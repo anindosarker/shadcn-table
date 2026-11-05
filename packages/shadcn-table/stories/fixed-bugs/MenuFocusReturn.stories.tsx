@@ -2,9 +2,11 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
-// The five menus share useST_MenuAnchor: each opens from an invisible span
-// over its opener and, on Escape, hands focus back to that opener.
+// Each menu, on Escape, hands focus back to its opener: the column menu
+// chevron, the row actions button, the cell, the filter mode button and the
+// columns button.
 
 const meta: Meta = {
   title: 'Fixed Bugs/Menu Focus Return',
@@ -21,8 +23,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 const waitForRows = (canvasElement: HTMLElement) =>
@@ -104,6 +106,7 @@ export const FilterOptionMenu = {
     <ShadcnTable
       columns={columns}
       data={data}
+      columnFilterDisplayMode="subheader"
       enableColumnFilterModes
       initialState={{ showColumnFilters: true }}
     />

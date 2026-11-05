@@ -55,7 +55,7 @@ Shadcn Table now exports all of its internal components. You can use them for yo
 
 [View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/stTableHook.tsx)
 
-Sub-components take no `table` prop. Those that render a `row`, `cell`, `header` or `column` read the table from it; the others read it from the context that `<ShadcnTable />` provides. Outside `<ShadcnTable />`, wrap them in `<ST_TableProvider table={table}>`. See [Compose with ST_TableProvider](/docs/guides/toolbar-customization#compose-with-st_tableprovider).
+Most sub-components take no `table` prop (the toolbar components `ST_FilterChips`, `ST_ColumnPicker`, `ST_SortPopover`, `ST_ViewSettingsButton`, `ST_ViewSettingsItems` and `ST_ScrollButtons` take it explicitly). Those that render a `row`, `cell`, `header` or `column` read the table from it; the others read it from the context that `<ShadcnTable />` provides. Outside `<ShadcnTable />`, wrap them in `<ST_TableProvider table={table}>`. See [Compose with ST_TableProvider](/docs/guides/toolbar-customization#compose-with-st_tableprovider).
 
 ```jsx
 const table = useShadcnTable({ columns, data });
@@ -93,6 +93,10 @@ Be aware that using this deep of a component, you will lose out on row virtualiz
 
 Shows a loading spinner over the table above the `ST_Table` component when the table is loading.
 
+##### \<ST_ScrollButtons /\>
+
+The two scroll chevrons in the header row that appear on hover while columns are hidden sideways; a click scrolls 80 percent of the visible unpinned width. Takes the `table` prop and renders inside the scroll wrapper of `<ST_TableContainer />`. See the [Scroll Cues Guide](/docs/guides/scroll-cues).
+
 #### TableHead Components
 
 [View TableHead Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/head)
@@ -111,11 +115,11 @@ The `<ST_TableHeadCell />` is a `<th>` element that contains all of the table he
 
 ##### \<ST_TableHeadCellColumnActionsButton /\>
 
-A button that opens up the column actions menu.
+The chevron button at the end of a header cell that opens the column menu (the header label is the second trigger of the same menu). Takes `open` and `onOpenChange` to control the menu.
 
 ##### \<ST_TableHeadCellSortLabel /\>
 
-The Sort Icon Button and Label next to a table header
+The sort arrow after a header label. It renders nothing while the column is unsorted and a plain arrow (not a button) while it is sorted, with the sort position when `showSortIndex` is on and more than one sort is active.
 
 ##### \<ST_TableHeadCellFilterLabel /\>
 
@@ -132,6 +136,10 @@ The Resize Handle Icon Button next to a table header used for column resizing
 ##### \<ST_TableHeadCellFilterContainer /\>
 
 The Filter Container that contains the filter input and filter actions
+
+##### \<ST_TableHeadCellLockedOverlay /\>
+
+The striped overlay and "Fixed" lock label a locked column (`enableColumnOrdering: false`) shows while another column is dragged. See [Locked Columns](/docs/guides/column-ordering-dnd#locked-columns).
 
 #### TableBody Components
 
@@ -152,6 +160,10 @@ A row and all column-spanning row for rendering detail panels for a row.
 ##### \<ST_TableBodyCell /\>
 
 The `<ST_TableBodyCell />` is a `<td>` element that surrounds the cell value or custom `Cell` render.
+
+##### \<ST_OverflowText /\>
+
+Truncates its content to one line and shows a tooltip with the full content only when the content is cut off. Body cells use it for plain values; wrap the text of a custom `Cell` in it to opt in. Props: `tooltip` (other tooltip content), `wrap` (plain wrapping text, no tooltip), `className`. See the [Overflow Tooltip Guide](/docs/guides/overflow-tooltip).
 
 ##### \<ST_TableBodyCellValue /\>
 
@@ -212,3 +224,58 @@ A Container component that will render two ST_FilterTextField components for fil
 ##### \<ST_SelectCheckbox /\>
 
 A checkbox component for selecting a row or selecting all rows from the table header.
+
+#### Toolbar Components
+
+[View Toolbar Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/toolbar)
+
+These components take the table as a `table` prop.
+
+##### \<ST_FilterChips /\>
+
+The chip row of the default `'chips'` filter display mode: one chip per filtered column, "+ Filter", "Clear filters", and the filter editor a column menu opens on its header cell. See the [Filter Chips Guide](/docs/guides/filter-chips).
+
+##### \<ST_ColumnPicker /\>
+
+The searchable column list behind "+ Filter", the toolbar filter button and "Add sort". Renders inline, for a popover of your own.
+
+##### \<ST_SortPopover /\>
+
+The sort button and sort editor: one row per sort rule with a drag handle, a column and a direction select and a remove button, plus "Add sort" and "Delete sort". `variant="chip"` renders the sort chip instead of the button. See the [Sort Editor Guide](/docs/guides/sort-editor).
+
+##### \<ST_ViewSettingsButton /\>
+
+The view settings button and panel: one row per setting with a pin toggle, and "Reset view". See the [View Settings Guide](/docs/guides/view-settings).
+
+##### \<ST_ViewSettingsItems /\>
+
+The view settings items pinned to the toolbar, as icon buttons in panel order.
+
+#### Menu Components
+
+[View Menu Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/menus)
+
+Each of these menus takes its opener as a `trigger` element: a press on it opens the menu and a second press closes it, and optional `open` and `onOpenChange` props control it. The older `anchorEl` and `setAnchorEl` props still open a menu without a trigger element.
+
+```jsx
+import { Button } from '@/components/ui/button';
+import { ST_ShowHideColumnsMenu } from '@/components/ui/shadcn-table';
+
+<ST_ShowHideColumnsMenu trigger={<Button variant="outline">Columns</Button>} />;
+```
+
+##### \<ST_ColumnActionMenu /\>
+
+The column menu of a header: sort, filter, pin, reset size, group, fixed position and hide items, each shown only when it applies. Takes the `header`. See the [Column Actions Guide](/docs/guides/column-actions).
+
+##### \<ST_RowActionMenu /\>
+
+The row actions menu opened by the dots button of the row actions column. Takes the `row` and `handleEdit`.
+
+##### \<ST_ShowHideColumnsMenu /\>
+
+The columns menu: a switch per column, drag to reorder, and the show all, hide all, reset order and unpin all actions.
+
+##### \<ST_FilterOptionMenu /\>
+
+The filter mode menu of a column (or of the global search). Takes the `header` for a column; with `isSubMenu` it renders as a submenu of the column menu.

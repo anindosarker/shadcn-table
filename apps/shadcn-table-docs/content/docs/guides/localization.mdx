@@ -51,6 +51,26 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
+#### Keys for the Toolbar and Column Menu
+
+The strings of the filter chips, the sort editor, the view settings panel, the column menu items, the locked column cue and the scroll cues (for example `addFilter`, `clearFilters`, `addSort`, `deleteSort`, `sortsCount`, `viewSettings`, `resetView`, `rowNumbers`, `pinToStart`, `pinToEnd`, `hideThisColumn`, `fixedPosition`, `scrollLeft`, `scrollRight`) are optional keys of `ST_Localization`. They ship with English values only. Every other built-in locale leaves them out, and the table falls back to the English text for any key a locale does not set, so a full locale object such as `ST_Localization_DE` keeps working and you can add just the new keys you want to translate:
+
+```jsx
+import { ST_Localization_DE } from '@/components/ui/shadcn-table/shared/locales/de';
+
+const table = useShadcnTable({
+  columns,
+  data,
+  localization: {
+    ...ST_Localization_DE,
+    addFilter: 'Filter',
+    resetView: 'Ansicht zurücksetzen',
+  },
+});
+```
+
+Where the new chrome words a label differently from an older key, it uses a new key and the older one stays: `sortAscending` and `sortDescending` beside `sortByColumnAsc` and `sortByColumnDesc`, `pinToStart` and `pinToEnd` beside `pinToLeft` and `pinToRight`, `hideThisColumn` beside `hideColumn`. Placeholders use the `{name}` style, as in `sortsCount: '{n} sorts'` and `columnsShown: '{n} shown'`.
+
 For a full list of all available translation keys, see [here](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/shared/locales/en.ts).
 Please note that each localization object should include a `language` property containing a valid BCP 47 language tag to ensure proper number formatting.
 

@@ -150,14 +150,17 @@ export type ST_IconProps = ComponentPropsWithoutRef<'svg'> & {
 };
 
 export type ST_IconKey =
+  | 'AddIcon'
   | 'ArrowDownwardIcon'
   | 'ArrowRightIcon'
+  | 'ArrowUpwardIcon'
   | 'CancelIcon'
   | 'ChevronLeftIcon'
   | 'ChevronRightIcon'
   | 'ClearAllIcon'
   | 'CloseIcon'
   | 'ContentCopy'
+  | 'DeleteIcon'
   | 'DensityLargeIcon'
   | 'DensityMediumIcon'
   | 'DensitySmallIcon'
@@ -171,20 +174,36 @@ export type ST_IconKey =
   | 'FirstPageIcon'
   | 'FullscreenExitIcon'
   | 'FullscreenIcon'
+  | 'GridLinesAllIcon'
+  | 'GridLinesColumnsIcon'
+  | 'GridLinesNoneIcon'
+  | 'GridLinesRowsIcon'
   | 'IndeterminateIcon'
   | 'KeyboardDoubleArrowDownIcon'
   | 'LastPageIcon'
+  | 'LockIcon'
   | 'MoreHorizIcon'
   | 'MoreVertIcon'
   | 'PushPinIcon'
+  | 'PushPinOffIcon'
   | 'RestartAltIcon'
+  | 'RowNumbersOffIcon'
+  | 'RowNumbersOnIcon'
   | 'SaveIcon'
   | 'SearchIcon'
   | 'SearchOffIcon'
+  | 'SettingsIcon'
+  | 'SingleLineIcon'
   | 'SortIcon'
+  | 'StickyHeaderOffIcon'
+  | 'StickyHeaderOnIcon'
+  | 'StripedOffIcon'
+  | 'StripedOnIcon'
+  | 'SwapVertIcon'
   | 'SyncAltIcon'
   | 'ViewColumnIcon'
-  | 'VisibilityOffIcon';
+  | 'VisibilityOffIcon'
+  | 'WrapTextIcon';
 
 export type ST_Icons = Record<ST_IconKey, ComponentType<ST_IconProps>>;
 
@@ -212,6 +231,44 @@ export type DropdownOption =
   | string;
 
 export type ST_DensityState = 'comfortable' | 'compact' | 'spacious';
+
+export type ST_GridLinesState = 'all' | 'columns' | 'none' | 'rows';
+
+export type ST_ViewSettingsItemId =
+  | 'columns'
+  | 'density'
+  | 'gridLines'
+  | 'rowNumbers'
+  | 'stickyHeader'
+  | 'striped'
+  | 'wrapText';
+
+/** The view settings panel rows and the items pinned to the toolbar. */
+export interface ST_ViewSettingsState {
+  readonly gridLines: ST_GridLinesState;
+  readonly pins: readonly ST_ViewSettingsItemId[];
+  readonly rowNumbers: boolean;
+  readonly stickyHeader: boolean;
+  readonly striped: boolean;
+  readonly wrapText: boolean;
+}
+
+/** The filter chips shown and the chip or header whose editor is open. */
+export interface ST_FilterChipsState {
+  readonly columnIds: readonly string[];
+  readonly openAnchor: 'chip' | 'header' | 'toolbar' | null;
+  readonly openColumnId: string | null;
+}
+
+/** What a column reorder hands to the column slide animation. */
+export interface ST_ColumnFlipPending {
+  /** The headers already sit in the preview order. */
+  readonly dragDrop: boolean;
+  /** The column to highlight. */
+  readonly movedId: string;
+  /** The left offset each column showed before the reorder. */
+  readonly positions: ReadonlyMap<string, number>;
+}
 
 export type ST_ColumnFilterFnsState = Record<string, ST_FilterOption>;
 
@@ -274,11 +331,19 @@ export interface ST_Localization {
   // BCP 47 language tag, used for number formatting
   language: string;
   actions: string;
+  addFilter?: string;
+  addSort?: string;
+  afterValue?: string;
+  alternatingRowColors?: string;
   and: string;
+  ascending?: string;
+  backToColumns?: string;
+  beforeValue?: string;
   cancel: string;
   changeFilterMode: string;
   changeSearchMode: string;
   clearFilter: string;
+  clearFilters?: string;
   clearSearch: string;
   clearSelection: string;
   clearSort: string;
@@ -286,17 +351,30 @@ export interface ST_Localization {
   collapse: string;
   collapseAll: string;
   columnActions: string;
+  columnMenu?: string;
+  columns?: string;
+  columnsShown?: string;
   copiedToClipboard: string;
   copy: string;
+  deleteAllFilters?: string;
+  deleteSort?: string;
+  density?: string;
+  densityComfortable?: string;
+  densityCompact?: string;
+  densitySpacious?: string;
+  descending?: string;
+  dragToReorder?: string;
   dropToGroupBy: string;
   edit: string;
   expand: string;
   expandAll: string;
+  filter?: string;
   filterArrIncludes: string;
   filterArrIncludesAll: string;
   filterArrIncludesSome: string;
   filterBetween: string;
   filterBetweenInclusive: string;
+  filterBy?: string;
   filterByColumn: string;
   filterContains: string;
   filterEmpty: string;
@@ -317,45 +395,76 @@ export interface ST_Localization {
   filterNotEquals: string;
   filterStartsWith: string;
   filterWeakEquals: string;
+  fixed?: string;
+  fixedPosition?: string;
   goToFirstPage: string;
   goToLastPage: string;
   goToNextPage: string;
   goToPreviousPage: string;
   grab: string;
+  gridLines?: string;
+  gridLinesAll?: string;
+  gridLinesColumns?: string;
+  gridLinesNone?: string;
+  gridLinesRows?: string;
   groupByColumn: string;
   groupedBy: string;
   hideAll: string;
   hideColumn: string;
+  hideThisColumn?: string;
+  isEmpty?: string;
+  isNotEmpty?: string;
   loading: string;
   max: string;
   min: string;
   move: string;
+  no?: string;
+  noColumns?: string;
   noRecordsToDisplay: string;
   noResultsFound: string;
   of: string;
   or: string;
   pin: string;
+  pinToEnd?: string;
   pinToLeft: string;
   pinToRight: string;
+  pinToStart?: string;
+  pinToToolbar?: string;
+  rangeSummary?: string;
+  removeFilter?: string;
+  removeSortOn?: string;
   resetColumnSize: string;
   resetOrder: string;
+  resetView?: string;
   rowActions: string;
   rowNumber: string;
   rowNumbers: string;
   rowsPerPage: string;
   save: string;
+  scrollLeft?: string;
+  scrollRight?: string;
   search: string;
   select: string;
   selectedCountOfRowCountRowsSelected: string;
   showAll: string;
   showAllColumns: string;
+  showColumnToEditFilter?: string;
   showHideColumns: string;
   showHideFilters: string;
   showHideSearch: string;
+  singleLineCells?: string;
+  sort?: string;
+  sortAscending?: string;
+  sortBy?: string;
   sortByColumnAsc: string;
   sortByColumnDesc: string;
+  sortDescending?: string;
+  sortedAscending?: string;
   sortedByColumnAsc: string;
   sortedByColumnDesc: string;
+  sortedDescending?: string;
+  sortsCount?: string;
+  stickyHeader?: string;
   thenBy: string;
   toggleDensity: string;
   toggleFullScreen: string;
@@ -365,6 +474,10 @@ export interface ST_Localization {
   ungroupByColumn: string;
   unpin: string;
   unpinAll: string;
+  unpinFromToolbar?: string;
+  viewSettings?: string;
+  wrapCellText?: string;
+  yes?: string;
 }
 
 export interface ST_RowModel<TData extends ST_RowData> {
@@ -442,7 +555,9 @@ export type ST_DefinedTableOptions<TData extends ST_RowData> = Omit<
   'icons' | 'localization'
 > & {
   icons: ST_Icons;
-  localization: ST_Localization;
+  localization: Required<ST_Localization>;
+  /** The `id` option as the caller passed it, before a generated id fills in. */
+  viewSettingsKeyInput?: string;
 };
 
 /** One read-only atom per table state slice, typed for `TData`. */
@@ -456,7 +571,8 @@ export type ST_DisplayColumnOptions<TData extends ST_RowData> =
     state: Pick<
       ST_TableState<TData>,
       'columnOrder' | 'creatingRow' | 'grouping'
-    >;
+    > &
+      Partial<Pick<ST_TableState<TData>, 'viewSettings'>>;
   };
 
 export type ST_StatefulTableOptions<TData extends ST_RowData> =

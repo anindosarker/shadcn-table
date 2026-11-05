@@ -53,6 +53,82 @@ export async function example(page, id, check) {
   return panel;
 }
 
+/**
+ * No header label in example panel `w` is truncated: every `.truncate` label
+ * inside `thead th` (the column menu button or the plain label span) fits its
+ * box, `scrollWidth <= clientWidth`. Popover filter mode adds a funnel beside
+ * the chevron, so an example sized for the inline mode clips its labels (F38).
+ */
+export async function headerLabelsFit(w, id, check) {
+  // Text widths depend on the web font (Inter through next/font): measure
+  // only once it is loaded, else the fallback font (wider on Linux) is
+  // measured instead.
+  await w.evaluate(() => document.fonts.ready.then(() => true));
+  const clipped = await w
+    .locator('thead th .truncate')
+    .evaluateAll((els) =>
+      els
+        .filter((el) => el.scrollWidth > el.clientWidth)
+        .map(
+          (el) =>
+            `${el.textContent?.trim()}(${el.scrollWidth}>${el.clientWidth})`,
+        ),
+    );
+  check(
+    `${id}: header labels not truncated`,
+    clipped.length === 0,
+    clipped.join(' '),
+  );
+}
+
+/**
+ * The chips filter flow of example `w` (filters in chips mode): the toolbar
+ * Filter button opens the column picker, picking `column` adds its chip and
+ * opens the editor in place; closing it and clicking the chip opens the
+ * editor from the chip, where `control` (a selector inside the open popover)
+ * must render. Returns the open editor popover, closed again by the caller
+ * through `closeChipEditor`.
+ */
+export async function chipFilter(page, w, id, column, control, check) {
+  const editor = page.locator('[data-slot="popover-content"]:visible');
+  try {
+    await w.locator('button[aria-label="Filter"]').first().click();
+    await editor
+      .getByRole('option', { name: column, exact: true })
+      .first()
+      .click({ timeout: 5000 });
+    await page.keyboard.press('Escape');
+    await editor.first().waitFor({ state: 'hidden', timeout: 5000 });
+  } catch (e) {
+    check(
+      `${id}: ${column} chip added`,
+      false,
+      String(e.message).split('\n')[0],
+    );
+    return editor;
+  }
+  const chip = w.locator('[data-filter-chip]', { hasText: column });
+  check(`${id}: ${column} chip`, (await chip.count()) === 1);
+  if (!(await chip.count())) return editor;
+  await chip.first().click();
+  await editor
+    .first()
+    .waitFor({ timeout: 5000 })
+    .catch(() => {});
+  const n = await editor.locator(control).count();
+  check(`${id}: ${column} editor opens from the chip`, n > 0, `controls=${n}`);
+  return editor;
+}
+
+/** Closes the open chip editor. */
+export async function closeChipEditor(page, editor) {
+  await page.keyboard.press('Escape');
+  await editor
+    .first()
+    .waitFor({ state: 'hidden', timeout: 5000 })
+    .catch(() => {});
+}
+
 export async function paginationControls(wrapper, id, check) {
   const n =
     (await wrapper.locator('nav, [data-slot="pagination"]').count()) +
@@ -519,15 +595,18 @@ export async function baseSwitch(page, id, check, { via = 'header' } = {}) {
   );
 }
 
-const DEMO_LAST = 'Now showing: Grouping';
+const DEMO_LAST = 'Now showing: View settings';
 const DEMO_MIN_HOLD_MS = 15000;
-const DEMO_TIMEOUT_MS = 30000;
+// the six steps play their interactions before their state lands (F33), so
+// the loop reaches the last step about 26 s after it starts
+const DEMO_TIMEOUT_MS = 45000;
 
 /**
  * Holds the home page through the full live demo loop on every base. The demo
- * (components/dev-home/v12/signal-demo.tsx) plays only while it is on screen,
- * so it is scrolled into view; each hold waits until its aria-live status reads
- * the last step and lasts at least DEMO_MIN_HOLD_MS. The first hold runs on the
+ * (components/dev-home/v12/signal-demo.tsx) plays only while its toolbar has
+ * room for its popovers below it, so it is scrolled into view centred; each
+ * hold waits until its aria-live status reads the last step and lasts at
+ * least DEMO_MIN_HOLD_MS. The first hold runs on the
  * base the page opened on (the default, Base UI, or the runner's --base); the
  * next two pick the other bases through the agent bar's base menu and reload. A
  * render loop or crash that needs time or the demo's step changes to surface
@@ -545,7 +624,15 @@ export async function demoLoop({ page, check, base }) {
   const hold = async () => {
     const start = Date.now();
     const status = page.locator('[aria-label="Demo items"] [aria-live]');
-    await status.first().scrollIntoViewIfNeeded({ timeout: DEMO_TIMEOUT_MS });
+    // the whole demo in view: it plays only while its toolbar has room for
+    // the popovers below it (F48, D63)
+    await page
+      .locator('.v5-demo')
+      .first()
+      .waitFor({ timeout: DEMO_TIMEOUT_MS });
+    await page.evaluate(() =>
+      document.querySelector('.v5-demo')?.scrollIntoView({ block: 'center' }),
+    );
     await status
       .filter({ hasText: DEMO_LAST })
       .first()
@@ -582,9 +669,9 @@ export async function demoLoop({ page, check, base }) {
     if (!tab.toLowerCase().includes(label.toLowerCase()))
       throw new Error(`base not kept after reload: ${tab.trim()}`);
   };
-  await run(`demo: ${opened.toLowerCase()} reaches Grouping`);
+  await run(`demo: ${opened.toLowerCase()} reaches View settings`);
   for (const label of Object.values(BASE_LABELS).filter((l) => l !== opened)) {
-    const name = `demo: ${label.toLowerCase()} reaches Grouping`;
+    const name = `demo: ${label.toLowerCase()} reaches View settings`;
     if (crashed) check(name, false, 'skipped after crash');
     else await run(name, choose(label));
   }

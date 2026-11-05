@@ -81,6 +81,8 @@ return <ShadcnTable table={table} />;
 
 #### Change Row Actions Display Column Options
 
+By default the row actions column is the last column, 48 px wide, pinned to the end so it stays visible while the table scrolls sideways. Its trigger is a horizontal dots button, and its header label ("Actions") is visually hidden and read by screen readers only.
+
 You can customize all column def options for the row actions column, including the column width, header text, and more using the `displayColumnDefOptions` table option.
 
 ```jsx
@@ -90,7 +92,8 @@ const table = useShadcnTable({
   enableRowActions: true,
   displayColumnDefOptions: {
     'st-row-actions': {
-      header: 'Change Account Settings', //change header text
+      header: 'Change Account Settings', //the column name the menus show
+      Header: 'Change Account Settings', //visible header text (by default the label is for screen readers only)
       size: 300, //make actions column wider
     },
   },
@@ -106,18 +109,31 @@ const table = useShadcnTable({
 
 #### Position Row Actions Column
 
-You can position the row actions column to the left or right (first or last column) of the table using the `positionActionsColumn` table option. The default is as the first column.
+You can position the row actions column at the start or end (first or last column) of the table using the `positionActionsColumn` table option. The default is `'last'`, with the column pinned to the end. To put it back before the data columns, set `positionActionsColumn: 'first'`; the column is then not pinned.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
   enableRowActions: true,
-  positionActionsColumn: 'last',
+  positionActionsColumn: 'first',
   renderRowActions: ({ table }) => (
     //...
   ),
 })
+```
+
+The end pinning is the table's default `columnPinning` while you give none of your own. If you set `columnPinning` in `initialState` or `state`, add `'st-row-actions'` to its `end` array to keep the column pinned, or leave it out to let it scroll with the rest. With `enableColumnPinning: false` it is not pinned either.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  enableRowActions: true,
+  initialState: {
+    columnPinning: { start: ['name'], end: ['st-row-actions'] },
+  },
+});
 ```
 
 View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

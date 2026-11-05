@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { CakeIcon, UserIcon } from 'lucide-react';
 
 // Render counts and the subscriptions behind them (decisions item 5): a
 // 1,000-row table under a React Profiler with counters on rows, cells, head
@@ -39,7 +40,7 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
 ];
 
 const bodyText = (root: HTMLElement) =>
@@ -55,8 +56,8 @@ const numbered: Numbered[] = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 const numberedColumns: ST_ColumnDef<Numbered>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 const firstNames = (root: HTMLElement) =>
@@ -105,10 +106,18 @@ export const RootSkipsStateRenders = {
           ?.textContent,
       ).toBe('6'),
     );
+    const ageHeader = canvas.getByRole('columnheader', { name: /Age/ });
     await userEvent.click(
-      canvasElement.querySelector(
-        'button[aria-label="Sort by Age ascending"]',
-      ) as HTMLElement,
+      within(ageHeader).getByRole('button', { name: 'Column Actions' }),
+    );
+    await userEvent.click(
+      await within(document.body).findByRole('menuitem', {
+        name: /^Sort ascending$/,
+      }),
+    );
+    // A closing menu keeps the rest of the page aria-hidden.
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
     const cellClassName = canvasElement.querySelector('tbody td')?.className;
     await userEvent.click(canvas.getByLabelText('Toggle density'));
@@ -503,9 +512,9 @@ const profiledColumns: ST_ColumnDef<Profiled>[] = [
     },
     size: 60,
   },
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 // Shows the counters on demand. Its own state, so the snapshot re-renders this
@@ -539,7 +548,7 @@ const CountsReadout = () => {
 const readCounts = (root: HTMLElement): RenderCounts =>
   JSON.parse(root.querySelector('[data-testid="counts"]')?.textContent || '{}');
 
-// The last cell of the first row is a data column: `p-2` under compact.
+// The last cell of the first row is a data column: `h-10 px-2` under compact.
 const dataCellClass = (root: HTMLElement) =>
   root.querySelector('tbody tr td:last-child')?.className ?? '';
 
@@ -647,7 +656,9 @@ export const ProfiledThousandRows = {
     // row and head cell components themselves do not render; the other toolbar
     // buttons do not commit.
     await userEvent.click(canvas.getByLabelText('Toggle density'));
-    await waitFor(() => expect(dataCellClass(canvasElement)).toContain('p-2'));
+    await waitFor(() =>
+      expect(dataCellClass(canvasElement)).toContain('h-10 px-2'),
+    );
     await userEvent.click(canvas.getByText('Snapshot counts'));
     const afterDensity = readCounts(canvasElement);
     expect(sum(afterDensity.probeCell), 'density: probe cells').toBe(1000);
@@ -717,8 +728,8 @@ const tree: Tree[] = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 const treeColumns: ST_ColumnDef<Tree>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 const rowNames = (root: HTMLElement) =>
@@ -771,7 +782,7 @@ export const RowModelFollowsState = {
             Group by age
           </button>
           <button onClick={() => table.resetColumnFilters()} type="button">
-            Clear filters
+            Reset filters
           </button>
         </div>
       )}
@@ -808,7 +819,7 @@ export const RowModelFollowsState = {
         'P21-child',
       ]),
     );
-    await userEvent.click(canvas.getByText('Clear filters'));
+    await userEvent.click(canvas.getByText('Reset filters'));
     await userEvent.click(canvas.getByText('Group by age'));
     // five collapsed age groups of five rows each
     await waitFor(() =>
@@ -849,11 +860,16 @@ export const ControlledDensityAndSelection = {
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
+    // the pinned density button steps compact, comfortable, spacious
+    await userEvent.click(canvas.getByLabelText('Toggle density'));
+    await waitFor(() =>
+      expect(canvas.getByTestId('owner-density')).toHaveTextContent('spacious'),
+    );
     await userEvent.click(canvas.getByLabelText('Toggle density'));
     await waitFor(() =>
       expect(canvas.getByTestId('owner-density')).toHaveTextContent('compact'),
     );
-    expect(dataCellClass(canvasElement)).toContain('p-2');
+    expect(dataCellClass(canvasElement)).toContain('h-10 px-2');
     await userEvent.click(canvas.getAllByLabelText('Toggle select row')[1]);
     await waitFor(() =>
       expect(canvas.getByTestId('owner-selection')).toHaveTextContent('1'),
@@ -907,7 +923,9 @@ export const ExternalAtomsDensityAndSelection = {
     const canvas = within(canvasElement);
     await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
     await userEvent.click(canvas.getByText('Set compact'));
-    await waitFor(() => expect(dataCellClass(canvasElement)).toContain('p-2'));
+    await waitFor(() =>
+      expect(dataCellClass(canvasElement)).toContain('h-10 px-2'),
+    );
     await userEvent.click(canvas.getByText('Select two'));
     await waitFor(() =>
       expect(

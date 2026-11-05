@@ -17,6 +17,32 @@ The previous icon package stays in `package.json`: remove it with your package m
 
 The `icons` option below overrides single icons on any edition.
 
+Every edition maps every icon key. Where a library has no match for a Lucide glyph, its edition uses the closest icon instead and says so in a comment in its `icons.ts` (for example the view settings icon, the sticky header and alternating rows toggles, and in some editions the density icons). The three grid line icons (`GridLinesAllIcon`, `GridLinesRowsIcon`, `GridLinesColumnsIcon`) are drawn by the library itself (`ST_GridLinesAllIcon`, `ST_GridLinesRowsIcon`, `ST_GridLinesColumnsIcon`) and are the same in every edition.
+
+### Icon Keys for the Toolbar and Column Menu
+
+Besides the long-standing keys, these keys draw the chrome of the column menu, the filter chips, the sort editor, the view settings panel and the scroll cues (Lucide defaults in brackets):
+
+- `AddIcon` (`Plus`): "+ Filter" and "Add sort"
+- `DeleteIcon` (`Trash2`): delete all filters, remove a sort rule, "Delete sort"
+- `SwapVertIcon` (`ArrowUpDown`): the sort button and the sort chip
+- `ArrowUpwardIcon` (`ArrowUp`): the ascending sort arrow and Sort ascending (with `ArrowDownwardIcon`, `ArrowDown`)
+- `ExpandMoreIcon` (`ChevronDown`): the column menu chevron and the chip caret
+- `LockIcon` (`Lock`): locked columns and the Fixed position item
+- `PushPinIcon` (`Pin`) and `PushPinOffIcon` (`PinOff`): pin items, unpin, and the view settings pin toggles
+- `SettingsIcon` (`Settings2`): the view settings button
+- `ViewColumnIcon` (`Columns3`): the Columns row
+- `DensitySmallIcon`, `DensityMediumIcon`, `DensityLargeIcon` (`Rows4`, `Rows3`, `Rows2`): the density row and button
+- `WrapTextIcon` (`WrapText`) and `SingleLineIcon` (`ArrowRightToLine`): Wrap cell text off and on
+- `GridLinesNoneIcon` (`Square`), `GridLinesRowsIcon`, `GridLinesColumnsIcon`, `GridLinesAllIcon`: the grid lines row
+- `StickyHeaderOnIcon` (`PanelTop`) and `StickyHeaderOffIcon` (`PanelTopDashed`)
+- `StripedOnIcon` (`GapVertical`) and `StripedOffIcon` (`SquareCenterlineDashedVertical`): Alternating row colors
+- `RowNumbersOnIcon` (`ListOrdered`) and `RowNumbersOffIcon` (`List`)
+- `RestartAltIcon` (`RotateCcw`): Reset view
+- `ChevronLeftIcon` and `ChevronRightIcon` (`ChevronLeft`, `ChevronRight`): the scroll cues
+
+Column-type icons (a calendar for dates, a hash for numbers) are not icon keys: set them per column with `columnDef.icon`, see the [Column Icons Guide](/docs/guides/column-icons).
+
 ### Relevant Table Options
 
 <TableOptionsTable onlyOptions={new Set(['icons'])} />

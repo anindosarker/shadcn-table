@@ -7,6 +7,7 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { MailIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -14,14 +15,17 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email',
       },
     ],
@@ -58,10 +62,10 @@ const Example = () => {
               : 0
             : //estimate normal row heights
               density === 'compact'
-              ? 37
+              ? 40
               : density === 'comfortable'
-                ? 58
-                : 73,
+                ? 48
+                : 56,
       };
     },
   });

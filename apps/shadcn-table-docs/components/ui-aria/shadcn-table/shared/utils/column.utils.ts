@@ -1,4 +1,10 @@
-import { useMemo } from 'react';
+import {
+  type ComponentType,
+  createElement,
+  isValidElement,
+  type ReactNode,
+  useMemo,
+} from 'react';
 import { constructAggregationFn } from '@tanstack/react-table';
 import {
   type DropdownOption,
@@ -9,10 +15,29 @@ import {
   type ST_DefinedTableOptions,
   type ST_FilterOption,
   type ST_Header,
+  type ST_IconProps,
   type ST_NeutralPartPropTypes,
   type ST_RowData,
   type ST_CoreTableInstance,
 } from '@/components/ui-aria/shadcn-table/types';
+
+/** `columnDef.icon`: an element renders as is, anything else as a component. */
+export const renderColumnIcon = (
+  icon: ReactNode | ComponentType<ST_IconProps>,
+) => {
+  if (icon == null || icon === false) return null;
+  const className = 'size-3.5 shrink-0 opacity-70';
+  if (
+    typeof icon === 'function' ||
+    (typeof icon === 'object' && !isValidElement(icon) && '$$typeof' in icon)
+  ) {
+    return createElement(icon as ComponentType<ST_IconProps>, {
+      'aria-hidden': true,
+      className,
+    });
+  }
+  return icon as ReactNode;
+};
 
 export const getColumnId = <TData extends ST_RowData>(
   columnDef: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>,
@@ -114,6 +139,28 @@ export const reorderColumn = <TData extends ST_RowData>(
     newColumnOrder.splice(newColumnOrder.indexOf(draggedColumn.id), 1)[0],
   );
   return newColumnOrder;
+};
+
+/**
+ * Moves `column` to `target`, takes the target's pinning, and keeps each
+ * pinned side in the new order. Returns the new column order.
+ */
+export const applyColumnReorder = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+  target: ST_Column<TData>,
+  table: ST_CoreTableInstance<TData>,
+): ST_ColumnOrderState => {
+  const reorderedColumns = reorderColumn(
+    column,
+    target,
+    table.atoms.columnOrder.get(),
+  );
+  table.setColumnOrder(reorderedColumns);
+  table.setColumnPinning(({ start = [], end = [] }) => ({
+    start: reorderedColumns.filter((id) => start.includes(id)),
+    end: reorderedColumns.filter((id) => end.includes(id)),
+  }));
+  return reorderedColumns;
 };
 
 /**

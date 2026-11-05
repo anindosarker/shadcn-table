@@ -7,6 +7,13 @@ import {
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import {
+  Building2Icon,
+  HashIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const Example = () => {
   //light or dark green (CSS variable follows the global dark/light mode)
@@ -18,34 +25,41 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'ID',
-        size: 100,
+        size: 110,
         enableColumnFilter: false,
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'middleName',
+        icon: UserIcon,
         header: 'Middle Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
         size: 300,
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
 
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
     ],

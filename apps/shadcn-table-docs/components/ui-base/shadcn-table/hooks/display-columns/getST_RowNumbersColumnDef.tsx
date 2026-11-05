@@ -17,15 +17,16 @@ export const getST_RowNumbersColumnDef = <TData extends ST_RowData>(
     // from the table here, not from the options.
     Cell: ({ row, staticRowIndex, table }) => (
       <Subscribe source={table.atoms.pagination}>
-        {({ pageIndex, pageSize }) =>
-          ((rowNumberDisplayMode === 'static'
-            ? (staticRowIndex || 0) + (pageSize || 0) * (pageIndex || 0)
-            : row.index) ?? 0) + 1
-        }
+        {({ pageIndex, pageSize }) => (
+          <span className="text-muted-foreground tabular-nums">
+            {((rowNumberDisplayMode === 'static'
+              ? (staticRowIndex || 0) + (pageSize || 0) * (pageIndex || 0)
+              : row.index) ?? 0) + 1}
+          </span>
+        )}
       </Subscribe>
     ),
     Header: () => localization.rowNumber,
-    grow: false,
     ...defaultDisplayColumnProps({
       header: 'rowNumbers',
       id: 'st-row-numbers',

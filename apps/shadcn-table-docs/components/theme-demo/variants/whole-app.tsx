@@ -72,17 +72,20 @@ const ROOT_LINE = 50;
 const DARK_LINE = 85;
 
 // one changed pair every STEP_MS; its + line lands ADD_MS after its - line
-const STEP_MS = 90;
-const ADD_MS = 140;
+const STEP_MS = 60;
+const ADD_MS = 100;
 
-// the prompt types one character every CHAR_MS, sits SEND_MS before it is
-// sent, and the reply lands THINK_MS later, with the repaint
-const CHAR_MS = 22;
+// the prompt types one character every CHAR_MS (a brisk pace), sits
+// SEND_MS before it is sent, and the reply lands THINK_MS later, with the
+// repaint
+const CHAR_MS = 25;
 const SEND_MS = 300;
 const THINK_MS = 700;
 
-// long enough to read the reply after the repaint
-const CYCLE_MS = 6000;
+// per theme: the longest prompt (about 70 characters) types and lands in
+// about 2.8 s, then the repainted app holds about 2.2 s; the five themes
+// cycle in 25 s
+const CYCLE_MS = 5000;
 
 type Row =
   | { kind: 'hunk'; text: string }

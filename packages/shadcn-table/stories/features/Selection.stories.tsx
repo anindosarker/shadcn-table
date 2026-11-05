@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Minus, Send } from 'lucide-react';
+import { CakeIcon, MapPinIcon, Minus, Send, UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   type ST_ColumnDef,
@@ -24,18 +24,22 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
 ];
 
@@ -106,8 +110,8 @@ export const SelectionEnabled = () => (
   />
 );
 
-// Body control centred in its cell; the select-all control's top on the
-// header text line top, the th's padding-top (D64).
+// Body control centred in its cell; the select-all control centred on the
+// header's label line, the 40 px row of a th with no padding (D64).
 SelectionEnabled.play = async ({ canvasElement }: StoryContext) => {
   await expectBodyControlCentred(canvasElement);
   await waitFor(() => {
@@ -115,14 +119,40 @@ SelectionEnabled.play = async ({ canvasElement }: StoryContext) => {
       `thead th ${SELECT_CONTROL}`,
     );
     expect(control).not.toBeNull();
-    const th = control!.closest('th')!;
-    const lineTop =
-      th.getBoundingClientRect().top +
-      parseFloat(getComputedStyle(th).paddingTop);
+    const labelLine = control!
+      .closest('th')!
+      .firstElementChild!.getBoundingClientRect();
+    const box = control!.getBoundingClientRect();
     expect(
-      Math.abs(control!.getBoundingClientRect().top - lineTop),
+      Math.abs(
+        box.top + box.height / 2 - (labelLine.top + labelLine.height / 2),
+      ),
     ).toBeLessThanOrEqual(1);
   });
+};
+
+// The select-all and row checkboxes share one x in their column (F12).
+export const CheckboxesAlign = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} enableRowSelection />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      const header = canvasElement.querySelector<HTMLElement>(
+        `thead th ${SELECT_CONTROL}`,
+      );
+      const body = canvasElement.querySelector<HTMLElement>(
+        `tbody tr td ${SELECT_CONTROL}`,
+      );
+      expect(header).not.toBeNull();
+      expect(body).not.toBeNull();
+      expect(
+        Math.abs(
+          header!.getBoundingClientRect().x - body!.getBoundingClientRect().x,
+        ),
+      ).toBeLessThanOrEqual(1);
+    });
+  },
 };
 
 export const DisableSelectAll = () => (
@@ -453,4 +483,30 @@ export const MultiSelectRowWithHoldShift = () => {
   }, [sortingAtom]);
 
   return <ShadcnTable table={table} />;
+};
+
+// Under the semantic layout the cell is a table cell, so the body checkbox
+// centres by its margins, not the grid's justify-center (F28).
+export const CheckboxesAlignSemantic = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowSelection
+      layoutMode="semantic"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await waitFor(() => {
+      const control = canvasElement.querySelector<HTMLElement>(
+        `tbody tr td ${SELECT_CONTROL}`,
+      );
+      expect(control).not.toBeNull();
+      const cell = control!.closest('td')!.getBoundingClientRect();
+      const box = control!.getBoundingClientRect();
+      expect(
+        Math.abs(box.left + box.width / 2 - (cell.left + cell.width / 2)),
+      ).toBeLessThanOrEqual(1);
+    });
+  },
 };

@@ -1,4 +1,9 @@
-import { type ComponentPropsWithRef, useMemo, useState } from 'react';
+import {
+  type ComponentPropsWithRef,
+  type ReactElement,
+  useMemo,
+  useState,
+} from 'react';
 import { Subscribe } from '@tanstack/react-table';
 import { useSelector } from '@tanstack/react-store';
 import { Header, Pressable, type Selection } from 'react-aria-components';
@@ -21,9 +26,16 @@ import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuA
 
 export interface ST_ShowHideColumnsMenuProps
   extends ComponentPropsWithRef<typeof DropdownMenu> {
-  anchorEl: HTMLElement | null;
+  /** The element the menu opens from when no `trigger` is given; `null` while closed. */
+  anchorEl?: HTMLElement | null;
   isSubMenu?: boolean;
-  setAnchorEl: (anchorEl: HTMLElement | null) => void;
+  /** Controlled open state with a `trigger`. */
+  onOpenChange?: (open: boolean) => void;
+  /** Controlled open state with a `trigger`. */
+  open?: boolean;
+  setAnchorEl?: (anchorEl: HTMLElement | null) => void;
+  /** The element that opens and closes the menu, such as a button. */
+  trigger?: ReactElement;
 }
 
 /** The columns the menu lists, group children included, in menu order. */
@@ -43,10 +55,15 @@ const getVisibleColumnIds = <TData extends ST_RowData>(
     .filter((column) => column.getIsVisible())
     .map((column) => column.id);
 
+const noAnchor = () => {};
+
 export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
   className,
-  anchorEl,
-  setAnchorEl,
+  anchorEl = null,
+  onOpenChange: onOpenChangeProp,
+  open: openProp,
+  setAnchorEl = noAnchor,
+  trigger,
   ...rest
 }: ST_ShowHideColumnsMenuProps) => {
   const table = useSTContext<TData>();
@@ -143,13 +160,23 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
     anchorEl,
     setAnchorEl,
   });
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const handleTriggerOpenChange = (next: boolean) => {
+    setUncontrolledOpen(next);
+    onOpenChangeProp?.(next);
+  };
 
   return (
-    <DropdownMenuTrigger isOpen={!!anchorEl} onOpenChange={onOpenChange}>
-      {/* An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor. */}
-      <Pressable isDisabled>
-        <a {...spanProps} />
-      </Pressable>
+    <DropdownMenuTrigger
+      isOpen={trigger ? (openProp ?? uncontrolledOpen) : !!anchorEl}
+      onOpenChange={trigger ? handleTriggerOpenChange : onOpenChange}
+    >
+      {trigger ?? (
+        // An anchor without href passes Pressable's role check with no role (D26); isDisabled skips the focusable check on the inert anchor.
+        <Pressable isDisabled>
+          <a {...spanProps} />
+        </Pressable>
+      )}
       <DropdownMenu
         placement="bottom start"
         className={cn('w-max', className)}
@@ -180,6 +207,7 @@ export const ST_ShowHideColumnsMenu = <TData extends ST_RowData>({
                             columnOrder: table.atoms.columnOrder.get(),
                             creatingRow: table.atoms.creatingRow.get(),
                             grouping: table.atoms.grouping.get(),
+                            viewSettings: table.atoms.viewSettings.get(),
                           },
                         },
                         true,

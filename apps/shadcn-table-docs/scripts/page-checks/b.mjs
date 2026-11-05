@@ -2,7 +2,13 @@
  * Cluster B page checks: guides/accessibility to guides/display-columns.
  * Each entry: async ({ page, check }) => void, run after load at the first width.
  */
-import { example, propTable } from './_helpers.mjs';
+import {
+  chipFilter,
+  closeChipEditor,
+  example,
+  headerLabelsFit,
+  propTable,
+} from './_helpers.mjs';
 
 const count = (scope, selector) => scope.locator(selector).count();
 
@@ -122,46 +128,81 @@ const checks = {
     );
   },
 
+  '/docs/guides/column-icons': async ({ page, check }) => {
+    await propTable(page, '#relevant-column-options-table', check);
+    const w = await example(page, 'persistent-view', check);
+    check(
+      'persistent-view: header column icons',
+      (await count(w, 'thead th svg[aria-hidden="true"]')) >= 5,
+    );
+  },
+
   '/docs/guides/column-filtering': async ({ page, check }) => {
     await propTable(page, '#relevant-props-table', check);
     await propTable(page, '#relevant-column-options-table', check);
     await propTable(page, '#relevant-state-options-table', check);
+    // chips mode (the default): each filter is added through the toolbar
+    // Filter button and its editor opens from the chip
     const variants = await example(page, 'customize-filter-variants', check);
-    check(
-      'customize-filter-variants: date input',
-      (await count(variants, 'thead input[type="date"]')) > 0,
-    );
-    check(
-      'customize-filter-variants: range slider',
-      (await count(variants, 'thead [data-slot="slider"]')) > 0,
-    );
-    check(
-      'customize-filter-variants: checkbox filter',
-      (await count(variants, 'thead [data-slot="checkbox"]')) > 0,
-    );
+    for (const [column, control] of [
+      ['Salary', '[role="slider"], input[type="range"]'],
+      ['Status', '[role="checkbox"], [data-slot="checkbox"]'],
+    ]) {
+      const editor = await chipFilter(
+        page,
+        variants,
+        'customize-filter-variants',
+        column,
+        control,
+        check,
+      );
+      await closeChipEditor(page, editor);
+    }
     const facets = await example(page, 'enable-filter-facet-values', check);
-    check(
-      'enable-filter-facet-values: select filter',
-      (await count(facets, 'thead [data-slot="select-trigger"]')) > 0,
+    await closeChipEditor(
+      page,
+      await chipFilter(
+        page,
+        facets,
+        'enable-filter-facet-values',
+        'City',
+        '[data-slot="select-trigger"], [role="combobox"]',
+        check,
+      ),
     );
     const alternate = await example(page, 'alternate-column-filtering', check);
     check(
       'alternate-column-filtering: no subheader filters',
       (await count(alternate, 'thead input')) === 0,
     );
+    await headerLabelsFit(alternate, 'alternate-column-filtering', check);
     const modes = await example(page, 'customize-filter-modes', check);
-    check(
-      'customize-filter-modes: filter mode buttons',
-      (await count(modes, 'button[aria-label="Change filter mode"]')) > 0,
+    await closeChipEditor(
+      page,
+      await chipFilter(
+        page,
+        modes,
+        'customize-filter-modes',
+        'First Name',
+        'button[aria-label="Change filter mode"]',
+        check,
+      ),
     );
     const components = await example(
       page,
       'customize-filter-components',
       check,
     );
-    check(
-      'customize-filter-components: filter inputs',
-      (await count(components, 'thead input')) > 0,
+    await closeChipEditor(
+      page,
+      await chipFilter(
+        page,
+        components,
+        'customize-filter-components',
+        'Age',
+        'input',
+        check,
+      ),
     );
   },
 
@@ -208,8 +249,8 @@ const checks = {
     await propTable(page, '#relevant-state-options-table', check);
     const w = await example(page, 'enable-column-ordering', check);
     check(
-      'enable-column-ordering: drag handles',
-      (await count(w, 'thead button[aria-label="Move"]')) > 0,
+      'enable-column-ordering: draggable headers',
+      (await count(w, 'thead [draggable="true"]')) > 0,
     );
   },
 
@@ -231,7 +272,7 @@ const checks = {
     const w = await example(page, 'enable-column-resizing', check);
     check(
       'enable-column-resizing: resize handles',
-      (await count(w, 'thead [data-slot="separator"]')) > 0,
+      (await count(w, 'thead .cursor-col-resize')) > 0,
     );
     const fa = await example(page, 'localization-i18n-fa', check);
     // React serialises the inline style as `direction:rtl` (no space).
@@ -265,6 +306,7 @@ const checks = {
       'customize-table-styles: striped body',
       (await count(styles, 'tbody[class*="nth-of-type"]')) === 1,
     );
+    await headerLabelsFit(styles, 'customize-table-styles', check);
   },
 
   '/docs/guides/customize-icons': async ({ page, check, base }) => {
@@ -297,6 +339,7 @@ const checks = {
       'column-alignment: right aligned cells',
       (await count(w, 'td[align="right"]')) > 0,
     );
+    await headerLabelsFit(w, 'column-alignment', check);
   },
 
   '/docs/guides/density-toggle': async ({ page, check }) => {
@@ -325,7 +368,13 @@ const checks = {
       'enable-detail-panel-conditionally: panel opens',
       /Address:/.test(body),
     );
-    await example(page, 'alternate-detail-panel', check);
+    await headerLabelsFit(
+      conditional,
+      'enable-detail-panel-conditionally',
+      check,
+    );
+    const alternate = await example(page, 'alternate-detail-panel', check);
+    await headerLabelsFit(alternate, 'alternate-detail-panel', check);
     // initialState.expanded = { 0: true }: the first panel (and its chart) is
     // open on load; clicking the first expand button would collapse it.
     const chart = await example(page, 'chart-detail-panel', check);
@@ -337,6 +386,17 @@ const checks = {
     check(
       'chart-detail-panel: recharts chart',
       (await count(chart, 'svg.recharts-surface')) > 0,
+    );
+    const lines = chart.locator('path.recharts-line-curve');
+    // an invalid stroke color computes to none: the line is not drawn
+    const stroke =
+      (await lines.count()) > 0
+        ? await lines.first().evaluate((el) => getComputedStyle(el).stroke)
+        : 'none';
+    check(
+      'chart-detail-panel: chart lines drawn',
+      (await lines.count()) > 0 && stroke !== 'none',
+      `lines=${await lines.count()} stroke=${stroke}`,
     );
     await example(page, 'enable-detail-panel-virtualized', check);
     await example(page, 'lazy-detail-panel', check);

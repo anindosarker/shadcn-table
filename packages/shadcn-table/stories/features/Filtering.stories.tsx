@@ -12,6 +12,18 @@ import {
 import { faker } from '@faker-js/faker';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { ST_BASE } from '../../.storybook/themes';
+import {
+  CakeIcon,
+  CalendarIcon,
+  CircleCheckIcon,
+  ClockIcon,
+  HashIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Filtering Examples',
@@ -24,20 +36,24 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     Cell: ({ cell }) => (cell.getValue() ? 'Yes' : 'No'),
     accessorKey: 'isActive',
     header: 'Is Active',
+    icon: CircleCheckIcon,
     size: 110,
   },
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     filterVariant: 'range',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), //transform data to readable format for cell render
@@ -45,15 +61,18 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     filterFn: 'lessThan',
     filterVariant: 'date',
     header: 'Birth Date',
+    icon: CalendarIcon,
     id: 'birthDate',
   },
   {
     accessorKey: 'gender',
     header: 'Gender',
+    icon: VenusAndMarsIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
@@ -68,6 +87,7 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
     ],
     filterVariant: 'multi-select',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 
@@ -88,6 +108,27 @@ const data = [...Array(120)].map(() => ({
 export const FilteringEnabledDefault = () => (
   <ShadcnTable columns={columns} data={data} />
 );
+
+// Chips are the default filter display: the toolbar's Filter button adds a
+// chip per column. Features/Filter Chips covers the chip editor in depth.
+export const ChipsDisplayMode = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="chips"
+      columns={columns}
+      data={data}
+    />
+  ),
+  play: async ({ canvas }: StoryContext) => {
+    // The toolbar buttons fade in from 0 opacity on mount (D70).
+    await waitFor(() =>
+      expect(canvas.getByRole('button', { name: 'Filter' })).toBeVisible(),
+    );
+    await expect(
+      canvas.queryByRole('textbox', { name: /Filter by/ }),
+    ).not.toBeInTheDocument();
+  },
+};
 
 export const PopoverDisplayMode = () => (
   <ShadcnTable
@@ -138,6 +179,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (originalRow) => (originalRow.isActive ? 'true' : 'false'),
         filterVariant: 'checkbox',
         header: 'Is Active',
+        icon: CircleCheckIcon,
         id: 'isActive',
         size: 200,
       },
@@ -145,16 +187,19 @@ export const FilterFnAndFilterVariants = () => (
         accessorKey: 'firstName',
         filterFn: 'fuzzy', // default
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         filterFn: 'contains',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterVariant: 'range',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), //transform data to readable format for cell render
@@ -162,6 +207,7 @@ export const FilterFnAndFilterVariants = () => (
         filterFn: 'lessThan',
         filterVariant: 'date',
         header: 'Birth Date',
+        icon: CalendarIcon,
         id: 'birthDate',
       },
       {
@@ -169,6 +215,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (row) => new Date(row.hireDate), //transform data before processing so sorting works
         filterVariant: 'date-range',
         header: 'Hire Date',
+        icon: CalendarIcon,
         id: 'hireDate',
       },
       {
@@ -176,6 +223,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (row) => new Date(row.arrivalTime), //transform data before processing so sorting works
         filterVariant: 'datetime-range',
         header: 'Arrival time',
+        icon: ClockIcon,
         id: 'arrivalTime',
       },
       {
@@ -183,6 +231,7 @@ export const FilterFnAndFilterVariants = () => (
         accessorFn: (row) => new Date(row.departureTime), //transform data before processing so sorting works
         filterVariant: 'time-range',
         header: 'Departure Time',
+        icon: ClockIcon,
         id: 'departureTime',
       },
       {
@@ -190,11 +239,13 @@ export const FilterFnAndFilterVariants = () => (
         filterSelectOptions: ['Male', 'Female', 'Other'],
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         filterFn: 'includesStringSensitive',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
@@ -209,9 +260,11 @@ export const FilterFnAndFilterVariants = () => (
         ],
         filterVariant: 'multi-select',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -227,33 +280,151 @@ export const FilterFnAndFilterVariantsFaceted = () => (
         })), //hard coded
         filterVariant: 'autocomplete',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         filterVariant: 'autocomplete', //faceted auto generated select options
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterVariant: 'range-slider',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'state',
         filterVariant: 'multi-select',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
     enableFacetedValues
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
+
+/** The subheader th whose header text starts with `name`. */
+const filterHeaderCell = (canvasElement: HTMLElement, name: string) =>
+  Array.from(canvasElement.querySelectorAll<HTMLElement>('thead th')).find(
+    (th) => th.textContent?.trim().startsWith(name),
+  )!;
+
+// D72: the multi-select field ends in a chevron, shows its clear button only
+// once a value exists (the empty slot takes no room), and on radix and base
+// highlights the first match so Enter picks it.
+export const MultiSelectFieldControls = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="subheader"
+      columns={columns}
+      data={data}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    const input = await canvas.findByRole('combobox', {
+      name: 'Filter by State',
+    });
+    const th = filterHeaderCell(canvasElement, 'State');
+    const chips = th.querySelector<HTMLElement>('[data-slot="combobox-chips"]');
+    expect(chips).not.toBeNull();
+    expect(
+      chips!.querySelector('[data-slot="combobox-trigger"]'),
+      'chevron inside the chips field',
+    ).not.toBeNull();
+    const clear = within(th).getByRole('button', {
+      hidden: true,
+      name: 'Clear filter',
+    });
+    expect(
+      within(th).queryByRole('button', { name: 'Clear filter' }),
+    ).toBeNull();
+    expect(
+      clear.closest<HTMLElement>('[data-slot="input-group-addon"]')!
+        .offsetWidth,
+      'the empty clear slot takes no room',
+    ).toBe(0);
+
+    await userEvent.click(input);
+    // The aria combobox opens from the keyboard, not on a click.
+    if (!body.queryByRole('listbox')) await userEvent.keyboard('{ArrowDown}');
+    await userEvent.click(await body.findByRole('option', { name: /^AZ/ }));
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(body.queryByRole('listbox')).toBeNull());
+    await waitFor(() =>
+      expect(
+        within(th).getByRole('button', { name: 'Clear filter' }),
+      ).toBeVisible(),
+    );
+
+    if (ST_BASE === 'aria') return;
+    await userEvent.type(input, 'CA');
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(within(chips!).getByText('CA')).toBeVisible());
+  },
+};
+
+/** The value of each slider thumb in `th`, in DOM order. */
+const thumbValues = (th: HTMLElement) =>
+  Array.from(
+    th.querySelectorAll<HTMLElement>('[data-slot="slider-thumb"]'),
+  ).map((thumb) => {
+    const slider = thumb.matches('[role="slider"]')
+      ? thumb
+      : thumb.querySelector<HTMLElement>('[role="slider"]');
+    const now = slider?.getAttribute('aria-valuenow');
+    if (now != null) return Number(now);
+    return Number(
+      thumb.querySelector<HTMLInputElement>('input[type="range"]')?.value,
+    );
+  });
+
+// F46: the aria range slider reads min and max from stFilterSliderProps, as
+// radix and base do.
+export const RangeSliderCustomBounds = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="subheader"
+      columns={[
+        {
+          accessorKey: 'firstName',
+          header: 'First Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'age',
+          filterVariant: 'range-slider',
+          header: 'Age',
+          icon: CakeIcon,
+          stFilterSliderProps: { max: 60, min: 30, step: 10 },
+        },
+      ]}
+      data={data}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('slider');
+    await waitFor(() =>
+      expect(thumbValues(filterHeaderCell(canvasElement, 'Age'))).toEqual([
+        30, 60,
+      ]),
+    );
+  },
+};
 
 export const FilteringChangeModeEnabled = () => (
   <ShadcnTable
@@ -261,78 +432,273 @@ export const FilteringChangeModeEnabled = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterFn: 'between',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(), //transform data to readable format for cell render
         accessorFn: (row) => new Date(row.birthDate), //transform data before processing so sorting works
         filterVariant: 'date',
         header: 'Birth Date',
+        icon: CalendarIcon,
         id: 'birthDate',
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
     enableColumnFilterModes
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
 
-export const FilteringChangeModeEnabledFaceted = () => (
-  <ShadcnTable
-    columns={[
-      {
-        accessorKey: 'firstName',
-        filterFn: 'fuzzy', // default
-        header: 'First Name',
-      },
-      {
-        accessorKey: 'lastName',
-        filterVariant: 'autocomplete',
-        header: 'Last Name',
-      },
-      {
-        accessorKey: 'age',
-        filterVariant: 'range-slider',
-        header: 'Age',
-      },
-      {
-        accessorKey: 'gender',
-        filterVariant: 'select',
-        header: 'Gender',
-      },
-      {
-        accessorKey: 'state',
-        filterVariant: 'multi-select',
-        header: 'State',
-      },
-    ]}
-    data={data}
-    enableColumnFilterModes
-    enableFacetedValues
-    initialState={{ showColumnFilters: true }}
-  />
-);
+// F44: a subheader filter (input, slider, caption) stays inside its th.
+const boxInside = (inner: DOMRect, outer: DOMRect) =>
+  inner.left >= outer.left - 1 &&
+  inner.right <= outer.right + 1 &&
+  inner.top >= outer.top - 1 &&
+  inner.bottom <= outer.bottom + 1;
+
+// React Aria's hidden native select carries its own (aria-hidden) label.
+const subheaderFilterParts = (th: Element) =>
+  Array.from(
+    th.querySelectorAll<HTMLElement>(
+      '[data-slot="input-group"], [data-slot="slider"], [data-slot="slider-thumb"], label, p',
+    ),
+  ).filter((part) => !part.closest('[aria-hidden="true"]'));
+
+/** Every input and caption in the subheader row sits inside its th. */
+const subheaderInputsInsideCell = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const ths = Array.from(canvasElement.querySelectorAll('thead th'));
+    const parts = ths.flatMap((th) =>
+      subheaderFilterParts(th).map((part) => ({ part, th })),
+    );
+    expect(parts.length).toBeGreaterThan(0);
+    for (const { part, th } of parts) {
+      const box = part.getBoundingClientRect();
+      const cell = th.getBoundingClientRect();
+      expect(
+        boxInside(box, cell),
+        `${part.dataset.slot ?? part.tagName} "${part.textContent}" [${box.left}, ${box.right}] x [${box.top}, ${box.bottom}] inside th [${cell.left}, ${cell.right}] x [${cell.top}, ${cell.bottom}]`,
+      ).toBe(true);
+    }
+    // A range filter's Filter Mode caption spans the range group, past the
+    // Min field.
+    let rangeGroups = 0;
+    for (const th of ths) {
+      // Top-level fields only: an autocomplete nests an input group.
+      const fields = Array.from(
+        th.querySelectorAll('[data-slot="input-group"]'),
+      ).filter(
+        (field) => !field.parentElement?.closest('[data-slot="input-group"]'),
+      );
+      const caption = Array.from(th.querySelectorAll('label, p')).find((el) =>
+        el.textContent?.startsWith('Filter Mode'),
+      );
+      if (fields.length !== 2 || !caption) continue;
+      rangeGroups += 1;
+      const minRight = fields[0].getBoundingClientRect().right;
+      const captionRight = caption.getBoundingClientRect().right;
+      expect(
+        captionRight,
+        `${th.textContent}: caption right ${captionRight} past Min right ${minRight}`,
+      ).toBeGreaterThan(minRight + 1);
+    }
+    expect(rangeGroups).toBeGreaterThan(0);
+  });
+};
+
+/** The slider's Filter Mode caption sits below the track, the slider inside its th. */
+const sliderCaptionBelowTrack = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const slider = canvasElement.querySelector<HTMLElement>(
+      'thead [data-slot="slider"]',
+    );
+    expect(slider).not.toBeNull();
+    const th = slider!.closest('th')!;
+    const track = th.querySelector('[data-slot="slider-track"]')!;
+    const caption = Array.from(th.querySelectorAll('label, p')).find((el) =>
+      el.textContent?.startsWith('Filter Mode'),
+    );
+    expect(caption).toBeDefined();
+    const trackBox = track.getBoundingClientRect();
+    const captionBox = caption!.getBoundingClientRect();
+    expect(
+      captionBox.top,
+      `caption top ${captionBox.top} at or below track bottom ${trackBox.bottom}`,
+    ).toBeGreaterThanOrEqual(trackBox.bottom);
+    expect(
+      boxInside(slider!.getBoundingClientRect(), th.getBoundingClientRect()),
+      'slider root inside th',
+    ).toBe(true);
+  });
+};
+
+export const FilteringChangeModeEnabledFaceted = {
+  render: () => (
+    <ShadcnTable
+      columns={[
+        {
+          accessorKey: 'firstName',
+          filterFn: 'fuzzy', // default
+          header: 'First Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'lastName',
+          filterVariant: 'autocomplete',
+          header: 'Last Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'age',
+          filterVariant: 'range-slider',
+          header: 'Age',
+          icon: CakeIcon,
+        },
+        {
+          accessorKey: 'gender',
+          filterVariant: 'select',
+          header: 'Gender',
+          icon: VenusAndMarsIcon,
+        },
+        {
+          accessorKey: 'state',
+          filterVariant: 'multi-select',
+          header: 'State',
+          icon: MapIcon,
+        },
+        {
+          Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
+          accessorFn: (row) => new Date(row.birthDate),
+          filterVariant: 'date-range',
+          header: 'Birth Date',
+          icon: CalendarIcon,
+          id: 'birthDate',
+          size: 320,
+        },
+      ]}
+      data={data}
+      enableColumnFilterModes
+      enableFacetedValues
+      columnFilterDisplayMode="subheader"
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement, step }: StoryContext) => {
+    await within(canvasElement).findAllByText(/Filter Mode/);
+    await step('SliderCaptionBelowTrack', () =>
+      sliderCaptionBelowTrack(canvasElement),
+    );
+    await step('SubheaderInputsInsideCell', () =>
+      subheaderInputsInsideCell(canvasElement),
+    );
+  },
+};
+
+/** Range fields wider than their column stay side by side, clipped by the th (D61). */
+export const SubheaderRangeFieldsNarrow = {
+  // The wrapper is the three column sizes (180 + 80 + 180) plus the frame's
+  // border wide, so the table cannot spread spare width over the columns.
+  render: () => (
+    <div className="w-111">
+      <ShadcnTable
+        columns={[
+          {
+            accessorKey: 'firstName',
+            header: 'First Name',
+            icon: UserIcon,
+          },
+          {
+            accessorKey: 'age',
+            filterVariant: 'range',
+            header: 'Age',
+            icon: CakeIcon,
+            size: 80,
+          },
+          {
+            Cell: ({ cell }) => cell.getValue<Date>().toLocaleDateString(),
+            accessorFn: (row) => new Date(row.birthDate),
+            filterVariant: 'date-range',
+            header: 'Birth Date',
+            icon: CalendarIcon,
+            id: 'birthDate',
+            size: 180,
+          },
+        ]}
+        data={data}
+        enableColumnFilterModes
+        columnFilterDisplayMode="subheader"
+        initialState={{ showColumnFilters: true }}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement, step }: StoryContext) => {
+    await within(canvasElement).findAllByText(/Filter Mode/);
+    const thFor = (name: string) =>
+      Array.from(canvasElement.querySelectorAll('thead th')).find((cell) =>
+        cell.textContent?.startsWith(name),
+      )!;
+    await step('SubheaderInputsInsideCell', () =>
+      waitFor(() => {
+        for (const [name, size] of [
+          ['Age', 80],
+          ['Birth Date', 180],
+        ] as const) {
+          const th = thFor(name);
+          const cell = th.getBoundingClientRect();
+          const [min, max] = Array.from(
+            th.querySelectorAll('[data-slot="input-group"]'),
+          ).map((group) => group.getBoundingClientRect());
+          // D61: Min and Max stay on one row at every width.
+          expect(
+            Math.abs(max.top - min.top),
+            `${name}: Min top ${min.top}, Max top ${max.top}`,
+          ).toBeLessThanOrEqual(1);
+          // The th keeps its size and clips what is wider.
+          expect(
+            Math.abs(cell.width - size),
+            `${name}: th width ${cell.width} is its size ${size}`,
+          ).toBeLessThanOrEqual(1);
+        }
+        const table = canvasElement.querySelector('table')!;
+        let scroller = table.parentElement!;
+        while (getComputedStyle(scroller).overflowX !== 'auto')
+          scroller = scroller.parentElement!;
+        expect(
+          scroller.scrollWidth,
+          'no horizontal overflow of the table',
+        ).toBeLessThanOrEqual(scroller.clientWidth);
+      }),
+    );
+  },
+};
 
 export const FilteringChangeModeEnabledHidden = () => (
   <ShadcnTable
@@ -340,28 +706,34 @@ export const FilteringChangeModeEnabledHidden = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterFn: 'between',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -375,6 +747,7 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
@@ -386,28 +759,34 @@ export const DisableSomeFilterTypesForCertainColumns = () => (
         ],
         filterFn: 'startsWith',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         columnFilterModeOptions: ['equals', 'notEquals'],
         filterFn: 'equals',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
     enableColumnFilterModes
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -418,31 +797,38 @@ export const FilteringDisabledForCertainColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         enableColumnFilter: false,
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         enableColumnFilter: false,
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -453,14 +839,17 @@ export const CustomFilterFunctionPerColumn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
@@ -470,10 +859,12 @@ export const CustomFilterFunctionPerColumn = () => (
             .toLowerCase()
             .startsWith(filterValue.toLowerCase()),
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
@@ -483,9 +874,11 @@ export const CustomFilterFunctionPerColumn = () => (
             .toLowerCase()
             .startsWith(filterValue.toLowerCase()),
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -496,28 +889,34 @@ export const CustomFilterFns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterFn: 'customFn',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         filterFn: 'customFn',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -530,6 +929,7 @@ export const CustomFilterFns = () => (
           .startsWith(filterValue.toLowerCase());
       },
     }}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -542,14 +942,17 @@ export const CustomFilterComponent = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         Filter: ({ header }) => (
@@ -571,17 +974,21 @@ export const CustomFilterComponent = () => (
           row.getValue<string>('gender').toLowerCase() ===
           filterValue.toLowerCase(),
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -594,31 +1001,38 @@ export const CustomizeFilterTextFields = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         filterVariant: 'select',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
   />
 );
@@ -657,6 +1071,7 @@ export const ExternalSetFilterValue = () => (
   <ShadcnTable
     columns={columns}
     data={data}
+    columnFilterDisplayMode="subheader"
     initialState={{ showColumnFilters: true }}
     renderTopToolbarCustomActions={({ table }) => (
       <div>
@@ -694,28 +1109,34 @@ export const InitialFilters = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         filterFn: 'between',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'gender',
         filterSelectOptions: ['Male', 'Female', 'Other'],
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ]}
     data={data}
@@ -739,8 +1160,13 @@ const scoreData: Score[] = [
 ];
 
 const scoreColumns: ST_ColumnDef<Score>[] = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'score', filterVariant: 'range', header: 'Score' },
+  { accessorKey: 'name', header: 'Name', icon: UserIcon },
+  {
+    icon: HashIcon,
+    accessorKey: 'score',
+    filterVariant: 'range',
+    header: 'Score',
+  },
 ];
 
 /** A Min value filters the rows; the number range input rejects letters. */
@@ -749,6 +1175,7 @@ export const RangeFilterMinValue = {
     <ShadcnTable
       columns={scoreColumns}
       data={scoreData}
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
     />
   ),

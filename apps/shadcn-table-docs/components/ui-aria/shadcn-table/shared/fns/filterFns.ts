@@ -10,7 +10,6 @@ import {
   filterFn_arrHas,
   filterFn_arrIncludes,
   filterFn_arrIncludesAll,
-  filterFn_arrIncludesSome,
   filterFn_equalsString,
   filterFn_equalsStringSensitive,
   filterFn_inDateRange,
@@ -200,11 +199,32 @@ const notEmpty = <TFeatures extends TableFeatures, TData extends RowData>(
 
 notEmpty.autoRemove = (val: unknown) => !val;
 
+// Registered as `arrIncludesSome` (the `multi-select` default, so its mode label
+// resolves): any overlap for an array row value, membership for a scalar one,
+// and every row for an empty selection.
+const arrIncludesSomeOrValue = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  id: string,
+  filterValues: ReadonlyArray<unknown>,
+): boolean => {
+  if (!filterValues?.length) return true;
+  const value = row.getValue<unknown>(id);
+  return Array.isArray(value)
+    ? filterValues.some((filterValue) => value.includes(filterValue))
+    : filterValues.includes(value);
+};
+
+arrIncludesSomeOrValue.autoRemove = (val: unknown) =>
+  !(val as ReadonlyArray<unknown> | undefined)?.length;
+
 export const ST_FilterFns = {
   arrIncludes: filterFn_arrIncludes,
   arrIncludesAll: filterFn_arrIncludesAll,
   arrHas: filterFn_arrHas,
-  arrIncludesSome: filterFn_arrIncludesSome,
+  arrIncludesSome: arrIncludesSomeOrValue,
   between,
   betweenInclusive,
   empty,

@@ -7,6 +7,13 @@ import {
 import { faker } from '@faker-js/faker';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import {
+  CakeIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Sorting Examples',
@@ -18,22 +25,27 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -59,24 +71,29 @@ export const DisableSortingForSpecificColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         enableSorting: false,
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         enableSorting: false,
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -97,23 +114,28 @@ export const SortRanking = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
         sortFn: 'fuzzy',
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
@@ -143,8 +165,8 @@ const pets: Pet[] = [
 ];
 
 const petColumns: ST_ColumnDef<Pet>[] = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'name', header: 'Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 const bodyNames = (canvasElement: HTMLElement) =>
@@ -180,11 +202,14 @@ export const ClearSortStaysCleared = {
     await userEvent.click(aria('Column Actions'));
     await userEvent.click(
       await within(document.body).findByRole('menuitem', {
-        name: /Sort by Name ascending/,
+        name: /^Sort ascending$/,
       }),
     );
     await waitFor(() =>
       expect(bodyNames(canvasElement)).toEqual(['Luna', 'Milo', 'Otis']),
+    );
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
 
     await userEvent.click(aria('Column Actions'));
@@ -195,6 +220,10 @@ export const ClearSortStaysCleared = {
     );
     await waitFor(() =>
       expect(bodyNames(canvasElement)).toEqual(['Milo', 'Luna', 'Otis']),
+    );
+    // A closing menu keeps the rest of the page aria-hidden.
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
     );
     // An owner render does not bring the cleared sort back.
     await userEvent.click(canvas.getByRole('button', { name: /Re-render/ }));

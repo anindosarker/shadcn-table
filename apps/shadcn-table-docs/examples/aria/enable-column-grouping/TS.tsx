@@ -9,6 +9,13 @@ import {
 import { data, type Person } from './makeData';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  CakeIcon,
+  DollarSignIcon,
+  MapIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -17,26 +24,32 @@ const Example = () => {
       {
         header: 'First Name',
         accessorKey: 'firstName',
+        icon: UserIcon,
       },
       {
         header: 'Last Name',
         accessorKey: 'lastName',
+        icon: UserIcon,
       },
       {
         header: 'Age',
         accessorKey: 'age',
+        icon: CakeIcon,
       },
       {
         header: 'Gender',
         accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
       },
       {
         header: 'State',
         accessorKey: 'state',
+        icon: MapIcon,
       },
       {
         header: 'Salary',
         accessorKey: 'salary',
+        icon: DollarSignIcon,
       },
     ],
     [],

@@ -1,6 +1,8 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Styling/Style Table Head Cells',
@@ -12,18 +14,22 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
 ];
 const data = [...Array(21)].map(() => ({
@@ -65,10 +71,12 @@ export const StyleTableHeadCellsIndividually = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
         stTableHeadCellProps: {
           className: 'text-primary',
         },
@@ -76,6 +84,7 @@ export const StyleTableHeadCellsIndividually = () => (
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
         stTableHeadCellProps: {
           className: 'text-red-500',
         },
@@ -83,6 +92,7 @@ export const StyleTableHeadCellsIndividually = () => (
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ]}
     data={data}
@@ -96,11 +106,13 @@ export const CustomHeadCellRenders = () => (
         Header: <em>First Name</em>,
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         Header: () => <em>Last Name</em>,
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         Header: ({ column }) => (
@@ -108,13 +120,25 @@ export const CustomHeadCellRenders = () => (
         ),
         accessorKey: 'age',
         header: 'Current Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address of Residence (Permanent)',
+        icon: MapPinIcon,
       },
     ]}
     data={data}
     enableColumnResizing
   />
 );
+
+// The table-level head cell classes give every header the end border and tint.
+StyleAllMuiTableHeadCell.play = async ({ canvasElement }: StoryContext) => {
+  const headers = await within(canvasElement).findAllByRole('columnheader');
+  for (const th of headers) {
+    const style = getComputedStyle(th);
+    expect(style.borderRightWidth).toBe('1px');
+    expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  }
+};

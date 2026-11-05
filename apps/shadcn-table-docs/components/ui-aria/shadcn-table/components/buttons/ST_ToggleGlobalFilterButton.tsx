@@ -14,25 +14,27 @@ export const ST_ToggleGlobalFilterButton = ({
       icons: { SearchIcon, SearchOffIcon },
       localization,
     },
+    setGlobalFilter,
     setShowGlobalFilter,
   } = table;
 
+  // Closed, a click opens the field, which focuses itself; open, one click
+  // clears the search and closes the field.
   const handleToggleSearch = () => {
-    setShowGlobalFilter(!table.atoms.showGlobalFilter.get());
+    if (table.atoms.showGlobalFilter.get()) {
+      setGlobalFilter(undefined);
+      setShowGlobalFilter(false);
+    } else {
+      setShowGlobalFilter(true);
+    }
   };
 
   return (
-    <table.Subscribe
-      selector={(state) => ({
-        globalFilter: state.globalFilter,
-        showGlobalFilter: state.showGlobalFilter,
-      })}
-    >
-      {({ globalFilter, showGlobalFilter }) => (
+    <table.Subscribe selector={(state) => state.showGlobalFilter}>
+      {(showGlobalFilter) => (
         <ST_Tooltip title={rest?.title ?? localization.showHideSearch}>
           <Button
             aria-label={rest?.title ?? localization.showHideSearch}
-            isDisabled={!!globalFilter && showGlobalFilter}
             onClick={handleToggleSearch}
             size="icon"
             type="button"

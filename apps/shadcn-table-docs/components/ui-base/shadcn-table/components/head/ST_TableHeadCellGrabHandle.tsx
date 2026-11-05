@@ -6,9 +6,11 @@ import {
   type ST_RowData,
   type ST_TableOptions,
 } from '@/components/ui-base/shadcn-table/types';
-import { reorderColumn } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
+import { applyColumnReorder } from '@/components/ui-base/shadcn-table/shared/utils/column.utils';
+import { isColumnDragCancelled } from '@/components/ui-base/shadcn-table/shared/utils/drag.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_GrabHandleButton } from '@/components/ui-base/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { getST_ColumnFlipPositions } from '@/components/ui-base/shadcn-table/hooks/useST_ColumnFlip';
 
 export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
   extends ButtonProps {
@@ -16,19 +18,63 @@ export interface ST_TableHeadCellGrabHandleProps<TData extends ST_RowData>
   tableHeadCellRef: RefObject<HTMLTableCellElement | null>;
 }
 
+/**
+ * The column drag source handlers, shared by the header cell and its grip:
+ * the start marks the dragging column with the header cell as the drag image;
+ * the end groups on a drop-zone drop, reorders on any other accepted drop
+ * (handing the layout offsets to the column slide first) and ignores a
+ * cancelled drag.
+ */
+export const getST_ColumnDragHandlers = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+  tableHeadCellRef: RefObject<HTMLTableCellElement | null>,
+) => {
+  const table = column.table;
+
+  const onDragStart = (event: DragEvent<HTMLElement>) => {
+    table.setDraggingColumn(column);
+    const dragImage = tableHeadCellRef.current;
+    if (dragImage && event.dataTransfer) {
+      try {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setDragImage(dragImage, 0, 0);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const onDragEnd = (event: DragEvent<HTMLElement>) => {
+    const draggingColumn = table.atoms.draggingColumn.get();
+    const hoveredColumn = table.atoms.hoveredColumn.get();
+    if (hoveredColumn?.id === 'drop-zone') {
+      column.toggleGrouping();
+    } else if (
+      table.options.enableColumnOrdering &&
+      hoveredColumn &&
+      hoveredColumn.id !== draggingColumn?.id &&
+      !isColumnDragCancelled(event)
+    ) {
+      table.setColumnFlipPending({
+        dragDrop: true,
+        movedId: column.id,
+        positions: getST_ColumnFlipPositions(table),
+      });
+      applyColumnReorder(column, hoveredColumn as ST_Column<TData>, table);
+    }
+    table.setDraggingColumn(null);
+    table.setHoveredColumn(null);
+  };
+
+  return { onDragEnd, onDragStart };
+};
+
 export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
   column,
   tableHeadCellRef,
   ...rest
 }: ST_TableHeadCellGrabHandleProps<TData>) => {
   const table = column.table;
-  const {
-    options: { enableColumnOrdering },
-    setColumnOrder,
-    setColumnPinning,
-    setDraggingColumn,
-    setHoveredColumn,
-  } = table;
   const {
     stColumnDragHandleProps,
   }: Pick<ST_TableOptions<TData>, 'stColumnDragHandleProps'> = table.options;
@@ -46,44 +92,23 @@ export const ST_TableHeadCellGrabHandle = <TData extends ST_RowData>({
     ...rest,
   };
 
+  const { onDragEnd, onDragStart } = getST_ColumnDragHandlers(
+    column,
+    tableHeadCellRef,
+  );
+
+  // The grip sits inside the draggable header cell, so its drag events stop
+  // here instead of running the cell's handlers a second time.
   const handleDragStart = (event: DragEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     iconButtonProps?.onDragStart?.(event);
-    setDraggingColumn(column);
-    try {
-      event.dataTransfer.setDragImage(
-        tableHeadCellRef.current as HTMLElement,
-        0,
-        0,
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    onDragStart(event);
   };
 
   const handleDragEnd = (event: DragEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     iconButtonProps?.onDragEnd?.(event);
-    const draggingColumn = table.atoms.draggingColumn.get();
-    const hoveredColumn = table.atoms.hoveredColumn.get();
-    if (hoveredColumn?.id === 'drop-zone') {
-      column.toggleGrouping();
-    } else if (
-      enableColumnOrdering &&
-      hoveredColumn &&
-      hoveredColumn?.id !== draggingColumn?.id
-    ) {
-      const reorderedColumns = reorderColumn(
-        column,
-        hoveredColumn as ST_Column<TData>,
-        table.atoms.columnOrder.get(),
-      );
-      setColumnOrder(reorderedColumns);
-      setColumnPinning(({ start = [], end = [] }) => ({
-        start: reorderedColumns.filter((header) => start.includes(header)),
-        end: reorderedColumns.filter((header) => end.includes(header)),
-      }));
-    }
-    setDraggingColumn(null);
-    setHoveredColumn(null);
+    onDragEnd(event);
   };
 
   return (

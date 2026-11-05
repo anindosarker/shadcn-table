@@ -1,6 +1,13 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import {
+  Building2Icon,
+  BuildingIcon,
+  GlobeIcon,
+  HashIcon,
+  UserIcon,
+} from 'lucide-react';
 
 // The popover filter opens from its filter button as the popover trigger,
 // with the column's input focused; the empty-mode chip's clear button has a
@@ -20,8 +27,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 export const OpensWithInputFocused = {
@@ -51,9 +58,95 @@ export const OpensWithInputFocused = {
   },
 };
 
+type Employee = {
+  city: string;
+  company: string;
+  country: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+};
+
+const employees: Employee[] = [
+  {
+    city: 'Omaha',
+    company: 'Northwind Traders',
+    country: 'United States',
+    firstName: 'Mason',
+    id: 1,
+    lastName: 'Lee',
+  },
+  {
+    city: 'Lyon',
+    company: 'Contoso',
+    country: 'France',
+    firstName: 'Lily',
+    id: 2,
+    lastName: 'Park',
+  },
+];
+
+// Row selection and columns sized 40 to 300, as the export CSV docs example
+// had them in popover mode; the name columns are wide enough for the label
+// beside the 24 px funnel and the chevron.
+const sizedColumns: ST_ColumnDef<Employee>[] = [
+  { accessorKey: 'id', header: 'ID', icon: HashIcon, size: 40 },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon, size: 180 },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon, size: 180 },
+  { accessorKey: 'company', header: 'Company', icon: BuildingIcon, size: 300 },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
+  { accessorKey: 'country', header: 'Country', icon: GlobeIcon, size: 220 },
+];
+
+// The funnel opens the popover with the input focused, and at the docs
+// page's 1440 px the label keeps its full width beside the funnel and the
+// chevron (F19).
+export const OpensWithRowSelection = {
+  render: () => (
+    <div style={{ width: 1440 }}>
+      <ShadcnTable
+        columnFilterDisplayMode="popover"
+        columns={sizedColumns}
+        data={employees}
+        enableRowSelection
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText('Mason');
+    const th = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="firstName"]',
+    );
+    if (!th) throw new Error('First Name header not found');
+    const label = within(th).getByText('First Name');
+    expect(label.scrollWidth).toBe(label.clientWidth);
+
+    const trigger = th.querySelector<HTMLElement>(
+      '[aria-expanded]:not([aria-haspopup="menu"])',
+    );
+    if (!trigger) throw new Error('filter button not found');
+    // A real press at the funnel's centre, so the th and the label see the
+    // pointer events a person's click sends.
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await (browserUserEvent ?? userEvent).click(trigger);
+    await waitFor(() =>
+      expect(trigger).toHaveAttribute('aria-expanded', 'true'),
+    );
+    const input = await within(document.body).findByPlaceholderText(
+      'Filter by First Name',
+    );
+    await waitFor(() => expect(document.activeElement).toBe(input));
+  },
+};
+
 export const EmptyModeChipClearHasName = {
   render: () => (
     <ShadcnTable
+      columnFilterDisplayMode="subheader"
       columns={columns}
       data={data}
       enableColumnFilterModes
@@ -75,5 +168,44 @@ export const EmptyModeChipClearHasName = {
     if (!(chip instanceof HTMLElement)) throw new Error('chip not found');
     const clear = within(chip).getByRole('button', { hidden: true });
     expect(clear).toHaveAccessibleName('Clear filter');
+  },
+};
+
+// The funnel is a 24 px icon button, so a click lands on it; the click opens
+// the filter popover and the label still truncates beside it (F19).
+export const FunnelIsClickable = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="popover"
+      columns={sizedColumns}
+      data={employees}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText('Mason');
+    const th = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="firstName"]',
+    );
+    if (!th) throw new Error('First Name header not found');
+    const trigger = th.querySelector<HTMLElement>(
+      '[aria-expanded]:not([aria-haspopup="menu"])',
+    );
+    if (!trigger) throw new Error('filter button not found');
+    // After the funnel's zoom-in, its box is the hit target.
+    await waitFor(() => {
+      const box = trigger.getBoundingClientRect();
+      expect(box.width).toBeGreaterThanOrEqual(24);
+      expect(box.height).toBeGreaterThanOrEqual(24);
+    });
+    const label = within(th).getByText('First Name');
+    expect(label).toHaveClass('min-w-0', 'truncate');
+
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { click: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await (browserUserEvent ?? userEvent).click(trigger);
+    await within(document.body).findByPlaceholderText('Filter by First Name');
   },
 };

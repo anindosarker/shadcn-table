@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // Fixtures for the decisions item 8 verify list (row pinning follows the
 // selection store under `rowPinningDisplayMode: 'select-*'`): Shift range
@@ -36,8 +37,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 const rowFirstName = (row: Element) =>
@@ -62,7 +63,7 @@ const bodyOrder = (root: ParentNode) =>
 const expectOrder = (root: ParentNode, names: string[]) =>
   waitFor(() => expect(bodyOrder(root)).toEqual(names));
 
-// The pagination label, `1-5 of 8`.
+// The pagination label, `1-5 of 8` (`paginationDisplayMode: 'default'`).
 const expectLabel = (root: ParentNode, label: string) =>
   waitFor(() =>
     expect(
@@ -278,6 +279,7 @@ export const SelectAllPageMode = () => (
     enableRowPinning
     enableRowSelection
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    paginationDisplayMode="default"
     rowPinningDisplayMode="select-sticky"
   />
 );
@@ -327,6 +329,7 @@ export const SelectAllAllMode = () => (
     enableRowPinning
     enableRowSelection
     initialState={{ pagination: { pageIndex: 0, pageSize: 5 } }}
+    paginationDisplayMode="default"
     rowPinningDisplayMode="select-sticky"
     selectAllMode="all"
   />

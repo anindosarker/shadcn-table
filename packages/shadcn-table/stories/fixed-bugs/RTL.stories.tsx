@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { Building2Icon, UserIcon } from 'lucide-react';
 
 // A right-to-left page: the pinned column sticks through inset-inline-start,
 // its edge shadow falls to the left onto the scrolled columns, and the resize
@@ -21,9 +22,9 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
 ];
 
 export const RightToLeft = {
@@ -48,11 +49,11 @@ export const RightToLeft = {
     await waitFor(() => expect(pinnedCell.style.insetInlineStart).not.toBe(''));
     expect(getComputedStyle(pinnedCell).position).toBe('sticky');
 
-    // The pinned edge shadow is cast outward, toward the scrolled columns,
-    // which sit to the left in RTL: a negative x offset. Tailwind lists its
-    // empty ring layers first, so the shadow is the tail of the list.
-    expect(getComputedStyle(pinnedCell).boxShadow).toMatch(
-      / -4px 0px 4px -4px$/,
+    // The pinned edge shadow is a drop-shadow filter clipped to the side of
+    // the scrolled columns, which sit to the left in RTL.
+    expect(getComputedStyle(pinnedCell).filter).toMatch(/^drop-shadow\(/);
+    expect(getComputedStyle(pinnedCell).clipPath).toBe(
+      'inset(0px 0px 0px -8px)',
     );
 
     const header = canvas.getByRole('columnheader', { name: /Last Name/ });

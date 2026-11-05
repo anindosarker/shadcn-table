@@ -1,0 +1,45 @@
+# v0.8.x sprints
+
+Updated: 2026-11-06 02:20
+
+| Story                                            | S1  | S2  | S3  | S4  | S5  | S6  | S7  | S8  | S9  | S10 | S11 | S12 |
+| ------------------------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Shared surface (01)                              | [x] |     |     |     |     |     |     |     |     |     |     |     |
+| Demo captures (01)                               | [x] |     |     |     |     |     |     |     |     |     |     |     |
+| Frame and body (02)                              |     | [x] |     |     |     |     |     |     |     |     |     |     |
+| Header, menu, drag (03)                          |     | [x] |     |     |     |     |     |     |     |     |     |     |
+| Toolbar chrome (04)                              |     | [x] |     |     |     |     |     |     |     |     |     |     |
+| Defaults and stories (05)                        |     |     | [x] |     |     |     |     |     |     |     |     |     |
+| Component fixes F3 to F6                         |     |     | [x] |     |     |     |     |     |     |     |     |     |
+| Docs (06)                                        |     |     |     | [x] |     |     |     |     |     |     |     |     |
+| Gate fixes F8, F9                                |     |     |     |     | [x] |     |     |     |     |     |     |     |
+| Toolbar and filters (06.1)                       |     |     |     |     |     | [x] |     |     |     |     |     |     |
+| Cells and layout (06.1)                          |     |     |     |     |     | [x] |     |     |     |     |     |     |
+| Docs app (06.2)                                  |     |     |     |     |     | [x] |     |     |     |     |     |     |
+| Multi-select filter fix F29                      |     |     |     |     |     | [x] |     |     |     |     |     |     |
+| Stories and DefaultLook (06.2)                   |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| CI fixes after S6, S7                            |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| Editor focus ring fix F31                        |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| Home demo columns F32                            |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| Docs polish F33, F34, F35, F37                   |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| Popover header widths F38                        |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| Pinned items in custom toolbars F36              |     |     |     |     |     |     | [x] |     |     |     |     |     |
+| Last fixes (F19, F28, F30, F39 to F41, D56, D57) |     |     |     |     |     |     |     | [x] |     |     |     |     |
+| Plays (06.3)                                     |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Custom actions follow selection F43              |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Subheader filter layout F44                      |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Home demo steps and titles F45                   |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Home demo polish (F45 follow-up)                 |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Moved column slides on top F47                   |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Demo viewport start F48, D63                     |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Theme demo speed                                 |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Demo cues and last title F49, D65                |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |     |     |
+| Grouping header (06.4)                           |     |     |     |     |     |     |     |     |     | [x] |     |     |
+| Filters, toolbar, RTL (06.4)                     |     |     |     |     |     |     |     |     |     | [x] |     |     |
+| Docs follow-up (06.5)                            |     |     |     |     |     |     |     |     |     | [x] |     |     |
+| Grouping column aligns start F57                 |     |     |     |     |     |     |     |     |     | [x] |     |     |
+| Expand column aligns start, all modes F58       |     |     |     |     |     |     |     |     |     | [x] |     |     |
+| View settings icons D75                          |     |     |     |     |     |     |     |     |     | [x] |     |     |
+| Edition icons (06.6)                             |     |     |     |     |     |     |     |     |     |     | [x] |     |
+| Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     |     |     | [ ] |

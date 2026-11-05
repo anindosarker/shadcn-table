@@ -1,6 +1,14 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
+import {
+  Building2Icon,
+  CakeIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Header Groups Examples',
@@ -14,11 +22,13 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
 
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ],
     header: 'Name',
@@ -29,10 +39,12 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ],
     header: 'Info',
@@ -69,11 +81,13 @@ export const HeaderAndFooterGroups = () => (
             accessorKey: 'firstName',
             footer: 'First Name',
             header: 'First Name',
+            icon: UserIcon,
           },
           {
             accessorKey: 'lastName',
             footer: 'Last Name',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         footer: 'Name',
@@ -86,11 +100,13 @@ export const HeaderAndFooterGroups = () => (
             accessorKey: 'age',
             footer: 'Age',
             header: 'Age',
+            icon: CakeIcon,
           },
           {
             accessorKey: 'address',
             footer: 'Address',
             header: 'Address',
+            icon: MapPinIcon,
           },
         ],
         footer: 'Info',
@@ -145,16 +161,19 @@ export const MixedHeaderGroups = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           columns: [
             {
               accessorKey: 'address',
               header: 'Address',
+              icon: MapPinIcon,
             },
           ],
           header: 'Grouped',
@@ -163,10 +182,12 @@ export const MixedHeaderGroups = () => {
         {
           accessorKey: 'city',
           header: 'City',
+          icon: Building2Icon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
       ]}
       data={data}
@@ -181,6 +202,7 @@ export const DeepMixedHeaderGroups = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           columns: [
@@ -189,14 +211,17 @@ export const DeepMixedHeaderGroups = () => {
                 {
                   accessorKey: 'address',
                   header: 'Address',
+                  icon: MapPinIcon,
                 },
                 {
                   accessorKey: 'city',
                   header: 'City',
+                  icon: Building2Icon,
                 },
                 {
                   accessorKey: 'state',
                   header: 'State',
+                  icon: MapIcon,
                 },
               ],
               header: 'Location',
@@ -209,6 +234,7 @@ export const DeepMixedHeaderGroups = () => {
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
       ]}
       data={data}
@@ -228,3 +254,72 @@ export const HeaderGroupsWithRowVirtualization = () => (
 export const HeaderGroupsWithColumnVirtualization = () => (
   <ShadcnTable columns={columns} data={data} enableColumnVirtualization />
 );
+
+// Each group header spans exactly its leaves: the group row's cells, taken by
+// colSpan, against the leaf row's cells below them (F18).
+const expectGroupEdgesMatchLeaves = async (canvasElement: HTMLElement) => {
+  await waitFor(() => {
+    const [groupRow, leafRow] = [
+      ...canvasElement.querySelectorAll<HTMLTableRowElement>('thead tr'),
+    ];
+    expect(groupRow).toBeDefined();
+    expect(leafRow).toBeDefined();
+    const leaves = [...leafRow.querySelectorAll<HTMLElement>('th')];
+    let index = 0;
+    for (const group of groupRow.querySelectorAll<HTMLTableCellElement>('th')) {
+      const span = leaves.slice(index, index + group.colSpan);
+      index += group.colSpan;
+      const rect = group.getBoundingClientRect();
+      const left = Math.min(
+        ...span.map((th) => th.getBoundingClientRect().left),
+      );
+      const right = Math.max(
+        ...span.map((th) => th.getBoundingClientRect().right),
+      );
+      const name = `${group.textContent} over ${span.map((th) => th.dataset.flipColumn).join(', ')}`;
+      expect(Math.abs(rect.left - left), `${name} left`).toBeLessThanOrEqual(1);
+      expect(Math.abs(rect.right - right), `${name} right`).toBeLessThanOrEqual(
+        1,
+      );
+    }
+    expect(index).toBe(leaves.length);
+  });
+};
+
+export const GroupEdgesMatchLeaves = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowSelection
+      initialState={{ columnPinning: { start: ['firstName'] } }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) =>
+    expectGroupEdgesMatchLeaves(canvasElement),
+};
+
+export const GroupEdgesMatchLeavesNoGrow = {
+  render: () => (
+    <ShadcnTable
+      columns={[
+        {
+          ...columns[0],
+          columns: [
+            {
+              icon: UserIcon,
+              accessorKey: 'firstName',
+              grow: false,
+              header: 'First Name',
+            },
+            { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+          ],
+        },
+        columns[1],
+      ]}
+      data={data}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) =>
+    expectGroupEdgesMatchLeaves(canvasElement),
+};

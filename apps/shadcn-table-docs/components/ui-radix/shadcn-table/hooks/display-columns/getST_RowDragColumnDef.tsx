@@ -18,7 +18,6 @@ export const getST_RowDragColumnDef = <TData extends ST_RowData>(
         rowRef={rowRef as RefObject<HTMLTableRowElement | null>}
       />
     ),
-    grow: false,
     ...defaultDisplayColumnProps({
       header: 'move',
       id: 'st-row-drag',

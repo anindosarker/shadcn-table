@@ -12,6 +12,38 @@ async function marker(wrapper, id, label, selector, check) {
 }
 
 /**
+ * F51: sorting by `column` through its column menu shows the sort chip
+ * (ST_SortPopover variant="chip"), a button named after the column outside
+ * the table head.
+ */
+async function sortChip(page, w, id, column, check) {
+  try {
+    await w
+      .locator(`thead th button[aria-label="${column} column menu"]`)
+      .first()
+      .click();
+    await page
+      .getByRole('menuitem', { name: 'Sort ascending', exact: true })
+      .first()
+      .click({ timeout: 5000 });
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(300);
+    const chips = await w
+      .locator('button')
+      .evaluateAll(
+        (els, label) =>
+          els.filter(
+            (el) => !el.closest('thead') && el.textContent?.trim() === label,
+          ).length,
+        column,
+      );
+    check(`${id}: sort chip`, chips > 0, `chips=${chips}`);
+  } catch (e) {
+    check(`${id}: sort chip`, false, String(e.message).split('\n')[0]);
+  }
+}
+
+/**
  * The Localization guide's install command (InstallCommand locale): German
  * first on the page's base, then French through the Locale select, with the
  * import line under the tabs following the pick.
@@ -112,6 +144,77 @@ const checks = {
         check,
       );
     }
+  },
+  '/docs/guides/filter-chips': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-column-options-table', check);
+    await propTable(page, '#relevant-state-options-table', check);
+    const w = await example(page, 'basic', check);
+    await marker(
+      w,
+      'basic',
+      'filter button',
+      'button[aria-label="Filter"]',
+      check,
+    );
+  },
+  '/docs/guides/overflow-tooltip': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-column-options-table', check);
+    const w = await example(page, 'basic', check);
+    await marker(
+      w,
+      'basic',
+      'truncated cell text',
+      'tbody td span.truncate',
+      check,
+    );
+  },
+  '/docs/guides/scroll-cues': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    const w = await example(page, 'enable-column-pinning', check);
+    await marker(
+      w,
+      'enable-column-pinning',
+      'scroll buttons',
+      'button[aria-label="Scroll left"], button[aria-label="Scroll right"]',
+      check,
+    );
+  },
+  '/docs/guides/sort-editor': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-state-options-table', check);
+    const w = await example(page, 'multi-sorting', check);
+    await marker(
+      w,
+      'multi-sorting',
+      'sort chip',
+      'button:has-text("2 sorts")',
+      check,
+    );
+  },
+  '/docs/guides/tint-tokens': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    const w = await example(page, 'enable-row-selection', check);
+    await marker(
+      w,
+      'enable-row-selection',
+      'tint token root',
+      '[data-slot="st-table-layout"][class*="--st-hover"]',
+      check,
+    );
+  },
+  '/docs/guides/view-settings': async ({ page, check }) => {
+    await propTable(page, '#relevant-props-table', check);
+    await propTable(page, '#relevant-state-options-table', check);
+    const w = await example(page, 'persistent-view', check);
+    await marker(
+      w,
+      'persistent-view',
+      'view settings button',
+      'button[aria-label="View settings"]',
+      check,
+    );
   },
   '/docs/guides/full-screen-toggle': async ({ page, check }) => {
     await propTable(page, TABLE, check);
@@ -320,8 +423,8 @@ const checks = {
     await marker(
       multi,
       'multi-sorting',
-      'sort label',
-      'th button[aria-label*="Sort" i], th [aria-label*="Sort" i]',
+      'sorted header marker',
+      'th [aria-label="Sorted ascending"], th [aria-label="Sorted descending"]',
       check,
     );
     await example(page, 'remote', check);
@@ -370,6 +473,7 @@ const checks = {
       'nav, [data-slot="pagination"], button[aria-label*="page" i]',
       check,
     );
+    await sortChip(page, external, 'external-toolbar', 'First Name', check);
   },
   '/docs/guides/virtualization': async ({ page, check }) => {
     await propTable(page, TABLE, check);

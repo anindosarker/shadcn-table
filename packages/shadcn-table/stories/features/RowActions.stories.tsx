@@ -1,10 +1,20 @@
 import { useState } from 'react';
-import { Pencil, Share2, Trash2, UserCircle } from 'lucide-react';
+import {
+  MapIcon,
+  MapPinIcon,
+  Pencil,
+  PhoneIcon,
+  Share2,
+  Trash2,
+  UserCircle,
+  UserIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 const meta: Meta = {
   title: 'Features/Row Actions Examples',
@@ -16,22 +26,27 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -243,13 +258,14 @@ export const RowActionsAndEditingCellEnabled = () => (
   />
 );
 
-export const RowActionsLastColumn = () => (
+// The actions column sits last and pinned by default; this one sits first.
+export const RowActionsFirstColumn = () => (
   <ShadcnTable
     columns={columns}
     data={data}
     enableRowActions
     initialState={{ density: 'compact' }}
-    positionActionsColumn="last"
+    positionActionsColumn="first"
     renderRowActionMenuItems={({ closeMenu, row }) => [
       <DropdownMenuItem
         key={1}
@@ -309,12 +325,12 @@ export const CustomRowActionButtons = () => (
   />
 );
 
-export const CustomRowActionButtonsLastColumn = () => (
+export const CustomRowActionButtonsFirstColumn = () => (
   <ShadcnTable
     columns={columns}
     data={data}
     enableRowActions
-    positionActionsColumn="last"
+    positionActionsColumn="first"
     renderRowActions={({ row }) => (
       <div style={{ display: 'flex', flexWrap: 'nowrap', gap: '0.5rem' }}>
         <Button
@@ -336,6 +352,58 @@ export const CustomRowActionButtonsLastColumn = () => (
     )}
   />
 );
+
+// Two icon buttons, as the editing docs examples render them: both show in
+// full and the column says "Actions" (D52) (F22).
+export const TwoControlsVisible = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableRowActions
+      renderRowActions={() => (
+        <div className="flex gap-4">
+          <Button aria-label="Edit" size="icon" variant="ghost">
+            <Pencil />
+          </Button>
+          <Button aria-label="Delete" size="icon" variant="ghost">
+            <Trash2 />
+          </Button>
+        </div>
+      )}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(
+        canvasElement.querySelector('th[data-flip-column="st-row-actions"]')
+          ?.textContent,
+      ).toBe('Actions'),
+    );
+    const header = canvas.getByRole('columnheader', { name: 'Actions' });
+    expect(header).toBeVisible();
+    await waitFor(() => {
+      const cell = canvasElement.querySelector<HTMLElement>(
+        'tbody tr td[data-flip-column="st-row-actions"]',
+      );
+      expect(cell).not.toBeNull();
+      const box = cell!.getBoundingClientRect();
+      for (const name of ['Edit', 'Delete']) {
+        const button = within(cell!)
+          .getByRole('button', { name })
+          .getBoundingClientRect();
+        expect(button.left, `${name} left`).toBeGreaterThanOrEqual(
+          box.left - 0.5,
+        );
+        expect(button.right, `${name} right`).toBeLessThanOrEqual(
+          box.right + 0.5,
+        );
+        expect(button.width, `${name} width`).toBeGreaterThan(0);
+      }
+    });
+  },
+};
 
 export const RowActionsCompleteOverride = () => (
   <ShadcnTable

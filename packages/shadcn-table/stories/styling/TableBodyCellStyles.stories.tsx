@@ -1,6 +1,8 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import { CakeIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Styling/Style Table Body Cells',
@@ -12,18 +14,22 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'age',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
 ];
 const data = [...Array(21)].map(() => ({
@@ -57,14 +63,17 @@ export const StyleMuiTableBodyCellConditionallyIn1Column = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
         stTableBodyCellProps: ({ cell }) => ({
           className: [
             cell.getValue<number>() > 40 ? 'bg-green-500/50' : undefined,
@@ -79,6 +88,7 @@ export const StyleMuiTableBodyCellConditionallyIn1Column = () => (
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ]}
     data={data}
@@ -94,6 +104,7 @@ export const CustomCellRender = () => (
         ),
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         Cell: ({ cell }) => (
@@ -101,6 +112,7 @@ export const CustomCellRender = () => (
         ),
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         Cell: ({ cell }) => (
@@ -119,12 +131,27 @@ export const CustomCellRender = () => (
         ),
         accessorKey: 'age',
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
     ]}
     data={data}
   />
 );
+
+// The table-level body cell classes give every cell the end border and tint.
+StyleAllMuiTableBodyCell.play = async ({ canvasElement }: StoryContext) => {
+  await within(canvasElement).findAllByText(data[0]!.firstName);
+  for (const cell of canvasElement.querySelectorAll<HTMLElement>(
+    'tbody tr:first-child td',
+  )) {
+    const style = getComputedStyle(cell);
+    expect(style.borderRightWidth).toBe('1px');
+    expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(cell).toHaveClass('bg-sky-500/10');
+  }
+};

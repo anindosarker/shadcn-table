@@ -23,7 +23,9 @@ Shadcn Table has a few built-in display columns that are created automatically w
 - `st-row-expand` - created when `enableExpanding`, `enableGrouping`, or `renderDetailPanel` props are `true`
 - `st-row-select` - created when `enableRowSelection` table option is `true`
 - `st-row-numbers` - created when `enableRowNumbers` table option is `true`
-- `st-row-spacer` - created when `layoutMode` is `"grid-no-grow"` (column resizing)
+- `st-row-spacer` - created only when you set `layoutMode: "grid-no-grow"` yourself; the default `"grid"` layout has no spacer column
+
+The row actions column sits last by default, 48 px wide and pinned to the end so it stays visible while the table scrolls sideways; its header label is for screen readers only. See the [Row Actions Guide](/docs/guides/row-actions) to put it first. Display columns have `grow: false` by default, so in the default `"grid"` layout they keep their set width while the data columns share the spare width. Every built-in display column except row actions is locked while another column is dragged (see [Locked Columns](/docs/guides/column-ordering-dnd#locked-columns)).
 
 Display columns are, for the most part, the same as a data column, except they do not have an accessor to access data. When a display column is created internally by Shadcn Table, the following options are all set to false by default:
 
@@ -96,11 +98,10 @@ const table = useShadcnTable({
   data,
   displayColumnDefOptions: {
     'st-row-numbers': {
-      enableOrdering: true,
+      enableColumnOrdering: true, //no longer locked: it can be dragged and takes drops
       enablePinning: true,
       enableColumnActions: true,
       size: 40,
-      grow: true,
     },
   },
   enableRowNumbers: true,

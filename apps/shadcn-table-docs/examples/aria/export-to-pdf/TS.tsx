@@ -7,7 +7,14 @@ import {
   createSRTColumnHelper,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
-import { DownloadIcon } from 'lucide-react';
+import {
+  Building2Icon,
+  BuildingIcon,
+  DownloadIcon,
+  GlobeIcon,
+  HashIcon,
+  UserIcon,
+} from 'lucide-react';
 import { jsPDF } from 'jspdf'; //or use your library of choice here
 import autoTable from 'jspdf-autotable';
 import { data, type Person } from './makeData';
@@ -16,25 +23,29 @@ const columnHelper = createSRTColumnHelper<Person>();
 
 const columns = [
   columnHelper.accessor('id', {
+    icon: HashIcon,
     header: 'ID',
-    size: 40,
+    size: 112,
   }),
   columnHelper.accessor('firstName', {
+    icon: UserIcon,
     header: 'First Name',
-    size: 120,
   }),
   columnHelper.accessor('lastName', {
+    icon: UserIcon,
     header: 'Last Name',
-    size: 120,
   }),
   columnHelper.accessor('company', {
+    icon: BuildingIcon,
     header: 'Company',
     size: 300,
   }),
   columnHelper.accessor('city', {
+    icon: Building2Icon,
     header: 'City',
   }),
   columnHelper.accessor('country', {
+    icon: GlobeIcon,
     header: 'Country',
     size: 220,
   }),
@@ -58,7 +69,6 @@ const Example = () => {
     columns,
     data,
     enableRowSelection: true,
-    columnFilterDisplayMode: 'popover',
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'bottom',
     renderTopToolbarCustomActions: ({ table }) => (

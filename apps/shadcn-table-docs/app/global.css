@@ -360,11 +360,11 @@ html > body[data-scroll-locked] {
 }
 
 /* paragraph and list gap 12px; lists and tables keep the body size */
-#nd-page .prose :is(p, ul, ol) {
+#nd-page .prose :is(p, ul, ol):not(.not-prose *) {
   margin-block: 0.75rem;
 }
 
-#nd-page .prose table {
+#nd-page .prose table:not(.not-prose *) {
   font-size: inherit;
   line-height: inherit;
 }

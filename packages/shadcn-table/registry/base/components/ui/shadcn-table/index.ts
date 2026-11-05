@@ -82,3 +82,30 @@ export * from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarAlertBa
 export * from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarDropZone';
 export * from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons';
 export * from '@/components/ui/shadcn-table/components/toolbar/ST_TopToolbar';
+// spec 01
+export * from '@/components/ui/shadcn-table/shared/utils/drag.utils';
+export * from '@/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils';
+// spec 02
+export {
+  ST_OverflowText,
+  type ST_OverflowTextProps,
+} from '@/components/ui/shadcn-table/components/body/ST_OverflowText';
+export * from '@/components/ui/shadcn-table/components/table/ST_ScrollButtons';
+export * from '@/components/ui/shadcn-table/hooks/useST_HorizontalOverflow';
+// spec 03
+export * from '@/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay';
+export { useST_ColumnFlip } from '@/components/ui/shadcn-table/hooks/useST_ColumnFlip';
+export { useST_DragAutoScroll } from '@/components/ui/shadcn-table/hooks/useST_DragAutoScroll';
+// spec 04
+export * from '@/components/ui/shadcn-table/shared/utils/filterSummary.utils';
+export * from '@/components/ui/shadcn-table/hooks/useST_PopupResize';
+export * from '@/components/ui/shadcn-table/hooks/useST_ViewPersistence';
+export * from '@/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker';
+export * from '@/components/ui/shadcn-table/components/toolbar/ST_FilterChips';
+export * from '@/components/ui/shadcn-table/components/toolbar/ST_FilterEditor';
+export * from '@/components/ui/shadcn-table/components/toolbar/ST_SortPopover';
+export * from '@/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsButton';
+export * from '@/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsItems';
+export * from '@/components/ui/shadcn-table/components/buttons/ST_TooltipButton';
+// spec 06.1
+export { ST_HeaderFilterEditor } from '@/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor';

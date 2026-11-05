@@ -188,6 +188,7 @@ export const getDefaultSRTOptions = <TData extends ST_RowData>(): Partial<
   //list all of your default table options here
   enableGlobalFilter: false,
   enableRowPinning: true,
+  columnFilterDisplayMode: 'subheader', //filter inputs under the headers instead of the default chips
   initialState: { showColumnFilters: true },
   manualFiltering: true,
   manualPagination: true,
@@ -195,7 +196,7 @@ export const getDefaultSRTOptions = <TData extends ST_RowData>(): Partial<
   stTableHeadCellProps: {
     style: { fontSize: '1.1rem' },
   },
-  paginationDisplayMode: 'pages',
+  paginationDisplayMode: 'default', //the compact pagination UI instead of the default pages
   //etc...
   defaultColumn: {
     //you can even list default column options here

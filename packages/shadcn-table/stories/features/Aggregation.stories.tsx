@@ -1,4 +1,5 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { constructAggregationFn } from '@tanstack/react-table';
 import {
   ST_AggregationFns,
@@ -6,6 +7,13 @@ import {
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  CakeIcon,
+  DollarSignIcon,
+  MapIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Aggregation Examples',
@@ -33,12 +41,14 @@ const columns = [
     accessorKey: 'firstName',
     enableGrouping: false,
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     AggregatedCell: () => '-',
     accessorKey: 'lastName',
     enableGrouping: false,
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     AggregatedCell: ({ cell, table }) => (
@@ -59,6 +69,7 @@ const columns = [
     accessorKey: 'age',
     aggregationFn: 'max',
     header: 'Age',
+    icon: CakeIcon,
   },
   {
     GroupedCell: ({ cell }) => (
@@ -66,10 +77,12 @@ const columns = [
     ),
     accessorKey: 'gender',
     header: 'Gender',
+    icon: VenusAndMarsIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     AggregatedCell: ({ cell, table }) => (
@@ -113,6 +126,7 @@ const columns = [
     aggregationFn: 'mean',
     enableGrouping: false,
     header: 'Salary',
+    icon: DollarSignIcon,
   },
 ] as ST_ColumnDef<(typeof data)[0]>[];
 
@@ -198,11 +212,13 @@ export const MultiAggregationPerColumn = () => (
         accessorKey: 'firstName',
         enableGrouping: false,
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         enableGrouping: false,
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         AggregatedCell: ({ cell, table }) => (
@@ -237,6 +253,7 @@ export const MultiAggregationPerColumn = () => (
           ],
         }),
         header: 'Age',
+        icon: CakeIcon,
       },
       {
         GroupedCell: ({ cell }) => (
@@ -244,10 +261,12 @@ export const MultiAggregationPerColumn = () => (
         ),
         accessorKey: 'gender',
         header: 'Gender',
+        icon: VenusAndMarsIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         AggregatedCell: ({ cell, table }) => (
@@ -300,6 +319,7 @@ export const MultiAggregationPerColumn = () => (
         aggregationFn: ['count', 'mean'], //multiple aggregation functions
         enableGrouping: false,
         header: 'Salary',
+        icon: DollarSignIcon,
       },
     ]}
     data={data}
@@ -312,3 +332,45 @@ export const MultiAggregationPerColumn = () => (
     }}
   />
 );
+
+/**
+ * A grouped row shows its group's aggregates: the max age and the mean
+ * salary of exactly the rows in that group.
+ */
+export const GroupedRowShowsAggregate = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      enableGrouping
+      initialState={{ grouping: ['state'] }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(/^Max by State:/);
+    const row = canvasElement.querySelector<HTMLElement>('tbody tr')!;
+    const cell = (id: string) =>
+      row.querySelector<HTMLElement>(`td[data-flip-column="${id}"]`)!;
+    const stateText = (cell('state').textContent ?? '').trim();
+    const state = [...new Set(data.map((person) => person.state))]
+      .filter((name) => stateText.startsWith(name))
+      .sort((a, b) => b.length - a.length)[0]!;
+    const group = data.filter((person) => person.state === state);
+    expect(stateText).toContain(`(${group.length})`);
+    const maxAge = Math.max(...group.map((person) => person.age));
+    const meanSalary = (
+      group.reduce((sum, person) => sum + person.salary, 0) / group.length
+    ).toLocaleString('en-US', {
+      currency: 'USD',
+      maximumFractionDigits: 0,
+      minimumFractionDigits: 0,
+      style: 'currency',
+    });
+    await waitFor(() => {
+      expect(cell('age')).toHaveTextContent(`Max by State: ${maxAge}`);
+      expect(cell('salary')).toHaveTextContent(
+        `Average by State: ${meanSalary}`,
+      );
+    });
+  },
+};

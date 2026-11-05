@@ -4,6 +4,7 @@ import { type ReactNode, useMemo } from 'react';
 import { useSelector } from '@tanstack/react-store';
 import { RadioGroup } from '@/components/ui-aria/radio-group';
 import { useST_ColumnVirtualizer } from '@/components/ui-aria/shadcn-table/hooks/useST_ColumnVirtualizer';
+import { useST_ComposedRef } from '@/components/ui-aria/shadcn-table/hooks/useST_ComposedRef';
 import { type TableProps } from '@/components/ui-aria/shadcn-table/types';
 import { parseCSSVarId } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
@@ -75,6 +76,8 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
     ...rest,
   };
 
+  const attachTableRef = useST_ComposedRef(table.refs.tableRef, tableProps.ref);
+
   const Caption = parseFromValuesOrFunc(renderCaption, { table });
 
   const columnSizeVars = useMemo(() => {
@@ -107,7 +110,14 @@ export const ST_Table = ({ ...rest }: ST_TableProps) => {
   const tableElement = (
     <table
       {...tableProps}
-      style={{ ...columnSizeVars, ...tableProps?.style }}
+      ref={attachTableRef}
+      style={{
+        ...columnSizeVars,
+        // Grid columns grow into spare width; past the frame they keep their
+        // set widths and the box scrolls sideways.
+        minWidth: layoutMode === 'grid' ? table.getTotalSize() : undefined,
+        ...tableProps?.style,
+      }}
       className={cn(
         tableVariants({ layoutMode, className: tableProps.className }),
       )}

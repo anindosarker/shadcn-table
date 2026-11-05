@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 //ST Imports
 import {
@@ -8,20 +8,48 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
   ST_GlobalFilterTextField,
-  ST_ToggleFiltersButton,
+  ST_FilterChips,
+  ST_SortPopover,
+  ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 
 //shadcn Imports
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 //Icons Imports
-import { CircleUserIcon, SendIcon } from 'lucide-react';
+import {
+  BriefcaseIcon,
+  CalendarIcon,
+  CircleUserIcon,
+  DollarSignIcon,
+  MailIcon,
+  SendIcon,
+  UserIcon,
+} from 'lucide-react';
 
 //Mock Data
 import { data, type Employee } from './makeData';
 
+//what the action dialog shows: a title, a message and the people it acts on
+type ActionMessage = { title: string; message: string; names: string[] };
+
 const Example = () => {
+  const [action, setAction] = useState<ActionMessage | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const showAction = (message: ActionMessage) => {
+    setAction(message);
+    setDialogOpen(true);
+  };
+
   const columns = useMemo<ST_ColumnDef<Employee>[]>(
     () => [
       {
@@ -31,6 +59,7 @@ const Example = () => {
           {
             accessorFn: (row) => `${row.firstName} ${row.lastName}`, //accessorFn used to join multiple data into a single cell
             id: 'name', //id is still required when using accessorFn instead of accessorKey
+            icon: UserIcon,
             header: 'Name',
             size: 250,
             Cell: ({ renderedCellValue, row }) => (
@@ -50,6 +79,7 @@ const Example = () => {
           },
           {
             accessorKey: 'email', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            icon: MailIcon,
             enableClickToCopy: true,
             filterVariant: 'autocomplete',
             header: 'Email',
@@ -63,6 +93,7 @@ const Example = () => {
         columns: [
           {
             accessorKey: 'salary',
+            icon: DollarSignIcon,
             // filterVariant: 'range', //if not using filter modes feature, use this instead of filterFn
             filterFn: 'between',
             header: 'Salary',
@@ -90,12 +121,14 @@ const Example = () => {
           },
           {
             accessorKey: 'jobTitle', //hey a simple column for once
+            icon: BriefcaseIcon,
             header: 'Job Title',
             size: 350,
           },
           {
             accessorFn: (row) => new Date(row.startDate), //convert to Date for sorting and filtering
             id: 'startDate',
+            icon: CalendarIcon,
             header: 'Start Date',
             filterVariant: 'date',
             filterFn: 'lessThan',
@@ -123,7 +156,6 @@ const Example = () => {
     enableRowActions: true,
     enableRowSelection: true,
     initialState: {
-      showColumnFilters: true,
       showGlobalFilter: true,
       columnPinning: {
         start: ['st-row-expand', 'st-row-select'],
@@ -151,11 +183,16 @@ const Example = () => {
         </div>
       </div>
     ),
-    renderRowActionMenuItems: ({ closeMenu }) => [
+    renderRowActionMenuItems: ({ closeMenu, row }) => [
       <DropdownMenuItem
         key={0}
         onClick={() => {
           // View profile logic...
+          showAction({
+            title: 'View profile',
+            message: 'Opening the profile of',
+            names: [row.getValue<string>('name')],
+          });
           closeMenu();
         }}
         className="m-0"
@@ -167,6 +204,11 @@ const Example = () => {
         key={1}
         onClick={() => {
           // Send email logic...
+          showAction({
+            title: 'Send email',
+            message: 'Sending an email to',
+            names: [row.getValue<string>('name')],
+          });
           closeMenu();
         }}
         className="m-0"
@@ -176,21 +218,32 @@ const Example = () => {
       </DropdownMenuItem>,
     ],
     renderTopToolbar: ({ table }) => {
+      const selectedNames = () =>
+        table
+          .getSelectedRowModel()
+          .flatRows.map((row) => row.getValue<string>('name'));
+
       const handleDeactivate = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('deactivating ' + row.getValue('name'));
+        showAction({
+          title: 'Deactivate',
+          message: 'Deactivating',
+          names: selectedNames(),
         });
       };
 
       const handleActivate = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('activating ' + row.getValue('name'));
+        showAction({
+          title: 'Activate',
+          message: 'Activating',
+          names: selectedNames(),
         });
       };
 
       const handleContact = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('contact ' + row.getValue('name'));
+        showAction({
+          title: 'Contact',
+          message: 'Contacting',
+          names: selectedNames(),
         });
       };
 
@@ -199,7 +252,8 @@ const Example = () => {
           <div className="flex items-center gap-2">
             {/* import ST sub-components */}
             <ST_GlobalFilterTextField />
-            <ST_ToggleFiltersButton />
+            <ST_SortPopover table={table} variant="chip" />
+            <ST_FilterChips table={table} />
           </div>
           <div>
             <div className="flex gap-2">
@@ -228,6 +282,7 @@ const Example = () => {
               >
                 Contact
               </Button>
+              <ST_ViewSettingsButton table={table} />
             </div>
           </div>
         </div>
@@ -235,7 +290,29 @@ const Example = () => {
     },
   });
 
-  return <ShadcnTable table={table} />;
+  return (
+    <>
+      <ShadcnTable table={table} />
+      {/* the actions above open this dialog instead of acting */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{action?.title}</DialogTitle>
+            <DialogDescription>
+              {action?.message} {action?.names.length}{' '}
+              {action?.names.length === 1 ? 'person' : 'people'}:
+            </DialogDescription>
+          </DialogHeader>
+          <ul className="list-disc ps-5">
+            {action?.names.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+          <DialogFooter showCloseButton />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
 
 export default Example;

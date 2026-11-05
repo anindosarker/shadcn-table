@@ -97,15 +97,17 @@ const table = useShadcnTable({
 });
 ```
 
-#### Alternate Pagination UI
+#### Pagination Display Modes
 
-By default, Shadcn Table provides its own Table Pagination UI that is more compact and traditional for data tables. However, if you want to use the shadcn/ui Pagination component instead, it is as easy as setting the `paginationDisplayMode` table option to `pages`.
+By default (`paginationDisplayMode: 'pages'`), the bottom toolbar shows the shadcn/ui Pagination component on the right: the rows per page select, numbered page buttons, and previous and next buttons. The bottom toolbar sits inside the table frame, separated from the last row by a plain 1 px hairline, and its left side stays empty unless you fill it with `renderBottomToolbarCustomActions`.
+
+If you prefer the more compact, traditional data table pagination (the rows per page select, the shown row range such as "1-10 of 100", and first, previous, next and last buttons), set the `paginationDisplayMode` table option to `'default'`. Set `'custom'` to render no pagination controls and place your own.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
-  paginationDisplayMode: 'pages',
+  paginationDisplayMode: 'default', //the compact rows per page, row range and arrow buttons UI
 });
 ```
 

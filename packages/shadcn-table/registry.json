@@ -43,6 +43,7 @@
         "skeleton",
         "slider",
         "spinner",
+        "switch",
         "tooltip"
       ],
       "files": [
@@ -50,6 +51,11 @@
           "path": "registry/base/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
@@ -157,6 +163,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -200,6 +211,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -297,6 +313,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -317,14 +338,44 @@
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_FilterChips.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterChips.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_SortPopover.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_SortPopover.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
@@ -350,6 +401,16 @@
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
@@ -382,6 +443,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -410,6 +476,11 @@
           "path": "registry/base/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -452,6 +523,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -460,6 +536,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -472,6 +553,11 @@
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
@@ -480,6 +566,16 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_PopupResize.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -500,6 +596,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ViewPersistence.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useShadcnTable.ts",
@@ -547,6 +648,16 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/filterSummary.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/filterSummary.utils.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -570,6 +681,11 @@
           "path": "registry/base/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
@@ -1327,6 +1443,7 @@
         "skeleton",
         "slider",
         "spinner",
+        "switch",
         "tooltip"
       ],
       "files": [
@@ -1334,6 +1451,11 @@
           "path": "registry/radix/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
@@ -1441,6 +1563,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -1484,6 +1611,11 @@
           "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -1581,6 +1713,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -1601,14 +1738,44 @@
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_FilterChips.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterChips.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_SortPopover.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_SortPopover.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
@@ -1634,6 +1801,16 @@
           "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/features/stCellActionsFeature.ts",
@@ -1666,6 +1843,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -1694,6 +1876,11 @@
           "path": "registry/radix/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -1736,6 +1923,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -1744,6 +1936,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -1756,6 +1953,11 @@
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
@@ -1764,6 +1966,16 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_PopupResize.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -1784,6 +1996,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ViewPersistence.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useShadcnTable.ts",
@@ -1831,6 +2048,16 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/filterSummary.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/filterSummary.utils.ts"
+        },
+        {
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -1854,6 +2081,11 @@
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
@@ -2611,6 +2843,7 @@
         "skeleton",
         "slider",
         "spinner",
+        "switch",
         "tooltip"
       ],
       "files": [
@@ -2618,6 +2851,11 @@
           "path": "registry/aria/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
@@ -2725,6 +2963,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -2768,6 +3011,11 @@
           "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -2865,6 +3113,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -2885,14 +3138,44 @@
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_FilterChips.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterChips.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_SortPopover.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_SortPopover.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
@@ -2918,6 +3201,16 @@
           "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/features/stCellActionsFeature.ts",
@@ -2950,6 +3243,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -2978,6 +3276,11 @@
           "path": "registry/aria/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -3020,6 +3323,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -3028,6 +3336,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -3040,6 +3353,11 @@
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
@@ -3048,6 +3366,16 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_PopupResize.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -3068,6 +3396,11 @@
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ViewPersistence.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useShadcnTable.ts",
@@ -3115,6 +3448,16 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/filterSummary.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/filterSummary.utils.ts"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -3138,6 +3481,11 @@
           "path": "registry/aria/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/aria/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/aria/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",
@@ -3895,6 +4243,7 @@
         "skeleton",
         "slider",
         "spinner",
+        "switch",
         "tooltip"
       ],
       "files": [
@@ -3902,6 +4251,11 @@
           "path": "registry/base/components/ui/shadcn-table/ShadcnTable.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/ShadcnTable.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/body/ST_OverflowText.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/body/ST_OverflowText.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/body/ST_TableBody.tsx",
@@ -4009,6 +4363,11 @@
           "target": "@ui/shadcn-table/components/buttons/ST_Tooltip.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/buttons/ST_TooltipButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/buttons/ST_TooltipButton.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/footer/ST_TableFooter.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/footer/ST_TableFooter.tsx"
@@ -4052,6 +4411,11 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadCellGrabHandle.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/head/ST_TableHeadCellLockedOverlay.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadCellResizeHandle.tsx",
@@ -4149,6 +4513,11 @@
           "target": "@ui/shadcn-table/components/modals/ST_EditRowModal.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ScrollButtons.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ScrollButtons.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/table/ST_Table.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/table/ST_Table.tsx"
@@ -4169,14 +4538,44 @@
           "target": "@ui/shadcn-table/components/table/ST_TableLoadingOverlay.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/table/ST_ViewPendingScript.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/table/ST_ViewPendingScript.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_BottomToolbar.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ColumnPicker.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_FilterChips.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterChips.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_FilterEditor.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_LinearProgressBar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_SortPopover.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_SortPopover.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx",
@@ -4202,6 +4601,16 @@
           "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/toolbar/ST_TopToolbar.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsButton.tsx"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/components/toolbar/ST_ViewSettingsItems.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/features/stCellActionsFeature.ts",
@@ -4234,6 +4643,11 @@
           "target": "@ui/shadcn-table/features/stFeatures.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/features/stFilterChipsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stFilterChipsFeature.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/features/stFilterModesFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stFilterModesFeature.ts"
@@ -4262,6 +4676,11 @@
           "path": "registry/base/components/ui/shadcn-table/features/stToolbarsFeature.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/features/stToolbarsFeature.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/features/stViewSettingsFeature.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/features/stViewSettingsFeature.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/display-columns/getST_RowActionsColumnDef.tsx",
@@ -4304,6 +4723,11 @@
           "target": "@ui/shadcn-table/hooks/stTableHook.tsx"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ColumnFlip.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ColumnVirtualizer.ts"
@@ -4312,6 +4736,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_Effects.ts",
@@ -4324,6 +4753,11 @@
           "target": "@ui/shadcn-table/hooks/useST_FullScreenContainer.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_HorizontalOverflow.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_HorizontalOverflow.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MediaQuery.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MediaQuery.ts"
@@ -4332,6 +4766,16 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_MenuAnchor.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_MenuAnchor.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_PopupResize.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_PopupResize.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowFlip.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_RowFlip.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_RowVirtualizer.ts",
@@ -4352,6 +4796,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_TableOptions.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_TableOptions.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_ViewPersistence.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useShadcnTable.ts",
@@ -4399,6 +4848,16 @@
           "target": "@ui/shadcn-table/shared/utils/displayColumn.utils.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/drag.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/drag.utils.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/filterSummary.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/filterSummary.utils.ts"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/pagination.utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/pagination.utils.ts"
@@ -4422,6 +4881,11 @@
           "path": "registry/base/components/ui/shadcn-table/shared/utils/utils.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/shared/utils/utils.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/shared/utils/virtualization.utils.ts",

@@ -190,7 +190,7 @@ const checks = {
   },
   '/docs/guides/pagination': async ({ page, check }) => {
     const propNames = await names(page, '#relevant-props-table');
-    check('table options rows', propNames.length === 8, propNames.join(','));
+    check('table options rows', propNames.length === 9, propNames.join(','));
     const stateNames = await names(page, '#relevant-state-options-table');
     check(
       'state options rows',
@@ -206,7 +206,7 @@ const checks = {
     await codeToggle(
       page,
       'alternate-pagination',
-      "paginationDisplayMode: 'pages'",
+      "paginationDisplayMode: 'default'",
       check,
     );
     const remote = await example(page, 'remote', check);
@@ -366,17 +366,17 @@ const checks = {
   },
   '/docs/api/table-options': async ({ page, check }) => {
     await switcher(page, 'Table Options', 3, check);
-    await propTable(page, '#props-table', 199, check);
+    await propTable(page, '#props-table', 211, check);
     await codeToggle(page, 'root-props', 'TableOptionsTable', check);
   },
   '/docs/api/column-options': async ({ page, check }) => {
     await switcher(page, 'Column Options', 3, check);
-    await propTable(page, '#column-options-table', 63, check);
+    await propTable(page, '#column-options-table', 65, check);
     await codeToggle(page, 'column-options', 'ColumnOptionsTable', check);
   },
   '/docs/api/state-options': async ({ page, check }) => {
     await switcher(page, 'State Options', 3, check);
-    await propTable(page, '#state-options-table', 33, check);
+    await propTable(page, '#state-options-table', 35, check);
     await codeToggle(page, 'state-options', 'StateOptionsTable', check);
   },
   '/docs/api/table-instance-apis': async ({ page, check }) => {
@@ -417,7 +417,7 @@ const checks = {
   '/docs/api/st-components': async ({ page, check }) => {
     await switcher(page, 'ST Components', 2, check);
     const n = await page.locator('article h5').count();
-    check('component headings', n === 30, String(n));
+    check('component headings', n === 42, String(n));
   },
   '/docs/api/st-hooks': async ({ page, check }) => {
     await switcher(page, 'ST Hooks', 2, check);

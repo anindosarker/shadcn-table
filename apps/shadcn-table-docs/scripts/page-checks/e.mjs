@@ -7,7 +7,14 @@
  * headings, guide links, then holds the page through the full live demo loop
  * on Base UI, Radix UI and React Aria (demoLoop in _helpers.mjs).
  */
-import { codeToggle, demoLoop, example } from './_helpers.mjs';
+import {
+  chipFilter,
+  closeChipEditor,
+  codeToggle,
+  demoLoop,
+  example,
+  headerLabelsFit,
+} from './_helpers.mjs';
 
 /**
  * An example page renders exactly one playground panel (data-mode) and no
@@ -45,24 +52,54 @@ const checks = {
     'enable-filter-facet-values',
     'enableFacetedValues: true',
     async (page, w, check) => {
-      const selects = w.locator('thead select, thead [role="combobox"]');
-      check('faceted select filters', (await selects.count()) > 0);
+      await headerLabelsFit(w, 'enable-filter-facet-values', check);
+      const editor = await chipFilter(
+        page,
+        w,
+        'faceted-values',
+        'City',
+        '[data-slot="select-trigger"], [role="combobox"]',
+        check,
+      );
+      await closeChipEditor(page, editor);
     },
   ),
   '/docs/examples/filter-switching': examplePage(
     'customize-filter-modes',
     'enableColumnFilterModes: true',
     async (page, w, check) => {
-      check(
-        'filter mode buttons',
-        (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
-          0,
+      // the mode picker sits on the editor's top line in chips mode (D39)
+      const editor = await chipFilter(
+        page,
+        w,
+        'filter-switching',
+        'First Name',
+        'button[aria-label*="filter mode" i]',
+        check,
       );
+      await closeChipEditor(page, editor);
     },
   ),
   '/docs/examples/filter-variants': examplePage(
     'customize-filter-variants',
     "filterVariant: 'range-slider'",
+    async (page, w, check) => {
+      await headerLabelsFit(w, 'customize-filter-variants', check);
+      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
+      const editor = await chipFilter(
+        page,
+        w,
+        'filter-variants',
+        'Salary',
+        '[role="slider"], input[type="range"]',
+        check,
+      );
+      await closeChipEditor(page, editor);
+    },
+  ),
+  '/docs/examples/subheader-filters': examplePage(
+    'subheader-filters',
+    "columnFilterDisplayMode: 'subheader'",
     async (page, w, check) => {
       // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
       check(
@@ -70,6 +107,110 @@ const checks = {
         (await w
           .locator('thead [role="slider"], thead input[type="range"]')
           .count()) > 0,
+      );
+      check(
+        'date filter input',
+        (await w.locator('thead input[type="date"]').count()) > 0,
+      );
+      check(
+        'checkbox filter',
+        (await w
+          .locator('thead [role="checkbox"], thead [data-slot="checkbox"]')
+          .count()) > 0,
+      );
+      check(
+        'filter mode buttons',
+        (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
+          0,
+      );
+      // F44: every filter input and caption sits inside its th and inside any
+      // clipping box between them, each caption's text inside its box; the
+      // slider track stays in its th and its "Filter Mode:" caption sits
+      // below the track.
+      const layout = await w.locator('thead').evaluate((thead) => {
+        const inside = (inner, outer) =>
+          inner.left >= outer.left - 1 &&
+          inner.right <= outer.right + 1 &&
+          inner.top >= outer.top - 1 &&
+          inner.bottom <= outer.bottom + 1;
+        const clipped = [];
+        let slider = 'no slider';
+        for (const th of thead.querySelectorAll('th')) {
+          const cell = th.getBoundingClientRect();
+          const parts = [
+            ...th.querySelectorAll(
+              '[data-slot="input-group"], [data-slot="slider-track"], [data-slot="slider-thumb"], label, p',
+            ),
+          ].filter((part) => !part.closest('[aria-hidden="true"]'));
+          for (const part of parts) {
+            const box = part.getBoundingClientRect();
+            let clip = part.parentElement;
+            let ok = inside(box, cell);
+            while (ok && clip && clip !== th) {
+              if (getComputedStyle(clip).overflowX !== 'visible')
+                ok = inside(box, clip.getBoundingClientRect());
+              clip = clip.parentElement;
+            }
+            // A Filter Mode caption's text overflowing its own box is cut too.
+            if (
+              ok &&
+              part.textContent?.startsWith('Filter Mode:') &&
+              part.scrollWidth > part.clientWidth + 1
+            )
+              ok = false;
+            if (!ok)
+              clipped.push(
+                `${th.textContent?.trim().slice(0, 14)} ${part.dataset.slot ?? part.tagName}:${part.textContent?.trim().slice(0, 30)} [${Math.round(box.left - cell.left)}, ${Math.round(box.right - cell.left)}] in ${Math.round(cell.width)}`,
+              );
+          }
+          const track = th.querySelector('[data-slot="slider-track"]');
+          if (track) {
+            const caption = [...th.querySelectorAll('label, p')].find((el) =>
+              el.textContent?.startsWith('Filter Mode:'),
+            );
+            const trackBox = track.getBoundingClientRect();
+            const top = caption?.getBoundingClientRect().top ?? -1;
+            slider =
+              top >= trackBox.bottom
+                ? ''
+                : `caption top ${top} < track bottom ${trackBox.bottom}`;
+          }
+        }
+        return { clipped, slider };
+      });
+      check(
+        'subheader filters not clipped',
+        layout.clipped.length === 0,
+        layout.clipped.join(' '),
+      );
+      check('slider caption below track', layout.slider === '', layout.slider);
+    },
+  ),
+  '/docs/examples/persistent-view': examplePage(
+    'persistent-view',
+    'persistViewSettings: true',
+    async (page, w, check) => {
+      // F14: the docs prose margin must not push the pagination out of the
+      // bottom toolbar
+      const box = await w
+        .locator('[data-slot="pagination-content"]')
+        .last()
+        .evaluate((el) => {
+          const bar = el.closest('div.justify-between')?.parentElement;
+          if (!bar) return null;
+          const ul = el.getBoundingClientRect();
+          const rect = bar.getBoundingClientRect();
+          return {
+            bar: Math.round(rect.bottom),
+            inside: ul.top >= rect.top - 0.5 && ul.bottom <= rect.bottom + 0.5,
+            ul: Math.round(ul.bottom),
+          };
+        })
+        .catch(() => null);
+      check(
+        'pagination inside the bottom toolbar',
+        !!box?.inside,
+        box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
       );
     },
   ),
@@ -85,6 +226,7 @@ const checks = {
         'filter buttons in head',
         (await w.locator('thead button').count()) > 0,
       );
+      await headerLabelsFit(w, 'alternate-column-filtering', check);
     },
   ),
   '/docs/examples/infinite-scrolling': examplePage(
@@ -119,7 +261,22 @@ const checks = {
       );
     },
   ),
-  '/docs/examples/react-query': examplePage('react-query', 'useQuery'),
+  '/docs/examples/react-query': examplePage(
+    'react-query',
+    'useQuery',
+    async (page, w, check) => {
+      // a body row under the sticky header is a library layout fault: logged,
+      // not failed (spec 06.2 1.6.5)
+      const head = await w.locator('thead').first().boundingBox();
+      const row = await w.locator('tbody tr').first().boundingBox();
+      if (head && row && row.y < head.y + head.height - 0.5) {
+        console.warn(
+          `  warn react-query: first body row top ${Math.round(row.y)} above the sticky header bottom ${Math.round(head.y + head.height)}`,
+        );
+      }
+      check('react-query: header and first row measured', !!head && !!row);
+    },
+  ),
   '/docs/examples/remote': examplePage('remote', 'manualPagination: true'),
   '/docs/examples/lazy-detail-panel': examplePage(
     'lazy-detail-panel',
@@ -166,6 +323,7 @@ const checks = {
         (await w.locator('table').count()) === 2,
         `tables=${await w.locator('table').count()}`,
       );
+      await headerLabelsFit(w, 'enable-row-dragging', check);
     },
   ),
   '/docs/examples/row-ordering': examplePage(
@@ -265,6 +423,45 @@ const checks = {
       (await rows.count()) > 0,
       `rows=${await rows.count()}`,
     );
+    // the stock 0.8 table: icons in the headers, filters as chips (no
+    // filter row under the headers), the view settings button
+    const demo = page.locator('.v5-demo-table');
+    check(
+      'demo: header icons',
+      (await demo.locator('thead th svg[aria-hidden="true"]').count()) >= 5,
+    );
+    check(
+      'demo: no subheader filter row',
+      (await demo.locator('thead input').count()) === 0,
+    );
+    check(
+      'demo: view settings button',
+      (await demo.locator('button[aria-label="View settings"]').count()) === 1,
+    );
+    // seven data columns (D54), and at the desktop width they fit the frame,
+    // so the Estimate cell the Editing step changes is in view (F32)
+    const dataHeaders = await demo
+      .locator('thead th button[aria-label$=" column menu"]')
+      .count();
+    check(
+      'demo: seven data columns',
+      dataHeaders === 7,
+      `columns=${dataHeaders}`,
+    );
+    if ((page.viewportSize()?.width ?? 0) >= 1024) {
+      const overflow = await demo
+        .locator('table')
+        .first()
+        .evaluate((table) => {
+          const box = table.parentElement;
+          return box ? box.scrollWidth - box.clientWidth : 0;
+        });
+      check(
+        'demo: no horizontal scroll',
+        overflow <= 1,
+        `overflow=${overflow}px`,
+      );
+    }
     check('features heading', txt.includes('Everything you need'));
     check(
       'install steps heading',
@@ -280,6 +477,383 @@ const checks = {
       'no contributors section',
       !txt.includes('Maintainers and Contributors'),
     );
+    // a page of ten rows fits the table frame: no row cut off at the bottom,
+    // no scrollbar inside the table (F45 follow-up)
+    const clipped = await demo
+      .locator('table')
+      .first()
+      .evaluate((table) => {
+        const box = table.parentElement;
+        return box ? box.scrollHeight - box.clientHeight : 0;
+      });
+    check('demo: ten rows fit the frame', clipped <= 1, `clipped=${clipped}px`);
+    // the replay plays only while the toolbar has room for its popovers
+    // below it (F48, D63): with the toolbar near the bottom edge it holds on
+    // Starting; with the demo in view it plays and the Sort popover opens
+    // below its trigger; scrolled away mid-step it pauses with no popover
+    // left open, and scrolled back it resumes
+    const toolbarNearBottom = () =>
+      page.evaluate(() => {
+        const sort = [
+          ...document.querySelectorAll(
+            '.v5-demo-table button[aria-label="Sort"]',
+          ),
+        ].find((button) => !button.closest('table'));
+        if (!sort) return -1;
+        window.scrollBy(
+          0,
+          sort.getBoundingClientRect().bottom - (window.innerHeight - 80),
+        );
+        return Math.round(
+          window.innerHeight - sort.getBoundingClientRect().bottom,
+        );
+      });
+    const demoInView = () =>
+      page.evaluate(() =>
+        document.querySelector('.v5-demo')?.scrollIntoView({ block: 'center' }),
+      );
+    const replayState = () =>
+      page.evaluate(() => {
+        const popover = document.querySelector('[data-slot="popover-content"]');
+        const trigger = document.querySelector(
+          '.v5-demo-table [aria-expanded="true"]',
+        );
+        return {
+          status:
+            document.querySelector('[aria-label="Demo items"] [aria-live]')
+              ?.textContent ?? '',
+          running:
+            document.querySelector('.v5-demo')?.hasAttribute('data-running') ??
+            false,
+          popoverTop: popover
+            ? Math.round(popover.getBoundingClientRect().top)
+            : null,
+          triggerBottom: trigger
+            ? Math.round(trigger.getBoundingClientRect().bottom)
+            : null,
+        };
+      });
+    try {
+      const room = await toolbarNearBottom();
+      // the Sort popover would open 2s after Starting; give it 3s
+      await page.waitForTimeout(3000);
+      const held = await replayState();
+      check(
+        'demo: holds on Starting with the toolbar near the bottom edge',
+        room >= 0 &&
+          room < 360 &&
+          held.status === 'Starting' &&
+          !held.running &&
+          held.popoverTop === null,
+        `room=${room}px ${JSON.stringify(held)}`,
+      );
+      await demoInView();
+      await page
+        .locator('[data-slot="popover-content"]')
+        .first()
+        .waitFor({ timeout: 10000 });
+      const playing = await replayState();
+      check(
+        'demo: plays in view, the Sort popover opens below its trigger',
+        playing.running &&
+          playing.triggerBottom !== null &&
+          playing.popoverTop !== null &&
+          playing.popoverTop >= playing.triggerBottom,
+        JSON.stringify(playing),
+      );
+      await toolbarNearBottom();
+      await page.waitForTimeout(500);
+      const away = await replayState();
+      // the Sort step's hold is 2.2s: a running replay would move on
+      await page.waitForTimeout(3000);
+      const later = await replayState();
+      check(
+        'demo: pauses when scrolled away mid-step, no popover left open',
+        !away.running &&
+          away.popoverTop === null &&
+          /Sorting/.test(away.status) &&
+          later.status === away.status,
+        `${JSON.stringify(away)} 3s later=${later.status}`,
+      );
+      await demoInView();
+      await page
+        .locator('[aria-label="Demo items"] [aria-live]')
+        .filter({ hasText: 'Search' })
+        .waitFor({ timeout: 10000 });
+      check('demo: resumes when scrolled back', true);
+    } catch (e) {
+      check(
+        'demo: plays only with room for its popovers',
+        false,
+        String(e.message).split('\n')[0].slice(0, 160),
+      );
+    }
+    // the six step titles name the feature (F45), and one full replay gives
+    // every step the active state in turn: a recorder samples the list each
+    // frame from a Replay click (outside the table, so the replay keeps
+    // playing) until the loop starts over. It also records what the replay
+    // must never leave behind (F45 follow-up): a tooltip or a keyboard focus
+    // ring on a control it clicked, a page scroll, a change in the table
+    // frame's height or in the step list's place, an empty cell editor; and
+    // what it must show: the Filtering cue on the "+ Filter" pill, the cue on
+    // the sort chip, the sort editor, the filter chip editor and the view
+    // settings panel (F49, D65), polled each frame, the moved column drawn on top of the cells it slides across (F47): mid-slide, the
+    // topmost element at its header's centre is that header
+    const titles = await page
+      .locator('[aria-label="Demo items"] .v5-step span.text-sm')
+      .allTextContents();
+    const expected = [
+      'Sort editor',
+      'Global search',
+      'Cell editing',
+      'Filter chips',
+      'Column order',
+      'Alternating row colors',
+    ];
+    check(
+      'demo: step titles',
+      titles.join('|') === expected.join('|'),
+      titles.join(' | '),
+    );
+    try {
+      const steps = page.locator('[aria-label="Demo items"]');
+      // the whole demo in view, so the toolbar has room for the popovers
+      await demoInView();
+      await page.evaluate(() => {
+        const seen = new Set();
+        const flaws = {
+          tooltips: new Set(),
+          rings: new Set(),
+          scrolls: new Set(),
+          frames: new Set(),
+          lists: new Set(),
+          emptyEdit: 0,
+          pillCue: false,
+          cues: new Set(),
+          movedOnTop: 0,
+          movedCovered: 0,
+          flipped: new Set(),
+        };
+        window.__demoSeen = seen;
+        window.__demoFlaws = flaws;
+        const aside = document.querySelector('[aria-label="Demo items"]');
+        const table = document.querySelector('.v5-demo-table');
+        const frame = table?.querySelector('table')?.parentElement;
+        const list = aside?.querySelector('ol');
+        const sample = () => {
+          aside?.querySelectorAll('.v5-step').forEach((el, i) => {
+            if (el.getAttribute('data-state') === 'active') seen.add(i);
+          });
+          document
+            .querySelectorAll('[role="tooltip"]')
+            .forEach((el) => flaws.tooltips.add(el.textContent?.trim()));
+          const focused = document.activeElement;
+          if (
+            focused instanceof HTMLElement &&
+            focused.matches(':focus-visible') &&
+            !focused.matches('input, textarea') &&
+            (table?.contains(focused) ||
+              focused.closest('[data-slot="popover-content"]'))
+          ) {
+            flaws.rings.add(
+              focused.getAttribute('aria-label') ??
+                focused.textContent?.trim().slice(0, 20),
+            );
+          }
+          flaws.scrolls.add(Math.round(window.scrollY));
+          // every popover the replay opens sits below its trigger (F48)
+          const trigger = table?.querySelector(
+            '[data-slot="popover-trigger"][aria-expanded="true"], button[aria-expanded="true"]',
+          );
+          const popover = document.querySelector(
+            '[data-slot="popover-content"]',
+          );
+          if (
+            trigger &&
+            popover &&
+            popover.getBoundingClientRect().top <
+              trigger.getBoundingClientRect().bottom
+          ) {
+            flaws.flipped.add(
+              trigger.getAttribute('aria-label') ??
+                trigger.textContent?.trim().slice(0, 20),
+            );
+          }
+          if (frame) flaws.frames.add(frame.offsetHeight);
+          if (aside && list) {
+            flaws.lists.add(
+              Math.round(
+                list.getBoundingClientRect().top -
+                  aside.getBoundingClientRect().top,
+              ),
+            );
+          }
+          const edit = table?.querySelector('tbody input');
+          if (edit instanceof HTMLInputElement && edit.value === '') {
+            flaws.emptyEdit += 1;
+          }
+          table?.querySelectorAll('.v12-cue').forEach((el) => {
+            if (
+              el.tagName === 'BUTTON' &&
+              !el.hasAttribute('aria-label') &&
+              el.textContent?.trim() === 'Filter'
+            ) {
+              flaws.pillCue = true;
+            }
+            if (
+              el.tagName === 'BUTTON' &&
+              !el.closest('thead') &&
+              el.textContent?.trim() === 'Due'
+            ) {
+              flaws.cues.add('sort chip');
+            }
+          });
+          // the editors and the panel render in portals outside the table
+          document
+            .querySelectorAll('[data-slot="popover-content"].v12-cue')
+            .forEach((el) => {
+              const text = el.textContent ?? '';
+              if (text.includes('Delete sort')) flaws.cues.add('sort editor');
+              if (text.includes('Remove filter')) {
+                flaws.cues.add('filter chip editor');
+              }
+              if (el.querySelector('[aria-label="Alternating row colors"]')) {
+                flaws.cues.add('view settings panel');
+              }
+            });
+          const head = [...(table?.querySelectorAll('thead th') ?? [])].map(
+            (th) => th.getAttribute('data-flip-column'),
+          );
+          if (head[1] === 'project') {
+            const th = table?.querySelector(
+              'thead th[data-flip-column="project"]',
+            );
+            const sliding = th
+              ?.getAnimations()
+              .some(
+                (animation) =>
+                  animation.playState === 'running' &&
+                  animation.effect
+                    ?.getKeyframes()
+                    .some((keyframe) => keyframe.translate !== undefined),
+              );
+            if (th && sliding) {
+              const rect = th.getBoundingClientRect();
+              const x = rect.left + rect.width / 2;
+              const y = rect.top + rect.height / 2;
+              if (
+                x >= 0 &&
+                y >= 0 &&
+                x < window.innerWidth &&
+                y < window.innerHeight
+              ) {
+                const hit = document.elementFromPoint(x, y);
+                if (hit && th.contains(hit)) flaws.movedOnTop += 1;
+                else flaws.movedCovered += 1;
+              }
+            }
+          }
+          if (window.__demoSeen === seen) requestAnimationFrame(sample);
+        };
+        sample();
+      });
+      await steps.getByRole('button', { name: 'Replay' }).click();
+      await steps
+        .locator('.v5-step')
+        .nth(expected.length - 1)
+        .and(page.locator('[data-state="active"]'))
+        .waitFor({ timeout: 45000 });
+      // the last step plays out, then the loop starts over
+      await steps
+        .locator('[aria-live]')
+        .filter({ hasText: 'Starting' })
+        .waitFor({ timeout: 15000 })
+        .catch(() => {});
+      const { seen, flaws } = await page.evaluate(() => {
+        const list = [...window.__demoSeen].sort();
+        const f = window.__demoFlaws;
+        window.__demoSeen = null;
+        return {
+          seen: list,
+          flaws: {
+            tooltips: [...f.tooltips],
+            rings: [...f.rings],
+            scrolls: [...f.scrolls],
+            frames: [...f.frames],
+            lists: [...f.lists],
+            emptyEdit: f.emptyEdit,
+            pillCue: f.pillCue,
+            cues: [...f.cues],
+            movedOnTop: f.movedOnTop,
+            movedCovered: f.movedCovered,
+            flipped: [...f.flipped],
+          },
+        };
+      });
+      check(
+        'demo: every step active in one replay',
+        seen.length === expected.length,
+        `active=${seen.join(',')}`,
+      );
+      check(
+        'demo: no tooltip during the replay',
+        flaws.tooltips.length === 0,
+        flaws.tooltips.join(' | '),
+      );
+      check(
+        'demo: no focus ring left by the replay',
+        flaws.rings.length === 0,
+        flaws.rings.join(' | '),
+      );
+      check(
+        'demo: every popover opens below its trigger',
+        flaws.flipped.length === 0,
+        flaws.flipped.join(' | '),
+      );
+      check(
+        'demo: the replay never scrolls the page',
+        flaws.scrolls.length === 1,
+        `scrollY=${flaws.scrolls.join(',')}`,
+      );
+      check(
+        'demo: the table frame keeps its height',
+        flaws.frames.length === 1,
+        `heights=${flaws.frames.join(',')}`,
+      );
+      check(
+        'demo: the step list never moves',
+        flaws.lists.length === 1,
+        `offsets=${flaws.lists.join(',')}`,
+      );
+      check(
+        'demo: the cell editor never shows empty',
+        flaws.emptyEdit === 0,
+        `frames=${flaws.emptyEdit}`,
+      );
+      check('demo: Filtering cues the + Filter pill', flaws.pillCue);
+      const cued = [
+        'sort editor',
+        'sort chip',
+        'filter chip editor',
+        'view settings panel',
+      ];
+      check(
+        'demo: cues the sort chip, the editors and the view settings panel',
+        cued.every((cue) => flaws.cues.includes(cue)),
+        `cued=${flaws.cues.join(',')}`,
+      );
+      check(
+        'demo: the moved column slides on top of the others',
+        flaws.movedOnTop > 0 && flaws.movedCovered === 0,
+        `onTop=${flaws.movedOnTop} covered=${flaws.movedCovered}`,
+      );
+    } catch (e) {
+      check(
+        'demo: every step active in one replay',
+        false,
+        String(e.message).split('\n')[0].slice(0, 160),
+      );
+    }
     await demoLoop({ page, check, base });
   },
 };

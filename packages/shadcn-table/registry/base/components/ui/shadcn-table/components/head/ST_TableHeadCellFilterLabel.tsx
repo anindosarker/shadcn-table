@@ -23,12 +23,12 @@ import {
 import { getValueAndLabel } from '@/components/ui/shadcn-table/shared/utils/utils';
 
 const tableHeadCellFilterLabelVariants = cva(
-  'ms-1 size-4 p-2 scale-75 align-middle transition-all duration-150 ease-in-out',
+  'size-6 align-middle transition-all duration-150 ease-in-out',
   {
     variants: {
       active: {
         true: 'opacity-100',
-        false: 'opacity-30',
+        false: 'opacity-30 hover:opacity-100',
       },
     },
   },
@@ -133,7 +133,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
   };
 
   const buttonProps = {
-    size: 'icon-sm',
+    size: 'icon-xs',
     type: 'button',
     variant: 'ghost',
     ...rest,
@@ -142,6 +142,9 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
       rest.className,
     ),
   } as const;
+
+  // Chips show the filter in the toolbar instead.
+  if (columnFilterDisplayMode === 'chips') return null;
 
   return (
     <>
@@ -162,7 +165,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
                     />
                   }
                 >
-                  <FilterAltIcon className="size-6" />
+                  <FilterAltIcon className="size-4" />
                 </PopoverTrigger>
               </ST_Tooltip>
               <PopoverContent
@@ -178,7 +181,7 @@ export const ST_TableHeadCellFilterLabel = <TData extends ST_RowData>({
           ) : (
             <ST_Tooltip side="top" title={filterTooltip}>
               <Button onClick={handleShowColumnFilters} {...buttonProps}>
-                <FilterAltIcon className="size-6" />
+                <FilterAltIcon className="size-4" />
               </Button>
             </ST_Tooltip>
           )}

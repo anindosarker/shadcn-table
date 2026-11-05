@@ -26,6 +26,7 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  ComboboxTrigger,
   useComboboxAnchor,
 } from '@/components/ui-aria/combobox';
 import {
@@ -82,6 +83,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const table = header.table;
   const {
     options: {
+      columnFilterDisplayMode,
       enableColumnFilterModes,
       icons: { CancelIcon, CloseIcon, FilterListIcon },
       localization,
@@ -183,7 +185,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         ? localization.max
         : '';
 
+  // In chips mode the filter editor's top line carries the mode picker.
   const showChangeModeButton = !!(
+    columnFilterDisplayMode !== 'chips' &&
     enableColumnFilterModes &&
     columnDef.enableColumnFilterModes !== false &&
     !rangeFilterIndex &&
@@ -363,7 +367,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           // The select addon overlays the trigger so the trigger spans the whole
           // group and the popper (sized from the trigger) matches the field.
           isSelectFilter && 'absolute inset-y-0 inset-e-0',
-          hasFilterValue ? 'visible' : 'invisible',
+          // The multi-select field carries its own chevron, so the empty clear
+          // slot takes no room there.
+          hasFilterValue
+            ? 'visible'
+            : isMultiSelectFilter
+              ? 'hidden'
+              : 'invisible',
         )}
       >
         <ST_Tooltip side="right" title={localization.clearFilter ?? ''}>
@@ -623,38 +633,41 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               <ComboboxChips
                 className={cn(
                   nestedGroupClassName,
-                  'px-1.5 py-0.5',
+                  'flex-nowrap px-1.5 py-0.5',
                   textFieldProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* The chip list part renders an unlabelled TagGroup; its context names it. */}
-                <TagGroupContext.Provider
-                  value={{ 'aria-label': filterPlaceholder }}
-                >
-                  <ComboboxChipList>
-                    {({ id }: { id: string }) => (
-                      <ComboboxChip
-                        className="h-5 text-xs"
-                        id={id}
-                        key={id}
-                        textValue={optionLabel(id)}
-                      >
-                        {optionLabel(id)}
-                      </ComboboxChip>
-                    )}
-                  </ComboboxChipList>
-                </TagGroupContext.Provider>
-                <ComboboxChipsInput
-                  aria-label={filterPlaceholder}
-                  className="min-w-4"
-                  onKeyDown={(e) => {
-                    e.stopPropagation();
-                    textFieldProps.onKeyDown?.(e);
-                  }}
-                  placeholder={filterValue.length ? '' : filterPlaceholder}
-                  title={filterPlaceholder}
-                />
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+                  {/* The chip list part renders an unlabelled TagGroup; its context names it. */}
+                  <TagGroupContext.Provider
+                    value={{ 'aria-label': filterPlaceholder }}
+                  >
+                    <ComboboxChipList>
+                      {({ id }: { id: string }) => (
+                        <ComboboxChip
+                          className="h-5 text-xs"
+                          id={id}
+                          key={id}
+                          textValue={optionLabel(id)}
+                        >
+                          {optionLabel(id)}
+                        </ComboboxChip>
+                      )}
+                    </ComboboxChipList>
+                  </TagGroupContext.Provider>
+                  <ComboboxChipsInput
+                    aria-label={filterPlaceholder}
+                    className="min-w-4"
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      textFieldProps.onKeyDown?.(e);
+                    }}
+                    placeholder={filterValue.length ? '' : filterPlaceholder}
+                    title={filterPlaceholder}
+                  />
+                </div>
+                <ComboboxTrigger className="ms-auto shrink-0 self-center" />
               </ComboboxChips>
               <ComboboxContent anchor={comboboxAnchor}>
                 <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
@@ -686,7 +699,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           )}
           {endAdornment}
         </InputGroup>
-        {showChangeModeButton ? (
+        {/* A range field's caption spans the whole range group, in
+            ST_FilterRangeFields. */}
+        {showChangeModeButton && rangeFilterIndex === undefined ? (
           <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',

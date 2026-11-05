@@ -70,7 +70,7 @@ export const ST_Localization_DE: ST_Localization = {
   resetOrder: 'Reihenfolge zurücksetzen',
   rowActions: 'Zeilen-Aktionen',
   rowNumber: '#',
-  rowNumbers: 'Zeilennumern',
+  rowNumbers: 'Zeilennummern',
   rowsPerPage: 'Zeilen pro Seite',
   save: 'Speichern',
   search: 'Suche',

@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryContext, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { ShadcnTable, type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import { Building2Icon, CakeIcon, UserIcon } from 'lucide-react';
 
 type Person = {
   firstName: string;
@@ -25,10 +27,10 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'age', header: 'Age' },
-  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
 ];
 
 // ShadcnTableProps is an Xor<{ columns; data }, { table }> union, which
@@ -45,3 +47,25 @@ const meta: Meta<BasicArgs> = {
 export default meta;
 
 export const Default: StoryObj<BasicArgs> = {};
+
+/** Every data row renders, its cells in column order. */
+export const RendersRows: StoryObj<BasicArgs> = {
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByText('Ada');
+    const rows = canvasElement.querySelectorAll('tbody tr');
+    expect(rows).toHaveLength(data.length);
+    rows.forEach((row, index) => {
+      const person = data[index]!;
+      expect(
+        [...row.querySelectorAll('td')].map((cell) =>
+          (cell.textContent ?? '').trim(),
+        ),
+      ).toEqual([
+        person.firstName,
+        person.lastName,
+        String(person.age),
+        person.city,
+      ]);
+    });
+  },
+};

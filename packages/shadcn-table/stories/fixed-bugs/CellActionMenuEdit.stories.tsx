@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // Fixed bug (findings, decisions item 5): `ST_CellActionMenu`'s
 // `onCloseAutoFocus` read `editingCell` from a render snapshot, still `null`
@@ -22,7 +23,7 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
 ];
 
 // Edit from the cell action menu: the menu's close must not refocus the cell,

@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui/shadcn-table/shared/utils/utils';
 import { ST_Tooltip } from '@/components/ui/shadcn-table/components/buttons/ST_Tooltip';
+import { ST_TooltipButton } from '@/components/ui/shadcn-table/components/buttons/ST_TooltipButton';
 import { ST_EditActionButtons } from '@/components/ui/shadcn-table/components/buttons/ST_EditActionButtons';
 import { ST_RowActionMenu } from '@/components/ui/shadcn-table/components/menus/ST_RowActionMenu';
-import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
 const commonIconButtonStyles = cva('ms-2.5');
 
@@ -43,22 +43,12 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
     setEditingRow,
   } = table;
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const { openerProps, toggle } = useST_MenuAnchor({
-    anchorEl,
-    setAnchorEl,
-  });
-
-  const handleOpenRowActionMenu = (event: MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
-    toggle(event.currentTarget);
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleStartEditMode = (event: MouseEvent) => {
     event.stopPropagation();
     setEditingRow(row);
-    setAnchorEl(null);
+    setMenuOpen(false);
   };
 
   return (
@@ -99,34 +89,33 @@ export const ST_ToggleRowActionMenuButton = <TData extends ST_RowData>({
                 </Button>
               </ST_Tooltip>
             ) : renderRowActionMenuItems?.({
-                closeMenu: () => setAnchorEl(null),
+                closeMenu: () => setMenuOpen(false),
                 row,
                 staticRowIndex,
                 table,
               })?.length ? (
-              <>
-                <ST_Tooltip title={localization.rowActions}>
-                  <Button
+              <ST_RowActionMenu
+                handleEdit={handleStartEditMode}
+                onOpenChange={setMenuOpen}
+                open={menuOpen}
+                row={row}
+                staticRowIndex={staticRowIndex}
+                trigger={
+                  <ST_TooltipButton
+                    aria-haspopup="menu"
                     aria-label={localization.rowActions}
-                    {...openerProps}
-                    onClick={handleOpenRowActionMenu}
+                    onClick={(event) => event.stopPropagation()}
                     size="icon-sm"
+                    tooltip={localization.rowActions}
                     type="button"
                     variant="ghost"
                     {...rest}
                     className={cn(commonIconButtonStyles(), rest.className)}
                   >
                     <MoreHorizIcon />
-                  </Button>
-                </ST_Tooltip>
-                <ST_RowActionMenu
-                  anchorEl={anchorEl}
-                  handleEdit={handleStartEditMode}
-                  row={row}
-                  setAnchorEl={setAnchorEl}
-                  staticRowIndex={staticRowIndex}
-                />
-              </>
+                  </ST_TooltipButton>
+                }
+              />
             ) : null}
           </>
         );
