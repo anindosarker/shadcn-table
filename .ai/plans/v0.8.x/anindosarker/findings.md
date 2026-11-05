@@ -246,3 +246,7 @@
 ### F59 The icon editions still ship the old view settings icons
 
 - D75 replaced the Lucide defaults (`icons.ts`, three bases) for grid lines, Columns and density, but the four editions (`icons/tabler.ts`, `phosphor.ts`, `remixicon.ts`, `hugeicons.ts`, three bases) still import the drawn glyphs from `components/icons/ST_GridLineIcons.tsx` and map their own rows icons, so a Tabler, Phosphor, Remix or Hugeicons install shows a different Grid lines, Columns and Density look than the docs (Lucide). Found by a side-agent note 2026-11-06 during the first release gate run (stopped by the owner). Fix: sub-spec 06.6 maps the eight keys per edition to that set's nearest icons (the owner picks from the candidate table in `reference/icons/edition-candidates.md`), rotation or mirroring through a className as the Lucide map does; the drawn glyph file is deleted with its registry entries (D76); `check:icons` and `registry:build` green; then the release gate reruns.
+
+### F60 Flaky play: PanelCollapse "Progress And Banner Collapse" in aria CI
+
+- `packages/shadcn-table/stories/fixed-bugs/PanelCollapse.stories.tsx`, play `Progress And Banner Collapse`: failed once on the 0.8.0 release PR #130 (pr.yml run 42104722808, aria job) with `expected 0 to be greater than 0` at its first check, green on the job rerun. Second known flake after `Profiled Thousand Rows` (P4). Not fixed; a 0.9 item: the first assertion waits for the panel height to settle (`waitFor`) instead of reading it once.
