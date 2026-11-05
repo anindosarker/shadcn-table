@@ -1,6 +1,6 @@
 # Moved column slides on top (F47), tracker
 
-Status: verified
+Status: merged (dacf201e85bff20e43e12fe2a1bd22d224f31df5)
 Branch `v0.8/fix-column-flip-zorder`, worktree 01, PR #120
 Gates:
 - Repro on shipped code (905ef298): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/ColumnDragging.stories.tsx`: red as intended, `MovedColumnOnTop` failed with `expected { time: 30, body: false } to deeply equal { time: 30, body: true }` (the City body cell, sliding two slots left, was covered by a later sibling at 30 ms into the slide)
