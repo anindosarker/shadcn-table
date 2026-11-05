@@ -230,3 +230,7 @@
 ### F55 The filter chip editor grows sideways with every multi-select pick
 
 - `/docs/examples/filter-variants`, State chip editor (multi-select), owner screenshot 2026-11-05 16:46: with five picks the editor popover is about 720 px wide and still grows; the chips field would wrap (`flex-wrap`) but the editor popover (`components/toolbar/ST_FilterChips.tsx`, the chip's editor content, spec 04) sets no width, so it sizes to its content. Fix: the editor content keeps its base width (about 260 px, the width it has with no value) with a max, the chips wrap onto new lines inside it, three bases; play in `stories/features/FilterChips.stories.tsx`: pick five options, the popover width is unchanged and the field height grew.
+
+### F56 Header-width page checks measure before the web font loads
+
+- `apps/shadcn-table-docs/scripts/page-checks/_helpers.mjs:62` `headerLabelsFit` reads `scrollWidth` against `clientWidth` as soon as the page is idle, without `document.fonts.ready`; the docs load Inter through `next/font` (`app/layout.tsx:6`, `global.css:30`), so on CI (Linux) the fallback system font, wider than Inter, was measured and `filter-variants` failed on "Departure Time" (109 over 106) while the same page passes locally. Visitors get Inter on every platform, so the widths chosen on the Mac stand. Fix: the check awaits `document.fonts.ready` before measuring (and any other text-width assertion does the same); the one-column widening at `19233ec3` stays.
