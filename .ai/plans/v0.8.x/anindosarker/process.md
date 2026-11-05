@@ -57,3 +57,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P10 Plays
 
 - Every story file ships with at least one play, and a feature file with one play per behaviour it demonstrates. A play added for a fix is run on the shipped code first and must fail there; the failure is noted in the tracker. A story file without a play is a finding (D59).
+
+## P11 Attention items earn their place
+
+- Before an ATTENTION item or a discussion item reaches the owner, the agent reads the decisions of this cycle and the earlier cycles (`.ai/plans/*/anindosarker/decisions.md`, the specs they cite) and the findings: a question an existing decision already answers is settled by citing it (an addendum under that decision, `Source: A<n>`), never re-asked. A proposal the owner rejected before is not re-proposed. Only an unruled real choice (a visible behaviour or look, a public API, a scope change) is posted, with the decisions it touches named. Owner, 2026-11-05, after A12 re-proposed what D6 had rejected.
