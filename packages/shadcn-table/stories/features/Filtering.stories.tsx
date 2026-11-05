@@ -377,6 +377,55 @@ export const MultiSelectFieldControls = {
   },
 };
 
+/** The value of each slider thumb in `th`, in DOM order. */
+const thumbValues = (th: HTMLElement) =>
+  Array.from(
+    th.querySelectorAll<HTMLElement>('[data-slot="slider-thumb"]'),
+  ).map((thumb) => {
+    const slider = thumb.matches('[role="slider"]')
+      ? thumb
+      : thumb.querySelector<HTMLElement>('[role="slider"]');
+    const now = slider?.getAttribute('aria-valuenow');
+    if (now != null) return Number(now);
+    return Number(
+      thumb.querySelector<HTMLInputElement>('input[type="range"]')?.value,
+    );
+  });
+
+// F46: the aria range slider reads min and max from stFilterSliderProps, as
+// radix and base do.
+export const RangeSliderCustomBounds = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="subheader"
+      columns={[
+        {
+          accessorKey: 'firstName',
+          header: 'First Name',
+          icon: UserIcon,
+        },
+        {
+          accessorKey: 'age',
+          filterVariant: 'range-slider',
+          header: 'Age',
+          icon: CakeIcon,
+          stFilterSliderProps: { max: 60, min: 30, step: 10 },
+        },
+      ]}
+      data={data}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByRole('slider');
+    await waitFor(() =>
+      expect(thumbValues(filterHeaderCell(canvasElement, 'Age'))).toEqual([
+        30, 60,
+      ]),
+    );
+  },
+};
+
 export const FilteringChangeModeEnabled = () => (
   <ShadcnTable
     columns={[
