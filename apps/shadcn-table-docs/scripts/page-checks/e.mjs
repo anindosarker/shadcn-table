@@ -484,6 +484,107 @@ const checks = {
         return box ? box.scrollHeight - box.clientHeight : 0;
       });
     check('demo: ten rows fit the frame', clipped <= 1, `clipped=${clipped}px`);
+    // the replay plays only while the toolbar has room for its popovers
+    // below it (F48, D63): with the toolbar near the bottom edge it holds on
+    // Starting; with the demo in view it plays and the Sort popover opens
+    // below its trigger; scrolled away mid-step it pauses with no popover
+    // left open, and scrolled back it resumes
+    const toolbarNearBottom = () =>
+      page.evaluate(() => {
+        const sort = [
+          ...document.querySelectorAll(
+            '.v5-demo-table button[aria-label="Sort"]',
+          ),
+        ].find((button) => !button.closest('table'));
+        if (!sort) return -1;
+        window.scrollBy(
+          0,
+          sort.getBoundingClientRect().bottom - (window.innerHeight - 80),
+        );
+        return Math.round(
+          window.innerHeight - sort.getBoundingClientRect().bottom,
+        );
+      });
+    const demoInView = () =>
+      page.evaluate(() =>
+        document.querySelector('.v5-demo')?.scrollIntoView({ block: 'center' }),
+      );
+    const replayState = () =>
+      page.evaluate(() => {
+        const popover = document.querySelector('[data-slot="popover-content"]');
+        const trigger = document.querySelector(
+          '.v5-demo-table [aria-expanded="true"]',
+        );
+        return {
+          status:
+            document.querySelector('[aria-label="Demo items"] [aria-live]')
+              ?.textContent ?? '',
+          running:
+            document.querySelector('.v5-demo')?.hasAttribute('data-running') ??
+            false,
+          popoverTop: popover
+            ? Math.round(popover.getBoundingClientRect().top)
+            : null,
+          triggerBottom: trigger
+            ? Math.round(trigger.getBoundingClientRect().bottom)
+            : null,
+        };
+      });
+    try {
+      const room = await toolbarNearBottom();
+      // the Sort popover would open 2s after Starting; give it 3s
+      await page.waitForTimeout(3000);
+      const held = await replayState();
+      check(
+        'demo: holds on Starting with the toolbar near the bottom edge',
+        room >= 0 &&
+          room < 360 &&
+          held.status === 'Starting' &&
+          !held.running &&
+          held.popoverTop === null,
+        `room=${room}px ${JSON.stringify(held)}`,
+      );
+      await demoInView();
+      await page
+        .locator('[data-slot="popover-content"]')
+        .first()
+        .waitFor({ timeout: 10000 });
+      const playing = await replayState();
+      check(
+        'demo: plays in view, the Sort popover opens below its trigger',
+        playing.running &&
+          playing.triggerBottom !== null &&
+          playing.popoverTop !== null &&
+          playing.popoverTop >= playing.triggerBottom,
+        JSON.stringify(playing),
+      );
+      await toolbarNearBottom();
+      await page.waitForTimeout(500);
+      const away = await replayState();
+      // the Sort step's hold is 2.2s: a running replay would move on
+      await page.waitForTimeout(3000);
+      const later = await replayState();
+      check(
+        'demo: pauses when scrolled away mid-step, no popover left open',
+        !away.running &&
+          away.popoverTop === null &&
+          /Sorting/.test(away.status) &&
+          later.status === away.status,
+        `${JSON.stringify(away)} 3s later=${later.status}`,
+      );
+      await demoInView();
+      await page
+        .locator('[aria-label="Demo items"] [aria-live]')
+        .filter({ hasText: 'Search' })
+        .waitFor({ timeout: 10000 });
+      check('demo: resumes when scrolled back', true);
+    } catch (e) {
+      check(
+        'demo: plays only with room for its popovers',
+        false,
+        String(e.message).split('\n')[0].slice(0, 160),
+      );
+    }
     // the six step titles name the feature (F45), and one full replay gives
     // every step the active state in turn: a recorder samples the list each
     // frame from a Replay click (outside the table, so the replay keeps
@@ -512,7 +613,8 @@ const checks = {
     );
     try {
       const steps = page.locator('[aria-label="Demo items"]');
-      await steps.scrollIntoViewIfNeeded({ timeout: 10000 });
+      // the whole demo in view, so the toolbar has room for the popovers
+      await demoInView();
       await page.evaluate(() => {
         const seen = new Set();
         const flaws = {
@@ -525,6 +627,7 @@ const checks = {
           pillCue: false,
           movedOnTop: 0,
           movedCovered: 0,
+          flipped: new Set(),
         };
         window.__demoSeen = seen;
         window.__demoFlaws = flaws;
@@ -553,6 +656,24 @@ const checks = {
             );
           }
           flaws.scrolls.add(Math.round(window.scrollY));
+          // every popover the replay opens sits below its trigger (F48)
+          const trigger = table?.querySelector(
+            '[data-slot="popover-trigger"][aria-expanded="true"], button[aria-expanded="true"]',
+          );
+          const popover = document.querySelector(
+            '[data-slot="popover-content"]',
+          );
+          if (
+            trigger &&
+            popover &&
+            popover.getBoundingClientRect().top <
+              trigger.getBoundingClientRect().bottom
+          ) {
+            flaws.flipped.add(
+              trigger.getAttribute('aria-label') ??
+                trigger.textContent?.trim().slice(0, 20),
+            );
+          }
           if (frame) flaws.frames.add(frame.offsetHeight);
           if (aside && list) {
             flaws.lists.add(
@@ -639,6 +760,7 @@ const checks = {
             pillCue: f.pillCue,
             movedOnTop: f.movedOnTop,
             movedCovered: f.movedCovered,
+            flipped: [...f.flipped],
           },
         };
       });
@@ -656,6 +778,11 @@ const checks = {
         'demo: no focus ring left by the replay',
         flaws.rings.length === 0,
         flaws.rings.join(' | '),
+      );
+      check(
+        'demo: every popover opens below its trigger',
+        flaws.flipped.length === 0,
+        flaws.flipped.join(' | '),
       );
       check(
         'demo: the replay never scrolls the page',
