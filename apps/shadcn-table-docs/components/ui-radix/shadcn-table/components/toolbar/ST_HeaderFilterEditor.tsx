@@ -12,7 +12,7 @@ import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-radix/shadcn-table/share
 import { ST_FilterEditor } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_FilterEditor';
 import { useST_MenuAnchor } from '@/components/ui-radix/shadcn-table/hooks/useST_MenuAnchor';
 
-export const filterEditorClassName = 'w-auto min-w-65';
+export const filterEditorClassName = 'w-65';
 
 /** Focuses the column's first filter input; false when it is not mounted. */
 export const focusFilterInput = <TData extends ST_RowData>(

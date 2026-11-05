@@ -114,7 +114,12 @@ export type SelectProps = Omit<ButtonProps, 'size' | 'variant'> &
 
 export type CheckboxProps = ComponentPropsWithRef<typeof ST_Checkbox>;
 
-export type SliderProps = ComponentPropsWithRef<typeof Slider>;
+// `min` and `max` are the radix and base keys; the aria range filter reads
+// them as its bounds when `minValue` and `maxValue` are absent.
+export type SliderProps = ComponentPropsWithRef<typeof Slider> & {
+  max?: number;
+  min?: number;
+};
 
 export type CollapseProps = ComponentPropsWithRef<typeof Collapsible>;
 
