@@ -60,6 +60,10 @@ export async function example(page, id, check) {
  * the chevron, so an example sized for the inline mode clips its labels (F38).
  */
 export async function headerLabelsFit(w, id, check) {
+  // Text widths depend on the web font (Inter through next/font): measure
+  // only once it is loaded, else the fallback font (wider on Linux) is
+  // measured instead.
+  await w.evaluate(() => document.fonts.ready.then(() => true));
   const clipped = await w
     .locator('thead th .truncate')
     .evaluateAll((els) =>
