@@ -206,3 +206,7 @@
 ### F49 The home demo's cue is missing on the sort chip, the sort editor and the filter chip editor
 
 - Home page live demo, owner screenshots 2026-11-05 09:1x: during the Sorting step neither the sort chip ("Due") nor the sort editor popover carries the demo's cue highlight; during Filtering the opened filter chip editor ("Status", "In Review", "Remove filter") carries none either. D46 puts the cue on the sort chip and on the filter chip; the editor each opens is the thing the step demonstrates. `apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx` (SignalCue kinds and targets). Fix with F48's start condition merged first (same file).
+
+### F50 RTL resizing story hides every header but the first
+
+- Storybook aria, `Column Resizing Enabled On End RTL` (`stories/features/ColumnResizing.stories.tsx:182`), owner screenshot 2026-11-05 15:53: the header row shows only the "First Name" header at the right edge; the other header cells are missing while the body renders every column; an "Address" header with the D37 dashed drag outline floats over the first body row around the State and Phone columns. Not investigated (owner: record only). Check the other RTL stories of the file and the base base; suspects: physical `left`/`right` in the header width or sticky maths under `dir="rtl"` (`shared/utils/style.utils.ts`, `components/head/ST_TableHeadCell.tsx`), the column drag preview measuring `left` in RTL (`hooks/useST_ColumnFlip.ts`).
