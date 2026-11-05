@@ -78,6 +78,11 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - `enableScrollButtons` defaults to `true`: hover chevrons on a side with hidden columns. Set `enableScrollButtons: false` to restore.
 - `enableCellOverflowTooltip` defaults to `true`: cut-off text shows a tooltip. Set `enableCellOverflowTooltip: false` to restore.
 
+#### Spec 06.4 grouping
+
+- D68: under `groupedColumnMode: 'remove'` the grouping column's header is a breadcrumb: the expand-all button, then per grouped column its icon and header name, a chevron between segments. It replaces "State, Gender" behind the first grouped column's icon (F41), and renders without `enableExpandAll` too. `'reorder'` is unchanged.
+- D73: under `'remove'` the grouping column's default `size` is the sum of the grouped columns' sizes (each falls back to `defaultColumn.size`, then 180), recomputed as grouping changes. `displayColumnDefOptions['st-row-expand'].size` still wins.
+
 ### Fixed
 
 #### Spec 06.1 toolbar
