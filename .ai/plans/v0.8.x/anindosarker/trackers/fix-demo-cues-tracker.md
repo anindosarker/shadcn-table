@@ -1,6 +1,6 @@
 # Home demo cues and last title (F49, D65), tracker
 
-Status: verified
+Status: merged (993d47e6)
 Branch `v0.8/fix-demo-cues`, worktree 02, PR #123
 Gates:
 - Repro on shipped code (ec0949b5): Chromium 1440x900, demo scrolled into view, DOM sampled every 100 ms through one loop: no `.v12-cue` element is ever the sort editor content (Due / Ascending / Add sort / Delete sort), the "Due" sort chip, the "Status" chip editor content or the view settings panel; the cues on portalled elements (the options "Due", "Status", "In Review", the striped switch) compute `::after` `content: none`, so they never showed: red as reported
