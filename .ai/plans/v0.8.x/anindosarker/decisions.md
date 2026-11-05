@@ -543,3 +543,8 @@ index 94a82564..02f86b2e 100644
 ### D73 The grouping column's default width is the sum of the grouped columns' widths
 
 - Under `groupedColumnMode: 'remove'` the combined grouping column's default `size` is the sum of the grouped columns' sizes (each grouped column leaves the table and its width moves into the combined one), recomputed as grouping changes; an explicit `displayColumnDefOptions['st-row-expand'].size` wins; the breadcrumb header (D68) never truncates. Owner, 2026-11-05.
+
+### D74 The aria multi-select filter keeps no first-match highlight
+
+- React Aria Components `ComboBox` has no `autoHighlight`; on aria, typing in the multi-select filter highlights nothing and Enter picks nothing until ArrowDown. Accepted as a base gap; radix and base keep D72's `autoHighlight`. Owner, 2026-11-05.
+- Source: A21
