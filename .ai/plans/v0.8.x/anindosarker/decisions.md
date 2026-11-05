@@ -308,7 +308,6 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 - Workflow sub-agents receive no harness reminder, so the v0.8.x run's commits, PR bodies and merge commits go out without the `Claude-Session:` trailer; the owner accepted the gap for this run ("ignore"). P5 stays as written for sessions that get the reminder.
 - Source: A2
 
-
 ## Round 4: triage of ATTENTION-2026-11-04
 
 ### D41 The view settings row reads "Row numbers"
@@ -539,3 +538,7 @@ index 94a82564..02f86b2e 100644
                <ComboboxContent anchor={comboboxAnchor}>
                  <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
 ```
+
+### D73 The grouping column's default width is the sum of the grouped columns' widths
+
+- Under `groupedColumnMode: 'remove'` the combined grouping column's default `size` is the sum of the grouped columns' sizes (each grouped column leaves the table and its width moves into the combined one), recomputed as grouping changes; an explicit `displayColumnDefOptions['st-row-expand'].size` wins; the breadcrumb header (D68) never truncates. Owner, 2026-11-05.
