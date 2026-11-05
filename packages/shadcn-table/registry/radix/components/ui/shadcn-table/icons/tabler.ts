@@ -17,16 +17,17 @@ import {
   IconChevronRightPipe,
   IconChevronsDown,
   IconCircleX,
-  IconColumns3,
   IconCopy,
   IconDeviceFloppy,
   IconDots,
   IconDotsVertical,
+  IconEqual,
   IconEraser,
   IconEyeOff,
   IconFilter,
   IconFilter2,
   IconFilterOff,
+  IconFrame,
   IconGripVertical,
   IconLayoutNavbar,
   IconLayoutNavbarInactive,
@@ -48,16 +49,23 @@ import {
   IconSquare,
   IconSquareDashed,
   IconStack2,
+  IconTableOptions,
   IconTextWrap,
   IconTrash,
   IconX,
 } from '@tabler/icons-react';
-import type { ST_Icons } from '@/components/ui/shadcn-table/types';
-import {
-  ST_GridLinesAllIcon,
-  ST_GridLinesColumnsIcon,
-  ST_GridLinesRowsIcon,
-} from '@/components/ui/shadcn-table/components/icons/ST_GridLineIcons';
+import { createElement } from 'react';
+import { cn } from '@/lib/utils';
+import type {
+  ST_IconProps,
+  ST_Icons,
+} from '@/components/ui/shadcn-table/types';
+
+const IconEqualVertical = (props: ST_IconProps) =>
+  createElement(IconEqual, {
+    ...props,
+    className: cn('rotate-90', props.className),
+  });
 
 export const ST_Default_Icons = {
   AddIcon: IconPlus,
@@ -84,10 +92,10 @@ export const ST_Default_Icons = {
   FirstPageIcon: IconChevronLeftPipe,
   FullscreenExitIcon: IconMinimize,
   FullscreenIcon: IconMaximize,
-  GridLinesAllIcon: ST_GridLinesAllIcon,
-  GridLinesColumnsIcon: ST_GridLinesColumnsIcon,
+  GridLinesAllIcon: IconFrame,
+  GridLinesColumnsIcon: IconEqualVertical,
   GridLinesNoneIcon: IconSquare,
-  GridLinesRowsIcon: ST_GridLinesRowsIcon,
+  GridLinesRowsIcon: IconEqual,
   IndeterminateIcon: IconMinus,
   KeyboardDoubleArrowDownIcon: IconChevronsDown,
   LastPageIcon: IconChevronRightPipe,
@@ -116,7 +124,7 @@ export const ST_Default_Icons = {
   StripedOnIcon: IconSpacingVertical,
   SwapVertIcon: IconArrowsSort,
   SyncAltIcon: IconArrowsLeftRight,
-  ViewColumnIcon: IconColumns3,
+  ViewColumnIcon: IconTableOptions,
   VisibilityOffIcon: IconEyeOff,
   WrapTextIcon: IconTextWrap,
 } satisfies ST_Icons;

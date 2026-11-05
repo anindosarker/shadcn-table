@@ -9,6 +9,10 @@ import {
   ShadcnTable,
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { ST_Default_Icons as hugeicons } from '@/components/ui/shadcn-table/icons/hugeicons';
+import { ST_Default_Icons as phosphor } from '@/components/ui/shadcn-table/icons/phosphor';
+import { ST_Default_Icons as remixicon } from '@/components/ui/shadcn-table/icons/remixicon';
+import { ST_Default_Icons as tabler } from '@/components/ui/shadcn-table/icons/tabler';
 
 // The view settings panel: one row per table preference with a pin toggle
 // that places it in the toolbar, and "Reset view".
@@ -371,5 +375,55 @@ export const ToolbarGroupOrder = {
     buttons.forEach((button) =>
       expect(button.getAttribute('data-variant')).not.toBe('secondary'),
     );
+  },
+};
+
+// The view settings icons of the four icon editions (D75 keys, D77 picks):
+// one cell per icon, the columns icon rotated and the comfortable density
+// icon mirrored by the edition's wrapper.
+const EDITIONS = { hugeicons, phosphor, remixicon, tabler };
+const VIEW_SETTINGS_ICON_KEYS = [
+  'GridLinesAllIcon',
+  'GridLinesRowsIcon',
+  'GridLinesColumnsIcon',
+  'GridLinesNoneIcon',
+  'ViewColumnIcon',
+  'DensitySmallIcon',
+  'DensityMediumIcon',
+  'DensityLargeIcon',
+] as const;
+
+export const EditionIconsRender = {
+  render: () => (
+    <div className="grid grid-cols-8 gap-2">
+      {Object.entries(EDITIONS).flatMap(([set, icons]) =>
+        VIEW_SETTINGS_ICON_KEYS.map((key) => {
+          const Icon = icons[key];
+          return (
+            <span data-testid={`${set}-${key}`} key={`${set}-${key}`}>
+              <Icon />
+            </span>
+          );
+        }),
+      )}
+    </div>
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const svgOf = (id: string) => canvas.getByTestId(id).querySelector('svg');
+    for (const set of Object.keys(EDITIONS)) {
+      for (const key of VIEW_SETTINGS_ICON_KEYS) {
+        await expect(svgOf(`${set}-${key}`)).not.toBeNull();
+      }
+      await expect(
+        svgOf(`${set}-GridLinesColumnsIcon`)?.classList.contains('rotate-90'),
+      ).toBe(true);
+    }
+    // Tabler keeps its IconBaselineDensity trio, unmirrored (D77).
+    for (const set of ['hugeicons', 'phosphor', 'remixicon']) {
+      await expect(
+        svgOf(`${set}-DensityMediumIcon`)?.classList.contains('-scale-x-100'),
+      ).toBe(true);
+    }
   },
 };
