@@ -233,11 +233,6 @@
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
-          "path": "registry/base/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
-        },
-        {
           "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
@@ -1636,11 +1631,6 @@
           "path": "registry/radix/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
-        },
-        {
-          "path": "registry/radix/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
@@ -3043,11 +3033,6 @@
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
         },
         {
-          "path": "registry/aria/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
-        },
-        {
           "path": "registry/aria/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/inputs/ST_Checkbox.tsx"
@@ -4446,11 +4431,6 @@
           "path": "registry/base/components/ui/shadcn-table/components/head/ST_TableHeadRow.tsx",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/components/head/ST_TableHeadRow.tsx"
-        },
-        {
-          "path": "registry/base/components/ui/shadcn-table/components/icons/ST_GridLineIcons.tsx",
-          "type": "registry:ui",
-          "target": "@ui/shadcn-table/components/icons/ST_GridLineIcons.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/components/inputs/ST_Checkbox.tsx",
