@@ -1,6 +1,6 @@
 # Theme demo speed, tracker
 
-Status: verified
+Status: merged (800ea815c1c4201b4d450a632fe8a45edc23dc73)
 Branch `v0.8/fix-theme-demo-speed`, worktree 03, PR #[n]
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at 5b426b83: green
