@@ -45,6 +45,7 @@ The reference for every look decision is the owner's header demo (`test-projects
 - Changes: `ST_TableHeadCellResizeHandle` loses the short separator, the density offsets and the 2 px cell border while resizing.
 - Stays: `columnResizeMode`, per-column `enableResizing`.
 - Addendum 2026-11-05: applies to `columnResizeMode: 'onEnd'` too: the hairline follows the pointer, nothing else; no body guide line, no slide on release (A12).
+- Addendum 2026-11-05: the bordered box the owner saw while resizing in aria was the 2 px cell border this decision removes; gone with F39, guarded by the play `ResizeGuidesMeetEdge` (A13).
 
 ### D7 Row heights and grid lines
 
@@ -456,3 +457,13 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - The D63 room rule stays at 360 px for every step: on a first load where the toolbar sits within 360 px of the bottom edge the demo shows "Starting" and plays once the visitor scrolls it up. Owner, 2026-11-05.
 - Source: A20
+
+### D70 Every internal toolbar button mounts with the pinned items' animation, unchanged
+
+- `ST_ToolbarInternalButtons` uses the exact spec 04 1.6.5 animation (`animate-in fade-in zoom-in-75 duration-200 motion-reduce:animate-none`), from 0 opacity, as `ST_ViewSettingsItems` does; the play `ChipsDisplayMode` (`stories/features/Filtering.stories.tsx`) waits for the mount animation instead of the code starting at 10 percent (no test-driven deviation, no-hack rule). Agent, 2026-11-05.
+- Source: A14
+
+### D71 Custom toolbar actions subscribe to the state they read
+
+- `renderTopToolbarCustomActions` and `renderBottomToolbarCustomActions` render inside a `table.Subscribe` on `rowSelection`, `columnFilters`, `globalFilter` and `sorting` (per-atom subscriptions, v0.7.x D13); only the actions re-render. No public API change. Agent, 2026-11-05.
+- Source: A15
