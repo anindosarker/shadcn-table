@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 21:50
+Updated: 2026-11-05 22:00
 
 | Story                                            | S1  | S2  | S3  | S4  | S5  | S6  | S7  | S8  | S9  | S10 | S11 |
 | ------------------------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -39,4 +39,5 @@ Updated: 2026-11-05 21:50
 | Filters, toolbar, RTL (06.4)                     |     |     |     |     |     |     |     |     |     | [x] |     |
 | Docs follow-up (06.5)                            |     |     |     |     |     |     |     |     |     | [x] |     |
 | Grouping column aligns start F57                 |     |     |     |     |     |     |     |     |     | [x] |     |
+| Expand column aligns start, all modes F58       |     |     |     |     |     |     |     |     |     | [ ] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     |     | ·  |
