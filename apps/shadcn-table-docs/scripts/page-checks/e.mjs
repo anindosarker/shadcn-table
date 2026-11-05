@@ -592,8 +592,9 @@ const checks = {
     // must never leave behind (F45 follow-up): a tooltip or a keyboard focus
     // ring on a control it clicked, a page scroll, a change in the table
     // frame's height or in the step list's place, an empty cell editor; and
-    // what it must show: the Filtering cue on the "+ Filter" pill, the moved
-    // column drawn on top of the cells it slides across (F47): mid-slide, the
+    // what it must show: the Filtering cue on the "+ Filter" pill, the cue on
+    // the sort chip, the sort editor, the filter chip editor and the view
+    // settings panel (F49, D65), polled each frame, the moved column drawn on top of the cells it slides across (F47): mid-slide, the
     // topmost element at its header's centre is that header
     const titles = await page
       .locator('[aria-label="Demo items"] .v5-step span.text-sm')
@@ -604,7 +605,7 @@ const checks = {
       'Cell editing',
       'Filter chips',
       'Column order',
-      'Striped rows',
+      'Alternating row colors',
     ];
     check(
       'demo: step titles',
@@ -625,6 +626,7 @@ const checks = {
           lists: new Set(),
           emptyEdit: 0,
           pillCue: false,
+          cues: new Set(),
           movedOnTop: 0,
           movedCovered: 0,
           flipped: new Set(),
@@ -695,7 +697,27 @@ const checks = {
             ) {
               flaws.pillCue = true;
             }
+            if (
+              el.tagName === 'BUTTON' &&
+              !el.closest('thead') &&
+              el.textContent?.trim() === 'Due'
+            ) {
+              flaws.cues.add('sort chip');
+            }
           });
+          // the editors and the panel render in portals outside the table
+          document
+            .querySelectorAll('[data-slot="popover-content"].v12-cue')
+            .forEach((el) => {
+              const text = el.textContent ?? '';
+              if (text.includes('Delete sort')) flaws.cues.add('sort editor');
+              if (text.includes('Remove filter')) {
+                flaws.cues.add('filter chip editor');
+              }
+              if (el.querySelector('[aria-label="Alternating row colors"]')) {
+                flaws.cues.add('view settings panel');
+              }
+            });
           const head = [...(table?.querySelectorAll('thead th') ?? [])].map(
             (th) => th.getAttribute('data-flip-column'),
           );
@@ -758,6 +780,7 @@ const checks = {
             lists: [...f.lists],
             emptyEdit: f.emptyEdit,
             pillCue: f.pillCue,
+            cues: [...f.cues],
             movedOnTop: f.movedOnTop,
             movedCovered: f.movedCovered,
             flipped: [...f.flipped],
@@ -805,6 +828,17 @@ const checks = {
         `frames=${flaws.emptyEdit}`,
       );
       check('demo: Filtering cues the + Filter pill', flaws.pillCue);
+      const cued = [
+        'sort editor',
+        'sort chip',
+        'filter chip editor',
+        'view settings panel',
+      ];
+      check(
+        'demo: cues the sort chip, the editors and the view settings panel',
+        cued.every((cue) => flaws.cues.includes(cue)),
+        `cued=${flaws.cues.join(',')}`,
+      );
       check(
         'demo: the moved column slides on top of the others',
         flaws.movedOnTop > 0 && flaws.movedCovered === 0,

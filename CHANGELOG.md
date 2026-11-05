@@ -186,6 +186,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - The home demo plays only while its toolbar has room for the popovers below it (360 px under the toolbar, below the sticky nav): until then it holds on "Starting", scrolled away mid-step it pauses with its popover closed, and it resumes when the room is back, so the sort, filter and view settings popovers never flip up over the hero.
 
+#### Fix F49
+
+- The home demo's cue marks the editor or panel a control opens as well as the control: the sort picker, the "Due" chip and its sort editor, the filter picker, the "Status" chip editor and the "Status: In Review" chip, and the view settings panel; the cue inside a popover now shows (it was invisible there), and the last step is titled "Alternating row colors".
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed
