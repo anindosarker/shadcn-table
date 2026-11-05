@@ -2,14 +2,13 @@
 
 Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The process itself (orchestration, models, loop, gates once, Acceptance, attention, handoff) lives in the skill; this file says only what this project is.
 
-## P1 Branches, merges, PRs and CI (D81)
+## P1 Branches, merges, PRs and CI (D81, D83)
 
-- `claude/review` is where work lands, `dev` the always-releasable staging branch, `master` release only.
-- A story runs on a branch `v<major>.<minor>/<slug>` cut from `origin/claude/review`, never from an unmerged tip, in a pool worktree `../shadcn-react-table.worktrees/01`, `02`, `03` (clean, dependencies installed), reset with `git -C <wt> fetch origin && git -C <wt> checkout -B <branch> origin/claude/review && git -C <wt> push -u origin <branch>`; a new numbered worktree only when every pool one is busy, and it joins the pool; never remove one; never touch `wt1` and `wt2`. Branch and worktree are recorded in the tracker. Never force-push; never bare `git stash`.
-- Gates run locally: the `pr.yml` jobs are pnpm scripts, the builder runs the ones its files need and records them, the verifier reruns what is missing. A story merges into `claude/review` with a merge commit the moment its recorded gates are green (`merge: <story> (<spec>)`), the branch is deleted, the next story starts at once. No PR, no CI wait. A small fix (a constant, a copy change, a one-file docs fix) skips the verifier and is merged from the main session.
-- `claude/review` fast-forwards into `dev` at every story merge. `pr.yml` runs on each push to `dev`: that is the Linux run; a red is fixed forward on `claude/review` at once.
-- One PR per release: `dev` into `master`, created with its `release:` label, auto-merge enabled, the owner's approval, `release.yml` from there (P3). `.github/pull_request_template.md` applies to that PR only.
-- `act -j <job>` (nektos act, Docker) runs a `pr.yml` job locally on Linux; the verifier uses it only for a story that changes fonts, layout measurements or a workflow file.
+- `claude/review` is where work lands, `dev` the release staging branch, `master` release only.
+- A milestone runs on a branch `v<major>.<minor>/<slug>` cut from `origin/claude/review`, never from an unmerged tip, in a pool worktree `../shadcn-react-table.worktrees/01`, `02`, `03` (clean, dependencies installed), reset with `git -C <wt> fetch origin && git -C <wt> checkout -B <branch> origin/claude/review && git -C <wt> push -u origin <branch>`; a new numbered worktree only when every pool one is busy, and it joins the pool; never remove one; never touch `wt1` and `wt2`. Branch and worktree are recorded in the tracker. Never force-push; never bare `git stash`.
+- Gates run locally: the `pr.yml` jobs are pnpm scripts; the builder runs the ones the epic names for its milestone and records them, the verifier reruns what is missing. A milestone merges into `claude/review` with a merge commit the moment its recorded gates are green (`merge: <milestone> (<epic>)`), the branch is deleted local and remote, the next milestone starts at once. No PR, no CI wait. A small fix (a constant, a copy change, a one-file docs fix) skips the verifier and is merged from the main session.
+- `dev` is untouched during the sprints. After the last feature column merges, `claude/review` fast-forwards into `dev` once; the release epic's integration milestone runs the suite on `dev` through a verifier; a red is a fix milestone on `claude/review`, then `dev` again. `act pull_request` (nektos act, Docker) runs `pr.yml` locally on Linux: available to any agent at any stage when it helps, never required, never forbidden.
+- One PR per release: `dev` into `master`, created with its `release:` label and auto-merge; `pr.yml` is the CI run, its last job bumps the version onto the PR after every other job is green; the owner approves; `release.yml` runs once on the merge (P3). `.github/pull_request_template.md` applies to that PR only.
 - After a release, fast-forward `claude/review` and `dev` to `master` before the next plan commit.
 
 ## P3 Release once per release, in the background
