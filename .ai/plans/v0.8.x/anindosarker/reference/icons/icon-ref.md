@@ -1,0 +1,23 @@
+## Density icons
+
+![1793894852258](image/icon-ref/1793894852258.png)![1793894857272](image/icon-ref/1793894857272.png)
+
+## Gridlines
+
+=
+
+![1793895651313](image/icon-ref/1793895651313.png)
+
+||
+
+![1793895835950](image/icon-ref/1793895835950.png)![1793895846270](image/icon-ref/1793895846270.png)
+
+![1793895525105](image/icon-ref/1793895525105.png)
+
+![1793896178704](image/icon-ref/1793896178704.png)
+
+![1793902652340](image/icon-ref/1793902652340.png)
+
+## Cols
+
+![1793896031500](image/icon-ref/1793896031500.png)I
