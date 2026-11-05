@@ -467,3 +467,7 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - `renderTopToolbarCustomActions` and `renderBottomToolbarCustomActions` render inside a `table.Subscribe` on `rowSelection`, `columnFilters`, `globalFilter` and `sorting` (per-atom subscriptions, v0.7.x D13); only the actions re-render. No public API change. Agent, 2026-11-05.
 - Source: A15
+
+### D72 The multi-select filter field shows a chevron, a clear button and the first match highlighted
+
+- The `multi-select` filter (shadcn `Combobox` with `multiple`, the chips field) keeps its stock composition in place, with: the chips and the typing input in an inner wrapping box; a `ComboboxTrigger` chevron in its own column at the end of the field, vertically centred however many rows the chips take; the existing clear X in the group's trailing slot beside it once a value exists (the empty slot hidden until then, no gap); the chip editor popover at a fixed `w-65` so the chips wrap instead of widening it (F55); `autoHighlight` so typing highlights the first match and Enter picks it. Three bases. Previewed and accepted on the docs copy 2026-11-05 (diff in the session scratchpad `multiselect-chevron.diff`, to be applied to the library source). Owner, 2026-11-05.
