@@ -85,12 +85,14 @@ const getCanDrop = <TData extends ST_RowData>(column: ST_Column<TData>) =>
 /**
  * Each unpinned header's shift in the drag preview: the drop rule (the
  * dragged column takes the target's index) applied to the unpinned columns.
- * A drop into a pinned region is not previewed.
+ * A drop into a pinned region is not previewed. In an RTL table the first
+ * column is the rightmost, so the slots are laid right to left.
  */
 const previewShifts = (
   boxes: HeaderBox[],
   draggingId: string,
   targetId: string | undefined,
+  rtl: boolean,
 ): Map<string, number> => {
   const shifts = new Map<string, number>();
   const center = boxes.filter((box) => !box.pinned);
@@ -99,6 +101,14 @@ const previewShifts = (
   if (from < 0 || to < 0 || from === to) return shifts;
   const preview = [...center];
   preview.splice(to, 0, preview.splice(from, 1)[0]);
+  if (rtl) {
+    let right = center[0].left + center[0].width;
+    for (const box of preview) {
+      right -= box.width;
+      shifts.set(box.id, right - box.left);
+    }
+    return shifts;
+  }
   let left = center[0].left;
   for (const box of preview) {
     shifts.set(box.id, left - box.left);
@@ -220,10 +230,14 @@ export const useST_ColumnFlip = <TData extends ST_RowData>(
       previewTargetId = undefined;
     };
 
-    const showPreview = (draggingId: string, targetId: string | undefined) => {
+    const showPreview = (
+      draggingId: string,
+      targetId: string | undefined,
+      rtl: boolean,
+    ) => {
       if (!preview || targetId === previewTargetId) return;
       previewTargetId = targetId;
-      const shifts = previewShifts(boxes, draggingId, targetId);
+      const shifts = previewShifts(boxes, draggingId, targetId, rtl);
       shiftedIds.current.forEach((id) => {
         if (!shifts.get(id)) writeShift(id, 0);
       });
@@ -269,6 +283,7 @@ export const useST_ColumnFlip = <TData extends ST_RowData>(
       showPreview(
         dragging.id,
         next && !next.getIsPinned() ? next.id : undefined,
+        getComputedStyle(tableElement).direction === 'rtl',
       );
     };
 

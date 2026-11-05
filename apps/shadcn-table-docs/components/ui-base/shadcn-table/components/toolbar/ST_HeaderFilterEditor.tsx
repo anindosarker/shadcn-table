@@ -13,7 +13,7 @@ import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui-base/shadcn-table/shared
 import { ST_FilterEditor } from '@/components/ui-base/shadcn-table/components/toolbar/ST_FilterEditor';
 import { useST_MenuAnchor } from '@/components/ui-base/shadcn-table/hooks/useST_MenuAnchor';
 
-export const filterEditorClassName = 'w-auto min-w-65';
+export const filterEditorClassName = 'w-65';
 
 /** The column's first filter input, or null when it is not mounted. */
 export const getFilterInput = <TData extends ST_RowData>(
