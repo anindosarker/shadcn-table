@@ -52,7 +52,7 @@ const Example = () => {
         icon: HashIcon,
         header: 'Id',
         enableEditing: false,
-        size: 80,
+        size: 110,
       },
       {
         accessorKey: 'firstName',
