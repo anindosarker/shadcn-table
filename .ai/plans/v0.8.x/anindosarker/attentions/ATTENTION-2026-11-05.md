@@ -64,3 +64,10 @@
 - Options:
   - a) Recommended: keep; the header arrow carries the direction (spec 04 chip design).
   - b) The chip's icon follows the first sort's direction (arrow up or down instead of the swap icon), library change in the three bases.
+
+## A20 The home demo no longer plays on first load at 1440x900
+
+- D63 (F48): the replay runs only while the toolbar has 360 px of room below it. At 1440x900 with the page at the top the toolbar sits 157 px above the bottom edge, so the demo holds on "Starting" until the visitor scrolls it up; the same on any viewport where the toolbar lands within 360 px of the bottom. The first impression changes from a playing demo to a still table with "Starting".
+- Options:
+  - a) Recommended: keep; the demo plays as soon as the visitor scrolls to it.
+  - b) Lower the room to what the sort editor needs (about 260 px) so a 1440x900 first load plays; the view settings panel (309 px) then flips up in that position.
