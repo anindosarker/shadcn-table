@@ -119,7 +119,10 @@ export const ChipsDisplayMode = {
     />
   ),
   play: async ({ canvas }: StoryContext) => {
-    await expect(canvas.getByRole('button', { name: 'Filter' })).toBeVisible();
+    // The toolbar buttons fade in from 0 opacity on mount (D70).
+    await waitFor(() =>
+      expect(canvas.getByRole('button', { name: 'Filter' })).toBeVisible(),
+    );
     await expect(
       canvas.queryByRole('textbox', { name: /Filter by/ }),
     ).not.toBeInTheDocument();

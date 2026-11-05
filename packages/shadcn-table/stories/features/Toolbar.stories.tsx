@@ -437,6 +437,14 @@ export const InternalButtonsAnimateIn = {
         button.getAttribute('aria-label') ?? button.textContent ?? '',
       ).toBe(true);
     }
+    // D70: each group child fades in from 0 opacity, as the pinned view
+    // items do.
+    for (const child of [...group.children] as HTMLElement[]) {
+      expect(
+        getComputedStyle(child).getPropertyValue('--tw-enter-opacity').trim(),
+        child.getAttribute('aria-label') ?? child.textContent ?? '',
+      ).toBe('0');
+    }
     await new Promise((resolve) => setTimeout(resolve, 300));
     await waitFor(() => {
       for (const button of buttons) {
