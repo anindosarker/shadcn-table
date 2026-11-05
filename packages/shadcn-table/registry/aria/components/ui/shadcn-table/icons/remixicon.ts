@@ -14,10 +14,13 @@ import {
   RiCheckboxBlankLine,
   RiCloseCircleLine,
   RiCloseLine,
+  RiContractUpDownLine,
   RiDeleteBinLine,
   RiDraggable,
+  RiEqualLine,
   RiEqualizerLine,
   RiEraserLine,
+  RiExpandUpDownLine,
   RiEyeOffLine,
   RiFileCopyLine,
   RiFilter2Line,
@@ -25,14 +28,14 @@ import {
   RiFilterOffLine,
   RiFullscreenExitLine,
   RiFullscreenLine,
-  RiLayoutColumnLine,
+  RiHashtag,
+  RiIndentDecrease,
+  RiKanbanView,
   RiLayoutRowLine,
   RiLayoutTopLine,
   RiListOrdered,
   RiListUnordered,
   RiLockLine,
-  RiMenu2Line,
-  RiMenuLine,
   RiMore2Line,
   RiMoreLine,
   RiPencilLine,
@@ -44,21 +47,18 @@ import {
   RiSkipLeftLine,
   RiSkipRightLine,
   RiSortDesc,
+  RiSquareLine,
   RiStackLine,
   RiSubtractLine,
   RiTextWrap,
   RiUnpinLine,
   type RemixiconComponentType,
 } from '@remixicon/react';
+import { cn } from '@/lib/utils';
 import type {
   ST_IconProps,
   ST_Icons,
 } from '@/components/ui/shadcn-table/types';
-import {
-  ST_GridLinesAllIcon,
-  ST_GridLinesColumnsIcon,
-  ST_GridLinesRowsIcon,
-} from '@/components/ui/shadcn-table/components/icons/ST_GridLineIcons';
 
 // Remix types its icons without children; each entry drops them.
 const icon = (Ri: RemixiconComponentType) => {
@@ -66,6 +66,18 @@ const icon = (Ri: RemixiconComponentType) => {
     createElement(Ri, { ...props, children: undefined });
   return Icon;
 };
+
+const RiEqualVertical = (props: ST_IconProps) =>
+  icon(RiEqualLine)({
+    ...props,
+    className: cn('rotate-90', props.className),
+  });
+
+const RiIndentDecreaseFlipped = (props: ST_IconProps) =>
+  icon(RiIndentDecrease)({
+    ...props,
+    className: cn('-scale-x-100', props.className),
+  });
 
 export const ST_Default_Icons = {
   AddIcon: icon(RiAddLine),
@@ -79,12 +91,9 @@ export const ST_Default_Icons = {
   CloseIcon: icon(RiCloseLine),
   ContentCopy: icon(RiFileCopyLine),
   DeleteIcon: icon(RiDeleteBinLine),
-  // Stands in for Lucide Rows2.
-  DensityLargeIcon: icon(RiLayoutRowLine),
-  // Stands in for Lucide Rows3.
-  DensityMediumIcon: icon(RiMenuLine),
-  // Stands in for Lucide Rows4.
-  DensitySmallIcon: icon(RiMenu2Line),
+  DensityLargeIcon: icon(RiExpandUpDownLine),
+  DensityMediumIcon: RiIndentDecreaseFlipped,
+  DensitySmallIcon: icon(RiContractUpDownLine),
   DragHandleIcon: icon(RiDraggable),
   DynamicFeedIcon: icon(RiStackLine),
   EditIcon: icon(RiPencilLine),
@@ -96,11 +105,10 @@ export const ST_Default_Icons = {
   FirstPageIcon: icon(RiSkipLeftLine),
   FullscreenExitIcon: icon(RiFullscreenExitLine),
   FullscreenIcon: icon(RiFullscreenLine),
-  GridLinesAllIcon: ST_GridLinesAllIcon,
-  GridLinesColumnsIcon: ST_GridLinesColumnsIcon,
-  // Stands in for Lucide Square.
-  GridLinesNoneIcon: icon(RiCheckboxBlankLine),
-  GridLinesRowsIcon: ST_GridLinesRowsIcon,
+  GridLinesAllIcon: icon(RiHashtag),
+  GridLinesColumnsIcon: RiEqualVertical,
+  GridLinesNoneIcon: icon(RiSquareLine),
+  GridLinesRowsIcon: icon(RiEqualLine),
   IndeterminateIcon: icon(RiSubtractLine),
   KeyboardDoubleArrowDownIcon: icon(RiArrowDownDoubleLine),
   // Stands in for Lucide ChevronLast.
@@ -133,7 +141,7 @@ export const ST_Default_Icons = {
   StripedOnIcon: icon(RiLayoutRowLine),
   SwapVertIcon: icon(RiArrowUpDownLine),
   SyncAltIcon: icon(RiArrowLeftRightLine),
-  ViewColumnIcon: icon(RiLayoutColumnLine),
+  ViewColumnIcon: icon(RiKanbanView),
   VisibilityOffIcon: icon(RiEyeOffLine),
   WrapTextIcon: icon(RiTextWrap),
 } satisfies ST_Icons;
