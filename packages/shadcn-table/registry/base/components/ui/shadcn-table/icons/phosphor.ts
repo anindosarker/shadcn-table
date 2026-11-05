@@ -7,8 +7,10 @@ import {
   ArrowUpIcon,
   ArrowsDownUpIcon,
   ArrowsInIcon,
+  ArrowsInLineVerticalIcon,
   ArrowsLeftRightIcon,
   ArrowsOutIcon,
+  ArrowsOutLineVerticalIcon,
   BrowserIcon,
   CaretDoubleDownIcon,
   CaretDownIcon,
@@ -21,13 +23,14 @@ import {
   DotsSixVerticalIcon,
   DotsThreeIcon,
   DotsThreeVerticalIcon,
+  EqualsIcon,
   EraserIcon,
   EyeSlashIcon,
   FloppyDiskIcon,
   FunnelIcon,
   FunnelSimpleIcon,
   FunnelXIcon,
-  ListDashesIcon,
+  HashStraightIcon,
   ListIcon,
   ListNumbersIcon,
   LockIcon,
@@ -45,16 +48,29 @@ import {
   SquareSplitVerticalIcon,
   StackIcon,
   TextIndentIcon,
+  TextOutdentIcon,
   TrashIcon,
   XCircleIcon,
   XIcon,
 } from '@phosphor-icons/react';
-import type { ST_Icons } from '@/components/ui/shadcn-table/types';
-import {
-  ST_GridLinesAllIcon,
-  ST_GridLinesColumnsIcon,
-  ST_GridLinesRowsIcon,
-} from '@/components/ui/shadcn-table/components/icons/ST_GridLineIcons';
+import { createElement } from 'react';
+import { cn } from '@/lib/utils';
+import type {
+  ST_IconProps,
+  ST_Icons,
+} from '@/components/ui/shadcn-table/types';
+
+const EqualsVertical = (props: ST_IconProps) =>
+  createElement(EqualsIcon, {
+    ...props,
+    className: cn('rotate-90', props.className),
+  });
+
+const TextOutdentFlipped = (props: ST_IconProps) =>
+  createElement(TextOutdentIcon, {
+    ...props,
+    className: cn('-scale-x-100', props.className),
+  });
 
 export const ST_Default_Icons = {
   AddIcon: PlusIcon,
@@ -68,12 +84,9 @@ export const ST_Default_Icons = {
   CloseIcon: XIcon,
   ContentCopy: CopyIcon,
   DeleteIcon: TrashIcon,
-  // Stands in for Lucide Rows2.
-  DensityLargeIcon: RowsIcon,
-  // Stands in for Lucide Rows3.
-  DensityMediumIcon: ListIcon,
-  // Stands in for Lucide Rows4.
-  DensitySmallIcon: ListDashesIcon,
+  DensityLargeIcon: ArrowsOutLineVerticalIcon,
+  DensityMediumIcon: TextOutdentFlipped,
+  DensitySmallIcon: ArrowsInLineVerticalIcon,
   DragHandleIcon: DotsSixVerticalIcon,
   DynamicFeedIcon: StackIcon,
   EditIcon: PencilSimpleIcon,
@@ -84,10 +97,10 @@ export const ST_Default_Icons = {
   FirstPageIcon: CaretLineLeftIcon,
   FullscreenExitIcon: ArrowsInIcon,
   FullscreenIcon: ArrowsOutIcon,
-  GridLinesAllIcon: ST_GridLinesAllIcon,
-  GridLinesColumnsIcon: ST_GridLinesColumnsIcon,
+  GridLinesAllIcon: HashStraightIcon,
+  GridLinesColumnsIcon: EqualsVertical,
   GridLinesNoneIcon: SquareIcon,
-  GridLinesRowsIcon: ST_GridLinesRowsIcon,
+  GridLinesRowsIcon: EqualsIcon,
   IndeterminateIcon: MinusIcon,
   KeyboardDoubleArrowDownIcon: CaretDoubleDownIcon,
   LastPageIcon: CaretLineRightIcon,
