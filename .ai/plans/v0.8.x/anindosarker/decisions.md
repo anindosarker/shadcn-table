@@ -440,3 +440,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - The subheader filter container keeps `contain-inline-size overflow-hidden` for every filter variant: a column keeps its `size` and clips a wider filter; the consumer sizes a filterable column, as Material React Table. Extends D61 from range fields to all variants. Owner, 2026-11-05.
 - Source: A16
+
+### D67 The sort chip keeps the swap icon
+
+- The sort chip shows the swap icon, the first sort's label and a chevron; the sort direction shows in the sorted header's arrow only. Owner, 2026-11-05.
+- Source: A19
