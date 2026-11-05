@@ -318,13 +318,13 @@ const stateAt = (step: number) =>
 
 // after its last beat, a step's open popover stays up this long, then the
 // step's state lands and holds HOLD_MS (the 1200ms pulse fits well inside)
-const SHOW_MS = 1200;
-const HOLD_MS = 2200;
+const SHOW_MS = 800;
+const HOLD_MS = 1200;
 // the finished table holds this long before the replay starts over
-const LAST_HOLD_MS = 3000;
-const REST_MS = 1400;
+const LAST_HOLD_MS = 2000;
+const REST_MS = 1000;
 // every step stays active at least this long, beats and hold together
-const MIN_STEP_MS = 5200;
+const MIN_STEP_MS = 3600;
 
 /* Room under the toolbar's buttons the tallest popover a step opens needs
  * to open below its trigger (measured 2026-11-05): the view settings panel

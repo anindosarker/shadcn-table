@@ -150,6 +150,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 ### Docs
 
+#### Home demo pace
+
+- The home demo holds each step 1.2 s after it lands (was 2.2 s) with a 3.6 s floor per step (was 5.2 s), so the loop runs about 25 s instead of 34 s.
+
 #### Fix F56
 
 - The header-width page check waits for the web font before measuring, so CI measures Inter, not the Linux fallback.
