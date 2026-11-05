@@ -6,9 +6,11 @@
 // Every icon set holds the same keys: the Lucide map icons.ts and the maps
 // below icons/ (tabler, phosphor, hugeicons, remixicon) of every base. The
 // keys are read with a regex over the `ST_Default_Icons` object literal, one
-// `key:` per line, with no TypeScript import. It prints one line per base,
-// then every missing map, missing key and extra key against icons.ts, and
-// exits non-zero on any problem; it never edits a file.
+// `key:` per line, with no TypeScript import. A map also never imports from
+// components/icons/: each edition draws with its own set (D76). It prints one
+// line per base, then every missing map, missing key, extra key against
+// icons.ts and components/icons/ import, and exits non-zero on any problem;
+// it never edits a file.
 import fs from 'node:fs';
 import path from 'node:path';
 import { BASES } from './registry/bases.mjs';
@@ -58,6 +60,11 @@ for (const base of BASES) {
       }
       for (const key of keys.filter((k) => !reference.includes(k))) {
         problems.push(`${map}: extra key ${key}`);
+      }
+      if (
+        /from '[^']*components\/icons\//.test(fs.readFileSync(file, 'utf8'))
+      ) {
+        problems.push(`${map}: imports from components/icons/`);
       }
     }
   }
