@@ -35,7 +35,7 @@ Updated: 2026-11-05 18:05
 | Theme demo speed                                 |     |     |     |     |     |     |     |     | [x] |     |     |
 | Demo cues and last title F49, D65                |     |     |     |     |     |     |     |     | [x] |     |     |
 | Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |     |
-| Grouping header (06.4)                           |     |     |     |     |     |     |     |     |     | ·  |     |
-| Filters, toolbar, RTL (06.4)                     |     |     |     |     |     |     |     |     |     | ·  |     |
-| Docs follow-up (06.5)                            |     |     |     |     |     |     |     |     |     | ·  |     |
+| Grouping header (06.4)                           |     |     |     |     |     |     |     |     |     | [ ] |     |
+| Filters, toolbar, RTL (06.4)                     |     |     |     |     |     |     |     |     |     | [ ] |     |
+| Docs follow-up (06.5)                            |     |     |     |     |     |     |     |     |     | [ ] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     |     | ·  |
