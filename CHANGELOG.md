@@ -152,6 +152,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 - Under `groupedColumnMode: 'remove'` with grouping active, the grouping column aligns its header (expand-all button, then the breadcrumb), its group cells and its row chevrons to the start instead of the centre; the narrow expand column stays centred.
 
+#### Fix F58
+
+- With grouping active, the expand column aligns its chevrons to the start under `groupedColumnMode: false` and `'reorder'` too, so the depth indent steps right from the cell's start; without grouping the narrow control column stays centred.
+
 ### Docs
 
 #### Home demo pace

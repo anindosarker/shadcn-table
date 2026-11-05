@@ -555,6 +555,52 @@ export const GroupedHeaderAlignsStart = {
   },
 };
 
+// With grouping active the expand column aligns start in every
+// groupedColumnMode: under `false` and 'reorder' the group rows' chevrons sit
+// at the cell's start and step right one indent per depth, not mid-column
+// (F58).
+export const GroupedExpandAlignsStartAllModes = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      {([false, 'reorder'] as const).map((mode) => (
+        <div data-mode={String(mode)} key={String(mode)}>
+          <ShadcnTable
+            columns={columns}
+            data={data}
+            enableGrouping
+            groupedColumnMode={mode}
+            initialState={{ expanded: true, grouping: ['state', 'gender'] }}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const startOffset = (cell: Element) =>
+      cell.querySelector('button')!.getBoundingClientRect().left -
+      cell.getBoundingClientRect().left;
+    for (const mode of ['false', 'reorder']) {
+      const root = canvasElement.querySelector(`[data-mode="${mode}"]`)!;
+      const rows = () => [...root.querySelectorAll('tbody tr')];
+      const expandCell = (row: Element) =>
+        row.querySelector('td[data-flip-column="st-row-expand"]')!;
+      await waitFor(() => {
+        const depth0 = startOffset(expandCell(rows()[0]!));
+        const depth1 = startOffset(expandCell(rows()[1]!));
+        expect(depth0, mode).toBeLessThanOrEqual(24);
+        expect(depth1, mode).toBeGreaterThan(depth0);
+        const leafRow = rows().find(
+          (row) =>
+            row
+              .querySelector('td[data-flip-column="firstName"]')
+              ?.textContent?.trim() !== '',
+        )!;
+        expect(startOffset(expandCell(leafRow)), mode).toBeLessThanOrEqual(40);
+      });
+    }
+  },
+};
+
 // Under 'reorder' the grouped column keeps its own header, icon included.
 export const GroupedHeaderHasIconReorder = {
   render: () => (
