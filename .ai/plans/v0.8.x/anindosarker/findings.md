@@ -210,3 +210,7 @@
 ### F50 RTL resizing story hides every header but the first
 
 - Storybook aria, `Column Resizing Enabled On End RTL` (`stories/features/ColumnResizing.stories.tsx:182`), owner screenshot 2026-11-05 15:53: the header row shows only the "First Name" header at the right edge; the other header cells are missing while the body renders every column; an "Address" header with the D37 dashed drag outline floats over the first body row around the State and Phone columns. Not investigated (owner: record only). Check the other RTL stories of the file and the base base; suspects: physical `left`/`right` in the header width or sticky maths under `dir="rtl"` (`shared/utils/style.utils.ts`, `components/head/ST_TableHeadCell.tsx`), the column drag preview measuring `left` in RTL (`hooks/useST_ColumnFlip.ts`).
+
+### F51 The advanced example's custom toolbar shows no sort chip
+
+- `/docs/examples/advanced`, Base UI, owner screenshot 2026-11-05 16:01: Name and Email are sorted (header arrows) but the toolbar shows search, "+ Filter" and the custom actions only; the sort chip the stock toolbar renders while a sort exists (`ST_SortPopover` `variant="chip"`, spec 04) is missing. The example's `renderTopToolbar` (F27 made it render `<ST_FilterChips table={table} />`) does not render the sort chip. Fix: the custom toolbar renders `<ST_SortPopover table={table} variant="chip" />` before the filter chips as the stock toolbar does, three bases; check the other custom-toolbar examples (custom-top-toolbar, custom-headless, external-toolbar) and the page check for `advanced`.
