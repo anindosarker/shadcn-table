@@ -1,6 +1,6 @@
 # v0.8.x sprints
 
-Updated: 2026-11-05 18:05
+Updated: 2026-11-05 18:20
 
 | Story                                            | S1  | S2  | S3  | S4  | S5  | S6  | S7  | S8  | S9  | S10 | S11 |
 | ------------------------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -35,7 +35,7 @@ Updated: 2026-11-05 18:05
 | Theme demo speed                                 |     |     |     |     |     |     |     |     | [x] |     |     |
 | Demo cues and last title F49, D65                |     |     |     |     |     |     |     |     | [x] |     |     |
 | Sanity pass (D58)                                |     |     |     |     |     |     |     |     | [x] |     |     |
-| Grouping header (06.4)                           |     |     |     |     |     |     |     |     |     | [ ] |     |
+| Grouping header (06.4)                           |     |     |     |     |     |     |     |     |     | [x] |     |
 | Filters, toolbar, RTL (06.4)                     |     |     |     |     |     |     |     |     |     | [ ] |     |
 | Docs follow-up (06.5)                            |     |     |     |     |     |     |     |     |     | [ ] |     |
 | Release 0.8.0 (07)                               |     |     |     |     |     |     |     |     |     |     | ·  |
