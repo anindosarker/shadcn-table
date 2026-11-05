@@ -695,3 +695,4 @@ index d099d3a0..d778bfba 100644
 
 - One new file `scripts/ci.mjs` and one root script `"ci": "node scripts/ci.mjs"`: the job list of `pr.yml` (`library`, `bases`, `tests`, `docs`, `pages`, `registry`, `install`), each job a sequence of the existing pnpm scripts, `pnpm ci` runs all, `pnpm ci <job> [--base <base>]` one, per-base work serial by default (P4). `pr.yml` jobs run `pnpm ci <job>` under their setup steps; agents and trackers cite `pnpm ci <job>`. No other script is added. Owner, 2026-11-06.
 - Addendum 2026-11-06: no `actionlint`; a workflow edit is proven by running its job (`act` or the `dev` push). Owner.
+- Addendum 2026-11-06: no `actionlint`; a workflow edit is proven by running its job (`act` or the `dev` push). Owner.
