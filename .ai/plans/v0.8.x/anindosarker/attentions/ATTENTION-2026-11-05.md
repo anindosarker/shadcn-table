@@ -71,3 +71,10 @@
 - Options:
   - a) Recommended: keep; the demo plays as soon as the visitor scrolls to it.
   - b) Lower the room to what the sort editor needs (about 260 px) so a 1440x900 first load plays; the view settings panel (309 px) then flips up in that position.
+
+## A21 The aria multi-select filter cannot highlight the first match
+
+- D72 asks for `autoHighlight` so typing highlights the first option and Enter picks it. React Aria Components 1.22.1 `ComboBox` has no such prop and its state clears the focused key on every keystroke (`react-stately` `useComboBoxState.js:216-217`), so on aria Enter picks nothing until ArrowDown; radix and base behave as decided. Shipped in spec 06.4 (PR #125) with the gap.
+- Options:
+  - a) Recommended: accept the aria gap (one base, keyboard only; ArrowDown then Enter works).
+  - b) Emulate it on aria: on each input change set the focused key to the first filtered item through the collection state (custom code in the aria copy, kept in `aria-diff.json`).

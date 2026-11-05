@@ -41,15 +41,23 @@ export const ST_FilterRangeSlider = <TData extends ST_RowData>({
   const showChangeModeButton =
     enableColumnFilterModes && columnDef.enableColumnFilterModes !== false;
 
-  const sliderProps = {
+  // `min` and `max` are the radix and base keys: read as the bounds, never
+  // passed to the React Aria Slider.
+  const {
+    max: maxProp,
+    min: minProp,
+    ...sliderProps
+  } = {
     ...parseFromValuesOrFunc(stFilterSliderProps, { column, table }),
     ...parseFromValuesOrFunc(columnFilterSliderProps, { column, table }),
     ...rest,
   };
+  const minValue = sliderProps.minValue ?? minProp;
+  const maxValue = sliderProps.maxValue ?? maxProp;
 
   let [min, max] =
-    sliderProps.minValue !== undefined && sliderProps.maxValue !== undefined
-      ? [sliderProps.minValue, sliderProps.maxValue]
+    minValue !== undefined && maxValue !== undefined
+      ? [minValue, maxValue]
       : ((enableFacetedValues
           ? column.getFacetedMinMaxValues()
           : undefined) ?? [0, 1]);
