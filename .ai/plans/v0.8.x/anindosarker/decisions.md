@@ -435,3 +435,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D65 The demo's last step is titled "Alternating row colors"
 
 - The step list's sixth title reads "Alternating row colors" (was "Striped rows"); the feature label and `DEMO_LAST` ("Now showing: View settings") stay. The cue (pulse outline) marks the control that acts and the editor or panel it opens: the sort chip and the sort editor, the filter pill and the chip editor, the view settings button and its panel (F49). Owner, 2026-11-05.
+
+### D66 A subheader filter never widens its column
+
+- The subheader filter container keeps `contain-inline-size overflow-hidden` for every filter variant: a column keeps its `size` and clips a wider filter; the consumer sizes a filterable column, as Material React Table. Extends D61 from range fields to all variants. Owner, 2026-11-05.
+- Source: A16
