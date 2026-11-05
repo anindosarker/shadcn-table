@@ -121,6 +121,45 @@ const animate = (
   };
   animation.addEventListener('finish', clear);
   animation.addEventListener('cancel', clear);
+  return animation;
+};
+
+/**
+ * Lifts the moved column's cells above the unpinned cells they slide across
+ * (those share `z-0` and paint in DOM order, so a later cell would cover the
+ * moved one) and the pinned cells above the moved column, until the last
+ * slide finishes or is cancelled. Returns the undo, which runs once.
+ */
+const liftMovedColumn = (
+  moved: HTMLElement[],
+  pinned: HTMLElement[],
+  slides: Animation[],
+) => {
+  const saved = new Map<HTMLElement, string>();
+  const lift = (cell: HTMLElement, zIndex: string) => {
+    if (!saved.has(cell)) saved.set(cell, cell.style.zIndex);
+    cell.style.zIndex = zIndex;
+  };
+  moved.forEach((cell) => lift(cell, '1'));
+  pinned.forEach((cell) => lift(cell, '2'));
+  let lifted = true;
+  const restore = () => {
+    if (!lifted) return;
+    lifted = false;
+    saved.forEach((zIndex, cell) => {
+      cell.style.zIndex = zIndex;
+    });
+  };
+  let running = slides.length;
+  const settle = () => {
+    running -= 1;
+    if (!running) restore();
+  };
+  slides.forEach((slide) => {
+    slide.addEventListener('finish', settle);
+    slide.addEventListener('cancel', settle);
+  });
+  return restore;
 };
 
 /**
@@ -154,6 +193,7 @@ export const useST_ColumnFlip = <TData extends ST_RowData>(
   const columnOrder = useSelector(table.atoms.columnOrder);
   const shiftedIds = useRef(new Set<string>());
   const settleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const unliftMovedColumn = useRef<() => void>(undefined);
   // The instance a render hands over can change identity; its atoms do not.
   const latestTable = useRef(table);
   useLayoutEffect(() => {
@@ -305,6 +345,13 @@ export const useST_ColumnFlip = <TData extends ST_RowData>(
       );
 
     if (canSlide) {
+      // The sections that slide: the header row only on a Columns menu drop,
+      // a header drop leaves the headers where the preview put them.
+      const sections = [
+        ...(pending.dragDrop ? [] : (['thead'] as const)),
+        ...(canSlideBody ? (['tbody'] as const) : []),
+      ];
+      const slides: Animation[] = [];
       for (const box of measureHeaders(tableElement)) {
         if (box.pinned) continue;
         const before = pending.positions.get(box.id);
@@ -312,16 +359,23 @@ export const useST_ColumnFlip = <TData extends ST_RowData>(
         const delta = Math.round(before - box.left);
         if (!delta) continue;
         const keyframes = [{ translate: `${delta}px` }, { translate: '0px' }];
-        if (!pending.dragDrop) {
-          cellsOf('thead', box.id).forEach((cell) =>
-            animate(cell, keyframes, SLIDE_MS, 'translate'),
+        for (const section of sections) {
+          cellsOf(section, box.id).forEach((cell) =>
+            slides.push(animate(cell, keyframes, SLIDE_MS, 'translate')),
           );
         }
-        if (canSlideBody) {
-          cellsOf('tbody', box.id).forEach((cell) =>
-            animate(cell, keyframes, SLIDE_MS, 'translate'),
-          );
-        }
+      }
+      unliftMovedColumn.current?.();
+      if (slides.length) {
+        unliftMovedColumn.current = liftMovedColumn(
+          sections.flatMap((section) => [...cellsOf(section, pending.movedId)]),
+          sections.flatMap((section) => [
+            ...tableElement.querySelectorAll<HTMLElement>(
+              `:scope > ${section} > tr > [data-pinned]`,
+            ),
+          ]),
+          slides,
+        );
       }
     }
 
