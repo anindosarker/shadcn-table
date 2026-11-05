@@ -64,7 +64,8 @@ const EDIT_FROM = '4';
 const EDIT_TO = '16';
 const SEARCH = 'billing';
 
-/* One-shot accent pulse (v12.css), on the control a step is about to use. */
+/* One-shot accent pulse (v12.css), on the control a step is about to use
+ * and on the editor or panel it opens (D65). */
 const PULSE = 'v12-cue';
 const PULSE_MS = 1200;
 
@@ -113,6 +114,26 @@ const option = (text: string) =>
       '[data-slot="popover-content"] [role="option"], [data-slot="select-content"] [role="option"]',
     ),
   ].find((el) => el.textContent?.trim() === text) ?? null;
+
+/** The popover the replay opened last (portalled outside the table): the
+ * column picker, a chip's editor or the view settings panel. */
+const openPopover = () =>
+  [
+    ...document.querySelectorAll<HTMLElement>('[data-slot="popover-content"]'),
+  ].at(-1) ?? null;
+
+/** A sort or filter chip in the toolbar by the start of its text ("Due",
+ * "Status: In Review"); the header buttons inside the table are left out. */
+const chip = (root: HTMLElement, text: string) =>
+  [...root.querySelectorAll<HTMLElement>('button:not([aria-label])')].find(
+    (button) =>
+      !button.closest('table') &&
+      (button.textContent?.trim().startsWith(text) ?? false),
+  ) ?? null;
+
+/* A popover zooms in this long before its cue starts, so the cue sits on
+ * the popover's final size. */
+const POPOVER_IN_MS = 200;
 
 /* Where the replay's clicks move focus: the table and the popovers it opens
  * (portalled outside the table). An open select keeps its focus: it marks
@@ -163,8 +184,17 @@ const STEPS: readonly Step[] = [
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'Sort'))],
       [600, (r) => r.open(toolbarButton(r.root, 'Sort'))],
-      [700, () => pulse(option('Due'))],
+      [POPOVER_IN_MS, () => pulse(openPopover())],
+      [1000, () => pulse(option('Due'))],
       [500, (r) => option('Due')?.click() ?? r.set(STEPS[0].apply)],
+      // the sort lands: the "Due" chip and the sort editor it opens
+      [
+        POPOVER_IN_MS,
+        (r) => {
+          pulse(chip(r.root, 'Due'));
+          pulse(openPopover());
+        },
+      ],
     ],
     apply: (s) => ({ ...s, sorting: [{ id: 'due', desc: false }] }),
   },
@@ -210,10 +240,13 @@ const STEPS: readonly Step[] = [
       // together in the chips row
       [0, (r) => pulse(addFilterButton(r.root))],
       [600, (r) => r.open(addFilterButton(r.root))],
-      [700, () => pulse(option('Status'))],
+      [POPOVER_IN_MS, () => pulse(openPopover())],
+      [1000, () => pulse(option('Status'))],
       [500, () => option('Status')?.click()],
+      // the "Status" chip's editor opens
+      [POPOVER_IN_MS, () => pulse(openPopover())],
       [
-        700,
+        1000,
         () =>
           document
             .querySelector<HTMLElement>(
@@ -223,6 +256,8 @@ const STEPS: readonly Step[] = [
       ],
       [700, () => pulse(option('In Review'))],
       [500, (r) => option('In Review')?.click() ?? r.set(STEPS[3].apply)],
+      // the filter lands on the chip
+      [POPOVER_IN_MS, (r) => pulse(chip(r.root, 'Status: In Review'))],
     ],
     apply: (s) => ({
       ...s,
@@ -244,7 +279,7 @@ const STEPS: readonly Step[] = [
   },
   {
     feature: 'View settings',
-    title: 'Striped rows',
+    title: 'Alternating row colors',
     code: 'viewSettings: { striped: true }',
     // the panel covers half the table: it closes soon after the switch flips,
     // so the stripes show for the whole hold
@@ -252,8 +287,9 @@ const STEPS: readonly Step[] = [
     beats: [
       [0, (r) => pulse(toolbarButton(r.root, 'View settings'))],
       [600, (r) => r.open(toolbarButton(r.root, 'View settings'))],
+      [POPOVER_IN_MS, () => pulse(openPopover())],
       [
-        700,
+        1000,
         () =>
           pulse(
             document.querySelector(
