@@ -548,3 +548,114 @@ index 94a82564..02f86b2e 100644
 
 - React Aria Components `ComboBox` has no `autoHighlight`; on aria, typing in the multi-select filter highlights nothing and Enter picks nothing until ArrowDown. Accepted as a base gap; radix and base keep D72's `autoHighlight`. Owner, 2026-11-05.
 - Source: A21
+
+### D75 View settings icons: Lucide picks for grid lines, columns and density
+
+- The default Lucide map (`icons.ts`, three bases) changes: grid lines all `Frame`, rows `Equal`, columns `Equal` rotated 90 degrees, none `Square`; the view settings Columns row and its pinned button `Columns3Cog`; density compact `ListChevronsDownUp`, comfortable `ListIndentDecrease` mirrored horizontally, spacious `ListChevronsUpDown`. The drawn glyphs in `components/icons/ST_GridLineIcons.tsx` stay (the Tabler, Phosphor, Remix and Hugeicons editions keep importing them, no edition change); the file stays at its path (P5). Previewed on the docs copy and accepted. Owner, 2026-11-06.
+- The accepted diff, to apply as is to `icons.ts` in the three bases (paths rewritten from the docs copy to the registry); `check:icons` keeps one `Key: Glyph,` per line, the two wrappers sit above the map:
+
+```diff
+diff --git a/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/icons.ts b/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/icons.ts
+index d099d3a0..d778bfba 100644
+--- a/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/icons.ts
++++ b/packages/shadcn-table/registry/<base>/components/ui/shadcn-table/icons.ts
+@@ -11,17 +11,22 @@ import {
+   ChevronLeft,
+   ChevronRight,
+   ChevronsDown,
+-  Columns3,
++  Columns3Cog,
+   Copy,
++  Equal,
+   Eraser,
+   EyeOff,
+   Filter,
+   FilterX,
++  Frame,
+   GapVertical,
+   GripVertical,
+   Layers,
+   List,
++  ListChevronsDownUp,
++  ListChevronsUpDown,
+   ListFilter,
++  ListIndentDecrease,
+   ListOrdered,
+   Lock,
+   Maximize,
+@@ -36,9 +41,6 @@ import {
+   PinOff,
+   Plus,
+   RotateCcw,
+-  Rows2,
+-  Rows3,
+-  Rows4,
+   Save,
+   Search,
+   SearchX,
+@@ -49,13 +51,23 @@ import {
+   WrapText,
+   X,
+   XCircle,
++  type LucideProps,
+ } from 'lucide-react';
++import { createElement } from 'react';
++import { cn } from '@/lib/utils';
+ import type { ST_Icons } from '@/components/ui/shadcn-table/types';
+-import {
+-  ST_GridLinesAllIcon,
+-  ST_GridLinesColumnsIcon,
+-  ST_GridLinesRowsIcon,
+-} from '@/components/ui/shadcn-table/components/icons/ST_GridLineIcons';
++
++const EqualVertical = (props: LucideProps) =>
++  createElement(Equal, {
++    ...props,
++    className: cn('rotate-90', props.className),
++  });
++
++const ListIndentDecreaseFlipped = (props: LucideProps) =>
++  createElement(ListIndentDecrease, {
++    ...props,
++    className: cn('-scale-x-100', props.className),
++  });
+ 
+ export const ST_Default_Icons = {
+   AddIcon: Plus,
+@@ -69,9 +81,9 @@ export const ST_Default_Icons = {
+   CloseIcon: X,
+   ContentCopy: Copy,
+   DeleteIcon: Trash2,
+-  DensityLargeIcon: Rows2,
+-  DensityMediumIcon: Rows3,
+-  DensitySmallIcon: Rows4,
++  DensityLargeIcon: ListChevronsUpDown,
++  DensityMediumIcon: ListIndentDecreaseFlipped,
++  DensitySmallIcon: ListChevronsDownUp,
+   DragHandleIcon: GripVertical,
+   DynamicFeedIcon: Layers,
+   EditIcon: Pencil,
+@@ -82,10 +94,10 @@ export const ST_Default_Icons = {
+   FirstPageIcon: ChevronFirst,
+   FullscreenExitIcon: Minimize,
+   FullscreenIcon: Maximize,
+-  GridLinesAllIcon: ST_GridLinesAllIcon,
+-  GridLinesColumnsIcon: ST_GridLinesColumnsIcon,
++  GridLinesAllIcon: Frame,
++  GridLinesColumnsIcon: EqualVertical,
+   GridLinesNoneIcon: Square,
+-  GridLinesRowsIcon: ST_GridLinesRowsIcon,
++  GridLinesRowsIcon: Equal,
+   IndeterminateIcon: Minus,
+   KeyboardDoubleArrowDownIcon: ChevronsDown,
+   LastPageIcon: ChevronLast,
+@@ -109,7 +121,7 @@ export const ST_Default_Icons = {
+   StripedOnIcon: GapVertical,
+   SwapVertIcon: ArrowUpDown,
+   SyncAltIcon: ArrowLeftRight,
+-  ViewColumnIcon: Columns3,
++  ViewColumnIcon: Columns3Cog,
+   VisibilityOffIcon: EyeOff,
+   WrapTextIcon: WrapText,
+ } satisfies ST_Icons;
+```
