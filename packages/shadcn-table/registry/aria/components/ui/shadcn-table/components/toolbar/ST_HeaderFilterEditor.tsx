@@ -9,7 +9,7 @@ import {
 import { ST_COLUMN_ACTIONS_ATTR } from '@/components/ui/shadcn-table/shared/utils/drag.utils';
 import { ST_FilterEditor } from '@/components/ui/shadcn-table/components/toolbar/ST_FilterEditor';
 
-export const filterEditorClassName = 'w-auto min-w-65';
+export const filterEditorClassName = 'w-65';
 
 export const focusFilterInput = <TData extends ST_RowData>(
   table: ST_TableInstance<TData>,

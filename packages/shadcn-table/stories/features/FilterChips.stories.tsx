@@ -368,3 +368,71 @@ export const HeaderEditorWithCustomToolbar = {
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
   },
 };
+
+const statuses = ['Blocked', 'Done', 'In Progress', 'In Review', 'Not Started'];
+
+// F55 (D72): the chip editor keeps its 260 px width; the multi-select chips
+// wrap and the field grows in height instead of widening the popover.
+export const ChipEditorKeepsWidth = {
+  render: () => (
+    <ShadcnTable
+      columns={columns.map((column) =>
+        column.accessorKey === 'status'
+          ? {
+              ...column,
+              filterSelectOptions: statuses,
+              filterVariant: 'multi-select',
+            }
+          : column,
+      )}
+      data={data}
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const input = await body.findByRole('combobox', {
+      name: 'Filter by Status',
+    });
+    const editor = input.closest<HTMLElement>('[data-slot="popover-content"]');
+    expect(editor).not.toBeNull();
+    const field = input.closest<HTMLElement>('[data-slot="combobox-chips"]')!;
+    await waitFor(() =>
+      expect(
+        Math.abs(editor!.getBoundingClientRect().width - 260),
+        `editor width ${editor!.getBoundingClientRect().width} before the picks`,
+      ).toBeLessThanOrEqual(1),
+    );
+    const heightBefore = field.getBoundingClientRect().height;
+
+    for (const status of statuses) {
+      const name = new RegExp(`^${status}`);
+      if (!body.queryByRole('option', { name })) {
+        await userEvent.click(input);
+        // The aria combobox opens from the keyboard, not on a click.
+        if (!body.queryByRole('listbox'))
+          await userEvent.keyboard('{ArrowDown}');
+      }
+      await userEvent.click(await body.findByRole('option', { name }));
+    }
+    await waitFor(() =>
+      expect(
+        field.querySelectorAll('[data-slot="combobox-chip"]'),
+      ).toHaveLength(statuses.length),
+    );
+    await waitFor(() => {
+      expect(
+        Math.abs(editor!.getBoundingClientRect().width - 260),
+        `editor width ${editor!.getBoundingClientRect().width} after the picks`,
+      ).toBeLessThanOrEqual(1);
+      expect(field.getBoundingClientRect().height).toBeGreaterThan(
+        heightBefore,
+      );
+    });
+  },
+};
