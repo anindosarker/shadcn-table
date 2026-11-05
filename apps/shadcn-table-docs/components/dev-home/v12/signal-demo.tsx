@@ -290,6 +290,12 @@ const REST_MS = 1400;
 // every step stays active at least this long, beats and hold together
 const MIN_STEP_MS = 5200;
 
+/* Room under the toolbar's buttons the tallest popover a step opens needs
+ * to open below its trigger (measured 2026-11-05): the view settings panel
+ * reaches 309px below them, the filter picker under a wrapped chips row
+ * (390px wide) 340px; plus a margin. */
+const POPOVER_ROOM_PX = 360;
+
 const showMs = (step: number) => STEPS[step]?.showMs ?? SHOW_MS;
 
 const beatsMs = (step: number) =>
@@ -335,7 +341,6 @@ export function SignalDemo() {
   const [editing, setEditing] = useState<SignalTableProps['editing']>(null);
   // bumped on each restart so the table fades back in from its plain state
   const [resets, setResets] = useState(0);
-  const rootRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   // bumped on every move (the loop, a jump, Replay): an interrupted run lands
   // its state only while no newer move happened
@@ -359,16 +364,41 @@ export function SignalDemo() {
     }
   }, []);
 
-  // only play while the band is on screen
+  // only play while the toolbar shows below the sticky nav with room for the
+  // popovers under it, or they flip up over the hero (F48, D63); otherwise
+  // hold on Starting or pause in place, never scroll the page
   useEffect(() => {
-    const el = rootRef.current;
+    const el = tableRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.25 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const toolbar = toolbarButton(el, 'Sort')?.getBoundingClientRect();
+      const nav =
+        document.querySelector('.v4-nav')?.getBoundingClientRect().bottom ?? 0;
+      setVisible(
+        !!toolbar &&
+          toolbar.height > 0 &&
+          toolbar.top >= nav &&
+          toolbar.bottom + POPOVER_ROOM_PX <= window.innerHeight,
+      );
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    schedule();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    // the table mounts late (next/dynamic) and the page above it can reflow
+    const ro = new ResizeObserver(schedule);
+    ro.observe(el);
+    ro.observe(document.body);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      ro.disconnect();
+    };
   }, []);
 
   const running = mode === 'playing' && visible;
@@ -550,7 +580,7 @@ export function SignalDemo() {
     );
 
   return (
-    <div ref={rootRef} className="v5-demo" data-running={running || undefined}>
+    <div className="v5-demo" data-running={running || undefined}>
       <div
         className={`v5-demo-table min-w-0 ${
           resets === 0 ? '' : resets % 2 ? 'v12-reset-a' : 'v12-reset-b'

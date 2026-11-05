@@ -599,9 +599,10 @@ const DEMO_TIMEOUT_MS = 45000;
 
 /**
  * Holds the home page through the full live demo loop on every base. The demo
- * (components/dev-home/v12/signal-demo.tsx) plays only while it is on screen,
- * so it is scrolled into view; each hold waits until its aria-live status reads
- * the last step and lasts at least DEMO_MIN_HOLD_MS. The first hold runs on the
+ * (components/dev-home/v12/signal-demo.tsx) plays only while its toolbar has
+ * room for its popovers below it, so it is scrolled into view centred; each
+ * hold waits until its aria-live status reads the last step and lasts at
+ * least DEMO_MIN_HOLD_MS. The first hold runs on the
  * base the page opened on (the default, Base UI, or the runner's --base); the
  * next two pick the other bases through the agent bar's base menu and reload. A
  * render loop or crash that needs time or the demo's step changes to surface
@@ -619,7 +620,15 @@ export async function demoLoop({ page, check, base }) {
   const hold = async () => {
     const start = Date.now();
     const status = page.locator('[aria-label="Demo items"] [aria-live]');
-    await status.first().scrollIntoViewIfNeeded({ timeout: DEMO_TIMEOUT_MS });
+    // the whole demo in view: it plays only while its toolbar has room for
+    // the popovers below it (F48, D63)
+    await page
+      .locator('.v5-demo')
+      .first()
+      .waitFor({ timeout: DEMO_TIMEOUT_MS });
+    await page.evaluate(() =>
+      document.querySelector('.v5-demo')?.scrollIntoView({ block: 'center' }),
+    );
     await status
       .filter({ hasText: DEMO_LAST })
       .first()
