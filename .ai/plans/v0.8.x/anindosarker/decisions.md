@@ -450,3 +450,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 
 - Under `groupedColumnMode: 'remove'` the grouping column's header keeps the expand chevron as it is, then one segment per grouped column in grouping order, each segment the column's icon followed by its header name, segments separated by a `>` chevron (a breadcrumb), replacing "State, Gender" with a single icon. Under `'reorder'` the expand column keeps its empty header (A11). Supersedes the "first grouped column's icon" part of the F41 fix. Owner, 2026-11-05.
 - Source: A11
+
+### D69 The home demo waits for the visitor to scroll it into view
+
+- The D63 room rule stays at 360 px for every step: on a first load where the toolbar sits within 360 px of the bottom edge the demo shows "Starting" and plays once the visitor scrolls it up. Owner, 2026-11-05.
+- Source: A20
