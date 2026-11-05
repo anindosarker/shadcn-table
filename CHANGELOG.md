@@ -150,6 +150,10 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 
 ### Docs
 
+#### Fix F56
+
+- The header-width page check waits for the web font before measuring, so CI measures Inter, not the Linux fallback.
+
 #### Theme demo speed
 
 - The home page theme demo cycles its five themes in 25 s instead of 40 s: 25 ms per typed character, a 0.7 s reply, a 2.2 s hold per theme.
