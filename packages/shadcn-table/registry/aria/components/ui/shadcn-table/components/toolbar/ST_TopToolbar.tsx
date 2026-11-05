@@ -9,26 +9,26 @@ import { ST_ToolbarDropZone } from '@/components/ui/shadcn-table/components/tool
 import { ST_ToolbarInternalButtons } from '@/components/ui/shadcn-table/components/toolbar/ST_ToolbarInternalButtons';
 import { useST_MediaQuery } from '@/components/ui/shadcn-table/hooks/useST_MediaQuery';
 import { ST_GlobalFilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_GlobalFilterTextField';
+import { Separator } from '@/components/ui/separator';
+import { ST_FilterChips } from '@/components/ui/shadcn-table/components/toolbar/ST_FilterChips';
+import { ST_SortPopover } from '@/components/ui/shadcn-table/components/toolbar/ST_SortPopover';
 import { useSTContext } from '@/components/ui/shadcn-table/hooks/stTableHook';
 import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_ComposedRef';
 
 const topToolbarVariants = cva(
   'relative z-1 grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
-  {
-    variants: {
-      fullscreen: {
-        true: 'sticky top-0',
-        false: 'relative',
-      },
-    },
-  },
 );
 
 export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const table = useSTContext<TData>();
   const {
     options: {
+      columnFilterDisplayMode,
+      enableColumnFilters,
+      enableFilters,
       enableGlobalFilter,
+      enableSortPopover,
+      enableSorting,
       enablePagination,
       enableToolbarInternalActions,
       stTopToolbarProps,
@@ -57,14 +57,39 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   const dropZone = ['both', 'top'].includes(positionToolbarDropZone ?? '') && (
     <ST_ToolbarDropZone />
   );
-  const actions = (
+  const hasChips =
+    !!enableFilters &&
+    !!enableColumnFilters &&
+    columnFilterDisplayMode === 'chips';
+  const hasSortChip = !!enableSorting && enableSortPopover === true;
+  const renderActions = (showSeparator: boolean) => (
     <>
-      {enableGlobalFilter && positionGlobalFilter === 'left' && (
-        <ST_GlobalFilterTextField {...globalFilterProps} />
-      )}
-      {renderTopToolbarCustomActions?.({ table }) ?? <span />}
+      <div className="flex min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1.5 py-1">
+        {enableGlobalFilter && positionGlobalFilter === 'left' && (
+          <ST_GlobalFilterTextField {...globalFilterProps} />
+        )}
+        {hasSortChip && <ST_SortPopover table={table} variant="chip" />}
+        {showSeparator && (
+          <Separator className="h-4! self-center!" orientation="vertical" />
+        )}
+        {hasChips && <ST_FilterChips table={table} />}
+        {renderTopToolbarCustomActions && (
+          // The actions read the table, most often the selected rows, so they
+          // re-render on the state they commonly read; the toolbar does not.
+          <table.Subscribe
+            selector={(state) => ({
+              columnFilters: state.columnFilters,
+              globalFilter: state.globalFilter,
+              rowSelection: state.rowSelection,
+              sorting: state.sorting,
+            })}
+          >
+            {() => renderTopToolbarCustomActions({ table })}
+          </table.Subscribe>
+        )}
+      </div>
       {enableToolbarInternalActions ? (
-        <div className="flex flex-wrap-reverse items-center justify-end gap-2">
+        <div className="flex shrink-0 flex-wrap-reverse items-center justify-end gap-2">
           {enableGlobalFilter && positionGlobalFilter === 'right' && (
             <ST_GlobalFilterTextField {...globalFilterProps} />
           )}
@@ -87,24 +112,27 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
   return (
     <table.Subscribe
       selector={(state) => ({
-        isFullScreen: state.isFullScreen,
+        hasFilterChips:
+          state.filterChips.columnIds.length > 0 ||
+          state.columnFilters.length > 0,
+        hasSorts: state.sorting.length > 0,
         showGlobalFilter: state.showGlobalFilter,
       })}
     >
-      {({ isFullScreen, showGlobalFilter }) => {
+      {({ hasFilterChips, hasSorts, showGlobalFilter }) => {
+        const showSortChip = hasSortChip && hasSorts;
+        const hasChipRow = showSortChip || (hasChips && hasFilterChips);
         const stackAlertBanner =
           isMobile ||
           !!renderTopToolbarCustomActions ||
+          hasChipRow ||
           (showGlobalFilter && isTablet);
 
         return (
           <div
             {...toolbarProps}
             ref={attachRef}
-            className={cn(
-              topToolbarVariants({ fullscreen: isFullScreen }),
-              toolbarProps?.className,
-            )}
+            className={cn(topToolbarVariants(), toolbarProps?.className)}
           >
             {positionToolbarAlertBanner === 'top' && (
               <ST_ToolbarAlertBanner stackAlertBanner={stackAlertBanner} />
@@ -116,7 +144,7 @@ export const ST_TopToolbar = <TData extends ST_RowData>() => {
                 stackAlertBanner ? 'relative' : 'absolute',
               )}
             >
-              {actions}
+              {renderActions(showSortChip && hasChips && hasFilterChips)}
             </div>
             {pagination}
             {progressBar}

@@ -19,6 +19,7 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
+  ComboboxTrigger,
   ComboboxValue,
   useComboboxAnchor,
 } from '@/components/ui/combobox';
@@ -76,6 +77,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
   const table = header.table;
   const {
     options: {
+      columnFilterDisplayMode,
       enableColumnFilterModes,
       icons: { CancelIcon, CloseIcon, FilterListIcon },
       localization,
@@ -168,7 +170,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
         ? localization.max
         : '';
 
+  // In chips mode the filter editor's top line carries the mode picker.
   const showChangeModeButton = !!(
+    columnFilterDisplayMode !== 'chips' &&
     enableColumnFilterModes &&
     columnDef.enableColumnFilterModes !== false &&
     !rangeFilterIndex &&
@@ -334,7 +338,13 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           // The select addon overlays the trigger so the trigger spans the whole
           // group and the popper (sized from the trigger) matches the field.
           isSelectFilter && 'absolute inset-y-0 inset-e-0',
-          hasFilterValue ? 'visible' : 'invisible',
+          // The multi-select field carries its own chevron, so the empty clear
+          // slot takes no room there.
+          hasFilterValue
+            ? 'visible'
+            : isMultiSelectFilter
+              ? 'hidden'
+              : 'invisible',
         )}
       >
         <ST_Tooltip side="right" title={localization.clearFilter ?? ''}>
@@ -564,6 +574,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           ) : isMultiSelectFilter ? (
             // Combobox items raise no ChangeEvent, so a user onChange cannot fire.
             <Combobox
+              autoHighlight
               disabled={!!filterChipLabel || textFieldProps.disabled}
               items={multiSelectItems}
               itemToStringLabel={optionLabel}
@@ -574,14 +585,14 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
               <ComboboxChips
                 className={cn(
                   nestedGroupClassName,
-                  'px-1.5 py-0.5',
+                  'flex-nowrap px-1.5 py-0.5',
                   textFieldProps.className,
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
                 <ComboboxValue>
                   {(values: string[]) => (
-                    <>
+                    <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
                       {values.map((value) => (
                         <ComboboxChip className="h-5 text-xs" key={value}>
                           {optionLabel(value)}
@@ -598,9 +609,10 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                         placeholder={values.length ? '' : filterPlaceholder}
                         title={filterPlaceholder}
                       />
-                    </>
+                    </div>
                   )}
                 </ComboboxValue>
+                <ComboboxTrigger className="ms-auto shrink-0 self-center" />
               </ComboboxChips>
               <ComboboxContent anchor={comboboxAnchor}>
                 <ComboboxEmpty>{localization.noResultsFound}</ComboboxEmpty>
@@ -628,7 +640,9 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
           )}
           {endAdornment}
         </InputGroup>
-        {showChangeModeButton ? (
+        {/* A range field's caption spans the whole range group, in
+            ST_FilterRangeFields. */}
+        {showChangeModeButton && rangeFilterIndex === undefined ? (
           <label className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
             {localization.filterMode.replace(
               '{filterType}',

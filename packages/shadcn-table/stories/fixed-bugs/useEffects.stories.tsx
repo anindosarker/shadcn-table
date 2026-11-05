@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   type ST_ColumnFiltersState,
@@ -10,6 +11,14 @@ import {
 import { faker } from '@faker-js/faker';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+  CakeIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+  VenusAndMarsIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/useEffects',
@@ -48,22 +57,27 @@ export const FilterModesRefetch = () => {
     {
       accessorKey: 'firstName',
       header: 'First Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'lastName',
       header: 'Last Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'address',
       header: 'Address',
+      icon: MapPinIcon,
     },
     {
       accessorKey: 'state',
       header: 'State',
+      icon: MapIcon,
     },
     {
       accessorKey: 'phoneNumber',
       header: 'Phone Number',
+      icon: PhoneIcon,
     },
   ];
 
@@ -72,6 +86,7 @@ export const FilterModesRefetch = () => {
       columns={columns}
       data={data}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
       onColumnFiltersChange={setColumnFilters}
       state={{ columnFilters }}
@@ -93,24 +108,29 @@ export const FilterOptionsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         filterSelectOptions: stateFilterOptions,
         filterVariant: 'select',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [stateFilterOptions],
@@ -121,6 +141,7 @@ export const FilterOptionsAsync = () => {
       columns={columns}
       data={data}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
     />
   );
@@ -140,24 +161,29 @@ export const EditOptionsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         editSelectOptions: stateEditOptions,
         editVariant: 'select',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [stateEditOptions],
@@ -187,22 +213,27 @@ export const RenderRowActionsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [],
@@ -240,22 +271,27 @@ const RenderRowActionMenuItemsAsync = () => {
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ],
     [],
@@ -297,30 +333,36 @@ export const DelayedFacetedValues = () => {
           accessorKey: 'firstName',
           filterFn: 'fuzzy', // default
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           filterVariant: 'select',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'age',
           filterVariant: 'range-slider',
           header: 'Age',
+          icon: CakeIcon,
         },
         {
           accessorKey: 'gender',
           filterVariant: 'select',
           header: 'Gender',
+          icon: VenusAndMarsIcon,
         },
         {
           accessorKey: 'state',
           filterVariant: 'multi-select',
           header: 'State',
+          icon: MapIcon,
         },
       ]}
       data={tableData}
       enableFacetedValues
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
       state={{
         isLoading,
@@ -339,14 +381,17 @@ export const PreventUnnecessaryPaginationChangeByOutOfBoundsCheck = () => {
     {
       accessorKey: 'firstName',
       header: 'First Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'lastName',
       header: 'Last Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'address',
       header: 'Address',
+      icon: MapPinIcon,
     },
   ];
 
@@ -366,4 +411,29 @@ export const PreventUnnecessaryPaginationChangeByOutOfBoundsCheck = () => {
       state={{ pagination }}
     />
   );
+};
+
+// The consumer's effect on columnFilters runs once per filter change, not on
+// every render.
+FilterModesRefetch.play = async ({ canvasElement }: StoryContext) => {
+  const log = spyOn(console, 'log');
+  try {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0]!.firstName);
+    const refetches = () =>
+      log.mock.calls.filter(([first]) => first === 'refetch');
+    const start = refetches().length;
+    await userEvent.type(
+      canvas.getByPlaceholderText('Filter by First Name'),
+      data[0]!.firstName,
+    );
+    await waitFor(() => expect(refetches().length).toBe(start + 1));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    expect(refetches().length).toBe(start + 1);
+    expect(refetches().at(-1)![1]).toEqual([
+      expect.objectContaining({ id: 'firstName', value: data[0]!.firstName }),
+    ]);
+  } finally {
+    log.mockRestore();
+  }
 };

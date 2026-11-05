@@ -1,11 +1,26 @@
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, screen, waitFor } from 'storybook/test';
+import {
+  expect,
+  fireEvent,
+  screen,
+  spyOn,
+  userEvent,
+  waitFor,
+  within,
+} from 'storybook/test';
 import {
   type ST_ColumnDef,
   ShadcnTable,
   ST_ActionMenuItem,
 } from '@/components/ui/shadcn-table';
-import { Mail, UserX } from 'lucide-react';
+import {
+  Mail,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+  UserX,
+} from 'lucide-react';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { faker } from '@faker-js/faker';
 
@@ -27,22 +42,27 @@ const columns: ST_ColumnDef<Row>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -175,3 +195,48 @@ export const CellActionsWithBuiltIns = () => (
     ]}
   />
 );
+
+const firstNameCell = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<HTMLElement>(
+    'tbody tr:first-child td[data-flip-column="firstName"]',
+  )!;
+
+/** A right click on a cell opens its action menu with the copy item. */
+export const RightClickOpensMenu = {
+  render: () => <CellActionsEnabled />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    expect(screen.queryByRole('menu')).toBeNull();
+    fireEvent.contextMenu(firstNameCell(canvasElement));
+    const menu = await screen.findByRole('menu');
+    expect(
+      within(menu)
+        .getAllByRole('menuitem')
+        .map((item) => (item.textContent ?? '').trim()),
+    ).toContain('Copy');
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+  },
+};
+
+/** Choosing Copy writes the cell's value to the clipboard and closes the menu. */
+export const MenuItemRuns = {
+  render: () => <CellActionsEnabled />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+      undefined,
+    );
+    try {
+      await within(canvasElement).findAllByText(data[0].firstName);
+      fireEvent.contextMenu(firstNameCell(canvasElement));
+      const menu = await screen.findByRole('menu');
+      await userEvent.click(
+        within(menu).getByRole('menuitem', { name: 'Copy' }),
+      );
+      expect(writeText).toHaveBeenCalledWith(data[0].firstName);
+      await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+    } finally {
+      writeText.mockRestore();
+    }
+  },
+};

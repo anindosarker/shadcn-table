@@ -11,8 +11,10 @@ This guide shows you how to [hide](#hide-or-disable-toolbars), [customize](#cust
   onlyOptions={
     new Set([
       'enableBottomToolbar',
+      'enableSortPopover',
       'enableToolbarInternalActions',
       'enableTopToolbar',
+      'enableViewSettings',
       'stBottomToolbarProps',
       'stLinearProgressProps',
       'stToolbarAlertBannerChipProps',
@@ -37,6 +39,19 @@ This guide shows you how to [hide](#hide-or-disable-toolbars), [customize](#cust
 <StateOptionsTable
   onlyOptions={new Set(['showAlertBanner', 'showProgressBars'])}
 />
+
+### Toolbar Layout
+
+The top toolbar is a plain row above the bordered table frame; the frame holds the scrolling table and the bottom toolbar. On the left of the top toolbar sit the sort chip, the [filter chips](/docs/guides/filter-chips) and anything you render with `renderTopToolbarCustomActions`. On the right sits one group of built-in buttons, in this order:
+
+1. The search field and its toggle ([Global Filtering Guide](/docs/guides/global-filtering)). The field opens inline to the left of the group.
+2. The filter button, which opens the "Filter by..." column picker (with `columnFilterDisplayMode: 'subheader'`, the show/hide filters toggle instead).
+3. The sort button, which opens the [sort editor](/docs/guides/sort-editor).
+4. The [view settings](/docs/guides/view-settings) items pinned to the toolbar (Columns and Density by default).
+5. The full screen toggle.
+6. The view settings button.
+
+The buttons are small ghost icon buttons. The filter button turns to the `secondary` fill while any filter chip exists and the sort button while any sort exists; the search, full screen, view settings and pinned buttons stay ghost and show their state through their icon. With `enableViewSettings: false`, the separate columns button and density toggle return in place of the pinned items and the view settings button.
 
 ### Hide or Disable Toolbars
 
@@ -86,28 +101,37 @@ The `renderToolbarInternalActions` table option allows you to redefine the built
 ```jsx
 import {
   ShadcnTable,
+  ST_SortPopover,
   ST_ShowHideColumnsButton,
   ST_ToggleFullScreenButton,
+  ST_ToggleGlobalFilterButton,
+  ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 
 const table = useShadcnTable({
   data,
   columns,
-  renderToolbarInternalActions: () => (
+  renderToolbarInternalActions: ({ table }) => (
     <>
       {/* add your own custom print button or something */}
       <IconButton onClick={() => showPrintPreview(true)}>
         <PrintIcon />
       </IconButton>
       {/* built-in buttons (they read the table from ShadcnTable) */}
+      <ST_ToggleGlobalFilterButton />
       <ST_ShowHideColumnsButton />
       <ST_ToggleFullScreenButton />
+      {/* the v0.8 toolbar components take the table as a prop */}
+      <ST_SortPopover table={table} />
+      <ST_ViewSettingsButton table={table} />
     </>
   ),
 });
 
 return <ShadcnTable table={table} />;
 ```
+
+`ST_ViewSettingsItems` renders the pinned view settings buttons and `ST_FilterChips` the chips row; both take the `table` prop as well.
 
 #### Add Custom Toolbar Buttons/Components
 
@@ -257,7 +281,7 @@ Instead of overriding the toolbar components up above, you may want 100% control
 
 ### Compose with ST_TableProvider
 
-`<ShadcnTable />` puts its table on a context that every ST sub-component reads, so sub-components take no `table` prop. Inside `render...` table options and custom `Cell` or `Header` renders, they work as is. Anywhere else, wrap them in `ST_TableProvider`:
+`<ShadcnTable />` puts its table on a context that every ST sub-component reads, so most sub-components take no `table` prop (the toolbar components `ST_SortPopover`, `ST_FilterChips`, `ST_ViewSettingsButton`, `ST_ViewSettingsItems` and `ST_ScrollButtons` take it explicitly). Inside `render...` table options and custom `Cell` or `Header` renders, they work as is. Anywhere else, wrap them in `ST_TableProvider`:
 
 ```jsx
 import {

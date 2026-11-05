@@ -9,6 +9,7 @@ import {
   useShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { Building2Icon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -16,14 +17,17 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
     ],
@@ -41,9 +45,6 @@ const Example = () => {
     columns: ST_ColumnDef<Person>[];
   } = {
     columns,
-    defaultColumn: {
-      size: 100,
-    },
     enableRowDragging: true,
     enableFullScreenToggle: false,
     stTableContainerProps: {

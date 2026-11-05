@@ -1,6 +1,16 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  CakeIcon,
+  HashIcon,
+  MailboxIcon,
+  MapIcon,
+  MapPinIcon,
+  PhoneIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Column Resizing Examples',
@@ -12,26 +22,32 @@ const columns: ST_ColumnDef<(typeof data)[0]>[] = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
   {
     accessorKey: 'zipCode',
     header: 'Zip Code',
+    icon: MailboxIcon,
   },
   {
     accessorKey: 'phoneNumber',
     header: 'Phone Number',
+    icon: PhoneIcon,
   },
 ];
 
@@ -46,27 +62,22 @@ const data = [...Array(88)].map(() => ({
 }));
 
 export const ColumnResizingEnabledDefaultOnChange = () => (
-  <ShadcnTable columns={columns} data={data} enableColumnResizing />
+  <ShadcnTable columns={columns} data={data} />
+);
+
+// Resizing is on by default; `false` removes the resize handles.
+export const ColumnResizingDisabled = () => (
+  <ShadcnTable columns={columns} data={data} enableColumnResizing={false} />
 );
 
 export const ColumnResizingEnabledDefaultOnChangeRTL = () => (
   <div style={{ direction: 'rtl' }}>
-    <ShadcnTable
-      columnResizeDirection="rtl"
-      columns={columns}
-      data={data}
-      enableColumnResizing
-    />
+    <ShadcnTable columnResizeDirection="rtl" columns={columns} data={data} />
   </div>
 );
 
 export const ColumnResizingEnabledDefaultOnChangeGrid = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnResizing
-    layoutMode="grid"
-  />
+  <ShadcnTable columns={columns} data={data} layoutMode="grid" />
 );
 
 export const ColumnResizingDefaultOnChangeGridWithIndividualShrink = () => (
@@ -76,19 +87,21 @@ export const ColumnResizingDefaultOnChangeGridWithIndividualShrink = () => (
         accessorKey: 'id',
         grow: false,
         header: 'ID',
+        icon: HashIcon,
         size: 50,
       },
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
     ]}
     data={data}
-    enableColumnResizing
     layoutMode="grid"
   />
 );
@@ -99,19 +112,13 @@ export const ColumnResizingEnabledDefaultOnChangeGridRTL = () => (
       columnResizeDirection="rtl"
       columns={columns}
       data={data}
-      enableColumnResizing
       layoutMode="grid"
     />
   </div>
 );
 
 export const ColumnResizingEnabledDefaultOnChangeSemantic = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnResizing
-    layoutMode="semantic"
-  />
+  <ShadcnTable columns={columns} data={data} layoutMode="semantic" />
 );
 
 export const ColumnResizingEnabledDefaultOnChangeSemanticRTL = () => (
@@ -120,19 +127,13 @@ export const ColumnResizingEnabledDefaultOnChangeSemanticRTL = () => (
       columnResizeDirection="rtl"
       columns={columns}
       data={data}
-      enableColumnResizing
       layoutMode="semantic"
     />
   </div>
 );
 
 export const ColumnResizingEnabledNoColumnActions = () => (
-  <ShadcnTable
-    columns={columns}
-    data={data}
-    enableColumnActions={false}
-    enableColumnResizing
-  />
+  <ShadcnTable columns={columns} data={data} enableColumnActions={false} />
 );
 
 export const ColumnResizingDisabledSomeColumns = () => (
@@ -141,41 +142,41 @@ export const ColumnResizingDisabledSomeColumns = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
       {
         accessorKey: 'zipCode',
         enableResizing: false,
         header: 'Zip Code',
+        icon: MailboxIcon,
       },
       {
         accessorKey: 'phoneNumber',
         header: 'Phone Number',
+        icon: PhoneIcon,
       },
     ]}
     data={data}
-    enableColumnResizing
   />
 );
 
 export const ColumnResizingEnabledOnEnd = () => (
-  <ShadcnTable
-    columnResizeMode="onEnd"
-    columns={columns}
-    data={data}
-    enableColumnResizing
-  />
+  <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
 );
 
 export const ColumnResizingEnabledOnEndRTL = () => (
@@ -185,17 +186,75 @@ export const ColumnResizingEnabledOnEndRTL = () => (
       columnResizeMode="onEnd"
       columns={columns}
       data={data}
-      enableColumnResizing
     />
   </div>
 );
+
+/** A dragover on the table with the pointer over the middle of `target`. */
+const dragOverSlot = (canvasElement: HTMLElement, target: HTMLElement) => {
+  const rect = target.getBoundingClientRect();
+  fireEvent.dragOver(canvasElement.querySelector('table') as HTMLElement, {
+    clientX: rect.left + rect.width / 2,
+    clientY: rect.top + rect.height / 2,
+  });
+};
+
+const headerCellNamed = (canvasElement: HTMLElement, name: string) =>
+  [...canvasElement.querySelectorAll<HTMLElement>('thead th')].find((th) =>
+    (th.textContent ?? '').trim().startsWith(name),
+  ) as HTMLElement;
+
+const translateOf = (element: HTMLElement) =>
+  parseFloat(element.style.translate) || 0;
+
+// F50: in an RTL table the drag preview lays the slots right to left, so
+// every header stays inside the table and only the dragged and target
+// columns shift.
+export const DragPreviewRTL = {
+  render: ColumnResizingEnabledOnEndRTL,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /Address/,
+    });
+    const address = headerCellNamed(canvasElement, 'Address');
+    const state = headerCellNamed(canvasElement, 'State');
+    const addressWidth = address.getBoundingClientRect().width;
+    const stateWidth = state.getBoundingClientRect().width;
+    fireEvent.dragStart(address);
+    dragOverSlot(canvasElement, state);
+    await waitFor(() => {
+      const table = canvasElement.querySelector('table')!;
+      const tableBox = table.getBoundingClientRect();
+      const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
+      for (const th of ths) {
+        const box = th.getBoundingClientRect();
+        expect(
+          box.left >= tableBox.left - 1 && box.right <= tableBox.right + 1,
+          `${th.textContent?.trim()} [${box.left}, ${box.right}] inside table [${tableBox.left}, ${tableBox.right}]`,
+        ).toBe(true);
+      }
+      // RTL: Address moves left by State's width, State right by Address's.
+      expect(translateOf(address) + stateWidth).toBeCloseTo(0, 0);
+      expect(translateOf(state) - addressWidth).toBeCloseTo(0, 0);
+      for (const th of ths) {
+        if (th === address || th === state) continue;
+        expect(translateOf(th), th.textContent?.trim()).toBe(0);
+      }
+    });
+    // Cancel the drag, as Escape does.
+    const end = new DragEvent('dragend', { bubbles: true });
+    Object.defineProperty(end, 'dataTransfer', {
+      value: { dropEffect: 'none' },
+    });
+    fireEvent(address, end);
+  },
+};
 
 export const ColumnResizingCustomDefaultWidths = () => (
   <ShadcnTable
     columns={columns}
     data={data}
     defaultColumn={{ maxSize: 300, minSize: 100, size: 150 }}
-    enableColumnResizing
   />
 );
 
@@ -203,8 +262,6 @@ export const ColumnResizingWithPinning = () => (
   <ShadcnTable
     columns={columns}
     data={data}
-    enableColumnPinning
-    enableColumnResizing
     initialState={{
       columnPinning: { start: ['firstName', 'lastName'], end: [] },
     }}
@@ -220,12 +277,14 @@ export const ColumnResizingWithHeaderGroups = () => (
             accessorKey: 'firstName',
             footer: 'First Name',
             header: 'First Name',
+            icon: UserIcon,
           },
 
           {
             accessorKey: 'lastName',
             footer: 'Last Name',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         footer: 'Name',
@@ -237,11 +296,13 @@ export const ColumnResizingWithHeaderGroups = () => (
             accessorKey: 'age',
             footer: 'Age',
             header: 'Age',
+            icon: CakeIcon,
           },
           {
             accessorKey: 'address',
             footer: 'Address',
             header: 'Address',
+            icon: MapPinIcon,
           },
         ],
         footer: 'Info',
@@ -254,7 +315,6 @@ export const ColumnResizingWithHeaderGroups = () => (
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     }))}
-    enableColumnResizing
   />
 );
 
@@ -267,12 +327,14 @@ export const ColumnResizingWithHeaderGroupsGridGrow = () => (
             accessorKey: 'firstName',
             footer: 'First Name',
             header: 'First Name',
+            icon: UserIcon,
           },
 
           {
             accessorKey: 'lastName',
             footer: 'Last Name',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ],
         footer: 'Name',
@@ -284,11 +346,13 @@ export const ColumnResizingWithHeaderGroupsGridGrow = () => (
             accessorKey: 'age',
             footer: 'Age',
             header: 'Age',
+            icon: CakeIcon,
           },
           {
             accessorKey: 'address',
             footer: 'Address',
             header: 'Address',
+            icon: MapPinIcon,
           },
         ],
         footer: 'Info',
@@ -301,7 +365,6 @@ export const ColumnResizingWithHeaderGroupsGridGrow = () => (
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     }))}
-    enableColumnResizing
     enableRowSelection
     layoutMode="grid"
   />
@@ -311,7 +374,6 @@ export const ColumnResizingLayoutGridGrow = () => (
   <ShadcnTable
     columns={columns.slice(0, 3)}
     data={data}
-    enableColumnResizing
     enableRowSelection
     layoutMode="grid"
   />
@@ -323,9 +385,207 @@ export const ColumnResizingLayoutGridGrowRTL = () => (
       columnResizeDirection="rtl"
       columns={columns.slice(0, 3)}
       data={data}
-      enableColumnResizing
       enableRowSelection
       layoutMode="grid"
     />
   </div>
 );
+
+/**
+ * Mid-drag of the First Name resize handle, the lit header hairline and the
+ * body guide line are one 1 px line ending on the column's trailing edge
+ * (F39). Under 'onEnd' the edge is where the drag will put it: the cell's
+ * edge plus the drag.
+ */
+const expectResizeGuidesMeetEdge =
+  (mode: 'onChange' | 'onEnd') =>
+  async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole('columnheader', { name: /First Name/ });
+    const th = canvasElement.querySelector<HTMLElement>(
+      'thead th[data-flip-column="firstName"]',
+    )!;
+    const handle = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+    const browserUserEvent = (
+      globalThis as {
+        stBrowserUserEvent?: { hover: (element: Element) => Promise<void> };
+      }
+    ).stBrowserUserEvent;
+    await browserUserEvent?.hover(th);
+    const boxStyle = (element: HTMLElement) => {
+      const style = getComputedStyle(element);
+      return [
+        style.borderTop,
+        style.borderRight,
+        style.borderLeft,
+        style.outlineStyle,
+        style.boxShadow,
+      ].join('|');
+    };
+    const restingBox = boxStyle(th);
+    const start = th.getBoundingClientRect();
+    const startX = start.right;
+    const dx = 40;
+    fireEvent.mouseDown(handle, { clientX: startX, clientY: start.top + 5 });
+    fireEvent.mouseMove(document, {
+      clientX: startX + dx,
+      clientY: start.top + 5,
+    });
+    try {
+      await waitFor(() => {
+        const edge =
+          mode === 'onEnd' ? startX + dx : th.getBoundingClientRect().right;
+        // onChange moves the edge with the drag; onEnd only the hairline.
+        if (mode === 'onEnd') {
+          expect(th.getBoundingClientRect().right).toBe(startX);
+        } else {
+          expect(th.getBoundingClientRect().right).toBeGreaterThan(startX);
+        }
+        const line = handle.firstElementChild!.getBoundingClientRect();
+        expect(line.width).toBe(1);
+        expect(Math.abs(line.right - edge)).toBeLessThanOrEqual(0.25);
+        const cells = [
+          ...canvasElement.querySelectorAll<HTMLElement>(
+            'tbody td[data-flip-column="firstName"]',
+          ),
+        ];
+        expect(cells.length).toBeGreaterThan(0);
+        for (const cell of cells) {
+          const width = getComputedStyle(cell).borderInlineEndWidth;
+          if (mode === 'onEnd') {
+            // The body cells keep their width until the drop and clip, so
+            // onEnd shows the hairline alone.
+            expect(width).toBe('0px');
+            continue;
+          }
+          // The guide is the cell's 1 px end border: the hairline's x range,
+          // over the full row height.
+          expect(width).toBe('1px');
+          const box = cell.getBoundingClientRect();
+          expect(Math.abs(box.right - 1 - line.left)).toBeLessThanOrEqual(0.25);
+          expect(Math.abs(box.right - line.right)).toBeLessThanOrEqual(0.25);
+        }
+        // No box around the cell while it resizes.
+        expect(boxStyle(th)).toBe(restingBox);
+      });
+    } finally {
+      fireEvent.mouseUp(document, {
+        clientX: startX + dx,
+        clientY: start.top + 5,
+      });
+    }
+  };
+
+export const ResizeGuidesMeetEdge = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: expectResizeGuidesMeetEdge('onChange'),
+};
+
+export const ResizeGuidesMeetEdgeOnEnd = {
+  render: () => (
+    <ShadcnTable columnResizeMode="onEnd" columns={columns} data={data} />
+  ),
+  play: expectResizeGuidesMeetEdge('onEnd'),
+};
+
+const firstNameHeader = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<HTMLElement>(
+    'thead th[data-flip-column="firstName"]',
+  )!;
+
+const firstNameCells = (canvasElement: HTMLElement) => [
+  ...canvasElement.querySelectorAll<HTMLElement>(
+    'tbody td[data-flip-column="firstName"]',
+  ),
+];
+
+/** Drags the First Name handle by `dx` px and releases it. */
+const dragFirstNameHandle = (canvasElement: HTMLElement, dx: number) => {
+  const th = firstNameHeader(canvasElement);
+  const handle = th.querySelector<HTMLElement>('.cursor-col-resize')!;
+  const start = th.getBoundingClientRect();
+  const point = { clientX: start.right, clientY: start.top + 5 };
+  fireEvent.mouseDown(handle, point);
+  fireEvent.mouseMove(document, { ...point, clientX: start.right + dx });
+  fireEvent.mouseUp(document, { ...point, clientX: start.right + dx });
+};
+
+const widthOf = (element: HTMLElement) => element.getBoundingClientRect().width;
+
+/**
+ * Dragging the handle widens the column by the drag; every body cell of the
+ * column takes the header's width.
+ */
+export const DragResizesColumn = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const before = widthOf(th);
+    dragFirstNameHandle(canvasElement, 60);
+    // The table spreads spare width over its columns, so the column grows by
+    // most of the drag, not by exactly the drag.
+    await waitFor(() =>
+      expect(widthOf(th) - before).toBeGreaterThanOrEqual(45),
+    );
+    const cells = firstNameCells(canvasElement);
+    expect(cells.length).toBeGreaterThan(0);
+    for (const cell of cells) {
+      expect(Math.abs(widthOf(cell) - widthOf(th))).toBeLessThanOrEqual(1);
+    }
+  },
+};
+
+/** A double click on the handle puts a resized column back to its default. */
+export const DoubleClickResetsWidth = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const before = widthOf(th);
+    dragFirstNameHandle(canvasElement, 80);
+    await waitFor(() =>
+      expect(widthOf(th) - before).toBeGreaterThanOrEqual(60),
+    );
+    fireEvent.doubleClick(th.querySelector<HTMLElement>('.cursor-col-resize')!);
+    await waitFor(() =>
+      expect(Math.abs(widthOf(th) - before)).toBeLessThanOrEqual(1),
+    );
+    expect(
+      Math.abs(widthOf(firstNameCells(canvasElement)[0]!) - before),
+    ).toBeLessThanOrEqual(1);
+  },
+};
+
+/**
+ * After a resize the column menu offers Reset column size, and choosing it
+ * puts the width back (D5 addendum).
+ */
+export const ResizeMenuItemResets = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findByRole('columnheader', {
+      name: /First Name/,
+    });
+    const th = firstNameHeader(canvasElement);
+    const before = widthOf(th);
+    dragFirstNameHandle(canvasElement, 70);
+    await waitFor(() =>
+      expect(widthOf(th) - before).toBeGreaterThanOrEqual(50),
+    );
+    await userEvent.click(
+      within(th).getByRole('button', { name: 'Column Actions' }),
+    );
+    const menu = await within(document.body).findByRole('menu');
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Reset column size' }),
+    );
+    await waitFor(() =>
+      expect(Math.abs(widthOf(th) - before)).toBeLessThanOrEqual(1),
+    );
+  },
+};

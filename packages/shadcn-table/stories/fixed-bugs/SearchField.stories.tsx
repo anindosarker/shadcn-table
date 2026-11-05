@@ -1,6 +1,7 @@
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // The search field stays mounted: it opens with its input focused, is inert
 // while closed, and Escape inside it clears a value first, then closes the
@@ -20,8 +21,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 const panelOf = (canvasElement: HTMLElement) => {
@@ -98,5 +99,50 @@ export const RingAfterPointerOpen = {
       expect(shadow).not.toBe('none');
       expect(shadow).toMatch(/ 3px/);
     });
+  },
+};
+
+/** Open, the toggle clears the value and closes the field in one click; no inline X by default. */
+export const ToggleClearsAndCloses = {
+  render: () => <ShadcnTable columns={columns} data={data} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Mason');
+    const toggle = canvas.getByRole('button', { name: 'Show/Hide search' });
+
+    await userEvent.click(toggle);
+    await waitFor(() =>
+      expect(document.activeElement).toBe(panelOf(canvasElement).input),
+    );
+    await userEvent.keyboard('Lily');
+    await waitFor(() => expect(canvas.queryByText('Mason')).toBeNull());
+    expect(toggle).toBeEnabled();
+    expect(canvas.queryByRole('button', { name: 'Clear search' })).toBeNull();
+
+    await userEvent.click(toggle);
+    await waitFor(() => expect(panelOf(canvasElement).panel.inert).toBe(true));
+    await canvas.findByText('Mason');
+    expect(panelOf(canvasElement).input).toHaveValue('');
+  },
+};
+
+/** `showClearSearchButton` brings back the inline X. */
+export const InlineClearButton = {
+  render: () => (
+    <ShadcnTable columns={columns} data={data} showClearSearchButton />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Mason');
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Show/Hide search' }),
+    );
+    await waitFor(() =>
+      expect(document.activeElement).toBe(panelOf(canvasElement).input),
+    );
+    await userEvent.keyboard('Lily');
+    await waitFor(() => expect(canvas.queryByText('Mason')).toBeNull());
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear search' }));
+    await canvas.findByText('Mason');
   },
 };

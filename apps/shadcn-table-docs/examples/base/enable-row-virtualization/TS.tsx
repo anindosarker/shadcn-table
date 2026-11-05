@@ -9,6 +9,15 @@ import {
   type ST_RowVirtualizer,
 } from '@/components/ui/shadcn-table';
 import { makeData, type Person } from './makeData';
+import {
+  Building2Icon,
+  GlobeIcon,
+  MailboxIcon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
@@ -16,42 +25,51 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         size: 150,
       },
       {
         accessorKey: 'middleName',
+        icon: UserIcon,
         header: 'Middle Name',
         size: 150,
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         size: 150,
       },
       {
         accessorKey: 'email',
+        icon: MailIcon,
         header: 'Email Address',
         size: 300,
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'zipCode',
+        icon: MailboxIcon,
         header: 'Zip Code',
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
       {
         accessorKey: 'country',
+        icon: GlobeIcon,
         header: 'Country',
       },
     ],

@@ -197,12 +197,16 @@ export const ST_SelectCheckbox = <TData extends ST_RowData>({
                 : localization.toggleSelectRow)
             }
           >
-            {/* Body: block-level and as wide as the control, so the cell centres
-                it and the bubble anchors on the control. Header: on the top of the
-                line box, the header text line top. Never on the baseline. */}
+            {/* Body: block-level and as wide as the control, so the grid cell's
+                justify-center, or its auto margins in a semantic table cell,
+                centre it and the bubble anchors on the control.
+                Header: on the top of the line box, the header text line top. Never
+                on the baseline. */}
             <span
               className={cn(
-                selectAll ? 'inline-flex align-top' : 'flex w-fit items-center',
+                selectAll
+                  ? 'inline-flex align-top'
+                  : 'mx-auto flex w-fit items-center',
               )}
             >
               {enableMultiRowSelection === false ? (

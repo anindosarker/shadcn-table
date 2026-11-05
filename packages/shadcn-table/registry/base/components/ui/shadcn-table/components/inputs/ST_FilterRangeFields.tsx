@@ -1,3 +1,4 @@
+import { useSelector } from '@tanstack/react-store';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -5,6 +6,7 @@ import {
   type ST_Header,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
+import { getColumnFilterInfo } from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_FilterTextField } from '@/components/ui/shadcn-table/components/inputs/ST_FilterTextField';
 
 export interface ST_FilterRangeFieldsProps<TData extends ST_RowData>
@@ -12,8 +14,8 @@ export interface ST_FilterRangeFieldsProps<TData extends ST_RowData>
   header: ST_Header<TData>;
 }
 
-// Each track keeps its input's min width, so a narrow column grows to fit Min
-// and Max side by side instead of overlapping them.
+// Min and Max stay side by side at every column size (D61), each track
+// keeping its input's min width; a narrower column clips them.
 const filterRangeFieldsVariants = cva(
   'grid grid-cols-[1fr_1fr] items-start gap-2',
 );
@@ -22,18 +24,51 @@ export const ST_FilterRangeFields = <TData extends ST_RowData>({
   header,
   ...rest
 }: ST_FilterRangeFieldsProps<TData>) => {
+  const table = header.table;
+  const {
+    options: { columnFilterDisplayMode, enableColumnFilterModes, localization },
+  } = table;
+  const { columnDef } = header.column;
+  useSelector(table.atoms.columnFilters);
+  useSelector(table.atoms.columnFilterFns);
+
+  const { allowedColumnFilterOptions, currentFilterOption } =
+    getColumnFilterInfo({ header, table });
+
+  // The Min field carries the mode button; the caption spans both fields.
+  const showFilterModeCaption = !!(
+    !columnDef.Filter &&
+    columnFilterDisplayMode !== 'chips' &&
+    enableColumnFilterModes &&
+    columnDef.enableColumnFilterModes !== false &&
+    (allowedColumnFilterOptions === undefined ||
+      !!allowedColumnFilterOptions?.length)
+  );
+
   return (
-    <div
-      {...rest}
-      className={cn(filterRangeFieldsVariants({ className: rest.className }))}
-    >
-      {[0, 1].map((rangeFilterIndex) => (
-        <ST_FilterTextField
-          header={header}
-          key={rangeFilterIndex}
-          rangeFilterIndex={rangeFilterIndex}
-        />
-      ))}
+    <div {...rest} className={cn('flex flex-col', rest.className)}>
+      <div className={filterRangeFieldsVariants()}>
+        {[0, 1].map((rangeFilterIndex) => (
+          <ST_FilterTextField
+            header={header}
+            key={rangeFilterIndex}
+            rangeFilterIndex={rangeFilterIndex}
+          />
+        ))}
+      </div>
+      {showFilterModeCaption ? (
+        <p className="mt-0.75 block text-xs leading-[0.8rem] whitespace-nowrap text-muted-foreground">
+          {localization.filterMode.replace(
+            '{filterType}',
+            localization[
+              `filter${
+                currentFilterOption?.charAt(0)?.toUpperCase() +
+                currentFilterOption?.slice(1)
+              }` as keyof typeof localization
+            ],
+          )}
+        </p>
+      ) : null}
     </div>
   );
 };

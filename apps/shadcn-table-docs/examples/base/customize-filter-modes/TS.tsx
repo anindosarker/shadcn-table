@@ -8,28 +8,33 @@ import {
 } from '@/components/ui/shadcn-table';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { data, type Person } from './makeData';
+import { CakeIcon, HashIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         enableColumnFilterModes: false, //disable changing filter mode for this column
         filterFn: 'equals', //set filter mode to equals
         header: 'ID',
       },
       {
         accessorKey: 'firstName', //normal, all filter modes are enabled
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'middleName',
+        icon: UserIcon,
         enableColumnFilterModes: false, //disable changing filter mode for this column
         filterFn: 'startsWith', //even though changing the mode is disabled, you can still set the default filter mode
         header: 'Middle Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         //if you do not want to use the default filter modes, you can provide your own and render your own menu
         renderColumnFilterModeMenuItems: ({ onSelectFilterMode }) => [
@@ -49,6 +54,7 @@ const Example = () => {
       },
       {
         accessorKey: 'age',
+        icon: CakeIcon,
         columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
         filterFn: 'between',
         header: 'Age',
@@ -61,7 +67,6 @@ const Example = () => {
     columns,
     data,
     enableColumnFilterModes: true, //enable changing filter mode for all columns unless explicitly disabled in a column def
-    initialState: { showColumnFilters: true }, //show filters by default
     filterFns: {
       customFilterFn: (row, id, filterValue) => {
         return row.getValue(id) === filterValue;

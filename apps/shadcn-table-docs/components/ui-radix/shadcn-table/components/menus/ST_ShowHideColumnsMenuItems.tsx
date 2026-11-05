@@ -17,9 +17,12 @@ import {
   type ST_Column,
   type ST_RowData,
 } from '@/components/ui-radix/shadcn-table/types';
-import { reorderColumn } from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
+import { applyColumnReorder } from '@/components/ui-radix/shadcn-table/shared/utils/column.utils';
+import { isColumnDragCancelled } from '@/components/ui-radix/shadcn-table/shared/utils/drag.utils';
 import { ST_ColumnPinningButtons } from '@/components/ui-radix/shadcn-table/components/buttons/ST_ColumnPinningButtons';
 import { ST_GrabHandleButton } from '@/components/ui-radix/shadcn-table/components/buttons/ST_GrabHandleButton';
+import { ST_ColumnIcon } from '@/components/ui-radix/shadcn-table/components/toolbar/ST_ColumnPicker';
+import { getST_ColumnFlipPositions } from '@/components/ui-radix/shadcn-table/hooks/useST_ColumnFlip';
 
 const showHideColumnsMenuItemVariants = cva(
   'items-center justify-start my-0 -outline-offset-2',
@@ -47,8 +50,6 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const table = column.table;
   const {
     options: { enableColumnOrdering, enableColumnPinning, enableHiding },
-    setColumnOrder,
-    setColumnPinning,
   } = table;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
@@ -77,26 +78,33 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
     }
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e: DragEvent<HTMLButtonElement>) => {
     setIsDragging(false);
     setHoveredColumn(null);
-    if (hoveredColumn) {
-      const reorderedColumns = reorderColumn(
-        column,
-        hoveredColumn,
-        table.atoms.columnOrder.get(),
-      );
-      setColumnOrder(reorderedColumns);
-      setColumnPinning(({ start = [], end = [] }) => ({
-        start: reorderedColumns.filter((header) => start.includes(header)),
-        end: reorderedColumns.filter((header) => end.includes(header)),
-      }));
+    if (hoveredColumn && !isColumnDragCancelled(e)) {
+      // The column slide reads where every header sat before the reorder,
+      // measured as the slide measures: from the table's left edge.
+      table.setColumnFlipPending({
+        dragDrop: false,
+        movedId: column.id,
+        positions: getST_ColumnFlipPositions(table),
+      });
+      applyColumnReorder(column, hoveredColumn, table);
     }
   };
 
   const handleDragEnter = () => {
     if (!isDragging && columnDef.enableColumnOrdering !== false) {
       setHoveredColumn(column);
+    }
+  };
+
+  // Accepting the drop over a row keeps its dragend from reading as cancelled.
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect =
+        columnDef.enableColumnOrdering !== false ? 'move' : 'none';
     }
   };
 
@@ -107,10 +115,12 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
   const label = (
     <span
       className={cn(
+        'flex items-center gap-2',
         columnDefType === 'display' && 'opacity-50',
         !column.getCanHide() && 'text-muted-foreground',
       )}
     >
+      <ST_ColumnIcon column={column} />
       {columnDef.header}
     </span>
   );
@@ -128,6 +138,7 @@ export const ST_ShowHideColumnsMenuItems = <TData extends ST_RowData>({
             'outline-2 outline-dashed outline-primary',
         )}
         onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
         // Radix menus swallow Tab; the controls beside the item take it.
         onKeyDown={(event) => {
           if (event.key === 'Tab') event.stopPropagation();

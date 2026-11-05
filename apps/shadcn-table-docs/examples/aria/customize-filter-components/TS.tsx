@@ -6,6 +6,7 @@ import {
   useShadcnTable,
   type ST_ColumnDef,
 } from '@/components/ui/shadcn-table';
+import { CakeIcon, HashIcon, UserIcon, VenusAndMarsIcon } from 'lucide-react';
 
 export type Person = {
   id: number;
@@ -20,19 +21,23 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'ID',
         stFilterTextFieldProps: { placeholder: 'ID' },
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'gender',
+        icon: VenusAndMarsIcon,
         header: 'Gender',
         filterFn: 'equals',
         filterSelectOptions: [
@@ -44,6 +49,7 @@ const Example = () => {
       },
       {
         accessorKey: 'age',
+        icon: CakeIcon,
         header: 'Age',
         filterVariant: 'range',
       },
@@ -90,7 +96,6 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data,
-    initialState: { showColumnFilters: true },
     stFilterTextFieldProps: {
       className: 'my-2 w-full',
     },

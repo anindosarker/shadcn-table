@@ -11,12 +11,14 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { data, type Person } from './makeData';
+import { HashIcon, UserIcon } from 'lucide-react';
 
 const Example = () => {
   const columns = useMemo<ST_ColumnDef<Person>[]>(
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'ID',
         renderColumnActionsMenuItems: ({ closeMenu }) => [
           <DropdownMenuItem
@@ -41,6 +43,7 @@ const Example = () => {
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         renderColumnActionsMenuItems: ({
           closeMenu,
@@ -70,6 +73,7 @@ const Example = () => {
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         renderColumnActionsMenuItems: ({
           closeMenu,

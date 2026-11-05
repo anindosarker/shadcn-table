@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { UserIcon } from 'lucide-react';
 
 // The progress bar and the stacked alert banner keep their content while
 // their panel collapses, so they animate shut instead of snapping, and drop
@@ -21,8 +22,8 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
 ];
 
 const progressBars = () =>

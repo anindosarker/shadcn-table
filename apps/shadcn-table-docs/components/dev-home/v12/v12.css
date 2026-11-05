@@ -476,16 +476,35 @@
   }
 }
 
-/* the status line wraps instead of cutting "Now showing: Selection" */
-.v12 .v5-steps [aria-live] {
-  overflow: visible;
-  white-space: normal;
-  text-overflow: clip;
+/* the seven demo columns at the header demo's sizes need about 1080px, so
+ * the steps sit beside the table from 1440px (the band runs gutter to
+ * gutter, see home-page.tsx) and under it below */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .v12 .v5-demo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v12 .v5-steps {
+    border-top-width: 1px;
+    border-left-width: 0;
+  }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 640px) and (max-width: 1439px) {
+  .v12 .v12-step-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .v12 .v12-step-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
   .v12 .v5-demo {
-    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-columns: minmax(0, 1fr) 240px;
   }
 }
 
@@ -506,11 +525,30 @@
   position: relative;
 }
 
-.v12 :is(.v12-cue, .v12-cue-fill):not(input)::after {
+/* the popovers the replay opens (pickers, chip editors, the view settings
+ * panel, their options) are portalled outside .v12: a cue there brings the
+ * tokens it reads. A popover that places itself (an inline position) keeps
+ * it. */
+.v12-cue:not(.v12 *) {
+  --dh-accent: color-mix(in oklch, var(--primary) 72%, var(--foreground));
+  --dh-accent-soft: color-mix(in oklch, var(--dh-accent) 14%, transparent);
+  --dh-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  position: relative;
+}
+
+:root.dark .v12-cue:not(.v12 *) {
+  --dh-accent: var(--primary);
+}
+
+.v12 :is(.v12-cue, .v12-cue-fill):not(input)::after,
+.v12-cue:not(.v12 *, input)::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
+  /* inside a rounded popover, chip or button */
+  border-radius: inherit;
   border: 1px solid var(--dh-accent);
   background-color: var(--dh-accent-soft);
   opacity: 0;
@@ -572,6 +610,7 @@
 @media (prefers-reduced-motion: reduce) {
   .v12 .v4-star,
   .v12 :is(.v12-cue, .v12-cue-fill)::after,
+  .v12-cue:not(.v12 *)::after,
   .v12 :is(.v12-reset-a, .v12-reset-b) {
     animation: none;
   }

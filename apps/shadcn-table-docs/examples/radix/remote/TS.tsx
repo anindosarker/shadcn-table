@@ -9,6 +9,7 @@ import {
   type ST_PaginationState,
   type ST_SortingState,
 } from '@/components/ui/shadcn-table';
+import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 type UserApiResponse = {
   data: Array<User>;
@@ -89,23 +90,28 @@ const Example = () => {
     () => [
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
       },
       //column definitions...
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
       },
       {
         accessorKey: 'address',
+        icon: MapPinIcon,
         header: 'Address',
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
       },
       {
         accessorKey: 'phoneNumber',
+        icon: PhoneIcon,
         header: 'Phone Number',
       },
       //end
@@ -118,7 +124,6 @@ const Example = () => {
     data,
     enableRowSelection: true,
     getRowId: (row) => row.phoneNumber,
-    initialState: { showColumnFilters: true },
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,

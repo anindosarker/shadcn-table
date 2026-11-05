@@ -15,18 +15,22 @@ The sticky header and footer feature allows you to keep the header and footer of
 
 Enabling the sticky header is as simple as setting the `enableStickyHeader` table option to `true`. This will make the header of the table stick to the top and remain visible while scrolling through the table.
 
-When the sticky header is enabled, you will probably also want to give the table a maxHeight so that the table can scroll vertically and keep the header visible. You can do this by styling the table container with the `stTableContainerProps` table option.
+A sticky header needs the table container to scroll vertically, so when it is on, the container's height is capped. The cap comes from the `--st-sticky-max-height` CSS variable and defaults to `70vh` (70 percent of the window height). Users can also turn the sticky header on and off at runtime from the Sticky header row of the [view settings](/docs/guides/view-settings) panel; `enableStickyHeader` sets its starting value.
 
-> If no maxHeight is specified, the table container will default to a `100vh` maxHeight when `enableStickyHeader` is enabled.
+To change the cap, set the variable instead of a `maxHeight` style, for example with a Tailwind arbitrary property on the table layout (or on any ancestor element of the table). Set it to `none` when your page layout already limits the table's height.
 
 ```tsx
 <ShadcnTable
   columns={columns}
   data={data}
   enableStickyHeader
-  stTableContainerProps={{ style: { maxHeight: '500px' } }}
+  stTableLayoutProps={{
+    className: '[--st-sticky-max-height:calc(100vh-12rem)]',
+  }}
 />
 ```
+
+> Row virtualization forces the sticky header on. In that case the default cap is the full window height minus the toolbars (`clamp(350px, calc(100vh - toolbar height), 9999px)`), so a virtualized table does not shrink to 70vh; the same `--st-sticky-max-height` variable overrides it. In full screen the table fills the window and the cap does not apply.
 
 ### Enable Sticky Footer
 

@@ -12,6 +12,15 @@ import {
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   QueryClient,
   QueryClientProvider,
   useMutation,
@@ -19,7 +28,15 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { type User, fakeData, usStates } from './makeData';
-import { PencilIcon, Trash2Icon, UserPlusIcon } from 'lucide-react';
+import {
+  Building2Icon,
+  HashIcon,
+  MapIcon,
+  PencilIcon,
+  Trash2Icon,
+  UserIcon,
+  UserPlusIcon,
+} from 'lucide-react';
 
 const Example = () => {
   const [creatingRowIndex, setCreatingRowIndex] = useState<
@@ -33,12 +50,14 @@ const Example = () => {
     () => [
       {
         accessorKey: 'id',
+        icon: HashIcon,
         header: 'Id',
         enableEditing: false,
-        size: 80,
+        size: 110,
       },
       {
         accessorKey: 'firstName',
+        icon: UserIcon,
         header: 'First Name',
         stEditTextFieldProps: {
           required: true,
@@ -55,6 +74,7 @@ const Example = () => {
       },
       {
         accessorKey: 'lastName',
+        icon: UserIcon,
         header: 'Last Name',
         stEditTextFieldProps: {
           required: true,
@@ -70,6 +90,7 @@ const Example = () => {
       },
       {
         accessorKey: 'city',
+        icon: Building2Icon,
         header: 'City',
         stEditTextFieldProps: {
           required: true,
@@ -85,6 +106,7 @@ const Example = () => {
       },
       {
         accessorKey: 'state',
+        icon: MapIcon,
         header: 'State',
         editVariant: 'select',
         editSelectOptions: usStates,
@@ -146,11 +168,8 @@ const Example = () => {
   };
 
   //DELETE action
-  const openDeleteConfirmModal = (row: ST_Row<User>) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUser(row.original.id);
-    }
-  };
+  const [deletingRow, setDeletingRow] = useState<ST_Row<User> | null>(null);
+  const openDeleteConfirmModal = (row: ST_Row<User>) => setDeletingRow(row);
 
   const table = useShadcnTable({
     columns,
@@ -159,6 +178,7 @@ const Example = () => {
     editDisplayMode: 'row', // ('modal', 'cell', 'table', and 'custom' are also available)
     enableColumnPinning: true,
     enableEditing: true,
+    positionActionsColumn: 'first',
     enableExpanding: true,
     positionCreatingRow: creatingRowIndex, //index where new row is inserted before
     getRowId: (row) => row.id,
@@ -258,7 +278,35 @@ const Example = () => {
     },
   });
 
-  return <ShadcnTable table={table} />;
+  return (
+    <>
+      <ShadcnTable table={table} />
+      <AlertDialog
+        open={!!deletingRow}
+        onOpenChange={(open) => !open && setDeletingRow(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to delete this user?
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={() => {
+                if (deletingRow) deleteUser(deletingRow.original.id);
+                setDeletingRow(null);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
 };
 
 //CREATE hook (post new user to api)

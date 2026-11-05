@@ -12,12 +12,14 @@ Shadcn Table supports almost any sorting scenario you may have. Client-side sort
     new Set([
       'enableGlobalFilterRankedResults',
       'enableMultiSort',
+      'enableSortPopover',
       'enableSorting',
       'enableSortingRemoval',
       'isMultiSortEvent',
       'manualSorting',
       'maxMultiSortColCount',
       'onSortingChange',
+      'showSortIndex',
       'sortDescFirst',
       'sortFns',
     ])
@@ -88,31 +90,35 @@ const table = useShadcnTable({
 
 ### Default Sorting Features
 
-Client-side sorting is enabled by default. When sorting is toggled on for a column, the table will be sorted by the [`basic` sorting algorithm](https://tanstack.com/table/latest/docs/framework/react/guide/sorting#sorting-rowmodelfns) by default.
+Client-side sorting is enabled by default. When sorting is turned on for a column, the table will be sorted by the [`basic` sorting algorithm](https://tanstack.com/table/latest/docs/framework/react/guide/sorting#sorting-rowmodelfns) by default.
+
+Users sort from two places: the [column menu](/docs/guides/column-actions) (Sort ascending, Sort descending, Clear sort) and the [sort editor](/docs/guides/sort-editor) behind the sort button in the toolbar. Clicking a header label opens the column menu and does not sort. A sorted column shows a small arrow after its label; an unsorted column shows nothing.
 
 #### Multi-Sorting
 
-Multi-sorting is also enabled by default, which means you can sort by multiple columns at once. You can do this by clicking on a column header while holding down the `shift` key. The table will then be sorted by the previously sorted column, followed by the newly clicked column. Alternatively, if you want multi-sorting to be the default click behavior without the need to hold `shift`, you can set the `isMultiSortEvent` table option to `() => true`.
+Multi-sorting is also enabled by default, which means you can sort by multiple columns at once. No modifier key is needed: in the column menu, choosing a direction on a column that is already sorted replaces its direction, and choosing a direction on another column adds it after the current sorts. In the sort editor, "Add sort" adds a rule and the rules can be dragged into a new order. Set `showSortIndex: true` to show each sorted column's position next to its arrow while more than one sort is active.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
-  isMultiSortEvent: () => true, //multi-sorting will be the default click behavior without the need to hold shift
+  showSortIndex: true, //show 1, 2, 3 next to the sort arrows of a multi-column sort
 });
 ```
+
+`isMultiSortEvent` still decides whether a call to a column's `getToggleSortingHandler()` adds to the current sorts, which matters if you write a custom `Header` that sorts on click.
 
 You can limit the number of columns that can be sorted at once by setting the `maxMultiSortColCount` prop, or you can disable multi-sorting entirely by setting the `enableMultiSort` table option to `false`.
 
 #### Sorting Removal
 
-By default, users can remove a sort on a column by clicking through the sort direction options or selecting "Clear Sort" from the column actions menu. You can disable this feature by setting the `enableSortingRemoval` table option to `false`.
+By default, users can remove a sort on a column with "Clear sort" in the column menu, or with the remove button of its rule in the sort editor. You can disable removing a sort from the column menu by setting the `enableSortingRemoval` table option to `false`.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
-  enableSortingRemoval: false, //users will not be able to remove a sort on a column
+  enableSortingRemoval: false, //the column menu shows no Clear sort item
 });
 ```
 

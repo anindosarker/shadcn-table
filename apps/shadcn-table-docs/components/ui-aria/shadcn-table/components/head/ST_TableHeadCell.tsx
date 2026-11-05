@@ -1,4 +1,4 @@
-import { type DragEvent, type KeyboardEvent } from 'react';
+import { type KeyboardEvent, useState } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -8,14 +8,24 @@ import {
   type TableCellProps,
 } from '@/components/ui-aria/shadcn-table/types';
 import { cellKeyboardShortcuts } from '@/components/ui-aria/shadcn-table/shared/utils/cell.utils';
-import { getCommonSRTCellStyles } from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
+import { renderColumnIcon } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
+import {
+  getCellPinning,
+  getCommonSRTCellStyles,
+  gridLineClassName,
+} from '@/components/ui-aria/shadcn-table/shared/utils/style.utils';
 import { parseFromValuesOrFunc } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
 import { ST_TableHeadCellColumnActionsButton } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellColumnActionsButton';
 import { ST_TableHeadCellFilterContainer } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellFilterContainer';
 import { ST_TableHeadCellFilterLabel } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellFilterLabel';
-import { ST_TableHeadCellGrabHandle } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellGrabHandle';
+import {
+  getST_ColumnDragHandlers,
+  ST_TableHeadCellGrabHandle,
+} from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellGrabHandle';
+import { ST_TableHeadCellLockedOverlay } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellLockedOverlay';
 import { ST_TableHeadCellResizeHandle } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellResizeHandle';
 import { ST_TableHeadCellSortLabel } from '@/components/ui-aria/shadcn-table/components/head/ST_TableHeadCellSortLabel';
+import { prefersReducedMotion } from '@/components/ui-aria/shadcn-table/hooks/useST_ColumnFlip';
 
 export interface ST_TableHeadCellProps<TData extends ST_RowData>
   extends TableCellProps {
@@ -25,7 +35,7 @@ export interface ST_TableHeadCellProps<TData extends ST_RowData>
 }
 
 const headCellVariants = cva(
-  'border-b text-sm leading-6 align-top overflow-visible font-bold [&:hover_button]:opacity-100',
+  'group/th border-b p-0 text-sm font-medium text-muted-foreground align-middle overflow-visible',
 );
 
 export const ST_TableHeadCell = <TData extends ST_RowData>({
@@ -38,7 +48,6 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   const {
     options: {
       columnFilterDisplayMode,
-      columnResizeMode,
       enableKeyboardShortcuts,
       enableColumnActions,
       enableColumnDragging,
@@ -48,14 +57,17 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
       enableMultiSort,
       enableStickyHeader,
       layoutMode,
+      localization,
+      showColumnDragHandle,
       stTableHeadCellProps,
     },
     refs: { tableHeadCellRefs },
-    setHoveredColumn,
   } = table;
   const { column } = header;
   const { columnDef } = column;
   const { columnDefType } = columnDef;
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const tableCellProps = {
     ...parseFromValuesOrFunc(stTableHeadCellProps, { column, table }),
@@ -68,26 +80,22 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
 
   const showColumnActions =
     (enableColumnActions || columnDef.enableColumnActions) &&
-    columnDef.enableColumnActions !== false;
+    columnDef.enableColumnActions !== false &&
+    columnDefType !== 'group';
 
-  const handleDragEnter = () => {
-    const draggingColumn = table.atoms.draggingColumn.get();
-    const hoveredColumn = table.atoms.hoveredColumn.get();
-    if (enableGrouping && hoveredColumn?.id === 'drop-zone') {
-      setHoveredColumn(null);
-    }
-    if (enableColumnOrdering && draggingColumn && columnDefType !== 'group') {
-      setHoveredColumn(
-        columnDef.enableColumnOrdering !== false ? column : null,
-      );
-    }
+  const tableHeadCellRef = {
+    get current() {
+      return tableHeadCellRefs.current?.[column.id] ?? null;
+    },
   };
+  const dragHandlers = getST_ColumnDragHandlers(column, tableHeadCellRef);
 
-  const handleDragOver = (e: DragEvent) => {
-    if (columnDef.enableColumnOrdering !== false) {
-      e.preventDefault();
-    }
-  };
+  // A leaf header: the one cell per column the column slide moves.
+  const isLeaf = !header.isPlaceholder && !header.subHeaders.length;
+  const isLocked =
+    columnDefType !== 'group' &&
+    (enableColumnOrdering === false ||
+      columnDef.enableColumnOrdering === false);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTableCellElement>) => {
     tableCellProps?.onKeyDown?.(event);
@@ -107,18 +115,19 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
   const grabHandle = (
     <ST_TableHeadCellGrabHandle
       column={column}
-      tableHeadCellRef={{
-        get current() {
-          return tableHeadCellRefs.current?.[column.id] ?? null;
-        },
-      }}
+      tableHeadCellRef={tableHeadCellRef}
     />
   );
   const columnActionsButton = (
-    <ST_TableHeadCellColumnActionsButton header={header} />
+    <ST_TableHeadCellColumnActionsButton
+      header={header}
+      onOpenChange={setMenuOpen}
+      open={menuOpen}
+    />
   );
   const resizeHandle = <ST_TableHeadCellResizeHandle header={header} />;
   const filterContainer = <ST_TableHeadCellFilterContainer header={header} />;
+  const columnIcon = renderColumnIcon(columnDef.icon);
 
   return (
     <table.Subscribe
@@ -128,75 +137,77 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
         columnVisibility: state.columnVisibility,
         density: state.density,
         draggingColumn: state.draggingColumn,
+        gridLines: state.viewSettings.gridLines,
         grouping: state.grouping,
         hoveredColumn: state.hoveredColumn,
         isFullScreen: state.isFullScreen,
-        isResizingColumn: state.columnResizing.isResizingColumn,
         // A pinned cell's offset follows the other columns' sizes; widths
         // come from the CSS vars ST_Table sets.
         pinnedColumnSizing:
-          enableColumnPinning &&
-          columnDef.columnDefType !== 'group' &&
-          column.getIsPinned()
+          enableColumnPinning && getCellPinning({ column, header })
             ? state.columnSizing
             : undefined,
         showColumnFilters: state.showColumnFilters,
         sorting: state.sorting,
+        stickyHeaderSetting: state.viewSettings.stickyHeader,
       })}
     >
       {({
         density,
         draggingColumn,
+        gridLines,
         grouping,
         hoveredColumn,
         isFullScreen,
-        isResizingColumn,
         showColumnFilters,
+        stickyHeaderSetting,
       }) => {
         const isColumnPinned =
-          enableColumnPinning &&
-          columnDef.columnDefType !== 'group' &&
-          column.getIsPinned();
+          enableColumnPinning && getCellPinning({ column, header });
 
-        const showDragHandle =
+        const canDrag =
+          isLeaf &&
+          columnDefType !== 'group' &&
           enableColumnDragging !== false &&
           columnDef.enableColumnDragging !== false &&
-          (enableColumnDragging ||
+          !!(
+            enableColumnDragging ||
             (enableColumnOrdering &&
               columnDef.enableColumnOrdering !== false) ||
             (enableGrouping &&
               columnDef.enableGrouping !== false &&
-              !grouping.includes(column.id)));
+              !grouping.includes(column.id))
+          );
 
-        const stickyHeader = enableStickyHeader || isFullScreen;
+        const stickyHeader =
+          enableStickyHeader || isFullScreen || stickyHeaderSetting;
 
-        let headerPL = 0;
-        if (column.getCanSort()) headerPL += 1;
-        if (showColumnActions) headerPL += 1.75;
-        if (showDragHandle) headerPL += 1.5;
+        const showSubheaderFilter =
+          columnFilterDisplayMode === 'subheader' && column.getCanFilter();
 
-        const showResizeBorder =
-          isResizingColumn === column.id &&
-          columnResizeMode === 'onChange' &&
-          !header.subHeaders.length;
+        const isLastColumn =
+          header.headerGroup?.headers.at(-1)?.id === header.id;
 
-        const borderStyle = showResizeBorder
-          ? `2px solid var(--color-primary)`
-          : draggingColumn?.id === column.id
+        const isDragging = draggingColumn?.id === column.id;
+        // With the preview the dragged header sits in the gap with the drop
+        // outline; reduced motion keeps the static feedback on both cells.
+        const isPreview = !!draggingColumn && !prefersReducedMotion();
+        const borderStyle = isPreview
+          ? undefined
+          : isDragging
             ? `1px dashed var(--color-muted-foreground)`
-            : hoveredColumn?.id === column.id
+            : hoveredColumn?.id === column.id &&
+                hoveredColumn.id !== 'drop-zone'
               ? `2px dashed var(--color-primary)`
               : undefined;
 
-        const draggingBorders = showResizeBorder
-          ? { borderInlineEnd: borderStyle }
-          : borderStyle
-            ? {
-                borderLeft: borderStyle,
-                borderRight: borderStyle,
-                borderTop: borderStyle,
-              }
-            : undefined;
+        const draggingBorders = borderStyle
+          ? {
+              borderLeft: borderStyle,
+              borderRight: borderStyle,
+              borderTop: borderStyle,
+            }
+          : undefined;
 
         const HeaderElement =
           parseFromValuesOrFunc(columnDef.Header, {
@@ -212,6 +223,40 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
           tableCellProps,
         });
 
+        const alignClassName =
+          tableCellProps.align === 'center' || columnDefType === 'group'
+            ? 'justify-center text-center'
+            : tableCellProps.align === 'right'
+              ? 'flex-row-reverse text-end'
+              : tableCellProps.align === 'left'
+                ? 'text-start'
+                : columnDefType === 'display'
+                  ? 'justify-center text-center'
+                  : 'text-start';
+
+        // A plain text header is the second opener of the column menu; a
+        // custom `Header` render keeps its own content and events.
+        const label =
+          showColumnActions && !columnDef.Header ? (
+            <button
+              aria-label={localization.columnMenu.replace(
+                '{column}',
+                String(columnDef.header),
+              )}
+              className="min-w-0 cursor-[inherit] truncate text-start text-sm hover:text-foreground"
+              onClick={() => setMenuOpen(true)}
+              type="button"
+            >
+              {HeaderElement}
+            </button>
+          ) : (
+            <span
+              className={cn('min-w-0', columnDefType === 'data' && 'truncate')}
+            >
+              {HeaderElement}
+            </span>
+          );
+
         return (
           <th
             aria-sort={
@@ -226,8 +271,11 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
             data-index={staticColumnIndex}
             data-pinned={!!isColumnPinned || undefined}
             data-sort={column.getIsSorted() || undefined}
-            onDragEnter={handleDragEnter}
-            onDragOver={handleDragOver}
+            data-flip-column={isLeaf ? column.id : undefined}
+            data-flip-pinned={(isLeaf && !!isColumnPinned) || undefined}
+            draggable={canDrag || undefined}
+            onDragEnd={canDrag ? dragHandlers.onDragEnd : undefined}
+            onDragStart={canDrag ? dragHandlers.onDragStart : undefined}
             ref={(node: HTMLTableCellElement) => {
               if (node) {
                 tableHeadCellRefs.current[column.id] = node;
@@ -242,40 +290,25 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
             onKeyDown={handleKeyDown}
             className={cn(
               headCellVariants(),
-              tableCellProps.align === 'center'
-                ? 'text-center'
-                : tableCellProps.align === 'right'
-                  ? 'text-end flex-row-reverse'
-                  : tableCellProps.align === 'left'
-                    ? 'text-start'
-                    : tableCellProps.align === 'justify'
-                      ? 'text-justify'
-                      : columnDefType === 'group'
-                        ? 'text-center'
-                        : 'text-start',
+              !(showSubheaderFilter && showColumnFilters) && 'h-10',
               layoutMode?.startsWith('grid') && 'flex-col',
-              density === 'compact'
-                ? 'p-2'
-                : density === 'comfortable'
-                  ? columnDefType === 'display'
-                    ? 'p-3'
-                    : 'p-4'
-                  : columnDefType === 'display'
-                    ? 'px-5 py-4'
-                    : 'p-6',
-              columnDefType === 'display'
-                ? 'pb-0'
-                : showColumnFilters || density === 'compact'
-                  ? 'pb-[0.4rem]'
-                  : 'pb-[0.6rem]',
-              columnDefType === 'group' || density === 'compact'
-                ? 'pt-1'
-                : density === 'comfortable'
-                  ? 'pt-3'
-                  : 'pt-5',
               enableMultiSort && column.getCanSort() && 'select-none',
-              stickyHeader && 'sticky top-0 z-2 bg-background',
+              stickyHeader && 'sticky top-0 z-2',
+              (stickyHeader || isColumnPinned) && 'bg-background',
               commonCellStyles.className,
+              isDragging ? 'opacity-50' : 'opacity-100',
+              isDragging && isPreview && 'z-1',
+              isDragging &&
+                isPreview &&
+                !isColumnPinned &&
+                'relative outline-2 -outline-offset-2 outline-primary outline-dashed',
+              canDrag && 'cursor-grab select-none active:cursor-grabbing',
+              isLocked && !!draggingColumn && 'cursor-not-allowed',
+              isLeaf &&
+                !isColumnPinned &&
+                '[table[data-flip-sliding]_&]:transition-[translate] [table[data-flip-sliding]_&]:duration-200 [table[data-flip-sliding]_&]:ease-out [table[data-flip-sliding]_&]:will-change-[translate]',
+              gridLineClassName(gridLines, isLastColumn),
+              'border-b',
             )}
             style={{
               ...commonCellStyles.style,
@@ -287,61 +320,38 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
               : (tableCellProps.children ?? (
                   <div
                     className={cn(
-                      'relative flex w-full items-center',
-                      tableCellProps?.align === 'right' && 'flex-row-reverse',
-                      columnDefType === 'group' ||
-                        tableCellProps?.align === 'center'
-                        ? 'justify-center'
-                        : column.getCanResize()
-                          ? 'justify-between'
-                          : 'justify-start',
+                      'flex w-full min-w-0 items-center gap-1.5',
+                      showSubheaderFilter && showColumnFilters
+                        ? 'h-10'
+                        : 'h-full',
+                      // A display column's control shares its x with the
+                      // body cell's, which has no padding.
+                      columnDefType === 'display'
+                        ? 'p-0'
+                        : density === 'compact'
+                          ? 'px-2'
+                          : density === 'comfortable'
+                            ? 'px-3'
+                            : 'px-4',
+                      alignClassName,
                     )}
                   >
-                    <div
-                      className={cn(
-                        'flex items-center',
-                        tableCellProps?.align === 'right' && 'flex-row-reverse',
-                        column.getCanSort() &&
-                          columnDefType !== 'group' &&
-                          'cursor-pointer',
-                        columnDefType === 'data' && 'overflow-hidden',
-                      )}
-                      onClick={column.getToggleSortingHandler()}
-                      style={
-                        tableCellProps?.align === 'center'
-                          ? { paddingLeft: `${headerPL}rem` }
-                          : undefined
-                      }
-                    >
-                      <div
-                        className={cn(
-                          'text-ellipsis hover:text-clip',
-                          columnDefType === 'data' && 'overflow-hidden',
-                          (columnDef.header?.length ?? 0) < 20
-                            ? 'whitespace-nowrap'
-                            : 'whitespace-normal',
-                        )}
-                        style={{
-                          minWidth: `${Math.min(columnDef.header?.length ?? 0, 4)}ch`,
-                        }}
-                      >
-                        {HeaderElement}
-                      </div>
-                      {column.getCanFilter() && filterLabel}
-                      {column.getCanSort() && sortLabel}
-                    </div>
-                    {columnDefType !== 'group' && (
-                      <div className="flex items-center whitespace-nowrap">
-                        {showDragHandle && grabHandle}
-                        {showColumnActions && columnActionsButton}
-                      </div>
-                    )}
-                    {column.getCanResize() && resizeHandle}
+                    {canDrag && showColumnDragHandle && grabHandle}
+                    {columnIcon}
+                    {label}
+                    {column.getCanFilter() && filterLabel}
+                    {column.getCanSort() && sortLabel}
+                    {showColumnActions && columnActionsButton}
                   </div>
                 ))}
-            {columnFilterDisplayMode === 'subheader' &&
-              column.getCanFilter() &&
-              filterContainer}
+            {showSubheaderFilter && filterContainer}
+            {column.getCanResize() && resizeHandle}
+            {isLocked && (
+              <ST_TableHeadCellLockedOverlay
+                column={column}
+                dragActive={!!draggingColumn}
+              />
+            )}
           </th>
         );
       }}

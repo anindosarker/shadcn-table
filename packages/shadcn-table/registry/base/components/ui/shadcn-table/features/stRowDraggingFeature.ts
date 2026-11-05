@@ -20,19 +20,32 @@ import type {
 // ST_TableOptions<TData> types the options for TData.
 type ST_ErasedRow = ST_Row<ST_RowData>;
 
+/**
+ * A row drop the row slide plays once the new order renders: the dropped
+ * row's data and, by row data, each row's top from the table's top edge before
+ * the drop.
+ */
+export interface ST_RowFlipPending {
+  movedRow: ST_RowData;
+  positions: Map<ST_RowData, number>;
+}
+
 export interface ST_TableState_RowDragging {
   draggingRow: ST_ErasedRow | null;
   hoveredRow: Partial<ST_ErasedRow> | null;
+  rowFlipPending: ST_RowFlipPending | null;
 }
 
 export interface ST_TableOptions_RowDragging {
   onDraggingRowChange?: OnChangeFn<ST_ErasedRow | null>;
   onHoveredRowChange?: OnChangeFn<Partial<ST_ErasedRow> | null>;
+  onRowFlipPendingChange?: OnChangeFn<ST_RowFlipPending | null>;
 }
 
 export interface ST_Table_RowDragging<TData extends ST_RowData> {
   setDraggingRow: (updater: ST_Updater<ST_Row<TData> | null>) => void;
   setHoveredRow: (updater: ST_Updater<Partial<ST_Row<TData>> | null>) => void;
+  setRowFlipPending: (updater: ST_Updater<ST_RowFlipPending | null>) => void;
 }
 
 declare module '@tanstack/react-table' {
@@ -63,11 +76,13 @@ export const stRowDraggingFeature: TableFeature = {
   getInitialState: (initialState) => ({
     draggingRow: null,
     hoveredRow: null,
+    rowFlipPending: null,
     ...initialState,
   }),
   getDefaultTableOptions: (table) => ({
     onDraggingRowChange: makeStateUpdater('draggingRow', table),
     onHoveredRowChange: makeStateUpdater('hoveredRow', table),
+    onRowFlipPendingChange: makeStateUpdater('rowFlipPending', table),
   }),
   constructTableAPIs: (table) => {
     assignTableAPIs('stRowDraggingFeature', table, {
@@ -82,6 +97,12 @@ export const stRowDraggingFeature: TableFeature = {
           (table.options as ST_TableOptions_RowDragging).onHoveredRowChange?.(
             (old) => functionalUpdate(updater, old),
           ),
+      },
+      table_setRowFlipPending: {
+        fn: (updater: ST_Updater<ST_RowFlipPending | null>) =>
+          (
+            table.options as ST_TableOptions_RowDragging
+          ).onRowFlipPendingChange?.((old) => functionalUpdate(updater, old)),
       },
     });
   },

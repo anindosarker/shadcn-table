@@ -309,6 +309,9 @@ export const MultiSortingExample = () => (
 export const PersistentStateExample = () => (
   <ExampleSnippet name="persistent-state" />
 );
+export const PersistentViewExample = () => (
+  <ExampleSnippet name="persistent-view" />
+);
 export const ReactQueryExample = () => <ExampleSnippet name="react-query" />;
 export const RemoteExample = () => <ExampleSnippet name="remote" />;
 export const RowActionsButtonsExample = () => (
@@ -322,6 +325,9 @@ export const ServerSideDataExample = () => (
 );
 export const SingleRowSelectionExample = () => (
   <ExampleSnippet name="single-row-selection" />
+);
+export const SubheaderFiltersExample = () => (
+  <ExampleSnippet name="subheader-filters" />
 );
 export const VirtualizedExample = () => <ExampleSnippet name="virtualized" />;
 
@@ -434,11 +440,13 @@ export const exampleComponents = {
   MuiThemeExample,
   MultiSortingExample,
   PersistentStateExample,
+  PersistentViewExample,
   ReactQueryExample,
   RemoteExample,
   RowActionsButtonsExample,
   RowActionsMenuItemsExample,
   ServerSideDataExample,
   SingleRowSelectionExample,
+  SubheaderFiltersExample,
   VirtualizedExample,
 };

@@ -8,7 +8,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { faker } from '@faker-js/faker';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
-import { expect, screen, waitFor, within } from 'storybook/test';
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test';
+import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Editing Examples',
@@ -107,23 +108,28 @@ export const EditingEnabledEditModeModalDefault = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -174,23 +180,28 @@ export const EditingFeatureEnabledConditionally = () => {
     {
       accessorKey: 'firstName',
       header: 'First Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'lastName',
       header: 'Last Name',
+      icon: UserIcon,
     },
     {
       accessorKey: 'address',
       header: 'Address',
+      icon: MapPinIcon,
     },
     {
       accessorKey: 'state',
       header: 'State',
+      icon: MapIcon,
     },
     {
       accessorKey: 'phoneNumber',
       enableEditing: false,
       header: 'Phone Number',
+      icon: PhoneIcon,
     },
   ];
 
@@ -228,23 +239,28 @@ export const EditingEnabledEditModeRow = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -272,6 +288,7 @@ export const EditingValidationHelperText = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
           // MUI TextField error/helperText: validation text under the input.
           stEditTextFieldProps: ({ cell }) => {
             const empty = !cell.getValue<string>();
@@ -285,10 +302,12 @@ export const EditingValidationHelperText = () => {
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
       ]}
       data={tableData}
@@ -327,23 +346,28 @@ export const EditingEnabledEditModeRowCustomSave = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -391,23 +415,28 @@ export const EditingEnabledEditModeRowVirtualized = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -449,23 +478,28 @@ export const EditingEnabledEditModeCell = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -502,23 +536,28 @@ export const EditingEnabledEditModeCellWithRowActions = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       createDisplayMode="row"
@@ -557,22 +596,27 @@ export const EditingEnabledEditModeTable = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -603,24 +647,29 @@ export const EditSelectVariant = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           editSelectOptions: usStates,
           editVariant: 'select',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -647,14 +696,17 @@ export const EditSelectVariantAlternate = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
@@ -706,10 +758,12 @@ export const EditSelectVariantAlternate = () => {
           ],
           editVariant: 'select',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -740,24 +794,29 @@ export const EditingCustomizeInput = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           editSelectOptions: usStates,
           editVariant: 'select',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -789,22 +848,27 @@ export const EditingEnabledAsync = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -837,24 +901,29 @@ export const EditingNestedData = () => {
         {
           accessorFn: (row) => row.name.firstName,
           header: 'First Name',
+          icon: UserIcon,
           id: 'firstName',
         },
         {
           accessorKey: 'name.lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -893,23 +962,28 @@ export const EditingEnabledEditModeTableWithGroupedRows = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -939,23 +1013,28 @@ export const EnableEditingConditionally = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: (row) => row.original.state.includes('N'),
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -984,23 +1063,28 @@ export const EnableEditingConditionallyCell = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: (row) => row.original.state.includes('N'),
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -1029,23 +1113,28 @@ export const EnableEditingConditionallyTable = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
         },
         {
           accessorKey: 'phoneNumber',
           enableEditing: (row) => row.original.state.includes('N'),
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -1073,18 +1162,22 @@ export const EditingCellManualOnChange = () => {
         {
           accessorKey: 'firstName',
           header: 'First Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'lastName',
           header: 'Last Name',
+          icon: UserIcon,
         },
         {
           accessorKey: 'address',
           header: 'Address',
+          icon: MapPinIcon,
         },
         {
           accessorKey: 'state',
           header: 'State',
+          icon: MapIcon,
           stEditTextFieldProps: ({ cell }) => ({
             onBlur: (event) => {
               handleSaveCell(cell, event.target.value);
@@ -1097,6 +1190,7 @@ export const EditingCellManualOnChange = () => {
           accessorKey: 'phoneNumber',
           enableEditing: false,
           header: 'Phone Number',
+          icon: PhoneIcon,
         },
       ]}
       data={tableData}
@@ -1111,4 +1205,83 @@ export const EditingCellManualOnChange = () => {
       })}
     />
   );
+};
+
+const firstNameCell = (canvasElement: HTMLElement) =>
+  canvasElement.querySelector<HTMLElement>(
+    'tbody tr:first-child td[data-flip-column="firstName"]',
+  )!;
+
+/** Cell mode: double click, type, blur; the cell shows the new value. */
+export const CellEditSaves = {
+  render: () => <EditingEnabledEditModeCell />,
+  play: async ({ canvasElement }: StoryContext) => {
+    await within(canvasElement).findAllByText(data[0].firstName);
+    await userEvent.dblClick(firstNameCell(canvasElement));
+    const input = await within(firstNameCell(canvasElement)).findByRole(
+      'textbox',
+    );
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Zelda');
+    input.blur();
+    await waitFor(() =>
+      expect(
+        within(firstNameCell(canvasElement)).queryByRole('textbox'),
+      ).toBeNull(),
+    );
+    expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/);
+  },
+};
+
+/**
+ * Row mode: Cancel throws the typed value away and the row shows its old
+ * value; Save keeps the typed value.
+ */
+export const RowEditSaveCancel = {
+  render: () => <EditingEnabledEditModeRow />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const edit = async () => {
+      const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
+      await userEvent.click(firstRowEdit!);
+      const input = await within(firstNameCell(canvasElement)).findByRole(
+        'textbox',
+      );
+      await userEvent.clear(input);
+      await userEvent.type(input, 'Zelda');
+    };
+    await edit();
+    await userEvent.click(canvas.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() =>
+      expect(
+        within(firstNameCell(canvasElement)).queryByRole('textbox'),
+      ).toBeNull(),
+    );
+    expect(firstNameCell(canvasElement)).toHaveTextContent(data[0].firstName);
+
+    await edit();
+    await userEvent.click(canvas.getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/),
+    );
+  },
+};
+
+/** Modal mode: the dialog's Save writes the typed value into the row. */
+export const ModalEditSaves = {
+  render: () => <EditingEnabledEditModeModalDefault />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findAllByText(data[0].firstName);
+    const [firstRowEdit] = canvas.getAllByRole('button', { name: 'Edit' });
+    await userEvent.click(firstRowEdit!);
+    const dialog = await screen.findByRole('dialog');
+    const input = within(dialog).getByLabelText('First Name');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Zelda');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Save' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(firstNameCell(canvasElement)).toHaveTextContent(/^Zelda$/);
+  },
 };

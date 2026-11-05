@@ -7,6 +7,238 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Added
+
+#### Row drop slide (D57)
+
+- D57: a row drop inside one table slides the rows into their new places and flashes the dropped row with the column drop highlight (`useST_RowFlip`); a drop into another table, reduced motion, row virtualization and more than 200 rows skip the slide.
+
+#### Spec 01
+
+- Options, none with a default: `enableViewSettings`, `enableSortPopover`, `enableScrollButtons`, `enableCellOverflowTooltip`, `persistViewSettings`, `nonce`, `showClearSearchButton`, `showColumnDragHandle`, `showSortIndex`; `columnFilterDisplayMode` accepts `'chips'`.
+- Column options: `icon` (the column-type icon before the header label) and `overflowTooltip`.
+- Icon keys, with a glyph in the Lucide, Tabler, Phosphor, Hugeicons and Remix editions: `AddIcon`, `ArrowUpwardIcon`, `DeleteIcon`, `GridLinesAllIcon`, `GridLinesColumnsIcon`, `GridLinesNoneIcon`, `GridLinesRowsIcon`, `LockIcon`, `PushPinOffIcon`, `RowNumbersOffIcon`, `RowNumbersOnIcon`, `SettingsIcon`, `SingleLineIcon`, `StickyHeaderOffIcon`, `StickyHeaderOnIcon`, `StripedOffIcon`, `StripedOnIcon`, `SwapVertIcon`, `WrapTextIcon`; the grid line glyphs ship as `ST_GridLinesAllIcon`, `ST_GridLinesRowsIcon` and `ST_GridLinesColumnsIcon`.
+- Localization keys, optional, English only (other locales fall back to English): column menu `sortAscending`, `sortDescending`, `filter`, `pinToStart`, `pinToEnd`, `fixedPosition`, `fixed`, `hideThisColumn`, `columnMenu`, `sortedAscending`, `sortedDescending`; filter chips `addFilter`, `filterBy`, `noColumns`, `removeFilter`, `deleteAllFilters`, `clearFilters`, `backToColumns`, `isEmpty`, `isNotEmpty`, `showColumnToEditFilter`, `rangeSummary`, `yes`, `no`, `beforeValue`, `afterValue`; sort editor `sort`, `sortBy`, `ascending`, `descending`, `dragToReorder`, `removeSortOn`, `addSort`, `deleteSort`, `sortsCount`; view settings `viewSettings`, `columns`, `density`, `wrapCellText`, `singleLineCells`, `gridLines`, `stickyHeader`, `alternatingRowColors`, `pinToToolbar`, `unpinFromToolbar`, `resetView`, `columnsShown`, `gridLinesNone`, `gridLinesRows`, `gridLinesColumns`, `gridLinesAll`, `densityCompact`, `densityComfortable`, `densitySpacious`; scroll cues `scrollLeft`, `scrollRight`.
+- State slices: `viewSettings` (`setViewSettings`, `resetViewSettings`, `onViewSettingsChange`), `filterChips` (`setFilterChips`, `onFilterChipsChange`) and `columnFlipPending` (`setColumnFlipPending`); `table.refs.tableRef` points at the `<table>`.
+- Helpers: `getST_ColumnDropTargetProps`, `isColumnDragCancelled` and `applyColumnReorder` for column drags; the view storage functions `getViewSettingsKey`, `readStoredView`, `writeStoredView`, `removeStoredView`, `subscribeStoredView`, `getStoredViewSnapshot`, `getServerSnapshot` and `escapeForScript`.
+- A column drag ended with Escape or dropped outside the table no longer reorders the columns, from the header grip and from the columns menu.
+- The sticky header scroll box height reads `--st-sticky-max-height` when the table root sets it.
+
+#### Spec 02
+
+- The top toolbar sits above the table frame; the frame (`rounded-md border bg-background shadow`) holds the scroll box and the bottom toolbar with no inner padding, also in full screen, which now pads the window instead of stripping the frame. `stTableLayoutProps.className` restores the old box.
+- Body rows are 40, 48 and 56 px tall at compact, comfortable and spacious with `px-2`, `px-3` and `px-4` cell padding; rows are split by hairlines, none under the last row, and `viewSettings.gridLines` draws column lines; hover tints the whole row evenly. The bottom toolbar's top edge is the same hairline; the empty row is 96 px, muted, not italic.
+- The table root declares the tint tokens `--st-stripe`, `--st-hover`, `--st-selected` and `--st-edge-shadow` with dark twins; rows and pinned cells read them, and an ancestor or `stTableLayoutProps.className` overrides them. Pinned inner-edge cells cast the edge shadow towards the scrolling columns.
+- With `layoutMode: 'grid'` data columns share the spare width in proportion to their sizes, while display and pinned columns keep their width; past the frame every column keeps its set width and the table scrolls sideways. Display columns default to `grow: false`; the row actions column is 48 px with a visually hidden header label and moves through the columns menu (`displayColumnDefOptions['st-row-actions']` sets it back).
+- `enableScrollButtons: true` shows hover chevrons in the header row on a side with hidden columns; a click scrolls 80 percent of the unpinned width. `useST_HorizontalOverflow` and `ST_ScrollButtons` are exported for custom layouts.
+- `enableCellOverflowTooltip: true` truncates plain text cells on one line and shows the full value in a tooltip only when it is cut off; `viewSettings.wrapText` shows the text in full; `columnDef.overflowTooltip` sets it per column; `ST_OverflowText` is exported for custom cells.
+- The sticky header box caps at `var(--st-sticky-max-height, 70vh)` when the header is sticky by choice (`enableStickyHeader` or `viewSettings.stickyHeader`); a header forced sticky by row virtualization keeps the full-height rule.
+- With `persistViewSettings` on, a server-rendered table renders one inline script (with the `nonce` option) that marks the root `data-st-view-pending` and `aria-busy` before first paint when a stored view differs from the defaults; the body shows a skeleton bar while marked. Nothing is rendered with persistence off.
+
+#### Spec 03
+
+- Header look: no band, a medium-weight muted label, the column `icon` before it, a full-opacity chevron at the end and a static sort arrow only while sorted; 40 px at every density, a hairline between columns only when grid lines are `columns` or `all`; the header row shadow and the 0.97 opacity are gone.
+- The header label and the chevron open the same column menu, a second click on the chevron closes it, and a label click never sorts.
+- The column menu lists only what applies, in order: Sort ascending, Sort descending, Clear sort; Filter, Clear filter; Pin to start, Pin to end, Unpin, Reset column size, Group by, Fixed position (disabled, locked columns); Hide. The active sort direction is the one disabled item, and sorting from the menu stacks onto the other columns' sorts. Show all columns leaves the menu (the columns menu has it).
+- The resize handle is a full-height hairline: invisible at rest, lit while the pointer is over the header, primary while resizing, reset on double-click; a resize never starts a column drag.
+- Columns drag by the header cell where they can be dragged; the grip renders only with `showColumnDragHandle`. While a column drags, the other headers slide aside to open a gap and the dragged header sits in it, faded with a dashed outline; on drop the body slides to catch up and the moved column highlights; Escape or a drop outside slides the headers back. Reduced motion keeps the static dashed feedback and the highlight. Near the inner edges of the unpinned area the table scrolls sideways.
+- Locked columns (`enableColumnOrdering: false`) show striped "Fixed" headers only while another column drags.
+- `ST_ColumnActionMenu` and `ST_FilterOptionMenu` accept a `trigger` element with optional `open` / `onOpenChange` beside `anchorEl` / `setAnchorEl`, which are now optional.
+- New exports: `useST_ColumnFlip`, `useST_DragAutoScroll`, `ST_TableHeadCellLockedOverlay`, `getST_ColumnDragHandlers`.
+
+#### Spec 04
+
+- Filter chips (`columnFilterDisplayMode: 'chips'`): one chip per filtered column with its icon, label, mode and value; the toolbar filter button and "+ Filter" open a searchable column picker that swaps in place to the value editor (back button, 150 ms glide); Filter in a column menu opens the editor on the header cell; "Clear filters" clears every value and chip. `columnFilterDisplayMode: 'subheader'` keeps the filter row.
+- Sort editor (`enableSortPopover`): the toolbar Sort button opens a column picker, then the editor with one row per rule (drag to reorder, column, direction, remove), "Add sort" and "Delete sort"; a sort chip before the filter chips opens it. `enableSortPopover: false` keeps today's toolbar.
+- View settings (`enableViewSettings`): one panel for Columns, Density, Wrap cell text, Grid lines, Sticky header, Alternating row colors and Row numbers, each with a pin that places it in the toolbar as an icon button (Columns and Density pinned by default), and "Reset view". `enableViewSettings: false` keeps the columns and density buttons.
+- `useST_ViewPersistence`, mounted with `persistViewSettings`: the view settings, pins, density, column visibility, order and pinning are saved to `localStorage` on every change and applied once after hydration; "Reset view" deletes the stored view.
+- The search toggle is never disabled: open, one click clears the search and closes the field; the field's inline clear button renders only with `showClearSearchButton: true`.
+- `ST_ShowHideColumnsMenu` and `ST_RowActionMenu` take a `trigger` element (with `open` and `onOpenChange`) beside `anchorEl`; the columns and row action buttons open their menus from it, so focus returns through the primitive.
+- A drop in the columns menu slides header and body together and highlights the moved column.
+- Exports: `ST_FilterChips`, `ST_FilterEditor`, `ST_FilterPickerButton`, `ST_ColumnPicker`, `ST_SortPopover`, `ST_ViewSettingsButton`, `ST_ViewSettingsItems`, `useST_PopupResize`, `useST_ViewPersistence` and the filter summary helpers.
+
+### Changed
+
+#### View settings icons (D75)
+
+- Lucide defaults for the view settings: grid lines `Frame`, `Equal`, `Equal` rotated and `Square`; Columns `Columns3Cog`; density `ListChevronsDownUp`, mirrored `ListIndentDecrease`, `ListChevronsUpDown`.
+
+#### Edition icons (06.6)
+
+- The Tabler, Phosphor, Remix and Hugeicons editions take their own icons for grid lines, Columns and density (D77): Tabler `IconFrame`, `IconEqual`, `IconEqual` rotated, `IconTableOptions`; Phosphor `HashStraightIcon`, `EqualsIcon`, `EqualsIcon` rotated, `ArrowsInLineVerticalIcon`, mirrored `TextOutdentIcon`, `ArrowsOutLineVerticalIcon`; Remix `RiHashtag`, `RiEqualLine`, `RiEqualLine` rotated, `RiSquareLine`, `RiKanbanView`, `RiContractUpDownLine`, mirrored `RiIndentDecrease`, `RiExpandUpDownLine`; Hugeicons `FrameIcon`, `EqualIcon`, `EqualIcon` rotated, `Columns3CogIcon`, `ListChevronsDownUpIcon`, mirrored `ListIndentDecreaseIcon`, `UnfoldMoreIcon`.
+- The drawn glyph file `components/icons/ST_GridLineIcons.tsx` and its `index.ts` export are removed (D76; added in this cycle, never released).
+
+#### Spec 05
+
+The stock table takes the v0.8 look by default. Each line names the option that restores the old behaviour.
+
+- `enableColumnOrdering` defaults to `true`: headers are drag sources. Set `enableColumnOrdering: false` to restore static headers.
+- `enableColumnPinning` defaults to `true`: the column menu has the pin items. Set `enableColumnPinning: false` to restore.
+- `enableColumnResizing` defaults to `true`: headers have the resize handle. Set `enableColumnResizing: false` to restore.
+- `paginationDisplayMode` defaults to `'pages'`: numbered page buttons. Set `paginationDisplayMode: 'default'` to restore the range text with previous and next.
+- `columnFilterDisplayMode` defaults to `'chips'`: filters live in the toolbar chip row. Set `columnFilterDisplayMode: 'subheader'` to restore the inputs under the headers.
+- `layoutMode` defaults to `'grid'` and no longer switches to `'grid-no-grow'` when resizing is on. Set `layoutMode: 'semantic'` (or `'grid-no-grow'` with resizing) to restore.
+- `positionActionsColumn` defaults to `'last'`. Set `positionActionsColumn: 'first'` to restore.
+- With `enableRowActions` and no `columnPinning` of its own, a table pins the actions column to the end (`initialState.columnPinning.end: ['st-row-actions']`), so `resetColumnPinning()` keeps it pinned. Pass your own `initialState.columnPinning` (for example `{ start: [], end: [] }`) to restore.
+- `enableSortPopover` defaults to `true`: the toolbar sort editor. Set `enableSortPopover: false` to restore.
+- `enableViewSettings` defaults to `true`: one view settings button replaces the separate columns and density buttons. Set `enableViewSettings: false` to restore.
+- `enableScrollButtons` defaults to `true`: hover chevrons on a side with hidden columns. Set `enableScrollButtons: false` to restore.
+- `enableCellOverflowTooltip` defaults to `true`: cut-off text shows a tooltip. Set `enableCellOverflowTooltip: false` to restore.
+
+#### Spec 06.4 grouping
+
+- D68: under `groupedColumnMode: 'remove'` the grouping column's header is a breadcrumb: the expand-all button, then per grouped column its icon and header name, a chevron between segments. It replaces "State, Gender" behind the first grouped column's icon (F41), and renders without `enableExpandAll` too. `'reorder'` is unchanged.
+- D73: under `'remove'` the grouping column's default `size` is the sum of the grouped columns' sizes (each falls back to `defaultColumn.size`, then 180), recomputed as grouping changes. `displayColumnDefOptions['st-row-expand'].size` still wins.
+
+#### Spec 06.4 filters
+
+- The `multi-select` filter field ends in a chevron, vertically centred however many rows its chips take; its clear button shows once a value exists and the empty slot takes no room; the chips and the typing input wrap inside the field. On radix and base typing highlights the first match and Enter picks it (D72).
+- The chip editor popover is 260 px wide (`w-65`): a multi-select's chips wrap and the field grows in height instead of widening the editor (F55).
+
+### Fixed
+
+#### Spec 06.1 toolbar
+
+- With a custom `renderTopToolbar` in chips mode, the column menu's Filter item opens the header-anchored editor again: the new exported `ST_HeaderFilterEditor` is mounted by the table layout, outside the toolbar, and `ST_FilterChips` renders the chips row only.
+- The sort editor hides "Add sort" once the rule count reaches `maxMultiSortColCount`.
+- The columns menu shows the column icon before its label.
+- `localization.rowNumbers` reads "Row numbers" in English and "Zeilennummern" in German.
+
+#### Spec 06.1 cells
+
+- Display cells (select, expand, pin, drag, row numbers, actions) centre their control in the body and the header, so the header and row checkboxes share one x; row numbers render as muted tabular digits.
+- A group header spans exactly its leaves: it grows only by its growing leaves, keeps its width when every leaf is pinned or has `grow: false`, and sticks with its leaves when they are all pinned to one side.
+- With `renderRowActions` the actions column shows the "Actions" header label, is 96 px wide by default (`displayColumnDefOptions['st-row-actions'].size` wins) and centres every control it returns; without it the column stays 48 px with the dots button.
+- The popover filter funnel no longer adds its own margin beside the header label.
+- With `renderDetailPanel`, a row whose panel renders nothing keeps a disabled expand button and Expand all skips it, instead of opening an empty detail row; rows with sub rows still expand.
+
+#### Fix F29
+
+- A `multi-select` filter on a column of plain values keeps the rows whose value is picked; array values still match on any overlap and an empty selection keeps every row (`arrIncludesSome`, the variant's default).
+
+#### Fix F31
+
+- The focused filter input shows the full focus ring and rounded edge in the chip editor, the header-anchored editor and the subheader filter row; the filter container no longer clips them.
+
+#### Fix F36
+
+- The view items pinned to the toolbar render before `ST_ViewSettingsButton` wherever it is placed, so pins show in a custom `renderTopToolbar` or `renderToolbarInternalActions`; the stock toolbar keeps its order and renders them once.
+
+#### Fix F19, F28, F30, F39, F40, F41, D56
+
+- F19: the popover-mode header funnel is a 24 px icon button (it was a 12 px target), 30% opaque at rest and full while active or hovered.
+- F28: under `layoutMode: 'semantic'` the body select checkbox is centred in its cell.
+- F30: a Columns menu reorder slides each header by the distance it moved, not by the table's offset from the page edge.
+- F39: while a column resizes, the header hairline and the body guide are one 1 px line ending on the column's trailing edge; the body guide no longer is a 2 px border inside the cell.
+- F40: every built-in toolbar button fades and zooms in once on mount, as the pinned view items do; none under reduced motion.
+- F41: under `groupedColumnMode: 'remove'` the grouping column's header shows the first grouped column's icon.
+- D56: the export to CSV and export to PDF examples run on the chips filter default instead of popover mode.
+
+#### Fix F43
+
+- `renderTopToolbarCustomActions` and `renderBottomToolbarCustomActions` re-render when the row selection, filters or sorting change, so an action that reads the selected rows enables once a row is selected; the rest of the toolbar does not re-render.
+
+#### Fix F44
+
+- Subheader filters fit their columns: the filter row takes the label row's inline padding per density and a bottom padding, and adds no width to its column, so a column keeps its `size` and clips a wider filter.
+- The range slider's "Filter Mode" caption renders below the track, like the text field's caption, and the slider stays inside its cell.
+- Range filters keep Min and Max side by side at every column width (D61); their "Filter Mode" caption spans the whole range group instead of the Min field.
+- The subheader filters example sizes its columns to fit their filters.
+
+#### Fix F47
+
+- A column drop or a Columns menu reorder slides the moved column on top of the cells it passes, under the pinned columns, instead of under the cells that follow it in the DOM; the lift lasts only for the slide.
+
+#### Spec 06.4 filters
+
+- The built-in toolbar buttons fade in from 0 opacity on mount, the same animation as the pinned view items, instead of from 10 percent (D70).
+- The aria `range-slider` filter reads `min` and `max` from `stFilterSliderProps` as radix and base do, so its thumbs start at the given bounds instead of 0; aria `SliderProps` accepts the two keys (F46).
+- In an RTL table a column drag preview lays the columns right to left: every header stays inside the table and only the dragged and target columns shift (F50).
+
+#### Fix F57
+
+- Under `groupedColumnMode: 'remove'` with grouping active, the grouping column aligns its header (expand-all button, then the breadcrumb), its group cells and its row chevrons to the start instead of the centre; the narrow expand column stays centred.
+
+#### Fix F58
+
+- With grouping active, the expand column aligns its chevrons to the start under `groupedColumnMode: false` and `'reorder'` too, so the depth indent steps right from the cell's start; without grouping the narrow control column stays centred.
+
+### Docs
+
+#### Home demo pace
+
+- The home demo holds each step 1.2 s after it lands (was 2.2 s) with a 3.6 s floor per step (was 5.2 s), so the loop runs about 25 s instead of 34 s.
+
+#### Fix F56
+
+- The header-width page check waits for the web font before measuring, so CI measures Inter, not the Linux fallback.
+
+#### Theme demo speed
+
+- The home page theme demo cycles its five themes in 25 s instead of 40 s: 25 ms per typed character, a 0.7 s reply, a 2.2 s hold per theme.
+
+#### Spec 06
+
+- New guides for the v0.8 surfaces: Column Icons, Filter Chips, Sort Editor, View Settings and Persistence, Overflow Tooltip, Scroll Cues and Tint Tokens.
+- Guides rewritten for the v0.8 defaults and chrome: column actions, column filtering, column ordering (header dragging, locked columns, drag animation), column grouping, column pinning, column resizing, column size, display columns, row actions, pagination, density, column hiding, toolbar, global filtering, full screen, sticky header, virtualization, styling, icons, localization, state management, row pinning, detail panel, usage and best practices; the ST Components API page lists the new toolbar components, `ST_OverflowText`, `ST_ScrollButtons`, `ST_TableHeadCellLockedOverlay` and the menus' `trigger` prop.
+- The prop tables list every new option, column option and state slice with its shipped default.
+- New Persistent View example (`persistViewSettings` with column icons) in all three bases; the Multi-Sorting example works through the sort editor.
+
+#### Spec 06.2
+
+- Every example column carries a Lucide icon; loop-built columns take theirs from a lookup by key.
+- The home demo renders the stock table on the header demo's data, and its replay plays the sort editor, search, a cell edit, a filter chip, a column move and the view settings.
+- The Persistent View example renders the header demo's 50 rows and 15 columns.
+- The filtering examples use the filter chips; the new Subheader Filters Example keeps the filter row under the headers with the filter variants and the filter mode picker (`columnFilterDisplayMode: 'subheader'`).
+- The docs prose spacing no longer clips the pagination of the example previews; the Chart Detail Panel example draws its lines; the editing examples put the actions column first; the custom toolbar examples show the view settings button.
+
+#### Spec 06.2 stories
+
+- Every Storybook story column carries a Lucide icon, the same pick per field as the docs examples.
+- The Default Look story renders the stock table: columns, data, `getRowId` and the row actions only.
+
+#### Fix F32
+
+- The home demo shows seven columns (Name, Status, Assignee, Project, Due, Estimate, Priority) that fit its frame, so the Editing step's estimate change is in view.
+
+#### Fix F38
+
+- The Export to CSV and Export to PDF examples (popover filter mode) let the First Name and Last Name columns take the default width and size the ID column at 112 px, so no header label is cut off beside the funnel and the chevron.
+
+#### Docs polish
+
+- The home demo plays each step on the table's own controls before its state lands: the sort editor, the search box typing "billing", the Estimate cell edit, the Filter picker and its Status select, the Project column move and the view settings switch, each with a pulse on the control it uses.
+- The home demo's seven columns take the persistent-view definitions and read their headers in full: the demo band runs gutter to gutter with the steps beside the table from 1440px and under it below.
+- The home theme demo types its prompts at a reading pace, answers after a short beat and cycles the five themes in about 40 s; the mock app's member table stays inside its frame at every screen height.
+- The persistent view example uses the header demo's column definitions: filter variants, filter fns, select options, status, priority and tag chips, progress, PR link and archived cells, sizes and the priority sort; Name is orderable, every view settings item is pinned and 50 rows show per page.
+- The advanced example's Activate, Deactivate and Contact buttons and row action items open a dialog with the selected names instead of a browser alert.
+
+#### Fix F45
+
+- The home demo keeps every step active, with its check mark and "Now showing" label, for its whole run (at least 5.2 s), and the step titles name the feature: Sort editor, Global search, Cell editing, Filter chips, Column order, Striped rows.
+
+#### Home demo polish
+
+- The home demo replay leaves no tooltip, focus ring or page scroll behind when it closes a popover, keeps the table frame and the step list in place (a page of ten rows fits, the status keeps one height), slides the moved column over the others, opens the filter from the "+ Filter" pill and types the new estimate with no empty field.
+
+#### Fix F48
+
+- The home demo plays only while its toolbar has room for the popovers below it (360 px under the toolbar, below the sticky nav): until then it holds on "Starting", scrolled away mid-step it pauses with its popover closed, and it resumes when the room is back, so the sort, filter and view settings popovers never flip up over the hero.
+
+#### Fix F49
+
+- The home demo's cue marks the editor or panel a control opens as well as the control: the sort picker, the "Due" chip and its sort editor, the filter picker, the "Status" chip editor and the "Status: In Review" chip, and the view settings panel; the cue inside a popover now shows (it was invisible there), and the last step is titled "Alternating row colors".
+
+#### Spec 06.5
+
+- The sidebar no longer lists About, Changelog and Roadmap, which had no page behind them (F42).
+- The Advanced and External Toolbar examples show the sort chip in their custom toolbars while a sort is set, as the stock toolbar does (F51).
+- The Persistent View, Subheader Filters and Custom Headless pages are shorter; Persistent View says it stores the view in localStorage (F52).
+- The editing examples confirm a delete with a shadcn AlertDialog instead of a browser confirm, in the three bases (F53).
+- Example columns with an icon are wide enough to show their whole header label (F54).
+
 ## 0.7.4 - 2026-11-03
 
 ### Fixed

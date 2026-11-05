@@ -25,6 +25,8 @@ export function defaultDisplayColumnProps<TData extends ST_RowData>({
     tableOptions;
   return {
     ...defaultDisplayColumn,
+    // Display columns keep their width while data columns grow.
+    grow: false,
     header: header ? localization[header]! : '',
     size,
     ...displayColumnDefOptions?.[id],
@@ -85,7 +87,9 @@ export const showRowSelectionColumn = <TData extends ST_RowData>(
 
 export const showRowNumbersColumn = <TData extends ST_RowData>(
   tableOptions: ST_DisplayColumnOptions<TData>,
-): boolean => !!tableOptions.enableRowNumbers;
+): boolean =>
+  !!tableOptions.enableRowNumbers ||
+  !!tableOptions.state.viewSettings?.rowNumbers;
 
 export const showRowSpacerColumn = <TData extends ST_RowData>(
   tableOptions: ST_DisplayColumnOptions<TData>,

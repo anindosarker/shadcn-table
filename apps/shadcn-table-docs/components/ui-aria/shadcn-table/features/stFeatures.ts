@@ -19,12 +19,14 @@ import { stColumnDraggingFeature } from '@/components/ui-aria/shadcn-table/featu
 import { stConfigFeature } from '@/components/ui-aria/shadcn-table/features/stConfigFeature';
 import { stDensityFeature } from '@/components/ui-aria/shadcn-table/features/stDensityFeature';
 import { stEditingFeature } from '@/components/ui-aria/shadcn-table/features/stEditingFeature';
+import { stFilterChipsFeature } from '@/components/ui-aria/shadcn-table/features/stFilterChipsFeature';
 import { stFilterModesFeature } from '@/components/ui-aria/shadcn-table/features/stFilterModesFeature';
 import { stFullScreenFeature } from '@/components/ui-aria/shadcn-table/features/stFullScreenFeature';
 import { stLoadingFeature } from '@/components/ui-aria/shadcn-table/features/stLoadingFeature';
 import { stRefsFeature } from '@/components/ui-aria/shadcn-table/features/stRefsFeature';
 import { stRowDraggingFeature } from '@/components/ui-aria/shadcn-table/features/stRowDraggingFeature';
 import { stToolbarsFeature } from '@/components/ui-aria/shadcn-table/features/stToolbarsFeature';
+import { stViewSettingsFeature } from '@/components/ui-aria/shadcn-table/features/stViewSettingsFeature';
 import { ST_AggregationFns } from '@/components/ui-aria/shadcn-table/shared/fns/aggregationFns';
 import { ST_FilterFns } from '@/components/ui-aria/shadcn-table/shared/fns/filterFns';
 import { ST_SortFns } from '@/components/ui-aria/shadcn-table/shared/fns/sortFns';
@@ -47,12 +49,14 @@ export const stFeatures = tableFeatures({
   stConfigFeature,
   stDensityFeature,
   stEditingFeature,
+  stFilterChipsFeature,
   stFilterModesFeature,
   stFullScreenFeature,
   stLoadingFeature,
   stRefsFeature,
   stRowDraggingFeature,
   stToolbarsFeature,
+  stViewSettingsFeature,
   coreRowModel: createCoreRowModel(),
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),

@@ -1,9 +1,11 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   useShadcnTable,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
+import { Building2Icon, MapIcon, MapPinIcon, UserIcon } from 'lucide-react';
 
 const meta: Meta = {
   title: 'Fixed Bugs/AppBar overlaps with Fullscreen Modal',
@@ -75,26 +77,31 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'name.firstName', //access nested data with dot notation
     header: 'First Name',
+    icon: UserIcon,
     size: 150,
   },
   {
     accessorKey: 'name.lastName',
     header: 'Last Name',
+    icon: UserIcon,
     size: 150,
   },
   {
     accessorKey: 'address', //normal accessorKey
     header: 'Address',
+    icon: MapPinIcon,
     size: 200,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
     size: 150,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
     size: 150,
   },
 ];
@@ -119,4 +126,23 @@ export const FullscreenIsAboveAppbar = () => {
       </div>
     </>
   );
+};
+
+// In full screen the table covers the sticky app bar: the topmost element at
+// the app bar's place belongs to the table.
+FullscreenIsAboveAppbar.play = async ({ canvasElement }: StoryContext) => {
+  const canvas = within(canvasElement);
+  await canvas.findByText('John');
+  const appBar = canvas.getByText('App').parentElement!;
+  const box = appBar.getBoundingClientRect();
+  const topmost = () =>
+    document.elementFromPoint(box.left + 4, box.top + box.height / 2);
+  expect(appBar.contains(topmost())).toBe(true);
+  await userEvent.click(
+    canvas.getByRole('button', { name: 'Toggle full screen' }),
+  );
+  const root = canvasElement.querySelector('[data-st-full-screen]')!;
+  await waitFor(() => expect(root.contains(topmost())).toBe(true));
+  expect(appBar.contains(topmost())).toBe(false);
+  await userEvent.keyboard('{Escape}');
 };

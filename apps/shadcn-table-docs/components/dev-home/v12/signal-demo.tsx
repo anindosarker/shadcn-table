@@ -3,11 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CheckIcon, HandIcon, RotateCcwIcon } from 'lucide-react';
-import type {
-  SignalCue,
-  SignalTableProps,
-  SignalTableState,
-} from './signal-table';
+import type { SignalTableProps, SignalTableState } from './signal-table';
 
 const SignalTable = dynamic(() => import('./signal-table'), {
   ssr: false,
@@ -21,43 +17,143 @@ const SignalTable = dynamic(() => import('./signal-table'), {
   ),
 });
 
+/** What a beat can do to the table on screen. */
+interface Replay {
+  /** The table wrapper; popovers render in portals outside it. */
+  root: HTMLElement;
+  set: (update: (s: SignalTableState) => SignalTableState) => void;
+  edit: (editing: SignalTableProps['editing']) => void;
+  /** Clicks a popover trigger, which the step closes again at its end. */
+  open: (trigger: HTMLElement | null) => void;
+}
+
+/** One timed action of a step: it runs `wait` ms after the previous one. */
+type Beat = [wait: number, run: (r: Replay) => void];
+
 interface Step {
   /** Feature name for the status line. */
   feature: string;
+  /** Short feature title in the step list. */
   title: string;
   code: string;
-  /** What pulses when this item plays. */
-  cue: SignalCue['kind'];
+  /** The interaction, played before the state lands. */
+  beats: readonly Beat[];
+  /** How long what the step opened stays up after its last beat; SHOW_MS
+   * when unset. */
+  showMs?: number;
   /** Final table state once the item has played. */
   apply: (s: SignalTableState) => SignalTableState;
-  /** Text the replay types letter by letter, and the table state for each
-   * partial string, applied on top of the previous item's state. */
-  typing?: {
-    text: string;
-    at: (s: SignalTableState, partial: string) => SignalTableState;
-  };
 }
 
 const BASE: SignalTableState = {
   sorting: [],
   columnFilters: [],
-  grouping: [],
-  expanded: {},
-  showColumnFilters: false,
-  rowSelection: {},
   globalFilter: '',
   showGlobalFilter: false,
-  salaryEdits: {},
+  columnOrder: [],
+  viewSettings: { striped: false },
+  estimateEdits: {},
 };
 
 /* The edit item closes the search first, so search shows only in its own
- * item. It then opens Kathryn Kirlin's salary cell (row 55, seventh in the
- * sorted table, and a "New" state row, so it survives the filter), types a
- * new value, then saves it; she then tops the list. */
-const EDIT_STEP = 2;
-const EDIT_ROW = '55';
-const EDIT_FROM = '97434';
-const EDIT_TO = '120000';
+ * item. It then opens the estimate of "Review onboarding flow" (task-40,
+ * second in the due date sort, and In Review, so it survives the filter),
+ * types a new value, then saves it. */
+const EDIT_ROW = 'task-40';
+const EDIT_FROM = '4';
+const EDIT_TO = '16';
+const SEARCH = 'billing';
+
+/* One-shot accent pulse (v12.css), on the control a step is about to use
+ * and on the editor or panel it opens (D65). */
+const PULSE = 'v12-cue';
+const PULSE_MS = 1200;
+
+const pulse = (el: Element | null | undefined) => {
+  if (!el) return;
+  el.classList.remove(PULSE);
+  // restart the animation when the same control pulses twice
+  void (el as HTMLElement).offsetWidth;
+  el.classList.add(PULSE);
+  setTimeout(() => el.classList.remove(PULSE), PULSE_MS);
+};
+
+/** A toolbar button by its accessible name, outside the table itself. */
+const toolbarButton = (root: HTMLElement, label: string) =>
+  [...root.querySelectorAll<HTMLElement>(`button[aria-label="${label}"]`)].find(
+    (button) => !button.closest('table'),
+  ) ?? null;
+
+/** The "+ Filter" pill beside the chips (named by its text only), or the
+ * toolbar filter button while the chips row has no pill yet. */
+const addFilterButton = (root: HTMLElement) =>
+  [...root.querySelectorAll<HTMLElement>('button:not([aria-label])')].find(
+    (button) =>
+      !button.closest('table') && button.textContent?.trim() === 'Filter',
+  ) ?? toolbarButton(root, 'Filter');
+
+/** Closes the open popover the way a click outside it does. Clicking its
+ * trigger again would hand focus back to the trigger: a focused toolbar
+ * button keeps its tooltip and focus ring up into the next step and, off
+ * screen, scrolls the page to itself. An open select inside the popover
+ * closes first, so this repeats until the trigger reads closed. */
+const clickOutside = (trigger: HTMLElement, tries = 3) => {
+  if (!tries || trigger.getAttribute('aria-expanded') !== 'true') return;
+  // Radix dismisses on the click that follows the pointerdown
+  document.body.dispatchEvent(
+    new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse' }),
+  );
+  document.body.click();
+  setTimeout(() => clickOutside(trigger, tries - 1), 50);
+};
+
+/** An option of the open popover (a column picker or a select list). */
+const option = (text: string) =>
+  [
+    ...document.querySelectorAll<HTMLElement>(
+      '[data-slot="popover-content"] [role="option"], [data-slot="select-content"] [role="option"]',
+    ),
+  ].find((el) => el.textContent?.trim() === text) ?? null;
+
+/** The popover the replay opened last (portalled outside the table): the
+ * column picker, a chip's editor or the view settings panel. */
+const openPopover = () =>
+  [
+    ...document.querySelectorAll<HTMLElement>('[data-slot="popover-content"]'),
+  ].at(-1) ?? null;
+
+/** A sort or filter chip in the toolbar by the start of its text ("Due",
+ * "Status: In Review"); the header buttons inside the table are left out. */
+const chip = (root: HTMLElement, text: string) =>
+  [...root.querySelectorAll<HTMLElement>('button:not([aria-label])')].find(
+    (button) =>
+      !button.closest('table') &&
+      (button.textContent?.trim().startsWith(text) ?? false),
+  ) ?? null;
+
+/* A popover zooms in this long before its cue starts, so the cue sits on
+ * the popover's final size. */
+const POPOVER_IN_MS = 200;
+
+/* Where the replay's clicks move focus: the table and the popovers it opens
+ * (portalled outside the table). An open select keeps its focus: it marks
+ * the highlighted option, as for a visitor, and its focus trap fights a
+ * blur until the select closes. */
+const REPLAY_POPOVERS = '[data-slot="popover-content"]';
+/* Text fields keep the focus the replay gives them: they show a caret, as
+ * they do for a visitor. */
+const TEXT_FIELD =
+  'input:not([type="checkbox"], [type="radio"], [type="range"]), textarea';
+/* Focus this soon after a visitor's own pointer or key press is theirs. */
+const USER_FOCUS_MS = 300;
+
+const headerCell = (root: HTMLElement, id: string) =>
+  root.querySelector<HTMLElement>(`thead th[data-flip-column="${id}"]`);
+
+const estimateCell = (root: HTMLElement) =>
+  root.querySelector<HTMLElement>(
+    `tbody tr[data-row-id="${EDIT_ROW}"] td[data-flip-column="estimate"]`,
+  );
 
 const clearSearch = (s: SignalTableState): SignalTableState => ({
   ...s,
@@ -65,77 +161,154 @@ const clearSearch = (s: SignalTableState): SignalTableState => ({
   showGlobalFilter: false,
 });
 
+// reading pace for the replay's typing
+const CHAR_MS = 140;
+
+/** Beats that type `text` one letter at a time through `at`, the first one
+ * `first` ms after the previous beat. */
+const typeBeats = (
+  text: string,
+  at: (r: Replay, partial: string) => void,
+  first = CHAR_MS,
+): Beat[] =>
+  [...text].map((_, i) => [
+    i === 0 ? first : CHAR_MS,
+    (r: Replay) => at(r, text.slice(0, i + 1)),
+  ]);
+
 const STEPS: readonly Step[] = [
   {
     feature: 'Sorting',
-    title: 'Sort by salary, highest first',
-    code: "sorting: [{ id: 'salary', desc: true }]",
-    cue: 'sort',
-    apply: (s) => ({ ...s, sorting: [{ id: 'salary', desc: true }] }),
+    title: 'Sort editor',
+    code: "sorting: [{ id: 'due', desc: false }]",
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'Sort'))],
+      [600, (r) => r.open(toolbarButton(r.root, 'Sort'))],
+      [POPOVER_IN_MS, () => pulse(openPopover())],
+      [1000, () => pulse(option('Due'))],
+      [500, (r) => option('Due')?.click() ?? r.set(STEPS[0].apply)],
+      // the sort lands: the "Due" chip and the sort editor it opens
+      [
+        POPOVER_IN_MS,
+        (r) => {
+          pulse(chip(r.root, 'Due'));
+          pulse(openPopover());
+        },
+      ],
+    ],
+    apply: (s) => ({ ...s, sorting: [{ id: 'due', desc: false }] }),
   },
   {
     feature: 'Search',
-    title: 'Search all columns for “in”',
-    code: "globalFilter: 'in'",
-    cue: 'search',
-    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: 'in' }),
-    typing: {
-      text: 'in',
-      at: (s, partial) => ({
-        ...s,
-        showGlobalFilter: true,
-        globalFilter: partial,
-      }),
-    },
+    title: 'Global search',
+    code: "globalFilter: 'billing'",
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'Show/Hide search'))],
+      [600, (r) => r.set((s) => ({ ...s, showGlobalFilter: true }))],
+      ...typeBeats(SEARCH, (r, partial) =>
+        r.set((s) => ({ ...s, globalFilter: partial })),
+      ),
+    ],
+    apply: (s) => ({ ...s, showGlobalFilter: true, globalFilter: SEARCH }),
   },
   {
     feature: 'Editing',
-    title: 'Edit a salary to $120,000',
+    title: 'Cell editing',
     code: "enableEditing: true, editDisplayMode: 'cell'",
-    cue: 'edit',
+    beats: [
+      [0, (r) => r.set(clearSearch)],
+      [500, (r) => pulse(estimateCell(r.root))],
+      [600, (r) => r.edit({ rowId: EDIT_ROW, value: EDIT_FROM })],
+      // the new value types over the old one, with no empty field between
+      ...typeBeats(
+        EDIT_TO,
+        (r, partial) => r.edit({ rowId: EDIT_ROW, value: partial }),
+        640,
+      ),
+    ],
     apply: (s) => ({
       ...clearSearch(s),
-      salaryEdits: { [EDIT_ROW]: Number(EDIT_TO) },
+      estimateEdits: { [EDIT_ROW]: Number(EDIT_TO) },
     }),
-    // the typed value lives in the open cell's input until it is saved
-    typing: { text: EDIT_TO, at: (s) => clearSearch(s) },
   },
   {
     feature: 'Filtering',
-    title: 'Filter states starting with “New”',
-    code: "columnFilters: [{ id: 'state', value: 'New' }]",
-    cue: 'filter',
+    title: 'Filter chips',
+    code: "columnFilters: [{ id: 'status', value: 'In Review' }]",
+    beats: [
+      // the "+ Filter" pill, so the cue, the picker and the new chip sit
+      // together in the chips row
+      [0, (r) => pulse(addFilterButton(r.root))],
+      [600, (r) => r.open(addFilterButton(r.root))],
+      [POPOVER_IN_MS, () => pulse(openPopover())],
+      [1000, () => pulse(option('Status'))],
+      [500, () => option('Status')?.click()],
+      // the "Status" chip's editor opens
+      [POPOVER_IN_MS, () => pulse(openPopover())],
+      [
+        1000,
+        () =>
+          document
+            .querySelector<HTMLElement>(
+              '[data-slot="popover-content"] [data-slot="select-trigger"]',
+            )
+            ?.click(),
+      ],
+      [700, () => pulse(option('In Review'))],
+      [500, (r) => option('In Review')?.click() ?? r.set(STEPS[3].apply)],
+      // the filter lands on the chip
+      [POPOVER_IN_MS, (r) => pulse(chip(r.root, 'Status: In Review'))],
+    ],
     apply: (s) => ({
       ...s,
-      showColumnFilters: true,
-      columnFilters: [{ id: 'state', value: 'New' }],
-    }),
-    typing: {
-      text: 'New',
-      at: (s, partial) => ({
-        ...s,
-        showColumnFilters: true,
-        columnFilters: partial ? [{ id: 'state', value: partial }] : [],
-      }),
-    },
-  },
-  {
-    feature: 'Selection',
-    title: 'Select rows',
-    code: 'enableRowSelection: true',
-    cue: 'select',
-    // the top three rows left after the filter
-    apply: (s) => ({
-      ...s,
-      rowSelection: { '55': true, '100': true, '45': true },
+      columnFilters: [{ id: 'status', value: 'In Review' }],
     }),
   },
   {
-    feature: 'Grouping',
-    title: 'Group rows by state',
-    code: "grouping: ['state']",
-    cue: 'group',
-    apply: (s) => ({ ...s, grouping: ['state'], expanded: true }),
+    feature: 'Column order',
+    title: 'Column order',
+    code: "columnOrder: ['name', 'project', 'status', 'assignee', …]",
+    // the header pulses, slides next to Name, and pulses again where it
+    // landed, so the step plays about as long as the others
+    beats: [
+      [0, (r) => pulse(headerCell(r.root, 'project'))],
+      [700, (r) => r.set(STEPS[4].apply)],
+      [900, (r) => pulse(headerCell(r.root, 'project'))],
+    ],
+    apply: (s) => ({ ...s, columnOrder: ['project', 'status', 'assignee'] }),
+  },
+  {
+    feature: 'View settings',
+    title: 'Alternating row colors',
+    code: 'viewSettings: { striped: true }',
+    // the panel covers half the table: it closes soon after the switch flips,
+    // so the stripes show for the whole hold
+    showMs: 700,
+    beats: [
+      [0, (r) => pulse(toolbarButton(r.root, 'View settings'))],
+      [600, (r) => r.open(toolbarButton(r.root, 'View settings'))],
+      [POPOVER_IN_MS, () => pulse(openPopover())],
+      [
+        1000,
+        () =>
+          pulse(
+            document.querySelector(
+              '[data-slot="popover-content"] [aria-label="Alternating row colors"]',
+            ),
+          ),
+      ],
+      [
+        500,
+        (r) => {
+          const toggle = document.querySelector<HTMLElement>(
+            '[data-slot="popover-content"] [aria-label="Alternating row colors"]',
+          );
+          if (toggle?.getAttribute('aria-checked') === 'false') toggle.click();
+          r.set(STEPS[5].apply);
+        },
+      ],
+    ],
+    apply: (s) => ({ ...s, viewSettings: { striped: true } }),
   },
 ];
 
@@ -143,42 +316,78 @@ const STEPS: readonly Step[] = [
 const stateAt = (step: number) =>
   STEPS.slice(0, step + 1).reduce((s, x) => x.apply(s), BASE);
 
-// each item stays this long after its change lands (the 1200ms pulse fits
-// well inside)
-const STEP_MS = 3000;
+// after its last beat, a step's open popover stays up this long, then the
+// step's state lands and holds HOLD_MS (the 1200ms pulse fits well inside)
+const SHOW_MS = 800;
+const HOLD_MS = 1200;
 // the finished table holds this long before the replay starts over
-const HOLD_MS = 3000;
-const REST_MS = 1400;
-/* typing: a beat before the first letter, then one letter per CHAR_MS;
- * an edit is saved SAVE_MS after its last letter */
-const TYPE_LEAD_MS = 600;
-const CHAR_MS = 60;
-const SAVE_MS = 700;
+const LAST_HOLD_MS = 2000;
+const REST_MS = 1000;
+// every step stays active at least this long, beats and hold together
+const MIN_STEP_MS = 3600;
 
-const typingMs = (step: number) => {
-  const typing = STEPS[step]?.typing;
-  if (!typing) return 0;
-  return (
-    TYPE_LEAD_MS +
-    typing.text.length * CHAR_MS +
-    (step === EDIT_STEP ? SAVE_MS : 0)
-  );
-};
+/* Room under the toolbar's buttons the tallest popover a step opens needs
+ * to open below its trigger (measured 2026-11-05): the view settings panel
+ * reaches 309px below them, the filter picker under a wrapped chips row
+ * (390px wide) 340px; plus a margin. */
+const POPOVER_ROOM_PX = 360;
+
+const showMs = (step: number) => STEPS[step]?.showMs ?? SHOW_MS;
+
+const beatsMs = (step: number) =>
+  (STEPS[step]?.beats ?? []).reduce((ms, [wait]) => ms + wait, 0) +
+  showMs(step);
+
+const holdMs = (step: number) =>
+  step === -1
+    ? REST_MS
+    : Math.max(
+        step === STEPS.length - 1 ? LAST_HOLD_MS : HOLD_MS,
+        MIN_STEP_MS - beatsMs(step),
+      );
 
 type Mode = 'playing' | 'paused' | 'user';
+/* beats: the step's interaction plays; hold: its state has landed */
+type Phase = 'beats' | 'hold';
 
-/** v5's replaying table for the homepage: six items on a loop, each one types
- * any text letter by letter, then pulses what it changed. */
+/** A step's interaction in flight. It outlives the effect that plays it, so
+ * a remount of that effect (Strict Mode in dev, Fast Refresh) resumes the
+ * beats instead of cutting them short. */
+interface Run {
+  /** The navigation this run belongs to (`token` in SignalDemo). */
+  token: number;
+  step: number;
+  start: number;
+  /** Beats already played. */
+  ran: number;
+  /** The popover trigger the step opened, closed when it lands. */
+  opened: HTMLElement | null;
+  mounted: boolean;
+  landed: boolean;
+}
+
+/** The replaying table for the homepage: six items on a loop, each one plays
+ * its interaction on the table's own controls, then its state lands. */
 export function SignalDemo() {
   const [step, setStep] = useState(-1);
+  const [phase, setPhase] = useState<Phase>('hold');
   const [mode, setMode] = useState<Mode>('playing');
   const [visible, setVisible] = useState(false);
   const [state, setState] = useState<SignalTableState>(BASE);
-  // letters typed so far for the current item; null when it is not typing
-  const [typed, setTyped] = useState<number | null>(null);
+  const [editing, setEditing] = useState<SignalTableProps['editing']>(null);
   // bumped on each restart so the table fades back in from its plain state
   const [resets, setResets] = useState(0);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
+  // bumped on every move (the loop, a jump, Replay): an interrupted run lands
+  // its state only while no newer move happened
+  const tokenRef = useRef(0);
+  const runRef = useRef<Run | null>(null);
+
+  const goTo = (next: number, nextPhase: Phase) => {
+    tokenRef.current += 1;
+    setStep(next);
+    setPhase(nextPhase);
+  };
 
   // reduced motion: no autoplay, land on the finished table
   useEffect(() => {
@@ -191,95 +400,170 @@ export function SignalDemo() {
     }
   }, []);
 
-  // only play while the band is on screen
+  // only play while the toolbar shows below the sticky nav with room for the
+  // popovers under it, or they flip up over the hero (F48, D63); otherwise
+  // hold on Starting or pause in place, never scroll the page
   useEffect(() => {
-    const el = rootRef.current;
+    const el = tableRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.25 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const toolbar = toolbarButton(el, 'Sort')?.getBoundingClientRect();
+      const nav =
+        document.querySelector('.v4-nav')?.getBoundingClientRect().bottom ?? 0;
+      setVisible(
+        !!toolbar &&
+          toolbar.height > 0 &&
+          toolbar.top >= nav &&
+          toolbar.bottom + POPOVER_ROOM_PX <= window.innerHeight,
+      );
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    schedule();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    // the table mounts late (next/dynamic) and the page above it can reflow
+    const ro = new ResizeObserver(schedule);
+    ro.observe(el);
+    ro.observe(document.body);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      ro.disconnect();
+    };
   }, []);
 
   const running = mode === 'playing' && visible;
 
-  // advance to the next item
+  // the replay's clicks carry no pointer, so the browser draws a keyboard
+  // focus ring on the controls its popovers focus (the panel's first row, a
+  // select's trigger once the select closes), where a visitor's click
+  // shows none; while it plays, focus no visitor input caused leaves them
   useEffect(() => {
     if (!running) return;
+    let userAt = -Infinity;
+    const onInput = (event: Event) => {
+      if (event.isTrusted) userAt = event.timeStamp;
+    };
+    const onFocus = (event: FocusEvent) => {
+      const el = event.target;
+      if (!(el instanceof HTMLElement) || el.matches(TEXT_FIELD)) return;
+      if (event.timeStamp - userAt < USER_FOCUS_MS) return;
+      if (!tableRef.current?.contains(el) && !el.closest(REPLAY_POPOVERS)) {
+        return;
+      }
+      // a frame later, before the next paint: a select trigger the replay
+      // just clicked takes focus as it opens, and blurring it then closes
+      // the select and the popover around it, so an open one keeps it
+      requestAnimationFrame(() => {
+        if (
+          document.activeElement === el &&
+          el.getAttribute('aria-expanded') !== 'true'
+        ) {
+          el.blur();
+        }
+      });
+    };
+    document.addEventListener('pointerdown', onInput, true);
+    document.addEventListener('keydown', onInput, true);
+    document.addEventListener('focusin', onFocus);
+    return () => {
+      document.removeEventListener('pointerdown', onInput, true);
+      document.removeEventListener('keydown', onInput, true);
+      document.removeEventListener('focusin', onFocus);
+    };
+  }, [running]);
+
+  // play the current step's beats, then land its state
+  useEffect(() => {
+    const root = tableRef.current;
+    if (!running || phase !== 'beats' || step < 0 || !root) return;
+    const prev = runRef.current;
+    const run: Run =
+      prev && prev.token === tokenRef.current && !prev.landed
+        ? prev
+        : {
+            token: tokenRef.current,
+            step,
+            start: performance.now(),
+            ran: 0,
+            opened: null,
+            mounted: false,
+            landed: false,
+          };
+    runRef.current = run;
+    run.mounted = true;
+    const replay: Replay = {
+      root,
+      set: (update) => setState(update),
+      edit: setEditing,
+      open: (trigger) => {
+        if (!trigger) return;
+        run.opened = trigger;
+        trigger.click();
+      },
+    };
+    // closes what the step opened and lands its state, once
+    const land = () => {
+      if (run.landed) return;
+      run.landed = true;
+      if (run.opened) clickOutside(run.opened);
+      run.opened = null;
+      setEditing(null);
+      if (tokenRef.current !== run.token) return;
+      setState(stateAt(run.step));
+      setPhase('hold');
+    };
+    // a resumed run plays only the beats it has not played, on its own clock
+    const elapsed = performance.now() - run.start;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    let at = 0;
+    STEPS[step].beats.forEach(([wait, beat], i) => {
+      at += wait;
+      if (i < run.ran) return;
+      timers.push(
+        setTimeout(
+          () => {
+            run.ran = i + 1;
+            beat(replay);
+          },
+          Math.max(0, at - elapsed),
+        ),
+      );
+    });
+    timers.push(setTimeout(land, Math.max(0, at + showMs(step) - elapsed)));
+    return () => {
+      timers.forEach(clearTimeout);
+      run.mounted = false;
+      // a remount runs this effect again in the same task and resumes the
+      // run; stopped part way (a click, a jump, Replay, or scrolled away),
+      // it finishes at once
+      queueMicrotask(() => {
+        if (!run.mounted) land();
+      });
+    };
+  }, [running, phase, step, resets]);
+
+  // after a step's hold, start the next one
+  useEffect(() => {
+    if (!running || phase !== 'hold') return;
     const last = STEPS.length - 1;
-    const wait =
-      (step === -1 ? REST_MS : step === last ? HOLD_MS : STEP_MS) +
-      typingMs(step);
     const t = setTimeout(() => {
       // after the last item, fade back to the plain table and start over
       if (step === last) {
         setResets((n) => n + 1);
-        setStep(-1);
         setState(BASE);
-        setTyped(null);
+        goTo(-1, 'hold');
         return;
       }
-      const next = step + 1;
-      setStep(next);
-      const typing = STEPS[next]?.typing;
-      if (typing) {
-        setState(typing.at(stateAt(next - 1), ''));
-        setTyped(0);
-      } else {
-        setState(stateAt(next));
-        setTyped(null);
-      }
-    }, wait);
+      goTo(step + 1, 'beats');
+    }, holdMs(step));
     return () => clearTimeout(t);
-  }, [running, step]);
-
-  // type the current item's text, one letter at a time
-  useEffect(() => {
-    const typing = STEPS[step]?.typing;
-    if (!running || !typing || typed === null) return;
-    const done = typed >= typing.text.length;
-    const t = setTimeout(
-      () => {
-        if (done) {
-          setState(stateAt(step));
-          setTyped(null);
-          return;
-        }
-        const n = typed + 1;
-        setState(typing.at(stateAt(step - 1), typing.text.slice(0, n)));
-        setTyped(n);
-      },
-      done
-        ? step === EDIT_STEP
-          ? SAVE_MS
-          : 0
-        : typed === 0
-          ? TYPE_LEAD_MS
-          : CHAR_MS,
-    );
-    return () => clearTimeout(t);
-  }, [running, step, typed]);
-
-  const editing =
-    step === EDIT_STEP && typed !== null
-      ? {
-          rowId: EDIT_ROW,
-          value: typed === 0 ? EDIT_FROM : EDIT_TO.slice(0, typed),
-        }
-      : null;
-
-  // the pulse starts once the change has landed: after any typing (and,
-  // for the edit, after the value is saved)
-  const cueKind =
-    step >= 0 && mode !== 'user' && typed === null ? STEPS[step].cue : null;
-  const cue: SignalCue | null =
-    cueKind === null
-      ? null
-      : cueKind === 'edit'
-        ? { kind: 'edit', rowId: EDIT_ROW }
-        : { kind: cueKind };
+  }, [running, phase, step]);
 
   const onChange = useCallback<SignalTableProps['onChange']>(
     (key, updater) =>
@@ -293,54 +577,55 @@ export function SignalDemo() {
     [],
   );
 
-  const takeControl = () => {
-    if (mode !== 'playing') return;
+  // a visitor's own pointer or key stops the replay; the replay's clicks
+  // are not trusted events and pass
+  const takeControl = (event: { isTrusted: boolean }) => {
+    if (!event.isTrusted || mode !== 'playing') return;
     setMode('user');
-    // a half-typed item lands on its finished state
-    if (typed !== null && step >= 0) {
-      setTyped(null);
-      setState(stateAt(step));
-    }
   };
 
   // start over from the first item straight away
   const replay = () => {
     setResets((n) => n + 1);
-    setTyped(null);
-    setStep(0);
-    setState(stateAt(0));
+    setEditing(null);
+    setState(BASE);
+    goTo(0, 'beats');
     setMode('playing');
   };
 
   const jumpTo = (i: number) => {
-    setTyped(null);
-    setStep(i);
+    setEditing(null);
+    goTo(i, 'hold');
     setState(stateAt(i));
     setMode('paused');
   };
 
+  // in the 240px aside "Now showing:" and the feature sit on two lines of
+  // their own, so the status keeps one height and the step list under it
+  // never moves; under the table (below 1440px) they share one line
   const status =
-    mode === 'user'
-      ? 'Paused'
-      : step === -1
-        ? 'Starting'
-        : `Now showing: ${STEPS[step].feature}`;
+    mode === 'user' ? (
+      'Paused'
+    ) : step === -1 ? (
+      'Starting'
+    ) : (
+      <>
+        <span className="truncate">Now showing:</span>{' '}
+        <span className="truncate">{STEPS[step].feature}</span>
+      </>
+    );
 
   return (
-    <div ref={rootRef} className="v5-demo" data-running={running || undefined}>
+    <div className="v5-demo" data-running={running || undefined}>
       <div
         className={`v5-demo-table min-w-0 ${
           resets === 0 ? '' : resets % 2 ? 'v12-reset-a' : 'v12-reset-b'
         }`}
+        ref={tableRef}
         onPointerDownCapture={takeControl}
         onKeyDownCapture={takeControl}
       >
-        <SignalTable
-          state={state}
-          onChange={onChange}
-          editing={editing}
-          cue={cue}
-        />
+        <SignalTable state={state} onChange={onChange} editing={editing} />
       </div>
 
       <aside className="v5-steps" aria-label="Demo items">
@@ -351,7 +636,10 @@ export function SignalDemo() {
               className="v5-live-dot"
               data-on={running || undefined}
             />
-            <span className="truncate" aria-live="polite">
+            <span
+              className="flex h-8 min-w-0 items-center gap-x-1 min-[1440px]:flex-col min-[1440px]:items-start min-[1440px]:justify-center"
+              aria-live="polite"
+            >
               {status}
             </span>
           </p>
@@ -361,7 +649,7 @@ export function SignalDemo() {
           </button>
         </div>
 
-        <ol className="flex flex-col">
+        <ol className="v12-step-list flex flex-col">
           {STEPS.map((s, i) => {
             const done = i < step || (i === step && mode !== 'playing');
             const active = i === step && mode === 'playing';
@@ -383,14 +671,11 @@ export function SignalDemo() {
                   </span>
                   {active ? (
                     <span
-                      key={`${step}-${mode}`}
+                      key={`${step}-${mode}-${resets}`}
                       aria-hidden="true"
                       className="v5-step-progress"
                       style={{
-                        animationDuration: `${
-                          (i === STEPS.length - 1 ? HOLD_MS : STEP_MS) +
-                          typingMs(i)
-                        }ms`,
+                        animationDuration: `${beatsMs(i) + holdMs(i)}ms`,
                       }}
                     />
                   ) : null}

@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { Building2Icon, CakeIcon, UserIcon, UsersIcon } from 'lucide-react';
 
 // Per-call `filterFns`, `sortFns` and `aggregationFns` resolved by name
 // (decisions item 3): custom names filter, sort and aggregate; two tables on
@@ -43,10 +44,10 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'city', header: 'City' },
-  { accessorKey: 'age', header: 'Age' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
+  { accessorKey: 'age', header: 'Age', icon: CakeIcon },
 ];
 
 // Matches when the cell text has exactly `filterValue` characters. Neither
@@ -74,11 +75,13 @@ export const CustomColumnFilterFn = () => (
         accessorKey: 'firstName',
         filterFn: 'customFilterFn',
         header: 'First Name',
+        icon: UserIcon,
       },
-      { accessorKey: 'lastName', header: 'Last Name' },
+      { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
     ]}
     data={data}
     filterFns={{ customFilterFn: lengthEquals }}
+    columnFilterDisplayMode="subheader"
     initialState={{
       columnFilters: [{ id: 'firstName', value: '5' }],
       showColumnFilters: true,
@@ -133,9 +136,10 @@ export const CustomSortFn = () => (
       {
         accessorKey: 'firstName',
         header: 'First Name',
+        icon: UserIcon,
         sortFn: 'customSortFn',
       },
-      { accessorKey: 'lastName', header: 'Last Name' },
+      { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
     ]}
     data={data}
     initialState={{ sorting: [{ desc: false, id: 'firstName' }] }}
@@ -170,13 +174,14 @@ export const CustomAggregationFn = () => (
       }),
     }}
     columns={[
-      { accessorKey: 'team', header: 'Team' },
-      { accessorKey: 'firstName', header: 'First Name' },
+      { accessorKey: 'team', header: 'Team', icon: UsersIcon },
+      { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
       {
         AggregatedCell: ({ cell }) => cell.getValue<string>(),
         accessorKey: 'age',
         aggregationFn: 'customAggregationFn',
         header: 'Age',
+        icon: CakeIcon,
       },
     ]}
     data={data}
@@ -197,8 +202,8 @@ CustomAggregationFn.play = async ({ canvas }: StoryContext) => {
 export const AggregationFnArray = () => (
   <ShadcnTable
     columns={[
-      { accessorKey: 'team', header: 'Team' },
-      { accessorKey: 'firstName', header: 'First Name' },
+      { accessorKey: 'team', header: 'Team', icon: UsersIcon },
+      { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
       {
         AggregatedCell: ({ cell }) => (
           <span data-testid="aggregated-age">
@@ -208,6 +213,7 @@ export const AggregationFnArray = () => (
         accessorKey: 'age',
         aggregationFn: ['count', 'mean'],
         header: 'Age',
+        icon: CakeIcon,
       },
     ]}
     data={data}
@@ -236,10 +242,12 @@ export const TwoTablesDifferentRegistries = () => (
             accessorKey: 'firstName',
             filterFn: 'tableAFilterFn',
             header: 'First Name',
+            icon: UserIcon,
           },
         ]}
         data={data}
         filterFns={{ tableAFilterFn: lengthEquals }}
+        columnFilterDisplayMode="subheader"
         initialState={{
           columnFilters: [{ id: 'firstName', value: '5' }],
           showColumnFilters: true,
@@ -253,11 +261,13 @@ export const TwoTablesDifferentRegistries = () => (
             accessorKey: 'firstName',
             filterFn: 'tableAFilterFn',
             header: 'First Name',
+            icon: UserIcon,
           },
           {
             accessorKey: 'lastName',
             filterFn: 'tableBFilterFn',
             header: 'Last Name',
+            icon: UserIcon,
           },
         ]}
         data={data}
@@ -265,6 +275,7 @@ export const TwoTablesDifferentRegistries = () => (
           tableBFilterFn: (row, id, filterValue: string) =>
             String(row.getValue(id)).startsWith(filterValue),
         }}
+        columnFilterDisplayMode="subheader"
         initialState={{
           columnFilters: [
             { id: 'firstName', value: '5' },
@@ -306,9 +317,11 @@ export const UnknownFilterFnName = {
           accessorKey: 'firstName',
           filterFn: 'doesNotExist',
           header: 'First Name',
+          icon: UserIcon,
         },
       ]}
       data={data}
+      columnFilterDisplayMode="subheader"
       initialState={{
         columnFilters: [{ id: 'firstName', value: 'zzz' }],
         showColumnFilters: true,
@@ -374,7 +387,7 @@ export const GlobalFilterModeSwitch = {
 };
 
 const modeColumns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
 ];
 
 const modeData = data.filter(({ firstName }) =>
@@ -415,6 +428,7 @@ export const ProgrammaticColumnFilterMode = {
       columns={modeColumns}
       data={modeData}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{
         columnFilters: [{ id: 'firstName', value: 'ack' }],
         showColumnFilters: true,
@@ -452,9 +466,12 @@ export const ProgrammaticColumnFilterMode = {
 export const ColumnFilterModeSwitch = {
   render: () => (
     <ShadcnTable
-      columns={[{ accessorKey: 'firstName', header: 'First Name' }]}
+      columns={[
+        { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+      ]}
       data={modeData}
       enableColumnFilterModes
+      columnFilterDisplayMode="subheader"
       initialState={{ showColumnFilters: true }}
     />
   ),

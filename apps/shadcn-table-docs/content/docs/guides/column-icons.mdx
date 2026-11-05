@@ -1,0 +1,58 @@
+---
+title: 'Column Icons Guide'
+description: 'How to show an icon before a column label in the header, the filter chips and the column picker of Shadcn Table'
+---
+
+A column can show a small icon before its label, for example a calendar for a date column or a hash for a number column. The icon is optional: a column without one renders exactly as before, and the library ships no icon per column type.
+
+### Relevant Column Options
+
+<ColumnOptionsTable onlyOptions={new Set(['icon', 'Header'])} />
+
+### Add an Icon to a Column
+
+Set `icon` in the column definition to an icon component (such as a Lucide icon) or to an element. A component is rendered small and slightly muted, and hidden from screen readers; an element is rendered as you give it.
+
+```jsx
+import { Calendar, Hash, User } from 'lucide-react';
+
+const columns = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    icon: User, //a component: sized and colored by the table
+  },
+  {
+    accessorKey: 'age',
+    header: 'Age',
+    icon: Hash,
+  },
+  {
+    accessorKey: 'joined',
+    header: 'Joined',
+    icon: <Calendar className="size-3.5 text-primary" />, //an element: rendered as is
+  },
+];
+```
+
+### Where the Icon Shows
+
+Wherever the chrome names the column by its label:
+
+- the header cell, before the label
+- the [filter chips](/docs/guides/filter-chips) in the toolbar
+- the column picker behind "+ Filter", the toolbar filter button and the [sort editor](/docs/guides/sort-editor)'s "Add sort"
+
+The columns menu and the column menu list the column by its label only.
+
+### Anything Beyond an Icon
+
+For a header with more than an icon and a label, write a custom `Header` render as before. A custom `Header` replaces the label but not the icon, so leave `icon` unset if your `Header` draws its own.
+
+The icons of the table's own buttons and menus are a separate thing: they are keys of the `icons` table option, see the [Custom Icons Guide](/docs/guides/customize-icons).
+
+### Column Icons Example
+
+<PersistentViewExample />
+
+View Extra Storybook **<StorybookLink>Examples</StorybookLink>**

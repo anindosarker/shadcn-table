@@ -1,4 +1,5 @@
 import { type ST_ColumnDef } from '@/components/ui/shadcn-table';
+import { Building2Icon, MailIcon, UserIcon } from 'lucide-react';
 
 export type Person = {
   firstName: string;
@@ -10,18 +11,22 @@ export type Person = {
 export const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName', //access nested data with dot notation
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'email',
+    icon: MailIcon,
     header: 'Email',
   },
   {
     accessorKey: 'city',
+    icon: Building2Icon,
     header: 'City',
   },
 ];

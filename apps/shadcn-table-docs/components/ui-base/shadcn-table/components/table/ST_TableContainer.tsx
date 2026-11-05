@@ -10,11 +10,13 @@ import { cn } from '@/lib/utils';
 import { type DivProps } from '@/components/ui-base/shadcn-table/types';
 import { parseFromValuesOrFunc } from '@/components/ui-base/shadcn-table/shared/utils/utils';
 import { ST_Table } from '@/components/ui-base/shadcn-table/components/table/ST_Table';
+import { ST_ScrollButtons } from '@/components/ui-base/shadcn-table/components/table/ST_ScrollButtons';
 import { ST_TableLoadingOverlay } from '@/components/ui-base/shadcn-table/components/table/ST_TableLoadingOverlay';
 import { ST_CellActionMenu } from '@/components/ui-base/shadcn-table/components/menus/ST_CellActionMenu';
 import { ST_EditRowModal } from '@/components/ui-base/shadcn-table/components/modals/ST_EditRowModal';
 import { useSTContext } from '@/components/ui-base/shadcn-table/hooks/stTableHook';
 import { useST_ComposedRef } from '@/components/ui-base/shadcn-table/hooks/useST_ComposedRef';
+import { useST_HorizontalOverflow } from '@/components/ui-base/shadcn-table/hooks/useST_HorizontalOverflow';
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -36,6 +38,8 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
       createDisplayMode,
       editDisplayMode,
       enableCellActions,
+      enableRowVirtualization,
+      enableScrollButtons,
       enableStickyHeader,
       stTableContainerProps,
     },
@@ -66,6 +70,9 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
     },
     [composedRef],
   );
+
+  const scrollWrapperRef = useRef<HTMLDivElement | null>(null);
+  useST_HorizontalOverflow(scrollWrapperRef, tableContainerRef, table);
 
   const toolbarObserverRef = useRef<{
     observer: ResizeObserver;
@@ -119,6 +126,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
         isFullScreen: state.isFullScreen,
         isLoading: state.isLoading,
         showLoadingOverlay: state.showLoadingOverlay,
+        stickyHeader: state.viewSettings.stickyHeader,
       })}
     >
       {({
@@ -127,6 +135,7 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
         isFullScreen,
         isLoading,
         showLoadingOverlay,
+        stickyHeader,
       }) => {
         const loading =
           showLoadingOverlay !== false && (isLoading || showLoadingOverlay);
@@ -134,32 +143,49 @@ export const ST_TableContainer = ({ ...rest }: ST_TableContainerProps) => {
         const createModalOpen = createDisplayMode === 'modal' && creatingRow;
         const editModalOpen = editDisplayMode === 'modal' && editingRow;
 
+        // A sticky header needs the box to own the y axis. By choice it caps
+        // at 70vh; forced by row virtualization it keeps the full height.
+        const maxHeight = isFullScreen
+          ? undefined
+          : enableRowVirtualization
+            ? 'var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))'
+            : enableStickyHeader || stickyHeader
+              ? 'var(--st-sticky-max-height, 70vh)'
+              : undefined;
+
         return (
           <div
-            aria-busy={loading}
-            aria-describedby={loading ? 'st-progress' : undefined}
-            {...tableContainerProps}
-            ref={attachRef}
-            style={{
-              maxHeight: isFullScreen
-                ? 'calc(100vh - var(--st-toolbar-height, 0px))'
-                : enableStickyHeader
-                  ? 'clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px)'
-                  : undefined,
-              ...tableContainerProps?.style,
-            }}
             className={cn(
-              tableContainerVariants({
-                className: tableContainerProps.className,
-              }),
+              'group/st-scroll relative flex min-h-0 flex-col',
+              isFullScreen && 'flex-1',
             )}
+            data-slot="st-scroll-wrapper"
+            ref={scrollWrapperRef}
           >
-            {loading ? <ST_TableLoadingOverlay /> : null}
-            {tableElement}
-            {(createDisplayMode === 'modal' || editDisplayMode === 'modal') && (
-              <ST_EditRowModal open={!!(createModalOpen || editModalOpen)} />
-            )}
-            {enableCellActions && <ST_CellActionMenu />}
+            <div
+              aria-busy={loading}
+              aria-describedby={loading ? 'st-progress' : undefined}
+              {...tableContainerProps}
+              ref={attachRef}
+              style={{ maxHeight, ...tableContainerProps?.style }}
+              className={cn(
+                tableContainerVariants({
+                  className: cn(
+                    isFullScreen && 'min-h-0 flex-1',
+                    tableContainerProps.className,
+                  ),
+                }),
+              )}
+            >
+              {loading ? <ST_TableLoadingOverlay /> : null}
+              {tableElement}
+              {(createDisplayMode === 'modal' ||
+                editDisplayMode === 'modal') && (
+                <ST_EditRowModal open={!!(createModalOpen || editModalOpen)} />
+              )}
+              {enableCellActions && <ST_CellActionMenu />}
+            </div>
+            {enableScrollButtons === true && <ST_ScrollButtons table={table} />}
           </div>
         );
       }}

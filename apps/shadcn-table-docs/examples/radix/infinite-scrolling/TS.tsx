@@ -21,6 +21,7 @@ import {
   QueryClientProvider,
   useInfiniteQuery,
 } from '@tanstack/react-query'; //Note: this is TanStack React Query V5
+import { MapIcon, MapPinIcon, PhoneIcon, UserIcon } from 'lucide-react';
 
 //Your API response shape will probably be different. Knowing a total row count is important though.
 type UserApiResponse = {
@@ -41,22 +42,27 @@ type User = {
 const columns: ST_ColumnDef<User>[] = [
   {
     accessorKey: 'firstName',
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'address',
+    icon: MapPinIcon,
     header: 'Address',
   },
   {
     accessorKey: 'state',
+    icon: MapIcon,
     header: 'State',
   },
   {
     accessorKey: 'phoneNumber',
+    icon: PhoneIcon,
     header: 'Phone Number',
   },
 ];

@@ -224,6 +224,8 @@ const table = useShadcnTable({
 });
 ```
 
+Pinned cells already have an opaque background and, on the inner edge of each pinned side, a small shadow towards the scrolling columns. Change the shadow color through the `--st-edge-shadow` variable rather than a class on the cells, see the [Tint Tokens Guide](/docs/guides/tint-tokens).
+
 There are hundreds of table, column, header, row, and cell instance APIs that you can use for conditional styling and other logic. See the [Table Instance APIs](/docs/api/table-instance-apis), [Column Instance APIs](/docs/api/column-instance-apis), [Row Instance APIs](/docs/api/row-instance-apis), and [Cell Instance APIs](/docs/api/cell-instance-apis) docs for more info.
 
 ### Theming
@@ -264,33 +266,55 @@ return (
 
 The colors Shadcn Table uses internally come from the shadcn/ui theme variables, so there is no separate theme object to pass in. Here is where the default values come from, if you want to override them:
 
-- the table and toolbars use `--background` and `--foreground`
-- selected rows use `--primary` at 20% opacity, pinned rows at 10%, hovered rows use `--foreground` at 10%
-- dragging borders use `--primary`
+- the table and toolbars use `--background` and `--foreground`; the header labels use `--muted-foreground`, and grid lines use `--border`
+- the row tints come from four table variables declared on the table root, each mixed from your theme: `--st-stripe` (alternating rows), `--st-hover` (the hovered row), `--st-selected` (selected rows) and `--st-edge-shadow` (the shadow of pinned columns). See the [Tint Tokens Guide](/docs/guides/tint-tokens) for their defaults and how to override them
+- dragging outlines and the drop highlight use `--primary`
 - filter match highlighting uses `--destructive` at 20% opacity (30% in dark mode), on the element with `data-slot="st-match-highlight"`
 
 ### Customize Table Layout Styling
 
-You can customize both the props and the styles of the internal `<ST_TableLayout />` component that wraps the table by passing in a `stTableLayoutProps` table option. This is useful if you want to remove the shadow, or change the border radius, or any other styling you want to do to the wrapper.
+The table renders as a layout element (`<ST_TableLayout />`) holding the top toolbar and, below it, a bordered frame (`data-slot="st-table-frame"`, `rounded-md border bg-background shadow`) that wraps the scrolling table and the bottom toolbar. You can customize both the props and the styles of the layout element by passing in a `stTableLayoutProps` table option. To restyle the frame, target it from there with a Tailwind arbitrary variant.
 
 ```jsx
 const table = useShadcnTable({
   columns,
   data,
   stTableLayoutProps: {
-    //customize wrapper styles
-    className: 'rounded-none border-dashed shadow-none',
+    //remove the frame's shadow and radius
+    className:
+      '[&>[data-slot=st-table-frame]]:rounded-none [&>[data-slot=st-table-frame]]:shadow-none',
   },
 });
 
 return <ShadcnTable table={table} />;
 ```
 
+To put the toolbar back inside a bordered box, give the layout element the border and padding instead, for example `className: 'rounded-md border p-2'`.
+
 ### Customize Table Body, Rows, Columns, and Cells
 
 #### Stripe Rows Example
 
-If you need to style many of the rows or columns in a consistent manner, it usually makes sense to style the `<TableBody />` component itself. For example if you want to stripe the rows, you can do something like this:
+Alternating row colors are built in: users switch them on from the Alternating row colors row of the [view settings](/docs/guides/view-settings) panel, and you can start a table striped through the `viewSettings` state. The stripe color is the `--st-stripe` variable.
+
+```jsx
+const table = useShadcnTable({
+  columns,
+  data,
+  initialState: {
+    viewSettings: {
+      gridLines: 'rows',
+      pins: ['columns', 'density'],
+      rowNumbers: false,
+      stickyHeader: false,
+      striped: true, //alternating row colors on by default
+      wrapText: false,
+    },
+  },
+});
+```
+
+If you need to style many of the rows or columns in a consistent manner in your own way, it usually makes sense to style the `<TableBody />` component itself. For example if you want to stripe the rows with your own selector, you can do something like this:
 
 ```jsx
 const table = useShadcnTable({
@@ -327,7 +351,7 @@ const table = useShadcnTable({
 
 ### Customize No Rows overlay
 
-As part of the customization options, we allow you to override the No Records overlay.
+An empty table shows one muted row spanning the columns with the `noRecordsToDisplay` text, or `noResultsFound` while filters are active. As part of the customization options, we allow you to override the No Records overlay.
 
 ```jsx
 const table = useShadcnTable({

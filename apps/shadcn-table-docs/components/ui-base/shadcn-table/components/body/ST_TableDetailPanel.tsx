@@ -87,6 +87,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
       })}
     >
       {({ isLoading }) => {
+        const isGrid = !!layoutMode?.startsWith('grid');
         const DetailPanel = !isLoading && renderDetailPanel?.({ row, table });
 
         return (
@@ -112,7 +113,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
             }}
             className={cn(
               detailPanelRowVariants({
-                layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+                layout: isGrid ? 'grid' : 'semantic',
               }),
               tableRowProps?.className,
             )}
@@ -122,7 +123,7 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {...tableCellProps}
               className={cn(
                 detailPanelCellVariants({
-                  layout: layoutMode?.startsWith('grid') ? 'grid' : 'semantic',
+                  layout: isGrid ? 'grid' : 'semantic',
                   expanded: row.getIsExpanded(),
                   padded: !!DetailPanel && row.getIsExpanded(),
                   virtual: !!virtualRow,
@@ -142,7 +143,11 @@ export const ST_TableDetailPanel = <TData extends ST_RowData>({
               {virtualRow ? (
                 row.getIsExpanded() && DetailPanel
               ) : (
-                <Collapsible open={row.getIsExpanded()}>
+                // A grid cell is flex: the panel fills it, so a chart measures its width.
+                <Collapsible
+                  className={cn(isGrid && 'w-full min-w-0')}
+                  open={row.getIsExpanded()}
+                >
                   <CollapsibleContent className="h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 ease-out data-starting-style:h-0 data-ending-style:h-0 motion-reduce:transition-none">
                     {DetailPanel}
                   </CollapsibleContent>

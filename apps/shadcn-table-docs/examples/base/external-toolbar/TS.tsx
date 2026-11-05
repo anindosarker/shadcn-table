@@ -2,36 +2,39 @@
 
 import {
   ST_GlobalFilterTextField,
-  ST_ShowHideColumnsButton,
+  ST_SortPopover,
   ST_TablePagination,
-  ST_ToggleDensePaddingButton,
-  ST_ToggleFiltersButton,
   ST_ToolbarAlertBanner,
   useShadcnTable,
   type ST_ColumnDef,
   ST_TableContainer,
   ST_TableProvider,
   ST_Tooltip,
+  ST_ViewSettingsButton,
 } from '@/components/ui/shadcn-table';
 import { Button } from '@/components/ui/button';
-import { Printer } from 'lucide-react';
+import { CakeIcon, DollarSignIcon, Printer, UserIcon } from 'lucide-react';
 import { data, type Person } from './makeData';
 
 const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'age',
+    icon: CakeIcon,
     header: 'Age',
   },
   {
     accessorKey: 'salary',
+    icon: DollarSignIcon,
     header: 'Salary',
   },
 ];
@@ -58,11 +61,12 @@ const Example = () => {
               Create New Account
             </Button>
           </div>
-          <ST_GlobalFilterTextField />
           <div className="flex items-center gap-2">
-            <ST_ToggleFiltersButton />
-            <ST_ShowHideColumnsButton />
-            <ST_ToggleDensePaddingButton />
+            <ST_GlobalFilterTextField />
+            <ST_SortPopover table={table} variant="chip" />
+          </div>
+          <div className="flex items-center gap-2">
+            <ST_ViewSettingsButton table={table} />
             <ST_Tooltip title="Print">
               <Button
                 variant="ghost"

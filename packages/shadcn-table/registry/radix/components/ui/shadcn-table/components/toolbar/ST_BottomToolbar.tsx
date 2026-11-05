@@ -1,4 +1,3 @@
-import { Subscribe } from '@tanstack/react-table';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import {
@@ -16,16 +15,10 @@ import { useST_ComposedRef } from '@/components/ui/shadcn-table/hooks/useST_Comp
 
 export type ST_BottomToolbarProps = DivProps;
 
+// The frame holds the toolbar in full screen too; its top edge is the same
+// hairline as the lines between rows.
 const bottomToolbarVariants = cva(
-  'relative z-1 grid min-h-14 items-start overflow-hidden bg-background flex-wrap-reverse transition-all duration-150 ease-in-out shadow-[0_-1px_2px_-1px_color-mix(in_oklab,var(--foreground)_15%,transparent)] inset-s-0 inset-e-0',
-  {
-    variants: {
-      fullscreen: {
-        true: 'fixed bottom-0',
-        false: 'relative',
-      },
-    },
-  },
+  'relative z-1 grid min-h-12 items-start overflow-hidden border-t bg-background flex-wrap-reverse transition-all duration-150 ease-in-out',
 );
 
 export const ST_BottomToolbar = <TData extends ST_RowData>({
@@ -55,8 +48,6 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
 
   const stackAlertBanner = isMobile || !!renderBottomToolbarCustomActions;
 
-  // Created outside the full screen subscription, so a toggle does not
-  // re-render it.
   const toolbarContent = (
     <>
       <ST_LinearProgressBar isTopToolbar={false} />
@@ -68,7 +59,18 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
       )}
       <div className="flex w-full box-border items-center justify-between p-2">
         {renderBottomToolbarCustomActions ? (
-          renderBottomToolbarCustomActions({ table })
+          // The actions read the table, most often the selected rows, so they
+          // re-render on the state they commonly read; the toolbar does not.
+          <table.Subscribe
+            selector={(state) => ({
+              columnFilters: state.columnFilters,
+              globalFilter: state.globalFilter,
+              rowSelection: state.rowSelection,
+              sorting: state.sorting,
+            })}
+          >
+            {() => renderBottomToolbarCustomActions({ table })}
+          </table.Subscribe>
         ) : (
           <span />
         )}
@@ -88,21 +90,14 @@ export const ST_BottomToolbar = <TData extends ST_RowData>({
   );
 
   return (
-    <Subscribe source={table.atoms.isFullScreen}>
-      {(isFullScreen) => (
-        <div
-          {...toolbarProps}
-          ref={attachRef}
-          className={cn(
-            bottomToolbarVariants({
-              fullscreen: isFullScreen,
-              className: toolbarProps.className,
-            }),
-          )}
-        >
-          {toolbarContent}
-        </div>
+    <div
+      {...toolbarProps}
+      ref={attachRef}
+      className={cn(
+        bottomToolbarVariants({ className: toolbarProps.className }),
       )}
-    </Subscribe>
+    >
+      {toolbarContent}
+    </div>
   );
 };

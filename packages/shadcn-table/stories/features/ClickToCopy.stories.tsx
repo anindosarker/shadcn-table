@@ -1,10 +1,18 @@
-import { type Meta } from '@storybook/react-vite';
+import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { expect, spyOn, userEvent, waitFor, within } from 'storybook/test';
 import {
   type ST_ColumnDef,
   useShadcnTable,
   ShadcnTable,
 } from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
+import {
+  Building2Icon,
+  MailIcon,
+  MapIcon,
+  MapPinIcon,
+  UserIcon,
+} from 'lucide-react';
 
 const meta: Meta = {
   title: 'Features/Click to Copy Examples',
@@ -27,26 +35,32 @@ const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'name.firstName',
     header: 'First Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'name.lastName',
     header: 'Last Name',
+    icon: UserIcon,
   },
   {
     accessorKey: 'email',
     header: 'Email Address',
+    icon: MailIcon,
   },
   {
     accessorKey: 'address',
     header: 'Address',
+    icon: MapPinIcon,
   },
   {
     accessorKey: 'city',
     header: 'City',
+    icon: Building2Icon,
   },
   {
     accessorKey: 'state',
     header: 'State',
+    icon: MapIcon,
   },
 ];
 
@@ -87,27 +101,33 @@ export const ClickToCopyEnabledPerColumn = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'email',
         enableClickToCopy: true,
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ],
     data,
@@ -122,31 +142,80 @@ export const ClickToCopyDisabledPerColumn = () => {
       {
         accessorKey: 'name.firstName',
         header: 'First Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'name.lastName',
         header: 'Last Name',
+        icon: UserIcon,
       },
       {
         accessorKey: 'email',
         enableClickToCopy: false,
         header: 'Email Address',
+        icon: MailIcon,
       },
       {
         accessorKey: 'address',
         header: 'Address',
+        icon: MapPinIcon,
       },
       {
         accessorKey: 'city',
         header: 'City',
+        icon: Building2Icon,
       },
       {
         accessorKey: 'state',
         header: 'State',
+        icon: MapIcon,
       },
     ],
     data,
   });
 
   return <ShadcnTable table={table} />;
+};
+
+/**
+ * A click on a cell copies its text to the clipboard, and the tooltip says
+ * it was copied.
+ */
+export const ClickCopiesValue = {
+  render: () => <ClickToCopyEnabled />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const writeText = spyOn(navigator.clipboard, 'writeText').mockResolvedValue(
+      undefined,
+    );
+    try {
+      const value = data[0].name.firstName;
+      const [text] = await within(canvasElement).findAllByText(value);
+      const button = text!.closest<HTMLElement>('button')!;
+      const browserUserEvent = (
+        globalThis as {
+          stBrowserUserEvent?: {
+            click: (element: Element) => Promise<void>;
+            tab: (options?: { shift?: boolean }) => Promise<void>;
+          };
+        }
+      ).stBrowserUserEvent;
+      const input = browserUserEvent ?? userEvent;
+      await input.click(button);
+      expect(writeText).toHaveBeenCalledWith(value);
+      // The press closes the tooltip. Keyboard focus opens it at once, inside
+      // the 4 s the copied title lasts, without the 1 s hover delay.
+      await input.tab();
+      await input.tab({ shift: true });
+      expect(document.activeElement).toBe(button);
+      await waitFor(() =>
+        expect(
+          [...document.querySelectorAll('[data-slot="tooltip-content"]')].map(
+            (tooltip) => tooltip.textContent,
+          ),
+        ).toContain('Copied to clipboard'),
+      );
+    } finally {
+      writeText.mockRestore();
+    }
+  },
 };

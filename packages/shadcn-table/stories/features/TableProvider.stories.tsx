@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/shadcn-table';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { type Meta, type StoryContext } from '@storybook/react-vite';
+import { Building2Icon, UserIcon } from 'lucide-react';
 
 // `ST_TableProvider` and the table context (decisions items 3 and 4): hand
 // composition of library pieces, a reader beside and inside each of two
@@ -38,9 +39,9 @@ const data: Person[] = [
 ];
 
 const columns: ST_ColumnDef<Person>[] = [
-  { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'lastName', header: 'Last Name' },
-  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'firstName', header: 'First Name', icon: UserIcon },
+  { accessorKey: 'lastName', header: 'Last Name', icon: UserIcon },
+  { accessorKey: 'city', header: 'City', icon: Building2Icon },
 ];
 
 const bodyText = (root: HTMLElement) =>
@@ -48,7 +49,7 @@ const bodyText = (root: HTMLElement) =>
     .map((row) => row.textContent)
     .join();
 
-// The last cell of the first row is a data column: `p-2` under compact.
+// The last cell of the first row is a data column: `h-10 px-2` under compact.
 const dataCellClass = (root: HTMLElement) =>
   root.querySelector('tbody tr td:last-child')?.className ?? '';
 
@@ -56,7 +57,11 @@ const dataCellClass = (root: HTMLElement) =>
 // summary and two toolbar buttons of the owner's own layout, the top toolbar
 // and the table container. No piece takes a `table` prop.
 const HandComposedTable = () => {
-  const table = useShadcnTable({ columns, data });
+  const table = useShadcnTable({
+    columns,
+    data,
+    paginationDisplayMode: 'default',
+  });
   return (
     <ST_TableProvider table={table}>
       <div className="flex flex-col gap-2 rounded-md border p-2">
@@ -84,7 +89,9 @@ export const HandComposition = {
     await expect(canvas.getByTestId('owner-bar')).toHaveTextContent('1-6 of 6');
     // the owner's density button drives the container's cells
     await userEvent.click(ownerBar.getByLabelText('Toggle density'));
-    await waitFor(() => expect(dataCellClass(canvasElement)).toContain('p-2'));
+    await waitFor(() =>
+      expect(dataCellClass(canvasElement)).toContain('h-10 px-2'),
+    );
     // the owner's search button opens the search in ST_TopToolbar, which
     // filters the container's rows and the owner's pagination summary
     await userEvent.click(ownerBar.getByLabelText('Show/Hide search'));
@@ -159,6 +166,7 @@ const ProvidedTable = ({ id, rows }: { id: string; rows: Person[] }) => {
     columns,
     data: rows,
     id,
+    paginationDisplayMode: 'default',
     renderTopToolbarCustomActions: () => (
       <ContextReader label={`${id}-inner`} />
     ),
@@ -203,8 +211,18 @@ const MountId = () => {
 // The reader follows the new table, and the subtree under the provider
 // remounts, so no state of the first table's components carries over.
 const SwappedTable = () => {
-  const first = useShadcnTable({ columns, data: data.slice(0, 2), id: 'a' });
-  const second = useShadcnTable({ columns, data: data.slice(2), id: 'b' });
+  const first = useShadcnTable({
+    columns,
+    data: data.slice(0, 2),
+    id: 'a',
+    paginationDisplayMode: 'default',
+  });
+  const second = useShadcnTable({
+    columns,
+    data: data.slice(2),
+    id: 'b',
+    paginationDisplayMode: 'default',
+  });
   const [swapped, setSwapped] = useState(false);
   return (
     <>
@@ -254,11 +272,19 @@ export const PortalsReadContext = {
     const canvas = within(canvasElement);
     const body = within(document.body);
     await waitFor(() => expect(bodyText(canvasElement)).toContain('Mason'));
-    await userEvent.click(canvas.getAllByLabelText('Column Actions')[0]);
-    await waitFor(() =>
-      expect(body.getByText('Sort by First Name ascending')).toBeTruthy(),
+    const firstNameHeader = canvas.getByRole('columnheader', {
+      name: /First Name/,
+    });
+    await userEvent.click(
+      within(firstNameHeader).getByRole('button', { name: 'Column Actions' }),
     );
-    await userEvent.keyboard('{Escape}');
+    await userEvent.click(
+      await body.findByRole('menuitem', { name: /^Sort ascending$/ }),
+    );
+    // A closing menu keeps the rest of the page aria-hidden.
+    await waitFor(() =>
+      expect(document.querySelector('[role="menu"]')).toBeNull(),
+    );
     await userEvent.click(canvas.getByText('Create'));
     await waitFor(() => expect(body.getByRole('dialog')).toBeTruthy());
     expect(body.getByRole('dialog').querySelector('input')).not.toBeNull();
@@ -269,7 +295,9 @@ export const PortalsReadContext = {
     await userEvent.hover(canvas.getByText('Mason'));
     await userEvent.hover(canvas.getByLabelText('Toggle density'));
     await waitFor(() =>
-      expect(body.getAllByText('Toggle density').length).toBeGreaterThan(0),
+      expect(body.getAllByText('Density: Comfortable').length).toBeGreaterThan(
+        0,
+      ),
     );
   },
 };

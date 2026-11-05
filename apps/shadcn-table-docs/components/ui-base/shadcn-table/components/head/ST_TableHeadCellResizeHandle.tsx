@@ -1,5 +1,4 @@
-import { cva } from 'class-variance-authority';
-import { Separator } from '@/components/ui-base/separator';
+import { type ComponentProps, type MouseEvent, type TouchEvent } from 'react';
 import { cn } from '@/lib/utils';
 import {
   type ST_Header,
@@ -7,28 +6,17 @@ import {
 } from '@/components/ui-base/shadcn-table/types';
 
 export interface ST_TableHeadCellResizeHandleProps<TData extends ST_RowData>
-  extends React.ComponentProps<typeof Separator> {
+  extends ComponentProps<'div'> {
   header: ST_Header<TData>;
 }
 
-const resizeHandleVariants = cva(
-  'absolute cursor-col-resize px-1 [&:active>[data-slot=separator]]:bg-primary',
-  {
-    variants: {
-      density: {
-        compact: '-me-2',
-        comfortable: '-me-4',
-        spacious: '-me-6',
-      },
-      display: {
-        true: 'inset-e-1',
-        false: 'inset-e-0',
-      },
-    },
-  },
-);
-
+/**
+ * A full-height hairline on the column's trailing edge: invisible at rest,
+ * lit while the pointer is over the header cell, primary while resizing;
+ * double-click resets the width.
+ */
 export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
+  className,
   header,
   ...rest
 }: ST_TableHeadCellResizeHandleProps<TData>) => {
@@ -41,6 +29,18 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
 
   const handler = header.getResizeHandler();
 
+  // The header cell is draggable: without preventDefault a resize gesture
+  // starts a column drag and swallows the mouseup.
+  const handleMouseDown = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    handler(event);
+  };
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    handler(event);
+  };
+
+  const isLastColumn = header.headerGroup?.headers.at(-1)?.id === header.id;
+
   // Only the handle being dragged follows the drag offset.
   return (
     <table.Subscribe
@@ -48,21 +48,18 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
         const isResizing = state.columnResizing.isResizingColumn === column.id;
         return {
           deltaOffset: isResizing ? state.columnResizing.deltaOffset : null,
-          density: state.density,
           isResizing,
         };
       }}
     >
-      {({ deltaOffset, density, isResizing }) => (
+      {({ deltaOffset, isResizing }) => (
         <div
+          aria-hidden
+          {...rest}
           className={cn(
-            resizeHandleVariants({
-              density,
-              display: column.columnDef.columnDefType === 'display',
-            }),
-            header.subHeaders.length || columnResizeMode === 'onEnd'
-              ? '[&:active>[data-slot=separator]]:opacity-100'
-              : '[&:active>[data-slot=separator]]:opacity-0',
+            'absolute top-0 z-10 h-full w-2 cursor-col-resize touch-none select-none',
+            isLastColumn ? 'inset-e-0' : '-inset-e-1',
+            className,
           )}
           onDoubleClick={() => {
             setColumnResizing((old) => ({
@@ -71,8 +68,8 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
             }));
             column.resetSize();
           }}
-          onMouseDown={handler}
-          onTouchStart={handler}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
           style={{
             transform:
               isResizing && columnResizeMode === 'onEnd'
@@ -81,16 +78,16 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
                     (deltaOffset ?? 0)
                   }px)`
                 : undefined,
+            ...rest.style,
           }}
         >
-          {/* Base UI and Radix mark the orientation with data-orientation,
-              React Aria with aria-orientation. */}
-          <Separator
-            orientation="vertical"
+          {/* The line's trailing side is the column edge, where the body's
+              resize guide (ST_TableBodyCell) also ends. */}
+          <span
             className={cn(
-              'z-4 translate-x-1 touch-none select-none rounded-xs data-[orientation=vertical]:h-6 data-[orientation=vertical]:w-1 aria-[orientation=vertical]:h-6 aria-[orientation=vertical]:w-1',
-              !isResizing && 'transition-all duration-150 ease-in-out',
-              rest.className,
+              'absolute inset-y-0 w-px bg-transparent transition-colors group-hover/th:bg-foreground/15',
+              isLastColumn ? 'inset-e-0' : 'inset-e-1',
+              isResizing && 'bg-primary group-hover/th:bg-primary',
             )}
           />
         </div>

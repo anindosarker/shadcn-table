@@ -11,27 +11,33 @@ import {
   type ST_VisibilityState,
 } from '@/components/ui/shadcn-table';
 import { data, type Person } from './makeData';
+import { Building2Icon, DollarSignIcon, MapIcon, UserIcon } from 'lucide-react';
 
 //column definitions...
 const columns: ST_ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
+    icon: UserIcon,
     header: 'First Name',
   },
   {
     accessorKey: 'lastName',
+    icon: UserIcon,
     header: 'Last Name',
   },
   {
     accessorKey: 'city',
+    icon: Building2Icon,
     header: 'City',
   },
   {
     accessorKey: 'state',
+    icon: MapIcon,
     header: 'State',
   },
   {
     accessorKey: 'salary',
+    icon: DollarSignIcon,
     header: 'Salary',
   },
 ];
