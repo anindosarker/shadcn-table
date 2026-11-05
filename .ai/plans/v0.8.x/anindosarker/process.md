@@ -65,3 +65,7 @@ Project facts the expedition skill reads for this cycle. Cite as `(P<n>)`. The p
 ## P12 A previewed change is recorded as its diff
 
 - When the owner wants to see a change before deciding, the preview is built on the generated docs copy under `apps/shadcn-table-docs/components/ui-<base>/` in a scratch worktree (no package rebuild, no browser tests unless asked) and shown on a dev server on 5340 to 5360. Once accepted, the decision carries the accepted diff verbatim (paths rewritten to the registry source), and the fix story applies that diff as is to the three bases, in place, no new helper functions. Owner, 2026-11-05 (D72).
+
+## P13 Small fixes land directly, CI runs at the release
+
+- A small fix (a constant, a copy change, a one-file docs fix) is built on a worktree branch, gated locally (the gates its files need, run as CI would), then fast-forwarded or merged into `claude/review` from the main session without a PR and without a verifier agent; `dev` mirrors. The release PR (`dev` into `master`, P3) is the CI run for everything since the last release. Stories with library source changes keep their builder, verifier and merger (the regen steps), their PR being a by-product of the first push. Owner, 2026-11-05.
