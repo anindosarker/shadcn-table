@@ -1,6 +1,6 @@
 # 07: release 0.8.0, tracker
 
-Status: running (runtime gate run 1 found F8 and F9, both fixed at 941607e9; the rerun was stopped by the owner 2026-11-04 19:10, who reviews locally; release steps wait for the owner's go)
+Status: released (v0.8.0)
 Branch claude/review (inline, no spec branch), registry on 5310 (served from worktree 01 `.dev`, rebuilt 16:25 at bc21b6da; `git diff bc21b6da..7c2717aa -- packages/` empty, so it is claude/review's build; `pnpm -w registry:build` rerun at 7c2717aa, tree unchanged)
 Gates:
 - gate-base `next build` at 7c2717aa: green
@@ -42,8 +42,19 @@ Gates:
   - gate-aria RTL page at 3b4c68af: green (`direction: rtl`, Name th 1515 to 1775, handle 1511 to 1519, th and td sticky `inset-inline-start: 0px`, resize 260 to 320 px)
   - gate-aria captures at 3b4c68af: default-light.png and default-dark.png (viewport 1800x1150, full frame with toolbar) in the gate-aria agent's scratchpad `release-gate/aria/`; judges pending (main session). The full run's capture step hit a transient agent-browser timeout (page not on the app origin, localStorage SecurityError); rerun of the step alone green
 
-- Milestone 01 Runtime gate: blocked (checks recorded, two failures under Attention)
-- Final milestone Release and cleanup: not started (held: owner reviews locally before release)
+- Milestone 01 Runtime gate: done (run 2 green in the three bases, judges passed)
+- Final milestone Release and cleanup: done (v0.8.0, 2026-11-05)
+
+Release (P3):
+- Cleanup: `test-projects/checks/gate-base`, `gate-radix`, `gate-aria` deleted; no `next dev` left on 5350 to 5355; registry on 5310 left running
+- CHANGELOG regroup (1.6.1, D32): already grouped as Added, Changed, Fixed, Docs, each once; Changed holds one line per flipped default with its restoring option (Spec 05); no commit
+- dev fast-forward to claude/review 5c85f381: done
+- Release PR #130 `release: 0.8.0` (release:minor): pr.yml run 42104722808 aria vitest red once on `PanelCollapse.stories.tsx > Progress And Banner Collapse` (`expected 0 to be greater than 0`, collapse finished before the check), job rerun 127530947554 green; release impact red on the unlabeled opened run as usual, labeled run 42104726728 green; merged `merge: release 0.8.0 (#130)`
+- release.yml run 1 42109704962: green, opened bot PR #131 `chore: version 0.8.0` (CHANGELOG `## 0.8.0 - 2026-11-05`, both package.json 0.8.0); merged `merge: version 0.8.0 (#131)`
+- release.yml run 2 42109940832: green (tag v0.8.0, wait for production, smoke, five installs, GitHub release and PR comments)
+- `gh release view v0.8.0`: published 2026-11-05T21:37:45Z
+- `node scripts/release/smoke.mjs` against www.shadcn-table.com: 28 passed, 0 failed
+- claude/review and dev fast-forwarded to master eb5eb263
 
 Runtime gate (agent-browser 0.27.0, viewport 1800x1150, `next dev` on 5341 base, 5342 radix, 5343 aria, one base after another (P4 override); driver `gate.mjs` in the gate agent's scratchpad):
 - Apps: `pnpm dlx shadcn@latest init --template next --base <base> --preset nova --name gate-<base> --yes` under `test-projects/checks/` (Next 16.4.3); `iconLibrary` set in `components.json` before the add (`lucide`, `tabler`, `phosphor`); `shadcn add http://localhost:5310/r/shadcn-table-base.json`, `/r/shadcn-table-radix-tabler.json`, `/r/shadcn-table-aria-phosphor.json` `--yes`, all exit 0; base and radix layouts wrapped in `TooltipProvider` (aria's tooltip has no provider)
