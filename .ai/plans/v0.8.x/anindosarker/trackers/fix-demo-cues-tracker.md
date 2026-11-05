@@ -1,6 +1,6 @@
 # Home demo cues and last title (F49, D65), tracker
 
-Status: running
+Status: verified
 Branch `v0.8/fix-demo-cues`, worktree 02, PR #123
 Gates:
 - Repro on shipped code (ec0949b5): Chromium 1440x900, demo scrolled into view, DOM sampled every 100 ms through one loop: no `.v12-cue` element is ever the sort editor content (Due / Ascending / Add sort / Delete sort), the "Due" sort chip, the "Status" chip editor content or the view settings panel; the cues on portalled elements (the options "Due", "Status", "In Review", the striped switch) compute `::after` `content: none`, so they never showed: red as reported
@@ -11,6 +11,10 @@ Gates:
 - `node scripts/check-pages.mjs e --base radix --url http://localhost:5347 /` at fea845a5: green (44 passed)
 - `node scripts/check-pages.mjs e --base base --url http://localhost:5347 /` at fea845a5: green (44 passed)
 - `node scripts/check-pages.mjs e --base aria --url http://localhost:5347 /` at fea845a5: green (44 passed)
+- `pnpm --filter shadcn-table-docs build` at 259ab317: green, `git status --short` clean after (verifier)
+- types:check, lint and check-pages e (radix, base, aria) at fea845a5 stay valid: `git diff --name-only fea845a5..259ab317` touches only the tracker (verifier, not rerun)
+- Chromium 1440x900 dark, dev server 5348, toolbar just below the nav, one full replay sampled every 100 ms at 259ab317: the sort editor, the sort chip "Due", the filter chip editor, the chip "Status: In Review" and the view settings panel each carry `v12-cue` during their own step, `::after` visible on each; every cued popover keeps `position` non-static with the overlay `absolute` at inset 0 (inside its bounds), cued options sit inside their popover; no cue lingers past 1.5 s; titles end "Alternating row colors"; no page error: green (verifier)
+- Chromium 1280x720 light, same replay at 259ab317: same cues, popovers all `data-side="bottom"`, none above the toolbar, popover sizes as at 1440 (picker 260x244, sort editor 320x120, view settings 320x301), demo height and page scroll constant through the loop: green (verifier)
 
 - Milestone 01 cues on the chips and their editors, last title: done (fea845a5)
 
