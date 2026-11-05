@@ -659,3 +659,7 @@ index d099d3a0..d778bfba 100644
    WrapTextIcon: WrapText,
  } satisfies ST_Icons;
 ```
+
+### D76 The drawn grid-line glyphs go in 0.8.0
+
+- Sub-spec 06.6 maps the D75 keys in the four icon editions to their own sets and deletes `components/icons/ST_GridLineIcons.tsx` (three bases, its registry entries and docs copies follow): the file was added in this cycle and never released, so no shipped registry path is lost (P5 protects released paths only). Owner, 2026-11-06.
