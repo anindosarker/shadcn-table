@@ -417,3 +417,8 @@ Superseded by D31 (2026-11-03): the owner compared `semantic` and `grow` on `/he
 ### D61 Range filters keep Min and Max side by side at every column width
 
 - A `'range'`, `'date-range'`, `'datetime-range'` or `'time-range'` filter renders its two fields side by side in the subheader at every column width, as Material React Table does; a column narrower than the two fields clips them and the consumer sizes the column. No stacking in the library. The "Filter Mode" caption spans the whole range group, not the Min field only; the slider caption sits below the track; the subheader filter container keeps the label row's inline padding (F44). The subheader-filters page sets column sizes that fit. Owner, 2026-11-05 (F44, side-agent note).
+
+### D62 The home demo keeps its narrow-width layout
+
+- Below 1440 px the step list stays under the table with its code lines; that it does not fit a 720 px viewport together with the table is accepted. Owner, 2026-11-05.
+- Source: A17

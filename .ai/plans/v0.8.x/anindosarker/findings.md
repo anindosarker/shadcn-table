@@ -198,3 +198,7 @@
 ### F47 A column drop slides the moved column under the cells that follow it
 
 - `hooks/useST_ColumnFlip.ts:312-329` (three bases) animates `translate` on every cell at the same stacking level, so during the D37 catch-up slide the moved column passes under the opaque cells later in the DOM: the eye sees it vanish at its old slot and pop in at the new one (home demo burst capture, 2026-11-05: Project's th at x 564, 482, 322, 249 with nothing drawn at 482). The home demo works around it with `z-1` on the moved column's cells (`signal-table.tsx`, merged in #119); that workaround goes once the hook raises the moved column (and its header) above the others for the slide's duration, `will-change` and `z-index` only while the animation runs. Play `MovedColumnOnTop` in `stories/features/ColumnDragging.stories.tsx`: mid-slide, `document.elementFromPoint` at the moved header's centre is that header.
+
+### F48 The home demo's popovers flip up over the hero when the table is only partly in view
+
+- Home page, owner screenshot 2026-11-05 09:05: the replay starts once 25 percent of the demo is visible (`apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx:286-297`, IntersectionObserver threshold 0.25); with the toolbar at the bottom edge of the viewport the Sort popover has no room below, flips up and covers the hero and the install prompt. Same for the filter and view settings popovers. The replay must not scroll the page (#119). Fix per the owner's ruling on the start condition.
