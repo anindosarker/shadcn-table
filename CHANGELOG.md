@@ -83,6 +83,11 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 - D68: under `groupedColumnMode: 'remove'` the grouping column's header is a breadcrumb: the expand-all button, then per grouped column its icon and header name, a chevron between segments. It replaces "State, Gender" behind the first grouped column's icon (F41), and renders without `enableExpandAll` too. `'reorder'` is unchanged.
 - D73: under `'remove'` the grouping column's default `size` is the sum of the grouped columns' sizes (each falls back to `defaultColumn.size`, then 180), recomputed as grouping changes. `displayColumnDefOptions['st-row-expand'].size` still wins.
 
+#### Spec 06.4 filters
+
+- The `multi-select` filter field ends in a chevron, vertically centred however many rows its chips take; its clear button shows once a value exists and the empty slot takes no room; the chips and the typing input wrap inside the field. On radix and base typing highlights the first match and Enter picks it (D72).
+- The chip editor popover is 260 px wide (`w-65`): a multi-select's chips wrap and the field grows in height instead of widening the editor (F55).
+
 ### Fixed
 
 #### Spec 06.1 toolbar
@@ -136,6 +141,12 @@ The stock table takes the v0.8 look by default. Each line names the option that 
 #### Fix F47
 
 - A column drop or a Columns menu reorder slides the moved column on top of the cells it passes, under the pinned columns, instead of under the cells that follow it in the DOM; the lift lasts only for the slide.
+
+#### Spec 06.4 filters
+
+- The built-in toolbar buttons fade in from 0 opacity on mount, the same animation as the pinned view items, instead of from 10 percent (D70).
+- The aria `range-slider` filter reads `min` and `max` from `stFilterSliderProps` as radix and base do, so its thumbs start at the given bounds instead of 0; aria `SliderProps` accepts the two keys (F46).
+- In an RTL table a column drag preview lays the columns right to left: every header stays inside the table and only the dragged and target columns shift (F50).
 
 ### Docs
 

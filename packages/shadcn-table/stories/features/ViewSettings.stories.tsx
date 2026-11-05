@@ -141,13 +141,16 @@ export const PinUnpinAndSteppers = {
     const body = within(document.body);
     await canvas.findByText('Plan audit log');
 
-    // Columns and Density are pinned by default.
-    expect(
-      canvas.getByRole('button', { name: 'Show/Hide columns' }),
-    ).toBeVisible();
-    expect(
-      canvas.getByRole('button', { name: 'Toggle density' }),
-    ).toBeVisible();
+    // Columns and Density are pinned by default; the toolbar buttons fade in
+    // from 0 opacity on mount (D70).
+    await waitFor(() => {
+      expect(
+        canvas.getByRole('button', { name: 'Show/Hide columns' }),
+      ).toBeVisible();
+      expect(
+        canvas.getByRole('button', { name: 'Toggle density' }),
+      ).toBeVisible();
+    });
     expect(canvas.queryByRole('button', { name: 'Grid lines' })).toBeNull();
 
     await openPanel(canvasElement);
@@ -208,9 +211,11 @@ export const ResetView = {
         canvas.queryByRole('button', { name: 'Sticky header' }),
       ).toBeNull(),
     );
-    expect(
-      canvas.getByRole('button', { name: 'Toggle density' }),
-    ).toBeVisible();
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('button', { name: 'Toggle density' }),
+      ).toBeVisible(),
+    );
     expect(canvas.queryByRole('columnheader', { name: /Priority/ })).toBeNull();
   },
 };
