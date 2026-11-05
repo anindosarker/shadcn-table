@@ -638,6 +638,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -665,6 +666,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
+        "alert-dialog",
         "dialog"
       ],
       "dependencies": [
@@ -691,7 +693,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -718,6 +721,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -744,7 +748,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -3429,6 +3434,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -3456,6 +3462,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
+        "alert-dialog",
         "dialog"
       ],
       "dependencies": [
@@ -3482,7 +3489,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -3509,6 +3517,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -3535,7 +3544,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-radix-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -6221,6 +6231,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -6248,6 +6259,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
+        "alert-dialog",
         "dialog"
       ],
       "dependencies": [
@@ -6274,7 +6286,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -6301,6 +6314,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -6327,7 +6341,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-aria-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -9012,6 +9027,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -9039,6 +9055,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
+        "alert-dialog",
         "dialog"
       ],
       "dependencies": [
@@ -9065,7 +9082,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
@@ -9092,6 +9110,7 @@
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
         "button",
+        "alert-dialog",
         "spinner"
       ],
       "dependencies": [
@@ -9118,7 +9137,8 @@
       ],
       "registryDependencies": [
         "anindosarker/shadcn-table/shadcn-table-base-core",
-        "button"
+        "button",
+        "alert-dialog"
       ],
       "dependencies": [
         "@tanstack/react-query",
