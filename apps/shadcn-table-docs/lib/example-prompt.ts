@@ -2,7 +2,7 @@
 // from server components (ExampleSnippet), never from client code.
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { baseItemName } from '../../../packages/shadcn-table/scripts/registry/bases.mjs';
+import { baseItemName } from '../../../tools/registry/bases.mjs';
 import { findExamplePage, loadExamplePages } from './example-pages.mjs';
 import { readExampleFiles } from './example-source';
 import {

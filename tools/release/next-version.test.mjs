@@ -1,4 +1,4 @@
-// Usage (repo root): node --test scripts/release/next-version.test.mjs
+// Usage (repo root): node --test tools/release/next-version.test.mjs
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -108,7 +108,7 @@ test('the CLI reads the library version', () => {
   );
   const out = execFileSync(
     process.execPath,
-    [path.join(root, 'scripts/release/next-version.mjs'), '--level', 'patch'],
+    [path.join(root, 'tools/release/next-version.mjs'), '--level', 'patch'],
     { encoding: 'utf8' },
   );
   assert.equal(out, `${bump(version, 'patch')}\n`);

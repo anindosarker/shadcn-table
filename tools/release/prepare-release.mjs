@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // Usage (repo root):
-//   node scripts/release/prepare.mjs [--level patch|minor|major] [--base-version <v>]
-//   node scripts/release/prepare.mjs --check --base-version <v>
+//   node tools/release/prepare-release.mjs [--level patch|minor|major] [--base-version <v>]
+//   node tools/release/prepare-release.mjs --check --base-version <v>
 //
-// Prepares a release on the current branch, run by the `version bump
-// (release:prepare)` job of .github/workflows/pr.yml on the release pull
-// request (`pnpm release:prepare` locally). The next version comes from
+// Prepares a release on the current branch, run by the `Prepare Release`
+// job of .github/workflows/pr.yml on the release pull
+// request (this command locally). The next version comes from
 // next-version.mjs: the --level when given (the PR's `release:` label), else
 // the `## Unreleased` headings. It writes that version into
 // packages/shadcn-table/package.json and the docs app's package.json, renames
@@ -36,7 +36,7 @@ const LIB_PACKAGE = 'packages/shadcn-table/package.json';
 const DOCS_PACKAGE_NAME = 'shadcn-table-docs';
 const CHANGELOG = 'CHANGELOG.md';
 const USAGE =
-  'usage: node scripts/release/prepare.mjs [--level patch|minor|major] [--base-version <v>] | --check --base-version <v>';
+  'usage: node tools/release/prepare-release.mjs [--level patch|minor|major] [--base-version <v>] | --check --base-version <v>';
 const UNRELEASED = /^## Unreleased[ \t]*$/m;
 const VERSION_LINE = /^[ \t]*"version":[ \t]*"[^"]*",?[ \t]*$/gm;
 

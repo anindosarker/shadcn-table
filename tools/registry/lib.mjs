@@ -8,12 +8,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DEFAULT_BASE, BASE_LABELS, baseItemName } from './bases.mjs';
 
-export const PKG = path.resolve(
+export const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
   '..',
 );
-export const ROOT = path.resolve(PKG, '..', '..');
+export const PKG = path.join(ROOT, 'packages/shadcn-table');
 // The docs app: examples.mjs writes its registry.json, hosted.mjs its
 // public/r/. The one place the folder name lives in the registry scripts.
 export const DOCS = path.join(ROOT, 'apps/shadcn-table-docs');
@@ -339,7 +339,7 @@ export const baseItems = (catalog, base) => {
  * per example and base, found by the `examples/<base>/` file paths), each
  * renamed to its hosted name: the plain `example-<slug>`, which baseItemName
  * suffixes with `-<base>` in the committed catalog. hosted.mjs serves them in
- * /r/<base>/, smoke.mjs expects them there. The GitHub shorthand aliases
+ * /r/<base>/, validate-production expects them there. The GitHub shorthand aliases
  * (aliasItems), already plain, are skipped.
  *
  * @param {{ items: Array<{ name: string, files: Array<{ path: string }> }> }} catalog

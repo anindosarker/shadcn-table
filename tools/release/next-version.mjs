@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Usage (repo root):
-//   node scripts/release/next-version.mjs [--level patch|minor|major] [--from-changelog]
+//   node tools/release/next-version.mjs [--level patch|minor|major] [--from-changelog]
 //
 // Prints the version the next release ships as: the library version in
 // packages/shadcn-table/package.json bumped by one level. The level is
@@ -28,7 +28,7 @@ const ROOT = path.resolve(
 const LIB_PACKAGE = 'packages/shadcn-table/package.json';
 const CHANGELOG = 'CHANGELOG.md';
 const USAGE =
-  'usage: node scripts/release/next-version.mjs [--level patch|minor|major] [--from-changelog]';
+  'usage: node tools/release/next-version.mjs [--level patch|minor|major] [--from-changelog]';
 
 export const LEVELS = ['patch', 'minor', 'major'];
 const HEADING_LEVELS = {

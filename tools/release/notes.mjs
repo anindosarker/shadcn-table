@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Usage (repo root): node scripts/release/notes.mjs <version> > notes.md
+// Usage (repo root): node tools/release/notes.mjs <version> > notes.md
 //
 // Prints the body of the `## <version>` section of CHANGELOG.md (the lines
 // after that heading up to the next `## ` heading or the end of the file,
@@ -19,7 +19,7 @@ const CHANGELOG = 'CHANGELOG.md';
 
 const version = process.argv[2];
 if (!version) {
-  console.error('usage: node scripts/release/notes.mjs <version>');
+  console.error('usage: node tools/release/notes.mjs <version>');
   process.exit(1);
 }
 

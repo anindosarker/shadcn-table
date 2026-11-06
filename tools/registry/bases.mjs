@@ -3,21 +3,21 @@
 // the docs base selector and tabs, the Storybook base switch and every script
 // that loops over bases. Every script and config that handles more than one
 // base reads it: the registry scripts (through lib.mjs), vite.config.ts and
-// .storybook (ST_BASE, the base switch), check-storybook.mjs, the release smoke
-// (scripts/release/smoke.mjs) and the docs app's scripts/install.mjs and
-// lib/example-variant-dir.mjs. No node imports, so Vite bundles it into the
+// .storybook (ST_BASE, the base switch), the tests under test/ and the docs
+// app's lib/install.mjs and lib/example-variant-dir.mjs. No node imports, so Vite bundles it into the
 // Storybook manager and preview. The types live in bases.d.mts.
 //
 // Two constants name one base each, for two different jobs:
-// - REFERENCE_BASE is the diff baseline: check-bases.mjs compares every
-//   other base against it, each with its own list of files allowed to
-//   differ (scripts/registry/<base>-diff.json; the reference has none),
+// - REFERENCE_BASE is the diff baseline: the bases-identical check
+//   (test/validate-repo) compares every other base against it, each with its
+//   own list of files allowed to differ (tools/registry/<base>-diff.json; the
+//   reference has none),
 //   example-map.mjs and examples.mjs discover the example slugs in its
 //   folder. Hand edits land in its tree first.
 // - DEFAULT_BASE is what a reader sees before choosing: the docs base
 //   tabs open on it (apps/shadcn-table-docs/lib/install.ts, defaultBase),
 //   the Storybook root redirects to its build (vercel.json, written by hand
-//   to match; smoke.mjs checks it after a deploy) and the tools build it
+//   to match; validate-production checks it after a deploy) and the tools build it
 //   when ST_BASE is unset (resolveBase).
 // No base lives at the Storybook root: the static builds sit side by side under
 // storybook-static/<base>/ (`storybook:build:<base>`).
@@ -26,7 +26,7 @@ export const REFERENCE_BASE = 'radix';
 export const DEFAULT_BASE = 'base';
 
 // How each base is named to readers: the Storybook chrome and base switch, the
-// release smoke's SKILL.md check.
+// validate-production's SKILL.md check.
 export const BASE_LABELS = Object.freeze({
   base: 'Base UI',
   radix: 'Radix UI',
@@ -35,7 +35,7 @@ export const BASE_LABELS = Object.freeze({
 
 // The `storybook dev` port of each base, keyed by name so the order above never
 // moves one: the package.json `storybook:<base>` scripts (written by hand to
-// match), scripts/preview.mjs and the dev links in .storybook/base-tool.ts.
+// match), tools/preview.mjs and the dev links in .storybook/base-tool.ts.
 export const BASE_PORTS = Object.freeze({
   base: 6007,
   radix: 6006,

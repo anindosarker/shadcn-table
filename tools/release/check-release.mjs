@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Usage (repo root, the decide job of .github/workflows/release.yml):
-//   node scripts/release/decide.mjs
+// Usage (repo root, the Check Release job of .github/workflows/release.yml):
+//   node tools/release/check-release.mjs
 //
 // Chooses what a run of release.yml does and prints one line
 // `mode=<mode> version=<version>`; in Actions it also appends the two
@@ -9,7 +9,7 @@
 // GITHUB_SHA from the environment.
 //   release  CHANGELOG.md has no `## Unreleased` lines (next-version.mjs
 //            exits 2) and v<package version> is not tagged on origin: the
-//            release PR, bumped by its `version bump (release:prepare)`
+//            release PR, bumped by its `Prepare Release`
 //            check, was merged. A dispatch is always a release, for
 //            INPUT_VERSION or the package version.
 //   none     the section has no lines and the tag exists; or the section
@@ -28,7 +28,7 @@ const ROOT = path.resolve(
   '..',
 );
 const LIB_PACKAGE = 'packages/shadcn-table/package.json';
-const NEXT_VERSION = 'scripts/release/next-version.mjs';
+const NEXT_VERSION = 'tools/release/next-version.mjs';
 
 /**
  * The decision without its side effects. `env` holds EVENT, INPUT_VERSION

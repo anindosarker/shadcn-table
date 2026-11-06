@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Usage (repo root, full history and tags): node scripts/release/comment.mjs <tag> [--dry-run]
+// Usage (repo root, full history and tags): node tools/release/comment.mjs <tag> [--dry-run]
 //
 // Comments "Released in <tag>: <release url>" on every pull request that
 // <tag> shipped, run by .github/workflows/release.yml after
@@ -28,7 +28,7 @@ const gh = (...args) => run('gh', args);
 
 const [tag, ...flags] = process.argv.slice(2);
 if (!tag || flags.some((f) => f !== '--dry-run')) {
-  fail('usage: node scripts/release/comment.mjs <tag> [--dry-run]');
+  fail('usage: node tools/release/comment.mjs <tag> [--dry-run]');
 }
 const dryRun = flags.includes('--dry-run');
 

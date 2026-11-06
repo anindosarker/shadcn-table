@@ -15,7 +15,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   aliasItems,
   DEFAULT_BASE,
@@ -33,7 +33,11 @@ const OUT = path.join(PKG, DEV ? '.dev/registry.json' : 'registry.json');
 const bases = await Promise.all(
   BASES.map(
     async (base) =>
-      (await import(`../../registry/${base}/registry.ts`)).registry,
+      (
+        await import(
+          pathToFileURL(path.join(PKG, 'registry', base, 'registry.ts')).href
+        )
+      ).registry,
   ),
 );
 const reference = bases[BASES.indexOf(REFERENCE_BASE)];
