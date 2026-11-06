@@ -28,6 +28,12 @@ publishes the section as the GitHub release notes.
 - The registry scripts move to `tools/registry/`, the release scripts to `tools/release/` (`decide.mjs` is `check-release.mjs`, `prepare.mjs` is `prepare-release.mjs`), the two previews merge into `tools/preview.mjs`, and the docs `install.mjs` and `example-map.mjs` move to `apps/shadcn-table-docs/lib/`. `scripts/`, `packages/shadcn-table/scripts/`, `packages/shadcn-table/test/` and `apps/shadcn-table-docs/scripts/` are gone, with `check-aria-warnings.mjs` and `check-storybook.mjs`; the root `check:*` and `release:prepare` scripts are removed.
 - `playwright`, `pixelmatch` and `pngjs` are root devDependencies (the package keeps `playwright`); the package `storybook:build` writes `storybook-static/version.txt`, and the Vercel Storybook build runs it.
 
+#### Epic 08 Tools and workflows
+
+- `pr.yml` runs twenty-one jobs (D86, D87): `Typecheck`, `Storybook Tests` and `Docs E2E Tests` per base, `Lint`, `Validate Repo`, `Installation E2E` per scenario and `Validate PR`, each `pnpm test <name> --ci` with its records uploaded as `test-out-<job>`; `PR Summary` rewrites one sticky comment per PR from those records (the version line, the changelog counts, one line per job, the run link); `version-bump` is `Prepare Release`. `install.yml` is folded into `Installation E2E` and deleted; a `workflow_dispatch` with `installation-e2e-only` runs the seven install jobs with `--no-diff` and uploads the captures.
+- `release.yml` runs four jobs: `Check Release`, `Verify Deployment` (waits until www and storybook serve the version on `/version.txt`, then tags), `Validate Production` (`pnpm test validate-production`) and `Publish Release`; the post-merge install jobs are gone.
+- New tools `tools/release/verify-deployment.mjs`, `publish-release.mjs` and `pr-summary.mjs` (with `pr-summary.test.mjs`); the PR template names `pnpm test --changed`.
+
 ## 0.8.0 - 2026-11-05
 
 ### Added
