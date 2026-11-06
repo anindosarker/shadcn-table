@@ -1,4 +1,8 @@
-name: release
+name: Release
+# run-name cannot read files, so a push run is named `Release` and Check
+# Release writes the version it read from packages/shadcn-table/package.json
+# to the step summary; a dispatch is named after its version input (D90).
+run-name: "${{ inputs.version && format('Release {0}', inputs.version) || 'Release' }}"
 
 # Runs on every push to master and does one of two things, chosen by Check
 # Release (tools/release/check-release.mjs):

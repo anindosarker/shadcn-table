@@ -2,7 +2,7 @@
 
 The library ships once per shadcn base, Base UI (`registry/base`, shadcn style `base-nova`),
 Radix UI (`registry/radix`, style `radix-nova`) and React Aria (`registry/aria`, style
-`aria-nova`). The base list is `BASES` in `scripts/registry/bases.mjs`, in that
+`aria-nova`). The base list is `BASES` in `tools/registry/bases.mjs` (repo root), in that
 order; Radix is the reference (the diff baseline). Each tree is the whole library for that base; nothing is shared, resolved or
 generated between them. All three install to `components/ui/shadcn-table/` with the same
 relative paths.
@@ -22,10 +22,15 @@ registry/<base>/
     ShadcnTable.tsx  types.ts  icons.ts  index.ts
   lib/utils.ts  index.css  components.json  registry.ts
 registry/README.md                     this file
-scripts/registry/bases.mjs             the base list (BASES) and the reference (radix)
-scripts/registry/base-diff.json        the library files that differ between radix and base
-scripts/registry/aria-diff.json        the library files that differ between radix and aria
-scripts/registry/check-bases.mjs       the guard: pnpm check:bases
+```
+
+From the repo root:
+
+```
+tools/registry/bases.mjs                         the base list (BASES) and the reference (radix)
+tools/registry/base-diff.json                    the library files that differ between radix and base
+tools/registry/aria-diff.json                    the library files that differ between radix and aria
+test/validate-repo/lib/bases-identical.mjs       the guard: pnpm test validate-repo
 ```
 
 `@/` is a plain alias to one tree: `tsconfig.radix.json`, `tsconfig.baseui.json` and
@@ -38,8 +43,8 @@ tree.
 ## How to change a library file
 
 A common change is made in every tree by hand, in the same commit. There is no sync script;
-`pnpm check:bases` (also the CI job `bases`) reports a missed twin. It compares every base
-against the reference, radix, each with its own list, `scripts/registry/<base>-diff.json`
+`pnpm test validate-repo` (also the CI job `Validate Repo`) reports a missed twin. It compares every base
+against the reference, radix, each with its own list, `tools/registry/<base>-diff.json`
 (`base-diff.json`, `aria-diff.json`): every file under `components/ui/shadcn-table/` that is
 not on a base's list must be byte-identical in that tree and radix, every listed file
 must exist in both, and no library file may exist in one tree only. The guard prints one line
@@ -50,8 +55,8 @@ A base-only change is made in that tree, and the file's path (relative to
 the copy becomes identical to radix again, remove the path from the list in the commit that
 makes it so.
 
-Gates: `pnpm --filter shadcn-table tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `test:base`,
-`test:radix`, `test:aria`, `pnpm check:bases`.
+Checks, from the repo root: `pnpm test typecheck`, `pnpm test lint`, `pnpm test storybook-tests`,
+`pnpm test validate-repo` (or per base, `pnpm test storybook-tests --base radix`).
 
 ## How to add a shadcn part
 
@@ -67,7 +72,7 @@ pnpm add-part radix --all          # re-adds every part the base has, forks skip
 After `pnpm add-part <base> --all`, `git status --short` must print nothing: the committed
 parts are the script's output.
 
-`scripts/registry/add-part.mjs` fetches the part in the base's style
+`tools/registry/add-part.mjs` fetches the part in the base's style
 (`registry/<base>/components.json`), lets the shadcn CLI install it into a scratch project so
 the file goes through the CLI's own transforms, rewrites the upstream `cn` package import to
 `@/lib/utils`, formats the file and prints the part's `dependencies` (npm) and
@@ -81,7 +86,7 @@ as `@/components/ui/<part>`; the registry build turns that import into a
 
 `registry/<base>/registry.ts` defines the base's items (`shadcn-table`,
 `shadcn-table-base` or `shadcn-table-aria`, plus one locale item per language) through
-`scripts/registry/lib.mjs`. The main item lists every file of the tree's
+`tools/registry/lib.mjs`. The main item lists every file of the tree's
 `components/ui/shadcn-table/` except the non-English locales, plus the forked parts. Each
 locale item (`<item>-locale-<code>`, `mk` included) ships its one
 `shared/locales/<code>.ts`. `pnpm registry:build` collects every base's items into
