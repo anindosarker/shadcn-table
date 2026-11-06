@@ -6,10 +6,10 @@ name: pr
 # skip those events, so a label change reruns the label check alone. On the
 # release PR (dev into master) the last job, version-bump, commits
 # `chore: version <v>` to dev once every other job is green; the push reruns
-# this workflow once and the bumped head passes.
+# this workflow once and the bumped head passes; a draft PR is not bumped.
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
 
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.ref }}-${{ contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && 'labels' || 'checks' }}
@@ -261,7 +261,7 @@ jobs:
   version-bump:
     name: version bump (release:prepare)
     needs: [release-impact, library, bases, test, docs, pages, registry, install]
-    if: ${{ github.base_ref == 'master' && !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
+    if: ${{ github.base_ref == 'master' && !github.event.pull_request.draft && !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -308,7 +308,7 @@ jobs:
             exit 0
           fi
           [ "$status" -eq 2 ] || exit "$status"
-          next=$(node scripts/release/prepare.mjs --level "$level")
+          next=$(node scripts/release/prepare.mjs --level "$level" --base-version "$base")
           git add -- CHANGELOG.md packages/shadcn-table/package.json apps/shadcn-table-docs/package.json
           git -c 'user.name=github-actions[bot]' \
             -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' \

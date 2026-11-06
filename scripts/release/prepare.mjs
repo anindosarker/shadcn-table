@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Usage (repo root):
-//   node scripts/release/prepare.mjs [--level patch|minor|major]
+//   node scripts/release/prepare.mjs [--level patch|minor|major] [--base-version <v>]
 //   node scripts/release/prepare.mjs --check --base-version <v>
 //
 // Prepares a release on the current branch, run by the `version bump
@@ -12,6 +12,10 @@
 // `## Unreleased` to `## <next> - <YYYY-MM-DD>` (UTC) and prints <next>.
 // Exit 2 when `## Unreleased` has no lines (nothing to version), 1 on a bad
 // level or a malformed section. No git: the caller commits.
+//
+// --base-version <v> (the library version on master, the job passes it): the
+// next version is computed from <v>, and a head already bumped to another
+// version folds that section into the new one.
 //
 // --check --base-version <v> says whether the head is already bumped, <v>
 // being the library version on master (the caller reads it):
@@ -32,7 +36,7 @@ const LIB_PACKAGE = 'packages/shadcn-table/package.json';
 const DOCS_PACKAGE_NAME = 'shadcn-table-docs';
 const CHANGELOG = 'CHANGELOG.md';
 const USAGE =
-  'usage: node scripts/release/prepare.mjs [--level patch|minor|major] | --check --base-version <v>';
+  'usage: node scripts/release/prepare.mjs [--level patch|minor|major] [--base-version <v>] | --check --base-version <v>';
 const UNRELEASED = /^## Unreleased[ \t]*$/m;
 const VERSION_LINE = /^[ \t]*"version":[ \t]*"[^"]*",?[ \t]*$/gm;
 
@@ -60,16 +64,19 @@ export const setVersion = (packageJsonText, next) => {
  */
 export const prepare = (argv, { version, changelog, now }) => {
   const args = [];
+  let from = version;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--level' && i + 1 < argv.length) {
       args.push('--level', argv[++i]);
+    } else if (argv[i] === '--base-version' && i + 1 < argv.length) {
+      from = argv[++i];
     } else {
       return { code: 1, err: `prepare: unknown argument ${argv[i]}\n${USAGE}` };
     }
   }
   const text = changelog();
   const result = run([...args, '--from-changelog'], {
-    version,
+    version: from,
     changelog: () => text,
   });
   if (result.code === 2) {
@@ -86,11 +93,22 @@ export const prepare = (argv, { version, changelog, now }) => {
   }
   const next = result.out.trim();
   const date = now().toISOString().slice(0, 10);
-  return {
-    code: 0,
-    next,
-    changelog: text.replace(UNRELEASED, `## ${next} - ${date}`),
-  };
+  // The earlier bump's heading goes first, so its lines fold into the new
+  // section (the new heading may carry the same version).
+  let closed = text;
+  if (version !== from) {
+    closed = closed.replace(
+      new RegExp(
+        '^## ' +
+          version.replaceAll('.', '\\.') +
+          ' - \\d{4}-\\d{2}-\\d{2}[ \\t]*\\n\\n?',
+        'm',
+      ),
+      '',
+    );
+  }
+  closed = closed.replace(UNRELEASED, `## ${next} - ${date}`);
+  return { code: 0, next, changelog: closed };
 };
 
 /**
