@@ -47,3 +47,6 @@ yarn-error.log*
 
 # vercel link
 .vercel
+
+# test runner records (pnpm test)
+test/.out/
