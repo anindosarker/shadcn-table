@@ -1,4 +1,4 @@
-// Init script of the release gate (gate.mjs), added with
+// Init script of the installation-e2e browser phase (browser.mjs), added with
 // page.addInitScript before any page script runs. Records in window.__pend
 // the first time the table root carries data-st-view-pending (and its
 // aria-busy then), the time the attribute goes, and DOMContentLoaded, so the
