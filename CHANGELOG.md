@@ -21,6 +21,13 @@ publishes the section as the GitHub release notes.
 - One pull request per release, `dev` into `master` (D83): its last check, `version bump (release:prepare)`, runs `scripts/release/prepare.mjs` (`pnpm release:prepare`) once every other job is green, bumps both `package.json` files, renames `## Unreleased` to the version and the date and commits `chore: version <v>` to `dev`; `release impact` reads the labels live, takes `master` PRs from `dev` only and passes the bumped head.
 - `release.yml` runs once, on the merge: the `version` job, `scripts/release/version-pr.mjs` and the `release/next` branch are gone; `decide` chooses release or nothing.
 
+#### Epic 08 Test runner and tests
+
+- One test runner (D85): `pnpm test <name>` runs a test from `test/<name>/` (`typecheck`, `lint`, `storybook-tests`, `docs-e2e`, `validate-repo`, `installation-e2e`, `validate-pr`, `validate-production`), per base or per scenario, with `--list`, `--all`, `--changed`, `--base`, `--scenario` and `--ci`; every run ends with one summary line and a JSON record under `test/.out/`.
+- The checks move without changing their assertions: `check-bases`, `check-icons` and `check-tailwind` become `validate-repo` (with `shadcn registry validate` and the tool unit tests), `check-pages.mjs` and `page-checks/` become `docs-e2e` (it builds and serves the docs on a free agent port without `--url`), the release smoke becomes `validate-production`, the install shell of `install.yml` becomes `installation-e2e` with the release gate as its browser phase and the six reference captures under `test/installation-e2e/fixtures/reference/`.
+- The registry scripts move to `tools/registry/`, the release scripts to `tools/release/` (`decide.mjs` is `check-release.mjs`, `prepare.mjs` is `prepare-release.mjs`), the two previews merge into `tools/preview.mjs`, and the docs `install.mjs` and `example-map.mjs` move to `apps/shadcn-table-docs/lib/`. `scripts/`, `packages/shadcn-table/scripts/`, `packages/shadcn-table/test/` and `apps/shadcn-table-docs/scripts/` are gone, with `check-aria-warnings.mjs` and `check-storybook.mjs`; the root `check:*` and `release:prepare` scripts are removed.
+- `playwright`, `pixelmatch` and `pngjs` are root devDependencies (the package keeps `playwright`); the package `storybook:build` writes `storybook-static/version.txt`, and the Vercel Storybook build runs it.
+
 ## 0.8.0 - 2026-11-05
 
 ### Added
