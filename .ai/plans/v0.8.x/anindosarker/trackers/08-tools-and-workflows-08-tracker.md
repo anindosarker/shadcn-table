@@ -39,3 +39,4 @@ Checks:
 - PR Summary exits 0 whatever the jobs did (the job lines carry failures; Prepare Release needs every job); it writes the comment to `$GITHUB_STEP_SUMMARY` on every event and posts it only on a pull request.
 - Every test job runs `pnpm install` (the runner imports every `run.mjs`, and `docs-e2e` imports `playwright`); Chromium is installed for Storybook Tests, Docs E2E Tests and the three Next Installation E2E scenarios.
 - `release.yml` Validate Production also uploads `test-out-validate-production` (not named by the epic; harmless).
+- Review round 1: the `release.yml` Validate Production upload gained `overwrite: true`, like the `pr.yml` uploads.
