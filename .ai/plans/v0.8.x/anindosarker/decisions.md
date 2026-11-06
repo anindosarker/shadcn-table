@@ -769,6 +769,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 - Removed: `storybook-build` (a failed Storybook build fails its deploy, which Verify Deployment catches before the tag), `docs-build` as a job (the first step of Docs E2E Tests), every install and page job after the merge (the PR proved the commit; the release run proves the deploy).
 - Test names follow the job names in kebab case: `typecheck`, `lint`, `storybook-tests`, `docs-e2e`, `validate-repo` (runs `bases-identical`, `icon-maps`, `tailwind-classes`, `registry-valid`, `unit`), `installation-e2e` (build phase, then the browser phase for Next scenarios; `--no-browser`, `--no-diff` flags), `validate-pr` (runs `release-label`, `version-bump-dry-run`), `validate-production`. Tools: `tools/release/{check-release,verify-deployment,prepare-release,publish-release,next-version,notes,comment}.mjs`. The `check-` prefix leaves every test name; "Check:" stays the tracker word (D84). D85's test list and tree read with these names. Owner, 2026-11-06.
 - The `master` ruleset's required checks are these twenty job names, rewritten by the main session in the milestone that merges the new `pr.yml`, before `dev` fast-forwards (supersedes D80's list).
+- Addendum 2026-11-06: `storybook:build` writes `storybook-static/version.txt` from `packages/shadcn-table/package.json`; Verify Deployment polls `/version.txt` on both www.shadcn-table.com and storybook.shadcn-table.com. Owner.
 
 ### D87 One sticky comment per PR
 
