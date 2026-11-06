@@ -4,7 +4,7 @@ Status: merged (df8791d5)
 Branch `v0.8/fix-home-demo-2`, worktree 02, PR #119 (draft)
 Files owned: `apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx`; `apps/shadcn-table-docs/scripts/page-checks/e.mjs` home entry
 Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
-Gates:
+Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 82ff1a2e: green
 - `pnpm --filter shadcn-table-docs lint` (errors only) at 82ff1a2e: green (0 errors, 9 warnings)
 - `node scripts/check-pages.mjs e --base radix --url http://localhost:5341 /` at 82ff1a2e: green (38 passed)

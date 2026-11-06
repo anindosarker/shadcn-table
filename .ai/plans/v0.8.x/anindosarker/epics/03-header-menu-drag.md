@@ -94,7 +94,7 @@ sequenceDiagram
 - `ST_TableHeadCellSortLabel`: `null` when unsorted; sorted renders a `span` with `ArrowUpwardIcon` or `ArrowDownwardIcon` `size-3 text-muted-foreground/80` and `aria-label` `sortedAscending` / `sortedDescending`; the multi-sort index badge renders only with `showSortIndex` (01, D10 addendum) while more than one sort exists; no button, no tooltip
 - `ST_TableHeadCellColumnActionsButton`: `Button size="icon-xs" variant="ghost"` with `ExpandMoreIcon`, `aria-label` `localization.columnActions`, no tooltip; renders `<ST_ColumnActionMenu trigger={button} open onOpenChange />`; the `anchorEl` path remains for a consumer who renders the menu elsewhere
 - `ST_TableHeadRow`: the `shadow-[4px_0_8px...]` goes; `ST_TableHead`: `opacity-[0.97]` goes
-- Does NOT call `column.getToggleSortingHandler()` anywhere; does NOT render the grip unless `showColumnDragHandle`; does NOT render the filter label in chips mode (spec 04 gates it inside the label)
+- Does NOT call `column.getToggleSortingHandler()` anywhere; does NOT render the grip unless `showColumnDragHandle`; does NOT render the filter label in chips mode (spec 04 checks it inside the label)
 
 **Operations:**
 
@@ -194,12 +194,12 @@ export const useST_DragAutoScroll: <TData extends ST_RowData>(table: ST_TableIns
 - Files owned: `components/head/*.tsx` except components/head/ST_TableHeadCellFilterLabel.tsx (grab handle and filter container after F), `components/menus/{ST_ColumnActionMenu,ST_FilterOptionMenu,ST_ActionMenuItem}.tsx`, `hooks/useST_ColumnFlip.ts`, `hooks/useST_DragAutoScroll.ts`, `components/toolbar/ST_ToolbarDropZone.tsx` (after F), in the three bases; `stories/features/{ColumnActions,ColumnDragging,Sorting,ColumnResizing}.stories.tsx`, `stories/fixed-bugs/AriaTooltips.stories.tsx`
 - Depends on: 01
 - Review: fable
-- Task 1: Header, menu and handle (Lane: agent): 1.6.2 to 1.6.4 in the radix tree, then base and aria (the trigger wiring differs per base and is listed in the diff files). Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
-- Task 2: Drag, flip, locked (Lane: agent): 1.6.5 and 1.6.6; the three bases identical for the hooks. Gates: per base `tsc`; `check:bases`
-- Task 3: Stories, captures, judges (Lane: agent): 1.6.8; captures into the session scratchpad, paths in `../trackers/03-tracker.md`; the Acceptance plays and the judges, loop on failures. Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
-- Task 4: Cleanup and gates once (Lane: agent): Remove dead imports (`SyncAltIcon` use in the sort label, the Separator in the handle, `MoreVertIcon` in the actions button); `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 03` changelog block. Gates: 2.2
+- Task 1: Header, menu and handle (Lane: agent): 1.6.2 to 1.6.4 in the radix tree, then base and aria (the trigger wiring differs per base and is listed in the diff files). Checks: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
+- Task 2: Drag, flip, locked (Lane: agent): 1.6.5 and 1.6.6; the three bases identical for the hooks. Checks: per base `tsc`; `check:bases`
+- Task 3: Stories, captures, judges (Lane: agent): 1.6.8; captures into the session scratchpad, paths in `../trackers/03-tracker.md`; the Acceptance plays and the judges, loop on failures. Checks: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
+- Task 4: Cleanup and checks once (Lane: agent): Remove dead imports (`SyncAltIcon` use in the sort label, the Separator in the handle, `MoreVertIcon` in the actions button); `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 03` changelog block. Checks: 2.2
 
-### 2.2 Gates
+### 2.2 Checks
 
 - Per base: `tsc`, `test:<base>` green with the two MenuOpeners and MenuFocusReturn files excluded; `storybook:build:<base>` green
 - `lint`, `check:tailwind`, `check:bases`, `check:icons` green

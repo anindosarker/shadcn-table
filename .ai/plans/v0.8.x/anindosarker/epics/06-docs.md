@@ -104,11 +104,11 @@ Per the audit table (`reference/06-audit.md`, committed from the plan audit): `c
 - Files owned: everything under `apps/shadcn-table-docs/` except apps/shadcn-table-docs/components/ui-<base>/ (regenerated); `reference/06-check.mjs`, `reference/06-audit.md`
 - Depends on: 05
 - Review: fable
-- Task 1: Setup and prop tables (Lane: agent): `pnpm -w registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria`; 1.6.1 prop-table rows from the shipped `stConfigFeature.ts` and `useST_TableOptions.ts`. Gates: docs `types:check`
-- Task 2: Guides, example, registrations (Lane: agent): 1.6.2 to 1.6.4; `node scripts/example-map.mjs`; `pnpm registry:items`; `reference/06-check.mjs`. Gates: docs `lint`; `node reference/06-check.mjs`
-- Task 3: Page checks, build, cleanup (Lane: agent): Own dev server per base (`PORT` in 5340 to 5360, P5); `check-pages.mjs --base <base> --url http://localhost:<port>` per base; docs `build`; `pnpm format`; `#### Spec 06` changelog block. Gates: 2.2
+- Task 1: Setup and prop tables (Lane: agent): `pnpm -w registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria`; 1.6.1 prop-table rows from the shipped `stConfigFeature.ts` and `useST_TableOptions.ts`. Checks: docs `types:check`
+- Task 2: Guides, example, registrations (Lane: agent): 1.6.2 to 1.6.4; `node scripts/example-map.mjs`; `pnpm registry:items`; `reference/06-check.mjs`. Checks: docs `lint`; `node reference/06-check.mjs`
+- Task 3: Page checks, build, cleanup (Lane: agent): Own dev server per base (`PORT` in 5340 to 5360, P5); `check-pages.mjs --base <base> --url http://localhost:<port>` per base; docs `build`; `pnpm format`; `#### Spec 06` changelog block. Checks: 2.2
 
-### 2.2 Gates
+### 2.2 Checks
 
 - Per base: `check-pages.mjs --base <base>` green
 - Docs `types:check`, `lint`, `build` green; `check:bases` green (example copies identical except the diff-listed files)

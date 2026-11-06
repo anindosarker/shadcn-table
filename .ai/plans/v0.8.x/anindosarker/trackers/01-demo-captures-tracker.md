@@ -7,4 +7,4 @@ Branch `v0.8/shared-surface` (inside the Shared surface milestone), worktree 01,
 
 ## Notes
 
-- Written at the D82 conversion (2026-11-06): the captures had a grid row of their own in sprint S1 and were taken by the Shared surface milestone's builder; `01-tracker.md` holds the gates and the capture notes.
+- Written at the D82 conversion (2026-11-06): the captures had a grid row of their own in sprint S1 and were taken by the Shared surface milestone's builder; `01-tracker.md` holds the checks and the capture notes.

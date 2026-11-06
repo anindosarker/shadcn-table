@@ -4,7 +4,7 @@ Status: merged (483e2c22)
 Branch `v0.8/fix-custom-actions`, worktree 01, PR #116
 Files owned: `components/toolbar/ST_TopToolbar.tsx`, `components/toolbar/ST_BottomToolbar.tsx` in the three bases; `stories/features/Toolbar.stories.tsx`
 Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
-Gates:
+Checks:
 
 - Repro on shipped code (345b64a3): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/Toolbar.stories.tsx` with the new play: red as expected, `CustomActionsFollowSelection` failed at `expect(element).toBeEnabled()` on the top Deactivate button after a row was selected (1 failed, 19 passed)
 - `pnpm --filter shadcn-table tsc:radix` at db365b35: green
@@ -33,4 +33,4 @@ Gates:
 
 ## Notes
 
-- `tsc -p tsconfig.stories.json` reports two errors in `ViewSettings.stories.tsx` and `PinnedItemsCustomToolbar.stories.tsx` already on 345b64a3; not part of the gates and not this story's files.
+- `tsc -p tsconfig.stories.json` reports two errors in `ViewSettings.stories.tsx` and `PinnedItemsCustomToolbar.stories.tsx` already on 345b64a3; not part of the checks and not this story's files.

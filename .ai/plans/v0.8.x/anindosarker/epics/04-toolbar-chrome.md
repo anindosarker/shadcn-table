@@ -22,7 +22,7 @@ The top toolbar becomes the demo's: one right-aligned button group, filters as c
 
 ```
 packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
-├── components/toolbar/ST_ToolbarInternalButtons.tsx ← columns, density, filters, search, full screen (7-11, 22-61); filters gate mode !== 'popover' (52-54)
+├── components/toolbar/ST_ToolbarInternalButtons.tsx ← columns, density, filters, search, full screen (7-11, 22-61); filters check mode !== 'popover' (52-54)
 ├── components/toolbar/ST_TopToolbar.tsx         ← left slot renderTopToolbarCustomActions ?? <span /> (65); fullscreen sticky top-0 (20); stackAlertBanner 95-98
 ├── components/buttons/ST_ToggleGlobalFilterButton.tsx ← disabled while text (25-35); click toggles only (20-22)
 ├── components/inputs/ST_GlobalFilterTextField.tsx ← inline clear X (170-183); 250 ms debounce not cleared on close (66-76, 96-105)
@@ -53,7 +53,7 @@ packages/shadcn-table/registry/<base>/components/ui/shadcn-table/
 ├── components/toolbar/ST_ViewSettingsItems.tsx  ← new: pinned icon buttons
 ├── components/buttons/ST_ToggleGlobalFilterButton.tsx ← clear and close
 ├── components/inputs/ST_GlobalFilterTextField.tsx ← inline X behind showClearSearchButton; debounce cleared on close
-├── components/inputs/ST_FilterTextField.tsx     ← chips-mode gate on showChangeModeButton
+├── components/inputs/ST_FilterTextField.tsx     ← chips-mode check on showChangeModeButton
 ├── components/buttons/ST_ShowHideColumnsButton.tsx ← passes its button as trigger
 ├── components/menus/ST_ShowHideColumnsMenu.tsx  ← trigger, open, onOpenChange beside anchorEl
 ├── components/menus/ST_ShowHideColumnsMenuItems.tsx ← setColumnFlipPending before the reorder
@@ -97,7 +97,7 @@ sequenceDiagram
 
 `ST_ToolbarInternalButtons.tsx`, `ST_TopToolbar.tsx` (D8) (D9) (D10).
 
-- Group, in order, each behind its gate: `ST_GlobalFilterTextField` and `ST_ToggleGlobalFilterButton` (`enableGlobalFilter`), the chips-mode filter button from `ST_FilterChips` (`columnFilterDisplayMode === 'chips'`), `ST_SortPopover` button (`enableSortPopover === true`), `ST_ViewSettingsItems` (`enableViewSettings === true`), `ST_ToggleFullScreenButton` (`enableFullScreenToggle`), `ST_ViewSettingsButton` (`enableViewSettings === true`); spec 05 sets both defaults; `ST_ToggleFiltersButton` only when `columnFilterDisplayMode === 'subheader'`; `ST_ShowHideColumnsButton` and `ST_ToggleDensePaddingButton` only when `enableViewSettings` is not `true` (today's group for consumers who turn the panel off); container `flex h-9 shrink-0 items-center gap-0.5 self-start`
+- Group, in order, each behind its check: `ST_GlobalFilterTextField` and `ST_ToggleGlobalFilterButton` (`enableGlobalFilter`), the chips-mode filter button from `ST_FilterChips` (`columnFilterDisplayMode === 'chips'`), `ST_SortPopover` button (`enableSortPopover === true`), `ST_ViewSettingsItems` (`enableViewSettings === true`), `ST_ToggleFullScreenButton` (`enableFullScreenToggle`), `ST_ViewSettingsButton` (`enableViewSettings === true`); spec 05 sets both defaults; `ST_ToggleFiltersButton` only when `columnFilterDisplayMode === 'subheader'`; `ST_ShowHideColumnsButton` and `ST_ToggleDensePaddingButton` only when `enableViewSettings` is not `true` (today's group for consumers who turn the panel off); container `flex h-9 shrink-0 items-center gap-0.5 self-start`
 - `ST_TopToolbar`: left slot becomes `div.flex min-h-9 min-w-0 flex-1 flex-wrap items-center gap-1.5 py-1` holding the sort chip, a vertical `Separator` (`data-[orientation=vertical]:h-4 self-center`) when both a sort chip and filter chips exist, `ST_FilterChips`, then `renderTopToolbarCustomActions` output; the group on the right `shrink-0`; the alert banner stacking reads the chip row's presence; the fullscreen `sticky top-0` goes (the frame holds the toolbar above it, spec 02)
 - Does NOT change `renderToolbarInternalActions` (still replaces the whole group) or `positionGlobalFilter`
 
@@ -116,7 +116,7 @@ sequenceDiagram
 - Column filters set from `initialState`, controlled `columnFilters` or the header produce chips: the slice syncs on mount and on `columnFilters` change (ids with a value join `columnIds`; a cleared value keeps its chip until removed)
 - `ST_ColumnPicker`: the `combobox` part inline (`open`, `autoHighlight`, no trigger, `value` null), `placeholder` `localization.filterBy` or `sortBy`, items with the column icon and label, `localization.noColumns` when empty, `max-h-[min(24rem,var(--available-height))] w-65 gap-0 overflow-hidden p-0` content; used by chips, the sort button and "Add sort"
 - `ST_TableHeadCellFilterLabel` returns `null` when `columnFilterDisplayMode === 'chips'`; `ST_FilterTextField` turns `showChangeModeButton` off in chips mode, which removes its mode button, the empty-mode badge and the "Filter Mode: X" line together (the editor's picker replaces them, D39); the chip summary prefixes the mode text for a column with mode options (`describeFilterMode`: the mode label, or "is empty" / "is not empty")
-- Does NOT change the `ST_Filter*` inputs beyond the chips-mode gate in `ST_FilterTextField`, nor the filter functions; chips are new toolbar components, so no mode folder is created (D29)
+- Does NOT change the `ST_Filter*` inputs beyond the chips-mode check in `ST_FilterTextField`, nor the filter functions; chips are new toolbar components, so no mode folder is created (D29)
 
 **Interfaces:**
 
@@ -198,15 +198,15 @@ export const useST_ViewPersistence: <TData extends ST_RowData>(table: ST_TableIn
 
 ### Milestone: Toolbar chrome
 
-- Files owned: `components/toolbar/*.tsx` except components/toolbar/ST_BottomToolbar.tsx and components/toolbar/ST_ToolbarDropZone.tsx, `components/menus/{ST_ShowHideColumnsMenu,ST_ShowHideColumnsMenuItems,ST_RowActionMenu}.tsx`, `components/buttons/{ST_ToggleGlobalFilterButton,ST_ShowHideColumnsButton,ST_ToggleDensePaddingButton,ST_ToggleFiltersButton,ST_ToggleRowActionMenuButton}.tsx`, `components/inputs/ST_GlobalFilterTextField.tsx`, `components/inputs/ST_FilterTextField.tsx` (mode button gate only), `components/head/ST_TableHeadCellFilterLabel.tsx`, `hooks/useST_ViewPersistence.ts`, `hooks/useST_PopupResize.ts`, `hooks/useST_Effects.ts`, `shared/utils/filterSummary.utils.ts`, in the three bases; `stories/features/{FilterChips,SortPopover,ViewSettings,Search,ColumnHiding,DensePadding,Toolbar}.stories.tsx`, `stories/fixed-bugs/{SearchField,HeadlessFullScreen}.stories.tsx`
+- Files owned: `components/toolbar/*.tsx` except components/toolbar/ST_BottomToolbar.tsx and components/toolbar/ST_ToolbarDropZone.tsx, `components/menus/{ST_ShowHideColumnsMenu,ST_ShowHideColumnsMenuItems,ST_RowActionMenu}.tsx`, `components/buttons/{ST_ToggleGlobalFilterButton,ST_ShowHideColumnsButton,ST_ToggleDensePaddingButton,ST_ToggleFiltersButton,ST_ToggleRowActionMenuButton}.tsx`, `components/inputs/ST_GlobalFilterTextField.tsx`, `components/inputs/ST_FilterTextField.tsx` (mode button check only), `components/head/ST_TableHeadCellFilterLabel.tsx`, `hooks/useST_ViewPersistence.ts`, `hooks/useST_PopupResize.ts`, `hooks/useST_Effects.ts`, `shared/utils/filterSummary.utils.ts`, in the three bases; `stories/features/{FilterChips,SortPopover,ViewSettings,Search,ColumnHiding,DensePadding,Toolbar}.stories.tsx`, `stories/fixed-bugs/{SearchField,HeadlessFullScreen}.stories.tsx`
 - Depends on: 01
 - Review: fable
-- Task 1: Group, chips, picker, sort editor (Lane: agent): 1.6.2 to 1.6.4 in the radix tree, then base and aria; per-base copies listed in the diff files where the parts differ (aria `Popover` is the content, `Select` exports differ). Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
-- Task 2: View settings, search, persistence, triggers (Lane: agent): 1.6.5 to 1.6.8. Gates: per base `tsc`; `check:bases`; `check:aria-warnings`
-- Task 3: Stories, captures, judges (Lane: agent): 1.6.9; captures into the session scratchpad, paths in `../trackers/04-tracker.md`; the Acceptance plays and the judges, loop on failures. Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
-- Task 4: Cleanup and gates once (Lane: agent): Dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 04` changelog block. Gates: 2.2
+- Task 1: Group, chips, picker, sort editor (Lane: agent): 1.6.2 to 1.6.4 in the radix tree, then base and aria; per-base copies listed in the diff files where the parts differ (aria `Popover` is the content, `Select` exports differ). Checks: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
+- Task 2: View settings, search, persistence, triggers (Lane: agent): 1.6.5 to 1.6.8. Checks: per base `tsc`; `check:bases`; `check:aria-warnings`
+- Task 3: Stories, captures, judges (Lane: agent): 1.6.9; captures into the session scratchpad, paths in `../trackers/04-tracker.md`; the Acceptance plays and the judges, loop on failures. Checks: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
+- Task 4: Cleanup and checks once (Lane: agent): Dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 04` changelog block. Checks: 2.2
 
-### 2.2 Gates
+### 2.2 Checks
 
 - Per base: `tsc`, `test:<base>` green with the two MenuOpeners and MenuFocusReturn files excluded; `storybook:build:<base>` green
 - `lint`, `check:tailwind`, `check:bases`, `check:icons` green; aria: `check:aria-warnings` zero

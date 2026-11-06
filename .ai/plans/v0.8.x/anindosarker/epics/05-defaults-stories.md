@@ -100,11 +100,11 @@ apps/shadcn-table-docs/components/ui-<base>/     ← regenerated
 - Files owned: `hooks/useST_TableOptions.ts`, `hooks/useST_TableInstance.ts` in the three bases; every file under `packages/shadcn-table/stories/`; `apps/shadcn-table-docs/examples/<base>/{customize-filter-variants,enable-filter-facet-values,customize-filter-modes,customize-filter-components,alternate-pagination}/TS.tsx`; `apps/shadcn-table-docs/scripts/page-checks/*.mjs`; `reference/05-check.mjs`
 - Depends on: 02, 03, 04
 - Review: fable
-- Task 1: Flips and seed (Lane: agent): 1.6.2 in the radix tree, copied to base and aria; `reference/05-check.mjs`. Gates: per base `tsc`; `node reference/05-check.mjs`; `check:bases`
-- Task 2: Stories and docs examples (Lane: agent): 1.6.3 and 1.6.4; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; docs `types:check` and `lint`. Gates: `test:base`, `test:radix`, `test:aria`; `storybook:build:<base>` per base; `check-pages.mjs --base <base>` per base against the agent's own dev server (`PORT` in 5340 to 5360, P5)
-- Task 3: Cleanup and gates once (Lane: agent): `pnpm format`; `#### Spec 05` changelog lines. Gates: 2.2
+- Task 1: Flips and seed (Lane: agent): 1.6.2 in the radix tree, copied to base and aria; `reference/05-check.mjs`. Checks: per base `tsc`; `node reference/05-check.mjs`; `check:bases`
+- Task 2: Stories and docs examples (Lane: agent): 1.6.3 and 1.6.4; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; docs `types:check` and `lint`. Checks: `test:base`, `test:radix`, `test:aria`; `storybook:build:<base>` per base; `check-pages.mjs --base <base>` per base against the agent's own dev server (`PORT` in 5340 to 5360, P5)
+- Task 3: Cleanup and checks once (Lane: agent): `pnpm format`; `#### Spec 05` changelog lines. Checks: 2.2
 
-### 2.2 Gates
+### 2.2 Checks
 
 - Per base: `tsc`, `test:<base>`, `storybook:build:<base>`, `check-pages.mjs --base <base>` green
 - `lint`, `check:tailwind`, `check:bases`, `check:icons` green; docs `types:check`, `lint` green

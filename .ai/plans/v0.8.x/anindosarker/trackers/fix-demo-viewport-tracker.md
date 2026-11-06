@@ -4,7 +4,7 @@ Status: merged (5fc514b7)
 Branch `v0.8/fix-demo-viewport`, worktree 02, PR #122
 Files owned: `apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx`; `apps/shadcn-table-docs/scripts/page-checks/e.mjs` home entry
 Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
-Gates:
+Checks:
 - Repro on shipped code (b8435a27), Chromium 1440x900, dev server :5341: at scrollY 0 the toolbar's Sort button bottom is at y 743 (157 px above the bottom edge, the lowest the page allows at 900 px tall); the replay plays (`Now showing: Sorting`, `data-running`) and the Sort popover's top is at y 473, above the Sort button's top (711): flipped over the hero. The new home checks fail there: `demo: holds on Starting with the toolbar near the bottom edge` (room=157px, status `Now showing: Sorting`, running) and the follow-on `demo: plays only with room for its popovers` (timeout).
 - Fix verified at fdf0f8a2, Chromium 1440x900: scrollY 0 (157 px room) holds on `Starting`, no popover, after 8 s; demo scrolled in view (Sort button top 100) plays, Sort popover top 138 below the button bottom 132; scrolled back to scrollY 0 mid-step: popover closed, not running, status stays `Now showing: Sorting` for 6 s; scrolled back: running, moves on to `Search`.
 - Fix verified at fdf0f8a2, Chromium 1280x720: toolbar 80 px above the bottom edge (Sort bottom 640) holds on `Starting`; with the Sort button top at 100 (room 588 px) it plays with the popover below (top 138, button bottom 132), pauses and resumes as above. The whole demo plus 360 px never fits 720 px, but the condition is room under the toolbar, so it plays.

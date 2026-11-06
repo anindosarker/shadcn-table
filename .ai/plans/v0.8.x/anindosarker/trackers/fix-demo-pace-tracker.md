@@ -4,7 +4,7 @@ Status: merged (b389c726)
 Branch `v0.8/fix-demo-pace`, worktree 02, PR #[n]
 Files owned: `apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx`
 Depends on: Home demo cues and last title (F49, D65)
-Gates:
+Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 3d946632: green
 - `node scripts/check-pages.mjs e --base base` at 3d946632: green (home entry, base)
 

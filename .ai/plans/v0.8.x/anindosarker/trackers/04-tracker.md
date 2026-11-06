@@ -2,7 +2,7 @@
 
 Status: merged (04c2360e)
 Branch `v0.8/toolbar-chrome`, worktree 03, PR #100
-Gates:
+Checks:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria` at 87b7608e: green
 - `pnpm lint` at 87b7608e: green
 - `pnpm check:tailwind`, `pnpm check:bases` at 87b7608e: green
@@ -31,7 +31,7 @@ Gates:
 - Milestone 01 group, chips, picker, sort editor: done (87b7608e)
 - Milestone 02 view settings, search, persistence, triggers: done (87b7608e)
 - Milestone 03 stories, captures, judges: done (1f1082a4)
-- Milestone 04 cleanup and gates once: done (27cf06cf)
+- Milestone 04 cleanup and checks once: done (27cf06cf)
 
 ## Attention
 

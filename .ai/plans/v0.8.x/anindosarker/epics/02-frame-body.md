@@ -189,11 +189,11 @@ export interface ST_OverflowTextProps { readonly children: ReactNode; readonly c
 - Files owned: `components/table/{ST_TableLayout,ST_TableContainer,ST_Table,ST_ViewPendingScript,ST_ScrollButtons}.tsx`, `components/body/*.tsx`, `components/toolbar/ST_BottomToolbar.tsx`, `hooks/useST_HorizontalOverflow.ts`, `hooks/useST_FullScreenContainer.ts`, `hooks/useST_RowVirtualizer.ts`, `hooks/display-columns/*.tsx`, `shared/utils/{style,displayColumn}.utils.ts`, in the three bases; `stories/styling/DefaultLook.stories.tsx`, `stories/fixed-bugs/RTL.stories.tsx`, `stories/styling/RenderCounts.stories.tsx`, `stories/features/{TableProvider,RowPinning,Virtualization}.stories.tsx`, `stories/styling/StickyHeader.stories.tsx`
 - Depends on: 01
 - Review: fable
-- Task 1: One pass over 1.6.2 to 1.6.8 (Lane: agent): Radix tree first, then base and aria byte-identical except the diff-listed files; `ST_OverflowText` and `ST_TableBody` per base as 1.6.5 says; `check:tailwind` after every class batch; physical utilities (`left-`, `right-`, `border-r`) are logical (`inset-s-`, `inset-e-`, `border-e`). Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
-- Task 2: Stories, captures, judges (Lane: agent): 1.6.9; captures of `DefaultLook` per base, light and dark, 1800 by 1150, into the session scratchpad; paths in `../trackers/02-tracker.md`; Run the Acceptance plays and the judges; loop on failures. Gates: `test:base`, `test:radix`, `test:aria`
-- Task 3: Cleanup and gates once (Lane: agent): Delete the removed variants' dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 02` changelog block. Gates: 2.2
+- Task 1: One pass over 1.6.2 to 1.6.8 (Lane: agent): Radix tree first, then base and aria byte-identical except the diff-listed files; `ST_OverflowText` and `ST_TableBody` per base as 1.6.5 says; `check:tailwind` after every class batch; physical utilities (`left-`, `right-`, `border-r`) are logical (`inset-s-`, `inset-e-`, `border-e`). Checks: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
+- Task 2: Stories, captures, judges (Lane: agent): 1.6.9; captures of `DefaultLook` per base, light and dark, 1800 by 1150, into the session scratchpad; paths in `../trackers/02-tracker.md`; Run the Acceptance plays and the judges; loop on failures. Checks: `test:base`, `test:radix`, `test:aria`
+- Task 3: Cleanup and checks once (Lane: agent): Delete the removed variants' dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 02` changelog block. Checks: 2.2
 
-### 2.2 Gates
+### 2.2 Checks
 
 - Per base: `tsc`, `test:<base>` green; `storybook:build:<base>` green
 - `lint`, `check:tailwind`, `check:bases`, `check:icons` green

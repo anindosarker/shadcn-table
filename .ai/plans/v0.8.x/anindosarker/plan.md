@@ -32,5 +32,5 @@ Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D83 (D12 and 
 | 06.4 | [Library follow-up](epics/06.4-library-follow-up.md) | Grouping header breadcrumb, multi-select field, RTL resizing headers, aria range slider, toolbar fade, chip editor width |
 | 06.5 | [Docs follow-up](epics/06.5-docs-follow-up.md) | Unbacked routes, sort chip in custom toolbars, short page descriptions, delete confirm dialog, example column sizes |
 | 06.6 | [Edition icons](epics/06.6-edition-icons.md) | The Tabler, Phosphor, Remix and Hugeicons editions map the D75 view settings icons to their own sets |
-| 07 | [release 0.8.0](epics/07-release.md) | Gates rerun in throwaway apps per base; 0.8.0 released. |
-| 07.1 | [Release automation](epics/07.1-release-automation.md) | The release gate runs as a CI step with pixel-diffed captures; one PR per release bumps its own version |
+| 07 | [release 0.8.0](epics/07-release.md) | Checks rerun in throwaway apps per base; 0.8.0 released. |
+| 07.1 | [Release automation](epics/07.1-release-automation.md) | The install smoke check runs as a CI step with pixel-diffed captures; one PR per release bumps its own version |

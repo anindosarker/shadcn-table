@@ -2,7 +2,7 @@
 
 Status: merged 839a6a6e989fd933adcc07f378a676de848e5562
 Branch `v0.8/frame-body`, worktree 01, PR #98
-Gates:
+Checks:
 - `pnpm tsc:radix`, `tsc:baseui`, `tsc:aria` at 89c64f19: green
 - `pnpm lint` at 89c64f19: green
 - `pnpm check:tailwind`, `pnpm check:icons`, `pnpm check:bases` at 89c64f19: green
@@ -12,7 +12,7 @@ Gates:
 - `pnpm test:base` at d65fc6f2: 479 of 480, `Global Filter Mode Switch` red under parallel load, isolated rerun of CustomFilterFns green 12 of 12
 - `pnpm storybook:build:base`, `storybook:build:radix`, `storybook:build:aria` at d65fc6f2: green
 - `pnpm check:bases`, `pnpm registry:build` (no diff), `lib:install` per base (no diff), `node reference/01-check.mjs` at d65fc6f2: green
-- Review fixes, gates at 371cd87c: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:icons`, `check:bases`: green
+- Review fixes, checks at 371cd87c: `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:icons`, `check:bases`: green
 - `pnpm test:radix` at 371cd87c: green, 480 of 480
 - `pnpm test:aria` at 371cd87c: green, 480 of 480
 - `pnpm test:base` at 371cd87c: 479 of 480, `Global Filter Mode Switch` red under parallel load again; isolated rerun of CustomFilterFns green 12 of 12
@@ -25,7 +25,7 @@ Gates:
 
 - Milestone 01 one pass over 1.6.2 to 1.6.8: done (89c64f19)
 - Milestone 02 stories, captures, judges: done (5ecc689a)
-- Milestone 03 cleanup and gates once: done (d65fc6f2)
+- Milestone 03 cleanup and checks once: done (d65fc6f2)
 
 ## Attention
 - Tints paint on the row (`tableBodyRowVariants` tint and hover) and cells are `bg-inherit`, instead of the cell-level token classes of spec 1.6.4; one row-wide hover with no per-cell overlay.

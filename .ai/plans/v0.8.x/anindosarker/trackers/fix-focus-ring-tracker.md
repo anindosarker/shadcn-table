@@ -4,7 +4,7 @@ Status: merged (24ed9c7ad64ad4a3403a8ff8dab9f0d05ce19355)
 Branch `v0.8/fix-focus-ring`, worktree 03, PR #109
 Files owned: `components/head/ST_TableHeadCellFilterContainer.tsx` in the three bases; `stories/fixed-bugs/FilterEditorFocusRing.stories.tsx`
 Depends on: 06.1
-Gates:
+Checks:
 - `pnpm test:base stories/fixed-bugs/FilterEditorFocusRing.stories.tsx` on the shipped code (c5724f8a plus the story): red as expected, Chip Editor Ring and Subheader Row Ring fail with "filter container padding-top: expected 0 to be greater than or equal to 3"; the first draft's rect check failed on the same `overflow-hidden` CollapsibleContent (group top minus 3 px above the panel top)
 - `pnpm tsc:radix` at 90e55d1b: green
 - `pnpm tsc:baseui` at 90e55d1b: green

@@ -45,7 +45,7 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
   same commit.
 - shadcn parts (`registry/<base>/components/ui/<part>.tsx`) are never edited; they are
   what `pnpm add-part <base> <part>` writes, and `pnpm add-part <base> --all` re-adds
-  every committed part of a base: the gate is that it leaves `git status --short` empty.
+  every committed part of a base: the check is that it leaves `git status --short` empty.
   A check that fails on a part is fixed in the check (ESLint ignores the parts; the tsconfigs
   carry no unused-code flags). No exception: a look the library needs beyond the part goes in
   a library wrapper in the folder of its kind (`components/buttons/ST_Tooltip.tsx`,
@@ -85,7 +85,7 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
 - Agents navigate TypeScript with the LSP tool (definitions, references, call hierarchy),
   `grep` only for strings, comments and non-TypeScript files.
 
-## Gates
+## Checks
 
 Run before every commit that touches the area.
 
@@ -104,7 +104,7 @@ pnpm add-part <base> --all                 # shadcn parts, local only (not in pr
 pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
 ```
 
-CI runs the same gates: `.github/workflows/pr.yml` on every pull request, plus `release impact`,
+CI runs the same checks: `.github/workflows/pr.yml` on every pull request, plus `release impact`,
 which needs exactly one `release:` label (`release:patch`, `release:minor`, `release:major`,
 `release:skip`) when the PR changes `packages/shadcn-table/registry`,
 `apps/shadcn-table-docs/components/ui-*` or `skills/`, and `## Unreleased` lines in

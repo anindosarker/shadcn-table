@@ -12,7 +12,7 @@ Updated: 2026-11-06 16:09
 | Defaults and stories |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
 | Component fixes (F3, F4, F5, F6) |  |  | [x] |  |  |  |  |  |  |  |  |  |  |  |
 | Docs |  |  |  | [x] |  |  |  |  |  |  |  |  |  |  |
-| Gate fixes (F8, F9) |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
+| Check fixes (F8, F9) |  |  |  |  | [x] |  |  |  |  |  |  |  |  |  |
 | Toolbar and filters |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | Cells and layout |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |
 | Docs app |  |  |  |  |  | [x] |  |  |  |  |  |  |  |  |

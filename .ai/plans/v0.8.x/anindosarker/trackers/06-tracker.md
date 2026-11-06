@@ -2,7 +2,7 @@
 
 Status: merged (e0e2e6ef)
 Branch `v0.8/docs`, worktree 02, PR #102
-Gates:
+Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 73ec8c45: green
 - `pnpm --filter shadcn-table-docs types:check` at 23e6115e: green
 - `pnpm --filter shadcn-table-docs lint` at 23e6115e: green (9 pre-existing warnings)
