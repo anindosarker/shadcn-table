@@ -1,6 +1,6 @@
 # 08: Tools and workflows (08), tracker (D85, D86, D87, D88)
 
-Status: running
+Status: verified
 Branch `v0.8/08-tools-workflows`, worktree `shadcn-react-table.worktrees/01`, no PR (P1, P3)
 Checks:
 - Check: tool unit tests, `node --test "tools/**/*.test.mjs"` at 2b6a1e62: pass (27)
@@ -18,6 +18,17 @@ Checks:
 - Check: list, `pnpm test --list` at de2d9644: pass (eight names)
 - Check: validate-repo, `pnpm test validate-repo` at de2d9644: pass (27 unit tests; no file under `packages/shadcn-table/registry/` changed)
 - Check: format, `pnpm format` before each commit, `.ai/plans/**/reference/**` reverted: pass
+- Check: tool unit tests, `node --test "tools/**/*.test.mjs"` at 7941626d: pass (27) (verifier)
+- Check: syntax, `node --check` on `tools/release/{verify-deployment,publish-release,pr-summary}.mjs` at 7941626d: pass (verifier)
+- Check: verify-deployment live, `node tools/release/verify-deployment.mjs --version 0.8.1 --timeout-min 1` at 7941626d: fail (verifier; environment: www serves `0.8.0`, storybook `/version.txt` HTTP 404; exits 1 with both bodies as specified; see Attention)
+- Check: actionlint, `actionlint .github/workflows/*.yml` at 7941626d: pass (verifier)
+- Check: act list, `act -l` at 7941626d: pass (verifier; pr.yml nine job ids with the matrices of the twenty-one, release.yml four jobs, no install.yml)
+- Check: Local CI, `act pull_request -j validate-repo` and `-j lint`: act unavailable (Docker down); natively `pnpm test validate-repo --ci` at 7941626d: pass (27 unit tests), `pnpm test lint --ci` at 7941626d: pass (9 warnings) (verifier)
+- Check: 2.2 workflows grep, `grep -rnE "scripts/release|packages/shadcn-table/scripts|packages/shadcn-table/test|page-checks|install\.yml" .github package.json packages/*/package.json apps/*/package.json` at 7941626d: pass (empty) (verifier)
+- Check: list, `pnpm test --list` at 7941626d: pass (eight names) (verifier)
+- Check: dispatch run 42245855728, `gh run view 42245855728 --json conclusion,jobs` at 7941626d: pass (conclusion success; nineteen test jobs and PR Summary success, Validate PR and Prepare Release skipped; not re-dispatched: the only code change since de2d9644 is `release.yml`, which pr.yml does not run) (verifier)
+- Check: files owned, `git diff --stat 2c5ba59d..HEAD` at 7941626d: pass (only the Files owned, CHANGELOG.md and the tracker) (verifier)
+- Check: review findings, `git show 7941626d -- .github/workflows/release.yml` at 7941626d: pass (Validate Production upload has `overwrite: true`) (verifier)
 - Check: ruleset 25521193: pending (Task 3, main session)
 
 - Task 1 Release tools: done (2b6a1e62)
