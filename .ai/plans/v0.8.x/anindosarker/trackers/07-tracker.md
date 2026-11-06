@@ -93,3 +93,10 @@ Runtime gate (agent-browser 0.27.0, viewport 1800x1150, `next dev` on 5341 base,
 
 - D22 scroll chevron, all bases (spec 02): `ST_ScrollButtons` button carries `active:not-aria-[haspopup]:translate-y-px` from `buttonVariants`, which replaces `-translate-y-1/2` on press: the chevron jumps from y 109 to 122, the pointer at its centre then hits the header cell and the click does not scroll; only the lower half works
 - Aria React Aria warnings (spec 04): 58 "<Focusable> child must be focusable" warnings while the filter chip editor and the sort editor are open (18 on choosing Due in the sort picker); each sort rule renders its drag handle as a non-focusable `span[role=img]` (unverified as the source)
+
+## 0.8.1 (epic 07.1, D83 flow)
+
+- Integration on `claude/review` 49b3ad34 (main session, native: Docker down so no `act`): `node --test scripts/release/*.test.mjs` 21 passed; `pnpm check:bases` green; `pnpm check:icons` green; `pnpm --filter shadcn-table lint` green. No library source changed in 07.1.
+- Repository settings (D80, Task 4 of Version bump, owner-authorized): `allow_auto_merge` true; ruleset 25521193 gains `required_status_checks` with the 21 `pr.yml` contexts (strict false); `can_approve_pull_request_reviews` false; `release/next` deleted on origin.
+- `dev` fast-forwarded to `claude/review` 49b3ad34; PR #132 "release: 0.8.1", `dev` into `master`, label `release:patch`, no auto-merge (A23: the owner enables it as the approval).
+- Pending the owner: the `RELEASE_BOT_TOKEN` secret (A22); until it exists the `version bump (release:prepare)` check fails on #132 by design.
