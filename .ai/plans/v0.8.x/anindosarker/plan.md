@@ -1,6 +1,6 @@
 # v0.8.x plan
 
-Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D84 (D12 and D30 superseded, D16 unused). Findings: [findings.md](findings.md) F1 to F60. Ownership: [ownership.md](ownership.md). Sprints: [sprints.md](sprints.md). Epics implement decisions and never re-decide.
+Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D83 (D12 and D30 superseded, D16 unused). Findings: [findings.md](findings.md) F1 to F60. Ownership: [ownership.md](ownership.md). Sprints: [sprints.md](sprints.md). Epics implement decisions and never re-decide.
 
 ## Goals
 
