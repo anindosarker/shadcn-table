@@ -766,7 +766,3 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 ### D87 One sticky comment per PR
 
 - Validate PR writes one comment on the PR and rewrites it on every push (found by a hidden marker, never a second comment): line 1 `Ships as <version> (<label>).` or the reason it does not (`No release: label missing`, `release:patch needs lines under ## Unreleased`); line 2 the changelog lines under `## Unreleased` by heading (`Added 2, Changed 1, Fixed 4`); then one line per job of D86 with its summary (`Storybook Tests (radix): 609 passed`, `Installation E2E (nextjs-aria): built, browser pass, diff 0 px`), filled in as the jobs finish from their `test/.out/` records; a link to the run. The release PR's state is readable from that comment alone. Owner, 2026-11-06.
-
-### D87 One sticky comment per PR
-
-- Validate PR writes one comment on the pull request and rewrites it on every push (never a second comment): line 1 the release state (`Ships as 0.8.1 (release:patch).` or the reason it fails: no label, not from dev, changelog without lines), line 2 the changelog lines under `## Unreleased` by heading, then one line per job with its summary (`Storybook Tests (radix): 609 passed`, `Installation E2E (nextjs-base): 0 px off the reference`), read from the `test/.out/` records the jobs upload, and a link to the Actions run. The run's Summary tab keeps the same lines. Owner, 2026-11-06.
