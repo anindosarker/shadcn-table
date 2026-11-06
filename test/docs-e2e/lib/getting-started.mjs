@@ -351,7 +351,16 @@ const checks = {
         JSON.stringify(playing),
       );
       await toolbarNearBottom();
-      await page.waitForTimeout(500);
+      // wait for the paused state (F61): no data-running, no popover open
+      await page
+        .waitForFunction(
+          () =>
+            !document.querySelector('.v5-demo')?.hasAttribute('data-running') &&
+            !document.querySelector('[data-slot="popover-content"]'),
+          null,
+          { timeout: 5000 },
+        )
+        .catch(() => {});
       const away = await replayState();
       // the Sort step's hold is 2.2s: a running replay would move on
       await page.waitForTimeout(3000);
