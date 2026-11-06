@@ -15,16 +15,9 @@ const BASE_PROJECTS = {
 
 export default defineConfig([
   // Parts (registry/<base>/components/ui/<part>.tsx) are what `shadcn add`
-  // installs, written by scripts/registry/add-part.mjs and never edited; the
-  // library lives below components/ui/shadcn-table/ and is linted. The
-  // release gate pages are consumer-app sources (`@/` resolves in the Next app
-  // install.yml scaffolds), compiled by that app's next build.
-  globalIgnores([
-    'dist',
-    'storybook-static',
-    'registry/*/components/ui/*.tsx',
-    'test/release/pages',
-  ]),
+  // installs, written by tools/registry/add-part.mjs and never edited; the
+  // library lives below components/ui/shadcn-table/ and is linted.
+  globalIgnores(['dist', 'storybook-static', 'registry/*/components/ui/*.tsx']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
