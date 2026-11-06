@@ -705,6 +705,7 @@ index d099d3a0..d778bfba 100644
 - Critical path is arithmetic from the blocks: an edge from A to B when B depends on A or the two share a file (lower epic number first); a milestone's column is the longest chain ending at it plus one; the critical path is the longest chain, ending at the release milestone; a collision or a cycle is a script error fixed in the epic. The judgment (files owned, dependencies, the split into milestones) stays with the epic writer.
 - Scripts in the expedition skill: `new_cycle.py`, `new_epic.py` (was `new_spec.py`), `ownership.py`, `sprints.py`, `new_fix.py` (tracker stub plus grid row), `status.py` (reads the new names, flags a grid out of step with the epics). The main agent calls scripts, never does a script's job by hand, never spawns an agent to call one. The overlap agent and the hand-written story table go.
 - Applied to v0.8.x in place (files renamed, headings reworded, `ownership.md` generated from the existing specs' milestones) and to the skill, templates and scripts; earlier cycles stay as they are, `status.py` reads both layouts. Start on the owner's approval. Owner, 2026-11-06.
+- Addendum 2026-11-06: new `CHANGELOG.md` blocks are `#### Epic NN` (`#### Epic NN <milestone>` for an epic with several); released versions keep their `Spec` headings. The `// spec NN` comments in `index.ts` stay (code convention, D82 covers plan files). Owner.
 
 ### D83 Release flow: one PR, the version bumped by CI after green
 
