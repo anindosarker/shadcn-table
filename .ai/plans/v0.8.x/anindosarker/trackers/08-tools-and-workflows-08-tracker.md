@@ -1,4 +1,4 @@
-# 08: Tests and CI, tracker
+# 08: Tools and workflows (08), tracker (D85, D86, D87, D88)
 
 Status: planned
 Branch `[branch]`, worktree [name]
