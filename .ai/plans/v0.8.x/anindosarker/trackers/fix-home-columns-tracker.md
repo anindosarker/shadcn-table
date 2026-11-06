@@ -2,6 +2,8 @@
 
 Status: merged (b468d4283ab4c28387f74142ff72c1bfe5ffb8f8)
 Branch `v0.8/fix-home-columns`, worktree 02, PR #110
+Files owned: `apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx`, `apps/shadcn-table-docs/scripts/page-checks/e.mjs`
+Depends on: Docs app
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at d0576c27: green
 - `pnpm --filter shadcn-table-docs lint` at d0576c27: green (0 errors, 9 warnings, all in untouched example files)

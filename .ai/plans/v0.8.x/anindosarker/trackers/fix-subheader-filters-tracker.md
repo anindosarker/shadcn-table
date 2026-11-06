@@ -2,6 +2,8 @@
 
 Status: merged (5487d7517168af9d7c3f103105a8a869f567b572)
 Branch `v0.8/fix-subheader-filters`, worktree 01, PR #117
+Files owned: `components/inputs/ST_FilterRangeSlider.tsx`, `components/inputs/ST_FilterRangeFields.tsx`, `components/inputs/ST_FilterTextField.tsx`, `components/head/ST_TableHeadCell.tsx`, `components/head/ST_TableHeadCellFilterContainer.tsx` in the three bases; `stories/features/Filtering.stories.tsx`; `apps/shadcn-table-docs/examples/<base>/subheader-filters/TS.tsx`; `apps/shadcn-table-docs/scripts/page-checks/e.mjs` subheader entry
+Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
 Gates:
 - Repro on shipped code (7fc6473e), `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/Filtering.stories.tsx`: red as intended, 2 of 23 failed. FilteringChangeModeEnabledFaceted `SliderCaptionBelowTrack`: caption top 220 above track bottom 223. SubheaderRangeFieldsNarrow `SubheaderInputsInsideCell`: the table overflows its scroll box (445 > 442), the range fields widen their th past its size.
 - `pnpm --filter shadcn-table tsc:radix` at cdce2707: green

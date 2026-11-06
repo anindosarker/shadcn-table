@@ -98,23 +98,13 @@ Spec v0.7.x 09.4 1.6.2 as run on 2026-11-04 (`.ai/plans/v0.7.x/anindosarker/trac
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: Runtime gate
+### Milestone: Release 0.8.0
 
-Lane: agent
-
-- 1.6.2 for base, radix and aria, one app each under `../test-projects/checks/`, bases concurrently (P4); one root `pnpm registry:dev` on 5310 (reuse if running, P4); the agent's own free dev ports in 5340 to 5360 (P5)
-- Record per base in `../trackers/07-tracker.md`: edition and `icons.ts` import, build result, eslint count (base), console counts, each 1.6.2 check as pass or fail with the measured value where one exists (group order, translate values, scroll delta, pending attribute timing), the capture paths and the three judge verdicts
-- Blocked: any console warning or error, an eslint problem, a 1.6.2 check failing, a wrong edition import, a judge majority against; each to `attentions/ATTENTION-<date>.md` with the owning spec (02, 03, 04, 05, 01)
-- Gates: per base `next build` green, console zero, the 1.6.2 checks; `gate-base` eslint zero problems and zero warnings
-
-#### 2.1.2 Final milestone: Release and cleanup
-
-Lane: inline
-
-- Delete `../test-projects/checks/gate-*`; stop the servers this spec started
-- 1.6.1 changelog regroup, then 1.6.3 in order; push right after each merge
-- Blocked: `release.yml` or `smoke.mjs` red; the failed step under `## Attention` in `../trackers/07-tracker.md`, rerun per P3
-- Gates: 2.2
+- Files owned: none
+- Depends on: Shared surface, Demo captures, Frame and body, Header, column menu and dragging, Toolbar chrome, Defaults and stories, Docs, Toolbar and filters, Cells and layout, Docs app, Stories and DefaultLook, Plays, Grouping header, Filters, toolbar, RTL, Docs follow-up, Edition icons, Component fixes (F3, F4, F5, F6), Gate fixes (F8, F9), Multi-select filter on scalar values (F29), CI fixes after S6, S7, Filter editor focus ring (F31), Home demo columns (F32), Docs polish (F32, F33, F34, F35, F37), Popover-mode header widths (F38), Pinned view items in custom toolbars (F36), Last fixes (F19, F28, F30, F39, F40, F41, D56, D57), Custom toolbar actions follow row selection (F43), Subheader filter layout (F44), Home demo steps and titles (F45), Home demo polish (F45 follow-up), Moved column slides on top (F47), Home demo plays only with room for its popovers (F48, D63), Theme demo speed, Home demo cues and last title (F49, D65), Sanity pass (D58), Grouping column aligns start (F57), Expand column aligns start in every grouping mode (F58), View settings icons (D75), Home demo pace
+- Review: none
+- Task 1: Runtime gate (Lane: agent): 1.6.2 for base, radix and aria, one app each under `../test-projects/checks/`, bases concurrently (P4); one root `pnpm registry:dev` on 5310 (reuse if running, P4); the agent's own free dev ports in 5340 to 5360 (P5); Record per base in `../trackers/07-tracker.md`: edition and `icons.ts` import, build result, eslint count (base), console counts, each 1.6.2 check as pass or fail with the measured value where one exists (group order, translate values, scroll delta, pending attribute timing), the capture paths and the three judge verdicts; Blocked: any console warning or error, an eslint problem, a 1.6.2 check failing, a wrong edition import, a judge majority against; each to `attentions/ATTENTION-<date>.md` with the owning spec (02, 03, 04, 05, 01). Gates: per base `next build` green, console zero, the 1.6.2 checks; `gate-base` eslint zero problems and zero warnings
+- Task 2: Release and cleanup (Lane: inline): Delete `../test-projects/checks/gate-*`; stop the servers this spec started; 1.6.1 changelog regroup, then 1.6.3 in order; push right after each merge; Blocked: `release.yml` or `smoke.mjs` red; the failed step under `## Attention` in `../trackers/07-tracker.md`, rerun per P3. Gates: 2.2
 
 ### 2.2 Gates
 

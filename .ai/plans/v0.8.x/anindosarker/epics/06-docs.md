@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The docs site describes the 0.7 chrome: subheader filters, a grip for dragging, columns and density buttons, semantic layout, first-column row actions. This spec rewrites every guide whose behaviour v0.8 changes and adds one guide per new surface, from the shipped code of specs 01 to 05, so 0.8.0 and its docs go out together (D33). Workstream E (index, Run plan): branch `v0.8/docs`, worktree `02`, cut from `claude/review` after D merged, one builder, draft PR at the first push (P2), one fable review on the whole diff for correctness against the shipped code (`Review: fable`). Prop tables are hand data; the library copies under `components/ui-<base>/` are regenerated, never edited.
+The docs site describes the 0.7 chrome: subheader filters, a grip for dragging, columns and density buttons, semantic layout, first-column row actions. This spec rewrites every guide whose behaviour v0.8 changes and adds one guide per new surface, from the shipped code of specs 01 to 05, so 0.8.0 and its docs go out together (D33). Workstream E (index, Run plan): branch `v0.8/docs`, worktree `02`, cut from `claude/review` after D merged, one builder, draft PR at the first push (P1), one fable review on the whole diff for correctness against the shipped code (`Review: fable`). Prop tables are hand data; the library copies under `components/ui-<base>/` are regenerated, never edited.
 
 ### 1.2 Goals
 
@@ -99,26 +99,14 @@ Per the audit table (`reference/06-audit.md`, committed from the plan audit): `c
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: Setup and prop tables
+### Milestone: Docs
 
-Lane: agent
-
-- `pnpm -w registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria`; 1.6.1 prop-table rows from the shipped `stConfigFeature.ts` and `useST_TableOptions.ts`
-- Gates: docs `types:check`
-
-#### 2.1.2 Milestone 2: Guides, example, registrations
-
-Lane: agent
-
-- 1.6.2 to 1.6.4; `node scripts/example-map.mjs`; `pnpm registry:items`; `reference/06-check.mjs`
-- Gates: docs `lint`; `node reference/06-check.mjs`
-
-#### 2.1.3 Final milestone: Page checks, build, cleanup
-
-Lane: agent
-
-- Own dev server per base (`PORT` in 5340 to 5360, P5); `check-pages.mjs --base <base> --url http://localhost:<port>` per base; docs `build`; `pnpm format`; `#### Spec 06` changelog block
-- Gates: 2.2
+- Files owned: everything under `apps/shadcn-table-docs/` except apps/shadcn-table-docs/components/ui-<base>/ (regenerated); `reference/06-check.mjs`, `reference/06-audit.md`
+- Depends on: 05
+- Review: fable
+- Task 1: Setup and prop tables (Lane: agent): `pnpm -w registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria`; 1.6.1 prop-table rows from the shipped `stConfigFeature.ts` and `useST_TableOptions.ts`. Gates: docs `types:check`
+- Task 2: Guides, example, registrations (Lane: agent): 1.6.2 to 1.6.4; `node scripts/example-map.mjs`; `pnpm registry:items`; `reference/06-check.mjs`. Gates: docs `lint`; `node reference/06-check.mjs`
+- Task 3: Page checks, build, cleanup (Lane: agent): Own dev server per base (`PORT` in 5340 to 5360, P5); `check-pages.mjs --base <base> --url http://localhost:<port>` per base; docs `build`; `pnpm format`; `#### Spec 06` changelog block. Gates: 2.2
 
 ### 2.2 Gates
 

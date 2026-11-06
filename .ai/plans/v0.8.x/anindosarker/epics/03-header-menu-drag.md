@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The header becomes the demo's quiet band with one chevron menu per column, the column menu lists only what applies, the resize handle is a hairline, and columns reorder by dragging the header with the Notion-style preview, catch-up slide and highlight; locked columns say so only while a drag is active (D2) (D3) (D4) (D5) (D6) (D18) (D20) (D21) (D25) (D37). This spec owns the head files, the column action and filter option menus, the two drag hooks and the grab handle in all three bases. Workstream B (index, Run plan): branch `v0.8/header-menu-drag`, worktree `02`, cut from `claude/review` after spec 01 merged, parallel to specs 02 and 04, one builder, draft PR at the first push (P2), one fable review on the whole diff (`Review: fable`). Body cells, the container and the table element belong to spec 02: this spec reaches them only through `table.refs.tableRef`, `tableContainerRef` and the attributes spec 02 renders (`data-flip-column`); the default flip of `enableColumnOrdering` is spec 05's.
+The header becomes the demo's quiet band with one chevron menu per column, the column menu lists only what applies, the resize handle is a hairline, and columns reorder by dragging the header with the Notion-style preview, catch-up slide and highlight; locked columns say so only while a drag is active (D2) (D3) (D4) (D5) (D6) (D18) (D20) (D21) (D25) (D37). This spec owns the head files, the column action and filter option menus, the two drag hooks and the grab handle in all three bases. Workstream B (index, Run plan): branch `v0.8/header-menu-drag`, worktree `02`, cut from `claude/review` after spec 01 merged, parallel to specs 02 and 04, one builder, draft PR at the first push (P1), one fable review on the whole diff (`Review: fable`). Body cells, the container and the table element belong to spec 02: this spec reaches them only through `table.refs.tableRef`, `tableContainerRef` and the attributes spec 02 renders (`data-flip-column`); the default flip of `enableColumnOrdering` is spec 05's.
 
 ### 1.2 Goals
 
@@ -189,33 +189,15 @@ export const useST_DragAutoScroll: <TData extends ST_RowData>(table: ST_TableIns
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: Header, menu and handle
+### Milestone: Header, column menu and dragging
 
-Lane: agent
-
-- 1.6.2 to 1.6.4 in the radix tree, then base and aria (the trigger wiring differs per base and is listed in the diff files)
-- Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
-
-#### 2.1.2 Milestone 2: Drag, flip, locked
-
-Lane: agent
-
-- 1.6.5 and 1.6.6; the three bases identical for the hooks
-- Gates: per base `tsc`; `check:bases`
-
-#### 2.1.3 Milestone 3: Stories, captures, judges
-
-Lane: agent
-
-- 1.6.8; captures into the session scratchpad, paths in `../trackers/03-tracker.md`; the Acceptance plays and the judges, loop on failures
-- Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
-
-#### 2.1.4 Final milestone: Cleanup and gates once
-
-Lane: agent
-
-- Remove dead imports (`SyncAltIcon` use in the sort label, the Separator in the handle, `MoreVertIcon` in the actions button); `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 03` changelog block
-- Gates: 2.2
+- Files owned: `components/head/*.tsx` except components/head/ST_TableHeadCellFilterLabel.tsx (grab handle and filter container after F), `components/menus/{ST_ColumnActionMenu,ST_FilterOptionMenu,ST_ActionMenuItem}.tsx`, `hooks/useST_ColumnFlip.ts`, `hooks/useST_DragAutoScroll.ts`, `components/toolbar/ST_ToolbarDropZone.tsx` (after F), in the three bases; `stories/features/{ColumnActions,ColumnDragging,Sorting,ColumnResizing}.stories.tsx`, `stories/fixed-bugs/AriaTooltips.stories.tsx`
+- Depends on: 01
+- Review: fable
+- Task 1: Header, menu and handle (Lane: agent): 1.6.2 to 1.6.4 in the radix tree, then base and aria (the trigger wiring differs per base and is listed in the diff files). Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
+- Task 2: Drag, flip, locked (Lane: agent): 1.6.5 and 1.6.6; the three bases identical for the hooks. Gates: per base `tsc`; `check:bases`
+- Task 3: Stories, captures, judges (Lane: agent): 1.6.8; captures into the session scratchpad, paths in `../trackers/03-tracker.md`; the Acceptance plays and the judges, loop on failures. Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
+- Task 4: Cleanup and gates once (Lane: agent): Remove dead imports (`SyncAltIcon` use in the sort label, the Separator in the handle, `MoreVertIcon` in the actions button); `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 03` changelog block. Gates: 2.2
 
 ### 2.2 Gates
 

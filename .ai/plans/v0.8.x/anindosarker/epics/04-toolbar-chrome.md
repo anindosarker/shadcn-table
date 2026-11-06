@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The top toolbar becomes the demo's: one right-aligned button group, filters as chips on the left with a searchable column picker, a sort editor behind a toolbar button and a chip, table preferences behind one view settings button with pinnable items, one search clear control, and every menu opening from a real trigger (D8) (D9) (D10) (D11) (D18) (D24) (D25) (D35) (D36) (D37). This spec owns the toolbar files, the show-hide and row action menus, the search field and toggle, the toolbar buttons and the persistence hook in all three bases. Workstream C (index, Run plan): branch `v0.8/toolbar-chrome`, worktree `03`, cut from `claude/review` after spec 01 merged, parallel to specs 02 and 03, one builder, draft PR at the first push (P2), one fable review on the whole diff (`Review: fable`). The slices it writes come from spec 01; the cells that read them are spec 02's; the default flips (`chips`, `enableSortPopover`, `enableViewSettings`) are spec 05's.
+The top toolbar becomes the demo's: one right-aligned button group, filters as chips on the left with a searchable column picker, a sort editor behind a toolbar button and a chip, table preferences behind one view settings button with pinnable items, one search clear control, and every menu opening from a real trigger (D8) (D9) (D10) (D11) (D18) (D24) (D25) (D35) (D36) (D37). This spec owns the toolbar files, the show-hide and row action menus, the search field and toggle, the toolbar buttons and the persistence hook in all three bases. Workstream C (index, Run plan): branch `v0.8/toolbar-chrome`, worktree `03`, cut from `claude/review` after spec 01 merged, parallel to specs 02 and 03, one builder, draft PR at the first push (P1), one fable review on the whole diff (`Review: fable`). The slices it writes come from spec 01; the cells that read them are spec 02's; the default flips (`chips`, `enableSortPopover`, `enableViewSettings`) are spec 05's.
 
 ### 1.2 Goals
 
@@ -196,33 +196,15 @@ export const useST_ViewPersistence: <TData extends ST_RowData>(table: ST_TableIn
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: Group, chips, picker, sort editor
+### Milestone: Toolbar chrome
 
-Lane: agent
-
-- 1.6.2 to 1.6.4 in the radix tree, then base and aria; per-base copies listed in the diff files where the parts differ (aria `Popover` is the content, `Select` exports differ)
-- Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
-
-#### 2.1.2 Milestone 2: View settings, search, persistence, triggers
-
-Lane: agent
-
-- 1.6.5 to 1.6.8
-- Gates: per base `tsc`; `check:bases`; `check:aria-warnings`
-
-#### 2.1.3 Milestone 3: Stories, captures, judges
-
-Lane: agent
-
-- 1.6.9; captures into the session scratchpad, paths in `../trackers/04-tracker.md`; the Acceptance plays and the judges, loop on failures
-- Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
-
-#### 2.1.4 Final milestone: Cleanup and gates once
-
-Lane: agent
-
-- Dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 04` changelog block
-- Gates: 2.2
+- Files owned: `components/toolbar/*.tsx` except components/toolbar/ST_BottomToolbar.tsx and components/toolbar/ST_ToolbarDropZone.tsx, `components/menus/{ST_ShowHideColumnsMenu,ST_ShowHideColumnsMenuItems,ST_RowActionMenu}.tsx`, `components/buttons/{ST_ToggleGlobalFilterButton,ST_ShowHideColumnsButton,ST_ToggleDensePaddingButton,ST_ToggleFiltersButton,ST_ToggleRowActionMenuButton}.tsx`, `components/inputs/ST_GlobalFilterTextField.tsx`, `components/inputs/ST_FilterTextField.tsx` (mode button gate only), `components/head/ST_TableHeadCellFilterLabel.tsx`, `hooks/useST_ViewPersistence.ts`, `hooks/useST_PopupResize.ts`, `hooks/useST_Effects.ts`, `shared/utils/filterSummary.utils.ts`, in the three bases; `stories/features/{FilterChips,SortPopover,ViewSettings,Search,ColumnHiding,DensePadding,Toolbar}.stories.tsx`, `stories/fixed-bugs/{SearchField,HeadlessFullScreen}.stories.tsx`
+- Depends on: 01
+- Review: fable
+- Task 1: Group, chips, picker, sort editor (Lane: agent): 1.6.2 to 1.6.4 in the radix tree, then base and aria; per-base copies listed in the diff files where the parts differ (aria `Popover` is the content, `Select` exports differ). Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
+- Task 2: View settings, search, persistence, triggers (Lane: agent): 1.6.5 to 1.6.8. Gates: per base `tsc`; `check:bases`; `check:aria-warnings`
+- Task 3: Stories, captures, judges (Lane: agent): 1.6.9; captures into the session scratchpad, paths in `../trackers/04-tracker.md`; the Acceptance plays and the judges, loop on failures. Gates: `test:base`, `test:radix`, `test:aria`, each with `stories/fixed-bugs/MenuOpeners.stories.tsx` and `MenuFocusReturn.stories.tsx` excluded
+- Task 4: Cleanup and gates once (Lane: agent): Dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 04` changelog block. Gates: 2.2
 
 ### 2.2 Gates
 

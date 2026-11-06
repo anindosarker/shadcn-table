@@ -1,6 +1,6 @@
 # 07: release 0.8.0, tracker
 
-Status: released (v0.8.0)
+Status: done (4b4ebd31), released v0.8.0
 Branch claude/review (inline, no spec branch), registry on 5310 (served from worktree 01 `.dev`, rebuilt 16:25 at bc21b6da; `git diff bc21b6da..7c2717aa -- packages/` empty, so it is claude/review's build; `pnpm -w registry:build` rerun at 7c2717aa, tree unchanged)
 Gates:
 - gate-base `next build` at 7c2717aa: green

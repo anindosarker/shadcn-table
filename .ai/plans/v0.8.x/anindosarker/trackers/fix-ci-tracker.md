@@ -2,6 +2,8 @@
 
 Status: merged (4e5bf777)
 Branch `v0.8/fix-ci`, worktree 01, PR #108
+Files owned: `packages/shadcn-table/.storybook/vitest.setup.ts`, `packages/shadcn-table/vitest.config.ts`
+Depends on: 06.1
 Gates:
 - `ST_BASE=radix vitest run --browser.api.port=5341` at 39d409b8: green (537)
 - `ST_BASE=base vitest run --browser.api.port=5341` at 39d409b8: green (537); the first run failed `PanelCollapse > Progress And Banner Collapse` line 67 at load average 17 (other agents), passed alone and on the full rerun

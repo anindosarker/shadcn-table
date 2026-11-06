@@ -1,7 +1,9 @@
 # View settings icons (D75), tracker
 
-Status: verified
+Status: merged (f4251455)
 Branch `v0.8/fix-view-icons`, worktree 02, no PR (P13)
+Files owned: `icons.ts` in the three bases
+Depends on: 06.3
 Gates:
 - `pnpm check:icons` at 88171214: green (54 keys, 0 problems in 4 maps per base)
 - `pnpm check:bases` at 88171214: green

@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-The stock frame, rows, footer, tints, width rule, scroll cues, overflow text and reload behaviour change to the owner's header demo (D1) (D7) (D13) (D14) (D15) (D17) (D19) (D21) (D22) (D23) (D31) (D36) (D37). This spec owns the table, body and bottom toolbar files in all three bases: the toolbar moves above the frame, rows take fixed heights with rows-only lines, cells read the four tint tokens the root declares, the last data column grows, pinned edges cast the token shadow with hover chevrons for hidden columns, cut-off text gets a tooltip, and a persisted table reloads without painting the default order. Workstream A (index, Run plan): branch `v0.8/frame-body`, worktree `01`, cut from `claude/review` after spec 01 merged, one builder, draft PR at the first push (P2), one fable review on the whole diff (`Review: fable`). Default flips stay in spec 05; the header cell is spec 03's.
+The stock frame, rows, footer, tints, width rule, scroll cues, overflow text and reload behaviour change to the owner's header demo (D1) (D7) (D13) (D14) (D15) (D17) (D19) (D21) (D22) (D23) (D31) (D36) (D37). This spec owns the table, body and bottom toolbar files in all three bases: the toolbar moves above the frame, rows take fixed heights with rows-only lines, cells read the four tint tokens the root declares, the last data column grows, pinned edges cast the token shadow with hover chevrons for hidden columns, cut-off text gets a tooltip, and a persisted table reloads without painting the default order. Workstream A (index, Run plan): branch `v0.8/frame-body`, worktree `01`, cut from `claude/review` after spec 01 merged, one builder, draft PR at the first push (P1), one fable review on the whole diff (`Review: fable`). Default flips stay in spec 05; the header cell is spec 03's.
 
 ### 1.2 Goals
 
@@ -184,28 +184,14 @@ export interface ST_OverflowTextProps { readonly children: ReactNode; readonly c
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: One pass over 1.6.2 to 1.6.8
+### Milestone: Frame and body
 
-Lane: agent
-
-- Radix tree first, then base and aria byte-identical except the diff-listed files; `ST_OverflowText` and `ST_TableBody` per base as 1.6.5 says
-- `check:tailwind` after every class batch; physical utilities (`left-`, `right-`, `border-r`) are logical (`inset-s-`, `inset-e-`, `border-e`)
-- Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
-
-#### 2.1.2 Milestone 2: Stories, captures, judges
-
-Lane: agent
-
-- 1.6.9; captures of `DefaultLook` per base, light and dark, 1800 by 1150, into the session scratchpad; paths in `../trackers/02-tracker.md`
-- Run the Acceptance plays and the judges; loop on failures
-- Gates: `test:base`, `test:radix`, `test:aria`
-
-#### 2.1.3 Final milestone: Cleanup and gates once
-
-Lane: agent
-
-- Delete the removed variants' dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 02` changelog block
-- Gates: 2.2
+- Files owned: `components/table/{ST_TableLayout,ST_TableContainer,ST_Table,ST_ViewPendingScript,ST_ScrollButtons}.tsx`, `components/body/*.tsx`, `components/toolbar/ST_BottomToolbar.tsx`, `hooks/useST_HorizontalOverflow.ts`, `hooks/useST_FullScreenContainer.ts`, `hooks/useST_RowVirtualizer.ts`, `hooks/display-columns/*.tsx`, `shared/utils/{style,displayColumn}.utils.ts`, in the three bases; `stories/styling/DefaultLook.stories.tsx`, `stories/fixed-bugs/RTL.stories.tsx`, `stories/styling/RenderCounts.stories.tsx`, `stories/features/{TableProvider,RowPinning,Virtualization}.stories.tsx`, `stories/styling/StickyHeader.stories.tsx`
+- Depends on: 01
+- Review: fable
+- Task 1: One pass over 1.6.2 to 1.6.8 (Lane: agent): Radix tree first, then base and aria byte-identical except the diff-listed files; `ST_OverflowText` and `ST_TableBody` per base as 1.6.5 says; `check:tailwind` after every class batch; physical utilities (`left-`, `right-`, `border-r`) are logical (`inset-s-`, `inset-e-`, `border-e`). Gates: per base `tsc`; `lint`; `check:tailwind`; `check:bases`
+- Task 2: Stories, captures, judges (Lane: agent): 1.6.9; captures of `DefaultLook` per base, light and dark, 1800 by 1150, into the session scratchpad; paths in `../trackers/02-tracker.md`; Run the Acceptance plays and the judges; loop on failures. Gates: `test:base`, `test:radix`, `test:aria`
+- Task 3: Cleanup and gates once (Lane: agent): Delete the removed variants' dead imports; `pnpm format`; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; `#### Spec 02` changelog block. Gates: 2.2
 
 ### 2.2 Gates
 

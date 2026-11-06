@@ -2,6 +2,8 @@
 
 Status: merged (993d47e6)
 Branch `v0.8/fix-demo-cues`, worktree 02, PR #123
+Files owned: `apps/shadcn-table-docs/components/dev-home/v12/signal-demo.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx`; `apps/shadcn-table-docs/scripts/page-checks/e.mjs` home entry
+Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
 Gates:
 - Repro on shipped code (ec0949b5): Chromium 1440x900, demo scrolled into view, DOM sampled every 100 ms through one loop: no `.v12-cue` element is ever the sort editor content (Due / Ascending / Add sort / Delete sort), the "Due" sort chip, the "Status" chip editor content or the view settings panel; the cues on portalled elements (the options "Due", "Status", "In Review", the striped switch) compute `::after` `content: none`, so they never showed: red as reported
 - `node scripts/check-pages.mjs e --url http://localhost:5347 --widths 1440 /` with the shipped `signal-demo.tsx` and `v12.css` and the new home entry: `demo: step titles` and `demo: cues the sort chip, the editors and the view settings panel` (`cued=`) fail as expected (P10)

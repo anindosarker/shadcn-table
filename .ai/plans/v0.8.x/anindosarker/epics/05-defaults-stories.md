@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-Specs 02, 03 and 04 build the new chrome behind options whose defaults still point at the old look. This spec flips every default the decisions name, in one place, after the three workstreams merged, and brings every Storybook story, play test, docs example and page check that assumed the old defaults to the new ones (D9) (D10) (D11) (D13) (D14) (D19) (D20) (D31) (D32) (D36). Workstream D (index, Run plan): branch `v0.8/defaults-stories`, worktree `01`, cut from `claude/review` after A, B and C merged, one builder, draft PR at the first push (P2), one fable review on the whole diff (`Review: fable`). Docs guides are spec 06's; this spec touches the docs app only where the flips would turn `check-pages` red.
+Specs 02, 03 and 04 build the new chrome behind options whose defaults still point at the old look. This spec flips every default the decisions name, in one place, after the three workstreams merged, and brings every Storybook story, play test, docs example and page check that assumed the old defaults to the new ones (D9) (D10) (D11) (D13) (D14) (D19) (D20) (D31) (D32) (D36). Workstream D (index, Run plan): branch `v0.8/defaults-stories`, worktree `01`, cut from `claude/review` after A, B and C merged, one builder, draft PR at the first push (P1), one fable review on the whole diff (`Review: fable`). Docs guides are spec 06's; this spec touches the docs app only where the flips would turn `check-pages` red.
 
 ### 1.2 Goals
 
@@ -95,26 +95,14 @@ apps/shadcn-table-docs/components/ui-<base>/     ← regenerated
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: Flips and seed
+### Milestone: Defaults and stories
 
-Lane: agent
-
-- 1.6.2 in the radix tree, copied to base and aria; `reference/05-check.mjs`
-- Gates: per base `tsc`; `node reference/05-check.mjs`; `check:bases`
-
-#### 2.1.2 Milestone 2: Stories and docs examples
-
-Lane: agent
-
-- 1.6.3 and 1.6.4; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; docs `types:check` and `lint`
-- Gates: `test:base`, `test:radix`, `test:aria`; `storybook:build:<base>` per base; `check-pages.mjs --base <base>` per base against the agent's own dev server (`PORT` in 5340 to 5360, P5)
-
-#### 2.1.3 Final milestone: Cleanup and gates once
-
-Lane: agent
-
-- `pnpm format`; `#### Spec 05` changelog lines
-- Gates: 2.2
+- Files owned: `hooks/useST_TableOptions.ts`, `hooks/useST_TableInstance.ts` in the three bases; every file under `packages/shadcn-table/stories/`; `apps/shadcn-table-docs/examples/<base>/{customize-filter-variants,enable-filter-facet-values,customize-filter-modes,customize-filter-components,alternate-pagination}/TS.tsx`; `apps/shadcn-table-docs/scripts/page-checks/*.mjs`; `reference/05-check.mjs`
+- Depends on: 02, 03, 04
+- Review: fable
+- Task 1: Flips and seed (Lane: agent): 1.6.2 in the radix tree, copied to base and aria; `reference/05-check.mjs`. Gates: per base `tsc`; `node reference/05-check.mjs`; `check:bases`
+- Task 2: Stories and docs examples (Lane: agent): 1.6.3 and 1.6.4; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install <base>` per base; docs `types:check` and `lint`. Gates: `test:base`, `test:radix`, `test:aria`; `storybook:build:<base>` per base; `check-pages.mjs --base <base>` per base against the agent's own dev server (`PORT` in 5340 to 5360, P5)
+- Task 3: Cleanup and gates once (Lane: agent): `pnpm format`; `#### Spec 05` changelog lines. Gates: 2.2
 
 ### 2.2 Gates
 

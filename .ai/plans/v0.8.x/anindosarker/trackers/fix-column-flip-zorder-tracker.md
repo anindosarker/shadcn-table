@@ -2,6 +2,8 @@
 
 Status: merged (dacf201e85bff20e43e12fe2a1bd22d224f31df5)
 Branch `v0.8/fix-column-flip-zorder`, worktree 01, PR #120
+Files owned: `hooks/useST_ColumnFlip.ts` in the three bases; `stories/features/ColumnDragging.stories.tsx`; `apps/shadcn-table-docs/components/dev-home/v12/signal-table.tsx` (workaround removal); `apps/shadcn-table-docs/scripts/page-checks/e.mjs` home entry (z-index assertion)
+Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
 Gates:
 - Repro on shipped code (905ef298): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/ColumnDragging.stories.tsx`: red as intended, `MovedColumnOnTop` failed with `expected { time: 30, body: false } to deeply equal { time: 30, body: true }` (the City body cell, sliding two slots left, was covered by a later sibling at 30 ms into the slide)
 - `pnpm --filter shadcn-table tsc:radix` at 7ac08fb4: green

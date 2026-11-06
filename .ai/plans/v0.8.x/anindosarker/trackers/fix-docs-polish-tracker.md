@@ -2,6 +2,8 @@
 
 Status: merged (ddfb01bb8e1381ef35c3c75792d465a679d03a1b)
 Branch `v0.8/docs-polish`, worktree 02, PR #112
+Files owned: `apps/shadcn-table-docs/components/dev-home/v12/{home-page,signal-demo,signal-table}.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/v12.css`, `apps/shadcn-table-docs/components/theme-demo/variants/{whole-app-site,whole-app}.tsx`, `apps/shadcn-table-docs/examples/<base>/advanced/TS.tsx`, `apps/shadcn-table-docs/examples/<base>/persistent-view/{TS.tsx,makeData.ts}`, `apps/shadcn-table-docs/scripts/page-checks/{_helpers,d}.mjs`
+Depends on: Docs app
 Gates:
 - `pnpm --filter shadcn-table-docs types:check` at fe725e75: green
 - `pnpm --filter shadcn-table-docs lint` at fe725e75: green (9 warnings, none new: the advanced example's `<img>` and earlier ones)

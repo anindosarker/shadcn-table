@@ -2,6 +2,8 @@
 
 Status: merged (1a0f67a73ea1fe69346b5e6a3b8e54810307e734)
 Branch `v0.8/fix-pins`, worktree 03, PR #111
+Files owned: `components/toolbar/{ST_ToolbarInternalButtons,ST_ViewSettingsButton,ST_ViewSettingsItems}.tsx` in the three bases; `stories/fixed-bugs/PinnedItemsCustomToolbar.stories.tsx`
+Depends on: 06.1
 Gates:
 - Repro on shipped code (040c7460), `ST_BASE=base vitest run stories/fixed-bugs/PinnedItemsCustomToolbar.stories.tsx`: red as expected, `PinInCustomToolbar` fails at `findByRole('button', { name: 'Toggle density' })` (no pinned item beside the custom-placed settings button); `PinsInStockToolbarOrder` green (guards the stock order).
 - `pnpm --filter shadcn-table tsc:radix` at f131ccbf: green

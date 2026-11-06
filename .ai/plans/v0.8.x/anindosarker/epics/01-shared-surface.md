@@ -4,7 +4,7 @@
 
 ### 1.1 Overview
 
-Every v0.8 workstream needs the same new types, options, icon keys, strings, state slices and drag helpers, and three of them would otherwise edit `types.ts`, `stConfigFeature.ts`, `icons.ts` and `en.ts` at once. This spec lands that surface first, in all three bases, with no default flip and no rendered change, so specs 02, 03 and 04 build on it in parallel (D3) (D9) (D11) (D17) (D18) (D20) (D21) (D24) (D35) (D36) (D37). It is the cycle's foundation (index, Run plan): branch `v0.8/shared-surface` from `claude/review`, worktree `01`, one builder, draft PR at the first push (P2), merged before any other workstream starts. It also captures the demo reference for the judged specs (D34) and opens the changelog section (D32).
+Every v0.8 workstream needs the same new types, options, icon keys, strings, state slices and drag helpers, and three of them would otherwise edit `types.ts`, `stConfigFeature.ts`, `icons.ts` and `en.ts` at once. This spec lands that surface first, in all three bases, with no default flip and no rendered change, so specs 02, 03 and 04 build on it in parallel (D3) (D9) (D11) (D17) (D18) (D20) (D21) (D24) (D35) (D36) (D37). It is the cycle's foundation (index, Run plan): branch `v0.8/shared-surface` from `claude/review`, worktree `01`, one builder, draft PR at the first push (P1), merged before any other workstream starts. It also captures the demo reference for the judged specs (D34) and opens the changelog section (D32).
 
 ### 1.2 Goals
 
@@ -243,34 +243,21 @@ export const getViewSettingsKey: (input: { idInput: string | undefined; leafColu
 
 ### 2.1 Milestones
 
-#### 2.1.1 Milestone 1: Dependency, captures and changelog
+### Milestone: Shared surface
 
-Lane: agent
+- Files owned: `types.ts`, `features/stConfigFeature.ts`, `features/stFeatures.ts`, `features/stRefsFeature.ts`, `features/stColumnDraggingFeature.ts`, `features/stViewSettingsFeature.ts`, `features/stFilterChipsFeature.ts`, `hooks/useST_TableOptions.ts` (pass-through only), `hooks/useST_TableInstance.ts` (transform slices), `shared/locales/en.ts`, `icons.ts`, `icons/*.ts`, `components/icons/ST_GridLineIcons.tsx`, `shared/utils/{drag,viewSettingsStorage,column,style}.utils.ts` (new helpers), `components/head/ST_TableHeadCellGrabHandle.tsx` (cancel rule), `components/menus/ST_ShowHideColumnsMenuItems.tsx` (cancel rule), `components/toolbar/ST_ToolbarDropZone.tsx`, `components/table/ST_TableContainer.tsx` (one line), `components/table/ST_Table.tsx` (tableRef line), `components/body/ST_TableBodyCell.tsx` (attribute line), `shared/utils/displayColumn.utils.ts` (row numbers read), `components/head/ST_TableHeadCellFilterContainer.tsx` (open prop), `index.ts`, in the three bases; `packages/shadcn-table/package.json`, `pnpm-lock.yaml`; `CHANGELOG.md` section skeleton; `stories/styling/DefaultLook.stories.tsx`
+- Depends on: none
+- Review: none
+- Task 1: Dependency, captures and changelog (Lane: agent): 1.6.1: bump lucide-react, `pnpm install`, commit lockfile; `tsc` per base to prove the existing aliases survive; fix any renamed alias in `icons.ts` in all three bases; Capture the fourteen references and the demo hash per 1.6.8; commit under `reference/`; `CHANGELOG.md` `## Unreleased` and the six spec blocks. Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` green
+- Task 2: Types, options, slices, helpers, icons, strings (Lane: agent): 1.6.2 to 1.6.8 in the radix tree, then copied byte-identical to base and aria (`style.utils.ts` and `types.ts` in aria keep their listed differences; apply the same hunks); `ST_Table.tsx` attaches `tableRef`; `ST_TableBodyCell.tsx` renders `data-flip-column={column.id}` on the `td`; `displayColumn.utils.ts` `showRowNumbersColumn` reads `enableRowNumbers || viewSettings.rowNumbers`; `ST_TableHeadCellFilterContainer.tsx` already takes `open?: boolean` that forces the Collapsible open (radix and base spread `CollapseProps` after the computed `open`, aria reads `open ?? ...`), so it is left untouched; `ST_TableContainer.tsx` sticky maxHeight reads `var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))`; `index.ts` exports: `drag.utils`, `viewSettingsStorage.utils`, `ST_GridLineIcons`; Write `reference/01-surface.json` and the Acceptance script `reference/01-check.mjs` (node, no dependencies) that reads it and greps the three files per base; `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria` so the docs copies carry the new types; `stories/styling/DefaultLook.stories.tsx`: the demo's columns (Name, Status, Project, Assignee, Due, Estimate, Priority, Tags, Reporter) with `columnDef.icon`, 50 rows, `enableRowActions` with three items, `enableColumnOrdering: false` on Name and Due, and the v0.8 options set explicitly (`layoutMode: 'grid'`, `enableColumnPinning`, `enableColumnResizing`, `enableColumnOrdering`, `paginationDisplayMode: 'pages'`, `positionActionsColumn: 'last'`, `columnFilterDisplayMode: 'chips'`, `enableSortPopover`, `enableViewSettings`, `enableScrollButtons`, `enableCellOverflowTooltip`, `initialState.columnPinning.end: ['st-row-actions']`); no plays here (spec 02 adds them); the capture source for specs 02, 03 and 04. Gates: per base `tsc`; `lint`; `check:tailwind`; `check:icons`; `check:bases`; `node reference/01-check.mjs`
+- Task 3: Cleanup and gates once (Lane: agent): `pnpm format`; remove any helper left unused by mistake (every helper above is meant to be unused until its consumer spec, so none is deleted for that reason); `#### Spec 01` changelog block filled. Gates: 2.2
 
-- 1.6.1: bump lucide-react, `pnpm install`, commit lockfile; `tsc` per base to prove the existing aliases survive; fix any renamed alias in `icons.ts` in all three bases
-- Capture the fourteen references and the demo hash per 1.6.8; commit under `reference/`
-- `CHANGELOG.md` `## Unreleased` and the six spec blocks
-- Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` green
+### Milestone: Demo captures
 
-#### 2.1.2 Milestone 2: Types, options, slices, helpers, icons, strings
-
-Lane: agent
-
-- 1.6.2 to 1.6.8 in the radix tree, then copied byte-identical to base and aria (`style.utils.ts` and `types.ts` in aria keep their listed differences; apply the same hunks)
-- `ST_Table.tsx` attaches `tableRef`; `ST_TableBodyCell.tsx` renders `data-flip-column={column.id}` on the `td`; `displayColumn.utils.ts` `showRowNumbersColumn` reads `enableRowNumbers || viewSettings.rowNumbers`; `ST_TableHeadCellFilterContainer.tsx` already takes `open?: boolean` that forces the Collapsible open (radix and base spread `CollapseProps` after the computed `open`, aria reads `open ?? ...`), so it is left untouched; `ST_TableContainer.tsx` sticky maxHeight reads `var(--st-sticky-max-height, clamp(350px, calc(100vh - var(--st-toolbar-height, 0px)), 9999px))`
-- `index.ts` exports: `drag.utils`, `viewSettingsStorage.utils`, `ST_GridLineIcons`
-- Write `reference/01-surface.json` and the Acceptance script `reference/01-check.mjs` (node, no dependencies) that reads it and greps the three files per base
-- `pnpm registry:build`; `pnpm --filter shadcn-table-docs lib:install radix|base|aria` so the docs copies carry the new types
-- `stories/styling/DefaultLook.stories.tsx`: the demo's columns (Name, Status, Project, Assignee, Due, Estimate, Priority, Tags, Reporter) with `columnDef.icon`, 50 rows, `enableRowActions` with three items, `enableColumnOrdering: false` on Name and Due, and the v0.8 options set explicitly (`layoutMode: 'grid'`, `enableColumnPinning`, `enableColumnResizing`, `enableColumnOrdering`, `paginationDisplayMode: 'pages'`, `positionActionsColumn: 'last'`, `columnFilterDisplayMode: 'chips'`, `enableSortPopover`, `enableViewSettings`, `enableScrollButtons`, `enableCellOverflowTooltip`, `initialState.columnPinning.end: ['st-row-actions']`); no plays here (spec 02 adds them); the capture source for specs 02, 03 and 04
-- Gates: per base `tsc`; `lint`; `check:tailwind`; `check:icons`; `check:bases`; `node reference/01-check.mjs`
-
-#### 2.1.3 Final milestone: Cleanup and gates once
-
-Lane: agent
-
-- `pnpm format`; remove any helper left unused by mistake (every helper above is meant to be unused until its consumer spec, so none is deleted for that reason)
-- `#### Spec 01` changelog block filled
-- Gates: 2.2
+- Files owned: `reference/01-*.png`, `reference/01-demo-commit.txt`
+- Depends on: none
+- Review: none
+- Task 1: Capture the fourteen references and the demo hash per 1.6.8; commit under `reference/` (done inside the Shared surface milestone's Task 1, recorded in `trackers/01-tracker.md`). Gates: `tsc:radix`, `tsc:baseui`, `tsc:aria` green
 
 ### 2.2 Gates
 

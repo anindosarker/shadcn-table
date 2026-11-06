@@ -2,6 +2,8 @@
 
 Status: merged (ec118670)
 Branch `v0.8/fix-multiselect`, worktree 01, PR #106
+Files owned: `shared/fns/filterFns.ts` in the three bases; `stories/fixed-bugs/MultiSelectFilter.stories.tsx`
+Depends on: Gate fixes (F8, F9)
 Gates:
 - `pnpm test:radix stories/fixed-bugs/MultiSelectFilter.stories.tsx` on the shipped code (10ec402c plus the story): red as expected, Subheader String Column and Chips String Column show "No results found" after picking two states, Empty Selection Keeps Every Row shows no rows; Subheader Array Column green
 - `pnpm tsc:radix` at fd7c5f40: green

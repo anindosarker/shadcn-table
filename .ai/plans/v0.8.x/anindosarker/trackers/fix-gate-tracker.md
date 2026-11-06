@@ -2,6 +2,8 @@
 
 Status: merged (7e1a96b7)
 Branch `claude/review` (inline, main checkout), no PR; `dev` fast-forwarded to 7e1a96b7
+Files owned: `components/table/ST_ScrollButtons.tsx` in the three bases; `components/buttons/ST_Tooltip.tsx` in aria; `packages/shadcn-table/.storybook/vitest.setup.ts`; `stories/styling/DefaultLook.stories.tsx`
+Depends on: 06
 Gates:
 - `pnpm tsc:radix` at 7e1a96b7: green
 - `pnpm tsc:baseui` at 7e1a96b7: green

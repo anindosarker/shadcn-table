@@ -2,6 +2,8 @@
 
 Status: merged (86382700756692c82ef8141e1a2bc441840842e4)
 Branch `v0.8/fix-last`, worktree 01, PR #114
+Files owned: `components/head/ST_TableHeadCellFilterLabel.tsx`, `components/body/ST_TableBodyRow.tsx`, `components/body/ST_TableBody.tsx`, `components/inputs/ST_SelectCheckbox.tsx`, `components/menus/ST_ShowHideColumnsMenuItems.tsx`, `components/head/ST_TableHeadCellResizeHandle.tsx`, `components/head/ST_TableHeadCell.tsx`, `components/body/ST_TableBodyCell.tsx`, `components/toolbar/ST_ToolbarInternalButtons.tsx`, `hooks/display-columns/getST_RowExpandColumnDef.tsx` (the grouped header, F41), `components/body/ST_TableBodyRowGrabHandle.tsx`, `features/stRowDraggingFeature.ts`, `hooks/useST_RowFlip.ts` (new, D57), `hooks/useST_ColumnFlip.ts` (F30 consumer side), in the three bases; `stories/features/{Selection,ColumnHiding,ColumnResizing,Toolbar,ColumnGrouping,RowOrdering}.stories.tsx`, `stories/fixed-bugs/FilterPopover.stories.tsx`; `apps/shadcn-table-docs/examples/<base>/{export-to-csv,export-to-pdf}/TS.tsx`, `apps/shadcn-table-docs/scripts/page-checks/d.mjs`
+Depends on: Stories and DefaultLook
 Gates:
 - Repro on shipped code (335c749c), base, `FunnelIsClickable`: red, the funnel button is 12.07 px wide (want at least 24).
 - Repro on shipped code (335c749c), base, `DropSlidesRows`: red, the moved row has no translate animation after the drop (0 animations).
