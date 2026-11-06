@@ -678,10 +678,12 @@ index d099d3a0..d778bfba 100644
 ### D78 The release gate is a CI step, not an agent
 
 - The 0.8.0 release took 80 minutes with 13 agents and 1.8M tokens; the three gate agents spent 35 minutes re-deriving by hand what 138 Storybook plays per base and `install.yml` already prove. From 0.8.1 the runtime gate of spec 07 1.6.2 is a checked-in Playwright file run as a step of `install.yml` on the Next app it scaffolds: console zero warnings and errors on the gate, persisted and RTL pages, the persisted page's `data-st-view-pending` timing on a real reload, the RTL header and handle boxes, the two default-state captures per base. The checks the plays already cover (toolbar order, column menu, filter, sort, view settings, drag, locked column, scroll chevron, search, actions column) are not repeated. No gate agent. Ships as 0.8.1 (sub-spec 07.1), no library change. Owner, 2026-11-06 ("fix the scripts, add new ones if needed, and from future plan it properly"; "v0.8.1").
+- Addendum 2026-11-06: the check is the browser phase of the Installation E2E test (D85, D86); "gate" is retired (D84). Owner.
 
 ### D79 Captures are compared by pixel diff, judges removed
 
 - The gate step compares each capture with a reference PNG committed in the repo using `pixelmatch` (per-pixel colour tolerance, a maximum differing-pixel count); above the maximum the step fails and uploads the diff image as a CI artifact. The "three judges" line of spec 07 2.2 goes. Nobody looks at a passing diff. A failing diff: the owner in triage; the main session reads the diff image only in an unattended run before fixing forward. Owner, 2026-11-06 ("yes, that can reduce ai cost and time").
+- Addendum 2026-11-06: the comparison runs inside the Installation E2E test for the Next scenarios (D86); the references live in `test/installation-e2e/fixtures/reference/<base>/` (D85). Owner.
 
 ### D80 The pipeline releases; no releaser agent
 
@@ -709,6 +711,7 @@ index d099d3a0..d778bfba 100644
 - `release.yml` runs once on that push: tag, wait for production, smoke, installs, GitHub release, PR comment; then `claude/review` and `dev` fast-forward to `master`. Deleted: the `version` job, `version-pr.mjs`, branch `release/next`. Supersedes the version-PR half of v0.5.x decision 7 (the accumulating bot PR fitted many merges into `master`; D81 gives `master` one PR per release).
 - Repo settings, the owner's one-time authorization: the App token secret, auto-merge on, the `pr.yml` jobs as required checks, the `dev`-only source rule on the `master` ruleset. Code changes in epic 07.1; the rest is process (P1). Owner, 2026-11-06.
 - Addendum 2026-11-06: the push token is a fine-grained PAT, repository `anindosarker/shadcn-table`, Contents read and write, stored as the secret `RELEASE_BOT_TOKEN` (created by the owner 2026-11-06; expires in one year), not a GitHub App. Source: A22. Owner.
+- Addendum 2026-11-06: the integration milestone runs `pnpm test --all` (D85) on `dev`; the bump job is Prepare Release (D86). Owner.
 
 ### D84 "Check" replaces "gate"
 
