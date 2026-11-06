@@ -1,18 +1,15 @@
-// Placeholder until its milestone task fills it: listed, never run.
 import { defineTest } from '../lib/define.mjs';
+import { run, SCENARIOS } from './test.mjs';
 
 export default defineTest({
   name: 'installation-e2e',
-  paths: ['test/installation-e2e/**'],
-  scenarios: [
-    'fresh',
-    'existing',
-    'base',
-    'aria',
-    'nextjs-base',
-    'nextjs-radix',
-    'nextjs-aria',
+  paths: [
+    'packages/shadcn-table/registry/**',
+    'packages/shadcn-table/package.json',
+    'apps/shadcn-table-docs/examples/**',
+    'tools/registry/**',
+    'test/installation-e2e/**',
   ],
-  pending: true,
-  run: async () => ({ status: 'fail', summary: 'not written yet' }),
+  scenarios: Object.keys(SCENARIOS),
+  run,
 });

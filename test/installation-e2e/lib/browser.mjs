@@ -1,9 +1,10 @@
-// The release gate (D78, D79; epic 07.1 1.6.3). install.yml runs it on the
-// Next app it scaffolds per base, against `next dev` (React Aria warns in
-// development builds only), with the pages of ./pages copied into the app:
+// The browser phase of installation-e2e (D78, D79; epic 07.1 1.6.3, was
+// the release gate). test.mjs runs it on the Next app it scaffolds per base,
+// against `next dev` (React Aria warns in development builds only), with the
+// pages of ../fixtures/pages copied into the app:
 //
-//   node test/release/gate.mjs --base <base|radix|aria> --url <origin> --out <dir>
-//     [--reference <dir>] [--no-diff]
+//   node test/installation-e2e/lib/browser.mjs --base <base|radix|aria>
+//     --url <origin> --out <dir> [--reference <dir>] [--no-diff]
 //
 // Checks: zero console warnings and errors on /release-gate,
 // /release-gate/persisted and /release-gate/rtl; the persisted view marked
@@ -11,8 +12,9 @@
 // order restored after a reload (D36); the RTL pinned Name header and its
 // resize handle on the inline-end edge, a 60 px handle drag widening it
 // (v0.7.x D31); the two default captures, compared with the committed
-// references by pixelmatch. Writes <out>/default-{light,dark}.png,
-// default-<m>-diff.png on a failed diff, and result.json. Exit 0 pass, 1 any
+// references (../fixtures/reference/<base>/) by pixelmatch. Writes
+// <out>/default-{light,dark}.png, default-<m>-diff.png on a failed diff, and
+// result.json. Exit 0 pass, 1 any
 // failure. The checks the Storybook plays cover are not repeated here.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -42,7 +44,7 @@ const { values: args } = parseArgs({
 });
 if (!BASES.includes(args.base) || !args.url || !args.out) {
   console.error(
-    'usage: node test/release/gate.mjs --base <base|radix|aria> --url <origin> --out <dir> [--reference <dir>] [--no-diff]',
+    'usage: node test/installation-e2e/lib/browser.mjs --base <base|radix|aria> --url <origin> --out <dir> [--reference <dir>] [--no-diff]',
   );
   process.exit(1);
 }
@@ -50,7 +52,7 @@ const base = args.base;
 const origin = args.url.replace(/\/$/, '');
 const out = path.resolve(args.out);
 const reference = path.resolve(
-  args.reference ?? path.join(HERE, 'reference', base),
+  args.reference ?? path.join(HERE, '..', 'fixtures', 'reference', base),
 );
 fs.mkdirSync(out, { recursive: true });
 
