@@ -1,0 +1,46 @@
+name: Installation E2E
+
+# Called by pr.yml (D90): one job per scenario. A fresh app installs the
+# table from the dev registry built from this checkout (served on 5310),
+# typechecks and builds; the Next scenarios then run the browser checks and
+# the capture diff on 5341 (no-diff: capture only, the reference refresh path
+# of D86). Its test/.out/ records and captures are uploaded as
+# test-out-installation-e2e-<scenario>. The check context reads
+# `Installation E2E / Installation E2E (<scenario>)`.
+on:
+  workflow_call:
+    inputs:
+      no-diff:
+        description: Capture without comparing against the committed references
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  installation-e2e:
+    name: Installation E2E (${{ matrix.scenario }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [fresh, existing, base, aria, nextjs-base, nextjs-radix, nextjs-aria]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
+        if: startsWith(matrix.scenario, 'nextjs-')
+      - run: pnpm test installation-e2e --ci --scenario ${{ matrix.scenario }} ${{ inputs.no-diff && '--no-diff' || '' }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-out-installation-e2e-${{ matrix.scenario }}
+          path: test/.out/
+          include-hidden-files: true
+          overwrite: true
