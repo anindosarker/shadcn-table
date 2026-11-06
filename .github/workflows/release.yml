@@ -1,15 +1,15 @@
 name: release
 
-# Runs on every push to master and does one of three things, chosen by the
-# decide job:
-#   version  CHANGELOG.md has `## Unreleased` lines: computes the next version
-#            (the merged PR's `release:` label, else the headings) and opens or
-#            rewrites the version PR `chore: version <v>` from release/next.
+# Runs on every push to master and does one of two things, chosen by the
+# decide job (scripts/release/decide.mjs):
 #   release  `## Unreleased` is gone and v<package version> is untagged (the
-#            version PR was merged): tags this commit, waits for production,
-#            smokes the site, installs the table per base, creates the GitHub
-#            release and comments "Released in v<v>" on the PRs it shipped.
-#   none     neither (a merge that adds no changelog lines): every job skips.
+#            release PR merged with its `chore: version <v>` commit from the
+#            `version bump (release:prepare)` job of pr.yml): tags this
+#            commit, waits for production, smokes the site, installs the
+#            table per base, creates the GitHub release and comments
+#            "Released in v<v>" on the PRs it shipped.
+#   none     anything else (the version is tagged, or `## Unreleased` has
+#            lines: merged without the bump, a warning): every job skips.
 # workflow_dispatch runs the release path for `version` (default: the package
 # version) without tagging, to re-run after a failed late step; dry_run (the
 # default) also skips the GitHub release and the comments.
@@ -38,17 +38,12 @@ env:
 
 jobs:
   decide:
-    name: decide (version PR, release or nothing)
+    name: decide (release or nothing)
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
     outputs:
       mode: ${{ steps.decide.outputs.mode }}
       version: ${{ steps.decide.outputs.version }}
-      level: ${{ steps.decide.outputs.level }}
     env:
-      GH_TOKEN: ${{ github.token }}
       INPUT_VERSION: ${{ inputs.version }}
       EVENT: ${{ github.event_name }}
     steps:
@@ -57,45 +52,11 @@ jobs:
         with:
           node-version: 22
       # scripts/release/decide.mjs reads EVENT, INPUT_VERSION and GITHUB_SHA,
-      # runs next-version.mjs, asks gh for the merged PR's label and git for
-      # the tag, and writes mode, version and level to $GITHUB_OUTPUT.
-      - name: Read the changelog, the merged PR's label, the package version and its tag
+      # runs next-version.mjs, asks git for the tag, and writes mode and
+      # version to $GITHUB_OUTPUT.
+      - name: Read the changelog, the package version and its tag
         id: decide
         run: node scripts/release/decide.mjs
-
-  version:
-    name: version PR (release/next)
-    needs: decide
-    if: needs.decide.outputs.mode == 'version'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      LEVEL: ${{ needs.decide.outputs.level }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      # A version PR already open from earlier merges keeps its version when
-      # this merge asks for a lower one: several merges accumulate in one PR.
-      - name: Compute the next version and open or rewrite the version PR
-        run: |
-          if [ -n "$LEVEL" ]; then
-            next=$(node scripts/release/next-version.mjs --level "$LEVEL" --from-changelog)
-          else
-            next=$(node scripts/release/next-version.mjs --from-changelog)
-          fi
-          open=$(gh pr list --head release/next --base master --state open --json title \
-            --jq '.[0].title // "" | ltrimstr("chore: version ")')
-          if [ -n "$open" ]; then
-            next=$(printf '%s\n%s\n' "$next" "$open" | sort -V | tail -n 1)
-          fi
-          echo "next version $next (open version PR: ${open:-none})"
-          node scripts/release/version-pr.mjs "$next"
-          echo "Version PR \`chore: version $next\` from release/next." >> "$GITHUB_STEP_SUMMARY"
 
   wait-for-production:
     name: wait for production
