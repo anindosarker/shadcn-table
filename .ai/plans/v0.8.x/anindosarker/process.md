@@ -64,7 +64,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 - `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/index.ts`: each milestone's exports under its own `// spec NN` comment.
 - `CHANGELOG.md`: one `#### Epic NN` block per milestone under `## Unreleased` (`#### Epic NN <milestone>` when an epic has several milestones); released versions keep their older `Spec` headings.
 - `registry.json`, the `examples-*-diff.json` lists and `apps/shadcn-table-docs/components/ui-<base>/` are generated: regenerated at merge, never hand-merged.
-- `tools/registry/{base,aria}-diff.json` (today `packages/shadcn-table/scripts/registry/`) are hand-kept allow lists, owned by the milestone that adds the differing file.
+- `tools/registry/{base,aria}-diff.json` are hand-kept allow lists, owned by the milestone that adds the differing file.
 
 ## P10 Plans
 

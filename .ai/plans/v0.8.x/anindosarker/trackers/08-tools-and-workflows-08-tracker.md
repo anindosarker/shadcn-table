@@ -1,6 +1,6 @@
 # 08: Tools and workflows (08), tracker (D85, D86, D87, D88)
 
-Status: merged (977d1503)
+Status: merged (85d27dab)
 Branch `v0.8/08-tools-workflows`, worktree `shadcn-react-table.worktrees/01`, no PR (P1, P3)
 Checks:
 - Check: tool unit tests, `node --test "tools/**/*.test.mjs"` at 2b6a1e62: pass (27)

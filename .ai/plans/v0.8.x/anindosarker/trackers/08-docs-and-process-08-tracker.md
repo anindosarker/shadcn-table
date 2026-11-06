@@ -1,6 +1,6 @@
 # 08: Docs and process (08), tracker (D85, D86, D87, D88, D89, D90, D91)
 
-Status: verified (Tasks 1, 3, 4, 5, 6 done; Task 2 and the ruleset rewrite pending, main session)
+Status: merged (85d27dab)
 Branch `v0.8/08-docs-process`, worktree `shadcn-react-table.worktrees/01`, no PR (P1, P3)
 Checks:
 

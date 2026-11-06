@@ -425,7 +425,9 @@ export const run = async (ctx) => {
     for (const server of servers) await server.stop();
   }
 
-  fs.rmSync(tmp, { recursive: true, force: true });
+  // next dev may still release files for a moment after stop(); retry the
+  // removal instead of failing a passed scenario with ENOTEMPTY (F62).
+  fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
   let summary = 'built';
   if (template === 'next') {
     if (details.browser === 'skipped') summary += ', browser skipped';

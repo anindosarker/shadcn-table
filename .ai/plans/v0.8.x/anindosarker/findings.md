@@ -254,3 +254,7 @@
 ### F61 Flaky docs E2E timing check: demo "pauses when scrolled away mid-step"
 
 - `test/docs-e2e/lib/e.mjs` (examples, to become `examples.mjs` per D89), the 1440 px demo check "pauses when scrolled away mid-step": failed once on the first CI run of the new `pr.yml` (run 42238797293, Docs E2E Tests (radix)), green on the rerun. A timing assertion on the home demo's pause; third known flake after `Profiled Thousand Rows` and `PanelCollapse` (F60). Not fixed; the D91 parallel contexts may make it worse, so the D91 task waits for the pause state with `waitFor` instead of a fixed delay.
+
+### F62 Installation E2E cleanup fails with ENOTEMPTY after a passed Next scenario
+
+- `test/installation-e2e/test.mjs`, the `fs.rmSync(tmp, { recursive: true, force: true })` after the browser phase: on CI the `next dev` child still releases files for a moment after `stop()`, so the removal throws ENOTEMPTY and the scenario reports a failure although every check passed (runs 42254086380 nextjs-base, 42256775917 nextjs-radix, green on rerun). Fixed 2026-11-06 from the main session: `maxRetries: 10, retryDelay: 300` on the removal.
