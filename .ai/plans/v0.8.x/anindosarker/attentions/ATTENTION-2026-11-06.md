@@ -2,6 +2,8 @@
 
 ## A22 The bump job's push token: a fine-grained PAT, not a GitHub App
 
+- Closed by the D83 addendum: PAT `RELEASE_BOT_TOKEN`, created 2026-11-06.
+
 - D83 says "a GitHub App token". An App needs two secrets (app id, private key) and `actions/create-github-app-token` per run; a fine-grained PAT is one secret. The epic reads one secret `RELEASE_BOT_TOKEN` (contents: write on this repository). The owner creates it before the release PR: GitHub Settings, Developer settings, Fine-grained tokens, repository `anindosarker/shadcn-table`, permission Contents read and write, then `gh secret set RELEASE_BOT_TOKEN`. Without it the `version bump` job fails with a clear message and the release PR cannot merge.
 - Options: PAT as the epic has it (recommended); or a GitHub App, two secrets, the job rewritten.
 
