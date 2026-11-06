@@ -1,6 +1,6 @@
 # 08: Test runner and tests (08), tracker (D85, D86, D87, D88)
 
-Status: verified
+Status: merged (8e6208ef)
 Branch `v0.8/08-test-runner`, worktree `shadcn-react-table.worktrees/01`, no PR (P1, P3)
 Checks:
 - Check: frozen install, `pnpm install --frozen-lockfile` at 85ec0484: pass
