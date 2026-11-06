@@ -718,4 +718,46 @@ index d099d3a0..d778bfba 100644
 - Test names: `typecheck`, `lint`, `storybook-plays`, `storybook-build`, `check-docs-local`, `check-bases-identical`, `check-icon-maps`, `check-tailwind-classes`, `check-registry`, `install-fresh-app`, `check-installed-app` (the browser run on the installed Next app, was "gate" and "install smoke"), `check-pr-release-label`, `check-pr-version-bump`, `check-docs-live` (the deployed site after a release), `unit`. The folder, `pnpm test <name>`, the CI job and the tracker line use the same string.
 - `tools/` holds what workflows and developers run that is not a test: `tools/release/` (decide, prepare, next-version, notes, comment, their `*.test.mjs` run by `test/unit`), `tools/registry/` (build, hosted, examples, bases, lib, from `packages/shadcn-table/scripts/registry/`). Gone: `scripts/`, `packages/shadcn-table/scripts/`, `packages/shadcn-table/test/`, `apps/shadcn-table-docs/scripts/page-checks/`.
 - The package keeps `registry/` and `stories/` (each story a render test, a `play:` the behaviour test; no separate plays folder) and its `test:<base>`, `tsc:*`, `lint`, `storybook:build:*` scripts as implementation the tests call. Root `package.json`: `"test": "node test/run.mjs"`, `playwright`, `pixelmatch`, `pngjs` as devDependencies; `check:*` and `release:prepare` removed.
+- The layout:
+
+```
+shadcn-react-table/
+├── test/
+│   ├── run.mjs                        runner: discovers */run.mjs; --list --all --changed --base --scenario --ci
+│   ├── lib/
+│   │   ├── define.mjs                 defineTest({ name, paths, bases, scenarios, run })
+│   │   ├── exec.mjs
+│   │   └── report.mjs                 one summary line, .out/<name>[-<base>].json
+│   ├── .out/                          gitignored
+│   ├── typecheck/                     run.mjs, test.mjs
+│   ├── lint/                          run.mjs, test.mjs
+│   ├── storybook-plays/               run.mjs, test.mjs
+│   ├── storybook-build/               run.mjs, test.mjs
+│   ├── check-docs-local/              run.mjs, test.mjs, lib/{helpers.mjs, a.mjs … e.mjs}
+│   ├── check-bases-identical/         run.mjs, test.mjs
+│   ├── check-icon-maps/               run.mjs, test.mjs
+│   ├── check-tailwind-classes/        run.mjs, test.mjs
+│   ├── check-registry/                run.mjs, test.mjs
+│   ├── install-fresh-app/             run.mjs, test.mjs, fixtures/{table-demo.tsx, page.tsx}
+│   ├── check-installed-app/           run.mjs, test.mjs, lib/init.js, fixtures/{pages/, reference/<base>/}
+│   ├── check-pr-release-label/        run.mjs, test.mjs
+│   ├── check-pr-version-bump/         run.mjs, test.mjs
+│   ├── check-docs-live/               run.mjs, test.mjs
+│   └── unit/                          run.mjs, test.mjs, cases/
+├── tools/
+│   ├── release/                       decide, prepare, next-version, notes, comment (.mjs + .test.mjs)
+│   └── registry/                      build, hosted, examples, bases, lib (.mjs)
+├── packages/shadcn-table/
+│   ├── registry/                      the library, three bases
+│   ├── stories/                       stories with plays
+│   └── package.json                   test:<base>, tsc:*, lint, storybook:build:* as implementation only
+├── apps/shadcn-table-docs/            scripts/page-checks/ gone
+├── docs/code-of-conduct/
+└── .github/workflows/
+    ├── pr.yml                         one job per test name (the set is D86)
+    ├── install.yml                    `pnpm test install-fresh-app --scenario <s>`, `pnpm test check-installed-app --base <b>`
+    └── release.yml                    `node tools/release/decide.mjs`, wait, `pnpm test check-docs-live`, release
+```
+
+Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the only file `run.mjs` imports, `lib/` and `fixtures/` private.
 - Workflows call tests: a `pr.yml` job is setup steps plus `pnpm test <name>`; `install.yml` runs `install-fresh-app` then `check-installed-app`; `release.yml` runs `tools/release/decide.mjs`, waits for the deploy, `check-docs-live`, the GitHub release. Agents run the same commands natively; `act` stays the optional Linux run for `check-installed-app` and `check-docs-local` (D81, D83). Owner, 2026-11-06. The set of CI jobs per PR and per release is D86 (open).
