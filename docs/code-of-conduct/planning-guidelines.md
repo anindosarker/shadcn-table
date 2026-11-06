@@ -39,8 +39,8 @@ How to write an implementation plan for this repository. Applies to humans and a
 9. **Design in, implementation out.** Include interfaces, types, constants, file shapes,
    usage examples. Never method bodies or algorithm walkthroughs. Test: a decision goes in;
    how to do it stays in the code.
-10. **Cleanup task always last.** Delete old code, update references, run the repo gates.
-11. **Gates per task.** Each task names the commands that must pass, per base where the
+10. **Cleanup task always last.** Delete old code, update references, run the repo checks.
+11. **Checks per task.** Each task names the commands that must pass, per base where the
     repository has bases.
 12. **No em dashes.** Use a comma, a colon or a new sentence.
 13. **Dependency edges need a file reason.** Each milestone block names its `Files owned` and
@@ -153,11 +153,11 @@ fits one sprint; `ownership.py` reads these blocks.
 - Files owned: [a, b]
 - Depends on: [milestone names or epic numbers, or none]
 - Review: [none | fable]
-- Task 1: [what]. Gates: [commands]
-- Task 2: [what]. Gates: [commands]
-- Task N: Cleanup, delete old code, update references. Gates: repo gates
+- Task 1: [what]. Checks: [commands]
+- Task 2: [what]. Checks: [commands]
+- Task N: Cleanup, delete old code, update references. Checks: repo checks
 
-### 2.2 Gates
+### 2.2 Checks
 
 - `command` per base, what green means
 ````
@@ -222,10 +222,10 @@ Client component; highlights the active file when opened.
 - Files owned: `apps/shadcn-table-docs/components/code-explorer.tsx`, `apps/shadcn-table-docs/components/mdx/example-snippet.tsx`
 - Depends on: none
 - Review: none
-- Task 1: Change `ExplorerFile`, render `DynamicCodeBlock`. Gates: docs `types:check`
-- Task 2: Cleanup, remove `highlight` and `CodeBlock` imports from `example-snippet.tsx`. Gates: `pnpm format`, docs `types:check`, `lint`, `build`
+- Task 1: Change `ExplorerFile`, render `DynamicCodeBlock`. Checks: docs `types:check`
+- Task 2: Cleanup, remove `highlight` and `CodeBlock` imports from `example-snippet.tsx`. Checks: `pnpm format`, docs `types:check`, `lint`, `build`
 
-### 2.2 Gates
+### 2.2 Checks
 
 - Docs `build`; `du` on `.next/server/app/docs` under 15 MB
 - `check-pages.mjs a` and `e` against `next start`
