@@ -7,6 +7,15 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 that the release workflow opens renames that heading to the version and the
 date; merging it publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+#### Spec 07.1 gate step
+
+- The release gate is a step of `install.yml` (D78): a Next.js app per base (`nextjs-base`, `nextjs-radix`, `nextjs-aria` rows) runs `packages/shadcn-table/test/release/gate.mjs` (Playwright) against `next dev` of the gate pages: zero console warnings and errors, the persisted view marked before first paint and restored, the RTL pinned header and resize handle.
+- The two default captures per base are compared with the references under `packages/shadcn-table/test/release/reference/` by `pixelmatch` (at most 500 differing pixels); the captures, any diff image and `result.json` upload as the `gate-<base>` artifact (D79). `install.yml` gains a `workflow_dispatch` trigger to refresh the references.
+
 ## 0.8.0 - 2026-11-05
 
 ### Added
