@@ -2,8 +2,17 @@ name: install
 
 # The install matrix, reusable: pr.yml runs it against the GitHub address at
 # the pull request's merge SHA, release.yml against the public URL of the
-# tagged production deployment. One definition, so the two cannot drift.
+# tagged production deployment. One definition, so the two cannot drift. A
+# workflow_dispatch on a branch runs it against the dev registry: the proof of
+# a workflow edit, and the run whose gate-<base> artifacts become the release
+# gate's reference captures (packages/shadcn-table/test/release/reference/).
 on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: Template of the main item's address, as for workflow_call.
+        type: string
+        default: http://localhost:5310/r/<item>.json
   workflow_call:
     inputs:
       source:
@@ -28,11 +37,12 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       SOURCE: ${{ inputs.source }}
-      # Each scenario names its base in the matrix (matrix.base): fresh,
-      # existing and nextjs run on the Radix base and install the
-      # shadcn-table-radix item; base scaffolds on Base UI and installs the
-      # shadcn-table-base item, aria scaffolds on React Aria and installs
-      # shadcn-table-aria. Every committed item is named by its base (bases.mjs
+      # Each scenario names its base in the matrix (matrix.base): fresh and
+      # existing run on the Radix base and install the shadcn-table-radix
+      # item; base scaffolds on Base UI and installs the shadcn-table-base
+      # item, aria scaffolds on React Aria and installs shadcn-table-aria; the
+      # nextjs-<base> rows scaffold a Next.js app per base and run the release
+      # gate on it. Every committed item is named by its base (bases.mjs
       # baseItemName): the locale item is shadcn-table-<base>-locale-de, the
       # example item example-basic-<base>.
       BASE: ${{ matrix.base }}
@@ -52,6 +62,21 @@ jobs:
         }
         fs.writeFileSync(file, source.replace(line, ''));
         console.log(`${file}: unused React import deleted`);
+      # Next rows on base and radix: wraps the layout's children in
+      # TooltipProvider, exits 1 when the template's ThemeProvider line is
+      # not there.
+      WRAP_TOOLTIP_PROVIDER: |
+        const fs = require('fs');
+        const file = 'app/layout.tsx';
+        const source = fs.readFileSync(file, 'utf8');
+        const provider = '<ThemeProvider>{children}</ThemeProvider>';
+        if (!source.includes(provider)) {
+          console.error(`${file}: no \`${provider}\` line; the Next template changed, update this step`);
+          process.exit(1);
+        }
+        const wrapped = '<ThemeProvider><TooltipProvider>{children}</TooltipProvider></ThemeProvider>';
+        fs.writeFileSync(file, `import { TooltipProvider } from "@/components/ui/tooltip"\n${source.replace(provider, wrapped)}`);
+        console.log(`${file}: children wrapped in TooltipProvider`);
     strategy:
       fail-fast: false
       matrix:
@@ -60,7 +85,9 @@ jobs:
           - { scenario: existing, base: radix }
           - { scenario: base, base: base }
           - { scenario: aria, base: aria }
-          - { scenario: nextjs, base: radix }
+          - { scenario: nextjs-base, base: base }
+          - { scenario: nextjs-radix, base: radix }
+          - { scenario: nextjs-aria, base: aria }
     steps:
       # The repo is checked out into repo/ only for the dev registry (locale
       # step below); the consumer app lives in ${{ runner.temp }}/app so no
@@ -77,11 +104,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: repo/pnpm-lock.yaml
       - name: Scaffold a Vite app on the scenario's base
-        if: matrix.scenario != 'nextjs'
+        if: ${{ !startsWith(matrix.scenario, 'nextjs') }}
         run: pnpm dlx shadcn@latest init --template vite --base "$BASE" --preset nova --name app --yes
         working-directory: ${{ runner.temp }}
       - name: Scaffold a Next.js app on the scenario's base
-        if: matrix.scenario == 'nextjs'
+        if: startsWith(matrix.scenario, 'nextjs')
         run: pnpm dlx shadcn@latest init --template next --base "$BASE" --preset nova --name app --yes
         working-directory: ${{ runner.temp }}
       - name: Pre-install TanStack packages (existing app only)
@@ -126,7 +153,7 @@ jobs:
         run: node -e "$DROP_LABEL_IMPORT"
         working-directory: ${{ runner.temp }}/app
       - name: Mount a table, type-check and build (Vite)
-        if: matrix.scenario != 'nextjs'
+        if: ${{ !startsWith(matrix.scenario, 'nextjs') }}
         run: |
           cat > src/App.tsx <<'TSX'
           import { ShadcnTable } from '@/components/ui/shadcn-table';
@@ -148,11 +175,21 @@ jobs:
           pnpm exec vite build
         working-directory: ${{ runner.temp }}/app
       # The table runs hooks, so it mounts in a client component; the server
-      # component page imports that component. next build type-checks and
-      # compiles both.
+      # component page imports that component. The release gate's pages
+      # (/release-gate, /persisted, /rtl) and their table are copied in from
+      # the checkout; on base and radix the layout's children are wrapped in
+      # TooltipProvider, the user step for those bases' tooltip part. next
+      # build type-checks and compiles all of them.
       - name: Mount a table in a client component and run next build
-        if: matrix.scenario == 'nextjs'
+        if: startsWith(matrix.scenario, 'nextjs')
         run: |
+          pages="$GITHUB_WORKSPACE/repo/packages/shadcn-table/test/release/pages"
+          mkdir -p app/release-gate components/gate
+          cp -R "$pages/app/release-gate/." app/release-gate/
+          cp -R "$pages/components/gate/." components/gate/
+          if [ "$BASE" != aria ]; then
+            node -e "$WRAP_TOOLTIP_PROVIDER"
+          fi
           cat > components/table-demo.tsx <<'TSX'
           'use client';
 
@@ -184,11 +221,40 @@ jobs:
           TSX
           pnpm exec next build
         working-directory: ${{ runner.temp }}/app
+      # The release gate (D78, D79): test/release/gate.mjs drives Chromium
+      # against `next dev` (React Aria warns in development builds only):
+      # console, persisted view timing, RTL boxes, the two default captures
+      # diffed with test/release/reference/<base>/. It runs from repo/ so
+      # playwright, pixelmatch and pngjs resolve from the package.
+      - name: Install Chromium for the release gate
+        if: startsWith(matrix.scenario, 'nextjs')
+        run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
+        working-directory: repo
+      - name: Start next dev for the release gate
+        if: startsWith(matrix.scenario, 'nextjs')
+        run: |
+          (pnpm exec next dev -p 5341 > next-dev.log 2>&1 &)
+          for _ in $(seq 1 120); do
+            curl -sf -o /dev/null http://localhost:5341/release-gate && break
+            sleep 1
+          done
+          curl -sf -o /dev/null http://localhost:5341/release-gate || { cat next-dev.log; exit 1; }
+        working-directory: ${{ runner.temp }}/app
+      - name: Run the release gate
+        if: startsWith(matrix.scenario, 'nextjs')
+        run: pnpm --filter shadcn-table exec node test/release/gate.mjs --base "$BASE" --url http://localhost:5341 --out "$RUNNER_TEMP/gate"
+        working-directory: repo
+      - name: Upload the release gate captures and result
+        if: always() && startsWith(matrix.scenario, 'nextjs')
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-${{ matrix.base }}
+          path: ${{ runner.temp }}/gate/
       # The example item comes from the dev registry too, so its core
       # dependency resolves to this SHA's library; --overwrite lets it replace
       # the files without a prompt.
       - name: Add a locale and the base's example-basic
-        if: matrix.scenario != 'nextjs'
+        if: ${{ !startsWith(matrix.scenario, 'nextjs') }}
         run: |
           set -o pipefail
           pnpm dlx shadcn@latest add "http://localhost:5310/r/$ITEM-locale-de.json" --yes --overwrite 2>&1 | tee -a shadcn-add.log
@@ -203,7 +269,7 @@ jobs:
         run: node -e "$DROP_LABEL_IMPORT"
         working-directory: ${{ runner.temp }}/app
       - name: Mount the locale and example-basic, type-check and build
-        if: matrix.scenario != 'nextjs'
+        if: ${{ !startsWith(matrix.scenario, 'nextjs') }}
         run: |
           cat > src/App.tsx <<'TSX'
           import Example from '@/components/examples/basic/basic';
