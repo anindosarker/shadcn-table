@@ -4,7 +4,7 @@
  * strips only survive inside guides), so each page asserts that single panel
  * plus the example's own markers.
  */
-import { example, headerLabelsFit } from './_helpers.mjs';
+import { example, headerLabelsFit } from './helpers.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 

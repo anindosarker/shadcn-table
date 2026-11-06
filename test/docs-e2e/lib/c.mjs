@@ -3,7 +3,7 @@
  * (guides/pagination lives in a.mjs). Each entry: async ({ page, check }) =>
  * void, run after load at the first width.
  */
-import { example, exampleGroup, panelOf, propTable } from './_helpers.mjs';
+import { example, exampleGroup, panelOf, propTable } from './helpers.mjs';
 
 /** The feature's visible marker inside an example wrapper. */
 async function marker(wrapper, id, label, selector, check) {
