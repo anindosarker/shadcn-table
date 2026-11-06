@@ -1,8 +1,8 @@
 // validate-production: the deployed site after a release. First the HTTP
 // checks (Node fetch; every check runs, one PASS or FAIL line each), then
-// `node test/run.mjs docs-e2e --base <b> --url <site>` per base (D86
-// addendum), all before the exit. `--url` names the site, default
-// https://www.shadcn-table.com; Storybook is storybook.shadcn-table.com.
+// nothing else (D92: the PR already ran Docs E2E on this commit). `--url`
+// names the site, default https://www.shadcn-table.com; Storybook is
+// storybook.shadcn-table.com.
 // The HTTP checks:
 //   /r/<base>/shadcn-table.json for every base (BASES in
 //     tools/registry/lib.mjs): 200, `dependencies` carries lucide-react (the
@@ -18,7 +18,7 @@
 //     /<DEFAULT_BASE>/ with the query kept (the vercel.json redirect)
 //   /SKILL.md: 200, names every base (BASE_LABELS)
 //   /llms.txt: 200
-// Summary `http pass, docs-e2e 3/3`.
+// Summary `http pass`.
 import fs from 'node:fs';
 import path from 'node:path';
 import {
@@ -234,25 +234,7 @@ export const run = async (ctx) => {
   );
   errors.push(...httpFailed);
 
-  let docsPassed = 0;
-  for (const base of BASES) {
-    const { code } = await exec(
-      process.execPath,
-      [
-        'test/run.mjs',
-        'docs-e2e',
-        '--base',
-        base,
-        '--url',
-        site,
-        ...(ctx.ci ? ['--ci'] : []),
-      ],
-      { cwd: ctx.root },
-    );
-    if (code === 0) docsPassed++;
-    else errors.push(`docs-e2e (${base}) against ${site}: exit ${code}`);
-  }
-  const summary = `http ${httpFailed.length ? `${httpFailed.length} failed` : 'pass'}, docs-e2e ${docsPassed}/${BASES.length}`;
+  const summary = `http ${httpFailed.length ? `${httpFailed.length} failed` : 'pass'}`;
   return {
     status: errors.length ? 'fail' : 'pass',
     summary,
@@ -260,7 +242,6 @@ export const run = async (ctx) => {
       site,
       http: results.length,
       httpFailed: httpFailed.length,
-      docsE2e: docsPassed,
     },
     ...(errors.length ? { errors } : {}),
   };
