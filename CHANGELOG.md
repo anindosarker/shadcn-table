@@ -7,7 +7,7 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
-## Unreleased
+## 0.8.2 - 2026-11-06
 
 ### Changed
 
