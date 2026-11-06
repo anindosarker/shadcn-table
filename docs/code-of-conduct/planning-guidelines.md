@@ -230,5 +230,5 @@ Client component; highlights the active file when opened.
 ### 2.2 Checks
 
 - Docs `build`; `du` on `.next/server/app/docs` under 15 MB
-- `check-pages.mjs a` and `e` against `next start`
+- `pnpm test docs-e2e --base base` (builds the docs and checks every page against `next start`)
 ````

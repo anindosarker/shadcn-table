@@ -1,0 +1,55 @@
+name: Docs E2E Tests
+
+# Called by pr.yml (D90): one job per base. The docs app is built from this
+# checkout and served by `next start` on 5320; the section lists of
+# test/docs-e2e/lib/ (D89) run against it, four browser contexts per section
+# (D91). Chromium installs without --with-deps (the apt step took up to nine
+# minutes) from a cache keyed on the Playwright version. Its test/.out/ record is uploaded
+# as test-out-docs-e2e-<base>. The check context reads
+# `Docs E2E Tests / Docs E2E Tests (<base>)`.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  docs-e2e:
+    name: Docs E2E Tests (${{ matrix.base }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base: [base, radix, aria]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Read the Playwright version
+        id: playwright
+        run: echo "version=$(pnpm --filter shadcn-table exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - run: pnpm --filter shadcn-table exec playwright install chromium
+      # The Next build cache (D91): keyed on the lockfile and the docs
+      # sources, restored from the lockfile prefix when a source changed.
+      - uses: actions/cache@v4
+        with:
+          path: apps/shadcn-table-docs/.next/cache
+          key: next-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/shadcn-table-docs/**/*.ts', 'apps/shadcn-table-docs/**/*.tsx', 'apps/shadcn-table-docs/**/*.mdx', 'apps/shadcn-table-docs/**/*.mjs', 'apps/shadcn-table-docs/**/*.css', '!apps/shadcn-table-docs/node_modules/**', '!apps/shadcn-table-docs/.next/**') }}
+          restore-keys: |
+            next-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+      - run: pnpm test docs-e2e --ci --base ${{ matrix.base }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-out-docs-e2e-${{ matrix.base }}
+          path: test/.out/
+          include-hidden-files: true
+          overwrite: true

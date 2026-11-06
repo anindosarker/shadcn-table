@@ -34,6 +34,13 @@ publishes the section as the GitHub release notes.
 - `release.yml` runs four jobs: `Check Release`, `Verify Deployment` (waits until www and storybook serve the version on `/version.txt`, then tags), `Validate Production` (`pnpm test validate-production`) and `Publish Release`; the post-merge install jobs are gone.
 - New tools `tools/release/verify-deployment.mjs`, `publish-release.mjs` and `pr-summary.mjs` (with `pr-summary.test.mjs`); the PR template names `pnpm test --changed`.
 
+#### Epic 08 Docs and process
+
+- `CONTRIBUTING.md`, `coding-standards.md`, `planning-guidelines.md` and the registry and docs READMEs name `test/`, `tools/` and `pnpm test <name>` with the CI job names (D88).
+- Docs E2E page lists follow the docs sections (D89): `getting-started`, `api`, `guides`, `examples` under `test/docs-e2e/lib/`, every page once; `pnpm test docs-e2e --section <name>` runs one.
+- `pr.yml` is `PR checks` with nine jobs, the four matrices as called workflows (`typecheck.yml`, `storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml`), check contexts such as `Typecheck / Typecheck (base)`; runs are named `PR checks: <PR title>` or `PR checks: all`, `release.yml` is `Release` (D90).
+- Docs E2E runs four browser contexts per section and CI caches the Next build and Chromium, installed without `--with-deps` (D91).
+
 ## 0.8.0 - 2026-11-05
 
 ### Added
