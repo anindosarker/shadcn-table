@@ -6,7 +6,7 @@ import {
   BASE_LABELS,
   BASES,
   type Base,
-} from '../../../packages/shadcn-table/scripts/registry/bases.mjs';
+} from '../../../tools/registry/bases.mjs';
 import { gitConfig, libraryItem, siteUrl } from './shared';
 
 export const packageManagers = ['pnpm', 'npm', 'yarn', 'bun'] as const;
@@ -43,7 +43,7 @@ export const perBase = <T>(fn: (base: Base) => T): Record<Base, T> =>
 
 /**
  * Hosted registry item for a base: `pnpm registry:hosted`
- * (packages/shadcn-table/scripts/registry/hosted.mjs) serves every base under
+ * (tools/registry/hosted.mjs) serves every base under
  * the same item names, `/r/radix/<item>.json`, `/r/base/<item>.json` and
  * `/r/aria/<item>.json`.
  */

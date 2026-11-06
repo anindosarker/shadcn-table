@@ -5,10 +5,10 @@ import {
   BASES,
   resolveBase,
   type Base,
-} from '../scripts/registry/bases.mjs';
+} from '../../../tools/registry/bases.mjs';
 
 /**
- * Every base and its label (scripts/registry/bases.mjs), in reader order (Base
+ * Every base and its label (tools/registry/bases.mjs), in reader order (Base
  * UI, Radix UI, React Aria). Static builds sit side by side under
  * storybook-static/<base>/ (`storybook:build:base`, `storybook:build:radix`,
  * `storybook:build:aria`); no base lives at the root, which redirects to

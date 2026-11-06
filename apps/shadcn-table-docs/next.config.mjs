@@ -24,7 +24,7 @@ const config = {
         : 'tsconfig.json',
   },
   // Hosted registry (public/r/<base>/<name>.json, written by
-  // packages/shadcn-table/scripts/registry/hosted.mjs, `pnpm registry:hosted`):
+  // tools/registry/hosted.mjs, `pnpm registry:hosted`):
   // the namespace form
   // `@shadcn-table=https://www.shadcn-table.com/r/{style}/{name}.json` sends the
   // project's shadcn style (`radix-nova`, `base-sera`, `aria-nova`, ...),

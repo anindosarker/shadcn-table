@@ -3,9 +3,43 @@
 All notable changes to shadcn-table are recorded here, newest first, in the
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. Entries are
 written while the work happens, under `## Unreleased`, below `### Breaking`,
-`### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`. The version pull request
-that the release workflow opens renames that heading to the version and the
-date; merging it publishes the section as the GitHub release notes.
+`### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`. The release pull request's
+last check renames that heading to the version and the date; merging it
+publishes the section as the GitHub release notes.
+
+## 0.8.1 - 2026-11-06
+
+### Changed
+
+#### Spec 07.1 gate step
+
+- The release gate is a step of `install.yml` (D78): a Next.js app per base (`nextjs-base`, `nextjs-radix`, `nextjs-aria` rows) runs `packages/shadcn-table/test/release/gate.mjs` (Playwright) against `next dev` of the gate pages: zero console warnings and errors, the persisted view marked before first paint and restored, the RTL pinned header and resize handle.
+- The two default captures per base are compared with the references under `packages/shadcn-table/test/release/reference/` by `pixelmatch` (at most 500 differing pixels); the captures, any diff image and `result.json` upload as the `gate-<base>` artifact (D79). `install.yml` gains a `workflow_dispatch` trigger to refresh the references.
+
+#### Spec 07.1 version bump
+
+- One pull request per release, `dev` into `master` (D83): its last check, `version bump (release:prepare)`, runs `scripts/release/prepare.mjs` (`pnpm release:prepare`) once every other job is green, bumps both `package.json` files, renames `## Unreleased` to the version and the date and commits `chore: version <v>` to `dev`; `release impact` reads the labels live, takes `master` PRs from `dev` only and passes the bumped head.
+- `release.yml` runs once, on the merge: the `version` job, `scripts/release/version-pr.mjs` and the `release/next` branch are gone; `decide` chooses release or nothing.
+
+#### Epic 08 Test runner and tests
+
+- One test runner (D85): `pnpm test <name>` runs a test from `test/<name>/` (`typecheck`, `lint`, `storybook-tests`, `docs-e2e`, `validate-repo`, `installation-e2e`, `validate-pr`, `validate-production`), per base or per scenario, with `--list`, `--all`, `--changed`, `--base`, `--scenario` and `--ci`; every run ends with one summary line and a JSON record under `test/.out/`.
+- The checks move without changing their assertions: `check-bases`, `check-icons` and `check-tailwind` become `validate-repo` (with `shadcn registry validate` and the tool unit tests), `check-pages.mjs` and `page-checks/` become `docs-e2e` (it builds and serves the docs on a free agent port without `--url`), the release smoke becomes `validate-production`, the install shell of `install.yml` becomes `installation-e2e` with the release gate as its browser phase and the six reference captures under `test/installation-e2e/fixtures/reference/`.
+- The registry scripts move to `tools/registry/`, the release scripts to `tools/release/` (`decide.mjs` is `check-release.mjs`, `prepare.mjs` is `prepare-release.mjs`), the two previews merge into `tools/preview.mjs`, and the docs `install.mjs` and `example-map.mjs` move to `apps/shadcn-table-docs/lib/`. `scripts/`, `packages/shadcn-table/scripts/`, `packages/shadcn-table/test/` and `apps/shadcn-table-docs/scripts/` are gone, with `check-aria-warnings.mjs` and `check-storybook.mjs`; the root `check:*` and `release:prepare` scripts are removed.
+- `playwright`, `pixelmatch` and `pngjs` are root devDependencies (the package keeps `playwright`); the package `storybook:build` writes `storybook-static/version.txt`, and the Vercel Storybook build runs it.
+
+#### Epic 08 Tools and workflows
+
+- `pr.yml` runs twenty-one jobs (D86, D87): `Typecheck`, `Storybook Tests` and `Docs E2E Tests` per base, `Lint`, `Validate Repo`, `Installation E2E` per scenario and `Validate PR`, each `pnpm test <name> --ci` with its records uploaded as `test-out-<job>`; `PR Summary` rewrites one sticky comment per PR from those records (the version line, the changelog counts, one line per job, the run link); `version-bump` is `Prepare Release`. `install.yml` is folded into `Installation E2E` and deleted; a `workflow_dispatch` with `installation-e2e-only` runs the seven install jobs with `--no-diff` and uploads the captures.
+- `release.yml` runs four jobs: `Check Release`, `Verify Deployment` (waits until www and storybook serve the version on `/version.txt`, then tags), `Validate Production` (`pnpm test validate-production`) and `Publish Release`; the post-merge install jobs are gone.
+- New tools `tools/release/verify-deployment.mjs`, `publish-release.mjs` and `pr-summary.mjs` (with `pr-summary.test.mjs`); the PR template names `pnpm test --changed`.
+
+#### Epic 08 Docs and process
+
+- `CONTRIBUTING.md`, `coding-standards.md`, `planning-guidelines.md` and the registry and docs READMEs name `test/`, `tools/` and `pnpm test <name>` with the CI job names (D88).
+- Docs E2E page lists follow the docs sections (D89): `getting-started`, `api`, `guides`, `examples` under `test/docs-e2e/lib/`, every page once; `pnpm test docs-e2e --section <name>` runs one.
+- `pr.yml` is `PR checks` with nine jobs, the four matrices as called workflows (`typecheck.yml`, `storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml`), check contexts such as `Typecheck / Typecheck (base)`; runs are named `PR checks: <PR title>` or `PR checks: all`, `release.yml` is `Release` (D90).
+- Docs E2E runs four browser contexts per section and CI caches the Next build and Chromium, installed without `--with-deps` (D91).
 
 ## 0.8.0 - 2026-11-05
 

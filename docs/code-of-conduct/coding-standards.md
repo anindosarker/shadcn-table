@@ -10,17 +10,21 @@ packages/shadcn-table/
 ├── registry/radix/          ← complete Radix UI library, same shape
 ├── registry/aria/           ← complete React Aria library, same shape
 ├── registry.json            ← item catalog, stays at the package root
-├── scripts/registry/        ← base list, registry build, hosted copies, example items, add-part, base guard
-├── scripts/                 ← everything else
 └── stories/ .storybook/     ← one story set, `@/` points at registry/<ST_BASE>
 apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, components/ui-radix and components/ui-aria are installed copies
 ├── examples/base/ radix/ aria/  ← the docs examples, one hand-written set per base, radix the reference
+├── lib/                     ← install.mjs (lib:install), example-map.mjs and the docs helpers
+test/                        ← every test, one folder per test behind `pnpm test <name>` (run.mjs the runner)
+tools/
+├── registry/                ← base list, registry build, hosted copies, example items, add-part, the base diff lists
+├── release/                 ← the release tools the workflows run, with their *.test.mjs
+└── preview.mjs              ← the root and package previews
 ```
 
 ## Bases
 
 - Three trees, one per base: `registry/base`, `registry/radix`, `registry/aria`. The list
-  is `BASES` in `scripts/registry/bases.mjs` (with `REFERENCE_BASE`,
+  is `BASES` in `tools/registry/bases.mjs` (with `REFERENCE_BASE`,
   `DEFAULT_BASE`, `BASE_LABELS` and `BASE_PORTS`), Base UI first: the one source of
   the order readers see the bases in. Every script, config and docs app file that handles
   more than one base reads it, none repeats the names or the order.
@@ -38,22 +42,22 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
   cannot pick a base, installs the default; never hand-write one, and `hosted.mjs` skips
   them.
 - Each other base has its own list of files that legitimately differ from radix:
-  `scripts/registry/base-diff.json`, `scripts/registry/aria-diff.json`. A file not on a
-  base's list must be byte-identical in that tree and radix; CI (`pnpm check:bases`)
-  fails otherwise.
+  `tools/registry/base-diff.json`, `tools/registry/aria-diff.json`. A file not on a
+  base's list must be byte-identical in that tree and radix; `pnpm test validate-repo`
+  (the CI job `Validate Repo`) fails otherwise.
 - Adding a base-only difference means adding the path to that base's list in the
   same commit.
 - shadcn parts (`registry/<base>/components/ui/<part>.tsx`) are never edited; they are
   what `pnpm add-part <base> <part>` writes, and `pnpm add-part <base> --all` re-adds
-  every committed part of a base: the gate is that it leaves `git status --short` empty.
+  every committed part of a base: the check is that it leaves `git status --short` empty.
   A check that fails on a part is fixed in the check (ESLint ignores the parts; the tsconfigs
   carry no unused-code flags). No exception: a look the library needs beyond the part goes in
   a library wrapper in the folder of its kind (`components/buttons/ST_Tooltip.tsx`,
   `components/inputs/ST_Checkbox.tsx`), and every part reaches users as a `registryDependency`.
 - The docs examples follow the same model: `apps/shadcn-table-docs/examples/<base>/<slug>/`
   for every base, radix the reference, a common change made in every folder by hand,
-  `scripts/registry/examples-<base>-diff.json` the list of example files allowed to differ,
-  checked by the same `pnpm check:bases`.
+  `tools/registry/examples-<base>-diff.json` the list of example files allowed to differ,
+  checked by the same `pnpm test validate-repo`.
 
 ## Naming
 
@@ -85,36 +89,43 @@ apps/shadcn-table-docs/      ← Next.js docs app; components/ui-base, component
 - Agents navigate TypeScript with the LSP tool (definitions, references, call hierarchy),
   `grep` only for strings, comments and non-TypeScript files.
 
-## Gates
+## Checks
 
-Run before every commit that touches the area.
-
-```sh
-pnpm format                                   # prettier, once, before the commit
-pnpm --filter shadcn-table tsc:radix          # ignore only the TS5101 baseUrl notice
-pnpm --filter shadcn-table tsc:baseui
-pnpm --filter shadcn-table tsc:aria
-pnpm --filter shadcn-table lint              # React Compiler rules, no-deprecated, unused and undescribed eslint-disable directives
-pnpm --filter shadcn-table check:tailwind    # canonical and logical Tailwind classes, every base
-pnpm --filter shadcn-table test:base          # Base UI stories
-pnpm --filter shadcn-table test:radix         # Radix UI stories
-pnpm --filter shadcn-table test:aria          # React Aria stories
-pnpm check:bases                              # base guard, library and examples, every base against radix
-pnpm add-part <base> --all                 # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
-pnpm --filter shadcn-table-docs types:check && pnpm --filter shadcn-table-docs lint && pnpm --filter shadcn-table-docs build
-```
-
-CI runs the same gates: `.github/workflows/pr.yml` on every pull request, plus `release impact`,
-which needs exactly one `release:` label (`release:patch`, `release:minor`, `release:major`,
-`release:skip`) when the PR changes `packages/shadcn-table/registry`,
-`apps/shadcn-table-docs/components/ui-*` or `skills/`, and `## Unreleased` lines in
-`CHANGELOG.md` for a level label. `.github/workflows/release.yml` runs on every push to `master`:
-it opens or rewrites the version PR `chore: version <v>` from `release/next`, or, once that PR is
-merged, tags, verifies production and creates the GitHub release.
+Run before every commit that touches the area. Every test lives in `test/<name>/` and runs
+through one runner, `pnpm test <name>` (`--base <b>` or `--scenario <s>` for one, `--list`,
+`--all`, `--changed`); each ends with one summary line and a JSON record under `test/.out/`.
 
 ```sh
-node --test scripts/release/*.test.mjs   # release scripts
+pnpm format                             # prettier, once, before the commit
+pnpm test typecheck                     # Typecheck (<base>): tsc:<base> per base; radix also the docs types:check
+pnpm test lint                          # Lint: the package and the docs app, zero warnings
+pnpm test storybook-tests               # Storybook Tests (<base>): every story and play per base, headless Chromium
+pnpm test docs-e2e                      # Docs E2E Tests (<base>): the docs app built and served, every page checked per base
+pnpm test validate-repo                 # Validate Repo: bases identical, icon maps, Tailwind classes, registry valid, tool unit tests
+pnpm test installation-e2e              # Installation E2E (<scenario>): install from the dev registry, build, Next browser phase
+pnpm test --changed                     # only the tests whose paths the branch changed
+pnpm add-part <base> --all              # shadcn parts, local only (not in pr.yml); then git status --short must print nothing
 ```
+
+`validate-pr` (Validate PR: one `release:` label, the PR from `dev` into `master`, the version
+bump dry run) needs a PR and runs in CI; `validate-production` (Validate Production) checks the
+live site after a release. The tool unit tests (`node --test "tools/**/*.test.mjs"`) run as part
+of `pnpm test validate-repo`.
+
+CI runs the same tests. `.github/workflows/pr.yml` on every pull request, twenty-one jobs:
+`Typecheck (base|radix|aria)`, `Lint`, `Storybook Tests (base|radix|aria)`,
+`Docs E2E Tests (base|radix|aria)`, `Validate Repo`,
+`Installation E2E (fresh|existing|base|aria|nextjs-base|nextjs-radix|nextjs-aria)`,
+`Validate PR`, `PR Summary` (one sticky comment per PR from every job's record) and
+`Prepare Release` (on the release PR, `dev` into `master`, after every other job: commits
+`chore: version <v>` to `dev`). The four matrices are called workflows (`typecheck.yml`,
+`storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml`), so their check contexts read
+`Typecheck / Typecheck (base)`, `Installation E2E / Installation E2E (fresh)`. A PR that changes `packages/shadcn-table/registry`,
+`apps/shadcn-table-docs/components/ui-*` or `skills/` needs exactly one `release:` label
+(`release:patch`, `release:minor`, `release:major`, `release:skip`), and a level label needs
+`## Unreleased` lines in `CHANGELOG.md`. `.github/workflows/release.yml` on every push to
+`master`, four jobs: `Check Release`, `Verify Deployment` (waits for www and storybook to serve
+the version, then tags), `Validate Production`, `Publish Release`.
 
 Preview (Ctrl-C stops every server; the first two remove `.dev`, the root one also restores the production hosted registry):
 
