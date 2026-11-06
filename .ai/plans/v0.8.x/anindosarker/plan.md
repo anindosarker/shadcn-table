@@ -34,5 +34,6 @@ Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D83 (D12 and 
 | 06.6 | [Edition icons](epics/06.6-edition-icons.md) | The Tabler, Phosphor, Remix and Hugeicons editions map the D75 view settings icons to their own sets |
 | 07 | [release 0.8.0](epics/07-release.md) | Checks rerun in throwaway apps per base; 0.8.0 released. |
 | 07.1 | [Release automation](epics/07.1-release-automation.md) | The install smoke check runs as a CI step with pixel-diffed captures; one PR per release bumps its own version |
+| 08 | [Tests and CI](epics/08-tests-and-ci.md) | Every test under test/ with one runner, tools under tools/, 21 PR jobs and 4 release jobs, the PR Summary comment |
 
 Release label: `release:patch` (0.8.1, D78).
