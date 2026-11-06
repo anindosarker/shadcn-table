@@ -153,6 +153,7 @@ fits one sprint; `ownership.py` reads these blocks.
 - Files owned: [a, b]
 - Depends on: [milestone names or epic numbers, or none]
 - Review: [none | fable]
+- Local CI: [none | `pnpm test --changed` | `act pull_request -j <job>`] (what runs on the merged tree before the merge, beyond the task checks)
 - Task 1: [what]. Checks: [commands]
 - Task 2: [what]. Checks: [commands]
 - Task N: Cleanup, delete old code, update references. Checks: repo checks
@@ -222,6 +223,7 @@ Client component; highlights the active file when opened.
 - Files owned: `apps/shadcn-table-docs/components/code-explorer.tsx`, `apps/shadcn-table-docs/components/mdx/example-snippet.tsx`
 - Depends on: none
 - Review: none
+- Local CI: none
 - Task 1: Change `ExplorerFile`, render `DynamicCodeBlock`. Checks: docs `types:check`
 - Task 2: Cleanup, remove `highlight` and `CodeBlock` imports from `example-snippet.tsx`. Checks: `pnpm format`, docs `types:check`, `lint`, `build`
 
