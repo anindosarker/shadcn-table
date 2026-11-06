@@ -76,6 +76,29 @@ test('prepare: exit 1 on a bad level, an unknown argument or a malformed section
   assert.match(bad.err, /^prepare: /);
 });
 
+test('prepare: a second bump computes from master and folds the earlier section', () => {
+  const text =
+    '# Changelog\n\n## Unreleased\n\n### Fixed\n\n- A fix after the bump.\n\n## 0.8.1 - 2026-11-06\n\n### Changed\n\n- First batch.\n\n## 0.8.0 - 2026-11-05\n\n### Added\n\n- Old line.\n';
+  const result = prepare(
+    ['--level', 'patch', '--base-version', '0.8.0'],
+    deps(text, '0.8.1'),
+  );
+  assert.equal(result.code, 0);
+  assert.equal(result.next, '0.8.1');
+  assert.deepEqual(
+    result.changelog.split('\n').filter((l) => l.startsWith('## ')),
+    ['## 0.8.1 - 2026-11-07', '## 0.8.0 - 2026-11-05'],
+  );
+  assert.match(result.changelog, /- First batch\./);
+  assert.equal(
+    prepare(
+      ['--level', 'minor', '--base-version', '0.8.0'],
+      deps(text, '0.8.1'),
+    ).next,
+    '0.9.0',
+  );
+});
+
 test('check: bumped, not bumped, inconsistent', () => {
   const bumped = check({
     version: '0.8.1',

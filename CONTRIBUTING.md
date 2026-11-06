@@ -313,6 +313,7 @@ Releases come from `master` and need no command; `master` takes pull requests fr
 node scripts/release/next-version.mjs --level minor   # the version a minor release would ship as
 node scripts/release/next-version.mjs                 # from the Unreleased headings; exit 2 means no release
 pnpm release:prepare --level patch   # bump both package.json files and close ## Unreleased on this branch
+pnpm release:prepare --level patch --base-version 0.8.0   # what the version bump job runs: the next version from master's
 ```
 
 ## Analytics
