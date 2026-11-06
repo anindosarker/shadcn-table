@@ -2,7 +2,9 @@
 
 Status: merged (c17880fe1e02a175034983b26a0a2e3605beea57)
 Branch `v0.8/fix-grouping-align`, worktree 01, PR #127
-Gates:
+Files owned: `hooks/display-columns/getST_RowExpandColumnDef.tsx` in the three bases; `stories/features/ColumnGrouping.stories.tsx`
+Depends on: 06.3
+Checks:
 - Repro on shipped code (2c00ccfa): `ST_BASE=base pnpm --filter shadcn-table exec vitest run stories/features/ColumnGrouping.stories.tsx -t "Aligns Start"` red as expected: `GroupedHeaderAlignsStart` breadcrumb 91.2 px from the header cell's start (limit 24), first group row's chevron 108.4 px from its cell's start (limit 24)
 - `pnpm --filter shadcn-table tsc:radix` at 6b05cbaa: green
 - `pnpm --filter shadcn-table tsc:baseui` at 6b05cbaa: green
@@ -21,7 +23,7 @@ Gates:
 - `pnpm --filter shadcn-table test:radix` at 631fd9d2: green (79 files, 607 tests), verifier
 - `pnpm --filter shadcn-table test:aria` at 631fd9d2: green (79 files, 607 tests), verifier
 - `pnpm --filter shadcn-table storybook:build:aria` at 631fd9d2: green, verifier
-- Recorded gates at 6b05cbaa kept: `git diff --name-only 6b05cbaa..631fd9d2` touches only this tracker, verifier
+- Recorded checks at 6b05cbaa kept: `git diff --name-only 6b05cbaa..631fd9d2` touches only this tracker, verifier
 
 - Milestone 01 F57 fix with play: done (6b05cbaa)
 

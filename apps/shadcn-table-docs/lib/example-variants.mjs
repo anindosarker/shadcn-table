@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Per-base variants of the docs examples. examples/<base>/<slug>/ is that
- * base's hand-written source (packages/shadcn-table/scripts/registry/bases.mjs
- * lists the bases, pnpm check:bases keeps the three sets in step). It imports
+ * base's hand-written source (tools/registry/bases.mjs
+ * lists the bases, pnpm test validate-repo keeps the three sets in step). It imports
  * `@/components/ui/...`, the path a user has after `shadcn add`; the code view
  * shows it as is. The docs app installs the three library copies side by side
  * (`pnpm lib:install <base>`, under components/ui-<base>), so for each base

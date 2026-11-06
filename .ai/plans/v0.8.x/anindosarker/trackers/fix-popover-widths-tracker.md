@@ -2,7 +2,9 @@
 
 Status: merged (c89197e1f29a596986139d33a08c97f52e6e5b27)
 Branch `v0.8/fix-popover-widths`, worktree 03, PR #113
-Gates:
+Files owned: `apps/shadcn-table-docs/examples/<base>/{export-to-csv,export-to-pdf}/TS.tsx`, `apps/shadcn-table-docs/scripts/page-checks/{_helpers,b,d,e}.mjs`
+Depends on: Docs app
+Checks:
 - Repro on shipped code (9ec16645), `node scripts/check-pages.mjs --base base --url http://localhost:5341 /docs/examples/export-csv /docs/examples/export-pdf /docs/examples/popover-filters` with the new `headerLabelsFit` assertion: red as expected, export-csv and export-pdf `ID(14>0) First Name(72>22) Last Name(71>22)`; popover-filters green (alternate-column-filtering sets no sizes).
 - `pnpm --filter shadcn-table-docs types:check` at 67e26904: green
 - `pnpm --filter shadcn-table-docs lint` at 67e26904: green (9 existing warnings, 0 errors)

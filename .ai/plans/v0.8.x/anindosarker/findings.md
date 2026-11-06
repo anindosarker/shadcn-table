@@ -34,11 +34,11 @@
 
 ### F8 Scroll chevron jumps on press and misses the click
 
-- `components/table/ST_ScrollButtons.tsx` (spec 02): the chevron button takes `active:not-aria-[haspopup]:translate-y-px` from `buttonVariants`, which replaces its `-translate-y-1/2` while pressed; the button moves 13 px down and a click at its centre lands on the header cell, so nothing scrolls (D22). All three bases. Found by the spec 07 gate.
+- `components/table/ST_ScrollButtons.tsx` (spec 02): the chevron button takes `active:not-aria-[haspopup]:translate-y-px` from `buttonVariants`, which replaces its `-translate-y-1/2` while pressed; the button moves 13 px down and a click at its centre lands on the header cell, so nothing scrolls (D22). All three bases. Found by the spec 07 check.
 
 ### F9 React Aria Focusable warnings in the chip and sort editors
 
-- Aria base: 58 console warnings `<Focusable> child must be focusable` while the filter chip editor (20) and the sort editor (38) are open, 18 more on choosing a sort column (spec 04). The release gate requires zero React Aria warnings (v0.7.x D40). Found by the spec 07 gate.
+- Aria base: 58 console warnings `<Focusable> child must be focusable` while the filter chip editor (20) and the sort editor (38) are open, 18 more on choosing a sort column (spec 04). The install smoke check requires zero React Aria warnings (v0.7.x D40). Found by the spec 07 check.
 
 ### F10 DefaultLook story sets every default explicitly
 
@@ -245,4 +245,16 @@
 
 ### F59 The icon editions still ship the old view settings icons
 
-- D75 replaced the Lucide defaults (`icons.ts`, three bases) for grid lines, Columns and density, but the four editions (`icons/tabler.ts`, `phosphor.ts`, `remixicon.ts`, `hugeicons.ts`, three bases) still import the drawn glyphs from `components/icons/ST_GridLineIcons.tsx` and map their own rows icons, so a Tabler, Phosphor, Remix or Hugeicons install shows a different Grid lines, Columns and Density look than the docs (Lucide). Found by a side-agent note 2026-11-06 during the first release gate run (stopped by the owner). Fix: sub-spec 06.6 maps the eight keys per edition to that set's nearest icons (the owner picks from the candidate table in `reference/icons/edition-candidates.md`), rotation or mirroring through a className as the Lucide map does; the drawn glyph file is deleted with its registry entries (D76); `check:icons` and `registry:build` green; then the release gate reruns.
+- D75 replaced the Lucide defaults (`icons.ts`, three bases) for grid lines, Columns and density, but the four editions (`icons/tabler.ts`, `phosphor.ts`, `remixicon.ts`, `hugeicons.ts`, three bases) still import the drawn glyphs from `components/icons/ST_GridLineIcons.tsx` and map their own rows icons, so a Tabler, Phosphor, Remix or Hugeicons install shows a different Grid lines, Columns and Density look than the docs (Lucide). Found by a side-agent note 2026-11-06 during the first install smoke check run (stopped by the owner). Fix: sub-spec 06.6 maps the eight keys per edition to that set's nearest icons (the owner picks from the candidate table in `reference/icons/edition-candidates.md`), rotation or mirroring through a className as the Lucide map does; the drawn glyph file is deleted with its registry entries (D76); `check:icons` and `registry:build` green; then the install smoke check reruns.
+
+### F60 Flaky play: PanelCollapse "Progress And Banner Collapse" in aria CI
+
+- `packages/shadcn-table/stories/fixed-bugs/PanelCollapse.stories.tsx`, play `Progress And Banner Collapse`: failed once on the 0.8.0 release PR #130 (pr.yml run 42104722808, aria job) with `expected 0 to be greater than 0` at its first check, green on the job rerun. Second known flake after `Profiled Thousand Rows` (P4). Not fixed; a 0.9 item: the first assertion waits for the panel height to settle (`waitFor`) instead of reading it once.
+
+### F61 Flaky docs E2E timing check: demo "pauses when scrolled away mid-step"
+
+- `test/docs-e2e/lib/e.mjs` (examples, to become `examples.mjs` per D89), the 1440 px demo check "pauses when scrolled away mid-step": failed once on the first CI run of the new `pr.yml` (run 42238797293, Docs E2E Tests (radix)), green on the rerun. A timing assertion on the home demo's pause; third known flake after `Profiled Thousand Rows` and `PanelCollapse` (F60). Not fixed; the D91 parallel contexts may make it worse, so the D91 task waits for the pause state with `waitFor` instead of a fixed delay.
+
+### F62 Installation E2E cleanup fails with ENOTEMPTY after a passed Next scenario
+
+- `test/installation-e2e/test.mjs`, the `fs.rmSync(tmp, { recursive: true, force: true })` after the browser phase: on CI the `next dev` child still releases files for a moment after `stop()`, so the removal throws ENOTEMPTY and the scenario reports a failure although every check passed (runs 42254086380 nextjs-base, 42256775917 nextjs-radix, green on rerun). Fixed 2026-11-06 from the main session: `maxRetries: 10, retryDelay: 300` on the removal.

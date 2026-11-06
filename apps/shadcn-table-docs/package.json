@@ -1,6 +1,6 @@
 {
   "name": "shadcn-table-docs",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "license": "MIT",
   "author": "Anindo Sarker",
@@ -16,7 +16,7 @@
     "registry:hosted": "pnpm -w registry:hosted",
     "examples:variants": "node lib/example-variants.mjs",
     "lint": "eslint",
-    "lib:install": "node scripts/install.mjs"
+    "lib:install": "node lib/install.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

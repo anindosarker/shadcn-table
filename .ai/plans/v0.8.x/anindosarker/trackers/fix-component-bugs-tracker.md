@@ -2,7 +2,9 @@
 
 Status: merged (e6db62a9)
 Branch `claude/review` (fix commits on the integration branch), worktree none, PR none
-Gates:
+Files owned: `components/body/ST_TableBodyCell.tsx`, `components/body/ST_TableDetailPanel.tsx`, `components/toolbar/ST_ViewSettingsButton.tsx`, `components/toolbar/ST_ViewSettingsItems.tsx` in the three bases; `components/menus/ST_ColumnActionMenu.tsx` in radix and base
+Depends on: 02, 03, 04
+Checks:
 - `tsc:radix`, `tsc:baseui`, `tsc:aria`, `lint`, `check:tailwind`, `check:bases` at e6db62a9: green
 - `test:radix`, `test:base`, `test:aria` at e6db62a9: green except the four spec 05 stories rewritten by spec 05 (merged later at 7db14760)
 - `test:radix`, `test:base`, `test:aria` on `v0.8/defaults-stories` at dcaae068 (after the merge of these fixes): 519/519 green

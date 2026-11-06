@@ -2,7 +2,9 @@
 
 Status: merged (4e5bf777)
 Branch `v0.8/fix-ci`, worktree 01, PR #108
-Gates:
+Files owned: `packages/shadcn-table/.storybook/vitest.setup.ts`, `packages/shadcn-table/vitest.config.ts`
+Depends on: 06.1
+Checks:
 - `ST_BASE=radix vitest run --browser.api.port=5341` at 39d409b8: green (537)
 - `ST_BASE=base vitest run --browser.api.port=5341` at 39d409b8: green (537); the first run failed `PanelCollapse > Progress And Banner Collapse` line 67 at load average 17 (other agents), passed alone and on the full rerun
 - `ST_BASE=aria vitest run --browser.api.port=5341` at 39d409b8: green (537)
@@ -20,7 +22,7 @@ Gates:
 ## Attention
 
 - The PR carried `release:minor` as the task said, but the change ships nothing (test harness only, no CHANGELOG line); the `release impact` check asks for a CHANGELOG line under any non-skip label. The verifier switched the label to `release:skip` (label run 41867045211 green). Revert to `release:minor` only together with a CHANGELOG line.
-- `tsc -p tsconfig.stories.json` (not a gate, not run by CI) reports two errors on `claude/review` already: `HeaderGroups.stories.tsx:295` (`ColumnPinningState` without `end`) and `ViewSettings.stories.tsx:293` (partial `ST_ViewSettingsState`). Left alone.
+- `tsc -p tsconfig.stories.json` (not a check, not run by CI) reports two errors on `claude/review` already: `HeaderGroups.stories.tsx:295` (`ColumnPinningState` without `end`) and `ViewSettings.stories.tsx:293` (partial `ST_ViewSettingsState`). Left alone.
 
 ## Notes
 

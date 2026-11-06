@@ -7,6 +7,6 @@
     }
   },
   "include": ["registry/base"],
-  // Node-only item definition, read by scripts/registry/build.mjs.
+  // Node-only item definition, read by tools/registry/build.mjs.
   "exclude": ["registry/base/registry.ts"]
 }

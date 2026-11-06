@@ -2,7 +2,9 @@
 
 Status: merged (800ea815c1c4201b4d450a632fe8a45edc23dc73)
 Branch `v0.8/fix-theme-demo-speed`, worktree 03, PR #[n]
-Gates:
+Files owned: `apps/shadcn-table-docs/components/theme-demo/variants/whole-app.tsx`
+Depends on: Last fixes (F19, F28, F30, F39, F40, F41, D56, D57)
+Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 5b426b83: green
 - `pnpm --filter shadcn-table-docs lint` at 5b426b83: green (0 errors, 9 existing warnings)
 

@@ -2,7 +2,9 @@
 
 Status: merged (86382700756692c82ef8141e1a2bc441840842e4)
 Branch `v0.8/fix-last`, worktree 01, PR #114
-Gates:
+Files owned: `components/head/ST_TableHeadCellFilterLabel.tsx`, `components/body/ST_TableBodyRow.tsx`, `components/body/ST_TableBody.tsx`, `components/inputs/ST_SelectCheckbox.tsx`, `components/menus/ST_ShowHideColumnsMenuItems.tsx`, `components/head/ST_TableHeadCellResizeHandle.tsx`, `components/head/ST_TableHeadCell.tsx`, `components/body/ST_TableBodyCell.tsx`, `components/toolbar/ST_ToolbarInternalButtons.tsx`, `hooks/display-columns/getST_RowExpandColumnDef.tsx` (the grouped header, F41), `components/body/ST_TableBodyRowGrabHandle.tsx`, `features/stRowDraggingFeature.ts`, `hooks/useST_RowFlip.ts` (new, D57), `hooks/useST_ColumnFlip.ts` (F30 consumer side), in the three bases; `stories/features/{Selection,ColumnHiding,ColumnResizing,Toolbar,ColumnGrouping,RowOrdering}.stories.tsx`, `stories/fixed-bugs/FilterPopover.stories.tsx`; `apps/shadcn-table-docs/examples/<base>/{export-to-csv,export-to-pdf}/TS.tsx`, `apps/shadcn-table-docs/scripts/page-checks/d.mjs`
+Depends on: Stories and DefaultLook
+Checks:
 - Repro on shipped code (335c749c), base, `FunnelIsClickable`: red, the funnel button is 12.07 px wide (want at least 24).
 - Repro on shipped code (335c749c), base, `DropSlidesRows`: red, the moved row has no translate animation after the drop (0 animations).
 - Repro on shipped code (335c749c), base, `DropNoSlideReducedMotion`: red, the moved row has no highlight animation after the drop (0 animations).
@@ -55,7 +57,7 @@ Gates:
 
 ## Notes
 
-- Gate commits: tsc, lint, check:bases, check:tailwind and check:icons ran at 3259e974 after the last library change; later commits touch only stories (ccbae6f3, reran tsc, lint, the story file per base and full test:base) and `d.mjs` (4fa8c378, reran lint and the page checks).
+- Check commits: tsc, lint, check:bases, check:tailwind and check:icons ran at 3259e974 after the last library change; later commits touch only stories (ccbae6f3, reran tsc, lint, the story file per base and full test:base) and `d.mjs` (4fa8c378, reran lint and the page checks).
 
 - D57 plays read the animations through a recorder around `Element.prototype.animate` instead of `getAnimations()` after the drop: in the full `test:base` on the loaded machine the real-pointer drag returned after 4.7 s, when the 200 ms slide had finished, and `DropSlidesRows` went red. The recorder asserts the same: the moved row and the first row get a translate slide, row 6 none, the moved row's cells a highlight; under reduced motion no slide and the highlight.
 
