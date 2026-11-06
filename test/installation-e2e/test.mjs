@@ -425,9 +425,18 @@ export const run = async (ctx) => {
     for (const server of servers) await server.stop();
   }
 
-  // next dev may still release files for a moment after stop(); retry the
-  // removal instead of failing a passed scenario with ENOTEMPTY (F62).
-  fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
+  // The scenario's result is settled above; a temp folder that cannot be
+  // removed (a worker still winding down, F62) is a warning, never a failure.
+  try {
+    fs.rmSync(tmp, {
+      recursive: true,
+      force: true,
+      maxRetries: 10,
+      retryDelay: 300,
+    });
+  } catch (error) {
+    ctx.log(`warning: could not remove ${tmp}: ${error.message}`);
+  }
   let summary = 'built';
   if (template === 'next') {
     if (details.browser === 'skipped') summary += ', browser skipped';

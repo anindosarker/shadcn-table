@@ -107,6 +107,23 @@ export const spawnServer = async (
     }, 5000);
     await done;
     clearTimeout(timer);
+    // The direct child exits before its workers (next dev keeps writing
+    // .next/ while they wind down); wait until the process group is empty,
+    // then SIGKILL whatever is left, so a later rmSync does not hit ENOTEMPTY.
+    const gone = Date.now() + 10000;
+    while (Date.now() < gone) {
+      try {
+        process.kill(-child.pid, 0);
+      } catch {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+    try {
+      process.kill(-child.pid, 'SIGKILL');
+    } catch {
+      // group is empty
+    }
     live.delete(handle);
   };
   const deadline = Date.now() + timeoutMs;
