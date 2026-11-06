@@ -688,6 +688,7 @@ index d099d3a0..d778bfba 100644
 ### D80 The pipeline releases; no releaser agent
 
 - The release is: the `dev` into `master` PR created with its `release:` label and auto-merge enabled; `version-pr.mjs` labels the bot version PR `release:skip` and enables auto-merge on it; `release.yml` does the rest as today (tag, production wait, smoke, installs, GitHub release). An agent appears only on a red check. Repository settings, done by the agent with the owner's one-time authorization (P5 exception, "you can do it"): "Allow auto-merge" on, the `master` ruleset gets the `pr.yml` jobs as required status checks. Order: the label fixes of D78 to D81 land first so the bot PR is green, then the settings. Owner, 2026-11-06.
+- Superseded in part by D86 (2026-11-06): the required-check contexts on the `master` ruleset are the D86 job names; the ruleset is rewritten in the milestone that merges the new `pr.yml`, before `dev` fast-forwards. The rest of D80 stands (no releaser agent, auto-merge on, the owner's one-time settings authorization).
 
 ### D81 Branch flow: stories merge locally, CI on `dev`, one PR per release
 
@@ -767,6 +768,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 - `release.yml`, on the push to `master` the merge is: Check Release (the changelog closed and the version untagged, else nothing runs), Verify Deployment (waits until www.shadcn-table.com and storybook.shadcn-table.com serve the new version, then tags), Validate Production (HTTP checks on the live site: version, registry items, Storybook, SKILL.md, docs pages), Publish Release (the GitHub release from the changelog section, the "Released in v<version>" comment). Four jobs.
 - Removed: `storybook-build` (a failed Storybook build fails its deploy, which Verify Deployment catches before the tag), `docs-build` as a job (the first step of Docs E2E Tests), every install and page job after the merge (the PR proved the commit; the release run proves the deploy).
 - Test names follow the job names in kebab case: `typecheck`, `lint`, `storybook-tests`, `docs-e2e`, `validate-repo` (runs `bases-identical`, `icon-maps`, `tailwind-classes`, `registry-valid`, `unit`), `installation-e2e` (build phase, then the browser phase for Next scenarios; `--no-browser`, `--no-diff` flags), `validate-pr` (runs `release-label`, `version-bump-dry-run`), `validate-production`. Tools: `tools/release/{check-release,verify-deployment,prepare-release,publish-release,next-version,notes,comment}.mjs`. The `check-` prefix leaves every test name; "Check:" stays the tracker word (D84). D85's test list and tree read with these names. Owner, 2026-11-06.
+- The `master` ruleset's required checks are these twenty job names, rewritten by the main session in the milestone that merges the new `pr.yml`, before `dev` fast-forwards (supersedes D80's list).
 
 ### D87 One sticky comment per PR
 
