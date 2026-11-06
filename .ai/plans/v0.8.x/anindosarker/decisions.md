@@ -743,22 +743,22 @@ shadcn-react-table/
 │   ├── lint/                          run.mjs, test.mjs
 │   ├── storybook-tests/               run.mjs, test.mjs
 │   ├── docs-e2e/                      run.mjs, test.mjs, lib/{helpers.mjs, a.mjs … e.mjs}
-│   ├── validate-repo/                 run.mjs, test.mjs, lib/{bases-identical, icon-maps, tailwind-classes, registry-valid}.mjs
+│   ├── validate-repo/                 run.mjs, test.mjs, lib/{bases-identical, icon-maps, tailwind-classes, registry-valid, unit}.mjs
 │   ├── installation-e2e/              run.mjs, test.mjs, lib/{init.js, browser.mjs}, fixtures/{table-demo.tsx, page.tsx, pages/, reference/<base>/}
-│   ├── validate-pr/                   run.mjs, test.mjs, lib/{release-label, version-bump-dry-run}.mjs
-│   ├── validate-production/           run.mjs, test.mjs
-│   └── unit/                          run.mjs, test.mjs, cases/
+│   ├── validate-pr/                   run.mjs, test.mjs, lib/{release-label, source-branch, version-bump-dry-run}.mjs
+│   └── validate-production/           run.mjs, test.mjs
 ├── tools/
-│   ├── release/                       check-release, verify-deployment, prepare-release, publish-release, next-version, notes, comment (.mjs + .test.mjs)
-│   └── registry/                      build, hosted, examples, bases, lib (.mjs)
+│   ├── release/                       check-release, verify-deployment, prepare-release, publish-release, pr-summary, next-version, notes, comment (.mjs + .test.mjs)
+│   ├── registry/                      build, hosted, examples, add-part, bases, lib (.mjs), bases.d.mts, lib.d.mts, {base,aria}-diff.json, examples-{base,aria}-diff.json
+│   └── preview.mjs
 ├── packages/shadcn-table/
 │   ├── registry/                      the library, three bases
 │   ├── stories/                       stories with plays
 │   └── package.json                   test:<base>, tsc:*, lint, storybook:build:* as implementation only
-├── apps/shadcn-table-docs/            scripts/page-checks/ gone
+├── apps/shadcn-table-docs/lib/        install.mjs (lib:install), example-map.mjs; scripts/ gone
 ├── docs/code-of-conduct/
 └── .github/workflows/
-    ├── pr.yml                         the twenty jobs of D86, each `pnpm test <name>`; Prepare Release last
+    ├── pr.yml                         the twenty-one jobs of D86 and D87; workflow_dispatch input `job`
     └── release.yml                    Check Release, Verify Deployment, Validate Production, Publish Release (D86)
 ```
 
@@ -766,6 +766,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 
 - Workflows call tests: a `pr.yml` job is setup steps plus `pnpm test <name>`; `release.yml` runs Check Release, Verify Deployment, Validate Production, Publish Release (D86); `install.yml` is folded into `pr.yml`. Agents run the same commands natively; `act` stays the optional Linux run for `installation-e2e` and `docs-e2e` (D81, D83). Owner, 2026-11-06. The CI job set is D86.
 - Addendum 2026-11-06 (review of the set): `playwright` stays in `packages/shadcn-table/package.json` as well (vitest browser mode resolves it there); only `pixelmatch` and `pngjs` move to the root. `tools/registry/` also holds `add-part.mjs`, `bases.d.mts`, `lib.d.mts`, `base-diff.json`, `aria-diff.json`, `examples-base-diff.json`, `examples-aria-diff.json`; `check-bases.mjs` becomes `test/validate-repo/lib/bases-identical.mjs`; `scripts/preview.mjs` and `packages/shadcn-table/scripts/preview.mjs` become `tools/preview.mjs` (root `preview` kept); `check-aria-warnings.mjs` and `check-storybook.mjs` are deleted (covered by `storybook-tests` and Verify Deployment); `apps/shadcn-table-docs/scripts/install.mjs` and `example-map.mjs` move to `apps/shadcn-table-docs/lib/` (`lib:install` kept); `check-pages.mjs` becomes `test/docs-e2e/test.mjs`. Root scripts `registry:items`, `registry:hosted`, `add-part` point at `tools/registry/`; `check:bases` goes; the docs `build` script keeps its wording. Agent-settled.
+- Addendum 2026-11-06: `unit` is a lib file of `validate-repo` (`node --test "tools/**/*.test.mjs"`); `test/unit/` is not created until the first library unit test, which then gets its own folder and job. The tree above is updated to this and to the D86 and D87 addenda. Owner.
 
 ### D86 The CI job set: twenty jobs on a PR, four after the merge
 
