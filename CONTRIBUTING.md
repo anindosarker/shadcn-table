@@ -183,11 +183,11 @@ Page check, from the repo root:
 
 ```bash
 pnpm test docs-e2e --base base                                         # builds the docs, serves them on a free port, every page
-pnpm test docs-e2e --base aria --url http://localhost:5320 a           # one cluster against a running dev server, React Aria selected
+pnpm test docs-e2e --base aria --url http://localhost:5320 --section guides   # one section against a running dev server, React Aria selected
 pnpm test docs-e2e --url http://localhost:5320 /docs/guides/sorting    # one page
 ```
 
-- **Clusters.** `a` is getting-started and the API pages, `b` and `c` the guides, `d` and `e` the examples; `e` also covers the home page. The per-page checks live in `test/docs-e2e/lib/<cluster>.mjs`. The test loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
+- **Sections.** The pages and their checks live in one list per docs section, `test/docs-e2e/lib/<section>.mjs`: `getting-started` (with the home page and `/docs`), `api`, `guides`, `examples`; the sections run in that order, each section's pages split across the test's browser contexts. The test loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
 - **`tsconfig.json` include noise.** Next.js appends `<distDir>/types/**/*.ts` lines to `apps/shadcn-table-docs/tsconfig.json` on every `dev` and `build`. Keep only the default `.next/...` pair; do not commit the others.
 - **Second server.** `PORT=5331 pnpm --filter shadcn-table-docs dev` runs a second docs server next to the default one, with its own build dir.
 
@@ -277,7 +277,7 @@ Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI ins
 
 - **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `tools/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
 - **Example items per base.** `example-<slug>-base`, `example-<slug>-radix` and `example-<slug>-aria` are built from `examples/<base>/<slug>/`; the hosted registry serves each base's items under the plain `example-<slug>` in `/r/<base>/`. They use the public API only and pin no library item; the docs say to install the table first.
-- **Page checks.** A new page that renders live examples or prop tables needs an entry in `test/docs-e2e/lib/<cluster>.mjs`.
+- **Page checks.** A new page that renders live examples or prop tables needs an entry in its section's `test/docs-e2e/lib/<section>.mjs`.
 
 ## 6. Open a PR
 

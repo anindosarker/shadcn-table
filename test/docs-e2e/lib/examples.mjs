@@ -1,10 +1,16 @@
 /**
- * Cluster D page checks: docs/examples a to e (advanced ... export-pdf).
- * Every page renders its own example in one playground panel (the group tab
- * strips only survive inside guides), so each page asserts that single panel
- * plus the example's own markers.
+ * Examples page checks: /docs/examples and examples/*. Every example page
+ * renders its own example in one playground panel (the group tab strips only
+ * survive inside guides), so a page asserts that single panel, its table
+ * rows, the Code toggle and the example's own markers.
  */
-import { example, headerLabelsFit } from './helpers.mjs';
+import {
+  chipFilter,
+  closeChipEditor,
+  codeToggle,
+  example,
+  headerLabelsFit,
+} from './helpers.mjs';
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
@@ -114,6 +120,16 @@ async function deleteDialog(page, w, id, check) {
   }
   check(`${id}: delete dialog, no browser confirm`, !alerted);
 }
+
+/** One example page: single panel, example rows, Code toggle, feature marker. */
+const examplePage =
+  (id, needle, marker) =>
+  async ({ page, check }) => {
+    await singleExample(page, check);
+    const w = await example(page, id, check);
+    if (marker) await marker(page, w, check);
+    await codeToggle(page, id, needle, check);
+  };
 
 const checks = {
   '/docs/examples/advanced': async ({ page, check }) => {
@@ -366,6 +382,349 @@ const checks = {
     await chipsDefault(w, 'export-to-pdf', check);
     await headerLabelsFit(w, 'export-to-pdf', check);
   },
+  '/docs/examples': async ({ page, check }) => {
+    const links = page.locator('main a[href^="/docs/examples/"]');
+    check(
+      'example links',
+      (await links.count()) >= 40,
+      `n=${await links.count()}`,
+    );
+  },
+  '/docs/examples/faceted-values': examplePage(
+    'enable-filter-facet-values',
+    'enableFacetedValues: true',
+    async (page, w, check) => {
+      await headerLabelsFit(w, 'enable-filter-facet-values', check);
+      const editor = await chipFilter(
+        page,
+        w,
+        'faceted-values',
+        'City',
+        '[data-slot="select-trigger"], [role="combobox"]',
+        check,
+      );
+      await closeChipEditor(page, editor);
+    },
+  ),
+  '/docs/examples/filter-switching': examplePage(
+    'customize-filter-modes',
+    'enableColumnFilterModes: true',
+    async (page, w, check) => {
+      // the mode picker sits on the editor's top line in chips mode (D39)
+      const editor = await chipFilter(
+        page,
+        w,
+        'filter-switching',
+        'First Name',
+        'button[aria-label*="filter mode" i]',
+        check,
+      );
+      await closeChipEditor(page, editor);
+    },
+  ),
+  '/docs/examples/filter-variants': examplePage(
+    'customize-filter-variants',
+    "filterVariant: 'range-slider'",
+    async (page, w, check) => {
+      await headerLabelsFit(w, 'customize-filter-variants', check);
+      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
+      const editor = await chipFilter(
+        page,
+        w,
+        'filter-variants',
+        'Salary',
+        '[role="slider"], input[type="range"]',
+        check,
+      );
+      await closeChipEditor(page, editor);
+    },
+  ),
+  '/docs/examples/subheader-filters': examplePage(
+    'subheader-filters',
+    "columnFilterDisplayMode: 'subheader'",
+    async (page, w, check) => {
+      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
+      check(
+        'range slider filter',
+        (await w
+          .locator('thead [role="slider"], thead input[type="range"]')
+          .count()) > 0,
+      );
+      check(
+        'date filter input',
+        (await w.locator('thead input[type="date"]').count()) > 0,
+      );
+      check(
+        'checkbox filter',
+        (await w
+          .locator('thead [role="checkbox"], thead [data-slot="checkbox"]')
+          .count()) > 0,
+      );
+      check(
+        'filter mode buttons',
+        (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
+          0,
+      );
+      // F44: every filter input and caption sits inside its th and inside any
+      // clipping box between them, each caption's text inside its box; the
+      // slider track stays in its th and its "Filter Mode:" caption sits
+      // below the track.
+      const layout = await w.locator('thead').evaluate((thead) => {
+        const inside = (inner, outer) =>
+          inner.left >= outer.left - 1 &&
+          inner.right <= outer.right + 1 &&
+          inner.top >= outer.top - 1 &&
+          inner.bottom <= outer.bottom + 1;
+        const clipped = [];
+        let slider = 'no slider';
+        for (const th of thead.querySelectorAll('th')) {
+          const cell = th.getBoundingClientRect();
+          const parts = [
+            ...th.querySelectorAll(
+              '[data-slot="input-group"], [data-slot="slider-track"], [data-slot="slider-thumb"], label, p',
+            ),
+          ].filter((part) => !part.closest('[aria-hidden="true"]'));
+          for (const part of parts) {
+            const box = part.getBoundingClientRect();
+            let clip = part.parentElement;
+            let ok = inside(box, cell);
+            while (ok && clip && clip !== th) {
+              if (getComputedStyle(clip).overflowX !== 'visible')
+                ok = inside(box, clip.getBoundingClientRect());
+              clip = clip.parentElement;
+            }
+            // A Filter Mode caption's text overflowing its own box is cut too.
+            if (
+              ok &&
+              part.textContent?.startsWith('Filter Mode:') &&
+              part.scrollWidth > part.clientWidth + 1
+            )
+              ok = false;
+            if (!ok)
+              clipped.push(
+                `${th.textContent?.trim().slice(0, 14)} ${part.dataset.slot ?? part.tagName}:${part.textContent?.trim().slice(0, 30)} [${Math.round(box.left - cell.left)}, ${Math.round(box.right - cell.left)}] in ${Math.round(cell.width)}`,
+              );
+          }
+          const track = th.querySelector('[data-slot="slider-track"]');
+          if (track) {
+            const caption = [...th.querySelectorAll('label, p')].find((el) =>
+              el.textContent?.startsWith('Filter Mode:'),
+            );
+            const trackBox = track.getBoundingClientRect();
+            const top = caption?.getBoundingClientRect().top ?? -1;
+            slider =
+              top >= trackBox.bottom
+                ? ''
+                : `caption top ${top} < track bottom ${trackBox.bottom}`;
+          }
+        }
+        return { clipped, slider };
+      });
+      check(
+        'subheader filters not clipped',
+        layout.clipped.length === 0,
+        layout.clipped.join(' '),
+      );
+      check('slider caption below track', layout.slider === '', layout.slider);
+    },
+  ),
+  '/docs/examples/persistent-view': examplePage(
+    'persistent-view',
+    'persistViewSettings: true',
+    async (page, w, check) => {
+      // F14: the docs prose margin must not push the pagination out of the
+      // bottom toolbar
+      const box = await w
+        .locator('[data-slot="pagination-content"]')
+        .last()
+        .evaluate((el) => {
+          const bar = el.closest('div.justify-between')?.parentElement;
+          if (!bar) return null;
+          const ul = el.getBoundingClientRect();
+          const rect = bar.getBoundingClientRect();
+          return {
+            bar: Math.round(rect.bottom),
+            inside: ul.top >= rect.top - 0.5 && ul.bottom <= rect.bottom + 0.5,
+            ul: Math.round(ul.bottom),
+          };
+        })
+        .catch(() => null);
+      check(
+        'pagination inside the bottom toolbar',
+        !!box?.inside,
+        box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
+      );
+    },
+  ),
+  '/docs/examples/popover-filters': examplePage(
+    'alternate-column-filtering',
+    "columnFilterDisplayMode: 'popover'",
+    async (page, w, check) => {
+      check(
+        'no inline filter inputs',
+        (await w.locator('thead input').count()) === 0,
+      );
+      check(
+        'filter buttons in head',
+        (await w.locator('thead button').count()) > 0,
+      );
+      await headerLabelsFit(w, 'alternate-column-filtering', check);
+    },
+  ),
+  '/docs/examples/infinite-scrolling': examplePage(
+    'infinite-scrolling',
+    'useInfiniteQuery',
+    async (page, w, check) => {
+      const txt = await w.textContent();
+      check('fetched count text', /Fetched \d+ of \d+ total rows/.test(txt));
+    },
+  ),
+  '/docs/examples/row-virtualization': examplePage(
+    'enable-row-virtualization',
+    'enableRowVirtualization: true',
+    async (page, w, check) => {
+      const n = await w.locator('table tbody tr').count();
+      check(
+        'virtualized rows (fewer than 10000)',
+        n > 0 && n < 200,
+        `rows=${n}`,
+      );
+    },
+  ),
+  '/docs/examples/virtualized': examplePage(
+    'virtualized',
+    'enableColumnVirtualization: true',
+    async (page, w, check) => {
+      const n = await w.locator('table tbody tr').count();
+      check(
+        'virtualized rows (fewer than 10000)',
+        n > 0 && n < 200,
+        `rows=${n}`,
+      );
+    },
+  ),
+  '/docs/examples/react-query': examplePage(
+    'react-query',
+    'useQuery',
+    async (page, w, check) => {
+      // a body row under the sticky header is a library layout fault: logged,
+      // not failed (spec 06.2 1.6.5)
+      const head = await w.locator('thead').first().boundingBox();
+      const row = await w.locator('tbody tr').first().boundingBox();
+      if (head && row && row.y < head.y + head.height - 0.5) {
+        console.warn(
+          `  warn react-query: first body row top ${Math.round(row.y)} above the sticky header bottom ${Math.round(head.y + head.height)}`,
+        );
+      }
+      check('react-query: header and first row measured', !!head && !!row);
+    },
+  ),
+  '/docs/examples/remote': examplePage('remote', 'manualPagination: true'),
+  '/docs/examples/lazy-detail-panel': examplePage(
+    'lazy-detail-panel',
+    '/api/moredata/',
+    async (page, w, check) => {
+      const expand = w.locator('tbody button[aria-label*="expand" i]').first();
+      check('expand button', (await expand.count()) > 0);
+      if (!(await expand.count())) return;
+      await expand.click();
+      await page.waitForTimeout(2500);
+      const txt = await w.textContent();
+      check('detail panel loaded', /Favorite Music|favoriteMusic/i.test(txt));
+    },
+  ),
+  '/docs/examples/lazy-sub-rows': examplePage(
+    'lazy-sub-rows',
+    '/api/treedata',
+    async (page, w, check) => {
+      check(
+        'expand buttons',
+        (await w.locator('tbody button[aria-label*="expand" i]').count()) > 0,
+      );
+    },
+  ),
+  '/docs/examples/minimal': examplePage(
+    'minimal',
+    'ST_Table',
+    async (page, w, check) => {
+      check('caption', (await w.locator('table caption').count()) === 1);
+      check(
+        'no toolbar',
+        (await w
+          .locator('input[type="search"], input[placeholder*="Search" i]')
+          .count()) === 0,
+      );
+    },
+  ),
+  '/docs/examples/row-dragging': examplePage(
+    'enable-row-dragging',
+    'enableRowDragging: true',
+    async (page, w, check) => {
+      check(
+        'two tables',
+        (await w.locator('table').count()) === 2,
+        `tables=${await w.locator('table').count()}`,
+      );
+      await headerLabelsFit(w, 'enable-row-dragging', check);
+    },
+  ),
+  '/docs/examples/row-ordering': examplePage(
+    'enable-row-ordering',
+    'enableRowOrdering: true',
+    async (page, w, check) => {
+      check(
+        'drag handles',
+        (await w
+          .locator(
+            'tbody button[aria-label*="drag" i], tbody [draggable="true"]',
+          )
+          .count()) > 0,
+      );
+    },
+  ),
+  '/docs/examples/sticky-header': examplePage(
+    'enable-sticky-header',
+    'enableStickyHeader: true',
+    async (page, w, check) => {
+      const pos = await w
+        .locator('thead')
+        .first()
+        .evaluate((el) => getComputedStyle(el).position);
+      check('thead sticky', pos === 'sticky', pos);
+    },
+  ),
+  '/docs/examples/sticky-row-pinning': examplePage(
+    'enable-row-pinning-sticky',
+    'enableRowPinning: true',
+    async (page, w, check) => {
+      check(
+        'pin buttons',
+        (await w.locator('tbody button[aria-label*="pin" i]').count()) > 0,
+      );
+    },
+  ),
+  '/docs/examples/static-row-pinning': examplePage(
+    'enable-row-pinning-static',
+    "rowPinningDisplayMode: 'top-and-bottom'",
+    async (page, w, check) => {
+      check(
+        'pin buttons',
+        (await w.locator('tbody button[aria-label*="pin" i]').count()) > 0,
+      );
+    },
+  ),
+  '/docs/examples/sticky-row-selection': examplePage(
+    'enable-row-pinning-select',
+    "rowPinningDisplayMode: 'select-sticky'",
+    async (page, w, check) => {
+      check(
+        'row checkboxes',
+        (await w
+          .locator('tbody [role="checkbox"], tbody input[type="checkbox"]')
+          .count()) > 0,
+      );
+    },
+  ),
 };
 
 export default checks;
