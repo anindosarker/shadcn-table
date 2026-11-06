@@ -1,6 +1,6 @@
 # 08: Docs and process (08), tracker (D85, D86, D87, D88, D89, D90, D91)
 
-Status: running (Tasks 1, 3, 4, 5, 6 done; Task 2 pending, main session)
+Status: verified (Tasks 1, 3, 4, 5, 6 done; Task 2 and the ruleset rewrite pending, main session)
 Branch `v0.8/08-docs-process`, worktree `shadcn-react-table.worktrees/01`, no PR (P1, P3)
 Checks:
 
@@ -16,6 +16,16 @@ Checks:
 - Check: validate-repo, `pnpm test validate-repo` at 2770c169: pass (27 unit tests; under `packages/shadcn-table/registry/` only `README.md` changed)
 - Check: format, `pnpm format` before each commit, `.ai/plans/**/reference/**` reverted: pass
 - Check: ruleset 25521193 nested contexts: pending (Task 4, main session, D80)
+- Check: old names in docs, Task 1 grep at 158980c7: pass (empty) (verifier)
+- Check: test names in docs, `pnpm test <name>` in the docs and the PR template against `pnpm test --list` at 158980c7: pass (eight names; docs name typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-production, `--changed`, `--list`) (verifier)
+- Check: docs-e2e one section, `pnpm test docs-e2e --section api --base base` at 158980c7: pass (1 section, 10 pages, 109 assertions) (verifier)
+- Check: act list, `act -l` at 158980c7: pass (pr.yml `PR checks` nine jobs, four called workflows, release.yml `Release` four jobs); `actionlint .github/workflows/*.yml`: pass (verifier)
+- Check: dispatch runs, `gh run view <id> --json conclusion,jobs` at 158980c7: 42256775917 (head 2770c169, attempt 2) success, nineteen test jobs success, PR Summary success, Validate PR and Prepare Release skipped; display title `PR checks: all` on both 42254086380 and 42256775917: pass (verifier)
+- Check: files, `git diff --stat 81ddd4f0..HEAD` at 158980c7: pass (Files owned, CHANGELOG.md and the tracker, plus `test/docs-e2e/test.mjs` required by Tasks 3 and 5, see Attention) (verifier)
+- Check: format, `prettier --check` on the changed files at 158980c7: pass (verifier)
+- Check: process.md, `grep -n "packages/shadcn-table/scripts" .ai/plans/v0.8.x/anindosarker/process.md` at 158980c7: pending (Task 2, main session; line 67 still matches) (verifier)
+- Check: review findings, Review: none: pass (no findings to apply) (verifier)
+- Check: skipped as recorded at 2770c169 with only plan files and CHANGELOG.md changed since: `pnpm test docs-e2e --base base`, 2.2 workflows grep, `pnpm test validate-repo` (verifier)
 
 - Task 1 Docs of 1.6.13: done (c9c575cd)
 - Task 2 `process.md` P5 and P9: pending (main session, D88)
