@@ -39,7 +39,8 @@ const CHECKS_DIR = path.join(
 );
 /** The docs sections, in run order; lib/<section>.mjs each (D89). */
 export const SECTIONS = ['getting-started', 'api', 'guides', 'examples'];
-const WORKERS = 1;
+/** Browser contexts per section (D91); --workers overrides. */
+const WORKERS = 4;
 const CI_PORT = 5320;
 
 /** Console errors that always fail the gate, whatever the page. */
