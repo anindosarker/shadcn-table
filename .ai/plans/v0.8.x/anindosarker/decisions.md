@@ -720,7 +720,7 @@ index d099d3a0..d778bfba 100644
 - The package keeps `registry/` and `stories/` (each story a render test, a `play:` the behaviour test; no separate plays folder) and its `test:<base>`, `tsc:*`, `lint`, `storybook:build:*` scripts as implementation the tests call. Root `package.json`: `"test": "node test/run.mjs"`, `playwright`, `pixelmatch`, `pngjs` as devDependencies; `check:*` and `release:prepare` removed.
 - The layout:
 
-```
+```C
 shadcn-react-table/
 ├── test/
 │   ├── run.mjs                        runner: discovers */run.mjs; --list --all --changed --base --scenario --ci
@@ -760,4 +760,5 @@ shadcn-react-table/
 ```
 
 Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the only file `run.mjs` imports, `lib/` and `fixtures/` private.
+
 - Workflows call tests: a `pr.yml` job is setup steps plus `pnpm test <name>`; `install.yml` runs `install-fresh-app` then `check-installed-app`; `release.yml` runs `tools/release/decide.mjs`, waits for the deploy, `check-docs-live`, the GitHub release. Agents run the same commands natively; `act` stays the optional Linux run for `check-installed-app` and `check-docs-local` (D81, D83). Owner, 2026-11-06. The set of CI jobs per PR and per release is D86 (open).
