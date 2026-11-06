@@ -250,3 +250,7 @@
 ### F60 Flaky play: PanelCollapse "Progress And Banner Collapse" in aria CI
 
 - `packages/shadcn-table/stories/fixed-bugs/PanelCollapse.stories.tsx`, play `Progress And Banner Collapse`: failed once on the 0.8.0 release PR #130 (pr.yml run 42104722808, aria job) with `expected 0 to be greater than 0` at its first check, green on the job rerun. Second known flake after `Profiled Thousand Rows` (P4). Not fixed; a 0.9 item: the first assertion waits for the panel height to settle (`waitFor`) instead of reading it once.
+
+### F61 Flaky docs E2E timing check: demo "pauses when scrolled away mid-step"
+
+- `test/docs-e2e/lib/e.mjs` (examples, to become `examples.mjs` per D89), the 1440 px demo check "pauses when scrolled away mid-step": failed once on the first CI run of the new `pr.yml` (run 42238797293, Docs E2E Tests (radix)), green on the rerun. A timing assertion on the home demo's pause; third known flake after `Profiled Thousand Rows` and `PanelCollapse` (F60). Not fixed; the D91 parallel contexts may make it worse, so the D91 task waits for the pause state with `waitFor` instead of a fixed delay.

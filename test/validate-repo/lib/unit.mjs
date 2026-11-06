@@ -10,7 +10,7 @@ import { run, stripAnsi } from '../../lib/exec.mjs';
 export const check = async (log, root) => {
   const { code, stdout, stderr } = await run(
     process.execPath,
-    ['--test', 'tools/**/*.test.mjs'],
+    ['--test', '--test-reporter=spec', 'tools/**/*.test.mjs'],
     { cwd: root, capture: true, quiet: true },
   );
   const output = stripAnsi(stdout + stderr);

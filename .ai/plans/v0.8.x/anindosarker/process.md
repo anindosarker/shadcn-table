@@ -37,7 +37,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - Several agents share this machine. Run as much in parallel as fits, but never start work that would push CPU above 90 percent or memory pressure out of the green zone; check with `top -l 1 | head -5` and `memory_pressure | tail -1` before a long check.
 - The dev registry on port 5310 (`pnpm registry:dev`) is shared: reuse it, start it when missing, never kill it.
-- Known flakes, rerun once before calling a check failed: `Profiled Thousand Rows` (vitest browser mode); `PanelCollapse` "Progress And Banner Collapse" (aria, F60).
+- Known flakes, rerun once before calling a check failed: `Profiled Thousand Rows` (vitest browser mode); `PanelCollapse` "Progress And Banner Collapse" (aria, F60); docs E2E "pauses when scrolled away mid-step" (F61).
 
 ## P6 Agent sandbox
 
