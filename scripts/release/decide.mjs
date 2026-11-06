@@ -3,20 +3,21 @@
 //   node scripts/release/decide.mjs
 //
 // Chooses what a run of release.yml does and prints one line
-// `mode=<mode> version=<version> level=<level>`; in Actions it also appends
-// the three outputs to $GITHUB_OUTPUT and a line to $GITHUB_STEP_SUMMARY.
-// Reads EVENT (push or workflow_dispatch), INPUT_VERSION (the dispatch
-// input) and GITHUB_SHA from the environment; gh needs GH_TOKEN.
-//   version  CHANGELOG.md has `## Unreleased` lines (next-version.mjs exits
-//            0). level is the `release:` label of the pull request merged as
-//            GITHUB_SHA (patch, minor or major), or empty: the headings decide.
-//   release  the section has no lines (exit 2) and v<package version> is not
-//            tagged on origin: the version PR was merged. A dispatch is always
-//            a release, for INPUT_VERSION or the package version.
-//   none     the section has no lines and the tag exists.
+// `mode=<mode> version=<version>`; in Actions it also appends the two
+// outputs to $GITHUB_OUTPUT and a line to $GITHUB_STEP_SUMMARY. Reads EVENT
+// (push or workflow_dispatch), INPUT_VERSION (the dispatch input) and
+// GITHUB_SHA from the environment.
+//   release  CHANGELOG.md has no `## Unreleased` lines (next-version.mjs
+//            exits 2) and v<package version> is not tagged on origin: the
+//            release PR, bumped by its `version bump (release:prepare)`
+//            check, was merged. A dispatch is always a release, for
+//            INPUT_VERSION or the package version.
+//   none     the section has no lines and the tag exists; or the section
+//            has lines (exit 0): merged without the version bump, a warning,
+//            nothing released.
 // Any other exit code of next-version.mjs (a malformed section) is passed
 // through, so the workflow fails on it.
-import { execFileSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -28,34 +29,27 @@ const ROOT = path.resolve(
 );
 const LIB_PACKAGE = 'packages/shadcn-table/package.json';
 const NEXT_VERSION = 'scripts/release/next-version.mjs';
-const LEVELS = ['patch', 'minor', 'major'];
 
 /**
  * The decision without its side effects. `env` holds EVENT, INPUT_VERSION
  * and GITHUB_SHA; `version` is the library version; `changelogStatus()` is
  * the exit code of next-version.mjs --from-changelog (0 lines, 2 none);
- * `mergedLabel(sha)` is the `release:` label of the pull request merged as
- * sha, or ''; `tagged(tag)` says whether origin has the tag. Returns the exit
- * code, the outputs and the lines to print.
+ * `tagged(tag)` says whether origin has the tag. Returns the exit code, the
+ * outputs and the lines to print.
  */
-export const decide = (
-  env,
-  { version, changelogStatus, mergedLabel, tagged },
-) => {
+export const decide = (env, { version, changelogStatus, tagged }) => {
   const lines = [];
   let mode;
-  let level = '';
   if (env.EVENT === 'workflow_dispatch') {
     mode = 'release';
     version = env.INPUT_VERSION || version;
   } else {
     const status = changelogStatus();
     if (status === 0) {
-      mode = 'version';
-      const label = mergedLabel(env.GITHUB_SHA);
-      const candidate = label.replace(/^release:/, '');
-      if (label !== candidate && LEVELS.includes(candidate)) level = candidate;
-      lines.push(`merged PR label: ${label || 'none'}`);
+      mode = 'none';
+      lines.push(
+        '::warning::CHANGELOG.md has ## Unreleased lines on master: merged without the version bump; nothing released',
+      );
     } else if (status === 2) {
       if (tagged(`v${version}`)) {
         mode = 'none';
@@ -69,18 +63,11 @@ export const decide = (
       return { code: status, lines };
     }
   }
-  lines.push(
-    `mode=${mode} version=${version} level=${level || 'from headings'}`,
-  );
-  return { code: 0, mode, version, level, lines };
+  lines.push(`mode=${mode} version=${version}`);
+  return { code: 0, mode, version, lines };
 };
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const run = (cmd, args) =>
-    execFileSync(cmd, args, {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'inherit'],
-    }).trim();
   const result = decide(process.env, {
     version: JSON.parse(fs.readFileSync(path.join(ROOT, LIB_PACKAGE), 'utf8'))
       .version,
@@ -89,19 +76,6 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
         cwd: ROOT,
         stdio: ['ignore', 'ignore', 'inherit'],
       }).status,
-    mergedLabel: (sha) =>
-      run('gh', [
-        'pr',
-        'list',
-        '--search',
-        sha,
-        '--state',
-        'merged',
-        '--json',
-        'labels',
-        '--jq',
-        '[.[0].labels[]?.name | select(startswith("release:"))][0] // ""',
-      ]),
     tagged: (tag) =>
       spawnSync(
         'git',
@@ -111,11 +85,11 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   });
   for (const line of result.lines) console.log(line);
   if (result.code !== 0) process.exit(result.code);
-  const { mode, version, level } = result;
+  const { mode, version } = result;
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(
       process.env.GITHUB_OUTPUT,
-      `mode=${mode}\nversion=${version}\nlevel=${level}\n`,
+      `mode=${mode}\nversion=${version}\n`,
     );
   }
   if (process.env.GITHUB_STEP_SUMMARY) {

@@ -13,6 +13,7 @@
     "storybook": "concurrently -n base,radix,aria -c green,magenta,cyan \"pnpm --filter shadcn-table storybook:base\" \"pnpm --filter shadcn-table storybook:radix\" \"pnpm --filter shadcn-table storybook:aria\"",
     "format": "prettier --write \"**/*.{js,mjs,ts,tsx,md}\"",
     "preview": "node scripts/preview.mjs",
+    "release:prepare": "node scripts/release/prepare.mjs",
     "lint": "turbo run lint",
     "registry:build": "pnpm --filter shadcn-table registry:build",
     "registry:items": "node packages/shadcn-table/scripts/registry/examples.mjs",
