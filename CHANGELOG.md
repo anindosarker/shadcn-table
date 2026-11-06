@@ -3,9 +3,9 @@
 All notable changes to shadcn-table are recorded here, newest first, in the
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. Entries are
 written while the work happens, under `## Unreleased`, below `### Breaking`,
-`### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`. The version pull request
-that the release workflow opens renames that heading to the version and the
-date; merging it publishes the section as the GitHub release notes.
+`### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`. The release pull request's
+last check renames that heading to the version and the date; merging it
+publishes the section as the GitHub release notes.
 
 ## Unreleased
 
@@ -15,6 +15,11 @@ date; merging it publishes the section as the GitHub release notes.
 
 - The release gate is a step of `install.yml` (D78): a Next.js app per base (`nextjs-base`, `nextjs-radix`, `nextjs-aria` rows) runs `packages/shadcn-table/test/release/gate.mjs` (Playwright) against `next dev` of the gate pages: zero console warnings and errors, the persisted view marked before first paint and restored, the RTL pinned header and resize handle.
 - The two default captures per base are compared with the references under `packages/shadcn-table/test/release/reference/` by `pixelmatch` (at most 500 differing pixels); the captures, any diff image and `result.json` upload as the `gate-<base>` artifact (D79). `install.yml` gains a `workflow_dispatch` trigger to refresh the references.
+
+#### Spec 07.1 version bump
+
+- One pull request per release, `dev` into `master` (D83): its last check, `version bump (release:prepare)`, runs `scripts/release/prepare.mjs` (`pnpm release:prepare`) once every other job is green, bumps both `package.json` files, renames `## Unreleased` to the version and the date and commits `chore: version <v>` to `dev`; `release impact` reads the labels live, takes `master` PRs from `dev` only and passes the bumped head.
+- `release.yml` runs once, on the merge: the `version` job, `scripts/release/version-pr.mjs` and the `release/next` branch are gone; `decide` chooses release or nothing.
 
 ## 0.8.0 - 2026-11-05
 
