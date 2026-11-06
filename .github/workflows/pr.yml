@@ -3,10 +3,13 @@ name: pr
 # Every check of a pull request, on pull_request only (pushes to master run
 # release.yml). release-impact checks the `release:` label and prints the
 # version the PR ships as; it runs on label changes too, and the other jobs
-# skip those events, so a label change reruns the label check alone.
+# skip those events, so a label change reruns the label check alone. On the
+# release PR (dev into master) the last job, version-bump, commits
+# `chore: version <v>` to dev once every other job is green; the push reruns
+# this workflow once and the bumped head passes; a draft PR is not bumped.
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
 
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.ref }}-${{ contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && 'labels' || 'checks' }}
@@ -20,7 +23,10 @@ jobs:
   # release:skip) is required when the PR changes a shipped file: the library
   # trees, the docs app's installed copies or the skill. With a level label,
   # the PR must add `## Unreleased` lines to CHANGELOG.md and the job summary
-  # shows the version the next release ships as.
+  # shows the version the next release ships as. The labels are read live,
+  # not from the event payload, so the `opened` run sees a label added right
+  # after. A PR into master comes from dev only; its head, once version-bump
+  # has committed, has no `## Unreleased` lines and passes as already bumped.
   release-impact:
     name: release impact (label, next version)
     runs-on: ubuntu-latest
@@ -30,8 +36,13 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       PR: ${{ github.event.pull_request.number }}
-      PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
     steps:
+      - name: A PR into master comes from dev only
+        run: |
+          if [ "$GITHUB_BASE_REF" = master ] && [ "$GITHUB_HEAD_REF" != dev ]; then
+            echo "::error::a PR into master comes from dev only (this PR comes from $GITHUB_HEAD_REF)"
+            exit 1
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -40,7 +51,7 @@ jobs:
         run: |
           files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')
           shipped=$(printf '%s\n' "$files" | grep -E '^(packages/shadcn-table/registry/|apps/shadcn-table-docs/components/ui-(radix|base|aria)/|skills/)' || true)
-          labels=$(jq -r '.[] | select(startswith("release:"))' <<<"$PR_LABELS")
+          labels=$(gh pr view "$PR" --json labels --jq '.labels[].name | select(startswith("release:"))')
           count=$(printf '%s' "$labels" | grep -c . || true)
           if [ "$count" -gt 1 ]; then
             echo "::error::more than one release: label: ${labels//$'\n'/ }"
@@ -64,6 +75,15 @@ jobs:
           status=0
           next=$(node scripts/release/next-version.mjs --level "$level" --from-changelog) || status=$?
           if [ "$status" -eq 2 ]; then
+            # A head bumped by version-bump: no Unreleased lines and a
+            # library version other than master's.
+            base=$(gh api "repos/$GITHUB_REPOSITORY/contents/packages/shadcn-table/package.json?ref=master" --jq .content | base64 -d | jq -r .version)
+            if node scripts/release/prepare.mjs --check --base-version "$base"; then
+              current=$(jq -r .version packages/shadcn-table/package.json)
+              echo "Ships as $current (already bumped)"
+              echo "Ships as $current ($labels, already bumped)." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
             echo "::error::$labels needs lines under \"## Unreleased\" in CHANGELOG.md"
             exit 1
           fi
@@ -115,6 +135,8 @@ jobs:
         with:
           node-version: 22
       - run: node packages/shadcn-table/scripts/registry/check-bases.mjs
+      - name: Release script tests
+        run: node --test scripts/release/*.test.mjs
 
   test:
     name: 'test (${{ matrix.base }}: vitest browser mode)'
@@ -228,3 +250,69 @@ jobs:
     uses: ./.github/workflows/install.yml
     with:
       source: http://localhost:5310/r/<item>.json
+
+  # The last job, on the release PR only (a PR into master, which comes from
+  # dev): once every other job is green it runs release:prepare with the PR's
+  # `release:` level and commits `chore: version <v>` to the PR head with
+  # RELEASE_BOT_TOKEN, a token whose push triggers this workflow again (a
+  # push with github.token would not). On that rerun release-impact passes
+  # the bumped head and this job stops at "already bumped". A red or skipped
+  # need skips it.
+  version-bump:
+    name: version bump (release:prepare)
+    needs: [release-impact, library, bases, test, docs, pages, registry, install]
+    if: ${{ github.base_ref == 'master' && !github.event.pull_request.draft && !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR: ${{ github.event.pull_request.number }}
+      RELEASE_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
+    steps:
+      - name: Check the RELEASE_BOT_TOKEN secret
+        run: |
+          if [ -z "$RELEASE_BOT_TOKEN" ]; then
+            echo "::error::secret RELEASE_BOT_TOKEN is missing; the owner creates it (Settings, Secrets and variables, Actions): a fine-grained token with contents: write on this repository"
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.RELEASE_BOT_TOKEN }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Bump the version and commit it to the PR head
+        run: |
+          labels=$(gh pr view "$PR" --json labels --jq '.labels[].name | select(startswith("release:"))')
+          count=$(printf '%s' "$labels" | grep -c . || true)
+          if [ "$count" -gt 1 ]; then
+            echo "::error::more than one release: label: ${labels//$'\n'/ }"
+            exit 1
+          fi
+          if [ "$count" -eq 0 ] || [ "$labels" = release:skip ]; then
+            echo "no release, no bump"
+            echo "No release, no bump (${labels:-no release: label})." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          level=${labels#release:}
+          base=$(git show origin/master:packages/shadcn-table/package.json | jq -r .version)
+          status=0
+          node scripts/release/prepare.mjs --check --base-version "$base" || status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "already bumped"
+            echo "Already bumped." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          [ "$status" -eq 2 ] || exit "$status"
+          next=$(node scripts/release/prepare.mjs --level "$level" --base-version "$base")
+          git add -- CHANGELOG.md packages/shadcn-table/package.json apps/shadcn-table-docs/package.json
+          git -c 'user.name=github-actions[bot]' \
+            -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' \
+            commit --quiet -m "chore: version $next"
+          git push origin "HEAD:$GITHUB_HEAD_REF"
+          echo "Committed chore: version $next to $GITHUB_HEAD_REF."
+          echo "Committed \`chore: version $next\` to $GITHUB_HEAD_REF." >> "$GITHUB_STEP_SUMMARY"

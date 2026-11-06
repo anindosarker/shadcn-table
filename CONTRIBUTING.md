@@ -47,6 +47,7 @@ packages/shadcn-table/
     registry.ts                     # item definition: shadcn-table-aria + locale items
   registry/README.md                # what lives where, how to change a file, how to add a part
   stories/                          # Storybook stories, also the test suite, run once per base
+  test/release/                     # the release gate: Playwright script, gate pages, reference captures
   scripts/registry/bases.mjs        # the base list (BASES), radix the reference
   scripts/registry/lib.mjs          # item helpers: tree files + forked parts + css
   scripts/registry/build.mjs        # collects every registry.ts into registry.json
@@ -76,9 +77,9 @@ registry.json                       # root item, points at the package registry
 skills/                             # the skill file source
 vercel.json                         # docs + Storybook deployment
 .github/workflows/pr.yml            # the jobs listed in step 6, on every pull request
-.github/workflows/release.yml       # version PR and release on every push to master (step 7)
+.github/workflows/release.yml       # release on every push to master (step 7)
 .github/pull_request_template.md    # changes, checklist, release impact
-scripts/release/                    # next-version, version-pr, notes, smoke, comment
+scripts/release/                    # next-version, prepare, decide, notes, smoke, comment
 ```
 
 ## Prerequisites
@@ -291,7 +292,7 @@ pnpm --filter shadcn-table-docs lint
 pnpm --filter shadcn-table-docs build
 ```
 
-It also validates the registry at the pull request's merge SHA, installs the library (`shadcn-table-radix`), a locale and `example-basic-radix` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app (the `registry` and `install` jobs).
+It also validates the registry at the pull request's merge SHA, installs the library (`shadcn-table-radix`), a locale and `example-basic-radix` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app per base, with the browser gate and capture diff (the `registry` and `install` jobs).
 
 - **Release impact.** Set one `release:` label: `release:patch`, `release:minor`, `release:major`, or `release:skip` for a change that ships nothing. A PR that changes `packages/shadcn-table/registry`, `apps/shadcn-table-docs/components/ui-*` or `skills/` fails the `release impact` job without one. With a level label, add the change's line to `CHANGELOG.md` under `## Unreleased`, below `### Breaking`, `### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`; the job summary shows the version it ships as.
 - **Large changes.** Ask on [Discord](https://discord.gg/hsF37t6EKe) first if unsure, then open a GitHub issue, so the direction is agreed before the diff exists.
@@ -301,16 +302,18 @@ It also validates the registry at the pull request's merge SHA, installs the lib
 
 ## 7. Release
 
-Releases come from `master` and need no command; `master` only takes pull requests (work branches, `claude/review`, and `dev` when the owner stages on it).
+Releases come from `master` and need no command; `master` takes pull requests from `dev` only, one per release, with its `release:` label (`release impact` fails any other head branch).
 
-1. **A merge with changelog lines.** `.github/workflows/release.yml` computes the next version (`scripts/release/next-version.mjs`): the level of the merged PR's `release:` label, else the `## Unreleased` headings (`Breaking`, `Removed`, `Added`, `Changed` minor while the version is 0.x, `Breaking` and `Removed` major from 1.0; `Fixed`, `Docs` patch). `scripts/release/version-pr.mjs` then writes the version into both `package.json` files, renames `## Unreleased` to `## <v> - <date>`, force-pushes one commit `chore: version <v>` to `release/next` and opens the pull request `chore: version <v>` into `master`, or rewrites the open one. Further merges accumulate in that PR; it never lowers the version it already shows.
-2. **The owner merges the version PR when it is time to release.** Edit it before merging to override the version. GitHub does not run `pr.yml` on a pull request the workflow opened.
-3. **The merge of the version PR** tags `v<v>`, waits for production to serve the version, smokes the site, installs the table per base from the public URL, creates the GitHub release from the `## <v>` section and comments "Released in v<v>" on every PR it shipped (`scripts/release/comment.mjs`). Any failure: no release.
+1. **The release PR's last check.** Once every other `pr.yml` job is green, `version bump (release:prepare)` runs `release:prepare` with the label's level (`scripts/release/prepare.mjs`, the version from `scripts/release/next-version.mjs`: the label's level, else the `## Unreleased` headings, `Breaking`, `Removed`, `Added`, `Changed` minor while the version is 0.x, `Breaking` and `Removed` major from 1.0; `Fixed`, `Docs` patch). It writes the version into both `package.json` files, renames `## Unreleased` to `## <v> - <date>` and commits `chore: version <v>` to `dev` with the `RELEASE_BOT_TOKEN` secret; `pr.yml` reruns once, `release impact` passes the bumped head and the job prints `already bumped`.
+2. **The owner approves** by enabling auto-merge (or merging) on the PR; the merge waits for every required check.
+3. **The merge of the release PR** tags `v<v>`, waits for production to serve the version, smokes the site, installs the table per base from the public URL, creates the GitHub release from the `## <v>` section and comments "Released in v<v>" on every PR it shipped (`scripts/release/comment.mjs`). Any failure: no release.
 4. **A failed late step.** Run `release.yml` by hand (`workflow_dispatch`) with `version`; `dry_run` (the default) runs the checks only, without it the release and the comments follow. A merge without changelog lines whose version is tagged does nothing.
 
 ```bash
 node scripts/release/next-version.mjs --level minor   # the version a minor release would ship as
 node scripts/release/next-version.mjs                 # from the Unreleased headings; exit 2 means no release
+pnpm release:prepare --level patch   # bump both package.json files and close ## Unreleased on this branch
+pnpm release:prepare --level patch --base-version 0.8.0   # what the version bump job runs: the next version from master's
 ```
 
 ## Analytics
