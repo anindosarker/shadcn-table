@@ -8,7 +8,7 @@ import {
   example,
   headerLabelsFit,
   propTable,
-} from './_helpers.mjs';
+} from './helpers.mjs';
 
 const count = (scope, selector) => scope.locator(selector).count();
 

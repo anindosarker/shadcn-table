@@ -1,5 +1,5 @@
 /**
- * Shared assertions for scripts/page-checks/<cluster>.mjs. Every helper takes
+ * Shared assertions for test/docs-e2e/lib/<cluster>.mjs. Every helper takes
  * the Playwright `page` and the `check(name, ok, extra?)` reporter the runner
  * passes to each page check.
  */
@@ -7,7 +7,7 @@ import {
   DEFAULT_BASE,
   BASE_LABELS,
   BASES,
-} from '../../../../packages/shadcn-table/scripts/registry/bases.mjs';
+} from '../../../tools/registry/bases.mjs';
 
 /** Prop-table option names (3rd cell; detail-panel rows have no cells). */
 export async function names(page, tableId) {
@@ -150,7 +150,7 @@ export async function paginationControls(wrapper, id, check) {
  * second entry swaps the shown source, the path bar copy button copies the
  * shown file), plus its full screen toggle, the "Copy prompt" split button
  * (it must write the install command for `example-<id>` through the
- * clipboard stub scripts/check-pages.mjs installs) and its caret menu
+ * clipboard stub test/docs-e2e/test.mjs installs) and its caret menu
  * (copy install command, Open in GitHub). The panel is located
  * by id.
  */

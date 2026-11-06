@@ -4,10 +4,7 @@
  * `base` is the base the page opened on (the runner's --base, else the
  * default).
  */
-import {
-  BASE_LABELS,
-  BASES,
-} from '../../../../packages/shadcn-table/scripts/registry/bases.mjs';
+import { BASE_LABELS, BASES } from '../../../tools/registry/bases.mjs';
 import {
   baseSwitch,
   codeToggle,
@@ -16,7 +13,7 @@ import {
   headerBaseMenu,
   names,
   paginationControls,
-} from './_helpers.mjs';
+} from './helpers.mjs';
 
 /**
  * The install page's edition select and Short form switch: both commands

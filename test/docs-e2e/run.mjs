@@ -1,10 +1,14 @@
-// Placeholder until its milestone task fills it: listed, never run.
 import { defineTest } from '../lib/define.mjs';
+import { run } from './test.mjs';
 
 export default defineTest({
   name: 'docs-e2e',
-  paths: ['test/docs-e2e/**'],
+  paths: [
+    'apps/shadcn-table-docs/**',
+    'packages/shadcn-table/registry/**',
+    'tools/registry/**',
+    'test/docs-e2e/**',
+  ],
   bases: ['base', 'radix', 'aria'],
-  pending: true,
-  run: async () => ({ status: 'fail', summary: 'not written yet' }),
+  run,
 });
