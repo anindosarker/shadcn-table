@@ -794,3 +794,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 ### D89 Docs E2E page lists follow the docs sections
 
 - `test/docs-e2e/lib/` holds one page list per docs section, named by it: `getting-started.mjs`, `api.mjs`, `guides.mjs`, `examples.mjs` (the former clusters `a.mjs` to `e.mjs`, split by batch size, are merged by section); `helpers.mjs` keeps its name. The runner splits each section's pages across its workers itself, so parallelism does not depend on the file split; `pnpm test docs-e2e --section guides` runs one section. Lands as a task of the milestone "Docs and process (08)", which gains `test/docs-e2e/lib/` in its Files owned. Owner, 2026-11-06.
+
+### D90 Workflow and run names
+
+- `pr.yml` is named `PR checks`, `release.yml` is named `Release`. Run names: on a pull request event `PR checks: <PR title>`; on a `workflow_dispatch` `PR checks: <job input>` (`all` when the input is empty); on the push to `master` `Release <version>` (the version read from `packages/shadcn-table/package.json` of the pushed commit). The Actions list then reads, per release, `Release 0.8.1` on `master` above two `PR checks: release: 0.8.1` rows on `dev` (`opened`, then `synchronize` after the bump commit). Lands as a task of the milestone "Docs and process (08)", which gains `.github/workflows/pr.yml` and `release.yml` in its Files owned (after "Tools and workflows (08)" has merged). Owner, 2026-11-06.
