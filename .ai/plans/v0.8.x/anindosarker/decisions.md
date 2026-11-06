@@ -803,3 +803,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 ### D91 Docs E2E runs pages in parallel; CI caches the Next build and Chromium
 
 - `docs-e2e/test.mjs` opens pages through four Playwright browser contexts, the section lists (D89) split across them; the section order and the per-page assertions are unchanged. `docs-e2e.yml` caches `apps/shadcn-table-docs/.next/cache` with `actions/cache` keyed on the lockfile and the docs sources; `docs-e2e.yml` and `installation-e2e.yml` install Chromium without `--with-deps` and cache `~/.cache/ms-playwright` keyed on the Playwright version (the apt step of `--with-deps` took up to nine minutes on some runners). Expected: Docs E2E from about 20 to about 8 minutes per base. Lands in the milestone "Docs and process (08)" with the D89 and D90 tasks. Owner, 2026-11-06.
+
+### D92 Validate Production is the HTTP checks only
+
+- The release run's Validate Production job runs the 28 HTTP checks of `test/validate-production` and nothing else; the live Docs E2E per base (a D86 addendum from the review of the set) is removed: the PR run already ran Docs E2E on the same commit, and the live pass took 26 minutes of the 32-minute 0.8.1 release run. Small fix on `claude/review`, `dev` mirrored. Owner, 2026-11-07.

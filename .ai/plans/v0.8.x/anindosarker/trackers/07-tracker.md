@@ -1,6 +1,6 @@
 # 07: release 0.8.0, tracker
 
-Status: done (4b4ebd31), released v0.8.0
+Status: released (v0.8.0 2026-11-05, v0.8.1 2026-11-06)
 Branch claude/review (inline, no spec branch), registry on 5310 (served from worktree 01 `.dev`, rebuilt 16:25 at bc21b6da; `git diff bc21b6da..7c2717aa -- packages/` empty, so it is claude/review's build; `pnpm -w registry:build` rerun at 7c2717aa, tree unchanged)
 Checks:
 - gate-base `next build` at 7c2717aa: green
@@ -101,3 +101,4 @@ Install smoke check (agent-browser 0.27.0, viewport 1800x1150, `next dev` on 534
 - `dev` fast-forwarded to `claude/review` 49b3ad34; PR #132 "release: 0.8.1", `dev` into `master`, label `release:patch`, no auto-merge (A23: the owner enables it as the approval).
 - Pending the owner: the `RELEASE_BOT_TOKEN` secret (A22); until it exists the `version bump (release:prepare)` check fails on #132 by design.
 - 2026-11-06 23:3x: epic 08 merged (milestones S15 to S17: 8e6208ef, 977d1503, 85d27dab) plus the F62 fix 8a01c124. Integration proof: `pr.yml` dispatch run 42256775917 green on 2770c169 (the merged tree minus plan files and the F62 retry), `pnpm test validate-repo` green on 8a01c124; no local `pnpm test --all` rerun (D83: optional). Ruleset 25521193 required checks rewritten to the 21 nested D90 contexts. `dev` fast-forwarded to 8a01c124; PR #132 body updated, label `release:patch`, auto-merge enabled (D88); the release runs through `pr.yml` (Prepare Release bumps to 0.8.1) and `release.yml`.
+- 2026-11-06 18:26Z: v0.8.1 released. PR #132 merged 17:54Z after the F62 fix rerun (run 42264754643 green, Prepare Release "already bumped"); release.yml run 42265925519: Check Release, Verify Deployment (both hosts, tag), Validate Production (28 HTTP checks plus live Docs E2E x3, 26 min), Publish Release. `claude/review` and `dev` fast-forwarded to `master`.

@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 0.8.2 - 2026-11-06
+
+### Changed
+
+#### Epic 08 release run
+
+- Validate Production runs the 28 HTTP checks on the deployed site only; the live Docs E2E pass per base is gone (D92): the PR run already ran Docs E2E on the same commit, and the live pass took 26 of the 32 minutes of the 0.8.1 release run.
+
 ## 0.8.1 - 2026-11-06
 
 ### Changed
