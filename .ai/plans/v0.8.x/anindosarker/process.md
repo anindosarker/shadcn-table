@@ -5,7 +5,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 ## P1 Branches
 
 - `claude/review`: the integration branch. Every worktree starts from it (branch `v<major>.<minor>/<slug>` created from `origin/claude/review`), and every finished milestone merges back into it.
-- `dev`: the staging branch. Fast-forwarded from `claude/review` once, after the last feature column has merged; never pushed to otherwise.
+- `dev`: the staging branch. Fast-forwarded from `claude/review` after the last feature column has merged, and again after each fix milestone the integration run produces; the only other commit on it is `chore: version <v>` by Prepare Release on the release PR. Never pushed to by hand.
 - `master`: the release branch. Changes only by merging the release PR from `dev`; no other source branch, no direct push.
 
 ## P2 Milestone branch and worktree
@@ -31,7 +31,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - One PR per release: `dev` into `master`, title `release: <version>`, the `release:` label `plan.md` names.
 - Auto-merge is enabled on the PR by the owner or by the agent, as the plan says; the PR merges when every required check passes.
-- After the release, `claude/review` and `dev` are fast-forwarded to `master` before the next plan commit.
+- After the release, the main session fast-forwards `claude/review` and `dev` to `master` and pushes both before the next plan commit; no workflow does this.
 
 ## P5 Checks on a shared machine
 
@@ -64,7 +64,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 - `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/index.ts`: each milestone's exports under its own `// spec NN` comment.
 - `CHANGELOG.md`: one `#### Spec NN` block per milestone under `## Unreleased` (`#### Spec NN <milestone>` when an epic has several milestones).
 - `registry.json`, the `examples-*-diff.json` lists and `apps/shadcn-table-docs/components/ui-<base>/` are generated: regenerated at merge, never hand-merged.
-- `scripts/registry/{base,aria}-diff.json` are hand-kept allow lists, owned by the milestone that adds the differing file.
+- `tools/registry/{base,aria}-diff.json` (today `packages/shadcn-table/scripts/registry/`) are hand-kept allow lists, owned by the milestone that adds the differing file.
 
 ## P10 Plans
 

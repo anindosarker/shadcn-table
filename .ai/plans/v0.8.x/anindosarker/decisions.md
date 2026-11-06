@@ -689,12 +689,14 @@ index d099d3a0..d778bfba 100644
 
 - The release is: the `dev` into `master` PR created with its `release:` label and auto-merge enabled; `version-pr.mjs` labels the bot version PR `release:skip` and enables auto-merge on it; `release.yml` does the rest as today (tag, production wait, smoke, installs, GitHub release). An agent appears only on a red check. Repository settings, done by the agent with the owner's one-time authorization (P5 exception, "you can do it"): "Allow auto-merge" on, the `master` ruleset gets the `pr.yml` jobs as required status checks. Order: the label fixes of D78 to D81 land first so the bot PR is green, then the settings. Owner, 2026-11-06.
 - Superseded in part by D86 (2026-11-06): the required-check contexts on the `master` ruleset are the D86 job names; the ruleset is rewritten in the milestone that merges the new `pr.yml`, before `dev` fast-forwards. The rest of D80 stands (no releaser agent, auto-merge on, the owner's one-time settings authorization).
+- Addendum 2026-11-06 (review of the set): superseded by D83 on the bot PR: no bot version PR, no `version-pr.mjs`; the release is the one `dev` into `master` PR, bumped by Prepare Release (D86). Agent-settled.
 
 ### D81 Branch flow: stories merge locally, CI on `dev`, one PR per release
 
 - Stories: branch from `claude/review`, local gates (the `pr.yml` pnpm scripts), merge commit into `claude/review`, branch deleted, no PR. `claude/review` fast-forwards into `dev` at every merge; `pr.yml` runs on every push to `dev` (the Linux run). The one PR per release is `dev` into `master` with its `release:` label, the owner's approval and auto-merge (D80). `act -j <job>` only for stories that change fonts, layout measurements or a workflow file. P1, P2 and P13 are folded into one rule (P1); the 18 story PRs of this cycle were a consequence of the old P2 only. Owner, 2026-11-06.
 - Addendum 2026-11-06: no `actionlint`; a workflow edit is proven by running its job (`act` or the `dev` push). Owner.
 - Addendum 2026-11-06: superseded on `dev` and CI by D83: `dev` is untouched during the sprints and fast-forwarded once; `pr.yml` runs on the release PR, not on pushes to `dev`. Owner.
+- Addendum 2026-11-06 (review of the set): read "stories" as milestones (D82), "local gates" as the checks the epic names, run as `pnpm test <name>` (D84, D85). Agent-settled.
 
 ### D82 Plan vocabulary and files: release, epic, milestone, task, sprint; ownership generated
 
@@ -713,10 +715,12 @@ index d099d3a0..d778bfba 100644
 - Repo settings, the owner's one-time authorization: the App token secret, auto-merge on, the `pr.yml` jobs as required checks, the `dev`-only source rule on the `master` ruleset. Code changes in epic 07.1; the rest is process (P1). Owner, 2026-11-06.
 - Addendum 2026-11-06: the push token is a fine-grained PAT, repository `anindosarker/shadcn-table`, Contents read and write, stored as the secret `RELEASE_BOT_TOKEN` (created by the owner 2026-11-06; expires in one year), not a GitHub App. Source: A22. Owner.
 - Addendum 2026-11-06: the integration milestone runs `pnpm test --all` (D85) on `dev`; the bump job is Prepare Release (D86). Owner.
+- Addendum 2026-11-06 (review of the set): `release.yml` is D86's four jobs in that order (Verify Deployment waits, then tags; no install job after the merge). The bump job runs `node tools/release/prepare-release.mjs --level <level> --base-version <v>`; the root `release:prepare` script goes and `CONTRIBUTING.md` names the tool. GitHub rulesets have no source-branch rule: the `dev`-only source is a step of Validate PR (D86), not a repo setting. Agent-settled.
 
 ### D84 "Check" replaces "gate"
 
 - A check is a command that must pass before a merge or a release; a required check is one the `master` ruleset lists. "Gate" is retired from the skill, `process.md`, templates, trackers and epics: "Gates:" lines become "Checks:", a tracker line reads `- Check: <name>, <command> at <sha>: pass | fail`, "green" becomes "pass", "a red gate" becomes "a failing check". The name after "Check:" says what is checked (typecheck (radix), lint, play tests (base), bases identical, docs pages (aria), release label, version bump, install smoke). Inputs and outputs of a check carry its name without the prefix. The browser run on an installed app (spec 07 1.6.2) is "Check: install smoke". Merged milestone names keep "Gate step (07.1)". Where that check's files live, and whether every repo-level check becomes a script under `test/checks/`, are open items, not decided. Owner, 2026-11-06.
+- Addendum 2026-11-06 (review of the set): the name after `Check:` is the D86 test name with the base or scenario in parentheses (`Check: typecheck (radix)`, `Check: installation-e2e (nextjs-aria)`, `Check: validate-repo`); the earlier example names are no longer check names. The two open items are closed by D85: every test is a folder `test/<name>/`; there is no `test/checks/`. Agent-settled.
 
 ### D85 Tests and tools at the repo root; one runner; one contract per test
 
@@ -761,6 +765,7 @@ shadcn-react-table/
 Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the only file `run.mjs` imports, `lib/` and `fixtures/` private.
 
 - Workflows call tests: a `pr.yml` job is setup steps plus `pnpm test <name>`; `release.yml` runs Check Release, Verify Deployment, Validate Production, Publish Release (D86); `install.yml` is folded into `pr.yml`. Agents run the same commands natively; `act` stays the optional Linux run for `installation-e2e` and `docs-e2e` (D81, D83). Owner, 2026-11-06. The CI job set is D86.
+- Addendum 2026-11-06 (review of the set): `playwright` stays in `packages/shadcn-table/package.json` as well (vitest browser mode resolves it there); only `pixelmatch` and `pngjs` move to the root. `tools/registry/` also holds `add-part.mjs`, `bases.d.mts`, `lib.d.mts`, `base-diff.json`, `aria-diff.json`, `examples-base-diff.json`, `examples-aria-diff.json`; `check-bases.mjs` becomes `test/validate-repo/lib/bases-identical.mjs`; `scripts/preview.mjs` and `packages/shadcn-table/scripts/preview.mjs` become `tools/preview.mjs` (root `preview` kept); `check-aria-warnings.mjs` and `check-storybook.mjs` are deleted (covered by `storybook-tests` and Verify Deployment); `apps/shadcn-table-docs/scripts/install.mjs` and `example-map.mjs` move to `apps/shadcn-table-docs/lib/` (`lib:install` kept); `check-pages.mjs` becomes `test/docs-e2e/test.mjs`. Root scripts `registry:items`, `registry:hosted`, `add-part` point at `tools/registry/`; `check:bases` goes; the docs `build` script keeps its wording. Agent-settled.
 
 ### D86 The CI job set: twenty jobs on a PR, four after the merge
 
@@ -771,6 +776,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 - The `master` ruleset's required checks are these twenty job names, rewritten by the main session in the milestone that merges the new `pr.yml`, before `dev` fast-forwards (supersedes D80's list).
 - Addendum 2026-11-06: `storybook:build` writes `storybook-static/version.txt` from `packages/shadcn-table/package.json`; Verify Deployment polls `/version.txt` on both www.shadcn-table.com and storybook.shadcn-table.com. Owner.
 - Addendum 2026-11-06: `pr.yml` keeps a `workflow_dispatch` input `installation-e2e-only` that runs the seven Installation E2E jobs with `--no-diff` and uploads the captures. One reference set is committed (six PNGs under `test/installation-e2e/fixtures/reference/<base>/`); a milestone that changes the default look replaces them in its own commit from that dispatch run's artifacts; run captures are artifacts only, never committed. Owner.
+- Addendum 2026-11-06 (review of the set): `registry-valid` is `shadcn registry validate` on the checkout; the six `shadcn add --dry-run` steps of today's `registry` job are dropped (Installation E2E installs the items for real). Typecheck (<base>) runs the package `tsc:<base>`; Typecheck (radix) also runs the docs app's `types:check` once; Lint runs `pnpm --filter shadcn-table lint` and `pnpm --filter shadcn-table-docs lint`. Every job except Prepare Release runs on any PR; Prepare Release runs only when the base is `master` and the head is `dev`. Agent-settled.
 
 ### D87 One sticky comment per PR
 
