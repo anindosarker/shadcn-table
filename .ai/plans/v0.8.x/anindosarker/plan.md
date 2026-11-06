@@ -1,6 +1,6 @@
 # v0.8.x plan
 
-Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D60 (D12 and D30 superseded, D16 unused). Findings: [findings.md](findings.md) F1 to F41. Ownership: [ownership.md](ownership.md). Sprints: [sprints.md](sprints.md). Epics implement decisions and never re-decide.
+Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D84 (D12 and D30 superseded, D16 unused). Findings: [findings.md](findings.md) F1 to F60. Ownership: [ownership.md](ownership.md). Sprints: [sprints.md](sprints.md). Epics implement decisions and never re-decide.
 
 ## Goals
 
@@ -20,7 +20,7 @@ Release 0.8.0 (D32). Decisions: [decisions.md](decisions.md) D1 to D60 (D12 and 
 
 | # | Epic | Scope |
 |---|---|---|
-| 01 | [shared surface](epics/01-shared-surface.md) | Types, options, icon keys, strings, state slices and drag helpers every story builds on; no default flips. |
+| 01 | [shared surface](epics/01-shared-surface.md) | Types, options, icon keys, strings, state slices and drag helpers every milestone builds on; no default flips. |
 | 02 | [frame and body](epics/02-frame-body.md) | Toolbar above the frame, row metrics, tokens, width rule, scroll cues, overflow text, pending-view script. |
 | 03 | [header, column menu and dragging](epics/03-header-menu-drag.md) | Quiet header, Notion column menu, hairline resize, header drag with animation and locked columns. |
 | 04 | [toolbar chrome](epics/04-toolbar-chrome.md) | Button group, filter chips, sort editor, view settings with pinned items, one search X, real triggers. |
