@@ -1,389 +1,178 @@
 /**
- * Cluster E page checks: examples/faceted-values to examples/virtualized and
- * the home page. Each example page renders its own example in one playground
- * panel (no group tab strip), so a page asserts that panel, its table rows,
- * the Code toggle and the page's feature marker. The home page asserts the new
- * landing: hero, install command, live demo rows, feature and install
- * headings, guide links, then holds the page through the full live demo loop
- * on Base UI, Radix UI and React Aria (demoLoop in helpers.mjs).
+ * Getting started page checks: the home page, /docs and getting-started/*.
+ * Each entry: async ({ page, check, base }) => void, run after load at the
+ * first width; `base` is the base the page opened on (the runner's --base,
+ * else the default). The home page asserts the hero command bar (it follows
+ * the site-wide base), the landing (hero, install command, live demo rows,
+ * feature and install headings, guide links), then holds the page through the
+ * full live demo loop on Base UI, Radix UI and React Aria (demoLoop in
+ * helpers.mjs).
  */
+import { BASE_LABELS, BASES } from '../../../tools/registry/bases.mjs';
 import {
-  chipFilter,
-  closeChipEditor,
+  baseSwitch,
   codeToggle,
   demoLoop,
   example,
-  headerLabelsFit,
+  headerBaseLabel,
+  headerBaseMenu,
 } from './helpers.mjs';
 
 /**
- * An example page renders exactly one playground panel (data-mode) and no
- * group tab strip; the explorer's file tree is a nav, not a tablist.
+ * The install page's edition select and Short form switch: both commands
+ * start on Lucide (`shadcn-table`), Tabler in the first select switches both
+ * (one pick per page) to `shadcn-table-tabler`, and Short form shows the
+ * `components.json` registries entry and the `@shadcn-table/<item>` command.
+ * The page is on the Radix UI tab when this runs.
  */
-async function singleExample(page, check) {
-  const panels = await page.locator('article [data-mode]').count();
-  check('single example panel', panels === 1, `panels=${panels}`);
-  const strips = await page
-    .locator('article [role="tablist"]:not([aria-label="Source files"])')
-    .count();
-  check('no group tab strip', strips === 0, `tablists=${strips}`);
+async function iconEditions(page, check, article) {
+  check(
+    'created with shadcn create section',
+    (await page
+      .locator('article h2', { hasText: 'Created with shadcn create' })
+      .count()) === 1,
+  );
+  const selects = page.locator('article button[aria-label="Icon library"]');
+  check(
+    'icon library select per command',
+    (await selects.count()) === 2,
+    String(await selects.count()),
+  );
+  if (!(await selects.count())) return;
+  check(
+    'icon library starts on Lucide',
+    (await selects.first().textContent())?.trim() === 'Lucide',
+    (await selects.first().textContent()) ?? '',
+  );
+  await selects.first().click();
+  const tabler = page.getByRole('menuitemradio', { name: 'Tabler' });
+  await tabler.waitFor({ timeout: 5000 }).catch(() => {});
+  await tabler.click();
+  await tabler.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  const commands = page.locator('article pre:visible', {
+    hasText: 'shadcn-table-tabler.json',
+  });
+  check(
+    'tabler: both commands install the edition',
+    (await commands.count()) === 2,
+    String(await commands.count()),
+  );
+  check(
+    'tabler: update command overwrites',
+    /\/r\/radix\/shadcn-table-tabler\.json --overwrite/.test(await article()),
+  );
+  const short = page.locator('article [role="switch"]').first();
+  await short.click();
+  await page.waitForTimeout(200);
+  const txt = await article();
+  check(
+    'short form: namespace command',
+    txt.includes('shadcn@latest add @shadcn-table/shadcn-table-tabler'),
+  );
+  check(
+    'short form: registries entry',
+    txt.includes('"registries"') &&
+      txt.includes('"@shadcn-table"') &&
+      txt.includes('/r/{style}/{name}.json'),
+  );
+  await short.click();
 }
 
-/** One example page: single panel, example rows, Code toggle, feature marker. */
-const examplePage =
-  (id, needle, marker) =>
-  async ({ page, check }) => {
-    await singleExample(page, check);
-    const w = await example(page, id, check);
-    if (marker) await marker(page, w, check);
-    await codeToggle(page, id, needle, check);
+/** The agent bar: one visible prompt pointing at /SKILL.md, Copy prompt writes it. */
+async function agentBar(page, check) {
+  const bar = page.locator('[data-slot="agent-bar"]');
+  check('agent bar', (await bar.count()) === 1, String(await bar.count()));
+  if (!(await bar.count())) return;
+  const copy = bar.getByRole('button', { name: 'Copy prompt' });
+  await copy.click();
+  const written = await page.evaluate(() => window.__stClipboard ?? '');
+  check(
+    'copy prompt writes the skill prompt',
+    written.startsWith('Install shadcn-table in my app: ') &&
+      written.endsWith('/SKILL.md'),
+    written,
+  );
+  check(
+    'copied state',
+    (await bar.getByRole('button', { name: 'Copied' }).count()) === 1,
+  );
+}
+
+/**
+ * The hero's command bar (components/agent-bar.tsx): the Command tab names the
+ * site-wide base and its chevron menu sets it, so the command follows. Opens on
+ * `base`, visits the other two, returns to it. The tab text is uppercased by
+ * CSS; compare case-insensitively.
+ */
+async function commandBarBase({ page, check, base }) {
+  const label0 = BASE_LABELS[base];
+  const others = Object.keys(BASE_LABELS).filter((e) => e !== base);
+  const bar = page.locator('[data-slot="agent-bar"]');
+  check('agent bar', (await bar.count()) === 1, String(await bar.count()));
+  if (!(await bar.count())) return;
+  const tab = bar.getByRole('radio', { name: /^command/i });
+  const label = async () => ((await tab.textContent()) ?? '').trim();
+  const command = async () =>
+    (await bar.locator('span.font-mono').textContent()) ?? '';
+  const pick = async (name) => {
+    await bar.getByRole('button', { name: 'Choose base' }).click();
+    const item = page.getByRole('menuitemradio', { name, exact: true });
+    await item.waitFor({ timeout: 5000 });
+    await item.click();
+    await page.waitForTimeout(200);
   };
+  const expectBase = async (what, e) => {
+    const l = BASE_LABELS[e];
+    check(
+      `${what}: command`,
+      (await command()).includes(`/r/${e}/`),
+      await command(),
+    );
+    check(
+      `${what}: tab label`,
+      (await label()).toLowerCase().includes(l.toLowerCase()),
+      await label(),
+    );
+  };
+  check(
+    `command tab names ${label0}`,
+    (await label()).toLowerCase().includes(label0.toLowerCase()),
+    await label(),
+  );
+  await tab.click();
+  check(
+    `${base} command`,
+    (await command()).includes(`/r/${base}/`),
+    await command(),
+  );
+  await bar.getByRole('button', { name: 'Choose base' }).click();
+  const items = page.getByRole('menuitemradio');
+  check(
+    'base menu items',
+    (await items.allTextContents()).join(',') ===
+      BASES.map((e) => BASE_LABELS[e]).join(','),
+    (await items.allTextContents()).join(','),
+  );
+  check(
+    `base menu: ${label0} checked`,
+    (await items
+      .filter({ hasText: label0 })
+      .first()
+      .getAttribute('aria-checked')) === 'true',
+  );
+  await page.keyboard.press('Escape');
+  for (const other of others) {
+    await pick(BASE_LABELS[other]);
+    await expectBase(other, other);
+  }
+  await pick(label0);
+  await expectBase(`${base} again`, base);
+}
 
 const checks = {
-  '/docs/examples': async ({ page, check }) => {
-    const links = page.locator('main a[href^="/docs/examples/"]');
-    check(
-      'example links',
-      (await links.count()) >= 40,
-      `n=${await links.count()}`,
-    );
-  },
-  '/docs/examples/faceted-values': examplePage(
-    'enable-filter-facet-values',
-    'enableFacetedValues: true',
-    async (page, w, check) => {
-      await headerLabelsFit(w, 'enable-filter-facet-values', check);
-      const editor = await chipFilter(
-        page,
-        w,
-        'faceted-values',
-        'City',
-        '[data-slot="select-trigger"], [role="combobox"]',
-        check,
-      );
-      await closeChipEditor(page, editor);
-    },
-  ),
-  '/docs/examples/filter-switching': examplePage(
-    'customize-filter-modes',
-    'enableColumnFilterModes: true',
-    async (page, w, check) => {
-      // the mode picker sits on the editor's top line in chips mode (D39)
-      const editor = await chipFilter(
-        page,
-        w,
-        'filter-switching',
-        'First Name',
-        'button[aria-label*="filter mode" i]',
-        check,
-      );
-      await closeChipEditor(page, editor);
-    },
-  ),
-  '/docs/examples/filter-variants': examplePage(
-    'customize-filter-variants',
-    "filterVariant: 'range-slider'",
-    async (page, w, check) => {
-      await headerLabelsFit(w, 'customize-filter-variants', check);
-      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
-      const editor = await chipFilter(
-        page,
-        w,
-        'filter-variants',
-        'Salary',
-        '[role="slider"], input[type="range"]',
-        check,
-      );
-      await closeChipEditor(page, editor);
-    },
-  ),
-  '/docs/examples/subheader-filters': examplePage(
-    'subheader-filters',
-    "columnFilterDisplayMode: 'subheader'",
-    async (page, w, check) => {
-      // Radix and React Aria thumbs carry role=slider, the Base UI thumb is a range input.
-      check(
-        'range slider filter',
-        (await w
-          .locator('thead [role="slider"], thead input[type="range"]')
-          .count()) > 0,
-      );
-      check(
-        'date filter input',
-        (await w.locator('thead input[type="date"]').count()) > 0,
-      );
-      check(
-        'checkbox filter',
-        (await w
-          .locator('thead [role="checkbox"], thead [data-slot="checkbox"]')
-          .count()) > 0,
-      );
-      check(
-        'filter mode buttons',
-        (await w.locator('thead button[aria-label*="filter mode" i]').count()) >
-          0,
-      );
-      // F44: every filter input and caption sits inside its th and inside any
-      // clipping box between them, each caption's text inside its box; the
-      // slider track stays in its th and its "Filter Mode:" caption sits
-      // below the track.
-      const layout = await w.locator('thead').evaluate((thead) => {
-        const inside = (inner, outer) =>
-          inner.left >= outer.left - 1 &&
-          inner.right <= outer.right + 1 &&
-          inner.top >= outer.top - 1 &&
-          inner.bottom <= outer.bottom + 1;
-        const clipped = [];
-        let slider = 'no slider';
-        for (const th of thead.querySelectorAll('th')) {
-          const cell = th.getBoundingClientRect();
-          const parts = [
-            ...th.querySelectorAll(
-              '[data-slot="input-group"], [data-slot="slider-track"], [data-slot="slider-thumb"], label, p',
-            ),
-          ].filter((part) => !part.closest('[aria-hidden="true"]'));
-          for (const part of parts) {
-            const box = part.getBoundingClientRect();
-            let clip = part.parentElement;
-            let ok = inside(box, cell);
-            while (ok && clip && clip !== th) {
-              if (getComputedStyle(clip).overflowX !== 'visible')
-                ok = inside(box, clip.getBoundingClientRect());
-              clip = clip.parentElement;
-            }
-            // A Filter Mode caption's text overflowing its own box is cut too.
-            if (
-              ok &&
-              part.textContent?.startsWith('Filter Mode:') &&
-              part.scrollWidth > part.clientWidth + 1
-            )
-              ok = false;
-            if (!ok)
-              clipped.push(
-                `${th.textContent?.trim().slice(0, 14)} ${part.dataset.slot ?? part.tagName}:${part.textContent?.trim().slice(0, 30)} [${Math.round(box.left - cell.left)}, ${Math.round(box.right - cell.left)}] in ${Math.round(cell.width)}`,
-              );
-          }
-          const track = th.querySelector('[data-slot="slider-track"]');
-          if (track) {
-            const caption = [...th.querySelectorAll('label, p')].find((el) =>
-              el.textContent?.startsWith('Filter Mode:'),
-            );
-            const trackBox = track.getBoundingClientRect();
-            const top = caption?.getBoundingClientRect().top ?? -1;
-            slider =
-              top >= trackBox.bottom
-                ? ''
-                : `caption top ${top} < track bottom ${trackBox.bottom}`;
-          }
-        }
-        return { clipped, slider };
-      });
-      check(
-        'subheader filters not clipped',
-        layout.clipped.length === 0,
-        layout.clipped.join(' '),
-      );
-      check('slider caption below track', layout.slider === '', layout.slider);
-    },
-  ),
-  '/docs/examples/persistent-view': examplePage(
-    'persistent-view',
-    'persistViewSettings: true',
-    async (page, w, check) => {
-      // F14: the docs prose margin must not push the pagination out of the
-      // bottom toolbar
-      const box = await w
-        .locator('[data-slot="pagination-content"]')
-        .last()
-        .evaluate((el) => {
-          const bar = el.closest('div.justify-between')?.parentElement;
-          if (!bar) return null;
-          const ul = el.getBoundingClientRect();
-          const rect = bar.getBoundingClientRect();
-          return {
-            bar: Math.round(rect.bottom),
-            inside: ul.top >= rect.top - 0.5 && ul.bottom <= rect.bottom + 0.5,
-            ul: Math.round(ul.bottom),
-          };
-        })
-        .catch(() => null);
-      check(
-        'pagination inside the bottom toolbar',
-        !!box?.inside,
-        box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
-      );
-    },
-  ),
-  '/docs/examples/popover-filters': examplePage(
-    'alternate-column-filtering',
-    "columnFilterDisplayMode: 'popover'",
-    async (page, w, check) => {
-      check(
-        'no inline filter inputs',
-        (await w.locator('thead input').count()) === 0,
-      );
-      check(
-        'filter buttons in head',
-        (await w.locator('thead button').count()) > 0,
-      );
-      await headerLabelsFit(w, 'alternate-column-filtering', check);
-    },
-  ),
-  '/docs/examples/infinite-scrolling': examplePage(
-    'infinite-scrolling',
-    'useInfiniteQuery',
-    async (page, w, check) => {
-      const txt = await w.textContent();
-      check('fetched count text', /Fetched \d+ of \d+ total rows/.test(txt));
-    },
-  ),
-  '/docs/examples/row-virtualization': examplePage(
-    'enable-row-virtualization',
-    'enableRowVirtualization: true',
-    async (page, w, check) => {
-      const n = await w.locator('table tbody tr').count();
-      check(
-        'virtualized rows (fewer than 10000)',
-        n > 0 && n < 200,
-        `rows=${n}`,
-      );
-    },
-  ),
-  '/docs/examples/virtualized': examplePage(
-    'virtualized',
-    'enableColumnVirtualization: true',
-    async (page, w, check) => {
-      const n = await w.locator('table tbody tr').count();
-      check(
-        'virtualized rows (fewer than 10000)',
-        n > 0 && n < 200,
-        `rows=${n}`,
-      );
-    },
-  ),
-  '/docs/examples/react-query': examplePage(
-    'react-query',
-    'useQuery',
-    async (page, w, check) => {
-      // a body row under the sticky header is a library layout fault: logged,
-      // not failed (spec 06.2 1.6.5)
-      const head = await w.locator('thead').first().boundingBox();
-      const row = await w.locator('tbody tr').first().boundingBox();
-      if (head && row && row.y < head.y + head.height - 0.5) {
-        console.warn(
-          `  warn react-query: first body row top ${Math.round(row.y)} above the sticky header bottom ${Math.round(head.y + head.height)}`,
-        );
-      }
-      check('react-query: header and first row measured', !!head && !!row);
-    },
-  ),
-  '/docs/examples/remote': examplePage('remote', 'manualPagination: true'),
-  '/docs/examples/lazy-detail-panel': examplePage(
-    'lazy-detail-panel',
-    '/api/moredata/',
-    async (page, w, check) => {
-      const expand = w.locator('tbody button[aria-label*="expand" i]').first();
-      check('expand button', (await expand.count()) > 0);
-      if (!(await expand.count())) return;
-      await expand.click();
-      await page.waitForTimeout(2500);
-      const txt = await w.textContent();
-      check('detail panel loaded', /Favorite Music|favoriteMusic/i.test(txt));
-    },
-  ),
-  '/docs/examples/lazy-sub-rows': examplePage(
-    'lazy-sub-rows',
-    '/api/treedata',
-    async (page, w, check) => {
-      check(
-        'expand buttons',
-        (await w.locator('tbody button[aria-label*="expand" i]').count()) > 0,
-      );
-    },
-  ),
-  '/docs/examples/minimal': examplePage(
-    'minimal',
-    'ST_Table',
-    async (page, w, check) => {
-      check('caption', (await w.locator('table caption').count()) === 1);
-      check(
-        'no toolbar',
-        (await w
-          .locator('input[type="search"], input[placeholder*="Search" i]')
-          .count()) === 0,
-      );
-    },
-  ),
-  '/docs/examples/row-dragging': examplePage(
-    'enable-row-dragging',
-    'enableRowDragging: true',
-    async (page, w, check) => {
-      check(
-        'two tables',
-        (await w.locator('table').count()) === 2,
-        `tables=${await w.locator('table').count()}`,
-      );
-      await headerLabelsFit(w, 'enable-row-dragging', check);
-    },
-  ),
-  '/docs/examples/row-ordering': examplePage(
-    'enable-row-ordering',
-    'enableRowOrdering: true',
-    async (page, w, check) => {
-      check(
-        'drag handles',
-        (await w
-          .locator(
-            'tbody button[aria-label*="drag" i], tbody [draggable="true"]',
-          )
-          .count()) > 0,
-      );
-    },
-  ),
-  '/docs/examples/sticky-header': examplePage(
-    'enable-sticky-header',
-    'enableStickyHeader: true',
-    async (page, w, check) => {
-      const pos = await w
-        .locator('thead')
-        .first()
-        .evaluate((el) => getComputedStyle(el).position);
-      check('thead sticky', pos === 'sticky', pos);
-    },
-  ),
-  '/docs/examples/sticky-row-pinning': examplePage(
-    'enable-row-pinning-sticky',
-    'enableRowPinning: true',
-    async (page, w, check) => {
-      check(
-        'pin buttons',
-        (await w.locator('tbody button[aria-label*="pin" i]').count()) > 0,
-      );
-    },
-  ),
-  '/docs/examples/static-row-pinning': examplePage(
-    'enable-row-pinning-static',
-    "rowPinningDisplayMode: 'top-and-bottom'",
-    async (page, w, check) => {
-      check(
-        'pin buttons',
-        (await w.locator('tbody button[aria-label*="pin" i]').count()) > 0,
-      );
-    },
-  ),
-  '/docs/examples/sticky-row-selection': examplePage(
-    'enable-row-pinning-select',
-    "rowPinningDisplayMode: 'select-sticky'",
-    async (page, w, check) => {
-      check(
-        'row checkboxes',
-        (await w
-          .locator('tbody [role="checkbox"], tbody input[type="checkbox"]')
-          .count()) > 0,
-      );
-    },
-  ),
   '/': async ({ page, check, base }) => {
+    // the hero command bar follows the site-wide base (was cluster a)
+    await commandBarBase({ page, check, base });
     const h1 = page.locator('h1').first();
     check(
       'hero title',
@@ -855,6 +644,161 @@ const checks = {
       );
     }
     await demoLoop({ page, check, base });
+  },
+  '/docs/getting-started/usage': async ({ page, check }) => {
+    const steps = page.locator('article .fd-step');
+    check(
+      'four steps',
+      (await steps.count()) === 4,
+      String(await steps.count()),
+    );
+    const w = await example(page, 'basic', check);
+    await codeToggle(page, 'basic', 'useShadcnTable', check);
+    // The header's base switch re-renders the example on Base UI and the
+    // code view shows that variant's imports; Radix again afterwards.
+    await baseSwitch(page, 'basic', check);
+    // The example toolbar's own base select drives the same switch.
+    await baseSwitch(page, 'basic', check, { via: 'toolbar' });
+  },
+  '/docs': async ({ page, check }) => {
+    check(
+      'redirects to introduction',
+      page.url().endsWith('/docs/getting-started/introduction'),
+      page.url(),
+    );
+  },
+  '/docs/getting-started/install': async ({ page, check, base }) => {
+    const steps = page.locator('article .fd-step');
+    const tabs = page.locator('article [role="tab"]');
+    check(
+      'three steps',
+      (await steps.count()) === 3,
+      String(await steps.count()),
+    );
+    check(
+      'package manager tabs',
+      (await tabs.count()) >= 8,
+      String(await tabs.count()),
+    );
+    const article = async () =>
+      (await page.locator('article').textContent()) ?? '';
+    // The hosted registry URL: the origin is the dev server's in dev.
+    const addCommand = (target, item) =>
+      new RegExp(`shadcn@latest add \\S+/r/${target}/${item}\\.json`);
+    let txt = await article();
+    // The page opens on `base`: the default (Base UI) in a fresh browser
+    // context, the runner's --base otherwise; the header select agrees and its
+    // menu lists the bases in order.
+    check(
+      `opens on ${BASE_LABELS[base]}`,
+      (await headerBaseLabel(page)) === BASE_LABELS[base],
+    );
+    await headerBaseMenu(page, check, BASE_LABELS[base]);
+    check(
+      `init on the ${base} base`,
+      txt.includes(`shadcn@latest init --base ${base}`),
+    );
+    check('install command', addCommand(base, 'shadcn-table').test(txt));
+    check(
+      'compatibility sentence',
+      txt.includes('on the Base UI, Radix UI or React Aria base') &&
+        txt.includes('React Aria is supported since 0.5.0'),
+    );
+    check(
+      'aria style note',
+      txt.includes('aria-* style') && txt.includes('aria-nova'),
+    );
+    // The Base UI tab (the site-wide base group) switches both commands and
+    // the header select with them.
+    await page
+      .locator('article [role="tab"]', { hasText: 'Base UI' })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+    txt = await article();
+    check(
+      'base ui tab: init on the base ui base',
+      txt.includes('shadcn@latest init --base base'),
+    );
+    check(
+      'base ui tab: install command',
+      addCommand('base', 'shadcn-table').test(txt),
+    );
+    check(
+      'base ui tab: header select follows',
+      (await headerBaseLabel(page)) === 'Base UI',
+    );
+    // The React Aria tab: same group, the aria commands.
+    await page
+      .locator('article [role="tab"]', { hasText: 'React Aria' })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+    txt = await article();
+    check(
+      'react aria tab: init on the react aria base',
+      txt.includes('shadcn@latest init --base aria'),
+    );
+    check(
+      'react aria tab: install command',
+      addCommand('aria', 'shadcn-table').test(txt),
+    );
+    check(
+      'react aria tab: header select follows',
+      (await headerBaseLabel(page)) === 'React Aria',
+    );
+    check(
+      'uninstall lists react-aria-components',
+      txt.includes('react-aria-components'),
+    );
+    await page
+      .locator('article [role="tab"]', { hasText: 'Radix UI' })
+      .first()
+      .click();
+    await page.waitForTimeout(200);
+    check(
+      'radix tab again: install command',
+      addCommand('radix', 'shadcn-table').test(await article()),
+    );
+    await iconEditions(page, check, article);
+    await agentBar(page, check);
+  },
+  '/docs/getting-started/agents': async ({ page, check }) => {
+    await agentBar(page, check);
+    const txt = (await page.locator('article').textContent()) ?? '';
+    // The @shadcn-table namespace form lives here only; the localization
+    // guide links to this page's Registry addresses section.
+    check(
+      'namespace form',
+      txt.includes('registry add @shadcn-table=') &&
+        txt.includes('add @shadcn-table/shadcn-table'),
+    );
+    check(
+      'one address per base',
+      BASES.every((base) => txt.includes(`/r/${base}/shadcn-table.json`)),
+    );
+    check(
+      'skill install command',
+      txt.includes('npx skills add anindosarker/shadcn-table'),
+    );
+    check(
+      'llms link',
+      (await page.locator('article a[href="/llms.txt"]').count()) === 1,
+    );
+  },
+  '/docs/getting-started': async ({ page, check }) => {
+    check(
+      'redirects to introduction',
+      page.url().endsWith('/docs/getting-started/introduction'),
+      page.url(),
+    );
+  },
+  '/docs/getting-started/production-ready-tables': async ({ page, check }) => {
+    check(
+      'redirects to guides/production-ready-tables',
+      page.url().endsWith('/docs/guides/production-ready-tables'),
+      page.url(),
+    );
   },
 };
 
