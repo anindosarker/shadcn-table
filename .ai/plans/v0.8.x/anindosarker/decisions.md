@@ -781,6 +781,7 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 ### D87 One sticky comment per PR
 
 - Validate PR writes one comment on the PR and rewrites it on every push (found by a hidden marker, never a second comment): line 1 `Ships as <version> (<label>).` or the reason it does not (`No release: label missing`, `release:patch needs lines under ## Unreleased`); line 2 the changelog lines under `## Unreleased` by heading (`Added 2, Changed 1, Fixed 4`); then one line per job of D86 with its summary (`Storybook Tests (radix): 609 passed`, `Installation E2E (nextjs-aria): built, browser pass, diff 0 px`), filled in as the jobs finish from their `test/.out/` records; a link to the run. The release PR's state is readable from that comment alone. Owner, 2026-11-06.
+- Addendum 2026-11-06: every job uploads its `test/.out/*.json` as the artifact `test-out-<job>`; a twenty-first job, Report (`if: always()`, needs every job except Prepare Release, `pull-requests: write`), downloads them and rewrites the one comment: the version line and the changelog counts from Validate PR's record, then one line per job. Prepare Release needs Report. D86 reads twenty-one PR jobs. Owner.
 
 ### D88 The process file: project facts, one rule per topic, explicit bullets
 
