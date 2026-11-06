@@ -29,7 +29,7 @@ import {
   BASES,
   baseExampleItems,
   baseItems,
-} from '../../packages/shadcn-table/scripts/registry/lib.mjs';
+} from '../../tools/registry/lib.mjs';
 
 const SITE = 'https://www.shadcn-table.com';
 const STORYBOOK = 'https://storybook.shadcn-table.com';

@@ -1,4 +1,4 @@
-// Types of scripts/registry/bases.mjs for the TypeScript readers
+// Types of tools/registry/bases.mjs for the TypeScript readers
 // (vite.config.ts, .storybook/, the per-base item definitions through
 // lib.d.mts). Node and Vite run the .mjs; the editor and tsc check against
 // these signatures, so the tuple below follows BASES in bases.mjs.

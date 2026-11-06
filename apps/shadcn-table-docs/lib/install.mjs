@@ -4,7 +4,7 @@
  * rendered examples, under components/ui-<base>/ (the table in
  * components/ui-<base>/shadcn-table/ plus the shadcn parts it imports,
  * installed from the base's style, `<base>-nova`). <base> is any base
- * (packages/shadcn-table/scripts/registry/bases.mjs); its item is the one
+ * (tools/registry/bases.mjs); its item is the one
  * registry/<base>/ holds in the committed registry.json. The generated example
  * variants (lib/example-variants.mjs) import from there, so a reader on any
  * base tab sees that base's copy render.
@@ -42,7 +42,7 @@ import {
   BASES,
   baseItems,
   REFERENCE_BASE,
-} from '../../../packages/shadcn-table/scripts/registry/lib.mjs';
+} from '../../../tools/registry/lib.mjs';
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const LIB = path.join(APP, '..', '..', 'packages', 'shadcn-table');
@@ -62,7 +62,7 @@ const KEEP = [
 
 const base = process.argv[2];
 if (!BASES.includes(base)) {
-  console.error(`usage: node scripts/install.mjs <${BASES.join('|')}>`);
+  console.error(`usage: node lib/install.mjs <${BASES.join('|')}>`);
   process.exit(1);
 }
 /** The base's committed core and main item names, from registry.json. */

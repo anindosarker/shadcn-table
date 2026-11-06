@@ -1,7 +1,7 @@
-// Usage (repo root): node --test scripts/release/prepare.test.mjs
+// Usage (repo root): node --test tools/release/prepare-release.test.mjs
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { check, prepare, setVersion } from './prepare.mjs';
+import { check, prepare, setVersion } from './prepare-release.mjs';
 
 const changelog = (body) =>
   `# Changelog\n\nIntro.\n\n## Unreleased\n\n${body}\n## 0.8.0 - 2026-11-05\n\n### Added\n\n- Old line.\n`;

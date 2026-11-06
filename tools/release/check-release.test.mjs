@@ -1,7 +1,7 @@
-// Usage (repo root): node --test scripts/release/decide.test.mjs
+// Usage (repo root): node --test tools/release/check-release.test.mjs
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { decide } from './decide.mjs';
+import { decide } from './check-release.mjs';
 
 const push = { EVENT: 'push', INPUT_VERSION: '', GITHUB_SHA: 'abc123' };
 const deps = (over = {}) => ({

@@ -13,8 +13,8 @@
 // it never edits a file.
 import fs from 'node:fs';
 import path from 'node:path';
-import { BASES } from './registry/bases.mjs';
-import { PKG } from './registry/lib.mjs';
+import { BASES } from '../../../tools/registry/bases.mjs';
+import { PKG } from '../../../tools/registry/lib.mjs';
 
 const LIB_REL = 'components/ui/shadcn-table';
 const REFERENCE_MAP = 'icons.ts';

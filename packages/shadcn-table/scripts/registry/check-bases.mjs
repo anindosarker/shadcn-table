@@ -14,7 +14,13 @@
 // non-zero on any problem; it never copies or edits a file.
 import fs from 'node:fs';
 import path from 'node:path';
-import { DOCS, BASES, PKG, REFERENCE_BASE } from './lib.mjs';
+import {
+  DOCS,
+  BASES,
+  PKG,
+  REFERENCE_BASE,
+  ROOT,
+} from '../../../../tools/registry/lib.mjs';
 
 const LIB_REL = 'components/ui/shadcn-table';
 
@@ -56,7 +62,7 @@ for (const set of SETS) {
     const diffList = set.diffList(base);
     const allowed = new Set(
       JSON.parse(
-        fs.readFileSync(path.join(PKG, 'scripts/registry', diffList), 'utf8'),
+        fs.readFileSync(path.join(ROOT, 'tools/registry', diffList), 'utf8'),
       ),
     );
     const treeDir = set.tree(base);

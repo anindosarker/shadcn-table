@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
-import { resolveBase } from '../scripts/registry/bases.mjs';
+import { resolveBase } from '../../../tools/registry/bases.mjs';
 
 const require = createRequire(import.meta.url);
 

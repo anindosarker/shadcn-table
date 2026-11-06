@@ -15,6 +15,15 @@ importers:
       concurrently:
         specifier: ^9.2.5
         version: 9.2.5
+      pixelmatch:
+        specifier: 8.0.0
+        version: 8.0.0
+      playwright:
+        specifier: ^1.64.1
+        version: 1.64.1
+      pngjs:
+        specifier: 7.0.0
+        version: 7.0.0
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -284,15 +293,9 @@ importers:
       globals:
         specifier: ^16.4.0
         version: 16.4.0
-      pixelmatch:
-        specifier: 8.0.0
-        version: 8.0.0
       playwright:
         specifier: ^1.64.1
         version: 1.64.1
-      pngjs:
-        specifier: 7.0.0
-        version: 7.0.0
       shadcn:
         specifier: ^4.22.0
         version: 4.22.0(babel-plugin-macros@3.1.0)

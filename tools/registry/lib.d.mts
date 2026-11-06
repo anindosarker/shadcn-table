@@ -1,4 +1,4 @@
-// Types of scripts/registry/lib.mjs for the per-base item definitions
+// Types of tools/registry/lib.mjs for the per-base item definitions
 // (registry/<base>/registry.ts), which import the .mjs from TypeScript. Node
 // strips the types at run time; the editor checks against these signatures.
 import type { RegistryItem } from 'shadcn/schema';

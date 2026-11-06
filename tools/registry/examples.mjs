@@ -36,10 +36,10 @@
  *
  * Usage (repo root):
  *   pnpm registry:items                               # writes registry.json
- *   node packages/shadcn-table/scripts/registry/examples.mjs --dev --out <file>
+ *   node tools/registry/examples.mjs --dev --out <file>
  *     writes the catalog to <file> instead, core addresses as local server
  *     URLs (build.mjs --dev merges it into .dev/registry.json)
- *   node packages/shadcn-table/scripts/registry/examples.mjs --resolve <dir>
+ *   node tools/registry/examples.mjs --resolve <dir>
  *     also writes one resolved item json (files[].content filled in) per
  *     example into <dir>, for local `shadcn add <file> --dry-run` checks
  */
