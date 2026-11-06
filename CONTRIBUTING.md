@@ -1,6 +1,6 @@
 # Contributing
 
-This repo holds shadcn-table, a React data table on TanStack Table v9 that ships as a shadcn registry: the source is copied into the user's app by the shadcn CLI, there is no npm package, and the Base UI, Radix UI and React Aria bases are supported, one copy of the table per shadcn base. The library source lives once per base, as three complete trees under `packages/shadcn-table/registry/`: `base`, `radix` and `aria`, each with its shadcn parts and every library file. The base list is `BASES` in `packages/shadcn-table/scripts/registry/bases.mjs`, Base UI first, the one source of the order readers see; every script and config that handles more than one base reads it. A change goes through four pieces:
+This repo holds shadcn-table, a React data table on TanStack Table v9 that ships as a shadcn registry: the source is copied into the user's app by the shadcn CLI, there is no npm package, and the Base UI, Radix UI and React Aria bases are supported, one copy of the table per shadcn base. The library source lives once per base, as three complete trees under `packages/shadcn-table/registry/`: `base`, `radix` and `aria`, each with its shadcn parts and every library file. The base list is `BASES` in `tools/registry/bases.mjs`, Base UI first, the one source of the order readers see; every script and config that handles more than one base reads it. A change goes through four pieces:
 
 1. **Library:** `packages/shadcn-table`, the three trees and the shared Storybook stories.
 2. **Tests:** Vitest runs every story in headless Chromium, once per base.
@@ -19,7 +19,7 @@ The goal of this guide: make a change, prove it, open a PR; step 7 says how a me
 
 ## Three Trees
 
-`registry/<base>/components/ui/shadcn-table/` is the library, once per base. Each tree builds on its own shadcn parts (Base UI in `@base-ui/react`, Radix UI in `radix-ui`, React Aria in `react-aria-components`); `@/` is a plain alias to the tree, so no adapter layer, no codemod, nothing generated. Radix is the reference: `pnpm check:bases` (the CI job `bases`) compares every other base against it, each with its own list of library files that differ on purpose, `scripts/registry/base-diff.json` and `scripts/registry/aria-diff.json`. Every other library file must be byte-identical in all three trees, and the guard fails otherwise. The rule for a library change:
+`registry/<base>/components/ui/shadcn-table/` is the library, once per base. Each tree builds on its own shadcn parts (Base UI in `@base-ui/react`, Radix UI in `radix-ui`, React Aria in `react-aria-components`); `@/` is a plain alias to the tree, so no adapter layer, no codemod, nothing generated. Radix is the reference: `pnpm test validate-repo` (the CI job `Validate Repo`) compares every other base against it, each with its own list of library files that differ on purpose, `tools/registry/base-diff.json` and `tools/registry/aria-diff.json`. Every other library file must be byte-identical in all three trees, and the guard fails otherwise. The rule for a library change:
 
 - **Edit the radix tree and copy the file to the others** when every base takes the change (the guard reports a missed twin), or
 - **edit the base's own copy and add the path to its `<base>-diff.json`** in the same commit when only that base differs, and say so in the PR.
@@ -47,39 +47,47 @@ packages/shadcn-table/
     registry.ts                     # item definition: shadcn-table-aria + locale items
   registry/README.md                # what lives where, how to change a file, how to add a part
   stories/                          # Storybook stories, also the test suite, run once per base
-  test/release/                     # the install smoke check: Playwright script, install smoke pages, reference captures
-  scripts/registry/bases.mjs        # the base list (BASES), radix the reference
-  scripts/registry/lib.mjs          # item helpers: tree files + forked parts + css
-  scripts/registry/build.mjs        # collects every registry.ts into registry.json
-  scripts/registry/examples.mjs     # example items per base -> apps/shadcn-table-docs/registry.json
-  scripts/registry/hosted.mjs       # hosted copies per base -> apps/shadcn-table-docs/public/r/<base>/ (gitignored)
-  scripts/registry/add-part.mjs     # pnpm add-part <base> <part>: fetch a shadcn part into registry/<base>/components/ui/
-  scripts/registry/check-bases.mjs  # pnpm check:bases: the n-tree guard, each base against radix, library and examples
-  scripts/registry/base-diff.json   # library files allowed to differ between radix and base
-  scripts/registry/aria-diff.json   # library files allowed to differ between radix and aria
-  scripts/registry/examples-base-diff.json  # example files allowed to differ between examples/radix and examples/base
-  scripts/registry/examples-aria-diff.json  # example files allowed to differ between examples/radix and examples/aria
   registry.json                     # generated, committed, GitHub addresses
 apps/shadcn-table-docs/
   components/ui-radix/              # installed Radix UI copy of the library and its parts (never edit)
   components/ui-base/               # installed Base UI copy, same shape (never edit)
   components/ui-aria/               # installed React Aria copy, same shape (never edit)
   examples/radix/<slug>/            # one folder per docs example and base, imports @/components/ui/ like a user's project
-  examples/base/<slug>/ aria/<slug>/  # the same examples written for Base UI and React Aria (pnpm check:bases guards the drift)
-  examples/map.tsx                  # generated: one component per example (scripts/example-map.mjs, which also writes example-groups/map.tsx and lib/locales.ts)
+  examples/base/<slug>/ aria/<slug>/  # the same examples written for Base UI and React Aria (pnpm test validate-repo guards the drift)
+  examples/map.tsx                  # generated: one component per example (lib/example-map.mjs, which also writes example-groups/map.tsx and lib/locales.ts)
   examples/.radix/ .base/ .aria/    # generated per-base copies of the examples, imports rewritten (gitignored)
-  scripts/install.mjs               # pnpm lib:install <base>: reinstalls one copy from the built registry
+  lib/install.mjs                   # pnpm lib:install <base>: reinstalls one copy from the built registry
   content/docs/                     # MDX pages
   registry.json                     # generated example items, committed
-  scripts/check-pages.mjs           # page check against a running dev server
   app/SKILL.md, app/llms.txt        # routes that serve the agent files
 registry.json                       # root item, points at the package registry
 skills/                             # the skill file source
 vercel.json                         # docs + Storybook deployment
 .github/workflows/pr.yml            # the jobs listed in step 6, on every pull request
 .github/workflows/release.yml       # release on every push to master (step 7)
-.github/pull_request_template.md    # changes, checklist, release impact
-scripts/release/                    # next-version, prepare, decide, notes, smoke, comment
+.github/pull_request_template.md    # changes, checklist, release label
+test/
+  run.mjs                           # the runner: pnpm test <name>, --list, --all, --changed, --base, --scenario
+  lib/                              # define.mjs (the contract), exec.mjs, report.mjs (summary line, test/.out/ record)
+  typecheck/ lint/ storybook-tests/ # wrappers around the package and docs scripts
+  docs-e2e/                         # every docs page in Chromium per base; per-page checks in lib/
+  validate-repo/                    # bases identical, icon maps, Tailwind classes, registry valid, tool unit tests
+  installation-e2e/                 # install from the dev registry per scenario, build, Next browser phase, capture diff
+  validate-pr/                      # release: label, source branch, version dry run (on a PR)
+  validate-production/              # the live site after a release
+tools/
+  registry/bases.mjs                # the base list (BASES), radix the reference
+  registry/lib.mjs                  # item helpers: tree files + forked parts + css
+  registry/build.mjs                # collects every registry.ts into registry.json
+  registry/examples.mjs             # example items per base -> apps/shadcn-table-docs/registry.json
+  registry/hosted.mjs               # hosted copies per base -> apps/shadcn-table-docs/public/r/<base>/ (gitignored)
+  registry/add-part.mjs             # pnpm add-part <base> <part>: fetch a shadcn part into registry/<base>/components/ui/
+  registry/base-diff.json           # library files allowed to differ between radix and base
+  registry/aria-diff.json           # library files allowed to differ between radix and aria
+  registry/examples-base-diff.json  # example files allowed to differ between examples/radix and examples/base
+  registry/examples-aria-diff.json  # example files allowed to differ between examples/radix and examples/aria
+  release/                          # check-release, verify-deployment, prepare-release, publish-release, pr-summary, next-version, notes, comment
+  preview.mjs                       # pnpm preview (root) and pnpm --filter shadcn-table preview
 ```
 
 ## Prerequisites
@@ -107,7 +115,7 @@ Optional environment variables:
 
 ## 1. Set Up
 
-Chromium is needed once: the tests and the page install smoke run in it.
+Chromium is needed once: the tests run in it.
 
 ```bash
 git clone https://github.com/anindosarker/shadcn-table.git
@@ -118,14 +126,14 @@ pnpm --filter shadcn-table exec playwright install chromium
 
 ## 2. Change the Library
 
-Edit `packages/shadcn-table/registry/radix/components/ui/shadcn-table` and copy the file to its twins under `registry/base/` and `registry/aria/` (or one base's copy plus its `scripts/registry/<base>-diff.json` for a base-only change), then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested. The Base UI loop:
+Edit `packages/shadcn-table/registry/radix/components/ui/shadcn-table` and copy the file to its twins under `registry/base/` and `registry/aria/` (or one base's copy plus its `tools/registry/<base>-diff.json` for a base-only change), then add or update a story under `stories/`: the stories are the test suite, so a change without a story is untested. The Base UI loop:
 
 ```bash
 pnpm storybook:base                     # http://localhost:6007
 pnpm test:base                          # every story, headless Chromium
 pnpm --filter shadcn-table tsc:baseui
 pnpm --filter shadcn-table lint
-pnpm check:bases
+pnpm test validate-repo
 ```
 
 The Radix UI loop, the same stories against `registry/radix`:
@@ -169,18 +177,17 @@ pnpm --filter shadcn-table-docs dev                        # http://localhost:53
 pnpm --filter shadcn-table-docs types:check
 ```
 
-The examples exist once per base, `examples/radix/<slug>/`, `examples/base/<slug>/` and `examples/aria/<slug>/`, hand-written in that base's idiom (Base UI `render` for `asChild`, React Aria `isDisabled`, `onPress`, `onChange`, the `TooltipTrigger` composition). They import `@/components/ui/...`, the path a reader has after `shadcn add`, and the code view shows the selected base's folder as is. A change to an example that is the same on every base is made in every folder by hand; `pnpm check:bases` fails when a file differs from `examples/radix` without being listed in `scripts/registry/examples-<base>-diff.json`, so a base-only difference adds its path to that list in the same commit. The live examples run on generated copies, `examples/.radix/`, `examples/.base/` and `examples/.aria/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies; nothing else is rewritten. `examples/map.tsx` and `example-groups/map.tsx` are generated by `node scripts/example-map.mjs` from the `examples/radix` folders and the groups; run it after adding or removing an example.
+The examples exist once per base, `examples/radix/<slug>/`, `examples/base/<slug>/` and `examples/aria/<slug>/`, hand-written in that base's idiom (Base UI `render` for `asChild`, React Aria `isDisabled`, `onPress`, `onChange`, the `TooltipTrigger` composition). They import `@/components/ui/...`, the path a reader has after `shadcn add`, and the code view shows the selected base's folder as is. A change to an example that is the same on every base is made in every folder by hand; `pnpm test validate-repo` fails when a file differs from `examples/radix` without being listed in `tools/registry/examples-<base>-diff.json`, so a base-only difference adds its path to that list in the same commit. The live examples run on generated copies, `examples/.radix/`, `examples/.base/` and `examples/.aria/` (`lib/example-variants.mjs`, written on `predev`, `build` and `pnpm examples:variants`), whose imports point at the installed copies; nothing else is rewritten. `examples/map.tsx` and `example-groups/map.tsx` are generated by `node lib/example-map.mjs` from the `examples/radix` folders and the groups; run it after adding or removing an example.
 
-Page check, with the dev server running, from `apps/shadcn-table-docs`:
+Page check, from the repo root:
 
 ```bash
-node scripts/check-pages.mjs a --url http://localhost:5320          # one cluster
-node scripts/check-pages.mjs d --url http://localhost:5320 --base aria   # one cluster with the React Aria base selected
-node scripts/check-pages.mjs /docs/guides/sorting --url http://localhost:5320   # one page
-node scripts/check-pages.mjs --url http://localhost:5320            # everything
+pnpm test docs-e2e --base base                                         # builds the docs, serves them on a free port, every page
+pnpm test docs-e2e --base aria --url http://localhost:5320 a           # one cluster against a running dev server, React Aria selected
+pnpm test docs-e2e --url http://localhost:5320 /docs/guides/sorting    # one page
 ```
 
-- **Clusters.** `a` is getting-started and the API pages, `b` and `c` the guides, `d` and `e` the examples; `e` also covers the home page. The check loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
+- **Clusters.** `a` is getting-started and the API pages, `b` and `c` the guides, `d` and `e` the examples; `e` also covers the home page. The per-page checks live in `test/docs-e2e/lib/<cluster>.mjs`. The test loads each page at desktop and mobile widths and fails on any console error, in particular hydration mismatches.
 - **`tsconfig.json` include noise.** Next.js appends `<distDir>/types/**/*.ts` lines to `apps/shadcn-table-docs/tsconfig.json` on every `dev` and `build`. Keep only the default `.next/...` pair; do not commit the others.
 - **Second server.** `PORT=5331 pnpm --filter shadcn-table-docs dev` runs a second docs server next to the default one, with its own build dir.
 
@@ -244,8 +251,9 @@ pnpm exec vite build
 ```
 
 - **Existing app.** Repeat in an app that already has `@tanstack/react-table` installed (`pnpm add @tanstack/react-table@8.20.5 @tanstack/react-query` first). The CLI merges the dependency; `package.json` must end with one `@tanstack/react-table` entry.
-- **From a pushed branch.** Example items resolve only through GitHub, and the library items can too: `pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table-radix#<branch>` (or `shadcn-table-base#<branch>`, `shadcn-table-aria#<branch>`), then `anindosarker/shadcn-table/example-basic-radix#<branch> --overwrite` (`example-basic-base#<branch>`, `example-basic-aria#<branch>` on the other bases). Set `GH_TOKEN` to avoid the API rate limit. Locale items depend on the unpinned library address, which the CLI resolves on the default branch, so from a branch install them through `registry:dev` (that is what the CI `install` job does).
+- **From a pushed branch.** Example items resolve only through GitHub, and the library items can too: `pnpm dlx shadcn@latest add anindosarker/shadcn-table/shadcn-table-radix#<branch>` (or `shadcn-table-base#<branch>`, `shadcn-table-aria#<branch>`), then `anindosarker/shadcn-table/example-basic-radix#<branch> --overwrite` (`example-basic-base#<branch>`, `example-basic-aria#<branch>` on the other bases). Set `GH_TOKEN` to avoid the API rate limit. Locale items depend on the unpinned library address, which the CLI resolves on the default branch, so from a branch install them through `registry:dev` (that is what `pnpm test installation-e2e` does).
 - **Rerun after changes.** `registry:dev` rebuilds `.dev/`; `add` again with `--overwrite` to update the installed files.
+- **The same, automated.** `pnpm test installation-e2e --scenario <s>` runs these steps in a temp directory with its own dev registry on a free port, for `fresh`, `existing`, `base`, `aria`, `nextjs-base`, `nextjs-radix` and `nextjs-aria`; the Next scenarios also run the browser phase and the capture diff (`--no-diff` on macOS, `--no-browser` to stop after the build).
 
 ## 5. Update the Docs and the Registry
 
@@ -267,34 +275,26 @@ The registry has three library items, one per base, each with its own locale ite
 
 Each lists 23 shadcn parts as bare `registryDependencies`, so the user's CLI installs its own base's parts (the React Aria item ships its own `label` and lists `checkbox` instead). Users install from the hosted registry on the docs site, one path per base with the same item names on all three: `https://www.shadcn-table.com/r/base/shadcn-table.json`, `https://www.shadcn-table.com/r/radix/shadcn-table.json` and `https://www.shadcn-table.com/r/aria/shadcn-table.json` (locales `/r/<base>/shadcn-table-locale-<code>.json`, examples `/r/<base>/example-<slug>.json`), or through the namespace `@shadcn-table=https://www.shadcn-table.com/r/{style}/{name}.json`. The GitHub addresses (`anindosarker/shadcn-table/<item>`, the committed per-base names above) stay as the fallback. The committed catalogs also carry the plain names (`shadcn-table`, `shadcn-table-locale-<code>`, `example-<slug>`) as generated aliases of the Base UI items (`DEFAULT_BASE`), because the GitHub shorthand cannot pick a base; `hosted.mjs` skips them.
 
-- **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `packages/shadcn-table/scripts/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
+- **Both `registry.json` files are committed.** `registry:build` and `registry:items` write them with GitHub addresses; never commit one that points at localhost (that is what `registry:dev` and `.dev/` are for). The scripts live in `tools/registry/`; the catalogs stay next to the files they list because the CLI resolves `files[].path` relative to the catalog.
 - **Example items per base.** `example-<slug>-base`, `example-<slug>-radix` and `example-<slug>-aria` are built from `examples/<base>/<slug>/`; the hosted registry serves each base's items under the plain `example-<slug>` in `/r/<base>/`. They use the public API only and pin no library item; the docs say to install the table first.
-- **Page checks.** A new page that renders live examples or prop tables needs an entry in `scripts/page-checks/<cluster>.mjs`.
+- **Page checks.** A new page that renders live examples or prop tables needs an entry in `test/docs-e2e/lib/<cluster>.mjs`.
 
 ## 6. Open a PR
 
-`.github/workflows/pr.yml` runs these on every pull request; run them first.
+`.github/workflows/pr.yml` runs these on every pull request, one job per test and base or scenario; run them first, from the repo root (`pnpm test --changed` runs only the tests whose paths you changed):
 
 ```bash
-pnpm --filter shadcn-table tsc:radix
-pnpm --filter shadcn-table tsc:baseui
-pnpm --filter shadcn-table tsc:aria
-pnpm --filter shadcn-table lint
-pnpm check:bases
-pnpm --filter shadcn-table storybook:build:base    # storybook-static/base
-pnpm --filter shadcn-table storybook:build:radix   # storybook-static/radix
-pnpm --filter shadcn-table storybook:build:aria    # storybook-static/aria
-pnpm test:base
-pnpm test:radix
-pnpm test:aria
-pnpm --filter shadcn-table-docs types:check
-pnpm --filter shadcn-table-docs lint
-pnpm --filter shadcn-table-docs build
+pnpm test typecheck          # Typecheck (base), (radix), (aria); radix also the docs types:check
+pnpm test lint               # Lint: the package and the docs app
+pnpm test storybook-tests    # Storybook Tests (base), (radix), (aria)
+pnpm test docs-e2e           # Docs E2E Tests (base), (radix), (aria): builds the docs, checks every page
+pnpm test validate-repo      # Validate Repo: bases identical, icon maps, Tailwind classes, registry valid, tool unit tests
+pnpm test installation-e2e --no-diff   # Installation E2E per scenario; --no-diff on macOS, CI compares the captures
 ```
 
-It also validates the registry at the pull request's merge SHA, installs the library (`shadcn-table-radix`), a locale and `example-basic-radix` into a fresh Radix Vite app, into one that already has TanStack packages, into a Base UI Vite app with `shadcn-table-base`, into a React Aria Vite app with `shadcn-table-aria`, and into a Next.js app per base, with the browser check and capture diff (the `registry` and `install` jobs).
+Add `--base <b>` or `--scenario <s>` to run one; every run prints one summary line and writes its record under `test/.out/`. Installation E2E installs the library (`shadcn-table-radix`), a locale and `example-basic-radix` into a fresh Radix Vite app (`fresh`), into one that already has TanStack packages (`existing`), into a Base UI Vite app with `shadcn-table-base` (`base`), into a React Aria Vite app with `shadcn-table-aria` (`aria`), and into a Next.js app per base (`nextjs-base`, `nextjs-radix`, `nextjs-aria`), with the browser check and capture diff. `Validate PR` (`validate-pr`) needs a PR and runs in CI only; `PR Summary` keeps one comment on the PR with one line per job.
 
-- **Release impact.** Set one `release:` label: `release:patch`, `release:minor`, `release:major`, or `release:skip` for a change that ships nothing. A PR that changes `packages/shadcn-table/registry`, `apps/shadcn-table-docs/components/ui-*` or `skills/` fails the `release impact` job without one. With a level label, add the change's line to `CHANGELOG.md` under `## Unreleased`, below `### Breaking`, `### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`; the job summary shows the version it ships as.
+- **Release label.** Set one `release:` label: `release:patch`, `release:minor`, `release:major`, or `release:skip` for a change that ships nothing. A PR that changes `packages/shadcn-table/registry`, `apps/shadcn-table-docs/components/ui-*` or `skills/` fails the `Validate PR` job without one. With a level label, add the change's line to `CHANGELOG.md` under `## Unreleased`, below `### Breaking`, `### Removed`, `### Added`, `### Changed`, `### Fixed` or `### Docs`; the PR comment shows the version it ships as.
 - **Large changes.** Ask on [Discord](https://discord.gg/hsF37t6EKe) first if unsure, then open a GitHub issue, so the direction is agreed before the diff exists.
 - **Format.** `pnpm prettier --write <changed files>` for `ts`, `tsx`, `mjs` and `mdx`; `md` and `json` files are prettier-ignored.
 - **Commit messages.** `type: short summary` in the imperative (`fix: keep pinned rows visible in grid mode`), one concern per commit.
@@ -302,18 +302,18 @@ It also validates the registry at the pull request's merge SHA, installs the lib
 
 ## 7. Release
 
-Releases come from `master` and need no command; `master` takes pull requests from `dev` only, one per release, with its `release:` label (`release impact` fails any other head branch).
+Releases come from `master` and need no command; `master` takes pull requests from `dev` only, one per release, with its `release:` label (`Validate PR` fails any other head branch).
 
-1. **The release PR's last check.** Once every other `pr.yml` job is green, `version bump (release:prepare)` runs `release:prepare` with the label's level (`scripts/release/prepare.mjs`, the version from `scripts/release/next-version.mjs`: the label's level, else the `## Unreleased` headings, `Breaking`, `Removed`, `Added`, `Changed` minor while the version is 0.x, `Breaking` and `Removed` major from 1.0; `Fixed`, `Docs` patch). It writes the version into both `package.json` files, renames `## Unreleased` to `## <v> - <date>` and commits `chore: version <v>` to `dev` with the `RELEASE_BOT_TOKEN` secret; `pr.yml` reruns once, `release impact` passes the bumped head and the job prints `already bumped`.
+1. **The release PR's last check.** Once every other `pr.yml` job is green, `Prepare Release` runs `node tools/release/prepare-release.mjs` with the label's level (the version from `tools/release/next-version.mjs`: the label's level, else the `## Unreleased` headings, `Breaking`, `Removed`, `Added`, `Changed` minor while the version is 0.x, `Breaking` and `Removed` major from 1.0; `Fixed`, `Docs` patch). It writes the version into both `package.json` files, renames `## Unreleased` to `## <v> - <date>` and commits `chore: version <v>` to `dev` with the `RELEASE_BOT_TOKEN` secret; `pr.yml` reruns once, `Validate PR` passes the bumped head and `Prepare Release` prints `already bumped`.
 2. **The owner approves** by enabling auto-merge (or merging) on the PR; the merge waits for every required check.
-3. **The merge of the release PR** tags `v<v>`, waits for production to serve the version, smokes the site, installs the table per base from the public URL, creates the GitHub release from the `## <v>` section and comments "Released in v<v>" on every PR it shipped (`scripts/release/comment.mjs`). Any failure: no release.
+3. **The merge of the release PR** runs `.github/workflows/release.yml`, four jobs: `Check Release` (the changelog closed and the version untagged, else every job skips), `Verify Deployment` (waits until www.shadcn-table.com and storybook.shadcn-table.com serve the version on `/version.txt`, then tags `v<v>`), `Validate Production` (`pnpm test validate-production`: the HTTP checks on the live site, then `docs-e2e` per base against it) and `Publish Release` (the GitHub release from the `## <v>` section and the "Released in v<v>" comment on every PR it shipped, `tools/release/publish-release.mjs`). Any failure: no release.
 4. **A failed late step.** Run `release.yml` by hand (`workflow_dispatch`) with `version`; `dry_run` (the default) runs the checks only, without it the release and the comments follow. A merge without changelog lines whose version is tagged does nothing.
 
 ```bash
-node scripts/release/next-version.mjs --level minor   # the version a minor release would ship as
-node scripts/release/next-version.mjs                 # from the Unreleased headings; exit 2 means no release
-pnpm release:prepare --level patch   # bump both package.json files and close ## Unreleased on this branch
-pnpm release:prepare --level patch --base-version 0.8.0   # what the version bump job runs: the next version from master's
+node tools/release/next-version.mjs --level minor   # the version a minor release would ship as
+node tools/release/next-version.mjs                 # from the Unreleased headings; exit 2 means no release
+node tools/release/prepare-release.mjs --level patch   # bump both package.json files and close ## Unreleased on this branch
+node tools/release/prepare-release.mjs --level patch --base-version 0.8.0   # what Prepare Release runs: the next version from master's
 ```
 
 ## Analytics
@@ -341,7 +341,7 @@ Session replay, surveys, feature flags and error tracking are not enabled. There
 ## Common Mistakes
 
 - **Editing the docs copy.** `apps/shadcn-table-docs/components/ui-radix`, `components/ui-base` and `components/ui-aria` are overwritten by `lib:install <base>`. Change `packages/shadcn-table/registry/<base>` and sync.
-- **Editing one tree only.** The other bases keep the old code; `pnpm check:bases` red is the sign, as is `pnpm test:radix` green and `pnpm test:base` or `pnpm test:aria` red (or the reverse). Make the change in the other trees too, or add the path to that base's `<base>-diff.json` when the difference is meant.
+- **Editing one tree only.** The other bases keep the old code; `pnpm test validate-repo` red is the sign, as is `pnpm test:radix` green and `pnpm test:base` or `pnpm test:aria` red (or the reverse). Make the change in the other trees too, or add the path to that base's `<base>-diff.json` when the difference is meant.
 - **Forgetting `lib:install <base>`.** The docs app, the page check and the examples keep running on the old library on that base.
 - **Committing `tsconfig.json` include noise.** Only the two `.next/...` lines belong there.
 - **`registry.json` rewritten with localhost.** Use `pnpm registry:dev`, which writes to the gitignored `.dev/`.
