@@ -390,13 +390,14 @@ Text that names the old layout, rewritten by "Docs and process (08)"; the PR tem
 
 ### Milestone: Docs and process (08)
 
-- Files owned: `CONTRIBUTING.md`, `docs/code-of-conduct/coding-standards.md`, `docs/code-of-conduct/planning-guidelines.md`, `packages/shadcn-table/registry/README.md`, `apps/shadcn-table-docs/README.md`, `.ai/plans/v0.8.x/anindosarker/process.md`
+- Files owned: `test/docs-e2e/lib/` (D89), `CONTRIBUTING.md`, `docs/code-of-conduct/coding-standards.md`, `docs/code-of-conduct/planning-guidelines.md`, `packages/shadcn-table/registry/README.md`, `apps/shadcn-table-docs/README.md`, `.ai/plans/v0.8.x/anindosarker/process.md`
 - Depends on: Tools and workflows (08)
 - Review: none
 - Local CI: none
 - Task 1: The docs of 1.6.13 except `process.md` and the PR template (owned by "Tools and workflows (08)"): `CONTRIBUTING.md`, `coding-standards.md` (Layout, Bases, Checks), the registry and docs READMEs, `planning-guidelines.md:233`. Checks: `grep -rnE "scripts/release|packages/shadcn-table/scripts|packages/shadcn-table/test|page-checks|install\.yml|check:bases|check:tailwind|check:icons|release:prepare|check-pages|release impact|version bump" CONTRIBUTING.md docs/code-of-conduct packages/shadcn-table/registry/README.md apps/shadcn-table-docs/README.md` empty; every `pnpm test <name>` the docs name is one of the eight (`pnpm test --list`)
 - Task 2: `process.md` P5 and P9 (main session, D88). Checks: `grep -n "packages/shadcn-table/scripts" .ai/plans/v0.8.x/anindosarker/process.md` empty
-- Task 3: Cleanup and checks once: `pnpm format`; the `#### Epic 08 Docs and process` changelog block. Checks: 2.2
+- Task 3: Docs E2E page lists by section (D89): `lib/a.mjs` to `e.mjs` merged into `getting-started.mjs`, `api.mjs`, `guides.mjs`, `examples.mjs` (every page kept, none duplicated); `test.mjs` runs the four and splits each section's pages across its workers; `--section <name>` runs one; `helpers.mjs` unchanged. Checks: `pnpm test docs-e2e --base base` passes with 107 pages; `pnpm test docs-e2e --section api --base base` runs 10 pages
+- Task 4: Cleanup and checks once: `pnpm format`; the `#### Epic 08 Docs and process` changelog block. Checks: 2.2
 
 ### 2.2 Checks
 
