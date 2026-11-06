@@ -108,6 +108,7 @@ jobs:
           name: test-out-validate-production
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   publish-release:
     name: Publish Release
