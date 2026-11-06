@@ -52,6 +52,7 @@ jobs:
           name: test-out-typecheck-${{ matrix.base }}
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   lint:
     name: Lint
@@ -72,6 +73,7 @@ jobs:
           name: test-out-lint
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   storybook-tests:
     name: Storybook Tests (${{ matrix.base }})
@@ -97,6 +99,7 @@ jobs:
           name: test-out-storybook-tests-${{ matrix.base }}
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   # The docs app is built from this checkout and served by `next start` on
   # 5320; clusters a to e run against it.
@@ -124,6 +127,7 @@ jobs:
           name: test-out-docs-e2e-${{ matrix.base }}
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   # bases-identical, icon-maps, tailwind-classes, registry-valid and the
   # tool unit tests (node --test "tools/**/*.test.mjs").
@@ -146,6 +150,7 @@ jobs:
           name: test-out-validate-repo
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   # A fresh app per scenario installs the table from the dev registry built
   # from this checkout (served on 5310), typechecks and builds; the Next
@@ -175,6 +180,7 @@ jobs:
           name: test-out-installation-e2e-${{ matrix.scenario }}
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   # Exactly one `release:` label on a PR into master (from dev only); on
   # another base a label only when the PR changes shipped files; the
@@ -204,9 +210,12 @@ jobs:
           name: test-out-validate-pr
           path: test/.out/
           include-hidden-files: true
+          overwrite: true
 
   # One sticky comment per PR (D87), from every test-out-* artifact; on a
-  # workflow_dispatch the comment goes to the step summary.
+  # workflow_dispatch the comment goes to the step summary. Every upload sets
+  # overwrite, so a re-run job replaces its earlier attempt's artifact and
+  # the merged download holds one record per job.
   pr-summary:
     name: PR Summary
     if: always()
