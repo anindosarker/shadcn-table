@@ -1,6 +1,6 @@
 /**
  * Docs pages that render an example. Shared by
- * packages/shadcn-table/scripts/registry/examples.mjs (registry item title and
+ * tools/registry/examples.mjs (registry item title and
  * description) and lib/example-prompt.ts (the page URL in the copy prompt),
  * so both resolve an example to the same page.
  *
@@ -66,7 +66,7 @@ export async function loadExamplePages(pagesDir) {
 
 /**
  * `aggregation-and-grouping` to `AggregationAndGrouping`: the slug's words
- * in PascalCase, the way scripts/example-map.mjs names the components.
+ * in PascalCase, the way lib/example-map.mjs names the components.
  * @param {string} slug
  */
 export const pascal = (slug) =>
@@ -78,7 +78,7 @@ export const pascal = (slug) =>
 
 /**
  * Name of the component a docs page renders for examples/<base>/<slug>,
- * `<PascalCase(slug)>Example`, as scripts/example-map.mjs generates it.
+ * `<PascalCase(slug)>Example`, as lib/example-map.mjs generates it.
  * @param {string} slug
  */
 export const exampleExportName = (slug) => `${pascal(slug)}Example`;
