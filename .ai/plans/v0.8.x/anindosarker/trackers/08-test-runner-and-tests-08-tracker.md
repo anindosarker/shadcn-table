@@ -1,6 +1,6 @@
 # 08: Test runner and tests (08), tracker (D85, D86, D87, D88)
 
-Status: running (all tasks done, checks green; waiting for the main session merge)
+Status: verified
 Branch `v0.8/08-test-runner`, worktree `shadcn-react-table.worktrees/01`, no PR (P1, P3)
 Checks:
 - Check: frozen install, `pnpm install --frozen-lockfile` at 85ec0484: pass
@@ -28,6 +28,17 @@ Checks:
 - Check: 2.2 moves, `tsc:radix`, `tsc:baseui`, `tsc:aria` and `test:<base>` per base through `pnpm test --all` at 7ed6aa90: pass
 - Check: format, `pnpm format` before each commit, `.ai/plans/**/reference/**` reverted: pass
 - Check: act, not named by this milestone block: not run (Docker down)
+- Check: scope, `git diff --stat 930d8b33..HEAD` touches only Files owned, CHANGELOG.md and the tracker at 2e8967d9: pass (verifier; three comment-only path edits outside the line, `apps/shadcn-table-docs/lib/{example-files,example-pages,example-variants}.mjs`, named by epic 1.6.8, already under Attention)
+- Check: library source, `git diff 930d8b33..HEAD -- packages/shadcn-table/registry/` only `registry/*/registry.ts` (Files owned, import path and comments) at 2e8967d9: pass (verifier)
+- Check: frozen install, `pnpm install --frozen-lockfile` at 2e8967d9: pass (verifier)
+- Check: list, `pnpm test --list` prints the eight names at 2e8967d9: pass (verifier)
+- Check: tool unit tests, `node --test "tools/**/*.test.mjs"` at 2e8967d9: pass (verifier, 21)
+- Check: old paths, Task 5 grep at 2e8967d9: pass (verifier, empty)
+- Check: registry output, `pnpm registry:build` then `git status --porcelain` empty at 2e8967d9: pass (verifier)
+- Check: validate-repo, `pnpm test validate-repo` at 2e8967d9: pass (verifier)
+- Check: dispatch run, none named by this milestone block: not applicable (verifier)
+- Check: review findings, `Review: none`, no findings to apply: pass (verifier)
+- Check: recorded checks at 7ed6aa90 (`pnpm test --all --no-diff` and the rest) not rerun: `git diff --name-only 7ed6aa90..HEAD` is the tracker only (verifier)
 
 - Task 1 Dependencies and the tools move: done (85ec0484)
 - Task 2 Runner and the wrappers: done (1fa03217)
