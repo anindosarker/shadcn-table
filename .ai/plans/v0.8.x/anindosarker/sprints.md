@@ -46,4 +46,4 @@ Updated: 2026-11-06 16:06
 | Release 0.8.0 |  |  |  |  |  |  |  |  |  |  |  | [x] |  |  |
 | Gate step (07.1) |  |  |  |  |  |  |  |  |  |  |  |  | [x] |  |
 | Version bump (07.1) |  |  |  |  |  |  |  |  |  |  |  |  |  | [x] |
-| Install smoke move (D84) (D84) |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
+| Install smoke move (D84) |  |  |  |  |  |  |  |  |  |  |  |  |  | · |
