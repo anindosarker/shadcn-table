@@ -715,8 +715,8 @@ index d099d3a0..d778bfba 100644
 ### D85 Tests and tools at the repo root; one runner; one contract per test
 
 - `test/` holds every test, one folder per test: `run.mjs` (the contract, `defineTest({ name, paths, bases, scenarios, run })`), `test.mjs` (the logic), `lib/` and `fixtures/` private to the folder; `test/run.mjs` is the runner (`pnpm test <name> [--base b] [--scenario s]`, `--list`, `--all` serial per base, `--changed`); `test/lib/` holds `define.mjs`, `exec.mjs`, `report.mjs`; every test ends with one summary line and a JSON record under `test/.out/` (gitignored). "Test" is the umbrella word: unit, browser, install, shell-backed, all are tests; "check" stays the plan word for a test a milestone must pass (`Check: <name>`, D84).
-- Test names: `typecheck`, `lint`, `storybook-plays`, `storybook-build`, `check-docs-local`, `check-bases-identical`, `check-icon-maps`, `check-tailwind-classes`, `check-registry`, `install-fresh-app`, `check-installed-app` (the browser run on the installed Next app, was "gate" and "install smoke"), `check-pr-release-label`, `check-pr-version-bump`, `check-docs-live` (the deployed site after a release), `unit`. The folder, `pnpm test <name>`, the CI job and the tracker line use the same string.
-- `tools/` holds what workflows and developers run that is not a test: `tools/release/` (decide, prepare, next-version, notes, comment, their `*.test.mjs` run by `test/unit`), `tools/registry/` (build, hosted, examples, bases, lib, from `packages/shadcn-table/scripts/registry/`). Gone: `scripts/`, `packages/shadcn-table/scripts/`, `packages/shadcn-table/test/`, `apps/shadcn-table-docs/scripts/page-checks/`.
+- Test names: `typecheck`, `lint`, `storybook-tests`, `docs-e2e`, `validate-repo` (`bases-identical`, `icon-maps`, `tailwind-classes`, `registry-valid`, `unit`), `installation-e2e` (the build phase, then the browser phase on the installed Next app, was "gate" and "install smoke"), `validate-pr` (`release-label`, `version-bump-dry-run`), `validate-production` (the deployed site after a release); the final names per D86. The folder, `pnpm test <name>`, the CI job and the tracker line use the same string.
+- `tools/` holds what workflows and developers run that is not a test: `tools/release/` (check-release, verify-deployment, prepare-release, publish-release, next-version, notes, comment, their `*.test.mjs` run by `test/unit`), `tools/registry/` (build, hosted, examples, bases, lib, from `packages/shadcn-table/scripts/registry/`). Gone: `scripts/`, `packages/shadcn-table/scripts/`, `packages/shadcn-table/test/`, `apps/shadcn-table-docs/scripts/page-checks/`.
 - The package keeps `registry/` and `stories/` (each story a render test, a `play:` the behaviour test; no separate plays folder) and its `test:<base>`, `tsc:*`, `lint`, `storybook:build:*` scripts as implementation the tests call. Root `package.json`: `"test": "node test/run.mjs"`, `playwright`, `pixelmatch`, `pngjs` as devDependencies; `check:*` and `release:prepare` removed.
 - The layout:
 
@@ -731,21 +731,15 @@ shadcn-react-table/
 │   ├── .out/                          gitignored
 │   ├── typecheck/                     run.mjs, test.mjs
 │   ├── lint/                          run.mjs, test.mjs
-│   ├── storybook-plays/               run.mjs, test.mjs
-│   ├── storybook-build/               run.mjs, test.mjs
-│   ├── check-docs-local/              run.mjs, test.mjs, lib/{helpers.mjs, a.mjs … e.mjs}
-│   ├── check-bases-identical/         run.mjs, test.mjs
-│   ├── check-icon-maps/               run.mjs, test.mjs
-│   ├── check-tailwind-classes/        run.mjs, test.mjs
-│   ├── check-registry/                run.mjs, test.mjs
-│   ├── install-fresh-app/             run.mjs, test.mjs, fixtures/{table-demo.tsx, page.tsx}
-│   ├── check-installed-app/           run.mjs, test.mjs, lib/init.js, fixtures/{pages/, reference/<base>/}
-│   ├── check-pr-release-label/        run.mjs, test.mjs
-│   ├── check-pr-version-bump/         run.mjs, test.mjs
-│   ├── check-docs-live/               run.mjs, test.mjs
+│   ├── storybook-tests/               run.mjs, test.mjs
+│   ├── docs-e2e/                      run.mjs, test.mjs, lib/{helpers.mjs, a.mjs … e.mjs}
+│   ├── validate-repo/                 run.mjs, test.mjs, lib/{bases-identical, icon-maps, tailwind-classes, registry-valid}.mjs
+│   ├── installation-e2e/              run.mjs, test.mjs, lib/{init.js, browser.mjs}, fixtures/{table-demo.tsx, page.tsx, pages/, reference/<base>/}
+│   ├── validate-pr/                   run.mjs, test.mjs, lib/{release-label, version-bump-dry-run}.mjs
+│   ├── validate-production/           run.mjs, test.mjs
 │   └── unit/                          run.mjs, test.mjs, cases/
 ├── tools/
-│   ├── release/                       decide, prepare, next-version, notes, comment (.mjs + .test.mjs)
+│   ├── release/                       check-release, verify-deployment, prepare-release, publish-release, next-version, notes, comment (.mjs + .test.mjs)
 │   └── registry/                      build, hosted, examples, bases, lib (.mjs)
 ├── packages/shadcn-table/
 │   ├── registry/                      the library, three bases
@@ -754,11 +748,17 @@ shadcn-react-table/
 ├── apps/shadcn-table-docs/            scripts/page-checks/ gone
 ├── docs/code-of-conduct/
 └── .github/workflows/
-    ├── pr.yml                         one job per test name (the set is D86)
-    ├── install.yml                    `pnpm test install-fresh-app --scenario <s>`, `pnpm test check-installed-app --base <b>`
-    └── release.yml                    `node tools/release/decide.mjs`, wait, `pnpm test check-docs-live`, release
+    ├── pr.yml                         the twenty jobs of D86, each `pnpm test <name>`; Prepare Release last
+    └── release.yml                    Check Release, Verify Deployment, Validate Production, Publish Release (D86)
 ```
 
 Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the only file `run.mjs` imports, `lib/` and `fixtures/` private.
 
-- Workflows call tests: a `pr.yml` job is setup steps plus `pnpm test <name>`; `install.yml` runs `install-fresh-app` then `check-installed-app`; `release.yml` runs `tools/release/decide.mjs`, waits for the deploy, `check-docs-live`, the GitHub release. Agents run the same commands natively; `act` stays the optional Linux run for `check-installed-app` and `check-docs-local` (D81, D83). Owner, 2026-11-06. The set of CI jobs per PR and per release is D86 (open).
+- Workflows call tests: a `pr.yml` job is setup steps plus `pnpm test <name>`; `release.yml` runs Check Release, Verify Deployment, Validate Production, Publish Release (D86); `install.yml` is folded into `pr.yml`. Agents run the same commands natively; `act` stays the optional Linux run for `installation-e2e` and `docs-e2e` (D81, D83). Owner, 2026-11-06. The CI job set is D86.
+
+### D86 The CI job set: twenty jobs on a PR, four after the merge
+
+- `pr.yml`, on every PR: Typecheck (3, per base: the library and the docs app compile under `tsc`), Lint (1: eslint, zero warnings), Storybook Tests (3, per base: every story renders in Chromium, every play passes), Docs E2E Tests (3, per base: the docs app built from the PR serves every page with its table mounted, no console errors, headers fitting), Validate Repo (1: the three bases identical, the icon maps complete, Tailwind classes valid, `registry.json` resolves, the tool unit tests pass), Installation E2E (7, per scenario: a fresh app installs the table from the PR's registry, mounts it, typechecks and builds; the three Next scenarios also run the browser checks and the capture diff), Validate PR (1: one `release:` label, the PR comes from `dev`, the version bump dry run is clean), Prepare Release (1: after every job above passes, commits `chore: version <v>` to the PR branch with `RELEASE_BOT_TOKEN`). Twenty jobs; `install.yml` is no longer a separate workflow.
+- `release.yml`, on the push to `master` the merge is: Check Release (the changelog closed and the version untagged, else nothing runs), Verify Deployment (waits until www.shadcn-table.com and storybook.shadcn-table.com serve the new version, then tags), Validate Production (HTTP checks on the live site: version, registry items, Storybook, SKILL.md, docs pages), Publish Release (the GitHub release from the changelog section, the "Released in v<version>" comment). Four jobs.
+- Removed: `storybook-build` (a failed Storybook build fails its deploy, which Verify Deployment catches before the tag), `docs-build` as a job (the first step of Docs E2E Tests), every install and page job after the merge (the PR proved the commit; the release run proves the deploy).
+- Test names follow the job names in kebab case: `typecheck`, `lint`, `storybook-tests`, `docs-e2e`, `validate-repo` (runs `bases-identical`, `icon-maps`, `tailwind-classes`, `registry-valid`, `unit`), `installation-e2e` (build phase, then the browser phase for Next scenarios; `--no-browser`, `--no-diff` flags), `validate-pr` (runs `release-label`, `version-bump-dry-run`), `validate-production`. Tools: `tools/release/{check-release,verify-deployment,prepare-release,publish-release,next-version,notes,comment}.mjs`. The `check-` prefix leaves every test name; "Check:" stays the tracker word (D84). D85's test list and tree read with these names. Owner, 2026-11-06.
