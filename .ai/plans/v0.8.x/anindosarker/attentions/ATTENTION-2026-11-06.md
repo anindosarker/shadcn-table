@@ -7,6 +7,8 @@
 
 ## A23 The owner's approval versus auto-merge
 
+- Closed by D88: auto-merge is enabled by the owner or the agent as the plan says.
+
 - Ruleset 25521193 requires 0 approving reviews, and the owner cannot approve a PR from the same account. With auto-merge enabled at PR creation, GitHub merges the moment the checks are green, before the owner looks (D83 says "the owner approves the PR with the bump in it; auto-merge merges on green").
 - Default taken for 0.8.1: the release PR is opened with its label and without auto-merge; the owner reads the sticky state and enables auto-merge (or merges) when satisfied; that click is the approval. The settings of 1.6.8 (allow_auto_merge on, required checks) still land so the merge button is gated on green.
 - Options: as taken (recommended); or auto-merge at creation, no owner step.

@@ -691,6 +691,7 @@ index d099d3a0..d778bfba 100644
 
 - Stories: branch from `claude/review`, local gates (the `pr.yml` pnpm scripts), merge commit into `claude/review`, branch deleted, no PR. `claude/review` fast-forwards into `dev` at every merge; `pr.yml` runs on every push to `dev` (the Linux run). The one PR per release is `dev` into `master` with its `release:` label, the owner's approval and auto-merge (D80). `act -j <job>` only for stories that change fonts, layout measurements or a workflow file. P1, P2 and P13 are folded into one rule (P1); the 18 story PRs of this cycle were a consequence of the old P2 only. Owner, 2026-11-06.
 - Addendum 2026-11-06: no `actionlint`; a workflow edit is proven by running its job (`act` or the `dev` push). Owner.
+- Addendum 2026-11-06: superseded on `dev` and CI by D83: `dev` is untouched during the sprints and fast-forwarded once; `pr.yml` runs on the release PR, not on pushes to `dev`. Owner.
 
 ### D82 Plan vocabulary and files: release, epic, milestone, task, sprint; ownership generated
 
@@ -766,3 +767,8 @@ Every test folder: `run.mjs` is the only file the runner reads, `test.mjs` the o
 ### D87 One sticky comment per PR
 
 - Validate PR writes one comment on the PR and rewrites it on every push (found by a hidden marker, never a second comment): line 1 `Ships as <version> (<label>).` or the reason it does not (`No release: label missing`, `release:patch needs lines under ## Unreleased`); line 2 the changelog lines under `## Unreleased` by heading (`Added 2, Changed 1, Fixed 4`); then one line per job of D86 with its summary (`Storybook Tests (radix): 609 passed`, `Installation E2E (nextjs-aria): built, browser pass, diff 0 px`), filled in as the jobs finish from their `test/.out/` records; a link to the run. The release PR's state is readable from that comment alone. Owner, 2026-11-06.
+
+### D88 The process file: project facts, one rule per topic, explicit bullets
+
+- `process.md` holds project facts only: branches, milestone branch and worktree, merge, release, checks on a shared machine, agent sandbox, public surface, commits, shared files, plans, plays. One rule per topic, two to five bullets, each a full sentence that states the fact explicitly (names, paths, the exact command in a code block when it matters) so no agent reads it two ways. Nothing restated from elsewhere: commands live in `package.json`, code rules in `docs/code-of-conduct/`, what a milestone must run in its epic (the milestone block gains a `- Local CI:` line), the process itself in the expedition skill. Suggestions to agents (the `act` line) stay; per-milestone requirements go to the epic. The v0.8.x file is rewritten to eleven rules, P1 to P11; the old P7 Orchestration, P11 Attention, P12 Preview then diff and P14 Checks are scripts leave the file (the skill, D72 and D85 hold them). The skill's `templates/process.md` takes this shape.
+- Machine load: CPU may reach 90 percent, memory pressure must stay green; percent of RAM used is not a limit. The release PR gets auto-merge enabled by the owner or the agent as the plan says (A23 closed). Owner, 2026-11-06.
