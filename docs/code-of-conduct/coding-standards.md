@@ -118,7 +118,9 @@ CI runs the same tests. `.github/workflows/pr.yml` on every pull request, twenty
 `Installation E2E (fresh|existing|base|aria|nextjs-base|nextjs-radix|nextjs-aria)`,
 `Validate PR`, `PR Summary` (one sticky comment per PR from every job's record) and
 `Prepare Release` (on the release PR, `dev` into `master`, after every other job: commits
-`chore: version <v>` to `dev`). A PR that changes `packages/shadcn-table/registry`,
+`chore: version <v>` to `dev`). The four matrices are called workflows (`typecheck.yml`,
+`storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml`), so their check contexts read
+`Typecheck / Typecheck (base)`, `Installation E2E / Installation E2E (fresh)`. A PR that changes `packages/shadcn-table/registry`,
 `apps/shadcn-table-docs/components/ui-*` or `skills/` needs exactly one `release:` label
 (`release:patch`, `release:minor`, `release:major`, `release:skip`), and a level label needs
 `## Unreleased` lines in `CHANGELOG.md`. `.github/workflows/release.yml` on every push to

@@ -1,0 +1,38 @@
+name: Docs E2E Tests
+
+# Called by pr.yml (D90): one job per base. The docs app is built from this
+# checkout and served by `next start` on 5320; the section lists of
+# test/docs-e2e/lib/ (D89) run against it. Its test/.out/ record is uploaded
+# as test-out-docs-e2e-<base>. The check context reads
+# `Docs E2E Tests / Docs E2E Tests (<base>)`.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  docs-e2e:
+    name: Docs E2E Tests (${{ matrix.base }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base: [base, radix, aria]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
+      - run: pnpm test docs-e2e --ci --base ${{ matrix.base }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-out-docs-e2e-${{ matrix.base }}
+          path: test/.out/
+          include-hidden-files: true
+          overwrite: true

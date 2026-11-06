@@ -1,0 +1,37 @@
+name: Storybook Tests
+
+# Called by pr.yml (D90): one job per base, `pnpm test storybook-tests
+# --base <b>` (every story and play in headless Chromium), its test/.out/
+# record uploaded as test-out-storybook-tests-<base>. The check context reads
+# `Storybook Tests / Storybook Tests (<base>)`.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  storybook-tests:
+    name: Storybook Tests (${{ matrix.base }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base: [base, radix, aria]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
+      - run: pnpm test storybook-tests --ci --base ${{ matrix.base }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-out-storybook-tests-${{ matrix.base }}
+          path: test/.out/
+          include-hidden-files: true
+          overwrite: true

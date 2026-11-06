@@ -1,9 +1,14 @@
-name: pr
+name: PR checks
+run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installation-e2e-only && 'installation-e2e-only') || 'all' }}"
 
 # Every check of a pull request: nineteen test jobs, each the setup steps
 # plus `pnpm test <name> --ci` (test/run.mjs) and its test/.out/ records
-# uploaded as the artifact test-out-<job>; PR Summary (D87) rewrites the one
-# sticky comment from those records; Prepare Release, on the release PR only
+# uploaded as the artifact test-out-<job>. The four matrices are called
+# workflows (typecheck.yml, storybook-tests.yml, docs-e2e.yml,
+# installation-e2e.yml, D90), so nine jobs here and check contexts such as
+# `Typecheck / Typecheck (base)` and `Installation E2E / Installation E2E
+# (fresh)`. PR Summary (D87) rewrites the one sticky comment from those
+# records; Prepare Release, on the release PR only
 # (dev into master), commits `chore: version <v>` once every job is green.
 # A label change runs Validate PR and PR Summary alone (the other jobs skip
 # those events). workflow_dispatch runs every test job on the chosen branch
@@ -30,29 +35,9 @@ permissions:
 
 jobs:
   typecheck:
-    name: Typecheck (${{ matrix.base }})
+    name: Typecheck
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        base: [base, radix, aria]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test typecheck --ci --base ${{ matrix.base }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-out-typecheck-${{ matrix.base }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+    uses: ./.github/workflows/typecheck.yml
 
   lint:
     name: Lint
@@ -76,58 +61,14 @@ jobs:
           overwrite: true
 
   storybook-tests:
-    name: Storybook Tests (${{ matrix.base }})
+    name: Storybook Tests
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        base: [base, radix, aria]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
-      - run: pnpm test storybook-tests --ci --base ${{ matrix.base }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-out-storybook-tests-${{ matrix.base }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+    uses: ./.github/workflows/storybook-tests.yml
 
-  # The docs app is built from this checkout and served by `next start` on
-  # 5320; clusters a to e run against it.
   docs-e2e:
-    name: Docs E2E Tests (${{ matrix.base }})
+    name: Docs E2E Tests
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        base: [base, radix, aria]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
-      - run: pnpm test docs-e2e --ci --base ${{ matrix.base }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-out-docs-e2e-${{ matrix.base }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+    uses: ./.github/workflows/docs-e2e.yml
 
   # bases-identical, icon-maps, tailwind-classes, registry-valid and the
   # tool unit tests (node --test "tools/**/*.test.mjs").
@@ -152,35 +93,12 @@ jobs:
           include-hidden-files: true
           overwrite: true
 
-  # A fresh app per scenario installs the table from the dev registry built
-  # from this checkout (served on 5310), typechecks and builds; the Next
-  # scenarios then run the browser checks and the capture diff on 5341.
   installation-e2e:
-    name: Installation E2E (${{ matrix.scenario }})
+    name: Installation E2E
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario: [fresh, existing, base, aria, nextjs-base, nextjs-radix, nextjs-aria]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
-        if: startsWith(matrix.scenario, 'nextjs-')
-      - run: pnpm test installation-e2e --ci --scenario ${{ matrix.scenario }} ${{ github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only && '--no-diff' || '' }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-out-installation-e2e-${{ matrix.scenario }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+    uses: ./.github/workflows/installation-e2e.yml
+    with:
+      no-diff: ${{ github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only }}
 
   # Exactly one `release:` label on a PR into master (from dev only); on
   # another base a label only when the PR changes shipped files; the
