@@ -1,6 +1,6 @@
 # 01: Filtering, tracker
 
-Status: done
+Status: merged (4a61e251)
 Branch `v0.9/filtering`, worktree 02
 Checks:
 - `ST_BASE=radix vitest run stories/features/Filtering.stories.tsx stories/features/FilterChips.stories.tsx` at 058b649b (library unchanged, plays added): fail as required, 5 failed, 38 passed. Red lines: ModePickerByDefaultChips `Unable to find role="button" and name "Change filter mode"`; MultiSelectArrayModes `Unable to find role="button" and name "Change filter mode"`; SelectClearBesideChevron `chevron right 265, clear left 241: expected 265 to be less than or equal to 241`; ModePickerByDefaultSubheader `Unable to find an accessible element with the role "button" and name "Change filter mode"`; ModePickerByDefaultPopover `Unable to find role="button" and name "Change filter mode"`
