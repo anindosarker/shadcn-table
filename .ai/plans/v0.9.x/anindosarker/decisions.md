@@ -112,3 +112,91 @@ index 4b0227a2..21c2d077 100644
 - Story names: the compact story `PaginationEnabledDefaultMoreData` (`Pagination.stories.tsx:60`) becomes `PaginationCompactMoreData`; the four stock-settings stories drop "Default": `PaginationEnabled` (`:56`), `PaginationEnabledBigData` (`:103`), `PaginationEnabledBigDataLanguage` (`:116`), `PaginationEnabledNoRowsPerPage` (`:133`). Titles follow the export names; the story ids change and no docs link points at them.
 - The guide and the API entry state that `'pages'` is the default and `'compact'` the alternative; no page calls the compact footer the default.
 - The next-app demo's stale copy (`test-projects/next-app/.../useST_TableOptions.ts:84`) is the owner's, outside the run (D34).
+
+### D8 The static Storybook resets each story after its play
+
+- Fixes F6. The static builds (`/base/`, `/radix/`, `/aria/`) reset a story after its play: `.storybook/main.ts` injects `window.__ST_STATIC__ = true` into the preview head only when `configType === 'PRODUCTION'`; `.storybook/preview.tsx` adds a project-level `afterEach` that bumps a counter and a `ResetAfterPlay` keyed wrapper inside the existing decorator, so React remounts the story with fresh state. The play does not rerun; the Interactions panel keeps its steps and PASS; Rerun runs the play and resets again. Previewed on the Base static build (worktree 01, port 5342) and accepted. Owner, 2026-11-08.
+- `storybook dev` (configType `DEVELOPMENT`) and vitest (no configType in the addon-vitest plugin) keep the end state. A failing play keeps its end state too: `afterEach` is skipped in the `errored` phase.
+- The accepted diff, to apply as is:
+
+```diff
+diff --git a/packages/shadcn-table/.storybook/main.ts b/packages/shadcn-table/.storybook/main.ts
+index 4c3f4c27..191c4493 100644
+--- a/packages/shadcn-table/.storybook/main.ts
++++ b/packages/shadcn-table/.storybook/main.ts
+@@ -16,6 +16,10 @@ const ST_BASE = resolveBase(process.env.ST_BASE);
+ const baseScript = `<script>window.__ST_BASE__ = ${JSON.stringify(ST_BASE)};</script>`;
+ const devScript = (dev: boolean) =>
+   `<script>window.__ST_DEV__ = ${JSON.stringify(dev)};</script>`;
++// The preview gets whether this is a static build, which resets each story
++// after its play (preview.tsx). Vitest loads no configType, so it stays false.
++const staticScript = (isStatic: boolean) =>
++  `<script>window.__ST_STATIC__ = ${JSON.stringify(isStatic)};</script>`;
+ 
+ /** Resolve the absolute path of a package (monorepo-safe). */
+ function getAbsolutePath(value: string): string {
+@@ -41,7 +45,8 @@ const config: StorybookConfig = {
+   },
+   managerHead: (head, { configType }) =>
+     `${head}${baseScript}${devScript(configType !== 'PRODUCTION')}`,
+-  previewHead: (head) => `${head}${baseScript}`,
++  previewHead: (head, { configType }) =>
++    `${head}${baseScript}${staticScript(configType === 'PRODUCTION')}`,
+   // Storybook keys its Vite dep cache by the config dir alone, so the base
+   // servers (storybook:all) would share one optimized-deps dir and invalidate
+   // each other ("Failed to fetch dynamically imported module"). One cache per
+diff --git a/packages/shadcn-table/.storybook/preview.tsx b/packages/shadcn-table/.storybook/preview.tsx
+index e1645117..e67a5482 100644
+--- a/packages/shadcn-table/.storybook/preview.tsx
++++ b/packages/shadcn-table/.storybook/preview.tsx
+@@ -1,5 +1,5 @@
+ import type { Preview } from '@storybook/react-vite';
+-import { Fragment } from 'react';
++import { Fragment, type ReactNode, useSyncExternalStore } from 'react';
+ import { addons, useEffect, useState } from 'storybook/preview-api';
+ import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
+ import {
+@@ -42,7 +42,29 @@ function useStorybookDarkMode() {
+ // Set the class before React mounts so the initial story paint is dark.
+ applyHtmlClass(readStoredMode() === 'dark');
+ 
++// A play leaves the story in its end state. On the static site the story
++// resets after its play: afterEach bumps this counter and the keyed wrapper
++// remounts the story with fresh state, without rerunning the play. Vitest and
++// `storybook dev` keep the end state (__ST_STATIC__ is false there, main.ts).
++let resetCount = 0;
++const resetListeners = new Set<() => void>();
++const subscribeReset = (listener: () => void) => {
++  resetListeners.add(listener);
++  return () => resetListeners.delete(listener);
++};
++
++function ResetAfterPlay({ children }: { children: ReactNode }) {
++  const key = useSyncExternalStore(subscribeReset, () => resetCount);
++  return <Fragment key={key}>{children}</Fragment>;
++}
++
+ const preview: Preview = {
++  afterEach: () => {
++    if ((globalThis as { __ST_STATIC__?: boolean }).__ST_STATIC__ !== true)
++      return;
++    resetCount += 1;
++    resetListeners.forEach((listener) => listener());
++  },
+   parameters: {
+     actions: { argTypesRegex: '^on[A-Z].*' },
+     controls: {
+@@ -132,7 +154,9 @@ const preview: Preview = {
+               here on GitHub.
+             </a>
+           </p>
+-          <Story />
++          <ResetAfterPlay>
++            <Story />
++          </ResetAfterPlay>
+         </div>
+       );
+     },
+```
+
+- Check: the release validation opens one story with a play on the deployed Storybook and asserts the initial state once the play has settled.
