@@ -541,7 +541,7 @@ export const ST_FilterTextField = <TData extends ST_RowData>({
                 className={cn(
                   'w-full flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent',
                   // Keeps the chevron clear of the overlaid clear button.
-                  hasFilterValue && 'pe-9',
+                  hasFilterValue && 'pr-9',
                   textFieldProps.className,
                 )}
                 disabled={!!filterChipLabel || textFieldProps.disabled}

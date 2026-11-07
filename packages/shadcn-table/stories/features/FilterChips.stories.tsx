@@ -130,7 +130,9 @@ export const AddThroughPicker = {
     await waitFor(() => expect(document.activeElement).toBe(input));
     await userEvent.type(input, 'Done');
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
-    await waitFor(() => expect(chip.textContent).toContain('Status: Done'));
+    await waitFor(() =>
+      expect(chip.textContent).toContain('Status fuzzy: Done'),
+    );
 
     await userEvent.click(back);
     await body.findByRole('option', { name: 'Priority' });
@@ -152,11 +154,12 @@ export const RemoveAndClear = {
     const body = within(document.body);
     await canvas.findByText('Build search index');
     await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+    // Modes are on by default, so the chips name the mode (D4).
     expect(chipOf(canvasElement, 'status')?.textContent).toContain(
-      'Status: Done',
+      'Status fuzzy: Done',
     );
     expect(chipOf(canvasElement, 'priority')?.textContent).toContain(
-      'Priority: High',
+      'Priority fuzzy: High',
     );
 
     await userEvent.click(chipOf(canvasElement, 'priority')!);
@@ -445,18 +448,24 @@ const modeMenuItems = () =>
     return items;
   });
 
-/** The columns with no filter mode flag or mode list. */
-const plainColumns: ST_ColumnDef<Task>[] = columns.map((column) => ({
-  ...column,
-  columnFilterModeOptions: undefined,
-  enableColumnFilterModes: undefined,
-  filterFn: undefined,
-}));
+/**
+ * Fresh columns with no filter mode flag, mode list or filterFn; fresh because
+ * the table writes the picked mode onto its column defs.
+ */
+const plainColumns = (): ST_ColumnDef<Task>[] =>
+  columns.map((column) => ({
+    ...column,
+    columnFilterModeOptions: undefined,
+    enableColumnFilterModes: undefined,
+    filterFn: undefined,
+  }));
 
 // D4: a chips table without `enableColumnFilterModes` shows the mode picker
 // on the chip editor's top line, with all 14 modes.
 export const ModePickerByDefaultChips = {
-  render: () => <ShadcnTable columns={plainColumns} data={data} {...options} />,
+  render: () => (
+    <ShadcnTable columns={plainColumns()} data={data} {...options} />
+  ),
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
@@ -479,7 +488,7 @@ export const ModePickerByDefaultChips = {
 export const MultiSelectArrayModes = {
   render: () => (
     <ShadcnTable
-      columns={plainColumns.map((column) =>
+      columns={plainColumns().map((column) =>
         column.accessorKey === 'status'
           ? {
               ...column,
@@ -513,9 +522,19 @@ export const MultiSelectArrayModes = {
       expect.stringContaining('Excludes'),
     ]);
     // The default fn stays checked.
-    expect(items[14]).toHaveAttribute('aria-checked', 'true');
+    await waitFor(() =>
+      expect(
+        body
+          .getAllByRole('menuitemradio', { checked: true })
+          .map((item) => item.textContent?.trim()),
+      ).toEqual([expect.stringContaining('Includes any')]),
+    );
 
-    await userEvent.click(items[16]);
+    await userEvent.click(
+      body
+        .getAllByRole('menuitemradio')
+        .find((item) => item.textContent?.includes('Excludes'))!,
+    );
     await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
     await userEvent.click(input);
     // The aria combobox opens from the keyboard, not on a click.
@@ -533,7 +552,7 @@ export const MultiSelectArrayModes = {
 export const SelectClearBesideChevron = {
   render: () => (
     <ShadcnTable
-      columns={plainColumns.map((column) =>
+      columns={plainColumns().map((column) =>
         column.accessorKey === 'status'
           ? {
               ...column,
