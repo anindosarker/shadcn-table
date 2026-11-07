@@ -37,3 +37,71 @@
 - The transition is Tailwind classes on the th and td class strings, gated by the attribute the way the flip gates `transition-[translate]` (`ST_TableHeadCell.tsx:309`): `[table[data-size-resetting]_&]:transition-[width,min-width]`, 200 ms, ease-out, `motion-reduce:transition-none`. No JS animation, no frame loop, no change to `global.css`.
 - Nothing else animates: drags stay instant, other width changes snap as today.
 - One play asserts the attribute appears on double-click, clears after the transition, and the width lands on the default; it runs on the shipped code first and must fail there (v0.8.x P11).
+
+### D6 The `pages` footer shows the row range; the compact mode is `compact`
+
+- The `pages` footer (the default, v0.8.x D13 stays) shows the row range between Rows per page and the page buttons: `1-10 of 200`, localized, the filtered count, `1-2 of 2` on one page. Previewed on the docs copy (Base UI, worktree 01, port 5341) and accepted. Owner, 2026-11-08.
+- The compact footer's value is `paginationDisplayMode: 'compact'`; `'default'` is removed from the option type and the branch, no alias (no users yet). The stories, guide, API page and examples that say "default" for it are a separate item (F5, F7).
+- The accepted diff, to apply as is to `ST_TablePagination.tsx` in the three bases (path rewritten from the docs copy to the registry; `pnpm format` fixes the indent of the moved `<Pagination>` block; `'default'` in the branch becomes `'compact'`):
+
+```diff
+diff --git a/apps/shadcn-table-docs/components/ui-base/shadcn-table/components/toolbar/ST_TablePagination.tsx b/apps/shadcn-table-docs/components/ui-base/shadcn-table/components/toolbar/ST_TablePagination.tsx
+index 4b0227a2..21c2d077 100644
+--- a/apps/shadcn-table-docs/components/ui-base/shadcn-table/components/toolbar/ST_TablePagination.tsx
++++ b/apps/shadcn-table-docs/components/ui-base/shadcn-table/components/toolbar/ST_TablePagination.tsx
+@@ -150,6 +150,17 @@ export const ST_TablePagination = <TData extends ST_RowData>({
+           pageSize,
+           totalRowCount,
+         });
++        const rangeLabel = (
++          <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
++            shownRowRange.lastRowIndex === 0
++              ? 0
++              : (shownRowRange.firstRowIndex + 1).toLocaleString(
++                  localization.language,
++                )
++          }-${shownRowRange.lastRowIndex.toLocaleString(localization.language)} ${
++            localization.of
++          } ${totalRowCount.toLocaleString(localization.language)}`}</span>
++        );
+ 
+         return (
+           <div
+@@ -239,9 +250,11 @@ export const ST_TablePagination = <TData extends ST_RowData>({
+               </div>
+             )}
+             {paginationDisplayMode === 'pages' ? (
+-              // Not PaginationPrevious/Next: they hardcode English text and
+-              // lucide icons, which bypasses localization and icon overrides.
+-              <Pagination {...restPaginationProps} className="mx-0 w-auto">
++              <>
++                {rangeLabel}
++                {/* Not PaginationPrevious/Next: they hardcode English text and
++                    lucide icons, which bypasses localization and icon overrides. */}
++                <Pagination {...restPaginationProps} className="mx-0 w-auto">
+                 <PaginationContent>
+                   {getPaginationItems({
+                     boundaryCount,
+@@ -291,17 +304,10 @@ export const ST_TablePagination = <TData extends ST_RowData>({
+                   })}
+                 </PaginationContent>
+               </Pagination>
++              </>
+             ) : paginationDisplayMode === 'default' ? (
+               <>
+-                <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
+-                  shownRowRange.lastRowIndex === 0
+-                    ? 0
+-                    : (shownRowRange.firstRowIndex + 1).toLocaleString(
+-                        localization.language,
+-                      )
+-                }-${shownRowRange.lastRowIndex.toLocaleString(localization.language)} ${
+-                  localization.of
+-                } ${totalRowCount.toLocaleString(localization.language)}`}</span>
++                {rangeLabel}
+                 <div>
+                   {showFirstPageButton && (
+                     <ST_Tooltip title={localization.goToFirstPage}>
+```
+
+- One play renders a `pages` table, asserts `1-10 of 21`, types a filter and asserts the new range; it runs on the shipped code first and must fail there, the red recorded in the tracker (v0.8.x P11).
