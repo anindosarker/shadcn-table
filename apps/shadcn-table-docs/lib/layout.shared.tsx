@@ -7,9 +7,9 @@ import { gitConfig } from './shared';
 /** Top bar links, shared by the fumadocs layouts and components/site-nav.tsx. */
 export const NAV_LINKS = [
   { text: 'Docs', url: '/docs/getting-started/introduction' },
-  { text: 'API', url: '/docs/api' },
   { text: 'Examples', url: '/docs/examples' },
   { text: 'Guides', url: '/docs/guides' },
+  { text: 'API', url: '/docs/api' },
 ] as const;
 
 export const GITHUB_URL = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
