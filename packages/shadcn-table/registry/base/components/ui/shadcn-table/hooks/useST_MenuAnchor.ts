@@ -19,7 +19,7 @@ export interface ST_MenuAnchor {
   readonly onOpenChange: (open: boolean) => void;
   /** Opener click handler: closes when open from this anchor, opens otherwise. */
   readonly toggle: (anchor: HTMLElement) => void;
-  /** The anchor's box this render, re-measured on resize and scroll while open; `undefined` while closed. */
+  /** The anchor's box this render, re-measured on resize and scroll while open; the last box after close. */
   readonly rect: DOMRect | undefined;
   /** Spread on the visible opener: aria-haspopup, aria-expanded, onClick toggle. */
   readonly openerProps: {
@@ -59,8 +59,12 @@ export const useST_MenuAnchor = ({
     rect: DOMRect | undefined;
   }>({ anchor: null, rect: undefined });
 
+  // On close the last box is kept, so the exit animation plays at the anchor.
   if (measured.anchor !== anchorEl) {
-    setMeasured({ anchor: anchorEl, rect: anchorEl?.getBoundingClientRect() });
+    setMeasured({
+      anchor: anchorEl,
+      rect: anchorEl ? anchorEl.getBoundingClientRect() : measured.rect,
+    });
   }
 
   useEffect(() => {
