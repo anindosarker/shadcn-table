@@ -12,4 +12,4 @@
 
 ### F3 The filtering story's UI jumps
 
-- Owner, 2026-11-08, on `https://storybook.shadcn-table.com/base/?path=/story/features-filtering-examples--filtering-change-mode-enabled`: the table UI jumps (layout shift) while viewing the story. Trigger not yet pinned (load, typing in a filter, or a mode change); to be reproduced before it is planned (v0.8.x P10).
+- Owner, 2026-11-08, on `https://storybook.shadcn-table.com/base/?path=/story/features-filtering-examples--filtering-change-mode-enabled`: type a value in one subheader filter field, then close it (blur): the first filter field jumps (layout shift in the filter row). To be reproduced with a play before it is planned (v0.8.x P10, P11).
