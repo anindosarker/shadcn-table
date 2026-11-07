@@ -13,6 +13,7 @@
 ### F3 The filtering story's UI jumps
 
 - Owner, 2026-11-08, on `https://storybook.shadcn-table.com/base/?path=/story/features-filtering-examples--filtering-change-mode-enabled`: type a value in one subheader filter field, then close it (blur): the first filter field jumps (layout shift in the filter row). To be reproduced with a play before it is planned (v0.8.x P10, P11).
+- Resolved 2026-11-08: the jump is the filter mode menu's exit animation. `useST_MenuAnchor.ts` stored `anchorEl?.getBoundingClientRect()` on close, undefined once the anchor cleared, so the invisible trigger span moved to (0,0) and the Base UI and Radix positioners followed it while the menu faded; the hook now keeps the last measured box (three bases). Play `FilterModeMenuClosesInPlace`, red on base and radix before, green after; merged as a fix from the lead at the merge commit after `546bcabd`.
 
 ### F4 Stories carry no explainer
 
