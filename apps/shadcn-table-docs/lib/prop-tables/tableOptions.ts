@@ -282,8 +282,9 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableColumnFilterModes',
-    defaultValue: 'false',
-    description: '',
+    defaultValue: 'true',
+    description:
+      'Shows the filter mode picker on every column filter. Set false to hide it; a column can turn it off with its own enableColumnFilterModes: false.',
     link: '/docs/guides/column-filtering#filter-modes',
     linkText: 'ST Column Filtering Docs',
     required: false,

@@ -1204,3 +1204,63 @@ export const RangeFilterMinValue = {
     expect(canvas.getByText('Cleo')).toBeInTheDocument();
   },
 };
+
+/** The open filter mode menu's items, once it holds any. */
+const openModeMenuItems = () =>
+  waitFor(() => {
+    const items = within(document.body).getAllByRole('menuitem');
+    expect(items.length).toBeGreaterThan(0);
+    return items;
+  });
+
+// D4: a table without `enableColumnFilterModes` shows the mode picker in the
+// subheader filter, and the picker offers all 14 modes.
+export const ModePickerByDefaultSubheader = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="subheader"
+      columns={scoreColumns}
+      data={scoreData}
+      initialState={{ showColumnFilters: true }}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Ada');
+    const th = filterHeaderCell(canvasElement, 'Name');
+    await userEvent.click(
+      within(th).getByRole('button', { name: 'Change filter mode' }),
+    );
+    const items = await openModeMenuItems();
+    expect(items).toHaveLength(14);
+    expect(items[0].textContent).toContain('Fuzzy');
+  },
+};
+
+// D4: the popover filter shows the mode picker without the flag too.
+export const ModePickerByDefaultPopover = {
+  render: () => (
+    <ShadcnTable
+      columnFilterDisplayMode="popover"
+      columns={scoreColumns}
+      data={scoreData}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Ada');
+    const trigger = filterHeaderCell(
+      canvasElement,
+      'Name',
+    ).querySelector<HTMLElement>('[aria-expanded]:not([aria-haspopup="menu"])');
+    expect(trigger, 'the Name filter button').not.toBeNull();
+    await userEvent.click(trigger!);
+    await body.findByPlaceholderText('Filter by Name');
+    await userEvent.click(
+      await body.findByRole('button', { name: 'Change filter mode' }),
+    );
+    const items = await openModeMenuItems();
+    expect(items).toHaveLength(14);
+  },
+};

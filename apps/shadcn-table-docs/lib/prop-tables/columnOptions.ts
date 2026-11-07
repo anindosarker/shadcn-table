@@ -212,7 +212,8 @@ export const columnOptions: ColumnOption[] = [
   {
     columnOption: 'enableColumnFilterModes',
     defaultValue: '',
-    description: 'Enable column filtering modes for this column.',
+    description:
+      'Filter modes are on by default; set false to hide the filter mode picker for this column.',
     link: '/docs/guides/column-filtering#enable-column-filter-modes-(filter-switching)',
     linkText: 'ST Column Filtering Docs',
     source: 'ST',

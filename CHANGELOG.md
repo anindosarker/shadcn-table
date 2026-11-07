@@ -11,6 +11,13 @@ publishes the section as the GitHub release notes.
 
 ### Changed
 
+#### Epic 01 Filtering
+
+- Filter modes are on by default (D4): `enableColumnFilterModes` defaults to `true`, so the mode picker shows in the chips, subheader and popover display modes without the flag; `enableColumnFilterModes: false` on the table or a column hides it. Material React Table defaults it off; this is a deliberate deviation. The mode lists stay as they were: every mode for text, autocomplete, select, date, datetime and time, the two between modes for the range variants, none for range-slider and checkbox. A chip now names the mode ("Status fuzzy: Done").
+- A multi-select filter offers Includes any (`arrIncludesSome`, still the default), Includes all (`arrIncludesAll`) and Excludes (the new `arrIncludesNone` filter fn) after its 14 modes; `ST_Localization` gains `filterArrIncludesNone`, `filterArrIncludesSome` reads "Includes any", and every locale carries the three labels.
+- Removing a filter chip, or "Clear filters", puts the column back on its initial filter mode instead of the first mode of its list, so a multi-select or select column keeps its default fn.
+- Fixed (D1, F1): a select filter with a value shows its chevron left of the clear button instead of under it; the trigger takes `ltr:pr-9 rtl:pl-9` in place of `pe-9`, which lost to the shadcn trigger's `pr-2`.
+
 #### Epic 03 Resize animation
 
 - A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
