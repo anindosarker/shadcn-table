@@ -1,6 +1,6 @@
 # 02: Pagination, tracker
 
-Status: done
+Status: merged (de4df68e)
 Branch `v0.9/pagination`, worktree 02
 Checks:
 - `ST_BASE=radix vitest run stories/features/Pagination.stories.tsx` at f3c0fe69 + the two plays (library unchanged): fail as required, 2 failed, 21 passed. Red lines: PagesFooterRowRange `Unable to find an element with the text` (no range span in the pages footer); CompactFooter `Unable to find an element with the text` ('compact' falls through to the custom branch)
