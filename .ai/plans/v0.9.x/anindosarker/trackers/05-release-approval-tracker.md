@@ -11,6 +11,9 @@ Checks:
 - Check: lint, `pnpm test lint` at d65a066d plus the changelog block: pass (0 errors, 9 warnings outside this milestone)
 - Check: validate-repo, `pnpm test validate-repo` at d65a066d plus the changelog block: pass
 - Check: Acceptance, `gh api .../environments/release --jq ...` prints `["anindosarker"]`, grep prints `1`, validate-repo green, at d65a066d plus the changelog block: pass
+- Check (verifier): environment reviewers, `gh api repos/anindosarker/shadcn-table/environments/release --jq '[.protection_rules[] | select(.type == "required_reviewers") | .reviewers[].reviewer.login]'` at 1f8aa742: pass (`["anindosarker"]`)
+- Check (verifier): Acceptance rerun, gh api prints `["anindosarker"]`, `grep -c '^    environment: release$' .github/workflows/pr.yml` prints `1` (line 171), `pnpm test validate-repo` green (27 unit tests), at 1f8aa742: pass
+- Check (verifier): `pnpm test lint` and `pnpm test validate-repo` not rerun: recorded at d65a066d, `git diff --name-only d65a066d..1f8aa742` touches only .ai/ and CHANGELOG.md
 
 - Task 1 Create the `release` environment: done, aeca4d55
 - Task 2 Gate `prepare-release`: done, d65a066d
