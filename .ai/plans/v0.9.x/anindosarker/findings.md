@@ -29,3 +29,7 @@
 ### F7 "Default" names the compact pagination across stories and docs
 
 - Owner, 2026-11-08, `Features/Pagination Examples/Pagination Enabled Default More Data` (Base build): the story is titled "Default" and shows the compact footer (`Rows per page`, `1-10 of 551`, four arrows), which is not the default since v0.8.x D13 (`pages`). The same wording runs through the pagination stories (`Pagination Enabled Default`, `... Big Data`, `... No Rows Per Page` and more), the guide, the API page and the examples. Fixing it is bigger than F5: one audit of every story title, docs page and example that says "default" for `paginationDisplayMode: 'default'`, with the rename decided separately from item 6 (the range span). Decided in its own item.
+
+### F8 Two storybook plays time out under machine load and are not on the known-flake list
+
+- `stories/features/ClickToCopy.stories.tsx` "Click Copies Value" (base and radix) and `stories/features/RowOrdering.stories.tsx` "Drag Reorders Rows" (aria, 90 s timeout) failed once each in the E1 verifier runs at load average about 16 and passed on rerun and alone; neither is in the P5 known-flake list, so a loaded run reads them as red.
