@@ -150,6 +150,17 @@ export const ST_TablePagination = <TData extends ST_RowData>({
           pageSize,
           totalRowCount,
         });
+        const rangeLabel = (
+          <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
+            shownRowRange.lastRowIndex === 0
+              ? 0
+              : (shownRowRange.firstRowIndex + 1).toLocaleString(
+                  localization.language,
+                )
+          }-${shownRowRange.lastRowIndex.toLocaleString(localization.language)} ${
+            localization.of
+          } ${totalRowCount.toLocaleString(localization.language)}`}</span>
+        );
 
         return (
           <div
@@ -223,69 +234,64 @@ export const ST_TablePagination = <TData extends ST_RowData>({
               </div>
             )}
             {paginationDisplayMode === 'pages' ? (
-              // Not PaginationPrevious/Next: they hardcode English text and
-              // lucide icons, which bypasses localization and icon overrides.
-              <Pagination {...restPaginationProps} className="mx-0 w-auto">
-                <PaginationContent>
-                  {getPaginationItems({
-                    boundaryCount,
-                    count: numberOfPages,
-                    disabled,
-                    hideNextButton,
-                    hidePrevButton,
-                    page: pageIndex + 1,
-                    showFirstButton: showFirstPageButton,
-                    showLastButton: showLastPageButton,
-                    siblingCount,
-                  }).map((item, index) => {
-                    if (item.page === null) {
+              <>
+                {rangeLabel}
+                {/* Not PaginationPrevious/Next: they hardcode English text and
+                    lucide icons, which bypasses localization and icon overrides. */}
+                <Pagination {...restPaginationProps} className="mx-0 w-auto">
+                  <PaginationContent>
+                    {getPaginationItems({
+                      boundaryCount,
+                      count: numberOfPages,
+                      disabled,
+                      hideNextButton,
+                      hidePrevButton,
+                      page: pageIndex + 1,
+                      showFirstButton: showFirstPageButton,
+                      showLastButton: showLastPageButton,
+                      siblingCount,
+                    }).map((item, index) => {
+                      if (item.page === null) {
+                        return (
+                          <PaginationItem key={index}>
+                            <PaginationEllipsis />
+                          </PaginationItem>
+                        );
+                      }
+                      const { page } = item;
+                      const nav = navItems[item.type];
                       return (
+                        // A Button, not PaginationLink: an href-less <a> is not
+                        // keyboard-operable.
                         <PaginationItem key={index}>
-                          <PaginationEllipsis />
+                          <Button
+                            aria-current={item.selected ? 'page' : undefined}
+                            aria-label={
+                              nav
+                                ? nav.label
+                                : `${item.selected ? '' : 'Go to '}page ${page}`
+                            }
+                            disabled={item.disabled}
+                            onClick={() => table.setPageIndex(page - 1)}
+                            size="icon-sm"
+                            type="button"
+                            variant={item.selected ? 'outline' : 'ghost'}
+                          >
+                            {nav
+                              ? createElement(nav.Icon, {
+                                  className: 'rtl:rotate-180',
+                                })
+                              : page.toLocaleString(localization.language)}
+                          </Button>
                         </PaginationItem>
                       );
-                    }
-                    const { page } = item;
-                    const nav = navItems[item.type];
-                    return (
-                      // A Button, not PaginationLink: an href-less <a> is not
-                      // keyboard-operable.
-                      <PaginationItem key={index}>
-                        <Button
-                          aria-current={item.selected ? 'page' : undefined}
-                          aria-label={
-                            nav
-                              ? nav.label
-                              : `${item.selected ? '' : 'Go to '}page ${page}`
-                          }
-                          disabled={item.disabled}
-                          onClick={() => table.setPageIndex(page - 1)}
-                          size="icon-sm"
-                          type="button"
-                          variant={item.selected ? 'outline' : 'ghost'}
-                        >
-                          {nav
-                            ? createElement(nav.Icon, {
-                                className: 'rtl:rotate-180',
-                              })
-                            : page.toLocaleString(localization.language)}
-                        </Button>
-                      </PaginationItem>
-                    );
-                  })}
-                </PaginationContent>
-              </Pagination>
-            ) : paginationDisplayMode === 'default' ? (
+                    })}
+                  </PaginationContent>
+                </Pagination>
+              </>
+            ) : paginationDisplayMode === 'compact' ? (
               <>
-                <span className="mx-1 min-w-[8ch] text-center text-sm">{`${
-                  shownRowRange.lastRowIndex === 0
-                    ? 0
-                    : (shownRowRange.firstRowIndex + 1).toLocaleString(
-                        localization.language,
-                      )
-                }-${shownRowRange.lastRowIndex.toLocaleString(localization.language)} ${
-                  localization.of
-                } ${totalRowCount.toLocaleString(localization.language)}`}</span>
+                {rangeLabel}
                 <div>
                   {showFirstPageButton && (
                     <ST_Tooltip title={localization.goToFirstPage}>
