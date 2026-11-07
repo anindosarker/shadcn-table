@@ -1,18 +1,18 @@
 # 05: Release approval, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/release-approval`, worktree 04
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: environment reviewers, `gh api repos/anindosarker/shadcn-table/environments/release --jq '[.protection_rules[] | select(.type == "required_reviewers") | .reviewers[].reviewer.login]'` at 546bcabd: pass (`["anindosarker"]`)
 
-- Task 1 Create the `release` environment: planned
+- Task 1 Create the `release` environment: done
 - Task 2 Gate `prepare-release`: planned
 - Task 3 Cleanup: planned
 
 ## Attention
 
-- [Staging for the ATTENTION file, one bullet per item, self-explanatory first line.]
+- The `release` environment keeps GitHub's default `can_admins_bypass: true`: the spec's PUT body (1.6.2) does not set it, so a repository admin can still bypass the review. Left as the spec wrote it; setting it to false is one more PUT if the owner wants it.
 
 ## Notes
 
-- [Optional: only what a later task, a resume or the owner would otherwise rediscover.]
+- Environment created 2026-11-07T23:48:53Z with `gh api -X PUT repos/anindosarker/shadcn-table/environments/release` and the body of spec 1.6.2. Before: `{"total_count":0,"environments":[]}`. Response (user fields trimmed): `{"id":26597343948,"name":"release","can_admins_bypass":true,"protection_rules":[{"id":71674184,"type":"required_reviewers","prevent_self_review":false,"reviewers":[{"type":"User","reviewer":{"login":"anindosarker","id":29659719}}]}],"deployment_branch_policy":null}`.
