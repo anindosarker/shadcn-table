@@ -408,7 +408,7 @@ const checks = {
   ),
   '/docs/examples/filter-switching': examplePage(
     'customize-filter-modes',
-    'enableColumnFilterModes: true',
+    'enableColumnFilterModes: false',
     async (page, w, check) => {
       // the mode picker sits on the editor's top line in chips mode (D39)
       const editor = await chipFilter(
