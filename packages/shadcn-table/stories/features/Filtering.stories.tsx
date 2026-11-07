@@ -477,6 +477,47 @@ export const FilteringChangeModeEnabled = () => (
   />
 );
 
+// The closing state of a menu popup in each base.
+const menuExiting = (popup: Element) =>
+  popup.hasAttribute('data-closed') ||
+  popup.getAttribute('data-state') === 'closed' ||
+  popup.hasAttribute('data-exiting');
+
+/** F3: the filter mode menu plays its exit animation where it opened. */
+export const FilterModeMenuClosesInPlace = {
+  render: FilteringChangeModeEnabled,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const [modeButton] = await canvas.findAllByRole('button', {
+      name: 'Change filter mode',
+    });
+    await userEvent.click(modeButton);
+    const body = within(canvasElement.ownerDocument.body);
+    // React Aria sets the exit state on the popover around the menu.
+    const menu = await body.findByRole('menu');
+    const popup = menu.closest('[data-slot="dropdown-menu-content"]') ?? menu;
+    await waitFor(() => expect(menuExiting(popup)).toBe(false));
+    // Settled after the enter animation.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const open = popup.getBoundingClientRect();
+    await userEvent.keyboard('{Escape}');
+    let exitFrames = 0;
+    for (let frame = 0; frame < 60 && popup.isConnected; frame++) {
+      if (menuExiting(popup)) {
+        exitFrames += 1;
+        const box = popup.getBoundingClientRect();
+        expect(
+          Math.abs(box.left - open.left) <= 8 &&
+            Math.abs(box.top - open.top) <= 8,
+          `closing popup at (${box.left}, ${box.top}) within 8 px of open (${open.left}, ${open.top})`,
+        ).toBe(true);
+      }
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    }
+    expect(exitFrames, 'frames in the exit state').toBeGreaterThan(0);
+  },
+};
+
 // F44: a subheader filter (input, slider, caption) stays inside its th.
 const boxInside = (inner: DOMRect, outer: DOMRect) =>
   inner.left >= outer.left - 1 &&
