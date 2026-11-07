@@ -6,11 +6,24 @@ import { useEffect, useRef, type ReactNode } from 'react';
 const SPY_LINE = 0.4;
 
 /**
+ * Next skips its `usePathname` sync when the state carries its own markers
+ * (`__NA`, `_N`), treating the call as internal. Drop them and keep the rest;
+ * Next copies its router tree back onto the state.
+ */
+function userHistoryState(): Record<string, unknown> | null {
+  const state: unknown = window.history.state;
+  if (!state || typeof state !== 'object') return null;
+  const { __NA: _na, _N: _n, ...rest } = state as Record<string, unknown>;
+  return rest;
+}
+
+/**
  * Wraps the continuous examples page. Every child marked `data-spy-url` is a
  * target; the one covering the line at 40 percent of the viewport height wins
  * and its url replaces the address bar entry. Next's App Router syncs
  * `usePathname` with `replaceState`, so the sidebar highlight and breadcrumb
- * follow. The intro wins whenever any part of it is in the upper band.
+ * follow. Until the first block reaches that line the page is on its intro
+ * and reads as `/docs/examples`.
  */
 export function ExamplesScrollSpy({
   children,
@@ -29,14 +42,17 @@ export function ExamplesScrollSpy({
     );
     const visible = new Set<HTMLElement>();
 
+    const firstBlock = targets.find(
+      (target) => target.dataset.spyUrl !== introUrl,
+    );
+
     const pick = (): string | undefined => {
+      const line = window.innerHeight * SPY_LINE;
+      if (!firstBlock || firstBlock.getBoundingClientRect().top > line) {
+        return introUrl;
+      }
       const ordered = targets.filter((target) => visible.has(target));
       if (ordered.length === 0) return undefined;
-      const intro = ordered.find(
-        (target) => target.dataset.spyUrl === introUrl,
-      );
-      if (intro) return introUrl;
-      const line = window.innerHeight * SPY_LINE;
       const covering = ordered.find((target) => {
         const rect = target.getBoundingClientRect();
         return rect.top <= line && rect.bottom > line;
@@ -44,6 +60,17 @@ export function ExamplesScrollSpy({
       return (covering ?? ordered[ordered.length - 1]).dataset.spyUrl;
     };
 
+    const update = () => {
+      const url = pick();
+      if (url && url !== window.location.pathname) {
+        // Never pushState: scrolling must not add history entries.
+        window.history.replaceState(userHistoryState(), '', url);
+      }
+    };
+
+    // The observer keeps the set of targets in the upper band; the scroll
+    // listener re-picks within that set, since the covering block can change
+    // without any target entering or leaving the band.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -51,16 +78,26 @@ export function ExamplesScrollSpy({
           if (entry.isIntersecting) visible.add(target);
           else visible.delete(target);
         }
-        const url = pick();
-        if (url && url !== window.location.pathname) {
-          // Never pushState: scrolling must not add history entries.
-          window.history.replaceState(window.history.state, '', url);
-        }
+        update();
       },
       { rootMargin: `0px 0px -${100 - SPY_LINE * 100}% 0px` },
     );
     for (const target of targets) observer.observe(target);
-    return () => observer.disconnect();
+
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
   }, [introUrl]);
 
   return <div ref={ref}>{children}</div>;
