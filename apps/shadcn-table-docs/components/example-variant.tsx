@@ -2,6 +2,7 @@
 
 import { Suspense, use, useSyncExternalStore, type ComponentType } from 'react';
 import { useBase } from '@/components/base-selector';
+import { ExampleTableSkeleton } from '@/components/example-skeleton';
 import type { Base } from '@/lib/install';
 
 type Module = { default: ComponentType };
@@ -43,14 +44,8 @@ const useMounted = () =>
     () => false,
   );
 
-const Loading = () => (
-  <div
-    role="status"
-    className="flex min-h-72 items-center justify-center text-sm text-fd-muted-foreground"
-  >
-    Loading example
-  </div>
-);
+/** The table area keeps pulsing until the example's chunk has loaded. */
+const Loading = () => <ExampleTableSkeleton />;
 
 /** Suspends on the chunk, then renders the module's default export. */
 const Loaded = ({ base, name }: { base: Base; name: string }) => {
