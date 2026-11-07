@@ -19,6 +19,12 @@ import {
   siteName,
 } from '@/lib/shared';
 import { findSectionName } from '@/lib/page-tree-utils';
+import { ExamplesStack } from '@/components/examples-stack';
+
+/** True only for the examples index, `/docs/examples`. */
+function isExamplesIndex(slug: string[] | undefined): boolean {
+  return slug?.length === 1 && slug[0] === 'examples';
+}
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -74,12 +80,27 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         {page.data.description}
       </DocsDescription>
       <DocsBody>
-        <MDX
-          components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(source, page),
-          })}
-        />
+        {isExamplesIndex(params.slug) ? (
+          // /docs/examples is one continuous page: the index intro, then
+          // every example page. /docs/examples/<slug> stays a single page.
+          <ExamplesStack
+            index={page}
+            intro={
+              <MDX
+                components={getMDXComponents({
+                  a: createRelativeLink(source, page),
+                })}
+              />
+            }
+          />
+        ) : (
+          <MDX
+            components={getMDXComponents({
+              // this allows you to link to other pages with relative file paths
+              a: createRelativeLink(source, page),
+            })}
+          />
+        )}
       </DocsBody>
     </DocsPage>
   );
