@@ -53,11 +53,11 @@ const bigData = [...Array(11_111)].map(() => ({
   lastName: faker.person.lastName(),
 }));
 
-export const PaginationEnabledDefault = () => (
+export const PaginationEnabled = () => (
   <ShadcnTable columns={columns} data={data} />
 );
 
-export const PaginationEnabledDefaultMoreData = () => (
+export const PaginationCompactMoreData = () => (
   <ShadcnTable
     columns={columns}
     data={moreData}
@@ -70,7 +70,7 @@ export const PaginationEnabledDefaultMoreData = () => (
 
 let moreDataConsoleError: ReturnType<typeof spyOn> | undefined;
 
-PaginationEnabledDefaultMoreData.beforeEach = () => {
+PaginationCompactMoreData.beforeEach = () => {
   const spy = spyOn(console, 'error');
   moreDataConsoleError = spy;
   return () => spy.mockRestore();
@@ -78,9 +78,7 @@ PaginationEnabledDefaultMoreData.beforeEach = () => {
 
 // From the last page, a global search that leaves one page moves the table
 // back to page index 0 without a console error.
-PaginationEnabledDefaultMoreData.play = async ({
-  canvasElement,
-}: StoryContext) => {
+PaginationCompactMoreData.play = async ({ canvasElement }: StoryContext) => {
   const canvas = within(canvasElement);
   const rangeText = () =>
     canvas.getByText(
@@ -100,7 +98,7 @@ PaginationEnabledDefaultMoreData.play = async ({
   await expect(moreDataConsoleError).not.toHaveBeenCalled();
 };
 
-export const PaginationEnabledDefaultBigData = () => (
+export const PaginationEnabledBigData = () => (
   <ShadcnTable
     columns={columns}
     data={bigData}
@@ -113,7 +111,7 @@ export const PaginationEnabledDefaultBigData = () => (
   />
 );
 
-export const PaginationEnabledDefaultBigDataLanguage = () => (
+export const PaginationEnabledBigDataLanguage = () => (
   <ShadcnTable
     columns={columns}
     data={bigData}
@@ -130,7 +128,7 @@ export const PaginationEnabledDefaultBigDataLanguage = () => (
   />
 );
 
-export const PaginationEnabledDefaultNoRowsPerPage = () => (
+export const PaginationEnabledNoRowsPerPage = () => (
   <ShadcnTable
     columns={columns}
     data={data}
@@ -266,7 +264,7 @@ const firstRowFirstName = (canvasElement: HTMLElement) =>
 
 /** Next page shows the next ten rows. */
 export const NextPageChangesRows = {
-  render: () => <PaginationEnabledDefault />,
+  render: () => <PaginationEnabled />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await canvas.findAllByText(data[0].firstName);

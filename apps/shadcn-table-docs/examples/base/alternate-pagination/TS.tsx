@@ -10,7 +10,7 @@ const Example = () => {
     stPaginationProps: {
       showRowsPerPage: false,
     },
-    paginationDisplayMode: 'default',
+    paginationDisplayMode: 'compact', //the compact row range and arrow buttons footer
   });
 
   return <ShadcnTable table={table} />;

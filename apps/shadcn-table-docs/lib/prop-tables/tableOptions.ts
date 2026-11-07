@@ -1828,12 +1828,12 @@ export const tableOptions: TableOption[] = [
     tableOption: 'paginationDisplayMode',
     defaultValue: "'pages'",
     description:
-      "The pagination controls. 'pages' (the default) shows the rows per page select, numbered page buttons and previous and next; 'default' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
+      "The pagination controls. 'pages' (the default) shows the rows per page select, the row range, numbered page buttons and previous and next; 'compact' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
     link: '/docs/guides/pagination',
     linkText: 'ST Pagination Docs',
     required: false,
     source: 'ST',
-    type: "'custom' | 'default' | 'pages'",
+    type: "'compact' | 'custom' | 'pages'",
   },
   {
     tableOption: 'paginateExpandedRows',
