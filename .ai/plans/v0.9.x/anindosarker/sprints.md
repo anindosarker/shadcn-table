@@ -1,9 +1,9 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 04:34
+Updated: 2026-11-08 04:43
 
-| Milestone | S1 |
-|---|---|
-| Filtering  D1, D4 | [ ] |
-| Pagination  D6, D7 | · |
-| Resize animation  D5 | [x] |
+| Milestone | S1 | S2 |
+|---|---|---|
+| E1 01 Filtering | [ ] |  |
+| E1 02 Pagination |  | · |
+| E1 03 Resize animation | [x] |  |

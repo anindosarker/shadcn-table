@@ -1,11 +1,11 @@
 # Process, v0.9.x
 
-Project facts only. The process itself is the expedition skill; commands are in `package.json`; code rules in `docs/code-of-conduct/`; what a milestone must run is in its epic. Copied from v0.8.x and audited on 2026-11-08 (D9); the numbers P1 to P11 are unchanged, so v0.8.x citations still read.
+Project facts only. The process itself is the expedition skill; commands are in `package.json`; code rules in `docs/code-of-conduct/`; what a milestone must run is in its spec. Copied from v0.8.x and audited on 2026-11-08 (D9); the numbers P1 to P11 are unchanged, so v0.8.x citations still read.
 
 ## P1 Branches
 
 - `claude/review`: the integration branch. Every worktree starts from it (branch `v<major>.<minor>/<slug>` created from `origin/claude/review`), and every finished milestone merges back into it.
-- `dev`: the staging branch. Untouched until a release epic runs; then fast-forwarded from `claude/review` once, and again after each fix milestone the integration run produces; the only other commit on it is `chore: version <v>` by Prepare Release on the release PR. Never pushed to by hand.
+- `dev`: the staging branch. Untouched until a release spec runs; then fast-forwarded from `claude/review` once, and again after each fix milestone the integration run produces; the only other commit on it is `chore: version <v>` by Prepare Release on the release PR. Never pushed to by hand.
 - `master`: the release branch. Changes only by merging the release PR from `dev`; no other source branch, no direct push.
 
 ## P2 Milestone branch and worktree
@@ -15,13 +15,13 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 ## P3 Merge
 
-- The merge commit of a milestone into `claude/review` is `merge: <milestone> (<epic>)`; the milestone branch is deleted local and remote right after.
+- The merge commit of a milestone into `claude/review` is `merge: <milestone> (<spec>)`; the milestone branch is deleted local and remote right after.
 - `act pull_request` runs `pr.yml` locally on Linux: any agent may use it when it helps; never required, never forbidden.
 
 ## P4 Release
 
-- No release is planned for v0.9.x yet; every batch merges into `claude/review` and stays there until a release epic is decided (owner, 2026-11-08).
-- A release is one PR, `dev` into `master`, title `release: <version>`, with the release label, auto-merge enabled at creation; the bump job `prepare-release` waits for the owner's Approve on the GitHub Environment `release` (D3). The environment and the `environment: release` line in `pr.yml` are not in place yet; D3's epic adds them.
+- No release is planned for v0.9.x yet; every epic merges into `claude/review` and stays there until a release spec is decided (owner, 2026-11-08).
+- A release is one PR, `dev` into `master`, title `release: <version>`, with the release label, auto-merge enabled at creation; the bump job `prepare-release` waits for the owner's Approve on the GitHub Environment `release` (D3). The environment and the `environment: release` line in `pr.yml` are not in place yet; D3's spec adds them.
 - After a release, the main session fast-forwards `claude/review` and `dev` to `master` and pushes both before the next plan commit; no workflow does this.
 
 ## P5 Checks on a shared machine
@@ -35,7 +35,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - Ports 5340 to 5360 are for agents; stop what you start. Never kill 5273 (the owner's test-shadcn vite server), 5310, 5320, 5330, 6006, 6007 or 6008: they are the owner's servers and the shared registry.
 - `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` and its server on port 3000 are the owner's reference demo: read-only, never started, stopped or restarted (v0.8.x D34).
-- A new dependency is added by the first milestone of the batch that needs it, with one `pnpm install`, and that milestone owns `package.json` and the lockfile for its batch; no other running milestone touches them.
+- A new dependency is added by the first milestone of the epic that needs it, with one `pnpm install`, and that milestone owns `package.json` and the lockfile for its epic; no other running milestone touches them.
 
 ## P7 Public surface
 
@@ -52,7 +52,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 - No milestone owns these files; every milestone may append to them, in a conflict both sides are kept in order.
 - `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/index.ts`: each milestone's exports under its own `// spec NN` comment.
-- `CHANGELOG.md`: one `#### Epic NN` block per milestone under `## Unreleased` (`#### Epic NN <milestone>` when an epic has several milestones); released versions keep their older `Spec` headings.
+- `CHANGELOG.md`: one `#### Spec NN` block per milestone under `## Unreleased` (`#### Spec NN <milestone>` when a spec has several milestones); released versions keep their older `Spec` headings.
 - Generated, never hand-edited: `registry.json`, the `examples-*-diff.json` lists, `apps/shadcn-table-docs/components/ui-<base>/` and `public/r/`.
 - `tools/registry/{base,aria}-diff.json` are hand-kept allow lists, owned by the milestone that adds the differing file.
 
