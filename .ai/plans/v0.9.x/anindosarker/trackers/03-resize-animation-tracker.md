@@ -1,6 +1,6 @@
 # 03: Resize animation, tracker
 
-Status: done
+Status: merged (54a51ee3)
 Branch `v0.9/resize-animation`, worktree 03
 Checks:
 - Red (P11): `ST_BASE=radix vitest run stories/features/ColumnResizing.stories.tsx` at 058b649b + play: fail, ResetSizeAnimates `expected false to be true` on the first `data-size-resetting` assertion after the double click; 24 other tests pass
