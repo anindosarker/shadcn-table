@@ -330,3 +330,68 @@ export const PagesModeNumbers = {
     expect(firstRowFirstName(canvasElement)).toBe(moreData[550].firstName);
   },
 };
+
+// Fixed rows: only the first one matches the search `Liam`.
+const searchData = [...Array(21)].map((_, index) => ({
+  address: `${index + 1} Oak Street`,
+  age: 20 + index,
+  firstName: index === 0 ? 'Liam' : 'Noah',
+  lastName: `Row ${index + 1}`,
+}));
+
+const footerRangeText = (canvasElement: HTMLElement) =>
+  within(canvasElement).getByText(
+    (_, element) =>
+      element?.tagName === 'SPAN' &&
+      /^\d+-\d+ of \d+$/.test(element.textContent ?? ''),
+  ).textContent;
+
+/**
+ * The pages footer shows the row range (D6); a global search that leaves one
+ * page shows the filtered count and a single page button.
+ */
+export const PagesFooterRowRange = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={searchData}
+      paginationDisplayMode="pages"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(footerRangeText(canvasElement)).toBe('1-10 of 21'),
+    );
+    await userEvent.click(canvas.getByLabelText('Show/Hide search'));
+    await userEvent.type(canvas.getByPlaceholderText('Search'), 'Liam');
+    await waitFor(() =>
+      expect(footerRangeText(canvasElement)).toMatch(/^1-(\d+) of \1$/),
+    );
+    expect(
+      canvas.getAllByRole('button', { name: /^(Go to )?page \d+$/ }),
+    ).toHaveLength(1);
+  },
+};
+
+/** The compact footer shows the row range and four navigation buttons (D6). */
+export const CompactFooter = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      paginationDisplayMode="compact"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(footerRangeText(canvasElement)).toBe('1-10 of 21'),
+    );
+    expect(
+      canvas.getAllByRole('button', {
+        name: /^Go to (first|previous|next|last) page$/,
+      }),
+    ).toHaveLength(4);
+  },
+};
