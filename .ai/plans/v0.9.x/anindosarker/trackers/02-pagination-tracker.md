@@ -17,6 +17,15 @@ Checks:
 - `pnpm format` at d9fde330: no change beyond the changelog block
 - `pnpm test lint` at d9fde330: pass, 9 warnings
 - `pnpm test storybook-tests --base radix` at d9fde330: pass, 617 passed
+- Verifier, at 0139639b (clean tree; reused unchanged: lint, storybook-tests radix and validate-repo at d9fde330, typecheck radix and docs-e2e base at c3826a06, the diffs since touch only .ai/ and CHANGELOG.md):
+  - `pnpm test typecheck --base base` at 0139639b: pass, tsc clean
+  - `pnpm test typecheck --base aria` at 0139639b: pass, tsc clean
+  - `pnpm test storybook-tests --base base` at 0139639b: pass, 617 passed
+  - `pnpm test storybook-tests --base aria` at 0139639b: pass, 617 passed
+  - Acceptance (1.2), `ST_BASE=<base> vitest run stories/features/Pagination.stories.tsx -t 'Pages Footer Row Range|Compact Footer'` at 0139639b, base, radix, aria one after another: pass, 2 passed each
+  - Acceptance grep 1 at 0139639b: committed tree lists only the six stale generated docs copies under `apps/shadcn-table-docs/components/ui-<base>/` (P9, regenerated at merge); after `pnpm registry:build` and `lib:install <base>` for the three bases: empty (regenerated files restored, not committed)
+  - Acceptance grep 2 (`PaginationEnabledDefault`) at 0139639b: empty
+  - Acceptance `pnpm test validate-repo` at 0139639b: pass, bases identical, tailwind valid, registry valid, 27 unit tests
 
 - Task 1 Reproduce (plays red on the shipped code): done, 27fd2e86
 - Task 2 Library (range span, compact branch, three bases): done, bc55414f
