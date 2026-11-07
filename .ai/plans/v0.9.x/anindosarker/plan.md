@@ -10,8 +10,3 @@ Decisions: [decisions.md](decisions.md). Sprints: [sprints.md](sprints.md). Epic
 
 | # | Epic | Scope |
 |---|---|---|
-
-## Stories
-
-| Story | Files owned |
-|---|---|
