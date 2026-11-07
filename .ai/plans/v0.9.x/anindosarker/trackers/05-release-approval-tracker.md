@@ -1,6 +1,6 @@
 # 05: Release approval, tracker
 
-Status: done
+Status: merged (53ff442a)
 Branch `v0.9/release-approval`, worktree 04
 Checks:
 - Check: environment reviewers, `gh api repos/anindosarker/shadcn-table/environments/release --jq '[.protection_rules[] | select(.type == "required_reviewers") | .reviewers[].reviewer.login]'` at 546bcabd: pass (`["anindosarker"]`)
