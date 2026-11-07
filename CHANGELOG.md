@@ -18,6 +18,11 @@ publishes the section as the GitHub release notes.
 - Removing a filter chip, or "Clear filters", puts the column back on its initial filter mode instead of the first mode of its list, so a multi-select or select column keeps its default fn.
 - Fixed (D1, F1): a select filter with a value shows its chevron left of the clear button instead of under it; the trigger takes `ltr:pr-9 rtl:pl-9` in place of `pe-9`, which lost to the shadcn trigger's `pr-2`.
 
+#### Epic 02 Pagination
+
+- The `pages` footer, the default, shows the row range between Rows per page and the page buttons (D6): `1-10 of 200`, localized, following the filtered count, `1-2 of 2` on one page.
+- `paginationDisplayMode: 'default'` is renamed `'compact'`, with no alias (D6): the option type is `'compact' | 'custom' | 'pages'` and `'default'` is a type error. The stories, the pagination guide, the API entry and the alternate-pagination example name the compact footer `'compact'`, and the pagination story names drop "Default" (D7).
+
 #### Epic 03 Resize animation
 
 - A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
