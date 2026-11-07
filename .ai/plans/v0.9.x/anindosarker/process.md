@@ -33,6 +33,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 ## P6 Agent sandbox
 
+- The talker session runs in `/Users/anindosarker/Work/Personal/React-table` (the workspace folder above the repo); the runner and the spec forks are started from that same folder, never from the repo root or a subfolder, so every session resolves the same paths.
 - Ports 5340 to 5360 are for agents; stop what you start. Never kill 5273 (the owner's test-shadcn vite server), 5310, 5320, 5330, 6006, 6007 or 6008: they are the owner's servers and the shared registry.
 - `/Users/anindosarker/Work/Personal/React-table/test-projects/next-app` and its server on port 3000 are the owner's reference demo: read-only, never started, stopped or restarted (v0.8.x D34).
 - A new dependency is added by the first milestone of the epic that needs it, with one `pnpm install`, and that milestone owns `package.json` and the lockfile for its epic; no other running milestone touches them.
