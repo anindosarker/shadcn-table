@@ -7,6 +7,17 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+#### Epic 01 Filtering
+
+- Filter modes are on by default (D4): `enableColumnFilterModes` defaults to `true`, so the mode picker shows in the chips, subheader and popover display modes without the flag; `enableColumnFilterModes: false` on the table or a column hides it. Material React Table defaults it off; this is a deliberate deviation. The mode lists stay as they were: every mode for text, autocomplete, select, date, datetime and time, the two between modes for the range variants, none for range-slider and checkbox. A chip now names the mode ("Status fuzzy: Done").
+- A multi-select filter offers Includes any (`arrIncludesSome`, still the default), Includes all (`arrIncludesAll`) and Excludes (the new `arrIncludesNone` filter fn) after its 14 modes; `ST_Localization` gains `filterArrIncludesNone`, `filterArrIncludesSome` reads "Includes any", and every locale carries the three labels.
+- Removing a filter chip, or "Clear filters", puts the column back on its initial filter mode instead of the first mode of its list, so a multi-select or select column keeps its default fn.
+- Fixed (D1, F1): a select filter with a value shows its chevron left of the clear button instead of under it; the trigger takes `ltr:pr-9 rtl:pl-9` in place of `pe-9`, which lost to the shadcn trigger's `pr-2`.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
