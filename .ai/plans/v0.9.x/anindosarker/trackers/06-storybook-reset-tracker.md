@@ -7,7 +7,7 @@ Checks:
 - Check: format, `pnpm exec prettier --check test/storybook-static/` at 546bcabd (+ test/storybook-static): pass
 - Check: red run on the shipped code (P11), `pnpm test storybook-static --base base` at 546bcabd (+ test/storybook-static): fail as expected, `FAIL footer in initial state "1-1 of 1" (expected "1-10 of 551")`, `FAIL global filter empty "79079 Montana Fields"`, `FAIL window.__ST_STATIC__ is true`
 
-- Task 1 Reproduce (`storybook-static` red on the shipped code): running
+- Task 1 Reproduce (`storybook-static` red on the shipped code): done at dbaf1414
 - Task 2 Apply the D8 diff: planned
 - Task 3 Cleanup: planned
 
