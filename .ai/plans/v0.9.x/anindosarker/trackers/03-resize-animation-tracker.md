@@ -13,6 +13,12 @@ Checks:
 - `pnpm test lint` at 2dd9c242 + changelog: pass (9 pre-existing warnings in docs examples, none in owned files)
 - `pnpm test validate-repo` at 2dd9c242 + changelog: pass (bases identical, tailwind valid, registry valid, 27 unit tests)
 - `pnpm test storybook-tests --base radix` at 2dd9c242 + changelog: pass (610)
+- Verifier at 2a9057b8: radix typecheck, radix storybook-tests, `pnpm test lint` and validate-repo not rerun (recorded at 2dd9c242 + changelog; diff since touches only .ai/ and CHANGELOG.md)
+- `pnpm test typecheck --base base` at 2a9057b8: pass
+- `pnpm test typecheck --base aria` at 2a9057b8: pass
+- `pnpm test storybook-tests --base base` at 2a9057b8: pass (610) on the rerun; first run 1 failed, ClickToCopy "Click Copies Value" timed out under machine load (29.6 s), passes alone, not in owned files
+- `pnpm test storybook-tests --base aria` at 2a9057b8: pass (610) on the rerun; first run 1 failed, RowOrdering "Drag Reorders Rows" timed out at 90 s under machine load, not in owned files
+- Acceptance (1.2) at 2a9057b8: `ST_BASE=<base> vitest run stories/features/ColumnResizing.stories.tsx -t "Reset Size Animates"` pass in base, radix, aria; red line on the shipped code recorded above; `pnpm test validate-repo` pass (bases identical, tailwind valid, registry valid, 27 unit tests)
 
 - Task 1 Reproduce (play red on the shipped code): done, d0e887c9
 - Task 2 Library (reset helper, transition classes, three bases): done, 2dd9c242
@@ -20,6 +26,7 @@ Checks:
 
 ## Attention
 
+- Two unlisted flakes seen in the milestone 03 verifier run under load: ClickToCopy "Click Copies Value" (base) and RowOrdering "Drag Reorders Rows" (aria, 90 s timeout); both passed on the rerun. Candidates for the P5 known-flake list.
 - The reset helper's `transitionend` listener removes itself only on a `width` or `min-width` event instead of `{ once: true }` (epic 1.6.2): button color transitions bubble to the table too, and `once` would drop the listener on the first of them and leave the attribute stuck. No timer, as D5 says.
 
 
