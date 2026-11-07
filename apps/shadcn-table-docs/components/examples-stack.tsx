@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
+import { connection } from 'next/server';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { source } from '@/lib/source';
@@ -6,6 +7,7 @@ import { getMDXComponents } from '@/components/mdx';
 import { ExamplePageProvider } from '@/components/example-page-context';
 import { ExamplesScrollSpy } from '@/components/examples-scroll-spy';
 import { LazyMount } from '@/components/lazy-mount';
+import { ExampleSkeleton } from '@/components/example-skeleton';
 
 type DocsPage = NonNullable<ReturnType<typeof source.getPage>>;
 
@@ -63,9 +65,32 @@ function examplePages(indexUrl: string): StackEntry[] {
 }
 
 /**
+ * One block's body: the example page's MDX with its playground. Awaiting
+ * `connection()` renders the stack per request, so the shell (intro,
+ * subgroup headings, titles, descriptions, skeletons) streams first and each
+ * body follows inside its own Suspense boundary; the playground's
+ * ExampleSnippet reads its example sources while the block suspends.
+ * LazyMount still defers the client mount of the live table.
+ */
+async function ExampleBlockBody({ page }: { page: DocsPage }) {
+  await connection();
+  const MDX = page.data.body;
+  return (
+    <LazyMount>
+      <MDX
+        components={getMDXComponents({
+          a: createRelativeLink(source, page),
+        })}
+      />
+    </LazyMount>
+  );
+}
+
+/**
  * The continuous examples page: the index intro, then every example page as a
  * block. The scroll spy keeps the address bar on the block in view; each
- * block's body mounts only near the viewport.
+ * block's body streams in its own Suspense boundary and mounts only near the
+ * viewport.
  */
 export function ExamplesStack({
   index,
@@ -80,7 +105,6 @@ export function ExamplesStack({
     <ExamplesScrollSpy introUrl={index.url}>
       <div data-spy-url={index.url}>{intro}</div>
       {entries.map(({ page, group, groupStart }) => {
-        const MDX = page.data.body;
         const slug = page.slugs.slice(1).join('/');
         return (
           <div key={page.url}>
@@ -101,13 +125,9 @@ export function ExamplesStack({
                 </p>
               )}
               <ExamplePageProvider url={page.url}>
-                <LazyMount>
-                  <MDX
-                    components={getMDXComponents({
-                      a: createRelativeLink(source, page),
-                    })}
-                  />
-                </LazyMount>
+                <Suspense fallback={<ExampleSkeleton />}>
+                  <ExampleBlockBody page={page} />
+                </Suspense>
               </ExamplePageProvider>
             </section>
           </div>
