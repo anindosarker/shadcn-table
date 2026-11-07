@@ -110,11 +110,52 @@ export const stFilterOptions = (
     option: 'notEmpty',
     symbol: '!∅',
   },
+  {
+    divider: false,
+    label: localization.filterArrIncludesSome,
+    option: 'arrIncludesSome',
+    symbol: '∪',
+  },
+  {
+    divider: false,
+    label: localization.filterArrIncludesAll,
+    option: 'arrIncludesAll',
+    symbol: '∩',
+  },
+  {
+    divider: false,
+    label: localization.filterArrIncludesNone,
+    option: 'arrIncludesNone',
+    symbol: '∉',
+  },
 ];
+
+/** The modes `stFilterOptions` offers a `multi-select` column only. */
+export const ST_MULTI_SELECT_FILTER_MODES: readonly string[] = [
+  'arrIncludesSome',
+  'arrIncludesAll',
+  'arrIncludesNone',
+];
+
+/**
+ * True when the mode belongs in the column's list: the array modes for a
+ * `multi-select` column only.
+ */
+export const isFilterModeForVariant = (
+  option: string,
+  filterVariant: string | undefined,
+) =>
+  filterVariant === 'multi-select' ||
+  !ST_MULTI_SELECT_FILTER_MODES.includes(option);
 
 const rangeModes = ['between', 'betweenInclusive', 'inNumberRange'];
 const emptyModes = ['empty', 'notEmpty'];
-const arrModes = ['arrIncludesSome', 'arrIncludesAll', 'arrIncludes'];
+const arrModes = [
+  'arrIncludesSome',
+  'arrIncludesAll',
+  'arrIncludes',
+  'arrIncludesNone',
+];
 const rangeVariants = ['range-slider', 'date-range', 'datetime-range', 'range'];
 
 export interface ST_FilterOptionMenuProps<TData extends ST_RowData>
@@ -180,8 +221,12 @@ export const ST_FilterOptionMenu = <TData extends ST_RowData>({
     () =>
       stFilterOptions(localization).filter((filterOption) =>
         columnDef
-          ? allowedColumnFilterOptions === undefined ||
-            allowedColumnFilterOptions?.includes(filterOption.option)
+          ? isFilterModeForVariant(
+              filterOption.option,
+              columnDef.filterVariant,
+            ) &&
+            (allowedColumnFilterOptions === undefined ||
+              allowedColumnFilterOptions?.includes(filterOption.option))
           : (!globalFilterModeOptions ||
               globalFilterModeOptions.includes(filterOption.option)) &&
             ['contains', 'fuzzy', 'startsWith'].includes(filterOption.option),

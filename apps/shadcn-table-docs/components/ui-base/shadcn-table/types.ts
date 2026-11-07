@@ -371,6 +371,7 @@ export interface ST_Localization {
   filter?: string;
   filterArrIncludes: string;
   filterArrIncludesAll: string;
+  filterArrIncludesNone: string;
   filterArrIncludesSome: string;
   filterBetween: string;
   filterBetweenInclusive: string;
