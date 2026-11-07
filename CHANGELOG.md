@@ -27,6 +27,10 @@ publishes the section as the GitHub release notes.
 
 - A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
 
+#### Spec 05 Release approval
+
+- The version bump waits for the owner's approval (D3): the release PR's `prepare-release` job runs in the GitHub Environment `release`, whose one required reviewer is the owner, so Prepare Release shows "Waiting for review" until the owner approves the deployment; a rejected review fails the job and pushes nothing. Every other `pr.yml` job stays automatic.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
