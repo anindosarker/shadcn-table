@@ -161,12 +161,14 @@ jobs:
   # `chore: version <v>` to dev with RELEASE_BOT_TOKEN, a token whose push
   # triggers this workflow again (a push with github.token would not). On
   # that rerun Validate PR passes the bumped head and this job stops at
-  # "already bumped". A red or skipped need skips it.
+  # "already bumped". A red or skipped need skips it. The job waits for the
+  # owner's Approve on the `release` environment before it runs (D3).
   prepare-release:
     name: Prepare Release
     needs: [pr-summary, typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-pr]
     if: ${{ github.event_name == 'pull_request' && github.base_ref == 'master' && github.head_ref == 'dev' && !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
+    environment: release
     permissions:
       contents: read
       pull-requests: read
