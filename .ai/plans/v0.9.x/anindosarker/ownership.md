@@ -1,0 +1,11 @@
+# v0.9.x ownership
+
+Generated: 2026-11-08 by ownership.py
+
+| Milestone | Epic | Depends on | Files |
+|---|---|---|---|
+| Filtering | 01 | none | `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_TableOptions.ts`, `.../components/inputs/ST_FilterTextField.tsx`, `.../components/menus/ST_FilterOptionMenu.tsx`, `.../shared/utils/filterSummary.utils.ts`, `.../shared/fns/filterFns.ts`, `.../types.ts`, `.../shared/locales/*.ts`, `packages/shadcn-table/stories/features/Filtering.stories.tsx`, `packages/shadcn-table/stories/features/FilterChips.stories.tsx`, `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx`, `apps/shadcn-table-docs/content/docs/guides/filter-chips.mdx`, `apps/shadcn-table-docs/content/docs/guides/production-ready-tables.mdx`, `apps/shadcn-table-docs/content/docs/examples/subheader-filters.mdx`, `apps/shadcn-table-docs/lib/prop-tables/tableOptions.ts`, `apps/shadcn-table-docs/lib/prop-tables/columnOptions.ts`, `apps/shadcn-table-docs/examples/<base>/**/*.tsx`, `test/docs-e2e/lib/examples.mjs` |
+| Pagination | 02 | Filtering | `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx`, `.../features/stConfigFeature.ts`, `packages/shadcn-table/stories/features/Pagination.stories.tsx`, `packages/shadcn-table/stories/features/TableProvider.stories.tsx`, `packages/shadcn-table/stories/features/NestedTable.stories.tsx`, `packages/shadcn-table/stories/features/RowPinningOnSelect.stories.tsx`, `apps/shadcn-table-docs/content/docs/guides/pagination.mdx`, `apps/shadcn-table-docs/content/docs/guides/best-practices.mdx`, `apps/shadcn-table-docs/lib/prop-tables/tableOptions.ts`, `apps/shadcn-table-docs/examples/<base>/alternate-pagination/TS.tsx`, `test/docs-e2e/lib/guides.mjs` |
+| Resize animation | 03 | none | `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/shared/utils/column.utils.ts`, `.../components/head/ST_TableHeadCellResizeHandle.tsx`, `.../components/menus/ST_ColumnActionMenu.tsx`, `.../components/head/ST_TableHeadCell.tsx`, `.../components/body/ST_TableBodyCell.tsx`, `packages/shadcn-table/stories/features/ColumnResizing.stories.tsx` |
+
+Critical path: Resize animation
