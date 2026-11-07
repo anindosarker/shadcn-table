@@ -38,7 +38,6 @@ const Example = () => {
       data={data}
       defaultColumn={{ size: 250 }}
       columnResizeDirection="rtl"
-      enableColumnFilterModes
       enableColumnOrdering
       enableColumnResizing
       enableEditing

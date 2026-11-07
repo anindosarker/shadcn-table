@@ -74,7 +74,6 @@ export const UsersTable = () => {
     manualPagination: true, //turn off client-side pagination
     manualSorting: true, //turn off client-side sorting
     manualFiltering: true, //turn off client-side filtering
-    enableColumnFilterModes: true,
     //only the operators the server understands
     columnFilterModeOptions: [
       'contains',
