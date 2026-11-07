@@ -220,11 +220,31 @@ const arrIncludesSomeOrValue = <
 arrIncludesSomeOrValue.autoRemove = (val: unknown) =>
   !(val as ReadonlyArray<unknown> | undefined)?.length;
 
+// The `multi-select` "Excludes" mode: no overlap for an array row value, no
+// membership for a scalar one, and every row for an empty selection.
+const arrIncludesNone = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  id: string,
+  filterValues: ReadonlyArray<unknown>,
+): boolean => {
+  if (!filterValues?.length) return true;
+  const value = row.getValue<unknown>(id);
+  return Array.isArray(value)
+    ? !filterValues.some((filterValue) => value.includes(filterValue))
+    : !filterValues.includes(value);
+};
+
+arrIncludesNone.autoRemove = arrIncludesSomeOrValue.autoRemove;
+
 export const ST_FilterFns = {
   arrIncludes: filterFn_arrIncludes,
   arrIncludesAll: filterFn_arrIncludesAll,
   arrHas: filterFn_arrHas,
   arrIncludesSome: arrIncludesSomeOrValue,
+  arrIncludesNone,
   between,
   betweenInclusive,
   empty,
