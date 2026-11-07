@@ -1,16 +1,20 @@
 # 05: Release approval, tracker
 
-Status: running
+Status: done
 Branch `v0.9/release-approval`, worktree 04
 Checks:
 - Check: environment reviewers, `gh api repos/anindosarker/shadcn-table/environments/release --jq '[.protection_rules[] | select(.type == "required_reviewers") | .reviewers[].reviewer.login]'` at 546bcabd: pass (`["anindosarker"]`)
-- Check: environment line, `grep -c '^    environment: release$' .github/workflows/pr.yml` at task 2 commit: pass (`1`, line 171, inside `prepare-release`)
-- Check: act list, `act pull_request -l` at task 2 commit: pass (lists `prepare-release`, Prepare Release)
-- Check: validate-repo, `pnpm test validate-repo` at task 2 commit: pass
+- Check: environment line, `grep -c '^    environment: release$' .github/workflows/pr.yml` at d65a066d: pass (`1`, line 171, inside `prepare-release`)
+- Check: act list, `act pull_request -l` at d65a066d: pass (lists `prepare-release`, Prepare Release)
+- Check: validate-repo, `pnpm test validate-repo` at d65a066d: pass
+- Check: format, `pnpm format` at d65a066d plus the changelog block: pass (no file changed)
+- Check: lint, `pnpm test lint` at d65a066d plus the changelog block: pass (0 errors, 9 warnings outside this milestone)
+- Check: validate-repo, `pnpm test validate-repo` at d65a066d plus the changelog block: pass
+- Check: Acceptance, `gh api .../environments/release --jq ...` prints `["anindosarker"]`, grep prints `1`, validate-repo green, at d65a066d plus the changelog block: pass
 
-- Task 1 Create the `release` environment: done
-- Task 2 Gate `prepare-release`: done
-- Task 3 Cleanup: planned
+- Task 1 Create the `release` environment: done, aeca4d55
+- Task 2 Gate `prepare-release`: done, d65a066d
+- Task 3 Cleanup: done, the commit adding the `#### Spec 05 Release approval` changelog block
 
 ## Attention
 
