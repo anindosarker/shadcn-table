@@ -1,9 +1,9 @@
 # 03: Resize animation, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/resize-animation`, worktree 03
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Red (P11): `ST_BASE=radix vitest run stories/features/ColumnResizing.stories.tsx` at 058b649b + play: fail, ResetSizeAnimates `expected false to be true` on the first `data-size-resetting` assertion after the double click; 24 other tests pass
 
 - Task 1 Reproduce (play red on the shipped code): planned
 - Task 2 Library (reset helper, transition classes, three bases): planned
@@ -11,8 +11,5 @@ Checks:
 
 ## Attention
 
-- [Staging for the ATTENTION file, one bullet per item, self-explanatory first line.]
 
 ## Notes
-
-- [Optional: only what a later task, a resume or the owner would otherwise rediscover.]
