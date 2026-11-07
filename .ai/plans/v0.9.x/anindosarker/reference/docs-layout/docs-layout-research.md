@@ -12,7 +12,7 @@ Facts gathered on 2026-11-05 for the docs restructuring items (nav order, exampl
 - Sidebar root order: getting-started, api, examples, guides (`content/docs/meta.json:3-8`). API Reference is second, Examples third, Guides fourth.
   - Getting Started (`getting-started/meta.json:4`): introduction, install, usage, agents. No index page; `/docs` and `/docs/getting-started` redirect to `/introduction` (`next.config.mjs:66-77`).
   - API Reference (`api/meta.json`): 3 subgroups, 9 pages, landing `api/index.mdx`.
-  - Examples, titled "Quick Examples" (`examples/meta.json:2`): 5 top pages plus 8 subgroups, 43 pages (:4-55), landing `examples/index.mdx`.
+  - Examples, titled "Quick Examples" (`examples/meta.json:2`): 5 top pages plus 8 subgroups, 42 pages (:4-55), landing `examples/index.mdx`.
   - Guides (`guides/meta.json`): 10 subgroups, 46 pages, landing `guides/index.mdx`.
 - Second, hand-kept route list `lib/routes.ts:11`, examples block at :107, external "Extra Storybook Examples" entry at :392. Feeds `TableOfContentsList` on `examples/index.mdx:10-12`.
 
