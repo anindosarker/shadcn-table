@@ -18,6 +18,13 @@ Checks:
 - `pnpm test typecheck --base radix` at 0cdfa958: pass
 - `pnpm test lint` at 0cdfa958: pass, 9 warnings
 - `pnpm test storybook-tests --base radix` at 0cdfa958: 613 passed, 1 failed (ClickToCopy "Click Copies Value", clipboard toast under load, not filter code); `ST_BASE=radix vitest run stories/features/ClickToCopy.stories.tsx` twice: pass, 5 of 5
+- Verifier at e8158899 (diff from 0cdfa958 touches only .ai/; checks recorded at 0cdfa958 not rerun: typecheck radix, lint, storybook-tests radix, validate-repo):
+- `pnpm test typecheck --base base` at e8158899: pass, tsc clean
+- `pnpm test typecheck --base aria` at e8158899: pass, tsc clean
+- `pnpm test storybook-tests --base base` at e8158899: pass, 79 files, 614 of 614
+- `pnpm test storybook-tests --base aria` at e8158899: pass, 79 files, 614 of 614
+- `pnpm test docs-e2e --base base` at e8158899 (components/ui-<base> regenerated locally with `pnpm -w registry:build` and `lib:install <base>`, then restored, not committed): pass, getting-started 181, api 109, guides 689, examples 936, 0 failed
+- Acceptance rerun at e8158899: `grep -rn "enableColumnFilterModes: true" apps/shadcn-table-docs/examples apps/shadcn-table-docs/content` empty, `grep -rn "enableColumnFilterModes$" apps/shadcn-table-docs/examples` empty, `pnpm test validate-repo` pass (bases identical, tailwind valid, registry valid, 27 unit tests); the five 1.6.5 plays green in base and aria (full suites above) and radix (856f5ed6, 0cdfa958)
 
 - Task 1 Reproduce (plays red on the shipped code): done, 6748d48c
 - Task 2 Library (default, multi-select modes, select clear button, three bases): done, 856f5ed6
