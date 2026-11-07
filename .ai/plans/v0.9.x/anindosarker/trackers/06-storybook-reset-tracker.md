@@ -13,6 +13,7 @@ Checks:
 - Check: format, `pnpm exec prettier --check CHANGELOG.md` at ff2aa8d8: pass
 - Check: `pnpm test lint` at ff2aa8d8: pass, `9 warnings` (docs app, untouched files; the package has 0)
 - Check: `pnpm test validate-repo` at ff2aa8d8: pass, 27 unit tests
+- Check: verifier, Acceptance rerun, `pnpm test storybook-static --base base` at 180bc8dc: pass, `reset pass` (footer `1-10 of 551`, filter empty); other 2.2 checks not rerun, recorded at 061982af and ff2aa8d8, diff to HEAD touches only .ai/ and CHANGELOG.md
 
 - Task 1 Reproduce (`storybook-static` red on the shipped code): done at dbaf1414
 - Task 2 Apply the D8 diff: done at 061982af
