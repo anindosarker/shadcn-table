@@ -307,6 +307,7 @@ export const ST_TableHeadCell = <TData extends ST_RowData>({
               isLeaf &&
                 !isColumnPinned &&
                 '[table[data-flip-sliding]_&]:transition-[translate] [table[data-flip-sliding]_&]:duration-200 [table[data-flip-sliding]_&]:ease-out [table[data-flip-sliding]_&]:will-change-[translate]',
+              '[table[data-size-resetting]_&]:transition-[width,min-width] [table[data-size-resetting]_&]:duration-200 [table[data-size-resetting]_&]:ease-out motion-reduce:[table[data-size-resetting]_&]:transition-none',
               gridLineClassName(gridLines, isLastColumn),
               'border-b',
             )}
