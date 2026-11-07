@@ -36,73 +36,6 @@ export const routes: Array<RouteItem> = [
     ],
   },
   {
-    label: 'API Reference',
-    href: '/docs/api',
-    items: [
-      {
-        label: 'Props and Options',
-        href: '/docs/api/table-options',
-        secondaryItems: [
-          {
-            href: '/docs/api/table-options',
-            label: 'Table Options (Props)',
-            keywords: ['props'],
-          },
-          {
-            href: '/docs/api/column-options',
-            label: 'Column Options',
-          },
-          {
-            href: '/docs/api/state-options',
-            label: 'State Options',
-          },
-        ],
-      },
-      {
-        label: 'Instance APIs',
-        href: '/docs/api/table-instance-apis',
-        secondaryItems: [
-          {
-            href: '/docs/api/table-instance-apis',
-            label: 'Table Instance APIs',
-            keywords: ['methods', 'apis'],
-          },
-          {
-            href: '/docs/api/column-instance-apis',
-            label: 'Column Instance APIs',
-            keywords: ['methods', 'apis'],
-          },
-          {
-            href: '/docs/api/row-instance-apis',
-            label: 'Row Instance APIs',
-            keywords: ['methods', 'apis'],
-          },
-          {
-            href: '/docs/api/cell-instance-apis',
-            label: 'Cell Instance APIs',
-            keywords: ['methods', 'apis'],
-          },
-        ],
-      },
-      {
-        label: 'Components and Hooks',
-        href: '/docs/api/st-components',
-        secondaryItems: [
-          {
-            href: '/docs/api/st-components',
-            label: 'ST Components',
-            keywords: ['internal'],
-          },
-          {
-            href: '/docs/api/st-hooks',
-            label: 'ST Hooks',
-            keywords: ['internal'],
-          },
-        ],
-      },
-    ],
-  },
-  {
     label: 'Quick Examples',
     href: '/docs/examples',
     items: [
@@ -649,6 +582,73 @@ export const routes: Array<RouteItem> = [
           {
             href: '/docs/guides/click-to-copy',
             label: 'Click to Copy',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'API Reference',
+    href: '/docs/api',
+    items: [
+      {
+        label: 'Props and Options',
+        href: '/docs/api/table-options',
+        secondaryItems: [
+          {
+            href: '/docs/api/table-options',
+            label: 'Table Options (Props)',
+            keywords: ['props'],
+          },
+          {
+            href: '/docs/api/column-options',
+            label: 'Column Options',
+          },
+          {
+            href: '/docs/api/state-options',
+            label: 'State Options',
+          },
+        ],
+      },
+      {
+        label: 'Instance APIs',
+        href: '/docs/api/table-instance-apis',
+        secondaryItems: [
+          {
+            href: '/docs/api/table-instance-apis',
+            label: 'Table Instance APIs',
+            keywords: ['methods', 'apis'],
+          },
+          {
+            href: '/docs/api/column-instance-apis',
+            label: 'Column Instance APIs',
+            keywords: ['methods', 'apis'],
+          },
+          {
+            href: '/docs/api/row-instance-apis',
+            label: 'Row Instance APIs',
+            keywords: ['methods', 'apis'],
+          },
+          {
+            href: '/docs/api/cell-instance-apis',
+            label: 'Cell Instance APIs',
+            keywords: ['methods', 'apis'],
+          },
+        ],
+      },
+      {
+        label: 'Components and Hooks',
+        href: '/docs/api/st-components',
+        secondaryItems: [
+          {
+            href: '/docs/api/st-components',
+            label: 'ST Components',
+            keywords: ['internal'],
+          },
+          {
+            href: '/docs/api/st-hooks',
+            label: 'ST Hooks',
+            keywords: ['internal'],
           },
         ],
       },

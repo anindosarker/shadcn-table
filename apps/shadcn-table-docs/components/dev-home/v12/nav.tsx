@@ -10,9 +10,9 @@ import { trackOutboundClicked } from '@/lib/analytics';
 
 const LINKS = [
   { label: 'Docs', href: '/docs/getting-started/introduction' },
-  { label: 'API', href: '/docs/api' },
   { label: 'Examples', href: '/docs/examples' },
   { label: 'Guides', href: '/docs/guides' },
+  { label: 'API', href: '/docs/api' },
 ] as const;
 
 /**
