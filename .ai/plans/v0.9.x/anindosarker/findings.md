@@ -25,3 +25,7 @@
 ### F6 The deployed Storybook runs the plays and shows their end state
 
 - Owner, 2026-11-08, `https://storybook.shadcn-table.com/base/?path=/story/features-pagination-examples--pagination-enabled-default-more-data`: the story opens with the global filter already set to "42459 Eda Springs" and one row left, because its play function runs on load in the static build too. A visitor takes the filtered end state for the example (D59 requires a play per story, so most stories end in some changed state). The static builds under `/base/`, `/radix/` and `/aria/` should render the stories without running the plays (the plays keep running in vitest and in local dev), or the play should restore the initial state; the mechanism is decided with the Storybook items.
+
+### F7 "Default" names the compact pagination across stories and docs
+
+- Owner, 2026-11-08, `Features/Pagination Examples/Pagination Enabled Default More Data` (Base build): the story is titled "Default" and shows the compact footer (`Rows per page`, `1-10 of 551`, four arrows), which is not the default since v0.8.x D13 (`pages`). The same wording runs through the pagination stories (`Pagination Enabled Default`, `... Big Data`, `... No Rows Per Page` and more), the guide, the API page and the examples. Fixing it is bigger than F5: one audit of every story title, docs page and example that says "default" for `paginationDisplayMode: 'default'`, with the rename decided separately from item 6 (the range span). Decided in its own item.
