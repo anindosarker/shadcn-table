@@ -26,7 +26,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 ## P5 Checks on a shared machine
 
-- The test runner is `pnpm test <name> [--base base|radix|aria] [--scenario <s>] [--ci]` from the repo root (`test/run.mjs`); `pnpm test --list` names the tests, `--all` runs every one, `--changed` runs those touched since `origin/claude/review`; runs are never parallel and their records go to `test/.out/`. `validate-pr` and `validate-production` run only in CI.
+- The test runner is `pnpm test` followed by the test name, with `--base base|radix|aria`, `--scenario` and `--ci` as flags, from the repo root (`test/run.mjs`); `pnpm test --list` names the tests, `--all` runs every one, `--changed` runs those touched since `origin/claude/review`; runs are never parallel and their records go to `test/.out/`. `validate-pr` and `validate-production` run only in CI.
 - Several agents share this machine. Run as much in parallel as fits, but never start work that would push CPU above 90 percent or memory pressure out of the green zone; check with `top -l 1 | head -5` and `memory_pressure | tail -1` before a long check.
 - The dev registry on port 5310 (`pnpm registry:dev`) is shared: reuse it, start it when missing, never kill it.
 - Known flakes, rerun once before calling a check failed: `Profiled Thousand Rows` (vitest browser mode); `PanelCollapse` "Progress And Banner Collapse" (aria, v0.8.x F60); docs E2E "pauses when scrolled away mid-step" (v0.8.x F61).
