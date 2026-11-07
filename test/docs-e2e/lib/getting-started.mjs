@@ -6,7 +6,7 @@
  * the site-wide base), the landing (hero, install command, live demo rows,
  * feature and install headings, guide links), then holds the page through the
  * full live demo loop on Base UI, Radix UI and React Aria (demoLoop in
- * helpers.mjs).
+ * helpers.mjs), and ends with the theme customizer (themeCustomizer).
  */
 import { BASE_LABELS, BASES } from '../../../tools/registry/bases.mjs';
 import {
@@ -167,6 +167,180 @@ async function commandBarBase({ page, check, base }) {
   }
   await pick(label0);
   await expectBase(`${base} again`, base);
+}
+
+/**
+ * The `Default` color preset's primary (apps/shadcn-table-docs/lib/design-system/color-presets.ts),
+ * the Emerald look a fresh visitor sees.
+ */
+const DEFAULT_PRIMARY = {
+  light: 'oklch(0.596 0.145 163.225)',
+  dark: 'oklch(0.765 0.177 163.223)',
+};
+const DESIGN_SYSTEM_KEY = 'st-design-system';
+
+/**
+ * The theme customizer (components/theme-customizer.tsx, D2): the default
+ * tokens come from the design system style element with empty storage and
+ * with a choice older than 2 days; the palette button opens the panel; the
+ * `r`, `p` and `Shift+R` shortcuts shuffle, undo and reset, and do nothing
+ * while the search dialog is open; a Colors tab edit changes the computed
+ * variable. Leaves the page on the default look with empty storage.
+ */
+async function themeCustomizer({ page, check }) {
+  const primary = () =>
+    page.evaluate(() =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--primary')
+        .trim(),
+    );
+  /** `--primary` in light and dark, the `.dark` class restored after. */
+  const bothModes = () =>
+    page.evaluate(() => {
+      const root = document.documentElement;
+      const wasDark = root.classList.contains('dark');
+      const read = () =>
+        getComputedStyle(root).getPropertyValue('--primary').trim();
+      root.classList.remove('dark');
+      const light = read();
+      root.classList.add('dark');
+      const dark = read();
+      root.classList.toggle('dark', wasDark);
+      return { light, dark };
+    });
+  const reload = async () => {
+    await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+    await page.waitForTimeout(1000);
+  };
+  const stored = () =>
+    page.evaluate((key) => localStorage.getItem(key), DESIGN_SYSTEM_KEY);
+
+  await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await reload();
+  const fresh = await bothModes();
+  const styleElement = await page.evaluate(
+    () => document.getElementById('design-system-theme-vars') !== null,
+  );
+  check(
+    'theme: default look with empty storage',
+    styleElement &&
+      fresh.light === DEFAULT_PRIMARY.light &&
+      fresh.dark === DEFAULT_PRIMARY.dark,
+    `style=${styleElement} ${JSON.stringify(fresh)}`,
+  );
+
+  await page.evaluate((key) => {
+    const css =
+      ':root[data-design-system] { --primary: oklch(0.5 0.2 20); }\n' +
+      ':root[data-design-system].dark { --primary: oklch(0.5 0.2 20); }\n';
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        config: { style: 'nova', colorPreset: 'mono' },
+        css,
+        savedAt: Date.now() - 3 * 24 * 60 * 60 * 1000,
+      }),
+    );
+  }, DESIGN_SYSTEM_KEY);
+  await reload();
+  const stale = await bothModes();
+  const left = await stored();
+  check(
+    'theme: a stale choice is ignored and removed',
+    stale.light === DEFAULT_PRIMARY.light &&
+      stale.dark === DEFAULT_PRIMARY.dark &&
+      left === null,
+    `${JSON.stringify(stale)} stored=${left !== null}`,
+  );
+
+  const trigger = page
+    .locator('button[aria-label="Customize theme"]:visible')
+    .first();
+  const panel = page.getByRole('dialog');
+  if (await trigger.count()) {
+    await trigger.click();
+    await panel.waitFor({ timeout: 5000 }).catch(() => {});
+  }
+  const tabs = await panel.getByRole('tab').allTextContents();
+  const heading = await panel
+    .getByRole('heading', { name: 'Theme', exact: true })
+    .count();
+  check(
+    'theme: the palette button opens the panel',
+    heading === 1 &&
+      ['Colors', 'Typography', 'Other'].every((t) => tabs.includes(t)),
+    `heading=${heading} tabs=${tabs.join(',')}`,
+  );
+  await page.keyboard.press('Escape');
+  await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await page.evaluate(() =>
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement.blur()
+      : undefined,
+  );
+
+  const press = async (key) => {
+    await page.keyboard.press(key);
+    await page.waitForTimeout(200);
+  };
+  const before = await primary();
+  await press('r');
+  const shuffled = await primary();
+  check(
+    'theme: r changes --primary',
+    shuffled !== before,
+    `${before} -> ${shuffled}`,
+  );
+  await press('p');
+  const undone = await primary();
+  check(
+    'theme: p restores it',
+    shuffled !== before && undone === before,
+    `${shuffled} -> ${undone}`,
+  );
+  await press('r');
+  const again = await primary();
+  await press('Shift+R');
+  const reset = await primary();
+  check(
+    'theme: Shift+R returns to the default',
+    again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
+    `${again} -> ${reset}`,
+  );
+  await page.keyboard.press('ControlOrMeta+k');
+  const search = page.getByRole('dialog');
+  await search.waitFor({ timeout: 5000 }).catch(() => {});
+  const searchOpen = (await search.count()) > 0;
+  await press('r');
+  const duringSearch = await primary();
+  check(
+    'theme: r does nothing while the search dialog is open',
+    searchOpen && duringSearch === reset,
+    `search=${searchOpen} ${reset} -> ${duringSearch}`,
+  );
+  await page.keyboard.press('Escape');
+  await search.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+
+  const edited = 'oklch(0.6 0.2 30)';
+  let afterEdit = '';
+  if (await trigger.count()) {
+    await trigger.click();
+    await panel.waitFor({ timeout: 5000 }).catch(() => {});
+    const input = panel.getByLabel('primary', { exact: true });
+    if (await input.count()) {
+      await input.fill(edited);
+      await page.waitForTimeout(200);
+      afterEdit = await primary();
+    }
+    await page.keyboard.press('Escape');
+    await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  }
+  check(
+    'theme: a Colors tab edit changes the computed variable',
+    afterEdit === edited,
+    afterEdit,
+  );
+  await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
 }
 
 const checks = {
@@ -653,6 +827,7 @@ const checks = {
       );
     }
     await demoLoop({ page, check, base });
+    await themeCustomizer({ page, check });
   },
   '/docs/getting-started/usage': async ({ page, check }) => {
     const steps = page.locator('article .fd-step');
