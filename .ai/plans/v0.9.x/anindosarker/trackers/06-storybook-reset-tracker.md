@@ -1,6 +1,6 @@
 # 06: Storybook reset, tracker
 
-Status: running
+Status: done
 Branch `v0.9/storybook-reset`, worktree 05
 Checks:
 - Check: list, `pnpm test --list` at dbaf1414 (shipped `.storybook/`): pass, names `storybook-static (base, radix, aria)`
@@ -10,10 +10,13 @@ Checks:
 - Check: tsc, `pnpm --filter shadcn-table tsc:radix` at 061982af: pass
 - Check: Acceptance, `pnpm test storybook-static --base base` at 061982af: pass, `reset pass`
 - Check: `pnpm test storybook-tests --base base` at 061982af: pass, 617 passed
+- Check: format, `pnpm exec prettier --check CHANGELOG.md` at ff2aa8d8: pass
+- Check: `pnpm test lint` at ff2aa8d8: pass, `9 warnings` (docs app, untouched files; the package has 0)
+- Check: `pnpm test validate-repo` at ff2aa8d8: pass, 27 unit tests
 
 - Task 1 Reproduce (`storybook-static` red on the shipped code): done at dbaf1414
 - Task 2 Apply the D8 diff: done at 061982af
-- Task 3 Cleanup: planned
+- Task 3 Cleanup: done at ff2aa8d8
 
 ## Attention
 
