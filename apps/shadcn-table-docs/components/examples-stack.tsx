@@ -1,15 +1,14 @@
 import { Suspense, type ReactNode } from 'react';
-import { connection } from 'next/server';
 import type * as PageTree from 'fumadocs-core/page-tree';
-import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { source } from '@/lib/source';
-import { getMDXComponents } from '@/components/mdx';
-import { ExamplePageProvider } from '@/components/example-page-context';
+import {
+  ExampleBlockBody,
+  type DocsPage,
+} from '@/components/example-block-body';
 import { ExamplesScrollSpy } from '@/components/examples-scroll-spy';
+import { LazyBlock } from '@/components/lazy-block';
 import { LazyMount } from '@/components/lazy-mount';
 import { ExampleSkeleton } from '@/components/example-skeleton';
-
-type DocsPage = NonNullable<ReturnType<typeof source.getPage>>;
 
 interface StackEntry {
   page: DocsPage;
@@ -64,33 +63,16 @@ function examplePages(indexUrl: string): StackEntry[] {
   return out;
 }
 
-/**
- * One block's body: the example page's MDX with its playground. Awaiting
- * `connection()` renders the stack per request, so the shell (intro,
- * subgroup headings, titles, descriptions, skeletons) streams first and each
- * body follows inside its own Suspense boundary; the playground's
- * ExampleSnippet reads its example sources while the block suspends.
- * LazyMount still defers the client mount of the live table.
- */
-async function ExampleBlockBody({ page }: { page: DocsPage }) {
-  await connection();
-  const MDX = page.data.body;
-  return (
-    <LazyMount>
-      <MDX
-        components={getMDXComponents({
-          a: createRelativeLink(source, page),
-        })}
-      />
-    </LazyMount>
-  );
-}
+/** Blocks whose body renders on the server; the rest load on scroll. */
+const EAGER_BLOCKS = 3;
 
 /**
  * The continuous examples page: the index intro, then every example page as a
- * block. The scroll spy keeps the address bar on the block in view; each
- * block's body streams in its own Suspense boundary and mounts only near the
- * viewport.
+ * block. The server renders every title, description and a skeleton per
+ * block, but only the first EAGER_BLOCKS bodies (each in its own Suspense
+ * boundary, LazyMount deferring the live table); every other body loads
+ * through LazyBlock when it nears the viewport. The scroll spy keeps the
+ * address bar on the block in view.
  */
 export function ExamplesStack({
   index,
@@ -104,7 +86,7 @@ export function ExamplesStack({
   return (
     <ExamplesScrollSpy introUrl={index.url}>
       <div data-spy-url={index.url}>{intro}</div>
-      {entries.map(({ page, group, groupStart }) => {
+      {entries.map(({ page, group, groupStart }, i) => {
         const slug = page.slugs.slice(1).join('/');
         return (
           <div key={page.url}>
@@ -124,11 +106,15 @@ export function ExamplesStack({
                   {page.data.description}
                 </p>
               )}
-              <ExamplePageProvider url={page.url}>
+              {i < EAGER_BLOCKS ? (
                 <Suspense fallback={<ExampleSkeleton />}>
-                  <ExampleBlockBody page={page} />
+                  <LazyMount>
+                    <ExampleBlockBody page={page} />
+                  </LazyMount>
                 </Suspense>
-              </ExamplePageProvider>
+              ) : (
+                <LazyBlock slug={slug} url={page.url} title={page.data.title} />
+              )}
             </section>
           </div>
         );
