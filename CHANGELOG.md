@@ -27,6 +27,12 @@ publishes the section as the GitHub release notes.
 
 - A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
 
+### Fixed
+
+#### Spec 06 Storybook reset
+
+- The deployed Storybook resets each story after its play (D8, F6): the static builds run the play with the Interactions panel logging every step, then remount the story in its initial state; Rerun runs the play and resets again. `storybook dev`, vitest and a failing play keep the end state. `pnpm test storybook-static` checks it on a local static build or, with `--url`, on the deployed site.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
