@@ -1,5 +1,5 @@
 # 02: Pages footer row range, compact mode
-- Batch: B1
+- Sprint: S1
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
