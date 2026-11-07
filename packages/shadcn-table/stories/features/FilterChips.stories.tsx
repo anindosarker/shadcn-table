@@ -436,3 +436,134 @@ export const ChipEditorKeepsWidth = {
     });
   },
 };
+
+/** The open filter mode menu's radio items, once it holds any. */
+const modeMenuItems = () =>
+  waitFor(() => {
+    const items = within(document.body).getAllByRole('menuitemradio');
+    expect(items.length).toBeGreaterThan(0);
+    return items;
+  });
+
+/** The columns with no filter mode flag or mode list. */
+const plainColumns: ST_ColumnDef<Task>[] = columns.map((column) => ({
+  ...column,
+  columnFilterModeOptions: undefined,
+  enableColumnFilterModes: undefined,
+  filterFn: undefined,
+}));
+
+// D4: a chips table without `enableColumnFilterModes` shows the mode picker
+// on the chip editor's top line, with all 14 modes.
+export const ModePickerByDefaultChips = {
+  render: () => <ShadcnTable columns={plainColumns} data={data} {...options} />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Name' }));
+    await body.findByRole('textbox', { name: 'Filter by Name' });
+    await userEvent.click(
+      await body.findByRole('button', { name: 'Change filter mode' }),
+    );
+    const items = await modeMenuItems();
+    expect(items).toHaveLength(14);
+    expect(items[0].textContent).toContain('Fuzzy');
+  },
+};
+
+// D4: a multi-select column offers Includes any, Includes all and Excludes
+// after its 14 modes; Excludes drops the rows holding a picked value.
+export const MultiSelectArrayModes = {
+  render: () => (
+    <ShadcnTable
+      columns={plainColumns.map((column) =>
+        column.accessorKey === 'status'
+          ? {
+              ...column,
+              filterSelectOptions: ['Done', 'In Progress', 'Not Started'],
+              filterVariant: 'multi-select',
+            }
+          : column,
+      )}
+      data={data}
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+    await canvas.findByText('Plan audit log');
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Filter' }));
+    await userEvent.click(await body.findByRole('option', { name: 'Status' }));
+    const input = await body.findByRole('combobox', {
+      name: 'Filter by Status',
+    });
+    await userEvent.click(
+      await body.findByRole('button', { name: 'Change filter mode' }),
+    );
+    const items = await modeMenuItems();
+    expect(items).toHaveLength(17);
+    expect(items.slice(14).map((item) => item.textContent?.trim())).toEqual([
+      expect.stringContaining('Includes any'),
+      expect.stringContaining('Includes all'),
+      expect.stringContaining('Excludes'),
+    ]);
+    // The default fn stays checked.
+    expect(items[14]).toHaveAttribute('aria-checked', 'true');
+
+    await userEvent.click(items[16]);
+    await waitFor(() => expect(body.queryByRole('menu')).toBeNull());
+    await userEvent.click(input);
+    // The aria combobox opens from the keyboard, not on a click.
+    if (!body.queryByRole('listbox')) await userEvent.keyboard('{ArrowDown}');
+    await userEvent.click(await body.findByRole('option', { name: /^Done/ }));
+    await waitFor(() => expect(bodyRows(canvasElement)).toHaveLength(2));
+    expect(canvas.queryByText('Build search index')).toBeNull();
+    expect(canvas.queryByText('Review billing page')).toBeNull();
+    expect(canvas.getByText('Ship export job')).toBeInTheDocument();
+  },
+};
+
+// D1, F1: a select filter with a value shows its chevron left of the clear
+// button, not under it.
+export const SelectClearBesideChevron = {
+  render: () => (
+    <ShadcnTable
+      columns={plainColumns.map((column) =>
+        column.accessorKey === 'status'
+          ? {
+              ...column,
+              filterSelectOptions: ['Done', 'In Progress', 'Not Started'],
+              filterVariant: 'select',
+            }
+          : column,
+      )}
+      data={data}
+      initialState={{ columnFilters: [{ id: 'status', value: 'Done' }] }}
+      {...options}
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const body = within(document.body);
+    await waitFor(() => expect(chipOf(canvasElement, 'status')).not.toBeNull());
+    await userEvent.click(chipOf(canvasElement, 'status')!);
+    const clear = await body.findByRole('button', { name: 'Clear filter' });
+    const group = clear.closest<HTMLElement>('[data-slot="input-group"]')!;
+    const chevron = group.querySelector<SVGElement>(
+      '[data-slot="select-trigger"] svg',
+    );
+    expect(chevron, 'the select chevron').not.toBeNull();
+    await waitFor(() => {
+      const chevronRight = chevron!.getBoundingClientRect().right;
+      const clearLeft = clear.getBoundingClientRect().left;
+      expect(
+        chevronRight,
+        `chevron right ${chevronRight}, clear left ${clearLeft}`,
+      ).toBeLessThanOrEqual(clearLeft);
+    });
+  },
+};
