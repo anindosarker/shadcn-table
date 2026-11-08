@@ -102,3 +102,6 @@
 - Options:
   - a) Recommended: keep
   - b) revert: drop `SHUFFLE_PRESETS`, Random shuffles by `randomFields` only, `decodePreset` import gone
+
+## A12 How dev takes the installation reference refresh while E4 sits on claude/review
+
