@@ -340,6 +340,7 @@ async function themeCustomizer({ page, check }) {
     afterEdit === edited,
     afterEdit,
   );
+  await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
 }
 
