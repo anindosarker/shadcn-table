@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sprint Swimlanes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11"></script>
+<style>
+  /* Catppuccin Latte (light) and Mocha (dark). */
+  :root {
+    --ctp-base: #eff1f5; --ctp-mantle: #e6e9ef; --ctp-crust: #dce0e8;
+    --ctp-text: #4c4f69; --ctp-subtext1: #5c5f77; --ctp-subtext0: #6c6f85; --ctp-overlay0: #9ca0b0;
+    --ctp-surface0: #ccd0da; --ctp-surface1: #bcc0cc; --ctp-surface2: #acb0be;
+    --ctp-blue: #1e66f5; --ctp-lavender: #7287fd; --ctp-mauve: #8839ef; --ctp-red: #d20f39;
+    --ctp-peach: #fe640b; --ctp-yellow: #df8e1d; --ctp-green: #40a02b; --ctp-teal: #179299;
+    --ctp-sky: #04a5e5; --ctp-pink: #ea76cb; --ctp-sapphire: #209fb5; --ctp-flamingo: #dd7878;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ctp-base: #1e1e2e; --ctp-mantle: #181825; --ctp-crust: #11111b;
+      --ctp-text: #cdd6f4; --ctp-subtext1: #bac2de; --ctp-subtext0: #a6adc8; --ctp-overlay0: #6c7086;
+      --ctp-surface0: #313244; --ctp-surface1: #45475a; --ctp-surface2: #585b70;
+      --ctp-blue: #89b4fa; --ctp-lavender: #b4befe; --ctp-mauve: #cba6f7; --ctp-red: #f38ba8;
+      --ctp-peach: #fab387; --ctp-yellow: #f9e2af; --ctp-green: #a6e3a1; --ctp-teal: #94e2d5;
+      --ctp-sky: #89dceb; --ctp-pink: #f5c2e7; --ctp-sapphire: #74c7ec; --ctp-flamingo: #f2cdcd;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ctp-base: #1e1e2e; --ctp-mantle: #181825; --ctp-crust: #11111b;
+    --ctp-text: #cdd6f4; --ctp-subtext1: #bac2de; --ctp-subtext0: #a6adc8; --ctp-overlay0: #6c7086;
+    --ctp-surface0: #313244; --ctp-surface1: #45475a; --ctp-surface2: #585b70;
+    --ctp-blue: #89b4fa; --ctp-lavender: #b4befe; --ctp-mauve: #cba6f7; --ctp-red: #f38ba8;
+    --ctp-peach: #fab387; --ctp-yellow: #f9e2af; --ctp-green: #a6e3a1; --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb; --ctp-pink: #f5c2e7; --ctp-sapphire: #74c7ec; --ctp-flamingo: #f2cdcd;
+    color-scheme: dark;
+  }
+  body { background: var(--ctp-base); color: var(--ctp-text); }
+  /* Quiet scrollbars: thin, transparent track, thumb shows on hover. */
+  * { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  *:hover { scrollbar-color: var(--ctp-surface1) transparent; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: transparent; border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+  :hover::-webkit-scrollbar-thumb { background-color: var(--ctp-surface1); }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--ctp-surface2); }
+</style>
+<style type="text/tailwindcss">
+  @theme inline {
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --color-base: var(--ctp-base); --color-mantle: var(--ctp-mantle); --color-crust: var(--ctp-crust);
+    --color-text: var(--ctp-text); --color-subtext1: var(--ctp-subtext1); --color-subtext0: var(--ctp-subtext0);
+    --color-overlay0: var(--ctp-overlay0);
+    --color-surface0: var(--ctp-surface0); --color-surface1: var(--ctp-surface1); --color-surface2: var(--ctp-surface2);
+    --color-blue: var(--ctp-blue); --color-lavender: var(--ctp-lavender); --color-mauve: var(--ctp-mauve);
+    --color-red: var(--ctp-red); --color-peach: var(--ctp-peach); --color-yellow: var(--ctp-yellow);
+    --color-green: var(--ctp-green); --color-teal: var(--ctp-teal); --color-sky: var(--ctp-sky);
+    --color-pink: var(--ctp-pink); --color-sapphire: var(--ctp-sapphire); --color-flamingo: var(--ctp-flamingo);
+  }
+  @layer components {
+    .ibtn { @apply relative inline-flex size-8 items-center justify-center rounded-md border border-surface0 bg-mantle text-subtext0 shadow-xs transition-colors hover:bg-surface0 hover:text-text focus-visible:outline-2 focus-visible:outline-mauve cursor-pointer; }
+    .ibtn[aria-pressed="true"] { @apply border-mauve/60 bg-mauve/15 text-mauve; }
+    .ibtn svg, .seg svg { @apply size-4; }
+    .seg { @apply inline-flex h-8 items-center rounded-md border border-surface0 bg-mantle p-0.5; }
+    .seg button { @apply relative inline-flex h-full items-center gap-1.5 rounded-[5px] px-2 text-xs font-medium text-subtext0 transition-colors hover:text-text cursor-pointer; }
+    .seg button[aria-pressed="true"] { @apply bg-base text-text shadow-sm; }
+    .card { @apply relative z-10 cursor-pointer rounded-md border px-2.5 py-1.5 leading-snug transition-[opacity,box-shadow,transform] duration-150 hover:-translate-y-px hover:shadow-md; font-size: 0.75em; }
+    .card.done { @apply border-green/40 text-text; background: color-mix(in srgb, var(--ctp-green) 12%, var(--ctp-mantle)); }
+    .card.running { @apply border-yellow/60 text-text; background: color-mix(in srgb, var(--ctp-yellow) 18%, var(--ctp-mantle)); }
+    .card.planned { @apply border-blue/50 text-text; background: color-mix(in srgb, var(--ctp-blue) 15%, var(--ctp-mantle)); }
+    .card.sel { @apply ring-2 ring-mauve ring-offset-1 ring-offset-base; }
+    .card.crit-on { @apply shadow-[inset_3px_0_0_var(--ctp-red)]; }
+    .card.dim, .mrow.dim { @apply opacity-20; }
+    .card.hidden { display: none; }
+    .compact .card { @apply px-2 py-1; font-size: 0.6875em; }
+    .compact .card .num { display: none; }
+    .slider { @apply w-full cursor-pointer accent-mauve; }
+  }
+  /* Tooltips: data-tip on any control. */
+  [data-tip]::after {
+    content: attr(data-tip); position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s .25s;
+    background: var(--ctp-crust); color: var(--ctp-text); border: 1px solid var(--ctp-surface0);
+    border-radius: 6px; padding: 4px 8px; font: 500 11px/1.3 Inter, system-ui, sans-serif; z-index: 60;
+    box-shadow: 0 4px 12px rgb(0 0 0 / .15);
+  }
+  [data-tip-end]::after { left: auto; right: 0; transform: none; }
+  [data-tip]:hover::after, [data-tip]:focus-visible::after { opacity: 1; }
+  .popover-open [data-tip]::after { display: none; }
+  svg.arrows path.edge { fill: none; stroke: var(--ctp-overlay0); stroke-width: 1.5; opacity: .8; }
+  svg.arrows path.cross { stroke-dasharray: 4 3; }
+  svg.arrows path.crit { stroke: var(--ctp-red); stroke-width: 2; opacity: 1; }
+  svg.arrows path.hl { stroke: var(--ctp-mauve); stroke-width: 2.25; opacity: 1; }
+  svg.arrows path.dim { opacity: .08; }
+  .i { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+
+<!-- Lucide icons (ISC licence), inlined as symbols. -->
+<svg width="0" height="0" class="absolute" aria-hidden="true">
+  <symbol id="ic-lanes" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M21 9H3"/><path d="M21 15H3"/></symbol>
+  <symbol id="ic-list" viewBox="0 0 24 24"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></symbol>
+  <symbol id="ic-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="ic-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="ic-circle-dashed" viewBox="0 0 24 24"><path d="M10.1 2.182a10 10 0 0 1 3.8 0"/><path d="M13.9 21.818a10 10 0 0 1-3.8 0"/><path d="M17.609 3.721a10 10 0 0 1 2.69 2.7"/><path d="M2.182 13.9a10 10 0 0 1 0-3.8"/><path d="M20.279 17.609a10 10 0 0 1-2.7 2.69"/><path d="M21.818 10.1a10 10 0 0 1 0 3.8"/><path d="M3.721 6.391a10 10 0 0 1 2.7-2.69"/><path d="M6.391 20.279a10 10 0 0 1-2.69-2.7"/></symbol>
+  <symbol id="ic-workflow" viewBox="0 0 24 24"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></symbol>
+  <symbol id="ic-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="ic-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol>
+  <symbol id="ic-fold" viewBox="0 0 24 24"><path d="M12 22v-6"/><path d="M12 8V2"/><path d="M4 12H2"/><path d="M10 12H8"/><path d="M16 12h-2"/><path d="M22 12h-2"/><path d="m15 19-3-3-3 3"/><path d="m15 5-3 3-3-3"/></symbol>
+  <symbol id="ic-sliders" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></symbol>
+  <symbol id="ic-panel" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></symbol>
+  <symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+  <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+  <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="ic-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></symbol>
+  <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+</svg>
+
+<header class="sticky top-0 z-30 border-b border-surface0 bg-mantle/90 backdrop-blur">
+  <div class="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2.5">
+    <div class="mr-1 flex items-baseline gap-3">
+      <h1 id="title" class="text-[15px] font-semibold tracking-tight text-text">Sprint swimlanes</h1>
+      <span id="meta" class="text-xs text-subtext0"></span>
+    </div>
+
+    <div class="seg" role="group" aria-label="View">
+      <button data-view="epic" aria-pressed="true" data-tip="Epic × sprint swimlanes"><svg class="i"><use href="#ic-lanes"/></svg>Epics</button>
+      <button data-view="milestone" aria-pressed="false" data-tip="Milestone × sprint table"><svg class="i"><use href="#ic-list"/></svg>Milestones</button>
+    </div>
+
+    <div class="seg" role="group" aria-label="Status filter">
+      <button data-status="all" aria-pressed="true" data-tip="All milestones" aria-label="All"><svg class="i"><use href="#ic-layers"/></svg></button>
+      <button data-status="done" aria-pressed="false" data-tip="Done only" aria-label="Done"><svg class="i"><use href="#ic-check-circle"/></svg></button>
+      <button data-status="open" aria-pressed="false" data-tip="Open only (running and planned)" aria-label="Open"><svg class="i"><use href="#ic-circle-dashed"/></svg></button>
+    </div>
+
+    <div class="flex gap-1.5">
+      <button class="ibtn" id="t-arrows" data-tip="Dependency arrows" aria-label="Dependency arrows"><svg class="i"><use href="#ic-workflow"/></svg></button>
+      <button class="ibtn" id="t-crit" data-tip="Highlight critical path" aria-label="Critical path"><svg class="i"><use href="#ic-flame"/></svg></button>
+      <button class="ibtn" id="t-fixes" data-tip="Show fixes" aria-label="Fixes"><svg class="i"><use href="#ic-bug"/></svg></button>
+      <button class="ibtn" id="t-compact" data-tip="Compact cards" aria-label="Compact"><svg class="i"><use href="#ic-fold"/></svg></button>
+    </div>
+
+    <div class="ml-auto flex gap-1.5">
+      <div class="relative">
+        <button class="ibtn" id="legend-btn" data-tip="Legend" aria-label="Legend" aria-pressed="false"><svg class="i"><use href="#ic-info"/></svg></button>
+        <div id="legend" class="absolute right-0 top-10 z-50 hidden w-56 rounded-lg border border-surface0 bg-mantle p-3 text-xs text-subtext1 shadow-lg">
+          <div class="mb-2 text-[11px] font-semibold uppercase tracking-wider text-subtext0">Legend</div>
+          <ul class="space-y-1.5">
+            <li class="flex items-center gap-2"><i class="size-3 rounded-sm border border-green/50 bg-green/20"></i>done</li>
+            <li class="flex items-center gap-2"><i class="size-3 rounded-sm border border-yellow/60 bg-yellow/25"></i>running</li>
+            <li class="flex items-center gap-2"><i class="size-3 rounded-sm border border-blue/50 bg-blue/20"></i>planned</li>
+            <li class="flex items-center gap-2"><i class="h-0 w-4 border-t-2 border-overlay0"></i>dependency in the epic</li>
+            <li class="flex items-center gap-2"><i class="h-0 w-4 border-t-2 border-dashed border-overlay0"></i>dependency across epics</li>
+            <li class="flex items-center gap-2"><i class="h-0 w-4 border-t-2 border-red"></i>critical path</li>
+            <li class="flex items-center gap-2"><i class="h-3 w-4 rounded-sm bg-blue/15"></i>current sprint</li>
+          </ul>
+        </div>
+      </div>
+      <div class="relative">
+        <button class="ibtn" id="size-btn" data-tip="Size and layout" data-tip-end aria-label="Size and layout" aria-pressed="false"><svg class="i"><use href="#ic-sliders"/></svg></button>
+        <div id="size" class="absolute right-0 top-10 z-50 hidden w-72 space-y-3 rounded-lg border border-surface0 bg-mantle p-3 text-xs shadow-lg">
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-subtext0">Size and layout</div>
+          <label class="block"><span class="flex justify-between"><span>Zoom</span><span id="v-zoom" class="font-mono text-subtext0"></span></span>
+            <input class="slider" type="range" id="s-zoom" min="60" max="150" step="5"></label>
+          <p class="text-[11px] text-subtext0">Drag a column header edge or the side panel edge to resize. Double-click an edge to reset it.</p>
+          <label class="flex items-center justify-between gap-2"><span>Fill the screen width</span><input type="checkbox" id="s-fill" class="size-4 accent-mauve"></label>
+          <label class="flex items-center justify-between gap-2"><span>Side panel</span><input type="checkbox" id="s-panel" class="size-4 accent-mauve"></label>
+          <button id="s-reset" class="w-full cursor-pointer rounded-md border border-surface0 py-1.5 text-subtext0 hover:bg-surface0 hover:text-text">Reset size</button>
+        </div>
+      </div>
+      <button class="ibtn" id="reload" data-tip="Reload data (run data/extract.py first)" data-tip-end aria-label="Reload data"><svg class="i"><use href="#ic-refresh"/></svg></button>
+      <button class="ibtn" id="theme" data-tip="Light or dark" data-tip-end aria-label="Theme"><svg class="i" id="theme-ic"><use href="#ic-moon"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main class="flex items-start gap-4 p-4 max-lg:flex-col">
+  <div id="wrap" class="relative min-w-0 flex-1 overflow-x-auto">
+    <div id="zoom" class="relative w-fit min-w-full">
+      <div id="board" class="relative grid overflow-hidden rounded-xl border border-surface0 bg-mantle shadow-sm"></div>
+      <svg id="arrows" class="arrows pointer-events-none absolute inset-0 z-[5] overflow-visible"></svg>
+    </div>
+  </div>
+  <div id="detail-wrap" class="sticky top-20 flex flex-none max-lg:static max-lg:w-full">
+    <div data-resize="panel" title="Drag to resize, double-click to reset" class="group -ml-3 flex w-3 cursor-col-resize items-stretch justify-center max-lg:hidden"><span class="w-0.5 rounded-full bg-transparent transition-colors group-hover:bg-mauve/60"></span></div>
+    <aside id="detail" class="max-h-[calc(100vh-6rem)] w-full overflow-auto rounded-xl border border-surface0 bg-mantle p-4 shadow-sm"></aside>
+  </div>
+</main>
+
+<script>
+const LANE_COLORS = ["mauve", "blue", "teal", "peach", "pink", "sapphire", "lavender", "flamingo", "sky", "yellow"];
+const SIZE_DEFAULTS = { zoom: 100, col: 150, label: 0, widths: {}, panelW: 320, fill: true, panel: true };
+const state = { view: "epic", status: "all", arrows: true, crit: false, fixes: true, compact: false, ...SIZE_DEFAULTS, widths: {}, sel: null, collapsed: new Set() };
+try {
+  Object.assign(state, JSON.parse(localStorage.getItem("swimlanes-ui") || "{}"));
+  state.sel = null;
+  state.collapsed = new Set(JSON.parse(localStorage.getItem("swimlanes-collapsed") || "[]"));
+  const th = localStorage.getItem("swimlanes-theme");
+  if (th) document.documentElement.dataset.theme = th;
+} catch (e) {}
+const save = () => { try {
+  const { sel, collapsed, ...rest } = state;
+  localStorage.setItem("swimlanes-ui", JSON.stringify(rest));
+  localStorage.setItem("swimlanes-collapsed", JSON.stringify([...collapsed]));
+} catch (e) {} };
+
+let D, byId, dependents;
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const icon = (id, cls = "size-3.5") => `<svg class="i ${cls}"><use href="#ic-${id}"/></svg>`;
+const STATUS_ICON = { done: "check", running: "clock", planned: "circle" };
+const EMPTY = `<div class="flex h-full flex-col items-center justify-center gap-2 py-10 text-center text-xs text-subtext0">
+  <div class="text-sm font-medium text-text">No milestone selected</div>
+  <p>Click a card for its spec, dependencies and files.<br>Click a lane name to collapse it. Esc clears.</p></div>`;
+
+function load(data) {
+  D = data;
+  byId = new Map(D.milestones.map((m) => [m.id, m]));
+  dependents = new Map(D.milestones.map((m) => [m.id, []]));
+  D.milestones.forEach((m) => m.depends.forEach((d) => dependents.get(d)?.push(m.id)));
+  $("#title").textContent = `${D.release} swimlanes`;
+  document.title = `${D.release} swimlanes`;
+  const done = D.milestones.filter((m) => m.status === "done").length;
+  $("#meta").textContent = `${done}/${D.milestones.length} done · updated ${D.updated ?? "?"}`;
+  if (state.sel && !byId.has(state.sel)) state.sel = null;
+  render();
+}
+
+function nowSprint() {
+  const open = D.milestones.filter((m) => m.status !== "done" && m.epic !== "Fixes").map((m) => m.sprint);
+  return open.length ? Math.min(...open) : -1;
+}
+
+function chain(id) {
+  const out = new Set([id]);
+  const walk = (k, next) => (next(k) || []).forEach((n) => { if (!out.has(n)) { out.add(n); walk(n, next); } });
+  walk(id, (k) => byId.get(k)?.depends);
+  walk(id, (k) => dependents.get(k));
+  return out;
+}
+
+const visible = (m) => !(state.status === "done" && m.status !== "done") && !(state.status === "open" && m.status === "done");
+const laneColor = (epic) => epic === "Fixes" ? "red" : LANE_COLORS[(D.epics.indexOf(epic)) % LANE_COLORS.length];
+const laneInfo = (epic) => {
+  const ms = D.milestones.filter((m) => m.epic === epic);
+  const span = ms.length ? [Math.min(...ms.map((m) => m.sprint)), Math.max(...ms.map((m) => m.sprint))] : null;
+  const spanTxt = span ? (span[0] === span[1] ? D.sprints[span[0]] : `${D.sprints[span[0]]}–${D.sprints[span[1]]}`) : "";
+  return { ms, span, spanTxt, done: ms.filter((m) => m.status === "done").length };
+};
+function cardClass(m, focus) {
+  const cls = ["card", m.status];
+  if (!visible(m)) cls.push("hidden");
+  if (state.crit && m.critical) cls.push("crit-on");
+  if (state.sel === m.id) cls.push("sel");
+  if ((focus && !focus.has(m.id)) || (state.crit && !focus && !m.critical)) cls.push("dim");
+  return cls.join(" ");
+}
+
+function headerRow(lanes, now, firstLabel) {
+  const nowBg = (i) => i === now ? " bg-blue/[0.06]" : "";
+  const handle = (key) => `<div data-resize="${key}" title="Drag to resize, double-click to reset" class="group absolute inset-y-0 -right-1.5 z-30 flex w-3 cursor-col-resize justify-center"><span class="w-0.5 bg-transparent transition-colors group-hover:bg-mauve/70"></span></div>`;
+  let html = `<div class="sticky left-0 z-20 flex items-end border-b border-r border-surface0 bg-crust px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-subtext0">${firstLabel}${handle("label")}</div>`;
+  D.sprints.forEach((s, i) => {
+    const ms = D.milestones.filter((m) => m.sprint === i && lanes.includes(m.epic));
+    const done = ms.filter((m) => m.status === "done").length;
+    const pct = ms.length ? Math.round((done / ms.length) * 100) : 0;
+    html += `<div class="relative border-b border-r border-surface0 bg-crust/60 px-3 py-2.5 last:border-r-0${nowBg(i)}">${i < D.sprints.length - 1 || !state.fill ? handle("col:" + s) : ""}
+      <div class="flex items-center justify-between gap-1">
+        <span class="text-sm font-semibold">${esc(s)}</span>
+        ${i === now ? `<span class="rounded-full bg-blue/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue">now</span>` : ""}
+      </div>
+      <div class="mt-0.5 text-[11px] text-subtext0">${done}/${ms.length} done</div>
+      <div class="mt-1.5 h-1 overflow-hidden rounded-full bg-surface0"><div class="h-full rounded-full ${pct === 100 ? "bg-green" : "bg-blue"}" style="width:${pct}%"></div></div>
+    </div>`;
+  });
+  return html;
+}
+
+function laneLabel(epic, extra = "") {
+  const { spanTxt, done, ms } = laneInfo(epic);
+  const collapsed = state.collapsed.has(epic);
+  const c = laneColor(epic);
+  return `<div data-lane="${esc(epic)}" title="Click to ${collapsed ? "expand" : "collapse"}" ${extra}
+    class="group sticky left-0 z-20 flex cursor-pointer items-center gap-2.5 border-b border-r border-surface0 bg-mantle px-3 py-2 hover:bg-surface0/50${collapsed ? " opacity-60" : ""}">
+    <span class="h-full min-h-8 w-1 rounded-full bg-${c}"></span>
+    <span class="flex min-w-0 flex-col">
+      <span class="text-sm font-semibold text-${c}">${esc(epic)}</span>
+      <span class="truncate text-[11px] text-subtext0">${spanTxt} · ${done}/${ms.length}</span>
+    </span>
+    <span class="ml-auto text-overlay0 transition-transform ${collapsed ? "-rotate-90" : ""}">${icon("chevron")}</span>
+  </div>`;
+}
+
+function renderEpic(lanes, now, focus) {
+  const cols = D.sprints.length;
+  const nowBg = (i) => i === now ? " bg-blue/[0.06]" : "";
+  let html = headerRow(lanes, now, "Epic");
+  lanes.forEach((epic) => {
+    const { ms, span } = laneInfo(epic);
+    const c = laneColor(epic);
+    const collapsed = state.collapsed.has(epic);
+    html += laneLabel(epic);
+    for (let i = 0; i < cols; i++) {
+      const cards = ms.filter((m) => m.sprint === i);
+      const inSpan = span && i >= span[0] && i <= span[1];
+      html += `<div class="flex min-h-14 flex-col gap-1.5 border-b border-r border-surface0 p-2 last:border-r-0${nowBg(i)}${inSpan ? ` bg-${c}/[0.04]` : ""}">`;
+      if (collapsed) {
+        if (cards.length) html += `<div data-lane="${esc(epic)}" class="card ${cards.every((m) => m.status === "done") ? "done" : "planned"} text-subtext0">${cards.length} milestone${cards.length > 1 ? "s" : ""}</div>`;
+      } else {
+        cards.forEach((m) => {
+          html += `<div class="${cardClass(m, focus)}" data-id="${esc(m.id)}" title="${esc(m.specTitle || m.name)}">${m.number ? `<span class="num mr-1 font-mono text-[10px] text-${c}">${esc(m.number)}</span>` : ""}${esc(m.name)}</div>`;
+        });
+      }
+      html += `</div>`;
+    }
+  });
+  return html;
+}
+
+function renderMilestone(lanes, now, focus) {
+  const cols = D.sprints.length;
+  const nowBg = (i) => i === now ? " bg-blue/[0.06]" : "";
+  let html = headerRow(lanes, now, "Milestone");
+  lanes.forEach((epic) => {
+    const { ms } = laneInfo(epic);
+    const c = laneColor(epic);
+    const collapsed = state.collapsed.has(epic);
+    // Epic group header spans the whole row.
+    html += `<div style="grid-column:1 / -1" class="grid border-b border-surface0 bg-crust/40" >${laneLabel(epic, `style="border-right:0"`)}</div>`;
+    if (collapsed) return;
+    ms.forEach((m) => {
+      if (!visible(m)) return;
+      const dim = (focus && !focus.has(m.id)) || (state.crit && !focus && !m.critical);
+      html += `<div data-pick="${esc(m.id)}" class="mrow sticky left-0 z-20 flex cursor-pointer items-center gap-2 border-b border-r border-surface0 bg-mantle py-1.5 pl-5 pr-3 hover:bg-surface0/50${dim ? " dim" : ""}${state.sel === m.id ? " bg-mauve/10" : ""}">
+        <span class="w-6 shrink-0 font-mono text-[10px] text-${c}">${esc(m.number ?? "")}</span>
+        <span class="truncate text-xs" title="${esc(m.specTitle || m.name)}">${esc(m.name)}</span>
+      </div>`;
+      for (let i = 0; i < cols; i++) {
+        html += `<div class="flex items-center border-b border-r border-surface0 px-2 py-1.5 last:border-r-0${nowBg(i)}">`;
+        if (m.sprint === i) html += `<div class="${cardClass(m, focus)} flex w-full items-center gap-1.5" data-id="${esc(m.id)}" title="${esc(m.name)}">${icon(STATUS_ICON[m.status], "size-3 shrink-0")}<span class="truncate">${esc(m.status)}</span></div>`;
+        html += `</div>`;
+      }
+    });
+  });
+  return html;
+}
+
+function render() {
+  const board = $("#board");
+  board.classList.toggle("compact", state.compact);
+  const lanes = D.epics.filter((e) => e !== "Fixes" || state.fixes);
+  board.style.gridTemplateColumns = template();
+  $("#zoom").style.zoom = state.zoom / 100;
+  $("#detail-wrap").style.width = state.panelW + "px";
+  const now = nowSprint();
+  const focus = state.sel ? chain(state.sel) : null;
+  board.innerHTML = state.view === "milestone" ? renderMilestone(lanes, now, focus) : renderEpic(lanes, now, focus);
+  syncControls();
+  renderDetail();
+  watchLayout();
+  scheduleArrows();
+  save();
+}
+
+const labelWidth = () => state.label || (state.view === "milestone" ? 260 : 128);
+function template() {
+  const cols = D.sprints.map((s) => {
+    const w = state.widths[s] ?? state.col;
+    return state.fill ? `minmax(${w}px, 1fr)` : `${w}px`;
+  });
+  return `${labelWidth()}px ${cols.join(" ")}`;
+}
+
+function syncControls() {
+  document.querySelectorAll("[data-view]").forEach((b) => b.setAttribute("aria-pressed", state.view === b.dataset.view));
+  document.querySelectorAll("[data-status]").forEach((b) => b.setAttribute("aria-pressed", state.status === b.dataset.status));
+  $("#t-arrows").setAttribute("aria-pressed", state.arrows);
+  $("#t-crit").setAttribute("aria-pressed", state.crit);
+  $("#t-fixes").setAttribute("aria-pressed", state.fixes);
+  $("#t-compact").setAttribute("aria-pressed", state.compact);
+  $("#s-zoom").value = state.zoom; $("#v-zoom").textContent = state.zoom + "%";
+  $("#s-fill").checked = state.fill;
+  $("#s-panel").checked = state.panel;
+  $("#detail-wrap").classList.toggle("hidden", !state.panel);
+  const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  $("#theme-ic use").setAttribute("href", dark ? "#ic-sun" : "#ic-moon");
+}
+
+function drawArrows() {
+  const svg = $("#arrows"), host = $("#zoom");
+  svg.innerHTML = "";
+  if (!state.arrows || !D) return;
+  // Layout offsets, not screen rects: they stay in the zoomed element's own
+  // units in every browser and ignore the cards' hover transform.
+  svg.setAttribute("width", host.scrollWidth);
+  svg.setAttribute("height", host.scrollHeight);
+  const pos = (id) => {
+    const el = document.querySelector(`.card[data-id="${CSS.escape(id)}"]:not(.hidden)`);
+    if (!el) return null;
+    let x = 0, y = 0;
+    for (let n = el; n && n !== host; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; }
+    const w = el.offsetWidth, h = el.offsetHeight;
+    return { l: x, r: x + w, y: y + h / 2, t: y, b: y + h };
+  };
+  const focus = state.sel ? chain(state.sel) : null;
+  // Red only inside one epic's path (criticalPaths); older data falls back to the critical flags.
+  const onPath = (a, b) => D.criticalPaths
+    ? Object.values(D.criticalPaths).some((p) => p.includes(a) && p.includes(b))
+    : !!(byId.get(a)?.critical && byId.get(b)?.critical);
+  let out = `<defs>${["overlay0", "red", "mauve"].map((k) => `<marker id="m-${k}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L8 4L0 8z" style="fill:var(--ctp-${k})"/></marker>`).join("")}</defs>`;
+  D.milestones.forEach((m) => m.depends.forEach((d) => {
+    const a = pos(d), b = pos(m.id);
+    if (!a || !b) return;
+    const from = byId.get(d);
+    const hl = focus && focus.has(m.id) && focus.has(d);
+    const crit = state.crit && onPath(d, m.id);
+    let path;
+    if (b.l > a.r + 4) {
+      const dx = Math.max(20, (b.l - a.r) / 2);
+      path = `M${a.r} ${a.y} C${a.r + dx} ${a.y} ${b.l - dx} ${b.y} ${b.l - 2} ${b.y}`;
+    } else {
+      const x = (a.l + a.r) / 2, down = b.t > a.b;
+      path = `M${x} ${down ? a.b : a.t} L${x} ${down ? b.t - 2 : b.b + 2}`;
+    }
+    const cls = ["edge", from && from.epic !== m.epic ? "cross" : "", crit ? "crit" : "", hl ? "hl" : "", focus && !hl ? "dim" : ""].join(" ");
+    out += `<path class="${cls}" d="${path}" marker-end="url(#m-${hl ? "mauve" : crit ? "red" : "overlay0"})"/>`;
+  }));
+  svg.innerHTML = out;
+}
+
+const encPath = (p) => p.split("/").map(encodeURIComponent).join("/");
+const vscodeUrl = (p) => "vscode://file" + encPath(p);
+const fileUrl = (p) => "file://" + encPath(p);
+
+function renderDetail() {
+  const el = $("#detail");
+  const m = state.sel && byId.get(state.sel);
+  if (!m) { el.innerHTML = EMPTY; return; }
+  const c = laneColor(m.epic);
+  const badge = { done: "bg-green/15 text-green", running: "bg-yellow/20 text-yellow", planned: "bg-blue/15 text-blue" }[m.status];
+  const list = (ids) => ids.length ? `<ul class="mt-1 space-y-1">${ids.map((i) => {
+    const o = byId.get(i);
+    return `<li class="flex items-center justify-between gap-2 rounded-md px-2 py-1 hover:bg-surface0/60">
+      <button data-go="${esc(i)}" class="cursor-pointer truncate text-left text-mauve underline-offset-2 hover:underline">${esc(i)}</button>
+      <span class="shrink-0 font-mono text-[10px] text-subtext0">${esc(o?.epic ?? "")} ${esc(D.sprints[o?.sprint] ?? "")}</span></li>`;
+  }).join("")}</ul>` : `<p class="mt-1 text-subtext0">none</p>`;
+  const section = (label, body) => `<div class="border-t border-surface0 pt-3"><div class="text-[11px] font-semibold uppercase tracking-wider text-subtext0">${label}</div>${body}</div>`;
+  el.innerHTML = `<div class="space-y-3 text-xs">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="rounded-md bg-${c}/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-${c}">${esc(m.epic)}${m.number ? " · " + esc(m.number) : ""}</span>
+        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${badge}">${icon(STATUS_ICON[m.status], "size-3")}${esc(m.status)}</span>
+        ${m.critical ? `<span class="inline-flex items-center gap-1 rounded-full bg-red/15 px-2 py-0.5 text-[10px] font-semibold text-red">${icon("flame", "size-3")}critical</span>` : ""}
+        <button data-close class="ml-auto cursor-pointer rounded p-1 text-subtext0 hover:bg-surface0 hover:text-text" aria-label="Close">${icon("x")}</button>
+      </div>
+      <h2 class="mt-2 text-sm font-semibold leading-snug">${esc(m.name)}</h2>
+      <div class="text-subtext0">${esc(D.sprints[m.sprint])}</div>
+    </div>
+    ${m.specTitle ? section("Spec", `<a href="${esc(vscodeUrl(m.specAbs))}" class="mt-1 block font-medium text-mauve underline-offset-2 hover:underline">${esc(m.specTitle)}</a>
+      <div class="mt-1 flex items-center gap-2">
+        <code class="min-w-0 flex-1 break-all font-mono text-[10px] text-subtext0">${esc(m.specPath)}</code>
+        <a href="${esc(vscodeUrl(m.specAbs))}" class="shrink-0 rounded border border-surface0 px-1.5 py-0.5 text-[10px] text-subtext0 hover:bg-surface0 hover:text-text">VS Code</a>
+        <a href="${esc(fileUrl(m.specAbs))}" target="_blank" class="shrink-0 rounded border border-surface0 px-1.5 py-0.5 text-[10px] text-subtext0 hover:bg-surface0 hover:text-text">Browser</a>
+      </div>`) : ""}
+    ${m.outcome ? section("Outcome", `<p class="mt-1 text-subtext1">${esc(m.outcome)}</p>`) : ""}
+    ${section("Depends on", list(m.depends))}
+    ${section("Needed by", list(dependents.get(m.id) || []))}
+    ${section(`Files (${m.files.length})`, m.files.length ? `<ul class="mt-1 space-y-1">${m.files.map((f) => {
+      const code = `<code class="block break-all rounded bg-crust/60 px-1.5 py-1 font-mono text-[10px] text-subtext1">${esc(f)}</code>`;
+      const concrete = D.repoRoot && !/[*<]|\.\.\./.test(f);
+      return `<li>${concrete ? `<a href="${esc(vscodeUrl(D.repoRoot + "/" + f))}" class="block hover:[&>code]:text-mauve" title="Open in VS Code">${code}</a>` : code}</li>`;
+    }).join("")}</ul>` : `<p class="mt-1 text-subtext0">none</p>`)}
+  </div>`;
+}
+
+// Popovers: legend and size.
+const popovers = [["#legend-btn", "#legend"], ["#size-btn", "#size"]];
+function closePopovers(except) {
+  popovers.forEach(([b, p]) => { if (p !== except) { $(p).classList.add("hidden"); $(b).setAttribute("aria-pressed", "false"); } });
+  document.body.classList.toggle("popover-open", popovers.some(([, p]) => !$(p).classList.contains("hidden")));
+}
+popovers.forEach(([b, p]) => $(b).addEventListener("click", (e) => {
+  e.stopPropagation();
+  const open = $(p).classList.toggle("hidden") === false;
+  $(b).setAttribute("aria-pressed", open);
+  closePopovers(p);
+}));
+popovers.forEach(([, p]) => $(p).addEventListener("click", (e) => e.stopPropagation()));
+
+document.addEventListener("click", (e) => {
+  closePopovers();
+  const t = e.target.closest("[data-view],[data-status],[data-id],[data-pick],[data-lane],[data-go],[data-close]");
+  if (!t) return;
+  if (t.dataset.view) state.view = t.dataset.view;
+  else if (t.dataset.status) state.status = t.dataset.status;
+  else if (t.hasAttribute("data-close")) state.sel = null;
+  else if (t.dataset.go) state.sel = t.dataset.go;
+  else if (t.dataset.id || t.dataset.pick) { const id = t.dataset.id || t.dataset.pick; state.sel = state.sel === id ? null : id; if (state.sel) state.panel = true; }
+  else if (t.dataset.lane) { const l = t.dataset.lane; state.collapsed.has(l) ? state.collapsed.delete(l) : state.collapsed.add(l); }
+  render();
+});
+const toggle = (id, key) => $(id).addEventListener("click", () => { state[key] = !state[key]; render(); });
+toggle("#t-arrows", "arrows"); toggle("#t-crit", "crit"); toggle("#t-fixes", "fixes"); toggle("#t-compact", "compact");
+
+const slider = (id, key) => $(id).addEventListener("input", (e) => { state[key] = +e.target.value; render(); });
+slider("#s-zoom", "zoom");
+
+// Drag resizing: column header edges and the side panel edge. Double-click resets.
+document.addEventListener("pointerdown", (e) => {
+  const h = e.target.closest("[data-resize]");
+  if (!h) return;
+  e.preventDefault();
+  const key = h.dataset.resize, z = key === "panel" ? 1 : state.zoom / 100;
+  const startX = e.clientX;
+  const startW = key === "panel" ? $("#detail-wrap").getBoundingClientRect().width : h.parentElement.getBoundingClientRect().width / z;
+  document.body.style.cursor = "col-resize";
+  document.body.classList.add("select-none");
+  let moved = false;
+  const move = (ev) => {
+    const dx = (ev.clientX - startX) / z;
+    if (!moved && Math.abs(dx) < 2) return;
+    moved = true;
+    if (key === "panel") { state.panelW = Math.round(Math.min(720, Math.max(240, startW - dx))); $("#detail-wrap").style.width = state.panelW + "px"; }
+    else {
+      const w = Math.round(Math.min(600, Math.max(60, startW + dx)));
+      if (key === "label") state.label = w; else state.widths[key.slice(4)] = w;
+      $("#board").style.gridTemplateColumns = template();
+    }
+    drawArrows();
+  };
+  const up = () => {
+    removeEventListener("pointermove", move); removeEventListener("pointerup", up);
+    document.body.style.cursor = ""; document.body.classList.remove("select-none");
+    if (moved) render();
+  };
+  addEventListener("pointermove", move); addEventListener("pointerup", up);
+});
+document.addEventListener("dblclick", (e) => {
+  const h = e.target.closest("[data-resize]");
+  if (!h) return;
+  const key = h.dataset.resize;
+  if (key === "panel") state.panelW = SIZE_DEFAULTS.panelW;
+  else if (key === "label") state.label = 0;
+  else delete state.widths[key.slice(4)];
+  render();
+});
+$("#s-fill").addEventListener("change", (e) => { state.fill = e.target.checked; render(); });
+$("#s-panel").addEventListener("change", (e) => { state.panel = e.target.checked; render(); });
+$("#s-reset").addEventListener("click", () => { Object.assign(state, SIZE_DEFAULTS, { widths: {} }); render(); });
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.matches("input")) return;
+  if (e.key === "Escape") { closePopovers(); if (state.sel) { state.sel = null; render(); } }
+  if ((e.key === "=" || e.key === "+") && !e.metaKey && !e.ctrlKey) { state.zoom = Math.min(150, state.zoom + 10); render(); }
+  if (e.key === "-" && !e.metaKey && !e.ctrlKey) { state.zoom = Math.max(60, state.zoom - 10); render(); }
+  if (e.key === "0" && !e.metaKey && !e.ctrlKey) { state.zoom = 100; render(); }
+  if (e.key === "v") { state.view = state.view === "epic" ? "milestone" : "epic"; render(); }
+});
+$("#theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("swimlanes-theme", root.dataset.theme); } catch (e) {}
+  syncControls();
+  requestAnimationFrame(drawArrows);
+});
+$("#reload").addEventListener("click", () => loadScript(true));
+// Redraw whenever layout moves: late fonts, Tailwind's runtime styling, wraps, resizes.
+let arrowFrame = 0;
+const scheduleArrows = () => { cancelAnimationFrame(arrowFrame); arrowFrame = requestAnimationFrame(drawArrows); };
+const layoutWatch = new ResizeObserver(scheduleArrows);
+const watchLayout = () => { layoutWatch.disconnect(); layoutWatch.observe($("#board")); document.querySelectorAll("#board .card").forEach((c) => layoutWatch.observe(c)); };
+document.fonts?.ready.then(scheduleArrows);
+addEventListener("resize", scheduleArrows);
+
+function loadScript(bust) {
+  const s = document.createElement("script");
+  s.src = "data/sprints.data.js" + (bust ? `?t=${Date.now()}` : "");
+  s.onload = () => { load(window.SPRINT_DATA); s.remove(); };
+  s.onerror = () => { $("#board").innerHTML = `<p class="p-6 text-sm text-subtext0">data/sprints.data.js not found. Run <code class="font-mono">python3 -I swimlanes.py &lt;release&gt;</code></p>`; };
+  document.head.appendChild(s);
+}
+loadScript(false);
+</script>
+</body>
+</html>
