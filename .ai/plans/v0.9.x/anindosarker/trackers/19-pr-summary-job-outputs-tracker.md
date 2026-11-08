@@ -1,7 +1,7 @@
 # 19: PR Summary reads job outputs, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/pr-summary-job-outputs`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
