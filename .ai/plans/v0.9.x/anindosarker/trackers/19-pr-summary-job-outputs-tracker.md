@@ -1,6 +1,6 @@
 # 19: PR Summary reads job outputs, tracker
 
-Status: done
+Status: merged (a0677dfc)
 Branch `v0.9/pr-summary-job-outputs`, worktree `shadcn-react-table.worktrees/04`
 Checks:
 - Check: proof under act, `act workflow_dispatch -W .github/workflows/zz-outputs-proof.yml -P ubuntu-latest=catthehacker/ubuntu:act-latest --container-architecture linux/amd64` (throwaway clone) at fe190cdf: fail, act 0.2.96 limit, not the workflows: the three legs set their keys, the radix leg fails, then act ends the plan (`Error: Job 'Leg (${{ matrix.base }})' failed`) and never runs `consume`; a scratch inline-matrix copy (no workflow_call) does run the always() consumer but shows `base` and `radix` empty (act keeps the last leg's output set, GitHub merges the non-empty ones); the act-unreproducible part goes to the GitHub run (P3)
