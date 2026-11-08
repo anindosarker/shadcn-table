@@ -1,0 +1,21 @@
+name: zz outputs proof
+
+# Throwaway proof of spec 19 1.6.4 (D38): the consumer prints toJSON(needs);
+# all three keys must arrive with call.result failure. Deleted before the
+# milestone merges.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  call:
+    uses: ./.github/workflows/zz-outputs-proof-call.yml
+
+  consume:
+    needs: [call]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{ toJSON(needs) }}'
