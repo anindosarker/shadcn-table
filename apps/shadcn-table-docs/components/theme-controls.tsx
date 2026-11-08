@@ -3,19 +3,28 @@
 import { useTheme } from 'next-themes';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import type { ThemeSwitchProps } from 'fumadocs-ui/layouts/shared/slots/theme-switch';
-import { ThemePresetSwitcher } from '@/components/theme-preset-switcher';
+import {
+  ThemeCustomizer,
+  ThemeCustomizerTrigger,
+} from '@/components/theme-customizer';
+import { Sheet, SheetTrigger } from '@/components/ui-radix/sheet';
 
 /**
- * `slots.themeSwitch` for the fumadocs layouts: one pill with the preset
- * palette icon and a single light/dark toggle, in the nav on desktop and in
- * the sidebar footer on mobile.
+ * `slots.themeSwitch` for the fumadocs layouts: one pill with the palette
+ * button, which opens the theme customizer, and a single light/dark toggle, in
+ * the nav on desktop and in the sidebar footer on mobile.
  */
 export function ThemeControls(_props: ThemeSwitchProps) {
   return (
-    <div className="inline-flex items-center gap-0.5 rounded-full border p-1">
-      <ThemePresetSwitcher />
-      <ModeToggle />
-    </div>
+    <Sheet>
+      <div className="inline-flex items-center gap-0.5 rounded-full border p-1">
+        <SheetTrigger asChild>
+          <ThemeCustomizerTrigger />
+        </SheetTrigger>
+        <ModeToggle />
+      </div>
+      <ThemeCustomizer />
+    </Sheet>
   );
 }
 
