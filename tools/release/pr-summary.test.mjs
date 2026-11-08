@@ -1,7 +1,13 @@
 // Usage (repo root): node --test tools/release/pr-summary.test.mjs
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { JOBS, MARKER, buildComment, changelogSection } from './pr-summary.mjs';
+import {
+  JOBS,
+  MARKER,
+  buildComment,
+  changelogSection,
+  recordsFromNeeds,
+} from './pr-summary.mjs';
 
 const RUN = 'https://github.com/o/r/actions/runs/1';
 const record = (name, extra = {}) => ({
@@ -282,4 +288,45 @@ test('changelog: without Unreleased the top version section is read', () => {
 
 test('changelog: a missing file reads not found', () => {
   assert.ok(changelogSection(undefined).includes('Changelog: not found'));
+});
+
+test('recordsFromNeeds: every output record of every job, empty and invalid values skipped', () => {
+  const out = (r) => JSON.stringify(r);
+  const needs = {
+    typecheck: {
+      result: 'failure',
+      outputs: {
+        base: out(record('typecheck', { base: 'base' })),
+        radix: out(record('typecheck', { base: 'radix', status: 'fail' })),
+        aria: '',
+      },
+    },
+    'docs-e2e': {
+      result: 'success',
+      outputs: {
+        base: out(record('docs-e2e', { base: 'base' })),
+        radix: '{not json',
+        aria: out({ leg: 'aria' }),
+      },
+    },
+    lint: { result: 'success', outputs: { record: out(record('lint')) } },
+    'validate-pr': { result: 'skipped', outputs: {} },
+    head: { result: 'success' },
+  };
+  const records = recordsFromNeeds(JSON.stringify(needs));
+  assert.deepEqual(
+    records.map((r) => [r.name, r.base, r.status]),
+    [
+      ['typecheck', 'base', 'pass'],
+      ['typecheck', 'radix', 'fail'],
+      ['docs-e2e', 'base', 'pass'],
+      ['lint', undefined, 'pass'],
+    ],
+  );
+});
+
+test('recordsFromNeeds: an empty or invalid NEEDS reads no records', () => {
+  assert.deepEqual(recordsFromNeeds(''), []);
+  assert.deepEqual(recordsFromNeeds('{not json'), []);
+  assert.deepEqual(recordsFromNeeds('null'), []);
 });
