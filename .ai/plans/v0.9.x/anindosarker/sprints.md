@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 23:36
+Updated: 2026-11-08 23:38
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 |
 |---|---|---|---|---|---|---|
@@ -20,7 +20,7 @@ Updated: 2026-11-08 23:36
 | E4 12 Stored view page size |  |  | [x] |  |  |  |
 | E4 13 Docs parts hooks |  |  | [x] |  |  |  |
 | E5 14 Icon library select |  |  |  |  | [x] |  |
-| E5 15 Style sheet on demand |  |  |  |  |  | [ ] |
+| E5 15 Style sheet on demand |  |  |  |  |  | [x] |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |
