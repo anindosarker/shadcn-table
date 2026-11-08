@@ -50,7 +50,7 @@ const LIB_R = path.join(LIB, 'public', 'r');
 /** The shadcn style each base installs with: `<base>-<STYLE>`. */
 const STYLE = 'nova';
 /** Parts the examples import that the item itself does not depend on. */
-const EXTRA_PARTS = ['table', 'alert-dialog'];
+const EXTRA_PARTS = ['table', 'alert-dialog', 'sheet'];
 const COMPONENTS_JSON = path.join(APP, 'components.json');
 /** Files the CLI touches that this install must leave as they were. */
 const KEEP = [
