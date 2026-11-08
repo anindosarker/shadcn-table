@@ -49,3 +49,43 @@
 - Options:
   - a) Recommended: keep the default (the owner is the only admin)
   - b) set `can_admins_bypass` to false with one more PUT
+
+## A6 The sheet part lives in the docs only, not in the registry
+
+- Spec 04 said `pnpm add-part radix sheet`; the merged code instead lists `sheet` in `EXTRA_PARTS` of `apps/shadcn-table-docs/lib/install.mjs`, so `lib:install <base>` writes `components/ui-<base>/sheet.tsx` for every base and the registry gains no part the library does not use.
+
+- Options:
+  - a) Recommended: keep (docs only, like alert-dialog)
+  - b) revert: add `sheet` to the registry for radix, base and aria
+
+## A7 The theme shortcuts depend on a six-day-old beta
+
+- `@tanstack/react-hotkeys` is `^0.22.0`, a beta published 2026-11-02, added to `apps/shadcn-table-docs/package.json` by spec 04 (D2).
+
+- Options:
+  - a) Recommended: keep `^0.22.0`
+  - b) pin the exact version `0.22.0`
+
+## A8 Three theme controls change nothing visible in the docs
+
+- Menu Color, Menu Accent and Style in the theme panel have no visible effect: the docs `components/ui-<base>/` parts carry no `cn-*` hooks for them to target, and spec 04 does not regenerate those parts. Tokens, fonts and radius do apply.
+
+- Options:
+  - a) Recommended: keep the controls; hook the docs parts in a later spec
+  - b) hide the three controls until the hooks exist
+
+## A9 The home demo label reads the theme store, not the page attribute
+
+- Spec 04 1.6.7 said `no-step-3.tsx` observes `data-design-system` with a MutationObserver; the merged code reads the preset from `useDesignSystem()`, the same store the panel writes, and the label updates on every pick (panel, shortcut, cycle button).
+
+- Options:
+  - a) Recommended: keep `useDesignSystem()`
+  - b) revert to the MutationObserver as 1.6.7 words it
+
+## A10 Undo in the Colors tab steps back one keystroke at a time
+
+- Each valid keystroke in a Colors tab input is one history entry, so undo walks back through a typed value one valid prefix at a time (spec 04 does not say).
+
+- Options:
+  - a) Recommended: keep
+  - b) record a token edit on blur, one undo step per edit

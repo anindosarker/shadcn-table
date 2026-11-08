@@ -34,3 +34,11 @@
 ### F8 Two storybook plays time out under machine load and are not on the known-flake list
 
 - `stories/features/ClickToCopy.stories.tsx` "Click Copies Value" (base and radix) and `stories/features/RowOrdering.stories.tsx` "Drag Reorders Rows" (aria, 90 s timeout) failed once each in the E1 verifier runs at load average about 16 and passed on rerun and alone; neither is in the P5 known-flake list, so a loaded run reads them as red.
+
+### F9 Two doc comments name files spec 04 deleted or misstate their list
+
+- `apps/shadcn-table-docs/components/theme-demo/demo-themes.ts:42` still names `lib/theme-presets.ts` and `themes/*.css`, deleted by spec 04; `apps/shadcn-table-docs/lib/install.mjs:52` says `EXTRA_PARTS` holds "parts the examples import", but `sheet` is imported by the theme panel, not by an example.
+
+### F10 The static Storybook test folder matches the build-output ignore line
+
+- `.gitignore`: the line `storybook-static` also matches `test/storybook-static/`, so spec 06 added its two files with `git add -f`; git tracks them now, but a new file in that folder is ignored unless a `!test/storybook-static/` line follows.
