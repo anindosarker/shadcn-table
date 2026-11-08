@@ -279,29 +279,39 @@ async function themeCustomizer({ page, check }) {
       : undefined,
   );
 
-  const press = async (key) => {
+  /**
+   * Presses `key`, then polls `--primary` every 50 ms for up to 5000 ms until
+   * `done(value)` holds (F23: a fixed 200 ms raced the update on CI); returns
+   * the last value read either way.
+   */
+  const pressUntil = async (key, done) => {
     await page.keyboard.press(key);
-    await page.waitForTimeout(200);
+    return waitForPrimary(done);
+  };
+  const waitForPrimary = async (done) => {
+    const until = Date.now() + 5000;
+    let value = await primary();
+    while (!done(value) && Date.now() < until) {
+      await page.waitForTimeout(50);
+      value = await primary();
+    }
+    return value;
   };
   const before = await primary();
-  await press('r');
-  const shuffled = await primary();
+  const shuffled = await pressUntil('r', (v) => v !== before);
   check(
     'theme: r changes --primary',
     shuffled !== before,
     `${before} -> ${shuffled}`,
   );
-  await press('p');
-  const undone = await primary();
+  const undone = await pressUntil('p', (v) => v === before);
   check(
     'theme: p restores it',
     shuffled !== before && undone === before,
     `${shuffled} -> ${undone}`,
   );
-  await press('r');
-  const again = await primary();
-  await press('Shift+R');
-  const reset = await primary();
+  const again = await pressUntil('r', (v) => v !== before);
+  const reset = await pressUntil('Shift+R', (v) => v === DEFAULT_PRIMARY.dark);
   check(
     'theme: Shift+R returns to the default',
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
@@ -311,7 +321,9 @@ async function themeCustomizer({ page, check }) {
   const search = page.getByRole('dialog');
   await search.waitFor({ timeout: 5000 }).catch(() => {});
   const searchOpen = (await search.count()) > 0;
-  await press('r');
+  // the expected outcome is no change, so a short fixed wait, not a poll
+  await page.keyboard.press('r');
+  await page.waitForTimeout(200);
   const duringSearch = await primary();
   check(
     'theme: r does nothing while the search dialog is open',
@@ -329,8 +341,7 @@ async function themeCustomizer({ page, check }) {
     const input = panel.getByLabel('primary', { exact: true });
     if (await input.count()) {
       await input.fill(edited);
-      await page.waitForTimeout(200);
-      afterEdit = await primary();
+      afterEdit = await waitForPrimary((v) => v === edited);
     }
     await page.keyboard.press('Escape');
     await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
