@@ -319,9 +319,20 @@ async function themeCustomizer({ page, check }) {
     await page.keyboard.press(key);
     await page.waitForTimeout(200);
   };
+  // A shuffle can land on a look with the same primary (a theme matching the
+  // color preset it left), so `r` is pressed until --primary moves, at most
+  // three times; every press before that kept --primary, so undo still
+  // returns to `before`.
+  const shuffle = async (from) => {
+    let value = from;
+    for (let i = 0; i < 3 && value === from; i++) {
+      await press('r');
+      value = await primary();
+    }
+    return value;
+  };
   const before = await primary();
-  await press('r');
-  const shuffled = await primary();
+  const shuffled = await shuffle(before);
   check(
     'theme: r changes --primary',
     shuffled !== before,
@@ -341,8 +352,7 @@ async function themeCustomizer({ page, check }) {
     shuffled !== before && undone === before && redone === shuffled,
     `${undone} -> ${redone}`,
   );
-  await press('r');
-  const again = await primary();
+  const again = await shuffle(redone);
   await press('p');
   const afterP = await primary();
   check(
