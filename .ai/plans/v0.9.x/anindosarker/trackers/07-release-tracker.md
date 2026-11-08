@@ -16,7 +16,7 @@ Checks:
 - Check: storybook-static (base, radix, aria), `pnpm test storybook-static --base <b>` at df90bd27: pass
 
 - Task 1 Changelog pass and fast-forward: done, changelog commit c4960684 on `claude/review`; `dev` fast-forwarded 712f0c36..c4960684 and pushed; fast-forwarded again c4960684..df90bd27 after the F11 fix (2026-11-08 09:55)
-- Task 2 The suite on dev: green at df90bd27 except installation-e2e (F20, fixed by `refresh-installation-references`, merged into `dev` as 0adce149 per D30); installation-e2e rerun on `dev` at 0adce149 with `--no-diff` (F21): running
+- Task 2 The suite on dev: green at df90bd27 except installation-e2e (F20, fixed by `refresh-installation-references`, merged into `dev` as 0adce149 per D30); installation-e2e rerun on `dev` at 0adce149 with `--no-diff` (F21): paused by the owner at 11:03 after fresh, existing, base, aria, nextjs-base, nextjs-radix passed; nextjs-aria not finished
 
 ## Attention
 
