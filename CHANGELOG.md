@@ -24,6 +24,10 @@ publishes the section as the GitHub release notes.
 - The sticky PR Summary comment (`tools/release/pr-summary.mjs`) is a grouped table (D37): the PR title, one line with the release label, the run link and the status (all green, jobs failed or skipped), one `Job | Result` table with a bold group row per matrix job and its bases or scenarios under it, a collapsed block listing every error line of the failed jobs, and a changelog section with the `## Unreleased` counts by heading and the entry titles. Without `## Unreleased` it reads the top version section. The Prepare Release row of the draft is left out: the comment is written before that job runs.
 - On a label event the rows of the other jobs and the failures block are kept; the title, the status line, the Validate PR row and the changelog section are rebuilt.
 
+#### Spec 16 CI: test jobs skip the version bump commit
+
+- A new first job of `pr.yml`, `head`, reads the pull request's head commit and sets `bumped` when it is the `chore: version <v>` commit Prepare Release pushes as `github-actions[bot]` (D35). On that commit Typecheck, Storybook Tests, Docs E2E Tests and Installation E2E skip every matrix leg (a `skip` input on the four called workflows), Lint and Validate Repo skip, Validate PR and PR Summary still run, and Prepare Release is skipped with its needs, so the bump push runs no second test pass and prompts nobody. Any other head runs every job as before.
+
 ### Docs
 
 #### Spec 11 Persistent view example: ten rows
