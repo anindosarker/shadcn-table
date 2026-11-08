@@ -83,3 +83,5 @@
 
 ### F20 Installation E2E references predate the pages footer range
 
+### F21 Installation E2E capture diff cannot pass on macOS against the Linux references
+
