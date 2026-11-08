@@ -1,31 +1,31 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { cn } from "cn"
+import * as React from 'react';
+import { cn } from 'cn';
 import {
   DialogTrigger,
   Heading,
   Popover as PopoverPrimitive,
   type DialogTriggerProps,
   type PopoverProps as PopoverPrimitiveProps,
-} from "react-aria-components"
+} from 'react-aria-components';
 
 function PopoverTrigger({ children, ...props }: DialogTriggerProps) {
   return (
     <DialogTrigger data-slot="popover-trigger" {...props}>
       {children}
     </DialogTrigger>
-  )
+  );
 }
 
 function Popover({
   className,
-  placement = "bottom",
+  placement = 'bottom',
   offset = 4,
   crossOffset = 0,
   ...props
-}: Omit<PopoverPrimitiveProps, "className"> & {
-  className?: string
+}: Omit<PopoverPrimitiveProps, 'className'> & {
+  className?: string;
 }) {
   return (
     <PopoverPrimitive
@@ -34,22 +34,22 @@ function Popover({
       offset={offset}
       crossOffset={crossOffset}
       className={cn(
-        "z-50 flex w-72 origin-(--trigger-anchor-point) flex-col gap-2.5 rounded-lg bg-popover p-2.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden duration-100 data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2",
-        className
+        'cn-popover-content-aria z-50 w-72 origin-(--trigger-anchor-point) outline-hidden',
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
-function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
+function PopoverHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="popover-header"
-      className={cn("flex flex-col gap-0.5 text-sm", className)}
+      className={cn('cn-popover-header', className)}
       {...props}
     />
-  )
+  );
 }
 
 function PopoverTitle({
@@ -59,23 +59,23 @@ function PopoverTitle({
   return (
     <Heading
       data-slot="popover-title"
-      className={cn("font-medium", className)}
+      className={cn('cn-popover-title', className)}
       {...props}
     />
-  )
+  );
 }
 
 function PopoverDescription({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="popover-description"
-      className={cn("text-muted-foreground", className)}
+      className={cn('cn-popover-description', className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -84,4 +84,4 @@ export {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-}
+};
