@@ -1,7 +1,7 @@
 # 11: Persistent view example starts at ten rows, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/persistent-view-page-size`, worktree 05
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
