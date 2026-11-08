@@ -297,3 +297,5 @@ index e1645117..e67a5482 100644
 
 ### D24 The persistent view example starts at ten rows
 
+
+- Fixes F14. `initialState.pagination.pageSize` becomes 10 in `apps/shadcn-table-docs/examples/{radix,base,aria}/persistent-view/TS.tsx:344`; the stored view (`viewSettingsStorage.utils.ts`) keeps not persisting pagination, so a visitor's page size choice still resets on reload. No library change.
