@@ -31,6 +31,12 @@ publishes the section as the GitHub release notes.
 
 - The version bump waits for the owner's approval (D3): the release PR's `prepare-release` job runs in the GitHub Environment `release`, whose one required reviewer is the owner, so Prepare Release shows "Waiting for review" until the owner approves the deployment; a rejected review fails the job and pushes nothing. Every other `pr.yml` job stays automatic.
 
+### Fixed
+
+#### Spec 06 Storybook reset
+
+- The deployed Storybook resets each story after its play (D8, F6): the static builds run the play with the Interactions panel logging every step, then remount the story in its initial state; Rerun runs the play and resets again. `storybook dev`, vitest and a failing play keep the end state. `pnpm test storybook-static` checks it on a local static build or, with `--url`, on the deployed site.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
