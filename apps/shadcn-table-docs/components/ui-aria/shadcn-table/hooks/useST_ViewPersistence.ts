@@ -68,6 +68,7 @@ const readView = <TData extends ST_RowData>(
   columnPinning: table.atoms.columnPinning.get(),
   columnVisibility: table.atoms.columnVisibility.get(),
   density: table.atoms.density.get(),
+  pageSize: table.atoms.pagination.get().pageSize,
   viewSettings: table.atoms.viewSettings.get(),
 });
 
@@ -80,6 +81,7 @@ const readDefaultView = <TData extends ST_RowData>(
     columnPinning: initialState.columnPinning ?? {},
     columnVisibility: initialState.columnVisibility ?? {},
     density: initialState.density ?? 'comfortable',
+    pageSize: initialState.pagination?.pageSize,
     viewSettings: initialState.viewSettings,
   };
 };
@@ -115,11 +117,16 @@ const applyView = <TData extends ST_RowData>(
       start: [...(view.columnPinning.start ?? [])],
     });
   }
+  // Page index is not stored, so the restored size keeps the initial page index.
+  if (view.pageSize) {
+    const { pageSize } = view;
+    table.setPagination((old) => ({ ...old, pageSize }));
+  }
 };
 
 /**
- * Restores the view settings, their pins, density, column visibility, order
- * and pinning to `initialState` and deletes the stored view.
+ * Restores the view settings, their pins, density, column visibility, order,
+ * pinning and rows per page to `initialState` and deletes the stored view.
  */
 export const resetST_View = <TData extends ST_RowData>(
   table: ST_CoreTableInstance<TData>,
@@ -129,6 +136,7 @@ export const resetST_View = <TData extends ST_RowData>(
   table.resetColumnVisibility();
   table.resetColumnOrder();
   table.resetColumnPinning();
+  table.resetPageSize();
   const key = getST_ViewSettingsKey(table);
   if (key) removeStoredView(key);
 };
@@ -138,8 +146,9 @@ const noSubscription = () => () => {};
 /**
  * With `persistViewSettings`, applies the stored view once after hydration,
  * clears the root's pending mark, and from then on saves every change of the
- * view settings, density, column visibility, order and pinning. A view equal
- * to `initialState` removes the stored entry instead.
+ * view settings, density, column visibility, order, pinning and rows per
+ * page. A page index change alone saves nothing. A view equal to
+ * `initialState` removes the stored entry instead.
  */
 export const useST_ViewPersistence = <TData extends ST_RowData>(
   table: ST_CoreTableInstance<TData>,
@@ -187,12 +196,20 @@ export const useST_ViewPersistence = <TData extends ST_RowData>(
         writeStoredView(key, view);
       }
     };
+    let lastPageSize = table.atoms.pagination.get().pageSize;
+    const savePageSize = () => {
+      const { pageSize } = table.atoms.pagination.get();
+      if (pageSize === lastPageSize) return;
+      lastPageSize = pageSize;
+      save();
+    };
     const subscriptions = [
       table.atoms.viewSettings.subscribe(save),
       table.atoms.density.subscribe(save),
       table.atoms.columnVisibility.subscribe(save),
       table.atoms.columnOrder.subscribe(save),
       table.atoms.columnPinning.subscribe(save),
+      table.atoms.pagination.subscribe(savePageSize),
     ];
     return () => subscriptions.forEach(({ unsubscribe }) => unsubscribe());
   }, [hydrated, key, stored, table]);

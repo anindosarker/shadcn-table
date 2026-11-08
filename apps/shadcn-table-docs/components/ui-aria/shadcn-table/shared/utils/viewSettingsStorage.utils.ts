@@ -12,6 +12,7 @@ export interface ST_StoredView {
   };
   readonly columnVisibility?: Readonly<Record<string, boolean>>;
   readonly density?: ST_DensityState;
+  readonly pageSize?: number;
   readonly viewSettings?: Partial<ST_ViewSettingsState>;
 }
 
@@ -108,7 +109,7 @@ export const writeStoredView = (key: string, view: ST_StoredView) => {
 /**
  * The view stored under `key`, or `null`. With `columnIds`, a view whose
  * column order or visibility names a column the table lacks is dropped as a
- * whole.
+ * whole. A `pageSize` that is not a positive integer is dropped as if absent.
  */
 export const readStoredView = (
   key: string,
@@ -123,6 +124,12 @@ export const readStoredView = (
     return null;
   }
   if (!view || typeof view !== 'object') return null;
+  if (
+    view.pageSize !== undefined &&
+    !(Number.isInteger(view.pageSize) && view.pageSize > 0)
+  ) {
+    view = { ...view, pageSize: undefined };
+  }
   if (columnIds) {
     const known = new Set(columnIds);
     const names = [

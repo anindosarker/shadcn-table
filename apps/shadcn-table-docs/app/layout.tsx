@@ -3,6 +3,7 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import { TooltipProvider } from '@/components/ui-radix/tooltip';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { DesignSystemProvider } from '@/components/design-system-provider';
+import { ExampleIcons } from '@/components/example-icons';
 import { SearchDialog } from '@/components/search-dialog';
 import './global.css';
 import { Inter } from 'next/font/google';
@@ -41,10 +42,13 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       className={`${inter.variable} ${archivo.variable} ${designSystemFontVariables}`}
       suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
-        {/* The stored design system (or the default) before first paint:
-            lib/design-system/config.ts, kept in sync by DesignSystemProvider. */}
+      <head>
+        {/* The stored design system (or the default) before first paint,
+            the active style's sheet included (D29): lib/design-system/config.ts,
+            kept in sync by DesignSystemProvider. */}
         <script dangerouslySetInnerHTML={{ __html: designSystemScript }} />
+      </head>
+      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <style dangerouslySetInnerHTML={{ __html: searchHighlightStyle }} />
         {/* ST sub-components (ST_TopToolbar, ST_ToggleFiltersButton, row
             drag handles, ...) and the example playground render Radix
@@ -62,7 +66,12 @@ export default function Layout({ children }: LayoutProps<'/'>) {
               NEXT_PUBLIC_POSTHOG_KEY. */}
           <PostHogProvider>
             <TooltipProvider skipDelayDuration={0}>
-              <DesignSystemProvider>{children}</DesignSystemProvider>
+              <DesignSystemProvider>
+                {/* The Icon Library pick for every example table, one
+                    ST_DefaultsProvider per base copy
+                    (components/example-icons.tsx). */}
+                <ExampleIcons>{children}</ExampleIcons>
+              </DesignSystemProvider>
             </TooltipProvider>
           </PostHogProvider>
         </RootProvider>

@@ -109,3 +109,8 @@ export * from '@/components/ui/shadcn-table/components/toolbar/ST_ViewSettingsIt
 export * from '@/components/ui/shadcn-table/components/buttons/ST_TooltipButton';
 // spec 06.1
 export { ST_HeaderFilterEditor } from '@/components/ui/shadcn-table/components/toolbar/ST_HeaderFilterEditor';
+// spec 14
+export {
+  ST_DefaultsProvider,
+  useST_Defaults,
+} from '@/components/ui/shadcn-table/hooks/useST_Defaults';

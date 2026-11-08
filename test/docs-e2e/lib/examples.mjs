@@ -14,6 +14,55 @@ import {
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
+const DESIGN_SYSTEM_KEY = 'st-design-system';
+
+/**
+ * Spec 14 (D27): a stored `iconLibrary: 'tabler'` reaches the example on the
+ * page's base copy (components/example-icons.tsx): after a reload the
+ * toolbar's search toggle draws a Tabler svg. Clears the stored config and
+ * reloads after.
+ */
+async function storedIconLibrary(page, check) {
+  await page.evaluate((key) => {
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        config: { iconLibrary: 'tabler' },
+        savedAt: Date.now(),
+      }),
+    );
+  }, DESIGN_SYSTEM_KEY);
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  const sel = '[id="example-basic"] button[aria-label="Show/Hide search"] svg';
+  await page
+    .locator('[id="example-basic"] table tbody tr')
+    .first()
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+  const tabler = await page
+    .waitForFunction(
+      (s) => document.querySelector(s)?.classList.contains('tabler-icon'),
+      sel,
+      { timeout: 5000 },
+    )
+    .then(() => true)
+    .catch(() => false);
+  const cls =
+    (await page
+      .locator(sel)
+      .first()
+      .getAttribute('class')
+      .catch(() => '')) ?? '';
+  check('basic: stored Tabler pick switches the example icons', tabler, cls);
+  await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  await page
+    .locator('[id="example-basic"] table tbody tr')
+    .first()
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+}
+
 async function hasText(w, id, re, check) {
   const txt = (await w.innerText().catch(() => '')) ?? '';
   check(`${id}: text ${re}`, re.test(txt));
@@ -215,6 +264,7 @@ const checks = {
   '/docs/examples/basic': async ({ page, check }) => {
     const w = await example(page, 'basic', check);
     await singleExample(page, check);
+    await storedIconLibrary(page, check);
     // Example switcher: previous is disabled on the first example, next
     // steps to Minimal.
     const header = w.locator('header');
@@ -574,6 +624,28 @@ const checks = {
         !!box?.inside,
         box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
       );
+      // D24: with no stored view the example opens at ten rows
+      await page.evaluate(() =>
+        localStorage.removeItem('shadcn-table:persistent-view:view'),
+      );
+      await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+      const rows = w.locator('table tbody tr');
+      await rows
+        .first()
+        .waitFor({ timeout: 30000 })
+        .catch(() => {});
+      const count = await rows.count();
+      check('ten rows on first load', count === 10, `rows=${count}`);
+      const size = await w
+        .locator('[aria-label="Rows per page"]')
+        .first()
+        .evaluate((el) =>
+          el.tagName === 'SELECT'
+            ? el.value
+            : el.textContent?.match(/\d+/)?.[0],
+        )
+        .catch(() => null);
+      check('rows per page reads 10', size === '10', `select=${size}`);
     },
   ),
   '/docs/examples/popover-filters': examplePage(
