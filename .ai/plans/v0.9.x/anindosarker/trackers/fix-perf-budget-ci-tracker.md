@@ -1,6 +1,6 @@
 # Perf budgets on CI (F28), tracker
 
-Status: done
+Status: merged (629dcf81)
 Files owned: `test/docs-e2e/lib/getting-started.mjs`
 Depends on: none
 Branch `v0.9/perf-budget-ci`, worktree `shadcn-react-table.worktrees/03`
