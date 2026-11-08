@@ -354,3 +354,6 @@ index e1645117..e67a5482 100644
 - Source: A11
 
 - Source: A11. D21 removed the preset-code codec; the Random button (kept by D21) decoded its curated `SHUFFLE_PRESETS` with it, so the builder kept a private `curatedPreset` decoder and a `sameLook` field compare in `lib/design-system/config.ts`; `decodePreset` from `shadcn/preset` stays imported, nothing user-facing changes. Kept as merged (E4 08, `9d582dcd`).
+
+### D32 A CI-only red is reproduced and fixed under act before it merges
+
