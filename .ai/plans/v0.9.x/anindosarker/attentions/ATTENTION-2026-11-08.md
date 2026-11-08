@@ -123,6 +123,7 @@
   - b) a follow-up fix milestone adds a `Persistence` play variant with `pageIndex: 2` in `ViewSettings.stories.tsx`, red on 117a81b5, green on 811045dc
 
 ## A14 The pre-paint script creates the style sheet link, not the layout
+[D41]
 
 - Spec 15 section 1.6.3 has `app/layout.tsx` render the active style's `<link>` and the pre-paint script swap it; built that way, a page with a stored style failed React 19 hydration (error #418, links in `<head>` matched by href) and a second link appeared. The builder moved the link creation into the pre-paint script in `lib/design-system/config.ts` (`blocking=render`), `app/layout.tsx` renders no link; every check green, merged in 5df252e9.
 
@@ -131,6 +132,7 @@
   - b) revert to a server-rendered link in `app/layout.tsx` and solve the hydration mismatch another way (the script would then suppress or match the default link)
 
 ## A15 Every per-style sheet build runs through the optimizer, not only --minify
+[D42]
 
 - Spec 15 section 1.6.2 says only `--minify` passes a sheet through the optimizer and `predev` leaves it readable; `lib/build-styles.mjs` runs `optimize()` on every build (the flag only adds minification) so the flattened nesting and prefixes match the root bundle. Recorded under the tracker's Notes by the builder; merged in 5df252e9.
 
