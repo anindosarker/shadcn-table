@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 23:16
+Updated: 2026-11-08 23:27
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 |
 |---|---|---|---|---|---|---|
@@ -11,8 +11,8 @@ Updated: 2026-11-08 23:16
 | E2 05 Release approval | [x] |  |  |  |  |  |
 | E2 06 Storybook reset | [x] |  |  |  |  |  |
 | E3 07 Integration |  | [x] |  |  |  |  |
-| E3 07 Release PR |  |  | [ ] |  |  |  |
-| E3 07 After release |  |  |  | · |  |  |
+| E3 07 Release PR |  |  | [x] |  |  |  |
+| E3 07 After release |  |  |  | [ ] |  |  |
 | E4 08 Theme panel copy import |  | [x] |  |  |  |  |
 | E4 09 Theme panel shortcut row |  |  | [x] |  |  |  |
 | E4 10 Theme color picker |  |  |  | [x] |  |  |
