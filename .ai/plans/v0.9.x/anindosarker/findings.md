@@ -91,3 +91,5 @@
 - `test/installation-e2e/lib/browser.mjs:363`: the local capture on macOS differs from the Linux CI reference in every glyph (font rasterization), so the diff exceeds 500 pixels whatever the code; the v0.8.x local runs used `--no-diff` (v0.8.x tracker 08-test-runner-and-tests, line 22).
 - Local runs of the nextjs scenarios take `--no-diff`; the pixel diff is a CI check only. Recorded in process.md P5.
 
+### F22 Restoring a stored rows per page remaps the page index
+
