@@ -24,6 +24,14 @@ Checks:
 - `pnpm test storybook-tests --base aria` at bf40fd6a: pass, 619 passed (Icons play included)
 - `pnpm test docs-e2e --base base /` at 408a7ba9: pass (theme checks and the three icon checks)
 - `pnpm test docs-e2e --base base /docs/examples/basic` at 408a7ba9: pass
+- Verifier at 5cb8af69 (bf40fd6a..HEAD touched `test/docs-e2e/lib/getting-started.mjs`, so its checks rerun; the docs-e2e lines at 408a7ba9 stand, .ai-only diff since):
+- `pnpm install --frozen-lockfile` at 5cb8af69: pass, clean
+- `pnpm test typecheck --base radix`, `--base base`, `--base aria` at 5cb8af69: pass, tsc clean
+- `pnpm test lint` at 5cb8af69: pass (9 warnings, 0 errors)
+- `pnpm test validate-repo` at 5cb8af69: pass (bases identical, icon maps complete, tailwind valid, registry valid, 27 unit tests)
+- `pnpm test storybook-tests --base base` at 5cb8af69: pass, 619 passed (Icons play included)
+- `pnpm test storybook-tests --base radix` at 5cb8af69: pass, 619 passed
+- `pnpm test storybook-tests --base aria` at 5cb8af69: pass, 619 passed
 
 - Task 1 Reproduce (story typecheck and the icon checks red on the shipped code): done, a59bca71
 - Task 2 Dependencies (the five icon packages): done, 15ddc6da
