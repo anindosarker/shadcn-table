@@ -83,5 +83,11 @@
 
 ### F20 Installation E2E references predate the pages footer range
 
+- `test/installation-e2e/fixtures/reference/<base>/default-{light,dark}.png` (committed in 010f7359, v0.8.x) show the pages footer without the `1-10 of 50` range span that spec 02 (D6) added; `pnpm test installation-e2e` on `dev` at df90bd27 fails the three nextjs scenarios with 23626 (light) and 25084 (dark) pixels over the 500 limit, the same count on every base.
+- v0.8.x D-addendum (decisions.md line 780): a milestone that changes the default look replaces the six PNGs from a `pr.yml` dispatch with `installation-e2e-only=true`; spec 02 did not. Fix milestone `refresh-installation-references`.
+
 ### F21 Installation E2E capture diff cannot pass on macOS against the Linux references
+
+- `test/installation-e2e/lib/browser.mjs:363`: the local capture on macOS differs from the Linux CI reference in every glyph (font rasterization), so the diff exceeds 500 pixels whatever the code; the v0.8.x local runs used `--no-diff` (v0.8.x tracker 08-test-runner-and-tests, line 22).
+- Local runs of the nextjs scenarios take `--no-diff`; the pixel diff is a CI check only. Recorded in process.md P5.
 

@@ -105,3 +105,8 @@
 
 ## A12 How dev takes the installation reference refresh while E4 sits on claude/review
 
+- The 0.9.0 suite on `dev` (df90bd27) is green except the installation-e2e reference diff (F20); the fix milestone refreshes six PNGs on a branch cut from df90bd27 and merges it into `claude/review`. P1 says `dev` is then fast-forwarded from `claude/review` again, but `claude/review` now also carries the E4 merges 11 (d7ee15f3) and 08 (9d582dcd), which D15 keeps out of 0.9.0. The Release PR waits on this.
+
+- Options:
+  - a) Recommended: merge the fix branch `v0.9/refresh-installation-references` into `dev` directly (`dev` = df90bd27 plus the six PNGs), the one exception to P1 for this release; `claude/review` keeps everything.
+  - b) fast-forward `dev` to `claude/review`: 0.9.0 ships E4 08 and 11 (and whatever else merges before the PR opens).
