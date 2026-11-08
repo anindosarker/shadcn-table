@@ -54,6 +54,10 @@ publishes the section as the GitHub release notes.
 - Shortcuts through TanStack Hotkeys, each shown as a kbd hint: `R` shuffle, `Shift+R` reset, `C` another color preset, `P` undo; off while typing or while the search dialog is open.
 - The home theme demo cycles six palettes through the design system. The six `themes/*.css` files, `lib/theme-presets.ts` and `components/theme-preset-switcher.tsx` are gone.
 
+#### Spec 11 Persistent view example: ten rows
+
+- The persistent view example opens at 10 rows per page instead of 50 on every base (D24, F14); the stored view still does not keep the page size. The docs E2E check of `/docs/examples/persistent-view` clears the stored view, reloads and asserts 10 body rows and a rows-per-page select reading 10.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
