@@ -14,7 +14,7 @@ Checks:
 - Task 1 Reproduce: done (b47f9afc)
 - Task 2 Installer phase 2: done (4fdf49d3)
 - Task 3 Export gaps: done, none (exports of every part match; no installer change) (4fdf49d3)
-- Task 4 Cleanup: done (see last commit)
+- Task 4 Cleanup: done (5a66f4cc)
 
 ## Attention
 
