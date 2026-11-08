@@ -11,6 +11,11 @@ Checks:
 - Green, `pnpm test storybook-tests --base base` at 3a61b89b: pass, 619 passed
 - Green, `pnpm test storybook-tests --base radix` at 3a61b89b: pass, 619 passed
 - Green, `pnpm test storybook-tests --base aria` at 3a61b89b: pass, 619 passed on the third run; run 1 failed `Filtering` "Multi Select Field Controls" only, run 2 failed `ClickToCopy` "Click Copies Value" only (P5 flake), both under load and outside this file
+- Verifier (milestone fix-22-play) at c222ea33: 3a61b89b..c222ea33 touches only `.ai/`, so the lines above stand for HEAD and are not rerun
+- Typecheck base, `pnpm test typecheck --base base` at c222ea33: pass, tsc clean
+- Typecheck aria, `pnpm test typecheck --base aria` at c222ea33: pass, tsc clean
+- Validate repo, `pnpm test validate-repo` at c222ea33: pass, bases identical, registry valid, 27 unit tests
+- Docs E2E, `pnpm test docs-e2e --base base /docs/guides/view-settings` at c222ea33: pass, 14 passed 0 failed
 
 - Task 1 Persistence page index play: done (3a61b89b)
 
