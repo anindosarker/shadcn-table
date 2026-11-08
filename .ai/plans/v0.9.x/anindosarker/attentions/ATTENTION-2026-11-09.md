@@ -31,3 +31,9 @@
 
 ## A19 The release label minor ships 0.10.0, D45 names 0.9.1
 
+
+- D45 names the release 0.9.1 and the label `release:minor` (new public API: `ST_DefaultsProvider`, `pageSize` in the stored view); on 0.9.0 that label bumps to 0.10.0 (Validate PR on PR 135, run 42518019709: "Ships as 0.10.0 (release:minor)"). Prepare Release waits; the runner did not approve (a tag and a publish cannot be undone). Everything else is green; the D36 and D38 proof lines are recorded in `trackers/20-release-pr-0-9-1-tracker.md`.
+
+- Options:
+  - a) Recommended: ship 0.10.0 as labelled (semver: new public API is a minor), rename spec 20 and the trackers to 0.10.0 after the merge; the runner approves on the ruling
+  - b) relabel PR 135 `release:patch` (`gh pr edit 135 --remove-label release:minor --add-label release:patch`), a new `labeled` run, then approve: ships 0.9.1 with new API under a patch number
