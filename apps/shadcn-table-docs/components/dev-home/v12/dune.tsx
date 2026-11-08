@@ -25,8 +25,8 @@ interface DuneProps {
 
 /**
  * v4's drifting dune of box-drawing glyphs, recoloured live: the glyph colour
- * is read from --dh-accent and re-read whenever <html> changes design system
- * (data-design-system) or light/dark (class). Static under reduced motion; paused
+ * is read from --dh-accent and re-read whenever the design system is applied
+ * (data-design-system re-set) or light/dark changes (class). Static under reduced motion; paused
  * offscreen.
  */
 export function Dune({
@@ -155,7 +155,7 @@ export function Dune({
     });
     ro.observe(canvas);
 
-    // the theme customizer sets data-design-system and next-themes the .dark class on <html>
+    // the theme customizer re-sets data-design-system on every apply, next-themes the .dark class on <html>
     const mo = new MutationObserver(() => {
       setup();
       draw(performance.now() - t0);
