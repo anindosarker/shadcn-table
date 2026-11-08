@@ -1,6 +1,6 @@
 # 16: Test jobs skip the version bump commit, tracker
 
-Status: done
+Status: merged (8631dc0732f72c15a216a6f057a64820ffd79190)
 Branch `v0.9/ci-skip-bump-commit`, worktree `shadcn-react-table.worktrees/03`
 Checks:
 - P11 red line, `act pull_request -W .github/workflows/pr.yml -j lint -e bump.json` on the shipped workflows, scratch head `cace5bc5` (`chore: version 9.9.9`, github-actions[bot]) on 05c8c8da: Lint ran (`Run Main pnpm test lint --ci`), no skip; scratch reset
