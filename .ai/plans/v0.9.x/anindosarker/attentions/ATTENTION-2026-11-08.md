@@ -69,6 +69,7 @@
   - b) pin the exact version `0.22.0`
 
 ## A8 Three theme controls change nothing visible in the docs
+[D26]
 
 - Menu Color, Menu Accent and Style in the theme panel have no visible effect: the docs `components/ui-<base>/` parts carry no `cn-*` hooks for them to target, and spec 04 does not regenerate those parts. Tokens, fonts and radius do apply.
 
