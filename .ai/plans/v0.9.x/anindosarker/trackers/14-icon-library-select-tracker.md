@@ -1,6 +1,6 @@
 # 14: The Icon Library select switches the example tables' icons, tracker
 
-Status: done (local checks green; ready to merge)
+Status: merged (39dc76e7)
 Branch `v0.9/icon-library-select`, worktree 04
 Checks:
 - `pnpm test typecheck --base radix` at c827660c + Task 1 files: pass (the docs and registry tsconfigs do not include stories/, so the story red is read from the stories tsconfig below)
