@@ -1,4 +1,5 @@
 # 15: Only the active style's stylesheet loads
+- Epic: E5
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
