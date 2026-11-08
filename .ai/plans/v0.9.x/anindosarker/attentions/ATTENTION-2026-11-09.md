@@ -8,3 +8,6 @@
 - Options:
   - a) Recommended: keep (amend spec 18 1.6.2: "verbatim except the Validate PR lines")
   - b) revert: the block verbatim, a stale Validate PR failure stays until the next full run
+
+## A17 The four called workflows skip every step on the bump commit, not the job
+
