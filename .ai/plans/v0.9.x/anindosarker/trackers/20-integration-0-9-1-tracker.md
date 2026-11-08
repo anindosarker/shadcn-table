@@ -1,6 +1,6 @@
 # 20: Release 0.9.1, Integration, tracker
 
-Status: running
+Status: merged (763f923be2677dbd661d454646d1ecce93515576)
 Branch `v0.9/release-0-9-1-integration`, worktree 03
 Checks:
 - Check: record-output unit test, `node --test tools/release/record-output.test.mjs` at 5d29d199: pass (6 of 6; green expected, the cases describe the shipped capRecord, P11 not applicable)
@@ -13,9 +13,12 @@ Checks:
 - Check: changelog section well-formed, `node tools/release/prepare-release.mjs --check --base-version 0.9.0` at 1744fec8: pass (exit 2, not bumped)
 - Check (verifier): recorded checks reused, `git diff --name-only 5d29d199..433d16d2` touches only CHANGELOG.md and .ai/: no rerun at 433d16d2
 - Check (verifier): fix merges in master, `git merge-base --is-ancestor <sha> origin/master` at 433d16d2: pass (F20, F23, F24, F25 fixes 0adce149, ea276251, 50ef8dd5, 634739d3 in master; F22 3d5b0b13, 938765e6 not, listed under Fixed)
+- Check: merge, `git merge --no-ff origin/v0.9/release-0-9-1-integration` at e98ac7a0: pass (763f923b, no conflict)
+- Check: master in claude/review, `git merge-base --is-ancestor origin/master origin/claude/review` at 763f923b: pass (exit 0)
+- Check: Task 2 fast-forward, `git push origin origin/claude/review:dev` then `git rev-parse origin/dev origin/claude/review` at 763f923b: pass (763f923be2677dbd661d454646d1ecce93515576 twice)
 
 - Task 1 Ride-alongs (D46: .gitignore negation, record-output.test.mjs, pr-summary header): done, 5d29d199
-- Task 2 Changelog pass (on this branch; the fast-forward of dev is the merger's later step): done, 1744fec8
+- Task 2 Changelog pass and fast-forward to dev: done, 1744fec8, dev at 763f923b
 
 ## Attention
 
