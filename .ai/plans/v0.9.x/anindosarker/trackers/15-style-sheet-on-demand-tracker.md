@@ -1,7 +1,7 @@
 # 15: Only the active style's stylesheet loads, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/style-sheet-on-demand`, worktree 06
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
