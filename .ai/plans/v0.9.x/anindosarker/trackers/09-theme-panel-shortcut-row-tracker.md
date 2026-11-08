@@ -12,6 +12,7 @@ Checks:
 - `pnpm test typecheck --base radix` at fa52b856: pass
 - `pnpm test lint` at fa52b856: pass (0 errors, 9 warnings, none in owned files)
 - `pnpm test docs-e2e --base base /` at fa52b856: pass (67 passed, 0 failed; row scroll=client=327)
+- Verifier at eba60c8f: 2.2 and Acceptance (1.2) checks recorded green at fa52b856; `git diff --name-only fa52b856..eba60c8f` touches only `.ai/`, so none rerun; CI is the second run
 
 - Task 1 Reproduce: done (48168e17)
 - Task 2 Hotkeys: done (320027a0)
