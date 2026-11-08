@@ -1,6 +1,6 @@
 # Page index play (F22), tracker
 
-Status: done
+Status: merged (938765e6)
 Files owned: `packages/shadcn-table/stories/features/ViewSettings.stories.tsx`
 Depends on: none
 Branch `v0.9/page-index-play`, worktree 05
