@@ -404,8 +404,120 @@ async function themeCustomizer({ page, check }) {
     afterEdit === edited,
     afterEdit,
   );
+
+  await themeColorPicker({ page, check, trigger, panel, primary, press });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+}
+
+/**
+ * The Colors tab picker (spec 10, D23): the `primary` swatch is a button that
+ * opens a popover holding a `react-colorful` picker; dragging the hue to its
+ * start and the saturation square to its top right corner writes `#ff0000`
+ * live; after Escape one `Mod+Z` returns to the value before the click and a
+ * second one to the value before the typed edit that precedes the session, so
+ * the session left exactly one history entry. Closes the panel.
+ */
+async function themeColorPicker({
+  page,
+  check,
+  trigger,
+  panel,
+  primary,
+  press,
+}) {
+  const typed = 'oklch(0.55 0.15 250)';
+  let chainStart = '';
+  let before = '';
+  let opened = false;
+  let picked = '';
+  let undone = '';
+  let undoneTwice = '';
+  if (await trigger.count()) {
+    await trigger.click();
+    await panel
+      .first()
+      .waitFor({ timeout: 5000 })
+      .catch(() => {});
+    await page.waitForTimeout(300);
+    const input = panel.first().getByLabel('primary', { exact: true });
+    if (await input.count()) {
+      chainStart = await primary();
+      await input.fill(typed);
+      await page.waitForTimeout(200);
+      before = await primary();
+    }
+    const swatch = page.getByRole('button', {
+      name: 'Pick primary',
+      exact: true,
+    });
+    if (await swatch.count()) {
+      await swatch.click();
+      const picker = page.locator('[role="dialog"] .react-colorful').first();
+      opened = await picker
+        .waitFor({ timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+      if (opened) {
+        const viewport = page.viewportSize() ?? { width: 1280, height: 720 };
+        const clampX = (x) => Math.max(0, Math.min(viewport.width - 1, x));
+        const clampY = (y) => Math.max(0, Math.min(viewport.height - 1, y));
+        // press in the middle, release past the given edge: the picker clamps
+        const drag = async (part, toX, toY) => {
+          const box = await picker.locator(part).boundingBox();
+          if (!box) return;
+          await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+          await page.mouse.down();
+          await page.mouse.move(clampX(toX(box)), clampY(toY(box)), {
+            steps: 5,
+          });
+          await page.mouse.up();
+        };
+        await drag(
+          '.react-colorful__hue',
+          (box) => box.x - 8,
+          (box) => box.y + box.height / 2,
+        );
+        await drag(
+          '.react-colorful__saturation',
+          (box) => box.x + box.width + 8,
+          (box) => box.y - 8,
+        );
+        await page.waitForTimeout(200);
+        picked = await primary();
+      }
+      await page.keyboard.press('Escape');
+      await page
+        .locator('.react-colorful')
+        .first()
+        .waitFor({ state: 'detached', timeout: 5000 })
+        .catch(() => {});
+      await page.waitForTimeout(200);
+      await press('ControlOrMeta+z');
+      undone = await primary();
+      await press('ControlOrMeta+z');
+      undoneTwice = await primary();
+    }
+    await page.keyboard.press('Escape');
+    await panel
+      .first()
+      .waitFor({ state: 'detached', timeout: 5000 })
+      .catch(() => {});
+  }
+  check('theme: picker opens', opened, `opened=${opened}`);
+  check(
+    'theme: picker writes live',
+    opened && picked === '#ff0000' && picked !== before,
+    `${before} -> ${picked}`,
+  );
+  check(
+    'theme: picker undoes in one step',
+    opened &&
+      before === typed &&
+      undone === before &&
+      undoneTwice === chainStart,
+    `${chainStart} -> ${before} -> ${picked}, undo ${undone}, undo ${undoneTwice}`,
+  );
 }
 
 const checks = {
