@@ -10,6 +10,7 @@ Checks:
 - `pnpm test docs-e2e --base base` at 4fdf49d3: first run FAIL 1 (getting-started `/` "theme: Shift+R returns to the default", timing under load; passed twice alone on `/`), rerun pass (4 sections, 107 pages, all three theme-part checks green)
 - `pnpm test lint` at 4fdf49d3 plus the changelog: pass (9 warnings, pre-existing, examples/*/advanced and expanding-tree-flat-parse)
 - `pnpm test validate-repo` at 4fdf49d3 plus the changelog: pass (registry and public/r untouched)
+- Verifier at bc026a10: every 2.2 check and the 1.2 Acceptance lines are recorded at 4fdf49d3 (P11 red at b47f9afc); `git diff --name-only 4fdf49d3..bc026a10` touches only the tracker and CHANGELOG.md, so none is rerun; all green, CI is the second run
 
 - Task 1 Reproduce: done (b47f9afc)
 - Task 2 Installer phase 2: done (4fdf49d3)
