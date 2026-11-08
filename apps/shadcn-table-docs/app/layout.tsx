@@ -42,10 +42,13 @@ export default function Layout({ children }: LayoutProps<'/'>) {
       className={`${inter.variable} ${archivo.variable} ${designSystemFontVariables}`}
       suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
-        {/* The stored design system (or the default) before first paint:
-            lib/design-system/config.ts, kept in sync by DesignSystemProvider. */}
+      <head>
+        {/* The stored design system (or the default) before first paint,
+            the active style's sheet included (D29): lib/design-system/config.ts,
+            kept in sync by DesignSystemProvider. */}
         <script dangerouslySetInnerHTML={{ __html: designSystemScript }} />
+      </head>
+      <body className="flex flex-col min-h-screen" suppressHydrationWarning>
         <style dangerouslySetInnerHTML={{ __html: searchHighlightStyle }} />
         {/* ST sub-components (ST_TopToolbar, ST_ToggleFiltersButton, row
             drag handles, ...) and the example playground render Radix

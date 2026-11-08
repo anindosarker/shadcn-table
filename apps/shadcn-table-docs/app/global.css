@@ -3,17 +3,8 @@
 @import 'fumadocs-ui/css/preset.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-/* Component styles from shadcn-ui registry/styles: each scopes `.cn-*` hook classes
-   under `.style-<name>` on <html> (components/design-system-provider.tsx). The theme
-   tokens come from the design system's style element (lib/design-system/config.ts). */
-@import '../styles/style-vega.css' layer(base);
-@import '../styles/style-nova.css' layer(base);
-@import '../styles/style-lyra.css' layer(base);
-@import '../styles/style-maia.css' layer(base);
-@import '../styles/style-mira.css' layer(base);
-@import '../styles/style-luma.css' layer(base);
-@import '../styles/style-sera.css' layer(base);
-@import '../styles/style-rhea.css' layer(base);
+/* The per-style component sheets (styles/style-<name>.css) are compiled by
+   lib/build-styles.mjs and linked one at a time by the <link> in app/layout.tsx. */
 /* experimental /dev homepages, scoped under .dev-home */
 @import '../components/dev-home/tokens.css';
 /* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
