@@ -96,3 +96,5 @@
 - `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts:121` (spec 12, merged 117a81b5): `applyView` restores the stored size with `table.setPageSize`, which in TanStack 9.3.1 recomputes `pageIndex` to keep the top row; spec 12 section 1.6.3 says the page index is untouched, so a table with `initialState.pagination.pageIndex` above 0 and a stored size mounts on another page. Fix: `table.setPagination((old) => ({ ...old, pageSize: view.pageSize }))` in the three bases, the comment reworded, the docs copies regenerated.
 - Same review (fable, round 1, minors): `content/docs/guides/view-settings.mdx:109` Reset view bullet lacks "rows per page"; `content/docs/examples/persistent-view.mdx:6` lists a partial field set where spec 12 1.6.4 says the page names the option without a field list.
 
+### F23 Theme hotkey docs E2E checks read the variable a fixed 200 ms after the key
+
