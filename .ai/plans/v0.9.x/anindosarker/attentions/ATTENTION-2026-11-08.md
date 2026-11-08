@@ -96,6 +96,7 @@
   - b) record a token edit on blur, one undo step per edit
 
 ## A11 Random in the theme panel keeps its curated presets through a private decoder
+[D31]
 
 - Spec 08 removed the preset-code codec, but the Random button (kept by D21) decoded its curated presets with it; the builder kept Random working with a private `curatedPreset` decoder and a `sameLook` compare in `apps/shadcn-table-docs/lib/design-system/config.ts`, so `decodePreset` from `shadcn/preset` stays imported. Merged in 9d582dcd.
 
@@ -104,6 +105,7 @@
   - b) revert: drop `SHUFFLE_PRESETS`, Random shuffles by `randomFields` only, `decodePreset` import gone
 
 ## A12 How dev takes the installation reference refresh while E4 sits on claude/review
+[D30]
 
 - The 0.9.0 suite on `dev` (df90bd27) is green except the installation-e2e reference diff (F20); the fix milestone refreshes six PNGs on a branch cut from df90bd27 and merges it into `claude/review`. P1 says `dev` is then fast-forwarded from `claude/review` again, but `claude/review` now also carries the E4 merges 11 (d7ee15f3) and 08 (9d582dcd), which D15 keeps out of 0.9.0. The Release PR waits on this.
 
