@@ -112,3 +112,6 @@
 - Options:
   - a) Recommended: merge the fix branch `v0.9/refresh-installation-references` into `dev` directly (`dev` = df90bd27 plus the six PNGs), the one exception to P1 for this release; `claude/review` keeps everything.
   - b) fast-forward `dev` to `claude/review`: 0.9.0 ships E4 08 and 11 (and whatever else merges before the PR opens).
+
+## A13 The F22 fix has no play that fails on the shipped code
+
