@@ -1,6 +1,6 @@
 # 12: Stored view persists rows per page, tracker
 
-Status: done, awaiting review and merge
+Status: merged (117a81b5b5337bce189d56ddbb6044f8698d0a42)
 Branch `v0.9/stored-view-page-size`, worktree 05
 Checks:
 - Check: Persistence play red (P11), `ST_BASE=base vitest run stories/features/ViewSettings.stories.tsx` (package `shadcn-table`) on the shipped code plus the extended play: fail as expected, `Persistence` at `toContain('"pageSize":20')`, stored view `{"columnOrder":[...],"density":"spacious","viewSettings":{...}}` has no pageSize; 10 other stories pass
