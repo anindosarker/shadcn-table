@@ -7,7 +7,7 @@ Checks:
 
 - Task 1 Open the PR with label and auto-merge: done (PR 134, https://github.com/anindosarker/shadcn-table/pull/134, pr.yml run 42488458376, watcher armed 20:13)
 - Task 2 Approve the Prepare Release deployment (D15): superseded by D28, the owner approves; the runner stops when the job waits
-- Task 3 Merged on green: planned
+- Task 3 Merged on green: running; pr.yml run 42488458376 red on `Storybook Tests (aria)` only (`SubRowTree` plays "Expand Shows Children" and "Expand All Collapse All", `getByRole` on an undefined container; 616 of 618 pass; green locally at df90bd27 three times today), rerun once when the run completes (P5)
 
 ## Attention
 
