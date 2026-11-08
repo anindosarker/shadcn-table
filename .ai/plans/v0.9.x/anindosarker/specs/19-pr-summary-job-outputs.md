@@ -1,4 +1,5 @@
 # 19: PR Summary reads job outputs
+- Epic: E6
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
