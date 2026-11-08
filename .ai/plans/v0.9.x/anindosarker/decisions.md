@@ -346,3 +346,9 @@ index e1645117..e67a5482 100644
 ### D30 The installation reference refresh merges into dev directly
 
 - Source: A12
+
+- Source: A12. The fix milestone `refresh-installation-references` (F20: the six `test/installation-e2e/fixtures/reference/<base>/default-{light,dark}.png` taken after D6's footer range) is cut from `dev` at `df90bd27` and merged into `dev` directly with a merge commit, then into `claude/review`; `dev` is not fast-forwarded from `claude/review` again for 0.9.0, so the E4 and E5 merges stay out of it (D15). The one exception to P1 for this release; a later release returns to the fast-forward.
+
+### D31 Random keeps its curated presets through a private decoder
+
+- Source: A11
