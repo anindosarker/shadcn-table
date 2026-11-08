@@ -28,11 +28,11 @@ jobs:
       matrix:
         base: [base, radix, aria]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: ${{ !inputs.skip }}
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: ${{ !inputs.skip }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: ${{ !inputs.skip }}
         with:
           node-version: 22
@@ -43,7 +43,7 @@ jobs:
         if: ${{ !inputs.skip }}
       - run: pnpm test storybook-tests --ci --base ${{ matrix.base }}
         if: ${{ !inputs.skip }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ always() && !inputs.skip }}
         with:
           name: test-out-storybook-tests-${{ matrix.base }}
