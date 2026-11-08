@@ -1,4 +1,5 @@
 # 07: Release 0.9.0
+- Epic: E3
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 
@@ -95,7 +96,7 @@ sequenceDiagram
 #### 1.6.4 After release (D15, P4)
 
 - `release.yml` runs on the push to `master`: Check Release, Verify Deployment (polls www and storybook `/version.txt` up to 20 minutes, then tags `v0.9.0`), Validate Production (HTTP checks, v0.8.x D92), Publish Release (the GitHub release from the `## 0.9.0` section, the "Released in v0.9.0" PR comment). The watcher loop over `gh run watch <id> --exit-status` wakes the runner.
-- A red Verify Deployment or Validate Production: `gh workflow run release.yml -f version=0.9.0` reruns the late steps without retagging once the deploy serves 0.9.0 (D90); a red that needs code is a fix milestone on `claude/review` and the next version, reported as an ATTENTION item, not fixed on `master`.
+- A red Verify Deployment or Validate Production: `gh workflow run release.yml -f version=0.9.0` reruns the late steps without retagging once the deploy serves 0.9.0 (v0.8.x D90); a red that needs code is a fix milestone on `claude/review` and the next version, reported as an ATTENTION item, not fixed on `master`.
 - Then: `git checkout claude/review && git merge --ff-only origin/master && git push`, the same for `dev` (P4); the handoff rewritten with the release facts.
 - Does NOT delete `dev` or `claude/review`; does NOT touch `test-projects/`.
 
