@@ -1,9 +1,13 @@
 # 14: The Icon Library select switches the example tables' icons, tracker
 
-Status: planned
+Status: running
 Branch `v0.9/icon-library-select`, worktree 04
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- `pnpm test typecheck --base radix` at c827660c + Task 1 files: pass (the docs and registry tsconfigs do not include stories/, so the story red is read from the stories tsconfig below)
+- `tsc -p packages/shadcn-table/tsconfig.stories.json --noEmit` at c827660c + Task 1 files: fail as expected, `Icons.stories.tsx(5,3): TS2305 no exported member 'ST_DefaultsProvider'` (P11); 3 older errors in HeaderGroups, ViewSettings, PinnedItemsCustomToolbar stories are not this milestone's
+- `ST_BASE=radix vitest run stories/features/Icons.stories.tsx` at c827660c + Task 1 files: fail as expected, "does not provide an export named 'ST_DefaultsProvider'" (P11)
+- `pnpm test docs-e2e --base base /` at c827660c + Task 1 files: fail as expected, 3 failed: `icons: Tabler switches the home tables` (picked=false, the select is disabled), `icons: the pick survives a reload` (stored=lucide), `icons: Shift+R returns to Lucide` (P11)
+- `pnpm test docs-e2e --base base /docs/examples/basic` at c827660c + Task 1 files: fail as expected, 1 failed: `basic: stored Tabler pick switches the example icons` (class lucide lucide-search) (P11)
 
 - Task 1 Reproduce (story typecheck and the icon checks red on the shipped code): planned
 - Task 2 Dependencies (the five icon packages): planned
