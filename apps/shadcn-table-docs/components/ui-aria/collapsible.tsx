@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   DisclosurePanel as CollapsibleContentPrimitive,
@@ -7,10 +7,10 @@ import {
   type ButtonProps,
   type DisclosurePanelProps,
   type DisclosureProps,
-} from "react-aria-components"
+} from 'react-aria-components';
 
 function Collapsible({ ...props }: DisclosureProps) {
-  return <CollapsiblePrimitive data-slot="collapsible" {...props} />
+  return <CollapsiblePrimitive data-slot="collapsible" {...props} />;
 }
 
 function CollapsibleTrigger({ ...props }: ButtonProps) {
@@ -20,13 +20,13 @@ function CollapsibleTrigger({ ...props }: ButtonProps) {
       data-slot="collapsible-trigger"
       {...props}
     />
-  )
+  );
 }
 
 function CollapsibleContent({ ...props }: DisclosurePanelProps) {
   return (
     <CollapsibleContentPrimitive data-slot="collapsible-content" {...props} />
-  )
+  );
 }
 
-export { Collapsible, CollapsibleTrigger, CollapsibleContent }
+export { Collapsible, CollapsibleTrigger, CollapsibleContent };
