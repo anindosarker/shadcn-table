@@ -11,7 +11,19 @@ Checks:
 - `pnpm test storybook-tests --base base` at 7a2c9c66: pass (618 tests, ViewSettings Persistence included)
 - `pnpm test docs-e2e --base base /docs/guides/view-settings` at 7a2c9c66: pass (11)
 - `pnpm test lint` at 7a2c9c66: pass (9 warnings, 0 errors)
+- Verifier rerun at 864a2ec2 (registry.json changed after 7a2c9c66): `pnpm test typecheck --base radix|base|aria`: pass (tsc clean x3)
+- `pnpm test lint` at 864a2ec2: pass (9 warnings, 0 errors)
+- `pnpm test validate-repo` at 864a2ec2: pass (bases identical, registry valid, 27 unit tests)
+- `pnpm test storybook-tests --base base` at 864a2ec2: pass (618)
+- `pnpm test storybook-tests --base radix` at 864a2ec2: pass (618)
+- `pnpm test storybook-tests --base aria` at 864a2ec2: pass (618)
+- `pnpm test docs-e2e --base base /docs/guides/view-settings` at 864a2ec2: pass (11)
+- Review fable: not run by the verifier
 
 - Task 1 applyView keeps the page index, docs copies regenerated: done (2cb30726)
 - Task 2 docs, Reset view and persistent view: done (6d7381fc)
 - Task 3 checks and changelog: done (7a2c9c66)
+
+## Attention
+
+- No play covers F22 (a stored rows per page with `initialState.pagination.pageIndex` above 0), so no P11 red line on the shipped code is recorded; the `Persistence` play of spec 12 stays green but does not exercise the page index. The verifier recorded the spec 12 checks only and did not add a play.
