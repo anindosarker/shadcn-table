@@ -476,6 +476,7 @@ async function themeCustomizer({ page, check }) {
     closePanel,
   });
   await themeIconLibrary({ page, check, trigger, panel, closePanel });
+  await themeStyleSheet({ page, check, trigger, panel, closePanel, reload });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
   await page.emulateMedia({ reducedMotion: null });
@@ -690,6 +691,172 @@ async function themeIconLibrary({ page, check, trigger, panel, closePanel }) {
     `class=${await iconClass()}`,
   );
   await closePanel();
+}
+
+/**
+ * The style sheets (spec 15, D29): with empty storage the page links exactly
+ * one `/styles/style-<name>.css`, nova's, and no other stylesheet holds a
+ * `.style-*` rule; opening the panel and switching to light each leave under
+ * 300 ms of long tasks in the 2 s after the click (load-sensitive, P5); the
+ * Style select swaps the link to Sera's sheet and the `style-sera` class
+ * within 5 s, and a reload links Sera's sheet before any interaction.
+ * Ends with `Shift+R` and the panel closed.
+ */
+async function themeStyleSheet({
+  page,
+  check,
+  trigger,
+  panel,
+  closePanel,
+  reload,
+}) {
+  const SHEET = 'link[rel="stylesheet"][href*="/styles/style-"]';
+  /** The hrefs of the style links, in document order. */
+  const styleLinks = () =>
+    page.evaluate(
+      (sel) =>
+        Array.from(document.querySelectorAll(sel)).map((l) =>
+          l.getAttribute('href'),
+        ),
+      SHEET,
+    );
+  /** True when the one style link ends with `style-<name>.css`. */
+  const linksOnly = (links, name) =>
+    links.length === 1 && links[0].endsWith(`style-${name}.css`);
+  /**
+   * Long tasks in the 2 s after `act()`: a PerformanceObserver on `longtask`
+   * registered before it, the durations summed.
+   */
+  const longTasksAfter = async (act) => {
+    await page.evaluate(() => {
+      window.__stLongTasks = [];
+      window.__stLongTaskObserver?.disconnect();
+      window.__stLongTaskObserver = new PerformanceObserver((list) => {
+        for (const e of list.getEntries())
+          window.__stLongTasks.push({ start: e.startTime, dur: e.duration });
+      });
+      window.__stLongTaskObserver.observe({ type: 'longtask' });
+      window.__stLongTaskStart = performance.now();
+    });
+    await act();
+    await page.waitForTimeout(2000);
+    return page.evaluate(() => {
+      window.__stLongTaskObserver?.disconnect();
+      const t0 = window.__stLongTaskStart;
+      return Math.round(
+        window.__stLongTasks
+          .filter((e) => e.start >= t0 && e.start <= t0 + 2000)
+          .reduce((sum, e) => sum + e.dur, 0),
+      );
+    });
+  };
+
+  await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await reload();
+  const fresh = await styleLinks();
+  check(
+    'sheet: one style link',
+    linksOnly(fresh, 'nova'),
+    JSON.stringify(fresh),
+  );
+  const elsewhere = await page.evaluate((sel) => {
+    const link = document.querySelector(sel);
+    const found = [];
+    const walk = (rules) => {
+      for (const rule of Array.from(rules)) {
+        if (found.length >= 3) return;
+        const text = rule.selectorText;
+        if (typeof text === 'string' && text.trim().startsWith('.style-'))
+          found.push(text.slice(0, 60));
+        if (rule.cssRules) walk(rule.cssRules);
+      }
+    };
+    for (const sheet of Array.from(document.styleSheets)) {
+      if (link && sheet.ownerNode === link) continue;
+      try {
+        walk(sheet.cssRules);
+      } catch {
+        // a cross-origin sheet is not readable and is not ours
+      }
+    }
+    return found;
+  }, SHEET);
+  check(
+    'sheet: no style rules elsewhere',
+    elsewhere.length === 0,
+    JSON.stringify(elsewhere),
+  );
+
+  let panelOpen = -1;
+  let toggle = -1;
+  let picked = false;
+  let followed = false;
+  if (await trigger.count()) {
+    panelOpen = await longTasksAfter(() => trigger.click());
+    await panel
+      .first()
+      .waitFor({ timeout: 5000 })
+      .catch(() => {});
+    const mode = panel.first().getByRole('group', { name: 'Mode' });
+    const light = mode.getByRole('button', { name: 'Light' });
+    if (await light.count()) {
+      toggle = await longTasksAfter(() => light.click());
+      await mode
+        .getByRole('button', { name: 'Dark' })
+        .click()
+        .catch(() => {});
+      await page.waitForTimeout(300);
+    }
+    const select = panel.first().getByLabel('Style', { exact: true });
+    if (await select.count()) {
+      picked = await select
+        .click({ timeout: 5000 })
+        .then(async () => {
+          const option = page.getByRole('option', { name: 'Sera' });
+          await option.waitFor({ timeout: 5000 });
+          await option.click();
+          return true;
+        })
+        .catch(() => false);
+    }
+    followed = await page
+      .waitForFunction(
+        (sel) => {
+          const links = document.querySelectorAll(sel);
+          return (
+            links.length === 1 &&
+            links[0].getAttribute('href').endsWith('style-sera.css') &&
+            document.documentElement.classList.contains('style-sera')
+          );
+        },
+        SHEET,
+        { timeout: 5000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+    await closePanel();
+  }
+  check(
+    'perf: panel open',
+    panelOpen >= 0 && panelOpen < 300,
+    `${panelOpen} ms`,
+  );
+  check('perf: light/dark toggle', toggle >= 0 && toggle < 300, `${toggle} ms`);
+  const afterPick = await styleLinks();
+  check(
+    'sheet: follows the Style select',
+    picked && followed,
+    `picked=${picked} links=${JSON.stringify(afterPick)}`,
+  );
+
+  await reload();
+  const storedLinks = await styleLinks();
+  check(
+    'sheet: stored style at first paint',
+    linksOnly(storedLinks, 'sera'),
+    JSON.stringify(storedLinks),
+  );
 }
 
 const checks = {
