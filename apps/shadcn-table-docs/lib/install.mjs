@@ -12,7 +12,9 @@
  * Source: the built items in packages/shadcn-table/public/r/
  * (`pnpm -w registry:build`): the core item <item>-core.json, the Lucide item
  * <item>.json (icons.ts) and the locale items <item>-locale-<code>.json (the
- * localization examples import every locale), merged into one item so the
+ * localization examples import every locale) and the icon set items
+ * <item>-<set>.json (installed as icons/<set>.ts beside icons.ts, spec 14),
+ * merged into one item so the
  * CLI never resolves the core dependency through its GitHub address. The item
  * is rewritten on the way in: its `@/components/ui/` imports point at
  * `@/components/ui-<base>/` (the CLI rewrites only `@/registry/...`
@@ -54,6 +56,7 @@ import { fileURLToPath } from 'node:url';
 import {
   BASES,
   baseItems,
+  ICON_SETS,
   REFERENCE_BASE,
 } from '../../../tools/registry/lib.mjs';
 
@@ -130,6 +133,21 @@ for (const file of localeItems) {
   item.files.push(
     ...JSON.parse(fs.readFileSync(path.join(LIB_R, file), 'utf8')).files,
   );
+}
+// The icon set items (spec 14, D27): each one's icons/<set>.ts lands beside
+// icons.ts instead of over it, for the docs' Icon Library select
+// (components/example-icons.tsx). Their packages are docs dependencies, so
+// the items' dependencies are left out.
+for (const set of Object.keys(ICON_SETS)) {
+  for (const file of readItem(`${itemName}-${set}`).files) {
+    item.files.push({
+      ...file,
+      target: file.target.replace(
+        /shadcn-table\/icons\.ts$/,
+        `shadcn-table/icons/${set}.ts`,
+      ),
+    });
+  }
 }
 for (const file of item.files) {
   file.content = file.content.replace(

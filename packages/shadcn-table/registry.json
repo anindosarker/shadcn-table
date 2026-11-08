@@ -538,6 +538,11 @@
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
         },
         {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
+        },
+        {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
@@ -1936,6 +1941,11 @@
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/radix/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
         },
         {
           "path": "registry/radix/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
@@ -3338,6 +3348,11 @@
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
         },
         {
+          "path": "registry/aria/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
+        },
+        {
           "path": "registry/aria/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_DragAutoScroll.ts"
@@ -4736,6 +4751,11 @@
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_ComposedRef.ts",
           "type": "registry:ui",
           "target": "@ui/shadcn-table/hooks/useST_ComposedRef.ts"
+        },
+        {
+          "path": "registry/base/components/ui/shadcn-table/hooks/useST_Defaults.tsx",
+          "type": "registry:ui",
+          "target": "@ui/shadcn-table/hooks/useST_Defaults.tsx"
         },
         {
           "path": "registry/base/components/ui/shadcn-table/hooks/useST_DragAutoScroll.ts",
