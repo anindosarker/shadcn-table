@@ -183,9 +183,11 @@ const DESIGN_SYSTEM_KEY = 'st-design-system';
  * The theme customizer (components/theme-customizer.tsx, D2): the default
  * tokens come from the design system style element with empty storage and
  * with a choice older than 2 days; the palette button opens the panel, which
- * has no Copy and no Import button (D21); the
- * `r`, `p` and `Shift+R` shortcuts shuffle, undo and reset, and do nothing
- * while the search dialog is open; a Colors tab edit changes the computed
+ * has no Copy and no Import button (D21) and one shortcut row with Reset,
+ * Undo, Redo, Random and Next preset that does not overflow (D22); with the
+ * panel open `r`, `Mod+Z`, `Mod+Shift+Z` and `Shift+R` shuffle, undo, redo
+ * and reset, `p` does nothing; `r` does nothing while the search dialog is
+ * open; a Colors tab edit changes the computed
  * variable. Leaves the page on the default look with empty storage.
  */
 async function themeCustomizer({ page, check }) {
@@ -277,14 +279,42 @@ async function themeCustomizer({ page, check }) {
       copyImport === 0,
     `heading=${heading} tabs=${tabs.join(',')} copyImport=${copyImport}`,
   );
-  await page.keyboard.press('Escape');
-  await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
-  await page.evaluate(() =>
-    document.activeElement instanceof HTMLElement
-      ? document.activeElement.blur()
-      : undefined,
+
+  // D22: one shortcut row under the header, five buttons by accessible name
+  const shortcutNames = ['Reset', 'Undo', 'Redo', 'Random', 'Next preset'];
+  const shortcutCounts = [];
+  for (const name of shortcutNames) {
+    shortcutCounts.push(
+      await panel.getByRole('button', { name, exact: true }).count(),
+    );
+  }
+  check(
+    'theme: the shortcut row has Reset, Undo, Redo, Random, Next preset',
+    shortcutCounts.every((n) => n === 1),
+    shortcutNames.map((n, i) => `${n}=${shortcutCounts[i]}`).join(' '),
+  );
+  const rowSize = await page.evaluate(() => {
+    const row = document.querySelector('[data-slot="theme-shortcut-row"]');
+    return row ? { scroll: row.scrollWidth, client: row.clientWidth } : null;
+  });
+  check(
+    'theme: the shortcut row does not overflow',
+    rowSize !== null && rowSize.scroll === rowSize.client,
+    JSON.stringify(rowSize),
   );
 
+  // the shortcuts, pressed with the panel open once focus has moved into it
+  await page
+    .waitForFunction(
+      () =>
+        document.querySelector('[role="dialog"]')?.contains(
+          document.activeElement,
+        ) === true,
+      null,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+  await page.waitForTimeout(300);
   const press = async (key) => {
     await page.keyboard.press(key);
     await page.waitForTimeout(200);
@@ -297,15 +327,29 @@ async function themeCustomizer({ page, check }) {
     shuffled !== before,
     `${before} -> ${shuffled}`,
   );
-  await press('p');
+  await press('ControlOrMeta+z');
   const undone = await primary();
   check(
-    'theme: p restores it',
+    'theme: Mod+Z restores it',
     shuffled !== before && undone === before,
     `${shuffled} -> ${undone}`,
   );
+  await press('ControlOrMeta+Shift+z');
+  const redone = await primary();
+  check(
+    'theme: Mod+Shift+Z reapplies the shuffled value',
+    shuffled !== before && undone === before && redone === shuffled,
+    `${undone} -> ${redone}`,
+  );
   await press('r');
   const again = await primary();
+  await press('p');
+  const afterP = await primary();
+  check(
+    'theme: p changes nothing',
+    afterP === again,
+    `${again} -> ${afterP}`,
+  );
   await press('Shift+R');
   const reset = await primary();
   check(
@@ -313,6 +357,14 @@ async function themeCustomizer({ page, check }) {
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
     `${again} -> ${reset}`,
   );
+  await page.keyboard.press('Escape');
+  await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await page.evaluate(() =>
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement.blur()
+      : undefined,
+  );
+
   await page.keyboard.press('ControlOrMeta+k');
   const search = page.getByRole('dialog');
   await search.waitFor({ timeout: 5000 }).catch(() => {});
