@@ -52,11 +52,15 @@ const ViewSettingsTable = (props: Partial<ST_TableOptions<Task>>) => {
     table.atoms.viewSettings,
     (state) => state.gridLines,
   );
+  const pageSize = useSelector(
+    table.atoms.pagination,
+    (state) => state.pageSize,
+  );
   return (
     <>
       <ShadcnTable table={table} />
       <output className="text-sm" data-testid="view-state">
-        {`density=${density} gridLines=${gridLines}`}
+        {`density=${density} gridLines=${gridLines} pageSize=${pageSize}`}
       </output>
     </>
   );
@@ -245,10 +249,31 @@ export const Persistence = {
       expect(window.localStorage.getItem(STORAGE_KEY)).toContain('spacious'),
     );
 
+    // Rows per page is part of the stored view (D25).
+    await userEvent.click(
+      canvas
+        .getAllByLabelText('Rows per page')
+        .find((element) => element.tagName === 'BUTTON')!,
+    );
+    await userEvent.click(
+      await within(document.body).findByRole('option', { name: '20' }),
+    );
+    await waitFor(() =>
+      expect(viewState(canvasElement)).toContain('pageSize=20'),
+    );
+    await waitFor(() =>
+      expect(window.localStorage.getItem(STORAGE_KEY)).toContain(
+        '"pageSize":20',
+      ),
+    );
+
     // A remount reads the stored view and clears the pending mark.
     await userEvent.click(canvas.getByRole('button', { name: 'Remount' }));
     await waitFor(() =>
       expect(viewState(canvasElement)).toContain('density=spacious'),
+    );
+    await waitFor(() =>
+      expect(viewState(canvasElement)).toContain('pageSize=20'),
     );
     expect(canvasElement.querySelector('[data-st-view-pending]')).toBeNull();
 
