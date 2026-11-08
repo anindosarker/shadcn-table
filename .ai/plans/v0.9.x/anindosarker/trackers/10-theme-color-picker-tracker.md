@@ -1,6 +1,6 @@
 # 10: Color swatches open a picker, tracker
 
-Status: running
+Status: done
 Branch `v0.9/theme-color-picker`, worktree 04
 Checks:
 
@@ -11,3 +11,18 @@ Checks:
 - `pnpm --filter shadcn-table-docs exec eslint components/theme-customizer.tsx` at feb69b0c: pass
 - `pnpm --filter shadcn-table-docs types:check` at feb69b0c: pass
 - `pnpm test docs-e2e --base base /` at feb69b0c: pass (70 passed, 0 failed; picker #ff0000, undo to the typed value, second undo to the value before it)
+- `pnpm test typecheck --base radix` at 9b2cea14: pass
+- `pnpm test lint` at 9b2cea14: pass (0 errors, 9 warnings, none in owned files)
+- `pnpm test validate-repo` at 9b2cea14: pass
+- `pnpm install --frozen-lockfile` at 9b2cea14: pass (clean)
+- `pnpm test docs-e2e --base base /` at 9b2cea14: first run 1 red, the P5 flake "theme: Shift+R returns to the default" (`again` was already the default; the three `r` presses found no other primary); rerun pass (70 passed, 0 failed, the three picker checks green)
+
+- Task 1 Reproduce: done (cec8cf0c)
+- Task 2 Dependency: done (a6055ae0)
+- Task 3 Provider session, toHex: done (55f419c6)
+- Task 4 Token row popover: done (feb69b0c)
+- Task 5 Cleanup: done (9b2cea14)
+
+## Attention
+
+- `toHex` resolves a non-hex value by painting it on a 1x1 canvas and reading the pixel, not through a hidden element's computed color as 1.6.2 says: Chrome keeps oklch as oklch in a computed style, so that route returns no hex. Same outcome (browser resolves, no color library); alpha is dropped.
