@@ -48,3 +48,35 @@
 ### F11 The docs dev server logs errors on every page load
 
 - Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review` (`815436fa`), GET `/`: two logs on every load. Server: `[TanStack Hotkeys] A hotkey label was formatted during server rendering without a platform, so it uses 'linux'` (the kbd hints of the theme panel, E2 04, format on the server with no `platform`). Browser: `A tree hydrated but some attributes of the server rendered HTML didn't match the client properties` under `<Page>` of `(home)/page`, attribute mismatch not yet located. Owner: "Every time I run the server locally I see huge errors."
+
+### F10 The theme panel carries Copy and Import
+
+- Owner, 2026-11-08, screenshot of the panel on `/docs/examples/persistent-view` (dev, `claude/review`): the Copy button (top row) and the Import button (Presets row), both from D2's layout, marked "Unnecessary items, remove them."
+
+### F11 The shortcut buttons and hints are spread over the panel
+
+- Owner, 2026-11-08, same screenshot: Undo (`P`) and Redo sit in the top row, Random (`R`) in the Presets row, the cycle hint `C` under the preset select, Reset (`⇧R`) as an icon in the header. Owner: keep all shortcut buttons and hints together at the top.
+
+### F12 Reset is not discoverable
+
+- Owner, 2026-11-08, same screenshot: "There is no button or hint to reset theme." The header holds an icon-only reset button with a `⇧R` hint (spec 04 review fix), which the owner did not read as reset.
+
+### F13 The color tokens have no color picker
+
+- Owner, 2026-11-08, same screenshot: each token in the Colors tab shows a static swatch and a hex input; no picker opens from the swatch. The reference (shadcnstudio.com/theme-generator, D2) opens a picker.
+
+### F14 The persistent view example starts with more than ten rows
+
+- Owner, 2026-11-08, `/docs/examples/persistent-view`: the default page size should be ten.
+
+### F15 The docs dev server is slow
+
+- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review`: "The site is super slow in dev server." Cause not yet located (lookup running: bundler, per-request work in the design-system provider).
+
+### F16 The icon library cannot be changed
+
+- Owner, 2026-11-08, same screenshot: the Icon Library select is disabled at Lucide (D2: "Lucide only, v0.7.x D38"). Owner: add the option.
+
+### F17 Undo and redo use `p` and no key
+
+- Owner, 2026-11-08: undo and redo should be the regular shortcuts, Cmd+Z and Cmd+Shift+Z (Ctrl on Windows and Linux); D2 gave undo `p` and redo nothing.
