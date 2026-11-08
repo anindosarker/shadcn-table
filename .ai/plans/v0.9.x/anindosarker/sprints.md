@@ -9,7 +9,7 @@ Updated: 2026-11-08 06:15
 | E1 03 Resize animation | [x] |  |  |  |
 | E2 04 Theme customizer | [ ] |  |  |  |
 | E2 05 Release approval | [ ] |  |  |  |
-| E2 06 Storybook reset | [ ] |  |  |  |
+| E2 06 Storybook reset | [x] |  |  |  |
 | E3 07 Integration |  | · |  |  |
 | E3 07 Release PR |  |  | · |  |
 | E3 07 After release |  |  |  | · |
