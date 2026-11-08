@@ -1,7 +1,7 @@
 # 10: Color swatches open a picker, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/theme-color-picker`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

@@ -115,3 +115,8 @@
 
 ## A13 The F22 fix has no play that fails on the shipped code
 
+- Fix milestone `stored-view-page-index` (F22, merged 811045dc) changed how a stored rows-per-page is restored so the page index stays, but no story play exercises a table with `initialState.pagination.pageIndex` above 0, so P11 (a fix's play fails on the shipped code first) has no red line; the spec 12 `Persistence` play stays green before and after.
+
+- Options:
+  - a) Recommended: accept as is; the behavior is covered by the three typechecks and the Persistence play, the page-index case is a one-line spec clause
+  - b) a follow-up fix milestone adds a `Persistence` play variant with `pageIndex: 2` in `ViewSettings.stories.tsx`, red on 117a81b5, green on 811045dc

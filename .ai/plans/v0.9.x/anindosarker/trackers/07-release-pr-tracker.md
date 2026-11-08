@@ -3,10 +3,10 @@
 Status: running
 Branch `dev` at 0adce149, main checkout (gh only)
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: label and auto-merge, `gh pr view 134 --json labels,autoMergeRequest --jq '[.labels[].name, .autoMergeRequest.enabledAt != null]'` at 0adce149: pass (`["release:minor", true]`)
 
-- Task 1 Open the PR with label and auto-merge: running
-- Task 2 Approve the Prepare Release deployment (D15): planned
+- Task 1 Open the PR with label and auto-merge: done (PR 134, https://github.com/anindosarker/shadcn-table/pull/134, pr.yml run 42488458376, watcher armed 20:13)
+- Task 2 Approve the Prepare Release deployment (D15): superseded by D28, the owner approves; the runner stops when the job waits
 - Task 3 Merged on green: planned
 
 ## Attention
