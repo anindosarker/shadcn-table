@@ -21,6 +21,7 @@ apps/shadcn-table-docs/tsconfig.*.json
 /dist
 dist
 storybook-static
+!test/storybook-static/
 
 # misc
 .DS_Store
