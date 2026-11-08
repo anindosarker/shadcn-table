@@ -81,3 +81,5 @@
 
 - Owner, 2026-11-08, same screenshot: Undo (`P`) and Redo sit in the top row, Random (`R`) in the Presets row, the cycle hint `C` under the preset select, Reset (`⇧R`) as an icon in the header. Owner: keep all shortcut buttons and hints together at the top.
 
+### F20 Installation E2E references predate the pages footer range
+
