@@ -377,6 +377,7 @@ index e1645117..e67a5482 100644
 
 - In `.github/workflows/pr.yml`, every test job (typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-pr, PR Summary as applicable) gets an `if:` that skips it when the PR head commit is the bot's `chore: version <v>` commit pushed by `prepare-release` (D3); a job skipped by its condition reports Success for required checks, so auto-merge merges without a second test run. The bump commit changes version files only. `prepare-release` itself keeps running only on an unbumped head. The next release (0.9.1) is the first to run this way; the spec proves it with the 0.9.1 PR's check list (one run of each test job, the bump commit's jobs skipped).
 - Owner, 2026-11-08: "doesn't that mean we just ran the same checks again? doesn't it seem unnecessary?"
+- Consequence, owner 2026-11-08: the bot's bump push prompts nobody (its test jobs skip, so `prepare-release`, which needs them, is skipped too), while any regular push after an Approve (a fix) runs the tests and prompts again; that second prompt is wanted and stays (the idea of skipping `prepare-release` on an already bumped head was dropped).
 
 ### D36 The workflows use the Node 24 action majors
 
