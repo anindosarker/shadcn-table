@@ -1,7 +1,7 @@
 # 13: Docs parts carry the design-system hooks, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/docs-parts-hooks`, worktree 06
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
