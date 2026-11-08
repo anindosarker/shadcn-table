@@ -34,14 +34,52 @@ permissions:
   contents: read
 
 jobs:
+  # The PR head commit: bumped=true when it is the `chore: version <v>`
+  # commit Prepare Release pushes as github-actions[bot] (D35); the test
+  # jobs then skip (the called workflows through their skip input, so each
+  # matrix leg still reports its check context). false without a PR. The
+  # default checkout (the merge commit, depth 2) holds the head commit as a
+  # parent, so git reads it by sha without a fetch. Its if: is the label
+  # condition alone, so the installation-e2e-only dispatch still reaches
+  # Installation E2E, which needs this job.
+  head:
+    name: Head
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
+    runs-on: ubuntu-latest
+    outputs:
+      bumped: ${{ steps.commit.outputs.bumped }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Read the head commit
+        id: commit
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          bumped=false
+          if [ -n "$HEAD_SHA" ]; then
+            { read -r author; read -r subject; } <<< "$(git log -1 --format='%an%n%s' "$HEAD_SHA")"
+            if [ "$author" = 'github-actions[bot]' ] && printf '%s\n' "$subject" | grep -qE '^chore: version [0-9]'; then
+              bumped=true
+            fi
+            echo "head $HEAD_SHA: $author, $subject"
+          fi
+          echo "bumped=$bumped"
+          echo "bumped=$bumped" >> "$GITHUB_OUTPUT"
+
   typecheck:
     name: Typecheck
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/typecheck.yml
+    with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
 
   lint:
     name: Lint
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
+    needs: [head]
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,19 +100,26 @@ jobs:
 
   storybook-tests:
     name: Storybook Tests
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/storybook-tests.yml
+    with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
 
   docs-e2e:
     name: Docs E2E Tests
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/docs-e2e.yml
+    with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
 
   # bases-identical, icon-maps, tailwind-classes, registry-valid and the
   # tool unit tests (node --test "tools/**/*.test.mjs").
   validate-repo:
     name: Validate Repo
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
+    needs: [head]
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -95,9 +140,11 @@ jobs:
 
   installation-e2e:
     name: Installation E2E
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     uses: ./.github/workflows/installation-e2e.yml
     with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
       no-diff: ${{ github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only }}
 
   # Exactly one `release:` label on a PR into master (from dev only); on
