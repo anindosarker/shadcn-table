@@ -77,6 +77,10 @@ publishes the section as the GitHub release notes.
 
 - One row under the theme panel's header holds Reset (`Shift+R`), Undo (`Mod+Z`), Redo (`Mod+Shift+Z`), Random (`R`) and Next preset (`C`) (D22): icon buttons named by their label, each with a tooltip carrying the label and its key, since the labeled buttons do not fit the 360 px panel. The header keeps the title and the close button, the Presets row the preset select. Undo moves from `P` to `Mod+Z` (Cmd on macOS, Ctrl elsewhere), redo gains `Mod+Shift+Z`, and `P` is no longer bound.
 
+#### Spec 10 Theme panel: color picker
+
+- Each token swatch in the theme panel's Colors tab is a button (`Pick <token>`) that opens a popover with a `react-colorful` hex picker above a copy of the token's text field (D23, F13). Dragging writes the token live as hex; closing the popover records one undo step, so `Mod+Z` returns to the value from before it opened. Typed values keep one undo step per change (A10), and an invalid value still applies nothing. `react-colorful` 5.8.1 is a new dependency of the docs app.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
