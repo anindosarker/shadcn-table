@@ -74,7 +74,7 @@ sequenceDiagram
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` block of E4, E5 and E6 sits under `### Added`, `### Changed` or `### Docs` inside `## Unreleased` (today: Added Spec 12; Changed Spec 19, 18, 16, 17; Docs Spec 11, 08, 13, 09, 10, 14, 15); `#### Spec 14` moves to `### Added` (a new public export, `ST_DefaultsProvider`); the fixes F20 to F25 each have one line under `### Fixed` (`#### Fix F<n>` as 0.9.0 did); no `### Breaking` or `### Removed`. Prepare Release renames `## Unreleased` to `## 0.9.1 - <date>`; nothing else edits the file.
+- `CHANGELOG.md` (P9): before the fast-forward, every `#### Spec NN` block of E4, E5 and E6 sits under `### Added`, `### Changed` or `### Docs` inside `## Unreleased` (today: Added Spec 12; Changed Spec 19, 18, 16, 17; Docs Spec 11, 08, 13, 09, 10, 14, 15); `#### Spec 14` moves to `### Added` (a new public export, `ST_DefaultsProvider`); the fixes F20 to F25 whose merge is not yet in `master` each have one line under `### Fixed` (`#### Fix F<n>` as 0.9.0 did; F20, F23, F24, F25 shipped in 0.9.0 and F21 has no fix commit, so 0.9.1 lists Fix F22 only); no `### Breaking` or `### Removed`. Prepare Release renames `## Unreleased` to `## 0.9.1 - <date>`; nothing else edits the file.
 - `packages/shadcn-table/package.json` and the root `package.json`: version `0.9.1` through Prepare Release only; never bumped by hand.
 - The trackers: `trackers/20-integration-0-9-1-tracker.md` (Integration), `trackers/20-release-pr-0-9-1-tracker.md`, `trackers/20-after-release-0-9-1-tracker.md`: check lines, the PR number, the run ids, the proof lines of 1.6.3, the final shas.
 
@@ -129,7 +129,7 @@ sequenceDiagram
 - Review: none
 - Local CI: `node --test tools/release/record-output.test.mjs`, `pnpm test validate-repo`, `pnpm test lint`
 - Task 1: Ride-alongs (1.6.2): the test file first, red on the shipped `capRecord` only where a case is wrong (the cases describe the shipped rule, so green is the expected result and the tracker says so, P11 does not apply to a coverage add); the `.gitignore` line; the header sentence; `pnpm format`. Checks: `node --test tools/release/record-output.test.mjs` green; `git check-ignore -q test/storybook-static/new.mjs` exits 1; `grep -c "spec 18's act check" tools/release/pr-summary.mjs` prints `0`; `pnpm test validate-repo` green; `pnpm test lint` green
-- Task 2: Changelog pass of 1.6.1 on `claude/review` (commit, push), then the fast-forward of 1.6.3. Checks: `git rev-parse origin/dev` equals `git rev-parse origin/claude/review`; `grep -c '^## Unreleased' CHANGELOG.md` prints `1`; every `#### Spec` block of 08 to 19 and one `#### Fix F<n>` line for F20 to F25 sit under a `###` group
+- Task 2: Changelog pass of 1.6.1 on `claude/review` (commit, push), then the fast-forward of 1.6.3. Checks: `git rev-parse origin/dev` equals `git rev-parse origin/claude/review`; `grep -c '^## Unreleased' CHANGELOG.md` prints `1`; every `#### Spec` block of 08 to 19 and one `#### Fix F<n>` line per fix not yet in `master` (F22) sit under a `###` group
 
 ### Milestone: Release PR 0.9.1
 
