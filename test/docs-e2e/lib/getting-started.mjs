@@ -180,6 +180,31 @@ const DEFAULT_PRIMARY = {
 const DESIGN_SYSTEM_KEY = 'st-design-system';
 
 /**
+ * Closes the search dialog before the next click: Escape, a second Escape,
+ * its close control, then a reload as the last resort, each tried only while
+ * the dialog is still attached (on CI one Escape left it open and it
+ * intercepted the `trigger` click). Waits for `trigger` after a reload.
+ */
+async function closeSearch(page, search, trigger) {
+  const gone = () =>
+    search
+      .waitFor({ state: 'detached', timeout: 5000 })
+      .then(() => true)
+      .catch(() => false);
+  await page.keyboard.press('Escape');
+  if (await gone()) return;
+  await page.keyboard.press('Escape');
+  if (await gone()) return;
+  const close = search.getByRole('button', { name: /close/i }).first();
+  if (await close.count()) {
+    await close.click({ timeout: 5000 }).catch(() => {});
+    if (await gone()) return;
+  }
+  await page.goto(page.url());
+  await trigger.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {});
+}
+
+/**
  * The theme customizer (components/theme-customizer.tsx, D2): the default
  * tokens come from the design system style element with empty storage and
  * with a choice older than 2 days; the palette button opens the panel; the
@@ -330,8 +355,7 @@ async function themeCustomizer({ page, check }) {
     searchOpen && duringSearch === reset,
     `search=${searchOpen} ${reset} -> ${duringSearch}`,
   );
-  await page.keyboard.press('Escape');
-  await search.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await closeSearch(page, search, trigger);
 
   const edited = 'oklch(0.6 0.2 30)';
   let afterEdit = '';
