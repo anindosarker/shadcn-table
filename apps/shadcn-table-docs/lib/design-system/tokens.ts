@@ -56,6 +56,40 @@ export function isColorValue(value: string) {
   return CSS.supports('color', trimmed);
 }
 
+const HEX = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+const hexCache = new Map<string, string>();
+let hexCanvas: CanvasRenderingContext2D | null | undefined;
+
+/** `value` as a `#rrggbb` hex for the color picker. Hex passes through; any
+ * other color is resolved by the browser (painted on a 1x1 canvas and read
+ * back, since a computed style keeps oklch as oklch). Client only: without a
+ * document, or for a value the browser cannot parse, it returns `#000000`.
+ * Alpha is dropped. */
+export function toHex(value: string) {
+  const trimmed = value.trim();
+  if (HEX.test(trimmed)) return trimmed;
+  const cached = hexCache.get(trimmed);
+  if (cached) return cached;
+  if (typeof document === 'undefined' || !isColorValue(trimmed)) {
+    return '#000000';
+  }
+  if (hexCanvas === undefined) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    hexCanvas = canvas.getContext('2d', { willReadFrequently: true });
+  }
+  if (!hexCanvas) return '#000000';
+  hexCanvas.clearRect(0, 0, 1, 1);
+  hexCanvas.fillStyle = '#000000';
+  hexCanvas.fillStyle = trimmed;
+  hexCanvas.fillRect(0, 0, 1, 1);
+  const [r, g, b] = hexCanvas.getImageData(0, 0, 1, 1).data;
+  const hex = `#${[r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('')}`;
+  hexCache.set(trimmed, hex);
+  return hex;
+}
+
 /** Keeps only known tokens with string values, for both modes. */
 export function normalizeOverrides(input: unknown): TokenOverrides {
   const result: TokenOverrides = { light: {}, dark: {} };

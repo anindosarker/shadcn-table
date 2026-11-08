@@ -38,6 +38,8 @@ type StoreState = {
 const listeners = new Set<() => void>();
 let state: StoreState | null = null;
 let history: History<DesignSystemConfig> = emptyHistory();
+/** The config when a picker session began (beginTokenEdit); null outside one. */
+let editStart: DesignSystemConfig | null = null;
 
 const SERVER_STATE: StoreState = {
   config: DEFAULT_CONFIG,
@@ -133,27 +135,67 @@ function commit(config: DesignSystemConfig) {
   publish(config);
 }
 
+function sameConfig(a: DesignSystemConfig, b: DesignSystemConfig) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/** Starts a picker session: token changes until endTokenEdit apply without
+ * history. A nested call is a no-op. */
+function beginTokenEdit() {
+  if (editStart) return;
+  editStart = current();
+}
+
+/** Ends a picker session with one history entry when the config changed.
+ * Without an open session it is a no-op. */
+function endTokenEdit() {
+  if (!editStart) return;
+  const start = editStart;
+  editStart = null;
+  if (sameConfig(start, current())) return;
+  history = record(history, start);
+  publish(current());
+}
+
+/** Runs a change that records its own history during a picker session: the
+ * session so far becomes one entry, and a new session starts after it. */
+function outsideTokenEdit(change: () => void) {
+  if (!editStart) {
+    change();
+    return;
+  }
+  endTokenEdit();
+  change();
+  editStart = current();
+}
+
 function setDesignSystem(next: Partial<DesignSystemConfig>) {
-  const previous = current();
-  // Like create, a forced radius (Lyra, Sera) stays after leaving that style.
-  const config = normalizeConfig({ ...previous, ...next });
-  if (JSON.stringify(config) === JSON.stringify(previous)) return;
-  history = record(history, previous);
-  commit(config);
+  outsideTokenEdit(() => {
+    const previous = current();
+    // Like create, a forced radius (Lyra, Sera) stays after leaving that style.
+    const config = normalizeConfig({ ...previous, ...next });
+    if (sameConfig(config, previous)) return;
+    history = record(history, previous);
+    commit(config);
+  });
 }
 
 function undo() {
-  const step = undoHistory(history, current());
-  if (!step) return;
-  history = step.history;
-  commit(step.value);
+  outsideTokenEdit(() => {
+    const step = undoHistory(history, current());
+    if (!step) return;
+    history = step.history;
+    commit(step.value);
+  });
 }
 
 function redo() {
-  const step = redoHistory(history, current());
-  if (!step) return;
-  history = step.history;
-  commit(step.value);
+  outsideTokenEdit(() => {
+    const step = redoHistory(history, current());
+    if (!step) return;
+    history = step.history;
+    commit(step.value);
+  });
 }
 
 function shuffle() {
@@ -173,11 +215,20 @@ function reset() {
   setDesignSystem(DEFAULT_CONFIG);
 }
 
+/** One history entry per call (A10); inside a picker session the change
+ * applies and stores, and endTokenEdit records the session once (D23). */
 function setToken(mode: Mode, token: Token, value: string) {
-  const { overrides } = current();
-  setDesignSystem({
+  const previous = current();
+  const { overrides } = previous;
+  const next = {
     overrides: { ...overrides, [mode]: { ...overrides[mode], [token]: value } },
-  });
+  };
+  if (!editStart) {
+    setDesignSystem(next);
+    return;
+  }
+  const config = normalizeConfig({ ...previous, ...next });
+  if (!sameConfig(config, previous)) commit(config);
 }
 
 /** The theme shortcuts, each also shown as a kbd hint in the panel. */
@@ -197,6 +248,8 @@ type DesignSystemContextValue = StoreState & {
   undo: () => void;
   redo: () => void;
   setToken: (mode: Mode, token: Token, value: string) => void;
+  beginTokenEdit: () => void;
+  endTokenEdit: () => void;
 };
 
 const DesignSystemContext =
@@ -293,6 +346,8 @@ export function DesignSystemProvider({
       undo,
       redo,
       setToken,
+      beginTokenEdit,
+      endTokenEdit,
     }),
     [store],
   );
