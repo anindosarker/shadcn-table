@@ -27,6 +27,15 @@ publishes the section as the GitHub release notes.
 
 - A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
 
+### Docs
+
+#### Spec 04 Theme customizer
+
+- The palette button in the docs and home navs opens a theme customizer panel on the right (D2) in place of the six-preset dropdown: Copy (theme CSS or preset code), Undo, Redo, Mode, Style, Icon Library, Base Color, Theme, Menu Color, Menu Accent, Presets (Import a preset code, Random, Default plus 42 tweakcn palettes) and the tabs Colors (per-token editing for the current mode), Typography and Other.
+- A fresh visitor sees the Emerald look as the `Default` preset; a stored choice (`st-design-system` in localStorage) applies before first paint and is dropped after 2 days. The old `st-theme` key is removed.
+- Shortcuts through TanStack Hotkeys, each shown as a kbd hint: `R` shuffle, `Shift+R` reset, `C` another color preset, `P` undo; off while typing or while the search dialog is open.
+- The home theme demo cycles six palettes through the design system. The six `themes/*.css` files, `lib/theme-presets.ts` and `components/theme-preset-switcher.tsx` are gone.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
