@@ -129,6 +129,7 @@ export function ThemeCustomizer() {
           Colors, fonts and radius of the docs site, saved in this browser for
           two days.
         </SheetDescription>
+        <Kbd>{format(THEME_HOTKEYS.reset)}</Kbd>
         <Button
           variant="ghost"
           size="icon-sm"
