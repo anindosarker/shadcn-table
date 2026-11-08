@@ -336,6 +336,7 @@ export const ST_TableBodyCell = <TData extends ST_RowData>({
                 wrap: !!wrapText,
               }),
               gridLineClassName(gridLines, isLastColumn),
+              '[table[data-size-resetting]_&]:transition-[width,min-width] [table[data-size-resetting]_&]:duration-200 [table[data-size-resetting]_&]:ease-out motion-reduce:[table[data-size-resetting]_&]:transition-none',
               isLastRow && 'border-b-0',
               columnDefType === 'display' && 'px-0',
               tableCellProps.align === 'center'

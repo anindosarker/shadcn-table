@@ -39,6 +39,38 @@ export const renderColumnIcon = (
   return icon as ReactNode;
 };
 
+/** Marks the table while a column size reset transitions the cell widths. */
+export const ST_SIZE_RESETTING_ATTR = 'data-size-resetting';
+
+/**
+ * `column.resetSize()`, animated (D5): when the width will change and motion
+ * is allowed, marks the table with `ST_SIZE_RESETTING_ATTR` so the cells
+ * transition their width, and clears the mark on the width `transitionend`.
+ */
+export const resetColumnSizeAnimated = <TData extends ST_RowData>(
+  column: ST_Column<TData>,
+) => {
+  const tableElement = column.table.refs.tableRef.current;
+  const defaultSize =
+    column.columnDef.size ?? column.table.options.defaultColumn?.size;
+  const reducedMotion =
+    typeof window !== 'undefined' &&
+    !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (tableElement && column.getSize() !== defaultSize && !reducedMotion) {
+    tableElement.setAttribute(ST_SIZE_RESETTING_ATTR, '');
+    // Other transitions bubble here too (colors on buttons); only the cell
+    // width ends the reset.
+    const handleTransitionEnd = (event: TransitionEvent) => {
+      if (event.propertyName !== 'width' && event.propertyName !== 'min-width')
+        return;
+      tableElement.removeAttribute(ST_SIZE_RESETTING_ATTR);
+      tableElement.removeEventListener('transitionend', handleTransitionEnd);
+    };
+    tableElement.addEventListener('transitionend', handleTransitionEnd);
+  }
+  column.resetSize();
+};
+
 export const getColumnId = <TData extends ST_RowData>(
   columnDef: ST_ColumnDef<TData, unknown, ST_NeutralPartPropTypes>,
 ): string =>

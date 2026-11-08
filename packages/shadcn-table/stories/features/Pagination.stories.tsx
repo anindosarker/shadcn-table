@@ -53,15 +53,15 @@ const bigData = [...Array(11_111)].map(() => ({
   lastName: faker.person.lastName(),
 }));
 
-export const PaginationEnabledDefault = () => (
+export const PaginationEnabled = () => (
   <ShadcnTable columns={columns} data={data} />
 );
 
-export const PaginationEnabledDefaultMoreData = () => (
+export const PaginationCompactMoreData = () => (
   <ShadcnTable
     columns={columns}
     data={moreData}
-    paginationDisplayMode="default"
+    paginationDisplayMode="compact"
     stTableContainerProps={{
       className: 'min-h-[600px]',
     }}
@@ -70,7 +70,7 @@ export const PaginationEnabledDefaultMoreData = () => (
 
 let moreDataConsoleError: ReturnType<typeof spyOn> | undefined;
 
-PaginationEnabledDefaultMoreData.beforeEach = () => {
+PaginationCompactMoreData.beforeEach = () => {
   const spy = spyOn(console, 'error');
   moreDataConsoleError = spy;
   return () => spy.mockRestore();
@@ -78,9 +78,7 @@ PaginationEnabledDefaultMoreData.beforeEach = () => {
 
 // From the last page, a global search that leaves one page moves the table
 // back to page index 0 without a console error.
-PaginationEnabledDefaultMoreData.play = async ({
-  canvasElement,
-}: StoryContext) => {
+PaginationCompactMoreData.play = async ({ canvasElement }: StoryContext) => {
   const canvas = within(canvasElement);
   const rangeText = () =>
     canvas.getByText(
@@ -100,7 +98,7 @@ PaginationEnabledDefaultMoreData.play = async ({
   await expect(moreDataConsoleError).not.toHaveBeenCalled();
 };
 
-export const PaginationEnabledDefaultBigData = () => (
+export const PaginationEnabledBigData = () => (
   <ShadcnTable
     columns={columns}
     data={bigData}
@@ -113,7 +111,7 @@ export const PaginationEnabledDefaultBigData = () => (
   />
 );
 
-export const PaginationEnabledDefaultBigDataLanguage = () => (
+export const PaginationEnabledBigDataLanguage = () => (
   <ShadcnTable
     columns={columns}
     data={bigData}
@@ -130,7 +128,7 @@ export const PaginationEnabledDefaultBigDataLanguage = () => (
   />
 );
 
-export const PaginationEnabledDefaultNoRowsPerPage = () => (
+export const PaginationEnabledNoRowsPerPage = () => (
   <ShadcnTable
     columns={columns}
     data={data}
@@ -266,7 +264,7 @@ const firstRowFirstName = (canvasElement: HTMLElement) =>
 
 /** Next page shows the next ten rows. */
 export const NextPageChangesRows = {
-  render: () => <PaginationEnabledDefault />,
+  render: () => <PaginationEnabled />,
   play: async ({ canvasElement }: StoryContext) => {
     const canvas = within(canvasElement);
     await canvas.findAllByText(data[0].firstName);
@@ -328,5 +326,70 @@ export const PagesModeNumbers = {
     );
     expect(bodyRows(canvasElement).length).toBe(1);
     expect(firstRowFirstName(canvasElement)).toBe(moreData[550].firstName);
+  },
+};
+
+// Fixed rows: only the first one matches the search `Liam`.
+const searchData = [...Array(21)].map((_, index) => ({
+  address: `${index + 1} Oak Street`,
+  age: 20 + index,
+  firstName: index === 0 ? 'Liam' : 'Noah',
+  lastName: `Row ${index + 1}`,
+}));
+
+const footerRangeText = (canvasElement: HTMLElement) =>
+  within(canvasElement).getByText(
+    (_, element) =>
+      element?.tagName === 'SPAN' &&
+      /^\d+-\d+ of \d+$/.test(element.textContent ?? ''),
+  ).textContent;
+
+/**
+ * The pages footer shows the row range (D6); a global search that leaves one
+ * page shows the filtered count and a single page button.
+ */
+export const PagesFooterRowRange = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={searchData}
+      paginationDisplayMode="pages"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(footerRangeText(canvasElement)).toBe('1-10 of 21'),
+    );
+    await userEvent.click(canvas.getByLabelText('Show/Hide search'));
+    await userEvent.type(canvas.getByPlaceholderText('Search'), 'Liam');
+    await waitFor(() =>
+      expect(footerRangeText(canvasElement)).toMatch(/^1-(\d+) of \1$/),
+    );
+    expect(
+      canvas.getAllByRole('button', { name: /^(Go to )?page \d+$/ }),
+    ).toHaveLength(1);
+  },
+};
+
+/** The compact footer shows the row range and four navigation buttons (D6). */
+export const CompactFooter = {
+  render: () => (
+    <ShadcnTable
+      columns={columns}
+      data={data}
+      paginationDisplayMode="compact"
+    />
+  ),
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await waitFor(() =>
+      expect(footerRangeText(canvasElement)).toBe('1-10 of 21'),
+    );
+    expect(
+      canvas.getAllByRole('button', {
+        name: /^Go to (first|previous|next|last) page$/,
+      }),
+    ).toHaveLength(4);
   },
 };

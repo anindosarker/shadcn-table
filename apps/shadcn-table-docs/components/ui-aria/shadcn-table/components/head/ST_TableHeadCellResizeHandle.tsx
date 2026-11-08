@@ -4,6 +4,7 @@ import {
   type ST_Header,
   type ST_RowData,
 } from '@/components/ui-aria/shadcn-table/types';
+import { resetColumnSizeAnimated } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 
 export interface ST_TableHeadCellResizeHandleProps<TData extends ST_RowData>
   extends ComponentProps<'div'> {
@@ -66,7 +67,7 @@ export const ST_TableHeadCellResizeHandle = <TData extends ST_RowData>({
               ...old,
               isResizingColumn: false,
             }));
-            column.resetSize();
+            resetColumnSizeAnimated(column);
           }}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}

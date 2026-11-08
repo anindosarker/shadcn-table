@@ -36,7 +36,6 @@ const Example = () => {
     <ShadcnTable
       columns={columns}
       data={data}
-      enableColumnFilterModes
       enableColumnOrdering
       enableEditing
       enableColumnPinning
