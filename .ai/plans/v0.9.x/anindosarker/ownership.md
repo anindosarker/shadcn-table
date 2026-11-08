@@ -1,6 +1,6 @@
 # v0.9.x ownership
 
-Generated: 2026-11-08 by ownership.py
+Generated: 2026-11-09 by ownership.py
 
 | Milestone | Spec | Depends on | Files |
 |---|---|---|---|
@@ -25,6 +25,9 @@ Generated: 2026-11-08 by ownership.py
 | CI Node 24 actions | 17 | CI skip bump commit | `.github/workflows/pr.yml`, `.github/workflows/typecheck.yml`, `.github/workflows/storybook-tests.yml`, `.github/workflows/docs-e2e.yml`, `.github/workflows/installation-e2e.yml`, `.github/workflows/release.yml` |
 | PR summary layout | 18 | none | `tools/release/pr-summary.mjs`, `tools/release/pr-summary.test.mjs` |
 | PR summary job outputs | 19 | CI Node 24 actions, PR summary layout | `.github/workflows/pr.yml`, `.github/workflows/typecheck.yml`, `.github/workflows/storybook-tests.yml`, `.github/workflows/docs-e2e.yml`, `.github/workflows/installation-e2e.yml`, `tools/release/record-output.mjs`, `tools/release/pr-summary.mjs`, `tools/release/pr-summary.test.mjs` |
+| Integration 0.9.1 | 20 | none | `.gitignore`, `tools/release/record-output.test.mjs`, `tools/release/pr-summary.mjs` |
+| Release PR 0.9.1 | 20 | Integration 0.9.1 | none |
+| After release 0.9.1 | 20 | Release PR 0.9.1 | none |
 | CRUD dialog check waits for the rows (F25) | fix | none | `test/docs-e2e/lib/examples.mjs` |
 | Dev server clean (F11) | fix | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
 | Page index play (F22) | fix | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
@@ -33,4 +36,4 @@ Generated: 2026-11-08 by ownership.py
 | Theme check closes the search dialog (F24) | fix | none | `test/docs-e2e/lib/getting-started.mjs` |
 | Theme hotkey checks wait for the change (F23) | fix | none | `test/docs-e2e/lib/getting-started.mjs` |
 
-Critical path: Release approval > CI skip bump commit > CI Node 24 actions > PR summary job outputs
+Critical path: Release approval > CI skip bump commit > CI Node 24 actions > PR summary job outputs > Integration 0.9.1 > Release PR 0.9.1 > After release 0.9.1
