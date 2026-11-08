@@ -1,0 +1,37 @@
+name: zz outputs proof call
+
+# Throwaway proof of spec 19 1.6.4 (D38): does a failed matrix leg's output
+# reach the caller? Deleted before the milestone merges.
+on:
+  workflow_call:
+    outputs:
+      base:
+        description: The base leg's value
+        value: ${{ jobs.legs.outputs.base }}
+      radix:
+        description: The radix leg's value (this leg fails)
+        value: ${{ jobs.legs.outputs.radix }}
+      aria:
+        description: The aria leg's value
+        value: ${{ jobs.legs.outputs.aria }}
+
+permissions:
+  contents: read
+
+jobs:
+  legs:
+    name: Leg (${{ matrix.base }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base: [base, radix, aria]
+    outputs:
+      base: ${{ steps.rec.outputs.base }}
+      radix: ${{ steps.rec.outputs.radix }}
+      aria: ${{ steps.rec.outputs.aria }}
+    steps:
+      - id: rec
+        run: echo '${{ matrix.base }}={"leg":"${{ matrix.base }}"}' >> "$GITHUB_OUTPUT"
+      - if: ${{ matrix.base == 'radix' }}
+        run: exit 1
