@@ -32,6 +32,12 @@ Checks:
 - `pnpm test storybook-tests --base base` at 5cb8af69: pass, 619 passed (Icons play included)
 - `pnpm test storybook-tests --base radix` at 5cb8af69: pass, 619 passed
 - `pnpm test storybook-tests --base aria` at 5cb8af69: pass, 619 passed
+- Merge of `origin/claude/review` into the branch at 450ee4f7 (conflict in `getting-started.mjs`: kept claude/review's F23/F24 helpers, added the `themeIconLibrary` call, which now takes the shared `closePanel`); lockfile unchanged, regenerated copies unchanged
+- `pnpm test typecheck --base radix` at 450ee4f7: pass, tsc clean
+- `pnpm test lint` at 450ee4f7: pass (9 warnings, 0 errors)
+- `pnpm test validate-repo` at 450ee4f7: pass (bases identical, icon maps complete, tailwind valid, registry valid, 27 unit tests)
+- `pnpm test docs-e2e --base base /` at 450ee4f7: pass, 73 passed (theme hotkey, picker and the three icon checks)
+- `pnpm test docs-e2e --base base /docs/examples/basic` at 450ee4f7: pass, 15 passed
 
 - Task 1 Reproduce (story typecheck and the icon checks red on the shipped code): done, a59bca71
 - Task 2 Dependencies (the five icon packages): done, 15ddc6da
