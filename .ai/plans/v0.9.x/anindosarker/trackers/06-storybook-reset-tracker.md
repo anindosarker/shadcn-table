@@ -1,6 +1,6 @@
 # 06: Storybook reset, tracker
 
-Status: done
+Status: merged (6c094612)
 Branch `v0.9/storybook-reset`, worktree 05
 Checks:
 - Check: list, `pnpm test --list` at dbaf1414 (shipped `.storybook/`): pass, names `storybook-static (base, radix, aria)`
