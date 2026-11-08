@@ -110,6 +110,21 @@ const FONT_GROUPS = [
 /** The customizer panel (D2): a right-side sheet, rendered inside the `Sheet`
  * that ThemeControls owns. */
 export function ThemeCustomizer() {
+  return (
+    <SheetContent
+      side="right"
+      className="w-[360px] gap-0 overflow-y-auto p-0 data-[side=right]:sm:max-w-[360px]"
+    >
+      <ThemeCustomizerPanel />
+    </SheetContent>
+  );
+}
+
+/** The panel body. `SheetContent` mounts it only while the sheet is open, so
+ * it renders only in the browser and its kbd hints format with the platform
+ * detected there; the server never formats a hotkey label (TanStack Hotkeys'
+ * server rendering guidance: render labels only in the browser). */
+function ThemeCustomizerPanel() {
   const { config, setConfig, reset, shuffle, undo, redo, canUndo, canRedo } =
     useDesignSystem();
   const { resolvedTheme, setTheme } = useTheme();
@@ -119,10 +134,7 @@ export function ThemeCustomizer() {
   const radiusLocked = config.style === 'lyra' || config.style === 'sera';
 
   return (
-    <SheetContent
-      side="right"
-      className="w-[360px] gap-0 overflow-y-auto p-0 data-[side=right]:sm:max-w-[360px]"
-    >
+    <>
       <SheetHeader className="flex-row items-center gap-2 border-b py-3 pr-12">
         <SheetTitle className="flex-1">Theme</SheetTitle>
         <SheetDescription className="sr-only">
@@ -359,7 +371,7 @@ export function ThemeCustomizer() {
           </TabsContent>
         </Tabs>
       </div>
-    </SheetContent>
+    </>
   );
 }
 
