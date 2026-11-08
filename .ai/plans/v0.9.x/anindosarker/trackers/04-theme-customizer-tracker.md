@@ -25,7 +25,7 @@ Checks:
 
 ## Attention
 
-- The sheet part sits in the docs only: `pnpm add-part radix sheet` writes to `packages/shadcn-table/registry/radix/components/ui/`, so its output was moved to `apps/shadcn-table-docs/components/ui-radix/sheet.tsx` (the file the spec owns) with the button import pointed at `@/components/ui-radix/button`; the registry gains no unused part and `add-part radix --all` stays clean. Revert: keep it in the registry too (then base and aria need it as well).
+- The sheet part sits in the docs only: it is in `EXTRA_PARTS` of `apps/shadcn-table-docs/lib/install.mjs` (as alert-dialog is), so `pnpm lib:install <base>` writes `components/ui-<base>/sheet.tsx` for every base; the registry gains no unused part. The first cut hand-placed a radix copy, replaced in the fix round. Revert: keep it in the registry too (then base and aria need it as well).
 - `@tanstack/react-hotkeys` is `^0.22.0`, published 2026-11-02 (beta, six days old at install).
 - Menu Color, Menu Accent and Style have no visible effect on the docs menus and primitives: the docs `components/ui-radix/` parts carry no `cn-menu-target` or other `cn-*` hook, so the style layers and the menu provider code match nothing there (1.6.3 does NOT regenerate the primitives). The controls stay; tokens, fonts and radius do apply. Revert: hook the docs parts in a later spec.
 - The pre-paint script stays a plain `<script dangerouslySetInnerHTML>` in `app/layout.tsx` (the docs' existing pattern) instead of next-app's `<InlineScript>` component, which the docs do not have; the docs E2E hydration and script-tag checks pass. Revert: port `components/inline-script.tsx`.
