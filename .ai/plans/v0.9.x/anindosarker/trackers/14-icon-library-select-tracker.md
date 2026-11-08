@@ -8,8 +8,9 @@ Checks:
 - `ST_BASE=radix vitest run stories/features/Icons.stories.tsx` at c827660c + Task 1 files: fail as expected, "does not provide an export named 'ST_DefaultsProvider'" (P11)
 - `pnpm test docs-e2e --base base /` at c827660c + Task 1 files: fail as expected, 3 failed: `icons: Tabler switches the home tables` (picked=false, the select is disabled), `icons: the pick survives a reload` (stored=lucide), `icons: Shift+R returns to Lucide` (P11)
 - `pnpm test docs-e2e --base base /docs/examples/basic` at c827660c + Task 1 files: fail as expected, 1 failed: `basic: stored Tabler pick switches the example icons` (class lucide lucide-search) (P11)
+- `pnpm install --frozen-lockfile` after the Task 2 install at a59bca71 + Task 2 files: pass, clean
 
-- Task 1 Reproduce (story typecheck and the icon checks red on the shipped code): planned
+- Task 1 Reproduce (story typecheck and the icon checks red on the shipped code): done, a59bca71
 - Task 2 Dependencies (the five icon packages): planned
 - Task 3 Library (ST_DefaultsProvider, hook merge, exports, types): planned
 - Task 4 Installer and copies (icons/<set>.ts per base): planned
