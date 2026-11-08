@@ -1,6 +1,6 @@
 # 17: Workflows use the Node 24 action majors, tracker
 
-Status: done
+Status: merged (9c38efcc45ebe98bb538f33c377046cc5521e12d)
 Branch `v0.9/ci-node24-actions`, worktree `shadcn-react-table.worktrees/03`
 Checks:
 - Task 1, `gh api repos/<owner>/<repo>/contents/action.yml?ref=<tag> --jq .content | base64 -d` at 31d70572: pass, all six below
