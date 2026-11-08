@@ -41,6 +41,10 @@ publishes the section as the GitHub release notes.
 
 - Anchored menus keep their position while they close: `useST_MenuAnchor.ts` keeps the last measured anchor box through the exit animation instead of dropping to (0,0), so the filter mode menu no longer jumps the subheader filter row as it fades (three bases).
 
+#### Fix F11 Dev server clean
+
+- The docs dev server loads `/`, `/docs` and the example pages without errors (D20, F11): the theme panel formats its kbd hints only in the browser, so TanStack Hotkeys no longer warns about a server-formatted label, and the search dialog renders only in the browser, so a theme panel opened before hydration ends no longer causes an `aria-hidden` hydration mismatch on the home page.
+
 ### Docs
 
 #### Spec 04 Theme customizer

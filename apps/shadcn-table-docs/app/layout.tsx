@@ -3,6 +3,7 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import { TooltipProvider } from '@/components/ui-radix/tooltip';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { DesignSystemProvider } from '@/components/design-system-provider';
+import { SearchDialog } from '@/components/search-dialog';
 import './global.css';
 import { Inter } from 'next/font/google';
 import { archivo } from '@/lib/fonts';
@@ -51,7 +52,12 @@ export default function Layout({ children }: LayoutProps<'/'>) {
             mounts its own; standalone compositions (custom-headless,
             external-toolbar, row ordering) and the home page examples need
             this one. */}
-        <RootProvider theme={{ defaultTheme: 'dark', enableSystem: false }}>
+        {/* The search dialog renders only in the browser:
+            components/search-dialog.tsx. */}
+        <RootProvider
+          theme={{ defaultTheme: 'dark', enableSystem: false }}
+          search={{ SearchDialog }}
+        >
           {/* Analytics (components/posthog-provider.tsx); a no-op without
               NEXT_PUBLIC_POSTHOG_KEY. */}
           <PostHogProvider>
