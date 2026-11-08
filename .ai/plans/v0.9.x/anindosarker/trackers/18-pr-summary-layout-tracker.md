@@ -1,15 +1,20 @@
 # 18: PR Summary comment is a grouped table, tracker
 
-Status: running
+Status: done
 Branch `v0.9/pr-summary-layout`, worktree `../shadcn-react-table.worktrees/04`
 Checks:
 - Check: red on the shipped code (P11), `node --test tools/release/pr-summary.test.mjs` at f1048f8f with the new tests: fail (`SyntaxError: The requested module './pr-summary.mjs' does not provide an export named 'changelogSection'`)
 - Check: unit tests, `node --test tools/release/pr-summary.test.mjs` at e3ff78e7: pass (11 of 11)
 - Check: act, `act pull_request -W <scratchpad>/pr-summary-only.yml -j pr-summary -e <scratchpad>/event18.json -P ubuntu-latest=catthehacker/ubuntu:act-latest --container-architecture linux/amd64 --bind --artifact-server-path <scratchpad>/act-artifacts` at e3ff78e7, records of run 42501252444 in test/.out/: pass (Job succeeded, exit 0, body below)
+- Check: unit tests, `node --test tools/release/pr-summary.test.mjs` at 0376a29b: pass (11 of 11)
+- Check: validate-repo, `pnpm test validate-repo` at 0376a29b: pass (32 unit tests)
+- Check: lint, `pnpm test lint` at 0376a29b: pass (0 errors, 9 warnings)
+- Check: format, `pnpm format` at 0376a29b: pass (no other file changed)
 
 - Task 1 Reproduce: done (70e4d827)
 - Task 2 buildComment and helpers, main(): done (e3ff78e7)
-- Task 3 act: done (tracker only)
+- Task 3 act: done (f4d85858)
+- Task 4 Cleanup: done (0376a29b)
 
 ## Notes
 
@@ -66,3 +71,8 @@ Under `## Unreleased`: Added 1 · Docs 7
 
 <sub>Updated on every run of this pull request.</sub>
 ```
+- Judgment calls: `1 job failed` and `1 failure` in the singular; the changelog bullets list every `####` title (no `and N more` cut as in the draft, spec 1.2 says "as written"); headings without a `####` title are left out of the counts; on a label event the status line counts over the merged rows and links the new run.
+
+## Attention
+
+- Label event: the failures block is carried over except its `- **Validate PR** ` lines, which are replaced by the new Validate PR record's errors (spec 1.6.2 says verbatim; verbatim would keep a stale Validate PR failure after a relabel that fixes it). Revert in `buildComment` if verbatim is wanted.
