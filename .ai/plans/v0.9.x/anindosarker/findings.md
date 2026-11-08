@@ -114,3 +114,5 @@
 
 ### F27 The record cap of record-output.mjs has no unit test and the pr-summary.mjs header names a removed act path
 
+
+- `tools/release/record-output.mjs:28`: `capRecord` holds the one rule D38 specifies (five errors, 400 characters, an `…` mark) and is exported, but no `tools/release/record-output.test.mjs` runs under `pnpm test validate-repo`; the cap was checked by hand in the spec 19 review only. `tools/release/pr-summary.mjs:10`: the header says the `test/.out/*.json` fallback serves "spec 18's act check", but under act `toJSON(needs)` sets `NEEDS` too, so the fallback serves a plain shell run only. Both nits from the spec 19 review (a0677dfc), deferred.

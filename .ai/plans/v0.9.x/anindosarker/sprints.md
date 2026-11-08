@@ -24,7 +24,7 @@ Updated: 2026-11-09 00:07
 | E6 16 CI skip bump commit |  | [x] |  |  |  |  |
 | E6 17 CI Node 24 actions |  |  | [x] |  |  |  |
 | E6 18 PR summary layout | [x] |  |  |  |  |  |
-| E6 19 PR summary job outputs |  |  |  | [ ] |  |  |
+| E6 19 PR summary job outputs |  |  |  | [x] |  |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |
