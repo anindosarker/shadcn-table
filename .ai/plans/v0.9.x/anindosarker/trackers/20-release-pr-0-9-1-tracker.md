@@ -11,14 +11,15 @@ Checks:
 - Check: D38 artifacts, `gh api repos/anindosarker/shadcn-table/actions/runs/42518019709/artifacts --jq '.artifacts[].name'`: pass (7 names, all test-out-installation-e2e-*)
 - Check: D38 comment, `gh pr view 135 --json comments --jq '... contains("shadcn-table:pr-summary") ...' | grep -c '✅\|❌\|⚪'`: pass (20; `## release: 0.9.1`, `|` status line, four bold group rows, `#### Changelog`)
 - Check: Validate PR row of run 42518019709: fail (`✅ Ships as 0.10.0 (release:minor)`, spec target 0.9.1); deployment not approved
+- Check: labeled run, `gh run view 42520968919` at 6746034c after relabel `release:patch` (D49): pass (success; Validate PR row `✅ Ships as 0.9.1 (release:patch)`; Prepare Release reads the label live via `gh pr view`)
+- Check: approve (D47), `gh api .../runs/42518019709/pending_deployments -f state=approved -F 'environment_ids[]=26597343948' -f comment=D47` at 2026-11-08T20:38:09Z: pass (deployment 7641212415, environment release; Prepare Release in_progress)
 
 - Task 1 Open the PR with label and auto-merge: done, PR #135, pr.yml run 42514739346 (head 763f923b)
-- Task 2 Full run green; the runner's Approve (D47): blocked, run 42518019709 green, Prepare Release left waiting (version 0.10.0, not 0.9.1)
+- Task 2 Full run green; the runner's Approve (D47): done, run 42518019709 green, relabelled `release:patch` (D49), deployment approved 2026-11-08T20:38:09Z
 - Task 3 Bump run (test jobs skipped, D35) and merge; proof lines D35, D36, D38, D44: planned
 
 ## Attention
 
-- Prepare Release of run 42518019709 NOT approved: label `release:minor` on 0.9.0 bumps to 0.10.0 (Validate PR row: `Ships as 0.10.0 (release:minor)`), while spec 20 and D45 name the release 0.9.1. Approving would tag and publish 0.10.0. Owner picks: relabel PR 135 `release:patch` (ships 0.9.1, new run, then the runner approves) or keep `release:minor` and rename the release to 0.10.0 (PR title, spec, trackers), then approve.
 - [Staging for the ATTENTION file, one bullet per item, self-explanatory first line.]
 
 ## Notes
