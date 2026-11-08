@@ -17,6 +17,13 @@ publishes the section as the GitHub release notes.
 - A restored rows per page keeps the initial page index instead of remapping it to keep the top row (F22).
 - The `PersistenceKeepsPageIndex` play covers it: a table on its third page with a stored rows per page remounts on the third page (D33).
 
+### Changed
+
+#### Spec 18 PR Summary: grouped table, failures, changelog
+
+- The sticky PR Summary comment (`tools/release/pr-summary.mjs`) is a grouped table (D37): the PR title, one line with the release label, the run link and the status (all green, jobs failed or skipped), one `Job | Result` table with a bold group row per matrix job and its bases or scenarios under it, a collapsed block listing every error line of the failed jobs, and a changelog section with the `## Unreleased` counts by heading and the entry titles. Without `## Unreleased` it reads the top version section. The Prepare Release row of the draft is left out: the comment is written before that job runs.
+- On a label event the rows of the other jobs and the failures block are kept; the title, the status line, the Validate PR row and the changelog section are rebuilt.
+
 ### Docs
 
 #### Spec 11 Persistent view example: ten rows
