@@ -368,3 +368,6 @@ index e1645117..e67a5482 100644
 
 ### D34 No bot comment for the approval wait
 
+[Done]
+
+- The PR's own banner ("This branch is waiting for a deployment approval", Show environments) is the entry point; no `pr.yml` job and no runner comment announces the wait. Owner, 2026-11-08: "I think we can scrap it." Not to be re-proposed.
