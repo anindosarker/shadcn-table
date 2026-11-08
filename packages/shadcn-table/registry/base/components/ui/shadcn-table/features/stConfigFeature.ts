@@ -388,7 +388,7 @@ export interface ST_TableOptions_Config<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- edited values are user data of any shape, as in ST_TableOptions
     values: Record<LiteralUnion<string & DeepKeys<TData>>, any>;
   }) => Promise<void> | void;
-  paginationDisplayMode?: 'custom' | 'default' | 'pages';
+  paginationDisplayMode?: 'compact' | 'custom' | 'pages';
   /**
    * Saves the view settings, pins, column order, pinning and visibility to
    * `localStorage`; a string is the storage key.

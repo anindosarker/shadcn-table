@@ -7,6 +7,53 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## 0.9.0 - 2026-11-08
+
+### Changed
+
+#### Epic 01 Filtering
+
+- Filter modes are on by default (D4): `enableColumnFilterModes` defaults to `true`, so the mode picker shows in the chips, subheader and popover display modes without the flag; `enableColumnFilterModes: false` on the table or a column hides it. Material React Table defaults it off; this is a deliberate deviation. The mode lists stay as they were: every mode for text, autocomplete, select, date, datetime and time, the two between modes for the range variants, none for range-slider and checkbox. A chip now names the mode ("Status fuzzy: Done").
+- A multi-select filter offers Includes any (`arrIncludesSome`, still the default), Includes all (`arrIncludesAll`) and Excludes (the new `arrIncludesNone` filter fn) after its 14 modes; `ST_Localization` gains `filterArrIncludesNone`, `filterArrIncludesSome` reads "Includes any", and every locale carries the three labels.
+- Removing a filter chip, or "Clear filters", puts the column back on its initial filter mode instead of the first mode of its list, so a multi-select or select column keeps its default fn.
+- Fixed (D1, F1): a select filter with a value shows its chevron left of the clear button instead of under it; the trigger takes `ltr:pr-9 rtl:pl-9` in place of `pe-9`, which lost to the shadcn trigger's `pr-2`.
+
+#### Epic 02 Pagination
+
+- The `pages` footer, the default, shows the row range between Rows per page and the page buttons (D6): `1-10 of 200`, localized, following the filtered count, `1-2 of 2` on one page.
+- `paginationDisplayMode: 'default'` is renamed `'compact'`, with no alias (D6): the option type is `'compact' | 'custom' | 'pages'` and `'default'` is a type error. The stories, the pagination guide, the API entry and the alternate-pagination example name the compact footer `'compact'`, and the pagination story names drop "Default" (D7).
+
+#### Epic 03 Resize animation
+
+- A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
+
+#### Spec 05 Release approval
+
+- The version bump waits for the owner's approval (D3): the release PR's `prepare-release` job runs in the GitHub Environment `release`, whose one required reviewer is the owner, so Prepare Release shows "Waiting for review" until the owner approves the deployment; a rejected review fails the job and pushes nothing. Every other `pr.yml` job stays automatic.
+
+### Fixed
+
+#### Spec 06 Storybook reset
+
+- The deployed Storybook resets each story after its play (D8, F6): the static builds run the play with the Interactions panel logging every step, then remount the story in its initial state; Rerun runs the play and resets again. `storybook dev`, vitest and a failing play keep the end state. `pnpm test storybook-static` checks it on a local static build or, with `--url`, on the deployed site.
+
+#### Fix F3
+
+- Anchored menus keep their position while they close: `useST_MenuAnchor.ts` keeps the last measured anchor box through the exit animation instead of dropping to (0,0), so the filter mode menu no longer jumps the subheader filter row as it fades (three bases).
+
+#### Fix F11 Dev server clean
+
+- The docs dev server loads `/`, `/docs` and the example pages without errors (D20, F11): the theme panel formats its kbd hints only in the browser, so TanStack Hotkeys no longer warns about a server-formatted label, and the search dialog renders only in the browser, so a theme panel opened before hydration ends no longer causes an `aria-hidden` hydration mismatch on the home page.
+
+### Docs
+
+#### Spec 04 Theme customizer
+
+- The palette button in the docs and home navs opens a theme customizer panel on the right (D2) in place of the six-preset dropdown: Copy (theme CSS or preset code), Undo, Redo, Mode, Style, Icon Library, Base Color, Theme, Menu Color, Menu Accent, Presets (Import a preset code, Random, Default plus 42 tweakcn palettes) and the tabs Colors (per-token editing for the current mode), Typography and Other.
+- A fresh visitor sees the Emerald look as the `Default` preset; a stored choice (`st-design-system` in localStorage) applies before first paint and is dropped after 2 days. The old `st-theme` key is removed.
+- Shortcuts through TanStack Hotkeys, each shown as a kbd hint: `R` shuffle, `Shift+R` reset, `C` another color preset, `P` undo; off while typing or while the search dialog is open.
+- The home theme demo cycles six palettes through the design system. The six `themes/*.css` files, `lib/theme-presets.ts` and `components/theme-preset-switcher.tsx` are gone.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed

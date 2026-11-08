@@ -1,0 +1,18 @@
+# v0.9.x ownership
+
+Generated: 2026-11-08 by ownership.py
+
+| Milestone | Spec | Depends on | Files |
+|---|---|---|---|
+| Filtering | 01 | none | `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_TableOptions.ts`, `.../components/inputs/ST_FilterTextField.tsx`, `.../components/menus/ST_FilterOptionMenu.tsx`, `.../shared/utils/filterSummary.utils.ts`, `.../shared/fns/filterFns.ts`, `.../types.ts`, `.../shared/locales/*.ts`, `packages/shadcn-table/stories/features/Filtering.stories.tsx`, `packages/shadcn-table/stories/features/FilterChips.stories.tsx`, `apps/shadcn-table-docs/content/docs/guides/column-filtering.mdx`, `apps/shadcn-table-docs/content/docs/guides/filter-chips.mdx`, `apps/shadcn-table-docs/content/docs/guides/production-ready-tables.mdx`, `apps/shadcn-table-docs/content/docs/examples/subheader-filters.mdx`, `apps/shadcn-table-docs/lib/prop-tables/tableOptions.ts`, `apps/shadcn-table-docs/lib/prop-tables/columnOptions.ts`, `apps/shadcn-table-docs/examples/<base>/**/*.tsx`, `test/docs-e2e/lib/examples.mjs` |
+| Pagination | 02 | Filtering | `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/components/toolbar/ST_TablePagination.tsx`, `.../features/stConfigFeature.ts`, `packages/shadcn-table/stories/features/Pagination.stories.tsx`, `packages/shadcn-table/stories/features/TableProvider.stories.tsx`, `packages/shadcn-table/stories/features/NestedTable.stories.tsx`, `packages/shadcn-table/stories/features/RowPinningOnSelect.stories.tsx`, `apps/shadcn-table-docs/content/docs/guides/pagination.mdx`, `apps/shadcn-table-docs/content/docs/guides/best-practices.mdx`, `apps/shadcn-table-docs/lib/prop-tables/tableOptions.ts`, `apps/shadcn-table-docs/examples/<base>/alternate-pagination/TS.tsx`, `test/docs-e2e/lib/guides.mjs` |
+| Resize animation | 03 | none | `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/shared/utils/column.utils.ts`, `.../components/head/ST_TableHeadCellResizeHandle.tsx`, `.../components/menus/ST_ColumnActionMenu.tsx`, `.../components/head/ST_TableHeadCell.tsx`, `.../components/body/ST_TableBodyCell.tsx`, `packages/shadcn-table/stories/features/ColumnResizing.stories.tsx` |
+| Theme customizer | 04 | none | `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`, `apps/shadcn-table-docs/lib/design-system/*`, `apps/shadcn-table-docs/components/design-system-provider.tsx`, `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/components/theme-controls.tsx`, `apps/shadcn-table-docs/components/theme-preset-switcher.tsx`, `apps/shadcn-table-docs/components/ui-radix/sheet.tsx`, `apps/shadcn-table-docs/lib/theme-presets.ts`, `apps/shadcn-table-docs/themes/*`, `apps/shadcn-table-docs/styles/*`, `apps/shadcn-table-docs/app/global.css`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/theme-demo/variants/no-step-3.tsx`, `apps/shadcn-table-docs/components/theme-demo/variants/matches.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/dune.tsx`, `test/docs-e2e/lib/getting-started.mjs` |
+| Release approval | 05 | none | `.github/workflows/pr.yml` |
+| Storybook reset | 06 | none | `packages/shadcn-table/.storybook/main.ts`, `packages/shadcn-table/.storybook/preview.tsx`, `test/storybook-static/run.mjs`, `test/storybook-static/test.mjs` |
+| Integration | 07 | Theme customizer, Release approval, Storybook reset | none |
+| Release PR | 07 | Integration | none |
+| After release | 07 | Release PR | none |
+| Dev server clean (F11) | fix | none | none |
+
+Critical path: Theme customizer > Integration > Release PR > After release

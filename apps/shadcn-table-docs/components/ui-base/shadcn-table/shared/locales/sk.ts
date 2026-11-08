@@ -23,6 +23,7 @@ export const ST_Localization_SK: ST_Localization = {
   expandAll: 'Otvoriť všetko',
   filterArrIncludes: 'Obsahuje',
   filterArrIncludesAll: 'Obsahuje všetko',
+  filterArrIncludesNone: 'Vylučuje',
   filterArrIncludesSome: 'Obsahuje niektoré',
   filterBetween: 'Medzi',
   filterBetweenInclusive: 'Medzi',

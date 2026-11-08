@@ -66,7 +66,6 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data,
-    enableColumnFilterModes: true, //enable changing filter mode for all columns unless explicitly disabled in a column def
     filterFns: {
       customFilterFn: (row, id, filterValue) => {
         return row.getValue(id) === filterValue;

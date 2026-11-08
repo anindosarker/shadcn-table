@@ -19,7 +19,10 @@ import {
   type ST_Header,
   type ST_RowData,
 } from '@/components/ui/shadcn-table/types';
-import { getColumnFilterFnName } from '@/components/ui/shadcn-table/shared/utils/column.utils';
+import {
+  getColumnFilterFnName,
+  resetColumnSizeAnimated,
+} from '@/components/ui/shadcn-table/shared/utils/column.utils';
 import { ST_FilterOptionMenu } from '@/components/ui/shadcn-table/components/menus/ST_FilterOptionMenu';
 import { useST_MenuAnchor } from '@/components/ui/shadcn-table/hooks/useST_MenuAnchor';
 
@@ -121,7 +124,7 @@ export const ST_ColumnActionMenu = <TData extends ST_RowData>({
 
   const handleResetColumnSize = () => {
     setColumnResizing((old) => ({ ...old, isResizingColumn: false }));
-    column.resetSize();
+    resetColumnSizeAnimated(column);
     closeMenu();
   };
 

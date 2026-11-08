@@ -282,8 +282,9 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableColumnFilterModes',
-    defaultValue: 'false',
-    description: '',
+    defaultValue: 'true',
+    description:
+      'Shows the filter mode picker on every column filter. Set false to hide it; a column can turn it off with its own enableColumnFilterModes: false.',
     link: '/docs/guides/column-filtering#filter-modes',
     linkText: 'ST Column Filtering Docs',
     required: false,
@@ -1827,12 +1828,12 @@ export const tableOptions: TableOption[] = [
     tableOption: 'paginationDisplayMode',
     defaultValue: "'pages'",
     description:
-      "The pagination controls. 'pages' (the default) shows the rows per page select, numbered page buttons and previous and next; 'default' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
+      "The pagination controls. 'pages' (the default) shows the rows per page select, the row range, numbered page buttons and previous and next; 'compact' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
     link: '/docs/guides/pagination',
     linkText: 'ST Pagination Docs',
     required: false,
     source: 'ST',
-    type: "'custom' | 'default' | 'pages'",
+    type: "'compact' | 'custom' | 'pages'",
   },
   {
     tableOption: 'paginateExpandedRows',

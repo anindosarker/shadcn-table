@@ -148,7 +148,6 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
-    enableColumnFilterModes: true,
     enableColumnOrdering: true,
     enableGrouping: true,
     enableColumnPinning: true,
