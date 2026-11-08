@@ -182,7 +182,8 @@ const DESIGN_SYSTEM_KEY = 'st-design-system';
 /**
  * The theme customizer (components/theme-customizer.tsx, D2): the default
  * tokens come from the design system style element with empty storage and
- * with a choice older than 2 days; the palette button opens the panel; the
+ * with a choice older than 2 days; the palette button opens the panel, which
+ * has no Copy and no Import button (D21); the
  * `r`, `p` and `Shift+R` shortcuts shuffle, undo and reset, and do nothing
  * while the search dialog is open; a Colors tab edit changes the computed
  * variable. Leaves the page on the default look with empty storage.
@@ -265,11 +266,16 @@ async function themeCustomizer({ page, check }) {
   const heading = await panel
     .getByRole('heading', { name: 'Theme', exact: true })
     .count();
+  // D21: no Copy menu and no Import popover in the panel
+  const copyImport = await panel
+    .getByRole('button', { name: /^(Copy|Import)$/ })
+    .count();
   check(
     'theme: the palette button opens the panel',
     heading === 1 &&
-      ['Colors', 'Typography', 'Other'].every((t) => tabs.includes(t)),
-    `heading=${heading} tabs=${tabs.join(',')}`,
+      ['Colors', 'Typography', 'Other'].every((t) => tabs.includes(t)) &&
+      copyImport === 0,
+    `heading=${heading} tabs=${tabs.join(',')} copyImport=${copyImport}`,
   );
   await page.keyboard.press('Escape');
   await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});

@@ -58,6 +58,10 @@ publishes the section as the GitHub release notes.
 
 - The persistent view example opens at 10 rows per page instead of 50 on every base (D24, F14); the stored view still does not keep the page size. The docs E2E check of `/docs/examples/persistent-view` clears the stored view, reloads and asserts 10 body rows and a rows-per-page select reading 10.
 
+#### Spec 08 Theme panel: Copy and Import removed
+
+- The theme panel drops the Copy menu (Copy CSS, Copy preset code) and the Import popover (D21); the toolbar row keeps Undo and Redo, the Presets row Random and the preset select. `encodeConfig`, `decodeConfig` and `importPreset` are gone; Random still picks from create's curated presets half the time.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed

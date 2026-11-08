@@ -1,13 +1,7 @@
 /** Design system config for the theme customizer, mirroring ui.shadcn.com/create
  * (shadcn-ui apps/v4/registry/config.ts and app/(app)/(create)). Shared by the
  * pre-paint script in app/layout.tsx (server) and the provider (client). */
-import {
-  decodePreset,
-  encodePreset,
-  isPresetCode,
-  V1_CHART_COLOR_MAP,
-  type PresetConfig,
-} from 'shadcn/preset';
+import { decodePreset, type PresetConfig } from 'shadcn/preset';
 
 import {
   COLOR_PRESETS,
@@ -496,38 +490,6 @@ export function readStoredConfig(raw: string | null): DesignSystemConfig {
  * mismatch. */
 export const designSystemScript = `(function(){var d=document.documentElement,s=null;try{localStorage.removeItem("st-theme");s=JSON.parse(localStorage.getItem(${JSON.stringify(STORAGE_KEY)})||"null");var a=s&&s.savedAt,n=Date.now();if(s&&(typeof a!=="number"||n-a<0||n-a>${STORAGE_TTL_MS})){localStorage.removeItem(${JSON.stringify(STORAGE_KEY)});s=null}}catch(e){s=null}var c=s&&s.config,style=c&&c.style,css=s&&s.css;if(typeof style!=="string"||typeof css!=="string"){c=${JSON.stringify({ menuColor: DEFAULT_CONFIG.menuColor, menuAccent: DEFAULT_CONFIG.menuAccent })};style=${JSON.stringify(DEFAULT_CONFIG.style)};css=${JSON.stringify(buildThemeCss(DEFAULT_CONFIG))}}d.classList.add("style-"+style);d.setAttribute(${JSON.stringify(DESIGN_SYSTEM_ATTRIBUTE)},"");d.setAttribute("data-menu-color",String(c.menuColor||${JSON.stringify(DEFAULT_CONFIG.menuColor)}));d.setAttribute("data-menu-accent",String(c.menuAccent||${JSON.stringify(DEFAULT_CONFIG.menuAccent)}));var el=document.createElement("style");el.id=${JSON.stringify(THEME_STYLE_ELEMENT_ID)};el.textContent=css;document.head.appendChild(el)})()`;
 
-// MARK: Preset codes (shadcn/preset, the codec ui.shadcn.com/create and `shadcn init --preset` use)
-
-export function encodeConfig(config: DesignSystemConfig) {
-  return encodePreset({
-    style: config.style,
-    baseColor: config.baseColor as PresetConfig['baseColor'],
-    theme: config.theme as PresetConfig['theme'],
-    chartColor: config.chartColor as PresetConfig['chartColor'],
-    iconLibrary: config.iconLibrary,
-    font: config.font,
-    fontHeading: config.fontHeading,
-    radius: config.radius,
-    menuAccent: config.menuAccent,
-    menuColor: config.menuColor,
-  });
-}
-
-/** Decodes a preset code into a normalized config, or null when it is not a code.
- * V1 ("a") codes have no chartColor: create falls back via V1_CHART_COLOR_MAP. */
-export function decodeConfig(code: string): DesignSystemConfig | null {
-  const trimmed = code.trim();
-  if (!isPresetCode(trimmed)) return null;
-  const decoded = decodePreset(trimmed);
-  if (!decoded) return null;
-  return normalizeConfig({
-    ...decoded,
-    chartColor:
-      decoded.chartColor ?? V1_CHART_COLOR_MAP[decoded.theme] ?? decoded.theme,
-    colorPreset: 'none',
-  });
-}
-
 /** Curated codes create's Shuffle picks from (apps/v4 app/(app)/(create)/lib/shuffle-presets.ts). */
 const SHUFFLE_PRESETS = [
   'b6sUj34d9',
@@ -561,22 +523,47 @@ function randomItem<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)];
 }
 
+/** One of the curated codes above as a normalized config (every one is a V2 code
+ * and carries its chartColor). */
+function curatedPreset(code: string): DesignSystemConfig {
+  const decoded = decodePreset(code);
+  if (!decoded) return DEFAULT_CONFIG;
+  return normalizeConfig({ ...decoded, colorPreset: 'none' });
+}
+
+/** The fields a shuffle must change for the look to count as new. */
+const LOOK_FIELDS = [
+  'style',
+  'baseColor',
+  'theme',
+  'chartColor',
+  'iconLibrary',
+  'font',
+  'fontHeading',
+  'radius',
+  'menuAccent',
+  'menuColor',
+] as const;
+
+function sameLook(a: DesignSystemConfig, b: DesignSystemConfig) {
+  return LOOK_FIELDS.every((field) => a[field] === b[field]);
+}
+
 /** A random look: half the time one of create's curated presets, otherwise every field
  * picked on its own (style, colors, fonts, radius, menus), so shuffles rarely repeat.
  * The color preset is always re-rolled, and is "none" a fifth of the time so the base
  * color and theme pairs show up too. */
 export function shuffleConfig(current: DesignSystemConfig): DesignSystemConfig {
-  const currentCode = encodeConfig(current);
   for (let attempt = 0; attempt < 10; attempt++) {
     const next =
       Math.random() < 0.5
-        ? (decodeConfig(randomItem(SHUFFLE_PRESETS)) ?? DEFAULT_CONFIG)
+        ? curatedPreset(randomItem(SHUFFLE_PRESETS))
         : randomFields();
     const shuffled = {
       ...next,
       colorPreset: randomColorPreset(current.colorPreset),
     };
-    if (encodeConfig(shuffled) !== currentCode) return shuffled;
+    if (!sameLook(shuffled, current)) return shuffled;
   }
   return { ...current, colorPreset: randomColorPreset(current.colorPreset) };
 }
