@@ -7,7 +7,7 @@ Checks:
 
 - Task 1 Open the PR with label and auto-merge: done (PR 134, https://github.com/anindosarker/shadcn-table/pull/134, pr.yml run 42488458376, watcher armed 20:13)
 - Task 2 Approve the Prepare Release deployment (D15): superseded by D28, the owner approves; the runner stops when the job waits
-- Task 3 Merged on green: running; pr.yml run 42488458376 red on `Storybook Tests (aria)` only (`SubRowTree` plays "Expand Shows Children" and "Expand All Collapse All", `getByRole` on an undefined container; 616 of 618 pass; green locally at df90bd27 three times today), plus `Docs E2E Tests (base, radix, aria)` each on the `/` theme checks of getting-started (base and aria: "Shift+R returns to the default" leaves `--primary` unchanged; radix: the next check's `locator.click` times out after 30 s); every other job green; `gh run rerun --failed 42488458376` at 20:27 (attempt 2, the one P5 rerun)
+- Task 3 Merged on green: running; pr.yml run 42488458376 red on `Storybook Tests (aria)` only (`SubRowTree` plays "Expand Shows Children" and "Expand All Collapse All", `getByRole` on an undefined container; 616 of 618 pass; green locally at df90bd27 three times today), plus `Docs E2E Tests (base, radix, aria)` each on the `/` theme checks of getting-started (base and aria: "Shift+R returns to the default" leaves `--primary` unchanged; radix: the next check's `locator.click` times out after 30 s); every other job green; `gh run rerun --failed 42488458376` at 20:27 (attempt 2, the one P5 rerun): storybook aria, docs-e2e base and radix green, docs-e2e aria red again on "Shift+R returns to the default" (F23); fix milestone `theme-hotkey-check-wait` on `dev`, then the PR reruns on the new head
 
 ## Attention
 

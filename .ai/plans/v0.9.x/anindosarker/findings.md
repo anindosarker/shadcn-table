@@ -98,3 +98,5 @@
 
 ### F23 Theme hotkey docs E2E checks read the variable a fixed 200 ms after the key
 
+- `test/docs-e2e/lib/getting-started.mjs:282-309` (spec 04 on `dev` at 0adce149; spec 09 and 10 kept the pattern on `claude/review`): `press()` is `keyboard.press` plus `waitForTimeout(200)`, then `--primary` is read once. On CI (release PR 134, run 42488458376) "theme: Shift+R returns to the default" failed on base and aria in attempt 1 and on aria again in attempt 2 with the value unchanged after Shift+R, and radix timed out on the next click; locally it failed once under load (P5 entry). Fix: wait for the variable to change (or to equal the expected value) with a bounded poll instead of a fixed delay; test file only.
+

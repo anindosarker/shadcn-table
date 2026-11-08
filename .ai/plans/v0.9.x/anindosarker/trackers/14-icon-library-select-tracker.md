@@ -1,7 +1,7 @@
 # 14: The Icon Library select switches the example tables' icons, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/icon-library-select`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
