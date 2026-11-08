@@ -554,6 +554,28 @@ const checks = {
         !!box?.inside,
         box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
       );
+      // D24: with no stored view the example opens at ten rows
+      await page.evaluate(() =>
+        localStorage.removeItem('shadcn-table:persistent-view:view'),
+      );
+      await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+      const rows = w.locator('table tbody tr');
+      await rows
+        .first()
+        .waitFor({ timeout: 30000 })
+        .catch(() => {});
+      const count = await rows.count();
+      check('ten rows on first load', count === 10, `rows=${count}`);
+      const size = await w
+        .locator('[aria-label="Rows per page"]')
+        .first()
+        .evaluate((el) =>
+          el.tagName === 'SELECT'
+            ? el.value
+            : el.textContent?.match(/\d+/)?.[0],
+        )
+        .catch(() => null);
+      check('rows per page reads 10', size === '10', `select=${size}`);
     },
   ),
   '/docs/examples/popover-filters': examplePage(
