@@ -51,3 +51,6 @@ yarn-error.log*
 
 # test runner records (pnpm test)
 test/.out/
+
+.ai/plans/*/*/status/index.html
+.ai/plans/*/*/status/data/
