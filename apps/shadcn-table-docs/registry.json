@@ -2579,7 +2579,7 @@
       "name": "example-persistent-view-base",
       "type": "registry:block",
       "title": "Persistent View Example",
-      "description": "An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.",
+      "description": "An example of Shadcn Table that saves the view to localStorage and restores it on reload.",
       "files": [
         {
           "path": "examples/base/persistent-view/TS.tsx",
@@ -5375,7 +5375,7 @@
       "name": "example-persistent-view-radix",
       "type": "registry:block",
       "title": "Persistent View Example",
-      "description": "An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.",
+      "description": "An example of Shadcn Table that saves the view to localStorage and restores it on reload.",
       "files": [
         {
           "path": "examples/radix/persistent-view/TS.tsx",
@@ -8172,7 +8172,7 @@
       "name": "example-persistent-view-aria",
       "type": "registry:block",
       "title": "Persistent View Example",
-      "description": "An example of Shadcn Table that saves the view settings, the toolbar pins and the column layout to localStorage and restores them on reload.",
+      "description": "An example of Shadcn Table that saves the view to localStorage and restores it on reload.",
       "files": [
         {
           "path": "examples/aria/persistent-view/TS.tsx",
