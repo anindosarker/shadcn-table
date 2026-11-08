@@ -3,24 +3,33 @@
 // the test-out-* artifacts are downloaded into test/.out/):
 //   node tools/release/pr-summary.mjs
 //
-// Builds the one sticky comment of a pull request (D87) from the test
-// records test/.out/*.json:
+// Builds the one sticky comment of a pull request (D87, D37) from the test
+// records test/.out/*.json and the checkout's CHANGELOG.md:
 //   the hidden marker <!-- shadcn-table:pr-summary -->
-//   line 1  `Ships as <version> (<label>).` or the reason from the
-//           validate-pr record
-//   line 2  the `## Unreleased` line counts by heading (`Added 2, Fixed 4`)
-//   then    one line per job in D86 order with the record's summary
-//           (`Storybook Tests (radix): 609 passed`), `<job>: no record
-//           (skipped or cancelled)` without one
-//   last    the link to the run
+//   `## <PR title>` (`## PR checks` on a dispatch)
+//   `` `<label>` | [run <id>](<url>) | <status> ``: the validate-pr record's
+//           label or `no release label`; `✅ all green`, `❌ <n> jobs failed`
+//           or `⚪ <n> skipped` (jobs without a record)
+//   one `| Job | Result |` table in D86 order: a bold group row per matrix
+//           job (Typecheck, Storybook Tests, Docs E2E Tests, Installation
+//           E2E) with one indented row per base or scenario, Lint, Validate
+//           Repo and Validate PR as one bold row each; cells `✅ <summary>`,
+//           `❌ <summary before its first ": ">`, `⚪ skipped`
+//   `<details>` `❌ <n> failures`: one `- **<job>** <error>` line per error
+//           of every failed record, omitted when nothing failed
+//   `#### Changelog`: the `## Unreleased` counts by `###` heading and one
+//           bullet per heading listing its `####` titles; the top
+//           `## <version>` section when Unreleased is absent
+//   the `<sub>` footer
 // On a pull_request event the comment carrying the marker is PATCHed, else
 // one is POSTed (GH_TOKEN, GITHUB_REPOSITORY, the PR number from the event
-// payload). On a `labeled` or `unlabeled` event only Validate PR ran: lines 1
-// and 2 and the Validate PR line are rewritten from its record, the other job
-// lines and the run link are kept from the previous comment. Without a pull
-// request (workflow_dispatch) the comment goes to $GITHUB_STEP_SUMMARY only;
-// on a pull request it goes there too. The exit code is 0 whatever the jobs
-// did: the job lines carry their failures, Prepare Release needs every job.
+// payload). On a `labeled` or `unlabeled` event only Validate PR ran: the
+// title, the status line, the Validate PR row and the changelog section are
+// rebuilt, the other table rows and the failures block are kept from the
+// previous comment. Without a pull request (workflow_dispatch) the comment
+// goes to $GITHUB_STEP_SUMMARY only; on a pull request it goes there too.
+// The exit code is 0 whatever the jobs did: the table carries their
+// failures, Prepare Release needs every job.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
