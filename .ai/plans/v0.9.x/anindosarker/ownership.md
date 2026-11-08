@@ -10,5 +10,8 @@ Generated: 2026-11-08 by ownership.py
 | Theme customizer | 04 | none | `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`, `apps/shadcn-table-docs/lib/design-system/*`, `apps/shadcn-table-docs/components/design-system-provider.tsx`, `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/components/theme-controls.tsx`, `apps/shadcn-table-docs/components/theme-preset-switcher.tsx`, `apps/shadcn-table-docs/components/ui-radix/sheet.tsx`, `apps/shadcn-table-docs/lib/theme-presets.ts`, `apps/shadcn-table-docs/themes/*`, `apps/shadcn-table-docs/styles/*`, `apps/shadcn-table-docs/app/global.css`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/theme-demo/variants/no-step-3.tsx`, `apps/shadcn-table-docs/components/theme-demo/variants/matches.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/dune.tsx`, `test/docs-e2e/lib/getting-started.mjs` |
 | Release approval | 05 | none | `.github/workflows/pr.yml` |
 | Storybook reset | 06 | none | `packages/shadcn-table/.storybook/main.ts`, `packages/shadcn-table/.storybook/preview.tsx`, `test/storybook-static/run.mjs`, `test/storybook-static/test.mjs` |
+| Integration | 07 | Theme customizer, Release approval, Storybook reset | none |
+| Release PR | 07 | Integration | none |
+| After release | 07 | Release PR | none |
 
-Critical path: Storybook reset
+Critical path: Theme customizer > Integration > Release PR > After release
