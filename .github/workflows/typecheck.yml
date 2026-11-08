@@ -2,8 +2,9 @@ name: Typecheck
 
 # Called by pr.yml (D90): one job per base, `pnpm test typecheck --base <b>`
 # (the package tsc:<base>; radix also the docs app's types:check), its
-# test/.out/ record uploaded as test-out-typecheck-<base>. The check context
-# reads `Typecheck / Typecheck (<base>)`.
+# test/.out/ record handed to PR Summary as the job output <base> (D38),
+# exposed as the workflow output of the same name. The check context reads
+# `Typecheck / Typecheck (<base>)`.
 # The skip input (the PR head is the version bump commit, D35) skips every
 # step, not the job: a job-level if: is read before the matrix expands, so
 # GitHub would report one unexpanded skipped job instead of the leg contexts
@@ -15,6 +16,16 @@ on:
         description: Skip every step (the PR head is the version bump commit, D35)
         type: boolean
         default: false
+    outputs:
+      base:
+        description: The typecheck record of the base leg (JSON), empty when it wrote none
+        value: ${{ jobs.typecheck.outputs.base }}
+      radix:
+        description: The typecheck record of the radix leg (JSON), empty when it wrote none
+        value: ${{ jobs.typecheck.outputs.radix }}
+      aria:
+        description: The typecheck record of the aria leg (JSON), empty when it wrote none
+        value: ${{ jobs.typecheck.outputs.aria }}
 
 permissions:
   contents: read
@@ -23,6 +34,10 @@ jobs:
   typecheck:
     name: Typecheck (${{ matrix.base }})
     runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.record.outputs.base }}
+      radix: ${{ steps.record.outputs.radix }}
+      aria: ${{ steps.record.outputs.aria }}
     strategy:
       fail-fast: false
       matrix:
@@ -41,10 +56,7 @@ jobs:
         if: ${{ !inputs.skip }}
       - run: pnpm test typecheck --ci --base ${{ matrix.base }}
         if: ${{ !inputs.skip }}
-      - uses: actions/upload-artifact@v7
+      - name: Hand the record to PR Summary
+        id: record
         if: ${{ always() && !inputs.skip }}
-        with:
-          name: test-out-typecheck-${{ matrix.base }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key ${{ matrix.base }} >> "$GITHUB_OUTPUT"

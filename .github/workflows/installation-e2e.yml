@@ -4,9 +4,11 @@ name: Installation E2E
 # table from the dev registry built from this checkout (served on 5310),
 # typechecks and builds; the Next scenarios then run the browser checks and
 # the capture diff on 5341 (no-diff: capture only, the reference refresh path
-# of D86). Its test/.out/ records and captures are uploaded as
-# test-out-installation-e2e-<scenario>. The check context reads
-# `Installation E2E / Installation E2E (<scenario>)`.
+# of D86). Its test/.out/ record is handed to PR Summary as the job output
+# <scenario> (D38), exposed as the workflow output of the same name; the
+# records and captures are still uploaded as
+# test-out-installation-e2e-<scenario> for the reference refresh. The check
+# context reads `Installation E2E / Installation E2E (<scenario>)`.
 # The skip input (the PR head is the version bump commit, D35) skips every
 # step, not the job: a job-level if: is read before the matrix expands, so
 # GitHub would report one unexpanded skipped job instead of the leg contexts
@@ -22,6 +24,28 @@ on:
         description: Skip every step (the PR head is the version bump commit, D35)
         type: boolean
         default: false
+    outputs:
+      fresh:
+        description: The installation-e2e record of the fresh scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.fresh }}
+      existing:
+        description: The installation-e2e record of the existing scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.existing }}
+      base:
+        description: The installation-e2e record of the base scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.base }}
+      aria:
+        description: The installation-e2e record of the aria scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.aria }}
+      nextjs-base:
+        description: The installation-e2e record of the nextjs-base scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.nextjs-base }}
+      nextjs-radix:
+        description: The installation-e2e record of the nextjs-radix scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.nextjs-radix }}
+      nextjs-aria:
+        description: The installation-e2e record of the nextjs-aria scenario (JSON), empty when it wrote none
+        value: ${{ jobs.installation-e2e.outputs.nextjs-aria }}
 
 permissions:
   contents: read
@@ -30,6 +54,14 @@ jobs:
   installation-e2e:
     name: Installation E2E (${{ matrix.scenario }})
     runs-on: ubuntu-latest
+    outputs:
+      fresh: ${{ steps.record.outputs.fresh }}
+      existing: ${{ steps.record.outputs.existing }}
+      base: ${{ steps.record.outputs.base }}
+      aria: ${{ steps.record.outputs.aria }}
+      nextjs-base: ${{ steps.record.outputs.nextjs-base }}
+      nextjs-radix: ${{ steps.record.outputs.nextjs-radix }}
+      nextjs-aria: ${{ steps.record.outputs.nextjs-aria }}
     strategy:
       fail-fast: false
       matrix:
@@ -61,6 +93,10 @@ jobs:
         if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
       - run: pnpm test installation-e2e --ci --scenario ${{ matrix.scenario }} ${{ inputs.no-diff && '--no-diff' || '' }}
         if: ${{ !inputs.skip }}
+      - name: Hand the record to PR Summary
+        id: record
+        if: ${{ always() && !inputs.skip }}
+        run: node tools/release/record-output.mjs --key ${{ matrix.scenario }} >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v7
         if: ${{ always() && !inputs.skip }}
         with:
