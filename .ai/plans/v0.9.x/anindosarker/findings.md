@@ -42,3 +42,9 @@
 ### F10 The static Storybook test folder matches the build-output ignore line
 
 - `.gitignore`: the line `storybook-static` also matches `test/storybook-static/`, so spec 06 added its two files with `git add -f`; git tracks them now, but a new file in that folder is ignored unless a `!test/storybook-static/` line follows.
+
+## Round 3: triage E2, 2026-11-08
+
+### F9 The docs dev server logs errors on every page load
+
+- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review` (`815436fa`), GET `/`: two logs on every load. Server: `[TanStack Hotkeys] A hotkey label was formatted during server rendering without a platform, so it uses 'linux'` (the kbd hints of the theme panel, E2 04, format on the server with no `platform`). Browser: `A tree hydrated but some attributes of the server rendered HTML didn't match the client properties` under `<Page>` of `(home)/page`, attribute mismatch not yet located. Owner: "Every time I run the server locally I see huge errors."

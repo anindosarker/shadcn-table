@@ -13,5 +13,6 @@ Generated: 2026-11-08 by ownership.py
 | Integration | 07 | Theme customizer, Release approval, Storybook reset | none |
 | Release PR | 07 | Integration | none |
 | After release | 07 | Release PR | none |
+| Dev server clean (F9) | fix | none | none |
 
 Critical path: Theme customizer > Integration > Release PR > After release
