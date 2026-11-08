@@ -13,6 +13,12 @@ Generated: 2026-11-08 by ownership.py
 | Integration | 07 | Theme customizer, Release approval, Storybook reset | none |
 | Release PR | 07 | Integration | none |
 | After release | 07 | Release PR | none |
-| Dev server clean (F11) | fix | none | none |
+| Theme panel copy import | 08 | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/components/design-system-provider.tsx`, `apps/shadcn-table-docs/lib/design-system/config.ts`, `test/docs-e2e/lib/getting-started.mjs` |
+| Theme panel shortcut row | 09 | Theme panel copy import | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/components/design-system-provider.tsx`, `test/docs-e2e/lib/getting-started.mjs` |
+| Theme color picker | 10 | Theme panel shortcut row | `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`, `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/components/design-system-provider.tsx`, `apps/shadcn-table-docs/lib/design-system/tokens.ts`, `test/docs-e2e/lib/getting-started.mjs` |
+| Persistent view page size | 11 | none | `apps/shadcn-table-docs/examples/radix/persistent-view/TS.tsx`, `apps/shadcn-table-docs/examples/base/persistent-view/TS.tsx`, `apps/shadcn-table-docs/examples/aria/persistent-view/TS.tsx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx`, `test/docs-e2e/lib/examples.mjs` |
+| Stored view page size | 12 | none | `packages/shadcn-table/registry/radix/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/shared/utils/viewSettingsStorage.utils.ts`, `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/stories/features/ViewSettings.stories.tsx`, `apps/shadcn-table-docs/lib/prop-tables/tableOptions.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/guides/state-management.mdx` |
+| Docs parts hooks | 13 | none | `apps/shadcn-table-docs/lib/install.mjs`, `apps/shadcn-table-docs/components/ui-radix/*.tsx`, `apps/shadcn-table-docs/components/ui-base/*.tsx`, `apps/shadcn-table-docs/components/ui-aria/*.tsx`, `test/docs-e2e/lib/guides.mjs` |
+| Dev server clean (F11) | fix | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
 
-Critical path: Theme customizer > Integration > Release PR > After release
+Critical path: Filtering > Pagination > Docs parts hooks
