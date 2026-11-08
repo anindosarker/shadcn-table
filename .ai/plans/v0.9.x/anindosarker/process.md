@@ -22,7 +22,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 ## P4 Release
 
 - Every epic merges into `claude/review`; 0.9.0 ships through the release spec after E2 (D15), the docs changes as 0.9.1 later.
-- A release is one PR, `dev` into `master`, title `release: <version>`, with the release label, auto-merge enabled at creation; the bump job `prepare-release` waits for the owner's Approve on the GitHub Environment `release` (D3). The environment and the `environment: release` line in `pr.yml` are not in place yet; D3's spec adds them.
+- A release is one PR, `dev` into `master`, title `release: <version>`, with the release label, auto-merge enabled at creation; the bump job `prepare-release` waits on the GitHub Environment `release` (D3), and the runner approves it through `gh api .../pending_deployments` as soon as it waits (D47); no owner click. The environment and the `environment: release` line in `pr.yml` are not in place yet; D3's spec adds them.
 - The release suite runs on GitHub only: Integration does the changelog pass and the fast-forward, the PR opens at once, `pr.yml` is the one full run; a red is reproduced and fixed under `act` and pushed (D40).
 - After a release, the main session brings `claude/review` and `dev` up to `master` and pushes both before the next plan commit: a fast-forward when the branch has nothing past `master`, else a merge commit `merge: master <version>` (0.9.0: `claude/review` carried E4 and E5, merge 566f56a6); no workflow does this.
 
