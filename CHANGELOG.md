@@ -17,6 +17,12 @@ publishes the section as the GitHub release notes.
 - A restored rows per page keeps the initial page index instead of remapping it to keep the top row (F22).
 - The `PersistenceKeepsPageIndex` play covers it: a table on its third page with a stored rows per page remounts on the third page (D33).
 
+### Changed
+
+#### Spec 16 CI: test jobs skip the version bump commit
+
+- A new first job of `pr.yml`, `head`, reads the pull request's head commit and sets `bumped` when it is the `chore: version <v>` commit Prepare Release pushes as `github-actions[bot]` (D35). On that commit Typecheck, Storybook Tests, Docs E2E Tests and Installation E2E skip every matrix leg (a `skip` input on the four called workflows), Lint and Validate Repo skip, Validate PR and PR Summary still run, and Prepare Release is skipped with its needs, so the bump push runs no second test pass and prompts nobody. Any other head runs every job as before.
+
 ### Docs
 
 #### Spec 11 Persistent view example: ten rows

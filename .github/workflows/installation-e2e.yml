@@ -7,6 +7,8 @@ name: Installation E2E
 # of D86). Its test/.out/ records and captures are uploaded as
 # test-out-installation-e2e-<scenario>. The check context reads
 # `Installation E2E / Installation E2E (<scenario>)`.
+# The skip input (the PR head is the version bump commit, D35) skips
+# every leg; each still reports its check context.
 on:
   workflow_call:
     inputs:
