@@ -114,6 +114,7 @@
   - b) fast-forward `dev` to `claude/review`: 0.9.0 ships E4 08 and 11 (and whatever else merges before the PR opens).
 
 ## A13 The F22 fix has no play that fails on the shipped code
+[D33]
 
 - Fix milestone `stored-view-page-index` (F22, merged 811045dc) changed how a stored rows-per-page is restored so the page index stays, but no story play exercises a table with `initialState.pagination.pageIndex` above 0, so P11 (a fix's play fails on the shipped code first) has no red line; the spec 12 `Persistence` play stays green before and after.
 

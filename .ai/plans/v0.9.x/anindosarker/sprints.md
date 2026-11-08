@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 21:53
+Updated: 2026-11-08 22:02
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 |
 |---|---|---|---|---|---|---|
@@ -22,6 +22,7 @@ Updated: 2026-11-08 21:53
 | E5 14 Icon library select |  |  |  |  | [ ] |  |
 | E5 15 Style sheet on demand |  |  |  |  |  | · |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |
+| fix Page index play (F22) |  |  | · |  |  |  |
 | fix Installation references refreshed (F20) |  | [x] |  |  |  |  |
 | fix Stored view page index (F22) |  | [x] |  |  |  |  |
 | fix Theme check closes the search dialog (F24) |  |  | [x] |  |  |  |
