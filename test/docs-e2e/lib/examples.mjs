@@ -80,6 +80,26 @@ async function sortChip(page, w, id, column, check) {
 }
 
 /**
+ * F25 (v0.9.x): the `tbody tr` count once the example's rows have settled:
+ * no loading skeleton left in the body and the count equal across two reads
+ * 300 ms apart, bounded at 10 s. The CRUD examples load their users through
+ * a fake 1 s query and render skeleton rows until then.
+ */
+async function settledRowCount(page, w) {
+  const rows = w.locator('tbody tr');
+  const skeletons = w.locator('tbody [data-slot="skeleton"]');
+  const deadline = Date.now() + 10_000;
+  let count = await rows.count();
+  while (Date.now() < deadline) {
+    await page.waitForTimeout(300);
+    const next = await rows.count();
+    if (next === count && (await skeletons.count()) === 0) return next;
+    count = next;
+  }
+  return count;
+}
+
+/**
  * F53: the row's delete button opens a shadcn AlertDialog with the question,
  * not a browser confirm; Cancel closes it and keeps every row.
  */
@@ -91,7 +111,7 @@ async function deleteDialog(page, w, id, check) {
   };
   page.on('dialog', onDialog);
   try {
-    const before = await w.locator('tbody tr').count();
+    const before = await settledRowCount(page, w);
     await w.locator('tbody button.text-destructive').first().click();
     const dialog = page.getByRole('alertdialog');
     await dialog.waitFor({ timeout: 5000 });
@@ -103,7 +123,7 @@ async function deleteDialog(page, w, id, check) {
     );
     await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
     await dialog.waitFor({ state: 'hidden', timeout: 5000 });
-    const after = await w.locator('tbody tr').count();
+    const after = await settledRowCount(page, w);
     check(
       `${id}: delete dialog cancel keeps the rows`,
       after === before,
