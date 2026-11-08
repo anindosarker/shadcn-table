@@ -44,6 +44,10 @@ publishes the section as the GitHub release notes.
 - New: `ST_DefaultsProvider` and `useST_Defaults`, exported from the library index on all three bases (D27). The provider's `icons` prop (`Partial<ST_Icons>`) applies to every table below it: `useST_TableOptions` merges `ST_Default_Icons`, then the nearest provider's `icons`, then the table's own `icons` option, which still wins key by key. Nested providers merge over their parent; a table outside any provider behaves as before. The `ST_Defaults` type is added beside `ST_Icons`. Documented in the ST Components API page and the custom icons guide; the `ProviderIconSet` story covers it.
 - Docs: the theme panel's Icon Library select is enabled and offers Lucide, Tabler, Phosphor, Hugeicons and Remix Icon. A pick switches the icons of every example table (the home demo and the docs examples, all three base copies), persists with the rest of the theme config, and Reset returns to Lucide; Random keeps the current icon set. The docs chrome stays Lucide. `pnpm lib:install <base>` also installs the four icon set maps as `components/ui-<base>/shadcn-table/icons/<set>.ts`, loaded only once picked. `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons` and `@remixicon/react` are new dependencies of the docs app.
 
+#### Spec 15 Docs: one style sheet per style, loaded on demand
+
+- Docs: the root stylesheet no longer carries the eight theme styles (D29). `lib/build-styles.mjs` compiles each `styles/style-<name>.css` against the docs' Tailwind theme into `public/styles/style-<name>.css` (generated, git-ignored; run by `predev` and `build`, minified in `build`), and every page links only the active style's sheet: the pre-paint script links the stored or default style render-blocking, and a style change loads the new sheet before it switches the `style-<name>` class. The root stylesheet of `/` drops from about 2.8 MB to 337 KB; opening the theme panel and toggling light and dark stay under 300 ms of long tasks. `@tailwindcss/node` is a new devDependency of the docs app.
+
 ## 0.9.0 - 2026-11-08
 
 ### Changed

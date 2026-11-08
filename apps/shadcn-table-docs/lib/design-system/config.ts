@@ -448,6 +448,12 @@ export function buildThemeVars(config: DesignSystemConfig) {
 export const DESIGN_SYSTEM_ATTRIBUTE = 'data-design-system';
 export const THEME_STYLE_ELEMENT_ID = 'design-system-theme-vars';
 export const STORAGE_KEY = 'st-design-system';
+/** The id of the one style sheet link in <head> (app/layout.tsx, D29). */
+export const STYLE_SHEET_ID = 'design-system-style';
+
+/** The sheet lib/build-styles.mjs writes for `style`, under public/styles/. */
+export const styleSheetHref = (style: StyleName) =>
+  `/styles/style-${style}.css`;
 
 function cssRule(selector: string, vars: Record<string, string>) {
   const body = Object.entries(vars)
@@ -502,8 +508,11 @@ export function readStoredConfig(raw: string | null): DesignSystemConfig {
 /** Inline script for app/layout.tsx: applies the saved style class, theme tokens,
  * fonts and menu attributes before first paint, or the default when nothing fresh is
  * stored (a stale entry is removed). React never renders these, so hydration does not
- * mismatch. */
-export const designSystemScript = `(function(){var d=document.documentElement,s=null;try{localStorage.removeItem("st-theme");s=JSON.parse(localStorage.getItem(${JSON.stringify(STORAGE_KEY)})||"null");var a=s&&s.savedAt,n=Date.now();if(s&&(typeof a!=="number"||n-a<0||n-a>${STORAGE_TTL_MS})){localStorage.removeItem(${JSON.stringify(STORAGE_KEY)});s=null}}catch(e){s=null}var c=s&&s.config,style=c&&c.style,css=s&&s.css;if(typeof style!=="string"||typeof css!=="string"){c=${JSON.stringify({ menuColor: DEFAULT_CONFIG.menuColor, menuAccent: DEFAULT_CONFIG.menuAccent })};style=${JSON.stringify(DEFAULT_CONFIG.style)};css=${JSON.stringify(buildThemeCss(DEFAULT_CONFIG))}}d.classList.add("style-"+style);d.setAttribute(${JSON.stringify(DESIGN_SYSTEM_ATTRIBUTE)},"");d.setAttribute("data-menu-color",String(c.menuColor||${JSON.stringify(DEFAULT_CONFIG.menuColor)}));d.setAttribute("data-menu-accent",String(c.menuAccent||${JSON.stringify(DEFAULT_CONFIG.menuAccent)}));var el=document.createElement("style");el.id=${JSON.stringify(THEME_STYLE_ELEMENT_ID)};el.textContent=css;document.head.appendChild(el)})()`;
+ * mismatch. Runs in <head> and links the active style's sheet (STYLE_SHEET_ID, D29)
+ * with `blocking="render"`, so the stored style paints first. React does not render
+ * that link: it matches a <head> link by href while hydrating, and a server-rendered
+ * default swapped for the stored style failed hydration (React error 418). */
+export const designSystemScript = `(function(){var d=document.documentElement,s=null;try{localStorage.removeItem("st-theme");s=JSON.parse(localStorage.getItem(${JSON.stringify(STORAGE_KEY)})||"null");var a=s&&s.savedAt,n=Date.now();if(s&&(typeof a!=="number"||n-a<0||n-a>${STORAGE_TTL_MS})){localStorage.removeItem(${JSON.stringify(STORAGE_KEY)});s=null}}catch(e){s=null}var c=s&&s.config,style=c&&c.style,css=s&&s.css;if(typeof style!=="string"||typeof css!=="string"){c=${JSON.stringify({ menuColor: DEFAULT_CONFIG.menuColor, menuAccent: DEFAULT_CONFIG.menuAccent })};style=${JSON.stringify(DEFAULT_CONFIG.style)};css=${JSON.stringify(buildThemeCss(DEFAULT_CONFIG))}}var k=document.createElement("link");k.rel="stylesheet";k.id=${JSON.stringify(STYLE_SHEET_ID)};k.href="/styles/style-"+style+".css";k.setAttribute("data-style",style);k.setAttribute("blocking","render");document.head.appendChild(k);d.classList.add("style-"+style);d.setAttribute(${JSON.stringify(DESIGN_SYSTEM_ATTRIBUTE)},"");d.setAttribute("data-menu-color",String(c.menuColor||${JSON.stringify(DEFAULT_CONFIG.menuColor)}));d.setAttribute("data-menu-accent",String(c.menuAccent||${JSON.stringify(DEFAULT_CONFIG.menuAccent)}));var el=document.createElement("style");el.id=${JSON.stringify(THEME_STYLE_ELEMENT_ID)};el.textContent=css;document.head.appendChild(el)})()`;
 
 /** Curated codes create's Shuffle picks from (apps/v4 app/(app)/(create)/lib/shuffle-presets.ts). */
 const SHUFFLE_PRESETS = [

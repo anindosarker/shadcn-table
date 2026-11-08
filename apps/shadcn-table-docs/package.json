@@ -7,8 +7,8 @@
   "repository": "github:anindosarker/shadcn-table",
   "homepage": "https://www.shadcn-table.com",
   "scripts": {
-    "build": "pnpm -w registry:build && pnpm -w registry:items && pnpm -w registry:hosted && node lib/example-variants.mjs && next build",
-    "predev": "node lib/example-variants.mjs",
+    "build": "pnpm -w registry:build && pnpm -w registry:items && pnpm -w registry:hosted && node lib/example-variants.mjs && node lib/build-styles.mjs --minify && next build",
+    "predev": "node lib/example-variants.mjs && node lib/build-styles.mjs",
     "dev": "NEXT_DEV=1 node lib/dev-tsconfig.mjs && NEXT_DEV=1 next dev -p ${PORT:-5320}",
     "start": "next start -p 5320",
     "preview": "NEXT_DIST_DIR=.next-preview pnpm build && NEXT_DIST_DIR=.next-preview next start -p 5330",
@@ -56,6 +56,7 @@
     "recharts": "^2.15.4"
   },
   "devDependencies": {
+    "@tailwindcss/node": "^4.3.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/mdx": "^2.0.14",
     "@types/node": "^26.6.4",
