@@ -106,3 +106,5 @@
 
 ### F25 The CRUD delete-dialog check counts rows before the example finishes loading
 
+- `test/docs-e2e/lib/examples.mjs:85-111` (`deleteDialog`, v0.8.x F53): `before` is `tbody tr` counted as soon as the example panel is found, `after` the same count once the Cancel click closed the alert dialog. On CI the inline CRUD examples still show their loading rows at the first count (before=10 after=8 on `editing-crud-inline-row` and `-inline-cell`, before=20 after=10 on `editing-crud-tree`), so the check fails although Cancel kept every row. Release PR 134 on the bump 0a465c3e: run 42501252444 attempt 1 base and radix, attempt 2 radix; earlier once on aria at ea276251. Fix: wait for the example's rows to settle (the loading state gone, the count stable across two reads) before the first count; test file only, D30 pattern.
+
