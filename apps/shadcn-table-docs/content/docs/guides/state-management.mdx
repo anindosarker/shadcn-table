@@ -156,8 +156,8 @@ return <ShadcnTable table={table} />;
 
 ### Persistent State
 
-The view is persisted by the table itself: with `persistViewSettings: true`, the view settings, the toolbar pins, density, column visibility, order and pinning are saved to `localStorage` and restored on the next visit, without a flash of the default order under server rendering. See the [View Settings Guide](/docs/guides/view-settings) and the [Persistent View Example](/docs/examples/persistent-view).
+The view is persisted by the table itself: with `persistViewSettings: true`, the view settings, the toolbar pins, density, column visibility, order, pinning and rows per page are saved to `localStorage` and restored on the next visit, without a flash of the default order under server rendering. See the [View Settings Guide](/docs/guides/view-settings) and the [Persistent View Example](/docs/examples/persistent-view).
 
-Sorts, filters, the search text and the page are not part of the stored view. To persist them, use the above patterns with the `state` table option and the `on[StateName]Change` callbacks. Here is an example of how you might implement persistent state using `sessionStorage`:
+Sorts, filters, the search text and the page index are not part of the stored view. To persist them, use the above patterns with the `state` table option and the `on[StateName]Change` callbacks. Here is an example of how you might implement persistent state using `sessionStorage`:
 
 <PersistentStateExample />

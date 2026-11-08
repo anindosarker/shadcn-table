@@ -1850,7 +1850,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'persistViewSettings',
     defaultValue: 'false',
     description:
-      'Saves the view settings, the pins, column visibility, order and pinning to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
+      'Saves the view settings, the pins, column visibility, order, pinning and rows per page to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
     link: '/docs/guides/view-settings',
     linkText: 'ST View Settings Docs',
     required: false,
