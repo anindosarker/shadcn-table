@@ -16,12 +16,20 @@ Checks:
 - Check: `pnpm test lint` at 2cff5076 (Task 5): pass, 0 errors (9 warnings in examples, unchanged)
 - Check: `pnpm test validate-repo` at 2cff5076 (Task 5): pass, 27 unit tests, registry valid
 - Check: `pnpm test docs-e2e --base base` at 2cff5076 (Task 5): pass, getting-started 189, api 109, guides 689, examples 936, 0 failed
+- Check: `pnpm lib:install radix|base|aria` with `sheet` in `EXTRA_PARTS`, then `git status --short` (fix round): pass, only `components/ui-<base>/sheet.tsx` written (the hand-placed radix copy replaced by the installer's)
+- Check: `pnpm format` at e62b5262 (fix round): pass, no file changed
+- Check: `pnpm test typecheck --base radix`, `--base base`, `--base aria` at e62b5262 (fix round): pass, tsc clean on all three
+- Check: `pnpm --filter shadcn-table-docs types:check` at e62b5262 (fix round): pass
+- Check: `pnpm test lint` at e62b5262 (fix round): pass, 0 errors (9 warnings in examples, unchanged)
+- Check: `pnpm test validate-repo` at e62b5262 (fix round): pass, 27 unit tests, registry valid
+- Check: `pnpm test docs-e2e --base base` at e62b5262 (fix round): pass, 1923 checks on 107 pages (getting-started, api, guides, examples 936), 0 failed
 
 - Task 1 Reproduce (docs E2E theme checks red on the shipped code): done, fb2aa071
 - Task 2 Dependencies (react-hotkeys, sheet part): done, 8d0670db
 - Task 3 Core and provider: done, 73c60884
 - Task 4 Panel, controls, layout, demo: done, c1b56e57
 - Task 5 Cleanup: done, 2cff5076
+- Review fixes: done, 17d7daf7 to e62b5262 (sheet through the installer, Reset kbd hint, hotkeys guard, data-icon, observer invariant comment, e2e reset, cn import)
 
 ## Attention
 
