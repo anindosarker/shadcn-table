@@ -3,15 +3,10 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { ArrowUpRightIcon, RotateCcwIcon, ShuffleIcon } from 'lucide-react';
-import { applyThemePreset } from '@/components/theme-preset-switcher';
+import { useDesignSystem } from '@/components/design-system-provider';
 import { cn } from '@/lib/cn';
+import { findColorPreset } from '@/lib/design-system/color-presets';
 import { installDir, namespaceAddCommand } from '@/lib/install';
-import {
-  DEFAULT_THEME,
-  isThemePreset,
-  THEME_PRESETS,
-  type ThemePreset,
-} from '@/lib/theme-presets';
 
 const ThemeTable = dynamic(
   () => import('@/components/theme-demo/theme-table'),
@@ -71,21 +66,16 @@ function subscribeReduced(onChange: () => void) {
   return () => query.removeEventListener('change', onChange);
 }
 
-/** The site preset, read from `<html data-theme>`: the nav picker writes it,
- * so an observer on the attribute catches every pick, ours or the nav's. */
-function subscribePreset(onChange: () => void) {
-  const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme'],
-  });
-  return () => observer.disconnect();
-}
-
-function getPreset(): ThemePreset {
-  const current = document.documentElement.dataset.theme;
-  return isThemePreset(current) ? current : DEFAULT_THEME;
-}
+/** The color presets the cycle button steps through, nearest to the six the site
+ * offered before the theme customizer (Emerald, Mono, Violet, Blue, Rose, Amber). */
+const DEMO_PRESETS = [
+  'default',
+  'mono',
+  'violet-bloom',
+  'ocean-breeze',
+  'quantum-rose',
+  'amber-minimal',
+] as const;
 
 function Caret() {
   return (
@@ -154,13 +144,10 @@ export function NoStep3Demo() {
     () => window.matchMedia(REDUCED_QUERY).matches,
     () => false,
   );
-  const preset = useSyncExternalStore(
-    subscribePreset,
-    getPreset,
-    () => DEFAULT_THEME,
-  );
-  const active =
-    THEME_PRESETS.find((p) => p.name === preset) ?? THEME_PRESETS[0];
+  // The site design system: the customizer in the nav and the cycle button here
+  // both change it, so the label follows every pick.
+  const { config, setConfig } = useDesignSystem();
+  const activeLabel = findColorPreset(config.colorPreset)?.label ?? 'Custom';
 
   // the line in progress; lines before it are complete
   const [step, setStep] = useState(0);
@@ -199,8 +186,11 @@ export function NoStep3Demo() {
   };
 
   const cycle = () => {
-    const i = THEME_PRESETS.findIndex((p) => p.name === preset);
-    applyThemePreset(THEME_PRESETS[(i + 1) % THEME_PRESETS.length].name);
+    const i = DEMO_PRESETS.findIndex((name) => name === config.colorPreset);
+    setConfig({
+      ...config,
+      colorPreset: DEMO_PRESETS[(i + 1) % DEMO_PRESETS.length],
+    });
   };
 
   return (
@@ -295,7 +285,7 @@ export function NoStep3Demo() {
                   aria-live="polite"
                   className="font-medium text-foreground"
                 >
-                  {active.label}
+                  {activeLabel}
                 </span>
               </span>
             </p>
