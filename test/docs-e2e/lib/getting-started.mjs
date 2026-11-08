@@ -307,9 +307,9 @@ async function themeCustomizer({ page, check }) {
   await page
     .waitForFunction(
       () =>
-        document.querySelector('[role="dialog"]')?.contains(
-          document.activeElement,
-        ) === true,
+        document
+          .querySelector('[role="dialog"]')
+          ?.contains(document.activeElement) === true,
       null,
       { timeout: 5000 },
     )
@@ -355,11 +355,7 @@ async function themeCustomizer({ page, check }) {
   const again = await shuffle(redone);
   await press('p');
   const afterP = await primary();
-  check(
-    'theme: p changes nothing',
-    afterP === again,
-    `${again} -> ${afterP}`,
-  );
+  check('theme: p changes nothing', afterP === again, `${again} -> ${afterP}`);
   await press('Shift+R');
   const reset = await primary();
   check(

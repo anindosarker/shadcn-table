@@ -323,15 +323,8 @@ const SHORTCUT_ROW_COMPACT = true;
 /** Reset, Undo, Redo, Random and Next preset with their kbd hints, the
  * buttons for every theme shortcut (D22). */
 function ShortcutRow() {
-  const {
-    reset,
-    undo,
-    redo,
-    shuffle,
-    shuffleColorPreset,
-    canUndo,
-    canRedo,
-  } = useDesignSystem();
+  const { reset, undo, redo, shuffle, shuffleColorPreset, canUndo, canRedo } =
+    useDesignSystem();
   const format = useFormatForDisplay();
   const shortcuts = [
     {
