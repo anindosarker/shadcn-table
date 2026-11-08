@@ -5,7 +5,6 @@ import { HotkeysProvider, useHotkeys } from '@tanstack/react-hotkeys';
 import { useSearchContext } from 'fumadocs-ui/contexts/search';
 import {
   buildThemeCss,
-  decodeConfig,
   DEFAULT_CONFIG,
   DESIGN_SYSTEM_ATTRIBUTE,
   normalizeConfig,
@@ -181,14 +180,6 @@ function setToken(mode: Mode, token: Token, value: string) {
   });
 }
 
-/** Applies a create preset code; false when it is not one. */
-function importPreset(code: string) {
-  const config = decodeConfig(code);
-  if (!config) return false;
-  setDesignSystem(config);
-  return true;
-}
-
 /** The theme shortcuts, each also shown as a kbd hint in the panel. */
 export const THEME_HOTKEYS = {
   shuffle: 'R',
@@ -205,7 +196,6 @@ type DesignSystemContextValue = StoreState & {
   undo: () => void;
   redo: () => void;
   setToken: (mode: Mode, token: Token, value: string) => void;
-  importPreset: (code: string) => boolean;
 };
 
 const DesignSystemContext =
@@ -301,7 +291,6 @@ export function DesignSystemProvider({
       undo,
       redo,
       setToken,
-      importPreset,
     }),
     [store],
   );

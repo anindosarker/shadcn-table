@@ -4,8 +4,6 @@ import * as React from 'react';
 import { useTheme } from 'next-themes';
 import { useFormatForDisplay } from '@tanstack/react-hotkeys';
 import {
-  CheckIcon,
-  CopyIcon,
   MoonIcon,
   PaletteIcon,
   Redo2Icon,
@@ -13,25 +11,13 @@ import {
   ShuffleIcon,
   SunIcon,
   Undo2Icon,
-  UploadIcon,
 } from 'lucide-react';
 import {
   THEME_HOTKEYS,
   useDesignSystem,
 } from '@/components/design-system-provider';
 import { Button } from '@/components/ui-radix/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui-radix/dropdown-menu';
 import { Input } from '@/components/ui-radix/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui-radix/popover';
 import {
   Select,
   SelectContent,
@@ -61,9 +47,7 @@ import {
 } from '@/lib/design-system/color-presets';
 import {
   BASE_COLORS,
-  buildThemeCss,
   buildThemeVars,
-  encodeConfig,
   FONTS,
   getThemesForBaseColor,
   MENU_ACCENTS,
@@ -155,7 +139,6 @@ function ThemeCustomizerPanel() {
 
       <div className="flex flex-col gap-4 p-4">
         <div className="flex items-center gap-1">
-          <CopyMenu config={config} />
           <Button
             variant="outline"
             size="sm"
@@ -284,7 +267,6 @@ function ThemeCustomizerPanel() {
 
         <Section label="Presets">
           <div className="flex items-center gap-1">
-            <ImportPreset />
             <Button
               variant="outline"
               size="sm"
@@ -495,96 +477,6 @@ function Swatch({
         />
       ))}
     </span>
-  );
-}
-
-/** Copy the theme CSS or the create preset code. */
-function CopyMenu({ config }: { config: DesignSystemConfig }) {
-  const [copied, setCopied] = React.useState(false);
-  const copy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // clipboard blocked: nothing to show
-    }
-  };
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          {copied ? <CheckIcon /> : <CopyIcon />}
-          {copied ? 'Copied' : 'Copy'}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="docs-menu">
-        <DropdownMenuItem onSelect={() => copy(buildThemeCss(config))}>
-          Copy CSS
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => copy(encodeConfig(config))}>
-          Copy preset code
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-/** Paste a create preset code (ui.shadcn.com/create, `shadcn init --preset`). */
-function ImportPreset() {
-  const { importPreset } = useDesignSystem();
-  const id = React.useId();
-  const [open, setOpen] = React.useState(false);
-  const [draft, setDraft] = React.useState('');
-  const [error, setError] = React.useState(false);
-
-  const apply = () => {
-    if (!importPreset(draft)) {
-      setError(true);
-      return;
-    }
-    setDraft('');
-    setError(false);
-    setOpen(false);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" size="sm">
-          <UploadIcon />
-          Import
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="start" className="w-64">
-        <label htmlFor={id} className="text-xs font-medium">
-          Preset code
-        </label>
-        <div className="flex gap-1">
-          <Input
-            id={id}
-            value={draft}
-            spellCheck={false}
-            placeholder="b2fms620zo"
-            aria-invalid={error || undefined}
-            onChange={(event) => {
-              setDraft(event.target.value);
-              setError(false);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') apply();
-            }}
-            className="h-7"
-          />
-          <Button size="sm" onClick={apply} disabled={!draft.trim()}>
-            Apply
-          </Button>
-        </div>
-        {error && (
-          <p className="text-xs text-destructive">Not a preset code.</p>
-        )}
-      </PopoverContent>
-    </Popover>
   );
 }
 
