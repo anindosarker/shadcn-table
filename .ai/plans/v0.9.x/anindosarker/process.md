@@ -16,7 +16,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 ## P3 Merge
 
 - The merge commit of a milestone into `claude/review` is `merge: <milestone> (<spec>)`; the milestone branch is deleted local and remote right after.
-- `act pull_request` runs `pr.yml` locally on Linux: any agent may use it when it helps; never required, never forbidden.
+- `act pull_request` runs `pr.yml` locally on Linux against Docker Desktop: any agent may use it when it helps, and a CI-only red is reproduced under it before the fix merges (D32). A down Docker daemon is started by the agent itself (`open -a Docker`, then wait for `docker info`); it is an environment fix, not an owner question.
 
 ## P4 Release
 
