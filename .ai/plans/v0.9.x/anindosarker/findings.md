@@ -63,7 +63,7 @@
 
 ### F15 The docs dev server is slow
 
-- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review`: "The site is super slow in dev server." Cause not yet located (lookup running: bundler, per-request work in the design-system provider).
+- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review`: "The site is super slow in dev server." Cause, measured 2026-11-08 in a browser before and after the theme panel: `app/global.css:9-16` imports all eight `styles/style-*.css`, the root stylesheet grew from 351 KB to 2,755 KB, and every theme or class change recalculates styles over about 3,560 nodes (0.5 to 1 s); the first-hit compile (12 to 18 s) is the same on both builds. The machine's load average of 20 plus from agent gates doubles it. Resolved by D29.
 
 ### F16 The icon library cannot be changed
 
