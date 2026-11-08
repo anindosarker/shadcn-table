@@ -1,6 +1,6 @@
 # Dev server clean (F11), tracker
 
-Status: running
+Status: done
 Files owned: `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` (new)
 Depends on: none
 Branch `v0.9/fix-dev-server-clean`, worktree 04
@@ -13,6 +13,11 @@ Checks:
 - Check: `pnpm --filter shadcn-table-docs lint` at de62f9eb: pass, 0 errors, 9 warnings (examples, untouched files); the three changed files lint clean
 - Check: format, `pnpm exec prettier --check` on the three changed files and `CHANGELOG.md` at f58201a2: pass
 - Check: Acceptance, `pnpm test docs-e2e --base base` at f58201a2: pass, 1923 passed, 0 failed, 107 pages
+- Check: verifier, D20 Acceptance rerun, `PORT=5346 pnpm --filter shadcn-table-docs dev`, headless playwright loads `/`, `/docs`, `/docs/examples/basic` plus `/` with Mac UA and theme panel opened at first paint, at 464ba1a7: pass, server log holds no TanStack Hotkeys line, browser logs no error, warning or hydration mismatch
+- Check: verifier, `pnpm test docs-e2e --base base` at 464ba1a7: pass, 1923 checks, 107 pages, 0 failed
+- Check: verifier, `pnpm test typecheck --base radix` at 464ba1a7: pass, tsc clean
+- Check: verifier, `pnpm test lint` at 464ba1a7: pass, 0 errors, 9 warnings (examples, untouched files)
+- Check: verifier, `pnpm test validate-repo` at 464ba1a7: pass, bases identical, icon maps complete, tailwind valid, registry valid, 27 unit tests
 
 - Task 1 Reproduce on the shipped code: done at efd2717a
 - Task 2 Theme panel kbd hints format only in the browser: done (fea054ee)
