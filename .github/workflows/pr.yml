@@ -15,7 +15,8 @@ run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installatio
 # (Validate PR and Prepare Release skip without a PR); with
 # installation-e2e-only it runs the seven Installation E2E jobs with
 # --no-diff, whose artifacts carry the captures (the reference refresh path,
-# D86).
+# D86). Head, the first job, reads the PR head commit: on the version bump
+# commit every test job skips (D35).
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
@@ -209,7 +210,9 @@ jobs:
   # triggers this workflow again (a push with github.token would not). On
   # that rerun Validate PR passes the bumped head and this job stops at
   # "already bumped". A red or skipped need skips it. The job waits for the
-  # owner's Approve on the `release` environment before it runs (D3).
+  # owner's Approve on the `release` environment before it runs (D3). On
+  # the bump commit the test jobs are skipped and this job is skipped with
+  # them, so the bump push prompts nobody (D35).
   prepare-release:
     name: Prepare Release
     needs: [pr-summary, typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-pr]
