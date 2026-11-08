@@ -188,7 +188,8 @@ const DESIGN_SYSTEM_KEY = 'st-design-system';
  * panel open `r`, `Mod+Z`, `Mod+Shift+Z` and `Shift+R` shuffle, undo, redo
  * and reset, `p` does nothing; `r` does nothing while the search dialog is
  * open; a Colors tab edit changes the computed
- * variable. Leaves the page on the default look with empty storage.
+ * variable; the Icon Library select switches the home tables (spec 14).
+ * Leaves the page on the default look with empty storage.
  */
 async function themeCustomizer({ page, check }) {
   const primary = () =>
@@ -406,6 +407,7 @@ async function themeCustomizer({ page, check }) {
   );
 
   await themeColorPicker({ page, check, trigger, panel, primary, press });
+  await themeIconLibrary({ page, check, trigger, panel });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
 }
@@ -518,6 +520,117 @@ async function themeColorPicker({
       undoneTwice === chainStart,
     `${chainStart} -> ${before} -> ${picked}, undo ${undone}, undo ${undoneTwice}`,
   );
+}
+
+/**
+ * The Icon Library select (spec 14, D27): picking Tabler switches the home
+ * demo's toolbar icons (the search toggle's svg gets `tabler-icon` within
+ * 5 s), the pick is stored and survives a reload, and `Shift+R` with the
+ * panel open returns the table to Lucide. Closes the panel.
+ */
+async function themeIconLibrary({ page, check, trigger, panel }) {
+  const icon = '.v5-demo button[aria-label="Show/Hide search"] svg';
+  const iconHas = (cls) =>
+    page
+      .waitForFunction(
+        ({ sel, c }) =>
+          document.querySelector(sel)?.classList.contains(c) === true,
+        { sel: icon, c: cls },
+        { timeout: 5000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+  const iconClass = async () =>
+    (await page
+      .locator(icon)
+      .first()
+      .getAttribute('class')
+      .catch(() => '')) ?? '';
+  const openPanel = async () => {
+    if (!(await trigger.count())) return;
+    await trigger.click();
+    await panel
+      .first()
+      .waitFor({ timeout: 5000 })
+      .catch(() => {});
+    await page.waitForTimeout(300);
+  };
+  const closePanel = async () => {
+    await page.keyboard.press('Escape');
+    await panel
+      .first()
+      .waitFor({ state: 'detached', timeout: 5000 })
+      .catch(() => {});
+  };
+
+  await openPanel();
+  const select = panel.first().getByLabel('Icon Library', { exact: true });
+  let picked = false;
+  if (await select.count()) {
+    picked = await select
+      .click({ timeout: 5000 })
+      .then(async () => {
+        const option = page.getByRole('option', { name: 'Tabler' });
+        await option.waitFor({ timeout: 5000 });
+        await option.click();
+        return true;
+      })
+      .catch(() => false);
+  }
+  await page.waitForTimeout(200);
+  await closePanel();
+  await page
+    .locator('.v5-demo')
+    .first()
+    .scrollIntoViewIfNeeded()
+    .catch(() => {});
+  const tabler = await iconHas('tabler-icon');
+  check(
+    'icons: Tabler switches the home tables',
+    picked && tabler,
+    `picked=${picked} class=${await iconClass()}`,
+  );
+
+  const storedLibrary = await page.evaluate((key) => {
+    try {
+      return JSON.parse(localStorage.getItem(key) ?? 'null')?.config
+        ?.iconLibrary;
+    } catch {
+      return undefined;
+    }
+  }, DESIGN_SYSTEM_KEY);
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  await page
+    .locator('.v5-demo table tbody tr')
+    .first()
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+  const afterReload = await iconHas('tabler-icon');
+  check(
+    'icons: the pick survives a reload',
+    storedLibrary === 'tabler' && afterReload,
+    `stored=${storedLibrary} class=${await iconClass()}`,
+  );
+
+  await openPanel();
+  await page
+    .waitForFunction(
+      () =>
+        document
+          .querySelector('[role="dialog"]')
+          ?.contains(document.activeElement) === true,
+      null,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+  await page.keyboard.press('Shift+R');
+  const lucide = await iconHas('lucide');
+  check(
+    'icons: Shift+R returns to Lucide',
+    tabler && lucide,
+    `class=${await iconClass()}`,
+  );
+  await closePanel();
 }
 
 const checks = {
