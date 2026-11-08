@@ -69,7 +69,7 @@ sequenceDiagram
 
 `pr.yml`, status `refactor`: a new first job.
 
-- `head`: `runs-on: ubuntu-latest`, `if:` the existing event condition of the test jobs (`!contains(labeled/unlabeled) && !(dispatch && installation-e2e-only)`), steps: `actions/checkout` with `ref: ${{ github.event.pull_request.head.sha || github.sha }}` and `fetch-depth: 1`; one step `id: commit` running `git log -1 --format='%an%n%s'` and writing `bumped=true` when the author is exactly `github-actions[bot]` and the subject matches `^chore: version [0-9]`, else `bumped=false`; job `outputs: { bumped: ${{ steps.commit.outputs.bumped }} }`. Without a pull request (dispatch) `bumped` is `false`.
+- `head`: `runs-on: ubuntu-latest`, `if:` the label condition alone (`!contains(labeled/unlabeled)`; it runs on the `installation-e2e-only` dispatch too, because `installation-e2e` needs it and a skipped need skips the dependent), steps: `actions/checkout` with `fetch-depth: 2` (the default merge commit; a `ref: head.sha` cannot be proven under act, which fetches the sha from GitHub); one step `id: commit` running `git log -1 --format='%an%n%s' "$HEAD_SHA"` with `HEAD_SHA` from `github.event.pull_request.head.sha` (empty on a dispatch) and writing `bumped=true` when the author is exactly `github-actions[bot]` and the subject matches `^chore: version [0-9]`, else `bumped=false`; job `outputs: { bumped: ${{ steps.commit.outputs.bumped }} }`. Without a pull request (dispatch) `bumped` is `false`.
 - Does NOT read the PR through the API and does NOT depend on the label.
 
 **Interfaces:**
@@ -94,7 +94,7 @@ head:
 `typecheck.yml`, `storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml`, status `refactor`.
 
 - `on.workflow_call.inputs.skip`: `description: Skip the job (the PR head is the version bump commit, D35)`, `type: boolean`, `default: false`.
-- The one job: `if: ${{ !inputs.skip }}` at job level, matrix unchanged, so each leg is created and reported as skipped.
+- The one job: `if: ${{ !inputs.skip }}` on every step (`always() && !inputs.skip` on the upload), never at job level: a job-level `if:` is read before the matrix expands and GitHub reports one unexpanded skipped job instead of the leg contexts (actions/runner#952), so each leg runs no step and reports success under its own context. (Run of 2026-11-09, A17.)
 - The header comment of each file names the input in one sentence.
 
 ### 1.7 Dependencies and env
@@ -112,7 +112,7 @@ head:
 - Review: fable
 - Local CI: `act -W .github/workflows/pr.yml -l` (the workflow parses, every job listed), `act pull_request -W .github/workflows/pr.yml -j lint -e <event.json>` on a bump head and on a normal head, `pnpm test validate-repo`
 - Task 1: Reproduce: in the milestone worktree commit `chore: version 9.9.9` as `github-actions[bot]` (a one-byte change to `CHANGELOG.md`), run `act pull_request -W .github/workflows/pr.yml -j lint -e <event.json>` on the shipped workflows, record in the tracker that Lint ran (P11); reset the scratch commit. Checks: the tracker line
-- Task 2: The `head` job, the callers, lint and validate-repo (1.6.2, 1.6.3); the `skip` input and job `if:` in the four called workflows (1.6.4). Checks: `act -W .github/workflows/pr.yml -l` lists `head`; the scratch bump head: `act ... -j lint` prints `bumped=true` and skips Lint; a normal head runs Lint
+- Task 2: The `head` job, the callers, lint and validate-repo (1.6.2, 1.6.3); the `skip` input and the step `if:` in the four called workflows (1.6.4). Checks: `act -W .github/workflows/pr.yml -l` lists `head`; the scratch bump head: `act ... -j lint` prints `bumped=true` and skips Lint; a normal head runs Lint
 - Task 3: Cleanup: the comments, the changelog block, `pnpm format`. Checks: 2.2
 
 ### 2.2 Checks

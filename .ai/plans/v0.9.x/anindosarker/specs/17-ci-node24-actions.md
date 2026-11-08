@@ -19,7 +19,7 @@ Every job of `pr.yml` and `release.yml` annotates "Node.js 20 is deprecated. The
 
 ```
 .github/workflows/
-├── pr.yml:47-49,55 80-82,88 117-119,125 148-149,152 186,191   ← checkout@v4 (6), pnpm/action-setup@v4 (3), setup-node@v4 (6), upload-artifact@v4 (3), download-artifact@v4 (1)
+├── pr.yml:47-49,55 80-82,88 117-119,125 148-149,152 186,191   ← checkout@v4 (7, the `head` job of spec 16 included), pnpm/action-setup@v4 (3), setup-node@v4 (6), upload-artifact@v4 (3), download-artifact@v4 (1)
 ├── typecheck.yml:22-24,30                                      ← checkout, pnpm/action-setup, setup-node, upload-artifact @v4
 ├── storybook-tests.yml:22-24,31                                ← same four
 ├── docs-e2e.yml:25-27,35,42,49                                 ← same four plus cache@v4 (2)
@@ -28,7 +28,7 @@ Every job of `pr.yml` and `release.yml` annotates "Node.js 20 is deprecated. The
 package.json:44                                                  ← "packageManager": "pnpm@10.13.1"
 ```
 
-Counts: checkout 13, setup-node 13, upload-artifact 8, download-artifact 1, cache 3, pnpm/action-setup 8.
+Counts: checkout 14 (spec 16 added one), setup-node 13, upload-artifact 8, download-artifact 1, cache 3, pnpm/action-setup 8.
 
 ### 1.4 Target structure
 
@@ -46,7 +46,7 @@ Counts: checkout 13, setup-node 13, upload-artifact 8, download-artifact 1, cach
 
 #### 1.6.2 The `uses:` lines
 
-Six workflow files, status `refactor`: a one-token change per line, 46 lines. The `with:` blocks stay (`node-version: 22`, `cache: pnpm`, `path`, `key`, `restore-keys`, `name`, `include-hidden-files`, `overwrite`, `pattern`, `merge-multiple`, `ref`, `token`, `fetch-depth`); every input used here exists unchanged in the new majors (checked against each action's `action.yml` at the pinned release before the edit; a renamed or removed input is a tracker Attention line, not a silent workaround).
+Six workflow files, status `refactor`: a one-token change per line, 47 lines. The `with:` blocks stay (`node-version: 22`, `cache: pnpm`, `path`, `key`, `restore-keys`, `name`, `include-hidden-files`, `overwrite`, `pattern`, `merge-multiple`, `ref`, `token`, `fetch-depth`); every input used here exists unchanged in the new majors (checked against each action's `action.yml` at the pinned release before the edit; a renamed or removed input is a tracker Attention line, not a silent workaround).
 
 - Does NOT pin to a sha; the project pins majors.
 - Does NOT touch the `node-version: 22` of the jobs: that is the project's Node, the action runtime is GitHub's.
@@ -66,7 +66,7 @@ Six workflow files, status `refactor`: a one-token change per line, 46 lines. Th
 - Review: none
 - Local CI: `act -W .github/workflows/pr.yml -l`, `act -W .github/workflows/release.yml -l`, `act pull_request -W .github/workflows/pr.yml -j lint`, `pnpm test validate-repo`
 - Task 1: Read each action's `action.yml` at the pinned release (`gh api repos/<owner>/<action>/contents/action.yml?ref=<tag>`), confirm `runs.using: node24` and every input this repo passes; record the six lines in the tracker. Checks: the tracker lines
-- Task 2: The 46 `uses:` lines (1.6.2). Checks: `grep -rn '@v4' .github/workflows/` empty; both `act -l` parse; `act pull_request -W .github/workflows/pr.yml -j lint` green
+- Task 2: The 47 `uses:` lines (1.6.2). Checks: `grep -rn '@v4' .github/workflows/` empty; both `act -l` parse; `act pull_request -W .github/workflows/pr.yml -j lint` green
 - Task 3: Cleanup: the changelog block, `pnpm format`. Checks: 2.2
 
 ### 2.2 Checks

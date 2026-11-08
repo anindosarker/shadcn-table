@@ -21,8 +21,8 @@ Updated: 2026-11-09 00:07
 | E4 13 Docs parts hooks |  |  | [x] |  |  |  |
 | E5 14 Icon library select |  |  |  |  | [x] |  |
 | E5 15 Style sheet on demand |  |  |  |  |  | [x] |
-| E6 16 CI skip bump commit |  | [ ] |  |  |  |  |
-| E6 17 CI Node 24 actions |  |  | · |  |  |  |
+| E6 16 CI skip bump commit |  | [x] |  |  |  |  |
+| E6 17 CI Node 24 actions |  |  | [ ] |  |  |  |
 | E6 18 PR summary layout | [x] |  |  |  |  |  |
 | E6 19 PR summary job outputs |  |  |  | · |  |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |
