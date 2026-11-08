@@ -13,6 +13,9 @@ Checks:
 - Check: storybook-tests base, `pnpm test storybook-tests --base base` at 89e41e5f: pass (618 passed) on rerun; two earlier runner runs under load ended 1 failed, 617 passed, test name not captured; three direct `vitest run` runs in between 618 passed (P5 flake under load)
 - Check: storybook-tests radix, `pnpm test storybook-tests --base radix` at 89e41e5f: pass (618 passed)
 - Check: storybook-tests aria, `pnpm test storybook-tests --base aria` at 89e41e5f: pass (618 passed)
+- Check (verifier): typecheck, `pnpm test typecheck --base radix`, `--base base`, `--base aria` at 7038cfc8: pass (tsc clean each)
+- Check (verifier): lint, `pnpm test lint` at 7038cfc8: pass (0 errors, 9 warnings, same pre-existing set)
+- Check (verifier): validate-repo and docs-e2e at 812cc69f, storybook-tests at 89e41e5f stay valid for 7038cfc8 (diff since touches only .ai/ and CHANGELOG.md); Acceptance lines all green
 
 - Task 1 Reproduce: done (e5cef62f)
 - Task 2 Stored view and hook: done (4be5d8b2)
