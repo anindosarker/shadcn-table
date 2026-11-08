@@ -460,3 +460,6 @@ index e1645117..e67a5482 100644
 
 
 - Fixes F10 and F27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (F10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (F27). Settled by the lead: tooling with one right answer. F9 and F26 (stale comments) wait for a change that touches their files (no comment-only commits).
+
+### D47 The runner approves every Prepare Release deployment
+
