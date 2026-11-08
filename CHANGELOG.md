@@ -37,6 +37,10 @@ publishes the section as the GitHub release notes.
 
 - The deployed Storybook resets each story after its play (D8, F6): the static builds run the play with the Interactions panel logging every step, then remount the story in its initial state; Rerun runs the play and resets again. `storybook dev`, vitest and a failing play keep the end state. `pnpm test storybook-static` checks it on a local static build or, with `--url`, on the deployed site.
 
+#### Fix F3
+
+- Anchored menus keep their position while they close: `useST_MenuAnchor.ts` keeps the last measured anchor box through the exit animation instead of dropping to (0,0), so the filter mode menu no longer jumps the subheader filter row as it fades (three bases).
+
 ### Docs
 
 #### Spec 04 Theme customizer
