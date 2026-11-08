@@ -58,6 +58,10 @@ publishes the section as the GitHub release notes.
 
 - The persistent view example opens at 10 rows per page instead of 50 on every base (D24, F14); the stored view still does not keep the page size. The docs E2E check of `/docs/examples/persistent-view` clears the stored view, reloads and asserts 10 body rows and a rows-per-page select reading 10.
 
+#### Spec 13 Docs parts carry the design-system hooks
+
+- Style, Menu Color and Menu Accent in the docs theme panel now reach the docs parts (D26). `pnpm lib:install <base>` gains a second phase: every shadcn part it installs under `components/ui-<base>/` is replaced by its hooked source from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit (`SHADCN_UI_SHA`), with the imports pointed at the docs folders and each icon placeholder turned into its Lucide icon, so the parts carry the `cn-*` classes the style layers target and `cn-menu-target` for the menu color loop. The library copy in `shadcn-table/` is unchanged. The docs E2E check of `/docs/guides/view-settings` picks a Style, Menu Color `inverted` and Menu Accent `bold` in the theme panel and reads the open menu.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
