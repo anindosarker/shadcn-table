@@ -1,6 +1,6 @@
 # Installation references refreshed (F20), tracker
 
-Status: merged (db8a27fc)
+Status: merged (db8a27fc; dev 0adce149)
 Files owned: `test/installation-e2e/fixtures/reference/base/default-light.png`, `test/installation-e2e/fixtures/reference/base/default-dark.png`, `test/installation-e2e/fixtures/reference/radix/default-light.png`, `test/installation-e2e/fixtures/reference/radix/default-dark.png`, `test/installation-e2e/fixtures/reference/aria/default-light.png`, `test/installation-e2e/fixtures/reference/aria/default-dark.png`
 Depends on: none
 Branch `v0.9/refresh-installation-references` (cut from df90bd27, the `dev` head), worktree 07
@@ -16,5 +16,6 @@ Checks:
 
 ## Attention
 
-- Branch `v0.9/refresh-installation-references` kept, not deleted (exception to P3): D30 merges it into `dev` directly, which this milestone did not do.
+- Branch `v0.9/refresh-installation-references` kept, not deleted (exception to P3, per the lead).
+- Merge order reversed: `claude/review` (db8a27fc) was merged before the D30 instruction arrived; `dev` (0adce149, from df90bd27) followed. The `dev` merge ran in worktree 07 on a detached `origin/dev`, pushed as `HEAD:dev`, so the main checkout, shared with other agents, never switched branch or ran `reset --hard`.
 - The fix commit has no trailer: the builder prompt asked for the harness trailer, and none was given in the session.
