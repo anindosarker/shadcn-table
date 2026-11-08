@@ -13,6 +13,8 @@ Checks:
 - `eslint` on layout.tsx, config.ts, design-system-provider.tsx, build-styles.mjs: pass
 - `pnpm test docs-e2e --base base /` with the 1.6.3 layout as specified (server-rendered default link, script swaps it): fail, `sheet: stored style at first paint` (two links) and `no hydration / React errors` (Minified React error #418): React 19 matches a <head> link by href while hydrating, so the swapped link fails hydration and the client render adds the default link back
 - `pnpm test docs-e2e --base base /` at Task 3 files (the script creates the one link): pass, 79 passed; `perf: panel open` 92 ms, `perf: light/dark toggle` 113 ms
+- Root stylesheet bytes after, `/` in `next dev` (port 5341), CSS `decodedBodySize` at 61fc16d2: root chunk 337,228 B plus the same 52,399 B second chunk; the one active sheet `/styles/style-nova.css` is 315,935 B unminified (file size; the entry read 0 from cache). Root 337 KB against the 351 KB baseline, root plus the active sheet 653 KB against 667 KB (351 + 316): within 10 percent (D29). No console errors in `next dev`
+- `pnpm test docs-e2e --base base` at 61fc16d2 + P9 line: pass, 4 sections, 107 pages, 0 failed; `perf: panel open` 90 ms, `perf: light/dark toggle` 124 ms. Its build step is `pnpm --filter shadcn-table-docs build` (build-styles --minify: 258 to 277 KB per sheet, next build compiled): pass
 
 - Task 1 Reproduce (sheet checks red on the shipped code, root stylesheet bytes before): planned
 - Task 2 Dependency and scripts (@tailwindcss/node, build-styles.mjs, predev, build, .gitignore): planned

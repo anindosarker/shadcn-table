@@ -55,7 +55,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 - No milestone owns these files; every milestone may append to them, in a conflict both sides are kept in order.
 - `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/index.ts`: each milestone's exports under its own `// spec NN` comment.
 - `CHANGELOG.md`: one `#### Spec NN` block per milestone under `## Unreleased` (`#### Spec NN <milestone>` when a spec has several milestones); released versions keep their older `Spec` headings.
-- Generated, never hand-edited: `registry.json`, the `examples-*-diff.json` lists, `apps/shadcn-table-docs/components/ui-<base>/` and `public/r/`.
+- Generated, never hand-edited: `registry.json`, the `examples-*-diff.json` lists, `apps/shadcn-table-docs/components/ui-<base>/`, `public/r/` and `apps/shadcn-table-docs/public/styles/` (`lib/build-styles.mjs`, git-ignored).
 - `tools/registry/{base,aria}-diff.json` are hand-kept allow lists, owned by the milestone that adds the differing file.
 
 ## P10 Plans
