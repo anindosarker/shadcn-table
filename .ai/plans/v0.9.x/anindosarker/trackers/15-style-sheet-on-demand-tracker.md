@@ -1,6 +1,6 @@
 # 15: Only the active style's stylesheet loads, tracker
 
-Status: done
+Status: merged (5df252e9)
 Branch `v0.9/style-sheet-on-demand`, worktree 06
 Checks:
 - `pnpm test docs-e2e --base base /` at d2b4d0ae + Task 1 checks: fail as expected (P11), 5 failed: `sheet: one style link` ([]), `sheet: no style rules elsewhere` (.style-vega rules in the root bundle), `sheet: follows the Style select` (links=[]), `sheet: stored style at first paint` ([]), `perf: light/dark toggle` 318 ms; `perf: panel open` 246 ms passes
