@@ -1,10 +1,15 @@
 # Theme check closes the search dialog (F24), tracker
 
-Status: planned
+Status: merged (dbc43fd6; dev 50ef8dd5)
 Files owned: `test/docs-e2e/lib/getting-started.mjs`
 Depends on: none
 Branch `v0.9/theme-check-close-search` (cut from `dev` ea276251, D30 pattern: merged into `dev` then `claude/review`), worktree 03
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: docs E2E `/` base, `pnpm test docs-e2e --base base /` at d912ec9a (worktree 03): pass (63 passed, 0 failed)
+- Check: docs E2E `/` aria, `pnpm test docs-e2e --base aria /` at d912ec9a (worktree 03): fail, 1 check "theme: p restores it" (`#b91c1c -> #b91c1c`, before the changed code, CPU idle near 0 percent)
+- Check: docs E2E `/` aria rerun, `pnpm test docs-e2e --base aria /` at d912ec9a (worktree 03): pass (63 passed, 0 failed)
+- Check: merge into `claude/review` at dbc43fd6: clean auto-merge, no conflict, `node --check` passes; no run (the task runs one only on a conflict)
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Dialog close: done (d912ec9a)
+
+Notes: no changelog block, test file only.
