@@ -13,4 +13,4 @@ Updated: 2026-11-08 09:12
 | E3 07 Integration |  | [ ] |  |  |
 | E3 07 Release PR |  |  | · |  |
 | E3 07 After release |  |  |  | · |
-| fix Dev server clean (F11) |  | [ ] |  |  |
+| fix Dev server clean (F11) |  | [x] |  |  |
