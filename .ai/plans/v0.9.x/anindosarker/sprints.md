@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-09 01:14
+Updated: 2026-11-09 01:47
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 |
 |---|---|---|---|---|---|---|---|
@@ -31,6 +31,7 @@ Updated: 2026-11-09 01:14
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |  |
+| fix Perf budgets on CI (F28) |  |  |  |  |  | [ ] |  |
 | fix Installation references refreshed (F20) |  | [x] |  |  |  |  |  |
 | fix Stored view page index (F22) |  | [x] |  |  |  |  |  |
 | fix Theme check closes the search dialog (F24) |  |  | [x] |  |  |  |  |

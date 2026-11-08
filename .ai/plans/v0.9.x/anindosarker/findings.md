@@ -119,3 +119,5 @@
 
 ### F28 The 300 ms perf budgets of the getting-started page fail on GitHub runners
 
+
+- `test/docs-e2e/lib/getting-started.mjs:841-845`: `perf: panel open` and `perf: light/dark toggle` require under 300 ms of long tasks (D29's acceptance, measured on the owner's machine). On GitHub runners the toggle took 342 ms (aria) and 351 ms (radix) on the 0.9.1 release PR run 42514739346, twice (one rerun), base 267 ms; panel open 207 to 268 ms. The release run is red on a budget the runner cannot meet; the P5 flake rerun does not cover it.
