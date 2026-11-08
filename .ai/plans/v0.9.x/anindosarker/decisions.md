@@ -254,3 +254,20 @@ index e1645117..e67a5482 100644
 [Done]
 
 - Source: A5. The environment created by spec 05 (`aeca4d55`) keeps GitHub's default `can_admins_bypass: true`; the owner is the repository's only admin, so nobody else can merge past the Approve. Kept as created; no extra PUT.
+
+## Round 3: triage E2, 2026-11-08
+
+### D17 The sheet part is installed into the docs only
+[Done]
+
+- Source: A6. `sheet` is listed in `EXTRA_PARTS` of `apps/shadcn-table-docs/lib/install.mjs` (as `alert-dialog` is), so `pnpm lib:install <base>` writes `components/ui-<base>/sheet.tsx` for every base; the registry gains no part the library does not use. Kept as merged (E2 04, `161c5ae6`).
+
+### D18 `@tanstack/react-hotkeys` stays a caret range
+[Done]
+
+- Source: A7. `^0.22.0` in `apps/shadcn-table-docs/package.json`, the convention of the other dependencies there; the lockfile pins the installed build. Kept as merged (E2 04, `161c5ae6`).
+
+### D19 The home demo label reads the design system store
+[Done]
+
+- Source: A9. `no-step-3.tsx` reads the current preset from `useDesignSystem()`, the store the panel writes, so every pick (panel, shortcut, cycle button) updates the label; no MutationObserver on `data-design-system`. The D2 behaviour is unchanged. Kept as merged (E2 04, `161c5ae6`).

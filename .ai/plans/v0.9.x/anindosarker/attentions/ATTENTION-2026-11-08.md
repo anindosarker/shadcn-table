@@ -51,6 +51,7 @@
   - b) set `can_admins_bypass` to false with one more PUT
 
 ## A6 The sheet part lives in the docs only, not in the registry
+[D17]
 
 - Spec 04 said `pnpm add-part radix sheet`; the merged code instead lists `sheet` in `EXTRA_PARTS` of `apps/shadcn-table-docs/lib/install.mjs`, so `lib:install <base>` writes `components/ui-<base>/sheet.tsx` for every base and the registry gains no part the library does not use.
 
@@ -59,6 +60,7 @@
   - b) revert: add `sheet` to the registry for radix, base and aria
 
 ## A7 The theme shortcuts depend on a six-day-old beta
+[D18]
 
 - `@tanstack/react-hotkeys` is `^0.22.0`, a beta published 2026-11-02, added to `apps/shadcn-table-docs/package.json` by spec 04 (D2).
 
@@ -75,6 +77,7 @@
   - b) hide the three controls until the hooks exist
 
 ## A9 The home demo label reads the theme store, not the page attribute
+[D19]
 
 - Spec 04 1.6.7 said `no-step-3.tsx` observes `data-design-system` with a MutationObserver; the merged code reads the preset from `useDesignSystem()`, the same store the panel writes, and the label updates on every pick (panel, shortcut, cycle button).
 
