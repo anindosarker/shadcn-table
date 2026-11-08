@@ -62,6 +62,10 @@ publishes the section as the GitHub release notes.
 
 - The theme panel drops the Copy menu (Copy CSS, Copy preset code) and the Import popover (D21); the toolbar row keeps Undo and Redo, the Presets row Random and the preset select. `encodeConfig`, `decodeConfig` and `importPreset` are gone; Random still picks from create's curated presets half the time.
 
+#### Spec 09 Theme panel: shortcut row, Mod+Z undo
+
+- One row under the theme panel's header holds Reset (`Shift+R`), Undo (`Mod+Z`), Redo (`Mod+Shift+Z`), Random (`R`) and Next preset (`C`) (D22): icon buttons named by their label, each with a tooltip carrying the label and its key, since the labeled buttons do not fit the 360 px panel. The header keeps the title and the close button, the Presets row the preset select. Undo moves from `P` to `Mod+Z` (Cmd on macOS, Ctrl elsewhere), redo gains `Mod+Shift+Z`, and `P` is no longer bound.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
