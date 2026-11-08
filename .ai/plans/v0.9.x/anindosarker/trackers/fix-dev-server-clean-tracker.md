@@ -1,6 +1,6 @@
 # Dev server clean (F11), tracker
 
-Status: done
+Status: merged (0d95960c)
 Files owned: `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` (new)
 Depends on: none
 Branch `v0.9/fix-dev-server-clean`, worktree 04
