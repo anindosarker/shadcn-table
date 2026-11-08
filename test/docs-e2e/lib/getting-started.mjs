@@ -218,6 +218,11 @@ async function themeCustomizer({ page, check }) {
   const stored = () =>
     page.evaluate((key) => localStorage.getItem(key), DESIGN_SYSTEM_KEY);
 
+  // F23: the demo replay focuses its Search field while it plays, which takes
+  // focus out of the theme panel (closing it) and makes the hotkeys ignore
+  // the keys; reduced motion holds the replay paused from mount, so the
+  // reload below applies it. Restored at the end.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
   await reload();
   const fresh = await bothModes();
@@ -339,6 +344,20 @@ async function themeCustomizer({ page, check }) {
     await page.keyboard.press(key);
     return waitForPrimary(done);
   };
+  /**
+   * Presses Escape until the panel is gone, at most three times: with focus
+   * on a shortcut button the first Escape only closes its tooltip, and the
+   * panel left open covers the trigger (F23).
+   */
+  const closePanel = async () => {
+    for (let i = 0; i < 3 && (await panel.count()); i++) {
+      await page.keyboard.press('Escape');
+      await panel
+        .first()
+        .waitFor({ state: 'detached', timeout: 2000 })
+        .catch(() => {});
+    }
+  };
   // A shuffle can land on a look with the same primary (a theme matching the
   // color preset it left), so `r` is pressed until --primary moves, at most
   // three times; every press before that kept --primary, so undo still
@@ -382,8 +401,7 @@ async function themeCustomizer({ page, check }) {
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
     `${again} -> ${reset}`,
   );
-  await page.keyboard.press('Escape');
-  await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await closePanel();
   await page.evaluate(() =>
     document.activeElement instanceof HTMLElement
       ? document.activeElement.blur()
@@ -414,8 +432,7 @@ async function themeCustomizer({ page, check }) {
       await input.fill(edited);
       afterEdit = await waitForPrimary((v) => v === edited);
     }
-    await page.keyboard.press('Escape');
-    await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+    await closePanel();
   }
   check(
     'theme: a Colors tab edit changes the computed variable',
@@ -431,9 +448,11 @@ async function themeCustomizer({ page, check }) {
     primary,
     waitForPrimary,
     pressUntil,
+    closePanel,
   });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.emulateMedia({ reducedMotion: null });
 }
 
 /**
@@ -452,6 +471,7 @@ async function themeColorPicker({
   primary,
   waitForPrimary,
   pressUntil,
+  closePanel,
 }) {
   const typed = 'oklch(0.55 0.15 250)';
   let chainStart = '';
@@ -524,11 +544,7 @@ async function themeColorPicker({
         (v) => v === chainStart,
       );
     }
-    await page.keyboard.press('Escape');
-    await panel
-      .first()
-      .waitFor({ state: 'detached', timeout: 5000 })
-      .catch(() => {});
+    await closePanel();
   }
   check('theme: picker opens', opened, `opened=${opened}`);
   check(
