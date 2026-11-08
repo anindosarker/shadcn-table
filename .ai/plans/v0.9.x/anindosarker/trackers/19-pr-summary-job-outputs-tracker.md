@@ -11,6 +11,9 @@ Checks:
 - Check: `pnpm test validate-repo` at 924a9118 and e0adb7a2: pass, 34 unit tests
 - Check: `pnpm test lint` at 924a9118: pass, 9 warnings; `node tools/release/record-output.mjs --key record` after it prints `record={"name":"lint","status":"pass",...}`
 - Check: at e0adb7a2 `grep -rn 'download-artifact' .github/workflows/pr.yml` empty; `grep -rln 'test-out-' .github/workflows/` lists `installation-e2e.yml` and `release.yml` (the `test-out-validate-production` upload of the release workflow, outside this spec); `ls .github/workflows/zz-*` no match: pass
+- Check (verifier): `pnpm test lint` at c4d9904f: pass, 9 warnings; `node tools/release/record-output.mjs --key record` after it prints `record={"name":"lint","status":"pass","summary":"9 warnings",...,"sha":"c4d9904f"}`
+- Check (verifier): `act pull_request -W .github/workflows/pr.yml -j lint -e <scratchpad>/pr-event.json -P ubuntu-latest=catthehacker/ubuntu:act-latest --artifact-server-path <scratchpad>/act-artifacts19v` (throwaway clone) at c4d9904f: pass line met as at 924a9118: Head green, Lint checkout, pnpm/action-setup, setup-node and install green, `pnpm test lint --ci` red (package eslint out of the container heap, exit 134; act only, local lint above is green), the record step `Hand the record to PR Summary` green printing `::set-output:: record={"name":"lint","status":"fail","summary":"9 problems",...,"sha":"c4d9904f"}`
+- Check (verifier): not rerun, recorded green on e0adb7a2 and only the tracker changed since: `node --test tools/release/pr-summary.test.mjs`, `pnpm test validate-repo`, the three greps; the GitHub proof (run 42509826313) stands. Left for GitHub: the next PR run (artifacts only `test-out-installation-e2e-*`, nineteen filled rows), not a local check
 
 - Task 1 Proof: done (c42a23d8, run 42509826313)
 - Task 2 Reproduce: done (135d35eb)
