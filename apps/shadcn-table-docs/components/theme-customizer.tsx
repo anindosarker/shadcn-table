@@ -150,7 +150,7 @@ export function ThemeCustomizer() {
             disabled={!canUndo}
             onClick={undo}
           >
-            <Undo2Icon data-icon="inline-start" />
+            <Undo2Icon />
             Undo
             <Kbd>{format(THEME_HOTKEYS.undo)}</Kbd>
           </Button>
@@ -160,7 +160,7 @@ export function ThemeCustomizer() {
             disabled={!canRedo}
             onClick={redo}
           >
-            <Redo2Icon data-icon="inline-start" />
+            <Redo2Icon />
             Redo
           </Button>
         </div>
@@ -279,7 +279,7 @@ export function ThemeCustomizer() {
               title={`Random (${format(THEME_HOTKEYS.shuffle)})`}
               onClick={shuffle}
             >
-              <ShuffleIcon data-icon="inline-start" />
+              <ShuffleIcon />
               Random
               <Kbd>{format(THEME_HOTKEYS.shuffle)}</Kbd>
             </Button>
@@ -503,9 +503,9 @@ function CopyMenu({ config }: { config: DesignSystemConfig }) {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
           {copied ? (
-            <CheckIcon data-icon="inline-start" />
+            <CheckIcon />
           ) : (
-            <CopyIcon data-icon="inline-start" />
+            <CopyIcon />
           )}
           {copied ? 'Copied' : 'Copy'}
         </Button>
@@ -544,7 +544,7 @@ function ImportPreset() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm">
-          <UploadIcon data-icon="inline-start" />
+          <UploadIcon />
           Import
         </Button>
       </PopoverTrigger>
