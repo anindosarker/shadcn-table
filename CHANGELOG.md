@@ -7,7 +7,7 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
-## 0.9.0 - 2026-11-08
+## Unreleased
 
 ### Added
 
@@ -16,6 +16,35 @@ publishes the section as the GitHub release notes.
 - `persistViewSettings` stores rows per page (D25): `ST_StoredView` gains `pageSize?: number`, saved on every page size change and applied at mount over `initialState.pagination.pageSize`, on the three bases. The page index is not stored, and a page index change alone writes nothing. A stored view without `pageSize`, or with one that is not a positive integer, keeps the initial page size. Reset view returns the page size to `initialState`. The view settings guide, the state management guide and the `persistViewSettings` API entry list the new field.
 - A restored rows per page keeps the initial page index instead of remapping it to keep the top row (F22).
 - The `PersistenceKeepsPageIndex` play covers it: a table on its third page with a stored rows per page remounts on the third page (D33).
+
+### Docs
+
+#### Spec 11 Persistent view example: ten rows
+
+- The persistent view example opens at 10 rows per page instead of 50 on every base (D24, F14); the stored view still does not keep the page size. The docs E2E check of `/docs/examples/persistent-view` clears the stored view, reloads and asserts 10 body rows and a rows-per-page select reading 10.
+
+#### Spec 08 Theme panel: Copy and Import removed
+
+- The theme panel drops the Copy menu (Copy CSS, Copy preset code) and the Import popover (D21); the toolbar row keeps Undo and Redo, the Presets row Random and the preset select. `encodeConfig`, `decodeConfig` and `importPreset` are gone; Random still picks from create's curated presets half the time.
+
+#### Spec 13 Docs parts carry the design-system hooks
+
+- Style, Menu Color and Menu Accent in the docs theme panel now reach the docs parts (D26). `pnpm lib:install <base>` gains a second phase: every shadcn part it installs under `components/ui-<base>/` is replaced by its hooked source from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit (`SHADCN_UI_SHA`), with the imports pointed at the docs folders and each icon placeholder turned into its Lucide icon, so the parts carry the `cn-*` classes the style layers target and `cn-menu-target` for the menu color loop. The library copy in `shadcn-table/` is unchanged. The docs E2E check of `/docs/guides/view-settings` picks a Style, Menu Color `inverted` and Menu Accent `bold` in the theme panel and reads the open menu.
+
+#### Spec 09 Theme panel: shortcut row, Mod+Z undo
+
+- One row under the theme panel's header holds Reset (`Shift+R`), Undo (`Mod+Z`), Redo (`Mod+Shift+Z`), Random (`R`) and Next preset (`C`) (D22): icon buttons named by their label, each with a tooltip carrying the label and its key, since the labeled buttons do not fit the 360 px panel. The header keeps the title and the close button, the Presets row the preset select. Undo moves from `P` to `Mod+Z` (Cmd on macOS, Ctrl elsewhere), redo gains `Mod+Shift+Z`, and `P` is no longer bound.
+
+#### Spec 10 Theme panel: color picker
+
+- Each token swatch in the theme panel's Colors tab is a button (`Pick <token>`) that opens a popover with a `react-colorful` hex picker above a copy of the token's text field (D23, F13). Dragging writes the token live as hex; closing the popover records one undo step, so `Mod+Z` returns to the value from before it opened. Typed values keep one undo step per change (A10), and an invalid value still applies nothing. `react-colorful` 5.8.1 is a new dependency of the docs app.
+
+#### Spec 14 ST_DefaultsProvider; the docs icon library select
+
+- New: `ST_DefaultsProvider` and `useST_Defaults`, exported from the library index on all three bases (D27). The provider's `icons` prop (`Partial<ST_Icons>`) applies to every table below it: `useST_TableOptions` merges `ST_Default_Icons`, then the nearest provider's `icons`, then the table's own `icons` option, which still wins key by key. Nested providers merge over their parent; a table outside any provider behaves as before. The `ST_Defaults` type is added beside `ST_Icons`. Documented in the ST Components API page and the custom icons guide; the `ProviderIconSet` story covers it.
+- Docs: the theme panel's Icon Library select is enabled and offers Lucide, Tabler, Phosphor, Hugeicons and Remix Icon. A pick switches the icons of every example table (the home demo and the docs examples, all three base copies), persists with the rest of the theme config, and Reset returns to Lucide; Random keeps the current icon set. The docs chrome stays Lucide. `pnpm lib:install <base>` also installs the four icon set maps as `components/ui-<base>/shadcn-table/icons/<set>.ts`, loaded only once picked. `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons` and `@remixicon/react` are new dependencies of the docs app.
+
+## 0.9.0 - 2026-11-08
 
 ### Changed
 
@@ -61,31 +90,6 @@ publishes the section as the GitHub release notes.
 - A fresh visitor sees the Emerald look as the `Default` preset; a stored choice (`st-design-system` in localStorage) applies before first paint and is dropped after 2 days. The old `st-theme` key is removed.
 - Shortcuts through TanStack Hotkeys, each shown as a kbd hint: `R` shuffle, `Shift+R` reset, `C` another color preset, `P` undo; off while typing or while the search dialog is open.
 - The home theme demo cycles six palettes through the design system. The six `themes/*.css` files, `lib/theme-presets.ts` and `components/theme-preset-switcher.tsx` are gone.
-
-#### Spec 11 Persistent view example: ten rows
-
-- The persistent view example opens at 10 rows per page instead of 50 on every base (D24, F14); the stored view still does not keep the page size. The docs E2E check of `/docs/examples/persistent-view` clears the stored view, reloads and asserts 10 body rows and a rows-per-page select reading 10.
-
-#### Spec 08 Theme panel: Copy and Import removed
-
-- The theme panel drops the Copy menu (Copy CSS, Copy preset code) and the Import popover (D21); the toolbar row keeps Undo and Redo, the Presets row Random and the preset select. `encodeConfig`, `decodeConfig` and `importPreset` are gone; Random still picks from create's curated presets half the time.
-
-#### Spec 13 Docs parts carry the design-system hooks
-
-- Style, Menu Color and Menu Accent in the docs theme panel now reach the docs parts (D26). `pnpm lib:install <base>` gains a second phase: every shadcn part it installs under `components/ui-<base>/` is replaced by its hooked source from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit (`SHADCN_UI_SHA`), with the imports pointed at the docs folders and each icon placeholder turned into its Lucide icon, so the parts carry the `cn-*` classes the style layers target and `cn-menu-target` for the menu color loop. The library copy in `shadcn-table/` is unchanged. The docs E2E check of `/docs/guides/view-settings` picks a Style, Menu Color `inverted` and Menu Accent `bold` in the theme panel and reads the open menu.
-
-#### Spec 09 Theme panel: shortcut row, Mod+Z undo
-
-- One row under the theme panel's header holds Reset (`Shift+R`), Undo (`Mod+Z`), Redo (`Mod+Shift+Z`), Random (`R`) and Next preset (`C`) (D22): icon buttons named by their label, each with a tooltip carrying the label and its key, since the labeled buttons do not fit the 360 px panel. The header keeps the title and the close button, the Presets row the preset select. Undo moves from `P` to `Mod+Z` (Cmd on macOS, Ctrl elsewhere), redo gains `Mod+Shift+Z`, and `P` is no longer bound.
-
-#### Spec 10 Theme panel: color picker
-
-- Each token swatch in the theme panel's Colors tab is a button (`Pick <token>`) that opens a popover with a `react-colorful` hex picker above a copy of the token's text field (D23, F13). Dragging writes the token live as hex; closing the popover records one undo step, so `Mod+Z` returns to the value from before it opened. Typed values keep one undo step per change (A10), and an invalid value still applies nothing. `react-colorful` 5.8.1 is a new dependency of the docs app.
-
-#### Spec 14 ST_DefaultsProvider; the docs icon library select
-
-- New: `ST_DefaultsProvider` and `useST_Defaults`, exported from the library index on all three bases (D27). The provider's `icons` prop (`Partial<ST_Icons>`) applies to every table below it: `useST_TableOptions` merges `ST_Default_Icons`, then the nearest provider's `icons`, then the table's own `icons` option, which still wins key by key. Nested providers merge over their parent; a table outside any provider behaves as before. The `ST_Defaults` type is added beside `ST_Icons`. Documented in the ST Components API page and the custom icons guide; the `ProviderIconSet` story covers it.
-- Docs: the theme panel's Icon Library select is enabled and offers Lucide, Tabler, Phosphor, Hugeicons and Remix Icon. A pick switches the icons of every example table (the home demo and the docs examples, all three base copies), persists with the rest of the theme config, and Reset returns to Lucide; Random keeps the current icon set. The docs chrome stays Lucide. `pnpm lib:install <base>` also installs the four icon set maps as `components/ui-<base>/shadcn-table/icons/<set>.ts`, loaded only once picked. `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons` and `@remixicon/react` are new dependencies of the docs app.
 
 ## 0.8.2 - 2026-11-06
 
