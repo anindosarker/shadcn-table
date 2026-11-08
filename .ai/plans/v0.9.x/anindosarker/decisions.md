@@ -427,3 +427,9 @@ index e1645117..e67a5482 100644
 ### D43 The label event rebuilds the Validate PR failure lines
 
 - Source: A16
+
+- Source: A16. On a `labeled` or `unlabeled` run the previous comment's failures block is carried over except the `- **Validate PR**` lines, rebuilt from the new record, so a relabel that fixes the label leaves no stale Validate PR failure (spec 18 1.6.2 said verbatim). Kept as merged (E6 18, `b501c14f`).
+
+### D44 The called workflows skip every step on the bump commit
+
+- Source: A17
