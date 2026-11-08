@@ -1,6 +1,6 @@
 # 04: Theme customizer, tracker
 
-Status: done
+Status: merged (161c5ae6)
 Branch `v0.9/theme-customizer`, worktree 03
 Checks:
 - Check: red, `pnpm test docs-e2e --base base /` at 546bcabd (shipped code plus the new checks): fail as expected, 7 failed: default look (no design system style element), stale choice (entry not removed), panel (no Customize theme button), r, p, Shift+R (no shortcut), token edit (no panel)
