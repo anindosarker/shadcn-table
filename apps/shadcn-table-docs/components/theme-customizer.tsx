@@ -61,6 +61,7 @@ import {
   buildThemeVars,
   FONTS,
   getThemesForBaseColor,
+  ICON_LIBRARIES,
   MENU_ACCENTS,
   MENU_COLORS,
   RADII,
@@ -179,13 +180,22 @@ function ThemeCustomizerPanel() {
               </SelectItem>
             ))}
           </SelectField>
+          {/* The example tables' icon set (components/example-icons.tsx, D27);
+              the docs chrome stays Lucide. */}
           <SelectField
             label="Icon Library"
-            value="lucide"
-            disabled
-            onChange={() => {}}
+            value={config.iconLibrary}
+            onChange={(iconLibrary) =>
+              setConfig({
+                iconLibrary: iconLibrary as DesignSystemConfig['iconLibrary'],
+              })
+            }
           >
-            <SelectItem value="lucide">Lucide</SelectItem>
+            {ICON_LIBRARIES.map((l) => (
+              <SelectItem key={l.name} value={l.name}>
+                {l.title}
+              </SelectItem>
+            ))}
           </SelectField>
           {/* A color preset replaces the base color, theme and chart tokens, so
               picking one of these leaves the preset. */}

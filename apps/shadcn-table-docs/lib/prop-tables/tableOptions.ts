@@ -905,9 +905,10 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'icons',
     defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    description:
+      'Replaces single icons of this table. The table merges ST_Default_Icons, then the icons of the nearest ST_DefaultsProvider, then this option, so this option wins for its keys.',
+    link: '/docs/guides/customize-icons',
+    linkText: 'Custom Icons Guide',
     required: false,
     source: 'ST',
     type: 'Partial<ST_Icons>;',
