@@ -94,3 +94,6 @@
 - Options:
   - a) Recommended: keep
   - b) record a token edit on blur, one undo step per edit
+
+## A11 Random in the theme panel keeps its curated presets through a private decoder
+
