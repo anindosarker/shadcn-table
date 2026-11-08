@@ -104,3 +104,5 @@
 
 - `test/docs-e2e/lib/getting-started.mjs` (`/` theme checks, `dev` at ea276251 and `claude/review`): after "theme: r does nothing while the search dialog is open" the test presses Escape and swallows the 5 s detach timeout; on CI the dialog stays, so the next `button[aria-label="Customize theme"]` click (or the following `input.fill`) times out after 30 s. Release PR 134: run 42488458376 attempt 1 radix, run 42490873017 attempts 1 and 2 aria (the F23 hotkey waits pass there). Fix: close the dialog deterministically (second Escape, close control, reload as the last resort) before the edit check; test file only, D30 pattern.
 
+### F25 The CRUD delete-dialog check counts rows before the example finishes loading
+
