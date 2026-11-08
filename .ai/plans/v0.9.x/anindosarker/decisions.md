@@ -423,3 +423,7 @@ index e1645117..e67a5482 100644
 - Source: A15
 
 - Source: A15. `lib/build-styles.mjs` runs `optimize()` on every build so the flattened nesting and prefixes match the root bundle; `--minify` only adds minification (spec 15 1.6.2 said readable output without the flag). Kept as merged (E5 15, `5df252e9`).
+
+### D43 The label event rebuilds the Validate PR failure lines
+
+- Source: A16
