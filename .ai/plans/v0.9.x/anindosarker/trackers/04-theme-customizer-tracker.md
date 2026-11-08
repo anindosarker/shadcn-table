@@ -6,10 +6,12 @@ Checks:
 - Check: red, `pnpm test docs-e2e --base base /` at 546bcabd (shipped code plus the new checks): fail as expected, 7 failed: default look (no design system style element), stale choice (entry not removed), panel (no Customize theme button), r, p, Shift+R (no shortcut), token edit (no panel)
 - Check: install, `pnpm install --frozen-lockfile` after the hotkeys add (Task 2): pass
 - Check: parts, `pnpm add-part radix --all` then `git status --short` (Task 2): pass, nothing beyond the new sheet
+- Check: `pnpm --filter shadcn-table-docs types:check` at 73c60884 plus the Task 4 working tree (Task 3): pass
+- Check: `pnpm --filter shadcn-table-docs lint` at 73c60884 plus the Task 4 working tree (Task 3): pass, 0 errors (9 warnings in examples, unchanged)
 
 - Task 1 Reproduce (docs E2E theme checks red on the shipped code): done, fb2aa071
-- Task 2 Dependencies (react-hotkeys, sheet part): done
-- Task 3 Core and provider: planned
+- Task 2 Dependencies (react-hotkeys, sheet part): done, 8d0670db
+- Task 3 Core and provider: done, 73c60884
 - Task 4 Panel, controls, layout, demo: planned
 - Task 5 Cleanup: planned
 
