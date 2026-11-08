@@ -302,3 +302,7 @@ index e1645117..e67a5482 100644
 
 ### D25 The stored view persists rows per page
 
+
+- `ST_StoredView` (`shared/utils/viewSettingsStorage.utils.ts:7-16`, three bases) gains `pageSize?: number`; the persist path saves it on every page size change and the restore path applies it at mount over `initialState.pagination.pageSize`. Page index is not stored. Old stored views without the field stay valid. Public surface (P7): the view settings guide and the API entry for `persistViewSettings` list the new field; a CHANGELOG entry.
+- One play changes the page size, remounts the table and asserts the size held; it runs on the shipped code first and must fail there (P11).
+- D24 stays: the persistent view example starts at 10 and a visitor's choice now survives reload.

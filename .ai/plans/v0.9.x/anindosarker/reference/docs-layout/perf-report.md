@@ -6,6 +6,28 @@ Build: wt1, branch `v0.9/preview-docs-examples` at `e702398d`, `next start` prod
 
 **Needs work.** Initial load is fine: LCP is 504 ms on the stack and 112 ms on the single page, CLS at load is 0, and TBT is 62 ms (limits: 2.5 s, 0.1, 200 ms). Scrolling through the stack is the problem. CLS during the scroll is 1.10, which is 11 times the 0.1 limit. The main thread blocks for 26.2 s of TBT-equivalent time, and the longest task is 6.7 s. After the full scroll, a sort click on a table near the bottom takes 1,256 to 1,760 ms from input to paint (median 1,448 ms), against the 200 ms INP limit. The same click on the single page takes 72 ms. Under 4x CPU and Fast 3G, the stack misses the limits on load as well: LCP is 7.2 s and TBT is 1,428 ms.
 
+## Summary
+
+Stack page `/docs/examples`, baseline run (1440x900, no throttling, median of 3). Thresholds are the "good" limits from the table below.
+
+| metric | good under | stack now | verdict |
+|---|---|---|---|
+| LCP (load) | 2.5 s | 0.50 s | good |
+| CLS (load) | 0.1 | 0 | good |
+| TBT (load) | 200 ms | 62 ms | good |
+| TTFB | 0.8 s | 0.01 s | good |
+| transfer | 1.6 MB | 1.19 MB | good |
+| DOM nodes after load | 1,400 | 2,864 | poor |
+| CLS during scroll | 0.1 | 1.10 | poor |
+| blocking time during scroll | 200 ms | 26.2 s | poor |
+| sort click after full scroll (INP) | 200 ms | 1,448 ms | poor |
+| DOM nodes after full scroll | 1,400 | 19,383 | poor |
+| JS heap after full scroll | no threshold | 276 MB | not rated |
+| LCP, 4x CPU + Fast 3G | 2.5 s | 7.2 s | poor |
+| TBT, 4x CPU + Fast 3G | 200 ms | 1,428 ms | poor |
+
+Single page `/docs/examples/basic`, same run: LCP 0.11 s, sort click 72 ms, 2,864 DOM nodes, 19 MB heap; all good except DOM nodes.
+
 ## Thresholds
 
 Each measured value below carries a rating against these ranges: G = good, NI = needs improvement, P = poor, `-` = no published threshold. Sources: web.dev Web Vitals (https://web.dev/articles/vitals) and the Lighthouse audits.
