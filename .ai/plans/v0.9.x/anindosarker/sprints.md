@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 23:48
+Updated: 2026-11-08 23:51
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 |
 |---|---|---|---|---|---|---|
@@ -21,9 +21,9 @@ Updated: 2026-11-08 23:48
 | E4 13 Docs parts hooks |  |  | [x] |  |  |  |
 | E5 14 Icon library select |  |  |  |  | [x] |  |
 | E5 15 Style sheet on demand |  |  |  |  |  | [x] |
-| E6 16 CI skip bump commit |  | · |  |  |  |  |
+| E6 16 CI skip bump commit |  | [ ] |  |  |  |  |
 | E6 17 CI Node 24 actions |  |  | · |  |  |  |
-| E6 18 PR summary layout | · |  |  |  |  |  |
+| E6 18 PR summary layout | [ ] |  |  |  |  |  |
 | E6 19 PR summary job outputs |  |  |  | · |  |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |

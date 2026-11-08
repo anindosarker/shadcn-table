@@ -1,7 +1,7 @@
 # 16: Test jobs skip the version bump commit, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/ci-skip-bump-commit`, worktree 03
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

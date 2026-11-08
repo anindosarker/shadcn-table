@@ -1,7 +1,7 @@
 # 18: PR Summary comment is a grouped table, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/pr-summary-layout`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
