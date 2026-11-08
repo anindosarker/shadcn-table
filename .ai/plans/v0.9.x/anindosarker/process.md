@@ -20,7 +20,7 @@ Project facts only. The process itself is the expedition skill; commands are in 
 
 ## P4 Release
 
-- No release is planned for v0.9.x yet; every epic merges into `claude/review` and stays there until a release spec is decided (owner, 2026-11-08).
+- Every epic merges into `claude/review`; 0.9.0 ships through the release spec after E2 (D15), the docs changes as 0.9.1 later.
 - A release is one PR, `dev` into `master`, title `release: <version>`, with the release label, auto-merge enabled at creation; the bump job `prepare-release` waits for the owner's Approve on the GitHub Environment `release` (D3). The environment and the `environment: release` line in `pr.yml` are not in place yet; D3's spec adds them.
 - After a release, the main session fast-forwards `claude/review` and `dev` to `master` and pushes both before the next plan commit; no workflow does this.
 
