@@ -180,6 +180,31 @@ const DEFAULT_PRIMARY = {
 const DESIGN_SYSTEM_KEY = 'st-design-system';
 
 /**
+ * Closes the search dialog before the next click: Escape, a second Escape,
+ * its close control, then a reload as the last resort, each tried only while
+ * the dialog is still attached (on CI one Escape left it open and it
+ * intercepted the `trigger` click). Waits for `trigger` after a reload.
+ */
+async function closeSearch(page, search, trigger) {
+  const gone = () =>
+    search
+      .waitFor({ state: 'detached', timeout: 5000 })
+      .then(() => true)
+      .catch(() => false);
+  await page.keyboard.press('Escape');
+  if (await gone()) return;
+  await page.keyboard.press('Escape');
+  if (await gone()) return;
+  const close = search.getByRole('button', { name: /close/i }).first();
+  if (await close.count()) {
+    await close.click({ timeout: 5000 }).catch(() => {});
+    if (await gone()) return;
+  }
+  await page.goto(page.url());
+  await trigger.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {});
+}
+
+/**
  * The theme customizer (components/theme-customizer.tsx, D2): the default
  * tokens come from the design system style element with empty storage and
  * with a choice older than 2 days; the palette button opens the panel, which
@@ -219,6 +244,11 @@ async function themeCustomizer({ page, check }) {
   const stored = () =>
     page.evaluate((key) => localStorage.getItem(key), DESIGN_SYSTEM_KEY);
 
+  // F23: the demo replay focuses its Search field while it plays, which takes
+  // focus out of the theme panel (closing it) and makes the hotkeys ignore
+  // the keys; reduced motion holds the replay paused from mount, so the
+  // reload below applies it. Restored at the end.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
   await reload();
   const fresh = await bothModes();
@@ -316,9 +346,43 @@ async function themeCustomizer({ page, check }) {
     )
     .catch(() => {});
   await page.waitForTimeout(300);
+  // for a key whose expected outcome is no change: a short fixed wait
   const press = async (key) => {
     await page.keyboard.press(key);
     await page.waitForTimeout(200);
+  };
+  /**
+   * Polls `--primary` every 50 ms for up to 5000 ms until `done(value)` holds
+   * (F23: a fixed 200 ms raced the update on CI); returns the last value read
+   * either way.
+   */
+  const waitForPrimary = async (done) => {
+    const until = Date.now() + 5000;
+    let value = await primary();
+    while (!done(value) && Date.now() < until) {
+      await page.waitForTimeout(50);
+      value = await primary();
+    }
+    return value;
+  };
+  /** Presses `key`, then waits for `--primary` as `waitForPrimary` does. */
+  const pressUntil = async (key, done) => {
+    await page.keyboard.press(key);
+    return waitForPrimary(done);
+  };
+  /**
+   * Presses Escape until the panel is gone, at most three times: with focus
+   * on a shortcut button the first Escape only closes its tooltip, and the
+   * panel left open covers the trigger (F23).
+   */
+  const closePanel = async () => {
+    for (let i = 0; i < 3 && (await panel.count()); i++) {
+      await page.keyboard.press('Escape');
+      await panel
+        .first()
+        .waitFor({ state: 'detached', timeout: 2000 })
+        .catch(() => {});
+    }
   };
   // A shuffle can land on a look with the same primary (a theme matching the
   // color preset it left), so `r` is pressed until --primary moves, at most
@@ -327,8 +391,7 @@ async function themeCustomizer({ page, check }) {
   const shuffle = async (from) => {
     let value = from;
     for (let i = 0; i < 3 && value === from; i++) {
-      await press('r');
-      value = await primary();
+      value = await pressUntil('r', (v) => v !== from);
     }
     return value;
   };
@@ -339,15 +402,16 @@ async function themeCustomizer({ page, check }) {
     shuffled !== before,
     `${before} -> ${shuffled}`,
   );
-  await press('ControlOrMeta+z');
-  const undone = await primary();
+  const undone = await pressUntil('ControlOrMeta+z', (v) => v === before);
   check(
     'theme: Mod+Z restores it',
     shuffled !== before && undone === before,
     `${shuffled} -> ${undone}`,
   );
-  await press('ControlOrMeta+Shift+z');
-  const redone = await primary();
+  const redone = await pressUntil(
+    'ControlOrMeta+Shift+z',
+    (v) => v === shuffled,
+  );
   check(
     'theme: Mod+Shift+Z reapplies the shuffled value',
     shuffled !== before && undone === before && redone === shuffled,
@@ -357,15 +421,13 @@ async function themeCustomizer({ page, check }) {
   await press('p');
   const afterP = await primary();
   check('theme: p changes nothing', afterP === again, `${again} -> ${afterP}`);
-  await press('Shift+R');
-  const reset = await primary();
+  const reset = await pressUntil('Shift+R', (v) => v === DEFAULT_PRIMARY.dark);
   check(
     'theme: Shift+R returns to the default',
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
     `${again} -> ${reset}`,
   );
-  await page.keyboard.press('Escape');
-  await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await closePanel();
   await page.evaluate(() =>
     document.activeElement instanceof HTMLElement
       ? document.activeElement.blur()
@@ -383,8 +445,7 @@ async function themeCustomizer({ page, check }) {
     searchOpen && duringSearch === reset,
     `search=${searchOpen} ${reset} -> ${duringSearch}`,
   );
-  await page.keyboard.press('Escape');
-  await search.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  await closeSearch(page, search, trigger);
 
   const edited = 'oklch(0.6 0.2 30)';
   let afterEdit = '';
@@ -394,11 +455,9 @@ async function themeCustomizer({ page, check }) {
     const input = panel.getByLabel('primary', { exact: true });
     if (await input.count()) {
       await input.fill(edited);
-      await page.waitForTimeout(200);
-      afterEdit = await primary();
+      afterEdit = await waitForPrimary((v) => v === edited);
     }
-    await page.keyboard.press('Escape');
-    await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+    await closePanel();
   }
   check(
     'theme: a Colors tab edit changes the computed variable',
@@ -406,10 +465,20 @@ async function themeCustomizer({ page, check }) {
     afterEdit,
   );
 
-  await themeColorPicker({ page, check, trigger, panel, primary, press });
-  await themeIconLibrary({ page, check, trigger, panel });
+  await themeColorPicker({
+    page,
+    check,
+    trigger,
+    panel,
+    primary,
+    waitForPrimary,
+    pressUntil,
+    closePanel,
+  });
+  await themeIconLibrary({ page, check, trigger, panel, closePanel });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.emulateMedia({ reducedMotion: null });
 }
 
 /**
@@ -426,7 +495,9 @@ async function themeColorPicker({
   trigger,
   panel,
   primary,
-  press,
+  waitForPrimary,
+  pressUntil,
+  closePanel,
 }) {
   const typed = 'oklch(0.55 0.15 250)';
   let chainStart = '';
@@ -446,8 +517,7 @@ async function themeColorPicker({
     if (await input.count()) {
       chainStart = await primary();
       await input.fill(typed);
-      await page.waitForTimeout(200);
-      before = await primary();
+      before = await waitForPrimary((v) => v === typed);
     }
     const swatch = page.getByRole('button', {
       name: 'Pick primary',
@@ -485,8 +555,7 @@ async function themeColorPicker({
           (box) => box.x + box.width + 8,
           (box) => box.y - 8,
         );
-        await page.waitForTimeout(200);
-        picked = await primary();
+        picked = await waitForPrimary((v) => v === '#ff0000');
       }
       await page.keyboard.press('Escape');
       await page
@@ -495,16 +564,13 @@ async function themeColorPicker({
         .waitFor({ state: 'detached', timeout: 5000 })
         .catch(() => {});
       await page.waitForTimeout(200);
-      await press('ControlOrMeta+z');
-      undone = await primary();
-      await press('ControlOrMeta+z');
-      undoneTwice = await primary();
+      undone = await pressUntil('ControlOrMeta+z', (v) => v === before);
+      undoneTwice = await pressUntil(
+        'ControlOrMeta+z',
+        (v) => v === chainStart,
+      );
     }
-    await page.keyboard.press('Escape');
-    await panel
-      .first()
-      .waitFor({ state: 'detached', timeout: 5000 })
-      .catch(() => {});
+    await closePanel();
   }
   check('theme: picker opens', opened, `opened=${opened}`);
   check(
@@ -526,9 +592,11 @@ async function themeColorPicker({
  * The Icon Library select (spec 14, D27): picking Tabler switches the home
  * demo's toolbar icons (the search toggle's svg gets `tabler-icon` within
  * 5 s), the pick is stored and survives a reload, and `Shift+R` with the
- * panel open returns the table to Lucide. Closes the panel.
+ * panel open returns the table to Lucide. Every key press is followed by a
+ * poll on the icon class, and the panel closes through the shared
+ * `closePanel` (F23). Closes the panel.
  */
-async function themeIconLibrary({ page, check, trigger, panel }) {
+async function themeIconLibrary({ page, check, trigger, panel, closePanel }) {
   const icon = '.v5-demo button[aria-label="Show/Hide search"] svg';
   const iconHas = (cls) =>
     page
@@ -555,18 +623,6 @@ async function themeIconLibrary({ page, check, trigger, panel }) {
       .catch(() => {});
     await page.waitForTimeout(300);
   };
-  // The first Escape can only dismiss the tooltip of the focused shortcut
-  // button, so a second one follows while the panel is still open.
-  const closePanel = async () => {
-    for (let i = 0; i < 2 && (await panel.count()); i++) {
-      await page.keyboard.press('Escape');
-      await panel
-        .first()
-        .waitFor({ state: 'detached', timeout: 2500 })
-        .catch(() => {});
-    }
-  };
-
   await openPanel();
   const select = panel.first().getByLabel('Icon Library', { exact: true });
   let picked = false;

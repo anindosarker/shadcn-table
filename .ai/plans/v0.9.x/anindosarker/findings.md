@@ -100,3 +100,7 @@
 
 - `test/docs-e2e/lib/getting-started.mjs:282-309` (spec 04 on `dev` at 0adce149; spec 09 and 10 kept the pattern on `claude/review`): `press()` is `keyboard.press` plus `waitForTimeout(200)`, then `--primary` is read once. On CI (release PR 134, run 42488458376) "theme: Shift+R returns to the default" failed on base and aria in attempt 1 and on aria again in attempt 2 with the value unchanged after Shift+R, and radix timed out on the next click; locally it failed once under load (P5 entry). Fix: wait for the variable to change (or to equal the expected value) with a bounded poll instead of a fixed delay; test file only.
 
+### F24 The theme check's search dialog stays open after Escape on CI
+
+- `test/docs-e2e/lib/getting-started.mjs` (`/` theme checks, `dev` at ea276251 and `claude/review`): after "theme: r does nothing while the search dialog is open" the test presses Escape and swallows the 5 s detach timeout; on CI the dialog stays, so the next `button[aria-label="Customize theme"]` click (or the following `input.fill`) times out after 30 s. Release PR 134: run 42488458376 attempt 1 radix, run 42490873017 attempts 1 and 2 aria (the F23 hotkey waits pass there). Fix: close the dialog deterministically (second Escape, close control, reload as the last resort) before the edit check; test file only, D30 pattern.
+
