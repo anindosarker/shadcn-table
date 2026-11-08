@@ -56,11 +56,15 @@ const ViewSettingsTable = (props: Partial<ST_TableOptions<Task>>) => {
     table.atoms.pagination,
     (state) => state.pageSize,
   );
+  const pageIndex = useSelector(
+    table.atoms.pagination,
+    (state) => state.pageIndex,
+  );
   return (
     <>
       <ShadcnTable table={table} />
       <output className="text-sm" data-testid="view-state">
-        {`density=${density} gridLines=${gridLines} pageSize=${pageSize}`}
+        {`density=${density} gridLines=${gridLines} pageSize=${pageSize} pageIndex=${pageIndex}`}
       </output>
     </>
   );
@@ -287,6 +291,51 @@ export const Persistence = {
     await waitFor(() =>
       expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull(),
     );
+  },
+};
+
+// Sixty rows, so the third page exists at 10 and at 20 rows per page.
+const manyTasks: Task[] = Array.from({ length: 60 }, (_, index) => ({
+  ...data[index % data.length],
+  name: `Task ${index + 1}`,
+}));
+
+// A restored rows per page keeps the initial page index instead of remapping
+// it to keep the top row (F22, D33).
+export const PersistenceKeepsPageIndex = {
+  render: () => (
+    <ViewSettingsPersisted
+      data={manyTasks}
+      initialState={{ pagination: { pageIndex: 2, pageSize: 10 } }}
+    />
+  ),
+  beforeEach: Persistence.beforeEach,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText('Task 21');
+    expect(viewState(canvasElement)).toContain('pageSize=10 pageIndex=2');
+
+    await userEvent.click(
+      canvas
+        .getAllByLabelText('Rows per page')
+        .find((element) => element.tagName === 'BUTTON')!,
+    );
+    await userEvent.click(
+      await within(document.body).findByRole('option', { name: '20' }),
+    );
+    await waitFor(() =>
+      expect(window.localStorage.getItem(STORAGE_KEY)).toContain(
+        '"pageSize":20',
+      ),
+    );
+
+    // The remount restores 20 rows per page on the initial third page.
+    await userEvent.click(canvas.getByRole('button', { name: 'Remount' }));
+    await waitFor(() =>
+      expect(viewState(canvasElement)).toContain('pageSize=20 pageIndex=2'),
+    );
+    await canvas.findByText('Task 41');
+    expect(canvas.queryByText('Task 21')).toBeNull();
   },
 };
 
