@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
+import { HexColorPicker } from 'react-colorful';
 import { useFormatForDisplay } from '@tanstack/react-hotkeys';
 import {
   MoonIcon,
@@ -18,6 +19,11 @@ import {
 } from '@/components/design-system-provider';
 import { Button } from '@/components/ui-radix/button';
 import { Input } from '@/components/ui-radix/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui-radix/popover';
 import {
   Select,
   SelectContent,
@@ -63,6 +69,7 @@ import {
 } from '@/lib/design-system/config';
 import {
   isColorValue,
+  toHex,
   TOKENS,
   type Mode,
   type Token,
@@ -558,6 +565,45 @@ function ColorsTab({ mode }: { mode: Mode }) {
   );
 }
 
+/** A token's text field: the reader's draft shows while typing, a valid color
+ * applies at once (one history entry per change, A10). */
+function TokenInput({
+  value,
+  onChange,
+  onDraftChange,
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange'> & {
+  value: string;
+  onChange: (value: string) => void;
+  /** Reports the draft (null when none), so the swatch can show it. */
+  onDraftChange?: (draft: string | null) => void;
+}) {
+  // What the reader is typing; null shows the applied value.
+  const [draft, setDraft] = React.useState<string | null>(null);
+  const shown = draft ?? value;
+  const valid = draft === null || isColorValue(draft);
+  return (
+    <Input
+      {...props}
+      value={shown}
+      spellCheck={false}
+      aria-invalid={!valid || undefined}
+      onChange={(event) => {
+        const next = event.target.value;
+        setDraft(next);
+        onDraftChange?.(next);
+        if (isColorValue(next)) onChange(next.trim());
+      }}
+      onBlur={() => {
+        setDraft(null);
+        onDraftChange?.(null);
+      }}
+      className={cn('h-7 font-mono text-xs', className)}
+    />
+  );
+}
+
 function TokenRow({
   token,
   value,
@@ -568,35 +614,63 @@ function TokenRow({
   onChange: (value: string) => void;
 }) {
   const id = React.useId();
-  // What the reader is typing; null shows the applied value.
+  const { beginTokenEdit, endTokenEdit } = useDesignSystem();
+  const [open, setOpen] = React.useState(false);
+  // The row field's draft, so the swatch shows what is being typed.
   const [draft, setDraft] = React.useState<string | null>(null);
   const shown = draft ?? value;
   const valid = draft === null || isColorValue(draft);
+  // A row unmounted with its picker open (panel closed) still ends the session.
+  const openRef = React.useRef(false);
+  React.useEffect(
+    () => () => {
+      if (openRef.current) endTokenEdit();
+    },
+    [endTokenEdit],
+  );
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_11rem] items-center gap-2">
       <label htmlFor={id} className="truncate font-mono text-xs">
         {token}
       </label>
-      <span
-        aria-hidden
-        className={cn(
-          'size-5 rounded border border-foreground/20',
-          !valid && 'bg-muted',
-        )}
-        style={valid ? { backgroundColor: shown } : undefined}
-      />
-      <Input
-        id={id}
-        value={shown}
-        spellCheck={false}
-        aria-invalid={!valid || undefined}
-        onChange={(event) => {
-          const next = event.target.value;
-          setDraft(next);
-          if (isColorValue(next)) onChange(next.trim());
+      <Popover
+        open={open}
+        onOpenChange={(next) => {
+          openRef.current = next;
+          setOpen(next);
+          if (next) beginTokenEdit();
+          else endTokenEdit();
         }}
-        onBlur={() => setDraft(null)}
-        className="h-7 font-mono text-xs"
+      >
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-label={`Pick ${token}`}
+            className={cn(
+              'size-5 rounded border border-foreground/20 outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              !valid && 'bg-muted',
+            )}
+            style={valid ? { backgroundColor: shown } : undefined}
+          />
+        </PopoverTrigger>
+        <PopoverContent align="end" className="flex w-56 flex-col gap-2 p-3">
+          <HexColorPicker
+            color={toHex(value)}
+            onChange={onChange}
+            style={{ width: '100%' }}
+          />
+          <TokenInput
+            aria-label={`${token} value`}
+            value={value}
+            onChange={onChange}
+          />
+        </PopoverContent>
+      </Popover>
+      <TokenInput
+        id={id}
+        value={value}
+        onChange={onChange}
+        onDraftChange={setDraft}
       />
     </div>
   );
