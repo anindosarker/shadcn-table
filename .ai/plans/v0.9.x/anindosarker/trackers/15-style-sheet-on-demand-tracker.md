@@ -1,6 +1,6 @@
 # 15: Only the active style's stylesheet loads, tracker
 
-Status: running
+Status: done
 Branch `v0.9/style-sheet-on-demand`, worktree 06
 Checks:
 - `pnpm test docs-e2e --base base /` at d2b4d0ae + Task 1 checks: fail as expected (P11), 5 failed: `sheet: one style link` ([]), `sheet: no style rules elsewhere` (.style-vega rules in the root bundle), `sheet: follows the Style select` (links=[]), `sheet: stored style at first paint` ([]), `perf: light/dark toggle` 318 ms; `perf: panel open` 246 ms passes
@@ -15,12 +15,18 @@ Checks:
 - `pnpm test docs-e2e --base base /` at Task 3 files (the script creates the one link): pass, 79 passed; `perf: panel open` 92 ms, `perf: light/dark toggle` 113 ms
 - Root stylesheet bytes after, `/` in `next dev` (port 5341), CSS `decodedBodySize` at 61fc16d2: root chunk 337,228 B plus the same 52,399 B second chunk; the one active sheet `/styles/style-nova.css` is 315,935 B unminified (file size; the entry read 0 from cache). Root 337 KB against the 351 KB baseline, root plus the active sheet 653 KB against 667 KB (351 + 316): within 10 percent (D29). No console errors in `next dev`
 - `pnpm test docs-e2e --base base` at 61fc16d2 + P9 line: pass, 4 sections, 107 pages, 0 failed; `perf: panel open` 90 ms, `perf: light/dark toggle` 124 ms. Its build step is `pnpm --filter shadcn-table-docs build` (build-styles --minify: 258 to 277 KB per sheet, next build compiled): pass
+- `pnpm format` at 96ea0c48: no change beyond the changelog block
+- `pnpm test typecheck --base radix` at 96ea0c48: pass, tsc clean
+- `pnpm test lint` at 96ea0c48: pass (9 warnings, 0 errors, none in this milestone's files)
+- `pnpm test validate-repo` at 96ea0c48: pass
+- `pnpm install --frozen-lockfile` at 96ea0c48: pass, clean
+- The docs-e2e and docs build lines at 61fc16d2 + P9 line stand: the commits after it touch only CHANGELOG.md and plan files
 
-- Task 1 Reproduce (sheet checks red on the shipped code, root stylesheet bytes before): planned
-- Task 2 Dependency and scripts (@tailwindcss/node, build-styles.mjs, predev, build, .gitignore): planned
-- Task 3 Layout, pre-paint script, provider, global.css: planned
-- Task 4 Every page and the build (P9 line, bytes after): planned
-- Task 5 Cleanup: planned
+- Task 1 Reproduce (sheet checks red on the shipped code, root stylesheet bytes before): done, a3c070b6
+- Task 2 Dependency and scripts (@tailwindcss/node, build-styles.mjs, predev, build, .gitignore): done, ef231f8c
+- Task 3 Layout, pre-paint script, provider, global.css: done, 61fc16d2
+- Task 4 Every page and the build (P9 line, bytes after): done, 49fd03b3
+- Task 5 Cleanup: done, 96ea0c48
 
 ## Attention
 
@@ -28,4 +34,5 @@ Checks:
 
 ## Notes
 
-- [Optional: only what a later task, a resume or the owner would otherwise rediscover.]
+- build-styles.mjs runs every sheet through `optimize()` (minify only with `--minify`), so dev sheets are flattened like the root bundle; the entry also states the root layer order (`theme, base, components, utilities`) so a sheet parsed first does not reorder the layers.
+- `@reference` inlines theme fallbacks (`var(--spacing, .25rem)`); the values are the root's own, so rendering is unchanged.
