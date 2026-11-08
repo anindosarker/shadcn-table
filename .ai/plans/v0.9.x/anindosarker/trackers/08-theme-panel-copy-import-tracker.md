@@ -1,8 +1,7 @@
 # 08: Copy and Import leave the theme panel, tracker
 
-Status: planned
-Branch `[branch]`, worktree [name]
+Status: running
+Branch `v0.9/theme-panel-copy-import`, worktree 04
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- `pnpm test docs-e2e --base base /` at 9886cc07 plus the Task 1 assertion (shipped code, P11): fail as intended, "FAIL / @1440 theme: the palette button opens the panel heading=1 tabs=Colors,Typography,Other copyImport=2"; every other check pass (62 passed)
