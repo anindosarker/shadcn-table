@@ -477,3 +477,6 @@ index e1645117..e67a5482 100644
 ### D49 0.9.1 ships with the patch label; no 0.10.x in this release
 
 - Source: A19
+[E7]
+
+- Source: A19; amends D45's label. PR 135 is relabelled `release:patch` (the `labeled` run rewrites Validate PR to "Ships as 0.9.1"), the runner approves Prepare Release (D47), 0.9.1 ships. Every v0.9.x release stays on the 0.9.x line: new public API in this release line takes a patch bump. Owner, 2026-11-09: "0.9.1. no 0.10x release."
