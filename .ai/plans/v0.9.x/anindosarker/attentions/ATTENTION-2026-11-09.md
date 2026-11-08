@@ -19,3 +19,6 @@
 - Options:
   - a) Recommended: keep (spec 16 1.6.4 already reads this way); the 0.9.1 run is the proof, a context left "Expected" there is a new item
   - b) revert to the job-level `if:` and prove it on a throwaway PR first
+
+## A18 The getting-started perf budgets are 600 ms under --ci, 300 ms locally
+
