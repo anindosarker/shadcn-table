@@ -1,6 +1,6 @@
 # 10: Color swatches open a picker, tracker
 
-Status: done
+Status: merged (38bf5ac6d3d2e76094c27e6b455375efc7fa9b2f)
 Branch `v0.9/theme-color-picker`, worktree 04
 Checks:
 
