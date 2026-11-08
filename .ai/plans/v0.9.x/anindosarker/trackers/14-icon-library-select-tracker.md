@@ -12,10 +12,12 @@ Checks:
 - `pnpm test typecheck --base radix`, `--base base`, `--base aria` at 15ddc6da + Task 3 files: pass, tsc clean
 - `ST_BASE=<base> vitest run stories/features/Icons.stories.tsx` for radix, base, aria at 15ddc6da + Task 3 files: pass, 1 passed each
 - `eslint` on the Task 3 library files and the story: pass
+- `ls components/ui-<base>/shadcn-table/icons/` for radix, base, aria at efd1087f + Task 4 files: pass, hugeicons phosphor remixicon tabler in each
+- `pnpm test validate-repo` at efd1087f + Task 4 files: pass (bases identical, icon maps complete, registry valid, 27 unit tests)
 
 - Task 1 Reproduce (story typecheck and the icon checks red on the shipped code): done, a59bca71
 - Task 2 Dependencies (the five icon packages): done, 15ddc6da
-- Task 3 Library (ST_DefaultsProvider, hook merge, exports, types): planned
+- Task 3 Library (ST_DefaultsProvider, hook merge, exports, types): done, efd1087f
 - Task 4 Installer and copies (icons/<set>.ts per base): planned
 - Task 5 Docs (config, select, example-icons, layout, API page, guide): planned
 - Task 6 Cleanup: planned
