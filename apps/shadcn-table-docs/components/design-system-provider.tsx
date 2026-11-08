@@ -187,15 +187,6 @@ function importPreset(code: string) {
   return true;
 }
 
-function isTypingTarget(target: Element | null) {
-  return (
-    (target instanceof HTMLElement && target.isContentEditable) ||
-    target instanceof HTMLInputElement ||
-    target instanceof HTMLTextAreaElement ||
-    target instanceof HTMLSelectElement
-  );
-}
-
 /** The theme shortcuts, each also shown as a kbd hint in the panel. */
 export const THEME_HOTKEYS = {
   shuffle: 'R',
@@ -226,24 +217,15 @@ export function useDesignSystem() {
   return value;
 }
 
-/** Registers the shortcuts in the `theme` scope; skipped while typing. */
+/** Registers the shortcuts in the `theme` scope. The library's default
+ * `ignoreInputs: 'auto'` skips single keys and Shift combos while typing. */
 function ThemeHotkeys() {
-  const guard = (action: () => void) => () => {
-    if (isTypingTarget(document.activeElement)) return;
-    action();
-  };
-  useHotkeys(
-    [
-      { hotkey: THEME_HOTKEYS.shuffle, callback: guard(shuffle) },
-      { hotkey: THEME_HOTKEYS.reset, callback: guard(reset) },
-      {
-        hotkey: THEME_HOTKEYS.shuffleColorPreset,
-        callback: guard(shuffleColorPreset),
-      },
-      { hotkey: THEME_HOTKEYS.undo, callback: guard(undo) },
-    ],
-    { ignoreInputs: true },
-  );
+  useHotkeys([
+    { hotkey: THEME_HOTKEYS.shuffle, callback: shuffle },
+    { hotkey: THEME_HOTKEYS.reset, callback: reset },
+    { hotkey: THEME_HOTKEYS.shuffleColorPreset, callback: shuffleColorPreset },
+    { hotkey: THEME_HOTKEYS.undo, callback: undo },
+  ]);
   return null;
 }
 
