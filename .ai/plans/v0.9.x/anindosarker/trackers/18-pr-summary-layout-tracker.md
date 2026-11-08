@@ -1,8 +1,8 @@
 # 18: PR Summary comment is a grouped table, tracker
 
-Status: planned
-Branch `v0.9/pr-summary-layout`, worktree 04
+Status: running
+Branch `v0.9/pr-summary-layout`, worktree `../shadcn-react-table.worktrees/04`
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: red on the shipped code (P11), `node --test tools/release/pr-summary.test.mjs` at f1048f8f with the new tests: fail (`SyntaxError: The requested module './pr-summary.mjs' does not provide an export named 'changelogSection'`)
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Reproduce: running
