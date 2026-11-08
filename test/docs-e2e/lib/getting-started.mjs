@@ -315,9 +315,29 @@ async function themeCustomizer({ page, check }) {
     )
     .catch(() => {});
   await page.waitForTimeout(300);
+  // for a key whose expected outcome is no change: a short fixed wait
   const press = async (key) => {
     await page.keyboard.press(key);
     await page.waitForTimeout(200);
+  };
+  /**
+   * Polls `--primary` every 50 ms for up to 5000 ms until `done(value)` holds
+   * (F23: a fixed 200 ms raced the update on CI); returns the last value read
+   * either way.
+   */
+  const waitForPrimary = async (done) => {
+    const until = Date.now() + 5000;
+    let value = await primary();
+    while (!done(value) && Date.now() < until) {
+      await page.waitForTimeout(50);
+      value = await primary();
+    }
+    return value;
+  };
+  /** Presses `key`, then waits for `--primary` as `waitForPrimary` does. */
+  const pressUntil = async (key, done) => {
+    await page.keyboard.press(key);
+    return waitForPrimary(done);
   };
   // A shuffle can land on a look with the same primary (a theme matching the
   // color preset it left), so `r` is pressed until --primary moves, at most
@@ -326,8 +346,7 @@ async function themeCustomizer({ page, check }) {
   const shuffle = async (from) => {
     let value = from;
     for (let i = 0; i < 3 && value === from; i++) {
-      await press('r');
-      value = await primary();
+      value = await pressUntil('r', (v) => v !== from);
     }
     return value;
   };
@@ -338,15 +357,16 @@ async function themeCustomizer({ page, check }) {
     shuffled !== before,
     `${before} -> ${shuffled}`,
   );
-  await press('ControlOrMeta+z');
-  const undone = await primary();
+  const undone = await pressUntil('ControlOrMeta+z', (v) => v === before);
   check(
     'theme: Mod+Z restores it',
     shuffled !== before && undone === before,
     `${shuffled} -> ${undone}`,
   );
-  await press('ControlOrMeta+Shift+z');
-  const redone = await primary();
+  const redone = await pressUntil(
+    'ControlOrMeta+Shift+z',
+    (v) => v === shuffled,
+  );
   check(
     'theme: Mod+Shift+Z reapplies the shuffled value',
     shuffled !== before && undone === before && redone === shuffled,
@@ -356,8 +376,7 @@ async function themeCustomizer({ page, check }) {
   await press('p');
   const afterP = await primary();
   check('theme: p changes nothing', afterP === again, `${again} -> ${afterP}`);
-  await press('Shift+R');
-  const reset = await primary();
+  const reset = await pressUntil('Shift+R', (v) => v === DEFAULT_PRIMARY.dark);
   check(
     'theme: Shift+R returns to the default',
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
@@ -393,8 +412,7 @@ async function themeCustomizer({ page, check }) {
     const input = panel.getByLabel('primary', { exact: true });
     if (await input.count()) {
       await input.fill(edited);
-      await page.waitForTimeout(200);
-      afterEdit = await primary();
+      afterEdit = await waitForPrimary((v) => v === edited);
     }
     await page.keyboard.press('Escape');
     await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
@@ -405,7 +423,15 @@ async function themeCustomizer({ page, check }) {
     afterEdit,
   );
 
-  await themeColorPicker({ page, check, trigger, panel, primary, press });
+  await themeColorPicker({
+    page,
+    check,
+    trigger,
+    panel,
+    primary,
+    waitForPrimary,
+    pressUntil,
+  });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
 }
@@ -424,7 +450,8 @@ async function themeColorPicker({
   trigger,
   panel,
   primary,
-  press,
+  waitForPrimary,
+  pressUntil,
 }) {
   const typed = 'oklch(0.55 0.15 250)';
   let chainStart = '';
@@ -444,8 +471,7 @@ async function themeColorPicker({
     if (await input.count()) {
       chainStart = await primary();
       await input.fill(typed);
-      await page.waitForTimeout(200);
-      before = await primary();
+      before = await waitForPrimary((v) => v === typed);
     }
     const swatch = page.getByRole('button', {
       name: 'Pick primary',
@@ -483,8 +509,7 @@ async function themeColorPicker({
           (box) => box.x + box.width + 8,
           (box) => box.y - 8,
         );
-        await page.waitForTimeout(200);
-        picked = await primary();
+        picked = await waitForPrimary((v) => v === '#ff0000');
       }
       await page.keyboard.press('Escape');
       await page
@@ -493,10 +518,11 @@ async function themeColorPicker({
         .waitFor({ state: 'detached', timeout: 5000 })
         .catch(() => {});
       await page.waitForTimeout(200);
-      await press('ControlOrMeta+z');
-      undone = await primary();
-      await press('ControlOrMeta+z');
-      undoneTwice = await primary();
+      undone = await pressUntil('ControlOrMeta+z', (v) => v === before);
+      undoneTwice = await pressUntil(
+        'ControlOrMeta+z',
+        (v) => v === chainStart,
+      );
     }
     await page.keyboard.press('Escape');
     await panel
