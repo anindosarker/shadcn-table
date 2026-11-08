@@ -2,8 +2,9 @@ name: PR checks
 run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installation-e2e-only && 'installation-e2e-only') || 'all' }}"
 
 # Every check of a pull request: nineteen test jobs, each the setup steps
-# plus `pnpm test <name> --ci` (test/run.mjs) and its test/.out/ records
-# uploaded as the artifact test-out-<job>. The four matrices are called
+# plus `pnpm test <name> --ci` (test/run.mjs) and its test/.out/ record
+# handed to PR Summary as the job output `record` (the called workflows:
+# one output per base or scenario, D38). The four matrices are called
 # workflows (typecheck.yml, storybook-tests.yml, docs-e2e.yml,
 # installation-e2e.yml, D90), so ten jobs here and check contexts such as
 # `Typecheck / Typecheck (base)` and `Installation E2E / Installation E2E
@@ -83,6 +84,8 @@ jobs:
     needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -92,13 +95,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test lint --ci
-      - uses: actions/upload-artifact@v7
+      - name: Hand the record to PR Summary
+        id: record
         if: always()
-        with:
-          name: test-out-lint
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
 
   storybook-tests:
     name: Storybook Tests
@@ -123,6 +123,8 @@ jobs:
     needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -132,13 +134,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test validate-repo --ci
-      - uses: actions/upload-artifact@v7
+      - name: Hand the record to PR Summary
+        id: record
         if: always()
-        with:
-          name: test-out-validate-repo
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
 
   installation-e2e:
     name: Installation E2E
@@ -156,6 +155,8 @@ jobs:
     name: Validate PR
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
     permissions:
       contents: read
       pull-requests: read
@@ -171,18 +172,17 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test validate-pr --ci
-      - uses: actions/upload-artifact@v7
+      - name: Hand the record to PR Summary
+        id: record
         if: always()
-        with:
-          name: test-out-validate-pr
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
 
-  # One sticky comment per PR (D87), from every test-out-* artifact; on a
-  # workflow_dispatch the comment goes to the step summary. Every upload sets
-  # overwrite, so a re-run job replaces its earlier attempt's artifact and
-  # the merged download holds one record per job.
+  # One sticky comment per PR (D87), from the test records every job hands
+  # over as job outputs (D38): `record` for Lint, Validate Repo and Validate
+  # PR, one output per base or scenario for the four called workflows,
+  # passed as toJSON(needs) in NEEDS. A job without a record shows skipped;
+  # on a workflow_dispatch the comment goes to the step summary. A re-run
+  # job replaces its earlier attempt's outputs.
   pr-summary:
     name: PR Summary
     if: always()
@@ -198,12 +198,9 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - uses: actions/download-artifact@v8
-        with:
-          pattern: test-out-*
-          merge-multiple: true
-          path: test/.out/
       - run: node tools/release/pr-summary.mjs
+        env:
+          NEEDS: ${{ toJSON(needs) }}
 
   # The last job, on the release PR only (dev into master): once every job
   # is green it bumps the version with the PR's `release:` level and commits
