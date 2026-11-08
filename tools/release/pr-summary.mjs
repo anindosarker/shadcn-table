@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-// Usage (repo root, the PR Summary job of .github/workflows/pr.yml, after
-// the test-out-* artifacts are downloaded into test/.out/):
+// Usage (repo root, the PR Summary job of .github/workflows/pr.yml, with
+// NEEDS set to toJSON(needs); locally without NEEDS):
 //   node tools/release/pr-summary.mjs
 //
 // Builds the one sticky comment of a pull request (D87, D37) from the test
-// records test/.out/*.json and the checkout's CHANGELOG.md:
+// records and the checkout's CHANGELOG.md. The records come from the job
+// outputs in NEEDS (D38: every test job prints its record as an output,
+// tools/release/record-output.mjs), else from test/.out/*.json (a local
+// run, spec 18's act check). The comment:
 //   the hidden marker <!-- shadcn-table:pr-summary -->
 //   `## <PR title>` (`## PR checks` on a dispatch)
 //   `` `<label>` | [run <id>](<url>) | <status> ``: the validate-pr record's
@@ -329,7 +332,7 @@ export const upsertComment = async (api, body) => {
   return 'created';
 };
 
-/** Every record under `dir` (test/.out/*.json), unreadable files skipped. */
+/** Every record under `dir` (test/.out/*.json, a local run), unreadable files skipped. */
 export const readRecords = (dir) => {
   if (!fs.existsSync(dir)) return [];
   return fs
@@ -338,6 +341,31 @@ export const readRecords = (dir) => {
     .flatMap((f) => {
       try {
         const record = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+        return record?.name && record?.status ? [record] : [];
+      } catch {
+        return [];
+      }
+    });
+};
+
+/**
+ * Every record in the job outputs of `toJSON(needs)` (D38): each output
+ * value of each job parsed as JSON; empty, unparsable and nameless values
+ * skipped (a job without a record shows skipped).
+ */
+export const recordsFromNeeds = (json) => {
+  let needs;
+  try {
+    needs = JSON.parse(json);
+  } catch {
+    return [];
+  }
+  if (!needs || typeof needs !== 'object') return [];
+  return Object.values(needs)
+    .flatMap((job) => Object.values(job?.outputs ?? {}))
+    .flatMap((value) => {
+      try {
+        const record = JSON.parse(value);
         return record?.name && record?.status ? [record] : [];
       } catch {
         return [];
@@ -354,7 +382,9 @@ const main = async () => {
     event.pull_request?.number ?? (env.PR ? Number(env.PR) : undefined);
   const labelEvent = ['labeled', 'unlabeled'].includes(event.action);
   const runUrl = `${env.GITHUB_SERVER_URL ?? 'https://github.com'}/${env.GITHUB_REPOSITORY ?? 'anindosarker/shadcn-table'}/actions/runs/${env.GITHUB_RUN_ID ?? '0'}`;
-  const records = readRecords(path.join(ROOT, 'test', '.out'));
+  const records = env.NEEDS
+    ? recordsFromNeeds(env.NEEDS)
+    : readRecords(path.join(ROOT, 'test', '.out'));
   const changelogPath = path.join(ROOT, 'CHANGELOG.md');
   const changelog = fs.existsSync(changelogPath)
     ? fs.readFileSync(changelogPath, 'utf8')

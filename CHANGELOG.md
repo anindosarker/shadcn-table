@@ -19,6 +19,10 @@ publishes the section as the GitHub release notes.
 
 ### Changed
 
+#### Spec 19 PR Summary reads job outputs
+
+- Every test job hands its record to PR Summary as a job output instead of the artifact `test-out-<job>` (D38): a last step (`if: always()`) runs `tools/release/record-output.mjs`, which prints the `test/.out/` record as one line `<key>=<JSON>` with at most five errors of 400 characters each, appended to `$GITHUB_OUTPUT`. Lint, Validate Repo and Validate PR output `record`; Typecheck, Storybook Tests and Docs E2E Tests output `base`, `radix` and `aria`, Installation E2E one output per scenario, each mirrored under `workflow_call.outputs`. PR Summary passes `toJSON(needs)` as `NEEDS` to `pr-summary.mjs`, whose new `recordsFromNeeds` reads every output (a local run without `NEEDS` still reads `test/.out/`). A failed leg's output still reaches the caller (GitHub run 42509826313). The `test-out-*` uploads of `pr.yml`, `typecheck.yml`, `storybook-tests.yml` and `docs-e2e.yml` and PR Summary's download go; `installation-e2e.yml` keeps its upload, which carries the captures of the reference refresh.
+
 #### Spec 18 PR Summary: grouped table, failures, changelog
 
 - The sticky PR Summary comment (`tools/release/pr-summary.mjs`) is a grouped table (D37): the PR title, one line with the release label, the run link and the status (all green, jobs failed or skipped), one `Job | Result` table with a bold group row per matrix job and its bases or scenarios under it, a collapsed block listing every error line of the failed jobs, and a changelog section with the `## Unreleased` counts by heading and the entry titles. Without `## Unreleased` it reads the top version section. The Prepare Release row of the draft is left out: the comment is written before that job runs.

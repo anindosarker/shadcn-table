@@ -4,8 +4,9 @@ name: Docs E2E Tests
 # checkout and served by `next start` on 5320; the section lists of
 # test/docs-e2e/lib/ (D89) run against it, four browser contexts per section
 # (D91). Chromium installs without --with-deps (the apt step took up to nine
-# minutes) from a cache keyed on the Playwright version. Its test/.out/ record is uploaded
-# as test-out-docs-e2e-<base>. The check context reads
+# minutes) from a cache keyed on the Playwright version. Its test/.out/
+# record is handed to PR Summary as the job output <base> (D38), exposed as
+# the workflow output of the same name. The check context reads
 # `Docs E2E Tests / Docs E2E Tests (<base>)`.
 # The skip input (the PR head is the version bump commit, D35) skips every
 # step, not the job: a job-level if: is read before the matrix expands, so
@@ -18,6 +19,16 @@ on:
         description: Skip every step (the PR head is the version bump commit, D35)
         type: boolean
         default: false
+    outputs:
+      base:
+        description: The docs-e2e record of the base leg (JSON), empty when it wrote none
+        value: ${{ jobs.docs-e2e.outputs.base }}
+      radix:
+        description: The docs-e2e record of the radix leg (JSON), empty when it wrote none
+        value: ${{ jobs.docs-e2e.outputs.radix }}
+      aria:
+        description: The docs-e2e record of the aria leg (JSON), empty when it wrote none
+        value: ${{ jobs.docs-e2e.outputs.aria }}
 
 permissions:
   contents: read
@@ -26,6 +37,10 @@ jobs:
   docs-e2e:
     name: Docs E2E Tests (${{ matrix.base }})
     runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.record.outputs.base }}
+      radix: ${{ steps.record.outputs.radix }}
+      aria: ${{ steps.record.outputs.aria }}
     strategy:
       fail-fast: false
       matrix:
@@ -64,10 +79,7 @@ jobs:
             next-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm test docs-e2e --ci --base ${{ matrix.base }}
         if: ${{ !inputs.skip }}
-      - uses: actions/upload-artifact@v7
+      - name: Hand the record to PR Summary
+        id: record
         if: ${{ always() && !inputs.skip }}
-        with:
-          name: test-out-docs-e2e-${{ matrix.base }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key ${{ matrix.base }} >> "$GITHUB_OUTPUT"
