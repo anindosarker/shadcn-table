@@ -555,12 +555,16 @@ async function themeIconLibrary({ page, check, trigger, panel }) {
       .catch(() => {});
     await page.waitForTimeout(300);
   };
+  // The first Escape can only dismiss the tooltip of the focused shortcut
+  // button, so a second one follows while the panel is still open.
   const closePanel = async () => {
-    await page.keyboard.press('Escape');
-    await panel
-      .first()
-      .waitFor({ state: 'detached', timeout: 5000 })
-      .catch(() => {});
+    for (let i = 0; i < 2 && (await panel.count()); i++) {
+      await page.keyboard.press('Escape');
+      await panel
+        .first()
+        .waitFor({ state: 'detached', timeout: 2500 })
+        .catch(() => {});
+    }
   };
 
   await openPanel();
@@ -579,11 +583,6 @@ async function themeIconLibrary({ page, check, trigger, panel }) {
   }
   await page.waitForTimeout(200);
   await closePanel();
-  await page
-    .locator('.v5-demo')
-    .first()
-    .scrollIntoViewIfNeeded()
-    .catch(() => {});
   const tabler = await iconHas('tabler-icon');
   check(
     'icons: Tabler switches the home tables',
@@ -599,6 +598,10 @@ async function themeIconLibrary({ page, check, trigger, panel }) {
       return undefined;
     }
   }, DESIGN_SYSTEM_KEY);
+  // The live demo plays while its toolbar is in view and its replay moves
+  // focus into the table, where the theme keys are ignored; at the top of
+  // the page it holds, so Shift+R below reaches the panel.
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
   await page
     .locator('.v5-demo table tbody tr')
