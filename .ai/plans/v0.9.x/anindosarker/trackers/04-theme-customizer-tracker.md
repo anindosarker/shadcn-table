@@ -23,6 +23,11 @@ Checks:
 - Check: `pnpm test lint` at e62b5262 (fix round): pass, 0 errors (9 warnings in examples, unchanged)
 - Check: `pnpm test validate-repo` at e62b5262 (fix round): pass, 27 unit tests, registry valid
 - Check: `pnpm test docs-e2e --base base` at e62b5262 (fix round): pass, 1923 checks on 107 pages (getting-started, api, guides, examples 936), 0 failed
+- Check: verifier, 2.2 checks not rerun: all recorded at e62b5262, and `git diff --name-only e62b5262..e62f30c7` touches only .ai/
+- Check: Acceptance rerun, `pnpm test docs-e2e --base base /` at e62f30c7 (verifier): pass, 63 passed, 0 failed (all seven theme checks green)
+- Check: Acceptance rerun, `pnpm test typecheck --base radix` at e62f30c7 (verifier): pass, tsc clean
+- Check: Acceptance rerun, `pnpm test lint` at e62f30c7 (verifier): pass, 0 errors (9 warnings in examples, unchanged)
+- Check: Acceptance rerun, `pnpm test validate-repo` at e62f30c7 (verifier): pass, 27 unit tests, registry valid
 
 - Task 1 Reproduce (docs E2E theme checks red on the shipped code): done, fb2aa071
 - Task 2 Dependencies (react-hotkeys, sheet part): done, 8d0670db
