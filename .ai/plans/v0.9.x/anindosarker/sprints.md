@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 21:11
+Updated: 2026-11-08 21:53
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 |
 |---|---|---|---|---|---|---|
@@ -24,5 +24,5 @@ Updated: 2026-11-08 21:11
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |
 | fix Installation references refreshed (F20) |  | [x] |  |  |  |  |
 | fix Stored view page index (F22) |  | [x] |  |  |  |  |
-| fix Theme check closes the search dialog (F24) |  |  | [ ] |  |  |  |
+| fix Theme check closes the search dialog (F24) |  |  | [x] |  |  |  |
 | fix Theme hotkey checks wait for the change (F23) |  |  | [x] |  |  |  |
