@@ -7,7 +7,7 @@
 // records and the checkout's CHANGELOG.md. The records come from the job
 // outputs in NEEDS (D38: every test job prints its record as an output,
 // tools/release/record-output.mjs), else from test/.out/*.json (a local
-// run, spec 18's act check). The comment:
+// run without NEEDS). The comment:
 //   the hidden marker <!-- shadcn-table:pr-summary -->
 //   `## <PR title>` (`## PR checks` on a dispatch)
 //   `` `<label>` | [run <id>](<url>) | <status> ``: the validate-pr record's
