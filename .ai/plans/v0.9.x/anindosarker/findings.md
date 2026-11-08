@@ -112,3 +112,5 @@
 
 - `apps/shadcn-table-docs/app/global.css:7`, `lib/build-styles.mjs:8-11`, `lib/design-system/config.ts:451` (JSDoc on `STYLE_SHEET_ID`) say the style link is rendered by `app/layout.tsx`; since the A14 deviation the pre-paint script creates it. `CONTRIBUTING.md:59` lists neither `lib/build-styles.mjs` nor `public/styles/`. Review minors of milestone 15 (fable, round 1), left by the bounce because no major was open; a one-commit docs fix.
 
+### F27 The record cap of record-output.mjs has no unit test and the pr-summary.mjs header names a removed act path
+
