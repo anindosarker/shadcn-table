@@ -97,3 +97,8 @@
 
 ## A11 Random in the theme panel keeps its curated presets through a private decoder
 
+- Spec 08 removed the preset-code codec, but the Random button (kept by D21) decoded its curated presets with it; the builder kept Random working with a private `curatedPreset` decoder and a `sameLook` compare in `apps/shadcn-table-docs/lib/design-system/config.ts`, so `decodePreset` from `shadcn/preset` stays imported. Merged in 9d582dcd.
+
+- Options:
+  - a) Recommended: keep
+  - b) revert: drop `SHUFFLE_PRESETS`, Random shuffles by `randomFields` only, `decodePreset` import gone

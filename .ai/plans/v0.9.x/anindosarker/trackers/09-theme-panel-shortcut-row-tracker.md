@@ -1,7 +1,7 @@
 # 09: One shortcut row in the theme panel, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/theme-panel-shortcut-row`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

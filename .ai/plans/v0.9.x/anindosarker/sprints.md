@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-08 10:03
+Updated: 2026-11-08 10:09
 
 | Milestone | S1 | S2 | S3 | S4 |
 |---|---|---|---|---|
@@ -13,8 +13,8 @@ Updated: 2026-11-08 10:03
 | E3 07 Integration |  | [ ] |  |  |
 | E3 07 Release PR |  |  | · |  |
 | E3 07 After release |  |  |  | · |
-| E4 08 Theme panel copy import |  | [ ] |  |  |
-| E4 09 Theme panel shortcut row |  |  | · |  |
+| E4 08 Theme panel copy import |  | [x] |  |  |
+| E4 09 Theme panel shortcut row |  |  | [ ] |  |
 | E4 10 Theme color picker |  |  |  | · |
 | E4 11 Persistent view page size |  | [x] |  |  |
 | E4 12 Stored view page size |  |  | [ ] |  |
