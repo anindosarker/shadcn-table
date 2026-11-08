@@ -16,6 +16,7 @@ Checks:
 - `pnpm test validate-repo` at 9b2cea14: pass
 - `pnpm install --frozen-lockfile` at 9b2cea14: pass (clean)
 - `pnpm test docs-e2e --base base /` at 9b2cea14: first run 1 red, the P5 flake "theme: Shift+R returns to the default" (`again` was already the default; the three `r` presses found no other primary); rerun pass (70 passed, 0 failed, the three picker checks green)
+- Verifier at c233c2d9: every 2.2 check and every Acceptance (1.2) line is recorded green at 9b2cea14; `git diff --name-only 9b2cea14..c233c2d9` touches only this tracker, so nothing rerun
 
 - Task 1 Reproduce: done (cec8cf0c)
 - Task 2 Dependency: done (a6055ae0)
