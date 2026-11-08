@@ -8,6 +8,7 @@ Checks:
 - Check: validate-repo, `pnpm test validate-repo` at b5e4e468: pass
 - Check: typecheck, `pnpm test typecheck --base radix` at b5e4e468 plus changelog: pass
 - Check: format, `pnpm format`: no changes
+- Check: verifier at e7fd4e96: no rerun; `git diff --name-only b5e4e468..e7fd4e96` touches only the tracker and CHANGELOG.md, so the recorded typecheck, validate-repo and docs-e2e (Acceptance 1.2) results at b5e4e468 stand: pass
 
 - Task 1 Reproduce: done (cec58264)
 - Task 2 Page size 10: done (b5e4e468)
