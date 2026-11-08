@@ -87,6 +87,7 @@
   - b) revert to the MutationObserver as 1.6.7 words it
 
 ## A10 Undo in the Colors tab steps back one keystroke at a time
+[D23]
 
 - Each valid keystroke in a Colors tab input is one history entry, so undo walks back through a typed value one valid prefix at a time (spec 04 does not say).
 
