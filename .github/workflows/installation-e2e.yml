@@ -7,8 +7,10 @@ name: Installation E2E
 # of D86). Its test/.out/ records and captures are uploaded as
 # test-out-installation-e2e-<scenario>. The check context reads
 # `Installation E2E / Installation E2E (<scenario>)`.
-# The skip input (the PR head is the version bump commit, D35) skips
-# every leg; each still reports its check context.
+# The skip input (the PR head is the version bump commit, D35) skips every
+# step, not the job: a job-level if: is read before the matrix expands, so
+# GitHub would report one unexpanded skipped job instead of the leg contexts
+# (actions/runner#952). Each leg runs no step and reports success.
 on:
   workflow_call:
     inputs:
@@ -17,7 +19,7 @@ on:
         type: boolean
         default: false
       skip:
-        description: Skip the job (the PR head is the version bump commit, D35)
+        description: Skip every step (the PR head is the version bump commit, D35)
         type: boolean
         default: false
 
@@ -27,7 +29,6 @@ permissions:
 jobs:
   installation-e2e:
     name: Installation E2E (${{ matrix.scenario }})
-    if: ${{ !inputs.skip }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -35,28 +36,33 @@ jobs:
         scenario: [fresh, existing, base, aria, nextjs-base, nextjs-radix, nextjs-aria]
     steps:
       - uses: actions/checkout@v4
+        if: ${{ !inputs.skip }}
       - uses: pnpm/action-setup@v4
+        if: ${{ !inputs.skip }}
       - uses: actions/setup-node@v4
+        if: ${{ !inputs.skip }}
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        if: ${{ !inputs.skip }}
       # Chromium for the Next scenarios' browser phase, without --with-deps,
       # from a cache keyed on the Playwright version (D91).
       - name: Read the Playwright version
         id: playwright
-        if: startsWith(matrix.scenario, 'nextjs-')
+        if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
         run: echo "version=$(pnpm --filter shadcn-table exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
-        if: startsWith(matrix.scenario, 'nextjs-')
+        if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - run: pnpm --filter shadcn-table exec playwright install chromium
-        if: startsWith(matrix.scenario, 'nextjs-')
+        if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
       - run: pnpm test installation-e2e --ci --scenario ${{ matrix.scenario }} ${{ inputs.no-diff && '--no-diff' || '' }}
+        if: ${{ !inputs.skip }}
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ always() && !inputs.skip }}
         with:
           name: test-out-installation-e2e-${{ matrix.scenario }}
           path: test/.out/

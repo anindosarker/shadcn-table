@@ -4,13 +4,15 @@ name: Typecheck
 # (the package tsc:<base>; radix also the docs app's types:check), its
 # test/.out/ record uploaded as test-out-typecheck-<base>. The check context
 # reads `Typecheck / Typecheck (<base>)`.
-# The skip input (the PR head is the version bump commit, D35) skips
-# every leg; each still reports its check context.
+# The skip input (the PR head is the version bump commit, D35) skips every
+# step, not the job: a job-level if: is read before the matrix expands, so
+# GitHub would report one unexpanded skipped job instead of the leg contexts
+# (actions/runner#952). Each leg runs no step and reports success.
 on:
   workflow_call:
     inputs:
       skip:
-        description: Skip the job (the PR head is the version bump commit, D35)
+        description: Skip every step (the PR head is the version bump commit, D35)
         type: boolean
         default: false
 
@@ -20,7 +22,6 @@ permissions:
 jobs:
   typecheck:
     name: Typecheck (${{ matrix.base }})
-    if: ${{ !inputs.skip }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -28,15 +29,20 @@ jobs:
         base: [base, radix, aria]
     steps:
       - uses: actions/checkout@v4
+        if: ${{ !inputs.skip }}
       - uses: pnpm/action-setup@v4
+        if: ${{ !inputs.skip }}
       - uses: actions/setup-node@v4
+        if: ${{ !inputs.skip }}
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        if: ${{ !inputs.skip }}
       - run: pnpm test typecheck --ci --base ${{ matrix.base }}
+        if: ${{ !inputs.skip }}
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ always() && !inputs.skip }}
         with:
           name: test-out-typecheck-${{ matrix.base }}
           path: test/.out/
