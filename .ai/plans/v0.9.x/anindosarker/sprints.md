@@ -27,7 +27,7 @@ Updated: 2026-11-09 02:42
 | E6 19 PR summary job outputs |  |  |  | [x] |  |  |  |
 | E7 20 Integration 0.9.1 |  |  |  |  | [x] |  |  |
 | E7 20 Release PR 0.9.1 |  |  |  |  |  | [x] |  |
-| E7 20 After release 0.9.1 |  |  |  |  |  |  | [ ] |
+| E7 20 After release 0.9.1 |  |  |  |  |  |  | [x] |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |  |

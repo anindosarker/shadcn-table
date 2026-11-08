@@ -14,11 +14,11 @@ E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) an
 - `dev` carries every E4, E5 and E6 commit and the two ride-alongs; the PR opens right after the fast-forward, no local suite (D40, D45).
 - One PR `dev` into `master`, title `release: 0.9.1`, label `release:minor` (new public API: `ST_DefaultsProvider` D27, `pageSize` in the stored view D25), auto-merge enabled at creation; the version 0.9.0 bumps to 0.9.1 (D45, P4).
 - Prepare Release waits on the `release` environment; the runner approves it (D47). The bump push runs no test job and prompts nobody (D35).
-- `master` carries `v0.9.1`; www.shadcn-table.com and the three Storybook builds serve 0.9.1; the GitHub release exists with the 0.9.1 changelog section (D45).
+- `master` carries `v0.9.1`; www.shadcn-table.com and the Storybook host serve 0.9.1; the GitHub release exists with the 0.9.1 changelog section (D45).
 - The tracker holds the proof lines of D35 (the bump run's contexts), D36 (zero Node 20 annotations), D38 (artifacts list, comment complete), D44 (every leg context reported, none "Expected") (D45).
 - `claude/review` and `dev` end at `master` (P4).
 - Ride-alongs (D46): `.gitignore` gains `!test/storybook-static/` after its `storybook-static` line; `tools/release/record-output.test.mjs` covers `capRecord`; the `pr-summary.mjs` header names the `test/.out/*.json` fallback as a plain shell run.
-- Acceptance: programmatic. `git ls-remote --tags origin v0.9.1` prints one line; `gh release view v0.9.1 --json tagName --jq .tagName` prints `v0.9.1`; `curl -fsS https://www.shadcn-table.com/version.txt` and `curl -fsS https://storybook.shadcn-table.com/<base>/version.txt` for base, radix and aria print `0.9.1`; the Validate Production job of the `release.yml` run is green; `git rev-parse origin/claude/review origin/dev origin/master` prints one sha three times; `node --test tools/release/record-output.test.mjs` green and `pnpm test validate-repo` green on `claude/review`; `git check-ignore -q test/storybook-static/new.mjs` exits 1.
+- Acceptance: programmatic. `git ls-remote --tags origin v0.9.1` prints one line; `gh release view v0.9.1 --json tagName --jq .tagName` prints `v0.9.1`; `curl -fsS https://www.shadcn-table.com/version.txt` and `curl -fsS https://storybook.shadcn-table.com/version.txt` print `0.9.1` (Storybook serves one root `version.txt`, no per-base file; the run of 2026-11-09); the Validate Production job of the `release.yml` run is green; `git rev-parse origin/claude/review origin/dev origin/master` prints one sha three times; `node --test tools/release/record-output.test.mjs` green and `pnpm test validate-repo` green on `claude/review`; `git check-ignore -q test/storybook-static/new.mjs` exits 1.
 
 ### 1.3 Current structure
 

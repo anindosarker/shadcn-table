@@ -405,7 +405,7 @@ index e1645117..e67a5482 100644
 - Proof first, locally (D32, owner 2026-11-08: "instead of using github's slow machines ... use act locally"): a throwaway `workflow_dispatch` workflow calling a three-leg reusable workflow where one leg exits 1 after writing its key and a consumer prints `toJSON(needs)` runs under `act` against the local Docker; all three keys must arrive. One GitHub dispatch run confirms it afterwards (act's `workflow_call` output handling is not GitHub's). If the failed leg's key is dropped on GitHub, failed legs keep an artifact as the fallback. The same act-first rule holds for every CI change of this spec (D35, D36, D37).
 
 ### D39 Further 0.9.0 approval prompts are approved by the runner
-[E7]
+[Done]  [E7]
 [Done]
 
 
@@ -448,7 +448,7 @@ index e1645117..e67a5482 100644
 - Source: A17. A job-level `if:` on a matrix job is read before the matrix expands, so GitHub reports one skipped job `Typecheck (${{ matrix.base }})` and the required leg contexts stay "Expected" (actions/runner#952); the four called workflows put the `if:` on every step instead, so each leg runs no step and reports success under its own context. D35's outcome holds. `act` cannot show the difference; the 0.9.1 release run is the proof, a context left "Expected" there is a new item. Kept as merged (E6 16, `8631dc07`).
 
 ### D45 Release 0.9.1 now, the docs restructuring as 0.9.2
-[E7]
+[Done]  [E7]
 
 
 - Amends D15: 0.9.1 ships E4, E5 and E6 as merged on `claude/review` (the theme panel changes D21 to D29, the stored page size D25, `ST_DefaultsProvider` D27, the on-demand stylesheets D29, the CI changes D35 to D38), now; the docs restructuring (F2, F4, the docs session's decisions) ships as 0.9.2. Owner, 2026-11-09.
@@ -456,7 +456,7 @@ index e1645117..e67a5482 100644
 - The run is the proof for D35, D36, D38 and D44: the release tracker records the bump run's contexts (nineteen test contexts and Prepare Release skipped, Validate PR and PR Summary green), zero "Node.js 20 is deprecated" annotations, the artifacts list (`test-out-installation-e2e-*` only), the comment complete; a context left "Expected" or a missing row is an ATTENTION item.
 
 ### D46 Two tooling gaps ride along with the 0.9.1 release spec
-[E7]
+[Done]  [E7]
 
 
 - Fixes F10 and F27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (F10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (F27). Settled by the lead: tooling with one right answer. F9 and F26 (stale comments) wait for a change that touches their files (no comment-only commits).
