@@ -12,6 +12,8 @@ import {
   readStoredConfig,
   shuffleConfig,
   STORAGE_KEY,
+  STYLE_SHEET_ID,
+  styleSheetHref,
   THEME_STYLE_ELEMENT_ID,
   type DesignSystemConfig,
   type StoredDesignSystem,
@@ -96,12 +98,60 @@ function getServerState() {
   return SERVER_STATE;
 }
 
-function applyToDocument(config: DesignSystemConfig) {
+/** The `style-<name>` class on <html>, the others removed. */
+function setStyleClass(style: DesignSystemConfig['style']) {
   const root = document.documentElement;
   for (const name of Array.from(root.classList)) {
     if (name.startsWith('style-')) root.classList.remove(name);
   }
-  root.classList.add(`style-${config.style}`);
+  root.classList.add(`style-${style}`);
+}
+
+/** The style sheet link the latest style change waits for; null when none. */
+let pendingSheet: HTMLLinkElement | null = null;
+
+/**
+ * Switches to `style`'s sheet (D29): when the linked sheet (STYLE_SHEET_ID) is
+ * another style's, a second link is appended to <head>; once it has loaded
+ * the old link is removed, the new one takes the id and only then the class
+ * switches, so nothing paints unstyled. On error the new link is removed and
+ * the class stays. Of two changes in flight the later one wins: the earlier
+ * pending link is removed when it loads.
+ */
+function applyStyleSheet(style: DesignSystemConfig['style']) {
+  const linked = document.getElementById(STYLE_SHEET_ID);
+  if (!linked || linked.getAttribute('data-style') === style) {
+    pendingSheet = null;
+    setStyleClass(style);
+    return;
+  }
+  if (pendingSheet?.getAttribute('data-style') === style) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = styleSheetHref(style);
+  link.setAttribute('data-style', style);
+  pendingSheet = link;
+  link.addEventListener('load', () => {
+    if (pendingSheet !== link) {
+      link.remove();
+      return;
+    }
+    pendingSheet = null;
+    document.getElementById(STYLE_SHEET_ID)?.remove();
+    link.id = STYLE_SHEET_ID;
+    setStyleClass(style);
+  });
+  link.addEventListener('error', () => {
+    if (pendingSheet === link) pendingSheet = null;
+    link.remove();
+    console.error(`design system: ${link.href} failed to load`);
+  });
+  document.head.appendChild(link);
+}
+
+function applyToDocument(config: DesignSystemConfig) {
+  const root = document.documentElement;
+  applyStyleSheet(config.style);
   // Re-set on every apply, to the same empty value: the mutation record it queues
   // is what wakes the attribute observers (theme-demo matches.tsx, dev-home dune.tsx).
   root.setAttribute(DESIGN_SYSTEM_ATTRIBUTE, '');
