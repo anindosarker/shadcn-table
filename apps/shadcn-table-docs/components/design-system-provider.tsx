@@ -101,6 +101,8 @@ function applyToDocument(config: DesignSystemConfig) {
     if (name.startsWith('style-')) root.classList.remove(name);
   }
   root.classList.add(`style-${config.style}`);
+  // Re-set on every apply, to the same empty value: the mutation record it queues
+  // is what wakes the attribute observers (theme-demo matches.tsx, dev-home dune.tsx).
   root.setAttribute(DESIGN_SYSTEM_ATTRIBUTE, '');
   root.setAttribute('data-menu-color', config.menuColor);
   root.setAttribute('data-menu-accent', config.menuAccent);

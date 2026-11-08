@@ -66,7 +66,8 @@ const getReducedMotion = () => window.matchMedia(REDUCED_MOTION).matches;
 const getServerReducedMotion = () => false;
 
 /* The site mode and page background, as one string: next-themes toggles
- * html.dark and the theme customizer html[data-design-system]. */
+ * html.dark and the theme customizer re-sets html[data-design-system] on every
+ * apply (design-system-provider.tsx, applyToDocument). */
 function subscribeSite(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, {
