@@ -341,7 +341,7 @@ const Example = () => {
         striped: false,
         wrapText: false,
       },
-      pagination: { pageIndex: 0, pageSize: 50 },
+      pagination: { pageIndex: 0, pageSize: 10 },
     },
   });
 

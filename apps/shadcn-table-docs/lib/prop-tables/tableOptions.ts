@@ -905,9 +905,10 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'icons',
     defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    description:
+      'Replaces single icons of this table. The table merges ST_Default_Icons, then the icons of the nearest ST_DefaultsProvider, then this option, so this option wins for its keys.',
+    link: '/docs/guides/customize-icons',
+    linkText: 'Custom Icons Guide',
     required: false,
     source: 'ST',
     type: 'Partial<ST_Icons>;',
@@ -1850,7 +1851,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'persistViewSettings',
     defaultValue: 'false',
     description:
-      'Saves the view settings, the pins, column visibility, order and pinning to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
+      'Saves the view settings, the pins, column visibility, order, pinning and rows per page to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
     link: '/docs/guides/view-settings',
     linkText: 'ST View Settings Docs',
     required: false,

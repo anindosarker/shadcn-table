@@ -94,3 +94,48 @@
 - Options:
   - a) Recommended: keep
   - b) record a token edit on blur, one undo step per edit
+
+## A11 Random in the theme panel keeps its curated presets through a private decoder
+[D31]
+
+- Spec 08 removed the preset-code codec, but the Random button (kept by D21) decoded its curated presets with it; the builder kept Random working with a private `curatedPreset` decoder and a `sameLook` compare in `apps/shadcn-table-docs/lib/design-system/config.ts`, so `decodePreset` from `shadcn/preset` stays imported. Merged in 9d582dcd.
+
+- Options:
+  - a) Recommended: keep
+  - b) revert: drop `SHUFFLE_PRESETS`, Random shuffles by `randomFields` only, `decodePreset` import gone
+
+## A12 How dev takes the installation reference refresh while E4 sits on claude/review
+[D30]
+
+- The 0.9.0 suite on `dev` (df90bd27) is green except the installation-e2e reference diff (F20); the fix milestone refreshes six PNGs on a branch cut from df90bd27 and merges it into `claude/review`. P1 says `dev` is then fast-forwarded from `claude/review` again, but `claude/review` now also carries the E4 merges 11 (d7ee15f3) and 08 (9d582dcd), which D15 keeps out of 0.9.0. The Release PR waits on this.
+
+- Options:
+  - a) Recommended: merge the fix branch `v0.9/refresh-installation-references` into `dev` directly (`dev` = df90bd27 plus the six PNGs), the one exception to P1 for this release; `claude/review` keeps everything.
+  - b) fast-forward `dev` to `claude/review`: 0.9.0 ships E4 08 and 11 (and whatever else merges before the PR opens).
+
+## A13 The F22 fix has no play that fails on the shipped code
+[D33]
+
+- Fix milestone `stored-view-page-index` (F22, merged 811045dc) changed how a stored rows-per-page is restored so the page index stays, but no story play exercises a table with `initialState.pagination.pageIndex` above 0, so P11 (a fix's play fails on the shipped code first) has no red line; the spec 12 `Persistence` play stays green before and after.
+
+- Options:
+  - a) Recommended: accept as is; the behavior is covered by the three typechecks and the Persistence play, the page-index case is a one-line spec clause
+  - b) a follow-up fix milestone adds a `Persistence` play variant with `pageIndex: 2` in `ViewSettings.stories.tsx`, red on 117a81b5, green on 811045dc
+
+## A14 The pre-paint script creates the style sheet link, not the layout
+[D41]
+
+- Spec 15 section 1.6.3 has `app/layout.tsx` render the active style's `<link>` and the pre-paint script swap it; built that way, a page with a stored style failed React 19 hydration (error #418, links in `<head>` matched by href) and a second link appeared. The builder moved the link creation into the pre-paint script in `lib/design-system/config.ts` (`blocking=render`), `app/layout.tsx` renders no link; every check green, merged in 5df252e9.
+
+- Options:
+  - a) Recommended: keep (amend spec 15 1.6.3 to match)
+  - b) revert to a server-rendered link in `app/layout.tsx` and solve the hydration mismatch another way (the script would then suppress or match the default link)
+
+## A15 Every per-style sheet build runs through the optimizer, not only --minify
+[D42]
+
+- Spec 15 section 1.6.2 says only `--minify` passes a sheet through the optimizer and `predev` leaves it readable; `lib/build-styles.mjs` runs `optimize()` on every build (the flag only adds minification) so the flattened nesting and prefixes match the root bundle. Recorded under the tracker's Notes by the builder; merged in 5df252e9.
+
+- Options:
+  - a) Recommended: keep (amend spec 15 1.6.2)
+  - b) revert: optimizer only under `--minify`

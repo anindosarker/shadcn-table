@@ -18,6 +18,10 @@ import {
   headerBaseMenu,
 } from './helpers.mjs';
 
+// D29's 300 ms budget holds on a local machine, but GitHub runners took 342 to
+// 351 ms for the toggle on run 42514739346 (F28), so CI gets 600 ms.
+const PERF_BUDGET_MS = process.env.CI === 'true' ? 600 : 300;
+
 /**
  * The install page's edition select and Short form switch: both commands
  * start on Lucide (`shadcn-table`), Tabler in the first select switches both
@@ -207,10 +211,14 @@ async function closeSearch(page, search, trigger) {
 /**
  * The theme customizer (components/theme-customizer.tsx, D2): the default
  * tokens come from the design system style element with empty storage and
- * with a choice older than 2 days; the palette button opens the panel; the
- * `r`, `p` and `Shift+R` shortcuts shuffle, undo and reset, and do nothing
- * while the search dialog is open; a Colors tab edit changes the computed
- * variable. Leaves the page on the default look with empty storage.
+ * with a choice older than 2 days; the palette button opens the panel, which
+ * has no Copy and no Import button (D21) and one shortcut row with Reset,
+ * Undo, Redo, Random and Next preset that does not overflow (D22); with the
+ * panel open `r`, `Mod+Z`, `Mod+Shift+Z` and `Shift+R` shuffle, undo, redo
+ * and reset, `p` does nothing; `r` does nothing while the search dialog is
+ * open; a Colors tab edit changes the computed
+ * variable; the Icon Library select switches the home tables (spec 14).
+ * Leaves the page on the default look with empty storage.
  */
 async function themeCustomizer({ page, check }) {
   const primary = () =>
@@ -240,6 +248,11 @@ async function themeCustomizer({ page, check }) {
   const stored = () =>
     page.evaluate((key) => localStorage.getItem(key), DESIGN_SYSTEM_KEY);
 
+  // F23: the demo replay focuses its Search field while it plays, which takes
+  // focus out of the theme panel (closing it) and makes the hotkeys ignore
+  // the keys; reduced motion holds the replay paused from mount, so the
+  // reload below applies it. Restored at the end.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
   await reload();
   const fresh = await bothModes();
@@ -290,29 +303,63 @@ async function themeCustomizer({ page, check }) {
   const heading = await panel
     .getByRole('heading', { name: 'Theme', exact: true })
     .count();
+  // D21: no Copy menu and no Import popover in the panel
+  const copyImport = await panel
+    .getByRole('button', { name: /^(Copy|Import)$/ })
+    .count();
   check(
     'theme: the palette button opens the panel',
     heading === 1 &&
-      ['Colors', 'Typography', 'Other'].every((t) => tabs.includes(t)),
-    `heading=${heading} tabs=${tabs.join(',')}`,
-  );
-  await page.keyboard.press('Escape');
-  await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
-  await page.evaluate(() =>
-    document.activeElement instanceof HTMLElement
-      ? document.activeElement.blur()
-      : undefined,
+      ['Colors', 'Typography', 'Other'].every((t) => tabs.includes(t)) &&
+      copyImport === 0,
+    `heading=${heading} tabs=${tabs.join(',')} copyImport=${copyImport}`,
   );
 
-  /**
-   * Presses `key`, then polls `--primary` every 50 ms for up to 5000 ms until
-   * `done(value)` holds (F23: a fixed 200 ms raced the update on CI); returns
-   * the last value read either way.
-   */
-  const pressUntil = async (key, done) => {
+  // D22: one shortcut row under the header, five buttons by accessible name
+  const shortcutNames = ['Reset', 'Undo', 'Redo', 'Random', 'Next preset'];
+  const shortcutCounts = [];
+  for (const name of shortcutNames) {
+    shortcutCounts.push(
+      await panel.getByRole('button', { name, exact: true }).count(),
+    );
+  }
+  check(
+    'theme: the shortcut row has Reset, Undo, Redo, Random, Next preset',
+    shortcutCounts.every((n) => n === 1),
+    shortcutNames.map((n, i) => `${n}=${shortcutCounts[i]}`).join(' '),
+  );
+  const rowSize = await page.evaluate(() => {
+    const row = document.querySelector('[data-slot="theme-shortcut-row"]');
+    return row ? { scroll: row.scrollWidth, client: row.clientWidth } : null;
+  });
+  check(
+    'theme: the shortcut row does not overflow',
+    rowSize !== null && rowSize.scroll === rowSize.client,
+    JSON.stringify(rowSize),
+  );
+
+  // the shortcuts, pressed with the panel open once focus has moved into it
+  await page
+    .waitForFunction(
+      () =>
+        document
+          .querySelector('[role="dialog"]')
+          ?.contains(document.activeElement) === true,
+      null,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+  await page.waitForTimeout(300);
+  // for a key whose expected outcome is no change: a short fixed wait
+  const press = async (key) => {
     await page.keyboard.press(key);
-    return waitForPrimary(done);
+    await page.waitForTimeout(200);
   };
+  /**
+   * Polls `--primary` every 50 ms for up to 5000 ms until `done(value)` holds
+   * (F23: a fixed 200 ms raced the update on CI); returns the last value read
+   * either way.
+   */
   const waitForPrimary = async (done) => {
     const until = Date.now() + 5000;
     let value = await primary();
@@ -322,33 +369,80 @@ async function themeCustomizer({ page, check }) {
     }
     return value;
   };
+  /** Presses `key`, then waits for `--primary` as `waitForPrimary` does. */
+  const pressUntil = async (key, done) => {
+    await page.keyboard.press(key);
+    return waitForPrimary(done);
+  };
+  /**
+   * Presses Escape until the panel is gone, at most three times: with focus
+   * on a shortcut button the first Escape only closes its tooltip, and the
+   * panel left open covers the trigger (F23).
+   */
+  const closePanel = async () => {
+    for (let i = 0; i < 3 && (await panel.count()); i++) {
+      await page.keyboard.press('Escape');
+      await panel
+        .first()
+        .waitFor({ state: 'detached', timeout: 2000 })
+        .catch(() => {});
+    }
+  };
+  // A shuffle can land on a look with the same primary (a theme matching the
+  // color preset it left), so `r` is pressed until --primary moves, at most
+  // three times; every press before that kept --primary, so undo still
+  // returns to `before`.
+  const shuffle = async (from) => {
+    let value = from;
+    for (let i = 0; i < 3 && value === from; i++) {
+      value = await pressUntil('r', (v) => v !== from);
+    }
+    return value;
+  };
   const before = await primary();
-  const shuffled = await pressUntil('r', (v) => v !== before);
+  const shuffled = await shuffle(before);
   check(
     'theme: r changes --primary',
     shuffled !== before,
     `${before} -> ${shuffled}`,
   );
-  const undone = await pressUntil('p', (v) => v === before);
+  const undone = await pressUntil('ControlOrMeta+z', (v) => v === before);
   check(
-    'theme: p restores it',
+    'theme: Mod+Z restores it',
     shuffled !== before && undone === before,
     `${shuffled} -> ${undone}`,
   );
-  const again = await pressUntil('r', (v) => v !== before);
+  const redone = await pressUntil(
+    'ControlOrMeta+Shift+z',
+    (v) => v === shuffled,
+  );
+  check(
+    'theme: Mod+Shift+Z reapplies the shuffled value',
+    shuffled !== before && undone === before && redone === shuffled,
+    `${undone} -> ${redone}`,
+  );
+  const again = await shuffle(redone);
+  await press('p');
+  const afterP = await primary();
+  check('theme: p changes nothing', afterP === again, `${again} -> ${afterP}`);
   const reset = await pressUntil('Shift+R', (v) => v === DEFAULT_PRIMARY.dark);
   check(
     'theme: Shift+R returns to the default',
     again !== DEFAULT_PRIMARY.dark && reset === DEFAULT_PRIMARY.dark,
     `${again} -> ${reset}`,
   );
+  await closePanel();
+  await page.evaluate(() =>
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement.blur()
+      : undefined,
+  );
+
   await page.keyboard.press('ControlOrMeta+k');
   const search = page.getByRole('dialog');
   await search.waitFor({ timeout: 5000 }).catch(() => {});
   const searchOpen = (await search.count()) > 0;
-  // the expected outcome is no change, so a short fixed wait, not a poll
-  await page.keyboard.press('r');
-  await page.waitForTimeout(200);
+  await press('r');
   const duringSearch = await primary();
   check(
     'theme: r does nothing while the search dialog is open',
@@ -367,16 +461,410 @@ async function themeCustomizer({ page, check }) {
       await input.fill(edited);
       afterEdit = await waitForPrimary((v) => v === edited);
     }
-    await page.keyboard.press('Escape');
-    await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+    await closePanel();
   }
   check(
     'theme: a Colors tab edit changes the computed variable',
     afterEdit === edited,
     afterEdit,
   );
+
+  await themeColorPicker({
+    page,
+    check,
+    trigger,
+    panel,
+    primary,
+    waitForPrimary,
+    pressUntil,
+    closePanel,
+  });
+  await themeIconLibrary({ page, check, trigger, panel, closePanel });
+  await themeStyleSheet({ page, check, trigger, panel, closePanel, reload });
   await page.keyboard.press('Shift+R');
   await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.emulateMedia({ reducedMotion: null });
+}
+
+/**
+ * The Colors tab picker (spec 10, D23): the `primary` swatch is a button that
+ * opens a popover holding a `react-colorful` picker; dragging the hue to its
+ * start and the saturation square to its top right corner writes `#ff0000`
+ * live; after Escape one `Mod+Z` returns to the value before the click and a
+ * second one to the value before the typed edit that precedes the session, so
+ * the session left exactly one history entry. Closes the panel.
+ */
+async function themeColorPicker({
+  page,
+  check,
+  trigger,
+  panel,
+  primary,
+  waitForPrimary,
+  pressUntil,
+  closePanel,
+}) {
+  const typed = 'oklch(0.55 0.15 250)';
+  let chainStart = '';
+  let before = '';
+  let opened = false;
+  let picked = '';
+  let undone = '';
+  let undoneTwice = '';
+  if (await trigger.count()) {
+    await trigger.click();
+    await panel
+      .first()
+      .waitFor({ timeout: 5000 })
+      .catch(() => {});
+    await page.waitForTimeout(300);
+    const input = panel.first().getByLabel('primary', { exact: true });
+    if (await input.count()) {
+      chainStart = await primary();
+      await input.fill(typed);
+      before = await waitForPrimary((v) => v === typed);
+    }
+    const swatch = page.getByRole('button', {
+      name: 'Pick primary',
+      exact: true,
+    });
+    if (await swatch.count()) {
+      await swatch.click();
+      const picker = page.locator('[role="dialog"] .react-colorful').first();
+      opened = await picker
+        .waitFor({ timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+      if (opened) {
+        const viewport = page.viewportSize() ?? { width: 1280, height: 720 };
+        const clampX = (x) => Math.max(0, Math.min(viewport.width - 1, x));
+        const clampY = (y) => Math.max(0, Math.min(viewport.height - 1, y));
+        // press in the middle, release past the given edge: the picker clamps
+        const drag = async (part, toX, toY) => {
+          const box = await picker.locator(part).boundingBox();
+          if (!box) return;
+          await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+          await page.mouse.down();
+          await page.mouse.move(clampX(toX(box)), clampY(toY(box)), {
+            steps: 5,
+          });
+          await page.mouse.up();
+        };
+        await drag(
+          '.react-colorful__hue',
+          (box) => box.x - 8,
+          (box) => box.y + box.height / 2,
+        );
+        await drag(
+          '.react-colorful__saturation',
+          (box) => box.x + box.width + 8,
+          (box) => box.y - 8,
+        );
+        picked = await waitForPrimary((v) => v === '#ff0000');
+      }
+      await page.keyboard.press('Escape');
+      await page
+        .locator('.react-colorful')
+        .first()
+        .waitFor({ state: 'detached', timeout: 5000 })
+        .catch(() => {});
+      await page.waitForTimeout(200);
+      undone = await pressUntil('ControlOrMeta+z', (v) => v === before);
+      undoneTwice = await pressUntil(
+        'ControlOrMeta+z',
+        (v) => v === chainStart,
+      );
+    }
+    await closePanel();
+  }
+  check('theme: picker opens', opened, `opened=${opened}`);
+  check(
+    'theme: picker writes live',
+    opened && picked === '#ff0000' && picked !== before,
+    `${before} -> ${picked}`,
+  );
+  check(
+    'theme: picker undoes in one step',
+    opened &&
+      before === typed &&
+      undone === before &&
+      undoneTwice === chainStart,
+    `${chainStart} -> ${before} -> ${picked}, undo ${undone}, undo ${undoneTwice}`,
+  );
+}
+
+/**
+ * The Icon Library select (spec 14, D27): picking Tabler switches the home
+ * demo's toolbar icons (the search toggle's svg gets `tabler-icon` within
+ * 5 s), the pick is stored and survives a reload, and `Shift+R` with the
+ * panel open returns the table to Lucide. Every key press is followed by a
+ * poll on the icon class, and the panel closes through the shared
+ * `closePanel` (F23). Closes the panel.
+ */
+async function themeIconLibrary({ page, check, trigger, panel, closePanel }) {
+  const icon = '.v5-demo button[aria-label="Show/Hide search"] svg';
+  const iconHas = (cls) =>
+    page
+      .waitForFunction(
+        ({ sel, c }) =>
+          document.querySelector(sel)?.classList.contains(c) === true,
+        { sel: icon, c: cls },
+        { timeout: 5000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+  const iconClass = async () =>
+    (await page
+      .locator(icon)
+      .first()
+      .getAttribute('class')
+      .catch(() => '')) ?? '';
+  const openPanel = async () => {
+    if (!(await trigger.count())) return;
+    await trigger.click();
+    await panel
+      .first()
+      .waitFor({ timeout: 5000 })
+      .catch(() => {});
+    await page.waitForTimeout(300);
+  };
+  await openPanel();
+  const select = panel.first().getByLabel('Icon Library', { exact: true });
+  let picked = false;
+  if (await select.count()) {
+    picked = await select
+      .click({ timeout: 5000 })
+      .then(async () => {
+        const option = page.getByRole('option', { name: 'Tabler' });
+        await option.waitFor({ timeout: 5000 });
+        await option.click();
+        return true;
+      })
+      .catch(() => false);
+  }
+  await page.waitForTimeout(200);
+  await closePanel();
+  const tabler = await iconHas('tabler-icon');
+  check(
+    'icons: Tabler switches the home tables',
+    picked && tabler,
+    `picked=${picked} class=${await iconClass()}`,
+  );
+
+  const storedLibrary = await page.evaluate((key) => {
+    try {
+      return JSON.parse(localStorage.getItem(key) ?? 'null')?.config
+        ?.iconLibrary;
+    } catch {
+      return undefined;
+    }
+  }, DESIGN_SYSTEM_KEY);
+  // The live demo plays while its toolbar is in view and its replay moves
+  // focus into the table, where the theme keys are ignored; at the top of
+  // the page it holds, so Shift+R below reaches the panel.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  await page
+    .locator('.v5-demo table tbody tr')
+    .first()
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+  const afterReload = await iconHas('tabler-icon');
+  check(
+    'icons: the pick survives a reload',
+    storedLibrary === 'tabler' && afterReload,
+    `stored=${storedLibrary} class=${await iconClass()}`,
+  );
+
+  await openPanel();
+  await page
+    .waitForFunction(
+      () =>
+        document
+          .querySelector('[role="dialog"]')
+          ?.contains(document.activeElement) === true,
+      null,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+  await page.keyboard.press('Shift+R');
+  const lucide = await iconHas('lucide');
+  check(
+    'icons: Shift+R returns to Lucide',
+    tabler && lucide,
+    `class=${await iconClass()}`,
+  );
+  await closePanel();
+}
+
+/**
+ * The style sheets (spec 15, D29): with empty storage the page links exactly
+ * one `/styles/style-<name>.css`, nova's, and no other stylesheet holds a
+ * `.style-*` rule; opening the panel and switching to light each leave under
+ * 300 ms of long tasks in the 2 s after the click (load-sensitive, P5); the
+ * Style select swaps the link to Sera's sheet and the `style-sera` class
+ * within 5 s, and a reload links Sera's sheet before any interaction.
+ * Ends with `Shift+R` and the panel closed.
+ */
+async function themeStyleSheet({
+  page,
+  check,
+  trigger,
+  panel,
+  closePanel,
+  reload,
+}) {
+  const SHEET = 'link[rel="stylesheet"][href*="/styles/style-"]';
+  /** The hrefs of the style links, in document order. */
+  const styleLinks = () =>
+    page.evaluate(
+      (sel) =>
+        Array.from(document.querySelectorAll(sel)).map((l) =>
+          l.getAttribute('href'),
+        ),
+      SHEET,
+    );
+  /** True when the one style link ends with `style-<name>.css`. */
+  const linksOnly = (links, name) =>
+    links.length === 1 && links[0].endsWith(`style-${name}.css`);
+  /**
+   * Long tasks in the 2 s after `act()`: a PerformanceObserver on `longtask`
+   * registered before it, the durations summed.
+   */
+  const longTasksAfter = async (act) => {
+    await page.evaluate(() => {
+      window.__stLongTasks = [];
+      window.__stLongTaskObserver?.disconnect();
+      window.__stLongTaskObserver = new PerformanceObserver((list) => {
+        for (const e of list.getEntries())
+          window.__stLongTasks.push({ start: e.startTime, dur: e.duration });
+      });
+      window.__stLongTaskObserver.observe({ type: 'longtask' });
+      window.__stLongTaskStart = performance.now();
+    });
+    await act();
+    await page.waitForTimeout(2000);
+    return page.evaluate(() => {
+      window.__stLongTaskObserver?.disconnect();
+      const t0 = window.__stLongTaskStart;
+      return Math.round(
+        window.__stLongTasks
+          .filter((e) => e.start >= t0 && e.start <= t0 + 2000)
+          .reduce((sum, e) => sum + e.dur, 0),
+      );
+    });
+  };
+
+  await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await reload();
+  const fresh = await styleLinks();
+  check(
+    'sheet: one style link',
+    linksOnly(fresh, 'nova'),
+    JSON.stringify(fresh),
+  );
+  const elsewhere = await page.evaluate((sel) => {
+    const link = document.querySelector(sel);
+    const found = [];
+    const walk = (rules) => {
+      for (const rule of Array.from(rules)) {
+        if (found.length >= 3) return;
+        const text = rule.selectorText;
+        if (typeof text === 'string' && text.trim().startsWith('.style-'))
+          found.push(text.slice(0, 60));
+        if (rule.cssRules) walk(rule.cssRules);
+      }
+    };
+    for (const sheet of Array.from(document.styleSheets)) {
+      if (link && sheet.ownerNode === link) continue;
+      try {
+        walk(sheet.cssRules);
+      } catch {
+        // a cross-origin sheet is not readable and is not ours
+      }
+    }
+    return found;
+  }, SHEET);
+  check(
+    'sheet: no style rules elsewhere',
+    elsewhere.length === 0,
+    JSON.stringify(elsewhere),
+  );
+
+  let panelOpen = -1;
+  let toggle = -1;
+  let picked = false;
+  let followed = false;
+  if (await trigger.count()) {
+    panelOpen = await longTasksAfter(() => trigger.click());
+    await panel
+      .first()
+      .waitFor({ timeout: 5000 })
+      .catch(() => {});
+    const mode = panel.first().getByRole('group', { name: 'Mode' });
+    const light = mode.getByRole('button', { name: 'Light' });
+    if (await light.count()) {
+      toggle = await longTasksAfter(() => light.click());
+      await mode
+        .getByRole('button', { name: 'Dark' })
+        .click()
+        .catch(() => {});
+      await page.waitForTimeout(300);
+    }
+    const select = panel.first().getByLabel('Style', { exact: true });
+    if (await select.count()) {
+      picked = await select
+        .click({ timeout: 5000 })
+        .then(async () => {
+          const option = page.getByRole('option', { name: 'Sera' });
+          await option.waitFor({ timeout: 5000 });
+          await option.click();
+          return true;
+        })
+        .catch(() => false);
+    }
+    followed = await page
+      .waitForFunction(
+        (sel) => {
+          const links = document.querySelectorAll(sel);
+          return (
+            links.length === 1 &&
+            links[0].getAttribute('href').endsWith('style-sera.css') &&
+            document.documentElement.classList.contains('style-sera')
+          );
+        },
+        SHEET,
+        { timeout: 5000 },
+      )
+      .then(() => true)
+      .catch(() => false);
+    await closePanel();
+  }
+  check(
+    'perf: panel open',
+    panelOpen >= 0 && panelOpen < PERF_BUDGET_MS,
+    `${panelOpen} ms`,
+  );
+  check(
+    'perf: light/dark toggle',
+    toggle >= 0 && toggle < PERF_BUDGET_MS,
+    `${toggle} ms`,
+  );
+  const afterPick = await styleLinks();
+  check(
+    'sheet: follows the Style select',
+    picked && followed,
+    `picked=${picked} links=${JSON.stringify(afterPick)}`,
+  );
+
+  await reload();
+  const storedLinks = await styleLinks();
+  check(
+    'sheet: stored style at first paint',
+    linksOnly(storedLinks, 'sera'),
+    JSON.stringify(storedLinks),
+  );
 }
 
 const checks = {

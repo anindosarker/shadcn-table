@@ -243,9 +243,8 @@ index e1645117..e67a5482 100644
 
 - Fixes F8. `ClickToCopy` "Click Copies Value" (base, radix) and `RowOrdering` "Drag Reorders Rows" (aria, 90 s timeout) time out under machine load and pass alone; they join the P5 known-flake list, rerun once before a check is called red.
 
-### D15 Release 0.9.0 after E2
-[E3]
-
+### D15 Release 0.9.0 after E2 (superseded by D28, D45)
+[Done]  [E3]
 - A release spec (07, epic E3, depends on E2) ships 0.9.0 with E1, E2 and the F3 fix: the integration milestone fast-forwards `claude/review` into `dev` once and runs the suite there; then one PR `dev` into `master` with the label `release:minor`, auto-merge enabled at creation; `release.yml` tags, verifies the deploy and publishes. Supersedes the P4 bullet "no release is planned".
 - Superseded by D28 (the runner does not approve). The owner approved the 0.9.0 Prepare Release deployment in advance (2026-11-08: "you can approve it now"), the per-release word D3 requires; the runner approves it with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments` when the job waits. Any later release needs a fresh word.
 - The docs changes are not in 0.9.0; they ship as 0.9.1 after the docs discussion.
@@ -273,34 +272,38 @@ index e1645117..e67a5482 100644
 - Source: A9. `no-step-3.tsx` reads the current preset from `useDesignSystem()`, the store the panel writes, so every pick (panel, shortcut, cycle button) updates the label; no MutationObserver on `data-design-system`. The D2 behaviour is unchanged. Kept as merged (E2 04, `161c5ae6`).
 
 ### D20 The docs dev server loads clean
-[E2]
-
+[Done]  [E2]
 - Fixes F11. The runner runs `pnpm --filter shadcn-table-docs dev` on an agent port, loads `/`, `/docs` and one example page, reads the server and browser logs, and fixes each logged error or warning at its root cause (v0.8.x D34 style: no suppression, no `suppressHydrationWarning` blanket).
 - The hotkeys label: formatted only in the browser, or with the platform read from the request (`detectPlatform(userAgent)`) and set on the hotkeys provider, whichever the library's SSR guide names; the kbd hints stay (D2).
 - The hydration mismatch on the home page: the attribute located from the browser log and its server and client values made equal.
 - Acceptance: the same three loads log nothing from TanStack Hotkeys and no hydration mismatch, recorded in the tracker; `pnpm test docs-e2e --base base` green. Owner, 2026-11-08: fix now, before the release.
 
 ### D21 Copy and Import leave the theme panel
+[Done]  [E4]
 
 - Fixes F18, amends D2. The `CopyMenu` (Copy CSS, Copy preset code, `theme-customizer.tsx:490-519`, used at `:146`) and `ImportPreset` (`:522-576`, used at `:275`) are removed, with `importPreset` (`design-system-provider.tsx:185`), `encodeConfig` and `decodeConfig` (`config.ts:501,518`) and the preset-code format they share; Random, the preset select, the tabs and every other D2 control stay. Owner, 2026-11-08: "Unnecessary items, remove them."
 
 ### D22 One shortcut row at the top of the theme panel
+[Done]  [E4]
 
 - Fixes F19, F12, F17; amends D2's layout and keys. One row directly under the header, in Copy's former slot (D21), holds five buttons: Reset `Shift+R`, Undo `Mod+Z`, Redo `Mod+Shift+Z`, Random `R`, Next preset `C` (`Mod` is Cmd on macOS, Ctrl on Windows and Linux; the label comes from the client platform, D20). `P` for undo goes.
 - Labeled buttons with their kbd hint when the row fits the panel width; when it does not, icon buttons with a tooltip that carries the label and the kbd hint. The header keeps the title and the close button only (the icon-only reset at `theme-customizer.tsx:133-141` and its hint go); the Presets row keeps the select alone (Random at `:292` and the `C` hint under the select move up).
 - Keys registered in `design-system-provider.tsx:193-198`, scope and guards unchanged (D2).
 
 ### D23 Each color swatch opens a picker
+[Done]  [E4]
 
 
 - Fixes F13. In the Colors tab each token's swatch (`theme-customizer.tsx:631-638`, a static span today) becomes a button that opens a Popover holding `react-colorful`'s `HexColorPicker` above the existing text input; dragging in the picker writes the token live, and Undo records one step per Popover close (the per-keystroke undo of A10 stays for typed values). `react-colorful` is one new dependency of the docs app, added by the first milestone of the epic that ships this (P6).
 
 ### D24 The persistent view example starts at ten rows
+[Done]  [E4]
 
 
 - Fixes F14. `initialState.pagination.pageSize` becomes 10 in `apps/shadcn-table-docs/examples/{radix,base,aria}/persistent-view/TS.tsx:344`; the stored view (`viewSettingsStorage.utils.ts`) keeps not persisting pagination, so a visitor's page size choice still resets on reload. No library change.
 
 ### D25 The stored view persists rows per page
+[Done]  [E4]
 
 
 - `ST_StoredView` (`shared/utils/viewSettingsStorage.utils.ts:7-16`, three bases) gains `pageSize?: number`; the persist path saves it on every page size change and the restore path applies it at mount over `initialState.pagination.pageSize`. Page index is not stored. Old stored views without the field stay valid. Public surface (P7): the view settings guide and the API entry for `persistViewSettings` list the new field; a CHANGELOG entry.
@@ -308,13 +311,16 @@ index e1645117..e67a5482 100644
 - D24 stays: the persistent view example starts at 10 and a visitor's choice now survives reload.
 
 ### D26 Style, Menu Color and Menu Accent take effect in the docs
+[Done]  [E4]
 
 - Source: A8
 
 - The docs parts in `apps/shadcn-table-docs/components/ui-<base>/` (three bases) are regenerated through `lib/install.mjs` with the preset that emits the `cn-*` hooks (`cn-menu-target` and the rest the design system's style layers in `lib/design-system/*` target, as the next-app reference's parts carry them); the library's own table parts under `shadcn-table/` are untouched. Owner, 2026-11-08: "No, they should work."
 - Acceptance: `pnpm test docs-e2e --base base` green, plus one check that picking a Style and a Menu Color changes a docs menu's computed style; a check that fails on the shipped parts first (P11).
+- Mechanism settled at spec time (spec 13, lead 2026-11-08): `shadcn add` cannot emit the hooks (ui.shadcn.com serves the parts resolved, and the CLI's `transformMenu` strips `cn-menu-target`, measured on 4.22.0 and 4.23.0), so `lib/install.mjs` gains a second phase that fetches the hooked sources from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit and rewrites their imports; the decided behaviour is unchanged.
 
 ### D27 The Icon Library select switches the example tables' icons
+[Done]  [E5]
 
 
 - Fixes F16; supersedes v0.7.x D38 "Lucide only" for the docs. The select (`theme-customizer.tsx:207-214`, disabled today) picks lucide, hugeicons, tabler, phosphor or remixicon; every docs example table shows that set; the docs chrome (nav, panel, shadcn parts) stays Lucide. Reset returns to lucide; the choice persists with the rest of the config (D2).
@@ -322,6 +328,141 @@ index e1645117..e67a5482 100644
 - Docs side: the provider wraps the examples with the set the theme config names; `hugeicons`, `tabler`, `phosphor` and `remixicon` packages become docs dependencies (P6); the registry's `icons/<lib>.ts` files are installed into the docs copies by `lib:install`.
 
 ### D28 The 0.9.0 release waits for the owner's manual approval
+[E7]
+[Done]
 
 
 - Supersedes D15's advance approval. No agent approves the Prepare Release deployment of the 0.9.0 release PR, not in the UI and not through `gh api .../pending_deployments`; D3's rule stands in full. The run opens the PR, posts "Prepare Release waits for your approval" and stops there; the owner approves with a click. Owner, 2026-11-08: "There are way too many breaking items that we are changing, so stop the release before my manual approval."
+
+### D29 Only the active style's stylesheet loads
+[Done]  [E5]
+
+
+- Fixes F15. `app/global.css:9-16` stops importing the eight `styles/style-*.css` files; each style is its own CSS asset and only the active one is linked: the pre-paint script links the stored or default style's sheet before first paint, and a style change swaps the link and applies the class once the new sheet has loaded, so nothing flashes unstyled. The eight files themselves and the `.cn-*` layers stay as they are (spec 13 relies on them).
+- Measured 2026-11-08, same machine, commit `546bcabd` against `claude/review`: root stylesheet 351 KB to 2,755 KB; warm `/` usable at 1.3 s to 2.8 s; persistent view 1.6 s to 5.6 s; panel open one 1.1 to 1.3 s long task; light/dark toggle style recalc 81 ms to 476 ms. JS unchanged.
+- Acceptance: the root stylesheet of `/` within 10 percent of the 351 KB baseline plus the one active style sheet; opening the panel and toggling light/dark each under 300 ms of long task in the docs E2E harness, measured against the shipped code first (P11); every page green in `pnpm test docs-e2e --base base`.
+- Runs after spec 13 (E4) has merged, so the on-demand sheet is tested with the hooked parts.
+
+### D30 The installation reference refresh merges into dev directly
+[Done]
+
+- Source: A12
+
+- Source: A12. The fix milestone `refresh-installation-references` (F20: the six `test/installation-e2e/fixtures/reference/<base>/default-{light,dark}.png` taken after D6's footer range) is cut from `dev` at `df90bd27` and merged into `dev` directly with a merge commit, then into `claude/review`; `dev` is not fast-forwarded from `claude/review` again for 0.9.0, so the E4 and E5 merges stay out of it (D15). The one exception to P1 for this release; a later release returns to the fast-forward.
+
+### D31 Random keeps its curated presets through a private decoder
+[Done]
+
+- Source: A11
+
+- Source: A11. D21 removed the preset-code codec; the Random button (kept by D21) decoded its curated `SHUFFLE_PRESETS` with it, so the builder kept a private `curatedPreset` decoder and a `sameLook` field compare in `lib/design-system/config.ts`; `decodePreset` from `shadcn/preset` stays imported, nothing user-facing changes. Kept as merged (E4 08, `9d582dcd`).
+
+### D32 A CI-only red is reproduced and fixed under act before it merges
+[Done]  [E3]
+
+- A check that is red on GitHub Actions and green on the local macOS run (a Linux-only failure, such as the docs E2E `/` theme checks of F23 and F24) is reproduced locally with `act` against the local Docker (`act pull_request -W .github/workflows/pr.yml -j <job>` with the matrix narrowed to the red base) and the fix is confirmed green there before it merges into `dev`; the GitHub run is the confirmation, not the loop. Owner, 2026-11-08: "You can run them locally and fix them quickly, then do the pr"; "I have Docker and we discussed about using tools like act". Narrows process.md P3 ("never required") for the Linux-only case.
+
+### D33 The page index restore gets its red-first play
+[Done]
+
+- Source: A13
+
+- Source: A13. The F22 fix (`811045dc`) merged without a play that fails on the shipped code (P11). A fix milestone adds a `Persistence` play variant in `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` with `initialState.pagination.pageIndex: 2` and a stored rows-per-page, asserting the page index holds after remount; red at `117a81b5`, green at `811045dc`, the two lines in its tracker; three bases through `pnpm test storybook-tests --base <base>`. Settled by the lead: a coverage gap, no behaviour change.
+
+### D34 No bot comment for the approval wait
+
+[Done]
+
+- The PR's own banner ("This branch is waiting for a deployment approval", Show environments) is the entry point; no `pr.yml` job and no runner comment announces the wait. Owner, 2026-11-08: "I think we can scrap it." Not to be re-proposed.
+
+### D35 The release test jobs skip the version bump commit
+[Done]  [E6]
+
+
+- In `.github/workflows/pr.yml`, every test job (typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-pr, PR Summary as applicable) gets an `if:` that skips it when the PR head commit is the bot's `chore: version <v>` commit pushed by `prepare-release` (D3); a job skipped by its condition reports Success for required checks, so auto-merge merges without a second test run. The bump commit changes version files only. `prepare-release` itself keeps running only on an unbumped head. The next release (0.9.1) is the first to run this way; the spec proves it with the 0.9.1 PR's check list (one run of each test job, the bump commit's jobs skipped).
+- Owner, 2026-11-08: "doesn't that mean we just ran the same checks again? doesn't it seem unnecessary?"
+- Consequence, owner 2026-11-08: the bot's bump push prompts nobody (its test jobs skip, so `prepare-release`, which needs them, is skipped too), while any regular push after an Approve (a fix) runs the tests and prompts again; that second prompt is wanted and stays (the idea of skipping `prepare-release` on an already bumped head was dropped).
+
+### D36 The workflows use the Node 24 action majors
+[Done]  [E6]
+
+
+- Every `uses:` in `.github/workflows/*.yml` moves to the major built for Node 24: `actions/checkout@v5` (13 uses), `actions/setup-node@v5` (13), `actions/upload-artifact@v5` (8), `actions/download-artifact@v5` (1), `pnpm/action-setup@v5` where that release exists (8); the spec writer checks each release's Node line before pinning. Acceptance: a green `pr.yml` run with zero "Node.js 20 is deprecated" annotations (30 per run today). Owner, 2026-11-08.
+
+### D37 The PR Summary comment is a grouped table
+[Done]  [E6]
+
+
+- `tools/release/pr-summary.mjs` writes the sticky comment (v0.8.x D87 marker) in the layout of `reference/pr-summary-draft.md`, accepted by the owner 2026-11-08 ("the format lgtm"): `## <PR title>`; one line `` `<release label>` | [run <id>](url) | <status> `` with `✅ all green`, `❌ <n> jobs failed` or `⏳ <n> running`; one table `Job | Result` in job order, a bold group row per matrix job with its base or scenario rows indented under it, single jobs as one bold row, cells from the record's summary (`✅`/`❌`, `⚪ skipped (reason)` without a record); a `<details>` block `❌ <n> failures` listing every error line as `**<job> (<leg>)** <page> @<width> · <message>`, omitted when green; `#### Changelog` with the `## Unreleased` counts by heading and one line per heading listing its `####` titles as written; the `<sub>` footer. The same body goes to the step summary.
+- Settled at spec time (spec 18, lead 2026-11-08): the draft's `Prepare Release` row is left out, because `pr-summary` runs before `prepare-release` (`pr.yml` needs it) and cannot know its outcome; the Validate PR row carries "already bumped".
+
+### D38 The PR Summary reads job outputs, not artifacts
+[Done]  [E6]
+
+
+- Every test job of `pr.yml` (19: typecheck, storybook-tests and docs-e2e over base, radix, aria; installation-e2e over its seven scenarios; lint, validate-repo, validate-pr) ends with an `if: always()` step that prints its `test/.out/<name>[-<leg>].json` record as one compact JSON line into `$GITHUB_OUTPUT`, keyed by its leg (`base`, `radix`, `aria`, the scenario) or `record` for the single jobs; the matrix jobs declare the keys as outputs (each leg fills its own, an empty key never overrides another leg's value, GitHub docs "Using job outputs in a matrix job"); the reusable workflows `typecheck.yml`, `storybook-tests.yml`, `docs-e2e.yml`, `installation-e2e.yml` expose the same keys through `workflow_call.outputs`.
+- The PR Summary job (`needs` every test job, `if: always()`) passes `toJSON(needs)` to `tools/release/pr-summary.mjs` in an env variable; the script collects every output value, parses the records (the `name`/`status` filter stays) and renders the D37 comment; a job without a record shows skipped. The `test-out-*` `upload-artifact` steps and the `download-artifact` step go; the installation-e2e capture upload of the reference refresh stays. The record's `errors` list is capped in the output copy (1 MB per job, about 128 KB per env variable).
+- Proof first, locally (D32, owner 2026-11-08: "instead of using github's slow machines ... use act locally"): a throwaway `workflow_dispatch` workflow calling a three-leg reusable workflow where one leg exits 1 after writing its key and a consumer prints `toJSON(needs)` runs under `act` against the local Docker; all three keys must arrive. One GitHub dispatch run confirms it afterwards (act's `workflow_call` output handling is not GitHub's). If the failed leg's key is dropped on GitHub, failed legs keep an artifact as the fallback. The same act-first rule holds for every CI change of this spec (D35, D36, D37).
+
+### D39 Further 0.9.0 approval prompts are approved by the runner
+[E7]
+[Done]
+
+
+- Amends D28 for this release only. The owner gave the first Approve on PR 134 by click (run 42496942383) and the second (run 42503995049); any further Prepare Release prompt of the 0.9.0 release PR is approved by the runner with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments -f state=approved -F 'environment_ids[]=<id>' -f comment="D39"`. Owner, 2026-11-08: "approved already. I told you no need for my approval anymore." A later release starts again from D28: the owner's own click, or the words "approve it".
+
+### D40 The release runs its suite on GitHub only
+[E7]
+[Done]
+
+
+- Supersedes the local suite of the release spec's Integration milestone (spec 07 Task 2) for every later release: Integration does the changelog pass and fast-forwards `claude/review` into `dev`, then the Release PR opens at once; `pr.yml` on GitHub is the one full run (the milestones already ran their checks locally). A red is reproduced and fixed under `act` against Docker (D32, P3) and pushed; GitHub reruns; green plus the Approve (D28) merges and releases. Owner, 2026-11-08: "release can run on github directly, this way we save time"; "on github red, then we can bring up act with docker".
+
+### D41 The pre-paint script creates the style sheet link
+[Done]
+
+- Source: A14
+
+- Source: A14. Spec 15 1.6.3 had `app/layout.tsx` render the active style's `<link>` and the pre-paint script swap it; a stored style then failed React 19 hydration (error #418, head links matched by href) and a second link appeared. The pre-paint script in `lib/design-system/config.ts` creates the link (`blocking=render`), the layout renders none; D29's behaviour unchanged. Kept as merged (E5 15, `5df252e9`).
+
+### D42 Every per-style sheet build runs the optimizer
+[Done]
+
+- Source: A15
+
+- Source: A15. `lib/build-styles.mjs` runs `optimize()` on every build so the flattened nesting and prefixes match the root bundle; `--minify` only adds minification (spec 15 1.6.2 said readable output without the flag). Kept as merged (E5 15, `5df252e9`).
+
+### D43 The label event rebuilds the Validate PR failure lines
+[Done]
+
+- Source: A16
+
+- Source: A16. On a `labeled` or `unlabeled` run the previous comment's failures block is carried over except the `- **Validate PR**` lines, rebuilt from the new record, so a relabel that fixes the label leaves no stale Validate PR failure (spec 18 1.6.2 said verbatim). Kept as merged (E6 18, `b501c14f`).
+
+### D44 The called workflows skip every step on the bump commit
+[E7]
+[Done]
+
+- Source: A17
+
+- Source: A17. A job-level `if:` on a matrix job is read before the matrix expands, so GitHub reports one skipped job `Typecheck (${{ matrix.base }})` and the required leg contexts stay "Expected" (actions/runner#952); the four called workflows put the `if:` on every step instead, so each leg runs no step and reports success under its own context. D35's outcome holds. `act` cannot show the difference; the 0.9.1 release run is the proof, a context left "Expected" there is a new item. Kept as merged (E6 16, `8631dc07`).
+
+### D45 Release 0.9.1 now, the docs restructuring as 0.9.2
+[E7]
+
+
+- Amends D15: 0.9.1 ships E4, E5 and E6 as merged on `claude/review` (the theme panel changes D21 to D29, the stored page size D25, `ST_DefaultsProvider` D27, the on-demand stylesheets D29, the CI changes D35 to D38), now; the docs restructuring (F2, F4, the docs session's decisions) ships as 0.9.2. Owner, 2026-11-09.
+- Flow per D40 and D28: Integration does the changelog pass and fast-forwards `claude/review` into `dev`; the PR `dev` into `master`, title `release: 0.9.1`, label `release:minor` (new public API: `ST_DefaultsProvider`, `pageSize` in the stored view), auto-merge at creation; GitHub runs `pr.yml` once; the owner's Approve by click or "approve it" (D28, D39 does not carry over); the bump push skips the test jobs (D35); `release.yml` tags, verifies and publishes; After release brings `claude/review` and `dev` up to `master` (P4).
+- The run is the proof for D35, D36, D38 and D44: the release tracker records the bump run's contexts (nineteen test contexts and Prepare Release skipped, Validate PR and PR Summary green), zero "Node.js 20 is deprecated" annotations, the artifacts list (`test-out-installation-e2e-*` only), the comment complete; a context left "Expected" or a missing row is an ATTENTION item.
+
+### D46 Two tooling gaps ride along with the 0.9.1 release spec
+[E7]
+
+
+- Fixes F10 and F27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (F10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (F27). Settled by the lead: tooling with one right answer. F9 and F26 (stale comments) wait for a change that touches their files (no comment-only commits).
+
+### D47 The runner approves every Prepare Release deployment
+
+[Done]
+
+- Supersedes D28 and the per-release word of D3 and D39: from 0.9.1 on, the runner approves the Prepare Release deployment of every release PR as soon as the job waits, with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments -f state=approved -F 'environment_ids[]=<id>' -f comment="D47"`; no approval line to the lead, no owner click. The `release` environment and its required reviewer stay (D3): the owner can still reject a waiting deployment by hand before the runner reaches it. Owner, 2026-11-09: "Approve it. Don't ask me for approvals from now on, you have access and approvals."

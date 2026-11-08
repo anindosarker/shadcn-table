@@ -2,10 +2,9 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
+import { HexColorPicker } from 'react-colorful';
 import { useFormatForDisplay } from '@tanstack/react-hotkeys';
 import {
-  CheckIcon,
-  CopyIcon,
   MoonIcon,
   PaletteIcon,
   Redo2Icon,
@@ -13,19 +12,12 @@ import {
   ShuffleIcon,
   SunIcon,
   Undo2Icon,
-  UploadIcon,
 } from 'lucide-react';
 import {
   THEME_HOTKEYS,
   useDesignSystem,
 } from '@/components/design-system-provider';
 import { Button } from '@/components/ui-radix/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui-radix/dropdown-menu';
 import { Input } from '@/components/ui-radix/input';
 import {
   Popover,
@@ -53,6 +45,11 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui-radix/tabs';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui-radix/tooltip';
 import { cn } from '@/lib/cn';
 import {
   COLOR_PRESETS,
@@ -61,11 +58,10 @@ import {
 } from '@/lib/design-system/color-presets';
 import {
   BASE_COLORS,
-  buildThemeCss,
   buildThemeVars,
-  encodeConfig,
   FONTS,
   getThemesForBaseColor,
+  ICON_LIBRARIES,
   MENU_ACCENTS,
   MENU_COLORS,
   RADII,
@@ -74,6 +70,7 @@ import {
 } from '@/lib/design-system/config';
 import {
   isColorValue,
+  toHex,
   TOKENS,
   type Mode,
   type Token,
@@ -125,11 +122,9 @@ export function ThemeCustomizer() {
  * detected there; the server never formats a hotkey label (TanStack Hotkeys'
  * server rendering guidance: render labels only in the browser). */
 function ThemeCustomizerPanel() {
-  const { config, setConfig, reset, shuffle, undo, redo, canUndo, canRedo } =
-    useDesignSystem();
+  const { config, setConfig } = useDesignSystem();
   const { resolvedTheme, setTheme } = useTheme();
   const mode: Mode = resolvedTheme === 'light' ? 'light' : 'dark';
-  const format = useFormatForDisplay();
   const themes = getThemesForBaseColor(config.baseColor);
   const radiusLocked = config.style === 'lyra' || config.style === 'sera';
 
@@ -141,41 +136,10 @@ function ThemeCustomizerPanel() {
           Colors, fonts and radius of the docs site, saved in this browser for
           two days.
         </SheetDescription>
-        <Kbd>{format(THEME_HOTKEYS.reset)}</Kbd>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Reset theme"
-          title={`Reset (${format(THEME_HOTKEYS.reset)})`}
-          onClick={reset}
-        >
-          <RotateCcwIcon />
-        </Button>
       </SheetHeader>
 
       <div className="flex flex-col gap-4 p-4">
-        <div className="flex items-center gap-1">
-          <CopyMenu config={config} />
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!canUndo}
-            onClick={undo}
-          >
-            <Undo2Icon />
-            Undo
-            <Kbd>{format(THEME_HOTKEYS.undo)}</Kbd>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!canRedo}
-            onClick={redo}
-          >
-            <Redo2Icon />
-            Redo
-          </Button>
-        </div>
+        <ShortcutRow />
 
         <Section label="Mode">
           <div
@@ -216,13 +180,22 @@ function ThemeCustomizerPanel() {
               </SelectItem>
             ))}
           </SelectField>
+          {/* The example tables' icon set (components/example-icons.tsx, D27);
+              the docs chrome stays Lucide. */}
           <SelectField
             label="Icon Library"
-            value="lucide"
-            disabled
-            onChange={() => {}}
+            value={config.iconLibrary}
+            onChange={(iconLibrary) =>
+              setConfig({
+                iconLibrary: iconLibrary as DesignSystemConfig['iconLibrary'],
+              })
+            }
           >
-            <SelectItem value="lucide">Lucide</SelectItem>
+            {ICON_LIBRARIES.map((l) => (
+              <SelectItem key={l.name} value={l.name}>
+                {l.title}
+              </SelectItem>
+            ))}
           </SelectField>
           {/* A color preset replaces the base color, theme and chart tokens, so
               picking one of these leaves the preset. */}
@@ -283,27 +256,10 @@ function ThemeCustomizerPanel() {
         </div>
 
         <Section label="Presets">
-          <div className="flex items-center gap-1">
-            <ImportPreset />
-            <Button
-              variant="outline"
-              size="sm"
-              title={`Random (${format(THEME_HOTKEYS.shuffle)})`}
-              onClick={shuffle}
-            >
-              <ShuffleIcon />
-              Random
-              <Kbd>{format(THEME_HOTKEYS.shuffle)}</Kbd>
-            </Button>
-          </div>
           <ColorPresetSelect
             value={config.colorPreset}
             onChange={(colorPreset) => setConfig({ colorPreset })}
           />
-          <p className="text-xs text-muted-foreground">
-            <Kbd>{format(THEME_HOTKEYS.shuffleColorPreset)}</Kbd> picks another
-            color preset.
-          </p>
         </Section>
 
         <Tabs defaultValue="colors">
@@ -372,6 +328,93 @@ function ThemeCustomizerPanel() {
         </Tabs>
       </div>
     </>
+  );
+}
+
+/** Which form the shortcut row takes at the panel's 360 px width (D22): the
+ * labeled buttons when they fit, the icon buttons with a tooltip when they do
+ * not. Picked once from the docs E2E measurement (labeled: scrollWidth 622 px
+ * in a 327 px row), not measured at runtime. */
+const SHORTCUT_ROW_COMPACT = true;
+
+/** Reset, Undo, Redo, Random and Next preset with their kbd hints, the
+ * buttons for every theme shortcut (D22). */
+function ShortcutRow() {
+  const { reset, undo, redo, shuffle, shuffleColorPreset, canUndo, canRedo } =
+    useDesignSystem();
+  const format = useFormatForDisplay();
+  const shortcuts = [
+    {
+      label: 'Reset',
+      icon: RotateCcwIcon,
+      hotkey: THEME_HOTKEYS.reset,
+      onClick: reset,
+    },
+    {
+      label: 'Undo',
+      icon: Undo2Icon,
+      hotkey: THEME_HOTKEYS.undo,
+      onClick: undo,
+      disabled: !canUndo,
+    },
+    {
+      label: 'Redo',
+      icon: Redo2Icon,
+      hotkey: THEME_HOTKEYS.redo,
+      onClick: redo,
+      disabled: !canRedo,
+    },
+    {
+      label: 'Random',
+      icon: ShuffleIcon,
+      hotkey: THEME_HOTKEYS.shuffle,
+      onClick: shuffle,
+    },
+    {
+      label: 'Next preset',
+      icon: PaletteIcon,
+      hotkey: THEME_HOTKEYS.shuffleColorPreset,
+      onClick: shuffleColorPreset,
+    },
+  ];
+
+  return (
+    <div data-slot="theme-shortcut-row" className="flex items-center gap-1">
+      {shortcuts.map(({ label, icon: Icon, hotkey, onClick, disabled }) =>
+        SHORTCUT_ROW_COMPACT ? (
+          <Tooltip key={label}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                aria-label={label}
+                disabled={disabled}
+                onClick={onClick}
+              >
+                <Icon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {label}
+              <Kbd>{format(hotkey)}</Kbd>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            key={label}
+            variant="outline"
+            size="sm"
+            aria-label={label}
+            disabled={disabled}
+            onClick={onClick}
+          >
+            <Icon />
+            {label}
+            <Kbd>{format(hotkey)}</Kbd>
+          </Button>
+        ),
+      )}
+    </div>
   );
 }
 
@@ -498,96 +541,6 @@ function Swatch({
   );
 }
 
-/** Copy the theme CSS or the create preset code. */
-function CopyMenu({ config }: { config: DesignSystemConfig }) {
-  const [copied, setCopied] = React.useState(false);
-  const copy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // clipboard blocked: nothing to show
-    }
-  };
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          {copied ? <CheckIcon /> : <CopyIcon />}
-          {copied ? 'Copied' : 'Copy'}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="docs-menu">
-        <DropdownMenuItem onSelect={() => copy(buildThemeCss(config))}>
-          Copy CSS
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => copy(encodeConfig(config))}>
-          Copy preset code
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-/** Paste a create preset code (ui.shadcn.com/create, `shadcn init --preset`). */
-function ImportPreset() {
-  const { importPreset } = useDesignSystem();
-  const id = React.useId();
-  const [open, setOpen] = React.useState(false);
-  const [draft, setDraft] = React.useState('');
-  const [error, setError] = React.useState(false);
-
-  const apply = () => {
-    if (!importPreset(draft)) {
-      setError(true);
-      return;
-    }
-    setDraft('');
-    setError(false);
-    setOpen(false);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" size="sm">
-          <UploadIcon />
-          Import
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent align="start" className="w-64">
-        <label htmlFor={id} className="text-xs font-medium">
-          Preset code
-        </label>
-        <div className="flex gap-1">
-          <Input
-            id={id}
-            value={draft}
-            spellCheck={false}
-            placeholder="b2fms620zo"
-            aria-invalid={error || undefined}
-            onChange={(event) => {
-              setDraft(event.target.value);
-              setError(false);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') apply();
-            }}
-            className="h-7"
-          />
-          <Button size="sm" onClick={apply} disabled={!draft.trim()}>
-            Apply
-          </Button>
-        </div>
-        {error && (
-          <p className="text-xs text-destructive">Not a preset code.</p>
-        )}
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 /** One row per token for the current mode; a valid color applies at once. */
 function ColorsTab({ mode }: { mode: Mode }) {
   const { config, setConfig, setToken } = useDesignSystem();
@@ -622,6 +575,45 @@ function ColorsTab({ mode }: { mode: Mode }) {
   );
 }
 
+/** A token's text field: the reader's draft shows while typing, a valid color
+ * applies at once (one history entry per change, A10). */
+function TokenInput({
+  value,
+  onChange,
+  onDraftChange,
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange'> & {
+  value: string;
+  onChange: (value: string) => void;
+  /** Reports the draft (null when none), so the swatch can show it. */
+  onDraftChange?: (draft: string | null) => void;
+}) {
+  // What the reader is typing; null shows the applied value.
+  const [draft, setDraft] = React.useState<string | null>(null);
+  const shown = draft ?? value;
+  const valid = draft === null || isColorValue(draft);
+  return (
+    <Input
+      {...props}
+      value={shown}
+      spellCheck={false}
+      aria-invalid={!valid || undefined}
+      onChange={(event) => {
+        const next = event.target.value;
+        setDraft(next);
+        onDraftChange?.(next);
+        if (isColorValue(next)) onChange(next.trim());
+      }}
+      onBlur={() => {
+        setDraft(null);
+        onDraftChange?.(null);
+      }}
+      className={cn('h-7 font-mono text-xs', className)}
+    />
+  );
+}
+
 function TokenRow({
   token,
   value,
@@ -632,35 +624,63 @@ function TokenRow({
   onChange: (value: string) => void;
 }) {
   const id = React.useId();
-  // What the reader is typing; null shows the applied value.
+  const { beginTokenEdit, endTokenEdit } = useDesignSystem();
+  const [open, setOpen] = React.useState(false);
+  // The row field's draft, so the swatch shows what is being typed.
   const [draft, setDraft] = React.useState<string | null>(null);
   const shown = draft ?? value;
   const valid = draft === null || isColorValue(draft);
+  // A row unmounted with its picker open (panel closed) still ends the session.
+  const openRef = React.useRef(false);
+  React.useEffect(
+    () => () => {
+      if (openRef.current) endTokenEdit();
+    },
+    [endTokenEdit],
+  );
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_11rem] items-center gap-2">
       <label htmlFor={id} className="truncate font-mono text-xs">
         {token}
       </label>
-      <span
-        aria-hidden
-        className={cn(
-          'size-5 rounded border border-foreground/20',
-          !valid && 'bg-muted',
-        )}
-        style={valid ? { backgroundColor: shown } : undefined}
-      />
-      <Input
-        id={id}
-        value={shown}
-        spellCheck={false}
-        aria-invalid={!valid || undefined}
-        onChange={(event) => {
-          const next = event.target.value;
-          setDraft(next);
-          if (isColorValue(next)) onChange(next.trim());
+      <Popover
+        open={open}
+        onOpenChange={(next) => {
+          openRef.current = next;
+          setOpen(next);
+          if (next) beginTokenEdit();
+          else endTokenEdit();
         }}
-        onBlur={() => setDraft(null)}
-        className="h-7 font-mono text-xs"
+      >
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-label={`Pick ${token}`}
+            className={cn(
+              'size-5 rounded border border-foreground/20 outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              !valid && 'bg-muted',
+            )}
+            style={valid ? { backgroundColor: shown } : undefined}
+          />
+        </PopoverTrigger>
+        <PopoverContent align="end" className="flex w-56 flex-col gap-2 p-3">
+          <HexColorPicker
+            color={toHex(value)}
+            onChange={onChange}
+            style={{ width: '100%' }}
+          />
+          <TokenInput
+            aria-label={`${token} value`}
+            value={value}
+            onChange={onChange}
+          />
+        </PopoverContent>
+      </Popover>
+      <TokenInput
+        id={id}
+        value={value}
+        onChange={onChange}
+        onDraftChange={setDraft}
       />
     </div>
   );
