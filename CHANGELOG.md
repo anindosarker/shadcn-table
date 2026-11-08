@@ -72,6 +72,7 @@ publishes the section as the GitHub release notes.
 #### Spec 15 Docs: one style sheet per style, loaded on demand
 
 - Docs: the root stylesheet no longer carries the eight theme styles (D29). `lib/build-styles.mjs` compiles each `styles/style-<name>.css` against the docs' Tailwind theme into `public/styles/style-<name>.css` (generated, git-ignored; run by `predev` and `build`, minified in `build`), and every page links only the active style's sheet: the pre-paint script links the stored or default style render-blocking, and a style change loads the new sheet before it switches the `style-<name>` class. The root stylesheet of `/` drops from about 2.8 MB to 337 KB; opening the theme panel and toggling light and dark stay under 300 ms of long tasks. `@tailwindcss/node` is a new devDependency of the docs app.
+- Docs E2E: the perf budgets are 600 ms under --ci (F28).
 
 ## 0.9.0 - 2026-11-08
 
