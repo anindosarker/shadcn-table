@@ -21,6 +21,7 @@ Checks:
 - `pnpm test validate-repo` at 96ea0c48: pass
 - `pnpm install --frozen-lockfile` at 96ea0c48: pass, clean
 - The docs-e2e and docs build lines at 61fc16d2 + P9 line stand: the commits after it touch only CHANGELOG.md and plan files
+- Verifier at 1768570c: no rerun. typecheck, lint, validate-repo, install --frozen-lockfile recorded at 96ea0c48 (diff to HEAD: tracker only); docs build and `docs-e2e --base base` (every page, sheet and perf checks) recorded at 49fd03b3 (diff to HEAD: tracker and CHANGELOG.md); Acceptance (1.2) lines all recorded: red first (P11), bytes before and after within 10 percent. Review: fable is the reviewer's, not run here
 
 - Task 1 Reproduce (sheet checks red on the shipped code, root stylesheet bytes before): done, a3c070b6
 - Task 2 Dependency and scripts (@tailwindcss/node, build-styles.mjs, predev, build, .gitignore): done, ef231f8c
