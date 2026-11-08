@@ -1,6 +1,6 @@
 # 13: Docs parts carry the design-system hooks, tracker
 
-Status: done
+Status: merged (6cef142dc733e8ff62ed1695497187b4897c63ff)
 Branch `v0.9/docs-parts-hooks`, worktree 06
 Checks:
 - `pnpm test docs-e2e --base base /docs/guides/view-settings`, checks at b47f9afc on the shipped parts (P11): red as expected: `style changes menus` FAIL (item padding 4px 32px 4px 6px, gap 6px, unchanged after Sera), `menu color inverts` FAIL (dark=false); `menu accent bold` PASS (see Attention)
