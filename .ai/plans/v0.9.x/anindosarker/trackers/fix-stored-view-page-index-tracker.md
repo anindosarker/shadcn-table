@@ -1,6 +1,6 @@
 # Stored view page index (F22), tracker
 
-Status: planned
+Status: running
 Files owned: `packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/base/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `packages/shadcn-table/registry/aria/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts`, `apps/shadcn-table-docs/content/docs/guides/view-settings.mdx`, `apps/shadcn-table-docs/content/docs/examples/persistent-view.mdx`
 Depends on: none
 Branch `v0.9/stored-view-page-index`, worktree 05
