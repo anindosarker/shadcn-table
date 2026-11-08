@@ -39,6 +39,11 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui-radix/tabs';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui-radix/tooltip';
 import { cn } from '@/lib/cn';
 import {
   COLOR_PRESETS,
@@ -109,11 +114,9 @@ export function ThemeCustomizer() {
  * detected there; the server never formats a hotkey label (TanStack Hotkeys'
  * server rendering guidance: render labels only in the browser). */
 function ThemeCustomizerPanel() {
-  const { config, setConfig, reset, shuffle, undo, redo, canUndo, canRedo } =
-    useDesignSystem();
+  const { config, setConfig } = useDesignSystem();
   const { resolvedTheme, setTheme } = useTheme();
   const mode: Mode = resolvedTheme === 'light' ? 'light' : 'dark';
-  const format = useFormatForDisplay();
   const themes = getThemesForBaseColor(config.baseColor);
   const radiusLocked = config.style === 'lyra' || config.style === 'sera';
 
@@ -125,40 +128,10 @@ function ThemeCustomizerPanel() {
           Colors, fonts and radius of the docs site, saved in this browser for
           two days.
         </SheetDescription>
-        <Kbd>{format(THEME_HOTKEYS.reset)}</Kbd>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Reset theme"
-          title={`Reset (${format(THEME_HOTKEYS.reset)})`}
-          onClick={reset}
-        >
-          <RotateCcwIcon />
-        </Button>
       </SheetHeader>
 
       <div className="flex flex-col gap-4 p-4">
-        <div className="flex items-center gap-1">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!canUndo}
-            onClick={undo}
-          >
-            <Undo2Icon />
-            Undo
-            <Kbd>{format(THEME_HOTKEYS.undo)}</Kbd>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!canRedo}
-            onClick={redo}
-          >
-            <Redo2Icon />
-            Redo
-          </Button>
-        </div>
+        <ShortcutRow />
 
         <Section label="Mode">
           <div
@@ -266,26 +239,10 @@ function ThemeCustomizerPanel() {
         </div>
 
         <Section label="Presets">
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              title={`Random (${format(THEME_HOTKEYS.shuffle)})`}
-              onClick={shuffle}
-            >
-              <ShuffleIcon />
-              Random
-              <Kbd>{format(THEME_HOTKEYS.shuffle)}</Kbd>
-            </Button>
-          </div>
           <ColorPresetSelect
             value={config.colorPreset}
             onChange={(colorPreset) => setConfig({ colorPreset })}
           />
-          <p className="text-xs text-muted-foreground">
-            <Kbd>{format(THEME_HOTKEYS.shuffleColorPreset)}</Kbd> picks another
-            color preset.
-          </p>
         </Section>
 
         <Tabs defaultValue="colors">
@@ -354,6 +311,93 @@ function ThemeCustomizerPanel() {
         </Tabs>
       </div>
     </>
+  );
+}
+
+/** Which form the shortcut row takes at the panel's 360 px width (D22): the
+ * labeled buttons when they fit, the icon buttons with a tooltip when they do
+ * not. Picked once from the docs E2E measurement (labeled: scrollWidth 622 px
+ * in a 327 px row), not measured at runtime. */
+const SHORTCUT_ROW_COMPACT = true;
+
+/** Reset, Undo, Redo, Random and Next preset with their kbd hints, the
+ * buttons for every theme shortcut (D22). */
+function ShortcutRow() {
+  const { reset, undo, redo, shuffle, shuffleColorPreset, canUndo, canRedo } =
+    useDesignSystem();
+  const format = useFormatForDisplay();
+  const shortcuts = [
+    {
+      label: 'Reset',
+      icon: RotateCcwIcon,
+      hotkey: THEME_HOTKEYS.reset,
+      onClick: reset,
+    },
+    {
+      label: 'Undo',
+      icon: Undo2Icon,
+      hotkey: THEME_HOTKEYS.undo,
+      onClick: undo,
+      disabled: !canUndo,
+    },
+    {
+      label: 'Redo',
+      icon: Redo2Icon,
+      hotkey: THEME_HOTKEYS.redo,
+      onClick: redo,
+      disabled: !canRedo,
+    },
+    {
+      label: 'Random',
+      icon: ShuffleIcon,
+      hotkey: THEME_HOTKEYS.shuffle,
+      onClick: shuffle,
+    },
+    {
+      label: 'Next preset',
+      icon: PaletteIcon,
+      hotkey: THEME_HOTKEYS.shuffleColorPreset,
+      onClick: shuffleColorPreset,
+    },
+  ];
+
+  return (
+    <div data-slot="theme-shortcut-row" className="flex items-center gap-1">
+      {shortcuts.map(({ label, icon: Icon, hotkey, onClick, disabled }) =>
+        SHORTCUT_ROW_COMPACT ? (
+          <Tooltip key={label}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                aria-label={label}
+                disabled={disabled}
+                onClick={onClick}
+              >
+                <Icon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              {label}
+              <Kbd>{format(hotkey)}</Kbd>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            key={label}
+            variant="outline"
+            size="sm"
+            aria-label={label}
+            disabled={disabled}
+            onClick={onClick}
+          >
+            <Icon />
+            {label}
+            <Kbd>{format(hotkey)}</Kbd>
+          </Button>
+        ),
+      )}
+    </div>
   );
 }
 

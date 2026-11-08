@@ -73,6 +73,10 @@ publishes the section as the GitHub release notes.
 
 - Style, Menu Color and Menu Accent in the docs theme panel now reach the docs parts (D26). `pnpm lib:install <base>` gains a second phase: every shadcn part it installs under `components/ui-<base>/` is replaced by its hooked source from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit (`SHADCN_UI_SHA`), with the imports pointed at the docs folders and each icon placeholder turned into its Lucide icon, so the parts carry the `cn-*` classes the style layers target and `cn-menu-target` for the menu color loop. The library copy in `shadcn-table/` is unchanged. The docs E2E check of `/docs/guides/view-settings` picks a Style, Menu Color `inverted` and Menu Accent `bold` in the theme panel and reads the open menu.
 
+#### Spec 09 Theme panel: shortcut row, Mod+Z undo
+
+- One row under the theme panel's header holds Reset (`Shift+R`), Undo (`Mod+Z`), Redo (`Mod+Shift+Z`), Random (`R`) and Next preset (`C`) (D22): icon buttons named by their label, each with a tooltip carrying the label and its key, since the labeled buttons do not fit the 360 px panel. The header keeps the title and the close button, the Presets row the preset select. Undo moves from `P` to `Mod+Z` (Cmd on macOS, Ctrl elsewhere), redo gains `Mod+Shift+Z`, and `P` is no longer bound.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed

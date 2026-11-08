@@ -185,7 +185,8 @@ export const THEME_HOTKEYS = {
   shuffle: 'R',
   reset: 'Shift+R',
   shuffleColorPreset: 'C',
-  undo: 'P',
+  undo: 'Mod+Z',
+  redo: 'Mod+Shift+Z',
 } as const;
 
 type DesignSystemContextValue = StoreState & {
@@ -217,6 +218,7 @@ function ThemeHotkeys() {
     { hotkey: THEME_HOTKEYS.reset, callback: reset },
     { hotkey: THEME_HOTKEYS.shuffleColorPreset, callback: shuffleColorPreset },
     { hotkey: THEME_HOTKEYS.undo, callback: undo },
+    { hotkey: THEME_HOTKEYS.redo, callback: redo },
   ]);
   return null;
 }
