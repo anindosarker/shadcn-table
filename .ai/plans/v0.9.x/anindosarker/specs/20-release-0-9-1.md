@@ -7,13 +7,13 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 
 ### 1.1 Overview
 
-E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) and E6 (CI D35 to D38) sit on `claude/review` (`2c268682`, which already contains `master` through the 0.9.0 merge `566f56a6`); `dev` and `master` are at 0.9.0 (`2eeafde9`). D45 ships them as 0.9.1 through the D40 flow: Integration does the changelog pass and fast-forwards `claude/review` into `dev`, the PR `dev` into `master` opens at once with `release:minor` and auto-merge, `pr.yml` on GitHub is the one full run, the owner approves Prepare Release (D28; D39 does not carry over), the bump push skips the test jobs (D35), auto-merge merges, `release.yml` tags `v0.9.1`, verifies the deploy and publishes. The run is the proof D35, D36, D38 and D44 wait for, recorded in the release tracker. Two tooling gaps ride along in Integration before the fast-forward (D46): the `.gitignore` negation for `test/storybook-static/` (F10) and the `capRecord` unit test plus the `pr-summary.mjs` header sentence (F27). The docs restructuring is not in it (0.9.2, D45).
+E4 (theme panel D21 to D26), E5 (icon library D27, on-demand stylesheets D29) and E6 (CI D35 to D38) sit on `claude/review` (`2c268682`, which already contains `master` through the 0.9.0 merge `566f56a6`); `dev` and `master` are at 0.9.0 (`2eeafde9`). D45 ships them as 0.9.1 through the D40 flow: Integration does the changelog pass and fast-forwards `claude/review` into `dev`, the PR `dev` into `master` opens at once with `release:minor` and auto-merge, `pr.yml` on GitHub is the one full run, the runner approves Prepare Release (D47), the bump push skips the test jobs (D35), auto-merge merges, `release.yml` tags `v0.9.1`, verifies the deploy and publishes. The run is the proof D35, D36, D38 and D44 wait for, recorded in the release tracker. Two tooling gaps ride along in Integration before the fast-forward (D46): the `.gitignore` negation for `test/storybook-static/` (F10) and the `capRecord` unit test plus the `pr-summary.mjs` header sentence (F27). The docs restructuring is not in it (0.9.2, D45).
 
 ### 1.2 Goals
 
 - `dev` carries every E4, E5 and E6 commit and the two ride-alongs; the PR opens right after the fast-forward, no local suite (D40, D45).
 - One PR `dev` into `master`, title `release: 0.9.1`, label `release:minor` (new public API: `ST_DefaultsProvider` D27, `pageSize` in the stored view D25), auto-merge enabled at creation; the version 0.9.0 bumps to 0.9.1 (D45, P4).
-- Prepare Release waits for the owner's Approve; no agent approves (D28). The bump push runs no test job and prompts nobody (D35).
+- Prepare Release waits on the `release` environment; the runner approves it (D47). The bump push runs no test job and prompts nobody (D35).
 - `master` carries `v0.9.1`; www.shadcn-table.com and the three Storybook builds serve 0.9.1; the GitHub release exists with the 0.9.1 changelog section (D45).
 - The tracker holds the proof lines of D35 (the bump run's contexts), D36 (zero Node 20 annotations), D38 (artifacts list, comment complete), D44 (every leg context reported, none "Expected") (D45).
 - `claude/review` and `dev` end at `master` (P4).
@@ -97,7 +97,7 @@ sequenceDiagram
 - `gh pr create --base master --head dev --title "release: 0.9.1" --label release:minor --body-file <body>` with the body per `.github/pull_request_template.md` (Changes: E4, E5, E6 and the fixes in one paragraph each; Checklist ticked where the milestones proved it; Release impact: `release:minor`, the changelog lines present); then `gh pr merge <N> --auto --merge`.
 - A background watcher per run.md (a shell loop over `gh pr checks <N> --json name,state` every 60 s) wakes the runner; the runner never waits in the foreground.
 - A red job: a P5 flake reruns once (`gh run rerun --failed <id>`); any other red is reproduced under `act` against Docker (D32, P3: a stopped daemon is started by the agent, `open -a Docker`, then `docker info`), fixed as a fix milestone on `claude/review` (`new_fix.py`, the finding first), `dev` fast-forwarded again (the PR follows `dev`), GitHub reruns.
-- When Prepare Release waits: the runner posts "Prepare Release waits for your approval: <run url>" to the lead by SendMessage and continues nothing that depends on the merge. No agent approves, not in the UI and not through `gh api .../pending_deployments` (D28; D39 covered 0.9.0 only). The owner approves by click, or says "approve it" to the lead, who then runs the `gh api` call and records the response in the tracker.
+- When Prepare Release waits: the runner approves the deployment itself at once with `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments -f state=approved -F 'environment_ids[]=<id>' -f comment="D47"` (the environment id from `gh api repos/anindosarker/shadcn-table/actions/runs/<run_id>/pending_deployments --jq '.[].environment.id'`) and records the response in the tracker; no approval line to the lead or the owner (D47, supersedes D28).
 - The bump commit `chore: version 0.9.1` lands on `dev`; on that run the `head` job reports `bumped=true`, the nineteen test contexts and Prepare Release report skipped, Validate PR and PR Summary run green, auto-merge merges (D35, D44).
 - Proof lines in the tracker, from the two `pr.yml` runs (the full run on the pre-bump head, the bump run):
   - D35, D44: `gh api repos/anindosarker/shadcn-table/commits/<bump sha>/check-runs --jq '.check_runs[] | "\(.name) \(.status) \(.conclusion)"'` on the bump run: every test context `completed skipped` (or `success` with no steps run), Prepare Release skipped, Validate PR and PR Summary `success`, none `queued` or missing; a context left "Expected" or missing is an ATTENTION item.
@@ -138,7 +138,7 @@ sequenceDiagram
 - Review: none
 - Local CI: none (CI runs on the PR; a red is reproduced under `act`, D32)
 - Task 1: Open the PR with its label and auto-merge (1.6.4); arm the watcher. Checks: `gh pr view <N> --json labels,autoMergeRequest --jq '[.labels[].name, .autoMergeRequest.enabledAt != null]'` prints `["release:minor", true]`
-- Task 2: The full run green; when Prepare Release waits, post the approval line to the lead and stop this milestone's work until the Approve (1.6.4). Checks: `gh run view <id> --json jobs --jq '[.jobs[] | select(.conclusion != "success" and .conclusion != "skipped")] | length'` prints `0` apart from Prepare Release `waiting`; the D36 and D38 proof lines in the tracker
+- Task 2: The full run green; when Prepare Release waits, approve the deployment (1.6.4, D47) and record the response. Checks: `gh run view <id> --json jobs --jq '[.jobs[] | select(.conclusion != "success" and .conclusion != "skipped")] | length'` prints `0` apart from Prepare Release `waiting`; the D36 and D38 proof lines in the tracker
 - Task 3: The bump run and the merge (1.6.4). Checks: the D35, D44 proof line in the tracker; `gh pr view <N> --json state --jq .state` prints `MERGED`; `git fetch origin && git show origin/master:packages/shadcn-table/package.json | grep '"version": "0.9.1"'`
 
 ### Milestone: After release 0.9.1
@@ -153,6 +153,6 @@ sequenceDiagram
 ### 2.2 Checks
 
 - Integration: `node --test tools/release/record-output.test.mjs`, `pnpm test validate-repo`, `pnpm test lint` green on `claude/review`; `dev` equals `claude/review`
-- Release PR: `pr.yml` green on the pre-bump head; the owner's Approve; the bump run with the test jobs skipped; the PR merged by auto-merge with `chore: version 0.9.1` in it; the D35, D36, D38, D44 proof lines recorded
+- Release PR: `pr.yml` green on the pre-bump head; the runner's Approve (D47); the bump run with the test jobs skipped; the PR merged by auto-merge with `chore: version 0.9.1` in it; the D35, D36, D38, D44 proof lines recorded
 - After release: `release.yml` green (Check Release, Verify Deployment, Validate Production, Publish Release); tag `v0.9.1`; `gh release view v0.9.1`; the four `version.txt` print `0.9.1`; the three branches at one sha
 - Review: none (operations plus two tooling ride-alongs; P7 untouched)

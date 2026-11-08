@@ -1,7 +1,7 @@
 # 20: Release 0.9.1, Integration, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/release-0-9-1-integration`, worktree 03
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

@@ -25,7 +25,7 @@ Updated: 2026-11-09 01:14
 | E6 17 CI Node 24 actions |  |  | [x] |  |  |  |  |
 | E6 18 PR summary layout | [x] |  |  |  |  |  |  |
 | E6 19 PR summary job outputs |  |  |  | [x] |  |  |  |
-| E7 20 Integration 0.9.1 |  |  |  |  | · |  |  |
+| E7 20 Integration 0.9.1 |  |  |  |  | [ ] |  |  |
 | E7 20 Release PR 0.9.1 |  |  |  |  |  | · |  |
 | E7 20 After release 0.9.1 |  |  |  |  |  |  | · |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |
