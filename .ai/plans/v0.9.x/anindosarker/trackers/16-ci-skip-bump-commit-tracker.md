@@ -14,6 +14,11 @@ Checks:
   - `act -v pull_request -W .github/workflows/pr.yml -j typecheck -e bump16.json`: pass, `bumped=true`; each leg (base, radix, aria) is created under its own name, logs `Skipping step ... due to '${{ !inputs.skip }}'` for checkout, pnpm/action-setup, setup-node, install and the test run and `due to '${{ always() && !inputs.skip }}'` for upload-artifact, then `Job succeeded`
   - `act -v pull_request -W .github/workflows/pr.yml -j installation-e2e -e bump16.json`: pass, all seven legs skip their 9 steps (the nextjs Playwright steps through `!inputs.skip && startsWith(...)`) and succeed, 0 failed
   - `act pull_request -W .github/workflows/pr.yml -j typecheck -e normal16.json`, head 3a6bec2a: `bumped=false`, every leg runs its steps (checkout and pnpm/action-setup succeed), then setup-node fails with `exec: "node": executable file not found in $PATH`; the unchanged Lint job fails the same way under the same act run (`act ... -j lint -e normal16.json`), so it is the act image, not this change
+- Verifier at 3d7e739d (scratch clone, scratch head `fa94f49f` `chore: version 9.9.9` by github-actions[bot], reset after the proof); `act -l` not rerun (recorded at 3a6bec2a, only .ai/ changed since):
+  - `act -v pull_request -W .github/workflows/pr.yml -j lint -e bumpv.json`: pass, `[PR checks/Head] | bumped=true`, `Skipping job 'Lint' due to '${{ ... && needs.head.outputs.bumped != 'true' }}'`
+  - `act pull_request -W .github/workflows/pr.yml -j lint -e normalv.json`, head 3d7e739d: pass, `bumped=false`, Lint ran (checkout, pnpm/action-setup, setup-node), setup-node then fails on the act image (`exec: "node": executable file not found in $PATH`, known, see Attention)
+  - `pnpm test validate-repo` at 3d7e739d: pass, 27 unit tests, 0 failed
+  - Not local: the 0.9.1 release PR run (nineteen contexts and Prepare Release skipped, auto-merge); left to the release spec
 
 Tasks:
 - Task 1 reproduce: done (05c8c8da, the P11 line above)
