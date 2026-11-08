@@ -1,6 +1,6 @@
 # 11: Persistent view example starts at ten rows, tracker
 
-Status: done
+Status: merged (d7ee15f3419ab56e9fd3c14812c9d2af6aaaa81f)
 Branch `v0.9/persistent-view-page-size`, worktree 05
 Checks:
 - Check: docs-e2e red (P11), `pnpm test docs-e2e --base base /docs/examples/persistent-view` at 9886cc07 plus the uncommitted check: fail as expected, `ten rows on first load rows=50`, `rows per page reads 10 select=50`
