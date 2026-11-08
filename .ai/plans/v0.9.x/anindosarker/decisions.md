@@ -403,3 +403,5 @@ index e1645117..e67a5482 100644
 
 ### D40 The release runs its suite on GitHub only
 
+
+- Supersedes the local suite of the release spec's Integration milestone (spec 07 Task 2) for every later release: Integration does the changelog pass and fast-forwards `claude/review` into `dev`, then the Release PR opens at once; `pr.yml` on GitHub is the one full run (the milestones already ran their checks locally). A red is reproduced and fixed under `act` against Docker (D32, P3) and pushed; GitHub reruns; green plus the Approve (D28) merges and releases. Owner, 2026-11-08: "release can run on github directly, this way we save time"; "on github red, then we can bring up act with docker".
