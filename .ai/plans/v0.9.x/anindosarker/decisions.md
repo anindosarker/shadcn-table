@@ -473,3 +473,7 @@ index e1645117..e67a5482 100644
 [Done]
 
 - Source: A18. D29's acceptance (panel open and light/dark toggle under 300 ms of long tasks) holds locally; on GitHub runners the toggle measured 342 to 351 ms on two bases, twice (F28), so `PERF_BUDGET_MS` is 600 under `--ci` and 300 otherwise. The code is unchanged; the budget follows the machine. Kept as merged (`629dcf81`).
+
+### D49 0.9.1 ships with the patch label; no 0.10.x in this release
+
+- Source: A19
