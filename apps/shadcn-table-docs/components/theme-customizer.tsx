@@ -502,11 +502,7 @@ function CopyMenu({ config }: { config: DesignSystemConfig }) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
-          {copied ? (
-            <CheckIcon />
-          ) : (
-            <CopyIcon />
-          )}
+          {copied ? <CheckIcon /> : <CopyIcon />}
           {copied ? 'Copied' : 'Copy'}
         </Button>
       </DropdownMenuTrigger>
