@@ -9,6 +9,8 @@ Checks:
 - `act -W .github/workflows/release.yml -l` at e5457999: pass, all 4 jobs listed
 - `act pull_request -W .github/workflows/pr.yml -j lint -e normal17.json -P ubuntu-latest=catthehacker/ubuntu:act-latest` at e5457999 (scratch clone, after `docker pull catthehacker/ubuntu:act-latest`): pass line met, Head green (`checkout@v7`), Lint `checkout@v7`, `pnpm/action-setup@v6`, `setup-node@v7`, `pnpm install --frozen-lockfile` green; `pnpm test lint --ci` red on the 9 known TS.tsx eslint warnings, then `upload-artifact@v7` red on `Unable to get the ACTIONS_RUNTIME_TOKEN env variable` (act has no artifact server)
 - `pnpm test validate-repo` at b0c07db0: pass, 32 unit tests, 0 failed
+- Verifier at 5e5da57e: every 2.2 and 1.2 local check is recorded at e5457999 or b0c07db0, and `git diff --name-only` from both to HEAD touches only the tracker and `CHANGELOG.md`; no rerun, CI is the second run
+- Verifier: the 2.2 line "next GitHub run, `grep -c 'Node.js 20 is deprecated'` prints 0" needs the 0.9.1 release PR run; not a local check, left open
 
 Action lines (Task 1):
 - `actions/checkout` v7.0.1: `runs.using: node24`; inputs used here `fetch-depth`, `ref`, `token` exist
@@ -29,3 +31,4 @@ Notes:
 - The zero "Node.js 20 is deprecated" annotations check needs the next GitHub `pr.yml` run (the 0.9.1 release PR); out of this milestone's reach.
 
 ## Attention
+- The act lint proof (e5457999) is counted as green although the act job ended red: `pnpm test lint --ci` failed on 9 TS.tsx eslint warnings and `upload-artifact@v7` on the missing ACTIONS_RUNTIME_TOKEN (act has no artifact server); every action step on the new majors ran green and the same lint job is green on GitHub (dev run 42503995049). The verifier kept the recorder's call; the GitHub run of the 0.9.1 PR settles it.
