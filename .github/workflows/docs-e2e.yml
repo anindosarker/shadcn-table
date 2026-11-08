@@ -31,11 +31,11 @@ jobs:
       matrix:
         base: [base, radix, aria]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: ${{ !inputs.skip }}
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: ${{ !inputs.skip }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: ${{ !inputs.skip }}
         with:
           node-version: 22
@@ -46,7 +46,7 @@ jobs:
         if: ${{ !inputs.skip }}
         id: playwright
         run: echo "version=$(pnpm --filter shadcn-table exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         if: ${{ !inputs.skip }}
         with:
           path: ~/.cache/ms-playwright
@@ -55,7 +55,7 @@ jobs:
         if: ${{ !inputs.skip }}
       # The Next build cache (D91): keyed on the lockfile and the docs
       # sources, restored from the lockfile prefix when a source changed.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         if: ${{ !inputs.skip }}
         with:
           path: apps/shadcn-table-docs/.next/cache
@@ -64,7 +64,7 @@ jobs:
             next-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm test docs-e2e --ci --base ${{ matrix.base }}
         if: ${{ !inputs.skip }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ always() && !inputs.skip }}
         with:
           name: test-out-docs-e2e-${{ matrix.base }}

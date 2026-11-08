@@ -35,11 +35,11 @@ jobs:
       matrix:
         scenario: [fresh, existing, base, aria, nextjs-base, nextjs-radix, nextjs-aria]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: ${{ !inputs.skip }}
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         if: ${{ !inputs.skip }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: ${{ !inputs.skip }}
         with:
           node-version: 22
@@ -52,7 +52,7 @@ jobs:
         id: playwright
         if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
         run: echo "version=$(pnpm --filter shadcn-table exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
         with:
           path: ~/.cache/ms-playwright
@@ -61,7 +61,7 @@ jobs:
         if: ${{ !inputs.skip && startsWith(matrix.scenario, 'nextjs-') }}
       - run: pnpm test installation-e2e --ci --scenario ${{ matrix.scenario }} ${{ inputs.no-diff && '--no-diff' || '' }}
         if: ${{ !inputs.skip }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ always() && !inputs.skip }}
         with:
           name: test-out-installation-e2e-${{ matrix.scenario }}
