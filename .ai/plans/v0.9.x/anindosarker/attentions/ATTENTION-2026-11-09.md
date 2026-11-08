@@ -28,3 +28,6 @@
 - Options:
   - a) Recommended: keep (amend D29's acceptance line: 300 ms locally, 600 ms on GitHub runners)
   - b) revert: one budget of 300 ms everywhere, the release run reruns until the runner is fast enough (or the perf checks leave the CI run)
+
+## A19 The release label minor ships 0.10.0, D45 names 0.9.1
+
