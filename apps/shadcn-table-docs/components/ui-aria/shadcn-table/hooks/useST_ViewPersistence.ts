@@ -117,8 +117,11 @@ const applyView = <TData extends ST_RowData>(
       start: [...(view.columnPinning.start ?? [])],
     });
   }
-  // Page index is not stored, so the restored size starts on the first page.
-  if (view.pageSize) table.setPageSize(view.pageSize);
+  // Page index is not stored, so the restored size keeps the initial page index.
+  if (view.pageSize) {
+    const { pageSize } = view;
+    table.setPagination((old) => ({ ...old, pageSize }));
+  }
 };
 
 /**
