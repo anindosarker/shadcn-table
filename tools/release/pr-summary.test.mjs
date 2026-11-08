@@ -75,7 +75,9 @@ const opts = (extra = {}) => ({
 });
 
 const tableRows = (body) =>
-  body.split('\n').filter((l) => l.startsWith('| ') && !l.startsWith('| Job '));
+  body
+    .split('\n')
+    .filter((l) => l.startsWith('| ') && !/^\| (Job|---) /.test(l));
 const firstCell = (row) => row.split(' | ')[0].slice(2);
 const resultRows = (body) =>
   tableRows(body).filter((r) => !/^\| \*\*.*\*\* \| +\|$/.test(r));

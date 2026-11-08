@@ -78,58 +78,191 @@ const findRecord = (records, { test, base, scenario }) =>
       (r.scenario ?? undefined) === scenario,
   );
 
-const jobLine = (records, job) => {
-  const record = findRecord(records, job);
-  if (!record) return `- ${job.job}: no record (skipped or cancelled)`;
-  return `- ${job.job}: ${record.status === 'pass' ? '' : 'FAIL '}${record.summary}`;
-};
+const capitalize = (s) => `${s[0].toUpperCase()}${s.slice(1)}`;
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+/** A table cell: `|` escaped, one line. */
+const cell = (text) =>
+  String(text)
+    .replace(/\|/g, '\\|')
+    .replace(/\s*\n\s*/g, ' ');
+/** The leg of a matrix job (`base`, `nextjs-aria`), or undefined. */
+const legOf = (job) => job.base ?? job.scenario;
+/** The group name of a job: its label without the ` (<leg>)` suffix. */
+const groupOf = (job) => job.job.replace(/ \([^)]*\)$/, '');
 
-const versionLine = (pr) => {
-  if (!pr) return 'No version: Validate PR did not run.';
-  const d = pr.details ?? {};
-  if (d.version) {
-    return `Ships as ${d.version} (${d.label}${d.note ? `, ${d.note}` : ''}).`;
-  }
-  const reason = d.reason ?? pr.summary;
-  return /[.!?]$/.test(reason) ? reason : `${reason}.`;
-};
-
-const changelogLine = (pr) => {
-  const counts = pr?.details?.changelog;
-  if (!counts) return 'Changelog: no Validate PR record.';
-  const parts = Object.entries(counts).map(
-    ([heading, n]) => `${heading[0].toUpperCase()}${heading.slice(1)} ${n}`,
-  );
-  return parts.length ? parts.join(', ') : 'No lines under ## Unreleased.';
+const resultCell = (record) => {
+  if (!record) return '⚪ skipped';
+  if (record.status === 'pass') return `✅ ${cell(record.summary)}`;
+  const summary = String(record.summary ?? 'failed');
+  const cut = summary.indexOf(': ');
+  return `❌ ${cell(cut === -1 ? summary : summary.slice(0, cut))}`;
 };
 
 /**
- * The comment body, starting with the marker. `previous` is the body of the
- * existing comment; on a label event its job lines (all but Validate PR) and
- * its run link are kept.
+ * The table rows in JOBS order: `{ key, line, job }`, `key` being the
+ * first cell text under its group (`Typecheck/&nbsp;&nbsp;base`), `job`
+ * undefined on a bold group row. A test shared by several jobs is a group.
  */
-export const buildComment = (records, { runUrl, previous, labelEvent }) => {
+export const groupRows = (records) => {
+  const shared = (test) => JOBS.filter((j) => j.test === test).length > 1;
+  const rows = [];
+  for (const job of JOBS) {
+    const result = resultCell(findRecord(records, job));
+    if (!shared(job.test)) {
+      const first = `**${job.job}**`;
+      rows.push({ key: first, line: `| ${first} | ${result} |`, job });
+      continue;
+    }
+    const group = groupOf(job);
+    if (!rows.some((r) => r.key === `**${group}**`)) {
+      rows.push({ key: `**${group}**`, line: `| **${group}** | |` });
+    }
+    const first = `&nbsp;&nbsp;${legOf(job)}`;
+    rows.push({
+      key: `${group}/${first}`,
+      line: `| ${first} | ${result} |`,
+      job,
+    });
+  }
+  return rows;
+};
+
+/** `` `<label>` | [run <id>](<url>) | <status> `` counted over the result rows. */
+export const statusLine = (rows, { label, runUrl, runId }) => {
+  const results = rows.filter((r) => r.job).map((r) => r.line.split(' | ')[1]);
+  const failed = results.filter((c) => c.startsWith('❌')).length;
+  const skipped = results.filter((c) => c.startsWith('⚪')).length;
+  const status = failed
+    ? `❌ ${plural(failed, 'job')} failed`
+    : skipped
+      ? `⚪ ${skipped} skipped`
+      : '✅ all green';
+  return `${label ? `\`${label}\`` : 'no release label'} | [run ${runId}](${runUrl}) | ${status}`;
+};
+
+/** The error lines of every failed record: `- **<job label>** <error>`. */
+const failureLines = (records) =>
+  JOBS.flatMap((job) => {
+    const record = findRecord(records, job);
+    if (!record || record.status === 'pass') return [];
+    const errors = record.errors?.length ? record.errors : [record.summary];
+    return errors.map((e) => `- **${job.job}** ${cell(e)}`);
+  });
+
+/** The collapsed failures block, or '' when nothing failed. */
+export const failuresBlock = (lines) =>
+  lines.length
+    ? [
+        '<details>',
+        `<summary>❌ ${plural(lines.length, 'failure')}</summary>`,
+        '',
+        ...lines,
+        '',
+        '</details>',
+      ].join('\n')
+    : '';
+
+/**
+ * `#### Changelog` from the CHANGELOG.md text: the `## Unreleased` section,
+ * or the top `## <version> - <date>` section when it is absent; its `###`
+ * headings with their `####` counts in file order, then one bullet per
+ * heading listing the `####` titles as written.
+ */
+export const changelogSection = (text) => {
+  const head = '#### Changelog';
+  if (typeof text !== 'string') return `${head}\n\nChangelog: not found`;
+  const lines = [];
+  let fence = false;
+  for (const line of text.split('\n')) {
+    if (line.startsWith('```')) fence = !fence;
+    if (!fence) lines.push(line);
+  }
+  const tops = lines.flatMap((l, i) => (/^## /.test(l) ? [i] : []));
+  const start =
+    tops.find((i) => lines[i].trim() === '## Unreleased') ?? tops[0];
+  if (start === undefined) return `${head}\n\nChangelog: no section found`;
+  const name = lines[start].trim().slice(3);
+  const next = tops.find((i) => i > start) ?? lines.length;
+  const headings = [];
+  for (const line of lines.slice(start + 1, next)) {
+    if (/^### /.test(line))
+      headings.push({ name: line.slice(4).trim(), titles: [] });
+    else if (/^#### /.test(line) && headings.length)
+      headings.at(-1).titles.push(line.slice(5).trim());
+  }
+  const filled = headings.filter((h) => h.titles.length);
+  const under = `Under \`## ${name}\`:`;
+  if (!filled.length) return `${head}\n\n${under} nothing yet`;
+  return [
+    head,
+    '',
+    `${under} ${filled.map((h) => `${capitalize(h.name)} ${h.titles.length}`).join(' · ')}`,
+    '',
+    ...filled.map(
+      (h) => `- **${capitalize(h.name)}** · ${h.titles.join(' · ')}`,
+    ),
+  ].join('\n');
+};
+
+const FOOTER = '<sub>Updated on every run of this pull request.</sub>';
+
+/**
+ * The comment body, starting with the marker. `previous` is the body of the
+ * existing comment; on a label event its table rows (all but Validate PR)
+ * and its failures block are kept, the Validate PR failure lines excepted.
+ */
+export const buildComment = (
+  records,
+  { title, runUrl, runId, changelog, previous, labelEvent },
+) => {
   const pr = findRecord(records, { test: 'validate-pr' });
-  let jobs = JOBS.map((job) => jobLine(records, job));
-  let run = `[Run](${runUrl})`;
+  let rows = groupRows(records);
+  let failures = failureLines(records);
   if (labelEvent && previous?.startsWith(MARKER)) {
     const old = previous.split('\n');
-    jobs = JOBS.map((job, i) => {
-      if (job.test === 'validate-pr') return jobs[i];
-      return old.find((l) => l.startsWith(`- ${job.job}: `)) ?? jobs[i];
-    });
-    run = old.find((l) => l.startsWith('[Run](')) ?? run;
+    let group;
+    const kept = new Map();
+    for (const line of old.filter((l) => l.startsWith('| '))) {
+      const first = line.slice(2, line.indexOf(' | '));
+      if (first.startsWith('**')) group = first.slice(2, -2);
+      kept.set(first.startsWith('&nbsp;') ? `${group}/${first}` : first, line);
+    }
+    rows = rows.map((r) =>
+      r.job?.test === 'validate-pr'
+        ? r
+        : { ...r, line: kept.get(r.key) ?? r.line },
+    );
+    const open = old.indexOf('<details>');
+    const close = old.indexOf('</details>');
+    const oldFailures =
+      open === -1 || close === -1
+        ? []
+        : old
+            .slice(open, close)
+            .filter(
+              (l) =>
+                l.startsWith('- **') && !l.startsWith('- **Validate PR** '),
+            );
+    failures = [
+      ...oldFailures,
+      ...failures.filter((l) => l.startsWith('- **Validate PR** ')),
+    ];
   }
+  const failed = failuresBlock(failures);
   return [
     MARKER,
-    versionLine(pr),
+    `## ${title ?? 'PR checks'}`,
     '',
-    changelogLine(pr),
+    statusLine(rows, { label: pr?.details?.label, runUrl, runId }),
     '',
-    ...jobs,
+    '| Job | Result |',
+    '| --- | --- |',
+    ...rows.map((r) => r.line),
     '',
-    run,
+    ...(failed ? [failed, ''] : []),
+    changelogSection(changelog),
     '',
+    FOOTER,
   ].join('\n');
 };
 
@@ -213,6 +346,10 @@ const main = async () => {
   const labelEvent = ['labeled', 'unlabeled'].includes(event.action);
   const runUrl = `${env.GITHUB_SERVER_URL ?? 'https://github.com'}/${env.GITHUB_REPOSITORY ?? 'anindosarker/shadcn-table'}/actions/runs/${env.GITHUB_RUN_ID ?? '0'}`;
   const records = readRecords(path.join(ROOT, 'test', '.out'));
+  const changelogPath = path.join(ROOT, 'CHANGELOG.md');
+  const changelog = fs.existsSync(changelogPath)
+    ? fs.readFileSync(changelogPath, 'utf8')
+    : undefined;
 
   let api;
   let previous;
@@ -222,7 +359,14 @@ const main = async () => {
     api = { repo: env.GITHUB_REPOSITORY, pr, token: env.GH_TOKEN };
     if (labelEvent) previous = (await findComment(api))?.body;
   }
-  const body = buildComment(records, { runUrl, previous, labelEvent });
+  const body = buildComment(records, {
+    title: event.pull_request?.title ?? 'PR checks',
+    runUrl,
+    runId: env.GITHUB_RUN_ID ?? '0',
+    changelog,
+    previous,
+    labelEvent,
+  });
   if (env.GITHUB_STEP_SUMMARY) fs.appendFileSync(env.GITHUB_STEP_SUMMARY, body);
   console.log(body);
   if (api) console.log(`comment ${await upsertComment(api, body)} on #${pr}`);
