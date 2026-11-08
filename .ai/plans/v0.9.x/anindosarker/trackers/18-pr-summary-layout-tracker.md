@@ -10,6 +10,9 @@ Checks:
 - Check: validate-repo, `pnpm test validate-repo` at 0376a29b: pass (32 unit tests)
 - Check: lint, `pnpm test lint` at 0376a29b: pass (0 errors, 9 warnings)
 - Check: format, `pnpm format` at 0376a29b: pass (no other file changed)
+- Check (verifier): skipped as recorded, unit tests, validate-repo, lint and format at 0376a29b; `git diff --name-only 0376a29b..85ba5627` touches only the tracker
+- Check (verifier): act, same command as the e3ff78e7 line at 85ba5627 (pr-summary.mjs changed after e3ff78e7, header comment only), records of run 42501252444 staged in test/.out/: pass (Job succeeded, exit 0; body equal to the one below except the changelog now lists `Changed 1` with Spec 18)
+- Check (verifier): the GitHub render of the comment (2.2 last line) is not a local check; the next PR run shows it
 
 - Task 1 Reproduce: done (70e4d827)
 - Task 2 buildComment and helpers, main(): done (e3ff78e7)
