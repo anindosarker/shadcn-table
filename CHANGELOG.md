@@ -28,6 +28,10 @@ publishes the section as the GitHub release notes.
 
 - A new first job of `pr.yml`, `head`, reads the pull request's head commit and sets `bumped` when it is the `chore: version <v>` commit Prepare Release pushes as `github-actions[bot]` (D35). On that commit Typecheck, Storybook Tests, Docs E2E Tests and Installation E2E skip every matrix leg (a `skip` input on the four called workflows), Lint and Validate Repo skip, Validate PR and PR Summary still run, and Prepare Release is skipped with its needs, so the bump push runs no second test pass and prompts nobody. Any other head runs every job as before.
 
+#### Spec 17 CI: Node 24 action majors
+
+- Every `uses:` in `.github/workflows/*.yml` moves to the major that runs on Node 24 (D36): `actions/checkout@v7`, `actions/setup-node@v7`, `actions/upload-artifact@v7`, `actions/download-artifact@v8`, `actions/cache@v6`, `pnpm/action-setup@v6`. No `with:` input changes; pnpm still comes from `packageManager`, and the jobs keep `node-version: 22`. The "Node.js 20 is deprecated" annotations of each run go away.
+
 ### Docs
 
 #### Spec 11 Persistent view example: ten rows
