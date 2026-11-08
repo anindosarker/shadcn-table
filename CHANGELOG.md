@@ -81,6 +81,11 @@ publishes the section as the GitHub release notes.
 
 - Each token swatch in the theme panel's Colors tab is a button (`Pick <token>`) that opens a popover with a `react-colorful` hex picker above a copy of the token's text field (D23, F13). Dragging writes the token live as hex; closing the popover records one undo step, so `Mod+Z` returns to the value from before it opened. Typed values keep one undo step per change (A10), and an invalid value still applies nothing. `react-colorful` 5.8.1 is a new dependency of the docs app.
 
+#### Spec 14 ST_DefaultsProvider; the docs icon library select
+
+- New: `ST_DefaultsProvider` and `useST_Defaults`, exported from the library index on all three bases (D27). The provider's `icons` prop (`Partial<ST_Icons>`) applies to every table below it: `useST_TableOptions` merges `ST_Default_Icons`, then the nearest provider's `icons`, then the table's own `icons` option, which still wins key by key. Nested providers merge over their parent; a table outside any provider behaves as before. The `ST_Defaults` type is added beside `ST_Icons`. Documented in the ST Components API page and the custom icons guide; the `ProviderIconSet` story covers it.
+- Docs: the theme panel's Icon Library select is enabled and offers Lucide, Tabler, Phosphor, Hugeicons and Remix Icon. A pick switches the icons of every example table (the home demo and the docs examples, all three base copies), persists with the rest of the theme config, and Reset returns to Lucide; Random keeps the current icon set. The docs chrome stays Lucide. `pnpm lib:install <base>` also installs the four icon set maps as `components/ui-<base>/shadcn-table/icons/<set>.ts`, loaded only once picked. `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons` and `@remixicon/react` are new dependencies of the docs app.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed
