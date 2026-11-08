@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-09 02:02
+Updated: 2026-11-09 02:42
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 |
 |---|---|---|---|---|---|---|---|
@@ -26,8 +26,8 @@ Updated: 2026-11-09 02:02
 | E6 18 PR summary layout | [x] |  |  |  |  |  |  |
 | E6 19 PR summary job outputs |  |  |  | [x] |  |  |  |
 | E7 20 Integration 0.9.1 |  |  |  |  | [x] |  |  |
-| E7 20 Release PR 0.9.1 |  |  |  |  |  | [ ] |  |
-| E7 20 After release 0.9.1 |  |  |  |  |  |  | · |
+| E7 20 Release PR 0.9.1 |  |  |  |  |  | [x] |  |
+| E7 20 After release 0.9.1 |  |  |  |  |  |  | [ ] |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |  |
