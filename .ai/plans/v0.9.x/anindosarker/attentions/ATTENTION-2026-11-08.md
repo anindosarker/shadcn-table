@@ -39,3 +39,12 @@
 - Options:
   - a) Recommended: keep the new wording
   - b) revert the existing two keys to their old text, keep only `filterArrIncludesNone`
+
+## A5 Admins can bypass the release approval gate
+
+- The `release` environment created by spec 05 keeps GitHub's default `can_admins_bypass: true`, because the spec's PUT body does not set it: a repository admin can still merge past the owner's Approve on Prepare Release.
+- Setting: `gh api repos/anindosarker/shadcn-table/environments/release` (created in `aeca4d55`, E2 05).
+
+- Options:
+  - a) Recommended: keep the default (the owner is the only admin)
+  - b) set `can_admins_bypass` to false with one more PUT
