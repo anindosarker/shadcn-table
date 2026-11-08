@@ -121,3 +121,6 @@
 - Options:
   - a) Recommended: accept as is; the behavior is covered by the three typechecks and the Persistence play, the page-index case is a one-line spec clause
   - b) a follow-up fix milestone adds a `Persistence` play variant with `pageIndex: 2` in `ViewSettings.stories.tsx`, red on 117a81b5, green on 811045dc
+
+## A14 The pre-paint script creates the style sheet link, not the layout
+
