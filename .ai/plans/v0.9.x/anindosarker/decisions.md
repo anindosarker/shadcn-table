@@ -409,3 +409,9 @@ index e1645117..e67a5482 100644
 ### D41 The pre-paint script creates the style sheet link
 
 - Source: A14
+
+- Source: A14. Spec 15 1.6.3 had `app/layout.tsx` render the active style's `<link>` and the pre-paint script swap it; a stored style then failed React 19 hydration (error #418, head links matched by href) and a second link appeared. The pre-paint script in `lib/design-system/config.ts` creates the link (`blocking=render`), the layout renders none; D29's behaviour unchanged. Kept as merged (E5 15, `5df252e9`).
+
+### D42 Every per-style sheet build runs the optimizer
+
+- Source: A15
