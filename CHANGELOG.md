@@ -15,6 +15,7 @@ publishes the section as the GitHub release notes.
 
 - `persistViewSettings` stores rows per page (D25): `ST_StoredView` gains `pageSize?: number`, saved on every page size change and applied at mount over `initialState.pagination.pageSize`, on the three bases. The page index is not stored, and a page index change alone writes nothing. A stored view without `pageSize`, or with one that is not a positive integer, keeps the initial page size. Reset view returns the page size to `initialState`. The view settings guide, the state management guide and the `persistViewSettings` API entry list the new field.
 - A restored rows per page keeps the initial page index instead of remapping it to keep the top row (F22).
+- The `PersistenceKeepsPageIndex` play covers it: a table on its third page with a stored rows per page remounts on the third page (D33).
 
 ### Changed
 
