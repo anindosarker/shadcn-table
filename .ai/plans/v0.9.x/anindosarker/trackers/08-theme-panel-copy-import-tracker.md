@@ -11,6 +11,7 @@ Checks:
 - `pnpm test lint` at 6ca4e6ab: pass (0 errors, 9 warnings)
 - `pnpm test docs-e2e --base base /` at 6ca4e6ab: pass (63 passed, 0 failed; panel check copyImport=0)
 - `grep -rn "encodeConfig\|decodeConfig\|importPreset\|CopyMenu\|ImportPreset" apps/shadcn-table-docs` at 6ca4e6ab: prints nothing
+- Verifier at 68ed1ff8: every 2.2 check and the 1.2 Acceptance lines are recorded at 6ca4e6ab; `git diff --name-only 6ca4e6ab..68ed1ff8` touches only `.ai/`, so none rerun; all green
 
 - Task 1 Reproduce: done (51aef72e)
 - Task 2 Remove Copy, Import and the codec: done (7e907a9a)
