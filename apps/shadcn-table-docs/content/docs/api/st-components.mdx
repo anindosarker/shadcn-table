@@ -67,6 +67,26 @@ return (
 );
 ```
 
+#### \<ST_DefaultsProvider /\>
+
+[View Source Code on GitHub](https://github.com/anindosarker/shadcn-table/blob/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/hooks/useST_Defaults.tsx)
+
+Sets defaults for every table rendered below it. Its one prop is `icons` (`Partial<ST_Icons>`). Each table merges its icons in this order: `ST_Default_Icons` (the icon set your edition installed), then the nearest provider's `icons`, then the table's own `icons` option, so a table's own icon always wins for that key. A table outside any provider behaves as without one.
+
+Providers nest: an inner provider merges its `icons` over the outer one's. `useST_Defaults()` returns the merged defaults of the nearest provider, or `{}` outside one.
+
+```jsx
+import { ST_DefaultsProvider } from '@/components/ui/shadcn-table';
+import { ST_Default_Icons as tabler } from '@/components/ui/shadcn-table/icons/tabler';
+
+return (
+  <ST_DefaultsProvider icons={tabler}>
+    <OrdersTable />
+    <CustomersTable />
+  </ST_DefaultsProvider>
+);
+```
+
 #### Table Components
 
 [View Table Components Source Code on GitHub](https://github.com/anindosarker/shadcn-table/tree/master/packages/shadcn-table/registry/radix/components/ui/shadcn-table/components/table)

@@ -1,7 +1,7 @@
 /** Design system config for the theme customizer, mirroring ui.shadcn.com/create
  * (shadcn-ui apps/v4/registry/config.ts and app/(app)/(create)). Shared by the
  * pre-paint script in app/layout.tsx (server) and the provider (client). */
-import { decodePreset, type PresetConfig } from 'shadcn/preset';
+import { decodePreset } from 'shadcn/preset';
 
 import {
   COLOR_PRESETS,
@@ -244,6 +244,18 @@ export const MENU_COLORS = [
   { value: 'inverted-translucent', title: 'Inverted Translucent' },
 ] as const;
 
+/** The icon sets the registry ships an edition for (titles as lib/install.ts); the
+ * Icon Library select applies the pick to every example table (spec 14, D27). */
+export const ICON_LIBRARIES = [
+  { name: 'lucide', title: 'Lucide' },
+  { name: 'tabler', title: 'Tabler' },
+  { name: 'phosphor', title: 'Phosphor' },
+  { name: 'hugeicons', title: 'Hugeicons' },
+  { name: 'remixicon', title: 'Remix Icon' },
+] as const;
+
+export type IconLibraryName = (typeof ICON_LIBRARIES)[number]['name'];
+
 export type MenuAccentValue = (typeof MENU_ACCENTS)[number]['value'];
 export type MenuColorValue = (typeof MENU_COLORS)[number]['value'];
 
@@ -257,8 +269,9 @@ export type DesignSystemConfig = {
   radius: RadiusValue;
   menuAccent: MenuAccentValue;
   menuColor: MenuColorValue;
-  /** Read-only here: kept so a pasted preset round-trips; the docs always use lucide. */
-  iconLibrary: PresetConfig['iconLibrary'];
+  /** The example tables' icon set (components/example-icons.tsx); the docs chrome stays
+   * Lucide. */
+  iconLibrary: IconLibraryName;
   /** A full palette from lib/design-system/color-presets.ts that replaces the base color,
    * theme and chart tokens, or "none". Not part of create's preset codes. */
   colorPreset: string;
@@ -346,9 +359,11 @@ export function normalizeConfig(
   if (menuAccent === 'bold' && isTranslucentMenuColor(menuColor)) {
     menuAccent = 'subtle';
   }
-  const iconLibrary = (
-    typeof input.iconLibrary === 'string' ? input.iconLibrary : d.iconLibrary
-  ) as DesignSystemConfig['iconLibrary'];
+  const iconLibrary = pick(
+    input.iconLibrary,
+    ICON_LIBRARIES.map((l) => l.name),
+    d.iconLibrary,
+  );
   const colorPreset = pick(
     input.colorPreset,
     ['none', ...COLOR_PRESETS.map((p) => p.name)],
@@ -559,8 +574,11 @@ export function shuffleConfig(current: DesignSystemConfig): DesignSystemConfig {
       Math.random() < 0.5
         ? curatedPreset(randomItem(SHUFFLE_PRESETS))
         : randomFields();
+    // Random does not change the icon library (spec 14): the curated presets
+    // name one of their own, randomFields the default.
     const shuffled = {
       ...next,
+      iconLibrary: current.iconLibrary,
       colorPreset: randomColorPreset(current.colorPreset),
     };
     if (!sameLook(shuffled, current)) return shuffled;

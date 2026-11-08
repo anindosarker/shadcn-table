@@ -3,6 +3,7 @@ import { RootProvider } from 'fumadocs-ui/provider/next';
 import { TooltipProvider } from '@/components/ui-radix/tooltip';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { DesignSystemProvider } from '@/components/design-system-provider';
+import { ExampleIcons } from '@/components/example-icons';
 import { SearchDialog } from '@/components/search-dialog';
 import './global.css';
 import { Inter } from 'next/font/google';
@@ -62,7 +63,12 @@ export default function Layout({ children }: LayoutProps<'/'>) {
               NEXT_PUBLIC_POSTHOG_KEY. */}
           <PostHogProvider>
             <TooltipProvider skipDelayDuration={0}>
-              <DesignSystemProvider>{children}</DesignSystemProvider>
+              <DesignSystemProvider>
+                {/* The Icon Library pick for every example table, one
+                    ST_DefaultsProvider per base copy
+                    (components/example-icons.tsx). */}
+                <ExampleIcons>{children}</ExampleIcons>
+              </DesignSystemProvider>
             </TooltipProvider>
           </PostHogProvider>
         </RootProvider>
