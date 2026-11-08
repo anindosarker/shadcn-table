@@ -124,3 +124,5 @@
 
 ## A14 The pre-paint script creates the style sheet link, not the layout
 
+## A15 Every per-style sheet build runs through the optimizer, not only --minify
+
