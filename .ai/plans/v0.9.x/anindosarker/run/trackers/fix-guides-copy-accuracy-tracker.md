@@ -1,10 +1,24 @@
 # Guides copy accuracy (F32), tracker
 
-Status: planned
+Status: done
 Files owned: `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**`
 Depends on: none
 Branch `v0.9/fix-guides-copy-accuracy`, worktree 04
 Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+- Check: frontmatter guides, `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs/guides` at a6936758: pass (0 on every rule)
+- Check: frontmatter api, `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs/api` at a6936758: pass (0 on every rule)
+- Check: types, `pnpm --filter shadcn-table-docs types:check` at a6936758: pass
+- Check: build, `pnpm --filter shadcn-table-docs build` at a6936758: pass
+- Check: lint, `pnpm test lint` at a6936758: pass (0 errors, 9 warnings)
+- Check: validate-repo, `pnpm test validate-repo` at a6936758: pass
+- Check: typo grep, `grep -rn 'should also should\|news rows\|\bect\.\|version 2.6.0' apps/shadcn-table-docs/content/docs/guides` at a6936758: pass (prints nothing)
+- Check: typecheck, `pnpm test typecheck --base base` at ff4edbde (verifier): pass (tsc clean)
+- Check: docs-e2e, `pnpm test docs-e2e --base base` at ff4edbde (verifier): pass (getting-started 205, api 109, guides 692, examples 939 passed, 0 failed; 107 pages)
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+- Task 1 Apply the eight copy findings: done (a6936758)
+
+Notes:
+- The spec's grep pattern `ect\.` also matches `select.` (density-toggle.mdx:25, customize-icons.mdx:87) and `Object.` (production-ready-tables.mdx:81, 190); the check ran with `\bect\.` so it prints nothing.
+
+## Attention
+- Finding 8 (restating "These are the methods ..." / "Here is a list of all the ... options" sentences): left as is, the finding's second option. Dropping them puts table-instance-apis, column-options and state-options under the 150-word floor of check-frontmatter (126, 137, 136 words).
