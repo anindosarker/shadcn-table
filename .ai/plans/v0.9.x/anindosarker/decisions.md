@@ -559,3 +559,5 @@ index e1645117..e67a5482 100644
 
 ### D56 Home title and hero tagline name the category
 
+### D57 Security response headers
+
