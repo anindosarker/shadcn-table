@@ -559,11 +559,40 @@ index e1645117..e67a5482 100644
 
 ### D56 Home title and hero tagline name the category
 
+- The home page `<title>`, `og:title` and H1 are the bare word "shadcn-table" and the searched phrases ("shadcn data table", "tanstack table shadcn") appear nowhere on the site (audit 2026-11-10, on-page 56/100), so the page competes only for its own name.
+- Root metadata `title.default` becomes `shadcn-table: data table for shadcn/ui, built on TanStack Table`; the template `%s | shadcn-table` for docs pages stays. The H1 stays "shadcn-table"; the hero tagline under it carries the phrase "data table for shadcn/ui" once. Docs titles are untouched (D60 covers descriptions).
+- Checks: `curl` of `/` shows the new `<title>` and `og:title`; a docs page title still ends in `| shadcn-table`; the hero renders the tagline; docs-e2e green.
+- Owner, 2026-11-10: "recommended on all".
+
 ### D57 Security response headers
+
+- The live site sends only `strict-transport-security` (measured 2026-11-10); `next.config.mjs` has no `headers()`.
+- `next.config.mjs` `headers()` sets on every path: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy: camera=(), microphone=(), geolocation=()`. No `Content-Security-Policy` in this decision: it needs nonces for Next inline scripts, PostHog and fonts, and is its own decision when wanted.
+- The two-hop `http://shadcn-table.com` redirect (308 to https apex, 308 to www) is Vercel's standard behaviour and stays; no change.
+- Checks: `curl -sI` of `/` and of a docs page shows the four headers; `/ingest/*` and `/r/*` responses still work (the headers do not break the proxy or the registry JSON).
+- Owner, 2026-11-10: "recommended on all".
 
 ### D58 Markdown delivery and llms.txt shape
 
+- A docs URL requested with `Accept: text/markdown` answers `content-type: text/markdown` but its `vary` header lists only the Next router keys (measured 2026-11-10): `proxy.ts:26` sets `Vary: Accept` on the rewrite, Next drops it, so caches may serve Markdown to browsers or HTML to agents. `/llms.txt` starts with `# Docs` and no summary; `/llms-full.txt` carries raw JSX and import lines from the MDX.
+- `app/llms.mdx/docs/[[...slug]]/route.ts` sets `Vary: Accept` on its own response (and the HTML side keeps Next's vary; the proxy header may stay or go, whichever the check proves). `app/llms.txt/route.ts` follows llmstxt.org: `# shadcn-table` H1, one `>` blockquote summary (the home description), then the sections with one line per page: link and its description. `app/llms-full.txt/route.ts` strips MDX imports, JSX components and frontmatter before export; prose, headings and code fences stay.
+- Checks: `curl -sI -H "Accept: text/markdown"` on a docs URL shows `vary` containing `Accept`; `/llms.txt` first two lines are the H1 and the blockquote; `grep -cE '^(import |<[A-Z])' ` on `/llms-full.txt` is 0.
+- Owner, 2026-11-10: "recommended on all".
+
 ### D59 Home page JavaScript and API page payload
+
+- Lab audit 2026-11-10: the home page ships 775 KB of JavaScript with 1040 ms total blocking time; `/docs/api/table-options` HTML is 1.94 MB. `jspdf`, `jspdf-autotable` and `recharts` are docs dependencies (`apps/shadcn-table-docs/package.json:45-56`).
+- The home demo (`components/dev-home/v12/home-page.tsx` and what it imports) loads below-the-fold parts with `next/dynamic`; `jspdf`, `jspdf-autotable` and `recharts` are imported only inside the component that uses them, dynamically, never in the initial home bundle. `/docs/api/table-options` renders its option tables so the HTML stays under 800 KB (the spec picks the mechanism after measuring what fills the payload).
+- Targets, measured with the perf budget tooling of F28 (`--ci`): home initial JavaScript under 450 KB, lab TBT under 300 ms; `/docs/api/table-options` HTML under 800 KB. Visible behaviour unchanged.
+- Checks: the three numbers recorded in the tracker before and after; docs-e2e green; the home demo and the API page render the same content.
+- Owner, 2026-11-10: "recommended on all".
 
 ### D60 Docs content, descriptions and discoverability pages
 
+- Audit 2026-11-10 (content 62/100): docs intros and descriptions are 38 to 53 percent Material React Table wording with its typos (`/docs/guides/sorting` description, "use use" on the detail-panel page); descriptions are copied (column-pinning, row-pinning), missing (`/docs/api`) or under 45 characters (install, usage); 35 of 42 example pages are under 200 words; the Introduction page (where `/docs` lands) has no install snippet or demo; no page targets "TanStack Table" together with "shadcn/ui"; no comparison page; the GitHub repo has no topics, the docs no byline or dates.
+- Every docs page gets a unique description of 120 to 155 characters and an intro written around what is shadcn-specific, MRT typos gone; every example page gets two or three sentences on what it shows and when to use it. The Introduction page gets the install snippet and a demo; the `/docs` redirect becomes permanent (308).
+- New pages: a guide "TanStack Table with shadcn/ui" (why and how this library wires them), and a comparison page against tablecn, Material React Table and the shadcn data-table recipe (feature matrix, honest, no claims we cannot show). Each docs page shows the maintainer byline and a last-updated date from frontmatter, and the sidebar links the changelog.
+- The repo gets GitHub topics (`gh repo edit anindosarker/shadcn-table --add-topic react,shadcn-ui,tanstack-table,data-table,typescript,nextjs`).
+- This decision changes `content/docs/**`, the same files as the E8 docs restructuring; its epic is chosen with that in mind.
+- Checks: every page's description length in range (a script over `content/docs/**` frontmatter); no page under 150 words; the two new pages present in the sitemap; typecheck, lint, docs-e2e green.
+- Owner, 2026-11-10: "recommended on all".
