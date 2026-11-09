@@ -1,20 +1,29 @@
 # 30: Home JavaScript, tracker
 
-Status: running
+Status: blocked (KB target, Attention)
 Branch `v0.9/home-javascript`, worktree `shadcn-react-table.worktrees/05`
 Checks:
 - `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build` at e5f078cd: pass
 - Baseline Lighthouse x3 (`npx lighthouse@12 http://localhost:5349/ --preset=desktop ...`, Acceptance `node -e` line) at e5f078cd: 711 KB / 137 ms, 711 KB / 82 ms, 711 KB / 145 ms; median 711 KB, 137 ms (KB over target)
 - `grep -lE 'jspdf|recharts' .next/static/chunks/*.js` at e5f078cd: `0y4jmym2_y-p3.js`, `3uo436fj_z6e4.js`; neither referenced by the `/` HTML nor fetched in the Lighthouse runs: pass
 - `pnpm exec next experimental-analyze -o` (apps/shadcn-table-docs) at e5f078cd: pass, report in `.next/diagnostics/analyze` (Notes)
-- `pnpm --filter shadcn-table-docs types:check` at Task 2 change: pass
-- `pnpm --filter shadcn-table-docs lint` at Task 2 change: pass (0 errors, 9 warnings, none in dev-home)
-- `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build` at Task 2 change: pass
-- After Lighthouse x3 at Task 2 change: 437 KB / 158 ms, 437 KB / 146 ms, 437 KB / 160 ms; median 437 KB, 158 ms: pass
-- `grep -lE 'jspdf|recharts' .next/static/chunks/*.js` at Task 2 change: `0y4jmym2_y-p3.js`, `3uo436fj_z6e4.js`, neither referenced by the `/` HTML: pass
-- Playwright probe on port 5349 at Task 2 change (1350x940 and 1920x1400): pass (Notes)
+- `pnpm --filter shadcn-table-docs types:check` at 8d0f2850: pass
+- `pnpm --filter shadcn-table-docs lint` at 8d0f2850: pass (0 errors, 9 warnings, none in dev-home)
+- `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build` at 8d0f2850: pass
+- After Lighthouse x3 at 8d0f2850: 437 KB / 158 ms, 437 KB / 146 ms, 437 KB / 160 ms; median 437 KB, 158 ms: pass
+- `grep -lE 'jspdf|recharts' .next/static/chunks/*.js` at 8d0f2850: `0y4jmym2_y-p3.js`, `3uo436fj_z6e4.js`, neither referenced by the `/` HTML: pass
+- Playwright probe on port 5349 at 8d0f2850 (1350x940 and 1920x1400): pass (Notes)
+- `pnpm format` at 8d0f2850: pass, no changes
+- `pnpm test typecheck --base base` at 8d0f2850: pass
+- `pnpm test lint` at 8d0f2850: pass (9 warnings)
+- `pnpm test validate-repo` at 8d0f2850: pass
+- `pnpm test docs-e2e --base base` at 8d0f2850: fail, getting-started `/` @1440 "icons: the pick survives a reload stored=tabler class=" (not a P5 flake: after the reload no input reaches the page, so the intent-gated demo table never loads); cause of the revert below
+- Signal table gating reverted (`v12/signal-demo.tsx` back to e5f078cd), IntentLink kept: `pnpm --filter shadcn-table-docs types:check` pass; build pass; Lighthouse x3: 580 KB / 210 ms, 580 KB / 158 ms, 580 KB / 71 ms, median 580 KB, 158 ms: KB fail (target 450), ms pass; jspdf/recharts grep: same two chunks, not referenced by `/`: pass
+- `pnpm test docs-e2e --base base` with the revert: pass (107 pages, 939 examples)
 
 - Task 1 baseline: done (8a9493b9)
+- Task 2 defer and split: done as far as reachable (8d0f2850, table gating reverted in the Task 3 commit); KB target not met (Attention)
+- Task 3 format, changelog, Local CI: done (see Checks)
 
 ## Baseline (e5f078cd)
 
@@ -29,6 +38,10 @@ Checks:
 - `/` HTML 142186 bytes; 21 `<script src>` values, bytes on disk / transfer: 0bdryt_ic0367.js 33761/9367, 0cz1d0mv5g_q7.js 112594/not fetched (nomodule), 0e91pl0k5_tbm.js 5612/2430, 0t-0fg56ogvie.js 229044/72090, 0xm4182l47hkl.js 24364/8740, 1_c6vfv8os6as.js 25746/9475, 1n5grx6_y5td_.js 16611/6242, 1ootfg5f1u75s.js 343049/113860 (posthog-js), 1t92h_cggzt30.js 41490/16995, 1u1imhr-kmb1u.js 72016/23826, 2dmw2pwzd_snn.js 39251/11632, 2f_mx1qudi1tp.js 23960/8694, 2ljqm8td6c6v0.js 23491/8687, 2u7p081-chmlk.js 14434/4083, 300id0lsj28q9.js 161699/44631, 3_nspdrsocfzc.js 146480/33632, 3b6v5pt-ahp4e.js 38920/13016, 3cvfw3sg57tn1.js 33628/9359, 3fq8swxb-eibm.js 57180/19416, 3pd_0eh1o66nd.js 16909/6582, turbopack-16p7p4t38eskz.js 10947/4702. Total 1471186 bytes on disk, 427459 bytes transfer.
 - Fetched after load: 2quift96t15cq.js 6804 and 01mdz3ax1gwgh.js 13072 only. The demo table chunks and the docs route chunks no longer load until the visitor acts.
 
+## Final state
+
+- Kept: nav and hero links prefetch on intent (`shared/intent-link.tsx`). Reverted: the intent-gated demo table. Lighthouse median 580 KB, 158 ms; `/` first load unchanged (shared layout); post-load fetches are the demo table's 7 chunks only.
+
 ## Notes
 
 - ANALYZE=1 writes no report under Turbopack (milestone 24, A20); `next experimental-analyze -o` (Turbopack analyzer, read-only, no config change) wrote `.next/diagnostics/analyze/data/analyze.data`; it named @tanstack/table-core, lucide-react and the ui-radix shadcn-table files in the demo table chunks and posthog-js in the largest first-load chunk.
@@ -38,6 +51,6 @@ Checks:
 
 ## Attention
 
-- The demo table under the hero no longer loads on mount: at 1350x940 (demo top at 670 px, table placeholder partly in view) a visitor who neither moves the pointer nor scrolls sees "Loading table" in that strip until they do. Loading on mount keeps 167 KB of post-load script and misses the 450 KB target (711 to about 600 KB).
-- The nav and hero docs links prefetch on hover, touch or focus instead of on entering the viewport (133 KB of docs route chunks per visit otherwise). A click without a hover (keyboard Enter without focus, scripted) navigates without a warm prefetch.
+- Acceptance's 450 KB is unreachable inside `components/dev-home/**` while visible behaviour stays unchanged: the `/` first load is 427 KB transfer, all but 19 KB of it the shared root layout (posthog-js alone 114 KB, react-dom 72 KB; `app/layout.tsx` is out of scope, 1.6.2), and the live demo table (167 KB transfer, @tanstack/table-core plus the ui-radix shadcn-table) is in view at 1350x940 and must load without input (docs-e2e `/` "icons: the pick survives a reload" waits for its rows after a reload with no input). Gating the table on intent reached 437 KB but failed that check, so it is reverted; the branch stands at 580 KB. Owner choice: defer posthog-js / the layout providers (another spec), accept intent loading of the demo table and change that docs-e2e check, or move the 450 KB target.
+- The nav and hero docs links prefetch on hover, touch or focus instead of on entering the viewport (saves the 131 KB docs route chunks per home visit). A click without a prior hover or focus navigates without a warm prefetch.
 - 1.6.2's "every client component below the hero through `next/dynamic` from `home-page.tsx`" is not applied: the home-only first-load JavaScript is two chunks, 19 KB transfer, and `SignalDemo`/`ThemeDemo` already lazy-load their heavy parts; a server-component `dynamic()` keeps SSR and saves nothing, and `ssr: false` would drop the tiles, install strip and footer text from the HTML. Starfield and Dune stay in the first load (source 1.2 KB and 5.2 KB plus 3.8 KB field).
