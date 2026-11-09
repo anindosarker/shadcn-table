@@ -30,8 +30,8 @@ Updated: 2026-11-10 00:21
 | E7 20 After release 0.9.1 |  |  |  |  |  |  | [x] |  |  |  |
 | E9 21 Sitemap and robots | [x] |  |  |  |  |  |  |  |  |  |
 | E9 22 Remove dev routes |  |  |  |  |  |  | [x] |  |  |  |
-| E9 23 Integration 0.9.2 |  |  |  |  |  |  |  | [ ] |  |  |
-| E9 23 Release PR 0.9.2 |  |  |  |  |  |  |  |  | · |  |
+| E9 23 Integration 0.9.2 |  |  |  |  |  |  |  | [x] |  |  |
+| E9 23 Release PR 0.9.2 |  |  |  |  |  |  |  |  | [ ] |  |
 | E9 23 After release 0.9.2 |  |  |  |  |  |  |  |  |  | · |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |  |  |  |
