@@ -53,11 +53,17 @@ function examplePages(indexUrl: string): StackEntry[] {
       }
     }
   };
+  // The section is a root folder (meta.json "root": true), which has no
+  // folder index: its index page is listed as the first child instead.
   const folder = source
     .getPageTree()
     .children.find(
       (node): node is PageTree.Folder =>
-        node.type === 'folder' && node.index?.url === indexUrl,
+        node.type === 'folder' &&
+        (node.index?.url === indexUrl ||
+          node.children.some(
+            (child) => child.type === 'page' && child.url === indexUrl,
+          )),
     );
   walk(folder?.children ?? []);
   return out;
