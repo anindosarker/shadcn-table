@@ -613,3 +613,5 @@ index e1645117..e67a5482 100644
 
 ### D62 Home script target follows the home components; the PostHog load is its own finding
 
+### D63 The bundle analyzer wrap goes
+
