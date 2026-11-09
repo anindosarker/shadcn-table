@@ -261,7 +261,10 @@ html > body[data-scroll-locked] {
 
 /* ---------- sidebar ---------- */
 
-:is(#nd-sidebar, #nd-sidebar-mobile) a {
+/* page links only: the page tree sits in the scroll area (Base UI
+   role="presentation"); the banner's section tabs
+   (components/sidebar-section-tabs.tsx) sit outside it */
+:is(#nd-sidebar, #nd-sidebar-mobile) [role='presentation'] a {
   padding-block: 0.25rem;
   font-size: 0.8125rem;
   color: var(--color-fd-foreground);
@@ -269,7 +272,9 @@ html > body[data-scroll-locked] {
 }
 
 /* active item: subtle pill with the accent (primary) text, no left bar */
-:is(#nd-sidebar, #nd-sidebar-mobile) a[data-active='true'] {
+:is(#nd-sidebar, #nd-sidebar-mobile)
+  [role='presentation']
+  a[data-active='true'] {
   background-color: color-mix(
     in oklab,
     var(--color-fd-foreground) 6%,
