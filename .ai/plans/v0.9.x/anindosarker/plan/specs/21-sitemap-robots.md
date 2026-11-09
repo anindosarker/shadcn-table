@@ -11,7 +11,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 ### 1.2 Goals
 
 - `GET /sitemap.xml` returns 200, `application/xml`, one `<url>` per docs page plus the home page, every `<loc>` absolute on `siteUrl`, no `/dev`, `/r`, `/ingest`, `/og`, `/llms` or `/api` URL (D50).
-- `GET /robots.txt` returns 200, `text/plain`: `User-Agent: *`, `Allow: /`, `Disallow: /dev/`, `/ingest/`, `/r/`, and `Sitemap: <siteUrl>/sitemap.xml` (D50).
+- `GET /robots.txt` returns 200, `text/plain`: `User-Agent: *`, `Allow: /`, `Disallow: /ingest/` and `/r/`, and `Sitemap: <siteUrl>/sitemap.xml` (D50; `/dev/` is not blocked, spec 22 removes those routes, D51).
 - No `lastmod`, no `changefreq`; the home entry carries `priority: 1`, the docs pages none (D50).
 - Every other route and page renders as before; no dependency added (P6).
 - Acceptance: programmatic. On a production build (`pnpm --filter shadcn-table-docs build`, then `NEXT_PUBLIC_SITE_URL=http://localhost:5345 next start -p 5345` in the worktree, P6 ports): `curl -s localhost:5345/sitemap.xml` parses as XML (`xmllint --noout`), its `<loc>` count equals `source.getPages().length + 1` (103 + 1 = 104 at `claude/review` today; the builder computes the number with a one-line `node` script against `.source` or by counting `content/docs/**/*.mdx`), every `<loc>` starts with `http://localhost:5345/`, `grep -cE '/(dev|r|ingest|og|llms|api)(/|$)'` on the body is 0; `curl -s localhost:5345/robots.txt` equals the text of 1.6.3 with the port's origin. Repo checks of 2.2 green.
@@ -46,7 +46,7 @@ CHANGELOG.md (P9)                    ← #### Spec 21 under ## Unreleased, ### A
 
 #### 1.6.1 Data artifacts
 
-- `CHANGELOG.md` (P9): `#### Spec 21 Sitemap and robots for the docs site` under `## Unreleased`, `### Added`: the docs site serves `/sitemap.xml` and `/robots.txt` (D50).
+- `CHANGELOG.md` (P9): `#### Spec 21 Sitemap and robots for the docs site` under `## Unreleased`, `### Added`: the docs site serves `/sitemap.xml` and `/robots.txt` (D50). `## Unreleased` does not exist after 0.9.1 (`CHANGELOG.md:10` is `## 0.9.1 - 2026-11-08`): the first of specs 21 and 22 to merge adds it above `## 0.9.1`; the second appends under it (P9: both sides kept in a conflict).
 - No dependency, no `package.json`, lockfile or `next.config.mjs` change. No `vercel.json`.
 
 #### 1.6.2 Sitemap route
@@ -56,7 +56,7 @@ CHANGELOG.md (P9)                    ← #### Spec 21 under ## Unreleased, ### A
 - Entry 1: `{ url: siteUrl, priority: 1 }` (the home page `app/(home)/page.tsx`).
 - Then one entry per `source.getPages()` item: `{ url: \`${siteUrl}${page.url}\` }`; `page.url` is already `/docs/<slugs>` from `loader({ baseUrl: docsRoute })`.
 - No `lastModified`, `changeFrequency` or `priority` on the docs entries (D50: Vercel shallow clones make git dates unreliable).
-- Does NOT list `/dev/*` (noindex, `app/dev/layout.tsx:7`), `/r/*` (registry JSON, rewrites), `/ingest/*` (PostHog proxy), `/og/*`, `/llms*`, `/SKILL.md`, `/version.txt`, `/api/*`.
+- Does NOT list `/dev/*` (noindex today, `app/dev/layout.tsx:7`; gone after spec 22), `/r/*` (registry JSON, rewrites), `/ingest/*` (PostHog proxy), `/og/*`, `/llms*`, `/SKILL.md`, `/version.txt`, `/api/*`.
 - Does NOT list `/docs` or `/docs/getting-started`: they are not pages (no `index.mdx`), they redirect in `next.config.mjs`.
 - Does NOT compute `lastmod` from git or frontmatter.
 
@@ -88,7 +88,7 @@ import { siteUrl } from '@/lib/shared';
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: '*', allow: '/', disallow: ['/dev/', '/ingest/', '/r/'] },
+    rules: { userAgent: '*', allow: '/', disallow: ['/ingest/', '/r/'] },
     sitemap: `${siteUrl}/sitemap.xml`,
   };
 }
@@ -99,17 +99,15 @@ Rendered text, origin per environment:
 ```
 User-Agent: *
 Allow: /
-Disallow: /dev/
 Disallow: /ingest/
 Disallow: /r/
 
 Sitemap: https://www.shadcn-table.com/sitemap.xml
 ```
 
-- Does NOT disallow `/llms*`, `/SKILL.md`, `/og/` or `/api/`: those stay crawlable as today (a future decision may change that; D50 names three paths).
+- Does NOT disallow `/dev/`: spec 22 deletes those routes (D51), and a robots block would hide a page's `noindex` from Google (D50 edit, 2026-11-10).
+- Does NOT disallow `/llms*`, `/SKILL.md`, `/og/` or `/api/`: those stay crawlable as today (a future decision may change that; D50 names two paths).
 - Does NOT add per-agent rules (AI crawlers) or a `host` line.
-
-**Stays unchanged:** `app/dev/layout.tsx` (keeps its `noindex`; robots and meta robots overlap by design).
 
 ### 1.7 Dependencies and env
 
