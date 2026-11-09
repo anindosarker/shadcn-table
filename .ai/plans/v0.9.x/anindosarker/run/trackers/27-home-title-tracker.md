@@ -1,6 +1,6 @@
 # 27: Home title and hero tagline name the category, tracker
 
-Status: running
+Status: merged (0e3d9478)
 Branch `v0.9/home-title`, worktree `shadcn-react-table.worktrees/03`
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` at ecf28f3e: pass
