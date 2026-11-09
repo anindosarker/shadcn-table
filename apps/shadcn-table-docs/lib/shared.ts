@@ -14,6 +14,12 @@ export const gitConfig = {
   branch: 'master',
 };
 
+/** The maintainer named in each docs page's byline. */
+export const siteAuthor = {
+  name: gitConfig.user,
+  url: `https://github.com/${gitConfig.user}`,
+} as const;
+
 /**
  * Site origin for absolute URLs handed to tools outside the site (the copy
  * prompt): `NEXT_PUBLIC_SITE_URL` in deployments, the dev port otherwise.

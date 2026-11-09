@@ -4,11 +4,15 @@ import { docsContentRoute, docsImageRoute, docsRoute } from './shared';
 import { toPlainMarkdown } from './llms';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
+import { z } from 'zod';
 
 const docs = defineDocs({
   dir: 'content/docs',
   docs: {
-    schema: pageSchema,
+    // `date`: the day the page's copy was last written, shown in the byline.
+    schema: pageSchema.extend({
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    }),
     postprocess: {
       includeProcessedMarkdown: true,
     },
