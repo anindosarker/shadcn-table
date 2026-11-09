@@ -5,6 +5,6 @@
     "api",
     "examples",
     "guides",
-    "[Changelog](https://github.com/anindosarker/shadcn-table/blob/master/CHANGELOG.md)"
+    "external:[Changelog](https://github.com/anindosarker/shadcn-table/blob/master/CHANGELOG.md)"
   ]
 }
