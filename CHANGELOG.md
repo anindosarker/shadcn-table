@@ -58,6 +58,10 @@ publishes the section as the GitHub release notes.
 - New pages: "Comparison" (getting started), a feature matrix against tablecn, Material React Table and the shadcn/ui data-table recipe with its sources, and "TanStack Table with shadcn/ui" (first guide under Fundamentals) (D60).
 - The Introduction shows the install command and the basic example; the getting-started pages have new descriptions. `tools/docs/check-frontmatter.mjs` checks description length, dates, duplicates, word count and MRT typos (D60).
 
+#### Spec 31 Examples copy
+
+- Every example page has a new description of 120 to 155 characters naming the feature and the option or component it uses, and an intro on what the example shows, which options it turns on and when to use it; the Material React Table wording and its typos ("show how use use") are gone, and the Examples index page has a description and an intro (D60).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added
