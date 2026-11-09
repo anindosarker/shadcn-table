@@ -1,10 +1,10 @@
 ---
 title: 'Editing Guide'
-description: 'How to enable data editing features in Shadcn Table'
+description: 'Edit data in shadcn-table with enableEditing and editDisplayMode: in a shadcn/ui Dialog, one row, one cell, every cell at once, or a custom editing UI.'
 date: '2026-11-10'
 ---
 
-If your tables need full CRUD functionality, you can enable editing features in Shadcn Table.
+shadcn-table can edit data in place. Turn it on with `enableEditing`; the inputs are `ST_EditCellTextField` (your shadcn/ui `Input` or `Select`), and the modal mode opens your shadcn/ui `Dialog`. The table never writes your data: you save each change in a callback such as `onEditingRowSave`.
 
 There are five visually distinct editing modes to choose from, whether you want to let users [edit data in a modal](#modal-edit-display-mode), [inline one row at a time](#row-edit-display-mode), [one cell at a time](#cell-edit-display-mode), or just always have [editing enabled for every cell](#table-edit-display-mode), or a [completely custom editing UI](#custom-edit-display-mode).
 
@@ -106,7 +106,7 @@ When using the default `"modal"` editDisplayMode, the user will be presented wit
 
 An `onEditingRowSave` callback function prop must be provided where you will get access to the updated row data so that changes can be processed and saved. It is up to you how you handle the data. This function has a `exitEditingMode` parameter that must be called in order to exit editing mode upon save. The reason for this is so that you can perform validation checks before letting the modal close.
 
-By default, Shadcn Table will render all of the cells in the row as text fields in a vertical stack. You can customize or override this behavior with the `stEditRowDialogProps` table option, or the `renderEditRowDialogContent` table option.
+By default, shadcn-table will render all of the cells in the row as text fields in a vertical stack. You can customize or override this behavior with the `stEditRowDialogProps` table option, or the `renderEditRowDialogContent` table option.
 
 ```jsx
 const table = useShadcnTable({
@@ -208,7 +208,7 @@ There is another option if you don't like any of the built-in editDisplayModes U
 
 ### Enable Creating
 
-Shadcn Table offers new functionality to make creating news rows of data easier. It works just like the editing features, but with separate state options and callbacks. A Blank row is added to the table or modal for the user to fill out and submit.
+shadcn-table offers new functionality to make creating news rows of data easier. It works just like the editing features, but with separate state options and callbacks. A Blank row is added to the table or modal for the user to fill out and submit.
 
 #### Create Display Modes
 

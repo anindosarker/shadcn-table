@@ -58,6 +58,12 @@ publishes the section as the GitHub release notes.
 - New pages: "Comparison" (getting started), a feature matrix against tablecn, Material React Table and the shadcn/ui data-table recipe with its sources, and "TanStack Table with shadcn/ui" (first guide under Fundamentals) (D60).
 - The Introduction shows the install command and the basic example; the getting-started pages have new descriptions. `tools/docs/check-frontmatter.mjs` checks description length, dates, duplicates, word count and MRT typos (D60).
 
+#### Spec 31 Guides and API copy
+
+- Every guide and API page has a new description of 120 to 155 characters naming its feature and the option or `ST_` component involved, and the product is "shadcn-table" in prose (D60).
+- The guide intros are rewritten around what is shadcn-specific (the option, the `ST_` component, the shadcn/ui parts it uses); the Full Screen Toggle guide gains an intro, and the Guides and API index pages gain prose (D60).
+- Each API page opens with a paragraph on what its table lists and how it relates to TanStack Table's options; the API index has a description (D60).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added

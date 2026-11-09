@@ -1,6 +1,6 @@
 ---
 title: 'Row Instance APIs'
-description: 'All the row instance methods and objects that can be accessed from the table instance in Shadcn Table'
+description: 'Every method and property of a row instance in shadcn-table, from TanStack Table: the original data, selection, expansion, pinning and visible cells.'
 date: '2026-11-10'
 ---
 
@@ -25,7 +25,9 @@ date: '2026-11-10'
   ]}
 />
 
-> NOTE: These are NOT [props](/docs/api/table-options) or [column options](/docs/api/column-options) for Shadcn Table. These are just static methods on a row instance that you can use.
+This page lists the methods and properties of the `row` object that shadcn-table passes to row callbacks such as `stTableBodyRowProps`, `renderDetailPanel` and `renderRowActionMenuItems`. A row instance wraps one item of your `data`: `row.original` is that item, `row.id` its id, and the methods read or change the row's selection, expansion and pinning state. All of these come from TanStack Table, so the TanStack Table row docs describe the same methods. For one value in the row, use `row.getValue(columnId)` or go down to the cell instance; for state that spans rows, use the table instance.
+
+> NOTE: These are NOT [props](/docs/api/table-options) or [column options](/docs/api/column-options) for shadcn-table. These are just static methods on a row instance that you can use.
 
 Every row in the table has an associated row instance that can be accessed in many of the callback props that you can use to access a row's information and methods.
 

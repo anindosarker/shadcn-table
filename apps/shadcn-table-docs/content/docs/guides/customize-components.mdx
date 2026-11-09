@@ -1,12 +1,12 @@
 ---
 title: 'Customize (Style) Components Guide'
-description: 'How to customize and pass props to shadcn/ui components and set up a shadcn/ui Theme in Shadcn Table'
+description: 'Style shadcn-table by passing props to its shadcn/ui components through the st...Props options, and theme it with your own shadcn/ui CSS variables.'
 date: '2026-11-10'
 ---
 
-One of the strengths of Shadcn Table is that it exposes a majority of all the underlying shadcn/ui component props used to build the table.
+shadcn-table builds every part of the table from the shadcn/ui components in your `components/ui` folder, and the `st...Props` options pass props straight to them: classes, event handlers, ARIA attributes. Because the components are yours, a change to your theme or to the components themselves reaches the table too.
 
-Additionally, in one of the sections below, you will learn [how to theme your table](#theming) to customize colors, typography, or any other default CSS that is used by Shadcn Table.
+Additionally, in one of the sections below, you will learn [how to theme your table](#theming) to customize colors, typography, or any other default CSS that is used by shadcn-table.
 
 ### Relevant Table Options
 
@@ -118,7 +118,7 @@ return <ShadcnTable table={table} />;
 
 ### Styling Components
 
-Each `st...Props` prop accepts `className` and `style`, which are forwarded to the underlying element. Since Shadcn Table is built with Tailwind CSS, the recommended way to style components is with Tailwind classes in `className`. They are merged with the default classes, and they can use the shadcn/ui CSS variables from your theme.
+Each `st...Props` prop accepts `className` and `style`, which are forwarded to the underlying element. Since shadcn-table is built with Tailwind CSS, the recommended way to style components is with Tailwind classes in `className`. They are merged with the default classes, and they can use the shadcn/ui CSS variables from your theme.
 
 1. The `style` prop works just like a style prop in any React component.
 
@@ -231,7 +231,7 @@ There are hundreds of table, column, header, row, and cell instance APIs that yo
 
 ### Theming
 
-Shadcn Table respects your shadcn/ui theme. If you have already set up shadcn/ui with `shadcn init`, you should already be set. The table reads the CSS variables from your global stylesheet (`--background`, `--foreground`, `--primary`, `--border`, `--muted`, etc.), so changing them changes the table along with the rest of your app. If you have not set that up, you should visit the official [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming) to learn how.
+shadcn-table respects your shadcn/ui theme. If you have already set up shadcn/ui with `shadcn init`, you should already be set. The table reads the CSS variables from your global stylesheet (`--background`, `--foreground`, `--primary`, `--border`, `--muted`, etc.), so changing them changes the table along with the rest of your app. If you have not set that up, you should visit the official [shadcn/ui Theming Docs](https://ui.shadcn.com/docs/theming) to learn how.
 
 ```css
 /* app/globals.css: have you set up your theme variables globally in your app root? */
@@ -265,7 +265,7 @@ return (
 
 ### Table Theme Values
 
-The colors Shadcn Table uses internally come from the shadcn/ui theme variables, so there is no separate theme object to pass in. Here is where the default values come from, if you want to override them:
+The colors shadcn-table uses internally come from the shadcn/ui theme variables, so there is no separate theme object to pass in. Here is where the default values come from, if you want to override them:
 
 - the table and toolbars use `--background` and `--foreground`; the header labels use `--muted-foreground`, and grid lines use `--border`
 - the row tints come from four table variables declared on the table root, each mixed from your theme: `--st-stripe` (alternating rows), `--st-hover` (the hovered row), `--st-selected` (selected rows) and `--st-edge-shadow` (the shadow of pinned columns). See the [Tint Tokens Guide](/docs/guides/tint-tokens) for their defaults and how to override them

@@ -1,10 +1,14 @@
 ---
 title: 'Guides'
-description: 'Shadcn Table Guides and Tutorials'
+description: 'Guides to every shadcn-table feature: fundamentals, styling and icons, sizing, big data, editing, filtering, grouping, pinning, ordering and row actions.'
 date: '2026-11-10'
 ---
 
 import { routes } from '@/lib/routes';
+
+These guides walk through shadcn-table one feature at a time. Each one names the table options, column options and state that the feature uses, shows the defaults, and gives code you can copy into your own table. Start with the Fundamentals group: it explains how shadcn-table joins TanStack Table with your shadcn/ui components, how to define data and display columns, and how to manage the table state yourself.
+
+The other groups follow the parts of a table. Customization covers styling, icons, tint tokens, localization and the toolbars. Size and width covers column sizes, resizing, density and full screen. Big data covers loading states, pagination and virtualization. The remaining groups cover editing, filtering and hiding, grouping and expanding, sticky and pinned parts, sorting and ordering, and the action menus. Every option a guide mentions is listed in full in the [API reference](/docs/api), and most guides link a live example from the [examples](/docs/examples).
 
 <TableOfContentsList
   items={routes.find((item) => item.href === '/docs/guides').items}
