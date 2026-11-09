@@ -7,7 +7,9 @@ import { NAV_LINKS } from '@/lib/layout.shared';
 /**
  * The section switcher (L7): Docs, Examples, Guides, API at the top of the
  * sidebar (the `sidebar.banner` slot, above the section heading), the active
- * section underlined. One line; scrolls sideways when narrow.
+ * section underlined. One line; scrolls sideways when narrow. The type is
+ * the old header links' (.site-nav-link before L7); `!` beats the unlayered
+ * `#nd-sidebar a` rules in app/global.css (13px, foreground, active pill).
  */
 export function SidebarSectionTabs() {
   const pathname = usePathname();
@@ -22,7 +24,7 @@ export function SidebarSectionTabs() {
           key={l.url}
           href={l.url}
           data-active={isActive(l.url, pathname) || undefined}
-          className="-mb-px inline-flex shrink-0 items-center whitespace-nowrap border-b-2 border-transparent px-2 font-mono text-[11px] uppercase tracking-[0.12em] text-fd-muted-foreground transition-colors hover:text-(--docs-accent) data-active:border-(--docs-accent) data-active:text-(--docs-accent)"
+          className="-mb-px inline-flex shrink-0 items-center whitespace-nowrap rounded-none! border-b-2 border-transparent bg-transparent! px-2 py-1! font-mono text-[11px]! font-normal! uppercase tracking-[0.12em] text-fd-muted-foreground! transition-colors hover:text-(--docs-accent)! data-active:border-(--docs-accent) data-active:text-(--docs-accent)!"
         >
           {l.text}
         </Link>
