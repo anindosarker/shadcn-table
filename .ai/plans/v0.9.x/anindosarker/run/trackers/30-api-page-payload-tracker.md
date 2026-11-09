@@ -16,6 +16,7 @@ Checks:
 - `pnpm test validate-repo` at d10b2e5f: pass
 - `pnpm test docs-e2e --base base` at d10b2e5f: pass (getting-started 205, api 109, guides 692, examples 939 passed, 0 failed)
 - Playwright probe on 5350 at 21bd1d41: pass (211 rows hydrated; search `enableColumnFilters` leaves 2 rows; clicking `#enableColumnFilters-prop` copies `enableColumnFilters`; name column header sticky (pinned); JavaScript disabled: 211 static rows with `#enableColumnFilters-prop`)
+- Verifier at 3b61e501: every 2.2 and Acceptance line of this milestone is recorded above; `git diff --name-only d10b2e5f..HEAD` and `21bd1d41..HEAD` touch only `.ai/` and `CHANGELOG.md`, so none was rerun. The Lighthouse and `jspdf|recharts` lines belong to milestone Home JavaScript.
 
 - Task 1 static table, shell, client moves: done (21bd1d41)
 - Task 2 production proof: done (57bf33a1)
