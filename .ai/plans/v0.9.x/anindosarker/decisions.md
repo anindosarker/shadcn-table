@@ -556,3 +556,6 @@ index e1645117..e67a5482 100644
 - Add `apps/shadcn-table-docs/app/opengraph-image.tsx` (1200x630, `ImageResponse`) reusing the docs OG route's layout and fonts with the site name and the home description; Next.js adds `og:image` and `twitter:image` to `/` from the file, so `app/(home)/page.tsx` metadata is untouched.
 - Checks: the head of `/` has `og:image` and `twitter:image` on `siteUrl` pointing at `/opengraph-image`; the URL returns 200 `image/png` 1200x630; docs pages keep their `/og/docs/...` image.
 - Owner, 2026-11-10: "k" on the item.
+
+### D56 Home title and hero tagline name the category
+
