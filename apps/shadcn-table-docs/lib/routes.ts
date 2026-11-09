@@ -36,7 +36,7 @@ export const routes: Array<RouteItem> = [
     ],
   },
   {
-    label: 'Quick Examples',
+    label: 'Examples',
     href: '/docs/examples',
     items: [
       {

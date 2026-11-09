@@ -11,7 +11,7 @@ import {
 
 /**
  * A "---Label---" sub-group inside a section: the label toggles the pages
- * after it, which sit on a dashed guide line (styled in app/global.css).
+ * after it, which share the section's left edge (no indent, no guide line).
  * Open only while it holds the current page; navigating into it opens it.
  */
 export function SidebarSubgroup({
@@ -32,7 +32,7 @@ export function SidebarSubgroup({
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="flex flex-col">
-      <CollapsibleTrigger className="group/subgroup mt-2 inline-flex min-h-6 w-full cursor-pointer items-center justify-between gap-2 ps-5 pe-2 font-mono text-[11px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground hover:text-fd-foreground">
+      <CollapsibleTrigger className="group/subgroup mt-2 inline-flex min-h-6 w-full cursor-pointer items-center justify-between gap-2 px-2 font-mono text-[9px] font-normal uppercase leading-none tracking-[0.12em] text-fd-muted-foreground hover:text-fd-foreground">
         <span className="inline-flex items-center gap-2 text-start">
           {separator.icon}
           {separator.name}
