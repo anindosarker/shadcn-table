@@ -26,6 +26,15 @@ Checks:
   - `pnpm test validate-repo`: pass
   - `pnpm test docs-e2e --base base /docs/getting-started/comparison /docs/guides/tanstack-table-with-shadcn-ui /docs/guides/click-to-copy`: pass (23 passed, 0 failed)
   - curls on `next start -p 5351` (server stopped after): `/docs/guides/click-to-copy` has the Changelog URL only in the sidebar link, no footer card; byline `grep -o 'Updated 20[0-9-]*</p>' | wc -l` prints `1`; guide carries `table.state`; comparison carries `Data grid: RTL support`
+- Verifier, at 035523ce (code equal to 4cb6f290; checks recorded there not rerun):
+  - `pnpm test typecheck --base base`: pass (tsc clean)
+  - `pnpm test lint`: pass (exit 0; the same 9 warnings as at 67afaff5)
+  - `pnpm test docs-e2e --base base`: pass (107 pages; getting-started 205, api 109, guides 692, examples 939 passed, 0 failed)
+  - `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs/getting-started`: pass (5 pages, 0 on every rule)
+  - `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs/guides/tanstack-table-with-shadcn-ui.mdx`: pass (0 on every rule)
+  - `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs`: 85 / 0 / 2 / 52 / 10 (descriptions, date, duplicates, under 150 words, typos), as in Notes; the 2.2 line wants `0` only once all three milestones merged (release Integration), not a frame check
+  - Acceptance 1.2 on `next start -p 5351` (production build of 035523ce, server stopped after): `/docs` prints `308 http://localhost:5351/docs/getting-started/introduction`; byline `grep -c 'Updated 20'` prints `2`, `grep -o 'Updated 20[0-9-]*</p>' | wc -l` prints `1` (see Attention); sitemap count `2`; topics count `6`: pass
+  - Not local: 2.2 "Review: fable" is the reviewer's step
 
 Tasks:
 
