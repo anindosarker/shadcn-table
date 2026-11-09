@@ -15,7 +15,7 @@ Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, 
 - `GET /robots.txt` returns 200, `text/plain`: `User-Agent: *`, `Allow: /`, `Disallow: /ingest/` and `/r/`, and `Sitemap: <siteUrl>/sitemap.xml` (D50; `/dev/` is not blocked, spec 22 removes those routes, D51).
 - No `lastmod`, no `changefreq`; the home entry carries `priority: 1`, the docs pages none (D50).
 - Every other route and page renders as before; no dependency added (P6).
-- Acceptance: programmatic. On a production build (`pnpm --filter shadcn-table-docs build`, then `NEXT_PUBLIC_SITE_URL=http://localhost:5345 next start -p 5345` in the worktree, P6 ports): `curl -s localhost:5345/sitemap.xml` parses as XML (`xmllint --noout`), its `<loc>` count equals `source.getPages().length + 1` (103 + 1 = 104 at `claude/review` today; the builder computes the number with a one-line `node` script against `.source` or by counting `content/docs/**/*.mdx`), every `<loc>` starts with `http://localhost:5345/`, `grep -cE '/(dev|r|ingest|og|llms|api)(/|$)'` on the body is 0; `curl -s localhost:5345/robots.txt` equals the text of 1.6.3 with the port's origin. Repo checks of 2.2 green.
+- Acceptance: programmatic. On a production build (`pnpm --filter shadcn-table-docs build`, then `NEXT_PUBLIC_SITE_URL=http://localhost:5345 next start -p 5345` in the worktree, P6 ports): `curl -s localhost:5345/sitemap.xml` parses as XML (`xmllint --noout`), its `<loc>` count equals `source.getPages().length + 1` (103 + 1 = 104 at `claude/review` today; the builder computes the number with a one-line `node` script against `.source` or by counting `content/docs/**/*.mdx`), every `<loc>` starts with `http://localhost:5345/`, `grep -oE '<loc>[^<]*' | grep -cE '^<loc>http://localhost:5345/(dev|r|ingest|og|llms|api)(/|$)'` on the body is 0 (anchored at the origin: nine docs pages live under `/docs/api/`, the run of 2026-11-10); `curl -s localhost:5345/robots.txt` equals the text of 1.6.3 with the port's origin. Repo checks of 2.2 green.
 
 ### 1.3 Current structure
 
@@ -37,7 +37,7 @@ No `sitemap.*`, `robots.*`, `next-sitemap.config.*` anywhere in `apps/`.
 ```
 apps/shadcn-table-docs/app/
 ├── sitemap.ts                       ← MetadataRoute.Sitemap: home + source.getPages()
-└── robots.ts                        ← MetadataRoute.Robots: allow all, three disallows, sitemap URL
+└── robots.ts                        ← MetadataRoute.Robots: allow all, two disallows, sitemap URL
 CHANGELOG.md (P9)                    ← #### Spec 21 under ## Unreleased, ### Added
 ```
 
