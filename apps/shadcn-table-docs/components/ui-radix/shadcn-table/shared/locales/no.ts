@@ -25,6 +25,7 @@ export const ST_Localization_NO: ST_Localization = {
   hideColumn: 'Skjul {column} kolonne',
   filterArrIncludes: 'Inkluderer',
   filterArrIncludesAll: 'Inkluderer alle',
+  filterArrIncludesNone: 'Ekskluderer',
   filterArrIncludesSome: 'Inkluderer noen',
   filterBetween: 'Mellom',
   filterBetweenInclusive: 'Mellom (inkluderende)',

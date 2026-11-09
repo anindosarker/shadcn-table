@@ -112,8 +112,12 @@ bump dry run) needs a PR and runs in CI; `validate-production` (Validate Product
 live site after a release. The tool unit tests (`node --test "tools/**/*.test.mjs"`) run as part
 of `pnpm test validate-repo`.
 
-CI runs the same tests. `.github/workflows/pr.yml` on every pull request, twenty-one jobs:
-`Typecheck (base|radix|aria)`, `Lint`, `Storybook Tests (base|radix|aria)`,
+Every story file has at least one play; a feature story file has one play per behaviour it
+shows. A story file without a play is a finding (v0.8.x D59).
+
+CI runs the same tests. `.github/workflows/pr.yml` on every pull request, twenty-two jobs:
+`Head` (reads the PR head commit, D35), `Typecheck (base|radix|aria)`, `Lint`,
+`Storybook Tests (base|radix|aria)`,
 `Docs E2E Tests (base|radix|aria)`, `Validate Repo`,
 `Installation E2E (fresh|existing|base|aria|nextjs-base|nextjs-radix|nextjs-aria)`,
 `Validate PR`, `PR Summary` (one sticky comment per PR from every job's record) and

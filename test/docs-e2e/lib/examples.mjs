@@ -14,6 +14,55 @@ import {
 
 const expandButtons = (w) => w.locator('button[aria-label="Expand"]');
 
+const DESIGN_SYSTEM_KEY = 'st-design-system';
+
+/**
+ * Spec 14 (D27): a stored `iconLibrary: 'tabler'` reaches the example on the
+ * page's base copy (components/example-icons.tsx): after a reload the
+ * toolbar's search toggle draws a Tabler svg. Clears the stored config and
+ * reloads after.
+ */
+async function storedIconLibrary(page, check) {
+  await page.evaluate((key) => {
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        config: { iconLibrary: 'tabler' },
+        savedAt: Date.now(),
+      }),
+    );
+  }, DESIGN_SYSTEM_KEY);
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  const sel = '[id="example-basic"] button[aria-label="Show/Hide search"] svg';
+  await page
+    .locator('[id="example-basic"] table tbody tr')
+    .first()
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+  const tabler = await page
+    .waitForFunction(
+      (s) => document.querySelector(s)?.classList.contains('tabler-icon'),
+      sel,
+      { timeout: 5000 },
+    )
+    .then(() => true)
+    .catch(() => false);
+  const cls =
+    (await page
+      .locator(sel)
+      .first()
+      .getAttribute('class')
+      .catch(() => '')) ?? '';
+  check('basic: stored Tabler pick switches the example icons', tabler, cls);
+  await page.evaluate((key) => localStorage.removeItem(key), DESIGN_SYSTEM_KEY);
+  await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+  await page
+    .locator('[id="example-basic"] table tbody tr')
+    .first()
+    .waitFor({ timeout: 30000 })
+    .catch(() => {});
+}
+
 async function hasText(w, id, re, check) {
   const txt = (await w.innerText().catch(() => '')) ?? '';
   check(`${id}: text ${re}`, re.test(txt));
@@ -80,6 +129,26 @@ async function sortChip(page, w, id, column, check) {
 }
 
 /**
+ * F25 (v0.9.x): the `tbody tr` count once the example's rows have settled:
+ * no loading skeleton left in the body and the count equal across two reads
+ * 300 ms apart, bounded at 10 s. The CRUD examples load their users through
+ * a fake 1 s query and render skeleton rows until then.
+ */
+async function settledRowCount(page, w) {
+  const rows = w.locator('tbody tr');
+  const skeletons = w.locator('tbody [data-slot="skeleton"]');
+  const deadline = Date.now() + 10_000;
+  let count = await rows.count();
+  while (Date.now() < deadline) {
+    await page.waitForTimeout(300);
+    const next = await rows.count();
+    if (next === count && (await skeletons.count()) === 0) return next;
+    count = next;
+  }
+  return count;
+}
+
+/**
  * F53: the row's delete button opens a shadcn AlertDialog with the question,
  * not a browser confirm; Cancel closes it and keeps every row.
  */
@@ -91,7 +160,7 @@ async function deleteDialog(page, w, id, check) {
   };
   page.on('dialog', onDialog);
   try {
-    const before = await w.locator('tbody tr').count();
+    const before = await settledRowCount(page, w);
     await w.locator('tbody button.text-destructive').first().click();
     const dialog = page.getByRole('alertdialog');
     await dialog.waitFor({ timeout: 5000 });
@@ -103,7 +172,7 @@ async function deleteDialog(page, w, id, check) {
     );
     await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
     await dialog.waitFor({ state: 'hidden', timeout: 5000 });
-    const after = await w.locator('tbody tr').count();
+    const after = await settledRowCount(page, w);
     check(
       `${id}: delete dialog cancel keeps the rows`,
       after === before,
@@ -195,6 +264,7 @@ const checks = {
   '/docs/examples/basic': async ({ page, check }) => {
     const w = await example(page, 'basic', check);
     await singleExample(page, check);
+    await storedIconLibrary(page, check);
     // Example switcher: previous is disabled on the first example, next
     // steps to Minimal.
     const header = w.locator('header');
@@ -408,7 +478,7 @@ const checks = {
   ),
   '/docs/examples/filter-switching': examplePage(
     'customize-filter-modes',
-    'enableColumnFilterModes: true',
+    'enableColumnFilterModes: false',
     async (page, w, check) => {
       // the mode picker sits on the editor's top line in chips mode (D39)
       const editor = await chipFilter(
@@ -554,6 +624,28 @@ const checks = {
         !!box?.inside,
         box ? `ul=${box.ul} bar=${box.bar}` : 'no pagination',
       );
+      // D24: with no stored view the example opens at ten rows
+      await page.evaluate(() =>
+        localStorage.removeItem('shadcn-table:persistent-view:view'),
+      );
+      await page.reload({ waitUntil: 'networkidle', timeout: 90000 });
+      const rows = w.locator('table tbody tr');
+      await rows
+        .first()
+        .waitFor({ timeout: 30000 })
+        .catch(() => {});
+      const count = await rows.count();
+      check('ten rows on first load', count === 10, `rows=${count}`);
+      const size = await w
+        .locator('[aria-label="Rows per page"]')
+        .first()
+        .evaluate((el) =>
+          el.tagName === 'SELECT'
+            ? el.value
+            : el.textContent?.match(/\d+/)?.[0],
+        )
+        .catch(() => null);
+      check('rows per page reads 10', size === '10', `select=${size}`);
     },
   ),
   '/docs/examples/popover-filters': examplePage(

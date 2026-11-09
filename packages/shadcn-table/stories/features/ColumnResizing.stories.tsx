@@ -1,6 +1,10 @@
 import { type Meta, type StoryContext } from '@storybook/react-vite';
 import { expect, fireEvent, userEvent, waitFor, within } from 'storybook/test';
-import { type ST_ColumnDef, ShadcnTable } from '@/components/ui/shadcn-table';
+import {
+  type ST_ColumnDef,
+  ShadcnTable,
+  useShadcnTable,
+} from '@/components/ui/shadcn-table';
 import { faker } from '@faker-js/faker';
 import {
   CakeIcon,
@@ -587,5 +591,66 @@ export const ResizeMenuItemResets = {
     await waitFor(() =>
       expect(Math.abs(widthOf(th) - before)).toBeLessThanOrEqual(1),
     );
+  },
+};
+
+const ResetSizeAnimatesTable = () => {
+  const table = useShadcnTable({
+    columns,
+    data,
+    initialState: { columnSizing: { firstName: 400 } },
+  });
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => table.setColumnSizing({ firstName: 400 })}
+      >
+        Widen First Name
+      </button>
+      <ShadcnTable table={table} />
+    </div>
+  );
+};
+
+/**
+ * A reset animates (D5): the double click on the handle and the Reset column
+ * size menu item mark the table with `data-size-resetting` while the width
+ * transitions back to its default, and the mark clears on `transitionend`.
+ */
+export const ResetSizeAnimates = {
+  render: () => <ResetSizeAnimatesTable />,
+  play: async ({ canvasElement }: StoryContext) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole('columnheader', { name: /First Name/ });
+    const th = firstNameHeader(canvasElement);
+    const tableElement = th.closest('table')!;
+    const sizeVar = () =>
+      tableElement.style.getPropertyValue('--col-firstName-size');
+    expect(sizeVar()).toBe('400');
+
+    fireEvent.doubleClick(th.querySelector<HTMLElement>('.cursor-col-resize')!);
+    expect(tableElement.hasAttribute('data-size-resetting')).toBe(true);
+    await waitFor(() =>
+      expect(tableElement.hasAttribute('data-size-resetting')).toBe(false),
+    );
+    expect(sizeVar()).toBe('180');
+
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Widen First Name' }),
+    );
+    await waitFor(() => expect(sizeVar()).toBe('400'));
+    await userEvent.click(
+      within(th).getByRole('button', { name: 'Column Actions' }),
+    );
+    const menu = await within(document.body).findByRole('menu');
+    await userEvent.click(
+      within(menu).getByRole('menuitem', { name: 'Reset column size' }),
+    );
+    expect(tableElement.hasAttribute('data-size-resetting')).toBe(true);
+    await waitFor(() =>
+      expect(tableElement.hasAttribute('data-size-resetting')).toBe(false),
+    );
+    expect(sizeVar()).toBe('180');
   },
 };

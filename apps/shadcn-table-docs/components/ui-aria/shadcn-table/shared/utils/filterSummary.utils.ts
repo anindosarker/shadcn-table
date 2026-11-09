@@ -5,7 +5,10 @@ import {
 } from '@/components/ui-aria/shadcn-table/types';
 import { getColumnFilterFnName } from '@/components/ui-aria/shadcn-table/shared/utils/column.utils';
 import { getValueAndLabel } from '@/components/ui-aria/shadcn-table/shared/utils/utils';
-import { stFilterOptions } from '@/components/ui-aria/shadcn-table/components/menus/ST_FilterOptionMenu';
+import {
+  isFilterModeForVariant,
+  stFilterOptions,
+} from '@/components/ui-aria/shadcn-table/components/menus/ST_FilterOptionMenu';
 
 /** The filter modes that take no value; core drops an empty value, so they hold a space. */
 export const ST_EMPTY_FILTER_MODES: readonly string[] = ['empty', 'notEmpty'];
@@ -61,7 +64,9 @@ export const getFilterModeOptions = <TData extends ST_RowData>(
       RANGE_MODES.includes(mode),
     );
   }
-  const options = stFilterOptions(table.options.localization);
+  const options = stFilterOptions(table.options.localization).filter((option) =>
+    isFilterModeForVariant(option.option, filterVariant),
+  );
   if (!allowed) return options;
   return allowed.flatMap(
     (mode) => options.find((option) => option.option === mode) ?? [],
@@ -95,17 +100,23 @@ export const setFilterMode = <TData extends ST_RowData>(
   }
 };
 
-/** Puts a column with a mode picker back on its first mode. */
+/**
+ * Puts a column with a mode picker back on its initial mode, or on its first
+ * mode when the picker does not offer the initial one.
+ */
 export const resetFilterMode = <TData extends ST_RowData>(
   column: ST_Column<TData>,
 ) => {
-  const [first] = getFilterModeOptions(column);
-  if (!first || getColumnFilterFnName(column.columnDef) === first.option) {
+  const options = getFilterModeOptions(column);
+  const initial = column.table.initialState.columnFilterFns?.[column.id];
+  const target =
+    options.find((option) => option.option === initial) ?? options[0];
+  if (!target || getColumnFilterFnName(column.columnDef) === target.option) {
     return;
   }
   column.table.setColumnFilterFns((current) => ({
     ...current,
-    [column.id]: first.option,
+    [column.id]: target.option,
   }));
 };
 

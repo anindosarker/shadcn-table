@@ -207,6 +207,12 @@ export type ST_IconKey =
 
 export type ST_Icons = Record<ST_IconKey, ComponentType<ST_IconProps>>;
 
+/** Defaults for every table under an `ST_DefaultsProvider`. */
+export interface ST_Defaults {
+  /** Icons for every table under the provider; a table's own `icons` option wins. */
+  icons?: Partial<ST_Icons>;
+}
+
 /** The events the row selection and select-all handlers accept. */
 export type ST_SelectionEvent =
   | ChangeEvent<HTMLInputElement>
@@ -371,6 +377,7 @@ export interface ST_Localization {
   filter?: string;
   filterArrIncludes: string;
   filterArrIncludesAll: string;
+  filterArrIncludesNone: string;
   filterArrIncludesSome: string;
   filterBetween: string;
   filterBetweenInclusive: string;

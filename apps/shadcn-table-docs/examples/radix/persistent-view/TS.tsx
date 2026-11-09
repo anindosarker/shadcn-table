@@ -67,8 +67,6 @@ const Example = () => {
         header: 'Name',
         icon: TypeIcon,
         filterVariant: 'text',
-        //the only column with a filter mode picker in its filter editor
-        enableColumnFilterModes: true,
         columnFilterModeOptions: [
           'fuzzy',
           'contains',

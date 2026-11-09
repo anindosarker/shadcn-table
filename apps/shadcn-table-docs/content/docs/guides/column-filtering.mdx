@@ -244,13 +244,13 @@ const table = useShadcnTable({
 
 #### Enable Column Filter Modes (Filter Switching)
 
-If you want to let the user switch between multiple different filter modes from a drop-down menu on the Filter Textfield, you can enable that with the `enableColumnFilterModes` table option or column option. This will enable the filter icon in the filter text field to open a drop-down menu with the available filter modes when clicked. In the default chips mode, the mode picker sits on the filter editor's top line instead ("Name contains"), see the [Filter Chips Guide](/docs/guides/filter-chips#the-filter-editor).
+Filter modes are on by default: the user switches between the column's filter modes from a drop-down menu. The filter icon in the filter text field opens the menu in the subheader and popover display modes. In the default chips mode, the mode picker sits on the filter editor's top line instead ("Name contains"), see the [Filter Chips Guide](/docs/guides/filter-chips#the-filter-editor). Text, autocomplete, select, date, datetime and time filters offer every mode, range filters offer between and between inclusive, and a multi-select filter adds Includes any, Includes all and Excludes. Set `enableColumnFilterModes: false` on the table, or on a column, to hide the picker.
 
 ```tsx
 const table = useShadcnTable({
   columns,
   data,
-  enableColumnFilterModes: true,
+  enableColumnFilterModes: false, //no filter mode picker on any column
 });
 ```
 
@@ -302,7 +302,6 @@ const columns = [
 const table = useShadcnTable({
   columns,
   data,
-  enableColumnFilterModes: true,
   // renderColumnFilterModeMenuItems could go here if you want to apply to all columns
 });
 

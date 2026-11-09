@@ -60,7 +60,7 @@ const HandComposedTable = () => {
   const table = useShadcnTable({
     columns,
     data,
-    paginationDisplayMode: 'default',
+    paginationDisplayMode: 'compact',
   });
   return (
     <ST_TableProvider table={table}>
@@ -166,7 +166,7 @@ const ProvidedTable = ({ id, rows }: { id: string; rows: Person[] }) => {
     columns,
     data: rows,
     id,
-    paginationDisplayMode: 'default',
+    paginationDisplayMode: 'compact',
     renderTopToolbarCustomActions: () => (
       <ContextReader label={`${id}-inner`} />
     ),
@@ -215,13 +215,13 @@ const SwappedTable = () => {
     columns,
     data: data.slice(0, 2),
     id: 'a',
-    paginationDisplayMode: 'default',
+    paginationDisplayMode: 'compact',
   });
   const second = useShadcnTable({
     columns,
     data: data.slice(2),
     id: 'b',
-    paginationDisplayMode: 'default',
+    paginationDisplayMode: 'compact',
   });
   const [swapped, setSwapped] = useState(false);
   return (

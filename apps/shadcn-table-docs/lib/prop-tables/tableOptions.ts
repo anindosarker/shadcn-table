@@ -282,8 +282,9 @@ export const tableOptions: TableOption[] = [
   },
   {
     tableOption: 'enableColumnFilterModes',
-    defaultValue: 'false',
-    description: '',
+    defaultValue: 'true',
+    description:
+      'Shows the filter mode picker on every column filter. Set false to hide it; a column can turn it off with its own enableColumnFilterModes: false.',
     link: '/docs/guides/column-filtering#filter-modes',
     linkText: 'ST Column Filtering Docs',
     required: false,
@@ -904,9 +905,10 @@ export const tableOptions: TableOption[] = [
   {
     tableOption: 'icons',
     defaultValue: '',
-    description: '',
-    link: '',
-    linkText: '',
+    description:
+      'Replaces single icons of this table. The table merges ST_Default_Icons, then the icons of the nearest ST_DefaultsProvider, then this option, so this option wins for its keys.',
+    link: '/docs/guides/customize-icons',
+    linkText: 'Custom Icons Guide',
     required: false,
     source: 'ST',
     type: 'Partial<ST_Icons>;',
@@ -1827,12 +1829,12 @@ export const tableOptions: TableOption[] = [
     tableOption: 'paginationDisplayMode',
     defaultValue: "'pages'",
     description:
-      "The pagination controls. 'pages' (the default) shows the rows per page select, numbered page buttons and previous and next; 'default' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
+      "The pagination controls. 'pages' (the default) shows the rows per page select, the row range, numbered page buttons and previous and next; 'compact' shows the rows per page select, the row range and the first, previous, next and last buttons; 'custom' renders nothing.",
     link: '/docs/guides/pagination',
     linkText: 'ST Pagination Docs',
     required: false,
     source: 'ST',
-    type: "'custom' | 'default' | 'pages'",
+    type: "'compact' | 'custom' | 'pages'",
   },
   {
     tableOption: 'paginateExpandedRows',
@@ -1849,7 +1851,7 @@ export const tableOptions: TableOption[] = [
     tableOption: 'persistViewSettings',
     defaultValue: 'false',
     description:
-      'Saves the view settings, the pins, column visibility, order and pinning to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
+      'Saves the view settings, the pins, column visibility, order, pinning and rows per page to localStorage. true uses a key built from the column ids (or the id option when set); a string is the key. Sorts and filters are not saved.',
     link: '/docs/guides/view-settings',
     linkText: 'ST View Settings Docs',
     required: false,

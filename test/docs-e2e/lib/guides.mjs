@@ -113,6 +113,138 @@ async function localeCommand(page, check, base) {
   );
 }
 
+const DESIGN_SYSTEM_KEY = 'st-design-system';
+
+/**
+ * Spec 13 (D26): the docs parts carry the design-system hooks, so the theme
+ * panel's Style, Menu Color and Menu Accent reach a menu. Each check opens
+ * the panel's own Style select (a `cn-menu-target` popup): a Style pick
+ * changes its first item's computed padding or gap; Menu Color
+ * `inverted` puts `dark` on its content (the provider loop); Menu Accent
+ * `bold` paints the focused item with `--primary`. Leaves the default look
+ * with empty storage (Shift+R).
+ */
+async function themeParts(page, check) {
+  const trigger = page
+    .locator('button[aria-label="Customize theme"]:visible')
+    .first();
+  const panel = page.getByRole('dialog');
+  const content = page.locator('[data-slot="select-content"]').first();
+  const openPanel = async () => {
+    if (await panel.count()) return;
+    await trigger.click();
+    await panel.waitFor({ timeout: 5000 }).catch(() => {});
+  };
+  /** Opens the panel's `label` select; returns false when it does not open. */
+  const openSelect = async (label) => {
+    await openPanel();
+    await panel.getByLabel(label, { exact: true }).first().click();
+    const opened = await content
+      .waitFor({ timeout: 5000 })
+      .then(() => true)
+      .catch(() => false);
+    // the provider loop marks new popups on the next frame
+    await page.waitForTimeout(300);
+    return opened;
+  };
+  const closeSelect = async () => {
+    await page.keyboard.press('Escape');
+    await content.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+  };
+  const pick = async (label, option) => {
+    if (!(await openSelect(label))) return;
+    await page.getByRole('option', { name: option, exact: true }).click();
+    await content.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(300);
+  };
+  /**
+   * The first item's padding and gap: set by the style layer only (`.cn-*`),
+   * never by a token. The content's radius follows `--radius`, which a Style
+   * pick also sets, so it changes on unhooked parts too.
+   */
+  const look = () =>
+    content
+      .getByRole('option')
+      .first()
+      .evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return `padding ${cs.padding} gap ${cs.gap}`;
+      });
+
+  try {
+    let before = '';
+    let after = '';
+    if (await openSelect('Style')) {
+      before = await look();
+      await closeSelect();
+    }
+    await pick('Style', 'Sera');
+    if (await openSelect('Style')) {
+      after = await look();
+      await closeSelect();
+    }
+    check(
+      'theme parts: style changes menus',
+      before !== '' && after !== '' && before !== after,
+      `${before} -> ${after}`,
+    );
+
+    await pick('Menu Color', 'Inverted');
+    let classes = '';
+    if (await openSelect('Style')) {
+      classes = (await content.getAttribute('class')) ?? '';
+      await closeSelect();
+    }
+    check(
+      'theme parts: menu color inverts',
+      classes.split(/\s+/).includes('dark'),
+      `dark=${classes.split(/\s+/).includes('dark')}`,
+    );
+
+    await pick('Menu Accent', 'Bold');
+    let paint = { background: '', primary: '', focused: false };
+    if (await openSelect('Style')) {
+      const item = content.getByRole('option').first();
+      await item.hover();
+      await item.focus();
+      await page.waitForTimeout(300);
+      paint = await item.evaluate((el) => {
+        const probe = document.createElement('span');
+        probe.style.backgroundColor = 'var(--primary)';
+        el.appendChild(probe);
+        const primary = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return {
+          background: getComputedStyle(el).backgroundColor,
+          primary,
+          focused: document.activeElement === el,
+        };
+      });
+      await closeSelect();
+    }
+    check(
+      'theme parts: menu accent bold',
+      paint.focused &&
+        paint.primary !== '' &&
+        paint.background === paint.primary,
+      `focused=${paint.focused} ${paint.background} vs ${paint.primary}`,
+    );
+  } finally {
+    await page.keyboard.press('Escape');
+    await panel.waitFor({ state: 'detached', timeout: 5000 }).catch(() => {});
+    await page.evaluate(() =>
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement.blur()
+        : undefined,
+    );
+    await page.keyboard.press('Shift+R');
+    await page.evaluate(
+      (key) => localStorage.removeItem(key),
+      DESIGN_SYSTEM_KEY,
+    );
+  }
+}
+
 const TABLE = '#relevant-props-table';
 const STATE = '#relevant-state-options-table';
 const COLUMN = '#relevant-column-options-table';
@@ -136,7 +268,7 @@ const checks = {
     await codeToggle(
       page,
       'alternate-pagination',
-      "paginationDisplayMode: 'default'",
+      "paginationDisplayMode: 'compact'",
       check,
     );
     const remote = await example(page, 'remote', check);
@@ -670,6 +802,7 @@ const checks = {
       'button[aria-label="View settings"]',
       check,
     );
+    await themeParts(page, check);
   },
   '/docs/guides/full-screen-toggle': async ({ page, check }) => {
     await propTable(page, TABLE, check);
