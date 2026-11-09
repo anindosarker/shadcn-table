@@ -9,6 +9,7 @@ Checks:
 - `pnpm test typecheck --base base` at d73330b5: pass
 - `pnpm test lint` at d73330b5: pass
 - `pnpm test validate-repo` at d73330b5: pass
+- Verifier at 44171064: every Local CI and Task 1 check is recorded at d73330b5, and `git diff --name-only d73330b5..44171064` touches only this tracker; no rerun. Acceptance 1.2 lines of this milestone (three packages listed, lockfile from one install) are recorded above; the canonical, 308, `/ingest/e/` and `ANALYZE=1` lines need the Canonical milestone's code and are proven there.
 
 - Task 1 Add the three packages: done (d73330b5)
 
