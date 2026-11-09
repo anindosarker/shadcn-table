@@ -1,10 +1,14 @@
 ---
 title: 'Column Pinning Example'
-description: 'An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.'
+description: 'Freeze columns to the start or end of a wide shadcn-table with enableColumnPinning and initialState.columnPinning while the other columns scroll.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has an easy-to-enable column pinning feature. Columns can be pinned to the left or right of the table, and the column will be frozen in place while the rest of the table scrolls horizontally. See the [Column Pinning Feature Guide](/docs/guides/column-pinning) for more information.
+This example sets `enableColumnPinning`, so each column menu offers to pin the column to the start or the end of the table, and it starts with columns already pinned through `initialState.columnPinning`. Pinned columns stay in place while the rest of the table scrolls horizontally; the example also turns on `enableRowActions` with `renderRowActionMenuItems` so the actions column can stay pinned at the edge, and uses `layoutMode: 'grid-no-grow'` to keep column widths fixed.
+
+Use column pinning for wide tables where one or two columns identify the row, such as a name or an ID, and users lose track of the row as they scroll right. Pinning the actions column to the end is a common second use: the edit and delete buttons stay reachable without scrolling back.
+
+The `start` and `end` sides follow the reading direction, so the same setup works in right-to-left locales. See the [Column Pinning Feature Guide](/docs/guides/column-pinning) for more information.
 
 <EnableColumnPinningExample />
 

@@ -1,10 +1,14 @@
 ---
 title: 'Row DnD Ordering Example'
-description: 'An example of Shadcn Table which shows how to enable rows to be re-arranged via drag and drop.'
+description: 'Reorder shadcn-table rows by dragging a handle with enableRowOrdering, then write the new order back to your data in the onDragEnd callback of the handle.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has built-in support for row drag and drop re-ordering. Learn more about row ordering in the [Row Ordering Feature Guide](/docs/guides/row-ordering-dnd).
+shadcn-table has built-in row drag and drop reordering. This example sets `enableRowOrdering`, which adds a drag handle column to the table, and passes an `onDragEnd` handler through `stRowDragHandleProps`. When a drag ends, the handler reads the dragged row and the row it was dropped on from the table state and moves the row in the data array, so the new order is yours to keep or send to a server.
+
+Sorting is turned off (`enableSorting: false`) because a sorted table would undo the manual order on the next render; when you need both, clear the sorting before a drag starts. The drag handle is rendered with your shadcn/ui button and follows your theme.
+
+Use row ordering for lists whose order means something to the user, such as priorities, playlists or steps in a process. To move rows between tables instead, see the [Row Dragging Example](/docs/examples/row-dragging). Learn more about row ordering in the [Row Ordering Feature Guide](/docs/guides/row-ordering-dnd).
 
 <EnableRowOrderingExample />
 

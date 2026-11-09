@@ -1,10 +1,14 @@
 ---
 title: 'Static Row Pinning Example'
-description: 'An example of Shadcn Table which shows how to pin individual rows to the top or bottom of the table to keep them in view while scrolling.'
+description: 'Pin chosen rows to the top or bottom of a scrolling shadcn-table with enableRowPinning and rowPinningDisplayMode: top-and-bottom so they stay in view.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has the ability to pin rows and keep them in view while scrolling. In this example, when rows are pinned, they will be pinned statically to either the top or bottom of the table. Learn more about row pinning in the [Row Pinning Feature Guide](/docs/guides/row-pinning).
+shadcn-table can pin rows and keep them in view while the rest of the table scrolls. This example sets `enableRowPinning` with `rowPinningDisplayMode: 'top-and-bottom'`: each row gets pin buttons, and a pinned row moves to a static block at the top or the bottom of the table, where it stays until it is unpinned. The table scrolls inside a fixed-height container (`stTableContainerProps`), the header stays visible with `enableStickyHeader`, and `getRowId` keeps the pins tied to the right records.
+
+Use static pinning to keep reference rows in view while users scan the others, such as a baseline to compare against or the rows a user is working on. Pinned rows are part of the row pinning state, so you can read, save or set them like any other TanStack Table state.
+
+For rows that stay in place until they scroll out of view, see the [Sticky Row Pinning Example](/docs/examples/sticky-row-pinning). Learn more about row pinning in the [Row Pinning Feature Guide](/docs/guides/row-pinning).
 
 <EnableRowPinningStaticExample />
 

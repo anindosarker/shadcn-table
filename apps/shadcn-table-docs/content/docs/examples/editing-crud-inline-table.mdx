@@ -1,14 +1,14 @@
 ---
 title: 'Editing CRUD Inline Table Example'
-description: 'An example of Shadcn Table which shows how to use editing CRUD Inline table features'
+description: 'Keep every shadcn-table cell editable at once with editDisplayMode: table, then save the changed values together from a bottom toolbar button.'
 date: '2026-11-10'
 ---
 
-Full CRUD (Create, Read, Update, Delete) functionality can be easily implemented with Shadcn Table, with a combination of editing, toolbar, and row action features.
+This example builds full CRUD (create, read, update, delete) with shadcn-table using the inline [`"table"`](/docs/guides/editing#row-editing-mode) editing mode: `editDisplayMode: 'table'` with `enableEditing` renders every cell as an input all the time, so users edit values the way they would in a spreadsheet, one cell after another, with no click to enter edit mode first.
 
-This example below uses the inline [`"table"`](/docs/guides/editing#row-editing-mode) editing mode, which allows you to edit a single cell at a time, but all rows are always in an open editing state. Hook up your own event listeners to save the data to your backend.
+The example tracks the changed cells and saves them in one batch from a button added through `renderBottomToolbarCustomActions`. New rows open inline through `createDisplayMode: 'row'` and `onCreatingRowSave`, and `renderRowActions` adds a delete button per row. TanStack Query mutations apply the changes optimistically; hook in your own API calls to save the data to your backend.
 
-Check out the other editing modes down below, and the [editing guide](/docs/guides/editing) for more information.
+Table editing suits small data sets that users fill in or correct in bulk, such as a price list or a settings grid. For large tables it renders many inputs, so pagination stays on. Check out the other editing modes below, and the [editing guide](/docs/guides/editing) for more information.
 
 <EditingCrudTableExample />
 
