@@ -1,6 +1,6 @@
 # 31: Guides and API copy, tracker
 
-Status: done
+Status: merged (edc04e01)
 Branch `v0.9/guides-api-copy`, worktree `/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`
 Checks:
 
