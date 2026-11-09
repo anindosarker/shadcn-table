@@ -33,6 +33,21 @@ Generated: 2026-11-10 by ownership.py
 | Integration 0.9.2 | 23 | Sitemap and robots, Remove dev routes | none | `CHANGELOG.md` |
 | Release PR 0.9.2 | 23 | Integration 0.9.2 | none | none |
 | After release 0.9.2 | 23 | Release PR 0.9.2 | none | none |
+| E10 dependencies | 24 | none | Theme customizer (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`), Theme color picker (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`), Icon library select (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`), Style sheet on demand (`apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`) | `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml` |
+| Canonical and slash redirect | 24 | E10 dependencies | Theme customizer (`apps/shadcn-table-docs/app/layout.tsx`), Icon library select (`apps/shadcn-table-docs/app/layout.tsx`), Style sheet on demand (`apps/shadcn-table-docs/app/layout.tsx`) | `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/next.config.mjs` |
+| JSON-LD | 25 | E10 dependencies, Canonical and slash redirect | none | `apps/shadcn-table-docs/components/json-ld.tsx`, `apps/shadcn-table-docs/lib/structured-data.ts`, `apps/shadcn-table-docs/app/(home)/page.tsx`, `apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx` |
+| Home OG image | 26 | none | none | `apps/shadcn-table-docs/app/opengraph-image.tsx` |
+| Home title | 27 | E10 dependencies, Canonical and slash redirect, JSON-LD | Theme customizer (`apps/shadcn-table-docs/app/layout.tsx`), Icon library select (`apps/shadcn-table-docs/app/layout.tsx`), Style sheet on demand (`apps/shadcn-table-docs/app/layout.tsx`), Remove dev routes (`apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx`) | `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/app/(home)/page.tsx`, `apps/shadcn-table-docs/components/dev-home/v12/home-page.tsx` |
+| Security headers | 28 | E10 dependencies, Canonical and slash redirect | none | `apps/shadcn-table-docs/next.config.mjs` |
+| Markdown and llms | 29 | none | none | `apps/shadcn-table-docs/lib/llms.ts`, `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/app/llms.txt/route.ts`, `apps/shadcn-table-docs/app/llms-full.txt/route.ts`, `apps/shadcn-table-docs/app/llms.mdx/docs/[[...slug]]/route.ts` |
+| Home JavaScript | 30 | E10 dependencies, Canonical and slash redirect | none | `apps/shadcn-table-docs/components/dev-home/**` |
+| API page payload | 30 | none | none | `apps/shadcn-table-docs/components/prop-tables/**` |
+| Page frame and new pages | 31 | E10 dependencies, Canonical and slash redirect, JSON-LD, Security headers, Markdown and llms | none | `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/shared.ts`, `apps/shadcn-table-docs/components/docs-byline.tsx`, `apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx`, `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/content/docs/meta.json`, `apps/shadcn-table-docs/content/docs/getting-started/**`, `apps/shadcn-table-docs/content/docs/guides/meta.json`, `apps/shadcn-table-docs/content/docs/guides/tanstack-table-with-shadcn-ui.mdx`, `tools/docs/check-frontmatter.mjs` |
+| Examples copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/examples/**` |
+| Guides and API copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
+| Integration 0.9.3 | 32 | E10 dependencies, Canonical and slash redirect, JSON-LD, Home OG image, Home title, Security headers, Markdown and llms, Home JavaScript, API page payload, Page frame and new pages, Examples copy, Guides and API copy | Integration 0.9.2 (`CHANGELOG.md`) | `CHANGELOG.md` |
+| Release PR 0.9.3 | 32 | Integration 0.9.3 | none | none |
+| After release 0.9.3 | 32 | Release PR 0.9.3 | none | none |
 | CRUD dialog check waits for the rows (F25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
 | Dev server clean (F11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
 | Page index play (F22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
