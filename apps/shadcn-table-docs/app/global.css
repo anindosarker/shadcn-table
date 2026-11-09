@@ -5,7 +5,7 @@
 @import 'shadcn/tailwind.css';
 /* The per-style component sheets (styles/style-<name>.css) are compiled by
    lib/build-styles.mjs and linked one at a time by the <link> in app/layout.tsx. */
-/* experimental /dev homepages, scoped under .dev-home */
+/* homepage tokens (components/dev-home), scoped under .dev-home */
 @import '../components/dev-home/tokens.css';
 /* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
    ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
@@ -458,8 +458,8 @@ html > body[data-scroll-locked] {
   border-inline-start-width: 1px;
 }
 
-/* ---------- landing look: the /dev/12 tokens, type and top bar ----------
- * Scoped to pages with the docs layout, so /dev and the home page keep their
+/* ---------- landing look: the homepage tokens, type and top bar ----------
+ * Scoped to pages with the docs layout, so the home page keeps its
  * own values. Every token derives from the active preset and mode. */
 
 html:has(#nd-notebook-layout) {
