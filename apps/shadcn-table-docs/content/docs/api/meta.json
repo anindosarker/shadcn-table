@@ -1,7 +1,9 @@
 {
   "title": "API Reference",
+  "root": true,
   "defaultOpen": true,
   "pages": [
+    "index",
     "---Props and Options---",
     "table-options",
     "column-options",

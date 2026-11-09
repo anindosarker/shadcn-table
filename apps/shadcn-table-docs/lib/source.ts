@@ -22,6 +22,21 @@ export const source = loader({
   baseUrl: docsRoute,
   source: docs.toFumadocsSource(),
   plugins: [lucideIconsPlugin()],
+  pageTree: {
+    transformers: [
+      {
+        // Each section is a root folder (meta.json "root": true), so the
+        // sidebar shows one section at a time. A root folder has no folder
+        // index; its index page is listed as the first page and reads
+        // "Overview" in the sidebar.
+        file(node, path) {
+          return path && /^[^/]+\/index\.mdx?$/.test(path)
+            ? { ...node, name: 'Overview' }
+            : node;
+        },
+      },
+    ],
+  },
 });
 
 export const docsLlms = llms(source, {

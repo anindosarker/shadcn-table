@@ -1,5 +1,6 @@
 {
   "title": "Getting Started",
+  "root": true,
   "defaultOpen": true,
   "pages": ["introduction", "install", "usage", "agents"]
 }
