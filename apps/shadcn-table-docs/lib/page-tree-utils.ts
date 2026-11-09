@@ -99,3 +99,32 @@ export function findSectionName(
       node.type === 'folder' && containsUrl(node, url),
   )?.name;
 }
+
+type FooterItem = Pick<PageTree.Item, 'name' | 'description' | 'url'>;
+
+/**
+ * Previous and next page for the page footer across the whole docs tree.
+ * Each section is a root folder, so fumadocs' own footer stops at the
+ * section edge; this walks every section in meta.json order (L1) with the
+ * same rule as fumadocs (folder index first, then children; pages only,
+ * external links skipped), so within a section the neighbours are unchanged.
+ */
+export function footerNeighbours(
+  tree: PageTree.Root,
+  url: string,
+): { previous?: FooterItem; next?: FooterItem } {
+  const list: PageTree.Item[] = [];
+  function onNode(node: PageTree.Node) {
+    if (node.type === 'folder') {
+      if (node.index) onNode(node.index);
+      for (const child of node.children) onNode(child);
+    } else if (node.type === 'page' && !node.external) list.push(node);
+  }
+  for (const child of tree.children) onNode(child);
+
+  const idx = list.findIndex((item) => item.url === url);
+  if (idx === -1) return {};
+  const pick = (item?: PageTree.Item): FooterItem | undefined =>
+    item && { name: item.name, description: item.description, url: item.url };
+  return { previous: pick(list[idx - 1]), next: pick(list[idx + 1]) };
+}
