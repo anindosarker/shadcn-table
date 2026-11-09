@@ -1,6 +1,6 @@
 # v0.9.x ownership
 
-Generated: 2026-11-09 by ownership.py
+Generated: 2026-11-10 by ownership.py
 
 | Milestone | Spec | Depends on | Derived from | Files |
 |---|---|---|---|---|
@@ -28,6 +28,7 @@ Generated: 2026-11-09 by ownership.py
 | Integration 0.9.1 | 20 | none | PR summary layout (`tools/release/pr-summary.mjs`), PR summary job outputs (`tools/release/pr-summary.mjs`) | `.gitignore`, `tools/release/record-output.test.mjs`, `tools/release/pr-summary.mjs` |
 | Release PR 0.9.1 | 20 | Integration 0.9.1 | none | none |
 | After release 0.9.1 | 20 | Release PR 0.9.1 | none | none |
+| Sitemap and robots | 21 | none | none | `apps/shadcn-table-docs/app/sitemap.ts`, `apps/shadcn-table-docs/app/robots.ts` |
 | CRUD dialog check waits for the rows (F25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
 | Dev server clean (F11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
 | Page index play (F22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
