@@ -1,4 +1,5 @@
 # 30: Home page JavaScript and API page payload
+- Epic: E10
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 

@@ -45,9 +45,6 @@ Generated: 2026-11-10 by ownership.py
 | Page frame and new pages | 31 | E10 dependencies, Canonical and slash redirect, JSON-LD, Security headers, Markdown and llms | none | `apps/shadcn-table-docs/lib/source.ts`, `apps/shadcn-table-docs/lib/shared.ts`, `apps/shadcn-table-docs/components/docs-byline.tsx`, `apps/shadcn-table-docs/app/docs/[[...slug]]/page.tsx`, `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/content/docs/meta.json`, `apps/shadcn-table-docs/content/docs/getting-started/**`, `apps/shadcn-table-docs/content/docs/guides/meta.json`, `apps/shadcn-table-docs/content/docs/guides/tanstack-table-with-shadcn-ui.mdx`, `tools/docs/check-frontmatter.mjs` |
 | Examples copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/examples/**` |
 | Guides and API copy | 31 | Page frame and new pages | none | `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**` |
-| Integration 0.9.3 | 32 | E10 dependencies, Canonical and slash redirect, JSON-LD, Home OG image, Home title, Security headers, Markdown and llms, Home JavaScript, API page payload, Page frame and new pages, Examples copy, Guides and API copy | Integration 0.9.2 (`CHANGELOG.md`) | `CHANGELOG.md` |
-| Release PR 0.9.3 | 32 | Integration 0.9.3 | none | none |
-| After release 0.9.3 | 32 | Release PR 0.9.3 | none | none |
 | CRUD dialog check waits for the rows (F25) | fix | none | none | `test/docs-e2e/lib/examples.mjs` |
 | Dev server clean (F11) | fix | none | none | `apps/shadcn-table-docs/components/theme-customizer.tsx`, `apps/shadcn-table-docs/app/layout.tsx`, `apps/shadcn-table-docs/components/search-dialog.tsx` |
 | Page index play (F22) | fix | none | none | `packages/shadcn-table/stories/features/ViewSettings.stories.tsx` |
@@ -67,3 +64,4 @@ Generated: 2026-11-10 by ownership.py
 - E6: 16 CI skip bump commit > 17 CI Node 24 actions > 19 PR summary job outputs
 - E7: 20 Integration 0.9.1 > 20 Release PR 0.9.1 > 20 After release 0.9.1
 - E9: 21 Sitemap and robots > 23 Integration 0.9.2 > 23 Release PR 0.9.2 > 23 After release 0.9.2
+- E10: 24 E10 dependencies > 24 Canonical and slash redirect > 25 JSON-LD > 31 Page frame and new pages > 31 Examples copy
