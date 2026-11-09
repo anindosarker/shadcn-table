@@ -1,6 +1,6 @@
 ---
 title: 'Column Options'
-description: 'All the column options that can be used in Shadcn Table'
+description: 'Every option a shadcn-table column definition accepts: TanStack Table ColumnDef fields plus shadcn-table options such as Cell, icon and enableClickToCopy.'
 date: '2026-11-10'
 ---
 
@@ -20,6 +20,8 @@ date: '2026-11-10'
     },
   ]}
 />
+
+This page lists every option you can set on a column definition, typed as `ST_ColumnDef<TData>`. Some come from TanStack Table, such as `accessorKey`, `id`, `size` and `filterFn`, and behave as the TanStack Table docs describe. The rest are shadcn-table's own: per-column features, custom renders such as `Cell`, `Header`, `Filter` and `Edit`, and the `st...Props` options that pass props to the shadcn/ui components of that column only. Many column options share their name with a table option: set it on the table to change every column, and on a column to override it for that one column. The display columns the table creates take the same options through `displayColumnDefOptions`, keyed by their `st-row-*` id.
 
 > Many of the column options you can pass here are the same as the ones that you can pass to the TanStack Table [ColumnDefs](https://tanstack.com/table/latest/docs/guide/column-defs)
 

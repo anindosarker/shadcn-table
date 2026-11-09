@@ -1,10 +1,10 @@
 ---
 title: 'Row Actions Guide'
-description: 'How to add row action buttons to each row in Shadcn Table'
+description: 'Add row actions to shadcn-table with enableRowActions and renderRowActionMenuItems or renderRowActions, in the st-row-actions column pinned to the end.'
 date: '2026-11-10'
 ---
 
-The row actions feature is simply a pre-built [Display Column](/docs/guides/display-columns) feature that adds a column as a place to store either a row action menu or other row action buttons.
+Row actions are a built-in [Display Column](/docs/guides/display-columns), `st-row-actions`, that holds a row menu or your own buttons. Turn it on with `enableRowActions`; the menu is `ST_RowActionMenu`, a shadcn/ui `DropdownMenu` opened by the dots button in each row.
 
 Using the built-in Row Actions column is optional, as you can simply create your own display columns, but this feature has some built-in conveniences that make it easy to add row actions to your table.
 

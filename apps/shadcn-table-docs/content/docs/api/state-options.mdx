@@ -1,6 +1,6 @@
 ---
 title: 'State Options'
-description: 'All the state options that can be used in Shadcn Table'
+description: 'Every state shadcn-table keeps: TanStack Table states such as sorting and rowSelection, plus density, isFullScreen and the other states the table adds.'
 date: '2026-11-10'
 ---
 
@@ -20,6 +20,8 @@ date: '2026-11-10'
     },
   ]}
 />
+
+This page lists every state the table keeps. Pass a state to `initialState` to set its starting value, or to `state` to control it yourself, together with its `on...Change` option where one exists. Some states come from TanStack Table, such as `sorting`, `columnFilters`, `pagination` and `rowSelection`, and work as the TanStack Table docs describe. The rest belong to shadcn-table's own features, such as `density`, `isFullScreen`, `isLoading` and `showColumnFilters`, and drive its toolbars, its loading UI and the view settings panel. Every state, controlled or not, can be read back from `table.state`, and the instance APIs have a setter for most of them, for example `table.setDensity` or `table.setIsFullScreen`.
 
 > Many of the state options you can pass here are the same as the ones you can pass to the TanStack Table [useTable](https://tanstack.com/table/latest/docs/framework/react/guide/table-state) hook. Read them back from `table.state`.
 
