@@ -19,3 +19,61 @@ Accepted decisions for the docs site restructuring, discussed in the "v0.9" sess
 - Measured on the production build: HTML 0.49 MB (all 42 bodies inline was 1.59 MB); the 3 eager blocks carry 0.33 MB of code-explorer sources. 3 eager blocks kept.
 - Preview accepted by the owner on 2026-11-08 from branch `v0.9/preview-docs-examples` at `e702398d` (commits `766458b3`, `091c7e38`, `4c682d59`, `47e3b58e`, `ab924f86`, `e702398d`); the epic applies that branch as is. `ae89917d` (persistent-view example defaults to 10 rows) rides along.
 - Known, accepted for this cycle: the fumadocs mobile drawer closes on each URL change; Copy page and the GitHub link in the page bar point at the index while scrolling; heading ids can repeat across the stack; blocks load one at a time on a fast scroll.
+
+### L3 The scroll-spy writes `/docs/examples#<slug>`, never the single page URL
+
+- Supersedes the URL part of L2: the spy writes `/docs/examples#<slug>` through `replaceState` while a block covers the upper 40 percent of the viewport, and `/docs/examples` at the top. A reload or a shared link therefore opens the stack scrolled to that block.
+- Sidebar highlight keys on the hash while on `/docs/examples`; breadcrumb and prev/next stay on the examples index.
+- Single pages `/docs/examples/<slug>` keep their own URLs for search, metadata and deep links.
+- Owner accepted 2026-11-09.
+
+### L4 Sidebar example links scroll the stack while on `/docs/examples`
+
+- On the examples stack the sidebar items under Examples link to `/docs/examples#<slug>`, so a click scrolls the stack to that block instead of leaving it. Anywhere else they link to `/docs/examples/<slug>` as today.
+- `/docs/examples/<slug>` stays the plain single page for search, metadata and old links; no banner.
+- Owner accepted 2026-11-09.
+
+### L5 A floating back-to-top button on the examples stack
+
+- Bottom right of the viewport, shown once the page is scrolled past one viewport height, hidden at the top. Click scrolls smoothly to the top and resets the URL to `/docs/examples` (L3).
+- Tailwind utilities only, no library, no global CSS (v0.8.x P8). Only on `/docs/examples`.
+- Owner accepted 2026-11-09.
+
+### L6 The examples stack is virtualized with TanStack Virtual
+
+- `useWindowVirtualizer` from `@tanstack/react-virtual` (already a dependency) over a flat list of items: intro, group headings, example blocks. `measureElement` for the variable heights, overscan 2. Far-away blocks leave the DOM; the virtualizer keeps their space.
+- Block bodies still arrive through `loadExampleBlock(slug)` on first approach (L2) and stay cached in state, so a remount is instant. The skeleton of an unmeasured block keeps `min-h-[560px]`; measured blocks reuse their height, so nothing shifts.
+- On load with a hash (L3): `scrollToIndex` to that block after mount. The scroll-spy and sidebar sync (L3, L4) read the rendered blocks.
+- SEO guard: every block's title and description also render as plain server HTML outside the virtualized list; the single pages stay the indexed content.
+- Targets after a full scroll, measured as in `perf-report.md`: DOM nodes under 5,000, CLS under 0.1 during the scroll, sort click under 200 ms. `filter-variants` (7.8 s load, 6.6 s forced layout) is a separate finding, LF4.
+- Owner accepted 2026-11-09.
+
+### L7 The section switcher is a row under the header, TanStack style (amended by L10: the row lives at the top of the sidebar column)
+
+- The section links Docs, Examples, Guides, API (L1 order) leave the header centre and become a row directly under the header, left-aligned over the sidebar column, the active section underlined. The header keeps brand, search, GitHub, Discord, the base selector and the theme toggle.
+- One switcher only; it drives the per-section sidebar (item 8, recorded on acceptance of the preview).
+- Owner accepted 2026-11-10.
+
+### L8 Sidebar groups flush left, small labels, section titled "Examples"
+
+- Subgroup labels and their pages share the section pages' left edge: no indent, no guide line (`components/sidebar-subgroup.tsx`, `sidebar-separator.tsx` `px-2`; the four indent and guide-line rules in the docs `global.css` deleted). Subgroup labels `text-[9px]`, mono uppercase muted as before; page rows unchanged. Same groups, titles and collapse as before.
+- The Examples section is titled "Examples" (was "Quick Examples") in `meta.json`, `lib/routes.ts` and the examples index heading.
+- Owner accepted on the 5342 preview, 2026-11-10 (wt1 `d74def4d`).
+
+### L9 One sidebar per section
+
+- Each section folder (`getting-started`, `examples`, `guides`, `api`) is a fumadocs root (`"root": true`); the sidebar shows only the active section's pages. The section's name renders as a heading row at the top (`components/sidebar-root-heading.tsx`), then its Overview (the index page, listed explicitly in `meta.json` and named through a page-tree transformer in `lib/source.ts`), then its pages under their group labels (L8).
+- The prev/next footer crosses section boundaries in L1 order through `footerNeighbours` in `lib/page-tree-utils.ts` (fix of LF5); inside a section the neighbours are unchanged.
+- Owner accepted on the 5342 preview, 2026-11-10 (wt1 `11ff81ef`, `9f5a51ef`, `07b5f1eb`).
+
+### L10 Section tabs at the top of the sidebar, search in the header centre
+
+- Amends L7: the section switcher Docs, Examples, Guides, API (L1 order) is a one-line tab row at the top of the sidebar column (`components/sidebar-section-tabs.tsx`, sidebar banner slot, above the section heading), in the header links' former type: mono 11px uppercase, 0.12em tracking, muted, active in the accent colour with a 2px underline. No full-width row under the header; header height unchanged.
+- The header is brand left, the search box centred (max 28rem, `lg` and up; the icon stays with the right group below `lg`), then GitHub, Discord, base selector and theme toggle on the right.
+- The sidebar link rules in the docs `global.css` are scoped to the page tree (`[role='presentation'] a`) so they never style the tabs; no `!important` utilities.
+- Owner accepted on the 5342 preview, 2026-11-10 (wt1 `b4def583`, `4e26896e`, `449443ce`, `6e0c4da9`, `8949be4c`).
+
+### L11 Preview servers are the owner's to start
+
+- From 2026-11-10 agents never start a docs preview server (`next dev` or `next start`) after a build; they build, run the gates, commit, push, and report the branch head. The owner starts the server when they want to look.
+- Agents still may stop a server they started themselves earlier; never one they did not start.
