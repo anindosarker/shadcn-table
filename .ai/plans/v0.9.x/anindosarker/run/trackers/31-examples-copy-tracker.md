@@ -1,6 +1,6 @@
 # 31: Examples copy, tracker
 
-Status: done, ready to merge
+Status: merged (13a650c3a7c3c9f98d3ca8a6533a23d301e2282f)
 Branch `v0.9/examples-copy`, worktree `/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/03`
 
 Checks:
