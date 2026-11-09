@@ -38,7 +38,7 @@ Updated: 2026-11-10 01:34
 | E10 25 JSON-LD |  |  |  |  |  |  |  |  | [ ] |  |  |
 | E10 26 Home OG image | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 27 Home title |  |  |  |  |  |  |  |  |  | · |  |
-| E10 28 Security headers |  |  |  |  |  |  |  |  | [ ] |  |  |
+| E10 28 Security headers |  |  |  |  |  |  |  |  | [x] |  |  |
 | E10 29 Markdown and llms | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 30 Home JavaScript |  |  |  |  |  |  |  |  | [ ] |  |  |
 | E10 30 API page payload | [x] |  |  |  |  |  |  |  |  |  |  |
