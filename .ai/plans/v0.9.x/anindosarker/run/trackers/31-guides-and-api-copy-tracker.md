@@ -1,7 +1,7 @@
 # 31: Guides and API copy, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/guides-api-copy`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

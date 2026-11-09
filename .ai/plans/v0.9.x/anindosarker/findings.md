@@ -133,3 +133,5 @@
 
 ### F31 The docs check suite has no check for the byline or the two new pages
 
+
+- `test/docs-e2e/lib/`: spec 31 2.2 expects `pnpm test docs-e2e` to prove the byline and the two new pages (`/docs/getting-started/comparison`, `/docs/guides/tanstack-table-with-shadcn-ui`), but no milestone of spec 31 owns `test/docs-e2e`, so no named check exists; the frame milestone (merged 23e1cfa9) proved them by curl and a route run only (render, hydration, console).
