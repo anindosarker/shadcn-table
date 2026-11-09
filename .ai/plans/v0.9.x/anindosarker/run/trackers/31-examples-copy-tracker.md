@@ -21,6 +21,12 @@ Review fixes (5cbc6d4b, 21d1f674, 5b7e2553, 40166937, 6bddaf09), checks rerun at
 - `pnpm test docs-e2e --base base`: first run 1 failed (getting-started `/` "perf: light/dark toggle" 345 ms, P5 known flake), rerun pass (205, 109, 692, 939 passed, 0 failed)
 - `pnpm format`: pass (no change); `pnpm test validate-repo`: pass
 
+Verifier at f247a5fc (typecheck and lint were recorded at b7e82b57, before the review fixes; the rest recorded at 6bddaf09, only `.ai/` changed since):
+
+- `pnpm test typecheck --base base`: pass (tsc clean)
+- `pnpm test lint`: pass (0 errors, 9 warnings, the same as on `claude/review`)
+- Acceptance (1.2) lines of this milestone: the frontmatter script and docs-e2e are recorded at 6bddaf09; the curl, sitemap and topics lines are the frame milestone's
+
 - Task 1 Rewrite the 43 example pages: done (2745db71)
 - Task 2 Cleanup, format, changelog: done (b7e82b57)
 
