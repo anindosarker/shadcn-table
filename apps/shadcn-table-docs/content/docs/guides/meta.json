@@ -3,6 +3,7 @@
   "defaultOpen": true,
   "pages": [
     "---Fundamentals---",
+    "tanstack-table-with-shadcn-ui",
     "production-ready-tables",
     "best-practices",
     "data-columns",

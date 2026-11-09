@@ -20,6 +20,7 @@ import {
 } from '@/lib/shared';
 import { findSectionName } from '@/lib/page-tree-utils';
 import { JsonLd } from '@/components/json-ld';
+import { DocsByline } from '@/components/docs-byline';
 import { breadcrumbJsonLd, techArticleJsonLd } from '@/lib/structured-data';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
@@ -77,6 +78,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       <DocsDescription className="docs-description-rule mb-0 pb-4 text-[0.9375rem]">
         {page.data.description}
       </DocsDescription>
+      <DocsByline date={page.data.date} />
       <DocsBody>
         <MDX
           components={getMDXComponents({

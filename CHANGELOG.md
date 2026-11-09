@@ -49,6 +49,15 @@ publishes the section as the GitHub release notes.
 
 - Every docs site page names its canonical URL: the root metadata sets `alternates.canonical` to `./`, so `/` and each docs page carry one `<link rel="canonical">` with their own slash-less URL on `NEXT_PUBLIC_SITE_URL`. A path with a trailing slash answers 308 to the slash-less path; the PostHog proxy under `/ingest` keeps its slash (D53).
 
+### Docs
+
+#### Spec 31 Page frame and new pages
+
+- Every docs page shows `By anindosarker · Updated <date>` under its description, the name linking to the maintainer's GitHub profile; the date comes from a new required `date` frontmatter field (D60).
+- `/docs` redirects permanently (308) to the Introduction, and the sidebar's last entry links the changelog (D60).
+- New pages: "Comparison" (getting started), a feature matrix against tablecn, Material React Table and the shadcn/ui data-table recipe with its sources, and "TanStack Table with shadcn/ui" (first guide under Fundamentals) (D60).
+- The Introduction shows the install command and the basic example; the getting-started pages have new descriptions. `tools/docs/check-frontmatter.mjs` checks description length, dates, duplicates, word count and MRT typos (D60).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added
