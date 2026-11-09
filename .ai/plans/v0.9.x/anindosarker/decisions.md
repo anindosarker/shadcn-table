@@ -534,7 +534,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "work on it and release a new version asap."
 
 ### D53 Canonical URLs and trailing-slash redirect
-[E10]
+[Done]  [E10]
 
 - No page on www.shadcn-table.com carries `rel=canonical`, and every URL also answers with a trailing slash (`/docs/api/table-options/` returns 200, measured 2026-11-10), so Google sees two URLs per page with no signal which one counts (audit `reference/seo-audit-2026-11-10.md`).
 - `app/layout.tsx` adds `alternates: { canonical: './' }` to the root metadata; Next resolves it per page against the existing `metadataBase`, so the home page and every docs page get a canonical equal to their own slash-less URL. The docs `generateMetadata` keeps no canonical of its own.
@@ -543,7 +543,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "k" on the item.
 
 ### D54 JSON-LD structured data on the home and docs pages
-[E10]
+[Done]  [E10]
 
 - No page on www.shadcn-table.com emits JSON-LD (0 `application/ld+json` on `/`, measured 2026-11-10; schema 10/100 in `reference/seo-audit-2026-11-10.md`), so search engines get no machine-readable statement of what the site and each page are.
 - Home page (`app/(home)/page.tsx`): `WebSite` (name, url) and `SoftwareSourceCode` (name, codeRepository = the GitHub repo URL, programmingLanguage TypeScript, license MIT, runtimePlatform React, url = siteUrl).
@@ -553,7 +553,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "k" on the item.
 
 ### D55 Home page Open Graph image
-[E10]
+[Done]  [E10]
 
 - `/` declares `twitter:card summary_large_image` but no `og:image` (measured 2026-11-10; `/opengraph-image` 404), so a shared link to the site shows no preview card. Docs pages already have one from `app/og/docs/[...slug]/route.tsx` through `getPageImageUrl`.
 - Add `apps/shadcn-table-docs/app/opengraph-image.tsx` (1200x630, `ImageResponse`) reusing the docs OG route's layout and fonts with the site name and the home description; Next.js adds `og:image` and `twitter:image` to `/` from the file, so `app/(home)/page.tsx` metadata is untouched.
@@ -561,7 +561,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "k" on the item.
 
 ### D56 Home title and hero tagline name the category
-[E10]
+[Done]  [E10]
 
 - The home page `<title>`, `og:title` and H1 are the bare word "shadcn-table" and the searched phrases ("shadcn data table", "tanstack table shadcn") appear nowhere on the site (audit 2026-11-10, on-page 56/100), so the page competes only for its own name.
 - Root metadata `title.default` becomes `shadcn-table: data table for shadcn/ui, built on TanStack Table`; the template `%s | shadcn-table` for docs pages stays. The H1 stays "shadcn-table"; the hero tagline under it carries the phrase "data table for shadcn/ui" once. Docs titles are untouched (D60 covers descriptions).
@@ -569,7 +569,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "recommended on all".
 
 ### D57 Security response headers
-[E10]
+[Done]  [E10]
 
 - The live site sends only `strict-transport-security` (measured 2026-11-10); `next.config.mjs` has no `headers()`.
 - `next.config.mjs` `headers()` sets on every path: `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy: camera=(), microphone=(), geolocation=()`. No `Content-Security-Policy` in this decision: it needs nonces for Next inline scripts, PostHog and fonts, and is its own decision when wanted.
@@ -578,7 +578,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "recommended on all".
 
 ### D58 Markdown delivery and llms.txt shape
-[E10]
+[Done]  [E10]
 
 - A docs URL requested with `Accept: text/markdown` answers `content-type: text/markdown` but its `vary` header lists only the Next router keys (measured 2026-11-10): `proxy.ts:26` sets `Vary: Accept` on the rewrite, Next drops it, so caches may serve Markdown to browsers or HTML to agents. `/llms.txt` starts with `# Docs` and no summary; `/llms-full.txt` carries raw JSX and import lines from the MDX.
 - `app/llms.mdx/docs/[[...slug]]/route.ts` sets `Vary: Accept` on its own response (and the HTML side keeps Next's vary; the proxy header may stay or go, whichever the check proves). `app/llms.txt/route.ts` follows llmstxt.org: `# shadcn-table` H1, one `>` blockquote summary (the home description), then the sections with one line per page: link and its description. `app/llms-full.txt/route.ts` strips MDX imports, JSX components and frontmatter before export; prose, headings and code fences stay.
@@ -586,7 +586,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "recommended on all".
 
 ### D59 Home page JavaScript and API page payload
-[E10]
+[Done]  [E10]
 
 - Lab audit 2026-11-10: the home page ships 775 KB of JavaScript with 1040 ms total blocking time; `/docs/api/table-options` HTML is 1.94 MB. `jspdf`, `jspdf-autotable` and `recharts` are docs dependencies (`apps/shadcn-table-docs/package.json:45-56`).
 - The home demo (`components/dev-home/v12/home-page.tsx` and what it imports) loads below-the-fold parts with `next/dynamic`; `jspdf`, `jspdf-autotable` and `recharts` are imported only inside the component that uses them, dynamically, never in the initial home bundle. `/docs/api/table-options` renders its option tables so the HTML stays under 800 KB (the spec picks the mechanism after measuring what fills the payload).
@@ -595,7 +595,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "recommended on all".
 
 ### D60 Docs content, descriptions and discoverability pages
-[E10]
+[Done]  [E10]
 
 - Audit 2026-11-10 (content 62/100): docs intros and descriptions are 38 to 53 percent Material React Table wording with its typos (`/docs/guides/sorting` description, "use use" on the detail-panel page); descriptions are copied (column-pinning, row-pinning), missing (`/docs/api`) or under 45 characters (install, usage); 35 of 42 example pages are under 200 words; the Introduction page (where `/docs` lands) has no install snippet or demo; no page targets "TanStack Table" together with "shadcn/ui"; no comparison page; the GitHub repo has no topics, the docs no byline or dates.
 - Every docs page gets a unique description of 120 to 155 characters and an intro written around what is shadcn-specific, MRT typos gone; every example page gets two or three sentences on what it shows and when to use it. The Introduction page gets the install snippet and a demo; the `/docs` redirect becomes permanent (308).

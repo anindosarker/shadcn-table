@@ -24,3 +24,9 @@
 
 ## A22 The sidebar Changelog link is marked external
 
+
+- Spec 31 added a Changelog link to the docs sidebar. As a plain entry it also became the "Next" card on the last docs page, pointing at GitHub. The review fix gave the entry the fumadocs `external:` prefix in `content/docs/meta.json`: the link stays in the sidebar, opens in a new tab, shows the external-link icon before its label, and no longer appears in the previous/next footer. Merged in 23e1cfa9.
+
+- Options:
+  - a) Recommended: keep
+  - b) revert: drop the prefix (no icon, same tab, and the last docs page gets a Next card to the changelog on GitHub)

@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-10 03:37
+Updated: 2026-11-10 03:40
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -43,7 +43,7 @@ Updated: 2026-11-10 03:37
 | E10 30 Home JavaScript |  |  |  |  |  |  |  |  | [x] |  |  |
 | E10 30 API page payload | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [x] |  |
-| E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [ ] |
+| E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | [x] |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | [x] |
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |  |
