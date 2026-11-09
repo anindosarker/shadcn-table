@@ -130,3 +130,6 @@
 ### F30 PostHog and providers load in the root layout on every page
 
 - `apps/shadcn-table-docs/app/layout.tsx`: posthog-js (114 KB) and the providers ship in the shared root layout, so every page carries them in the first load; on `/` they are most of the 580 KB of script left after spec 30 (A21). A later decision lazy-loads posthog-js after hydration or on first interaction and re-measures `/` against 450 KB; the docs check "icons: the pick survives a reload" must keep passing.
+
+### F31 The docs check suite has no check for the byline or the two new pages
+
