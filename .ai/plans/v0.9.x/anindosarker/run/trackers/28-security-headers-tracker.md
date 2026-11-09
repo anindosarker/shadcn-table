@@ -1,7 +1,7 @@
 # 28: Security response headers, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/security-headers`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

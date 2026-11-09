@@ -1,7 +1,7 @@
 # 25: JSON-LD structured data, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/json-ld`, worktree 03
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

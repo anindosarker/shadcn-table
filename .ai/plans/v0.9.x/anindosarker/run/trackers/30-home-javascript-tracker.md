@@ -1,7 +1,7 @@
 # 30: Home JavaScript, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/home-javascript`, worktree 05
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
