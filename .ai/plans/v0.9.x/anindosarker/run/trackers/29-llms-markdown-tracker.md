@@ -12,6 +12,7 @@ Checks:
 - `pnpm test lint` at 38afefa3 plus changelog: pass (0 errors, 9 warnings)
 - `pnpm test validate-repo` at 38afefa3 plus changelog: pass
 - `pnpm test docs-e2e --base base` at 38afefa3 plus changelog: pass (getting-started 205, api 109, guides 692, examples 939, 0 failed)
+- Verifier at 456e5a05: no rerun; `git diff --name-only 38afefa3..456e5a05` lists only the tracker and `CHANGELOG.md`, so every Local CI, Task and 1.2 line recorded at 38afefa3 holds for HEAD; CI is the second run
 
 - Task 1 `lib/llms.ts`: done (c5cb3050)
 - Task 2 routes: done (38afefa3)
@@ -31,3 +32,4 @@ Checks:
 ## Attention
 
 - The `llms.txt` summary is the home page description copied as a constant into `lib/llms.ts` (`app/(home)/page.tsx` and `app/layout.tsx` are outside this milestone's files); a later change to the home description must update it too, or a shared `siteDescription` in `lib/shared.ts` replaces all three.
+- Acceptance line `grep -cE '^(import |<[A-Z])'` on `/llms-full.txt` prints `54`, not `0`: 53 lines sit inside fenced code (kept by 1.2 "fenced code stay") and 1 is Callout prose. It is counted as pass on the fence-aware check in Notes (prints `0`); revert means changing the spec line, not the renderer.
