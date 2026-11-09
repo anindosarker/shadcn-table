@@ -14,6 +14,7 @@ Checks:
 - `pnpm test lint` at c81a0b64: pass (9 warnings)
 - `pnpm test validate-repo` at c81a0b64: pass
 - `pnpm test docs-e2e --base base` at c81a0b64: fail on P5 flake getting-started `/` "theme: Shift+R returns to the default", rerun pass (107 pages, 939 examples)
+- Verifier at 1355d5e5: no rerun; `git diff --name-only 4476e6e8..HEAD` and `c81a0b64..HEAD` touch only `.ai/` and `CHANGELOG.md`, so every 2.2 line and the 1.2 Acceptance curls above stand for HEAD; the 2.2 analyzer line stays not met as written (Notes, Attention)
 
 - Task 1 canonical, redirect, analyzer wrap: done (4476e6e8)
 - Task 2 Acceptance proof on port 5343: done (7afa5cd6)
