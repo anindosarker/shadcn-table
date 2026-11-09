@@ -22,6 +22,7 @@ Checks:
 - `pnpm test lint` at 3e5e06d8: pass (0 errors, 9 pre-existing warnings)
 - `pnpm test validate-repo` at 3e5e06d8: pass
 - `pnpm test docs-e2e --base base` at 3e5e06d8: pass (4 sections, 107 pages; examples 939 passed, 0 failed)
+- verifier at 250ab5b1: `git ls-files app/dev theme-demo/variants | grep -vE whole-app` empty; goal 2 grep empty; every other 2.2 and 1.2 check recorded at c1618384 or 3e5e06d8, later diff only .ai/ and CHANGELOG.md, not rerun
 
 Tasks:
 - Task 1 route removal: done (a31e0390)
