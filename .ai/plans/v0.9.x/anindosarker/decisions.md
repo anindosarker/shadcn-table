@@ -610,3 +610,6 @@ index e1645117..e67a5482 100644
 - E10 (D53 to D60) ships as 0.9.3 in the same epic: a release spec modelled on spec 23, patch label `release:patch` (D49), the D40 flow, the runner approves Prepare Release (D47), post-release sync per P4. Release only after every E10 spec has merged into `claude/review`.
 - Owner, 2026-11-10: "work on it and release a new version asap" (E9), "epic go" on D53 to D60.
 - Held by the owner 2026-11-10 ("Hold.", after a side-agent note): E10 merges into `claude/review` only; the owner reviews the home title, the rewritten docs copy and the comparison page on the preview deploy first, then says release. The release spec is written then and joins the next epic.
+
+### D62 Home script target follows the home components; the PostHog load is its own finding
+
