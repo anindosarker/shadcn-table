@@ -11,6 +11,7 @@ Checks:
 - Check: `pnpm test lint` at 47b8be18: pass (0 errors, 9 existing warnings)
 - Check: `pnpm test validate-repo` at 47b8be18: pass
 - Check: `pnpm test docs-e2e --base base` at 47b8be18: pass (107 pages, examples 939 passed, 0 failed)
+- Check: verifier at 66dc4069: every 2.2 line and the 1.2 Acceptance recorded green; `git diff --name-only 47b8be18..HEAD` and `9ab4b69f..HEAD` touch only `.ai/` and `CHANGELOG.md`, so none rerun. Review: none (2.2).
 
 - Task 1 headers(): done (9ab4b69f)
 - Task 2 Acceptance proof: done (477edfad)
