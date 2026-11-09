@@ -36,18 +36,22 @@ export function SiteNav(props: ComponentProps<'header'>) {
           </span>
           <span>shadcn-table</span>
         </Link>
+        {/* from lg: the search field in the centre, max 28rem */}
+        {slots.searchTrigger && (
+          <div className="hidden min-w-0 justify-center [grid-area:search] lg:flex">
+            <slots.searchTrigger.full
+              hideIfDisabled
+              className="site-nav-search"
+            />
+          </div>
+        )}
         <div className="site-nav-actions">
+          {/* below lg: the search icon with the actions */}
           {slots.searchTrigger && (
-            <>
-              <slots.searchTrigger.full
-                hideIfDisabled
-                className="site-nav-search"
-              />
-              <slots.searchTrigger.sm
-                hideIfDisabled
-                className="site-nav-icon site-nav-search-sm"
-              />
-            </>
+            <slots.searchTrigger.sm
+              hideIfDisabled
+              className="site-nav-icon site-nav-search-sm"
+            />
           )}
           <a
             href={GITHUB_URL}

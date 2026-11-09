@@ -552,7 +552,7 @@ html:has(#nd-notebook-layout) ::selection {
 }
 
 .site-nav-search {
-  width: 14rem;
+  width: 100%;
   border-style: dashed;
   border-color: var(--docs-dash);
   border-radius: var(--docs-radius);
@@ -584,6 +584,11 @@ html:has(#nd-notebook-layout) ::selection {
   }
   .site-nav-row {
     height: 3.75rem;
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, 28rem) minmax(
+        max-content,
+        1fr
+      );
+    grid-template-areas: 'brand search actions';
   }
   .site-nav-search {
     display: flex;
