@@ -35,14 +35,14 @@ Updated: 2026-11-10 01:34
 | E9 23 After release 0.9.2 |  |  |  |  |  |  |  |  |  | [x] |  |
 | E10 24 E10 dependencies |  |  |  |  |  |  | [x] |  |  |  |  |
 | E10 24 Canonical and slash redirect |  |  |  |  |  |  |  | [x] |  |  |  |
-| E10 25 JSON-LD |  |  |  |  |  |  |  |  | [ ] |  |  |
+| E10 25 JSON-LD |  |  |  |  |  |  |  |  | [x] |  |  |
 | E10 26 Home OG image | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 27 Home title |  |  |  |  |  |  |  |  |  | · |  |
 | E10 28 Security headers |  |  |  |  |  |  |  |  | [x] |  |  |
 | E10 29 Markdown and llms | [x] |  |  |  |  |  |  |  |  |  |  |
 | E10 30 Home JavaScript |  |  |  |  |  |  |  |  | [ ] |  |  |
 | E10 30 API page payload | [x] |  |  |  |  |  |  |  |  |  |  |
-| E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | · |  |
+| E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [ ] |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | · |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | · |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |  |

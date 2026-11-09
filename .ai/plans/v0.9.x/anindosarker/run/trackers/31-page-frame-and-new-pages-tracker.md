@@ -1,7 +1,7 @@
 # 31: Page frame and new pages, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/docs-frame`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
