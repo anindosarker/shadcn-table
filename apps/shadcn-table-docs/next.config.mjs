@@ -92,7 +92,7 @@ const config = {
     {
       source: '/docs',
       destination: '/docs/getting-started/introduction',
-      permanent: false,
+      permanent: true,
     },
     // The getting-started overview was two links; the sidebar lists them.
     {
