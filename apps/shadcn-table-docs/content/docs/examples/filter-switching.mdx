@@ -1,10 +1,14 @@
 ---
 title: 'Filter Switching Example'
-description: 'An example of Shadcn Table which shows how to let the user switch between multiple filtering modes.'
+description: 'Let users switch each column filter between modes such as contains, startsWith or between, limited per column with columnFilterModeOptions in shadcn-table.'
 date: '2026-11-10'
 ---
 
-Shadcn Table supports letting users switch between multiple filter modes. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
+shadcn-table lets users switch how each column filter matches, from the mode picker next to the filter input. Filter modes are on by default, and this example customizes them: one column limits the choices with `columnFilterModeOptions`, another column builds its own menu with `renderColumnFilterModeMenuItems`, and columns start in a mode other than the default through their `filterFn`, such as `'startsWith'`, `'equals'` or `'between'`.
+
+The example also registers a custom filter function through the `filterFns` table option and gives it a label through `localization`, so it shows up in the picker like a built-in mode. Each mode is a TanStack Table filter function, so a custom one works anywhere a built-in one does.
+
+Use filter switching when the same column needs different kinds of matches for different users, such as exact codes for some and partial names for others. Set `enableColumnFilterModes: false` on a column (as the ID column does here) or on the table to hide the picker. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
 
 <CustomizeFilterModesExample />
 

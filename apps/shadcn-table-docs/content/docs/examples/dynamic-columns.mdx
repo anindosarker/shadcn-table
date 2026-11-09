@@ -1,10 +1,14 @@
 ---
 title: 'Dynamic Columns Example'
-description: 'An example of Shadcn Table which shows how to fetch remote data and generate columns dynamically'
+description: 'Build shadcn-table column definitions at runtime from the keys of fetched data, with server-side filtering, sorting and pagination via TanStack Query.'
 date: '2026-11-10'
 ---
 
-This example shows how to generate column definitions dynamically from remote data after first render using TanStack Query. You may need to manage the `columnOrder` state manually if doing this.
+This example fetches its rows with TanStack Query and builds the column definitions from the keys of the first row after the data arrives, so the table shape follows whatever the server returns. Filtering, sorting and pagination run on the server: `manualFiltering`, `manualSorting` and `manualPagination` are set, the `on...Change` callbacks feed the query, and `rowCount` tells the footer how many rows exist.
+
+Use dynamic columns when the schema is not known when you write the code, such as admin screens over arbitrary tables, CSV previews or reports whose fields a user picks. When the columns change after the first render, you may need to manage the `columnOrder` state yourself so that new columns land where you expect; the example keeps that code in a comment for reference.
+
+Keep the column builder memoized on the data shape rather than the rows, or every refetch rebuilds the columns and resets column state such as widths and order.
 
 <DynamicColumnsExample />
 

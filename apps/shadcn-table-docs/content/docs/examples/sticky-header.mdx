@@ -1,10 +1,14 @@
 ---
 title: 'Sticky Header Example'
-description: 'An example of Shadcn Table which shows how to make the header and footer sticky while scrolling.'
+description: 'Keep the header and footer of a scrolling shadcn-table on screen with enableStickyHeader and enableStickyFooter inside a fixed-height table container.'
 date: '2026-11-10'
 ---
 
-Shadcn Table allows you to easily make the header and footer sticky while scrolling. See the [Sticky Header Feature Guide](/docs/guides/sticky-header) for more information.
+shadcn-table can keep the header and footer in view while the body scrolls. This example sets `enableStickyHeader` and `enableStickyFooter`, gives the table a fixed height through `stTableContainerProps` so the body scrolls inside it, and turns off pagination and the bottom toolbar (`enablePagination: false`, `enableBottomToolbar: false`) to show a long list in one scroll area. `stTableBodyCellProps` adds a little styling to the cells.
+
+The sticky cells use your shadcn/ui table components and theme colors, so the header stays readable over the rows that scroll under it. Sticky headers combine with column pinning, row pinning and virtualization, and need no extra code beyond the two options and a container height.
+
+Use a sticky header for any table taller than the screen, where users lose track of which column is which as they scroll; add the sticky footer when the footer carries totals or labels users need while scanning. See the [Sticky Header Feature Guide](/docs/guides/sticky-header) for more information.
 
 <EnableStickyHeaderExample />
 

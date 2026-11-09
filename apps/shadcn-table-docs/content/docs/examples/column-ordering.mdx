@@ -1,10 +1,14 @@
 ---
 title: 'Column DnD Ordering Example'
-description: 'An example of Shadcn Table which shows how to enable column to be re-arranged via drag and drop.'
+description: 'Let users rearrange columns by dragging their headers with enableColumnOrdering, using the drag handles shadcn-table adds to each header cell.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has built-in support for column drag and drop re-ordering. Learn more about column ordering in the [Column Ordering Feature Guide](/docs/guides/column-ordering-dnd).
+This example sets one option, `enableColumnOrdering`, and shadcn-table adds a drag handle to every header cell. Dragging a header onto another moves the column there; the new order lives in the `columnOrder` state, so you can read it, control it or save it like any other TanStack Table state. The column visibility menu in the view settings follows the same order.
+
+Turn this on when users scan wide tables and want the columns they care about next to each other, for example moving a status column beside the name. Pair it with `persistViewSettings` (see the [Persistent View Example](/docs/examples/persistent-view)) when the order should survive a reload, or set `initialState.columnOrder` when you only need a different starting order and no dragging.
+
+The drag handles are shadcn/ui buttons from your `components/ui` folder, so they follow your theme and your base library. Learn more about column ordering in the [Column Ordering Feature Guide](/docs/guides/column-ordering-dnd).
 
 <EnableColumnOrderingExample />
 

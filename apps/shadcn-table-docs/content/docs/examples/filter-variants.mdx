@@ -1,10 +1,14 @@
 ---
 title: 'Filter Variants Example'
-description: 'An example of Shadcn Table which shows all of the powerful built-in filter variants.'
+description: 'Every built-in shadcn-table filterVariant in one table: text, select, multi-select, checkbox, range, range-slider, and date, time and datetime ranges.'
 date: '2026-11-10'
 ---
 
-Shadcn Table not only has filtering built in, but it also has a lot of different filter variants that take care of a lot of the heavy lifting for you. Text filters, date filters, range filters, range slider filters, and more are all built in and ready to use. There is much more you can do to customize the behavior of filtering, so be sure to check out the full [Column Filtering Feature Guide](/docs/guides/column-filtering) for more information.
+shadcn-table not only has filtering built in, it also has filter variants that do the heavy lifting of picking the right input for each column. This example sets `filterVariant` per column to show them all: `'text'`, `'select'`, `'multi-select'`, `'checkbox'`, `'range'`, `'range-slider'`, `'date-range'`, `'time-range'` and `'datetime-range'`. Each variant renders shadcn/ui inputs from your `components/ui` folder and pairs with a fitting filter function, so a range filter compares numbers and a date range compares dates.
+
+Choose the variant from the data type and from how users think about the column: a select for a short list of statuses, a slider for a bounded number such as age, a date range for timestamps. The variants combine with filter modes, faceted values and the filter display modes (chips, subheader, popover).
+
+There is much more you can do to customize filtering, so be sure to check out the full [Column Filtering Feature Guide](/docs/guides/column-filtering) for more information.
 
 <CustomizeFilterVariantsExample />
 

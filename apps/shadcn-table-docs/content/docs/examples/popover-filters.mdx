@@ -1,10 +1,14 @@
 ---
 title: 'Popover Filters Example'
-description: 'An example of Shadcn Table which shows an excel-like column filters.'
+description: 'Show shadcn-table column filters in a popover behind a filter icon in each header with columnFilterDisplayMode: popover, like the filters in a spreadsheet.'
 date: '2026-11-10'
 ---
 
-Shadcn Table supports displaying column filters in other ways than the default filter chips in the toolbar. This example shows how to only display column filters when the user clicks on the filter icon in the header and then display the filters in a popover. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
+shadcn-table can display column filters in other ways than the default filter chips in the toolbar. This example sets `columnFilterDisplayMode: 'popover'`, so each header gets a filter icon, and clicking it opens a shadcn/ui popover with the filter input for that column, much like the column filters in a spreadsheet. The rest of the table stays as it is, with no filter row and no chips taking space.
+
+Every filter variant works in the popover, from text and select to ranges and dates, and filter modes stay available inside it. The popover is the shadcn/ui popover from your `components/ui` folder, so it follows your theme and closes the way your other popovers do.
+
+Use popover filters for dense tables where users filter occasionally and want the filter next to the column it applies to, without a row of inputs under the headers. For filters always in view, see the [Subheader Filters Example](/docs/examples/subheader-filters). Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
 
 <AlternateColumnFilteringExample />
 

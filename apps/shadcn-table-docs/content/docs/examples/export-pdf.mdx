@@ -1,12 +1,14 @@
 ---
 title: 'PDF Export Example'
-description: 'An example of how to export data to PDF using Shadcn Table.'
+description: 'Download shadcn-table rows as a PDF with jsPDF and jspdf-autotable, from export buttons added to the top toolbar through renderTopToolbarCustomActions.'
 date: '2026-11-10'
 ---
 
-Shadcn Table does not have a data exporting feature built-in. However, you can easily integrate your own exporting features.
+shadcn-table does not ship a data export feature, but you can build your own from the table instance. In this example, [`jspdf`](https://www.npmjs.com/package/jspdf) and [`jspdf-autotable`](https://www.npmjs.com/package/jspdf-autotable) are connected to export buttons in the top toolbar, added through `renderTopToolbarCustomActions`, to export table rows to a PDF file that downloads in the browser.
 
-In the example below, `jspdf` and `jspdf-autotable` are connected to some export buttons in the top toolbar to export table rows to a PDF file that can be downloaded.
+The buttons read the rows from the table instance (all rows after filtering, the rows on the current page, or the selected ones, with `enableRowSelection` on), turn them into a header row and body rows, and pass them to `autoTable`, which draws a paginated table in the document. The footer uses `paginationDisplayMode: 'pages'`, and the selection banner sits at the bottom.
+
+Use PDF export when users need a file to print, attach to an email or archive, where a fixed layout matters more than editing the data afterwards. You can style the document through the `autoTable` options. For data users want to edit in a spreadsheet, see the [CSV Export Example](/docs/examples/export-csv).
 
 <ExportToPdfExample />
 
