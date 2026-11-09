@@ -483,3 +483,8 @@ index e1645117..e67a5482 100644
 
 ### D50 Sitemap and robots for the docs site
 
+- `https://www.shadcn-table.com/sitemap.xml` and `/robots.txt` both return 404 today; `apps/shadcn-table-docs` has no `sitemap.ts`, `robots.ts` or `next-sitemap` config, so Google finds pages only by following links.
+- Add `apps/shadcn-table-docs/app/sitemap.ts`: the home page at priority 1.0 plus every docs page from fumadocs `source.getPages()`, absolute URLs on `https://www.shadcn-table.com`; no `/dev/*` (already `noindex`, `app/dev/layout.tsx:7`), no `/r/*`, no `/ingest/*`; no `lastmod` (Vercel shallow clones make git dates unreliable).
+- Add `apps/shadcn-table-docs/app/robots.ts`: allow all, disallow `/dev/`, `/ingest/` and `/r/`, `sitemap: https://www.shadcn-table.com/sitemap.xml`. No new dependency; Next.js serves both from these files.
+- Checks: on `next start`, `curl` both routes return 200 with valid XML and text; sitemap URL count equals `source.getPages().length + 1`; no `/dev`, `/r` or `/ingest` URL in the sitemap. After deploy the owner submits the sitemap in Search Console.
+- Owner, 2026-11-10: "k. record."
