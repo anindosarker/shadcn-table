@@ -1,6 +1,6 @@
 # 22: Remove the /dev preview routes, tracker
 
-Status: done
+Status: merged (3e254708fcaeec199c2d9ba4ee3121c85d304bb7)
 Branch `v0.9/remove-dev-routes`, worktree 04
 Parent: 295d9afb2bb2268d822ae1870b9f49064cf696a1 (view a deleted file with `git show 295d9afb:apps/shadcn-table-docs/app/dev/theme/9/page.tsx`)
 
