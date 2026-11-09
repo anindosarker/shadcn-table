@@ -1,6 +1,6 @@
 # 30: API page payload, tracker
 
-Status: done
+Status: merged (6a8744b3)
 Branch `v0.9/api-page-payload`, worktree 06 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/06`)
 Checks:
 
