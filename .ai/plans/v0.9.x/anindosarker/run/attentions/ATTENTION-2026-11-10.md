@@ -8,3 +8,6 @@
 - Options:
   - a) Recommended: remove the wrap and the `@next/bundle-analyzer` devDependency in a small fix milestone; bundle inspection uses `next experimental-analyze` when needed
   - b) keep the wrap as merged (inert until the app builds with webpack)
+
+## A21 The home page cannot reach 450 KB of script inside the home components
+
