@@ -4,7 +4,7 @@ description: 'Render 500 columns smoothly with enableColumnVirtualization, which
 date: '2026-11-10'
 ---
 
-This example sets `enableColumnVirtualization`, so shadcn-table renders only the columns that are on screen (plus a few around them) through [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3). The table below has **500 columns**, and filtering, search and sorting stay responsive. `columnVirtualizerOptions` tunes the virtualizer (here `overscan: 4`), and the example also turns on `enableColumnPinning`, `enableColumnResizing` and `enableRowNumbers` to show that they keep working with virtualized columns.
+This example sets `enableColumnVirtualization`, so shadcn-table renders only the columns that are on screen (plus a few around them) through [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3). The table below has **500 columns**, and filtering, search and sorting stay responsive. `columnVirtualizerOptions` tunes the virtualizer (here `overscan: 4`), and the example turns on `enableRowNumbers` and states `enableColumnPinning` and `enableColumnResizing` (both on by default) to show that they keep working with virtualized columns.
 
 Reach for column virtualization when a table has dozens or hundreds of columns, such as pivoted reports or wide data exports, and the number of cells in the DOM becomes the bottleneck. Be sure to also check out the full [virtualization feature guide docs](/docs/guides/virtualization) to learn about both row and column virtualization.
 

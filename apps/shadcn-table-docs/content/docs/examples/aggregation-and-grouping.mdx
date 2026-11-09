@@ -1,10 +1,10 @@
 ---
 title: 'Aggregation and Grouping Example'
-description: 'Group rows by one or more columns with enableGrouping and show per-group totals, averages and maximums through aggregationFn and AggregatedCell.'
+description: 'Group rows by one or more columns with enableGrouping in shadcn-table and show the per-group maximum and average through aggregationFn and AggregatedCell.'
 date: '2026-11-10'
 ---
 
-This example sets `enableGrouping` so any column can group the rows from its column actions menu (the ⋮ icon, then **Group by (column name)**). The table starts grouped through `initialState.grouping`, and the columns declare an `aggregationFn` (`'mean'`, `'max'`) with an `AggregatedCell` to render the result on each group row, while `Footer` shows the totals for the whole table. Sticky header and footer (`enableStickyHeader`, `enableStickyFooter`) keep the labels and totals in view as the groups expand.
+This example sets `enableGrouping` so any column can group the rows from its column menu (**Group by (column name)**). The table starts grouped through `initialState.grouping`, and the columns declare an `aggregationFn` (`'mean'`, `'max'`) with an `AggregatedCell` to render the result on each group row, while `Footer` shows the same figures for the whole table. Sticky header and footer (`enableStickyHeader`, `enableStickyFooter`) keep the labels and footer figures in view as the groups expand.
 
 You can group by a single column or by several at a time, and grouping works together with expanding and sorting: try grouping by a different column, then sort by an aggregated column such as "age" or "salary". The grouping and aggregation logic comes from [TanStack Table](https://tanstack.com/table/latest/docs/framework/react/guide/grouping); shadcn-table adds the menu items, the expand buttons and the grouped cell rendering.
 

@@ -6,9 +6,9 @@ date: '2026-11-10'
 
 This example fetches its rows with TanStack Query and builds the column definitions from the keys of the first row after the data arrives, so the table shape follows whatever the server returns. Filtering, sorting and pagination run on the server: `manualFiltering`, `manualSorting` and `manualPagination` are set, the `on...Change` callbacks feed the query, and `rowCount` tells the footer how many rows exist.
 
-Use dynamic columns when the schema is not known when you write the code, such as admin screens over arbitrary tables, CSV previews or reports whose fields a user picks. When the columns change after the first render, you may need to manage the `columnOrder` state yourself so that new columns land where you expect; the example keeps that code in a comment for reference.
+Use dynamic columns when the schema is not known when you write the code, such as admin screens over arbitrary tables, CSV previews or reports whose fields a user picks. When the columns change after the first render, shadcn-table adds the new columns to the column order itself; the commented-out `columnOrder` code in the example is only needed for a custom order.
 
-Keep the column builder memoized on the data shape rather than the rows, or every refetch rebuilds the columns and resets column state such as widths and order.
+The column builder is memoized on `data`, so it reruns after each fetch; the column ids stay the same, so column state such as widths and order is kept.
 
 <DynamicColumnsExample />
 

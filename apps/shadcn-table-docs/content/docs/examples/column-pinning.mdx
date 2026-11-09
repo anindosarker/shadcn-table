@@ -4,7 +4,7 @@ description: 'Freeze columns to the start or end of a wide shadcn-table with ena
 date: '2026-11-10'
 ---
 
-This example sets `enableColumnPinning`, so each column menu offers to pin the column to the start or the end of the table, and it starts with columns already pinned through `initialState.columnPinning`. Pinned columns stay in place while the rest of the table scrolls horizontally; the example also turns on `enableRowActions` with `renderRowActionMenuItems` so the actions column can stay pinned at the edge, and uses `layoutMode: 'grid-no-grow'` to keep column widths fixed.
+Column pinning is on by default and this example states `enableColumnPinning` explicitly: each column menu offers to pin the column to the start or the end of the table, and it starts with columns already pinned through `initialState.columnPinning`. Pinned columns stay in place while the rest of the table scrolls horizontally; the example also turns on `enableRowActions` with `renderRowActionMenuItems` so the actions column can stay pinned at the edge, and uses `layoutMode: 'grid-no-grow'` to keep column widths fixed.
 
 Use column pinning for wide tables where one or two columns identify the row, such as a name or an ID, and users lose track of the row as they scroll right. Pinning the actions column to the end is a common second use: the edit and delete buttons stay reachable without scrolling back.
 
