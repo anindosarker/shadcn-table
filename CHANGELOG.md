@@ -19,6 +19,10 @@ publishes the section as the GitHub release notes.
 
 - Every response of the docs site carries `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN` and `Permissions-Policy: camera=(), microphone=(), geolocation=()` (D57). No `Content-Security-Policy` yet.
 
+#### Spec 25 JSON-LD structured data
+
+- The home page and every docs page carry Schema.org JSON-LD: `/` a `WebSite` and a `SoftwareSourceCode`, each docs page a `TechArticle` and a `BreadcrumbList` (Docs > section > page, absolute URLs), typed with `schema-dts` (D54).
+
 ### Changed
 
 #### Spec 30 API page payload
