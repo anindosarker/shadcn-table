@@ -11,6 +11,7 @@ Checks:
 - Check: Local CI, `pnpm test typecheck --base base` at 30c28957 + changelog/tracker: pass (tsc clean)
 - Check: Local CI, `pnpm test lint` at 30c28957 + changelog/tracker: pass (9 existing warnings)
 - Check: Local CI, `pnpm test validate-repo` at 30c28957 + changelog/tracker: pass (40 unit tests)
+- Check: verifier at e6af0f62: every 2.2 line and the 1.2 Acceptance recorded at 30c28957; `git diff --name-only 30c28957..e6af0f62` touches only CHANGELOG.md and this tracker, no rerun needed
 
 - Task 1 Write app/opengraph-image.tsx: done (30c28957)
 - Task 2 Acceptance proof: done (30c28957)
