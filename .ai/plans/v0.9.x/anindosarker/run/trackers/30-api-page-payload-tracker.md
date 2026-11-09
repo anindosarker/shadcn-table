@@ -1,6 +1,6 @@
 # 30: API page payload, tracker
 
-Status: running
+Status: done
 Branch `v0.9/api-page-payload`, worktree 06 (`/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/06`)
 Checks:
 
@@ -10,11 +10,16 @@ Checks:
 - `curl -s -o api.html -w '%{size_download}' localhost:5350/docs/api/table-options` at 21bd1d41: 268282 (under 819200): pass
 - `grep -c 'enableColumnFilters' api.html` at 21bd1d41: 1: pass
 - `pnpm test docs-e2e --base base --url http://localhost:5350 --section api` at 21bd1d41: pass (109 passed, 0 failed)
+- `pnpm format` at d10b2e5f: pass (no change)
+- `pnpm test typecheck --base base` at d10b2e5f: pass
+- `pnpm test lint` at d10b2e5f: pass (0 errors, 9 existing warnings)
+- `pnpm test validate-repo` at d10b2e5f: pass
+- `pnpm test docs-e2e --base base` at d10b2e5f: pass (getting-started 205, api 109, guides 692, examples 939 passed, 0 failed)
 - Playwright probe on 5350 at 21bd1d41: pass (211 rows hydrated; search `enableColumnFilters` leaves 2 rows; clicking `#enableColumnFilters-prop` copies `enableColumnFilters`; name column header sticky (pinned); JavaScript disabled: 211 static rows with `#enableColumnFilters-prop`)
 
 - Task 1 static table, shell, client moves: done (21bd1d41)
-- Task 2 production proof: done (this tracker commit)
-- Task 3 cleanup: running
+- Task 2 production proof: done (57bf33a1)
+- Task 3 cleanup: done (d10b2e5f)
 
 ## Notes
 
