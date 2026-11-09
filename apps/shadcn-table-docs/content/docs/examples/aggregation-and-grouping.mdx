@@ -1,16 +1,14 @@
 ---
 title: 'Aggregation and Grouping Example'
-description: 'A Shadcn Table example demonstrating aggregation and grouping. See how you can group rows by a column and aggregate the values of other columns.'
+description: 'Group rows by one or more columns with enableGrouping in shadcn-table and show the per-group maximum and average through aggregationFn and AggregatedCell.'
 date: '2026-11-10'
 ---
 
-Grouping and Aggregation features are usually hard to implement, but ST (thanks to [TanStack Table](https://tanstack.com/table/latest/docs/framework/react/guide/grouping)) makes it easy. Once enabled, simply click the vertical ellipses (⋮) icon for the column you want to group by and select **Group by (column name)**.
+This example sets `enableGrouping` so any column can group the rows from its column menu (**Group by (column name)**). The table starts grouped through `initialState.grouping`, and the columns declare an `aggregationFn` (`'mean'`, `'max'`) with an `AggregatedCell` to render the result on each group row, while `Footer` shows the same figures for the whole table. Sticky header and footer (`enableStickyHeader`, `enableStickyFooter`) keep the labels and footer figures in view as the groups expand.
 
-You can group by a single column or multiple columns at a time. Then, you can run aggregations on grouped columns to calculate totals, averages, max, min, etc.
+You can group by a single column or by several at a time, and grouping works together with expanding and sorting: try grouping by a different column, then sort by an aggregated column such as "age" or "salary". The grouping and aggregation logic comes from [TanStack Table](https://tanstack.com/table/latest/docs/framework/react/guide/grouping); shadcn-table adds the menu items, the expand buttons and the grouped cell rendering.
 
-The Grouping and Aggregation features work hand in hand with the Expanding and Sorting features. Try grouping by various columns in the example below and sorting by the aggregated columns, such as "age" or "salary".
-
-See the [Column Grouping](/docs/guides/column-grouping) and [Aggregation](/docs/guides/aggregation) docs for more information.
+Reach for this pattern when users need summaries per category, such as headcount and average salary per department. See the [Column Grouping](/docs/guides/column-grouping) and [Aggregation](/docs/guides/aggregation) guides for more.
 
 <AggregationAndGroupingExample />
 

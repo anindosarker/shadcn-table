@@ -1,16 +1,14 @@
 ---
 title: 'Column Virtualization Example'
-description: 'An example of a Shadcn Table with column virtualization enabled to achieve higher performance when rendering large data sets'
+description: 'Render 500 columns smoothly with enableColumnVirtualization, which mounts only the columns in view through TanStack Virtual and columnVirtualizerOptions.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has a built-in column virtualization feature (via [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3)) that allows you to render a large number of columns without major performance issues that you would normally see with a large number of DOM elements.
+This example sets `enableColumnVirtualization`, so shadcn-table renders only the columns that are on screen (plus a few around them) through [`@tanstack/react-virtual`](https://tanstack.com/virtual/v3). The table below has **500 columns**, and filtering, search and sorting stay responsive. `columnVirtualizerOptions` tunes the virtualizer (here `overscan: 4`), and the example turns on `enableRowNumbers` and states `enableColumnPinning` and `enableColumnResizing` (both on by default) to show that they keep working with virtualized columns.
 
-Try out the performance of the table below with **500 columns**! Filtering, Search, and Sorting also maintain usable performance.
+Reach for column virtualization when a table has dozens or hundreds of columns, such as pivoted reports or wide data exports, and the number of cells in the DOM becomes the bottleneck. Be sure to also check out the full [virtualization feature guide docs](/docs/guides/virtualization) to learn about both row and column virtualization.
 
-Be sure to also check out the full [virtualization feature guide docs](/docs/guides/virtualization) to learn about both Row and Column Virtualization.
-
-> NOTE: You should only enable row virtualization if you have a large number of rows or columns. Depending on the size of the table, if you are rendering fewer than a couple dozen rows at a time, you will actually just be adding extra overhead to the table renders. Virtualization only becomes necessary when you have over 50 rows or so at the same time with no pagination or dozens of columns.
+> NOTE: Only enable column virtualization when you have many columns. For a table with fewer than a couple dozen columns, it adds overhead to every render instead of saving it; it pays off once you render dozens of columns at the same time.
 
 <EnableColumnVirtualizationExample />
 

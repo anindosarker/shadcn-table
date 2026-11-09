@@ -1,10 +1,14 @@
 ---
 title: 'Column Grouping Example'
-description: 'A Shadcn Table example demonstrating different grouping UI modes.'
+description: 'Group a shadcn-table by state and gender with enableGrouping and switch groupedColumnMode between reorder, remove and off to see where grouped columns go.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has a few different UI options and behaviors for displaying grouped columns. See the [Column Grouping Guide](/docs/guides/column-grouping) to learn more.
+This example sets `enableGrouping` and starts grouped by two columns through `initialState.grouping`, with every group expanded. The radio buttons above the table switch `groupedColumnMode` between its values: `'reorder'` (the default) moves grouped columns to the start of the table, `'remove'` hides them because the group rows already show the value, and `false` leaves them where they were defined.
+
+Pick the mode that matches how your users read the data. Reordering keeps the grouped value visible in its own column, which helps when several levels of grouping are open at once; removing saves horizontal space on narrow screens; leaving columns in place keeps a familiar layout for users who switch grouping on and off often.
+
+Grouping comes from TanStack Table's grouped row model, and shadcn-table adds the column menu items, the expand buttons and the group row rendering. The [Customized Grouping Example](/docs/examples/customized-grouping) shows how to restyle the expand column, and the [Column Grouping Guide](/docs/guides/column-grouping) covers every option.
 
 <EnableColumnGroupingExample />
 

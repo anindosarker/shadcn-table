@@ -1,10 +1,14 @@
 ---
 title: 'Sticky Row Selection Example'
-description: 'An example of Shadcn Table which shows how to pin individual rows as they get selected and have them be sticky and stay in view while scrolling.'
+description: 'Pin rows as users select them so the selection stays in view while scrolling, with enableRowSelection, enableRowPinning and select-sticky display mode.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has the ability to pin rows as they are selected and keep them in view while scrolling. In this example, when rows are selected, they will initially appear to stay in place, but when the user scrolls up or down, the selected rows will stick to the top or bottom of the table. Learn more about row pinning in the [Row Pinning Feature Guide](/docs/guides/row-pinning).
+shadcn-table can pin rows as they are selected and keep them in view while scrolling. This example sets `enableRowSelection` and `enableRowPinning` with `rowPinningDisplayMode: 'select-sticky'`: selecting a row pins it, and when the user scrolls, the selected rows stick to the top or the bottom of the table instead of leaving the screen. It starts with a selected row through `initialState.rowSelection` and `initialState.rowPinning`.
+
+The table scrolls in a fixed-height container (`stTableContainerProps`) with a sticky header and pagination off, and `getRowId` keeps selection and pins tied to the same records. Deselecting a row unpins it, so the two states never drift apart. The selection count shows in the toolbar banner as usual.
+
+Use this when users pick rows from a long list and need to see their picks while they keep looking, such as choosing recipients or comparing products. Learn more about row pinning in the [Row Pinning Feature Guide](/docs/guides/row-pinning).
 
 <EnableRowPinningSelectExample />
 

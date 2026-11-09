@@ -1,10 +1,14 @@
 ---
 title: 'Faceted Values Example'
-description: 'An example of Shadcn Table which shows how to use faceted values to automatically populate filter suggestions.'
+description: 'Fill shadcn-table filter suggestions, select options and slider ranges from the data itself by turning on enableFacetedValues, with no hard-coded lists.'
 date: '2026-11-10'
 ---
 
-Shadcn Table can scan your data and automatically generate filter autocomplete suggestions, filter select options, or min and max values for your column filters. This is made possible by the faceted values feature from TanStack Table. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
+shadcn-table can scan your data and generate the filter choices for you. This example sets one table option, `enableFacetedValues`, and the column filters fill themselves: the `'autocomplete'` variant suggests the values in the column, `'select'` and `'multi-select'` list the unique values as options, and `'range-slider'` takes its minimum and maximum from the data.
+
+The values come from TanStack Table's faceted row models; with the option set, the filters read them. They follow the other filters, so the choices narrow as users filter other columns. You can still pass `filterSelectOptions` on a column when you want a fixed list or custom labels.
+
+Use faceted values for client-side data where the set of values is not known ahead of time, such as cities or job titles. With server-side filtering the client sees only one page, so fetch the options from the server instead. Learn more in the full [Column Filtering Feature Guide](/docs/guides/column-filtering).
 
 <EnableFilterFacetValuesExample />
 

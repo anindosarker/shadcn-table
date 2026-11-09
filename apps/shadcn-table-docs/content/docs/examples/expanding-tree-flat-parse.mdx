@@ -1,10 +1,14 @@
 ---
 title: 'Expanding Parsed Tree Example'
-description: 'A Shadcn Table example demonstrating expandable sub-rows in a tree structure parsed from a flat list of data'
+description: "Turn a flat list with parent ids into an expandable tree in shadcn-table by passing a getSubRows function that finds each row's children in the data."
 date: '2026-11-10'
 ---
 
-Shadcn Table supports showing rows in a expanding tree structure and parsing them from a flat data structure with the `getSubRows` option. Learn more about how to customize this in the [expanding sub-rows feature guide](/docs/guides/expanding-sub-rows).
+shadcn-table can show rows as an expanding tree even when your data arrives as a flat list. This example keeps every person in one array with a `managerId` field and passes `getSubRows` a function that returns the rows whose `managerId` matches the current row, so TanStack Table builds the tree from the flat data. Only the top-level rows go in `data`; `enableExpanding` turns on the expand buttons.
+
+This is the common shape of data from a SQL table or a REST endpoint, where nesting is a foreign key rather than a nested array. Parsing on the client works well for a few hundred rows; for large trees, filter the root rows on the server or fetch children on demand, as the [Lazy Sub-Rows Example](/docs/examples/lazy-sub-rows) does.
+
+The lookup runs for every row, so for bigger lists index the rows by parent id once in a `useMemo`. Learn more about how to customize this in the [expanding sub-rows feature guide](/docs/guides/expanding-sub-rows).
 
 <ExpandingTreeFlatParseExample />
 

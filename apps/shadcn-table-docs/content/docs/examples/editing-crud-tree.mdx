@@ -1,14 +1,14 @@
 ---
 title: 'Editing CRUD Tree Example'
-description: 'An example of Shadcn Table which shows how to use editing CRUD features with expanding sub rows'
+description: 'Edit and create rows at any depth of an expanding tree in shadcn-table, placing new sub-rows under their parent with the positionCreatingRow option.'
 date: '2026-11-10'
 ---
 
-Editing nested row data can be challenging. In this example, rows can be expanded to show sub rows, and editing and creating new rows can be done at any level.
+Editing nested row data can be challenging. In this example, rows expand to show their sub-rows (`enableExpanding`), and editing and creating rows works at any level of the tree with `editDisplayMode: 'row'` and `createDisplayMode: 'row'`. Each row has an add button that opens a blank row directly under its parent: the `positionCreatingRow` option takes the row index where the new row should appear.
 
-Adding a new blank row in the exact row index position is now possible with the new `positionCreatingRow` table option.
+The example also shows client-side optimistic updates on nested data: after a valid save, the table data changes at once, and the TanStack Query mutation finds the right parent to insert the new row into. The actions column is pinned through `enableColumnPinning` and `initialState.columnPinning`, so the buttons stay in view for deeply indented rows.
 
-This example also shows some complex client-side optimistic updates, where the table data is updated immediately after a valid user action.
+Use this pattern for hierarchies users maintain by hand, such as an org chart, a category tree or a bill of materials. Check out the flat editing modes in the [editing guide](/docs/guides/editing) for more information.
 
 <EditingCrudTreeExample />
 
