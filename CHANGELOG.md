@@ -33,6 +33,10 @@ publishes the section as the GitHub release notes.
 
 - The home page loads less JavaScript: the nav and hero links prefetch the docs on hover, touch or focus instead of as soon as they show, so the docs route's scripts no longer download with the home page. Lighthouse (desktop) script transfer for `/` drops from 711 KB to 580 KB; `jspdf`, `jspdf-autotable` and `recharts` stay out of the home load (D59, D62).
 
+#### Spec 27 Home title and hero tagline name the category
+
+- The home page title and `og:title` read `shadcn-table: data table for shadcn/ui, built on TanStack Table`; docs page titles keep `<page> | shadcn-table`. The hero eyebrow says "The batteries-included data table for shadcn/ui."; the H1 stays "shadcn-table" (D56).
+
 ### Fixed
 
 #### Spec 29 Markdown delivery and llms.txt shape
