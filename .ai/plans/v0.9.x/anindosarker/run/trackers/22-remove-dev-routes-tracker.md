@@ -10,11 +10,21 @@ Checks:
 - goal 2 grep (`/dev` route references in apps/shadcn-table-docs) at Task 2 commit: empty
 - `pnpm --filter shadcn-table-docs types:check` at Task 2 commit: pass
 - `pnpm --filter shadcn-table-docs lint` at Task 2 commit: pass (0 errors, 9 pre-existing warnings, none in owned files)
+- `pnpm --filter shadcn-table-docs build` then `next start -p 5340` at c1618384: pass; curl status lines:
+  - `/dev 404`
+  - `/dev/theme 404`
+  - `/dev/theme/1 404`
+  - `/dev/theme/9 404`
+  - `/ 200`
+  - server on 5340 stopped after the proof
 
 Tasks:
 - Task 1 route removal: done (a31e0390)
+- Task 2 ride-alongs: done (c1618384)
+- Task 3 acceptance proof: done (tracker commit)
 
 Notes:
 - Importer grep before removal: theme-chips imported only by terminal, stage, tokens variants; matches-app and matches-paste only by matches; the other variants by app/dev only. All eleven removed.
+- The worktree's install lacked `@tailwindcss/node` (declared in apps/shadcn-table-docs/package.json); `pnpm install --frozen-lockfile` fixed it, no lockfile change.
 
 ## Attention
