@@ -1,3 +1,4 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import { createMDX } from 'fumadocs-mdx/next';
 
 const withMDX = createMDX({ agentRules: false });
@@ -64,6 +65,13 @@ const config = {
   skipTrailingSlashRedirect: true,
   // MRT's docs index is a table of contents page; the sidebar already is one.
   redirects: async () => [
+    // skipTrailingSlashRedirect turns Next's own slash redirect off for every
+    // path; this puts it back for all but the PostHog proxy (D53).
+    {
+      source: '/:path((?!ingest).*)/',
+      destination: '/:path',
+      permanent: true,
+    },
     {
       source: '/docs',
       destination: '/docs/getting-started/introduction',
@@ -89,4 +97,7 @@ const config = {
   ],
 };
 
-export default withMDX(config);
+// `ANALYZE=1 pnpm build` writes the bundle reports to .next/analyze/.
+export default withBundleAnalyzer({ enabled: process.env.ANALYZE === '1' })(
+  withMDX(config),
+);
