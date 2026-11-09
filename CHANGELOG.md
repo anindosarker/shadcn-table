@@ -15,6 +15,12 @@ publishes the section as the GitHub release notes.
 
 - The home page has a social preview image: `app/opengraph-image.tsx` renders a 1200x630 PNG card like the docs cards, and Next.js adds `og:image` and `twitter:image` to `/` from it (D55).
 
+### Changed
+
+#### Spec 30 API page payload
+
+- The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
+
 ### Fixed
 
 #### Spec 29 Markdown delivery and llms.txt shape

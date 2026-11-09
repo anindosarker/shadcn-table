@@ -41,41 +41,47 @@ export const PropTableSource = async ({ file, tableId }: Props) => {
 };
 
 export const TableOptionsSource = () => (
-  <PropTableSource file="table-options-table.tsx" tableId="root-props" />
+  <PropTableSource file="table-options-table.client.tsx" tableId="root-props" />
 );
 
 export const ColumnOptionsSource = () => (
-  <PropTableSource file="column-options-table.tsx" tableId="column-options" />
+  <PropTableSource
+    file="column-options-table.client.tsx"
+    tableId="column-options"
+  />
 );
 
 export const StateOptionsSource = () => (
-  <PropTableSource file="state-options-table.tsx" tableId="state-options" />
+  <PropTableSource
+    file="state-options-table.client.tsx"
+    tableId="state-options"
+  />
 );
 
 export const TableInstanceAPIsSource = () => (
   <PropTableSource
-    file="table-instance-apis-table.tsx"
+    file="table-instance-apis-table.client.tsx"
     tableId="table-instance-apis"
   />
 );
 
 export const ColumnInstanceAPIsSource = () => (
   <PropTableSource
-    file="column-instance-apis-table.tsx"
+    file="column-instance-apis-table.client.tsx"
     tableId="column-instance-apis"
   />
 );
 
 export const RowInstanceAPIsSource = () => (
   <PropTableSource
-    file="row-instance-apis-table.tsx"
+    file="row-instance-apis-table.client.tsx"
     tableId="row-instance-apis"
   />
 );
 
 export const CellInstanceAPIsSource = () => (
   <PropTableSource
-    file="cell-instance-apis-table.tsx"
+    file="cell-instance-apis-table.client.tsx"
     tableId="cell-instance-apis"
   />
 );
