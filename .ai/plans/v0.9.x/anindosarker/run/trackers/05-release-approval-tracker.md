@@ -1,0 +1,28 @@
+# 05: Release approval, tracker
+
+Status: merged (53ff442a)
+Branch `v0.9/release-approval`, worktree 04
+Checks:
+- Check: environment reviewers, `gh api repos/anindosarker/shadcn-table/environments/release --jq '[.protection_rules[] | select(.type == "required_reviewers") | .reviewers[].reviewer.login]'` at 546bcabd: pass (`["anindosarker"]`)
+- Check: environment line, `grep -c '^    environment: release$' .github/workflows/pr.yml` at d65a066d: pass (`1`, line 171, inside `prepare-release`)
+- Check: act list, `act pull_request -l` at d65a066d: pass (lists `prepare-release`, Prepare Release)
+- Check: validate-repo, `pnpm test validate-repo` at d65a066d: pass
+- Check: format, `pnpm format` at d65a066d plus the changelog block: pass (no file changed)
+- Check: lint, `pnpm test lint` at d65a066d plus the changelog block: pass (0 errors, 9 warnings outside this milestone)
+- Check: validate-repo, `pnpm test validate-repo` at d65a066d plus the changelog block: pass
+- Check: Acceptance, `gh api .../environments/release --jq ...` prints `["anindosarker"]`, grep prints `1`, validate-repo green, at d65a066d plus the changelog block: pass
+- Check (verifier): environment reviewers, `gh api repos/anindosarker/shadcn-table/environments/release --jq '[.protection_rules[] | select(.type == "required_reviewers") | .reviewers[].reviewer.login]'` at 1f8aa742: pass (`["anindosarker"]`)
+- Check (verifier): Acceptance rerun, gh api prints `["anindosarker"]`, `grep -c '^    environment: release$' .github/workflows/pr.yml` prints `1` (line 171), `pnpm test validate-repo` green (27 unit tests), at 1f8aa742: pass
+- Check (verifier): `pnpm test lint` and `pnpm test validate-repo` not rerun: recorded at d65a066d, `git diff --name-only d65a066d..1f8aa742` touches only .ai/ and CHANGELOG.md
+
+- Task 1 Create the `release` environment: done, aeca4d55
+- Task 2 Gate `prepare-release`: done, d65a066d
+- Task 3 Cleanup: done, the commit adding the `#### Spec 05 Release approval` changelog block
+
+## Attention
+
+- The `release` environment keeps GitHub's default `can_admins_bypass: true`: the spec's PUT body (1.6.2) does not set it, so a repository admin can still bypass the review. Left as the spec wrote it; setting it to false is one more PUT if the owner wants it.
+
+## Notes
+
+- Environment created 2026-11-07T23:48:53Z with `gh api -X PUT repos/anindosarker/shadcn-table/environments/release` and the body of spec 1.6.2. Before: `{"total_count":0,"environments":[]}`. Response (user fields trimmed): `{"id":26597343948,"name":"release","can_admins_bypass":true,"protection_rules":[{"id":71674184,"type":"required_reviewers","prevent_self_review":false,"reviewers":[{"type":"User","reviewer":{"login":"anindosarker","id":29659719}}]}],"deployment_branch_policy":null}`.

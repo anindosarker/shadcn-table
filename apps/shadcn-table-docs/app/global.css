@@ -3,14 +3,9 @@
 @import 'fumadocs-ui/css/preset.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-/* theme presets: <html data-theme="..."> (components/theme-preset-switcher.tsx) */
-@import '../themes/violet.css';
-@import '../themes/blue.css';
-@import '../themes/emerald.css';
-@import '../themes/rose.css';
-@import '../themes/amber.css';
-@import '../themes/mono.css';
-/* experimental /dev homepages, scoped under .dev-home */
+/* The per-style component sheets (styles/style-<name>.css) are compiled by
+   lib/build-styles.mjs and linked one at a time by the <link> in app/layout.tsx. */
+/* homepage tokens (components/dev-home), scoped under .dev-home */
 @import '../components/dev-home/tokens.css';
 /* fumadocs-ui ships `[&_::highlight(fd-search)]:*` candidates; Lightning CSS rejects the
    ::highlight() pseudo-element and logs "Parsing CSS source code failed" on every compile.
@@ -73,7 +68,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* base tokens: neutral (used only until the preset script sets data-theme) */
+/* base tokens: neutral (used only until the design system script sets data-design-system) */
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -463,8 +458,8 @@ html > body[data-scroll-locked] {
   border-inline-start-width: 1px;
 }
 
-/* ---------- landing look: the /dev/12 tokens, type and top bar ----------
- * Scoped to pages with the docs layout, so /dev and the home page keep their
+/* ---------- landing look: the homepage tokens, type and top bar ----------
+ * Scoped to pages with the docs layout, so the home page keeps its
  * own values. Every token derives from the active preset and mode. */
 
 html:has(#nd-notebook-layout) {

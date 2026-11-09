@@ -1,5 +1,6 @@
 import { useId, useMemo, useState } from 'react';
 import { ST_Default_Icons } from '@/components/ui/shadcn-table/icons';
+import { useST_Defaults } from '@/components/ui/shadcn-table/hooks/useST_Defaults';
 import { ST_Localization_EN } from '@/components/ui/shadcn-table/shared/locales/en';
 import {
   type ST_DefinedTableOptions,
@@ -45,6 +46,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   enableBottomToolbar = true,
   enableCellOverflowTooltip = true,
   enableColumnActions = true,
+  enableColumnFilterModes = true,
   enableColumnFilters = true,
   enableColumnOrdering = true,
   enableColumnPinning = true,
@@ -109,9 +111,12 @@ export const useST_TableOptions: <TData extends ST_RowData>(
   const viewSettingsKeyInput = idProp;
   const generatedId = useId();
   const id = idProp ?? generatedId;
+  // ST_Default_Icons, then the nearest ST_DefaultsProvider's icons, then the
+  // table's own icons option.
+  const defaults = useST_Defaults();
   const definedIcons = useMemo(
-    () => ({ ...ST_Default_Icons, ...icons }),
-    [icons],
+    () => ({ ...ST_Default_Icons, ...defaults.icons, ...icons }),
+    [defaults.icons, icons],
   );
   const definedLocalization = useMemo(
     () => ({
@@ -182,6 +187,7 @@ export const useST_TableOptions: <TData extends ST_RowData>(
     enableBottomToolbar,
     enableCellOverflowTooltip,
     enableColumnActions,
+    enableColumnFilterModes,
     enableColumnFilters,
     enableColumnOrdering,
     enableColumnPinning,

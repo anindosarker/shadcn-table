@@ -5,6 +5,8 @@
 .source
 # hosted registries (pnpm registry:hosted, tools/registry/hosted.mjs), emitted before next build
 /public/r/
+# per-style sheets (lib/build-styles.mjs), emitted before next dev and next build
+/public/styles/
 
 # test & build
 /coverage

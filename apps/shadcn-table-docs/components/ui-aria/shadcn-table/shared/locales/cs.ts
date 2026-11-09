@@ -23,6 +23,7 @@ export const ST_Localization_CS: ST_Localization = {
   expandAll: 'Otevřít vše',
   filterArrIncludes: 'Obsahuje',
   filterArrIncludesAll: 'Obsahuje všechno',
+  filterArrIncludesNone: 'Vylučuje',
   filterArrIncludesSome: 'Obsahuje některé',
   filterBetween: 'Mezi',
   filterBetweenInclusive: 'Mezi',

@@ -21,6 +21,7 @@ apps/shadcn-table-docs/tsconfig.*.json
 /dist
 dist
 storybook-static
+!test/storybook-static/
 
 # misc
 .DS_Store
@@ -50,3 +51,6 @@ yarn-error.log*
 
 # test runner records (pnpm test)
 test/.out/
+
+.ai/plans/*/*/status/index.html
+.ai/plans/*/*/status/data/

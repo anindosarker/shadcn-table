@@ -2,7 +2,7 @@
 
 /*
  * Variant 12. Variant 7's layout, recoloured by the docs site's own theme.
- * app/dev/layout.tsx leaves /dev/12 out of the dark-only .dev-home shell, so
+ * The homepage sits outside the dark-only .dev-home shell, so
  * this block maps the --dh-* tokens that the reused v4/v5/v7 styles and the
  * shared tiles read onto the site's shadcn tokens. Changing the preset
  * (html[data-theme]) or the mode (html.dark) recolours everything at once.

@@ -7,6 +7,134 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Added
+
+#### Spec 21 Sitemap and robots for the docs site
+
+- The docs site serves `/sitemap.xml` (the home page and every docs page, absolute URLs on `NEXT_PUBLIC_SITE_URL`) and `/robots.txt` (allow all, disallow `/ingest/` and `/r/`, sitemap URL) from Next.js metadata routes (D50).
+
+### Removed
+
+#### Spec 22 Remove the /dev preview routes
+
+- The docs site no longer serves the `/dev` homepage variant index and the `/dev/theme` and `/dev/theme/1` to `/dev/theme/9` theming previews; they return 404. Their dev-only theme-demo components are deleted with them; git history keeps them.
+
+## 0.9.1 - 2026-11-08
+
+### Added
+
+#### Spec 12 Stored view persists rows per page
+
+- `persistViewSettings` stores rows per page (D25): `ST_StoredView` gains `pageSize?: number`, saved on every page size change and applied at mount over `initialState.pagination.pageSize`, on the three bases. The page index is not stored, and a page index change alone writes nothing. A stored view without `pageSize`, or with one that is not a positive integer, keeps the initial page size. Reset view returns the page size to `initialState`. The view settings guide, the state management guide and the `persistViewSettings` API entry list the new field.
+- A restored rows per page keeps the initial page index instead of remapping it to keep the top row (F22).
+- The `PersistenceKeepsPageIndex` play covers it: a table on its third page with a stored rows per page remounts on the third page (D33).
+
+#### Spec 14 ST_DefaultsProvider; the docs icon library select
+
+- New: `ST_DefaultsProvider` and `useST_Defaults`, exported from the library index on all three bases (D27). The provider's `icons` prop (`Partial<ST_Icons>`) applies to every table below it: `useST_TableOptions` merges `ST_Default_Icons`, then the nearest provider's `icons`, then the table's own `icons` option, which still wins key by key. Nested providers merge over their parent; a table outside any provider behaves as before. The `ST_Defaults` type is added beside `ST_Icons`. Documented in the ST Components API page and the custom icons guide; the `ProviderIconSet` story covers it.
+- Docs: the theme panel's Icon Library select is enabled and offers Lucide, Tabler, Phosphor, Hugeicons and Remix Icon. A pick switches the icons of every example table (the home demo and the docs examples, all three base copies), persists with the rest of the theme config, and Reset returns to Lucide; Random keeps the current icon set. The docs chrome stays Lucide. `pnpm lib:install <base>` also installs the four icon set maps as `components/ui-<base>/shadcn-table/icons/<set>.ts`, loaded only once picked. `@tabler/icons-react`, `@phosphor-icons/react`, `@hugeicons/react`, `@hugeicons/core-free-icons` and `@remixicon/react` are new dependencies of the docs app.
+
+### Changed
+
+#### Spec 19 PR Summary reads job outputs
+
+- Every test job hands its record to PR Summary as a job output instead of the artifact `test-out-<job>` (D38): a last step (`if: always()`) runs `tools/release/record-output.mjs`, which prints the `test/.out/` record as one line `<key>=<JSON>` with at most five errors of 400 characters each, appended to `$GITHUB_OUTPUT`. Lint, Validate Repo and Validate PR output `record`; Typecheck, Storybook Tests and Docs E2E Tests output `base`, `radix` and `aria`, Installation E2E one output per scenario, each mirrored under `workflow_call.outputs`. PR Summary passes `toJSON(needs)` as `NEEDS` to `pr-summary.mjs`, whose new `recordsFromNeeds` reads every output (a local run without `NEEDS` still reads `test/.out/`). A failed leg's output still reaches the caller (GitHub run 42509826313). The `test-out-*` uploads of `pr.yml`, `typecheck.yml`, `storybook-tests.yml` and `docs-e2e.yml` and PR Summary's download go; `installation-e2e.yml` keeps its upload, which carries the captures of the reference refresh.
+
+#### Spec 18 PR Summary: grouped table, failures, changelog
+
+- The sticky PR Summary comment (`tools/release/pr-summary.mjs`) is a grouped table (D37): the PR title, one line with the release label, the run link and the status (all green, jobs failed or skipped), one `Job | Result` table with a bold group row per matrix job and its bases or scenarios under it, a collapsed block listing every error line of the failed jobs, and a changelog section with the `## Unreleased` counts by heading and the entry titles. Without `## Unreleased` it reads the top version section. The Prepare Release row of the draft is left out: the comment is written before that job runs.
+- On a label event the rows of the other jobs and the failures block are kept; the title, the status line, the Validate PR row and the changelog section are rebuilt.
+
+#### Spec 16 CI: test jobs skip the version bump commit
+
+- A new first job of `pr.yml`, `head`, reads the pull request's head commit and sets `bumped` when it is the `chore: version <v>` commit Prepare Release pushes as `github-actions[bot]` (D35). On that commit Typecheck, Storybook Tests, Docs E2E Tests and Installation E2E skip every matrix leg (a `skip` input on the four called workflows), Lint and Validate Repo skip, Validate PR and PR Summary still run, and Prepare Release is skipped with its needs, so the bump push runs no second test pass and prompts nobody. Any other head runs every job as before.
+
+#### Spec 17 CI: Node 24 action majors
+
+- Every `uses:` in `.github/workflows/*.yml` moves to the major that runs on Node 24 (D36): `actions/checkout@v7`, `actions/setup-node@v7`, `actions/upload-artifact@v7`, `actions/download-artifact@v8`, `actions/cache@v6`, `pnpm/action-setup@v6`. No `with:` input changes; pnpm still comes from `packageManager`, and the jobs keep `node-version: 22`. The "Node.js 20 is deprecated" annotations of each run go away.
+
+### Fixed
+
+#### Fix F22 Restoring a stored rows per page remaps the page index
+
+- A stored rows per page restored at mount keeps the initial page index: `applyView` sets the page size through `setPagination` instead of `setPageSize`, which remapped the page index to keep the top row (three bases).
+
+### Docs
+
+#### Spec 11 Persistent view example: ten rows
+
+- The persistent view example opens at 10 rows per page instead of 50 on every base (D24, F14); the stored view still does not keep the page size. The docs E2E check of `/docs/examples/persistent-view` clears the stored view, reloads and asserts 10 body rows and a rows-per-page select reading 10.
+
+#### Spec 08 Theme panel: Copy and Import removed
+
+- The theme panel drops the Copy menu (Copy CSS, Copy preset code) and the Import popover (D21); the toolbar row keeps Undo and Redo, the Presets row Random and the preset select. `encodeConfig`, `decodeConfig` and `importPreset` are gone; Random still picks from create's curated presets half the time.
+
+#### Spec 13 Docs parts carry the design-system hooks
+
+- Style, Menu Color and Menu Accent in the docs theme panel now reach the docs parts (D26). `pnpm lib:install <base>` gains a second phase: every shadcn part it installs under `components/ui-<base>/` is replaced by its hooked source from shadcn-ui/ui `apps/v4/registry/bases/<base>/ui/` at a pinned commit (`SHADCN_UI_SHA`), with the imports pointed at the docs folders and each icon placeholder turned into its Lucide icon, so the parts carry the `cn-*` classes the style layers target and `cn-menu-target` for the menu color loop. The library copy in `shadcn-table/` is unchanged. The docs E2E check of `/docs/guides/view-settings` picks a Style, Menu Color `inverted` and Menu Accent `bold` in the theme panel and reads the open menu.
+
+#### Spec 09 Theme panel: shortcut row, Mod+Z undo
+
+- One row under the theme panel's header holds Reset (`Shift+R`), Undo (`Mod+Z`), Redo (`Mod+Shift+Z`), Random (`R`) and Next preset (`C`) (D22): icon buttons named by their label, each with a tooltip carrying the label and its key, since the labeled buttons do not fit the 360 px panel. The header keeps the title and the close button, the Presets row the preset select. Undo moves from `P` to `Mod+Z` (Cmd on macOS, Ctrl elsewhere), redo gains `Mod+Shift+Z`, and `P` is no longer bound.
+
+#### Spec 10 Theme panel: color picker
+
+- Each token swatch in the theme panel's Colors tab is a button (`Pick <token>`) that opens a popover with a `react-colorful` hex picker above a copy of the token's text field (D23, F13). Dragging writes the token live as hex; closing the popover records one undo step, so `Mod+Z` returns to the value from before it opened. Typed values keep one undo step per change (A10), and an invalid value still applies nothing. `react-colorful` 5.8.1 is a new dependency of the docs app.
+
+#### Spec 15 Docs: one style sheet per style, loaded on demand
+
+- Docs: the root stylesheet no longer carries the eight theme styles (D29). `lib/build-styles.mjs` compiles each `styles/style-<name>.css` against the docs' Tailwind theme into `public/styles/style-<name>.css` (generated, git-ignored; run by `predev` and `build`, minified in `build`), and every page links only the active style's sheet: the pre-paint script links the stored or default style render-blocking, and a style change loads the new sheet before it switches the `style-<name>` class. The root stylesheet of `/` drops from about 2.8 MB to 337 KB; opening the theme panel and toggling light and dark stay under 300 ms of long tasks. `@tailwindcss/node` is a new devDependency of the docs app.
+- Docs E2E: the perf budgets are 600 ms under --ci (F28).
+
+## 0.9.0 - 2026-11-08
+
+### Changed
+
+#### Epic 01 Filtering
+
+- Filter modes are on by default (D4): `enableColumnFilterModes` defaults to `true`, so the mode picker shows in the chips, subheader and popover display modes without the flag; `enableColumnFilterModes: false` on the table or a column hides it. Material React Table defaults it off; this is a deliberate deviation. The mode lists stay as they were: every mode for text, autocomplete, select, date, datetime and time, the two between modes for the range variants, none for range-slider and checkbox. A chip now names the mode ("Status fuzzy: Done").
+- A multi-select filter offers Includes any (`arrIncludesSome`, still the default), Includes all (`arrIncludesAll`) and Excludes (the new `arrIncludesNone` filter fn) after its 14 modes; `ST_Localization` gains `filterArrIncludesNone`, `filterArrIncludesSome` reads "Includes any", and every locale carries the three labels.
+- Removing a filter chip, or "Clear filters", puts the column back on its initial filter mode instead of the first mode of its list, so a multi-select or select column keeps its default fn.
+- Fixed (D1, F1): a select filter with a value shows its chevron left of the clear button instead of under it; the trigger takes `ltr:pr-9 rtl:pl-9` in place of `pe-9`, which lost to the shadcn trigger's `pr-2`.
+
+#### Epic 02 Pagination
+
+- The `pages` footer, the default, shows the row range between Rows per page and the page buttons (D6): `1-10 of 200`, localized, following the filtered count, `1-2 of 2` on one page.
+- `paginationDisplayMode: 'default'` is renamed `'compact'`, with no alias (D6): the option type is `'compact' | 'custom' | 'pages'` and `'default'` is a type error. The stories, the pagination guide, the API entry and the alternate-pagination example name the compact footer `'compact'`, and the pagination story names drop "Default" (D7).
+
+#### Epic 03 Resize animation
+
+- A column size reset animates (D5): the double click on the resize handle and the Reset column size menu item mark the table with `data-size-resetting`, the header and body cells transition their width back to the default in 200 ms ease-out, and the mark clears on the width `transitionend`. Drags and every other width change stay instant; `prefers-reduced-motion: reduce` gets no transition.
+
+#### Spec 05 Release approval
+
+- The version bump waits for the owner's approval (D3): the release PR's `prepare-release` job runs in the GitHub Environment `release`, whose one required reviewer is the owner, so Prepare Release shows "Waiting for review" until the owner approves the deployment; a rejected review fails the job and pushes nothing. Every other `pr.yml` job stays automatic.
+
+### Fixed
+
+#### Spec 06 Storybook reset
+
+- The deployed Storybook resets each story after its play (D8, F6): the static builds run the play with the Interactions panel logging every step, then remount the story in its initial state; Rerun runs the play and resets again. `storybook dev`, vitest and a failing play keep the end state. `pnpm test storybook-static` checks it on a local static build or, with `--url`, on the deployed site.
+
+#### Fix F3
+
+- Anchored menus keep their position while they close: `useST_MenuAnchor.ts` keeps the last measured anchor box through the exit animation instead of dropping to (0,0), so the filter mode menu no longer jumps the subheader filter row as it fades (three bases).
+
+#### Fix F11 Dev server clean
+
+- The docs dev server loads `/`, `/docs` and the example pages without errors (D20, F11): the theme panel formats its kbd hints only in the browser, so TanStack Hotkeys no longer warns about a server-formatted label, and the search dialog renders only in the browser, so a theme panel opened before hydration ends no longer causes an `aria-hidden` hydration mismatch on the home page.
+
+### Docs
+
+#### Spec 04 Theme customizer
+
+- The palette button in the docs and home navs opens a theme customizer panel on the right (D2) in place of the six-preset dropdown: Copy (theme CSS or preset code), Undo, Redo, Mode, Style, Icon Library, Base Color, Theme, Menu Color, Menu Accent, Presets (Import a preset code, Random, Default plus 42 tweakcn palettes) and the tabs Colors (per-token editing for the current mode), Typography and Other.
+- A fresh visitor sees the Emerald look as the `Default` preset; a stored choice (`st-design-system` in localStorage) applies before first paint and is dropped after 2 days. The old `st-theme` key is removed.
+- Shortcuts through TanStack Hotkeys, each shown as a kbd hint: `R` shuffle, `Shift+R` reset, `C` another color preset, `P` undo; off while typing or while the search dialog is open.
+- The home theme demo cycles six palettes through the design system. The six `themes/*.css` files, `lib/theme-presets.ts` and `components/theme-preset-switcher.tsx` are gone.
+
 ## 0.8.2 - 2026-11-06
 
 ### Changed

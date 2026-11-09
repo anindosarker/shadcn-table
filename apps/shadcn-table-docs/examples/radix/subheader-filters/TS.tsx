@@ -117,8 +117,7 @@ const Example = () => {
   const table = useShadcnTable({
     columns,
     data,
-    enableColumnFilterModes: true, //the filter mode picker beside each text filter
-    columnFilterDisplayMode: 'subheader', //a filter row under the headers instead of the filter chips
+    columnFilterDisplayMode: 'subheader', //a filter row under the headers, each text filter with its mode picker
     initialState: { showColumnFilters: true }, //the filter row starts open
   });
 

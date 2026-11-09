@@ -2,10 +2,11 @@ name: PR checks
 run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installation-e2e-only && 'installation-e2e-only') || 'all' }}"
 
 # Every check of a pull request: nineteen test jobs, each the setup steps
-# plus `pnpm test <name> --ci` (test/run.mjs) and its test/.out/ records
-# uploaded as the artifact test-out-<job>. The four matrices are called
+# plus `pnpm test <name> --ci` (test/run.mjs) and its test/.out/ record
+# handed to PR Summary as the job output `record` (the called workflows:
+# one output per base or scenario, D38). The four matrices are called
 # workflows (typecheck.yml, storybook-tests.yml, docs-e2e.yml,
-# installation-e2e.yml, D90), so nine jobs here and check contexts such as
+# installation-e2e.yml, D90), so ten jobs here and check contexts such as
 # `Typecheck / Typecheck (base)` and `Installation E2E / Installation E2E
 # (fresh)`. PR Summary (D87) rewrites the one sticky comment from those
 # records; Prepare Release, on the release PR only
@@ -15,7 +16,9 @@ run-name: "PR checks: ${{ github.event.pull_request.title || (inputs.installatio
 # (Validate PR and Prepare Release skip without a PR); with
 # installation-e2e-only it runs the seven Installation E2E jobs with
 # --no-diff, whose artifacts carry the captures (the reference refresh path,
-# D86).
+# D86). Head, the first job, reads the PR head commit: on the version bump
+# commit Lint and Validate Repo skip and every matrix leg skips its steps
+# (D35).
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
@@ -34,70 +37,115 @@ permissions:
   contents: read
 
 jobs:
+  # The PR head commit: bumped=true when it is the `chore: version <v>`
+  # commit Prepare Release pushes as github-actions[bot] (D35); the test
+  # jobs then skip (the called workflows skip every step through their skip
+  # input, so each matrix leg still reports its check context, as success).
+  # false without a PR. The default checkout (the merge commit, depth 2)
+  # holds the head commit as a parent, so git reads it by sha without a
+  # fetch. Its if: is the label condition alone, so the installation-e2e-only
+  # dispatch still reaches Installation E2E, which needs this job.
+  head:
+    name: Head
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
+    runs-on: ubuntu-latest
+    outputs:
+      bumped: ${{ steps.commit.outputs.bumped }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - name: Read the head commit
+        id: commit
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          bumped=false
+          if [ -n "$HEAD_SHA" ]; then
+            { read -r author; read -r subject; } <<< "$(git log -1 --format='%an%n%s' "$HEAD_SHA")"
+            if [ "$author" = 'github-actions[bot]' ] && printf '%s\n' "$subject" | grep -qE '^chore: version [0-9]'; then
+              bumped=true
+            fi
+            echo "head $HEAD_SHA: $author, $subject"
+          fi
+          echo "bumped=$bumped"
+          echo "bumped=$bumped" >> "$GITHUB_OUTPUT"
+
   typecheck:
     name: Typecheck
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/typecheck.yml
+    with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
 
   lint:
     name: Lint
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
+    needs: [head]
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test lint --ci
-      - uses: actions/upload-artifact@v4
+      - name: Hand the record to PR Summary
+        id: record
         if: always()
-        with:
-          name: test-out-lint
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
 
   storybook-tests:
     name: Storybook Tests
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/storybook-tests.yml
+    with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
 
   docs-e2e:
     name: Docs E2E Tests
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
     uses: ./.github/workflows/docs-e2e.yml
+    with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
 
   # bases-identical, icon-maps, tailwind-classes, registry-valid and the
   # tool unit tests (node --test "tools/**/*.test.mjs").
   validate-repo:
     name: Validate Repo
-    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) }}
+    needs: [head]
+    if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) && !(github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only) && needs.head.outputs.bumped != 'true' }}
     runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test validate-repo --ci
-      - uses: actions/upload-artifact@v4
+      - name: Hand the record to PR Summary
+        id: record
         if: always()
-        with:
-          name: test-out-validate-repo
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
 
   installation-e2e:
     name: Installation E2E
+    needs: [head]
     if: ${{ !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     uses: ./.github/workflows/installation-e2e.yml
     with:
+      skip: ${{ needs.head.outputs.bumped == 'true' }}
       no-diff: ${{ github.event_name == 'workflow_dispatch' && inputs.installation-e2e-only }}
 
   # Exactly one `release:` label on a PR into master (from dev only); on
@@ -107,6 +155,8 @@ jobs:
     name: Validate PR
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    outputs:
+      record: ${{ steps.record.outputs.record }}
     permissions:
       contents: read
       pull-requests: read
@@ -114,26 +164,25 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       PR: ${{ github.event.pull_request.number }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test validate-pr --ci
-      - uses: actions/upload-artifact@v4
+      - name: Hand the record to PR Summary
+        id: record
         if: always()
-        with:
-          name: test-out-validate-pr
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        run: node tools/release/record-output.mjs --key record >> "$GITHUB_OUTPUT"
 
-  # One sticky comment per PR (D87), from every test-out-* artifact; on a
-  # workflow_dispatch the comment goes to the step summary. Every upload sets
-  # overwrite, so a re-run job replaces its earlier attempt's artifact and
-  # the merged download holds one record per job.
+  # One sticky comment per PR (D87), from the test records every job hands
+  # over as job outputs (D38): `record` for Lint, Validate Repo and Validate
+  # PR, one output per base or scenario for the four called workflows,
+  # passed as toJSON(needs) in NEEDS. A job without a record shows skipped;
+  # on a workflow_dispatch the comment goes to the step summary. A re-run
+  # job replaces its earlier attempt's outputs.
   pr-summary:
     name: PR Summary
     if: always()
@@ -145,28 +194,29 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: test-out-*
-          merge-multiple: true
-          path: test/.out/
       - run: node tools/release/pr-summary.mjs
+        env:
+          NEEDS: ${{ toJSON(needs) }}
 
   # The last job, on the release PR only (dev into master): once every job
   # is green it bumps the version with the PR's `release:` level and commits
   # `chore: version <v>` to dev with RELEASE_BOT_TOKEN, a token whose push
   # triggers this workflow again (a push with github.token would not). On
   # that rerun Validate PR passes the bumped head and this job stops at
-  # "already bumped". A red or skipped need skips it.
+  # "already bumped". A red or skipped need skips it. The job waits for the
+  # owner's Approve on the `release` environment before it runs (D3). On
+  # the bump commit the test jobs are skipped and this job is skipped with
+  # them, so the bump push prompts nobody (D35).
   prepare-release:
     name: Prepare Release
     needs: [pr-summary, typecheck, lint, storybook-tests, docs-e2e, validate-repo, installation-e2e, validate-pr]
     if: ${{ github.event_name == 'pull_request' && github.base_ref == 'master' && github.head_ref == 'dev' && !contains(fromJSON('["labeled", "unlabeled"]'), github.event.action) }}
     runs-on: ubuntu-latest
+    environment: release
     permissions:
       contents: read
       pull-requests: read
@@ -181,12 +231,12 @@ jobs:
             echo "::error::secret RELEASE_BOT_TOKEN is missing; the owner creates it (Settings, Secrets and variables, Actions): a fine-grained token with contents: write on this repository"
             exit 1
           fi
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.RELEASE_BOT_TOKEN }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Bump the version and commit it to the PR head

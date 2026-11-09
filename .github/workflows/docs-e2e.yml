@@ -4,11 +4,31 @@ name: Docs E2E Tests
 # checkout and served by `next start` on 5320; the section lists of
 # test/docs-e2e/lib/ (D89) run against it, four browser contexts per section
 # (D91). Chromium installs without --with-deps (the apt step took up to nine
-# minutes) from a cache keyed on the Playwright version. Its test/.out/ record is uploaded
-# as test-out-docs-e2e-<base>. The check context reads
+# minutes) from a cache keyed on the Playwright version. Its test/.out/
+# record is handed to PR Summary as the job output <base> (D38), exposed as
+# the workflow output of the same name. The check context reads
 # `Docs E2E Tests / Docs E2E Tests (<base>)`.
+# The skip input (the PR head is the version bump commit, D35) skips every
+# step, not the job: a job-level if: is read before the matrix expands, so
+# GitHub would report one unexpanded skipped job instead of the leg contexts
+# (actions/runner#952). Each leg runs no step and reports success.
 on:
   workflow_call:
+    inputs:
+      skip:
+        description: Skip every step (the PR head is the version bump commit, D35)
+        type: boolean
+        default: false
+    outputs:
+      base:
+        description: The docs-e2e record of the base leg (JSON), empty when it wrote none
+        value: ${{ jobs.docs-e2e.outputs.base }}
+      radix:
+        description: The docs-e2e record of the radix leg (JSON), empty when it wrote none
+        value: ${{ jobs.docs-e2e.outputs.radix }}
+      aria:
+        description: The docs-e2e record of the aria leg (JSON), empty when it wrote none
+        value: ${{ jobs.docs-e2e.outputs.aria }}
 
 permissions:
   contents: read
@@ -17,39 +37,49 @@ jobs:
   docs-e2e:
     name: Docs E2E Tests (${{ matrix.base }})
     runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.record.outputs.base }}
+      radix: ${{ steps.record.outputs.radix }}
+      aria: ${{ steps.record.outputs.aria }}
     strategy:
       fail-fast: false
       matrix:
         base: [base, radix, aria]
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+        if: ${{ !inputs.skip }}
+      - uses: pnpm/action-setup@v6
+        if: ${{ !inputs.skip }}
+      - uses: actions/setup-node@v7
+        if: ${{ !inputs.skip }}
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+        if: ${{ !inputs.skip }}
       - name: Read the Playwright version
+        if: ${{ !inputs.skip }}
         id: playwright
         run: echo "version=$(pnpm --filter shadcn-table exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
+        if: ${{ !inputs.skip }}
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - run: pnpm --filter shadcn-table exec playwright install chromium
+        if: ${{ !inputs.skip }}
       # The Next build cache (D91): keyed on the lockfile and the docs
       # sources, restored from the lockfile prefix when a source changed.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
+        if: ${{ !inputs.skip }}
         with:
           path: apps/shadcn-table-docs/.next/cache
           key: next-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/shadcn-table-docs/**/*.ts', 'apps/shadcn-table-docs/**/*.tsx', 'apps/shadcn-table-docs/**/*.mdx', 'apps/shadcn-table-docs/**/*.mjs', 'apps/shadcn-table-docs/**/*.css', '!apps/shadcn-table-docs/node_modules/**', '!apps/shadcn-table-docs/.next/**') }}
           restore-keys: |
             next-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm test docs-e2e --ci --base ${{ matrix.base }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-out-docs-e2e-${{ matrix.base }}
-          path: test/.out/
-          include-hidden-files: true
-          overwrite: true
+        if: ${{ !inputs.skip }}
+      - name: Hand the record to PR Summary
+        id: record
+        if: ${{ always() && !inputs.skip }}
+        run: node tools/release/record-output.mjs --key ${{ matrix.base }} >> "$GITHUB_OUTPUT"

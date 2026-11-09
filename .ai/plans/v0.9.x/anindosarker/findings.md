@@ -13,6 +13,7 @@
 ### F3 The filtering story's UI jumps
 
 - Owner, 2026-11-08, on `https://storybook.shadcn-table.com/base/?path=/story/features-filtering-examples--filtering-change-mode-enabled`: type a value in one subheader filter field, then close it (blur): the first filter field jumps (layout shift in the filter row). To be reproduced with a play before it is planned (v0.8.x P10, P11).
+- Resolved 2026-11-08: the jump is the filter mode menu's exit animation. `useST_MenuAnchor.ts` stored `anchorEl?.getBoundingClientRect()` on close, undefined once the anchor cleared, so the invisible trigger span moved to (0,0) and the Base UI and Radix positioners followed it while the menu faded; the hook now keeps the last measured box (three bases). Play `FilterModeMenuClosesInPlace`, red on base and radix before, green after; merged as a fix from the lead at the merge commit after `546bcabd`.
 
 ### F4 Stories carry no explainer
 
@@ -29,3 +30,94 @@
 ### F7 "Default" names the compact pagination across stories and docs
 
 - Owner, 2026-11-08, `Features/Pagination Examples/Pagination Enabled Default More Data` (Base build): the story is titled "Default" and shows the compact footer (`Rows per page`, `1-10 of 551`, four arrows), which is not the default since v0.8.x D13 (`pages`). The same wording runs through the pagination stories (`Pagination Enabled Default`, `... Big Data`, `... No Rows Per Page` and more), the guide, the API page and the examples. Fixing it is bigger than F5: one audit of every story title, docs page and example that says "default" for `paginationDisplayMode: 'default'`, with the rename decided separately from item 6 (the range span). Decided in its own item.
+
+### F8 Two storybook plays time out under machine load and are not on the known-flake list
+
+- `stories/features/ClickToCopy.stories.tsx` "Click Copies Value" (base and radix) and `stories/features/RowOrdering.stories.tsx` "Drag Reorders Rows" (aria, 90 s timeout) failed once each in the E1 verifier runs at load average about 16 and passed on rerun and alone; neither is in the P5 known-flake list, so a loaded run reads them as red.
+
+### F9 Two doc comments name files spec 04 deleted or misstate their list
+
+- `apps/shadcn-table-docs/components/theme-demo/demo-themes.ts:42` still names `lib/theme-presets.ts` and `themes/*.css`, deleted by spec 04; `apps/shadcn-table-docs/lib/install.mjs:52` says `EXTRA_PARTS` holds "parts the examples import", but `sheet` is imported by the theme panel, not by an example.
+
+### F10 The static Storybook test folder matches the build-output ignore line
+
+- `.gitignore`: the line `storybook-static` also matches `test/storybook-static/`, so spec 06 added its two files with `git add -f`; git tracks them now, but a new file in that folder is ignored unless a `!test/storybook-static/` line follows.
+
+## Round 3: triage E2, 2026-11-08
+
+### F11 The docs dev server logs errors on every page load
+
+- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review` (`815436fa`), GET `/`: two logs on every load. Server: `[TanStack Hotkeys] A hotkey label was formatted during server rendering without a platform, so it uses 'linux'` (the kbd hints of the theme panel, E2 04, format on the server with no `platform`). Browser: `A tree hydrated but some attributes of the server rendered HTML didn't match the client properties` under `<Page>` of `(home)/page`, attribute mismatch not yet located. Owner: "Every time I run the server locally I see huge errors."
+
+### F12 Reset is not discoverable
+
+- Owner, 2026-11-08, same screenshot: "There is no button or hint to reset theme." The header holds an icon-only reset button with a `⇧R` hint (spec 04 review fix), which the owner did not read as reset.
+
+### F13 The color tokens have no color picker
+
+- Owner, 2026-11-08, same screenshot: each token in the Colors tab shows a static swatch and a hex input; no picker opens from the swatch. The reference (shadcnstudio.com/theme-generator, D2) opens a picker.
+
+### F14 The persistent view example starts with more than ten rows
+
+- Owner, 2026-11-08, `/docs/examples/persistent-view`: the default page size should be ten.
+
+### F15 The docs dev server is slow
+
+- Owner, 2026-11-08, `pnpm --filter shadcn-table-docs dev` on `claude/review`: "The site is super slow in dev server." Cause, measured 2026-11-08 in a browser before and after the theme panel: `app/global.css:9-16` imports all eight `styles/style-*.css`, the root stylesheet grew from 351 KB to 2,755 KB, and every theme or class change recalculates styles over about 3,560 nodes (0.5 to 1 s); the first-hit compile (12 to 18 s) is the same on both builds. The machine's load average of 20 plus from agent gates doubles it. Resolved by D29.
+
+### F16 The icon library cannot be changed
+
+- Owner, 2026-11-08, same screenshot: the Icon Library select is disabled at Lucide (D2: "Lucide only, v0.7.x D38"). Owner: add the option.
+
+### F17 Undo and redo use `p` and no key
+
+- Owner, 2026-11-08: undo and redo should be the regular shortcuts, Cmd+Z and Cmd+Shift+Z (Ctrl on Windows and Linux); D2 gave undo `p` and redo nothing.
+
+### F18 The theme panel carries Copy and Import
+
+- Owner, 2026-11-08, screenshot of the panel on `/docs/examples/persistent-view` (dev, `claude/review`): the Copy button (top row) and the Import button (Presets row), both from D2's layout, marked "Unnecessary items, remove them."
+
+### F19 The shortcut buttons and hints are spread over the panel
+
+- Owner, 2026-11-08, same screenshot: Undo (`P`) and Redo sit in the top row, Random (`R`) in the Presets row, the cycle hint `C` under the preset select, Reset (`⇧R`) as an icon in the header. Owner: keep all shortcut buttons and hints together at the top.
+
+### F20 Installation E2E references predate the pages footer range
+
+- `test/installation-e2e/fixtures/reference/<base>/default-{light,dark}.png` (committed in 010f7359, v0.8.x) show the pages footer without the `1-10 of 50` range span that spec 02 (D6) added; `pnpm test installation-e2e` on `dev` at df90bd27 fails the three nextjs scenarios with 23626 (light) and 25084 (dark) pixels over the 500 limit, the same count on every base.
+- v0.8.x D-addendum (decisions.md line 780): a milestone that changes the default look replaces the six PNGs from a `pr.yml` dispatch with `installation-e2e-only=true`; spec 02 did not. Fix milestone `refresh-installation-references`.
+
+### F21 Installation E2E capture diff cannot pass on macOS against the Linux references
+
+- `test/installation-e2e/lib/browser.mjs:363`: the local capture on macOS differs from the Linux CI reference in every glyph (font rasterization), so the diff exceeds 500 pixels whatever the code; the v0.8.x local runs used `--no-diff` (v0.8.x tracker 08-test-runner-and-tests, line 22).
+- Local runs of the nextjs scenarios take `--no-diff`; the pixel diff is a CI check only. Recorded in process.md P5.
+
+### F22 Restoring a stored rows per page remaps the page index
+
+- `packages/shadcn-table/registry/<base>/components/ui/shadcn-table/hooks/useST_ViewPersistence.ts:121` (spec 12, merged 117a81b5): `applyView` restores the stored size with `table.setPageSize`, which in TanStack 9.3.1 recomputes `pageIndex` to keep the top row; spec 12 section 1.6.3 says the page index is untouched, so a table with `initialState.pagination.pageIndex` above 0 and a stored size mounts on another page. Fix: `table.setPagination((old) => ({ ...old, pageSize: view.pageSize }))` in the three bases, the comment reworded, the docs copies regenerated.
+- Same review (fable, round 1, minors): `content/docs/guides/view-settings.mdx:109` Reset view bullet lacks "rows per page"; `content/docs/examples/persistent-view.mdx:6` lists a partial field set where spec 12 1.6.4 says the page names the option without a field list.
+
+### F23 Theme hotkey docs E2E checks read the variable a fixed 200 ms after the key
+
+- `test/docs-e2e/lib/getting-started.mjs:282-309` (spec 04 on `dev` at 0adce149; spec 09 and 10 kept the pattern on `claude/review`): `press()` is `keyboard.press` plus `waitForTimeout(200)`, then `--primary` is read once. On CI (release PR 134, run 42488458376) "theme: Shift+R returns to the default" failed on base and aria in attempt 1 and on aria again in attempt 2 with the value unchanged after Shift+R, and radix timed out on the next click; locally it failed once under load (P5 entry). Fix: wait for the variable to change (or to equal the expected value) with a bounded poll instead of a fixed delay; test file only.
+
+### F24 The theme check's search dialog stays open after Escape on CI
+
+- `test/docs-e2e/lib/getting-started.mjs` (`/` theme checks, `dev` at ea276251 and `claude/review`): after "theme: r does nothing while the search dialog is open" the test presses Escape and swallows the 5 s detach timeout; on CI the dialog stays, so the next `button[aria-label="Customize theme"]` click (or the following `input.fill`) times out after 30 s. Release PR 134: run 42488458376 attempt 1 radix, run 42490873017 attempts 1 and 2 aria (the F23 hotkey waits pass there). Fix: close the dialog deterministically (second Escape, close control, reload as the last resort) before the edit check; test file only, D30 pattern.
+
+### F25 The CRUD delete-dialog check counts rows before the example finishes loading
+
+- `test/docs-e2e/lib/examples.mjs:85-111` (`deleteDialog`, v0.8.x F53): `before` is `tbody tr` counted as soon as the example panel is found, `after` the same count once the Cancel click closed the alert dialog. On CI the inline CRUD examples still show their loading rows at the first count (before=10 after=8 on `editing-crud-inline-row` and `-inline-cell`, before=20 after=10 on `editing-crud-tree`), so the check fails although Cancel kept every row. Release PR 134 on the bump 0a465c3e: run 42501252444 attempt 1 base and radix, attempt 2 radix; earlier once on aria at ea276251. Fix: wait for the example's rows to settle (the loading state gone, the count stable across two reads) before the first count; test file only, D30 pattern.
+
+### F26 Spec 15 comments still name app/layout.tsx as the style link owner
+
+- `apps/shadcn-table-docs/app/global.css:7`, `lib/build-styles.mjs:8-11`, `lib/design-system/config.ts:451` (JSDoc on `STYLE_SHEET_ID`) say the style link is rendered by `app/layout.tsx`; since the A14 deviation the pre-paint script creates it. `CONTRIBUTING.md:59` lists neither `lib/build-styles.mjs` nor `public/styles/`. Review minors of milestone 15 (fable, round 1), left by the bounce because no major was open; a one-commit docs fix.
+
+### F27 The record cap of record-output.mjs has no unit test and the pr-summary.mjs header names a removed act path
+
+
+- `tools/release/record-output.mjs:28`: `capRecord` holds the one rule D38 specifies (five errors, 400 characters, an `…` mark) and is exported, but no `tools/release/record-output.test.mjs` runs under `pnpm test validate-repo`; the cap was checked by hand in the spec 19 review only. `tools/release/pr-summary.mjs:10`: the header says the `test/.out/*.json` fallback serves "spec 18's act check", but under act `toJSON(needs)` sets `NEEDS` too, so the fallback serves a plain shell run only. Both nits from the spec 19 review (a0677dfc), deferred.
+
+### F28 The 300 ms perf budgets of the getting-started page fail on GitHub runners
+
+
+- `test/docs-e2e/lib/getting-started.mjs:841-845`: `perf: panel open` and `perf: light/dark toggle` require under 300 ms of long tasks (D29's acceptance, measured on the owner's machine). On GitHub runners the toggle took 342 ms (aria) and 351 ms (radix) on the 0.9.1 release PR run 42514739346, twice (one rerun), base 267 ms; panel open 207 to 268 ms. The release run is red on a budget the runner cannot meet; the P5 flake rerun does not cover it.

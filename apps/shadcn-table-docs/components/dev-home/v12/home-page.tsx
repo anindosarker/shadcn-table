@@ -19,15 +19,9 @@ import './v12.css';
 
 /**
  * The homepage: v7's dune hero recoloured by the site theme, the replaying
- * demo, the theming demo, the feature tiles and the install strip. Rendered at "/" and at
- * /dev/12.
+ * demo, the theming demo, the feature tiles and the install strip. Rendered at "/".
  */
-export function HomePage({
-  showVariantsLink = false,
-}: {
-  /** Footer link back to the /dev index, for the /dev/12 copy. */
-  showVariantsLink?: boolean;
-}) {
+export function HomePage() {
   return (
     <div data-variant="12" className={`v4-root v12 ${archivo.variable}`}>
       <Starfield />
@@ -166,7 +160,7 @@ export function HomePage({
         </section>
       </main>
 
-      <Footer showVariantsLink={showVariantsLink} />
+      <Footer />
     </div>
   );
 }

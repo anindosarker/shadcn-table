@@ -12,7 +12,9 @@
  * Source: the built items in packages/shadcn-table/public/r/
  * (`pnpm -w registry:build`): the core item <item>-core.json, the Lucide item
  * <item>.json (icons.ts) and the locale items <item>-locale-<code>.json (the
- * localization examples import every locale), merged into one item so the
+ * localization examples import every locale) and the icon set items
+ * <item>-<set>.json (installed as icons/<set>.ts beside icons.ts, spec 14),
+ * merged into one item so the
  * CLI never resolves the core dependency through its GitHub address. The item
  * is rewritten on the way in: its `@/components/ui/` imports point at
  * `@/components/ui-<base>/` (the CLI rewrites only `@/registry/...`
@@ -32,6 +34,19 @@
  *
  * Manual equivalent: pnpm exec shadcn add <rewritten item json> table --overwrite --yes
  * with components.json temporarily set to {"style":"<style>","aliases":{"ui":"@/components/ui-<base>"}}.
+ *
+ * Phase 2 (spec 13, D26): the served parts come resolved to Tailwind, with no
+ * `cn-*` hook for the design system's style layers (styles/style-*.css) and
+ * the provider's menu loop, and the CLI strips `cn-menu-target` and
+ * `cn-menu-translucent` on install. So every part phase 1 wrote under
+ * components/ui-<base>/ (the library copy in shadcn-table/ excluded) is
+ * replaced by its hooked source from shadcn-ui/ui
+ * apps/v4/registry/bases/<base>/ui/ at SHADCN_UI_SHA: the
+ * `@/registry/bases/<base>/ui/` imports point at `@/components/ui-<base>/`,
+ * `cn` comes from the module phase 1's part imports it from, each
+ * IconPlaceholder becomes its Lucide icon (the docs' icon library), and the
+ * file is formatted with the repo prettier config. No CLI transform runs on
+ * the fetched sources; the hooks stay as written upstream.
  */
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -41,6 +56,7 @@ import { fileURLToPath } from 'node:url';
 import {
   BASES,
   baseItems,
+  ICON_SETS,
   REFERENCE_BASE,
 } from '../../../tools/registry/lib.mjs';
 
@@ -50,8 +66,18 @@ const LIB_R = path.join(LIB, 'public', 'r');
 /** The shadcn style each base installs with: `<base>-<STYLE>`. */
 const STYLE = 'nova';
 /** Parts the examples import that the item itself does not depend on. */
-const EXTRA_PARTS = ['table', 'alert-dialog'];
+const EXTRA_PARTS = ['table', 'alert-dialog', 'sheet'];
 const COMPONENTS_JSON = path.join(APP, 'components.json');
+/** The shadcn-ui/ui commit the hooked parts come from; bump by hand when the parts move. */
+const SHADCN_UI_SHA = '42f3bb63b46a69e52a24bd005cdc9ec15ba7a7b9';
+/** The icon libraries an IconPlaceholder names; the docs keep the Lucide one. */
+const ICON_LIBRARIES = [
+  'lucide',
+  'tabler',
+  'hugeicons',
+  'phosphor',
+  'remixicon',
+];
 /** Files the CLI touches that this install must leave as they were. */
 const KEEP = [
   'components.json',
@@ -108,6 +134,21 @@ for (const file of localeItems) {
     ...JSON.parse(fs.readFileSync(path.join(LIB_R, file), 'utf8')).files,
   );
 }
+// The icon set items (spec 14, D27): each one's icons/<set>.ts lands beside
+// icons.ts instead of over it, for the docs' Icon Library select
+// (components/example-icons.tsx). Their packages are docs dependencies, so
+// the items' dependencies are left out.
+for (const set of Object.keys(ICON_SETS)) {
+  for (const file of readItem(`${itemName}-${set}`).files) {
+    item.files.push({
+      ...file,
+      target: file.target.replace(
+        /shadcn-table\/icons\.ts$/,
+        `shadcn-table/icons/${set}.ts`,
+      ),
+    });
+  }
+}
 for (const file of item.files) {
   file.content = file.content.replace(
     /(['"])@\/components\/ui\//g,
@@ -147,7 +188,80 @@ try {
   for (const [file, content] of kept) fs.writeFileSync(file, content);
   fs.rmSync(tmp, { recursive: true, force: true });
 }
-const parts = fs.readdirSync(uiDir).filter((f) => f.endsWith('.tsx')).length;
+const parts = await installHookedParts();
 console.log(
-  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in), ${parts} parts; components.json, app/global.css, package.json and the lockfile kept as they were`,
+  `${path.relative(APP, uiDir)}: ${item.files.length} table files (${localeItems.length} locales merged in), ${parts} hooked parts from shadcn-ui/ui@${SHADCN_UI_SHA.slice(0, 7)}; components.json, app/global.css, package.json and the lockfile kept as they were`,
 );
+
+/**
+ * `<IconPlaceholder lucide="XIcon" tabler="..." ... />` becomes
+ * `<XIcon ... />`, and its import one from lucide-react.
+ */
+function lucideIcons(source, part) {
+  const icons = [];
+  const out = source.replace(/<IconPlaceholder\b([^>]*?)\/>/g, (_, attrs) => {
+    const name = /\blucide="([A-Za-z0-9]+)"/.exec(attrs)?.[1];
+    if (!name)
+      throw new Error(`${part}: IconPlaceholder without a lucide icon`);
+    if (!icons.includes(name)) icons.push(name);
+    const rest = attrs.replace(
+      new RegExp(`\\s+(?:${ICON_LIBRARIES.join('|')})="[^"]*"`, 'g'),
+      '',
+    );
+    return `<${name}${rest}/>`;
+  });
+  const placeholderImport = /import \{ IconPlaceholder \} from "[^"]+"\n/;
+  if (/\bIconPlaceholder\b/.test(out.replace(placeholderImport, ''))) {
+    throw new Error(`${part}: IconPlaceholder left after the rewrite`);
+  }
+  return out.replace(
+    placeholderImport,
+    icons.length ? `import { ${icons.join(', ')} } from "lucide-react"\n` : '',
+  );
+}
+
+/**
+ * Phase 2: overwrites every part phase 1 wrote with its hooked source at
+ * SHADCN_UI_SHA (see the header); returns how many. A part missing upstream
+ * fails the install with its name.
+ */
+async function installHookedParts() {
+  const prettier = await import('prettier');
+  const hooked = `https://raw.githubusercontent.com/shadcn-ui/ui/${SHADCN_UI_SHA}/apps/v4/registry/bases/${base}/ui/`;
+  const files = fs
+    .readdirSync(uiDir)
+    .filter((f) => f.endsWith('.tsx'))
+    .sort();
+  for (const name of files) {
+    const file = path.join(uiDir, name);
+    const installed = fs.readFileSync(file, 'utf8');
+    const cnModule =
+      /import \{ cn \} from (['"])([^'"]+)\1/.exec(installed)?.[2] ?? 'cn';
+    const response = await fetch(hooked + name);
+    if (!response.ok) {
+      console.error(
+        `install: ${base} part ${name} missing at shadcn-ui/ui@${SHADCN_UI_SHA} (${response.status} ${hooked + name})`,
+      );
+      process.exit(1);
+    }
+    let source = (await response.text())
+      .replaceAll(`@/registry/bases/${base}/ui/`, `${uiAlias}/`)
+      .replace(
+        new RegExp(
+          `(import \\{ cn \\} from )"(?:cn|@/registry/bases/${base}/lib/utils)"`,
+        ),
+        `$1"${cnModule}"`,
+      );
+    source = lucideIcons(source, `${base}/${name}`);
+    if (/@\/registry\/|@\/app\//.test(source)) {
+      console.error(`install: ${base}/${name} keeps an upstream-only import`);
+      process.exit(1);
+    }
+    const options = (await prettier.resolveConfig(file)) ?? {};
+    fs.writeFileSync(
+      file,
+      await prettier.format(source, { ...options, filepath: file }),
+    );
+  }
+  return files.length;
+}

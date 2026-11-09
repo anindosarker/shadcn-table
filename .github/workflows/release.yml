@@ -49,8 +49,8 @@ jobs:
       INPUT_VERSION: ${{ inputs.version }}
       EVENT: ${{ github.event_name }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # Reads EVENT, INPUT_VERSION and GITHUB_SHA, runs next-version.mjs,
@@ -72,8 +72,8 @@ jobs:
     env:
       VERSION: ${{ needs.check-release.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Poll www and storybook /version.txt every 30 s, 20 min timeout
@@ -97,16 +97,16 @@ jobs:
     if: needs.check-release.outputs.mode == 'release'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter shadcn-table exec playwright install --with-deps chromium
       - run: pnpm test validate-production --ci
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: test-out-validate-production
@@ -129,10 +129,10 @@ jobs:
       VERSION: ${{ needs.check-release.outputs.version }}
     steps:
       # Full history and tags: comment.mjs finds the previous tag.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: node tools/release/publish-release.mjs --version "$VERSION"

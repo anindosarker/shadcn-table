@@ -65,6 +65,26 @@ To replace a default icon, specify the icon in the `icons` table option. You sho
 
 Some icons have `style` props that get applied to them internally. So, in order to preserve the ability of those Icons to be styled with the correct paddings, margins, or rotations, you should pass in `{...props}` to your custom icon component as a best practice.
 
+### One Icon Set for Every Table
+
+To give every table in a part of your app the same icons without passing `icons` to each one, wrap them in `<ST_DefaultsProvider icons={...}>`. Each table merges `ST_Default_Icons`, then the provider's `icons`, then its own `icons` option, so one table can still override a single key:
+
+```jsx
+import { ST_DefaultsProvider } from '@/components/ui/shadcn-table';
+import { ST_Default_Icons as tabler } from '@/components/ui/shadcn-table/icons/tabler';
+
+<ST_DefaultsProvider icons={tabler}>
+  <ShadcnTable columns={columns} data={data} />
+  <ShadcnTable
+    columns={columns}
+    data={data}
+    icons={{ AddIcon: (props) => <PlusCircle {...props} /> }}
+  />
+</ST_DefaultsProvider>
+```
+
+The map can be a whole icon set, such as another edition's `icons.ts` saved as `icons/<library>.ts`, or only the keys you change. The docs' theme panel uses this provider for its Icon Library select. See [\<ST_DefaultsProvider /\>](/docs/api/st-components#st_defaultsprovider-).
+
 ### Font Awesome Example
 
 Here is an example where we use icons from a completely different library, [Font Awesome](https://fontawesome.com/).

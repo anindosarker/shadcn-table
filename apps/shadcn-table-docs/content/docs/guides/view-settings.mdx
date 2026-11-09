@@ -55,8 +55,9 @@ What is stored:
 - the toolbar pins
 - density
 - column visibility, column order and column pinning
+- rows per page
 
-What is not stored: sorts, filters, the search text, the page and column sizes. To persist those, manage them through `state` yourself, as the [State Management Guide](/docs/guides/state-management#persistent-state) shows. A view equal to the table's `initialState` is not kept; the entry is removed instead.
+What is not stored: sorts, filters, the search text, the page index and column sizes. To persist those, manage them through `state` yourself, as the [State Management Guide](/docs/guides/state-management#persistent-state) shows. A view equal to the table's `initialState` is not kept; the entry is removed instead.
 
 #### The Storage Key
 
@@ -105,7 +106,7 @@ The view settings button (aria-label "View settings") opens a panel with these r
 - **Sticky header**: a switch, starting from `enableStickyHeader`. See the [Sticky Header Guide](/docs/guides/sticky-header).
 - **Alternating row colors**: a switch for striped rows, using the `--st-stripe` color. See the [Tint Tokens Guide](/docs/guides/tint-tokens).
 - **Row numbers**: a switch, starting from `enableRowNumbers`. Turning it on adds the row numbers column pinned to the start.
-- **Reset view**: restores every row, the pins, density, column visibility, order and pinning to the table's `initialState`, and deletes the stored view when persistence is on.
+- **Reset view**: restores every row, the pins, density, column visibility, order, pinning and rows per page to the table's `initialState`, and deletes the stored view when persistence is on.
 
 ### Pin Items to the Toolbar
 
