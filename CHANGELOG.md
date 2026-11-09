@@ -15,6 +15,10 @@ publishes the section as the GitHub release notes.
 
 - The home page has a social preview image: `app/opengraph-image.tsx` renders a 1200x630 PNG card like the docs cards, and Next.js adds `og:image` and `twitter:image` to `/` from it (D55).
 
+#### Spec 25 JSON-LD structured data
+
+- The home page and every docs page carry Schema.org JSON-LD: `/` a `WebSite` and a `SoftwareSourceCode`, each docs page a `TechArticle` and a `BreadcrumbList` (Docs > section > page, absolute URLs), typed with `schema-dts` (D54).
+
 ### Changed
 
 #### Spec 30 API page payload
