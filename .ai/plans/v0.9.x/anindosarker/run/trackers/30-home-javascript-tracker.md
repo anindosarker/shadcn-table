@@ -1,6 +1,6 @@
 # 30: Home JavaScript, tracker
 
-Status: blocked (KB target, Attention)
+Status: merged (D62)
 Branch `v0.9/home-javascript`, worktree `shadcn-react-table.worktrees/05`
 Checks:
 - `NEXT_PUBLIC_SITE_URL=http://localhost:5349 pnpm --filter shadcn-table-docs build` at e5f078cd: pass
