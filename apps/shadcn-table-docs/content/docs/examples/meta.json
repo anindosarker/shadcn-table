@@ -1,7 +1,9 @@
 {
   "title": "Examples",
+  "root": true,
   "defaultOpen": true,
   "pages": [
+    "index",
     "basic",
     "minimal",
     "advanced",

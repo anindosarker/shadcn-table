@@ -1,7 +1,9 @@
 {
   "title": "Guides",
+  "root": true,
   "defaultOpen": true,
   "pages": [
+    "index",
     "---Fundamentals---",
     "production-ready-tables",
     "best-practices",
