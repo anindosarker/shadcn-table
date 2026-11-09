@@ -12,6 +12,7 @@ Checks:
 - `pnpm test typecheck --base base` at cf509a71: pass
 - `pnpm test lint` at cf509a71: pass (9 existing warnings)
 - `pnpm test validate-repo` at cf509a71: pass
+- Verifier at d5bf0516: no rerun; every 2.2 local check and the 1.2 Acceptance are recorded at 1f32b8af or cf509a71, and `git diff --name-only` from both to HEAD touches only `.ai/` and `CHANGELOG.md`. The Search Console line of 2.2 is the owner's step after deploy, not a local check.
 
 - Task 1 routes: done (1f32b8af)
 - Task 2 acceptance proof: done (1f32b8af, no commit)
