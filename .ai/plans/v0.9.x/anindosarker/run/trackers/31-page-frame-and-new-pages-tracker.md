@@ -1,8 +1,12 @@
 # 31: Page frame and new pages, tracker
 
-Status: planned
-Branch `v0.9/docs-frame`, worktree 04
-Checks:
-- Check: [name], `[command]` at [commit]: [pass | fail]
+Status: running
+Branch `v0.9/docs-frame`, worktree `/Users/anindosarker/Work/Personal/React-table/shadcn-react-table.worktrees/04`
 
-- Task 1 [name]: [planned | running | done (<commit>, <workflow run id>)]
+Checks:
+
+Tasks:
+
+Notes:
+
+## Attention
