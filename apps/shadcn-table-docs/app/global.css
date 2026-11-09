@@ -746,7 +746,7 @@ html:has(#nd-notebook-layout) ::selection {
   color: var(--docs-accent);
 }
 
-/* dashed boxes: code blocks, callouts (the accent bar stays solid), cards
+/* dashed boxes: code blocks, callouts (the accent bar stays solid), MDX cards ([data-card])
    and the prev/next footer cards, prop tables and their Code toggle, markdown
    table frames, rules, FAQ accordions (fumadocs
    Accordions) and their dividers, the line tab strips (example tabs, locale
@@ -754,7 +754,7 @@ html:has(#nd-notebook-layout) ::selection {
    search dialog's header rule and result snippets; the sidebar seam is
    --docs-rule above */
 #nd-page figure.shiki,
-#nd-page a.rounded-lg.border,
+#nd-page :is(a.rounded-lg.border, [data-card]),
 #nd-page .prose > .not-prose > .border,
 #nd-page [id^='props-'] > .justify-end > button,
 #nd-page .prose table,
@@ -843,7 +843,7 @@ html:has(#nd-notebook-layout) ::selection {
 #nd-page .prose :not(pre) > code,
 #nd-page .prose kbd,
 #nd-toc code,
-#nd-page a.rounded-lg.border,
+#nd-page :is(a.rounded-lg.border, [data-card]),
 #nd-page .prose > .not-prose > .border,
 #nd-page [id^='props-'] > .justify-end > button,
 #nd-page .divide-y.divide-fd-border,
