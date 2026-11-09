@@ -487,6 +487,7 @@ index e1645117..e67a5482 100644
 - Fixes F10 and F27 as named ride-alongs of the 0.9.1 release spec's first milestone, before the fast-forward: `.gitignore` gains `!test/storybook-static/` after the `storybook-static` line so new files there are tracked (F10); `tools/release/record-output.test.mjs` covers `capRecord` (five errors, 400 characters, the `…` mark) under `pnpm test validate-repo`, and the `pr-summary.mjs` header drops the removed act fallback sentence (F27). Settled by the lead: tooling with one right answer. F9 and F26 (stale comments) wait for a change that touches their files (no comment-only commits).
 
 ### D47 The runner approves every Prepare Release deployment
+[E9]
 
 [Done]
 
@@ -499,6 +500,7 @@ index e1645117..e67a5482 100644
 - Source: A18. D29's acceptance (panel open and light/dark toggle under 300 ms of long tasks) holds locally; on GitHub runners the toggle measured 342 to 351 ms on two bases, twice (F28), so `PERF_BUDGET_MS` is 600 under `--ci` and 300 otherwise. The code is unchanged; the budget follows the machine. Kept as merged (`629dcf81`).
 
 ### D49 0.9.1 ships with the patch label; no 0.10.x in this release
+[E9]
 
 - Source: A19
   [E7]

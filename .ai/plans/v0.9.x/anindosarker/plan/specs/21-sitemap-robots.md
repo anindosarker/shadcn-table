@@ -1,4 +1,5 @@
 # 21: Sitemap and robots for the docs site
+- Epic: E9
 
 Follow the project planning rules: docs/code-of-conduct/planning-guidelines.md, CLAUDE.md:9. Keep the expedition contract.
 

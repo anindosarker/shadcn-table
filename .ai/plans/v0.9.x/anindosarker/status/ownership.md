@@ -51,3 +51,4 @@ Generated: 2026-11-10 by ownership.py
 - E5: 14 Icon library select > 15 Style sheet on demand
 - E6: 16 CI skip bump commit > 17 CI Node 24 actions > 19 PR summary job outputs
 - E7: 20 Integration 0.9.1 > 20 Release PR 0.9.1 > 20 After release 0.9.1
+- E9: 21 Sitemap and robots > 23 Integration 0.9.2 > 23 Release PR 0.9.2 > 23 After release 0.9.2
