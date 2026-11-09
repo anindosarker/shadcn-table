@@ -1,10 +1,10 @@
 ---
 title: 'Row Selection Guide'
-description: 'How to add and customize row selection checkboxes in Shadcn Table'
+description: 'Select rows in shadcn-table with enableRowSelection: shadcn/ui checkboxes or radio buttons in the st-row-select column, and the rowSelection state.'
 date: '2026-11-10'
 ---
 
-Shadcn Table has a built-in row selection feature and makes it easy to manage the selection state yourself. This guide demonstrates how to enable row selection and customize the selection behavior.
+shadcn-table adds a selection column, `st-row-select`, when `enableRowSelection` is on: a shadcn/ui `Checkbox` per row and a select all checkbox in the header, or radio buttons when only one row may be selected. The selection lives in TanStack Table's `rowSelection` state, which you can read from the table or manage yourself.
 
 ### Relevant Table Options
 
@@ -126,7 +126,7 @@ return <ShadcnTable table={table} />;
 
 #### Useful Row IDs
 
-By default, the `row.id` for each row in the table is simply the index of the row in the table. You can override this and instruct Shadcn Table to use a more useful Row ID with the `getRowId` table option. For example, you may want something like this:
+By default, the `row.id` for each row in the table is simply the index of the row in the table. You can override this and instruct shadcn-table to use a more useful Row ID with the `getRowId` table option. For example, you may want something like this:
 
 ```jsx
 const table = useShadcnTable({

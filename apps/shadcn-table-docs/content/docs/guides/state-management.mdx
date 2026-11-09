@@ -1,10 +1,10 @@
 ---
 title: 'State Management Guide'
-description: 'How to access and manage internal state in Shadcn Table'
+description: 'Manage shadcn-table state yourself: start it from initialState, control single states with state and on...Change options, or read it from table.state.'
 date: '2026-11-10'
 ---
 
-Shadcn Table does not try to hide any of its internal state from you. You can initialize state with custom initial values, manage individual states yourself as you discover the need to have access to them, or read any of the state from the table instance itself.
+shadcn-table keeps all of its state in the TanStack Table instance, including its own states such as `density`, `isFullScreen` and `showColumnFilters`. You can start any state from `initialState`, control single states yourself with `state` and the matching `on...Change` option, or read any of it from `table.state`.
 
 This is all optional, of course. If you do not need access to any of the internal state, you do not need to do anything and it will just automatically be managed internally.
 
@@ -128,7 +128,7 @@ return (
 );
 ```
 
-The table instance is the same object that you will also see as a provided parameter in many of the other callback functions throughout Shadcn Table, such as all the `render...` props or the `Cell` or `Header` render overrides in the column definition options.
+The table instance is the same object that you will also see as a provided parameter in many of the other callback functions throughout shadcn-table, such as all the `render...` props or the `Cell` or `Header` render overrides in the column definition options.
 
 ```jsx
 const columns = useMemo(

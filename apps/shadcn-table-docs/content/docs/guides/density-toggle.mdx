@@ -1,10 +1,10 @@
 ---
 title: 'Density Toggle Guide'
-description: 'How to use, customize, or disable the density toggle button feature of Shadcn Table'
+description: 'Switch row density in shadcn-table between compact, comfortable and spacious with the density state, the view settings select and enableDensityToggle.'
 date: '2026-11-10'
 ---
 
-Shadcn Table lets users switch between three density levels. By default the density control lives in the [view settings](/docs/guides/view-settings) panel as a select, and it is pinned to the toolbar as a button that cycles through the densities. This is a great feature to include to help with accessibility for different user preferences, but it can also easily be disabled if desired.
+shadcn-table lets users switch between three density levels. By default the density control lives in the [view settings](/docs/guides/view-settings) panel as a select, and it is pinned to the toolbar as a button that cycles through the densities. Set `enableDensityToggle: false` to hide the control, or start from another density with the `density` state.
 
 ### Relevant Table Options
 
@@ -18,7 +18,7 @@ Shadcn Table lets users switch between three density levels. By default the dens
 
 ### Default Density
 
-By default, Shadcn Table will render with a medium `comfortable` density.
+By default, shadcn-table will render with a medium `comfortable` density.
 
 Each density gives body rows one fixed height: `compact` 40 px, `comfortable` 48 px and `spacious` 56 px. The header row is 40 px at every density. The horizontal cell padding grows with the density too.
 
