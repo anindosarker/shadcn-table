@@ -1,7 +1,7 @@
 # 24: Canonical and slash redirect, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/canonical-slash-redirect`, worktree 03
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 
