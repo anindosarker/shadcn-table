@@ -1,6 +1,6 @@
 # Guides copy accuracy (F32), tracker
 
-Status: done
+Status: merged (e12547a5)
 Files owned: `apps/shadcn-table-docs/content/docs/guides/*.mdx`, `apps/shadcn-table-docs/content/docs/api/**`
 Depends on: none
 Branch `v0.9/fix-guides-copy-accuracy`, worktree 04
