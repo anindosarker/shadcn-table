@@ -19,6 +19,8 @@ import {
   siteName,
 } from '@/lib/shared';
 import { findSectionName } from '@/lib/page-tree-utils';
+import { JsonLd } from '@/components/json-ld';
+import { breadcrumbJsonLd, techArticleJsonLd } from '@/lib/structured-data';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
@@ -42,6 +44,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       }
       slots={{ breadcrumb: NoBreadcrumb }}
     >
+      <JsonLd data={techArticleJsonLd(page)} />
+      <JsonLd data={breadcrumbJsonLd(page)} />
       {/* Sticky under the top nav (and the mobile TOC popover): fumadocs
           publishes that edge as --fd-docs-row-3. */}
       <div className="docs-page-bar sticky top-(--fd-docs-row-3) z-10 flex flex-row items-center justify-between gap-4 bg-fd-background py-2">
