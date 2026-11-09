@@ -532,3 +532,6 @@ index e1645117..e67a5482 100644
 - E9 (D50, D51) ships as 0.9.2 in the same epic: a release spec modelled on spec 20, patch label `release:patch` (D49), the D40 flow (release suite on GitHub only), the runner approves Prepare Release (D47), post-release sync per P4.
 - Release only after specs 21 and 22 have merged into `claude/review`; nothing else rides in.
 - Owner, 2026-11-10: "work on it and release a new version asap."
+
+### D53 Canonical URLs and trailing-slash redirect
+
