@@ -565,3 +565,5 @@ index e1645117..e67a5482 100644
 
 ### D59 Home page JavaScript and API page payload
 
+### D60 Docs content, descriptions and discoverability pages
+
