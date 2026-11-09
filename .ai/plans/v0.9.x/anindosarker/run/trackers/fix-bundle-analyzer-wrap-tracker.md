@@ -1,6 +1,6 @@
 # Bundle analyzer wrap (D63), tracker
 
-Status: done
+Status: merged (1984103c)
 Files owned: `apps/shadcn-table-docs/next.config.mjs`, `apps/shadcn-table-docs/package.json`, `pnpm-lock.yaml`
 Depends on: none
 Branch `v0.9/fix-bundle-analyzer-wrap`, worktree `../shadcn-react-table.worktrees/06`
