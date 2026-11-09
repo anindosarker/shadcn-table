@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Changed
+
+#### Spec 30 API page payload
+
+- The API option tables (table, column and state options; table, column, row and cell instance APIs, and their subsets on the guide pages) render a light HTML table first, name, type and description per option with the `<name>-prop` style anchors, and hydrate into the interactive table with search, copy and pinning as before (D59). `/docs/api/table-options` HTML drops from 1.94 MB to 268 KB.
+
 ## 0.9.2 - 2026-11-09
 
 ### Added
