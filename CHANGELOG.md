@@ -15,6 +15,14 @@ publishes the section as the GitHub release notes.
 
 - The home page has a social preview image: `app/opengraph-image.tsx` renders a 1200x630 PNG card like the docs cards, and Next.js adds `og:image` and `twitter:image` to `/` from it (D55).
 
+### Fixed
+
+#### Spec 29 Markdown delivery and llms.txt shape
+
+- A docs page served as Markdown (`Accept: text/markdown` or `/llms.mdx/docs/.../content.md`) now answers `Vary: Accept` and `text/markdown; charset=utf-8`, so a cache no longer hands Markdown to a browser or HTML to an agent (D58).
+- `/llms.txt` follows llmstxt.org: the `# shadcn-table` heading, a one-line summary, then one section per docs folder (Getting Started, API Reference, Quick Examples, Guides) with a link and description per page, on absolute URLs (D58).
+- `/llms-full.txt`, the per-page Markdown and the "Copy page" button carry plain Markdown: MDX imports, JSX components and frontmatter are gone; headings, prose, component prose (a callout body) and code blocks stay (D58).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added
