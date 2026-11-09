@@ -1,6 +1,6 @@
 # 24: E10 dependencies, tracker
 
-Status: done
+Status: merged (80ab4683)
 Branch `v0.9/e10-dependencies`, worktree 03
 Checks:
 - `pnpm ls --filter shadcn-table-docs zod schema-dts @next/bundle-analyzer` at d73330b5: pass (zod 4.6.7, schema-dts 1.1.5, @next/bundle-analyzer 16.3.8)
