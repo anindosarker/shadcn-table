@@ -28,8 +28,8 @@ Updated: 2026-11-10 00:21
 | E7 20 Integration 0.9.1 |  |  |  |  | [x] |  |  |  |  |  |
 | E7 20 Release PR 0.9.1 |  |  |  |  |  | [x] |  |  |  |  |
 | E7 20 After release 0.9.1 |  |  |  |  |  |  | [x] |  |  |  |
-| E9 21 Sitemap and robots | · |  |  |  |  |  |  |  |  |  |
-| E9 22 Remove dev routes |  |  |  |  |  |  | · |  |  |  |
+| E9 21 Sitemap and robots | [ ] |  |  |  |  |  |  |  |  |  |
+| E9 22 Remove dev routes |  |  |  |  |  |  | [ ] |  |  |  |
 | E9 23 Integration 0.9.2 |  |  |  |  |  |  |  | · |  |  |
 | E9 23 Release PR 0.9.2 |  |  |  |  |  |  |  |  | · |  |
 | E9 23 After release 0.9.2 |  |  |  |  |  |  |  |  |  | · |
