@@ -10,7 +10,7 @@ TanStack Table and shadcn/ui solve two halves of the same problem. This guide ex
 
 TanStack Table is headless. It holds the table state (sorting, filters, pagination, selection, column order, sizing, pinning, grouping and expansion) and computes the rows from it through row models: the core rows, then the filtered, sorted, grouped, expanded and paginated rows. It renders nothing. Every header, cell, menu and button is yours to write.
 
-shadcn-table is built on TanStack Table v9. In v9 a table declares the features it uses with `tableFeatures()` and builds its hook with `createTableHook()`, so only the features a table registers are part of its state and its types.
+shadcn-table is built on TanStack Table v9. In v9 a table declares the features it uses with `tableFeatures()` and can build its hook with `createTableHook()`, so only the features a table registers are part of its state and its types.
 
 ## What shadcn/ui gives you
 
@@ -22,7 +22,7 @@ shadcn/ui ships a `Table` component, but no data table. The [data-table recipe](
 
 The install copies the table into `components/ui/shadcn-table/`, next to your other shadcn/ui components. Two pieces do the joining:
 
-- **`useShadcnTable`** registers the shadcn-table feature set with TanStack Table (the core features plus the table's own, with your filter, sort and aggregation functions merged over the built-in ones) and returns the TanStack table instance with the shadcn-table options on it.
+- **`useShadcnTable`** registers the shadcn-table feature set with TanStack Table (the stock TanStack features plus the table's own, with your filter, sort and aggregation functions merged over the built-in ones) and returns the TanStack table instance with the shadcn-table options on it.
 - **The `ST_*` components** render that instance. `ST_ColumnActionMenu`, `ST_FilterTextField`, `ST_TablePagination` and the rest import your `@/components/ui/*` parts, so a column menu is your `DropdownMenu`, a filter field is your `InputGroup`, the pager is your `Pagination`, and all of them follow your theme.
 
 ```tsx
@@ -36,13 +36,13 @@ const table = useShadcnTable({
 return <ShadcnTable table={table} />;
 ```
 
-Each feature is one option on the hook, and each option is listed in [Table Options](/docs/api/table-options). The instance is still a TanStack table: `table.getState()`, `table.getRowModel()` and every other TanStack API work as the TanStack docs describe, so you can read state out or drive it from your own code. The copied source is yours too: edit an `ST_*` component when an option is not enough.
+Each feature is one option on the hook, and each option is listed in [Table Options](/docs/api/table-options). The instance is still a TanStack table: `table.state`, `table.getRowModel()` and every other TanStack API work as the TanStack docs describe, so you can read state out or drive it from your own code. The copied source is yours too: edit an `ST_*` component when an option is not enough.
 
 Because the table renders through your shadcn/ui parts, the copy you install matches your base. A Radix UI project gets the Radix copy, a Base UI project the Base UI copy, a React Aria project the React Aria copy; the table options are the same on all three.
 
 ## When to use the recipe instead
 
-The data-table recipe is the better fit when the table is small and fixed: a few columns, client-side sorting, one search box, pagination and row selection. You write about a hundred lines, you keep full control of the markup, and you add nothing beyond `@tanstack/react-table`.
+The data-table recipe is the better fit when the table is small and fixed: a few columns, client-side sorting, one search box, pagination and row selection. You write the table yourself, you keep full control of the markup, and you add nothing beyond `@tanstack/react-table`.
 
 Reach for shadcn-table when the table needs more than that: column filters with several modes, grouping and aggregation, column and row pinning, virtualization, editing, column resizing and ordering, or a toolbar with density, full screen and view settings. Writing those by hand on top of TanStack Table is the work this library has already done.
 
