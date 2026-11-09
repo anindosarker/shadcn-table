@@ -563,3 +563,5 @@ index e1645117..e67a5482 100644
 
 ### D58 Markdown delivery and llms.txt shape
 
+### D59 Home page JavaScript and API page payload
+
