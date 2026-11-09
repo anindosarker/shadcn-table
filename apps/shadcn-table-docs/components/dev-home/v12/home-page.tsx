@@ -32,7 +32,7 @@ export function HomePage() {
           <Dune className="v12-field" fps={9} />
           <div className="v4-shell v12-hero-copy">
             <p className="v7-eyebrow v12-eyebrow">
-              <span>{'//'}</span> The batteries-included table for shadcn/ui.
+              <span>{'//'}</span> The batteries-included data table for shadcn/ui.
             </p>
             <h1 id="v12-title" className="v4-display v12-h1">
               shadcn<span className="v7-wordmark-dash">-</span>table

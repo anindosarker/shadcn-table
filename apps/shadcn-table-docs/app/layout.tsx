@@ -12,8 +12,12 @@ import { designSystemScript } from '@/lib/design-system/config';
 import { designSystemFontVariables } from '@/lib/design-system/fonts';
 import { siteName, siteUrl } from '@/lib/shared';
 
+/** The home page title: names the category, not only the brand (D56). */
+const siteTitle =
+  'shadcn-table: data table for shadcn/ui, built on TanStack Table';
+
 export const metadata: Metadata = {
-  title: { default: siteName, template: `%s | ${siteName}` },
+  title: { default: siteTitle, template: `%s | ${siteName}` },
   description:
     'A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.',
   metadataBase: new URL(siteUrl),
