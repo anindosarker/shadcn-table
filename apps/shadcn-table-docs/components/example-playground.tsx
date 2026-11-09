@@ -10,6 +10,7 @@ import {
 import {
   CheckIcon,
   ChevronDownIcon,
+  BookOpenIcon,
   ExternalLinkIcon,
   MaximizeIcon,
   MinimizeIcon,
@@ -37,10 +38,12 @@ import { ExampleSwitcher } from '@/components/example-switcher';
 import { useExamplePage } from '@/components/example-page-context';
 import { GitHubIcon } from '@/components/github-icon';
 import { cn } from '@/lib/cn';
+import { storybookExampleUrl } from '@/lib/storybook-map';
 import type { Base } from '@/lib/install';
 import {
   trackExampleCodeOpened,
   trackInstallCommandCopied,
+  trackStorybookOpened,
 } from '@/lib/analytics';
 
 /** What differs per base: the base's sources, their GitHub folder and the commands. */
@@ -158,6 +161,7 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
   const examplePage = useExamplePage();
   const path = examplePage?.path ?? treePath;
   const pageUrl = examplePage?.url ?? pathname;
+  const exampleSlug = /^\/docs\/examples\/([^/]+)$/.exec(pageUrl)?.[1];
 
   useEffect(
     () => () => {
@@ -358,6 +362,23 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </div>
+          {/* The selected base's Storybook at the example's story
+              (lib/storybook-map.ts); same look as Copy prompt. */}
+          <div className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0">
+            <Button asChild variant="ghost" size="sm" className="px-2.5">
+              <a
+                href={storybookExampleUrl(base, exampleSlug)}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackStorybookOpened({ base, surface: 'example' })
+                }
+              >
+                <BookOpenIcon data-icon="inline-start" />
+                Storybook
+              </a>
+            </Button>
           </div>
           {/* Same button as the table toolbar's ST_ToggleFullScreenButton. */}
           <Tooltip open={tooltipOpen}>
