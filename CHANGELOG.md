@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Fixed
+
+#### Spec 24 Canonical URLs and trailing-slash redirect
+
+- Every docs site page names its canonical URL: the root metadata sets `alternates.canonical` to `./`, so `/` and each docs page carry one `<link rel="canonical">` with their own slash-less URL on `NEXT_PUBLIC_SITE_URL`. A path with a trailing slash answers 308 to the slash-less path; the PostHog proxy under `/ingest` keeps its slash (D53).
+
 ## 0.9.2 - 2026-11-09
 
 ### Added
