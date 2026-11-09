@@ -510,7 +510,7 @@ index e1645117..e67a5482 100644
 
 ### D50 Sitemap and robots for the docs site
 
-[E9]
+[Done]  [E9]
 
 - `https://www.shadcn-table.com/sitemap.xml` and `/robots.txt` both return 404 today; `apps/shadcn-table-docs` has no `sitemap.ts`, `robots.ts` or `next-sitemap` config, so Google finds pages only by following links.
 - Add `apps/shadcn-table-docs/app/sitemap.ts`: the home page at priority 1.0 plus every docs page from fumadocs `source.getPages()`, absolute URLs on `https://www.shadcn-table.com`; no `/dev/*` (removed by D51), no `/r/*`, no `/ingest/*`; no `lastmod` (Vercel shallow clones make git dates unreliable).
@@ -519,7 +519,7 @@ index e1645117..e67a5482 100644
 - Owner, 2026-11-10: "k. record."
 
 ### D51 Remove the /dev preview routes from the docs site
-[E9]
+[Done]  [E9]
 
 - `apps/shadcn-table-docs/app/dev/**` (the home and theme preview pages, `/dev`, `/dev/theme`, `/dev/theme/1` to `/dev/theme/9`) is deployed and public on www.shadcn-table.com (200 today) although it is development scaffolding with `noindex`. It goes: the route folder is deleted, and every component, helper and data file imported only from it is deleted with it. Git history keeps them; the spec names the removing commit's parent so they can be viewed again.
 - Anything still imported from outside `app/dev` stays. Check scripts, tests and workflow steps that open a `/dev/theme` URL are changed to the page they really test or deleted when they tested only the preview.
@@ -527,7 +527,7 @@ index e1645117..e67a5482 100644
 - Source: a side-agent note on D50 (robots block vs `noindex`). Owner, 2026-11-10: "the /dev pages can go already. and we can view the components if needed."
 
 ### D52 Release 0.9.2 ships E9
-[E9]
+[Done]  [E9]
 
 - E9 (D50, D51) ships as 0.9.2 in the same epic: a release spec modelled on spec 20, patch label `release:patch` (D49), the D40 flow (release suite on GitHub only), the runner approves Prepare Release (D47), post-release sync per P4.
 - Release only after specs 21 and 22 have merged into `claude/review`; nothing else rides in.
