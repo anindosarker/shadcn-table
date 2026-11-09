@@ -12,6 +12,8 @@ Checks:
 - Check: lint, `pnpm test lint` at a6936758: pass (0 errors, 9 warnings)
 - Check: validate-repo, `pnpm test validate-repo` at a6936758: pass
 - Check: typo grep, `grep -rn 'should also should\|news rows\|\bect\.\|version 2.6.0' apps/shadcn-table-docs/content/docs/guides` at a6936758: pass (prints nothing)
+- Check: typecheck, `pnpm test typecheck --base base` at ff4edbde (verifier): pass (tsc clean)
+- Check: docs-e2e, `pnpm test docs-e2e --base base` at ff4edbde (verifier): pass (getting-started 205, api 109, guides 692, examples 939 passed, 0 failed; 107 pages)
 
 - Task 1 Apply the eight copy findings: done (a6936758)
 
