@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-10 02:39
+Updated: 2026-11-10 02:40
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -45,7 +45,7 @@ Updated: 2026-11-10 02:39
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | [ ] |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | · |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | · |
-| fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [ ] |  |
+| fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |  |  |  |  |
 | fix Page index play (F22) |  |  | [x] |  |  |  |  |  |  |  |  |

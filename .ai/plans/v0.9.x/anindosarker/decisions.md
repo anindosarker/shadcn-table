@@ -612,7 +612,7 @@ index e1645117..e67a5482 100644
 - Held by the owner 2026-11-10 ("Hold.", after a side-agent note): E10 merges into `claude/review` only; the owner reviews the home title, the rewritten docs copy and the comparison page on the preview deploy first, then says release. The release spec is written then and joins the next epic.
 
 ### D62 Home script target follows the home components; the PostHog load is its own finding
-[E10]
+[Done]  [E10]
 
 - Source: A21. D59's 450 KB script target on `/` is unreachable inside `components/dev-home/**`: measured 711 KB before, 580 KB on branch `v0.9/home-javascript` (b2bcf60d), blocking time 158 ms (under the 300 ms target); all but 19 KB of the first load is the shared root layout (posthog-js 114 KB, react-dom 72 KB), out of spec 30's scope.
 - The branch merges as it stands. D59's home target becomes: script transfer on `/` under 600 KB and lab TBT under 300 ms, both met at b2bcf60d. Visible behaviour unchanged (nav and hero links prefetch on hover, touch or focus instead of in the viewport; the demo table still loads on mount, which the docs check "icons: the pick survives a reload" needs).
@@ -620,7 +620,7 @@ index e1645117..e67a5482 100644
 - Settled by the lead 2026-11-10: a target number the lead set, no visible change; A21 option a.
 
 ### D63 The bundle analyzer wrap goes
-[E10]
+[Done]  [E10]
 
 - Source: A20. Spec 24 wrapped `next.config.mjs` in `@next/bundle-analyzer` behind `ANALYZE=1` for spec 30's measurements; the docs app builds with Turbopack, where the analyzer writes no report, and `next build --webpack` fails on `node:` imports. The wrap and its devDependency do nothing.
 - A fix milestone on `claude/review` removes the wrap from `next.config.mjs` and `@next/bundle-analyzer` from `apps/shadcn-table-docs/package.json` and the lockfile. Bundle inspection, when needed, uses `next experimental-analyze` or the built `/` HTML, as spec 30 did.
