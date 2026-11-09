@@ -21,3 +21,6 @@
   - b) load the demo table only on visitor intent (437 KB measured) and change the docs check that waits for the table after a reload
   - c) widen spec 30 to `app/layout.tsx` and lazy-load posthog-js and the providers, then rerun the milestone against 450 KB
   - d) drop the branch; the home page stays at 711 KB
+
+## A22 The sidebar Changelog link is marked external
+
