@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-10 03:25
+Updated: 2026-11-10 03:37
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -48,7 +48,7 @@ Updated: 2026-11-10 03:25
 | fix Bundle analyzer wrap (D63) |  |  |  |  |  |  |  |  |  | [x] |  |
 | fix CRUD dialog check waits for the rows (F25) |  |  | [x] |  |  |  |  |  |  |  |  |
 | fix Dev server clean (F11) |  | [x] |  |  |  |  |  |  |  |  |  |
-| fix Guides copy accuracy (F32) |  |  |  |  |  |  |  |  |  |  | [ ] |
+| fix Guides copy accuracy (F32) |  |  |  |  |  |  |  |  |  |  | [x] |
 | fix Page index play (F22) |  |  | [x] |  |  |  |  |  |  |  |  |
 | fix Perf budgets on CI (F28) |  |  |  |  |  | [x] |  |  |  |  |  |
 | fix Installation references refreshed (F20) |  | [x] |  |  |  |  |  |  |  |  |  |
