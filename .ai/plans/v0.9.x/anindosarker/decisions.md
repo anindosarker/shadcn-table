@@ -549,3 +549,6 @@ index e1645117..e67a5482 100644
 - One `JsonLd` component renders a `<script type="application/ld+json">` per object; no `FAQPage`, no `HowTo`.
 - Checks: objects typed with `schema-dts` compile; `curl` of `/` shows exactly two scripts (`WebSite`, `SoftwareSourceCode`), a docs page exactly two (`TechArticle`, `BreadcrumbList`); each parses as JSON; Google Rich Results test on the deployed pages reports no errors (owner-side, after deploy).
 - Owner, 2026-11-10: "k" on the item.
+
+### D55 Home page Open Graph image
+
