@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description:
     'A production-ready table library built with TanStack Table and shadcn/ui. Sorting, filtering, grouping, pinning, virtualization, and more, all built in.',
   metadataBase: new URL(siteUrl),
+  // './' resolves per route against metadataBase: every page names its own
+  // slash-less URL as canonical (D53).
+  alternates: { canonical: './' },
   applicationName: siteName,
   openGraph: { siteName, type: 'website' },
   twitter: { card: 'summary_large_image' },
