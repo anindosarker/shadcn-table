@@ -7,6 +7,14 @@ written while the work happens, under `## Unreleased`, below `### Breaking`,
 last check renames that heading to the version and the date; merging it
 publishes the section as the GitHub release notes.
 
+## Unreleased
+
+### Removed
+
+#### Spec 22 Remove the /dev preview routes
+
+- The docs site no longer serves the `/dev` homepage variant index and the `/dev/theme` and `/dev/theme/1` to `/dev/theme/9` theming previews; they return 404. Their dev-only theme-demo components are deleted with them; git history keeps them.
+
 ## 0.9.1 - 2026-11-08
 
 ### Added
