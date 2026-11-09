@@ -13,6 +13,14 @@ Checks:
 - `pnpm test validate-repo` at b7e82b57: pass
 - `pnpm test docs-e2e --base base` at b7e82b57: pass (107 pages; getting-started 205, api 109, guides 692, examples 939 passed, 0 failed)
 
+Review fixes (5cbc6d4b, 21d1f674, 5b7e2553, 40166937, 6bddaf09), checks rerun at 6bddaf09:
+
+- `node tools/docs/check-frontmatter.mjs apps/shadcn-table-docs/content/docs/examples`: pass (43 pages, 0 on every rule; 21d1f674 alone had filter-variants at 159, fixed in 40166937)
+- `npx prettier --check apps/shadcn-table-docs/content/docs/examples/*.mdx`: pass
+- `NEXT_PUBLIC_SITE_URL=http://localhost:5352 pnpm --filter shadcn-table-docs build`: pass (registry.json reorder restored)
+- `pnpm test docs-e2e --base base`: first run 1 failed (getting-started `/` "perf: light/dark toggle" 345 ms, P5 known flake), rerun pass (205, 109, 692, 939 passed, 0 failed)
+- `pnpm format`: pass (no change); `pnpm test validate-repo`: pass
+
 - Task 1 Rewrite the 43 example pages: done (2745db71)
 - Task 2 Cleanup, format, changelog: done (b7e82b57)
 
