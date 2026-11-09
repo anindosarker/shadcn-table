@@ -126,3 +126,6 @@
 
 
 - `apps/shadcn-table-docs/lib/llms.ts`: the `llms.txt` summary line is the home page description copied as a module constant (spec 29, merged 184056d2), because the home page and layout files belonged to other milestones; a change to the home description leaves this copy behind. One shared `siteDescription` in `lib/shared.ts` read by the layout, the OG image (`app/opengraph-image.tsx` holds a third copy) and `lib/llms.ts` removes it.
+
+### F30 PostHog and providers load in the root layout on every page
+
