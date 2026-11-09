@@ -2,20 +2,63 @@
 
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { RefObject } from 'react';
 import { CheckIcon, HandIcon, RotateCcwIcon } from 'lucide-react';
 import type { SignalTableProps, SignalTableState } from './signal-table';
 
+const tablePlaceholder = (
+  <div
+    role="status"
+    className="flex min-h-[26rem] items-center justify-center text-sm text-(--dh-ink-muted)"
+  >
+    Loading table
+  </div>
+);
+
 const SignalTable = dynamic(() => import('./signal-table'), {
   ssr: false,
-  loading: () => (
-    <div
-      role="status"
-      className="flex min-h-[26rem] items-center justify-center text-sm text-(--dh-ink-muted)"
-    >
-      Loading table
-    </div>
-  ),
+  loading: () => tablePlaceholder,
 });
+
+/** What tells the demo a visitor is here: any of these loads the table. */
+const INTENT_EVENTS = [
+  'scroll',
+  'wheel',
+  'pointermove',
+  'pointerdown',
+  'touchstart',
+  'keydown',
+] as const;
+
+/**
+ * Whether the table's code may load: once its placeholder is wholly on
+ * screen, or on the visitor's first scroll, pointer, touch or key. The demo
+ * sits just under the hero, part in view on a desktop screen, so loading on
+ * mount would fetch the table library with the homepage itself (spec 30).
+ */
+function useLoadOnIntent(ref: RefObject<HTMLElement | null>) {
+  const [load, setLoad] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || load) return;
+    const go = () => setLoad(true);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.intersectionRatio >= 1) go();
+      },
+      { threshold: 1 },
+    );
+    io.observe(el);
+    for (const type of INTENT_EVENTS) {
+      window.addEventListener(type, go, { passive: true, once: true });
+    }
+    return () => {
+      io.disconnect();
+      for (const type of INTENT_EVENTS) window.removeEventListener(type, go);
+    };
+  }, [ref, load]);
+  return load;
+}
 
 /** What a beat can do to the table on screen. */
 interface Replay {
@@ -382,6 +425,7 @@ export function SignalDemo() {
   // its state only while no newer move happened
   const tokenRef = useRef(0);
   const runRef = useRef<Run | null>(null);
+  const loadTable = useLoadOnIntent(tableRef);
 
   const goTo = (next: number, nextPhase: Phase) => {
     tokenRef.current += 1;
@@ -625,7 +669,11 @@ export function SignalDemo() {
         onPointerDownCapture={takeControl}
         onKeyDownCapture={takeControl}
       >
-        <SignalTable state={state} onChange={onChange} editing={editing} />
+        {loadTable ? (
+          <SignalTable state={state} onChange={onChange} editing={editing} />
+        ) : (
+          tablePlaceholder
+        )}
       </div>
 
       <aside className="v5-steps" aria-label="Demo items">

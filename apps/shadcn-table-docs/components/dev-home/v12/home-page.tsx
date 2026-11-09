@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRightIcon, ArrowUpRightIcon } from 'lucide-react';
+import { IntentLink } from '@/components/dev-home/shared/intent-link';
 import { AutoplayTileGrid } from '@/components/dev-home/shared/autoplay-tile-grid';
 import { archivo } from '@/components/dev-home/v4/font';
 import { Starfield } from '@/components/dev-home/v4/starfield';
@@ -49,16 +50,16 @@ export function HomePage() {
               className="v12-agent"
             />
             <div className="v12-cta">
-              <Link
+              <IntentLink
                 href="/docs/getting-started/install"
                 className="v4-btn v4-btn-solid v4-btn-lg"
               >
                 Get started
                 <ArrowRightIcon aria-hidden="true" className="size-4" />
-              </Link>
-              <Link href="/docs/examples" className="v4-link">
+              </IntentLink>
+              <IntentLink href="/docs/examples" className="v4-link">
                 Examples
-              </Link>
+              </IntentLink>
             </div>
           </div>
         </section>
