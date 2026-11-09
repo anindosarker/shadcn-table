@@ -60,6 +60,23 @@ const config = {
       },
     ],
   }),
+  // Security response headers on every path, the root included (D57). No
+  // Content-Security-Policy: it needs nonces for Next's inline scripts,
+  // PostHog and fonts. Vercel sets Strict-Transport-Security itself.
+  headers: async () => [
+    {
+      source: '/:path*',
+      headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+        {
+          key: 'Permissions-Policy',
+          value: 'camera=(), microphone=(), geolocation=()',
+        },
+      ],
+    },
+  ],
   // PostHog paths end with a slash (/ingest/e/, /ingest/batch/); without
   // this Next would redirect them to the slash-less form.
   skipTrailingSlashRedirect: true,
