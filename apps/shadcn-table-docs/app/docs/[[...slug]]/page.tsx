@@ -18,7 +18,7 @@ import {
   gitConfig,
   siteName,
 } from '@/lib/shared';
-import { findSectionName } from '@/lib/page-tree-utils';
+import { findSectionName, footerNeighbours } from '@/lib/page-tree-utils';
 import { ExamplesStack } from '@/components/examples-stack';
 
 /** True only for the examples index, `/docs/examples`. */
@@ -47,6 +47,8 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         page.data.toc.length === 0
       }
       slots={{ breadcrumb: NoBreadcrumb }}
+      // prev / next across section edges (sections are root folders)
+      footer={{ items: footerNeighbours(source.getPageTree(), page.url) }}
     >
       {/* Sticky under the top nav (and the mobile TOC popover): fumadocs
           publishes that edge as --fd-docs-row-3. */}
