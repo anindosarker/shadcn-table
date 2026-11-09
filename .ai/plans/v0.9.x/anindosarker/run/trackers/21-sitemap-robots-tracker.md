@@ -1,6 +1,6 @@
 # 21: Sitemap and robots for the docs site, tracker
 
-Status: done
+Status: merged (dd6d1f6d)
 Branch `v0.9/sitemap-robots`, worktree 03
 Checks:
 - `pnpm --filter shadcn-table-docs types:check` at 1f32b8af: pass
