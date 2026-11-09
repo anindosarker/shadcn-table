@@ -133,11 +133,11 @@ const COPIED_MS = 1500;
  * (the example, then its code below) view, a file tree code explorer, Copy
  * prompt, full screen. The table stays
  * mounted in every mode so its state survives switching views. On example
- * pages the header also carries the example switcher (previous / next and
- * the page combobox), so the reader can step through examples without
- * leaving the panel. Copy prompt writes the agent prompt to the clipboard;
- * the caret menu next to it copies the install command or opens the
- * example in GitHub. Code, prompt and command are those of the selected
+ * pages the header also carries the example switcher (the page combobox),
+ * so the reader can move between examples without leaving the panel. Copy
+ * prompt writes the agent prompt to the clipboard; the caret menu next to it
+ * copies the install command or opens the example in GitHub; Storybook opens
+ * the example's story in the selected base's Storybook. Code, prompt and command are those of the selected
  * base (the header switch), as is the live example.
  */
 export const ExamplePlayground = ({ children, name, variants }: Props) => {
@@ -279,7 +279,11 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
               </Button>
             ))}
           </div>
-          <BaseSwitch surface="example" />
+          {/* dashed like the other groups on this row */}
+          <BaseSwitch
+            surface="example"
+            className="border-dashed border-(--docs-dash)"
+          />
           <div
             role="group"
             aria-label="Open example"
@@ -362,10 +366,8 @@ export const ExamplePlayground = ({ children, name, variants }: Props) => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-          {/* The selected base's Storybook at the example's story
-              (lib/storybook-map.ts); same look as Copy prompt. */}
-          <div className="st-page-actions inline-flex h-8 shrink-0 items-stretch overflow-hidden rounded-md border bg-fd-secondary [&>*]:h-full [&>*]:rounded-none [&>*]:border-0">
+            {/* The selected base's Storybook at the example's story
+                (lib/storybook-map.ts). */}
             <Button asChild variant="ghost" size="sm" className="px-2.5">
               <a
                 href={storybookExampleUrl(base, exampleSlug)}
