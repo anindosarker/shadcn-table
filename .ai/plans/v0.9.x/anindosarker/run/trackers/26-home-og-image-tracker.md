@@ -1,7 +1,7 @@
 # 26: Home page Open Graph image, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/home-og-image`, worktree 04
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

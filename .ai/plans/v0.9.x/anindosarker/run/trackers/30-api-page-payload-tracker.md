@@ -1,7 +1,7 @@
 # 30: API page payload, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/api-page-payload`, worktree 06
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

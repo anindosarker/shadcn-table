@@ -1,7 +1,7 @@
 # 24: E10 dependencies, tracker
 
 Status: planned
-Branch `[branch]`, worktree [name]
+Branch `v0.9/e10-dependencies`, worktree 03
 Checks:
 - Check: [name], `[command]` at [commit]: [pass | fail]
 

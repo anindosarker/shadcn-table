@@ -1,6 +1,6 @@
 # v0.9.x sprints
 
-Updated: 2026-11-10 01:18
+Updated: 2026-11-10 01:23
 
 | Milestone | S1 | S2 | S3 | S4 | S5 | S6 | S7 | S8 | S9 | S10 | S11 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -33,15 +33,15 @@ Updated: 2026-11-10 01:18
 | E9 23 Integration 0.9.2 |  |  |  |  |  |  |  | [x] |  |  |  |
 | E9 23 Release PR 0.9.2 |  |  |  |  |  |  |  |  | [x] |  |  |
 | E9 23 After release 0.9.2 |  |  |  |  |  |  |  |  |  | [x] |  |
-| E10 24 E10 dependencies |  |  |  |  |  |  | · |  |  |  |  |
+| E10 24 E10 dependencies |  |  |  |  |  |  | [ ] |  |  |  |  |
 | E10 24 Canonical and slash redirect |  |  |  |  |  |  |  | · |  |  |  |
 | E10 25 JSON-LD |  |  |  |  |  |  |  |  | · |  |  |
-| E10 26 Home OG image | · |  |  |  |  |  |  |  |  |  |  |
+| E10 26 Home OG image | [ ] |  |  |  |  |  |  |  |  |  |  |
 | E10 27 Home title |  |  |  |  |  |  |  |  |  | · |  |
 | E10 28 Security headers |  |  |  |  |  |  |  |  | · |  |  |
-| E10 29 Markdown and llms | · |  |  |  |  |  |  |  |  |  |  |
+| E10 29 Markdown and llms | [ ] |  |  |  |  |  |  |  |  |  |  |
 | E10 30 Home JavaScript |  |  |  |  |  |  |  |  | · |  |  |
-| E10 30 API page payload | · |  |  |  |  |  |  |  |  |  |  |
+| E10 30 API page payload | [ ] |  |  |  |  |  |  |  |  |  |  |
 | E10 31 Page frame and new pages |  |  |  |  |  |  |  |  |  | · |  |
 | E10 31 Examples copy |  |  |  |  |  |  |  |  |  |  | · |
 | E10 31 Guides and API copy |  |  |  |  |  |  |  |  |  |  | · |
