@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { IntentLink } from '@/components/dev-home/shared/intent-link';
 import { ThemeControls } from '@/components/theme-controls';
 import { GitHubIcon } from '@/components/dev-home/v2/github-icon';
 import { DiscordIcon } from '@/components/discord-icon';
@@ -24,17 +24,17 @@ export function Nav() {
   return (
     <header className="v4-nav">
       <div className="v4-shell v4-nav-row">
-        <Link href="/" className="v4-wordmark">
+        <IntentLink href="/" className="v4-wordmark">
           <span aria-hidden="true" className="v4-wordmark-slash">
             {'//'}
           </span>
           <span>shadcn-table</span>
-        </Link>
+        </IntentLink>
         <nav aria-label="Primary" className="v4-nav-links">
           {LINKS.map((l) => (
-            <Link key={l.label} href={l.href} className="v4-nav-link">
+            <IntentLink key={l.label} href={l.href} className="v4-nav-link">
               {l.label}
-            </Link>
+            </IntentLink>
           ))}
         </nav>
         <div className="v4-nav-actions">
